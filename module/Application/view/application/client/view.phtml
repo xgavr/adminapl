@@ -136,7 +136,7 @@ $legalContact = $client->getLegalContact();
     <div class="panel-body">
         <?php foreach ($client->getContacts() as $contact):?> 
             <?php if ($contact->getContactCars()->count()):?>
-        <table class="table table-striped">
+                <table class="table table-striped">
                     <?php foreach ($contact->getContactCars() as $contactCar):?>
                         <tr>
                             <td>
@@ -187,6 +187,51 @@ $legalContact = $client->getLegalContact();
                             </td>
                         </tr>
                     <?php endforeach;?>
+                </table>    
+            <?php endif; ?>    
+        <?php endforeach;?>
+    </div>
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="pull-left">Заказы
+        </div>
+        <div class="pull-right">
+        </div>
+        <div class="clearfix"></div>
+    </div>    
+    <div class="panel-body">
+        <?php foreach ($client->getContacts() as $contact):?> 
+            <?php if ($contact->getOrder()->count()):?>
+                <table class="table table-striped">
+                    <tr>
+                         <th>Id</th>
+                         <th>AplId</th>
+                         <th>Дата</th>
+                         <th></th>
+                         <th>Сумма</th>
+                         <th>Действие</th>
+                     </tr>
+                    <?php foreach ($contact->getOrder() as $order): ?>
+                        <tr>
+                            <td>
+                                <?= $this->escapeHtml($order->getId()); ?>
+                            </td>
+                            <td>
+                                <?= $this->escapeHtml($order->getAplId()); ?>
+                            </td>
+                            <td>
+                                <?= $this->escapeHtml($order->getDateCreated()); ?>
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                <?= $this->escapeHtml($row->getTotal()); ?>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>                        
+                    <?php endforeach; ?>        
                 </table>    
             <?php endif; ?>    
         <?php endforeach;?>

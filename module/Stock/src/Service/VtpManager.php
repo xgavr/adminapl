@@ -175,7 +175,7 @@ class VtpManager
 //        $connection->update('ptu', $data, ['id' => $ptu->getId()]);
 //        var_dump($data); exit;
         $vtp->setAplId($data['apl_id']);
-        $vtp->setDocNo($data['doc_no']);
+        $vtp->setDocNo(empty($data['doc_no']) ? null:$data['doc_no']);
         $vtp->setDocDate($data['doc_date']);
         $vtp->setComment($data['comment']);
         $vtp->setStatusEx($data['status_ex']);

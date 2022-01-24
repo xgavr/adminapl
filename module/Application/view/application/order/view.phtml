@@ -30,25 +30,25 @@ $this->pageBreadcrumbs()->setItems([
     
     <?php foreach ($bids as $row): ?>
     
-    <tr>
-        <td>
-            <?= $this->escapeHtml($row->getId()); ?>
-        </td>
-        <td>
-            <?= $this->escapeHtml($row->getGood()->getName()); ?>
-        </td>
-        <td>
-            <?= $this->escapeHtml($row->getNum()); ?>
-        </td>
-        <td>
-            <?= $this->escapeHtml($row->getPrice()); ?>
-        </td>
-        <td>
-            <?= $this->escapeHtml(round($row->getNum()*$row->getPrice(), 2)); ?>
-        </td>
-        <td>
-        </td>    
-    </tr>
+        <tr>
+            <td>
+                <?= $this->escapeHtml($row->getId()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($row->getGood()->getName()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($row->getNum()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($row->getPrice()); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml(round($row->getNum()*$row->getPrice(), 2)); ?>
+            </td>
+            <td>
+            </td>    
+        </tr>
         
     <?php endforeach; ?>   
     
