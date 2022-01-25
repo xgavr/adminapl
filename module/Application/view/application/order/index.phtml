@@ -1,10 +1,13 @@
 <?php
-    $this->headTitle('Заказы');
-    $this->mainMenu()->setActiveItemId('order');
-    $this->pageBreadcrumbs()->setItems([
-                'Главная'=>$this->url('home'),
-                'Заказы'=>$this->url('order'),
-                ]);
+
+use Application\Entity\Order;
+
+$this->headTitle('Заказы');
+$this->mainMenu()->setActiveItemId('order');
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Заказы'=>$this->url('order'),
+            ]);
 ?>    
 
 <div class="row">
@@ -12,19 +15,28 @@
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <select id="officeSelect" style="width: 100px" class="form-control" name="officeId">
+                    <select id="officeSelect" style="width: 100px" class="form-control refresh-table" name="officeId">
+                        <option>все</option>
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="userSelect" style="width: 200px" class="form-control refresh-table" name="cashId">
+                    <select id="userSelect" style="width: 200px" class="form-control refresh-table" name="userId">
+                        <option>все</option>
                         <?php foreach ($users as $user):?>
                             <option value="<?= $user->getId()?>"><?= $user->getName()?></option>
                         <?php endforeach;?>
                     </select>
-                    <label for="userSelect" id="userBalance">0</label>
+                </div>    
+                <div class="form-group">
+                    <select id="statusSelect" style="width: 200px" class="form-control refresh-table" name="status">
+                        <option>все</option>
+                        <?php foreach (Order::getStatusList() as $key=>$value):?>
+                            <option value="<?= $key?>"><?= $value?></option>
+                        <?php endforeach;?>
+                    </select>
                 </div>    
             </div>
         </div>
@@ -46,16 +58,12 @@
             <thead>
                 <tr>
                      <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
-                     <th data-field="cashDoc.dateOper" data-sortable="false" data-width="150">Дата</th>
-                     <th data-field="cashDoc.id" data-sortable="false" data-width="50" data-align="right">Номер</th>
-                     <!--<th data-field="aplId" data-type="numeric"data-align="right">AplId</th>-->
-                     <th data-field='cashDoc.kind' data-sortable="false" data-formatter="kindFormatter" data-width="200">Операция</th>
-                     <th data-field='cashDoc.kind' data-sortable="false" data-formatter="operFormatter" data-width="200">Кому/от кого</th>
-                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Приход</th>
-                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="outFormatter" data-width="100">Расход</th>
-                     <th data-field='cashDoc.comment' data-sortable="false">Комментарий</th>
-                     <th data-field='cashDoc.userCreator.fullName' data-sortable="false" data-width="50">Отв.</th>
-                     <th data-field="amount" data-formatter="activeFormatter" data-width="50"></th>
+                     <th data-field="order.dateCreated" data-sortable="false" data-width="150">Дата</th>
+                     <th data-field="order.id" data-sortable="false" data-width="50">Номер</th>
+                     <th data-field="order.aplId" data-sortable="false" data-width="50">AplId</th>
+                     <th data-field="order.contact.name" data-sortable="false">Покупатель</th>
+                     <th data-field='order.total' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Сумма</th>
+                     <!--<th data-field='.userCreator.fullName' data-sortable="false" data-width="50">Отв.</th>-->
                  </tr>                
             </thead>
         </table>
@@ -65,29 +73,21 @@
 <script type="text/javascript">
     var table = $('#table').bootstrapTable({
         onLoadSuccess: function() {
-            updateBalance();
         } 
     });
-    
-    function updateBalance(){
-        $.getJSON( '/till/cash-balance/'+$('#cashSelect').val()+'?dateOper='+$('#dateOper').val(), function( data ) {
-            $('#cashBalance').html((data.balance*100/100).toFixed(2));
-        });    
-    }
     
     function refreshTable(){
         table.bootstrapTable('refresh');
     }
 
     function officeChange(){
-        $.getJSON( '/till/office-cashes/'+$('#officeSelect').val(), function( data ) {
-            $('#cashSelect').empty();
-            $('#cashBalance').empty();
-            $.each( data.rows, function( key, value ) {
-                $('#cashSelect').append('<option value="' + key + '">' + value.name + '</option>');
-            });            
-            refreshTable();
-        });    
+//        $.getJSON( '/accountant/office-cashes/'+$('#officeSelect').val(), function( data ) {
+//            $('#userSelect').empty();
+//            $.each( data.rows, function( key, value ) {
+//                $('#userSelect').append('<option value="' + key + '">' + value.name + '</option>');
+//            });            
+//            refreshTable();
+//        });    
     }
 
     $(function () {        
@@ -96,29 +96,13 @@
         $('#ok').click(function () {
             refreshTable();
         });
-        $(document).on('click', '.cash-in-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'cashInModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.cash-out-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'cashOutModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
         $(document).on('change', '.refresh-table', function (e) {
             refreshTable();
         });
         $(document).on('change', '#officeSelect', function (e) {
             officeChange();
         });
-        $(document).on('change', '#cashSelect', function (e) {
+        $(document).on('change', '#userSelect', function (e) {
             table.bootstrapTable('selectPage', 1);
         });
 
@@ -137,8 +121,8 @@
             params.offset = params.limit * (offset - 1);
         }    
         params.office = $('#officeSelect').val();
-        params.cash = $('#cashSelect').val();
-        params.kind = $('#kindSelect').val();
+        params.user = $('#userSelect').val();
+        params.status = $('#statusSelect').val();
         return params;
     }
     
@@ -170,77 +154,7 @@
         }
         return;
     }    
-    
-    function kindFormatter(value){
-        var kinds = <?= CashDoc::getKindListAsJavascriptArray() ?>;
-        return kinds[value];
-    }    
-    
-    function operFormatter(value, row){
-        var cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
-        switch(value){
-            case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
-            case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
-                        var orderId = (row.cashDoc.order) ? row.cashDoc.order.aplId:'Пополнение ЛЦ';
-                        var contactName = (row.cashDoc.contact) ? row.cashDoc.contact.name:'NaN';
-                        return contactName+' '+orderId;
-            case '<?= CashDoc::KIND_IN_REFILL ?>': 
-                        return (row.amount < 0) ? cashName:row.cashDoc.cashRefill.name;
-            case '<?= CashDoc::KIND_OUT_REFILL ?>': 
-                        return (row.amount > 0) ? cashName:row.cashDoc.cashRefill.name;
-            case '<?= CashDoc::KIND_IN_RETURN_USER ?>': 
-            case '<?= CashDoc::KIND_OUT_COURIER ?>': 
-            case '<?= CashDoc::KIND_OUT_SALARY ?>': 
-            case '<?= CashDoc::KIND_OUT_USER ?>': 
-                        return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName:null;
-            case '<?= CashDoc::KIND_OUT_COST ?>': 
-                        return row.cashDoc.cost.name;
-            case '<?= CashDoc::KIND_IN_RETURN_SUPPLIER ?>': 
-            case '<?= CashDoc::KIND_OUT_SUPPLIER ?>': 
-                        return row.cashDoc.legal.name;
-        }
-        return;
-    }    
-    
-    function activeFormatter(value, row){
-        var btn = '';
-        if (row.cashDoc.cash){
-            if (row.cashDoc.kind<10){
-                var url = '/till/edit-cash-in/'+row.cashDoc.id;
-                btn = '<button';
-                btn += ' type="button"';
-                btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
-                btn += ' aria-label="Left Align"'; 
-                btn += ' modal-url="'+url+'">';
-                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-                btn += '</button>';
-            }    
-            if (row.cashDoc.kind>10){
-                var url = '/till/edit-cash-out/'+row.cashDoc.id;
-                btn = '<button';
-                btn += ' type="button"';
-                btn += ' class="btn btn-default btn-xs cash-out-modal-show"';
-                btn += ' aria-label="Left Align"'; 
-                btn += ' modal-url="'+url+'">';
-                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-                btn += '</button>';
-            }    
-            }    
-        return btn;
-    }    
-    
-    function rowStyle(row, index) {
-        if (row.cashDoc.status == <?= CashDoc::STATUS_RETIRED?>) {
-            return {               
-                classes: 'retired'
-            };   
-        }
-        return {
-          css: {
-//            color: 'blue'
-          }
-        };   
-    }
+        
     
     function responseHandler(res) {
         return res;

@@ -21,19 +21,6 @@ use Application\Entity\ContactCar;
  */
 class OrderRepository extends EntityRepository{
 
-    public function findAllOrder()
-    {
-        $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-
-        $queryBuilder->select('o')
-            ->from(Order::class, 'o')
-                ;
-        
-        return $queryBuilder->getQuery();
-    }       
-    
     /**
      * Запрос на все заказаы
      * @return Query
@@ -110,6 +97,76 @@ class OrderRepository extends EntityRepository{
 
         return $queryBuilder->getQuery();
     }        
+      
+    /**
+     * Запрос по заказам
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function findAllOrder($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('o, c, p, e, u')
+            ->from(Order::class, 'o')
+            ->leftJoin('o.contact', 'c')
+            ->leftJoin('c.phones', 'p')
+            ->leftJoin('c.emails', 'e')
+            ->leftJoin('o.user', 'u')
+            ->orderBy('o.dateCreated', 'DESC')                 
+            ->addOrderBy('o.id', 'DESC')                 
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['userId'])){
+                $queryBuilder->andWhere('o.user = ?2')
+                    ->setParameter('2', $params['userId'])
+                        ;
+            }            
+            if (is_numeric($params['status'])){
+                $queryBuilder->andWhere('o.status = ?3')
+                    ->setParameter('3', $params['status'])
+                        ;
+            }            
+            if (isset($params['sort'])){
+                $queryBuilder->addOrderBy('o.'.$params['sort'], $params['order']);
+            }            
+        }
+
+        return $queryBuilder->getQuery();
+    }      
+    
+    /**
+     * Запрос по количеству order
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function findAllOrderTotal($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('count(o.id) as orderCount')
+            ->from(Order::class, 'o')
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['userId'])){
+                $queryBuilder->andWhere('o.user = ?2')
+                    ->setParameter('2', $params['userId'])
+                        ;
+            }            
+        }
+        
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result['orderCount'];
+    }    
     
     /**
      * Найти машину клиента

@@ -84,11 +84,11 @@ class OrderController extends AbstractActionController
             'cashId' => $cashId, 'kind' => $kind,
         ];
         
-        $query = $this->entityManager->getRepository(CashDoc::class)
-                        ->findAllCashDoc($dateOper, $params);
+        $query = $this->entityManager->getRepository(Order::class)
+                        ->findAllOrder($params);
         
-        $total = $this->entityManager->getRepository(CashDoc::class)
-                        ->findAllCashDocTotal($dateOper, $params);
+        $total = $this->entityManager->getRepository(Order::class)
+                        ->findAllOrderTotal($params);
                 
         if ($offset) {
             $query->setFirstResult($offset);
