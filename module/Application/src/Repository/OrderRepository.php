@@ -110,18 +110,21 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('o, c, p, e, u')
+        $queryBuilder->select('o, c, u')
             ->from(Order::class, 'o')
             ->leftJoin('o.contact', 'c')
-            ->leftJoin('c.phones', 'p')
-            ->leftJoin('c.emails', 'e')
             ->leftJoin('o.user', 'u')
             ->orderBy('o.dateCreated', 'DESC')                 
             ->addOrderBy('o.id', 'DESC')                 
                 ;
         
         if (is_array($params)){
-            if (isset($params['userId'])){
+            if (is_numeric($params['officeId'])){
+                $queryBuilder->andWhere('o.office = ?1')
+                    ->setParameter('1', $params['officeId'])
+                        ;
+            }            
+            if (is_numeric($params['userId'])){
                 $queryBuilder->andWhere('o.user = ?2')
                     ->setParameter('2', $params['userId'])
                         ;
@@ -153,12 +156,26 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder->select('count(o.id) as orderCount')
             ->from(Order::class, 'o')
+            ->leftJoin('o.contact', 'c')
+            ->leftJoin('c.phones', 'p')
+            ->leftJoin('c.emails', 'e')
+            ->leftJoin('o.user', 'u')
                 ;
         
         if (is_array($params)){
-            if (isset($params['userId'])){
+            if (is_numeric($params['officeId'])){
+                $queryBuilder->andWhere('o.office = ?1')
+                    ->setParameter('1', $params['officeId'])
+                        ;
+            }            
+            if (is_numeric($params['userId'])){
                 $queryBuilder->andWhere('o.user = ?2')
                     ->setParameter('2', $params['userId'])
+                        ;
+            }            
+            if (is_numeric($params['status'])){
+                $queryBuilder->andWhere('o.status = ?3')
+                    ->setParameter('3', $params['status'])
                         ;
             }            
         }

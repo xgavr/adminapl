@@ -80,8 +80,8 @@ class OrderController extends AbstractActionController
         $dateOper = $this->params()->fromQuery('dateOper');
         
         $params = [
-            'sort' => $sort, 'order' => $order, 
-            'cashId' => $cashId, 'kind' => $kind,
+            'sort' => $sort, 'order' => $order, 'officeId' => $officeId,
+            'userId' => $userId, 'status' => $status,
         ];
         
         $query = $this->entityManager->getRepository(Order::class)
