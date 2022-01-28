@@ -53,6 +53,7 @@
 //                        ]
 //                )        
                     
+                ->prependStylesheet('//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css')
                 ->prependStylesheet('//cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css')
         ?>
 
@@ -95,7 +96,8 @@
 //                'crossorigin' => 'anonymous',
 //            ])
         
-            ->prependFile('//yastatic.net/jquery/3.1.1/jquery.js')
+            ->prependFile('//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js')
+            ->prependFile('//code.jquery.com/ui/1.13.1/jquery-ui.js')
         ?>
     </head>
     <body>
@@ -133,279 +135,279 @@
                 </div>
             </div>
         </div>
-
-        
-        <?= $this->inlineScript() ?>
-       <script type="text/javascript">
-            /*
-            * проверка на авторизацию
-            */
-
-            var checkLogin = function(){
-                $.ajax({
-                    type: 'POST',
-                    url: '/application/check-login'
-                })
-                    .done(function (data) { 
-                        if (data){
-                            if (data.response == 'ok' && !data.ident){
-                                window.location.reload();
-                            }
-                        }    
-                        setTimeout(checkLogin, 60000);
-                    })
-                    .fail(function (e) {
-                        console.log(e);
-                    });                
-            }
-            
-            // вызов проверки на авторизацию
-            //checkLogin();
-            
-            //сериализация формы
-            function serializeForm(node)
-            {
-                var formdata = $(node).serializeArray();
-                var result = {};
-                $(formdata).each(function(index, obj){
-                    if (obj.name.indexOf('[]') > 0){
-                        if (Array.isArray(result[obj.name])){
-                            result[obj.name].push(obj.value);
-                        } else {
-                            result[obj.name] = [obj.value];
-                        }    
-                    } else {
-                        result[obj.name] = obj.value;
-                    }    
-                });    
-                //alert(result);
-                return result;
-            }
-            
-            //получить новый номер строки таблицы
-            function getNewTableUniqueId(tableName, fieldName)
-            {
-                var data = $('#'+tableName).bootstrapTable('getData');
-                var result = 0;
-                $.each(data, function( index, value ) {
-                    if (value[fieldName] > result){
-                        result = value[fieldName];
-                    }
-                });
-                result++;
-                return result;
-            }
-            
-            function showFormDialog(params)
-            {
-                //https://itchief.ru/bootstrap/modal-dynamic-creation
-                
-                $.ajax({
-                    url: params.url,
-                }).done(function(data) {
-                    var modalDialog = new ModalApp.ModalProcess({
-                        id: params.id,
-                    });
-                    modalDialog.init();
-                    
-                    $('#' + modalDialog.id + ' .modal-header').remove();
-                    $('#' + modalDialog.id + ' .modal-footer').remove();
-                    $('#' + modalDialog.id).modal({
-                        backdrop: 'static',
-                        keyboard: true
-                    });
-                    $('#' + modalDialog.id).attr('data-focus-on', "input:first");
-                    
-                    if (params.zIndex){
-                        $('#' + modalDialog.id).css('z-index', params.zIndex);                        
-                    }
-                    if (params.width){
-                        $('#' + modalDialog.id + ' .modal-dialog').css('width', params.width);                        
-                    }
-                    
-                    modalDialog.changeBody(data);
-                    
-                    modalDialog.showModal();
-                    
-                    $('#' + modalDialog.id).on('hidden.bs.modal', function (e) {
-                        modalDialog.changeBody('');
-                    });                                    
-                });                                                
-            }
-            
-            $('#modal-dialog').on('show.bs.modal', function (e) {        
-                var url = e.relatedTarget.value;
-                if (url){
-                    $.ajax({
-                        type: 'GET',
-                        url: url
-                    })
-                        .done(function (data) {
-                           $('#modal-content').html(data);
-                        })
-                        .fail(function () {
-                            alert("Ошибка открытия формы.");
-                        }); 
-                }
-            })    
-            
-
-            //удаление по классу
-            $('.this-delete').on('click', function(e) {
-                var url = e.currentTarget.value;
-                if (url){
-                    if (confirm('Удалить запись?')){
-                        var dialog = bootbox.dialog({
-                            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-                            closeButton: false
-                        });
-                        
-                        $.ajax({
-                            type: 'GET',
-                            url: url,
-                        })
-                            .done(function (data) {
-                                if (data == 'ok'){
-                                    bootbox.alert("Ок!");
-                                    window.location.reload();
-                                } else {
-                                    alert("Не удалось удалить!");
-                                }    
-                            })
-                            .fail(function (e) {
-                                alert("Не удалось удалить.");
-
-                            });
-                    }        
-                }        
-            })    
-            
-            /*
-            *Удаление в bootstrap таблице
-            *str url - ссылка на удаление строки таблицы
-            */
-            function tableRowDelete(url, table = 'table') {
-                if (url){
-                    if (confirm('Удалить запись?')){
-                        var table = $('#'+table);
-                        var dialog = bootbox.dialog({
-                            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-                            closeButton: false
-                        });
-                        
-                        $.ajax({
-                            type: 'GET',
-                            url: url,
-                        })
-                            .done(function (data) {
-                                if (data == 'ok'){
-                                    dialog.modal('hide');
-                                    table.bootstrapTable('refresh');
-                                } else if (data == 'ok-reload'){
-                                    window.location.reload();
-                                } else {
-                                    alert("Не удалось удалить!");
-                                }    
-                            })
-                            .fail(function (e) {
-                                alert("Не удалось удалить.");
-
-                            });
-                    }        
-                }        
-            }   
-
-            $('.refresh-button').on('click', function(e) {
-                var url = e.currentTarget.value;
-
-                if (url){
-                    var dialog = bootbox.dialog({
-                        message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-                        closeButton: false
-                    });
-
-                    $.ajax({
-                        type: 'GET',
-                        url: url
-                    })
-                        .done(function (data) {
-                            dialog.modal('hide');
-                            if (data == 'ok'){
-                                bootbox.alert("Ок!");
-                                window.location.reload();
-                            }    
-                        })
-                        .fail(function () {
-                            dialog.modal('hide');
-                            bootbox.alert("Произошла ошибка при выполнении операции.");
-                        });        
-                }        
-            })    
-
-            $('.refresh-table-button').on('click', function(e) {
-                var url = e.currentTarget.value;
-                if (url){
-                    var dialog = bootbox.dialog({
-                        message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-                        closeButton: false
-                    });
-
-                    $.ajax({
-                        type: 'GET',
-                        url: url
-                    })
-                        .done(function (obj) {
-                            dialog.modal('hide');
-//                            var data = jQuery.parseJSON(obj);
-                            data = obj;
-                            if (data.result == 'ok'){
-                                //bootbox.alert("Ок!");
-                                $('#table').bootstrapTable('refresh');
-                            } else if (data.result == 'ok-reload'){
-                                //bootbox.alert("Ок!");
-                                window.location.reload();
-                            } else {
-                                dialog = bootbox.dialog({
-                                    message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>'+data.message+'</p>',
-                                    closeButton: true
-                                });
-                            }    
-                        })
-                        .fail(function () {
-                            dialog.modal('hide');
-                            bootbox.alert("Произошла ошибка при выполнении операции.");
-                        });        
-                }        
-            })    
-
-            //форматирование числа
-            numberFormat = function(value){
-                var res = parseFloat(value).toFixed(2);
-                res = res.replace('.',',');
-                return res.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1&nbsp;")
-            }
-
-            /**
-            * Объект или массив в html
-             * @param Object|Array obj
-             * @returns {String}
-             *              */
-            objectToHtml = function(obj){
-                var result = '<div>';
-                $.each( obj, function( key, value ) {
-                    if (jQuery.isPlainObject(value) || jQuery.isArray(value)){
-                        result = result + '<div>' + key + '</div>';
-                        result = result + objectToHtml(value);
-                    } else {
-                        result = result + '<div><span>' + key + '</span>: <span>' + value + '</span></div>';
-                    }    
-                });
-
-                result = result + '</div>';
-                return result;
-            }
-
-            
-        </script>        
     </body>
 </html>
+
+        
+<?= $this->inlineScript() ?>
+<script type="text/javascript">
+    /*
+    * проверка на авторизацию
+    */
+
+    var checkLogin = function(){
+        $.ajax({
+            type: 'POST',
+            url: '/application/check-login'
+        })
+            .done(function (data) { 
+                if (data){
+                    if (data.response == 'ok' && !data.ident){
+                        window.location.reload();
+                    }
+                }    
+                setTimeout(checkLogin, 60000);
+            })
+            .fail(function (e) {
+                console.log(e);
+            });                
+    }
+
+    // вызов проверки на авторизацию
+    //checkLogin();
+
+    //сериализация формы
+    function serializeForm(node)
+    {
+        var formdata = $(node).serializeArray();
+        var result = {};
+        $(formdata).each(function(index, obj){
+            if (obj.name.indexOf('[]') > 0){
+                if (Array.isArray(result[obj.name])){
+                    result[obj.name].push(obj.value);
+                } else {
+                    result[obj.name] = [obj.value];
+                }    
+            } else {
+                result[obj.name] = obj.value;
+            }    
+        });    
+        //alert(result);
+        return result;
+    }
+
+    //получить новый номер строки таблицы
+    function getNewTableUniqueId(tableName, fieldName)
+    {
+        var data = $('#'+tableName).bootstrapTable('getData');
+        var result = 0;
+        $.each(data, function( index, value ) {
+            if (value[fieldName] > result){
+                result = value[fieldName];
+            }
+        });
+        result++;
+        return result;
+    }
+
+    function showFormDialog(params)
+    {
+        //https://itchief.ru/bootstrap/modal-dynamic-creation
+
+        $.ajax({
+            url: params.url,
+        }).done(function(data) {
+            var modalDialog = new ModalApp.ModalProcess({
+                id: params.id,
+            });
+            modalDialog.init();
+
+            $('#' + modalDialog.id + ' .modal-header').remove();
+            $('#' + modalDialog.id + ' .modal-footer').remove();
+            $('#' + modalDialog.id).modal({
+                backdrop: 'static',
+                keyboard: true
+            });
+            $('#' + modalDialog.id).attr('data-focus-on', "input:first");
+
+            if (params.zIndex){
+                $('#' + modalDialog.id).css('z-index', params.zIndex);                        
+            }
+            if (params.width){
+                $('#' + modalDialog.id + ' .modal-dialog').css('width', params.width);                        
+            }
+
+            modalDialog.changeBody(data);
+
+            modalDialog.showModal();
+
+            $('#' + modalDialog.id).on('hidden.bs.modal', function (e) {
+                modalDialog.changeBody('');
+            });                                    
+        });                                                
+    }
+
+    $('#modal-dialog').on('show.bs.modal', function (e) {        
+        var url = e.relatedTarget.value;
+        if (url){
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                   $('#modal-content').html(data);
+                })
+                .fail(function () {
+                    alert("Ошибка открытия формы.");
+                }); 
+        }
+    })    
+
+
+    //удаление по классу
+    $('.this-delete').on('click', function(e) {
+        var url = e.currentTarget.value;
+        if (url){
+            if (confirm('Удалить запись?')){
+                var dialog = bootbox.dialog({
+                    message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                    closeButton: false
+                });
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                })
+                    .done(function (data) {
+                        if (data == 'ok'){
+                            bootbox.alert("Ок!");
+                            window.location.reload();
+                        } else {
+                            alert("Не удалось удалить!");
+                        }    
+                    })
+                    .fail(function (e) {
+                        alert("Не удалось удалить.");
+
+                    });
+            }        
+        }        
+    })    
+
+    /*
+    *Удаление в bootstrap таблице
+    *str url - ссылка на удаление строки таблицы
+    */
+    function tableRowDelete(url, table = 'table') {
+        if (url){
+            if (confirm('Удалить запись?')){
+                var table = $('#'+table);
+                var dialog = bootbox.dialog({
+                    message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                    closeButton: false
+                });
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                })
+                    .done(function (data) {
+                        if (data == 'ok'){
+                            dialog.modal('hide');
+                            table.bootstrapTable('refresh');
+                        } else if (data == 'ok-reload'){
+                            window.location.reload();
+                        } else {
+                            alert("Не удалось удалить!");
+                        }    
+                    })
+                    .fail(function (e) {
+                        alert("Не удалось удалить.");
+
+                    });
+            }        
+        }        
+    }   
+
+    $('.refresh-button').on('click', function(e) {
+        var url = e.currentTarget.value;
+
+        if (url){
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: false
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                    dialog.modal('hide');
+                    if (data == 'ok'){
+                        bootbox.alert("Ок!");
+                        window.location.reload();
+                    }    
+                })
+                .fail(function () {
+                    dialog.modal('hide');
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })    
+
+    $('.refresh-table-button').on('click', function(e) {
+        var url = e.currentTarget.value;
+        if (url){
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: false
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (obj) {
+                    dialog.modal('hide');
+//                            var data = jQuery.parseJSON(obj);
+                    data = obj;
+                    if (data.result == 'ok'){
+                        //bootbox.alert("Ок!");
+                        $('#table').bootstrapTable('refresh');
+                    } else if (data.result == 'ok-reload'){
+                        //bootbox.alert("Ок!");
+                        window.location.reload();
+                    } else {
+                        dialog = bootbox.dialog({
+                            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>'+data.message+'</p>',
+                            closeButton: true
+                        });
+                    }    
+                })
+                .fail(function () {
+                    dialog.modal('hide');
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    })    
+
+    //форматирование числа
+    numberFormat = function(value){
+        var res = parseFloat(value).toFixed(2);
+        res = res.replace('.',',');
+        return res.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1&nbsp;")
+    }
+
+    /**
+    * Объект или массив в html
+     * @param Object|Array obj
+     * @returns {String}
+     *              */
+    objectToHtml = function(obj){
+        var result = '<div>';
+        $.each( obj, function( key, value ) {
+            if (jQuery.isPlainObject(value) || jQuery.isArray(value)){
+                result = result + '<div>' + key + '</div>';
+                result = result + objectToHtml(value);
+            } else {
+                result = result + '<div><span>' + key + '</span>: <span>' + value + '</span></div>';
+            }    
+        });
+
+        result = result + '</div>';
+        return result;
+    }
+
+
+</script>        

@@ -11,10 +11,18 @@ $this->pageBreadcrumbs()->setItems([
   
 ?>
 
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <?= $this->escapeHtml('Заказ №'.$order->getId().' от '. date('d-m-Y H:i:s', strtotime($order->getDateCreated()))); ?>    
+          </div>
+        </div>        
+    </div>    
+</div>
 <h1>
     <?= $this->escapeHtml($order->getContact()->getName()); ?>
     <br/>
-    <?= $this->escapeHtml('Заказ №'.$order->getId().' от '. date('d-m-Y H:i:s', strtotime($order->getDateCreated()))); ?>    
 </h1>
 
 <table class="table table-striped">
