@@ -78,27 +78,26 @@ class OrderForm extends Form
                 'label' => 'Email',
             ],
         ]);
-        
-        $this->add([           
-            'type'  => 'text',
-            'name' => 'email',
-            'attributes' => [
-                'id' => 'email'
-            ],
-            'options' => [
-                'label' => 'Email',
-            ],
-        ]);
-        
+                
         // Добавляем поле "address"
         $this->add([           
-            'type'  => 'text',
+            'type'  => 'textarea',
             'name' => 'address',
             'attributes' => [
                 'id' => 'address'
             ],
             'options' => [
                 'label' => 'Адрес доставки',
+            ],
+        ]);
+        
+        $this->add([
+            'type' => 'csrf',
+            'name' => 'csrf',
+            'options' => [
+                'csrf_options' => [
+                'timeout' => 600
+                ]
             ],
         ]);
         

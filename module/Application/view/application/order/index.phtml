@@ -95,6 +95,15 @@ $this->pageBreadcrumbs()->setItems([
 
     $(function () {        
         $('#officeSelect').val("<?= $currentUser->getOffice()->getId()?>");
+        
+        $(document).on('click', '.order-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'orderModal',
+                url: url,
+                width: $(window).width()-50
+            });
+        });  
 
         $('#ok').click(function () {
             refreshTable();

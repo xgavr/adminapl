@@ -13,6 +13,7 @@ use Laminas\View\Model\JsonModel;
 use Application\Entity\Order;
 use User\Entity\User;
 use Company\Entity\Office;
+use Application\Form\OrderForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -105,55 +106,53 @@ class OrderController extends AbstractActionController
         ]);                  
     }
     
-    public function addAction() 
-    {     
-        // Создаем форму.
+    public function editFormAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        $order = null;
+        
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }    
+        
         $form = new OrderForm($this->entityManager);
         
-        // Проверяем, является ли пост POST-запросом.
         if ($this->getRequest()->isPost()) {
             
-            // Получаем POST-данные.
-            $data = $this->params()->fromPost();
-            
-            // Заполняем форму данными.
+            $data = $this->params()->fromPost();            
             $form->setData($data);
-            if ($form->isValid()) {
-                                
-                // Получаем валидированные данные формы.
-                $data = $form->getData();
-                
-                // Используем менеджер order для добавления нового good в базу данных.                
-                $this->orderManager->addNewOrder($data);
-                
-                // Перенаправляем пользователя на страницу "order".
-                return $this->redirect()->toRoute('order', []);
-            }
-        }
-        
-        // Визуализируем шаблон представления.
-        return new ViewModel([
-            'form' => $form
-        ]);
-    }   
-        
-    public function deleteAction()
-    {
-        $orderId = $this->params()->fromRoute('id', -1);
-        
-        $order = $this->entityManager->getRepository(Order::class)
-                ->findOneById($orderId);        
-        if ($order == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
-        }        
-        
-        $this->orderManager->removeOrder($order);
-        
-        // Перенаправляем пользователя на страницу "order".
-        return $this->redirect()->toRoute('order', []);
-    }    
 
+            if ($form->isValid()) {
+                
+                if ($order){
+                    $this->orderManager->updateOrder($order, $data);
+                } else {
+                    $order = $this->orderManager->addNewOrder($data);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+//                var_dump($form->getMessages());
+            }
+        } else {
+            if ($order){
+                $data = $order->toArray();
+//                var_dump($data);
+                $form->setData($data);
+            }    
+        }
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'order' => $order,
+        ]);        
+    }        
+    
     public function viewAction() 
     {       
         $orderId = (int)$this->params()->fromRoute('id', -1);

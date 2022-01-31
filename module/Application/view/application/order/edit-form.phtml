@@ -1,0 +1,301 @@
+<?php
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('phone')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('email')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('address')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'order-submit']);
+
+$form->prepare();
+
+$docName = 'Новый';
+if ($order){
+    $docName = '№ '.$order->getId().' от  '.date('d.m.Y', strtotime($order->getDateCreated()));
+}
+
+?>
+
+
+
+            
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="orderModalLabel">Заказ <?= $docName?></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('phone')); ?>
+                <?= $this->formElement($form->get('phone')); ?>
+                <?= $this->formElementErrors($form->get('phone')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('email')); ?>
+                <?= $this->formElement($form->get('email')); ?>
+                <?= $this->formElementErrors($form->get('email')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('address')); ?>
+                <?= $this->formElement($form->get('address')); ?>
+                <?= $this->formElementErrors($form->get('address')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2 text-right">
+            <h1 class="display-4" id="orderQuantity"></h1>
+        </div>    
+        <div class="col-xs-1 text-right">
+            <h1 class="display-4" id="orderAmount"><?= ($order) ? round($order->getTotal(), 2):"" ?></h1>                        
+        </div>    
+    </div>    
+    <div class="row">
+    </div>        
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="ordergoodtoolbar">
+                <div class="form-inline" role="form">
+                    <button type="button" class="btn btn-default order-good-modal-show" modal-url="/order/good-edit-form">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+            <table id="ordergoodtable" 
+                data-toggle="ordergoodtable" 
+                data-url="/order/good-content/<?= ($order) ? $order->getId():"" ?>"
+                data-side-pagination="client"
+                data-pagination="true"
+                data-page-size = "5"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#ordergoodtoolbar"
+                data-show-refresh="true"
+                data-show-toggle="true"
+                data-query-params="ordergoodQueryParams"
+                data-response-handler="ordergoodResponseHandler"
+                data-unique-id = "rowNo"
+                >
+                <thead>
+                    <tr>
+                         <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                         <th data-field="good.code" data-type="numeric">Артикул</th>
+                         <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                         <th data-field="good.name" data-type="numeric">Наименование</th>
+                         <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                         <th data-field='quantity' data-align="right">Количество</th>
+                         <th data-field='amount' data-align="right">Сумма</th>
+                         <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">
+        </div>                                            
+    </div>        
+
+
+
+
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>
+                
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="order-submit">Сохранить</button>
+</div>
+            
+            <?= $this->form()->closeTag(); ?>
+            
+<script>
+    function submitForm(){
+        var data = serializeForm('#order-form');
+        data.orderGood = getFormatedOrderGood();
+        $.ajax({
+            type: 'POST',
+            url: '/order/edit-form/<?= ($order) ? $order->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#orderModal').modal('hide');
+                    $('#table').bootstrapTable('refresh');
+                } else {
+                    $('#orderModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    function getFormatedOrderGood(){
+        var data = $('#ordergoodtable').bootstrapTable('getData');
+        var result = [];
+        $.each( data, function( index, row ) {
+            var newRow = {
+                good_id: row.good.id,
+                quantity: row.quantity,
+                amount: row.amount,
+                countryName: row.country.name || '',
+                unitName: row.unit.name || '',
+                unitCode: row.unit.code || '',
+                ntd: row.ntd.ntd || ""
+            };
+            result.push(newRow);
+        });   
+        return result;
+    }
+    
+    function contractList(){
+        //alert(11);
+        $.getJSON( '/contracts/select/?company='+$('#company').val()+'&legal='+$('#legal').val(), function( data ) {
+            $('#contract').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#contract').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    }
+    
+    $('#office').on('change', function(){
+        $.getJSON( '/offices/legals/'+$('#office').val(), function( data ) {
+            $('#company').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#company').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+            contractList();
+        });    
+    });
+    
+    $('#company').on('change', function(){
+        contractList();
+    });    
+    
+    $('#legal').on('change', function(){
+        contractList();
+    });
+    
+    function orderUpdateTotal(){
+        var data = $('#ordergoodtable').bootstrapTable('getData');
+        var amount = 0; var quantity = 0;
+        $.each(data, function( index, value ) {
+            amount += Math.round(value.amount*100)/100;
+            quantity += Math.round(value.quantity*100)/100; 
+        });
+        $('#orderAmount').html(Math.round(amount*100)/100);
+        $('#orderQuantity').html(Math.round(quantity*100)/100);
+    }
+    
+    //удаление строки из таблицы
+    function removeTableRowByUniqueId(index){
+        $('#ordergoodtable').bootstrapTable('removeByUniqueId', index);
+        orderUpdateTotal();
+    }
+    
+    $( document ).ready(function() {
+        
+        $('#ordergoodtable').bootstrapTable({
+            onLoadSuccess: function(res){
+                orderUpdateTotal();
+            }            
+        }); 
+        
+        var forms = $('#order-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('order-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });    
+    
+    function orderGoodRefreshTable(){
+        $('#ordergoodtable').bootstrapTable('refresh');
+    }
+    
+    function ordergoodQueryParams(params) {
+        $('#ordergoodtoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#ordergoodtable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#ordergoodtable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function pgActiveFormatter(value, row){
+        var url = '/order/good-edit-form/';
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs order-good-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' unique-id="'+value+'"';
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs table-row-remove"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function pgPriceFormatter(value, row){
+        return Math.round(value*100/row.quantity)/100;
+    }        
+    
+    function ordergoodResponseHandler(res) {
+        return res;
+    }     
+</script>
