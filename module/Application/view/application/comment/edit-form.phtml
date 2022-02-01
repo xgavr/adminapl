@@ -50,7 +50,9 @@ if ($comment){
 
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-    <button type="button" class="btn btn-primary" id="comment-submit">Сохранить</button>
+    <?php if ($allowSave):?>
+        <button type="button" class="btn btn-primary" id="comment-submit">Сохранить</button>
+    <?php endif;?>    
 </div>
 
 <?= $this->form()->closeTag(); ?>
