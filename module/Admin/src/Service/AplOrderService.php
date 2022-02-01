@@ -841,7 +841,9 @@ class AplOrderService {
                 $comment = $this->commentManager->addOrderComment($order, $data);
             } elseif ($client) {
                 $comment = $this->commentManager->addClientComment($client, $data);                            
-            }    
+            } else {
+                return false;
+            }   
         }
 
         return true;
@@ -892,11 +894,11 @@ class AplOrderService {
      * Загрузить comments
      * @return 
      */
-    public function uploadComments()
+    public function unloadComment()
     {
         set_time_limit(1800);
         $startTime = time();
-        $url = $this->aplApi().'get-comments?api='.$this->aplApiKey();
+        $url = $this->aplApi().'unload-comment?api='.$this->aplApiKey();
         
         $data = file_get_contents($url);
         if ($data){
@@ -905,22 +907,38 @@ class AplOrderService {
             $data = [];
         }
         
-        $items = $data['items'];
-        if (count($items)){
-            foreach ($items as $item){
-                $row = (array) $item;
-//                var_dump($data); exit;
-                if ($this->getComment($row)){
-                    $this->unloadedComment($row['id']);
-                }    
-                usleep(100);
-                if (time() > $startTime + 1740){
-                    return;
-                }
-            }    
-        }
-        
+        if ($this->getComment($data)){
+            $this->unloadedComment($data['id']);
+        }    
+        usleep(100);
+        if (time() > $startTime + 1740){
+            return;
+        }        
         return;
+    }    
+    
+    /**
+     * Получить комментарии
+     */
+    public function uploadComments()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        $start = 0;
+        
+        while (true){
+            if ($this->unloadComment($start)) {
+                usleep(100);
+                if (time() > $startTime + 840){
+                    break;
+                }
+            } else {
+                break;
+            }
+            $start++;
+        }    
+        return;        
     }    
     
 }
