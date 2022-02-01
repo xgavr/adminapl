@@ -1,0 +1,83 @@
+<?php
+
+$form = $this->form;
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    'style' => 'width: 568px; height: 250px',
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'comment-submit']);
+
+$form->prepare();
+
+$allowSave = false;
+if (!$comment){
+    $allowSave = true;
+    $headerText = ($order) ? 'заказу '.$order->getId():'клиенту '.$client->getName();
+}
+if ($comment){
+    if ($comment->getUser()){
+        if ($comment->getUser()->getId() === $currentUser->getId()){
+            $allowSave = true;
+        }
+    }
+    $headerText = ($comment->getOrder()) ? 'заказу '.$comment->getOrder()->getId():'клиенту '.$comment->getClient()->getName();
+}
+?>
+
+            
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title">Комментарий к <?= $headerText?></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="input-group">
+                <?= $this->formElement($form->get('comment')); ?>
+                <?= $this->formElementErrors($form->get('comment')); ?>                  
+            </div>    
+        </div>        
+    </div>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="comment-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    $( document ).ready(function() {
+        $('#comment').focus();
+    });
+    
+    $('#comment-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/comments/edit-form/<?= $comment ?  $comment->getId():''?>?client=<?= ($client ? $client->getId():'') ?>&order=<?= ($order ? $order->getId():'') ?>',
+            data: $('#comment-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#modal-dialog').modal('hide');
+                    window.location.reload();
+                } else {
+                    $('#modal-content').html(data);
+                }    
+            })
+            .fail(function (e) {
+                console.log(e);
+                alert("Ошибка при открытии формы.");
+
+            });
+    });    
+</script>

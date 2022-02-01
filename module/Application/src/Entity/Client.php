@@ -98,12 +98,19 @@ class Client {
     private $manager;
     
     /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Comment", mappedBy="client")
+    * @ORM\JoinColumn(name="id", referencedColumnName="client_id")
+     */
+    private $comments;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->contacts = new ArrayCollection();
         $this->cart = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
     
     public function getId() 
@@ -344,6 +351,23 @@ class Client {
     public function addCart($cart)
     {
         $this->cart[] = $cart;
+    }
+        
+    /**
+     * Returns the array of comment assigned to this.
+     * @return array
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+        
+    /**
+     * Assigns.
+     */
+    public function addComment($comment)
+    {
+        $this->comments[] = $comment;
     }
         
     /*

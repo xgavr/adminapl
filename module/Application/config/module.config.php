@@ -49,6 +49,20 @@ return [
                     ],
                 ],
             ],        
+            'comments' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/comments[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\CommentController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'courier' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -460,6 +474,7 @@ return [
         'factories' => [
             Controller\CarController::class => Controller\Factory\CarControllerFactory::class,
             Controller\ClientController::class => Controller\Factory\ClientControllerFactory::class,
+            Controller\CommentController::class => Controller\Factory\CommentControllerFactory::class,
             Controller\CourierController::class => Controller\Factory\CourierControllerFactory::class,
             Controller\ContactCarController::class => Controller\Factory\ContactCarControllerFactory::class,
             Controller\ContactController::class => Controller\Factory\ContactControllerFactory::class,
@@ -495,6 +510,7 @@ return [
             Service\AssemblyManager::class => Service\Factory\AssemblyManagerFactory::class,
             Service\CarManager::class => Service\Factory\CarManagerFactory::class,
             Service\ClientManager::class => Service\Factory\ClientManagerFactory::class,
+            Service\CommentManager::class => Service\Factory\CommentManagerFactory::class,
             Service\ContactCarManager::class => Service\Factory\ContactCarManagerFactory::class,
             Service\ContactManager::class => Service\Factory\ContactManagerFactory::class,
             Service\CourierManager::class => Service\Factory\CourierManagerFactory::class,
@@ -539,6 +555,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\ClientController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\CommentController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
@@ -590,7 +610,7 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => ['downloadYml'], 'allow' => '*'],
                 ['actions' => ['aplToZzap', 'content', 'delete', 'editForm', 'index', 
-                    'regionShipping', 'unloadMarket', 'ymlLinks'], 'allow' => '@'],
+                    'regionShipping', 'unloadMarket', 'ymlLinks', 'downloadPrice'], 'allow' => '@'],
 //                ['actions' => '*', 'allow' => '@'],
 //                ['actions' => ['downloadYml'], 'allow' => '*'],
             ],

@@ -23,7 +23,7 @@ $legalContact = $client->getLegalContact();
     <?= $this->escapeHtml($client->getName()); ?>    
 </h1>
 
-<div class="panel panel-info">
+<div class="panel panel-success">
     <div class="panel-heading">Контакты</div>
     <div class="panel-body">
         <div class="col-md-4">
@@ -119,7 +119,7 @@ $legalContact = $client->getLegalContact();
         </div>
     </div>
 </div>
-<div class="panel panel-info">
+<div class="panel panel-success">
     <div class="panel-heading">
         <div class="pull-left">Машины
         </div>
@@ -191,8 +191,7 @@ $legalContact = $client->getLegalContact();
             <?php endif; ?>    
         <?php endforeach;?>
     </div>
-</div>    
-<div class="panel panel-info">
+<div class="panel panel-success">
     <div class="panel-heading">
         <div class="pull-left">Заказы
         </div>
@@ -236,61 +235,6 @@ $legalContact = $client->getLegalContact();
                 </table>    
             <?php endif; ?>    
         <?php endforeach;?>
-    </div>
-</div>
-
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <div class="pull-left">Комментарии
-        </div>
-        <div class="pull-right">
-            <button value="/comments/edit-form/?client=<?= $client->getId()?>" class="btn btn-default btn-xs"
-                    data-toggle="modal" data-target="#modal-dialog" title="Добавить комментарий">
-                <span class="glyphicon glyphicon-plus" ></span>
-            </button>                                        
-        </div>
-        <div class="clearfix"></div>
-    </div>    
-    <div class="panel-body">
-        <table class="table table-striped">
-            <tr>
-                 <th>Id</th>
-                 <th>AplId</th>
-                 <th>Дата</th>
-                 <th>Заказ</th>
-                 <th>Комментарий</th>
-                 <th>Автор</th>
-                 <th></th>
-             </tr>
-            <?php foreach ($client->getComments() as $comment): ?>
-                <tr>
-                    <td width="50" valign="top">
-                        <?= $comment->getId(); ?>
-                    </td>
-                    <td width="50" valign="top">
-                        <?= $comment->getAplId(); ?>
-                    </td>
-                    <td width="150" valign="top">
-                        <?= $this->escapeHtml($comment->getDateCreated()); ?>
-                    </td>
-                    <td width="100" valign="top">
-                        <?= $comment->getOrderLink(); ?>
-                    </td>
-                    <td>
-                        <?= $this->escapeHtml($comment->getComment()); ?>
-                    </td>
-                    <td width="100" valign="top">
-                        <?= $comment->getUserName(); ?>
-                    </td>
-                    <td width="50" valign="top">
-                        <button value="/comments/edit-form/<?= $comment->getId()?>?client=<?= $client->getId()?>&order=<?= ($comment->getOrder()) ? $comment->getOrder()->getId():''?>" class="btn btn-default btn-xs"
-                                data-toggle="modal" data-target="#modal-dialog" title="Изменить комментарий">
-                            <span class="glyphicon glyphicon-edit" ></span>
-                        </button>                                        
-                    </td>
-                </tr>                        
-            <?php endforeach; ?>        
-        </table>    
     </div>
 </div>
 

@@ -20,6 +20,7 @@ use Application\Entity\Client as AplClient;
 use Application\Entity\Make;
 use Application\Entity\Model;
 use Application\Entity\Car;
+use Application\Entity\Comment;
 use User\Entity\User;
 use Application\Entity\Order;
 use Laminas\Validator\Date;
@@ -74,10 +75,16 @@ class AplOrderService {
      */
     private $legalManager;
 
+    /**
+     * Comment manager
+     * @var \Application\Service\CommentManager
+     */
+    private $commentManager;
+
     
     public function __construct($entityManager, $adminManager, $aplSevice,
             $aplDocService, $orderManager, $contactCarManager,
-            $legalManager)
+            $legalManager, $commentManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
@@ -86,6 +93,7 @@ class AplOrderService {
         $this->orderManager = $orderManager;
         $this->contactCarManager = $contactCarManager;
         $this->legalManager = $legalManager;
+        $this->commentManager = $commentManager;
     }
     
     private function aplApi() 
@@ -802,4 +810,117 @@ class AplOrderService {
         return;
     }
 
+    /*
+     * Получить comment
+     * @param array $row;
+     */
+    public function getComment($row)
+    {
+        $comment = $this->entityManager->getRepository(Comment::class)
+                ->findOneBy(['aplId' => $row['id']]);
+        $order = $client = null;
+        if ($row['type'] == 'Orders'){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->findOneByAplId($row['parent']);
+        }    
+        if ($row['type'] == 'Users'){
+            $client = $this->entityManager->getRepository(AplClient::class)
+                    ->findOneByAplId($row['parent']);
+        }    
+        
+        $data = [
+            'aplId' => $row['id'],
+            'comment' => $row['comment'],
+            'dateCreated' => $row['created'],
+        ];    
+
+        if ($comment){                    
+            $this->commentManager->updateComment($comment, $data);                    
+        } else {                            
+            if ($order){
+                $comment = $this->commentManager->addOrderComment($order, $data);
+            } elseif ($client) {
+                $comment = $this->commentManager->addClientComment($client, $data);                            
+            }    
+        }
+
+        return true;
+    }
+    
+        /**
+     * Обновить статус comment
+     * @param integer $commentId
+     * @return boolean
+     */
+    public function unloadedComment($commentId)
+    {
+        $result = true;
+        if (is_numeric($commentId)){
+            $url = $this->aplApi().'aa-comment?api='.$this->aplApiKey();
+
+            $post = [
+                'commentId' => $commentId,
+            ];
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            $result = $ok = FALSE;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $result = $ok = TRUE;
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
+                $ok = true;
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+            
+            if ($ok){
+            }
+
+            unset($post);
+        }    
+        return $result;        
+    }
+
+    /**
+     * Загрузить comments
+     * @return 
+     */
+    public function uploadComments()
+    {
+        set_time_limit(1800);
+        $startTime = time();
+        $url = $this->aplApi().'get-comments?api='.$this->aplApiKey();
+        
+        $data = file_get_contents($url);
+        if ($data){
+            $data = (array) Json::decode($data);
+        } else {
+            $data = [];
+        }
+        
+        $items = $data['items'];
+        if (count($items)){
+            foreach ($items as $item){
+                $row = (array) $item;
+//                var_dump($data); exit;
+                if ($this->getComment($row)){
+                    $this->unloadedComment($row['id']);
+                }    
+                usleep(100);
+                if (time() > $startTime + 1740){
+                    return;
+                }
+            }    
+        }
+        
+        return;
+    }    
+    
 }
