@@ -825,7 +825,7 @@ class AplOrderService {
         } else {
             return false;
         }
-        var_dump($row); exit;
+//        var_dump($row); exit;
         $comment = $this->entityManager->getRepository(Comment::class)
                 ->findOneBy(['aplId' => $row['id']]);
         $order = $client = null;
