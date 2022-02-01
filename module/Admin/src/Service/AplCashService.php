@@ -327,7 +327,7 @@ class AplCashService {
             if ($userRefill){
                 $dataCash['userRefill'] = $userRefill->getId();
             } else {
-                $dataCash['userRefill'] = $dataCash['user'];
+                $dataCash['userRefill'] = (empty($dataCash['user'])) ? null:$dataCash['user'];
             }   
         }    
         if ($data['type'] == 'Costs'){
