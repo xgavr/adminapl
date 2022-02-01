@@ -57,7 +57,7 @@ class CommentManager
         $comment = new Comment();
         $comment->setAplId((empty($data['aplId'])) ? null:$data['aplId']);
         $comment->setClient($order->getContact()->getClient());
-        $comment->setComment(empty($data['comment'] ? null:$data['comment']));
+        $comment->setComment(empty($data['comment']) ? null:$data['comment']);
         $comment->setDateCreated(empty($data['dateCreated']) ? date('Y-m-d H:i:s'):$data['dateCreated']);
         $comment->setOrder($order);
         $comment->setUser(empty($data['user']) ? $this->currentUser():$data['user']);
