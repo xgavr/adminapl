@@ -918,7 +918,7 @@ class AplOrderService {
         if (time() > $startTime + 1740){
             return;
         }        
-        return;
+        return true;
     }    
     
     /**
