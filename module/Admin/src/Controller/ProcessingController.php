@@ -1380,6 +1380,25 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Выгрузка комментариев из апл
+     * 
+     * @return JsonModel
+     */
+    public function updateAplCommentAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['order'] == 1){
+            $this->aplOrderService->uploadComments();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
      * Выгрузка платежей из апл
      * 
      * @return JsonModel

@@ -908,17 +908,11 @@ class AplOrderService {
      */
     public function unloadComment()
     {
-        set_time_limit(1800);
-        $startTime = time();
-        
         if ($comment = $this->getComment()){
             $this->unloadedComment($comment->getAplId());
+            return true;
         }    
-        usleep(100);
-        if (time() > $startTime + 1740){
-            return;
-        }        
-        return true;
+        return false;
     }    
     
     /**
