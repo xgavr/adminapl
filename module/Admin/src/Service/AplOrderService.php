@@ -908,7 +908,8 @@ class AplOrderService {
      */
     public function unloadComment()
     {
-        if ($comment = $this->getComment()){
+        $comment = $this->getComment();
+        if ($comment){
             $this->unloadedComment($comment->getAplId());
             return true;
         }    
@@ -926,7 +927,7 @@ class AplOrderService {
         $start = 0;
         
         while (true){
-            if ($this->unloadComment($start)) {
+            if ($this->unloadComment()) {
                 usleep(100);
                 if (time() > $startTime + 840){
                     break;
