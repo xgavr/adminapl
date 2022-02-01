@@ -854,11 +854,11 @@ class AplOrderService {
             } elseif ($client) {
                 $comment = $this->commentManager->addClientComment($client, $data);                            
             } else {
-                return false;
+                //return false;
             }   
         }
 
-        return $comment;
+        return $row['id'];
     }
     
         /**
@@ -908,9 +908,9 @@ class AplOrderService {
      */
     public function unloadComment()
     {
-        $comment = $this->getComment();
-        if ($comment){
-            $this->unloadedComment($comment->getAplId());
+        $commentId = $this->getComment();
+        if (is_numeric($commentId)){
+            $this->unloadedComment($commentId);
             return true;
         }    
         return false;
