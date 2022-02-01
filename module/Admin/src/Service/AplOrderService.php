@@ -24,6 +24,7 @@ use Application\Entity\Comment;
 use User\Entity\User;
 use Application\Entity\Order;
 use Laminas\Validator\Date;
+use Laminas\Json\Dcoder;
 
 
 /**
@@ -812,10 +813,19 @@ class AplOrderService {
 
     /*
      * Получить comment
-     * @param array $row;
+     * 
      */
-    public function getComment($row)
+    public function getComment()
     {
+        $url = $this->aplApi().'unload-comment?api='.$this->aplApiKey();
+        
+        $data = file_get_contents($url);
+        if ($data){
+            $row = json_decode($data, true);
+        } else {
+            return false;
+        }
+//        var_dump($row); exit;
         $comment = $this->entityManager->getRepository(Comment::class)
                 ->findOneBy(['aplId' => $row['id']]);
         $order = $client = null;
@@ -827,11 +837,13 @@ class AplOrderService {
             $client = $this->entityManager->getRepository(AplClient::class)
                     ->findOneByAplId($row['parent']);
         }    
-        
+        $user = $this->entityManager->getRepository(User::class)
+                ->find($row['user']);
         $data = [
             'aplId' => $row['id'],
             'comment' => $row['comment'],
             'dateCreated' => $row['created'],
+            'user' => $user,
         ];    
 
         if ($comment){                    
@@ -846,7 +858,7 @@ class AplOrderService {
             }   
         }
 
-        return true;
+        return $comment;
     }
     
         /**
@@ -898,17 +910,9 @@ class AplOrderService {
     {
         set_time_limit(1800);
         $startTime = time();
-        $url = $this->aplApi().'unload-comment?api='.$this->aplApiKey();
         
-        $data = file_get_contents($url);
-        if ($data){
-            $data = (array) Json::decode($data);
-        } else {
-            $data = [];
-        }
-        
-        if ($this->getComment($data)){
-            $this->unloadedComment($data['id']);
+        if ($comment = $this->getComment()){
+            $this->unloadedComment($comment->getAplId());
         }    
         usleep(100);
         if (time() > $startTime + 1740){

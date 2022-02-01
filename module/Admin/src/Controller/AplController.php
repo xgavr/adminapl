@@ -740,6 +740,24 @@ class AplController extends AbstractActionController
         ]);
     }    
     
+    public function unloadCommentAction()
+    {                
+        $this->aplOrderService->unloadComment();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+    
+    public function unloadCommentsAction()
+    {                
+        $this->aplOrderService->uploadComments();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+    
     public function sendFillVolumesAction()
     {
         $carId = $this->params()->fromRoute('id', -1);
