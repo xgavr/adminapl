@@ -28,9 +28,11 @@ class CommentRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c, u, identity(c.client) as clientId, identity(c.order) as orderId')
+        $queryBuilder->select('c, client, o, u')
             ->from(Comment::class, 'c') 
             ->leftJoin('c.user', 'u')    
+            ->leftJoin('c.client', 'client')
+            ->leftJoin('c.order', 'o')    
             ->addOrderBy('c.id', 'DESC')    
                 ;
         

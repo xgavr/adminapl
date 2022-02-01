@@ -41,11 +41,11 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="id" data-type="numeric" data-width="100">ID</th>
                      <th data-field="aplId" data-type="numeric" data-width="100">AplId</th>
                      <th data-field="dateCreated" data-width="100">Дата</th>
-                     <th data-field="orderId" data-formatter="orderFormatter" data-width="100">Заказ</th>
+                     <th data-field="order.id" data-formatter="orderFormatter" data-width="100">Заказ</th>
                      <th data-field="comment" data-sortable="true">Комментарий</th>
-                     <th data-field="clientId" data-formatter="clientFormatter" data-width="100">Клиент</th>
+                     <th data-field="client.id" data-formatter="clientFormatter" data-width="100">Клиент</th>
                      <th data-field="user.fullName" data-width="100">Автор</th>
-                     <th data-field="" data-formatter="activeFormatter" data-width="50"></th>
+                     <th data-field="id" data-formatter="activeFormatter" data-width="50"></th>
                  </tr>                
             </thead>
         </table>
@@ -92,22 +92,26 @@ $this->pageBreadcrumbs()->setItems([
         ].join(''); 
     }    
     
-    function clientFormatter(value){
+    function clientFormatter(value, row){
         if (!value){
             value = '---';
         }
         return [
-            '<a href="/client/view/' + value + '" target="_blank">' + value + '</a>'
+            '<a href="/client/view/' + value + '" target="_blank">' + row.client.name + '</a>'
         ].join(''); 
     }    
     
     function activeFormatter(value, row){
-        var url = '/client/delete-form/'+row.id;
+        var orderId = null;
+        if (row.order){
+            orderId = row.order.id;
+        }
+        var url = '/comments/edit-form/'+value+'?client='+row.client.id+'&order='+orderId;
         btn = '<button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' title="Изменить"'; 
+        btn += ' value="'+url+'"';
+        btn += ' class="btn btn-default btn-xs"';
+        btn += ' data-toggle="modal" data-target="#modal-dialog"'; 
+        btn += ' title="Изменить">'; 
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
