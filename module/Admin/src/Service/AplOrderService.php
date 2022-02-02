@@ -820,7 +820,7 @@ class AplOrderService {
         $url = $this->aplApi().'unload-comment?api='.$this->aplApiKey();
 
         $post = [
-            'start' => $start,
+            'start' => 0,
         ];
         
         $client = new Client();
