@@ -1388,7 +1388,7 @@ class ProcessingController extends AbstractActionController
     {
         
         $settings = $this->adminManager->getAplExchangeSettings();
-
+        var_dump(1); exit;
         if ($settings['order'] == 1){
             $this->aplOrderService->uploadComments();
         }    
