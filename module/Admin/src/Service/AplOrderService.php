@@ -838,7 +838,7 @@ class AplOrderService {
                     ->findOneByAplId($row['parent']);
         }    
         $user = $this->entityManager->getRepository(User::class)
-                ->find($row['user']);
+                ->findByAplId($row['user']);
         $data = [
             'aplId' => $row['id'],
             'comment' => $row['comment'],
