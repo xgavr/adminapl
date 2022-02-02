@@ -1384,7 +1384,7 @@ class ProcessingController extends AbstractActionController
      * 
      * @return JsonModel
      */
-    public function updateAplCommentAction()
+    public function commentsAction()
     {
         
         $settings = $this->adminManager->getAplExchangeSettings();
