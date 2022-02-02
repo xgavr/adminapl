@@ -819,30 +819,43 @@ class AplOrderService {
     {
         $url = $this->aplApi().'unload-comment?api='.$this->aplApiKey();
         
-        $data = file_get_contents($url);
-        if ($data){
-            $row = json_decode($data, true);
-        } else {
+        $client = new Client();
+        $client->setUri($url);
+        $client->setMethod('POST');
+        $client->setParameterPost($post);
+        $client->setOptions(['timeout' => 120]);
+        $response = $client->send();
+        $body = $response->getBody();
+
+//        var_dump($body); exit;
+        try{
+            $result = json_decode($body, true);
+        } catch (\Laminas\Json\Exception\RuntimeException $ex) {
+//            var_dump($ex->getMessage());
+//            var_dump($body);
             return false;
-        }
-//        var_dump($row); exit;
-        $comment = $this->entityManager->getRepository(Comment::class)
-                ->findOneBy(['aplId' => $row['id']]);
-        $order = $client = null;
-        if ($row['type'] == 'Orders'){
-            $order = $this->entityManager->getRepository(Order::class)
-                    ->findOneByAplId($row['parent']);
+        } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+            return true;
         }    
-        if ($row['type'] == 'Users'){
+        
+//        var_dump($result); exit;
+        $comment = $this->entityManager->getRepository(Comment::class)
+                ->findOneBy(['aplId' => $result['id']]);
+        $order = $client = null;
+        if ($result['type'] == 'Orders'){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->findOneByAplId($result['parent']);
+        }    
+        if ($result['type'] == 'Users'){
             $client = $this->entityManager->getRepository(AplClient::class)
-                    ->findOneByAplId($row['parent']);
+                    ->findOneByAplId($result['parent']);
         }    
         $user = $this->entityManager->getRepository(User::class)
-                ->findOneByAplId($row['user']);
+                ->findOneByAplId($result['user']);
         $data = [
-            'aplId' => $row['id'],
-            'comment' => $row['comment'],
-            'dateCreated' => $row['created'],
+            'aplId' => $result['id'],
+            'comment' => $result['comment'],
+            'dateCreated' => $result['created'],
             'user' => $user,
         ];    
 
@@ -858,7 +871,7 @@ class AplOrderService {
             }   
         }
 
-        return $row['id'];
+        return $result['id'];
     }
     
         /**
