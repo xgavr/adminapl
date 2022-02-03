@@ -178,6 +178,20 @@ class MarketForm extends Form
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'number',
+            'name' => 'extraMargin',
+            'attributes' => [
+                'id' => 'extraMargin',
+                'value' => 0,
+                'min' => 0,
+                'step' => 1,
+             ],
+            'options' => [
+                'label' => 'Наценка extra',
+            ],
+        ]);
+        
         $this->add([            
             'type'  => 'hidden',
             'name' => 'supplierSetting',

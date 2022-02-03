@@ -35,6 +35,10 @@ $form->get('imageCount')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('extraMargin')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('supplierSetting')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -227,6 +231,13 @@ $form->prepare();
                         </div>    
                         <div class="col-xs-2">                        
                             <div class="form-group">
+                                <?= $this->formLabel($form->get('extraMargin')); ?>
+                                <?= $this->formElement($form->get('extraMargin')); ?>
+                                <?= $this->formElementErrors($form->get('extraMargin')); ?>                  
+                            </div>
+                        </div>    
+                        <div class="col-xs-2">                        
+                            <div class="form-group">
                                 <?= $this->formLabel($form->get('tdSetting')); ?>
                                 <?= $this->formElement($form->get('tdSetting')); ?>
                                 <?= $this->formElementErrors($form->get('tdSetting')); ?>                  
@@ -241,13 +252,6 @@ $form->prepare();
                         </div>    
                         <div class="col-xs-2">                        
                             <div class="form-group">
-                                <?= $this->formLabel($form->get('supplier')); ?>
-                                <?= $this->formElement($form->get('supplier')); ?>
-                                <?= $this->formElementErrors($form->get('supplier')); ?>                  
-                            </div>
-                        </div>    
-                        <div class="col-xs-2">                        
-                            <div class="form-group">
                                 <?= $this->formLabel($form->get('producerSetting')); ?>
                                 <?= $this->formElement($form->get('producerSetting')); ?>
                                 <?= $this->formElementErrors($form->get('producerSetting')); ?>                  
@@ -255,6 +259,13 @@ $form->prepare();
                         </div>    
                     </div>        
                     <div class="row">
+                        <div class="col-xs-2">                        
+                            <div class="form-group">
+                                <?= $this->formLabel($form->get('supplier')); ?>
+                                <?= $this->formElement($form->get('supplier')); ?>
+                                <?= $this->formElementErrors($form->get('supplier')); ?>                  
+                            </div>
+                        </div>    
                         <div class="col-xs-2">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('groupSetting')); ?>
@@ -269,7 +280,7 @@ $form->prepare();
                                 <?= $this->formElementErrors($form->get('tokenGroupSetting')); ?>                  
                             </div>
                         </div>    
-                        <div class="col-xs-7">                        
+                        <div class="col-xs-5">                        
                             <div class="form-group">
                                 <?= $this->formLabel($form->get('shipping')); ?>
                                 <?= $this->formElement($form->get('shipping')); ?>

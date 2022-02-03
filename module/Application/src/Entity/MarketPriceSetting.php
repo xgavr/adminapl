@@ -121,6 +121,12 @@ class MarketPriceSetting {
     protected $imageCount;
 
     /**
+     * Количество картинок в оферте
+     * @ORM\Column(name="extra_margin")   
+     */
+    protected $extraMargin;
+
+    /**
      * Фильтр по поставщикам
      * @ORM\Column(name="supplier_setting")   
      */
@@ -297,6 +303,41 @@ class MarketPriceSetting {
     public function setImageCount($imageCount) 
     {
         $this->imageCount = $imageCount;
+    }     
+
+    public function getExtraMargin() 
+    {
+        return $this->extraMargin;
+    }
+
+    public function getExtraMarginView() 
+    {
+        if ($this->extraMargin > 0){
+            return ' + '.$this->extraMargin.'%';
+        }
+        if ($this->extraMargin < 0){
+            return ' - '.$this->extraMargin.'%';
+        }
+        return;
+    }
+    
+    /**
+     * Получить цену с дополнительной наценкой
+     * @param array $opts Колонки цен
+     * @return float
+     */
+    public static function getExtraPrice($opts)
+    {
+        $result = $opts[$this->pricecol];
+        if ($this->extraMargin){
+            $result += round($result*$this->extraMargin/100, -1);
+        }
+        return $result;
+    }
+
+    public function setExtraMargin($extraMargin) 
+    {
+        $this->extraMargin = $extraMargin;
     }     
 
     public function getSupplierSetting() 
@@ -1077,6 +1118,7 @@ class MarketPriceSetting {
             'nameSetting' => $this->getNameSetting(),
             'restSetting' => $this->getRestSetting(),
             'imageCount' => $this->getImageCount(),
+            'extraMargin' => $this->getExtraMargin(),
             'supplierSetting' => $this->getSupplierSetting(),
             'producerSetting' => $this->getProducerSetting(),
             'tokenGroupSetting' => $this->getTokenGroupSetting(),

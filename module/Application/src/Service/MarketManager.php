@@ -16,14 +16,12 @@ use Application\Entity\MarketPriceSetting;
 use Application\Entity\Rate;
 use Application\Entity\Images;
 use Application\Entity\Goods;
-use Application\Entity\Article;
 use Laminas\Filter\Compress;
 use Application\Entity\GenericGroup;
 use Application\Entity\SupplySetting;
 use Company\Entity\Office;
 use Application\Entity\Shipping;
 use Application\Entity\GoodAttributeValue;
-use Application\Entity\Attribute;
 use Application\Entity\GoodSupplier;
 
 use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
@@ -208,6 +206,7 @@ class MarketManager
         $market->setGoodSetting($data['goodSetting']);
         $market->setGroupSetting($data['groupSetting']);
         $market->setImageCount($data['imageCount']);
+        $market->setExtraMargin($data['extraMargin']);
         $market->setInfo($data['info']);
         $market->setMaxPrice($data['maxPrice']);
         $market->setMaxRowCount($data['maxRowCount']);
@@ -249,6 +248,7 @@ class MarketManager
         $market->setGoodSetting($data['goodSetting']);
         $market->setGroupSetting($data['groupSetting']);
         $market->setImageCount($data['imageCount']);
+        $market->setExtraMargin($data['extraMargin']);
         $market->setInfo($data['info']);
         $market->setMaxPrice($data['maxPrice']);
         $market->setMaxRowCount($data['maxRowCount']);
@@ -525,7 +525,7 @@ class MarketManager
                 $sheet->setCellValue("E$k", implode(';', $images));
             }
             $sheet->setCellValue("F$k", $rawprices['realrest']);
-            $sheet->setCellValue("G$k", $opts[$market->getPricecol()]);
+            $sheet->setCellValue("G$k", $market->getExtraPrice($opts));
     //                $sheet->setCellValue("G$k", $rawprice->getRealPrice());
 
             //$this->entityManager->detach($good);
@@ -619,7 +619,7 @@ class MarketManager
             $offer->setId($good['aplId'])
                 ->setAvailable(true)
                 ->setUrl(self::APL_BASE_URL.'/catalog/view/id/'.$good['aplId'].'?utm_source='.$market->getId().'&utm_term='.$good['aplId'])
-                ->setPrice($opts[$market->getPricecol()])
+                ->setPrice($market->getExtraPrice($opts))
                 ->setCurrencyId('RUR')
                 ->setCategoryId($categoryId)
                 ->setDelivery(true)

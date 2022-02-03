@@ -51,6 +51,7 @@ $this->pageBreadcrumbs()->setItems([
             </td>
             <td>
                 <?= $this->escapeHtml($market->getPricecolAsString()); ?>
+                <span><?= $this->escapeHtml($market->getExtraMarginView());?></span>
             </td>
             <td>
                 <?= $this->escapeHtml($market->getStatusAsString()); ?>
@@ -88,6 +89,7 @@ $this->pageBreadcrumbs()->setItems([
                     Расценки: <?= $this->escapeHtml($market->getRatesAsString());?>; 
                     Цена минимальная:  <?= $this->escapeHtml($market->getMinPrice());?>; 
                     Цена максимальная:  <?= $this->escapeHtml($market->getMaxPrice());?>; 
+                    Наценка дополнительная, %:  <?= $this->escapeHtml($market->getExtraMargin());?>; 
                     Строк в блоке:  <?= $this->escapeHtml($market->getMaxRowCount());?>; 
                     Количество блоков:  <?= $this->escapeHtml($market->getBlockRowCount());?>; 
                     Фильтр движений:  <?= $this->escapeHtml($market->getMovementLimit());?>;
