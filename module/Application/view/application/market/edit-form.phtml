@@ -337,7 +337,7 @@ $form->prepare();
         //console.log(data);
         $.ajax({
             type: 'POST',
-            url: '/market/edit-form/<?= ($market) ? $market->getId():"" ?>',
+            url: '/market/edit-form/<?= ($market) ? $market->getId():"" ?>?copy=<?= $copy?>',
             data: $.param(data)
         })
             .done(function (data) {

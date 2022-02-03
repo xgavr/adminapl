@@ -82,6 +82,7 @@ class MarketController extends AbstractActionController
     public function editFormAction()
     {
         $marketId = (int)$this->params()->fromRoute('id', -1);
+        $copy = (int) $this->params()->fromQuery('copy');
         
         $market = null;
         
@@ -140,7 +141,7 @@ class MarketController extends AbstractActionController
                 $data['supplier'] = $supplier; 
                 $data['shipping'] = $shipping; 
                 
-                if ($market){
+                if ($market && !$copy){
                     $this->marketManager->updateMarketSetting($market, $data);
                 } else {
                     $market = $this->marketManager->addMarketSetting($data);
@@ -163,6 +164,7 @@ class MarketController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'market' => $market,
+            'copy' => $copy,
         ]);        
     }    
     
