@@ -326,7 +326,7 @@ class MarketPriceSetting {
      * @param array $opts Колонки цен
      * @return float
      */
-    public static function getExtraPrice($opts)
+    public function getExtraPrice($opts)
     {
         $result = $opts[$this->pricecol];
         if ($this->extraMargin){
