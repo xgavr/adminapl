@@ -29,6 +29,7 @@ class MarketPriceSetting {
     const STATUS_RETIRED      = 2; // Retired pricelist.
    
     const FORMAT_YML       = 1; // Формат YML.
+    const FORMAT_YML_PP    = 3; // Формат YML для портала поставщиков.
     const FORMAT_XLSX      = 2; // Формат XLSX.
    
     const IMAGE_MATH       = 1; // Картирки точные
@@ -644,7 +645,7 @@ class MarketPriceSetting {
         if ($this->format == self::FORMAT_XLSX){
             return $this->filename.$this->id.'.xlsx';
         }
-        if ($this->format == self::FORMAT_YML){
+        if ($this->format == self::FORMAT_YML || $this->format == self::FORMAT_YML_PP){
             return $this->filename.$this->id.'.yml';
         }
         
@@ -662,7 +663,7 @@ class MarketPriceSetting {
         if ($this->format == self::FORMAT_XLSX){
             return $this->filename.$this->id.'_'.str_pad($block, 2, '0', STR_PAD_LEFT).'.xlsx';
         }
-        if ($this->format == self::FORMAT_YML){
+        if ($this->format == self::FORMAT_YML || $this->format == self::FORMAT_YML_PP){
             return $this->filename.$this->id.'_'.str_pad($block, 2, '0', STR_PAD_LEFT).'.yml';
         }
         
@@ -718,6 +719,7 @@ class MarketPriceSetting {
     {
         return [
             self::FORMAT_YML => 'YML',
+            self::FORMAT_YML_PP => 'YML (zakupki.mos.ru)',
             self::FORMAT_XLSX => 'XLSX'
         ];
     }    
