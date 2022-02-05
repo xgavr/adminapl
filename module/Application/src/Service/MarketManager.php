@@ -719,7 +719,7 @@ class MarketManager
             if ($market->getFormat() == MarketPriceSetting::FORMAT_XLSX){
                 $result = $this->marketXLSX($market, $offset, $blocks);
             }
-            if ($market->getFormat() == MarketPriceSetting::FORMAT_YML){
+            if ($market->getFormat() == MarketPriceSetting::FORMAT_YML && $market->getFormat() == MarketPriceSetting::FORMAT_YML_PP){
                 $result = $this->marketYML($market, $offset, $blocks);
             }
             $outRows += $result['outRows'];
