@@ -641,6 +641,17 @@ class MarketManager
                     ->addDeliveryOption($delivery) 
                     ;
             }    
+            
+            if ($market->getFormat() == MarketPriceSetting::FORMAT_YML_PP){
+                $offer->addCustomElement('isVisibleToStateCustomers', true)
+                        ->addCustomElement('isAvailableToIndividuals', true)
+                        ->addCustomElement('beginDate', date('Y-m-dTH:i:s'))
+                        ->addCustomElement('endDate', date('Y-m-dTH:i:s', strtotime('+7 day')))
+                        ->addCustomElement('vat', 'Без НДС')
+                        ->addCustomElement('model', 'автозапчасть')
+                        ->addCustomElement('oksm', '-')
+                        ;
+            }
 
             $offers[] = $offer;
 
