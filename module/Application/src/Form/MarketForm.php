@@ -361,7 +361,7 @@ class MarketForm extends Form
                 'value' => MarketPriceSetting::MAX_BLOCK_ROW_COUNT,
                 'min' => 0,
                 'max' => MarketPriceSetting::MAX_BLOCK_ROW_COUNT,
-                'step' => 1000,
+                'step' => 100,
             ],
             'options' => [
                 'label' => 'Строк в блоке',
