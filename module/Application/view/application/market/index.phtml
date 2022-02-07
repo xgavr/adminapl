@@ -107,7 +107,7 @@ $this->pageBreadcrumbs()->setItems([
             </td>
             <td>
                 <?php if ($market->getDateUnload()):?>
-                    <?php if ($market->getFormat() == MarketPriceSetting::FORMAT_YML):?>
+                    <?php if ($market->getFormat() == MarketPriceSetting::FORMAT_YML || $market->getFormat() == MarketPriceSetting::FORMAT_YML_PP):?>
                         <button class="btn btn-default btn-xs links-btn" value="<?= $market->getId()?>" 
                                 title="Ссылки для скачивания YML">
                             <span class="glyphicon glyphicon-link">Ссылки</span>
