@@ -648,6 +648,7 @@ class MarketManager
                         ->addCustomElement('beginDate', date('Y-m-dTH:i:s'))
                         ->addCustomElement('endDate', date('Y-m-dTH:i:s', strtotime('+7 day')))
                         ->addCustomElement('vat', 'Без НДС')
+                        ->addCustomElement('okei', 'Упаковка')
                         ->addCustomElement('model', 'автозапчасть')
                         ->addCustomElement('oksm', '-')
                         ;
