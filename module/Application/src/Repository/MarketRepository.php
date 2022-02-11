@@ -91,12 +91,13 @@ class MarketRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         
         if ($market->getSupplier()){
-            $queryBuilder->select('g, p')
+            $queryBuilder->select('g, p, gg')
                 //->distinct()    
                 ->from(Rawprice::class, 'r')
                 ->join('r.code', 'a')    
                 ->join(Goods::class, 'g', 'WITH', 'g.id = a.good')
                 ->join('r.raw', 'raw')
+                ->join('g.genericGroup', 'gg')
                 ->where('r.status = ?1')  
                 ->setParameter('1', Rawprice::STATUS_PARSED)    
                 ->andWhere('r.comment = \'\'')

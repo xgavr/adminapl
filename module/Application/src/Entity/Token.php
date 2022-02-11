@@ -180,7 +180,7 @@ class Token {
 
     public function setLemma($lemma) 
     {
-        $this->lemma = mb_strcut(trim($lemma), 0, 64, 'UTF-8');
+        $this->lemma = mb_strcut(trim($lemma), 0, 256, 'UTF-8');
     }     
     
     public function getCorrect() 
@@ -196,7 +196,7 @@ class Token {
     public function setCorrect($str) 
     {
         if ($str){
-            $this->correct = mb_strtoupper(mb_strcut(trim($str), 0, 64, 'UTF-8'));
+            $this->correct = mb_strtoupper(mb_strcut(trim($str), 0, 256, 'UTF-8'));
         } else {
             $this->correct = null;
         }    
