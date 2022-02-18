@@ -361,7 +361,9 @@ class AplCashService {
                 if ($client){
                     $contacts = $client->getContacts();
                     $dataCash['contact'] = $contacts[0]->getId();
-                }                    
+                } else {
+                    return false;
+                }                   
             }   
         }    
         if ($data['comment'] == 'Payments'){
