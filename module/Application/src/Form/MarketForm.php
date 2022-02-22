@@ -345,7 +345,7 @@ class MarketForm extends Form
             'attributes' => [
                 'id' => 'maxPrice',
                 'value' => 35000,
-                'step' => 1000,
+                'step' => 100,
                 'min' => 0,
             ],
             'options' => [
