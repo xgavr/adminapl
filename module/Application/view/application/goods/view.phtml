@@ -19,6 +19,9 @@ $priceCols = $goodsManager->priceCols($goods);
         height: 400px;
         overflow-y: scroll;
     }    
+    .retired {
+        text-decoration: line-through;
+    }
 </style>
 
 
@@ -202,6 +205,7 @@ $priceCols = $goodsManager->priceCols($goods);
                             data-show-toggle="true"
                             data-query-params="oemQueryParams"
                             data-response-handler="responseHandler"
+                            data-row-style="oeRowStyle"
                             >
                             <thead>
                                 <tr>
@@ -791,6 +795,19 @@ $priceCols = $goodsManager->priceCols($goods);
             return '<a href="/goods/view/'+row.intersectGoodId+'" target="_blank">'+value+'</a>'
         } 
         return value;
+    }
+    
+    function oeRowStyle(row, index) {
+        if (row.status == <?= Oem::STATUS_RETIRED?>) {
+            return {               
+                classes: 'retired'
+            };   
+        }
+        return {
+          css: {
+//            color: 'blue'
+          }
+        };   
     }
     
     function oemActiveFormatter(value, row){
