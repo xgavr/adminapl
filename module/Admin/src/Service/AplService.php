@@ -1693,6 +1693,7 @@ class AplService {
                     'parent'    => $good->getAplId(),
                     'sort'      => $oem->getSourceTagAsString(),
                     'name'      => $oem->getOeNumber(),
+                    'type'      => $oem->getOe(),
                     'desc'      => $oem->getTransferBrandName(),
                     'sf'        => $oem->getSourceAsString(),
                     'publish'   => $oem->getAplPublish(),
