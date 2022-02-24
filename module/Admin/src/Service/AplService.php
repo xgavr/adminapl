@@ -1695,6 +1695,7 @@ class AplService {
                     'name'      => $oem->getOeNumber(),
                     'desc'      => $oem->getTransferBrandName(),
                     'sf'        => $oem->getSourceAsString(),
+                    'publish'   => $oem->getAplPublish(),
                 ]; 
             }
 //            var_dump($post); exit;
