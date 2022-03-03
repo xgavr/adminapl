@@ -205,6 +205,31 @@ class Oem {
     }    
     
     /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getAplPublishList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 1,
+            self::STATUS_RETIRED => 0
+        ];
+    }    
+    
+    /**
+     * Returns make status as string.
+     * @return string
+     */
+    public function getAplPublish()
+    {
+        $list = self::getAplPublishList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 1;
+    }    
+
+    /**
      * Sets status.
      * @param int $status     
      */
