@@ -517,14 +517,14 @@ class MarketManager
             }
 
             $opts = Goods::optPrices($good['price'], $good['meanPrice']);
-            $sheet->setCellValue("A$k", $good['code']);
-            $sheet->setCellValue("B$k", $good['producer']['name']);
-            $sheet->setCellValue("C$k", $good['name']);
-            $sheet->setCellValue("D$k", $good['description']);
+            $sheet->setCellValue("A$k", ltrim($good['code'], '='));
+            $sheet->setCellValue("B$k", ltrim($good['producer']['name'], '='));
+            $sheet->setCellValue("C$k", ltrim($good['name'], '='));
+            $sheet->setCellValue("D$k", ltrim($good['description'], '='));
             if (!empty($market->getImageCount())){
                 $sheet->setCellValue("E$k", implode(';', $images));
             }
-            $sheet->setCellValue("F$k", $rawprices['realrest']);
+            $sheet->setCellValue("F$k", ltrim($rawprices['realrest'], '='));
             $sheet->setCellValue("G$k", $market->getExtraPrice($opts));
     //                $sheet->setCellValue("G$k", $rawprice->getRealPrice());
 
