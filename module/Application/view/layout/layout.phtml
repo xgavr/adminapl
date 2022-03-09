@@ -22,6 +22,8 @@
 
                 ->prependStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css') 
 
+                ->prependStylesheet('//cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css') 
+
                 ->prependStylesheet('//stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css', 
                         'screen',
                         true,
@@ -49,6 +51,10 @@
         <?= $this->headScript()
 //            ->prependFile($this->basePath('js/ajax-bootstrap-select.ru-RU.min.js'))
 //            ->prependFile($this->basePath('js/ajax-bootstrap-select.min.js'))
+        
+        //https://www.daterangepicker.com/#examples
+            ->prependFile('//cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js')
+
             ->prependFile($this->basePath('js/control-modal.min.js'))
             ->prependFile($this->basePath('js/jquery.mask.min.js'))
         
@@ -59,6 +65,7 @@
         
             ->prependFile('//unpkg.com/bootstrap-table@1.19.1/src/locale/bootstrap-table-ru-RU.js')
             ->prependFile('//unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.js')
+        
         
             // bootstrap3!!
             ->prependFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
@@ -81,6 +88,7 @@
         
             ->prependFile('//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js')
 //            ->prependFile('//code.jquery.com/ui/1.13.1/jquery-ui.js')
+
         ?>
     </head>
     <body>

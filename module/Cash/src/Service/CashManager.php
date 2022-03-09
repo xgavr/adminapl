@@ -579,16 +579,22 @@ class CashManager {
      * Подготовка данных для формы
      * @param CashForm $form
      * @param CashDoc $cashDoc
+     * @param integer $cashId
      */
-    public function cashFormOptions($form, $cashDoc = null)
+    public function cashFormOptions($form, $cashDoc = null, $cashId = null)
     {
         $user = $this->logManager->currentUser();
         if ($form->has('cash')){
             if ($cashDoc){
                 $cash = $cashDoc->getCash();
             } else {
-                $cash = $this->entityManager->getRepository(Cash::class)
-                        ->defaultCash($user->getOffice());
+                if ($cashId > 0){
+                    $cash = $this->entityManager->getRepository(Cash::class)
+                            ->find($cashId);                    
+                } else {
+                    $cash = $this->entityManager->getRepository(Cash::class)
+                            ->defaultCash($user->getOffice());
+                }    
                 if ($cash){
                     $form->get('cash')->setValue($cash->getId());
                 }
