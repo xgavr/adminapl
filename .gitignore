@@ -24,3 +24,4 @@ phpunit.xml
 /data/market/
 /nbproject/
 /data/DoctrineORMModule/Proxy/
+/config/development.config.dist.php

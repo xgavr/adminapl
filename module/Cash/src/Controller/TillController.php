@@ -72,7 +72,8 @@ class TillController extends AbstractActionController
         $officeId = $this->params()->fromQuery('office');
         $cashId = $this->params()->fromQuery('cash');
         $kind = $this->params()->fromQuery('kind');
-        $dateOper = $this->params()->fromQuery('dateOper');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $dateEnd = $this->params()->fromQuery('dateEnd');
         
         $params = [
             'sort' => $sort, 'order' => $order, 
@@ -80,10 +81,10 @@ class TillController extends AbstractActionController
         ];
         
         $query = $this->entityManager->getRepository(CashDoc::class)
-                        ->findAllCashDoc($dateOper, $params);
+                        ->findAllCashDoc($dateStart, $dateEnd, $params);
         
         $total = $this->entityManager->getRepository(CashDoc::class)
-                        ->findAllCashDocTotal($dateOper, $params);
+                        ->findAllCashDocTotal($dateStart, $dateEnd, $params);
                 
         if ($offset) {
             $query->setFirstResult($offset);
@@ -246,7 +247,7 @@ class TillController extends AbstractActionController
     public function cashBalanceAction()
     {
         $cashId = (int)$this->params()->fromRoute('id', -1);
-        $dateOper = $this->params()->fromQuery('dateOper');
+        $dateEnd = $this->params()->fromQuery('dateEnd');
         if ($cashId<1) {
             $this->getResponse()->setStatusCode(404);
             return;
@@ -263,7 +264,7 @@ class TillController extends AbstractActionController
         $balance = null;
         if ($cash->getRestStatus() == Cash::REST_ACTIVE){
             $balance = $this->entityManager->getRepository(Cash::class)
-                    ->cashBalance($cash->getId(), $dateOper);
+                    ->cashBalance($cash->getId(), $dateEnd);
         }    
         
         return new JsonModel([

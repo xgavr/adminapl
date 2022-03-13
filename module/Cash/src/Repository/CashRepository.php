@@ -25,10 +25,12 @@ class CashRepository extends EntityRepository
     /**
      * Запрос по кассовым документам
      * 
+     * @param string $dateStart
+     * @param string $dateEnd
      * @param array $params
      * @return query
      */
-    public function findAllCashDoc($dateOper, $params = null)
+    public function findAllCashDoc($dateStart, $dateEnd, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -46,21 +48,23 @@ class CashRepository extends EntityRepository
             ->leftJoin('cd.user', 'u')
             ->leftJoin('cd.contact', 'cnt')
             ->leftJoin('cd.order', 'o')
-            ->where('ct.dateOper = ?1')
-            ->setParameter('1', $dateOper)    
+            ->where('ct.dateOper >= ?1')
+            ->setParameter('1', $dateStart)    
+            ->andWhere('ct.dateOper <= ?2')
+            ->setParameter('2', $dateEnd . ' 23:59:59')    
             ->orderBy('cd.dateOper', 'DESC')                 
             ->addOrderBy('cd.id', 'DESC')                 
                 ;
         
         if (is_array($params)){
             if (isset($params['cashId'])){
-                $queryBuilder->andWhere('ct.cash = ?2')
-                    ->setParameter('2', $params['cashId'])
+                $queryBuilder->andWhere('ct.cash = ?3')
+                    ->setParameter('3', $params['cashId'])
                         ;
             }            
             if (is_numeric($params['kind'])){
-                $queryBuilder->andWhere('cd.kind = ?3')
-                    ->setParameter('3', $params['kind'])
+                $queryBuilder->andWhere('cd.kind = ?4')
+                    ->setParameter('4', $params['kind'])
                         ;
             }            
             if (isset($params['sort'])){
@@ -74,10 +78,12 @@ class CashRepository extends EntityRepository
     /**
      * Запрос по количеству записей
      * 
+     * @param string $dateStart
+     * @param string $dateEnd
      * @param array $params
      * @return query
      */
-    public function findAllCashDocTotal($dateOper, $params = null)
+    public function findAllCashDocTotal($dateStart, $dateEnd, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -87,8 +93,10 @@ class CashRepository extends EntityRepository
             ->from(CashTransaction::class, 'ct')
             ->join('ct.cashDoc', 'cd')
             ->join('cd.cash', 'c')
-            ->where('ct.dateOper = ?1')
-            ->setParameter('1', $dateOper)    
+            ->where('ct.dateOper >= ?1')
+            ->setParameter('1', $dateStart)    
+            ->andWhere('ct.dateOper <= ?2')
+            ->setParameter('2', $dateEnd . ' 23:59:59')    
                 ;
         
         if (is_array($params)){
