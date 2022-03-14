@@ -153,6 +153,7 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'hidden',
             'name' => 'order',
             'attributes' => [                
+                'id' => 'order'
             ],
             'options' => [
                 'label' => 'Номер заказа',
@@ -163,6 +164,7 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'number',
             'name' => 'orderApl',
             'attributes' => [                
+                'id' => 'orderApl'
             ],
             'options' => [
                 'label' => 'Номер заказа в АПЛ',
