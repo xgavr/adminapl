@@ -150,12 +150,22 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
         ]);
         
         $this->add([            
-            'type'  => 'number',
+            'type'  => 'hidden',
             'name' => 'order',
             'attributes' => [                
             ],
             'options' => [
                 'label' => 'Номер заказа',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'number',
+            'name' => 'orderApl',
+            'attributes' => [                
+            ],
+            'options' => [
+                'label' => 'Номер заказа в АПЛ',
             ],
         ]);
         
@@ -221,7 +231,7 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
         $this->setInputFilter($inputFilter);
 
         $inputFilter->add([
-                'name'     => 'order',
+                'name'     => 'orderApl',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

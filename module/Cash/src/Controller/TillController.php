@@ -22,6 +22,7 @@ use User\Entity\User;
 use Company\Entity\Legal;
 use Application\Entity\Phone;
 use User\Filter\PhoneFilter;
+use Application\Entity\Order;
 
 
 class TillController extends AbstractActionController
@@ -151,6 +152,28 @@ class TillController extends AbstractActionController
         
         return new JsonModel([
             'name' => $phone->getContact()->getName(),
+        ]);                  
+    }
+
+    public function orderAplAction()
+    {
+        $orderAplId = $this->params()->fromRoute('id', -1);
+        if ($orderAplId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        $order = $this->entityManager->getRepository(Order::class)
+                ->findOneByAplId($orderAplId);
+        
+        if ($order == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        return new JsonModel([
+            'name' => $order->getContact()->getName(),
+            'phone' => $order->getContact()->getPhone(),
+            'order' => $order->getId(),
         ]);                  
     }
 
