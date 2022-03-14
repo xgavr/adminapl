@@ -101,8 +101,8 @@ class CashRepository extends EntityRepository
         
         if (is_array($params)){
             if (isset($params['cashId'])){
-                $queryBuilder->andWhere('ct.cash = ?2')
-                    ->setParameter('2', $params['cashId'])
+                $queryBuilder->andWhere('ct.cash = ?3')
+                    ->setParameter('3', $params['cashId'])
                         ;
             }            
         }
@@ -140,10 +140,12 @@ class CashRepository extends EntityRepository
     /**
      * Запрос по кассовым документам
      * 
+     * @param string $dateStart
+     * @param string $dateEnd
      * @param array $params
      * @return query
      */
-    public function findAllUserDoc($dateOper, $params = null)
+    public function findAllUserDoc($dateStart, $dateEnd, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -159,21 +161,23 @@ class CashRepository extends EntityRepository
             ->leftJoin('cd.legal', 'l')
             ->leftJoin('cd.user', 'u')
             ->leftJoin('cd.cash', 'c')
-            ->where('ut.dateOper = ?1')
-            ->setParameter('1', $dateOper)    
+            ->where('ct.dateOper >= ?1')
+            ->setParameter('1', $dateStart)    
+            ->andWhere('ct.dateOper <= ?2')
+            ->setParameter('2', $dateEnd . ' 23:59:59')    
             ->orderBy('cd.dateOper', 'DESC')                 
             ->addOrderBy('cd.id', 'DESC')                 
                 ;
         
         if (is_array($params)){
             if (isset($params['userId'])){
-                $queryBuilder->andWhere('ut.user = ?2')
-                    ->setParameter('2', $params['userId'])
+                $queryBuilder->andWhere('ut.user = ?3')
+                    ->setParameter('3', $params['userId'])
                         ;
             }            
             if (is_numeric($params['kind'])){
-                $queryBuilder->andWhere('cd.kind = ?3')
-                    ->setParameter('3', $params['kind'])
+                $queryBuilder->andWhere('cd.kind = ?4')
+                    ->setParameter('4', $params['kind'])
                         ;
             }            
             if (isset($params['sort'])){
@@ -187,10 +191,12 @@ class CashRepository extends EntityRepository
     /**
      * Запрос по количеству записей
      * 
+     * @param string $dateStart
+     * @param string $dateEnd
      * @param array $params
      * @return query
      */
-    public function findAllUserDocTotal($dateOper, $params = null)
+    public function findAllUserDocTotal($dateStart, $dateEnd, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -200,14 +206,16 @@ class CashRepository extends EntityRepository
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')
             ->join('cd.user', 'c')
-            ->where('ut.dateOper = ?1')
-            ->setParameter('1', $dateOper)    
+            ->where('ct.dateOper >= ?1')
+            ->setParameter('1', $dateStart)    
+            ->andWhere('ct.dateOper <= ?2')
+            ->setParameter('2', $dateEnd . ' 23:59:59')    
                 ;
         
         if (is_array($params)){
             if (isset($params['cashId'])){
-                $queryBuilder->andWhere('ut.cash = ?2')
-                    ->setParameter('2', $params['cashId'])
+                $queryBuilder->andWhere('ut.cash = ?3')
+                    ->setParameter('3', $params['cashId'])
                         ;
             }            
         }
