@@ -15,7 +15,7 @@ $this->pageBreadcrumbs()->setItems([
     <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-body">
-            <?= $this->escapeHtml('Заказ №'.$order->getId().' от '. date('d-m-Y H:i:s', strtotime($order->getDateCreated()))); ?>    
+            <?= $this->escapeHtml('Заказ №'.$order->getId().'('.$order->getAplIdLink().') от '. date('d-m-Y H:i:s', strtotime($order->getDateCreated()))); ?>    
           </div>
         </div>        
     </div>    
