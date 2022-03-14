@@ -459,6 +459,7 @@ class CashManager {
         $cashDoc->setLegal(empty($data['legal']) ? null:$data['legal']);
         $cashDoc->setOrder(empty($data['order']) ? null:$data['order']);
         $cashDoc->setStatus($data['status']);
+        $cashDoc->setStatusEx(empty($data['statusEx']) ? CashDoc::STATUS_EX_NEW:$data['statusEx']);
         $cashDoc->setUser(empty($data['user']) ? null:$data['user']);
         $cashDoc->setUserRefill(empty($data['userRefill']) ? null:$data['userRefill']);
         $cashDoc->setVt(empty($data['vt']) ? null:$data['vt']);
@@ -506,6 +507,7 @@ class CashManager {
         $cashDoc->setLegal(empty($data['legal']) ? null:$data['legal']);
         $cashDoc->setOrder(empty($data['order']) ? null:$data['order']);
         $cashDoc->setStatus($data['status']);
+        $cashDoc->setStatusEx(empty($data['statusEx']) ? CashDoc::STATUS_EX_NEW:$data['statusEx']);
         $cashDoc->setUser(empty($data['user']) ? null:$data['user']);
         $cashDoc->setUserRefill(empty($data['userRefill']) ? null:$data['userRefill']);
         $cashDoc->setVt(empty($data['vt']) ? null:$data['vt']);

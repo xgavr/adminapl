@@ -34,6 +34,11 @@ class CashDoc {
     const CHECK_ACTIVE     = 1; // чек печатать.
     const CHECK_RETIRED    = 2; // не печатать.
     
+     // Status doc constants.
+    const STATUS_EX_NEW  = 1; // Не отправлено.
+    const STATUS_EX_RECD  = 2; // Получено из АПЛ.
+    const STATUS_EX_APL  = 3; // Отправлено в АПЛ.    
+    
     const KIND_IN_PAYMENT_CLIENT    = 1; // оплата от покупателя.
     const KIND_IN_REFILL            = 2; // пополнение.
     const KIND_IN_RETURN_USER       = 3; // возврат от сотрудника.
@@ -94,6 +99,11 @@ class CashDoc {
      */
     protected $checkStatus;
 
+    /** 
+     * @ORM\Column(name="status_ex")  
+     */
+    protected $statusEx;
+    
     /**
      * @ORM\Column(name="kind")   
      */
@@ -386,6 +396,50 @@ class CashDoc {
     public function setCheckStatus($checkStatus) 
     {
         $this->checkStatus = $checkStatus;
+    }   
+    
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatusEx() 
+    {
+        return $this->statusEx;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusExList() 
+    {
+        return [
+            self::STATUS_EX_NEW => 'Новый',
+            self::STATUS_EX_APL => 'Отправлен в АПЛ',
+            self::STATUS_EX_RECD => 'Получен из АПЛ',
+        ];
+    }    
+    
+    /**
+     * Returns user status as string.
+     * @return string
+     */
+    public function getStatusExAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->statusEx]))
+            return $list[$this->statusEx];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets status.
+     * @param int $statusEx     
+     */
+    public function setStatusEx($statusEx) 
+    {
+        $this->statusEx = $statusEx;
     }   
     
     /**

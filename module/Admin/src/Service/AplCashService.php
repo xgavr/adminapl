@@ -290,6 +290,7 @@ class AplCashService {
             'dateOper' => $docDate,
             'kind' => $this->getPaymentKind($data),
             'comment' => (empty($data['info'])) ? null:$data['info'],
+            'statusEx' => CashDoc::STATUS_EX_RECD,
         ];
         if (empty($dataCash['kind']) && empty($dataCash['amount'])){
             return true; // пустая запись
