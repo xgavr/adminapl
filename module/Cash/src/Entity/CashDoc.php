@@ -347,6 +347,31 @@ class CashDoc {
     }    
     
     /**
+     * Returns possible apl statuses as array.
+     * @return array
+     */
+    public static function getAplStatusList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 1,
+            self::STATUS_RETIRED => 0
+        ];
+    }    
+    
+    /**
+     * Returns cash status as apl.
+     * @return string
+     */
+    public function getStatusAsApl()
+    {
+        $list = self::getAplStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+
+    /**
      * Sets status.
      * @param int $status     
      */
@@ -383,6 +408,31 @@ class CashDoc {
     public function getCheckStatusAsString()
     {
         $list = self::getCheckStatusList();
+        if (isset($list[$this->checkStatus]))
+            return $list[$this->checkStatus];
+        
+        return 'Unknown';
+    }    
+
+    /**
+     * Returns possible Apl check statuses as array.
+     * @return array
+     */
+    public static function getAplCheckStatusList() 
+    {
+        return [
+            self::CHECK_ACTIVE => 1,
+            self::CHECK_RETIRED => 0,
+        ];
+    }    
+    
+    /**
+     * Returns check status as Apl.
+     * @return string
+     */
+    public function getCheckStatusAsApl()
+    {
+        $list = self::getAplCheckStatusList();
         if (isset($list[$this->checkStatus]))
             return $list[$this->checkStatus];
         
@@ -625,6 +675,25 @@ class CashDoc {
         return $this->user;
     }
     
+    public function getAplBo()
+    {
+        if ($this->user && !$this->cash){
+            return 1;
+        }
+        return 0;
+    }
+
+    public function getAplSf()
+    {
+        if ($this->user){
+            return $this->user->getAplId();
+        }
+        if ($this->cash){
+            return $this->cash->getAplId();
+        }
+        return 0;
+    }
+
     /**
      * Add user
      * @param User $user

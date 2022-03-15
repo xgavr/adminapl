@@ -491,18 +491,22 @@ class AplCashService {
         $post = [
             'parent' => ,
             'type' =>,
-            'sort' =>,
-            'publish' => ,
+            'sort' =>   $cashDoc->getKindAmount(),
+            'publish' => $cashDoc->getStatusAsApl(),
             'name' => ,
             'comment' => ,
             'desc' => ,
-            'user' => ,
-            'sf' => ,
-            'bo' => ,
-            'link' => ,
-            'check' => ,
-            'aa' => 1
+            'user' => $cashDoc->getUserCreator()->getAplId(),
+            'sf' =>     $cashDoc->getAplSf(),
+            'bo' =>     $cashDoc->getAplBo(),
+            'link' =>   0,
+            'check' =>  $cashDoc->getCheckStatusAsApl(),
+            'aa' =>     1
         ];
+        
+        if ($cashDoc->getAplId()){
+            $post['id'] = $cashDoc->getAplId();
+        }
         
         if ($cashDoc){
             $client = new Client();
