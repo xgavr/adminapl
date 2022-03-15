@@ -281,4 +281,25 @@ class CashRepository extends EntityRepository
         
         return $queryBuilder->getQuery()->getOneOrNullResult();                
     }
+    
+    
+    /**
+     * Найти записи для отправки в АПЛ
+     */
+    public function findForUpdateApl()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('cd')
+            ->from(CashDoc::class, 'cd')
+            ->where('cd.statusEx = ?1')
+            ->setParameter('1', CashDoc::STATUS_EX_NEW)    
+            ->setMaxResults(1)    
+                ;
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();                
+        
+    }
 }

@@ -8,7 +8,6 @@
 
 namespace Admin\Service;
 
-use Bank\Entity\Statement;
 use Laminas\Http\Client;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
@@ -16,15 +15,8 @@ use Company\Entity\Office;
 use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Company\Entity\Contract;
-use Stock\Entity\Ptu;
-use Stock\Entity\Vtp;
-use Stock\Entity\Vt;
 use Application\Entity\Order;
-use Stock\Entity\Ot;
-use Application\Entity\Contact;
 use Application\Entity\Client as AplClient;
-use Stock\Entity\St;
-use Stock\Entity\Pt;
 use User\Entity\User;
 use Company\Entity\Cost;
 use Laminas\Validator\Date;
@@ -483,6 +475,71 @@ class AplCashService {
     }
 
     /**
+     * Отправить платежи 
+     * 
+     * @param array $data
+     */
+    public function sendPayment($data)
+    {
+        $url = $this->aplApi().'update-payment?api='.$this->aplApiKey();
+
+        $result = false;
+
+        $cashDoc = $this->entityManager->getRepository(CashDoc::class)
+                ->findForUpdateApl();
+        
+        $post = [
+            'parent' => ,
+            'type' =>,
+            'sort' =>,
+            'publish' => ,
+            'name' => ,
+            'comment' => ,
+            'desc' => ,
+            'user' => ,
+            'sf' => ,
+            'bo' => ,
+            'link' => ,
+            'check' => ,
+            'aa' => 1
+        ];
+        
+        if ($cashDoc){
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 60]);
+            $client->setParameterPost($post);            
+
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody());
+                if ($response->isOk()) {                    
+                    $aplId = (int) $response->getBody();
+                    if ($aplId){
+                        $ok = $result = true;
+                    }
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok) {            
+                $cashDoc->setStatusEx(CashDoc::STATUS_EX_APL);
+                $cashDoc->setAplId($aplId);
+                $this->entityManager->persist($cashDoc);
+                $this->entityManager->flush($cashDoc);
+            }
+
+            unset($cashDoc);
+        }
+        
+        return $result;
+    }
+    
+    
+    /**
      * Загрузка платежей
      * 
      * @return
@@ -495,6 +552,17 @@ class AplCashService {
         $start = 0;
         while (true){
             if ($this->unloadPayment($start)) {
+                usleep(100);
+                if (time() > $startTime + 840){
+                    break;
+                }
+            } else {
+                break;
+            }    
+           // $start++;
+        }    
+        while (true){
+            if ($this->sendPayment()) {
                 usleep(100);
                 if (time() > $startTime + 840){
                     break;
