@@ -487,20 +487,25 @@ class AplCashService {
 
         $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                 ->findForUpdateApl();
+        $desc = [
+            'kind' => $cashDoc->getKindAsApl(),
+            'ds' => $cashDoc->getDateOper(),
+        ];
         
         $post = [
-            'parent' => ,
-            'type' =>,
+            'parent' => $cashDoc->getContact()->getClient()->getAplId(),
+            'type' =>   'Users',
             'sort' =>   $cashDoc->getKindAmount(),
             'publish' => $cashDoc->getStatusAsApl(),
-            'name' => ,
-            'comment' => ,
-            'desc' => ,
-            'user' => $cashDoc->getUserCreator()->getAplId(),
+            'name' => $cashDoc->getOrder()->getAplId(),
+            'comment' => 'Orders',
+            'desc' =>   $desc,
+            'user' =>   $cashDoc->getUserCreator()->getAplId(),
             'sf' =>     $cashDoc->getAplSf(),
             'bo' =>     $cashDoc->getAplBo(),
             'link' =>   0,
             'check' =>  $cashDoc->getCheckStatusAsApl(),
+            'created' => $cashDoc->getDateOper(),
             'aa' =>     1
         ];
         

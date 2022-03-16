@@ -298,6 +298,10 @@ class CashRepository extends EntityRepository
             ->setParameter('1', CashDoc::STATUS_EX_NEW)    
             ->setMaxResults(1)    
                 ;
+            $orX = $queryBuilder->expr()->orX();
+            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_IN_PAYMENT_CLIENT));
+            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_OUT_RETURN_CLIENT));
+            $queryBuilder->andWhere($orX);
         
         return $queryBuilder->getQuery()->getOneOrNullResult();                
         

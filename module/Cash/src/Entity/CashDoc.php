@@ -574,6 +574,40 @@ class CashDoc {
      * Returns possible kinds as array.
      * @return array
      */
+    public static function getAplKindList() 
+    {
+        return [
+            self::KIND_OUT_USER => 'out1',
+            self::KIND_OUT_SUPPLIER => 'out2',
+            self::KIND_OUT_COURIER => 'out8',
+            self::KIND_OUT_REFILL => 'out3',
+            self::KIND_OUT_RETURN_CLIENT => 'out4',
+            self::KIND_OUT_SALARY => 'out6',
+            self::KIND_OUT_COST => 'out5',
+            self::KIND_IN_PAYMENT_CLIENT => 'in1',
+            self::KIND_IN_REFILL => 'in3',
+            self::KIND_IN_RETURN_USER => 'in2',
+            self::KIND_IN_RETURN_SUPPLIER => 'in4',
+        ];
+    }    
+
+    /**
+     * Returns kind as string.
+     * @return string
+     */
+    public function getKindAsApl()
+    {
+        $list = self::getAplKindList();
+        if (isset($list[$this->kind]))
+            return $list[$this->kind];
+        
+        return 'Unknown';
+    }    
+
+    /**
+     * Returns possible kinds as array.
+     * @return array
+     */
     public static function getKindList() 
     {
         return self::getKindInList() + self::getKindOutList();
