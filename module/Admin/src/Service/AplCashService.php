@@ -513,7 +513,7 @@ class AplCashService {
         if ($cashDoc->getAplId()){
             $post['id'] = $cashDoc->getAplId();
         }
-        var_dump($post); exit;
+//        var_dump($post); exit;
         if ($cashDoc){
             $client = new Client();
             $client->setUri($url);
