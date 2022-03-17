@@ -713,6 +713,15 @@ class AplController extends AbstractActionController
         ]);
     }    
     
+    public function sendCashAction()
+    {                
+        $this->aplCashService->sendPayment();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+
     public function unloadCashesAction()
     {                
         $this->aplCashService->unloadPayments();

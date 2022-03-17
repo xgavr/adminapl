@@ -475,11 +475,10 @@ class AplCashService {
     }
 
     /**
-     * Отправить платежи 
+     * Отправить платеж
      * 
-     * @param array $data
      */
-    public function sendPayment($data)
+    public function sendPayment()
     {
         $url = $this->aplApi().'update-payment?api='.$this->aplApiKey();
 
@@ -490,6 +489,8 @@ class AplCashService {
         $desc = [
             'kind' => $cashDoc->getKindAsApl(),
             'ds' => $cashDoc->getDateOper(),
+            'comment' => $cashDoc->getComment(),
+            'info' => $cashDoc->getInfo(),
         ];
         
         $post = [
@@ -497,9 +498,9 @@ class AplCashService {
             'type' =>   'Users',
             'sort' =>   $cashDoc->getKindAmount(),
             'publish' => $cashDoc->getStatusAsApl(),
-            'name' => $cashDoc->getOrder()->getAplId(),
-            'comment' => 'Orders',
-            'desc' =>   $desc,
+            'name' =>   ($cashDoc->getOrder()) ? $cashDoc->getOrder()->getAplId():0,
+            'comment' => ($cashDoc->getOrder()) ? 'Orders':'',
+            'desc' =>   Encoder::encode($desc),
             'user' =>   $cashDoc->getUserCreator()->getAplId(),
             'sf' =>     $cashDoc->getAplSf(),
             'bo' =>     $cashDoc->getAplBo(),
@@ -512,7 +513,7 @@ class AplCashService {
         if ($cashDoc->getAplId()){
             $post['id'] = $cashDoc->getAplId();
         }
-        
+        var_dump($post); exit;
         if ($cashDoc){
             $client = new Client();
             $client->setUri($url);
@@ -523,7 +524,7 @@ class AplCashService {
             $ok = $result = false;
             try{
                 $response = $client->send();
-//                var_dump($response->getBody());
+                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {                    
                     $aplId = (int) $response->getBody();
                     if ($aplId){
@@ -541,7 +542,7 @@ class AplCashService {
                 $this->entityManager->flush($cashDoc);
             }
 
-            unset($cashDoc);
+            $this->entityManager->detach($cashDoc);
         }
         
         return $result;
