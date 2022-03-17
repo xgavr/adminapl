@@ -9,6 +9,10 @@ $this->pageBreadcrumbs()->setItems([
             'Edit User'=>$this->url('users', ['action'=>'edit', 'id'=>$user->getId()])
             ]);
 
+$form->get('aplId')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('email')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'name@example.com'
@@ -47,6 +51,12 @@ $form->prepare();
 <div class="row">
     <div class="col-md-6">
         <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('aplId')); ?>
+            <?= $this->formElement($form->get('aplId')); ?>
+            <?= $this->formElementErrors($form->get('aplId')); ?>                  
+        </div>
         
         <div class="form-group">
             <?= $this->formLabel($form->get('email')); ?>

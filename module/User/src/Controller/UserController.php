@@ -222,6 +222,7 @@ class UserController extends AbstractActionController
             }
             
             $form->setData(array(
+                    'aplId' => $user->getAplId(),
                     'full_name'=>$user->getFullName(),
                     'email'=>$user->getEmail(),
                     'status'=>$user->getStatus(), 

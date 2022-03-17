@@ -22,6 +22,7 @@ $this->pageBreadcrumbs()->setItems([
 
    <tr>
         <th>ID</th>
+        <th>APL ID</th>
         <th>E-mail</th>
         <th>Full Name</th>
         <th>Role(s)</th>        
@@ -35,6 +36,7 @@ $this->pageBreadcrumbs()->setItems([
     
     <tr>
         <td><?= $this->escapeHtml($user->getId()); ?></td>
+        <td><?= $this->escapeHtml($user->getAplId()); ?></td>
         <td>
             <a href="<?= $this->url('users', ['action'=>'view', 'id'=>$user->getId()]); ?>">
                 <?= $this->escapeHtml($user->getEmail()); ?>

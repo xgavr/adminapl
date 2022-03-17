@@ -57,6 +57,16 @@ class UserForm extends Form
      */
     protected function addElements() 
     {
+        // Add "aplId" field
+        $this->add([            
+            'type'  => 'number',
+            'name' => 'aplId',
+//            'disabled' => 'disabled',
+            'options' => [
+                'label' => 'АПЛ Id',
+            ],
+        ]);
+
         // Add "email" field
         $this->add([            
             'type'  => 'text',
