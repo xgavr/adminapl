@@ -236,7 +236,7 @@
     
     function activeFormatter(value, row){
         var btn = '';
-        if (row.cashDoc.cash){
+        if (row.cashDoc.cash && row.statusEx != <?= CashDoc::STATUS_EX_RECD?>){
             if (row.cashDoc.kind<10){
                 var url = '/till/edit-cash-in/'+row.cashDoc.id;
                 btn = '<button';
