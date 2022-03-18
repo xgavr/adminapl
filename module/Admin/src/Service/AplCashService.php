@@ -486,35 +486,35 @@ class AplCashService {
 
         $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                 ->findForUpdateApl();
-        $desc = [
-            'kind' => $cashDoc->getKindAsApl(),
-            'ds' => $cashDoc->getDateOper(),
-            'comment' => $cashDoc->getComment(),
-            'info' => $cashDoc->getInfo(),
-        ];
-        
-        $post = [
-            'parent' => $cashDoc->getContact()->getClient()->getAplId(),
-            'type' =>   'Users',
-            'sort' =>   $cashDoc->getKindAmount(),
-            'publish' => $cashDoc->getStatusAsApl(),
-            'name' =>   ($cashDoc->getOrder()) ? $cashDoc->getOrder()->getAplId():0,
-            'comment' => ($cashDoc->getOrder()) ? 'Orders':'',
-            'desc' =>   Encoder::encode($desc),
-            'user' =>   $cashDoc->getUserCreator()->getAplId(),
-            'sf' =>     $cashDoc->getAplSf(),
-            'bo' =>     $cashDoc->getAplBo(),
-            'link' =>   0,
-            'check' =>  $cashDoc->getCheckStatusAsApl(),
-            'created' => $cashDoc->getDateOper(),
-            'aa' =>     1
-        ];
-        
-        if ($cashDoc->getAplId()){
-            $post['id'] = $cashDoc->getAplId();
-        }
-//        var_dump($post); exit;
         if ($cashDoc){
+            $desc = [
+                'kind' => $cashDoc->getKindAsApl(),
+                'ds' => $cashDoc->getDateOper(),
+                'comment' => $cashDoc->getComment(),
+                'info' => $cashDoc->getInfo(),
+            ];
+        
+            $post = [
+                'parent' => $cashDoc->getContact()->getClient()->getAplId(),
+                'type' =>   'Users',
+                'sort' =>   $cashDoc->getKindAmount(),
+                'publish' => $cashDoc->getStatusAsApl(),
+                'name' =>   ($cashDoc->getOrder()) ? $cashDoc->getOrder()->getAplId():0,
+                'comment' => ($cashDoc->getOrder()) ? 'Orders':'',
+                'desc' =>   Encoder::encode($desc),
+                'user' =>   $cashDoc->getUserCreator()->getAplId(),
+                'sf' =>     $cashDoc->getAplSf(),
+                'bo' =>     $cashDoc->getAplBo(),
+                'link' =>   0,
+                'check' =>  $cashDoc->getCheckStatusAsApl(),
+                'created' => $cashDoc->getDateOper(),
+                'aa' =>     1
+            ];
+
+            if ($cashDoc->getAplId()){
+                $post['id'] = $cashDoc->getAplId();
+            }
+//        var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
