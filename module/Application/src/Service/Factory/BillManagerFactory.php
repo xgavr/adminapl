@@ -11,6 +11,7 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\BillManager;
+use Admin\Service\PostManager;
 
 /**
  * Description of BillManagerFactory
@@ -24,8 +25,9 @@ class BillManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $postManager = $container->get(PostManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new BillManager($entityManager);
+        return new BillManager($entityManager, $postManager);
     }
 }

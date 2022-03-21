@@ -10,9 +10,13 @@ namespace Application\Service;
 use Application\Entity\Supplier;
 use Application\Entity\BillSetting;
 use Application\Entity\Idoc;
+use Application\Entity\BillGetting;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Laminas\Json\Encoder;
+use Application\Filter\CsvDetectDelimiterFilter;
 
 /**
- * Description of CarService
+ * Description of BillManager
  *
  * @author Daddy
  */
@@ -25,11 +29,17 @@ class BillManager
      */
     private $entityManager;
     
+    /**
+     * Post manager.
+     * @var \Admin\Service\PostManager
+     */
+    private $postManager;
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $postManager)
     {
         $this->entityManager = $entityManager;
+        $this->postManager = $postManager;
     }
     
     /**
@@ -85,6 +95,157 @@ class BillManager
         
         $this->entityManager->remove($idoc);
         $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
+     * Преобразовать xls в array
+     * @param string $filename
+     */
+    protected function _xls2array($filename)
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(0); 
+        $result = [];
+        
+        if (file_exists($filename)){
+            
+            if (!filesize($filename)){
+                return;
+            }
+                                    
+            $filter = new RawToStr();
+                    
+            try{
+                $reader = IOFactory::createReaderForFile($filename);
+            } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
+            }    
+
+            $filterSubset = new \Application\Filter\ExcelColumn();
+            $reader->setReadFilter($filterSubset);
+            $spreadsheet = $reader->load($filename);
+
+            $sheets = $spreadsheet->getAllSheets();
+            foreach ($sheets as $sheet) { // PHPExcel_Worksheet
+
+                $excel_sheet_content = $sheet->toArray();
+
+                if (count($excel_sheet_content)){
+                        
+                    foreach ($excel_sheet_content as $row){
+
+                        $str = $filter->filter($row);
+
+                        if ($str){
+                            $result[] = explode(';', $str);                              
+                        }                               
+                    }
+                }
+                    
+            }                
+            unset($spreadsheet);
+        }
+        
+        return $result;        
+    }
+    
+    /**
+     * Преобразовать csv в array
+     * @param string $filename
+     * @return array
+     */
+    
+    protected function _csv2array($filename)
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+        $result = [];
+        
+        if (file_exists($filename)){
+            
+            if (!filesize($filename)){
+                return;
+            }
+
+            $lines = fopen($filename, 'r');
+
+            if($lines) {
+
+                $detector = new CsvDetectDelimiterFilter();
+                $delimiter = $detector->filter($filename);
+                
+                $filter = new RawToStr();
+
+                while (($row = fgetcsv($lines, 4096, $delimiter)) !== false) {
+
+                    $str = $filter->filter($row);
+
+                    if ($str){
+                        $result[] = explode(';', $str);                              
+                    }                            
+                }
+                    
+                fclose($lines);
+            }                                
+        }                
+        return $result;
+    }    
+
+    /**
+     * Преобразование данных файла в массив
+     * @param string $filename
+     * @return array
+     */
+    protected function _filedata2array($filename)
+    {
+        $result = [];
+        $pathinfo = pathinfo($filename);
+        if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
+            return $this->_xls2array($filename);            
+        }
+        if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
+            return $this->_csv2array($filename);            
+        }        
+        return $result;
+    }    
+    
+    /**
+     * Проверка почты в ящике поставщика
+     * @param BillGetting $billGetting
+     */
+    public function getBillByMail($billGetting)
+    {
+        if ($billGetting->getEmail() && $billGetting->getEmailPassword()){
+            $box = [
+                'host' => 'imap.yandex.ru',
+                'server' => '{imap.yandex.ru:993/imap/ssl}',
+                'user' => $billGetting->getEmail(),
+                'password' => $billGetting->getEmailPassword(),
+                'leave_message' => false,
+            ];
+            
+            $mailList = $this->postManager->readImap($box);
+            
+            if (count($mailList)){
+                foreach ($mailList as $mail){
+                    if (isset($mail['attachment'])){
+                        foreach($mail['attachment'] as $attachment){
+                            if ($attachment['filename'] && file_exists($attachment['temp_file'])){                                
+                                $this->addIdoc($billGetting->getSupplier(), [
+                                    'status' => Idoc::STATUS_ACTIVE,
+                                    'name' => $attachment['filename'],
+                                    'description' => Encoder::encode($this->_filedata2array($attachment['temp_file'])),
+                                    'docKey' => null,
+                                ]);
+                                
+                                unlink($attachment['temp_file']);
+                            }
+                        }
+                    }
+                }
+            }
+        }    
         
         return;
     }
