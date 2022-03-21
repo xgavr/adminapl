@@ -14,6 +14,7 @@ use Application\Entity\BillGetting;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Laminas\Json\Encoder;
 use Application\Filter\CsvDetectDelimiterFilter;
+use Laminas\Validator\File\IsCompressed;
 
 /**
  * Description of BillManager
@@ -199,6 +200,7 @@ class BillManager
      */
     protected function _filedata2array($filename)
     {
+
         $result = [];
         $pathinfo = pathinfo($filename);
         if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
