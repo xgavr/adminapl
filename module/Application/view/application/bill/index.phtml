@@ -1,0 +1,119 @@
+<?php
+use Application\Entity\Client;
+
+$this->headTitle('Электронные накладные');
+
+$this->mainMenu()->setActiveItemId('raw');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Поступления'=>$this->url('ptu'),
+            'Электронные накладные'=>$this->url('bills'),
+            ]);
+?>
+
+<h1>Электронные накладные</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="">
+                </div>
+                <button id="ok" type="submit" class="btn btn-default">OK</button>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/bills/content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric" data-width="50">ID</th>
+                     <th data-field="dateCreated" data-width="75">Дата</th>
+                     <th data-field="docKey" data-formatter="docFormatter" data-width="75">Документ</th>
+                     <th data-field="supplier.name" data-formatter="supplierFormatter">Поставщик</th>
+                     <th data-field="name">Файл</th>
+                     <th data-field="id" data-formatter="activeFormatter" data-width="50"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<script type="text/javascript">
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var table = $('#table').bootstrapTable();
+
+    ok = $('#ok');
+
+    $(function () {
+        ok.click(function () {
+            table.bootstrapTable('refresh');
+        });
+    });
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function docFormatter(value){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<a href="/ptu/view/' + value + '" target="_blank">' + value + '</a>'
+        ].join(''); 
+    }    
+    
+    function supplierFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<a href="/supplier/view/' + row.supplier.id + '" target="_blank">' + value + '</a>'
+        ].join(''); 
+    }    
+    
+    function activeFormatter(value, row){
+        var url = '/bills/edit-form/'+value;
+        btn = '<button';
+        btn += ' value="'+url+'"';
+        btn += ' class="btn btn-default btn-xs"';
+        btn += ' data-toggle="modal" data-target="#modal-dialog"'; 
+        btn += ' title="Изменить">'; 
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>
+
+

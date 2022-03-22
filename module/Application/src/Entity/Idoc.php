@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Description of idoc
- * @ORM\Entity(repositoryClass="\Application\Repository\SupplierRepository")
+ * @ORM\Entity(repositoryClass="\Application\Repository\BillRepository")
  * @ORM\Table(name="idoc")
  * @author Daddy
  */

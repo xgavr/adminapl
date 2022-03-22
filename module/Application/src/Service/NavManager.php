@@ -163,6 +163,12 @@ class NavManager
                     'link'  => $url('raw')
                 ];
                 
+                $priceDropdownItems[] = [
+                    'id' => 'bill',
+                    'label' => 'Электронные накладные',
+                    'link'  => $url('bills')
+                ];
+                
                 if ($this->rbacManager->isGranted(null, 'rate.manage')) {
                     $priceDropdownItems[] = [
                         'id' => 'rate',

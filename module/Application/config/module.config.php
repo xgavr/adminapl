@@ -35,6 +35,20 @@ return [
                     ],
                 ],
             ],
+            'bills' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/bills[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\BillController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'car' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -472,6 +486,7 @@ return [
     ],      
     'controllers' => [
         'factories' => [
+            Controller\BillController::class => Controller\Factory\BillControllerFactory::class,
             Controller\CarController::class => Controller\Factory\CarControllerFactory::class,
             Controller\ClientController::class => Controller\Factory\ClientControllerFactory::class,
             Controller\CommentController::class => Controller\Factory\CommentControllerFactory::class,
@@ -508,6 +523,7 @@ return [
         'factories' => [
             Service\ArticleManager::class => Service\Factory\ArticleManagerFactory::class,
             Service\AssemblyManager::class => Service\Factory\AssemblyManagerFactory::class,
+            Service\BillManager::class => Service\Factory\BillManagerFactory::class,
             Service\CarManager::class => Service\Factory\CarManagerFactory::class,
             Service\ClientManager::class => Service\Factory\ClientManagerFactory::class,
             Service\CommentManager::class => Service\Factory\CommentManagerFactory::class,
@@ -550,6 +566,10 @@ return [
     ],
     'access_filter' => [
         'controllers' => [
+            Controller\BillController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
             Controller\CarController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
