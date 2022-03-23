@@ -30,7 +30,7 @@ class BillRepository  extends EntityRepository{
 
         $queryBuilder->select('i, s')
             ->from(Idoc::class, 'i') 
-            ->leftJoin('s.supplier', 's')    
+            ->leftJoin('i.supplier', 's')    
             ->addOrderBy('i.id', 'DESC')    
                 ;
         

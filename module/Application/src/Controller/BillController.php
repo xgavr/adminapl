@@ -11,6 +11,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Entity\Idoc;
+use Application\Entity\BillGetting;
 use Application\Entity\Order;
 use Application\Entity\Client;
 use Application\Form\CommentForm;
@@ -29,7 +30,7 @@ class BillController extends AbstractActionController
      * Менеджер.
      * @var \Application\Service\BillManager 
      */
-    private $commentManager;    
+    private $billManager;    
     
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
@@ -160,5 +161,27 @@ class BillController extends AbstractActionController
             'commentManager' => $this->commentManager,
         ]);
     }      
+    
+    public function byMailAction()
+    {
+        $billGettingId = $this->params()->fromRoute('id', -1);
+        // Находим существующий billGetting в базе данных.    
+        $billGetting = $this->entityManager->getRepository(BillGetting::class)
+                ->find($billGettingId);  
+        	
+        if ($billGetting == null) {
+            $this->getResponse()->setStatusCode(401);
+            exit;                        
+        } 
+        
+        $result = $this->billManager->getBillByMail($billGetting);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+        
+    }
     
 }

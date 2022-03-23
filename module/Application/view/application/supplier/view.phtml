@@ -357,7 +357,14 @@ $this->pageBreadcrumbs()->setItems([
                                 <div class="panel-body">
                                     <div class="pull-left">
                                         <?= $billGetting->getName() ?><br/>
-                                        Email: <span><?= $billGetting->getEmail() ?></span><br/>
+                                        Email: <span><?= $billGetting->getEmail() ?></span>
+                                        <?php if ($billGetting->getEmail()): ?>
+                                            <button value="/bills/by-mail/<?= $billGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
+                                                    title="Проверить почту">
+                                                <span class="glyphicon glyphicon-envelope" ></span>
+                                            </button>
+                                        <?php endif; ?>
+                                        <br/>
                                         Email пароль: <span><?= $billGetting->getEmailPassword() ?></span><br/>
                                     </div>        
                                     <div class="pull-right">                                

@@ -60,8 +60,8 @@ class BillManager
         $idoc->setDocKey(null);
         $idoc->setSupplier($supplier);
         
-        $this->entityManager->persist();
-        $this->entityManager->flush();
+        $this->entityManager->persist($idoc);
+        $this->entityManager->flush($idoc);
         
         return $idoc;
     }
@@ -80,8 +80,8 @@ class BillManager
         $idoc->setDescription($data['description']);
         $idoc->setDocKey($data['docKey']);
         
-        $this->entityManager->persist();
-        $this->entityManager->flush();
+        $this->entityManager->persist($idoc);
+        $this->entityManager->flush($idoc);
         
         return $idoc;
     }
@@ -224,7 +224,7 @@ class BillManager
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $billGetting->getEmail(),
                 'password' => $billGetting->getEmailPassword(),
-                'leave_message' => false,
+                'leave_message' => true,
             ];
             
             $mailList = $this->postManager->readImap($box);
