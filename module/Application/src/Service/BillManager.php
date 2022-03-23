@@ -15,6 +15,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use Laminas\Json\Encoder;
 use Application\Filter\CsvDetectDelimiterFilter;
 use Laminas\Validator\File\IsCompressed;
+use Application\Filter\RawToStr;
 
 /**
  * Description of BillManager
@@ -196,18 +197,20 @@ class BillManager
     /**
      * Преобразование данных файла в массив
      * @param string $filename
+     * @param string $filepath
      * @return array
      */
-    protected function _filedata2array($filename)
+    protected function _filedata2array($filename, $filepath)
     {
 
         $result = [];
         $pathinfo = pathinfo($filename);
+        //var_dump($pathinfo); exit;
         if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
-            return $this->_xls2array($filename);            
+            return $this->_xls2array($filepath);            
         }
         if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
-            return $this->_csv2array($filename);            
+            return $this->_csv2array($filepath);            
         }        
         return $result;
     }    
@@ -237,7 +240,7 @@ class BillManager
                                 $this->addIdoc($billGetting->getSupplier(), [
                                     'status' => Idoc::STATUS_ACTIVE,
                                     'name' => $attachment['filename'],
-                                    'description' => Encoder::encode($this->_filedata2array($attachment['temp_file'])),
+                                    'description' => Encoder::encode($this->_filedata2array($attachment['filename'], $attachment['temp_file'])),
                                     'docKey' => null,
                                 ]);
                                 
