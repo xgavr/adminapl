@@ -69,7 +69,7 @@ $this->pageBreadcrumbs()->setItems([
             showFormDialog({
                 id: 'billSettingForm',
                 url: url+urlQuery,
-                width: window.screen.width-10
+                width: window.screen.width-40
             });
         });  
         
@@ -112,9 +112,9 @@ $this->pageBreadcrumbs()->setItems([
     function activeFormatter(value, row){
         var url = '/bills/bill-setting-form/'+value;
         btn = '<button';
-        btn += ' value="'+url+'"';
+        btn += ' modal-url="'+url+'"';
         btn += ' class="btn btn-default btn-xs bill-setting-modal-show"';
-        btn += ' data-toggle="modal" data-target="#modal-dialog"'; 
+//        btn += ' data-toggle="modal" data-target="#modal-dialog"'; 
         btn += ' title="Изменить">'; 
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
