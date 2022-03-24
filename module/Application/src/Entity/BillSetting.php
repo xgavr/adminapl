@@ -12,13 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Description of BillSetting
- * @ORM\Entity(repositoryClass="\Application\Repository\SupplierRepository")
+ * @ORM\Entity(repositoryClass="\Application\Repository\BillRepository")
  * @ORM\Table(name="bill_setting")
  * @author Daddy
  */
 class BillSetting {
     
-     // Supplier status constants.
+     // Bill setting status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     
@@ -148,4 +148,19 @@ class BillSetting {
         $supplier->addBillSettings($this);
     }    
         
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'status' => $this->getStatus(),
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+        ];
+        
+        return $result;
+    }    
+    
 }

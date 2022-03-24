@@ -12,9 +12,8 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Entity\Idoc;
 use Application\Entity\BillGetting;
-use Application\Entity\Order;
-use Application\Entity\Client;
-use Application\Form\CommentForm;
+use Application\Form\BillSettingForm;
+use Application\Entity\BillSetting;
 
 
 class BillController extends AbstractActionController
@@ -76,28 +75,23 @@ class BillController extends AbstractActionController
         ]);         
     }
 
-    public function editFormAction()
+    public function billSettingFormAction()
     {
-        $clientId = (int)$this->params()->fromQuery('client', -1);
-        $orderId = (int)$this->params()->fromQuery('order', -1);
-        $commentId = (int)$this->params()->fromRoute('id', -1);
+        $idocId = (int)$this->params()->fromQuery('idoc', -1);
+        $billSettingId = (int)$this->params()->fromRoute('id', -1);
 
-        $comment = $order = $client = NULL;
+        $billSetting = NULL;
         
-        if ($commentId>0) {
-            $comment = $this->entityManager->getRepository(Comment::class)
-                    ->find($commentId);
+        if ($billSettingId>0) {
+            $billSetting = $this->entityManager->getRepository(BillSetting::class)
+                    ->find($billSettingId);
         }        
-        if ($orderId>0) {
-            $order = $this->entityManager->getRepository(Order::class)
-                    ->find($orderId);
-        }        
-        if ($clientId>0) {
-            $client = $this->entityManager->getRepository(Client::class)
-                    ->find($clientId);
+        if ($idocId>0) {
+            $idoc = $this->entityManager->getRepository(Idoc::class)
+                    ->find($idocId);
         }        
         
-        $form = new CommentForm();
+        $form = new BillSettingForm();
 
         if ($this->getRequest()->isPost()) {
             
@@ -106,14 +100,10 @@ class BillController extends AbstractActionController
 
             if ($form->isValid()) {
 
-                if ($comment){
-                    $this->commentManager->updateComment($comment, $data);                    
+                if ($billSetting){
+                    $this->billManager->updateBillSetting($billSetting, $data);                    
                 } else {
-                    if ($order){
-                        $this->commentManager->addOrderComment($order, $data);
-                    } elseif ($client){
-                        $this->commentManager->addClientComment($client, $data);                        
-                    }    
+                    $this->billManager->addBillSeting($data);                        
                 }    
                 
                 return new JsonModel(
@@ -121,21 +111,16 @@ class BillController extends AbstractActionController
                 );           
             }
         } else {
-            if ($comment){
-                $data = [
-                    'comment' => $comment->getComment(),  
-                ];
-                $form->setData($data);
+            if ($billSetting){
+                $form->setData($billSetting->toArray());
             }  
         }    
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'comment' => $comment,
-            'client' => $client,
-            'order' => $order,
-            'currentUser' => $this->commentManager->currentUser(),
+            'billSetting' => $billSetting,
+            'idoc' => $idoc,
         ]);                
         
     }
@@ -178,10 +163,25 @@ class BillController extends AbstractActionController
         
         return new JsonModel(
            ['ok']
-        );           
-        
-        exit;
-        
+        );                   
     }
+    
+    public function deleteIdocAction()
+    {
+        $idocId = $this->params()->fromRoute('id', -1);
+        
+        $idoc = $this->entityManager->getRepository(Idoc::class)
+                ->find($idocId);        
+        if ($idoc == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->billManager->removeIdoc($idoc);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }    
     
 }

@@ -206,10 +206,12 @@ class SupplierRepository extends EntityRepository{
         $queryBuilder->select('gs, s')
                 ->from(GoodSupplier::class, 'gs')
                 ->join('gs.supplier', 's')
+                ->join('gs.good', 'g')
                 ->where('gs.good = ?1')
                 ->setParameter('1', $goodId)
                 ->andWhere('gs.update > ?2')
                 ->setParameter('2', date('Y-m-d', strtotime('-3 days')))
+                ->andWhere('g.price > gs.price')
                 ;
         
         if ($market instanceof MarketPriceSetting){
