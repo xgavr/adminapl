@@ -57,6 +57,10 @@ class MarketPriceSetting {
     const TD_IGNORE   = 1; // Товары все.
     const TD_MATH      = 2; // Товары с ТД.
     
+    const RATE_IGNORE   = 1; // Расценки все.
+    const RATE_INCLUDE  = 2; // Расценки включить.
+    const RATE_EXCLUDE  = 3; // Расценки исключить.
+    
     const DESCRIPTION_FORMAT_HTML = 1; //HTML
     const DESCRIPTION_FORMAT_TEXT = 2; //TEXT
         
@@ -156,6 +160,12 @@ class MarketPriceSetting {
      * @ORM\Column(name="td_setting")   
      */
     protected $tdSetting;
+
+    /**
+     * Использование расценок
+     * @ORM\Column(name="rate_setting")   
+     */
+    protected $rateSetting;
 
     /**
      * Формат описания
@@ -920,6 +930,50 @@ class MarketPriceSetting {
     }   
     
     /**
+     * Returns rate setting.
+     * @return int     
+     */
+    public function getRateSetting() 
+    {
+        return $this->rateSetting;
+    }
+    
+    /**
+     * Returns possible td setting as array.
+     * @return array
+     */
+    public static function getRateSettingList() 
+    {
+        return [
+            self::RATE_IGNORE => 'Игнорировать',
+            self::RATE_INCLUDE => 'Включить',
+            self::RATE_EXCLUDE => 'Исключить'
+        ];
+    }    
+    
+    /**
+     * Returns rate setting as string.
+     * @return string
+     */
+    public function getRateSettingAsString()
+    {
+        $list = self::getRateSettingList();
+        if (isset($list[$this->rateSetting]))
+            return $list[$this->rateSetting];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets rateSetting.
+     * @param int $rateSetting     
+     */
+    public function setRateSetting($rateSetting) 
+    {
+        $this->rateSetting = $rateSetting;
+    }   
+
+    /**
      * Returns description format.
      * @return int     
      */
@@ -1136,6 +1190,7 @@ class MarketPriceSetting {
             'shipping' => ($this->getShipping()) ? $this->getShipping()->getId():null,
             'rates' => $this->getRatesAsArray(),
             'tdSetting' => $this->getTdSetting(),
+            'rateSetting' => $this->getRateSetting(),
             'descriptionFormat' => $this->getDescriptionFormat(),
             'descriptionSet' => $this->getDescriptionSet(),
             'movementLimit' => $this->getMovementLimit(),

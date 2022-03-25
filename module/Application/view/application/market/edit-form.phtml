@@ -91,6 +91,10 @@ $form->get('tdSetting')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('rateSetting')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('descriptionFormat')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -101,7 +105,7 @@ $form->get('descriptionSet')->setAttributes([
 
 $form->get('rates')->setAttributes([
     'class'=>'form-control',
-    'style' => 'height: 330px',
+    'style' => 'height: 256px',
     ]);
 
 $form->get('supplier')->setAttributes([
@@ -319,8 +323,16 @@ if ($market && !$copy){
         <div class="col-lg-3">
             <div class="form-group">
                 <?= $this->formLabel($form->get('rates')); ?>
+                <button id="clearRatesBtn" type="button" class="btn btn-xs btn-default" title="Очистить выделенные строки">
+                    <span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+                </button>
                 <?= $this->formElement($form->get('rates')); ?>
                 <?= $this->formElementErrors($form->get('rates')); ?>                  
+            </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('rateSetting')); ?>
+                <?= $this->formElement($form->get('rateSetting')); ?>
+                <?= $this->formElementErrors($form->get('rateSetting')); ?>                  
             </div>
         </div>
     </div>
@@ -373,6 +385,9 @@ if ($market && !$copy){
         });    
         $('.form-control').on('change', function(){
             $('#changeSup').html('*');
+        });    
+        $('#clearRatesBtn').on('click', function(){
+            $('#rates option:selected').prop("selected", false);
         });    
         
         

@@ -93,7 +93,10 @@ $this->pageBreadcrumbs()->setItems([
                     Группы ТД:  <?= $this->escapeHtml($market->getGroupSettingAsString());?>; 
                     Группы наименований:  <?= $this->escapeHtml($market->getTokenGroupSettingAsString());?>; 
                     Текдок:  <?= $this->escapeHtml($market->getTdSettingAsString());?>; 
-                    Расценки: <?= $this->escapeHtml($market->getRatesAsString());?>; 
+                    Расценки <?= $this->escapeHtml(mb_strtolower($market->getRateSettingAsString()));?>
+                    <?php if($market->getRateSetting() != MarketPriceSetting::RATE_IGNORE):?>
+                        : <?= $this->escapeHtml($market->getRatesAsString());?> 
+                    <?php endif; ?>;    
                     Цена минимальная:  <?= $this->escapeHtml($market->getMinPrice());?>; 
                     Цена максимальная:  <?= $this->escapeHtml($market->getMaxPrice());?>; 
                     Наценка дополнительная, %:  <?= $this->escapeHtml($market->getExtraMargin());?>; 

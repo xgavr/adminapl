@@ -86,6 +86,7 @@ class MarketForm extends Form
             'name' => 'rates',
             'attributes' => [
                 'multiple' => 'multiple',
+                'id' => 'rates',
             ],
             'options' => [
                 'label' => 'Расценки',
@@ -273,6 +274,18 @@ class MarketForm extends Form
             'options' => [
                 'label' => 'Текдок',
                 'value_options' => MarketPriceSetting::getTdSettingList(),
+            ],
+        ]);
+                                
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'rateSetting',
+            'attributes' => [
+                'value' => MarketPriceSetting::RATE_IGNORE,
+            ],    
+            'options' => [
+                'label' => 'Выделенные расценки',
+                'value_options' => MarketPriceSetting::getRateSettingList(),
             ],
         ]);
                                 
