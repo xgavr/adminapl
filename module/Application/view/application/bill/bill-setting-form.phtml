@@ -1,3 +1,12 @@
+  <style>
+   .layer {
+        overflow: auto;  /*Добавляем полосы прокрутки*/ 
+        width: 100%;  /*Ширина блока */
+        height: 600px; /* Высота блока */
+        /*padding: 5px;  Поля вокруг текста */
+        border: solid 1px red;  /*Параметры рамки */
+   } 
+  </style>
 <?php
 
 $form = $this->form;
@@ -33,7 +42,7 @@ $form->prepare();
 
 <div class="modal-body">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-4">
             <div class="input-group">
                 <?= $this->formLabel($form->get('name')); ?>
                 <?= $this->formElement($form->get('name')); ?>
@@ -50,6 +59,13 @@ $form->prepare();
                 <?= $this->formElementErrors($form->get('description')); ?>                  
             </div>    
         </div>        
+        <div class="col-md-8">
+            <div class="input-group">
+                <div class="layer" id="sourceData">
+                    <small><?= $idoc->getDescriptionAsHtmlTable()?></small>                    
+                </div>
+            </div>
+        </div>
     </div>
 </div>    
 
@@ -62,12 +78,13 @@ $form->prepare();
             
 <script>
     $( document ).ready(function() {
+        $('#sourceData').css('width', Math.round(window.screen.width/1.67));
     });
     
     $('#bill-setting-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/bills/bill-setting-form/<?= $billSetting ?  $billSetting->getId():''?>?idoc=<?= ($idoc ? $idoc->getId():'') ?>,
+            url: '/bills/bill-setting-form/<?= $idoc ?  $idoc->getId():""?>?template=<?= ($billSetting ? $billSetting->getId():"") ?>',
             data: $('#bill-setting-form').serialize()
         })
             .done(function (data) {

@@ -9,6 +9,8 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Laminas\Json\Decoder;
+use Laminas\Json\Json;
 
 /**
  * Description of idoc
@@ -144,6 +146,36 @@ class Idoc {
         return Decoder::decode($this->description, Json::TYPE_ARRAY);
     }
     
+    public function getDescriptionAsHtmlTable()
+    {
+        $data = $this->getDescriptionAsArray();
+        $maxCol = 0;
+        foreach ($data as $row){
+            if (count($row) > $maxCol){
+                $maxCol = count($row);
+            }
+        }
+        $result = '';
+        if ($maxCol){
+            $result = '<table style="width: 9000px; height: 9000px">';
+            $r = 0;
+            foreach ($data as $row){
+                $c = 0;
+                $result .= '<tr>'; 
+                foreach ($row as $key=>$value){
+                    $result .= '<td style="border:1px solid black;">'; 
+                    $result .= $value;
+                    $result .= '</td>';                    
+                    $c++;
+                }
+                $result .= '</tr>';
+                $r++;
+            }
+            $result .= '</table>';
+        }    
+        return $result;
+    }
+
     public function setDescription($description)
     {
         $this->description = $description;

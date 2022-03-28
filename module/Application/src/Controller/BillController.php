@@ -77,8 +77,8 @@ class BillController extends AbstractActionController
 
     public function billSettingFormAction()
     {
-        $idocId = (int)$this->params()->fromQuery('idoc', -1);
-        $billSettingId = (int)$this->params()->fromRoute('id', -1);
+        $idocId = (int)$this->params()->fromRoute('id', -1);
+        $billSettingId = (int)$this->params()->fromQuery('template', -1);
 
         $billSetting = NULL;
         
