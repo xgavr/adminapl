@@ -149,30 +149,29 @@ class Idoc {
     public function getDescriptionAsHtmlTable()
     {
         $data = $this->getDescriptionAsArray();
+        $r = 0;
+        $maxH = count($data)*20;
         $maxCol = 0;
         foreach ($data as $row){
             if (count($row) > $maxCol){
                 $maxCol = count($row);
             }
         }
-        $result = '';
-        if ($maxCol){
-            $result = '<table style="width: 9000px; height: 9000px">';
-            $r = 0;
-            foreach ($data as $row){
-                $c = 0;
-                $result .= '<tr>'; 
-                foreach ($row as $key=>$value){
-                    $result .= '<td style="border:1px solid black;">'; 
-                    $result .= $value;
-                    $result .= '</td>';                    
-                    $c++;
-                }
-                $result .= '</tr>';
-                $r++;
+        $maxW = $maxCol*100;
+        $result = "<table style=\"width: {$maxW}px; height: {$maxH}px\">";
+        foreach ($data as $row){
+            $c = 0;
+            $result .= '<tr>'; 
+            foreach ($row as $key=>$value){
+                $result .= '<td style="border:1px solid black; width: 100px">'; 
+                $result .= $value;
+                $result .= '</td>';                    
+                $c++;
             }
-            $result .= '</table>';
-        }    
+            $result .= '</tr>';
+            $r++;
+        }
+        $result .= '</table>';
         return $result;
     }
 
