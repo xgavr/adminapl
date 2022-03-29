@@ -102,6 +102,53 @@ class BillManager
     }
     
     /**
+     * Чтение ячейки 
+     * @param string $cellOrCol
+     * @param string $row
+     * @param string $format
+     * @return string
+     */
+    public function getCellValue($cellOrCol, $row = null, $format = 'YYYY-m-d')
+    {
+        //column set by index
+        if(is_numeric($cellOrCol)) {
+            $cell = $this->activeSheet->getCellByColumnAndRow($cellOrCol, $row);
+        } else {
+            $lastChar = substr($cellOrCol, -1, 1);
+            if(!is_numeric($lastChar)) { //column contains only letter, e.g. "A"
+               $cellOrCol .= $row;
+            } 
+            
+            $cell = $this->activeSheet->getCell($cellOrCol);
+        }
+        
+        //try to find current coordinate in all merged cells ranges
+        //if find -> get value from head cell
+        foreach($this->mergedCellsRange as $currMergedRange){
+            if($cell->isInRange($currMergedRange)) {
+                $currMergedCellsArray = PHPExcel_Cell::splitRange($currMergedRange);
+                $cell = $this->activeSheet->getCell($currMergedCellsArray[0][0]);
+                break;
+            }
+        }
+
+        //simple value
+        $val = $cell->getValue();
+        
+        //date
+        if(PHPExcel_Shared_Date::isDateTime($cell)) {
+             $val = date($format, PHPExcel_Shared_Date::ExcelToPHP($val)); 
+        }
+        
+        //for incorrect formulas take old value
+        if((substr($val,0,1) === '=' ) && (strlen($val) > 1)){
+            $val = $cell->getOldCalculatedValue();
+        }
+
+        return $val;
+    }
+    
+    /**
      * Преобразовать xls в array
      * @param string $filename
      */
@@ -126,7 +173,7 @@ class BillManager
 
 //            $filterSubset = new \Application\Filter\ExcelColumn();
 //            $reader->setReadFilter($filterSubset);
-            $reader->setReadDataOnly(true);
+//            $reader->setReadDataOnly(true);
             $spreadsheet = $reader->load($filename);
 
             $sheets = $spreadsheet->getAllSheets();
