@@ -124,8 +124,9 @@ class BillManager
             } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
             }    
 
-            $filterSubset = new \Application\Filter\ExcelColumn();
-            $reader->setReadFilter($filterSubset);
+//            $filterSubset = new \Application\Filter\ExcelColumn();
+//            $reader->setReadFilter($filterSubset);
+            $reader->setReadDataOnly(true);
             $spreadsheet = $reader->load($filename);
 
             $sheets = $spreadsheet->getAllSheets();
