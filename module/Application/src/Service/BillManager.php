@@ -16,6 +16,7 @@ use Laminas\Json\Encoder;
 use Application\Filter\CsvDetectDelimiterFilter;
 use Laminas\Validator\File\IsCompressed;
 use Application\Filter\RawToStr;
+use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Date;
 
 /**
  * Description of BillManager
@@ -178,25 +179,21 @@ class BillManager
 
             $sheets = $spreadsheet->getAllSheets();
             foreach ($sheets as $sheet) { // PHPExcel_Worksheet
-
-                $excel_sheet_content = $sheet->toArray();
-
-                if (count($excel_sheet_content)){
-                        
-                    foreach ($excel_sheet_content as $row){
-
-                        $str = $filter->filter($row);
-
-                        if ($str){
-                            $result[] = explode(';', $str);                              
-                        }                               
+                foreach ($sheet->getRowIterator() as $row) { 
+                    $cellIterator = $row->getCellIterator();
+                    $resultRow = [];
+                    foreach ($cellIterator as $cell) {
+                        $value = $cell->getCalculatedValue();
+                        if (Date::isDateTime($cell)) {
+                            $value = date('YYYY-m-d', Date::excelToTimestamp($cell->getValue()));
+                        }                        
+                        $resultRow[] = $value;
                     }
-                }
-                    
+                    $result[] = $resultRow;                              
+                }    
             }                
             unset($spreadsheet);
-        }
-        
+        }        
         return $result;        
     }
     
