@@ -149,21 +149,38 @@ class Idoc {
     public function getDescriptionAsHtmlTable()
     {
         $data = $this->getDescriptionAsArray();
-        $r = 0;
-        $maxH = count($data)*20;
+        $maxH = count($data)*5;
         $maxCol = 0;
         foreach ($data as $row){
             if (count($row) > $maxCol){
                 $maxCol = count($row);
             }
         }
-        $maxW = $maxCol*100;
+        $w = 20;
+        $maxW = $maxCol*$w;
         $result = "<table style=\"width: {$maxW}px; height: {$maxH}px\">";
+        $c = 1;
+        $result .= '<tr>'; 
+        $result .= "<td align=\"center\" style=\"border:1px solid black; width: {$w}px\">"; 
+        $result .= 0;
+        $result .= '</td>';                    
+        while (true){
+            if ($c > $maxCol) break;
+            $result .= "<td align=\"center\" style=\"border:1px solid black; width: {$w}px\">"; 
+            $result .= $c;
+            $result .= '</td>';                    
+            $c++;
+        }
+        $result .= '</tr>';            
+        $r = 1;
         foreach ($data as $row){
-            $c = 0;
             $result .= '<tr>'; 
+            $result .= "<td align=\"center\" style=\"border:1px solid black; width: {$w}px\">"; 
+            $result .= $r;
+            $result .= '</td>';                    
+            $c = 1;
             foreach ($row as $key=>$value){
-                $result .= '<td style="border:1px solid black; width: 100px">'; 
+                $result .= "<td style=\"border:1px solid black; width: {$w}px\" class=\"dataCell\" data-row=\"{$r}\" data-col=\"{$c}\">"; 
                 $result .= $value;
                 $result .= '</td>';                    
                 $c++;

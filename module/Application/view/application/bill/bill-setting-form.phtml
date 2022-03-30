@@ -61,6 +61,8 @@ $form->prepare();
         </div>        
         <div class="col-md-8">
             <div class="input-group">
+                <div id="dataLabel">
+                </div>
                 <div class="layer" id="sourceData">
                     <small><?= $idoc->getDescriptionAsHtmlTable()?></small>                    
                 </div>
@@ -78,7 +80,14 @@ $form->prepare();
             
 <script>
     $( document ).ready(function() {
-        $('#sourceData').css('width', Math.round(window.screen.width/1.67));
+        $('#sourceData').css('width', Math.round(window.screen.width/1.58));
+
+        $('.dataCell').on('click', function(e){
+            var row = $(e.currentTarget).attr('data-row');
+            var col = $(e.currentTarget).attr('data-col');
+            var value = $(e.currentTarget).html();
+            $('#dataLabel').html('колонка: '+row+', строка: '+col+', '+value);
+        });
     });
     
     $('#bill-setting-submit').on('click', function() {
