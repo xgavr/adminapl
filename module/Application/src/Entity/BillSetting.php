@@ -45,6 +45,96 @@ class BillSetting {
     protected $status;    
        
     /**
+     * @ORM\Column(name="doc_num_col")  
+     */
+    protected $docNumCol;    
+
+    /**
+     * @ORM\Column(name="doc_num_row")  
+     */
+    protected $docNumRow;    
+
+    /**
+     * @ORM\Column(name="doc_date_col")  
+     */
+    protected $docDateCol;    
+
+    /**
+     * @ORM\Column(name="doc_date_row")  
+     */
+    protected $docDateRow;    
+
+    /**
+     * @ORM\Column(name="cor_num_col")  
+     */
+    protected $corNumCol;    
+
+    /**
+     * @ORM\Column(name="cor_num_row")  
+     */
+    protected $corNumRow;    
+
+    /**
+     * @ORM\Column(name="cor_date_col")  
+     */
+    protected $corDateCol;    
+
+    /**
+     * @ORM\Column(name="cor_date_row")  
+     */
+    protected $corDateRow;    
+
+    /**
+     * @ORM\Column(name="id_num_col")  
+     */
+    protected $idNumCol;    
+
+    /**
+     * @ORM\Column(name="id_num_row")  
+     */
+    protected $idNumRow;    
+
+    /**
+     * @ORM\Column(name="id_date_col")  
+     */
+    protected $idDateCol;    
+
+    /**
+     * @ORM\Column(name="id_date_row")  
+     */
+    protected $idDateRow;    
+
+    /**
+     * @ORM\Column(name="contract_col")  
+     */
+    protected $contractCol;    
+
+    /**
+     * @ORM\Column(name="contract_row")  
+     */
+    protected $contractRow;    
+
+    /**
+     * @ORM\Column(name="tag_non_cash_col")  
+     */
+    protected $tagNonCashCol;    
+
+    /**
+     * @ORM\Column(name="tag_non_cash_row")  
+     */
+    protected $tagNonCashRow;    
+
+    /**
+     * @ORM\Column(name="tag_non_cash_value")  
+     */
+    protected $tagNonCashValue;    
+
+    /**
+     * @ORM\Column(name="init_tab_row")  
+     */
+    protected $tagNonCashValue;    
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="billSettings") 
      * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
      */

@@ -2,7 +2,7 @@
    .layer {
         overflow: auto;  /*Добавляем полосы прокрутки*/ 
         width: 100%;  /*Ширина блока */
-        height: 600px; /* Высота блока */
+        /*height: 500px;  Высота блока */
         /*padding: 5px;  Поля вокруг текста */
         border: solid 1px red;  /*Параметры рамки */
    } 
@@ -34,7 +34,7 @@ $form->prepare();
 <?= $this->form()->openTag($form); ?>
 
 <div class="modal-header">
-    <h5 class="modal-title">Шаблон</h5>
+    <h5 class="modal-title">Шаблон для <?= $idoc->getSupplier()->getName()?> <?= $idoc->getName()?></h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -81,6 +81,7 @@ $form->prepare();
 <script>
     $( document ).ready(function() {
         $('#sourceData').css('width', Math.round(window.screen.width/1.58));
+        $('#sourceData').css('height', Math.round(window.screen.height/1.9));
 
         $('.dataCell').on('click', function(e){
             var row = $(e.currentTarget).attr('data-row');
