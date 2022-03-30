@@ -132,7 +132,12 @@ class BillSetting {
     /**
      * @ORM\Column(name="init_tab_row")  
      */
-    protected $tagNonCashValue;    
+    protected $initTabRow;    
+
+    /**
+     * @ORM\Column(name="article_col")  
+     */
+    protected $articleCol;    
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="billSettings") 
