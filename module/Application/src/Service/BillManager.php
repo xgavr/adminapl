@@ -103,6 +103,121 @@ class BillManager
     }    
     
     /**
+     * Добавить настройки чтерия накладных
+     * 
+     * @param Supplier $supplier
+     * @param array $data
+     * @return BillSetting
+     */
+    public function addBillSetting($supplier, $data)
+    {
+        $billSetting = new BillSetting();
+        $billSetting->setName(empty($data['name']) ? null:$data['name']);
+        $billSetting->setStatus($data['status']);
+        $billSetting->setDescription(empty($data['description']) ? null:$data['description']);
+        $billSetting->setDescription(empty($data['docNumCol']) ? null:$data['docNumCol']);
+        $billSetting->setDescription(empty($data['docNumRow']) ? null:$data['docNumRow']);
+        $billSetting->setDescription(empty($data['docDateCol']) ? null:$data['docDateCol']);
+        $billSetting->setDescription(empty($data['docDateRow']) ? null:$data['docDateRow']);
+        $billSetting->setDescription(empty($data['corNumCol']) ? null:$data['corNumCol']);
+        $billSetting->setDescription(empty($data['corNumRow']) ? null:$data['corNumRow']);
+        $billSetting->setDescription(empty($data['corDateCol']) ? null:$data['corDateCol']);
+        $billSetting->setDescription(empty($data['corDateRow']) ? null:$data['corDateRow']);
+        $billSetting->setDescription(empty($data['idNumCol']) ? null:$data['idNumCol']);
+        $billSetting->setDescription(empty($data['idNumRow']) ? null:$data['idNumRow']);
+        $billSetting->setDescription(empty($data['idDateCol']) ? null:$data['idDateCol']);
+        $billSetting->setDescription(empty($data['idDateRow']) ? null:$data['idDateRow']);
+        $billSetting->setDescription(empty($data['contractCol']) ? null:$data['contractCol']);
+        $billSetting->setDescription(empty($data['contractRow']) ? null:$data['contractRow']);
+        $billSetting->setDescription(empty($data['tagNoCashCol']) ? null:$data['tagNoCashCol']);
+        $billSetting->setDescription(empty($data['tagNoCashRow']) ? null:$data['tagNoCashRow']);
+        $billSetting->setDescription(empty($data['tagNoCashValue']) ? null:$data['tagNoCashValue']);
+        $billSetting->setDescription(empty($data['initTabRow']) ? null:$data['initTabRow']);
+        $billSetting->setDescription(empty($data['articleCol']) ? null:$data['articleCol']);
+        $billSetting->setDescription(empty($data['supplierIdCol']) ? null:$data['supplierIdCol']);
+        $billSetting->setDescription(empty($data['goodNameCol']) ? null:$data['goodNameCol']);
+        $billSetting->setDescription(empty($data['producerCol']) ? null:$data['producerCol']);
+        $billSetting->setDescription(empty($data['quantityCol']) ? null:$data['quantityCol']);
+        $billSetting->setDescription(empty($data['priceCol']) ? null:$data['priceCol']);
+        $billSetting->setDescription(empty($data['amountCol']) ? null:$data['amountCol']);
+        $billSetting->setDescription(empty($data['packageCodeCol']) ? null:$data['packageCodeCol']);
+        $billSetting->setDescription(empty($data['packcageCol']) ? null:$data['packcageCol']);
+        $billSetting->setDescription(empty($data['countryCodeCol']) ? null:$data['countryCodeCol']);
+        $billSetting->setDescription(empty($data['countryCol']) ? null:$data['countryCol']);
+        $billSetting->setDescription(empty($data['ntdCol']) ? null:$data['ntdCol']);
+        
+        $billSetting->setSupplier($supplier);
+        
+        $this->entityManager->persist($billSetting);
+        $this->entityManager->flush($billSetting);
+        
+        return $BillSetting;
+    }
+    
+    /**
+     * Обновить настройки чтерия накладных
+     * 
+     * @param BillSetting $billSetting
+     * @param array $data
+     * @return BillSetting
+     */
+    public function updateBillSetting($billSetting, $data)
+    {
+        $billSetting->setName(empty($data['name']) ? null:$data['name']);
+        $billSetting->setStatus($data['status']);
+        $billSetting->setDescription(empty($data['description']) ? null:$data['description']);
+        $billSetting->setDescription(empty($data['docNumCol']) ? null:$data['docNumCol']);
+        $billSetting->setDescription(empty($data['docNumRow']) ? null:$data['docNumRow']);
+        $billSetting->setDescription(empty($data['docDateCol']) ? null:$data['docDateCol']);
+        $billSetting->setDescription(empty($data['docDateRow']) ? null:$data['docDateRow']);
+        $billSetting->setDescription(empty($data['corNumCol']) ? null:$data['corNumCol']);
+        $billSetting->setDescription(empty($data['corNumRow']) ? null:$data['corNumRow']);
+        $billSetting->setDescription(empty($data['corDateCol']) ? null:$data['corDateCol']);
+        $billSetting->setDescription(empty($data['corDateRow']) ? null:$data['corDateRow']);
+        $billSetting->setDescription(empty($data['idNumCol']) ? null:$data['idNumCol']);
+        $billSetting->setDescription(empty($data['idNumRow']) ? null:$data['idNumRow']);
+        $billSetting->setDescription(empty($data['idDateCol']) ? null:$data['idDateCol']);
+        $billSetting->setDescription(empty($data['idDateRow']) ? null:$data['idDateRow']);
+        $billSetting->setDescription(empty($data['contractCol']) ? null:$data['contractCol']);
+        $billSetting->setDescription(empty($data['contractRow']) ? null:$data['contractRow']);
+        $billSetting->setDescription(empty($data['tagNoCashCol']) ? null:$data['tagNoCashCol']);
+        $billSetting->setDescription(empty($data['tagNoCashRow']) ? null:$data['tagNoCashRow']);
+        $billSetting->setDescription(empty($data['tagNoCashValue']) ? null:$data['tagNoCashValue']);
+        $billSetting->setDescription(empty($data['initTabRow']) ? null:$data['initTabRow']);
+        $billSetting->setDescription(empty($data['articleCol']) ? null:$data['articleCol']);
+        $billSetting->setDescription(empty($data['supplierIdCol']) ? null:$data['supplierIdCol']);
+        $billSetting->setDescription(empty($data['goodNameCol']) ? null:$data['goodNameCol']);
+        $billSetting->setDescription(empty($data['producerCol']) ? null:$data['producerCol']);
+        $billSetting->setDescription(empty($data['quantityCol']) ? null:$data['quantityCol']);
+        $billSetting->setDescription(empty($data['priceCol']) ? null:$data['priceCol']);
+        $billSetting->setDescription(empty($data['amountCol']) ? null:$data['amountCol']);
+        $billSetting->setDescription(empty($data['packageCodeCol']) ? null:$data['packageCodeCol']);
+        $billSetting->setDescription(empty($data['packcageCol']) ? null:$data['packcageCol']);
+        $billSetting->setDescription(empty($data['countryCodeCol']) ? null:$data['countryCodeCol']);
+        $billSetting->setDescription(empty($data['countryCol']) ? null:$data['countryCol']);
+        $billSetting->setDescription(empty($data['ntdCol']) ? null:$data['ntdCol']);
+        
+        $this->entityManager->persist($billSetting);
+        $this->entityManager->flush($billSetting);
+        
+        return $BillSetting;
+    }
+    
+    /**
+     * Удалить настройки чтерия накладных
+     * 
+     * @param BillSetting $billSetting
+     */
+    public function removeBillSetting($billSetting)
+    {
+        
+        $this->entityManager->remove($billSetting);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
      * Преобразовать xls в array
      * @param string $filename
      */

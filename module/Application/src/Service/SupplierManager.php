@@ -553,46 +553,6 @@ class SupplierManager
     }
     
     /**
-     * Добавить настройки чтерия накладных
-     * 
-     * @param Supplier $supplier
-     * @param array $data
-     * @return BillSetting
-     */
-    public function addBillSetting($supplier, $data)
-    {
-        $billSetting = new BillSetting();
-        $billSetting->setName($data['name']);
-        $billSetting->setStatus($data['status']);
-        $billSetting->setDescription($data['description']);
-        $billSetting->setSupplier($supplier);
-        
-        $this->entityManager->persist();
-        $this->entityManager->flush();
-        
-        return $BillSetting;
-    }
-    
-    /**
-     * Обновить настройки чтерия накладных
-     * 
-     * @param BillSetting $billSetting
-     * @param array $data
-     * @return BillSetting
-     */
-    public function updateBillSetting($billSetting, $data)
-    {
-        $billSetting->setName($data['name']);
-        $billSetting->setStatus($data['status']);
-        $billSetting->setDescription($data['description']);
-        
-        $this->entityManager->persist();
-        $this->entityManager->flush();
-        
-        return $BillSetting;
-    }
-    
-    /**
      * Удалить настройки чтерия накладных
      * 
      * @param BillSetting $billSetting
