@@ -24,123 +24,123 @@ $form->get('status')->setAttributes([
     ]);
 
 $form->get('docNumCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('docNumRow')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('docDateCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('docDateRow')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('corNumCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('corNumRow')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('corDateCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('corDateRow')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('idNumCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('idNumRow')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('idDateCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('idDateRow')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('contractCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('contractRow')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('tagNoCashCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('tagNoCashRow')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('tagNoCashValue')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('initTabRow')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('articleCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('supplierIdCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('goodNameCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('producerCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('quantityCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('priceCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('amountCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('packageCodeCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('packcageCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('countryCodeCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('countryCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 $form->get('ntdCol')->setAttributes([
-    'class'=>'form-control input-sm', 
+    'class'=>'form-control input-sm input-num', 
     ]);
 
 
@@ -162,10 +162,15 @@ $form->prepare();
 
 <div class="modal-body">
     <div class="row" style="padding: 5px;">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div id="dataLabel">
                
             </div>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-cancel" title="Очистить" id="eraseBtn">
+                <span class="glificon glyphicon-check"></span>
+            </button>
         </div>
         <div class="col-md-1">
             <?= $this->formElement($form->get('status')); ?>
@@ -350,6 +355,9 @@ $form->prepare();
             var col = $(e.currentTarget).attr('data-col');
             var value = $(e.currentTarget).html();
             $('#dataLabel').html('колонка: '+row+', строка: '+col+', '+value);
+        });
+        $('#eraseBtn').on('click', function(e){
+            $('.input-num').val(null);
         });
     });
     

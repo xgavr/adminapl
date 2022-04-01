@@ -89,6 +89,10 @@ class BillController extends AbstractActionController
         if ($idocId>0) {
             $idoc = $this->entityManager->getRepository(Idoc::class)
                     ->find($idocId);
+            if (!$billSetting){
+                $billSetting = $this->entityManager->getRepository(BillSetting::class)
+                        ->findOneBy(['supplier' => $idoc->getSupplier()->getId()]);
+            }    
         }        
         
         $form = new BillSettingForm();

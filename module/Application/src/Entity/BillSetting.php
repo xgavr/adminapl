@@ -225,18 +225,16 @@ class BillSetting {
         if (empty($result)){
             $result = preg_replace('/[^a-zA-Z]/ui', '',$name );            
         }
+        if (empty($result)){
+            $result = $name;   
+        }
         
+        return mb_strtoupper($result);
     }
 
     public function setName($name) 
     {
-        if ($strRU){
-            $this->name = $strRU;
-        } elseif ($strEN){
-            $this->name = $strEn;
-        } else {
-            $this->name = 
-        }   
+        $this->name = $this->gname($name);
     }     
     
     /**

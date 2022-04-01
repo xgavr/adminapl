@@ -49,7 +49,8 @@ class BillSettingForm extends Form
             'type'  => 'text',
             'name' => 'name',
             'attributes' => [
-                'id' => 'name'
+                'id' => 'name',
+                'disabled' => true,
             ],
             'options' => [
                 'label' => 'Наименование',
@@ -86,7 +87,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'docNumCol',
             'attributes' => [
-                'id' => 'docNumCol'
+                'id' => 'docNumCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Номер документа',
@@ -97,7 +99,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'docNumRow',
             'attributes' => [
-                'id' => 'docNumRow'
+                'id' => 'docNumRow',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Номер документа',
@@ -108,7 +111,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'docDateCol',
             'attributes' => [
-                'id' => 'docDateCol'
+                'id' => 'docDateCol',
+                'min' => 0,                
             ],
             'options' => [
                 'label' => 'Дата документа',
@@ -119,7 +123,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'docDateRow',
             'attributes' => [
-                'id' => 'docDateRow'
+                'id' => 'docDateRow',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Дата документа',
@@ -130,7 +135,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'corNumCol',
             'attributes' => [
-                'id' => 'corNumCol'
+                'id' => 'corNumCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Номер корректировки',
@@ -141,7 +147,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'corNumRow',
             'attributes' => [
-                'id' => 'corNumRow'
+                'id' => 'corNumRow',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Номер корректировки',
@@ -152,7 +159,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'corDateCol',
             'attributes' => [
-                'id' => 'corDateCol'
+                'id' => 'corDateCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Дата корректировки',
@@ -163,7 +171,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'corDateRow',
             'attributes' => [
-                'id' => 'corDateRow'
+                'id' => 'corDateRow',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Дата корректировки',
@@ -174,7 +183,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'idNumCol',
             'attributes' => [
-                'id' => 'idNumCol'
+                'id' => 'idNumCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Номер отгрузки',
@@ -185,7 +195,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'idNumRow',
             'attributes' => [
-                'id' => 'idNumRow'
+                'id' => 'idNumRow',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Номер отгрузки',
@@ -196,7 +207,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'idDateCol',
             'attributes' => [
-                'id' => 'idDateCol'
+                'id' => 'idDateCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Дата отгрузки',
@@ -207,7 +219,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'idDateRow',
             'attributes' => [
-                'id' => 'idDateRow'
+                'id' => 'idDateRow',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Дата отгрузки',
@@ -218,7 +231,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'contractCol',
             'attributes' => [
-                'id' => 'contractCol'
+                'id' => 'contractCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Номер договора',
@@ -229,7 +243,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'contractRow',
             'attributes' => [
-                'id' => 'contractRow'
+                'id' => 'contractRow',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Номер договора',
@@ -240,7 +255,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'tagNoCashCol',
             'attributes' => [
-                'id' => 'tagNoCashCol'
+                'id' => 'tagNoCashCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Оплата безнал',
@@ -251,7 +267,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'tagNoCashRow',
             'attributes' => [
-                'id' => 'tagNoCashRow'
+                'id' => 'tagNoCashRow',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Оплата безнал',
@@ -259,7 +276,7 @@ class BillSettingForm extends Form
         ]);
 
         $this->add([           
-            'type'  => 'number',
+            'type'  => 'text',
             'name' => 'tagNoCashValue',
             'attributes' => [
                 'id' => 'tagNoCashValue'
@@ -273,7 +290,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'initTabRow',
             'attributes' => [
-                'id' => 'initTabRow'
+                'id' => 'initTabRow',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Строка начала таблицы товаров',
@@ -284,7 +302,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'articleCol',
             'attributes' => [
-                'id' => 'articleCol'
+                'id' => 'articleCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Артикул',
@@ -295,7 +314,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'supplierIdCol',
             'attributes' => [
-                'id' => 'supplierIdCol'
+                'id' => 'supplierIdCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Номер у поставщика',
@@ -306,7 +326,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'goodNameCol',
             'attributes' => [
-                'id' => 'goodNameCol'
+                'id' => 'goodNameCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Наименование товара',
@@ -317,7 +338,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'producerCol',
             'attributes' => [
-                'id' => 'producerCol'
+                'id' => 'producerCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Производитель',
@@ -328,7 +350,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'quantityCol',
             'attributes' => [
-                'id' => 'quantityCol'
+                'id' => 'quantityCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Количество',
@@ -339,7 +362,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'priceCol',
             'attributes' => [
-                'id' => 'priceCol'
+                'id' => 'priceCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Цена с НДС',
@@ -350,7 +374,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'amountCol',
             'attributes' => [
-                'id' => 'amountCol'
+                'id' => 'amountCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Сумма с НДС',
@@ -361,7 +386,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'packageCodeCol',
             'attributes' => [
-                'id' => 'packageCodeCol'
+                'id' => 'packageCodeCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Упаковка, код',
@@ -372,7 +398,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'packcageCol',
             'attributes' => [
-                'id' => 'packcageCol'
+                'id' => 'packcageCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Упаковка',
@@ -383,7 +410,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'countryCodeCol',
             'attributes' => [
-                'id' => 'countryCodeCol'
+                'id' => 'countryCodeCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Страна, код',
@@ -394,7 +422,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'countryCol',
             'attributes' => [
-                'id' => 'countryCol'
+                'id' => 'countryCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'Страна',
@@ -405,7 +434,8 @@ class BillSettingForm extends Form
             'type'  => 'number',
             'name' => 'ntdCol',
             'attributes' => [
-                'id' => 'ntdCol'
+                'id' => 'ntdCol',
+                'min' => 0,
             ],
             'options' => [
                 'label' => 'НТД',
