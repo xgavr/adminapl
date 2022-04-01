@@ -72,13 +72,13 @@ class BillSettingForm extends Form
         
         // Добавляем поле "description"
         $this->add([           
-            'type'  => 'textarea',
+            'type'  => 'text',
             'name' => 'description',
             'attributes' => [
                 'id' => 'description'
             ],
             'options' => [
-                'label' => 'Описание',
+                'label' => 'Коментарий',
             ],
         ]);
         

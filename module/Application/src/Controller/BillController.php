@@ -103,7 +103,8 @@ class BillController extends AbstractActionController
                 if ($billSetting){
                     $this->billManager->updateBillSetting($billSetting, $data);                    
                 } else {
-                    $this->billManager->addBillSeting($data);                        
+                    $data['name'] = $idoc->getName();
+                    $this->billManager->addBillSetting($idoc->getSupplier(), $data);                        
                 }    
                 
                 return new JsonModel(

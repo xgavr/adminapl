@@ -214,10 +214,29 @@ class BillSetting {
     {
         return $this->name;
     }
+    
+    /**
+     * Получить какоето имя
+     * @param string $name
+     */
+    public static function gname($name)
+    {
+        $result = preg_replace('/[^а-яА-Я]/ui', '',$name );
+        if (empty($result)){
+            $result = preg_replace('/[^a-zA-Z]/ui', '',$name );            
+        }
+        
+    }
 
     public function setName($name) 
     {
-        $this->name = $name;
+        if ($strRU){
+            $this->name = $strRU;
+        } elseif ($strEN){
+            $this->name = $strEn;
+        } else {
+            $this->name = 
+        }   
     }     
     
     /**

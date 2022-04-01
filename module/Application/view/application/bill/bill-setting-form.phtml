@@ -3,7 +3,7 @@
         overflow: auto;  /*Добавляем полосы прокрутки*/ 
         width: 100%;  /*Ширина блока */
         /*height: 500px;  Высота блока */
-        /*padding: 5px;  Поля вокруг текста */
+        /*padding: 5px;  Поля вокруг текста*/ 
         border: solid 1px red;  /*Параметры рамки */
    } 
   </style>
@@ -161,163 +161,170 @@ $form->prepare();
 </div>
 
 <div class="modal-body">
+    <div class="row" style="padding: 5px;">
+        <div class="col-md-4">
+            <div id="dataLabel">
+               
+            </div>
+        </div>
+        <div class="col-md-1">
+            <?= $this->formElement($form->get('status')); ?>
+        </div>    
+        <div class="col-md-1">
+            <?= $this->formLabel($form->get('name')); ?>
+        </div>    
+        <div class="col-md-2">
+            <?= $this->formElement($form->get('name')); ?>
+        </div>    
+        <div class="col-md-1">
+            <?= $this->formLabel($form->get('description')); ?>
+        </div>    
+        <div class="col-md-3">
+            <?= $this->formElement($form->get('description')); ?>
+        </div>    
+    </div>
     <div class="row">
         <div class="col-md-4">
             <div class="row">
-                <table width="100%" class="table">
-                    <tr>
-                        <th></th>
-                        <th>Строка</th>
-                        <th>Колонка</th>
-                        <th>Значение</th>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('docNumCol')); ?></td>
-                        <td><?= $this->formElement($form->get('docNumCol')); ?></td>
-                        <td><?= $this->formElement($form->get('docNumRow')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('docDateCol')); ?></td>
-                        <td><?= $this->formElement($form->get('docDateCol')); ?></td>
-                        <td><?= $this->formElement($form->get('docDateRow')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('corNumCol')); ?></td>
-                        <td><?= $this->formElement($form->get('corNumCol')); ?></td>
-                        <td><?= $this->formElement($form->get('corNumRow')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('corDateCol')); ?></td>
-                        <td><?= $this->formElement($form->get('corDateCol')); ?></td>
-                        <td><?= $this->formElement($form->get('corDateRow')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('idNumCol')); ?></td>
-                        <td><?= $this->formElement($form->get('idNumCol')); ?></td>
-                        <td><?= $this->formElement($form->get('idNumRow')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('idDateCol')); ?></td>
-                        <td><?= $this->formElement($form->get('idDateCol')); ?></td>
-                        <td><?= $this->formElement($form->get('idDateRow')); ?></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('contractCol')); ?></td>
-                        <td><?= $this->formElement($form->get('contractCol')); ?></td>
-                        <td><?= $this->formElement($form->get('contractRow')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('tagNoCashCol')); ?></td>
-                        <td><?= $this->formElement($form->get('tagNoCashCol')); ?></td>
-                        <td><?= $this->formElement($form->get('tagNoCashRow')); ?></td>
-                        <td><?= $this->formElement($form->get('tagNoCashValue')); ?></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('initTabRow')); ?></td>
-                        <td><?= $this->formElement($form->get('initTabRow')); ?></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('articleCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('articleCol')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('supplierIdCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('supplierIdCol')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('goodNameCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('goodNameCol')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('producerCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('producerCol')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('quantityCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('quantityCol')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('priceCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('priceCol')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('amountCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('amountCol')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('packageCodeCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('packageCodeCol')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('packcageCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('packcageCol')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('countryCodeCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('countryCodeCol')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('countryCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('countryCol')); ?></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><?= $this->formLabel($form->get('ntdCol')); ?></td>
-                        <td></td>
-                        <td><?= $this->formElement($form->get('ntdCol')); ?></td>
-                        <td></td>
-                    </tr>
-                </table>
+                <div class="layer">
+                    <table width="100%" class="table">
+                        <tr>
+                            <th></th>
+                            <th>Строка</th>
+                            <th>Колонка</th>
+                            <th>Значение</th>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('docNumCol')); ?></td>
+                            <td><?= $this->formElement($form->get('docNumCol')); ?></td>
+                            <td><?= $this->formElement($form->get('docNumRow')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('docDateCol')); ?></td>
+                            <td><?= $this->formElement($form->get('docDateCol')); ?></td>
+                            <td><?= $this->formElement($form->get('docDateRow')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('corNumCol')); ?></td>
+                            <td><?= $this->formElement($form->get('corNumCol')); ?></td>
+                            <td><?= $this->formElement($form->get('corNumRow')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('corDateCol')); ?></td>
+                            <td><?= $this->formElement($form->get('corDateCol')); ?></td>
+                            <td><?= $this->formElement($form->get('corDateRow')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('idNumCol')); ?></td>
+                            <td><?= $this->formElement($form->get('idNumCol')); ?></td>
+                            <td><?= $this->formElement($form->get('idNumRow')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('idDateCol')); ?></td>
+                            <td><?= $this->formElement($form->get('idDateCol')); ?></td>
+                            <td><?= $this->formElement($form->get('idDateRow')); ?></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('contractCol')); ?></td>
+                            <td><?= $this->formElement($form->get('contractCol')); ?></td>
+                            <td><?= $this->formElement($form->get('contractRow')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('tagNoCashCol')); ?></td>
+                            <td><?= $this->formElement($form->get('tagNoCashCol')); ?></td>
+                            <td><?= $this->formElement($form->get('tagNoCashRow')); ?></td>
+                            <td><?= $this->formElement($form->get('tagNoCashValue')); ?></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('initTabRow')); ?></td>
+                            <td><?= $this->formElement($form->get('initTabRow')); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('articleCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('articleCol')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('supplierIdCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('supplierIdCol')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('goodNameCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('goodNameCol')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('producerCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('producerCol')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('quantityCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('quantityCol')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('priceCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('priceCol')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('amountCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('amountCol')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('packageCodeCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('packageCodeCol')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('packcageCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('packcageCol')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('countryCodeCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('countryCodeCol')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('countryCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('countryCol')); ?></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('ntdCol')); ?></td>
+                            <td></td>
+                            <td><?= $this->formElement($form->get('ntdCol')); ?></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>    
             </div>
-<!--            <div class="input-group">
-                <?= $this->formLabel($form->get('name')); ?>
-                <?= $this->formElement($form->get('name')); ?>
-                <?= $this->formElementErrors($form->get('name')); ?>                  
-            </div>    
-            <div class="input-group">
-                <?= $this->formLabel($form->get('status')); ?>
-                <?= $this->formElement($form->get('status')); ?>
-                <?= $this->formElementErrors($form->get('status')); ?>                  
-            </div>    
-            <div class="input-group">
-                <?= $this->formLabel($form->get('description')); ?>
-                <?= $this->formElement($form->get('description')); ?>
-                <?= $this->formElementErrors($form->get('description')); ?>                  
-            </div>    -->
         </div>        
         <div class="col-md-8">
             <div class="input-group">
-                <div id="dataLabel">
-                </div>
                 <div class="layer" id="sourceData">
                     <small><?= $idoc->getDescriptionAsHtmlTable()?></small>                    
                 </div>
@@ -336,7 +343,7 @@ $form->prepare();
 <script>
     $( document ).ready(function() {
         $('#sourceData').css('width', Math.round(window.screen.width/1.58));
-        $('#sourceData').css('height', Math.round(window.screen.height/1.9));
+        $('.layer').css('height', Math.round(window.screen.height/1.9));
 
         $('.dataCell').on('click', function(e){
             var row = $(e.currentTarget).attr('data-row');
