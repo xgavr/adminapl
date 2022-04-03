@@ -168,9 +168,14 @@ $form->prepare();
             </div>
         </div>
         <div class="col-md-1">
-            <button type="button" class="btn btn-cancel" title="Очистить" id="eraseBtn">
-                <span class="glificon glyphicon-check"></span>
-            </button>
+            <p class="pull-right">
+                <button type="button" class="btn btn-action" title="Проверить" id="bill-setting-check">
+                    <span class="glyphicon glyphicon-check"></span>
+                </button>
+                <button type="button" class="btn btn-action" title="Очистить" id="eraseBtn">
+                    <span class="glyphicon glyphicon-erase"></span>
+                </button>                
+            </p>
         </div>
         <div class="col-md-1">
             <?= $this->formElement($form->get('status')); ?>
@@ -201,49 +206,49 @@ $form->prepare();
                         </tr>
                         <tr>
                             <td><?= $this->formLabel($form->get('docNumCol')); ?></td>
-                            <td><?= $this->formElement($form->get('docNumCol')); ?></td>
                             <td><?= $this->formElement($form->get('docNumRow')); ?></td>
+                            <td><?= $this->formElement($form->get('docNumCol')); ?></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td><?= $this->formLabel($form->get('docDateCol')); ?></td>
-                            <td><?= $this->formElement($form->get('docDateCol')); ?></td>
                             <td><?= $this->formElement($form->get('docDateRow')); ?></td>
+                            <td><?= $this->formElement($form->get('docDateCol')); ?></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td><?= $this->formLabel($form->get('corNumCol')); ?></td>
-                            <td><?= $this->formElement($form->get('corNumCol')); ?></td>
                             <td><?= $this->formElement($form->get('corNumRow')); ?></td>
+                            <td><?= $this->formElement($form->get('corNumCol')); ?></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td><?= $this->formLabel($form->get('corDateCol')); ?></td>
-                            <td><?= $this->formElement($form->get('corDateCol')); ?></td>
                             <td><?= $this->formElement($form->get('corDateRow')); ?></td>
+                            <td><?= $this->formElement($form->get('corDateCol')); ?></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td><?= $this->formLabel($form->get('idNumCol')); ?></td>
-                            <td><?= $this->formElement($form->get('idNumCol')); ?></td>
                             <td><?= $this->formElement($form->get('idNumRow')); ?></td>
+                            <td><?= $this->formElement($form->get('idNumCol')); ?></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td><?= $this->formLabel($form->get('idDateCol')); ?></td>
-                            <td><?= $this->formElement($form->get('idDateCol')); ?></td>
                             <td><?= $this->formElement($form->get('idDateRow')); ?></td>
+                            <td><?= $this->formElement($form->get('idDateCol')); ?></td>
                         </tr>
                         <tr>
                             <td><?= $this->formLabel($form->get('contractCol')); ?></td>
-                            <td><?= $this->formElement($form->get('contractCol')); ?></td>
                             <td><?= $this->formElement($form->get('contractRow')); ?></td>
+                            <td><?= $this->formElement($form->get('contractCol')); ?></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td><?= $this->formLabel($form->get('tagNoCashCol')); ?></td>
-                            <td><?= $this->formElement($form->get('tagNoCashCol')); ?></td>
                             <td><?= $this->formElement($form->get('tagNoCashRow')); ?></td>
+                            <td><?= $this->formElement($form->get('tagNoCashCol')); ?></td>
                             <td><?= $this->formElement($form->get('tagNoCashValue')); ?></td>
                         </tr>
                         <tr>
@@ -354,12 +359,30 @@ $form->prepare();
             var row = $(e.currentTarget).attr('data-row');
             var col = $(e.currentTarget).attr('data-col');
             var value = $(e.currentTarget).html();
-            $('#dataLabel').html('колонка: '+row+', строка: '+col+', '+value);
+            $('#dataLabel').html('строка: '+row+', колонка: '+col+', '+value);
         });
         $('#eraseBtn').on('click', function(e){
             $('.input-num').val(null);
         });
     });
+    $('#bill-setting-check').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/bills/read-idoc/<?= $idoc ?  $idoc->getId():""?>',
+            data: $('#bill-setting-form').serialize()
+        })
+            .done(function (data) {
+                if (data.data){
+    //                console.log(data.data.doc_no);
+                    $('#dataLabel').html('№'+data.data.doc_no+' от '+data.data.doc_date+' на сумму '+data.data.total);
+                }    
+            })
+            .fail(function (e) {
+                console.log(e);
+                alert("Ошибка при проверке данных");
+
+            });
+    });    
     
     $('#bill-setting-submit').on('click', function() {
         $.ajax({
@@ -369,8 +392,8 @@ $form->prepare();
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#modal-dialog').modal('hide');
-                    window.location.reload();
+                    $('#billSettingForm').modal('hide');
+                    //window.location.reload();
                 } else {
                     $('#modal-content').html(data);
                 }    

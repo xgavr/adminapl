@@ -17,6 +17,17 @@ use Application\Filter\CsvDetectDelimiterFilter;
 use Laminas\Validator\File\IsCompressed;
 use Application\Filter\RawToStr;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Stock\Entity\Ptu;
+use Application\Entity\SupplySetting;
+use Company\Entity\Office;
+use Company\Entity\Contract;
+use Application\Entity\Producer;
+use Application\Entity\Article;
+use Application\Filter\ArticleCode;
+use Application\Entity\Rawprice;
+use Application\Filter\ProducerName;
+use Application\Entity\UnknownProducer;
+use Application\Entity\Goods;
 
 /**
  * Description of BillManager
@@ -38,11 +49,25 @@ class BillManager
      */
     private $postManager;
     
+    /**
+     * Ptu manager.
+     * @var \Stock\Service\PtuManager
+     */
+    private $ptuManager;
+    
+    /**
+     * Assembly manager.
+     * @var \Application\Service\AssemblyManager
+     */
+    private $assemblyManager;
+    
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $postManager)
+    public function __construct($entityManager, $postManager, $ptuManager, $assemblyManager)
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;
+        $this->ptuManager = $ptuManager;
+        $this->assemblyManager = $assemblyManager;
     }
     
     /**
@@ -373,12 +398,225 @@ class BillManager
                             }
                         }
                     }
-                    exit;
+//                    exit;
                 }
             }
         }    
         
         return;
+    }   
+    
+    /**
+     * Получить тип оплаты контракта
+     * @param array $idocData
+     * @return int
+     */
+    private function _idocContractPay($idocData)
+    {
+        $result = Contract::PAY_CASH;
+        $noCashValue = false;
+        if (!empty($idocData['tag_no_cash_value'])){
+            $noCashValue = $idocData['tag_no_cash_value'];
+        }
+        if (!empty($idocData['tag_no_cash'])){
+            if ($noCashValue == $idocData['tag_no_cash'] || $idocData['tag_no_cash']){
+                $result = Contract::PAY_CASHLESS;
+            }
+        }
+        return $result;
     }
     
+    /**
+     * Новый товар
+     * @param string $article
+     * @param Producer $producer
+     * @param string $name
+     * @return Goods
+     */
+    private function _newGood($article, $producer = null, $name = null)
+    {
+        if (!$name){
+            $name = $code;
+        }
+        if (!$producer){
+            $producer = $this->entityManager->getRepository(Producer::class)
+                    ->findOneByAplId(0);
+        }
+        $articleFilter = new ArticleCode();
+        return $this->assemblyManager->addNewGood($articleFilter->filter($article), $producer, NULL, 0, mb_substr($name, 0, 255));        
+    }
+    
+    /**
+     * Получить товар
+     * @param Idoc $idoc
+     * @param array $data
+     * @return Goods
+     */
+    public function findGood($idoc, $data)
+    {
+        $articleStr = empty($data['article']) ? null:$data['article'];
+        $producerStr = empty($data['producer']) ? null:$data['producer'];
+        $goodName = empty($data['good_name']) ? null:$data['good_name'];
+        $iid = empty($data['supplier_article']) ? null:$data['supplier_article'];
+        
+        $articleFilter = new ArticleCode();
+        if ($articleStr && !$producer){
+            $code = $articleFilter->filter($articleStr);
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->findOneByCode($code);
+            if ($good){
+                return $good;
+            }
+            $articles = $this->entityManager->getRepository(Article::class)
+                    ->findByCode($code);
+            foreach ($articles as $article){
+                if ($article->getGood()){
+                    return $article->getGood();
+                }    
+            }
+        }
+        if ($iid){
+            $good = $this->entityManager->getRepository(BillSetting::class)
+                    ->findGoodFromRawprice($idoc->getSupplier(), $iid);
+            if (is_array($good)){
+                return $this->_newGood($good['article'], $good['producer'], $good['goodName']);
+            }
+            if ($good){
+                return $good;
+            }
+        }
+        $producerProducer = null;
+        if ($producerStr){
+            $producerNameFilter = new ProducerName();
+            $producerName = $producerNameFilter->filter($producerStr);
+            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneByName($producerName);
+            if ($unknownProducer){
+                if ($unknownProducer->getProducer()){
+                    $producer = $unknownProducer->getProducer();
+                }
+            }
+        }
+
+        return $this->_newGood($articleStr, $producer, $goodName);
+    }
+
+    /**
+     * Получить ПТУ
+     * 
+     * @param Idoc $idoc
+     * @param BillSetting $billSetting
+     * 
+     * @return Ptu 
+     */
+    public function idocToPtu($idoc, $billSetting)
+    {
+        $idocData = $idoc->idocToPtu($billSetting->toArray());
+        if ($idocData['total'] && $idocData['doc_no'] && $idocData['doc_date']){
+            
+            $dataPtu = [
+                'apl_id' => 0,
+                'doc_no' => $idocData['doc_no'],
+                'doc_date' => $idocData['doc_date'],
+                'status_ex' => Ptu::STATUS_EX_NEW,
+                'status' => Ptu::STATUS_ACTIVE,
+            ];
+            
+            $defaultSupplySetting = $this->entityManager->getRepository(SupplySetting::class)
+                    ->findOneBy(['supplier' => $idoc->getSupplier()->getId()]);
+            $office = $defaultSupplySetting->getOffice();
+            if (!$office){
+                $office = $this->entityManager->getRepository(Office::class)
+                        ->findDefaultOffice();
+            }
+            $legal = $this->entityManager->getRepository(Supplier::class)
+                    ->findDefaultSupplierLegal($idoc->getSupplier(), $idocData['doc_date']);
+            $contract = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultContract($office, $legal, $idocData['doc_date'], $this->_idocContractPay($idocData));
+            
+            $dataPtu['office'] = $office;
+            $dataPtu['legal'] = $legal;
+            $dataPtu['contract'] = $contract; 
+            
+            $ptu = $this->entityManager->getRepository(Ptu::class)
+                    ->findOneBy(['docNo' => $idocData['doc_no'], 'docDate' => $idocData['doc_date']]);
+            
+            if ($ptu){
+                $this->ptuManager->updatePtu($ptu, $dataPtu);
+                $this->ptuManager->removePtuGood($ptu); 
+            } else {        
+                $ptu = $this->ptuManager->addPtu($dataPtu);
+            }    
+            
+            if ($ptu && isset($idocData['tab'])){
+                $rowNo = 1;
+                foreach ($idocData['tab'] as $tp){
+                    if (!empty($tp['quantity']) && !empty($tp['good_name'])){
+                        $good = $this->findGood($idoc, $tp);   
+                        if (empty($good)){
+                            throw new \Exception("Не удалось создать карточку товара для документа {$tp['good_name']}");
+                        } else {
+
+                            $this->ptuManager->addPtuGood($ptu->getId(), [
+                                'status' => $ptu->getStatus(),
+                                'statusDoc' => $ptu->getStatusDoc(),
+                                'quantity' => $tp['quantity'],                    
+                                'amount' => $tp['amount'],
+                                'good_id' => $good->getId(),
+                                'comment' => '',
+                                'info' => '',
+                                'countryName' => (isset($tp['country'])) ? $tp['country']:'',
+                                'countryCode' => (isset($tp['country_code'])) ? $tp['country_code']:'',
+                                'unitName' => (isset($tp['packcage'])) ? $tp['packcage']:'',
+                                'unitCode' => (isset($tp['package_code'])) ? $tp['package_code']:'',
+                                'ntd' => (isset($tp['ntd'])) ? $tp['ntd']:'',
+                            ], $rowNo);
+                            $rowNo++;
+                        }    
+                    }    
+                }
+            }  
+
+            if ($ptu){
+                $this->ptuManager->updatePtuAmount($ptu);
+                $idoc->setDocKey($ptu->getLogKey());
+                $idoc->setStatus(Idoc::STATUS_RETIRED);
+                $this->entityManager->persist($idoc);
+                $this->entityManager->flush($idoc);
+                return true;
+            }            
+        }        
+        return false;
+    }
+    
+    /**
+     * Создать ПТУ
+     * @param Idoc $idoc
+     */
+    public function tryPtu($idoc)
+    {
+        $billSettings = $this->entityManager->getRepository(BillSetting::class)
+                ->findBy(['supplier' => $idoc->getSupplier()->getId(), 'status' => Idoc::STATUS_ACTIVE]);
+        foreach ($billSettings as $billSetting){
+            $idocData = $idoc->idocToPtu($billSetting->toArray());
+            if ($idocData['doc_no'] && $idocData['doc_date'] > '1970-01-01' && $idocData['total']){
+                if ($this->idocToPtu($idoc, $billSetting)){
+                    return;
+                }
+                
+            }
+        }
+        
+        foreach ($billSettings as $billSetting){
+            $idocData = $idoc->idocToPtu($billSetting->toArray());
+            if ($idocData['doc_no'] && $idocData['doc_date'] > '1970-01-01'){
+                if ($this->idocToPtu($idoc, $billSetting)){
+                    return;
+                }
+                
+            }
+        }
+        
+        return;
+    }
 }

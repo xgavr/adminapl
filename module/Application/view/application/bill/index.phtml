@@ -73,6 +73,43 @@ $this->pageBreadcrumbs()->setItems([
             });
         });  
         
+        $(document).on('click', '.try-ptu', function (e) {
+            var url = $(e.currentTarget).attr('url');
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                    refreshTable();
+                })
+                .fail(function (e) {
+                    console.log(e);
+                    alert("Ошибка при создании ПТУ");
+
+                });
+        });            
+
+        $(document).on('click', '.ptu-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'ptuModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+        $(document).on('click', '.ptu-good-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            var uniqueId = $(e.currentTarget).attr('unique-id');
+            if (uniqueId){
+                var row = $('#ptugoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
+                url = url+'?'+$.param(row);
+            }    
+            showFormDialog({
+                id: 'ptuGoodModal',
+                url: url,
+                zIndex: 9999
+            });
+        });  
     });
     
     function queryParams(params) {
@@ -93,11 +130,19 @@ $this->pageBreadcrumbs()->setItems([
     
     function docFormatter(value){
         if (!value){
-            value = '---';
+            return;
         }
-        return [
-            '<a href="/ptu/view/' + value + '" target="_blank">' + value + '</a>'
-        ].join(''); 
+        var keys = value.split(':')
+        var url = '/ptu/edit-form/'+keys[1];
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs ptu-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Просмотр ПТУ"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
     }    
     
     function supplierFormatter(value, row){
@@ -119,6 +164,14 @@ $this->pageBreadcrumbs()->setItems([
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
         
+        var url = '/bills/idoc-to-ptu/'+value;
+        btn += ' <button';
+        btn += ' url="'+url+'"';
+        btn += ' class="btn btn-default btn-xs try-ptu"';
+        btn += ' title="ПТУ">'; 
+        btn += '<span class="glyphicon glyphicon-download" aria-hidden="true"></span>';
+        btn += '</button>';
+
         var url = '/bills/delete-idoc/'+row.id;
         btn += ' <button';
         btn += ' type="button"';

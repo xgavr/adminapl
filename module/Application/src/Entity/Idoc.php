@@ -11,6 +11,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Laminas\Json\Decoder;
 use Laminas\Json\Json;
+use Application\Entity\BillSetting;
 
 /**
  * Description of idoc
@@ -234,4 +235,222 @@ class Idoc {
         $supplier->addBillSettings($this);
     }    
         
+    /**
+     * Прочитать номер документа
+     * @param int $row
+     * @param int $col
+     * @param array $idocData
+     * @return string
+     */
+    public function readText($row, $col, $idocData)
+    {
+        if (isset($idocData[$row])){
+            if (isset($idocData[$row][$col])){
+                $result = trim($idocData[$row][$col]);
+                return $result;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Прочитать наименование товара документа
+     * @param int $row
+     * @param int $col
+     * @param array $idocData
+     * @return string
+     */
+    public function readGoodName($row, $col, $idocData)
+    {
+        $result = $this->readText($row, $col, $idocData);
+        if (mb_strlen($result)>3){
+            return $result;
+        }
+        return false;
+    }
+    
+    /**
+     * Преобразование даты
+     * @param string $excelDate
+     */
+    private function _excelDateToDate($excelDate)
+    {
+        if (is_numeric($excelDate) && $excelDate < 60000){
+            return date('Y-m-d', ($excelDate - 25569) * 86400);
+        }
+        
+        return $excelDate;
+    }
+
+    /**
+     * Прочитать дату документа
+     * @param int $row
+     * @param int $col
+     * @param array $idocData
+     * @return string
+     */
+    public function readDate($row, $col, $idocData)
+    {
+        if (isset($idocData[$row])){
+            if (isset($idocData[$row][$col])){
+                $result = trim($idocData[$row][$col]);
+                $date = $this->_excelDateToDate($result);
+                return $date;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Прочитать число из документа
+     * @param int $row
+     * @param int $col
+     * @param array $idocData
+     * @return string
+     */
+    public function readNumeric($row, $col, $idocData)
+    {
+        if (isset($idocData[$row])){
+            if (isset($idocData[$row][$col])){
+                $result = (float) str_replace(',', '.', preg_replace('/\s+/', '', $idocData[$row][$col]));
+                if (is_numeric($result)){
+                    return $result; 
+                }
+            }    
+        }    
+        return FALSE;
+    }
+    
+    /**
+     * Данные для ПТУ
+     * @param array $billSettingData
+     * @return array 
+     */
+    public function idocToPtu($billSettingData)
+    {
+        $idocData = $this->getDescriptionAsArray();
+        if (!empty($billSettingData['docNumRow'])){
+            $result['doc_no'] = $this->readText($billSettingData['docNumRow']-1, $billSettingData['docNumCol']-1, $idocData);
+        }    
+        if (!empty($billSettingData['docDateRow'])){
+            $result['doc_date'] = $this->readDate($billSettingData['docDateRow']-1, $billSettingData['docDateCol']-1, $idocData);
+        }    
+        if (!empty($billSettingData['corNumRow'])){
+            $result['cor_no'] = $this->readText($billSettingData['corNumRow']-1, $billSettingData['corNumCol']-1, $idocData);
+        }    
+        if (!empty($billSettingData['corDateRow'])){
+            $result['cor_date'] = $this->readDate($billSettingData['corDateRow']-1, $billSettingData['corDateCol']-1, $idocData);
+        }    
+        if (!empty($billSettingData['idNumRow'])){
+            $result['id_no'] = $this->readText($billSettingData['idNumRow']-1, $billSettingData['idNumCol']-1, $idocData);
+        }    
+        if (!empty($billSettingData['idDateRow'])){
+            $result['id_date'] = $this->readDate($billSettingData['idDateRow']-1, $billSettingData['idDateCol']-1, $idocData);
+        }    
+        if (!empty($billSettingData['contractRow'])){
+            $result['contract'] = $this->readText($billSettingData['contractRow']-1, $billSettingData['contractCol']-1, $idocData);
+        }    
+        if (!empty($billSettingData['tagNoCashRow'])){
+            $result['tag_no_cash'] = $this->readDate($billSettingData['tagNoCashRow']-1, $billSettingData['tagNoCashCol']-1, $idocData);
+        }    
+        if (!empty($billSettingData['tagNoCashValue'])){
+            $result['tag_no_cash_value'] = $billSettingData['tagNoCashValue'];
+        }    
+        
+        $initRow = null;
+        if (!empty($billSettingData['initTabRow'])){
+            $initRow = $billSettingData['initTabRow'];
+        }  
+        if ($initRow){
+            $total = 0;
+            while(true){
+                $tab = [];
+                $continue = false;
+                if (!empty($billSettingData['articleCol'])){
+                    $tab['article'] = $this->readText($initRow-1, $billSettingData['articleCol']-1, $idocData);
+                    if ($tab['article']){
+                        $continue = true;
+                    }            
+                }        
+                if (!empty($billSettingData['supplierIdCol'])){
+                    $tab['supplier_article'] = $this->readText($initRow-1, $billSettingData['supplierIdCol']-1, $idocData);
+                    if ($tab['supplier_article']){
+                        $continue = true;
+                    }            
+                }        
+                if (!empty($billSettingData['goodNameCol'])){
+                    $tab['good_name'] = $this->readGoodName($initRow-1, $billSettingData['goodNameCol']-1, $idocData);
+                    if ($tab['good_name']){
+                        $continue = true;
+                    }            
+                }        
+                if (!empty($billSettingData['producerCol'])){
+                    $tab['producer'] = $this->readText($initRow-1, $billSettingData['producerCol']-1, $idocData);
+                }        
+                if (!empty($billSettingData['quantityCol'])){
+                    $tab['quantity'] = $this->readNumeric($initRow-1, $billSettingData['quantityCol']-1, $idocData);
+                    if ($tab['quantity']){
+                        $continue = true;
+                    }            
+                }        
+                if (!empty($billSettingData['priceCol'])){
+                    $tab['price'] = $this->readNumeric($initRow-1, $billSettingData['priceCol']-1, $idocData);
+                    if ($tab['price']){
+                        $continue = true;
+                    }            
+                }        
+                if (!empty($billSettingData['amountCol'])){
+                    $tab['amount'] = $this->readNumeric($initRow-1, $billSettingData['amountCol']-1, $idocData);
+                    if ($tab['amount']){
+                        $continue = true;
+                        if (!empty($tab['quantity']) && !empty($tab['good_name'])){
+                            $total += $tab['amount'];
+                        }   
+                    }            
+                }        
+                if (!empty($billSettingData['packageCodeCol'])){
+                    $tab['package_code'] = $this->readText($initRow-1, $billSettingData['packageCodeCol']-1, $idocData);
+                    if ($tab['package_code']){
+                        $continue = true;
+                    }            
+                }        
+                if (!empty($billSettingData['packcageCol'])){
+                    $tab['packcage'] = $this->readText($initRow-1, $billSettingData['packcageCol']-1, $idocData);
+                    if ($tab['packcage']){
+                        $continue = true;
+                    }            
+                }        
+                if (!empty($billSettingData['countryCodeCol'])){
+                    $tab['country_code'] = $this->readText($initRow-1, $billSettingData['countryCodeCol']-1, $idocData);
+                    if ($tab['country_code']){
+                        $continue = true;
+                    }            
+                }        
+                if (!empty($billSettingData['countryCol'])){
+                    $tab['country'] = $this->readText($initRow-1, $billSettingData['countryCol']-1, $idocData);
+                    if ($tab['country']){
+                        $continue = true;
+                    }            
+                }        
+                if (!empty($billSettingData['ntdCol'])){
+                    $tab['ntd'] = $this->readText($initRow-1, $billSettingData['ntdCol']-1, $idocData);
+                    if ($tab['ntd']){
+                        $continue = true;
+                    }            
+                }      
+                
+                if (!$continue){
+                    break;
+                }
+//                if ($initRow > 100){
+//                    break;
+//                }
+                $result['tab'][] = $tab;
+                $initRow++;
+            }
+            $result['total'] = $total;
+        }                
+        return $result;
+    }
 }

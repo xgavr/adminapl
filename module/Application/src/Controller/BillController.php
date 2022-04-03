@@ -75,6 +75,29 @@ class BillController extends AbstractActionController
         ]);         
     }
 
+    public function readIdocAction()
+    {        
+        $idocId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($idocId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $idoc = $this->entityManager->getRepository(Idoc::class)
+                ->find($idocId);
+        $ptuData = [];
+        if ($this->getRequest()->isPost()) {
+            
+            $post = $this->params()->fromPost();
+            $ptuData = $idoc->idocToPtu($post); 
+        }    
+        
+        return new JsonModel([
+            'data' => $ptuData,
+        ]);         
+    }
+
     public function billSettingFormAction()
     {
         $idocId = (int)$this->params()->fromRoute('id', -1);
@@ -114,6 +137,8 @@ class BillController extends AbstractActionController
                 return new JsonModel(
                    ['ok']
                 );           
+            } else {
+               // var_dump($form->getMessages($elementName));
             }
         } else {
             if ($billSetting){
@@ -189,4 +214,22 @@ class BillController extends AbstractActionController
         );           
     }    
     
+    public function idocToPtuAction()
+    {        
+        $idocId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($idocId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $idoc = $this->entityManager->getRepository(Idoc::class)
+                ->find($idocId);
+        $this->billManager->tryPtu($idoc); 
+        
+        return new JsonModel([
+            'ok'
+        ]);         
+    }
+
 }

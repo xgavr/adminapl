@@ -473,5 +473,277 @@ class BillSettingForm extends Form
                 'validators' => [
                 ],
             ]);        
+
+        $inputFilter->add([
+                'name'     => 'docNumCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'docNumRow',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'docDateCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'docDateRow',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);    
+
+        $inputFilter->add([
+                'name'     => 'corNumCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);            
+
+        $inputFilter->add([
+                'name'     => 'corNumRow',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'corDateCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'corDateRow',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'idNumCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'idNumRow',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'idDateCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'idDateRow',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'contractCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'contractRow',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'tagNoCashCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'tagNoCashRow',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'tagNoCashValue',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'initTabRow',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'articleCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'supplierIdCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'goodNameCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'producerCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'quantityCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'priceCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'amountCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'packageCodeCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'packcageCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'countryCodeCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'countryCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'ntdCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        
     }    
 }
