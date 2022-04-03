@@ -97,6 +97,7 @@ $this->pageBreadcrumbs()->setItems([
                     <?php if($market->getRateSetting() != MarketPriceSetting::RATE_IGNORE):?>
                         : <?= $this->escapeHtml($market->getRatesAsString());?> 
                     <?php endif; ?>;    
+                    Комплект:  <?= $this->escapeHtml($market->getConsiderSetAsString());?>; 
                     Цена минимальная:  <?= $this->escapeHtml($market->getMinPrice());?>; 
                     Цена максимальная:  <?= $this->escapeHtml($market->getMaxPrice());?>; 
                     Наценка дополнительная, %:  <?= $this->escapeHtml($market->getExtraMargin());?>; 

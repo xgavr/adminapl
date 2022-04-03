@@ -291,6 +291,18 @@ class MarketForm extends Form
                                 
         $this->add([            
             'type'  => 'select',
+            'name' => 'considerSet',
+            'attributes' => [
+                'value' => MarketPriceSetting::CONSIDER_SET_NO,
+            ],    
+            'options' => [
+                'label' => 'Комплект',
+                'value_options' => MarketPriceSetting::getConsiderSetList(),
+            ],
+        ]);
+                                
+        $this->add([            
+            'type'  => 'select',
             'name' => 'descriptionFormat',
             'attributes' => [
                 'value' => MarketPriceSetting::DESCRIPTION_FORMAT_HTML,

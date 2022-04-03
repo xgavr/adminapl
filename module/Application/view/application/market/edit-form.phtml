@@ -95,6 +95,10 @@ $form->get('rateSetting')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('considerSet')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('descriptionFormat')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -225,13 +229,6 @@ if ($market && !$copy){
             <div class="row">
                 <div class="col-xs-2">                        
                     <div class="form-group">
-                        <?= $this->formLabel($form->get('movementLimit')); ?>
-                        <?= $this->formElement($form->get('movementLimit')); ?>
-                        <?= $this->formElementErrors($form->get('movementLimit')); ?>                  
-                    </div>
-                </div>    
-                <div class="col-xs-2">                        
-                    <div class="form-group">
                         <?= $this->formLabel($form->get('pricecol')); ?>
                         <?= $this->formElement($form->get('pricecol')); ?>
                         <?= $this->formElementErrors($form->get('pricecol')); ?>                  
@@ -242,6 +239,13 @@ if ($market && !$copy){
                         <?= $this->formLabel($form->get('extraMargin')); ?>
                         <?= $this->formElement($form->get('extraMargin')); ?>
                         <?= $this->formElementErrors($form->get('extraMargin')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-2">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('considerSet')); ?>
+                        <?= $this->formElement($form->get('considerSet')); ?>
+                        <?= $this->formElementErrors($form->get('considerSet')); ?>                  
                     </div>
                 </div>    
                 <div class="col-xs-2">                        
@@ -269,6 +273,13 @@ if ($market && !$copy){
             <div class="row">
                 <div class="col-xs-2">                        
                     <div class="form-group">
+                        <?= $this->formLabel($form->get('movementLimit')); ?>
+                        <?= $this->formElement($form->get('movementLimit')); ?>
+                        <?= $this->formElementErrors($form->get('movementLimit')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-2">                        
+                    <div class="form-group">
                         <?= $this->formLabel($form->get('supplier')); ?>
                         <?= $this->formElement($form->get('supplier')); ?>
                         <?= $this->formElementErrors($form->get('supplier')); ?>                  
@@ -288,7 +299,7 @@ if ($market && !$copy){
                         <?= $this->formElementErrors($form->get('tokenGroupSetting')); ?>                  
                     </div>
                 </div>    
-                <div class="col-xs-5">                        
+                <div class="col-xs-3">                        
                     <div class="form-group">
                         <?= $this->formLabel($form->get('shipping')); ?>
                         <?= $this->formElement($form->get('shipping')); ?>

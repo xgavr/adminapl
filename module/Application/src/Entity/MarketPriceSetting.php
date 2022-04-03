@@ -54,6 +54,9 @@ class MarketPriceSetting {
     const TOKEN_GROUP_ACTIVE   = 1; // Группы с движением.
     const TOKEN_GROUP_ALL      = 2; // Группы все.
     
+    const CONSIDER_SET      = 1; // Цена за комплект.
+    const CONSIDER_SET_NO      = 2; // Цена за одну штуку.
+
     const TD_IGNORE   = 1; // Товары все.
     const TD_MATH      = 2; // Товары с ТД.
     
@@ -166,6 +169,12 @@ class MarketPriceSetting {
      * @ORM\Column(name="rate_setting")   
      */
     protected $rateSetting;
+
+    /**
+     * Цена за комплект
+     * @ORM\Column(name="consider_set")   
+     */
+    protected $considerSet;
 
     /**
      * Формат описания
@@ -974,6 +983,49 @@ class MarketPriceSetting {
     }   
 
     /**
+     * Returns consider set.
+     * @return int     
+     */
+    public function getConsiderSet() 
+    {
+        return $this->considerSet;
+    }
+    
+    /**
+     * Returns possible consider set as array.
+     * @return array
+     */
+    public static function getConsiderSetList() 
+    {
+        return [
+            self::CONSIDER_SET => 'Цена за комплект',
+            self::CONSIDER_SET_NO => 'Цена за 1 шт'
+        ];
+    }    
+    
+    /**
+     * Returns consider set as string.
+     * @return string
+     */
+    public function getConsiderSetAsString()
+    {
+        $list = self::getConsiderSetList();
+        if (isset($list[$this->considerSet]))
+            return $list[$this->considerSet];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets considerSet.
+     * @param int $considerSet     
+     */
+    public function setConsiderSet($considerSet) 
+    {
+        $this->considerSet = $considerSet;
+    }   
+
+    /**
      * Returns description format.
      * @return int     
      */
@@ -1191,6 +1243,7 @@ class MarketPriceSetting {
             'rates' => $this->getRatesAsArray(),
             'tdSetting' => $this->getTdSetting(),
             'rateSetting' => $this->getRateSetting(),
+            'considerSet' => $this->getConsiderSet(),
             'descriptionFormat' => $this->getDescriptionFormat(),
             'descriptionSet' => $this->getDescriptionSet(),
             'movementLimit' => $this->getMovementLimit(),

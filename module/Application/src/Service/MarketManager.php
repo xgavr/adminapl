@@ -224,6 +224,7 @@ class MarketManager
         $market->setRestSetting($data['restSetting']);
         $market->setTdSetting($data['tdSetting']);
         $market->setRateSetting((count($data['rates']) ? $data['rateSetting']:MarketPriceSetting::RATE_IGNORE));
+        $market->setConsiderSet($data['considerSet']);
         $market->setDescriptionFormat($data['descriptionFormat']);
         $market->setDescriptionSet($data['descriptionSet']);
         $market->setShipping($data['shipping']);
@@ -267,6 +268,7 @@ class MarketManager
         $market->setRestSetting($data['restSetting']);
         $market->setTdSetting($data['tdSetting']);
         $market->setRateSetting((count($data['rates']) ? $data['rateSetting']:MarketPriceSetting::RATE_IGNORE));
+        $market->setConsiderSet($data['considerSet']);
         $market->setDescriptionFormat($data['descriptionFormat']);
         $market->setDescriptionSet($data['descriptionSet']);
         $market->setShipping($data['shipping']);
