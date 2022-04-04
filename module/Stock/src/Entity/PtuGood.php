@@ -63,11 +63,13 @@ class PtuGood {
     protected $statusDoc;
 
     /** 
+     * Количество
      * @ORM\Column(name="quantity")  
      */
     protected $quantity;
 
     /** 
+     * Сумма итого по стоке
      * @ORM\Column(name="amount")  
      */
     protected $amount;
@@ -290,6 +292,19 @@ class PtuGood {
     public function getAmount() 
     {
         return $this->amount;
+    }
+    
+    /**
+     * Returns the amount of doc.
+     * @return float     
+     */
+    public function getPrice() 
+    {
+        if ($this->quantity){
+            return $this->amount/$this->quantity;
+        }    
+        
+        return 0;
     }
     
     /**

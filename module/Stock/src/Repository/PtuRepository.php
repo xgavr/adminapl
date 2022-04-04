@@ -250,4 +250,39 @@ class PtuRepository extends EntityRepository{
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }        
+    
+    /**
+     * Найти записи для отправки в АПЛ
+     */
+    public function findForUpdateApl()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('p')
+            ->from(Ptu::class, 'p')
+            ->where('p.statusEx = ?1')
+            ->setParameter('1', Ptu::STATUS_EX_NEW)    
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        foreach ($data as $ptu){
+            $flag = true;
+            $ptuGoods = $entityManager->getRepository(PtuGood::class)
+                    ->findBy(['ptu' => $ptu->getId()]);
+            foreach ($ptuGoods as $ptuGood){
+               if (empty($ptuGood->getGood()->getAplId())){
+                   $flag = false;
+                   break;
+               }  
+            }
+            if ($flag){
+                return $ptu;
+            }    
+        }
+        
+        return;                
+        
+    }    
 }

@@ -233,6 +233,32 @@ class Ptu {
     }    
     
     /**
+     * Returns possible apl statuses as array.
+     * @return array
+     */
+    public static function getAplStatusList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 1,
+            self::STATUS_RETIRED => 0,
+            self::STATUS_COMMISSION => 1,
+        ];
+    }    
+    
+    /**
+     * Returns apl status as string.
+     * @return string
+     */
+    public function getAplStatusAsString()
+    {
+        $list = self::getAplStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 0;
+    }    
+
+    /**
      * Sets status.
      * @param int $status     
      */

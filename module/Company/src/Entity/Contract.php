@@ -260,6 +260,31 @@ class Contract {
     }    
     
     /**
+     * Returns possible apl cashless as array.
+     * @return array
+     */
+    public static function getAplCashlessList() 
+    {
+        return [
+            self::PAY_CASH => 0,
+            self::PAY_CASHLESS => 1,
+        ];
+    }    
+    
+    /**
+     * Returns contract apl cashless as string.
+     * @return string
+     */
+    public function getAplCashlessAsString()
+    {
+        $list = self::getAplCashlessList();
+        if (isset($list[$this->pay]))
+            return $list[$this->pay];
+        
+        return 'Unknown';
+    }    
+    
+    /**
      * Sets pay.
      * @param int $pay     
      */

@@ -693,7 +693,17 @@ class AplController extends AbstractActionController
         return new JsonModel([
             'result' => 'ok',
         ]);
+    }
+
+    public function sendPtuAction()
+    {                
+        $this->aplDocService->sendPtu();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
     }    
+    
     
     public function unloadDocsAction()
     {                

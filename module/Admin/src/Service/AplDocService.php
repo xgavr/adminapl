@@ -34,6 +34,7 @@ use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
 use Laminas\Validator\Date;
 use Stock\Entity\Revise;
+use Stock\Entity\PtuGood;
 
 
 /**
@@ -470,6 +471,106 @@ class AplDocService {
         }
                 
         return false;
+    }
+    
+    /**
+     * Отправить пту
+     * 
+     */
+    public function sendPtu()
+    {
+        $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
+
+        $result = false;
+
+        $ptu = $this->entityManager->getRepository(Ptu::class)
+                ->findForUpdateApl();
+        if ($ptu){
+            $desc = [
+                'cashless' => $ptu->getContract()->getAplCashlessAsString(),
+                'nsasis' => $ptu->getDocNo(),
+            ];
+        
+            $post = [
+                'parent' => $ptu->getOffice()->getAplId(),
+                'type' =>   'Suppliersorders',
+                'sort' =>   $ptu->getAmount(),
+                'publish' => $ptu->getAplStatusAsString(),
+                'name' =>   $ptu->getSupplier()->getAplId(),
+                'comment' => $ptu->getComment(),
+                'desc' =>   Encoder::encode($desc),
+//                'user' =>   $ptu->getUserCreator()->getAplId(),
+                'sf' =>     0,
+                'ns' =>     $ptu->getDocNo(),
+                'ds' =>     $ptu->getDocDate(),
+                'aa' =>     1
+            ];
+
+            if ($ptu->getAplId()){
+                $post['id'] = $ptu->getAplId();
+            }
+            
+            $so = [];
+            $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
+                    ->findBy(['ptu' => $ptu->getId()]);
+            foreach ($ptuGoods as $ptuGood){
+                $tpDesc = [
+                    'nsasis' => $ptu->getDocNo(),
+                    'total' => $ptuGood->getAmount(),
+                    'maker' => '',
+                    'country' => $ptuGood->getCountry()->getName(),
+                    'countrycode' => $ptuGood->getCountry()->getCode(),
+                    'ntd' => $ptuGood->getNtd()->getNtd(),
+                    'pack' => $ptuGood->getUnit()->getName(),
+                    'packcode' => $ptuGood->getUnit()->getCode(),
+                ];
+                
+                $tp = [
+                    'desc' => Encoder::encode($tpDesc),
+                    'sort' => $ptuGood->getQuantity(),
+                    'name' => $ptu->getSupplier()->getAplId(),
+                    'sf' => $ptuGood->getGood()->getAplId(),
+                    'ns' => $ptu->getDocNo(),
+                    'ds' => $ptu->getDocDate(),
+                    'price' => $ptuGood->getPrice(),                    
+                ];
+                
+                $so[] = $tp;
+            }
+            $post['tp'] = $so;
+            
+            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 60]);
+            $client->setParameterPost($post);            
+
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {                    
+                    $aplId = (int) $response->getBody();
+                    if ($aplId){
+                        $ok = $result = true;
+                    }
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok) {            
+                $ptu->setStatusEx(Ptu::STATUS_EX_APL);
+                $cashDoc->setAplId($aplId);
+                $this->entityManager->persist($ptu);
+                $this->entityManager->flush($ptu);
+            }
+
+            $this->entityManager->detach($ptu);
+        }
+        
+        return $result;
     }
     
     /**
