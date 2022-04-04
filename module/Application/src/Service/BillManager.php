@@ -542,6 +542,7 @@ class BillManager
                     ->findOneBy(['docNo' => $idocData['doc_no'], 'docDate' => $idocData['doc_date']]);
             
             if ($ptu){
+                $dataPtu['apl_id'] = $ptu->getAplId();
                 $this->ptuManager->updatePtu($ptu, $dataPtu);
                 $this->ptuManager->removePtuGood($ptu); 
             } else {        
