@@ -377,7 +377,7 @@ class BillManager
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $billGetting->getEmail(),
                 'password' => $billGetting->getEmailPassword(),
-                'leave_message' => true,
+                'leave_message' => false,
             ];
             
             $mailList = $this->postManager->readImap($box);
