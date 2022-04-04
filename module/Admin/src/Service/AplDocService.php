@@ -489,6 +489,7 @@ class AplDocService {
             $desc = [
                 'cashless' => $ptu->getContract()->getAplCashlessAsString(),
                 'nsasis' => $ptu->getDocNo(),
+                'comiss' => 0,
             ];
         
             $post = [
@@ -514,17 +515,6 @@ class AplDocService {
             $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
                     ->findBy(['ptu' => $ptu->getId()]);
             foreach ($ptuGoods as $ptuGood){
-                $tpDesc = [
-                    'nsasis' => $ptu->getDocNo(),
-                    'total' => $ptuGood->getAmount(),
-                    'maker' => '',
-                    'country' => $ptuGood->getCountry()->getName(),
-                    'countrycode' => $ptuGood->getCountry()->getCode(),
-                    'ntd' => $ptuGood->getNtd()->getNtd(),
-                    'pack' => $ptuGood->getUnit()->getName(),
-                    'packcode' => $ptuGood->getUnit()->getCode(),
-                ];
-                
                 $tp = [
                     'desc' => Encoder::encode($tpDesc),
                     'sort' => $ptuGood->getQuantity(),
@@ -533,8 +523,16 @@ class AplDocService {
                     'ns' => $ptu->getDocNo(),
                     'ds' => $ptu->getDocDate(),
                     'price' => $ptuGood->getPrice(),                    
-                ];
-                
+                    'nsasis' => $ptu->getDocNo(),
+                    'total' => $ptuGood->getAmount(),
+                    'maker' => '',
+                    'country' => $ptuGood->getCountry()->getName(),
+                    'countrycode' => $ptuGood->getCountry()->getCode(),
+                    'ntd' => $ptuGood->getNtd()->getNtd(),
+                    'pack' => $ptuGood->getUnit()->getName(),
+                    'packcode' => $ptuGood->getUnit()->getCode(),
+                    'cashless' => $ptu->getContract()->getAplCashlessAsString(),
+                ];                
                 $so[] = $tp;
             }
             $post['tp'] = $so;
@@ -562,7 +560,7 @@ class AplDocService {
 
             if ($ok) {            
                 $ptu->setStatusEx(Ptu::STATUS_EX_APL);
-                $cashDoc->setAplId($aplId);
+                $ptu->setAplId($aplId);
                 $this->entityManager->persist($ptu);
                 $this->entityManager->flush($ptu);
             }
