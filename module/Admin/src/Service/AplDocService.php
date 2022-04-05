@@ -486,12 +486,6 @@ class AplDocService {
         $ptu = $this->entityManager->getRepository(Ptu::class)
                 ->findForUpdateApl();
         if ($ptu){
-            $desc = [
-                'cashless' => $ptu->getContract()->getAplCashlessAsString(),
-                'nsasis' => $ptu->getDocNo(),
-                'comiss' => 0,
-            ];
-        
             $post = [
                 'parent' => $ptu->getOffice()->getAplId(),
                 'type' =>   'Suppliersorders',
@@ -499,12 +493,14 @@ class AplDocService {
                 'publish' => $ptu->getAplStatusAsString(),
                 'name' =>   $ptu->getSupplier()->getAplId(),
                 'comment' => $ptu->getComment(),
-                'desc' =>   Encoder::encode($desc),
 //                'user' =>   $ptu->getUserCreator()->getAplId(),
                 'sf' =>     0,
                 'ns' =>     $ptu->getDocNo(),
                 'ds' =>     $ptu->getDocDate(),
-                'aa' =>     1
+                'aa' =>     1,
+                'cashless' => $ptu->getContract()->getAplCashlessAsString(),
+                'nsasis' => $ptu->getDocNo(),
+                'comiss' => 0,
             ];
 
             if ($ptu->getAplId()){
