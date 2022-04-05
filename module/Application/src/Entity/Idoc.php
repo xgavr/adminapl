@@ -285,7 +285,7 @@ class Idoc {
         
         $date = str_replace($ru_month1, $en_month, mb_strtolower($excelDate));
         $date = str_replace($ru_month, $en_month, mb_strtolower($date));
-        $date = trim(preg_replace('/[^a-zA-Z0-9 ]/ui', '',$date));
+        $date = trim(preg_replace('/[а-яА-Я]/ui', '',$date));
         //var_dump($date);
 
         return date('Y-m-d', strtotime($date));
