@@ -753,17 +753,17 @@ class GoodsManager
             $price = $fixPrice;
             if ($fixPrice == 0){
                 $price = $oldPrice;
-            }    
             
-            if (!$regression){
-                $rate = $this->entityManager->getRepository(Rate::class)
-                        ->getRate($goodData['tokenGroupId'], $goodData['genericGroupId'], $goodData['producerId']);
-                $regression = $this->mlManager->rateScaleRegression($rate->getRateModelFileName());
-            }    
+                if (!$regression){
+                    $rate = $this->entityManager->getRepository(Rate::class)
+                            ->getRate($goodData['tokenGroupId'], $goodData['genericGroupId'], $goodData['producerId']);
+                    $regression = $this->mlManager->rateScaleRegression($rate->getRateModelFileName());
+                }    
 
-            if ($meanPrice && $regression){
-                $percent = $this->mlManager->predictRateScaleRegression($regression, $meanPrice);
-                $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
+                if ($meanPrice && $regression){
+                    $percent = $this->mlManager->predictRateScaleRegression($regression, $meanPrice);
+                    $price = ScaleTreshold::retail($meanPrice, $percent, ScaleTreshold::DEFAULT_ROUNDING);
+                }    
             }    
             unset($prices);
         }    
