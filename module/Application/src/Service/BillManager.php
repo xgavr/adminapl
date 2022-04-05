@@ -515,6 +515,27 @@ class BillManager
     }   
     
     /**
+     * Прочитать ящики с накладными
+     */
+    public function billsByMail()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        $billSettings = $this->entityManager->getRepository(BillSetting::class)
+                ->bindBy(['status' => BillSetting::STATUS_ACTIVE]);
+        foreach ($billSettings as $billSetting){
+            $this->getBillByMail($billGetting);
+            if (time() > $startTime + 840){
+                break;
+            }
+            usleep(100);
+        }
+        return;
+    }
+    
+    /**
      * Получить тип оплаты контракта
      * @param array $idocData
      * @return int
