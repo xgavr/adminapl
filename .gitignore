@@ -25,3 +25,4 @@ phpunit.xml
 /nbproject/
 /data/DoctrineORMModule/Proxy/
 /config/development.config.dist.php
+/data/bills/

@@ -278,8 +278,17 @@ class Idoc {
         if (is_numeric($excelDate) && $excelDate < 60000){
             return date('Y-m-d', ($excelDate - 25569) * 86400);
         }
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        $ru_month = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+        $ru_month1 = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        $en_month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         
-        return $excelDate;
+        $date = str_replace($ru_month1, $en_month, mb_strtolower($excelDate));
+        $date = str_replace($ru_month, $en_month, mb_strtolower($date));
+        $date = trim(preg_replace('/[^a-zA-Z0-9 ]/ui', '',$date));
+        //var_dump($date);
+
+        return date('Y-m-d', strtotime($date));
     }
 
     /**
@@ -352,7 +361,7 @@ class Idoc {
             $result['contract'] = $this->readText($billSettingData['contractRow']-1, $billSettingData['contractCol']-1, $idocData);
         }    
         if (!empty($billSettingData['tagNoCashRow'])){
-            $result['tag_no_cash'] = $this->readDate($billSettingData['tagNoCashRow']-1, $billSettingData['tagNoCashCol']-1, $idocData);
+            $result['tag_no_cash'] = $this->readText($billSettingData['tagNoCashRow']-1, $billSettingData['tagNoCashCol']-1, $idocData);
         }    
         if (!empty($billSettingData['tagNoCashValue'])){
             $result['tag_no_cash_value'] = $billSettingData['tagNoCashValue'];

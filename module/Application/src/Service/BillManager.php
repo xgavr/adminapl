@@ -15,6 +15,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use Laminas\Json\Encoder;
 use Application\Filter\CsvDetectDelimiterFilter;
 use Laminas\Validator\File\IsCompressed;
+use Laminas\Filter\Decompress;
 use Application\Filter\RawToStr;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Stock\Entity\Ptu;
@@ -36,6 +37,7 @@ use Application\Entity\Goods;
  */
 class BillManager
 {
+    const BILL_FOLDER       = './data/bills'; // папка с файлами
     
     /**
      * Doctrine entity manager.
@@ -366,6 +368,108 @@ class BillManager
     }    
     
     /**
+     * Добавить папку для временных файло
+     * @param Supplier $supplier
+     */
+    protected function _addBillFolder($supplier)
+    {
+        //Создать папку для файлов
+        if (!is_dir(self::BILL_FOLDER)){
+            mkdir(self::BILL_FOLDER);
+        }
+        
+        $bill_supplier_folder_name = self::BILL_FOLDER.'/'.$supplier->getId();
+        if (!is_dir($bill_supplier_folder_name)){
+            mkdir($bill_supplier_folder_name);
+        }
+    }        
+    
+    
+    /*
+     * Очистить содержимое папки
+     * 
+     * @var Supplier $supplier
+     * @var string $folderName
+     * 
+     */
+    protected function _clearBillFolder($supplier, $folderName)
+    {
+        if (is_dir($folderName)){
+            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
+                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isFile()){
+                    unlink($fileInfo->getPathname());                            
+                }
+                if ($fileInfo->isDir()){
+                    $this->clearPriceFolder($supplier, $fileInfo->getPathname());
+                    
+                }
+            }
+            if ($folderName != self::BILL_FOLDER.'/'.$supplier->getId()){
+                rmdir($folderName);
+            }
+        }        
+    }
+    
+    /**
+     * 
+     * Проверка папки с файлами. Если в папке есть файл то загружаем его
+     * 
+     * @param Supplier $supplier
+     * @param string $folderName
+     * 
+     */
+    protected function _checkBillFolder($supplier, $folderName)
+    {    
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        if (is_dir($folderName)){
+            foreach (new \DirectoryIterator($folderName) as $fileInfo) {
+                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isFile()){
+                    $this->addIdoc($supplier, [
+                        'status' => Idoc::STATUS_ACTIVE,
+                        'name' => $fileInfo->getFilename(),
+                        'description' => Encoder::encode($this->_filedata2array($fileInfo->getFilename(), $fileInfo->getPathname())),
+                        'docKey' => null,
+                    ]);
+                }
+                if ($fileInfo->isDir()){
+                    $this->_checkBillFolder($supplier, $fileInfo->getPathname());                    
+                }
+            }
+        }
+        return;
+    }    
+    
+    /**
+     * Распаковать вложение и загрузить
+     * @param Supplier $supplier
+     * @param string $filename
+     * @param string $filepath
+     * @return null
+     */
+    protected function _decompressAttachment($supplier, $filename, $filepath)
+    {
+        $this->_addBillFolder($supplier);
+        $bill_supplier_folder_name = self::BILL_FOLDER.'/'.$supplier->getId();
+        $pathinfo = pathinfo($filename);
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        $filter = new Decompress([
+            'adapter' => $pathinfo['extension'],
+            'options' => [
+                'target' => $bill_supplier_folder_name,
+            ],
+        ]);
+        if ($filter->filter($filepath)){
+            $this->_checkBillFolder($supplier, $bill_supplier_folder_name);
+        }
+        
+        $this->_clearBillFolder($supplier, $bill_supplier_folder_name);
+        
+        return;
+    }
+    
+    /**
      * Проверка почты в ящике поставщика
      * @param BillGetting $billGetting
      */
@@ -381,19 +485,23 @@ class BillManager
             ];
             
             $mailList = $this->postManager->readImap($box);
-            
+            $validator = new IsCompressed();
             if (count($mailList)){
                 foreach ($mailList as $mail){
                     if (isset($mail['attachment'])){
                         foreach($mail['attachment'] as $attachment){
-                            if ($attachment['filename'] && file_exists($attachment['temp_file'])){                                
-                                $this->addIdoc($billGetting->getSupplier(), [
-                                    'status' => Idoc::STATUS_ACTIVE,
-                                    'name' => $attachment['filename'],
-                                    'description' => Encoder::encode($this->_filedata2array($attachment['filename'], $attachment['temp_file'])),
-                                    'docKey' => null,
-                                ]);
-                                
+                            if ($attachment['filename'] && file_exists($attachment['temp_file'])){
+                                $pathinfo = pathinfo($attachment['filename']);
+                                if ($validator->isValid($attachment['temp_file']) && $pathinfo['extension'] != 'xlsx'){
+                                    $this->_decompressAttachment($billGetting->getSupplier(), $attachment['filename'], $attachment['temp_file']);
+                                } else {
+                                    $this->addIdoc($billGetting->getSupplier(), [
+                                        'status' => Idoc::STATUS_ACTIVE,
+                                        'name' => $attachment['filename'],
+                                        'description' => Encoder::encode($this->_filedata2array($attachment['filename'], $attachment['temp_file'])),
+                                        'docKey' => null,
+                                    ]);
+                                }    
                                 unlink($attachment['temp_file']);
                             }
                         }
