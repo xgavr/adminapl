@@ -516,7 +516,6 @@ class AplDocService {
                     ->findBy(['ptu' => $ptu->getId()]);
             foreach ($ptuGoods as $ptuGood){
                 $tp = [
-                    'desc' => Encoder::encode($tpDesc),
                     'sort' => $ptuGood->getQuantity(),
                     'name' => $ptu->getSupplier()->getAplId(),
                     'sf' => $ptuGood->getGood()->getAplId(),
@@ -537,7 +536,7 @@ class AplDocService {
             }
             $post['tp'] = $so;
             
-            var_dump($post); exit;
+//            var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
