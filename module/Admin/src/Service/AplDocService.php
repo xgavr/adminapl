@@ -1396,6 +1396,17 @@ class AplDocService {
             }    
             $start++;
         }    
+
+        while (true){
+            if ($this->sendPtu()) {
+                usleep(100);
+                if (time() > $startTime + 840){
+                    break;
+                }
+            } else {
+                break;
+            }    
+        }    
         return;
     }    
 }

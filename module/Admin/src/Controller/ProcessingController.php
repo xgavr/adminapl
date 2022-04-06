@@ -251,6 +251,18 @@ class ProcessingController extends AbstractActionController
         );        
     }
     
+    public function idocsAction()
+    {       
+        $settings = $this->adminManager->getSettings();
+        
+        if ($settings['hello_check'] == 1){
+            $this->billManager->tryIdocs();
+        }    
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
     public function testAction()
     {
         sleep(10);
