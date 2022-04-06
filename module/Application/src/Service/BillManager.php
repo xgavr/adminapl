@@ -732,11 +732,6 @@ class BillManager
                 $this->entityManager->flush($idoc);
                 return true;
             }            
-        } else {
-            $idoc->setStatus(Idoc::STATUS_ERROR);
-            $this->entityManager->persist($idoc);
-            $this->entityManager->flush($idoc);
-            return true;            
         }       
         return false;
     }
@@ -754,8 +749,7 @@ class BillManager
             if ($idocData['doc_no'] && $idocData['doc_date'] > '1970-01-01' && $idocData['total']){
                 if ($this->idocToPtu($idoc, $billSetting)){
                     return;
-                }
-                
+                }                
             }
         }
         
@@ -768,6 +762,10 @@ class BillManager
                 
             }
         }
+        
+        $idoc->setStatus(Idoc::STATUS_ERROR);
+        $this->entityManager->persist($idoc);
+        $this->entityManager->flush($idoc);
         
         return;
     }
