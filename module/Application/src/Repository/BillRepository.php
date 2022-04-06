@@ -45,6 +45,10 @@ class BillRepository  extends EntityRepository{
                 $queryBuilder->andWhere('i.supplier = ?1')
                         ->setParameter('1', $params['supplier']);
             }
+            if (is_numeric($params['status'])){
+                $queryBuilder->andWhere('i.status = ?2')
+                        ->setParameter('2', $params['status']);
+            }
         }
         return $queryBuilder->getQuery();
     }       

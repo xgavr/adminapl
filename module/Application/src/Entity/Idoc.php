@@ -110,8 +110,8 @@ class Idoc {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Используется',
-            self::STATUS_RETIRED => 'Не используется'
+            self::STATUS_ACTIVE => 'Новый',
+            self::STATUS_RETIRED => 'Обработано'
         ];
     }    
     

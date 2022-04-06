@@ -54,9 +54,10 @@ class BillController extends AbstractActionController
     {
         
         $supplier = $this->params()->fromQuery('supplier');
+        $status = $this->params()->fromQuery('status');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
-        $params = ['supplier' => $supplier];
+        $params = ['supplier' => $supplier, 'status' => $status];
         
         $query = $this->entityManager->getRepository(Idoc::class)
                     ->queryAllIdocs($params);            

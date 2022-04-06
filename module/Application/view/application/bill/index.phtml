@@ -30,6 +30,14 @@ $this->pageBreadcrumbs()->setItems([
                         <?php foreach ($suppliers as $supplier):?>
                             <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
                         <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="statusSelect" class="form-control">
+                        <?php foreach (Idoc::getStatusList() as $key=>$value):?>
+                            <option value="<?= $key?>"><?= $value?></option>
+                        <?php endforeach;?>
+                        <option>все</option>
                     </select>
                     
                 </div>    
@@ -90,6 +98,10 @@ $this->pageBreadcrumbs()->setItems([
         });
 
         $(document).on('change', '#supplierSelect', function (e) {
+            refreshTable();
+        });
+        
+        $(document).on('change', '#statusSelect', function (e) {
             refreshTable();
         });
         
@@ -171,6 +183,7 @@ $this->pageBreadcrumbs()->setItems([
             params.offset = params.limit * (offset - 1);
         }    
         params.supplier = $('#supplierSelect').val();
+        params.status = $('#statusSelect').val();
         
         return params;
     }
