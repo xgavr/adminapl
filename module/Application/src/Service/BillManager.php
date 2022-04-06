@@ -732,7 +732,12 @@ class BillManager
                 $this->entityManager->flush($idoc);
                 return true;
             }            
-        }        
+        } else {
+            $idoc->setStatus(Idoc::STATUS_ERROR);
+            $this->entityManager->persist($idoc);
+            $this->entityManager->flush($idoc);
+            return true;            
+        }       
         return false;
     }
     

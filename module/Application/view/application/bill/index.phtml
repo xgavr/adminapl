@@ -75,21 +75,7 @@ $this->pageBreadcrumbs()->setItems([
         $('#table').bootstrapTable('refresh');
     }
 
-    var table = $('#table').bootstrapTable({
-        onLoadSuccess: function(res){
-            $("[data-toggle='tooltip']").tooltip();
-            $('.editableCheckBox').change(function() {
-                $.ajax({
-                    type: "POST",
-                    url: $(this).attr('data-url'),
-                    data: "pk="+$(this).attr('data-pk'),
-                    success: function(msg){
-//                      alert( "Прибыли данные: " + msg );
-                    }
-                });
-            })        
-        }
-    });
+    var table = $('#table').bootstrapTable();
     var ok = $('#ok');
 
     $(function () {
@@ -215,14 +201,13 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function statusFormatter(value, row){
-        var checked = 'checked';
         if (value == <?= Idoc::STATUS_ACTIVE?>){
-            checked = '';
+            return 'new';
         }
-        return [
-            '<input data-toggle="tooltip" class="editableCheckBox" \n\
-                data-pk="'+row.id+'" data-url="/bills/idoc-status-edit" type="checkbox" '+checked+'/>'
-        ].join(''); 
+        if (value == <?= Idoc::STATUS_RETIRED?>){
+            return 'ok';
+        }
+        return 'er';
     }    
 
     function activeFormatter(value, row){

@@ -22,8 +22,9 @@ use Application\Entity\BillSetting;
 class Idoc {
     
      // Supplier status constants.
-    const STATUS_ACTIVE       = 1; // Active.
-    const STATUS_RETIRED      = 2; // Retired.
+    const STATUS_ACTIVE       = 1; // Новый.
+    const STATUS_RETIRED      = 2; // Создан документ.
+    const STATUS_ERROR      = 3; // Не прочитано.
     
     /**
      * @ORM\Id
@@ -111,7 +112,8 @@ class Idoc {
     {
         return [
             self::STATUS_ACTIVE => 'Новый',
-            self::STATUS_RETIRED => 'Обработано'
+            self::STATUS_RETIRED => 'Есть документ',
+            self::STATUS_ERROR => 'Нет документа'
         ];
     }    
     
