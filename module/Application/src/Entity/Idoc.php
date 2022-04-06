@@ -375,46 +375,29 @@ class Idoc {
         }  
         if ($initRow){
             $total = 0;
-            while(true){
+            while($initRow < count($idocData)){
                 $tab = [];
-                $continue = false;
                 if (!empty($billSettingData['articleCol'])){
                     $tab['article'] = $this->readText($initRow-1, $billSettingData['articleCol']-1, $idocData);
-                    if ($tab['article']){
-                        $continue = true;
-                    }            
                 }        
                 if (!empty($billSettingData['supplierIdCol'])){
                     $tab['supplier_article'] = $this->readText($initRow-1, $billSettingData['supplierIdCol']-1, $idocData);
-                    if ($tab['supplier_article']){
-                        $continue = true;
-                    }            
                 }        
                 if (!empty($billSettingData['goodNameCol'])){
                     $tab['good_name'] = $this->readGoodName($initRow-1, $billSettingData['goodNameCol']-1, $idocData);
-                    if ($tab['good_name']){
-                        $continue = true;
-                    }            
                 }        
                 if (!empty($billSettingData['producerCol'])){
                     $tab['producer'] = $this->readText($initRow-1, $billSettingData['producerCol']-1, $idocData);
                 }        
                 if (!empty($billSettingData['quantityCol'])){
                     $tab['quantity'] = $this->readNumeric($initRow-1, $billSettingData['quantityCol']-1, $idocData);
-                    if ($tab['quantity']){
-                        $continue = true;
-                    }            
                 }        
                 if (!empty($billSettingData['priceCol'])){
                     $tab['price'] = $this->readNumeric($initRow-1, $billSettingData['priceCol']-1, $idocData);
-                    if ($tab['price']){
-                        $continue = true;
-                    }            
                 }        
                 if (!empty($billSettingData['amountCol'])){
                     $tab['amount'] = $this->readNumeric($initRow-1, $billSettingData['amountCol']-1, $idocData);
                     if ($tab['amount']){
-                        $continue = true;
                         if (!empty($tab['quantity']) && !empty($tab['good_name'])){
                             $total += $tab['amount'];
                         }   
@@ -422,38 +405,20 @@ class Idoc {
                 }        
                 if (!empty($billSettingData['packageCodeCol'])){
                     $tab['package_code'] = $this->readText($initRow-1, $billSettingData['packageCodeCol']-1, $idocData);
-                    if ($tab['package_code']){
-                        $continue = true;
-                    }            
                 }        
                 if (!empty($billSettingData['packcageCol'])){
                     $tab['packcage'] = $this->readText($initRow-1, $billSettingData['packcageCol']-1, $idocData);
-                    if ($tab['packcage']){
-                        $continue = true;
-                    }            
                 }        
                 if (!empty($billSettingData['countryCodeCol'])){
                     $tab['country_code'] = $this->readText($initRow-1, $billSettingData['countryCodeCol']-1, $idocData);
-                    if ($tab['country_code']){
-                        $continue = true;
-                    }            
                 }        
                 if (!empty($billSettingData['countryCol'])){
                     $tab['country'] = $this->readText($initRow-1, $billSettingData['countryCol']-1, $idocData);
-                    if ($tab['country']){
-                        $continue = true;
-                    }            
                 }        
                 if (!empty($billSettingData['ntdCol'])){
                     $tab['ntd'] = $this->readText($initRow-1, $billSettingData['ntdCol']-1, $idocData);
-                    if ($tab['ntd']){
-                        $continue = true;
-                    }            
                 }      
                 
-                if (!$continue){
-                    break;
-                }
 //                if ($initRow > 100){
 //                    break;
 //                }
