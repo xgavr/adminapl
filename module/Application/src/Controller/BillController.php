@@ -62,8 +62,8 @@ class BillController extends AbstractActionController
         $query = $this->entityManager->getRepository(Idoc::class)
                     ->queryAllIdocs($params);            
         
-        $total = $this->entityManager->getRepository(Idoc::class)
-                ->count([]);
+//        $total = $this->entityManager->getRepository(Idoc::class)
+//                ->count([]);
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -73,6 +73,7 @@ class BillController extends AbstractActionController
         }
 
         $result = $query->getResult(2);
+        $total = count($result);
         
         return new JsonModel([
             'total' => $total,
