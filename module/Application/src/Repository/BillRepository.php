@@ -54,6 +54,38 @@ class BillRepository  extends EntityRepository{
     }       
     
     /**
+     * Запрос количества
+     * @param array $params
+     * @return Query
+     * 
+     */
+    public function totalAllIdocs($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('count(i) as countIdoc')
+            ->from(Idoc::class, 'i') 
+            ->leftJoin('i.supplier', 's')    
+            ->addOrderBy('i.id', 'DESC')    
+                ;
+        if (is_array($params)){
+            if (is_numeric($params['supplier'])){
+                $queryBuilder->andWhere('i.supplier = ?1')
+                        ->setParameter('1', $params['supplier']);
+            }
+            if (is_numeric($params['status'])){
+                $queryBuilder->andWhere('i.status = ?2')
+                        ->setParameter('2', $params['status']);
+            }
+        }
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result['countIdoc'];
+    }       
+
+    /**
      * Найти товар по коду поставщика
      * @param Supplier $supplier
      * @param string $iid
