@@ -70,6 +70,10 @@ $form->get('autoru_email_password')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('hello_check')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('hello_email')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -188,6 +192,12 @@ $form->prepare();
         
     </div>   
     <div class="col-md-3">
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('hello_check')); ?>
+            <?= $this->formElement($form->get('hello_check')); ?>
+            <?= $this->formElementErrors($form->get('hello_check')); ?>                  
+        </div>
         
         <div class="form-group">
             <?= $this->formLabel($form->get('autoru_email')); ?>

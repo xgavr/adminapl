@@ -170,6 +170,11 @@ class ProcessingController extends AbstractActionController
      */
     private $helloManager;    
 
+    /**
+     * Bill manager.
+     * @var \Application\Service\BillManager
+     */
+    private $billManager;    
 
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
@@ -177,7 +182,7 @@ class ProcessingController extends AbstractActionController
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
-            $aplCashService) 
+            $aplCashService, $billManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -204,6 +209,7 @@ class ProcessingController extends AbstractActionController
         $this->helloManager = $helloManager;
         $this->aplOrderService = $aplOrderService;
         $this->aplCashService = $aplCashService;
+        $this->billManager = $billManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -221,7 +227,11 @@ class ProcessingController extends AbstractActionController
 
     public function indexAction()
     {       
-        $this->autoruManager->postOrder();
+        $settings = $this->adminManager->getSettings();
+        
+        if ($settings['hello_check'] == 1){
+            //$this->autoruManager->postOrder();
+        }    
         
         return new JsonModel(
             ['ok']
@@ -230,7 +240,12 @@ class ProcessingController extends AbstractActionController
     
     public function helloAction()
     {       
-        $this->helloManager->checkingMail();
+        $settings = $this->adminManager->getSettings();
+        
+        if ($settings['hello_check'] == 1){
+            $this->helloManager->checkingMail();
+            $this->billManager->billsByMail();
+        }    
         return new JsonModel(
             ['ok']
         );        
@@ -1839,7 +1854,7 @@ class ProcessingController extends AbstractActionController
                 
         return new JsonModel(
             ['ok']
-        );
-        
+        );        
     }    
+    
 }

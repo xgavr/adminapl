@@ -101,10 +101,11 @@ class AdminManager {
         $config->admin->ftp_apl_market_price_login = $data['ftp_apl_market_price_login'];
         $config->admin->ftp_apl_market_price_password = $data['ftp_apl_market_price_password'];
 
-        $config->admin->autoru_email = $data['autoru_email'];
-        $config->admin->autoru_email_password = $data['autoru_email_password'];
+        $config->admin->hello_check = $data['hello_check'];
         $config->admin->hello_email = $data['hello_email'];
         $config->admin->hello_email_password = $data['hello_email_password'];
+        $config->admin->autoru_email = $data['autoru_email'];
+        $config->admin->autoru_email_password = $data['autoru_email_password'];
         
         $config->admin->telefonistka_email = $data['telefonistka_email'];
         $config->admin->telefonistka_email_password = $data['telefonistka_email_password'];

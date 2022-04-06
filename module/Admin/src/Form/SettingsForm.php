@@ -186,6 +186,18 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         ]);
                 
         $this->add([            
+            'type'  => 'select',
+            'name' => 'hello_check',
+            'options' => [
+                'label' => 'Проверка почты',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+        
+        $this->add([            
             'type'  => 'email',
             'name' => 'hello_email',
             'attributes' => [
@@ -633,6 +645,17 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'mail_token',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+
+        $inputFilter->add([
+                'name'     => 'hello_check',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
