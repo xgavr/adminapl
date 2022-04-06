@@ -267,4 +267,13 @@ class BillController extends AbstractActionController
         ]);         
     }
 
+    public function idocsToPtuAction()
+    {        
+        $this->billManager->tryIdocs(); 
+        
+        return new JsonModel([
+            'ok'
+        ]);         
+    }
+
 }

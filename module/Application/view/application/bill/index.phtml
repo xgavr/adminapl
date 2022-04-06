@@ -24,6 +24,9 @@ $this->pageBreadcrumbs()->setItems([
                 <button id="byMail" type="button" class="btn btn-default" title="Проверить почту">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
+                <button id="tryIdocs" type="button" class="btn btn-default" title="Загрузить документы">
+                    <span class="glyphicon glyphicon-download-alt"></span>
+                </button>
                 <div class="form-group">
                     <select id="supplierSelect" style="width: 250px" class="form-control">
                         <option selected>поставщик</option>
@@ -129,6 +132,22 @@ $this->pageBreadcrumbs()->setItems([
                 .fail(function (e) {
                     console.log(e);
                     alert("Ошибка при проверке почты");
+
+                });
+        });            
+
+        $(document).on('click', '#tryIdocs', function (e) {
+            var url = '/bills/idocs-to-ptu';
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                    refreshTable();
+                })
+                .fail(function (e) {
+                    console.log(e);
+                    alert("Ошибка при обработке документов");
 
                 });
         });            

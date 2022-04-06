@@ -763,10 +763,33 @@ class BillManager
             }
         }
         
-        $idoc->setStatus(Idoc::STATUS_ERROR);
-        $this->entityManager->persist($idoc);
-        $this->entityManager->flush($idoc);
+        if (count($billSettings)){
+            $idoc->setStatus(Idoc::STATUS_ERROR);
+            $this->entityManager->persist($idoc);
+            $this->entityManager->flush($idoc);
+        }
         
+        return;
+    }
+    
+    /**
+     * Проверить и создать ПТУ из эл.докуметов
+     * @return null
+     */
+    public function tryIdocs()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        $idocs = $this->entityManager->getRepository(Idoc::class)
+                ->findBy(['status' => Idoc::STATUS_ACTIVE]);
+        foreach ($idocs as $idoc){
+            $this->tryPtu($idoc);
+            if (time() > $startTime + 840){
+                break;
+            }
+        }
         return;
     }
 }
