@@ -664,7 +664,7 @@ class BillManager
                 'apl_id' => 0,
                 'doc_no' => $idocData['doc_no'],
                 'doc_date' => $idocData['doc_date'],
-                'status_ex' => Ptu::STATUS_EX_NEW,
+                'status_ex' => Ptu::STATUS_EX_UPL,
                 'status' => Ptu::STATUS_ACTIVE,
             ];
             
@@ -729,7 +729,10 @@ class BillManager
                 $idoc->setDocKey($ptu->getLogKey());
                 $idoc->setStatus(Idoc::STATUS_RETIRED);
                 $this->entityManager->persist($idoc);
-                $this->entityManager->flush($idoc);
+                
+                $ptu->setStatusEx(Ptu::STATUS_EX_NEW);
+                $this->entityManager->persist($ptu);
+                $this->entityManager->flush();
                 return true;
             }            
         }       

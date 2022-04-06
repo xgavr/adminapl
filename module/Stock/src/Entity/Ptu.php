@@ -39,6 +39,7 @@ class Ptu {
     const STATUS_EX_NEW  = 1; // Не отправлено.
     const STATUS_EX_RECD  = 2; // Получено из АПЛ.
     const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
+    const STATUS_EX_UPL  = 4; // Загружается.
 
     /**
      * @ORM\Id
@@ -329,6 +330,7 @@ class Ptu {
             self::STATUS_EX_NEW => 'Новый',
             self::STATUS_EX_APL => 'Отправлен в АПЛ',
             self::STATUS_EX_RECD => 'Получен из АПЛ',
+            self::STATUS_EX_UPL => 'Загружается',
         ];
     }    
     
