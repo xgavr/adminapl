@@ -540,9 +540,9 @@ class BillManager
         set_time_limit(900);
         $startTime = time();
         
-        $billSettings = $this->entityManager->getRepository(BillSetting::class)
+        $billGettings = $this->entityManager->getRepository(BillGetting::class)
                 ->findBy(['status' => BillSetting::STATUS_ACTIVE]);
-        foreach ($billSettings as $billSetting){
+        foreach ($billGettings as $billGetting){
             $this->getBillByMail($billGetting);
             if (time() > $startTime + 840){
                 break;
