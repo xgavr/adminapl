@@ -14,6 +14,7 @@ use Application\Entity\Idoc;
 use Application\Entity\BillGetting;
 use Application\Form\BillSettingForm;
 use Application\Entity\BillSetting;
+use Application\Entity\Supplier;
 
 
 class BillController extends AbstractActionController
@@ -41,18 +42,21 @@ class BillController extends AbstractActionController
     
     public function indexAction()
     {
-
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findBy([], ['status' => 'ASC']);
         return new ViewModel([
             'billManager' => $this->billManager,
+            'suppliers' => $suppliers,
         ]);  
     }
     
     public function contentAction()
     {
         
+        $supplier = $this->params()->fromQuery('supplier');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
-        $params = [];
+        $params = ['supplier' => $supplier];
         
         $query = $this->entityManager->getRepository(Idoc::class)
                     ->queryAllIdocs($params);            
@@ -75,6 +79,27 @@ class BillController extends AbstractActionController
         ]);         
     }
 
+    public function idocStatusEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $idocId = $data['pk'];
+            $idoc = $this->entityManager->getRepository(Idoc::class)
+                    ->find($idocId);
+                    
+            if ($idoc){
+                $idocStatus = Idoc::STATUS_RETIRED;
+                if ($idoc->getStatus() == Idoc::STATUS_RETIRED){
+                    $idocStatus = Idoc::STATUS_ACTIVE;
+                }
+                $this->billManager->updateIdocStatus($idoc, ['status' => $idocStatus]);
+            }    
+        }
+        
+        exit;
+    }    
+    
     public function readIdocAction()
     {        
         $idocId = (int)$this->params()->fromRoute('id', -1);
@@ -190,6 +215,15 @@ class BillController extends AbstractActionController
         } 
         
         $result = $this->billManager->getBillByMail($billGetting);
+        
+        return new JsonModel(
+           ['ok']
+        );                   
+    }
+    
+    public function billsByMailAction()
+    {
+        $this->billManager->billsByMail();
         
         return new JsonModel(
            ['ok']

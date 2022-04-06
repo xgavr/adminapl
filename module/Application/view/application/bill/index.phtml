@@ -1,5 +1,5 @@
 <?php
-use Application\Entity\Client;
+use Application\Entity\Idoc;
 
 $this->headTitle('Электронные накладные');
 
@@ -18,10 +18,21 @@ $this->pageBreadcrumbs()->setItems([
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
-                <div class="form-group">
+<!--                <div class="form-group">
                     <input name="search" style="width: 400px" class="form-control" type="text" placeholder="">
-                </div>
-                <button id="ok" type="submit" class="btn btn-default">OK</button>
+                </div>-->
+                <button id="byMail" type="button" class="btn btn-default" title="Проверить почту">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                </button>
+                <div class="form-group">
+                    <select id="supplierSelect" style="width: 250px" class="form-control">
+                        <option selected>поставщик</option>
+                        <?php foreach ($suppliers as $supplier):?>
+                            <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
+                        <?php endforeach;?>
+                    </select>
+                    
+                </div>    
             </div>
         </div>
         <table id="table" 
@@ -39,7 +50,8 @@ $this->pageBreadcrumbs()->setItems([
             <thead>
                 <tr>
                      <th data-field="id" data-type="numeric" data-width="50">ID</th>
-                     <th data-field="dateCreated" data-width="75">Дата</th>
+                     <th data-field="dateCreated" data-width="100">Дата</th>
+                     <th data-field="status" data-formatter="statusFormatter" data-width="20">C</th>
                      <th data-field="docKey" data-formatter="docFormatter" data-width="75">Документ</th>
                      <th data-field="supplier.name" data-formatter="supplierFormatter">Поставщик</th>
                      <th data-field="name">Файл</th>
@@ -55,12 +67,30 @@ $this->pageBreadcrumbs()->setItems([
         $('#table').bootstrapTable('refresh');
     }
 
-    var table = $('#table').bootstrapTable();
+    var table = $('#table').bootstrapTable({
+        onLoadSuccess: function(res){
+            $("[data-toggle='tooltip']").tooltip();
+            $('.editableCheckBox').change(function() {
+                $.ajax({
+                    type: "POST",
+                    url: $(this).attr('data-url'),
+                    data: "pk="+$(this).attr('data-pk'),
+                    success: function(msg){
+//                      alert( "Прибыли данные: " + msg );
+                    }
+                });
+            })        
+        }
+    });
     var ok = $('#ok');
 
     $(function () {
         ok.click(function () {
             table.bootstrapTable('refresh');
+        });
+
+        $(document).on('change', '#supplierSelect', function (e) {
+            refreshTable();
         });
         
         $(document).on('click', '.bill-setting-modal-show', function (e) {
@@ -75,6 +105,22 @@ $this->pageBreadcrumbs()->setItems([
         
         $(document).on('click', '.try-ptu', function (e) {
             var url = $(e.currentTarget).attr('url');
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                    refreshTable();
+                })
+                .fail(function (e) {
+                    console.log(e);
+                    alert("Ошибка при создании ПТУ");
+
+                });
+        });            
+
+        $(document).on('click', '#byMail', function (e) {
+            var url = '/bills/bills-by-mail';
             $.ajax({
                 type: 'GET',
                 url: url
@@ -124,6 +170,7 @@ $this->pageBreadcrumbs()->setItems([
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
+        params.supplier = $('#supplierSelect').val();
         
         return params;
     }
@@ -154,6 +201,17 @@ $this->pageBreadcrumbs()->setItems([
         ].join(''); 
     }    
     
+    function statusFormatter(value, row){
+        var checked = 'checked';
+        if (value == <?= Idoc::STATUS_ACTIVE?>){
+            checked = '';
+        }
+        return [
+            '<input data-toggle="tooltip" class="editableCheckBox" \n\
+                data-pk="'+row.id+'" data-url="/bills/idoc-status-edit" type="checkbox" '+checked+'/>'
+        ].join(''); 
+    }    
+
     function activeFormatter(value, row){
         var url = '/bills/bill-setting-form/'+value;
         btn = '<button';

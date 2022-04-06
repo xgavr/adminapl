@@ -356,6 +356,7 @@ $this->pageBreadcrumbs()->setItems([
                             <div class="panel panel-info">
                                 <div class="panel-body">
                                     <div class="pull-left">
+                                        <?= $billGetting->getStatusAsString() ?><br/>
                                         <?= $billGetting->getName() ?><br/>
                                         Email: <span><?= $billGetting->getEmail() ?></span>
                                         <?php if ($billGetting->getEmail()): ?>

@@ -40,7 +40,12 @@ class BillRepository  extends EntityRepository{
             ->leftJoin('i.supplier', 's')    
             ->addOrderBy('i.id', 'DESC')    
                 ;
-        
+        if (is_array($params)){
+            if (is_numeric($params['supplier'])){
+                $queryBuilder->andWhere('i.supplier = ?1')
+                        ->setParameter('1', $params['supplier']);
+            }
+        }
         return $queryBuilder->getQuery();
     }       
     

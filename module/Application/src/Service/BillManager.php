@@ -116,6 +116,23 @@ class BillManager
     }
     
     /**
+     * Обновить статус документа
+     * 
+     * @param Idoc $idoc
+     * @param array $data
+     * @return idoc
+     */
+    public function updateIdocStatus($idoc, $data)
+    {
+        $idoc->setStatus($data['status']);
+        
+        $this->entityManager->persist($idoc);
+        $this->entityManager->flush($idoc);
+        
+        return $idoc;
+    }
+
+    /**
      * Удалить документ
      * 
      * @param Idoc $idoc
