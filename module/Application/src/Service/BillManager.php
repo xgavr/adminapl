@@ -264,35 +264,36 @@ class BillManager
     
     /**
      * Преобразовать xls в array
+     * @param Supplier $supplier
      * @param string $filename
+     * @param string $filepath
      */
-    protected function _xls2array($filename)
+    protected function _xls2array($supplier, $filename, $filepath)
     {
         libxml_use_internal_errors(true);
         ini_set('memory_limit', '512M');
         set_time_limit(0); 
-        $result = [];
         
-        if (file_exists($filename)){
+        if (file_exists($filepath)){
             
-            if (!filesize($filename)){
+            if (!filesize($filepath)){
                 return;
             }
                                     
 //            $filter = new RawToStr();
-                    
             try{
-                $reader = IOFactory::createReaderForFile($filename);
+                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($filepath);        
+                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+//                var_dump($filepath); exit;
+                $spreadsheet = $reader->load($filepath);
+//                $reader = IOFactory::createReaderForFile($filepath);
             } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
+                var_dump($e->getMessage()); exit;
             }    
-
-//            $filterSubset = new \Application\Filter\ExcelColumn();
-//            $reader->setReadFilter($filterSubset);
-//            $reader->setReadDataOnly(true);
-            $spreadsheet = $reader->load($filename);
 
             $sheets = $spreadsheet->getAllSheets();
             foreach ($sheets as $sheet) { // PHPExcel_Worksheet
+                $result = [];
                 foreach ($sheet->getRowIterator() as $row) { 
                     $cellIterator = $row->getCellIterator();
                     $resultRow = [];
@@ -307,7 +308,13 @@ class BillManager
                         $resultRow[] = $value;
                     }
                     $result[] = $resultRow;                              
-                }    
+                }              
+                $this->addIdoc($supplier, [
+                    'status' => Idoc::STATUS_ACTIVE,
+                    'name' => $filename,
+                    'description' => Encoder::encode($result),
+                    'docKey' => null,
+                ]);                
             }                
             unset($spreadsheet);
 //            exit;
@@ -318,23 +325,24 @@ class BillManager
     /**
      * Преобразовать excel95 в array
      * @param string $filename
+     * @param string $filepath
      */
-    protected function _excel2array($filename)
+    protected function _excel2array($filename, $filepath)
     {
         libxml_use_internal_errors(true);
         ini_set('memory_limit', '512M');
         set_time_limit(0); 
         $result = [];
         
-        if (file_exists($filename)){
+        if (file_exists($filepath)){
             
-            if (!filesize($filename)){
+            if (!filesize($filepath)){
                 return;
             }
                                     
             $mvexcel = new Service\PhpExcelService();
             try {
-                $excel = $mvexcel->createPHPExcelObject($filename);
+                $excel = $mvexcel->createPHPExcelObject($filepath);
             } catch (\PHPExcel_Reader_Exception $e){
                 return;
             }
@@ -354,28 +362,30 @@ class BillManager
 
     /**
      * Преобразовать csv в array
+     * @param Supplier $supplier
      * @param string $filename
+     * @param string $filepath
      * @return array
      */
     
-    protected function _csv2array($filename)
+    protected function _csv2array($supplier, $filename, $filepath)
     {
         ini_set('memory_limit', '512M');
         set_time_limit(0);
         $result = [];
         
-        if (file_exists($filename)){
+        if (file_exists($filepath)){
             
-            if (!filesize($filename)){
+            if (!filesize($filepath)){
                 return;
             }
 
-            $lines = fopen($filename, 'r');
+            $lines = fopen($filepath, 'r');
 
             if($lines) {
 
                 $detector = new CsvDetectDelimiterFilter();
-                $delimiter = $detector->filter($filename);
+                $delimiter = $detector->filter($filepath);
                 
                 $filter = new RawToStr();
 
@@ -391,29 +401,38 @@ class BillManager
                 fclose($lines);
             }                                
         }                
+        
+        $this->addIdoc($supplier, [
+            'status' => Idoc::STATUS_ACTIVE,
+            'name' => $filename,
+            'description' => Encoder::encode($result),
+            'docKey' => null,
+        ]);                
+        
         return $result;
     }    
 
     /**
      * Преобразование данных файла в массив
+     * @param Supplier $supplier
      * @param string $filename
      * @param string $filepath
      * @return array
      */
-    protected function _filedata2array($filename, $filepath)
+    protected function _filedata2array($supplier, $filename, $filepath)
     {
 
         $result = [];
         $pathinfo = pathinfo($filename);
         //var_dump($pathinfo); exit;
 //        if (in_array(strtolower($pathinfo['extension']), ['xls'])){
-//            return $this->_excel2array($filepath);            
+//            return $this->_excel2array($filename, $filepath);            
 //        }
         if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
-            return $this->_xls2array($filepath);            
+            return $this->_xls2array($supplier, $filename, $filepath);            
         }
         if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
-            return $this->_csv2array($filepath);            
+            return $this->_csv2array($supplier, $filename, $filepath);            
         }        
         return $result;
     }    
@@ -477,12 +496,7 @@ class BillManager
             foreach (new \DirectoryIterator($folderName) as $fileInfo) {
                 if ($fileInfo->isDot()) continue;
                 if ($fileInfo->isFile()){
-                    $this->addIdoc($supplier, [
-                        'status' => Idoc::STATUS_ACTIVE,
-                        'name' => $fileInfo->getFilename(),
-                        'description' => Encoder::encode($this->_filedata2array($fileInfo->getFilename(), $fileInfo->getPathname())),
-                        'docKey' => null,
-                    ]);
+                    $this->_filedata2array($supplier, $fileInfo->getFilename(), $fileInfo->getPathname());
                 }
                 if ($fileInfo->isDir()){
                     $this->_checkBillFolder($supplier, $fileInfo->getPathname());                    
@@ -546,12 +560,7 @@ class BillManager
                                 if ($validator->isValid($attachment['temp_file']) && strtolower($pathinfo['extension']) != 'xlsx'){
                                     $this->_decompressAttachment($billGetting->getSupplier(), $attachment['filename'], $attachment['temp_file']);
                                 } else {
-                                    $this->addIdoc($billGetting->getSupplier(), [
-                                        'status' => Idoc::STATUS_ACTIVE,
-                                        'name' => $attachment['filename'],
-                                        'description' => Encoder::encode($this->_filedata2array($attachment['filename'], $attachment['temp_file'])),
-                                        'docKey' => null,
-                                    ]);
+                                    $this->_filedata2array($billGetting->getSupplier(), $attachment['filename'], $attachment['temp_file']);
                                 }    
                                 unlink($attachment['temp_file']);
                             }

@@ -234,7 +234,7 @@ class Idoc {
     public function setSupplier($supplier) 
     {
         $this->supplier = $supplier;
-        $supplier->addBillSettings($this);
+        $supplier->addIdoc($this);
     }    
         
     /**
