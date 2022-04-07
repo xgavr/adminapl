@@ -272,6 +272,26 @@ class Idoc {
     }
     
     /**
+     * Строка в дату
+     * @param string $str
+     * @return date
+     */
+    private function _strToDate($str)
+    {
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        $ru_month = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+        $ru_month1 = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        $en_month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        
+        $date = str_replace($ru_month1, $en_month, mb_strtolower($str));
+        $date = str_replace($ru_month, $en_month, mb_strtolower($date));
+        $date = trim(preg_replace('/[а-яА-Я]/ui', '',$date));
+        //var_dump($date);
+
+        return date('Y-m-d', strtotime($date));        
+    }
+    
+    /**
      * Преобразование даты
      * @param string $excelDate
      */
@@ -280,17 +300,66 @@ class Idoc {
         if (is_numeric($excelDate) && $excelDate < 60000){
             return date('Y-m-d', ($excelDate - 25569) * 86400);
         }
-        setlocale(LC_ALL,'ru_RU.UTF-8');
-        $ru_month = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
-        $ru_month1 = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-        $en_month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         
-        $date = str_replace($ru_month1, $en_month, mb_strtolower($excelDate));
-        $date = str_replace($ru_month, $en_month, mb_strtolower($date));
-        $date = trim(preg_replace('/[а-яА-Я]/ui', '',$date));
-        //var_dump($date);
-
-        return date('Y-m-d', strtotime($date));
+        return $this->_strToDate($excelDate);
+    }
+    
+    /**
+     * Проверить дату
+     * @param str $date
+     * @return bool
+     */
+    private function _isDate($date)
+    {
+        if (empty($date)){
+            return false;
+        }
+        if ($date == '1970-01-01'){
+            return false;
+        }
+        if(strtotime($date)){
+            return true;
+        }        
+        return false; 
+    }
+    
+    /**
+     * Номер и дата в одной строке
+     * @param string $str
+     * @param string $expec num|date
+     */
+    private function _docnumAndDate($str, $expec = 'num')
+    {        
+        if ($expec == 'date'){
+            $date = $this->_excelDateToDate($str);
+            if ($this->_isDate($date)){
+                return $date;
+            }
+        }
+        
+        $strs = explode(' ', $str);
+        if (count($strs) == 1 && $expec == 'num'){
+            return $str;
+        }
+        foreach ($strs as $value){
+            if ($expec == 'num'){
+                $posNN = \stripos(trim($value), '№');
+                if ($posNN !== false){
+                    return trim($value, '№');
+                }
+                $posN = \stripos(trim($value), 'N');
+                if ($posN !== false){
+                    return trim($value, 'N');
+                }
+            }
+            if ($expec == 'date'){
+                $date = $this->_strToDate($value);
+                if ($this->_isDate($date)){
+                    return $date;
+                }
+            }    
+        }
+        return;
     }
 
     /**
