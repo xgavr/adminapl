@@ -300,8 +300,7 @@ class BillManager
                         } elseif (Date::isDateTimeFormat($cell->getStyle()->getNumberFormat()) && $cell->getValue()) {
                             $value = date('Y-m-d', Date::excelToTimestamp($cell->getValue()));
                         } else {
-                            $cellValue = $cell->getCalculatedValue();
-                            $value = mb_substr(trim(iconv(mb_detect_encoding($cellValue), 'utf-8', $cellValue)), 0, 100);
+                            $value = mb_substr(trim($cell->getCalculatedValue()), 0, 50);
                         }                        
                         $resultRow[] = $value;
                     }
