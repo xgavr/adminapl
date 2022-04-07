@@ -509,7 +509,7 @@ class BillManager
                         foreach($mail['attachment'] as $attachment){
                             if ($attachment['filename'] && file_exists($attachment['temp_file'])){
                                 $pathinfo = pathinfo($attachment['filename']);
-                                if ($validator->isValid($attachment['temp_file']) && $pathinfo['extension'] != 'xlsx'){
+                                if ($validator->isValid($attachment['temp_file']) && strtolower($pathinfo['extension']) != 'xlsx'){
                                     $this->_decompressAttachment($billGetting->getSupplier(), $attachment['filename'], $attachment['temp_file']);
                                 } else {
                                     $this->addIdoc($billGetting->getSupplier(), [
