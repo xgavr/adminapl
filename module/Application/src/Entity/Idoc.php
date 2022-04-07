@@ -351,6 +351,14 @@ class Idoc {
                 if ($posN !== false){
                     return trim($value, 'N');
                 }
+                
+                $dig = preg_replace("/[^0-9]/", '', $value);
+                if ($dig){
+                    $date = $this->_strToDate($value);
+                    if (!$this->_isDate($date)){
+                        return $value;
+                    }                    
+                }
             }
             if ($expec == 'date'){
                 $date = $this->_strToDate($value);
