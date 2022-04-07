@@ -588,8 +588,32 @@ class BillManager
             $producer = $this->entityManager->getRepository(Producer::class)
                     ->findOneByAplId(0);
         }
-        $articleFilter = new ArticleCode();
-        return $this->assemblyManager->addNewGood($articleFilter->filter($article), $producer, NULL, 0, mb_substr($name, 0, 255));        
+        $code = $articleFilter = new ArticleCode();
+        if ($code){
+            return $this->assemblyManager->addNewGood($code, $producer, NULL, 0, mb_substr($name, 0, 255));        
+        }
+        
+        return;
+    }
+    
+    /**
+     * Попробовать получить артикул из кода поставщика
+     * @param string $iid
+     */
+    protected function _parseIid($iid)
+    {
+        $delimeters = ['^'];
+        foreach ($delimeters as $delimetr){
+            $art_pro = explode($delimetr, $iid);
+            foreach ($art_pro as $value){
+                $good = $this->entityManager->getRepository(Goods::class)
+                        ->findOneByCode($code);
+                if ($good){
+                    return $good;
+                }                
+            }
+        }
+        return;
     }
     
     /**
@@ -627,6 +651,11 @@ class BillManager
             if (is_array($good)){
                 return $this->_newGood($good['article'], $good['producer'], $good['goodName']);
             }
+            if ($good){
+                return $good;
+            }
+            
+            $good = $this->_parseIid($iid);
             if ($good){
                 return $good;
             }
@@ -701,7 +730,8 @@ class BillManager
                     if (!empty($tp['quantity']) && !empty($tp['good_name'])){
                         $good = $this->findGood($idoc, $tp);   
                         if (empty($good)){
-                            throw new \Exception("Не удалось создать карточку товара для документа {$tp['good_name']}");
+                            return false;
+//                            throw new \Exception("Не удалось создать карточку товара для документа {$tp['good_name']}");
                         } else {
 
                             $this->ptuManager->addPtuGood($ptu->getId(), [
@@ -736,7 +766,7 @@ class BillManager
                 return true;
             }            
         }       
-        return false;
+        return true;
     }
     
     /**
@@ -747,10 +777,11 @@ class BillManager
     {
         $billSettings = $this->entityManager->getRepository(BillSetting::class)
                 ->findBy(['supplier' => $idoc->getSupplier()->getId(), 'status' => Idoc::STATUS_ACTIVE]);
+        $flag = false;
         foreach ($billSettings as $billSetting){
             $idocData = $idoc->idocToPtu($billSetting->toArray());
             if ($idocData['doc_no'] && $idocData['doc_date'] > '1970-01-01' && $idocData['total']){
-                if ($this->idocToPtu($idoc, $billSetting)){
+                if ($flag = $this->idocToPtu($idoc, $billSetting)){
                     return;
                 }                
             }
@@ -759,14 +790,14 @@ class BillManager
         foreach ($billSettings as $billSetting){
             $idocData = $idoc->idocToPtu($billSetting->toArray());
             if ($idocData['doc_no'] && $idocData['doc_date'] > '1970-01-01'){
-                if ($this->idocToPtu($idoc, $billSetting)){
+                if ($flag = $this->idocToPtu($idoc, $billSetting)){
                     return;
                 }
                 
             }
         }
         
-        if (count($billSettings)){
+        if (count($billSettings) && $flag){
             $idoc->setStatus(Idoc::STATUS_ERROR);
             $this->entityManager->persist($idoc);
             $this->entityManager->flush($idoc);
