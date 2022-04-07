@@ -269,8 +269,7 @@ class BillManager
      * @param string $filepath
      */
     protected function _xls2array($supplier, $filename, $filepath)
-    {
-        libxml_use_internal_errors(true);
+    {        
         ini_set('memory_limit', '512M');
         set_time_limit(0); 
         
@@ -282,11 +281,13 @@ class BillManager
                                     
 //            $filter = new RawToStr();
             try{
+                libxml_use_internal_errors(true);
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($filepath);        
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 //                var_dump($filepath); exit;
                 $spreadsheet = $reader->load($filepath);
 //                $reader = IOFactory::createReaderForFile($filepath);
+                libxml_use_internal_errors(false);
             } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
                 var_dump($e->getMessage()); exit;
             }    
@@ -298,6 +299,11 @@ class BillManager
                     $cellIterator = $row->getCellIterator();
                     $resultRow = [];
                     foreach ($cellIterator as $cell) {   
+//                        var_dump(mb_detect_encoding($cell->getCalculatedValue()));
+//                        $calcValue = iconv('ascii', 'win-1251', $cell->getCalculatedValue());
+//                        $calcValue = iconv(mb_detect_encoding($cell->getValue(), mb_detect_order(), true), "UTF-8", $cell->getValue());
+                        $calcValue = utf8_encode($cell->getCalculatedValue());
+                        var_dump($calcValue);
                         if (Date::isDateTime($cell) && $cell->getValue()) {
                             $value = date('Y-m-d', Date::excelToTimestamp($cell->getValue()));
                         } elseif (Date::isDateTimeFormat($cell->getStyle()->getNumberFormat()) && $cell->getValue()) {
@@ -546,7 +552,7 @@ class BillManager
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $billGetting->getEmail(),
                 'password' => $billGetting->getEmailPassword(),
-                'leave_message' => false,
+                'leave_message' => true,
             ];
             
             $mailList = $this->postManager->readImap($box);
