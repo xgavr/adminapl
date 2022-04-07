@@ -361,6 +361,20 @@ class Idoc {
         }
         return;
     }
+    
+    /**
+     * Прочитать наименование товара документа
+     * @param int $row
+     * @param int $col
+     * @param array $idocData
+     * @param string $expec num|date
+     * @return string
+     */    
+    private function _readDocnumAndDate($row, $col, $idocData, $expec = 'num')
+    {
+       $str = $this->readText($row, $col, $idocData);
+       return $this->_docnumAndDate($str, $expec);
+    }
 
     /**
      * Прочитать дату документа
@@ -411,22 +425,22 @@ class Idoc {
     {
         $idocData = $this->getDescriptionAsArray();
         if (!empty($billSettingData['docNumRow'])){
-            $result['doc_no'] = $this->readText($billSettingData['docNumRow']-1, $billSettingData['docNumCol']-1, $idocData);
+            $result['doc_no'] = $this->_readDocnumAndDate($billSettingData['docNumRow']-1, $billSettingData['docNumCol']-1, $idocData);
         }    
         if (!empty($billSettingData['docDateRow'])){
-            $result['doc_date'] = $this->readDate($billSettingData['docDateRow']-1, $billSettingData['docDateCol']-1, $idocData);
+            $result['doc_date'] = $this->_readDocnumAndDate($billSettingData['docDateRow']-1, $billSettingData['docDateCol']-1, $idocData, 'date');
         }    
         if (!empty($billSettingData['corNumRow'])){
-            $result['cor_no'] = $this->readText($billSettingData['corNumRow']-1, $billSettingData['corNumCol']-1, $idocData);
+            $result['cor_no'] = $this->_readDocnumAndDate($billSettingData['corNumRow']-1, $billSettingData['corNumCol']-1, $idocData);
         }    
         if (!empty($billSettingData['corDateRow'])){
-            $result['cor_date'] = $this->readDate($billSettingData['corDateRow']-1, $billSettingData['corDateCol']-1, $idocData);
+            $result['cor_date'] = $this->_readDocnumAndDate($billSettingData['corDateRow']-1, $billSettingData['corDateCol']-1, $idocData, 'date');
         }    
         if (!empty($billSettingData['idNumRow'])){
-            $result['id_no'] = $this->readText($billSettingData['idNumRow']-1, $billSettingData['idNumCol']-1, $idocData);
+            $result['id_no'] = $this->_readDocnumAndDate($billSettingData['idNumRow']-1, $billSettingData['idNumCol']-1, $idocData);
         }    
         if (!empty($billSettingData['idDateRow'])){
-            $result['id_date'] = $this->readDate($billSettingData['idDateRow']-1, $billSettingData['idDateCol']-1, $idocData);
+            $result['id_date'] = $this->_readDocnumAndDate($billSettingData['idDateRow']-1, $billSettingData['idDateCol']-1, $idocData, 'date');
         }    
         if (!empty($billSettingData['contractRow'])){
             $result['contract'] = $this->readText($billSettingData['contractRow']-1, $billSettingData['contractCol']-1, $idocData);
