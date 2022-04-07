@@ -588,7 +588,8 @@ class BillManager
             $producer = $this->entityManager->getRepository(Producer::class)
                     ->findOneByAplId(0);
         }
-        $code = $articleFilter = new ArticleCode();
+        $articleFilter = new ArticleCode();
+        $code = $articleFilter->filter($article);
         if ($code){
             return $this->assemblyManager->addNewGood($code, $producer, NULL, 0, mb_substr($name, 0, 255));        
         }
@@ -603,9 +604,11 @@ class BillManager
     protected function _parseIid($iid)
     {
         $delimeters = ['^'];
+        $articleFilter = new ArticleCode();
         foreach ($delimeters as $delimetr){
             $art_pro = explode($delimetr, $iid);
             foreach ($art_pro as $value){
+                $code = $articleFilter->filter($value);
                 $good = $this->entityManager->getRepository(Goods::class)
                         ->findOneByCode($code);
                 if ($good){

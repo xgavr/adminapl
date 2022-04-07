@@ -149,7 +149,7 @@ class PtuManager
         $ptu->setAplId($data['apl_id']);
         $ptu->setDocNo($data['doc_no']);
         $ptu->setDocDate($data['doc_date']);
-        $ptu->setComment($data['comment']);
+        $ptu->setComment(empty($data['comment']) ? null:$data['comment']);
         $ptu->setStatusEx($data['status_ex']);
         $ptu->setStatus($data['status']);
         $ptu->setOffice($data['office']);
@@ -180,7 +180,7 @@ class PtuManager
         $ptu->setAplId($data['apl_id']);
         $ptu->setDocNo($data['doc_no']);
         $ptu->setDocDate($data['doc_date']);
-        $ptu->setComment($data['comment']);
+        $ptu->setComment(empty($data['comment']) ? null:$data['comment']);
         $ptu->setStatusEx($data['status_ex']);
         $ptu->setStatus($data['status']);
         $ptu->setOffice($data['office']);
