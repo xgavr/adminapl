@@ -301,7 +301,7 @@ class BillManager
                             $value = date('Y-m-d', Date::excelToTimestamp($cell->getValue()));
                         } else {
                             $cellValue = $cell->getCalculatedValue();
-                            $value = mb_substr(trim(mb_convert_encoding($cellValue, 'utf-8', mb_detect_encoding($cellValue))), 0, 100);
+                            $value = mb_substr(trim(iconv(mb_detect_encoding($cellValue), 'utf-8', $cellValue)), 0, 100);
                         }                        
                         $resultRow[] = $value;
                     }
