@@ -295,20 +295,13 @@ class BillManager
                     $cellIterator = $row->getCellIterator();
                     $resultRow = [];
                     foreach ($cellIterator as $cell) {   
-//                        $testOut=[
-//                            $cell->getCoordinate(),
-//                            $cell->getStyle()->getNumberFormat()->getFormatCode(),
-//                            $cell->getDataType(),
-//                            $cell->getFormattedValue(),
-//                            $cell->getValue()
-//                        ];
-//                        var_dump($testOut);                            
                         if (Date::isDateTime($cell) && $cell->getValue()) {
                             $value = date('Y-m-d', Date::excelToTimestamp($cell->getValue()));
                         } elseif (Date::isDateTimeFormat($cell->getStyle()->getNumberFormat()) && $cell->getValue()) {
                             $value = date('Y-m-d', Date::excelToTimestamp($cell->getValue()));
                         } else {
-                            $value = mb_substr(trim($cell->getCalculatedValue()), 0, 50);
+                            $cellValue = $cell->getCalculatedValue();
+                            $value = mb_substr(trim(mb_convert_encoding($cellValue, 'utf-8', mb_detect_encoding($cellValue))), 0, 100);
                         }                        
                         $resultRow[] = $value;
                     }
@@ -603,7 +596,7 @@ class BillManager
      */
     protected function _parseIid($iid)
     {
-        $delimeters = ['^'];
+        $delimeters = ['^', '_'];
         $articleFilter = new ArticleCode();
         foreach ($delimeters as $delimetr){
             $art_pro = explode($delimetr, $iid);
