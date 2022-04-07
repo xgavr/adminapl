@@ -29,6 +29,7 @@ use Application\Entity\Rawprice;
 use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
+use MvlabsPHPExcel\Service;
 
 /**
  * Description of BillManager
@@ -267,6 +268,7 @@ class BillManager
      */
     protected function _xls2array($filename)
     {
+        libxml_use_internal_errors(true);
         ini_set('memory_limit', '512M');
         set_time_limit(0); 
         $result = [];
@@ -313,6 +315,43 @@ class BillManager
         return $result;        
     }
     
+    /**
+     * Преобразовать excel95 в array
+     * @param string $filename
+     */
+    protected function _excel2array($filename)
+    {
+        libxml_use_internal_errors(true);
+        ini_set('memory_limit', '512M');
+        set_time_limit(0); 
+        $result = [];
+        
+        if (file_exists($filename)){
+            
+            if (!filesize($filename)){
+                return;
+            }
+                                    
+            $mvexcel = new Service\PhpExcelService();
+            try {
+                $excel = $mvexcel->createPHPExcelObject($filename);
+            } catch (\PHPExcel_Reader_Exception $e){
+                return;
+            }
+                    
+            $sheets = $excel->getAllSheets();
+
+            foreach ($sheets as $sheet) { // PHPExcel_Worksheet
+                $result = $sheet->toArray();
+                break;
+            }                
+            unset($sheets);
+            unset($mvexcel);
+//            exit;
+        }        
+        return $result;        
+    }
+
     /**
      * Преобразовать csv в array
      * @param string $filename
@@ -367,6 +406,9 @@ class BillManager
         $result = [];
         $pathinfo = pathinfo($filename);
         //var_dump($pathinfo); exit;
+//        if (in_array(strtolower($pathinfo['extension']), ['xls'])){
+//            return $this->_excel2array($filepath);            
+//        }
         if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
             return $this->_xls2array($filepath);            
         }
