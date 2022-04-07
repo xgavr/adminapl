@@ -466,7 +466,7 @@ class Idoc {
         }  
         if ($initRow){
             $total = 0;
-            while($initRow < count($idocData)){
+            while($initRow <= count($idocData)){
                 $tab = [];
                 if (!empty($billSettingData['articleCol'])){
                     $tab['article'] = $this->readText($initRow-1, $billSettingData['articleCol']-1, $idocData);
