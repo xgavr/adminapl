@@ -780,7 +780,7 @@ class BillManager
     {
         $billSettings = $this->entityManager->getRepository(BillSetting::class)
                 ->findBy(['supplier' => $idoc->getSupplier()->getId(), 'status' => Idoc::STATUS_ACTIVE]);
-        $flag = false;
+        $flag = true;
         foreach ($billSettings as $billSetting){
             $idocData = $idoc->idocToPtu($billSetting->toArray());
             if ($idocData['doc_no'] && $idocData['doc_date'] > '1970-01-01' && $idocData['total']){
