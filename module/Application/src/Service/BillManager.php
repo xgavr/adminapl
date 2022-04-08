@@ -741,6 +741,9 @@ class BillManager
      */
     public function idocToPtu($idoc, $billSetting)
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        
         $idocData = $idoc->idocToPtu($billSetting->toArray());
         if ($idocData['total'] && $idocData['doc_no'] && $idocData['doc_date']){
             

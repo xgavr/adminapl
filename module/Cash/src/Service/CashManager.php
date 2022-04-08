@@ -367,7 +367,7 @@ class CashManager {
      */
     protected function prepareData($data)
     {
-        if (is_numeric($data['cash'])){
+        if (!empty($data['cash'])){
             $data['cash'] = $this->entityManager->getRepository(Cash::class)
                     ->find($data['cash']);
         }
