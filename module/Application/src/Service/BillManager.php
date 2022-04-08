@@ -786,7 +786,7 @@ class BillManager
             if ($ptu && isset($idocData['tab'])){
                 $rowNo = 1;                
                 foreach ($idocData['tab'] as $tp){
-                    if (!empty($tp['quantity']) && !empty($tp['good_name'])){
+                    if (!empty($tp['quantity']) && !empty($tp['good_name'])&& !empty($tp['amount'])){
                         $good = $this->findGood($idoc, $tp);   
                         if (empty($good)){
                             $notFoundArticle[] = empty($tp['article']) ? $tp['supplier_article']:$tp['article'];
