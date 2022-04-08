@@ -336,6 +336,10 @@ class Idoc {
             if ($this->_isDate($date)){
                 return $date;
             }
+            $date = date_create_from_format('d.m.y', $str);
+            if ($this->_isDate($date)){
+                return $date;
+            }
         }
         
         $strs = explode(' ', $str);

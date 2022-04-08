@@ -283,9 +283,12 @@ class BillManager
 //            $filter = new RawToStr();
             try{
                 libxml_use_internal_errors(true);
-                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($filepath);        
-                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-//                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
+//                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($filepath); 
+//                var_dump($inputFileType); exit;
+//                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
+//                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xml();
+//                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
 //                var_dump($filepath); exit;
                 $spreadsheet = $reader->load($filepath);
 //                $reader = IOFactory::createReaderForFile($filepath);
@@ -338,6 +341,34 @@ class BillManager
         set_time_limit(0);         
         
         if ($content){
+            //https://stackoverflow.com/questions/8624585/domdocument-identifying-position-of-a-br
+            
+            function processElement(DOMNode $element){
+                foreach($element->childNodes as $child){
+                    if($child instanceOf DOMText){
+                        echo $child->nodeValue,PHP_EOL;
+                    }elseif($child instanceOf DOMElement){
+                        switch($child->nodeName){
+                        case 'br':
+                            echo 'BREAK: ',PHP_EOL;
+                            break;
+                        case 'p':
+                            echo 'PARAGRAPH: ',PHP_EOL;
+                            processElement($child);
+                            echo 'END OF PARAGRAPH;',PHP_EOL;
+                            break;
+                        // etc.
+                        // other cases:
+                        default:
+                            processElement($child);
+                        }
+                    }
+                }
+            }
+
+            $D = new DOMDocument;
+            $D->loadHTML('<p>Multiple-line paragraph<br />that has a close tag</p>');
+            processElement($D);            
             
             $dom = new \DOMDocument();
             $dom->loadHTML($content);  
@@ -445,17 +476,19 @@ class BillManager
     {
         $result = [];
         $pathinfo = pathinfo($filename);
-//        $content = file_get_contents($filepath);
-//        if($content != strip_tags($content)) {
+        $content = file_get_contents($filepath);
+        $stripContent = strip_tags($content);
+        if($content != $stripContent) {
 //            // contains HTML
 //            //return $this->_html2array($supplier, $filename, $content);
 ////            $content = iconv('UTF-8', 'UTF-8//IGNORE', $content);
 ////            $content = iconv('UTF-8', 'windows-1251', $content);
-//            $content = iconv('windows-1251', 'utf-8//IGNORE', $content);
-//            $handle = fopen($filepath, "w");
-//            fwrite($handle, $content);
-//            //var_dump(mb_detect_encoding($content)); exit;
-//        }       
+            $content = iconv('windows-1251', 'utf-8', $content);
+            $handle = fopen($filepath, "w");
+            fwrite($handle, $content);
+            fclose($handle);
+//            var_dump($content); exit;
+        }       
         if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
             return $this->_xls2array($supplier, $filename, $filepath);            
         }
@@ -574,7 +607,7 @@ class BillManager
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $billGetting->getEmail(),
                 'password' => $billGetting->getEmailPassword(),
-                'leave_message' => false,
+                'leave_message' => true,
             ];
             
             $mailList = $this->postManager->readImap($box);
