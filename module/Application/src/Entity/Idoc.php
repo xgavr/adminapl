@@ -418,9 +418,13 @@ class Idoc {
      */
     public function readNumeric($row, $col, $idocData)
     {
+        setlocale(LC_ALL,'ru_RU.UTF-8');
         if (isset($idocData[$row])){
             if (isset($idocData[$row][$col])){
-                $result = (float) str_replace(',', '.', preg_replace('/\s+/', '', $idocData[$row][$col]));
+//                var_dump($idocData[$row][$col]);
+                $converted = trim($idocData[$row][$col],chr(0xC2).chr(0xA0)); //&nbsp;
+                $result = (float) str_replace(',', '.', preg_replace('/\s+/', '', $converted));
+//                var_dump($result);
                 if (is_numeric($result)){
                     return $result; 
                 }
