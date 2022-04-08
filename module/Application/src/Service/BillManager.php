@@ -743,7 +743,7 @@ class BillManager
     {
         ini_set('memory_limit', '512M');
         set_time_limit(900);
-        
+
         $idocData = $idoc->idocToPtu($billSetting->toArray());
         if ($idocData['total'] && $idocData['doc_no'] && $idocData['doc_date']){
             
@@ -782,13 +782,14 @@ class BillManager
                 $ptu = $this->ptuManager->addPtu($dataPtu);
             }    
             
+            $notFoundArticle = [];
             if ($ptu && isset($idocData['tab'])){
-                $rowNo = 1;
+                $rowNo = 1;                
                 foreach ($idocData['tab'] as $tp){
                     if (!empty($tp['quantity']) && !empty($tp['good_name'])){
                         $good = $this->findGood($idoc, $tp);   
                         if (empty($good)){
-                            return false;
+                            $notFoundArticle[] = $tp['article'];
 //                            throw new \Exception("Не удалось создать карточку товара для документа {$tp['good_name']}");
                         } else {
 
@@ -814,16 +815,26 @@ class BillManager
 
             if ($ptu){
                 $this->ptuManager->updatePtuAmount($ptu);
-                $idoc->setDocKey($ptu->getLogKey());
-                $idoc->setStatus(Idoc::STATUS_RETIRED);
-                $this->entityManager->persist($idoc);
                 
-                $ptu->setStatusEx(Ptu::STATUS_EX_NEW);
-                $this->entityManager->persist($ptu);
+                $idoc->setDocKey($ptu->getLogKey());
+                $idoc->setStatus(Idoc::STATUS_ACTIVE);
+                if (count($notFoundArticle) == 0){
+                    $idoc->setStatus(Idoc::STATUS_RETIRED);
+
+                    $ptu->setStatusEx(Ptu::STATUS_EX_NEW);
+                    $this->entityManager->persist($ptu);
+                }    
+                $this->entityManager->persist($idoc);
                 $this->entityManager->flush();
+                
+                if (count($notFoundArticle) > 0){
+                    $articles = implode(';', $notFoundArticle);
+                    throw new \Exception("Не удалось создать карточку товара для документа {$articles}");
+                }
                 return true;
             }            
         }       
+
         return true;
     }
     
@@ -833,6 +844,11 @@ class BillManager
      */
     public function tryPtu($idoc)
     {
+        $oldstatus = $idoc->getStatus();
+        $idoc->setStatus(Idoc::STATUS_PROC);
+        $this->entityManager->persist($idoc);
+        $this->entityManager->flush($idoc);
+        
         $billSettings = $this->entityManager->getRepository(BillSetting::class)
                 ->findBy(['supplier' => $idoc->getSupplier()->getId(), 'status' => Idoc::STATUS_ACTIVE]);
         $flag = true;
@@ -859,7 +875,12 @@ class BillManager
             $idoc->setStatus(Idoc::STATUS_ERROR);
             $this->entityManager->persist($idoc);
             $this->entityManager->flush($idoc);
+            return;
         }
+
+        $idoc->setStatus($oldstatus);
+        $this->entityManager->persist($idoc);
+        $this->entityManager->flush($idoc);
         
         return;
     }
