@@ -532,7 +532,7 @@ class BillManager
                     unlink($fileInfo->getPathname());                            
                 }
                 if ($fileInfo->isDir()){
-                    $this->clearPriceFolder($supplier, $fileInfo->getPathname());
+                    $this->_clearBillFolder($supplier, $fileInfo->getPathname());
                     
                 }
             }
