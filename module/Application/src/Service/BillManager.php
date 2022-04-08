@@ -829,7 +829,7 @@ class BillManager
                 
                 if (count($notFoundArticle) > 0){
                     $articles = implode(';', $notFoundArticle);
-                    throw new \Exception("Не удалось создать карточку товара для документа {$articles}");
+                    throw new \Exception("Не удалось создать карточку товара для документа {$articles[0]}");
                 }
                 return true;
             }            
