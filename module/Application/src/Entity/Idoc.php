@@ -339,7 +339,7 @@ class Idoc {
             if ($this->_isDate($date)){
                 return $date;
             }
-            $date = date_create_from_format('d.m.y', $str);
+            $date = date('Y-m-d', date_create_from_format('d.m.y', $str));
             if ($this->_isDate($date)){
                 return $date;
             }
