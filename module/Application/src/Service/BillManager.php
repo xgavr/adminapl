@@ -430,10 +430,11 @@ class BillManager
     {
         $result = [];
         $pathinfo = pathinfo($filename);
-        $content = file_get_contents($filepath);
-        $stripContent = strip_tags($content);
-        if($content != $stripContent) {
+        
+//        $stripContent = strip_tags($content);
+        if($supplier->getId() == 65) { //микадо злбчее
 //            // contains HTML
+            $content = file_get_contents($filepath);
             return $this->_html2array($supplier, $filename, $content);
         }       
         if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
