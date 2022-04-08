@@ -152,47 +152,50 @@ class Idoc {
     public function getDescriptionAsHtmlTable()
     {
         $data = $this->getDescriptionAsArray();
-        $maxH = count($data)*5;
-        $maxCol = 0;
-        foreach ($data as $row){
-            if (count($row) > $maxCol){
-                $maxCol = count($row);
+        if (is_array($data)){
+            $maxH = count($data)*5;
+            $maxCol = 0;
+            foreach ($data as $row){
+                if (count($row) > $maxCol){
+                    $maxCol = count($row);
+                }
             }
-        }
-        $w = 20;
-        $maxW = $maxCol*$w;
-        $result = "<table style=\"width: {$maxW}px; height: {$maxH}px\">";
-        $c = 1;
-        $result .= '<tr>'; 
-        $result .= "<td align=\"center\" style=\"border:1px solid black; width: {$w}px\">"; 
-        $result .= 0;
-        $result .= '</td>';                    
-        while (true){
-            if ($c > $maxCol) break;
-            $result .= "<td align=\"center\" style=\"border:1px solid black; width: {$w}px\">"; 
-            $result .= $c;
-            $result .= '</td>';                    
-            $c++;
-        }
-        $result .= '</tr>';            
-        $r = 1;
-        foreach ($data as $row){
+            $w = 20;
+            $maxW = $maxCol*$w;
+            $result = "<table style=\"width: {$maxW}px; height: {$maxH}px\">";
+            $c = 1;
             $result .= '<tr>'; 
             $result .= "<td align=\"center\" style=\"border:1px solid black; width: {$w}px\">"; 
-            $result .= $r;
+            $result .= 0;
             $result .= '</td>';                    
-            $c = 1;
-            foreach ($row as $key=>$value){
-                $result .= "<td style=\"border:1px solid black; width: {$w}px\" class=\"dataCell\" data-row=\"{$r}\" data-col=\"{$c}\">"; 
-                $result .= $value;
+            while (true){
+                if ($c > $maxCol) break;
+                $result .= "<td align=\"center\" style=\"border:1px solid black; width: {$w}px\">"; 
+                $result .= $c;
                 $result .= '</td>';                    
                 $c++;
             }
-            $result .= '</tr>';
-            $r++;
-        }
-        $result .= '</table>';
-        return $result;
+            $result .= '</tr>';            
+            $r = 1;
+            foreach ($data as $row){
+                $result .= '<tr>'; 
+                $result .= "<td align=\"center\" style=\"border:1px solid black; width: {$w}px\">"; 
+                $result .= $r;
+                $result .= '</td>';                    
+                $c = 1;
+                foreach ($row as $key=>$value){
+                    $result .= "<td style=\"border:1px solid black; width: {$w}px\" class=\"dataCell\" data-row=\"{$r}\" data-col=\"{$c}\">"; 
+                    $result .= $value;
+                    $result .= '</td>';                    
+                    $c++;
+                }
+                $result .= '</tr>';
+                $r++;
+            }
+            $result .= '</table>';
+            return $result;
+        }    
+        return;
     }
 
     public function setDescription($description)
@@ -418,9 +421,13 @@ class Idoc {
      */
     public function readNumeric($row, $col, $idocData)
     {
+        setlocale(LC_ALL,'ru_RU.UTF-8');
         if (isset($idocData[$row])){
             if (isset($idocData[$row][$col])){
-                $result = (float) str_replace(',', '.', preg_replace('/\s+/', '', $idocData[$row][$col]));
+//                var_dump($idocData[$row][$col]);
+                $converted = trim($idocData[$row][$col],chr(0xC2).chr(0xA0)); //&nbsp;
+                $result = (float) str_replace(',', '.', preg_replace('/\s+/', '', $converted));
+//                var_dump($result);
                 if (is_numeric($result)){
                     return $result; 
                 }

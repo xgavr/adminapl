@@ -280,18 +280,11 @@ class BillManager
                 return;
             }
                                     
-//            $filter = new RawToStr();
             try{
                 libxml_use_internal_errors(true);
-//                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($filepath); 
-//                var_dump($inputFileType); exit;
-//                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
-//                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xml();
-//                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-//                var_dump($filepath); exit;
+                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($filepath); 
+                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
                 $spreadsheet = $reader->load($filepath);
-//                $reader = IOFactory::createReaderForFile($filepath);
                 libxml_use_internal_errors(false);
             } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
                 var_dump($e->getMessage()); exit;
@@ -327,7 +320,7 @@ class BillManager
         }        
         return $result;        
     }
-    
+        
     /**
      * Преобразовать html в array
      * @param Supplier $supplier
@@ -341,52 +334,21 @@ class BillManager
         set_time_limit(0);         
         
         if ($content){
-            //https://stackoverflow.com/questions/8624585/domdocument-identifying-position-of-a-br
-            
-            function processElement(DOMNode $element){
-                foreach($element->childNodes as $child){
-                    if($child instanceOf DOMText){
-                        echo $child->nodeValue,PHP_EOL;
-                    }elseif($child instanceOf DOMElement){
-                        switch($child->nodeName){
-                        case 'br':
-                            echo 'BREAK: ',PHP_EOL;
-                            break;
-                        case 'p':
-                            echo 'PARAGRAPH: ',PHP_EOL;
-                            processElement($child);
-                            echo 'END OF PARAGRAPH;',PHP_EOL;
-                            break;
-                        // etc.
-                        // other cases:
-                        default:
-                            processElement($child);
-                        }
-                    }
-                }
-            }
-
-            $D = new DOMDocument;
-            $D->loadHTML('<p>Multiple-line paragraph<br />that has a close tag</p>');
-            processElement($D);            
             
             $dom = new \DOMDocument();
-            $dom->loadHTML($content);  
-
-            $result = [];
+            $dom->loadHTML($content); 
+            $row = [];
             foreach($dom->getElementsByTagName('*') as $element ){
-//                var_dump($element->tagName);
-//                var_dump($element->nodeValue);
-                $row = [];
                 if ($element->tagName == 'b'){
-                    $row[] = $node->nodeValue;
+                    $row[] = $element->nodeValue;
                     $result[] = $row;
                 }
-                if ($element->tagName == 'br'){
-                    $row[] = '';
-                    $result[] = $row;
-                }
+//                if ($element->tagName == 'br'){
+//                    $result[] = $row;
+//                    $row = [];
+//                }
                 if ($element->tagName == 'tr'){
+                    $row = [];
                     foreach ($element->childNodes as $node) {
                         $row[] = $node->nodeValue;
                     }
@@ -394,21 +356,13 @@ class BillManager
                 }
             }
             
-//            $items = $dom->getElementsByTagName('tr');
-//            foreach ($items as $node) {
-//                $row = [];
-//                foreach ($node->childNodes as $element) {
-//                    $row[] = $element->nodeValue;
-//                }
-//                $result[] = $row;
-//            }            
-//            var_dump($result);
-//            $this->addIdoc($supplier, [
-//                'status' => Idoc::STATUS_ACTIVE,
-//                'name' => $filename,
-//                'description' => Encoder::encode($result),
-//                'docKey' => null,
-//            ]);                
+//            var_dump($result); exit;
+            $this->addIdoc($supplier, [
+                'status' => Idoc::STATUS_ACTIVE,
+                'name' => $filename,
+                'description' => Encoder::encode($result),
+                'docKey' => null,
+            ]);                
         }    
                                     
         return;        
@@ -476,18 +430,12 @@ class BillManager
     {
         $result = [];
         $pathinfo = pathinfo($filename);
-        $content = file_get_contents($filepath);
-        $stripContent = strip_tags($content);
-        if($content != $stripContent) {
+        
+//        $stripContent = strip_tags($content);
+        if($supplier->getId() == 65) { //микадо злбчее
 //            // contains HTML
-//            //return $this->_html2array($supplier, $filename, $content);
-////            $content = iconv('UTF-8', 'UTF-8//IGNORE', $content);
-////            $content = iconv('UTF-8', 'windows-1251', $content);
-            $content = iconv('windows-1251', 'utf-8', $content);
-            $handle = fopen($filepath, "w");
-            fwrite($handle, $content);
-            fclose($handle);
-//            var_dump($content); exit;
+            $content = file_get_contents($filepath);
+            return $this->_html2array($supplier, $filename, $content);
         }       
         if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
             return $this->_xls2array($supplier, $filename, $filepath);            
@@ -607,7 +555,7 @@ class BillManager
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $billGetting->getEmail(),
                 'password' => $billGetting->getEmailPassword(),
-                'leave_message' => true,
+                'leave_message' => false,
             ];
             
             $mailList = $this->postManager->readImap($box);
@@ -767,7 +715,7 @@ class BillManager
                 return $good;
             }
         }
-        $producerProducer = null;
+        $producerProducer = $producer = null;
         if ($producerStr){
             $producerNameFilter = new ProducerName();
             $producerName = $producerNameFilter->filter($producerStr);
@@ -793,6 +741,9 @@ class BillManager
      */
     public function idocToPtu($idoc, $billSetting)
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        
         $idocData = $idoc->idocToPtu($billSetting->toArray());
         if ($idocData['total'] && $idocData['doc_no'] && $idocData['doc_date']){
             
