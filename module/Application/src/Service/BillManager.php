@@ -270,6 +270,7 @@ class BillManager
      */
     protected function _xls2array($supplier, $filename, $filepath)
     {        
+        setlocale(LC_ALL,'ru_RU.UTF-8');
         ini_set('memory_limit', '512M');
         set_time_limit(0); 
         
@@ -284,6 +285,7 @@ class BillManager
                 libxml_use_internal_errors(true);
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($filepath);        
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+//                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
 //                var_dump($filepath); exit;
                 $spreadsheet = $reader->load($filepath);
 //                $reader = IOFactory::createReaderForFile($filepath);
@@ -299,11 +301,6 @@ class BillManager
                     $cellIterator = $row->getCellIterator();
                     $resultRow = [];
                     foreach ($cellIterator as $cell) {   
-//                        var_dump(mb_detect_encoding($cell->getCalculatedValue()));
-//                        $calcValue = iconv('ascii', 'win-1251', $cell->getCalculatedValue());
-//                        $calcValue = iconv(mb_detect_encoding($cell->getValue(), mb_detect_order(), true), "UTF-8", $cell->getValue());
-                        $calcValue = utf8_encode($cell->getCalculatedValue());
-                        var_dump($calcValue);
                         if (Date::isDateTime($cell) && $cell->getValue()) {
                             $value = date('Y-m-d', Date::excelToTimestamp($cell->getValue()));
                         } elseif (Date::isDateTimeFormat($cell->getStyle()->getNumberFormat()) && $cell->getValue()) {
@@ -329,41 +326,61 @@ class BillManager
     }
     
     /**
-     * Преобразовать excel95 в array
+     * Преобразовать html в array
+     * @param Supplier $supplier
      * @param string $filename
-     * @param string $filepath
+     * @param string $content
      */
-    protected function _excel2array($filename, $filepath)
+    protected function _html2array($supplier, $filename, $content)
     {
         libxml_use_internal_errors(true);
         ini_set('memory_limit', '512M');
-        set_time_limit(0); 
-        $result = [];
+        set_time_limit(0);         
         
-        if (file_exists($filepath)){
+        if ($content){
             
-            if (!filesize($filepath)){
-                return;
-            }
-                                    
-            $mvexcel = new Service\PhpExcelService();
-            try {
-                $excel = $mvexcel->createPHPExcelObject($filepath);
-            } catch (\PHPExcel_Reader_Exception $e){
-                return;
-            }
-                    
-            $sheets = $excel->getAllSheets();
+            $dom = new \DOMDocument();
+            $dom->loadHTML($content);  
 
-            foreach ($sheets as $sheet) { // PHPExcel_Worksheet
-                $result = $sheet->toArray();
-                break;
-            }                
-            unset($sheets);
-            unset($mvexcel);
-//            exit;
-        }        
-        return $result;        
+            $result = [];
+            foreach($dom->getElementsByTagName('*') as $element ){
+//                var_dump($element->tagName);
+//                var_dump($element->nodeValue);
+                $row = [];
+                if ($element->tagName == 'b'){
+                    $row[] = $node->nodeValue;
+                    $result[] = $row;
+                }
+                if ($element->tagName == 'br'){
+                    $row[] = '';
+                    $result[] = $row;
+                }
+                if ($element->tagName == 'tr'){
+                    foreach ($element->childNodes as $node) {
+                        $row[] = $node->nodeValue;
+                    }
+                    $result[] = $row;
+                }
+            }
+            
+//            $items = $dom->getElementsByTagName('tr');
+//            foreach ($items as $node) {
+//                $row = [];
+//                foreach ($node->childNodes as $element) {
+//                    $row[] = $element->nodeValue;
+//                }
+//                $result[] = $row;
+//            }            
+//            var_dump($result);
+//            $this->addIdoc($supplier, [
+//                'status' => Idoc::STATUS_ACTIVE,
+//                'name' => $filename,
+//                'description' => Encoder::encode($result),
+//                'docKey' => null,
+//            ]);                
+        }    
+                                    
+        return;        
     }
 
     /**
@@ -377,7 +394,6 @@ class BillManager
     protected function _csv2array($supplier, $filename, $filepath)
     {
         ini_set('memory_limit', '512M');
-        set_time_limit(0);
         $result = [];
         
         if (file_exists($filepath)){
@@ -427,13 +443,19 @@ class BillManager
      */
     protected function _filedata2array($supplier, $filename, $filepath)
     {
-
         $result = [];
         $pathinfo = pathinfo($filename);
-        //var_dump($pathinfo); exit;
-//        if (in_array(strtolower($pathinfo['extension']), ['xls'])){
-//            return $this->_excel2array($filename, $filepath);            
-//        }
+//        $content = file_get_contents($filepath);
+//        if($content != strip_tags($content)) {
+//            // contains HTML
+//            //return $this->_html2array($supplier, $filename, $content);
+////            $content = iconv('UTF-8', 'UTF-8//IGNORE', $content);
+////            $content = iconv('UTF-8', 'windows-1251', $content);
+//            $content = iconv('windows-1251', 'utf-8//IGNORE', $content);
+//            $handle = fopen($filepath, "w");
+//            fwrite($handle, $content);
+//            //var_dump(mb_detect_encoding($content)); exit;
+//        }       
         if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
             return $this->_xls2array($supplier, $filename, $filepath);            
         }
@@ -552,7 +574,7 @@ class BillManager
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $billGetting->getEmail(),
                 'password' => $billGetting->getEmailPassword(),
-                'leave_message' => true,
+                'leave_message' => false,
             ];
             
             $mailList = $this->postManager->readImap($box);
