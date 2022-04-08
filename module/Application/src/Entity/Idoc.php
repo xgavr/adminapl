@@ -335,11 +335,11 @@ class Idoc {
     {        
         $str = str_replace(['/', '\\'], '', $datastr);
         if ($expec == 'date'){
-            $date = $this->_excelDateToDate($str);
+            $date = date('Y-m-d', date_create_from_format('d.m.y', $str));
             if ($this->_isDate($date)){
                 return $date;
             }
-            $date = date('Y-m-d', date_create_from_format('d.m.y', $str));
+            $date = $this->_excelDateToDate($str);
             if ($this->_isDate($date)){
                 return $date;
             }
