@@ -335,9 +335,9 @@ class Idoc {
     {        
         $str = str_replace(['/', '\\'], '', $datastr);
         if ($expec == 'date'){
-            $date = \DateTime::createFromFormat('d.m.y', $str)->format('Y-m-d');
-            if ($this->_isDate($date)){
-                return $date;
+            $dateFromFormat = \DateTime::createFromFormat('d.m.y', $str);
+            if ($dateFromFormat){
+                return $dateFromFormat->format('Y-m-d');
             }
             $date = $this->_excelDateToDate($str);
             if ($this->_isDate($date)){
