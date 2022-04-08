@@ -715,7 +715,7 @@ class BillManager
                 return $good;
             }
         }
-        $producerProducer = null;
+        $producerProducer = $producer = null;
         if ($producerStr){
             $producerNameFilter = new ProducerName();
             $producerName = $producerNameFilter->filter($producerStr);
