@@ -337,7 +337,7 @@ class Idoc {
         if ($expec == 'date'){
             $date = date('Y-m-d', date_create_from_format('d.m.y', $str));
             var_dump($str);
-            var_dump($date);
+            var_dump(date_create_from_format('d.m.y', $str));
             if ($this->_isDate($date)){
                 return $date;
             }
