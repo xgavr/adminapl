@@ -325,11 +325,12 @@ class Idoc {
     
     /**
      * Номер и дата в одной строке
-     * @param string $str
+     * @param string $datastr
      * @param string $expec num|date
      */
-    private function _docnumAndDate($str, $expec = 'num')
+    private function _docnumAndDate($datastr, $expec = 'num')
     {        
+        $str = str_replace(['/', '\\'], '', $datastr);
         if ($expec == 'date'){
             $date = $this->_excelDateToDate($str);
             if ($this->_isDate($date)){
