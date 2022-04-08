@@ -789,7 +789,7 @@ class BillManager
                     if (!empty($tp['quantity']) && !empty($tp['good_name'])){
                         $good = $this->findGood($idoc, $tp);   
                         if (empty($good)){
-                            $notFoundArticle[] = $tp['article'];
+                            $notFoundArticle[] = empty($tp['article']) ? $tp['supplier_article']:$tp['article'];
 //                            throw new \Exception("Не удалось создать карточку товара для документа {$tp['good_name']}");
                         } else {
 
@@ -829,7 +829,7 @@ class BillManager
                 
                 if (count($notFoundArticle) > 0){
                     $articles = implode(';', $notFoundArticle);
-                    throw new \Exception("Не удалось создать карточку товара для документа {$articles[0]}");
+                    throw new \Exception("Не удалось создать карточку товара для документа {$articles}");
                 }
                 return true;
             }            
