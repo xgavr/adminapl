@@ -366,17 +366,24 @@ $form->prepare();
     $( document ).ready(function() {
         $('#sourceData').css('width', Math.round(window.screen.width/1.58));
         $('.layer').css('height', Math.round(window.screen.height/1.9));
-
+        
+        $('#eraseBtn').on('click', function(e){
+            $('.input-num').val(null);
+        });
+        
+        changeData();
+    });
+    
+    function changeData(){
         $('.dataCell').on('click', function(e){
             var row = $(e.currentTarget).attr('data-row');
             var col = $(e.currentTarget).attr('data-col');
             var value = $(e.currentTarget).html();
             $('#dataLabel').html('строка: '+row+', колонка: '+col+', '+value);
         });
-        $('#eraseBtn').on('click', function(e){
-            $('.input-num').val(null);
-        });
-    });
+
+    }    
+    
     $('#bill-setting-check').on('click', function() {
         $.ajax({
             type: 'POST',
@@ -409,6 +416,7 @@ $form->prepare();
                 if (data.data){
     //                console.log(data.data.doc_no);
                     $('#sourceData').html('<small>'+data.data+'</small>');
+                    changeData();
                 }    
             })
             .fail(function (e) {
