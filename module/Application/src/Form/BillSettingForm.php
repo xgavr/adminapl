@@ -71,6 +71,19 @@ class BillSettingForm extends Form
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'ruleCell',
+            'attributes' => [
+                'id' => 'ruleCell',
+                'value' => BillSetting::RULE_CELL_ALL,
+            ],
+            'options' => [
+                'label' => 'Адрес колонки',
+                'value_options' => BillSetting::getRuleCellList(),
+            ],
+        ]);
+        
         // Добавляем поле "description"
         $this->add([           
             'type'  => 'text',

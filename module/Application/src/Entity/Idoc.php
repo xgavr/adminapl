@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Laminas\Json\Decoder;
 use Laminas\Json\Json;
 use Application\Entity\BillSetting;
+use Stock\Entity\Ptu;
+use Phpml\Math\Matrix;
 
 /**
  * Description of idoc
@@ -26,7 +28,7 @@ class Idoc {
     const STATUS_RETIRED      = 2; // Создан документ.
     const STATUS_ERROR      = 3; // Не прочитано.
     const STATUS_PROC      = 4; // Читается.
-    
+        
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -49,6 +51,11 @@ class Idoc {
      */
     protected $description;
         
+    /**
+     * @ORM\Column(name="info")   
+     */
+    protected $info;
+
     /**
      * @ORM\Column(name="status")  
      */
@@ -146,14 +153,51 @@ class Idoc {
         return $this->description;
     }
     
-    public function getDescriptionAsArray()
+    /**
+     * Очистить пустые колонки из данных
+     * @param array $data
+     * @return array
+     */
+    private function _getDataValueColumns($data)
     {
-        return Decoder::decode($this->description, Json::TYPE_ARRAY);
+        $matrix = new Matrix($data);
+        $transpose = $matrix->transpose()->toArray();
+//        return $transpose;
+        
+        $result = [];
+        foreach ($transpose as $row){
+            $filterRow = array_filter($row);
+            if (count($filterRow)){
+                $result[] = $row;
+            }
+        }
+        $matrix2 = new Matrix($result);        
+        return $matrix2->transpose()->toArray();
+    }
+
+    /**
+     * Данные жокумента
+     * @param bool $allColumn
+     * @return array
+     */
+    public function getDescriptionAsArray($allColumn = true)
+    {
+        $data = Decoder::decode($this->description, Json::TYPE_ARRAY);
+        if ($allColumn){
+            return $data;
+        } else {
+            return $this->_getDataValueColumns($data);
+        }    
     }
     
-    public function getDescriptionAsHtmlTable()
+    /**
+     * Данные для HTML
+     * @param bool $allColumn
+     * @return string
+     */
+    public function getDescriptionAsHtmlTable($allColumn = true)
     {
-        $data = $this->getDescriptionAsArray();
+        $data = $this->getDescriptionAsArray($allColumn);
         if (is_array($data)){
             $maxH = count($data)*5;
             $maxCol = 0;
@@ -205,6 +249,16 @@ class Idoc {
         $this->description = $description;
     }    
     
+    public function getInfo()
+    {
+        return $this->info;
+    }
+
+    public function setInfo($info)
+    {
+        return $this->info = $info;
+    }
+    
     /**
      * Returns the date of doc creation.
      * @return string     
@@ -242,8 +296,9 @@ class Idoc {
         $supplier->addIdoc($this);
     }    
         
+        
     /**
-     * Прочитать номер документа
+     * Прочитать значение в ячейке
      * @param int $row
      * @param int $col
      * @param array $idocData
@@ -445,7 +500,7 @@ class Idoc {
      */
     public function idocToPtu($billSettingData)
     {
-        $idocData = $this->getDescriptionAsArray();
+        $idocData = $this->getDescriptionAsArray($billSettingData['ruleCell'] == BillSetting::RULE_CELL_ALL);
         if (!empty($billSettingData['docNumRow'])){
             $result['doc_no'] = $this->_readDocnumAndDate($billSettingData['docNumRow']-1, $billSettingData['docNumCol']-1, $idocData);
         }    

@@ -22,6 +22,9 @@ class BillSetting {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     
+    const RULE_CELL_ALL  = 1; //  искать значение во всех колноках строки.
+    const RULE_CELL_VALUE  = 2; //  искать значение в колнках с данными .
+        
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -44,6 +47,11 @@ class BillSetting {
      */
     protected $status;    
        
+    /**
+     * @ORM\Column(name="rule_cell")  
+     */
+    protected $ruleCell;    
+        
     /**
      * @ORM\Column(name="doc_num_col")  
      */
@@ -279,6 +287,74 @@ class BillSetting {
     public function setStatus($status) 
     {
         $this->status = $status;
+    }   
+    
+    /**
+     * Returns rule cell.
+     * @return int     
+     */
+    public function getRuleCell() 
+    {
+        return $this->ruleCell;
+    }
+    
+    /**
+     * Returns possible cell rules as array.
+     * @return array
+     */
+    public static function getRuleCellList() 
+    {
+        return [
+            self::RULE_CELL_ALL => 'Во всей строке',
+            self::RULE_CELL_VALUE => 'В ячейках с данными',
+        ];
+    }    
+    
+    /**
+     * Returns rule cell as string.
+     * @return string
+     */
+    public function getRuleCellAsString()
+    {
+        $list = self::getRuleCellList();
+        if (isset($list[$this->ruleCell]))
+            return $list[$this->ruleCell];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Returns possible cell rules as array.
+     * @return array
+     */
+    public static function getRuleCellBools() 
+    {
+        return [
+            self::RULE_CELL_ALL => true,
+            self::RULE_CELL_VALUE => false,
+        ];
+    }    
+    
+    /**
+     * Returns rule cell as bool.
+     * @return string
+     */
+    public function getRuleCellAsBool()
+    {
+        $list = self::getRuleCellBools();
+        if (isset($list[$this->ruleCell]))
+            return $list[$this->ruleCell];
+        
+        return 'Unknown';
+    }    
+
+    /**
+     * Sets rule cell.
+     * @param int $ruleCell     
+     */
+    public function setRuleCell($ruleCell) 
+    {
+        $this->ruleCell = $ruleCell;
     }   
     
     public function getDescription()
@@ -623,6 +699,7 @@ class BillSetting {
     {
         $result = [
             'status' => $this->getStatus(),
+            'ruleCell' => $this->getRuleCell(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),
             'docNumCol' => $this->getDocNumCol(),

@@ -8,6 +8,7 @@
    } 
   </style>
 <?php
+use Application\Entity\BillSetting;
 
 $form = $this->form;
 
@@ -20,6 +21,10 @@ $form->get('description')->setAttributes([
     ]);
 
 $form->get('status')->setAttributes([
+    'class'=>'form-control input-sm', 
+    ]);
+
+$form->get('ruleCell')->setAttributes([
     'class'=>'form-control input-sm', 
     ]);
 
@@ -181,15 +186,18 @@ $form->prepare();
             <?= $this->formElement($form->get('status')); ?>
         </div>    
         <div class="col-md-1">
-            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formLabel($form->get('ruleCell')); ?>
         </div>    
         <div class="col-md-2">
+            <?= $this->formElement($form->get('ruleCell')); ?>
+        </div>    
+        <div class="col-md-1">
             <?= $this->formElement($form->get('name')); ?>
         </div>    
         <div class="col-md-1">
             <?= $this->formLabel($form->get('description')); ?>
         </div>    
-        <div class="col-md-3">
+        <div class="col-md-2">
             <?= $this->formElement($form->get('description')); ?>
         </div>    
     </div>
@@ -336,7 +344,11 @@ $form->prepare();
         <div class="col-md-8">
             <div class="input-group">
                 <div class="layer" id="sourceData">
-                    <small><?= $idoc->getDescriptionAsHtmlTable()?></small>                    
+                    <?php if ($billSetting):?>
+                        <small><?= $idoc->getDescriptionAsHtmlTable($billSetting->getRuleCellAsBool())?></small>
+                    <?php else:?>
+                        <small><?= $idoc->getDescriptionAsHtmlTable()?></small>
+                    <?php endif;?>    
                 </div>
             </div>
         </div>
@@ -375,6 +387,28 @@ $form->prepare();
                 if (data.data){
     //                console.log(data.data.doc_no);
                     $('#dataLabel').html('№'+data.data.doc_no+' от '+data.data.doc_date+' на сумму '+data.data.total);
+                }    
+            })
+            .fail(function (e) {
+                console.log(e);
+                alert("Ошибка при проверке данных");
+
+            });
+    });    
+
+    $('#ruleCell').on('change', function() {
+        var ruleCell = 1;
+        if ($('#ruleCell').val() == <?= BillSetting::RULE_CELL_VALUE?>){
+            ruleCell = 0;
+        }
+        $.ajax({
+            type: 'GET',
+            url: '/bills/idoc-data/<?= $idoc ?  $idoc->getId():""?>?ruleCell='+ruleCell
+        })
+            .done(function (data) {
+                if (data.data){
+    //                console.log(data.data.doc_no);
+                    $('#sourceData').html('<small>'+data.data+'</small>');
                 }    
             })
             .fail(function (e) {

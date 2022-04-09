@@ -86,6 +86,7 @@ class BillManager
         $idoc->setName($data['name']);
         $idoc->setStatus($data['status']);
         $idoc->setDescription($data['description']);
+        $idoc->setInfo(empty($data['info']) ? null:$data['info']);
         $idoc->setDateCreated(date('Y-m-d H:i:s'));
         $idoc->setDocKey(null);
         $idoc->setSupplier($supplier);
@@ -108,6 +109,7 @@ class BillManager
         $idoc->setName($data['name']);
         $idoc->setStatus($data['status']);
         $idoc->setDescription($data['description']);
+        $idoc->setInfo(empty($data['info']) ? null:$data['info']);
         $idoc->setDocKey($data['docKey']);
         
         $this->entityManager->persist($idoc);
@@ -159,6 +161,7 @@ class BillManager
         $billSetting = new BillSetting();
         $billSetting->setName(empty($data['name']) ? null:$data['name']);
         $billSetting->setStatus($data['status']);
+        $billSetting->setRuleCell($data['ruleCell']);
         $billSetting->setDescription(empty($data['description']) ? null:$data['description']);
         $billSetting->setDocNumCol(empty($data['docNumCol']) ? null:$data['docNumCol']);
         $billSetting->setDocNumRow(empty($data['docNumRow']) ? null:$data['docNumRow']);
@@ -196,7 +199,7 @@ class BillManager
         $this->entityManager->persist($billSetting);
         $this->entityManager->flush($billSetting);
         
-        return $BillSetting;
+        return $billSetting;
     }
     
     /**
@@ -210,6 +213,7 @@ class BillManager
     {
 //        $billSetting->setName(empty($data['name']) ? null:$data['name']);
         $billSetting->setStatus($data['status']);
+        $billSetting->setRuleCell($data['ruleCell']);
         $billSetting->setDescription(empty($data['description']) ? null:$data['description']);
         $billSetting->setDocNumCol(empty($data['docNumCol']) ? null:$data['docNumCol']);
         $billSetting->setDocNumRow(empty($data['docNumRow']) ? null:$data['docNumRow']);
@@ -245,7 +249,7 @@ class BillManager
         $this->entityManager->persist($billSetting);
         $this->entityManager->flush($billSetting);
         
-        return $BillSetting;
+        return $billSetting;
     }
     
     /**
@@ -685,7 +689,7 @@ class BillManager
         $iid = empty($data['supplier_article']) ? null:$data['supplier_article'];
         
         $articleFilter = new ArticleCode();
-        if ($articleStr && !$producer){
+        if ($articleStr && !$producerStr){
             $code = $articleFilter->filter($articleStr);
             $good = $this->entityManager->getRepository(Goods::class)
                     ->findOneByCode($code);
@@ -815,7 +819,14 @@ class BillManager
 
             if ($ptu){
                 $this->ptuManager->updatePtuAmount($ptu);
+                $ptu->setIdoc($idoc);
                 
+                if (count($notFoundArticle) > 0){
+                    $articles = implode(';', $notFoundArticle);
+                    $idoc->setInfo($articles);
+                    //throw new \Exception("Не удалось создать карточку товара для документа {$articles}");
+                }
+
                 $idoc->setDocKey($ptu->getLogKey());
                 $idoc->setStatus(Idoc::STATUS_ACTIVE);
                 if (count($notFoundArticle) == 0){
@@ -827,10 +838,6 @@ class BillManager
                 $this->entityManager->persist($idoc);
                 $this->entityManager->flush();
                 
-                if (count($notFoundArticle) > 0){
-                    $articles = implode(';', $notFoundArticle);
-                    throw new \Exception("Не удалось создать карточку товара для документа {$articles}");
-                }
                 return true;
             }            
         }       

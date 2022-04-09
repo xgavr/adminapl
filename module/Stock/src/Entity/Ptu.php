@@ -17,6 +17,7 @@ use Company\Entity\Contract;
 use Company\Entity\Office;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
+use Application\Entity\Idoc;
 
 /**
  * Description of Ptu
@@ -127,6 +128,12 @@ class Ptu {
      * @ORM\JoinColumn(name="id", referencedColumnName="ptu_id")
      */
     private $vtp;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Idoc", inversedBy="ptu") 
+     * @ORM\JoinColumn(name="idoc_id", referencedColumnName="id")
+     */
+    private $idoc;
     
     
     /**
@@ -508,6 +515,24 @@ class Ptu {
     public function addVtp($vtp)
     {
         $this->vtp[] = $vtp;
+    }
+    
+    /**
+     * Returns the idoc.
+     * @return Idoc     
+     */
+    public function getIdoc() 
+    {
+        return $this->idoc;
+    }
+
+    /**
+     * Add Idoc
+     * @param Idoc $idoc
+     */
+    public function setIdoc($idoc)
+    {
+        $this->idoc = $idoc;
     }
     
     /**

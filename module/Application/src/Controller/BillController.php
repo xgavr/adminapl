@@ -101,6 +101,24 @@ class BillController extends AbstractActionController
         exit;
     }    
     
+    public function idocDataAction()
+    {        
+        $idocId = (int)$this->params()->fromRoute('id', -1);
+        $ruleCell = (bool) $this->params()->fromQuery('ruleCell', true);
+
+        if ($idocId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $idoc = $this->entityManager->getRepository(Idoc::class)
+                ->find($idocId);
+        
+        return new JsonModel([
+            'data' => $idoc->getDescriptionAsHtmlTable($ruleCell),
+        ]);         
+    }
+
     public function readIdocAction()
     {        
         $idocId = (int)$this->params()->fromRoute('id', -1);
