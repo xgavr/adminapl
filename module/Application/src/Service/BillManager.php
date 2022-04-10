@@ -690,8 +690,8 @@ class BillManager
         $producer = null;
         
         $articleFilter = new ArticleCode();
-        if ($articleStr && !$producerStr){
-            $code = $articleFilter->filter($articleStr);
+        $code = $articleFilter->filter($articleStr);
+        if ($code && !$producerStr){
             $good = $this->entityManager->getRepository(Goods::class)
                     ->findOneByCode($code);
             if ($good){
@@ -704,27 +704,28 @@ class BillManager
                     return $article->getGood();
                 }    
             }
+        }
             
-            if ($producerStr){
-                $producerNameFilter = new ProducerName();
-                $producerName = $producerNameFilter->filter($producerStr);
-                    var_dump($producerName); exit;
-                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                        ->findOneByName($producerName);
-                if ($unknownProducer){
-                    if ($unknownProducer->getProducer()){
-                        $producer = $unknownProducer->getProducer();
-                        if ($producer){
-                            $good = $this->entityManager->getRepository(Goods::class)
-                                    ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
-                            if ($good){
-                                return $good;
-                            }
-                        }    
-                    }
+        if ($producerStr){
+            $producerNameFilter = new ProducerName();
+            $producerName = $producerNameFilter->filter($producerStr);
+                var_dump($producerName); exit;
+            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneByName($producerName);
+            if ($unknownProducer){
+                if ($unknownProducer->getProducer()){
+                    $producer = $unknownProducer->getProducer();
+                    if ($producer){
+                        $good = $this->entityManager->getRepository(Goods::class)
+                                ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
+                        if ($good){
+                            return $good;
+                        }
+                    }    
                 }
             }
         }
+        
         if ($iid){
             $good = $this->entityManager->getRepository(BillSetting::class)
                     ->findGoodFromRawprice($idoc->getSupplier(), $iid);
