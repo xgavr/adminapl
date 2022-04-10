@@ -703,6 +703,25 @@ class BillManager
                     return $article->getGood();
                 }    
             }
+            $producerProducer = $producer = null;
+            if ($producerStr){
+                $producerNameFilter = new ProducerName();
+                $producerName = $producerNameFilter->filter($producerStr);
+                $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                        ->findOneByName($producerName);
+                if ($unknownProducer){
+                    if ($unknownProducer->getProducer()){
+                        $producer = $unknownProducer->getProducer();
+                        if ($producer){
+                            $good = $this->entityManager->getRepository(Goods::class)
+                                    ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
+                            if ($good){
+                                return $good;
+                            }
+                        }    
+                    }
+                }
+            }
         }
         if ($iid){
             $good = $this->entityManager->getRepository(BillSetting::class)
@@ -717,18 +736,6 @@ class BillManager
             $good = $this->_parseIid($iid);
             if ($good){
                 return $good;
-            }
-        }
-        $producerProducer = $producer = null;
-        if ($producerStr){
-            $producerNameFilter = new ProducerName();
-            $producerName = $producerNameFilter->filter($producerStr);
-            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findOneByName($producerName);
-            if ($unknownProducer){
-                if ($unknownProducer->getProducer()){
-                    $producer = $unknownProducer->getProducer();
-                }
             }
         }
 
