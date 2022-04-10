@@ -708,6 +708,7 @@ class BillManager
             if ($producerStr){
                 $producerNameFilter = new ProducerName();
                 $producerName = $producerNameFilter->filter($producerStr);
+                    var_dump($producerName); exit;
                 $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                         ->findOneByName($producerName);
                 if ($unknownProducer){
@@ -798,7 +799,6 @@ class BillManager
             if ($ptu && isset($idocData['tab'])){
                 $rowNo = 1;                
                 foreach ($idocData['tab'] as $tp){
-                    var_dump($tp); exit;
                     if (!empty($tp['quantity']) && !empty($tp['good_name'])&& !empty($tp['amount'])){
                         $good = $this->findGood($idoc, $tp);   
                         if (empty($good)){
