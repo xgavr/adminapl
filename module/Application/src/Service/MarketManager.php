@@ -74,7 +74,7 @@ class MarketManager
     
     /**
      * Получить папку с прайсам
-     * @param integer $market
+     * @param MarketPriceSetting $market
      */
     public function folder($market)
     {
@@ -85,6 +85,37 @@ class MarketManager
         
         return $folder;                
     }
+    
+    /*
+     * Очистить содержимое папки
+     * 
+     * @param MarketPriceSetting $market
+     * @param string $folderPath
+     * 
+     */
+    protected function _clearMarketFolder($market, $folderPath = null)
+    {
+        $marketFolder = $this->folder($market);
+        if (empty($folderPath)){
+            $folderPath = $marketFolder;
+        }
+        if (is_dir($folderPath)){
+            foreach (new \DirectoryIterator($folderPath) as $fileInfo) {
+                if ($fileInfo->isDot()) continue;
+                if ($fileInfo->isFile()){
+                    unlink($fileInfo->getPathname());                            
+                }
+                if ($fileInfo->isDir()){
+                    $this->_clearMarketFolder($market, $fileInfo->getPathname());                    
+                }
+            }
+            if ($folderPath != $marketFolder){
+                rmdir($folderPath);
+            }
+        }        
+        return;
+    }
+        
     
     /**
      * Полное имя файла
@@ -495,6 +526,8 @@ class MarketManager
      */
     public function marketXLSX($market, $offset = 0, $block = 0)
     {
+        $this->_clearMarketFolder($market);
+        
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -571,6 +604,8 @@ class MarketManager
      */
     public function marketYML($market, $offset = 0, $block=0)
     {
+        $this->_clearMarketFolder($market);
+        
         $path = $this->blockFilenamePath($market, 0, $block);
 
         $settings = (new Settings())
