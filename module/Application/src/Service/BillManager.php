@@ -714,7 +714,6 @@ class BillManager
             if ($unknownProducer){
                 if ($unknownProducer->getProducer()){
                     $producer = $unknownProducer->getProducer();
-                    var_dump($producer->getName()); exit;
                     if ($producer){
                         $good = $this->entityManager->getRepository(Goods::class)
                                 ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
