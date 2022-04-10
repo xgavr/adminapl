@@ -13,7 +13,7 @@ use Application\Entity\Goods;
 use Application\Entity\Supplier;
 
 /**
- * Description of Producer
+ * Description of GoodSupplier
  * @ORM\Entity(repositoryClass="\Application\Repository\SupplierRepository")
  * @ORM\Table(name="good_supplier")
  * @author Daddy
@@ -35,6 +35,12 @@ class GoodSupplier {
      * @ORM\Column(name="price")   
      */
     protected $price = 0;
+    
+    /**
+     * Минимальное количество, кратность
+     * @ORM\Column(name="lot")   
+     */
+    protected $lot = 1;
     
     /**
      * @ORM\Column(name="up_date")   
@@ -82,6 +88,16 @@ class GoodSupplier {
     public function setPrice($price)
     {
         $this->price = $price;
+    }
+
+    public function getLot()
+    {
+        return $this->lot;
+    }
+
+    public function setLot($lot)
+    {
+        $this->lot = $lot;
     }
 
     public function getUpdate()

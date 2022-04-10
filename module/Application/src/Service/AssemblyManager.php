@@ -717,15 +717,28 @@ class AssemblyManager
     {
         $rest = $rawprice->getRealRest();
         $price = $rawprice->getRealPrice();
+        $lot = max(intval($rawprice->getLot()), 1);
         if ($rest > 0 && $price > 0){
             $goodSupplierId = $this->entityManager->getRepository(GoodSupplier::class)
                     ->findGoodSupplierId($good->getId(), $supplier->getId());
             if ($goodSupplierId){
                 $this->entityManager->getConnection()
-                        ->update('good_supplier', ['rest' => $rest, 'price'=> $price, 'up_date' => $priceDate], ['id' => $goodSupplierId]);
+                        ->update('good_supplier', [
+                            'rest' => $rest, 
+                            'price'=> $price, 
+                            'up_date' => $priceDate, 
+                            'lot' => $lot,
+                    ], ['id' => $goodSupplierId]);
             } else {
                 $this->entityManager->getConnection()
-                        ->insert('good_supplier', ['good_id' => $good->getId(), 'supplier_id' => $supplier->getId(), 'rest' => $rest, 'price'=> $price, 'up_date' => $priceDate]);
+                        ->insert('good_supplier', [
+                            'good_id' => $good->getId(), 
+                            'supplier_id' => $supplier->getId(), 
+                            'rest' => $rest, 
+                            'price'=> $price, 
+                            'up_date' => $priceDate,
+                            'lot' => $lot,
+                        ]);
             }        
         }    
         return;
