@@ -318,6 +318,9 @@ class MarketManager
      */
     public function removeMarketPriceSetting($market)
     {
+        $this->_clearMarketFolder($market);
+        rmdir($this->folder($market)); 
+        
         $market->getRates()->clear();
         $this->entityManager->remove($market);
         $this->entityManager->flush();
