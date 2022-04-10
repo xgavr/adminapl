@@ -842,7 +842,7 @@ class BillManager
             }            
         }       
 
-        return true;
+        return false;
     }
     
     /**
@@ -865,16 +865,6 @@ class BillManager
                 if ($flag = $this->idocToPtu($idoc, $billSetting)){
                     return;
                 }                
-            }
-        }
-        
-        foreach ($billSettings as $billSetting){
-            $idocData = $idoc->idocToPtu($billSetting->toArray());
-            if ($idocData['doc_no'] && $idocData['doc_date'] > '1970-01-01'){
-                if ($flag = $this->idocToPtu($idoc, $billSetting)){
-                    return;
-                }
-                
             }
         }
         

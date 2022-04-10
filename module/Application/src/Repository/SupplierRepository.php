@@ -211,7 +211,7 @@ class SupplierRepository extends EntityRepository{
                 ->setParameter('1', $goodId)
                 ->andWhere('gs.update > ?2')
                 ->setParameter('2', date('Y-m-d', strtotime('-3 days')))
-                ->andWhere('g.price > gs.price')
+                //->andWhere('g.price > gs.price')
                 ;
         
         if ($market instanceof MarketPriceSetting){

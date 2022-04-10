@@ -374,33 +374,38 @@ class MarketManager
      * Остатки и доставки
      * @param integer $goodId
      * @param MarketPriceSetting $market
+     * @param float $goodPrice
      */
-    private function restShipping($goodId, $market)
+    private function restShipping($goodId, $market, $goodPrice)
     {
         $rp = [
             'realrest' => 0,
             'speed' => 3,
             'orderbefore' => 12,
+            'lot' => 1,
         ];
         
         $goodSuppliers = $this->entityManager->getRepository(GoodSupplier::class)
                 ->goodSuppliers($goodId, $market);
         foreach ($goodSuppliers as $goodSupplier){
-            $rp['realrest'] += $goodSupplier['rest'];
-
-            $supplyKey = $goodSupplier['supplier']['id'].'_'.$market->getId();
-            if (array_key_exists($supplyKey, $this->supply)){
-                $supplySetting = $this->supply[$supplyKey];
-            } else {
-                $supplySetting = $this->bestSupply($goodSupplier, $market->getRegion());
-                $this->supply[$supplyKey] = $supplySetting;
-            }
-            if ($supplySetting){
-                $supspeed = $supplySetting->getSupplyTimeAsDayWithSat();
-                if ($rp['speed'] > $supspeed){
-                    $rp['orderbefore'] = $supplySetting->getOrderBeforeHMax12();
-                    $rp['speed'] = $supspeed;
+            $rp['lot'] = max($rp['lot'], $goodSupplier['lot']);
+            
+            if ($goodPrice > $goodSupplier['price']){
+                $rp['realrest'] += $goodSupplier['rest'];
+                $supplyKey = $goodSupplier['supplier']['id'].'_'.$market->getId();
+                if (array_key_exists($supplyKey, $this->supply)){
+                    $supplySetting = $this->supply[$supplyKey];
+                } else {
+                    $supplySetting = $this->bestSupply($goodSupplier, $market->getRegion());
+                    $this->supply[$supplyKey] = $supplySetting;
                 }
+                if ($supplySetting){
+                    $supspeed = $supplySetting->getSupplyTimeAsDayWithSat();
+                    if ($rp['speed'] > $supspeed){
+                        $rp['orderbefore'] = $supplySetting->getOrderBeforeHMax12();
+                        $rp['speed'] = $supspeed;
+                    }
+                }    
             }    
             //$this->entityManager->detach($goodSupplier);
         }        
@@ -412,11 +417,16 @@ class MarketManager
      * Наименование товара
      * @param MarketPriceSetting $market
      * @param array $good
+     * $param integer $lot миниммальное количество
      * @return string
      */
-    private function goodName($market, $good)
+    private function goodName($market, $good, $lot = 1)
     {
         $result = "{$good['name']} {$good['producer']['name']} {$good['code']}";
+        
+        if ($market->getConsiderSet() == MarketPriceSetting::CONSIDER_SET && $lot > 1){
+            $result .= " ($lot шт.)";
+        }
                 
         return $result;        
     }
@@ -515,7 +525,7 @@ class MarketManager
             }    
 
     //                $rawprices = $this->rawprices($good, $market);
-            $rawprices = $this->restShipping($good['id'], $market);
+            $rawprices = $this->restShipping($good['id'], $market, $good['price']);
             if ($rawprices['realrest'] == 0){
                 continue;
             }
@@ -603,12 +613,13 @@ class MarketManager
                 continue;
             }
 //                $rawprices = $this->rawprices($good, $market);
-            $rawprices = $this->restShipping($good['id'], $market);
+            $rawprices = $this->restShipping($good['id'], $market, $good['price']);
             if ($rawprices['realrest'] == 0){
                 continue;
             }
 
             $opts = Goods::optPrices($good['price'], $good['meanPrice']);
+            $lot = $rawprices['lot'];
 
             $categoryId = 999;
             if (!empty($good['genericGroup'])){
@@ -623,11 +634,11 @@ class MarketManager
             $offer->setId($good['aplId'])
                 ->setAvailable(true)
                 ->setUrl(self::APL_BASE_URL.'/catalog/view/id/'.$good['aplId'].'?utm_source='.$market->getId().'&utm_term='.$good['aplId'])
-                ->setPrice($market->getExtraPrice($opts))
+                ->setPrice($market->getExtraPrice($opts, $lot))
                 ->setCurrencyId('RUR')
                 ->setCategoryId($categoryId)
                 ->setDelivery(true)
-                ->setName($this->goodName($market, $good))
+                ->setName($this->goodName($market, $good, $lot))
                 ->setPictures($images)
                 ->setVendor($good['producer']['name'])
                 ->setVendorCode($good['code'])
