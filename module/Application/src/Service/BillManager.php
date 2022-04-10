@@ -709,9 +709,9 @@ class BillManager
         if ($producerStr){
             $producerNameFilter = new ProducerName();
             $producerName = $producerNameFilter->filter($producerStr);
-                var_dump($producerName); exit;
             $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                     ->findOneByName($producerName);
+                var_dump($unknownProducer->getName()); exit;
             if ($unknownProducer){
                 if ($unknownProducer->getProducer()){
                     $producer = $unknownProducer->getProducer();
