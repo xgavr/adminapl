@@ -642,7 +642,7 @@ class BillManager
         }
         if (!$producer){
             $producer = $this->entityManager->getRepository(Producer::class)
-                    ->findOneByAplId(0);
+                    ->findOneByAplId(3078); //no name
         }
         $articleFilter = new ArticleCode();
         $code = $articleFilter->filter($article);
