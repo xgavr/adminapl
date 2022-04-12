@@ -332,6 +332,28 @@ class Idoc {
     }
     
     /**
+     * Строка в дату Старая
+     * @param string $str
+     * @return date
+     */
+    private function _strToDateOld($str)
+    {
+        setlocale(LC_ALL,'ru_RU.UTF-8');
+        $ru_month = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+        $ru_month1 = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        $en_month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        $en_month_ = [' January ', ' February ', ' March ', ' April ', ' May ', ' June ', ' July ', ' August ', ' September ', ' October ', ' November ', ' December '];
+        
+        $date = str_replace($ru_month1, $en_month, mb_strtolower($str));
+        $date = str_replace($ru_month, $en_month, mb_strtolower($date));
+        $date = str_replace($ru_month_, $en_month, mb_strtolower($date));
+        
+        $date = trim(preg_replace('/[а-яА-Я]/ui', '',$dateEn));
+
+        return date('Y-m-d', strtotime($date));        
+    }
+    
+    /**
      * Строка в дату
      * @param string $str
      * @return date
@@ -341,14 +363,31 @@ class Idoc {
         setlocale(LC_ALL,'ru_RU.UTF-8');
         $ru_month = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
         $ru_month1 = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-        $en_month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        $en_month = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        $num_month = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
         
-        $date = str_replace($ru_month1, $en_month, mb_strtolower($str));
-        $date = str_replace($ru_month, $en_month, mb_strtolower($date));
-        $date = trim(preg_replace('/[а-яА-Я]/ui', '',$date));
-        //var_dump($date);
-
-        return date('Y-m-d', strtotime($date));        
+        $date = str_replace($ru_month1, $num_month, mb_strtolower($str));
+        $date = str_replace($ru_month, $num_month, mb_strtolower($date));
+        $date = str_replace($en_month, $num_month, mb_strtolower($date));
+        
+        $delimetrs = [' ','.','-'];        
+        foreach ($delimetrs as $delimetr){
+            $matches = [];
+            \preg_match_all("/\d{1,2}\\$delimetr\d{1,2}\\$delimetr\d{2,4}/", $date, $matches);
+            foreach ($matches as $match){
+                foreach ($match as $strdate){
+                    $dateFromFormat = \DateTime::createFromFormat("d{$delimetr}m{$delimetr}Y", $strdate);
+                    if ($dateFromFormat){
+                        return $dateFromFormat->format('Y-m-d');
+                    }    
+                    $dateFromFormat = \DateTime::createFromFormat("d{$delimetr}m{$delimetr}y", $strdate);
+                    if ($dateFromFormat){
+                        return $dateFromFormat->format('Y-m-d');
+                    }    
+                }
+            }
+        }    
+        return false;
     }
     
     /**
