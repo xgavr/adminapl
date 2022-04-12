@@ -373,7 +373,7 @@ class Idoc {
         $delimetrs = [' ','.','-'];        
         foreach ($delimetrs as $delimetr){
             $matches = [];
-            \preg_match_all("/\d{1,2}\\$delimetr\d{1,2}\\$delimetr\d{2,4}/", $date, $matches);
+            \preg_match_all("/\d{1,4}\\$delimetr\d{1,2}\\$delimetr\d{2,4}/", $date, $matches);
             foreach ($matches as $match){
                 foreach ($match as $strdate){
                     $dateFromFormat = \DateTime::createFromFormat("d{$delimetr}m{$delimetr}Y", $strdate);
@@ -381,6 +381,10 @@ class Idoc {
                         return $dateFromFormat->format('Y-m-d');
                     }    
                     $dateFromFormat = \DateTime::createFromFormat("d{$delimetr}m{$delimetr}y", $strdate);
+                    if ($dateFromFormat){
+                        return $dateFromFormat->format('Y-m-d');
+                    }    
+                    $dateFromFormat = \DateTime::createFromFormat("Y{$delimetr}m{$delimetr}d", $strdate);
                     if ($dateFromFormat){
                         return $dateFromFormat->format('Y-m-d');
                     }    
@@ -432,6 +436,10 @@ class Idoc {
         $str = str_replace(['/', '\\'], '', $datastr);
         if ($expec == 'date'){
             $dateFromFormat = \DateTime::createFromFormat('d.m.y', $str);
+            if ($dateFromFormat){
+                return $dateFromFormat->format('Y-m-d');
+            }
+            $dateFromFormat = \DateTime::createFromFormat('Y-m-d', $str);
             if ($dateFromFormat){
                 return $dateFromFormat->format('Y-m-d');
             }
