@@ -104,6 +104,11 @@ $this->pageBreadcrumbs()->setItems([
             });
         });  
         
+        $(document).on('click', '.info-show', function (e) {
+            var data = $(e.currentTarget).attr('data-value');
+            bootbox.alert(data);
+        });  
+
         $(document).on('click', '.try-ptu', function (e) {
             var url = $(e.currentTarget).attr('url');
             $.ajax({
@@ -193,7 +198,7 @@ $this->pageBreadcrumbs()->setItems([
         return params;
     }
     
-    function docFormatter(value){
+    function docFormatter(value, row){
         if (!value){
             return;
         }
@@ -207,6 +212,16 @@ $this->pageBreadcrumbs()->setItems([
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
+        
+        if (row.info){
+            btn += '<button';
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs info-show"';
+            btn += ' aria-label="Left Align" data-value="'+row.info+'"'; 
+            btn += ' title="Есть информация">'; 
+            btn += '<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>';
+            btn += '</button>';            
+        }
         return btn;
     }    
     
