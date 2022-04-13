@@ -393,7 +393,7 @@ $form->prepare();
             .done(function (data) {
                 if (data.data){
     //                console.log(data.data.doc_no);
-                    $('#dataLabel').html('№'+data.data.doc_no+' от '+data.data.doc_date+' на сумму '+data.data.total);
+                    $('#dataLabel').html('№'+data.data.doc_no+' от '+data.data.doc_date+' на сумму '+Math.round(data.data.total*100)/100);
                 }    
             })
             .fail(function (e) {
