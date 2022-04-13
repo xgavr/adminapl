@@ -175,6 +175,19 @@ class Supplier {
      */
     private $regions;
    
+    /**
+     * One Supplier has Many Suppliers.
+     * @ORM\OneToMany(targetEntity="Application\Entity\Supplier", mappedBy="parent")
+     */
+    private $children;
+
+    /**
+     * Many Suppliers have One Suppliers.
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     */
+    private $parent;    
+    
    /**
      * Constructor.
      */
@@ -192,7 +205,8 @@ class Supplier {
         $this->supplySettings = new ArrayCollection();
         $this->supplierApiSettings = new ArrayCollection();
         $this->rates = new ArrayCollection();
-        $this->regions = new ArrayCollection();        
+        $this->regions = new ArrayCollection();  
+        $this->children = new ArrayCollection();
     }
     
     
@@ -774,4 +788,68 @@ class Supplier {
     {
         $this->regions->add($region);
     }        
+    
+   /**
+     * Add children
+     * @param Supplier $supplier
+     */
+    public function addChildren($supplier)
+    {
+        $this->children[] = $supplier;
+
+    }
+
+    /**
+     * Remove children
+     *
+     * @param Supplier $supplier
+     */
+    public function removeChildren($supplier)
+    {
+        $this->children->removeElement($supplier);
+    }
+
+    /**
+     * Get children
+     * @return array
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+    
+    /**
+     * Set parent
+     * @param Supplier $supplier
+     * @return MenuItem
+     */
+    public function setParent($supplier)
+    {
+        $this->parent = $supplier;
+        if ($supplier){
+            $supplier->addChildren($this);
+        }    
+    }
+
+    /**
+     * Get parent
+     * @return Supplier
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }    
+
+    /**
+     * Get parent Id
+     * @return integer
+     */
+    public function getParentId()
+    {
+        if ($this->parent){
+            return $this->parent->getId();
+        }    
+        
+        return;
+    }    
 }

@@ -225,12 +225,19 @@ class SupplierController extends AbstractActionController
             return;
         }
         
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findBy(['status' => Supplier::STATUS_ACTIVE], ['name' => 'ASC']);
+        $supplierList = ['--нет--'];
+        foreach ($suppliers as $value) {
+            $supplierList[$value->getId()] = $value->getName();
+        }
+        
         // Create form
         $form = new SupplierForm($this->entityManager);
-        
+        $form->get('parent')->setValueOptions($supplierList);        
+                
         // Check if user has submitted the form
         if ($this->getRequest()->isPost()) {
-            
             // Fill in the form with POST data
             $data = $this->params()->fromPost();            
             
@@ -242,6 +249,13 @@ class SupplierController extends AbstractActionController
                 // Get filtered and validated data
                 $data = $form->getData();
                 
+                if (is_numeric($data['parent'])){
+                    $data['parent'] = $this->entityManager->getRepository(Supplier::class)
+                            ->find($data['parent']);
+                } else {
+                    $data['parent'] = null;
+                }
+                
                 // Update permission.
                 $this->supplierManager->updateSupplier($supplier, $data);
                 
@@ -250,13 +264,16 @@ class SupplierController extends AbstractActionController
                 );           
             }               
         } else {
-            $form->setData(array(
-                    'name'=>$supplier->getName(),
-                    'aplId'=>$supplier->getAplId(),     
-                    'status'=>$supplier->getStatus(),     
-                    'prepayStatus' => $supplier->getPrepayStatus(),
-                    'priceListStatus' => $supplier->getPriceListStatus(),
-                ));
+            if ($supplier){
+                $form->setData(array(
+                        'name'=>$supplier->getName(),
+                        'aplId'=>$supplier->getAplId(),     
+                        'status'=>$supplier->getStatus(),     
+                        'prepayStatus' => $supplier->getPrepayStatus(),
+                        'priceListStatus' => $supplier->getPriceListStatus(),
+                        'parent' => $supplier->getParentId(),
+                    ));
+            }    
         }
         
         $this->layout()->setTemplate('layout/terminal');

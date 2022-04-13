@@ -133,6 +133,15 @@ class SupplierForm extends Form
         ]);
         
                 
+        // Add "parent" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'parent',
+            'options' => [
+                'label' => 'Главный поставщик',
+            ],
+        ]);
+        
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -262,6 +271,12 @@ class SupplierForm extends Form
                 ],
             ]); 
         
+        $inputFilter->add([
+                'name'     => 'parent',
+                'required' => false,
+                'filters'  => [],                
+                'validators' => [],
+            ]); 
         
     }    
     

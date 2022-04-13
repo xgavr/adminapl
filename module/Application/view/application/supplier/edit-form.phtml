@@ -20,6 +20,10 @@ $form->get('prepayStatus')->setAttributes([
     'class'=>'form-control'
     ]);
 
+$form->get('parent')->setAttributes([
+    'class'=>'form-control'
+    ]);
+
 $form->get('priceListStatus')->setAttributes([
     'class'=>'form-control'
     ]);
@@ -53,6 +57,12 @@ $form->prepare();
                             <?= $this->formLabel($form->get('aplId')); ?>
                             <?= $this->formElement($form->get('aplId')); ?>
                             <?= $this->formElementErrors($form->get('aplId')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('parent')); ?>
+                            <?= $this->formElement($form->get('parent')); ?>
+                            <?= $this->formElementErrors($form->get('parent')); ?>                  
                         </div>
 
                         <div class="form-group">
