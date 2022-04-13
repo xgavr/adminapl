@@ -68,13 +68,13 @@ class MarketRepository extends EntityRepository{
                 $or = $queryBuilder->expr()->orX();            
                 foreach ($rates as $rate){
                     if ($rate->getTokenGroup()){
-                        $or->add($queryBuilder->expr()->eq($alias.'.tokenGroup', $rate->getTokenGroup()));
+                        $or->add($queryBuilder->expr()->eq($alias.'.tokenGroup', $rate->getTokenGroup()->getId()));
                     }
                     if ($rate->getGenericGroup()){
-                        $or->add($queryBuilder->expr()->eq($alias.'.genericGroup', $rate->getGenericGroup()));
+                        $or->add($queryBuilder->expr()->eq($alias.'.genericGroup', $rate->getGenericGroup()->getId()));
                     }
                     if ($rate->getProducer()){
-                        $or->add($queryBuilder->expr()->eq($alias.'.producer', $rate->getProducer()));
+                        $or->add($queryBuilder->expr()->eq($alias.'.producer', $rate->getProducer()->getId()));
                     }
                 }
                 $queryBuilder->andWhere($or);
@@ -83,13 +83,13 @@ class MarketRepository extends EntityRepository{
                 $and = $queryBuilder->expr()->andX();            
                 foreach ($rates as $rate){
                     if ($rate->getTokenGroup()){
-                        $and->add($queryBuilder->expr()->neq($alias.'.tokenGroup', $rate->getTokenGroup()));
+                        $and->add($queryBuilder->expr()->neq($alias.'.tokenGroup', $rate->getTokenGroup()->getId()));
                     }
                     if ($rate->getGenericGroup()){
-                        $and->add($queryBuilder->expr()->neq($alias.'.genericGroup', $rate->getGenericGroup()));
+                        $and->add($queryBuilder->expr()->neq($alias.'.genericGroup', $rate->getGenericGroup()->getId()));
                     }
                     if ($rate->getProducer()){
-                        $and->add($queryBuilder->expr()->neq($alias.'.producer', $rate->getProducer()));
+                        $and->add($queryBuilder->expr()->neq($alias.'.producer', $rate->getProducer()->getId()));
                     }
                 }
                 $queryBuilder->andWhere($and);

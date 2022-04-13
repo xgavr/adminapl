@@ -395,7 +395,7 @@ class Idoc {
     }
     
     /**
-     * Преобразование даты
+     * Преобразование даты НЕ ИСПОЛЬЗУЕТСЯ
      * @param string $excelDate
      */
     private function _excelDateToDate($excelDate)
@@ -443,7 +443,7 @@ class Idoc {
             if ($dateFromFormat){
                 return $dateFromFormat->format('Y-m-d');
             }
-            $date = $this->_excelDateToDate($str);
+            $date = $this->_strToDate($str);
             if ($this->_isDate($date)){
                 return $date;
             }
@@ -508,7 +508,7 @@ class Idoc {
         if (isset($idocData[$row])){
             if (isset($idocData[$row][$col])){
                 $result = trim($idocData[$row][$col]);
-                $date = $this->_excelDateToDate($result);
+                $date = $this->_strToDate($result);
                 return $date;
             }
         }
