@@ -86,6 +86,30 @@ class BillRepository  extends EntityRepository{
     }       
 
     /**
+     * Поиск связанных поставщиков
+     * @param Supplier $supplier
+     * @retrun array
+     */
+    private function _findChildSupplier($supplier)
+    {
+        $result = [$supplier];
+        
+        if ($supplier->getParent()){
+            $parentSupplier = $supplier->getParent();
+        } else {
+            $parentSupplier = $supplier;
+        }
+        
+        $childs = $this->getEntityManager()->getRepository(Supplier::class)
+                ->findBy(['parent' => $parentSupplier->getId()]);
+        foreach ($childs as $child){
+            $result[] = $child;
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Найти товар по коду поставщика
      * @param Supplier $supplier
      * @param string $iid
@@ -103,10 +127,17 @@ class BillRepository  extends EntityRepository{
                 ->join('r.raw', 'raw')
                 ->where('r.iid = ?1')
                 ->setParameter('1', $iid)
-                ->andWhere('raw.supplier = ?2')
-                ->setParameter('2', $supplier->getId())
+//                ->andWhere('raw.supplier = ?2')
+//                ->setParameter('2', $supplier->getId())
                 ->setMaxResults(1)
                 ;            
+
+        $orX = $queryBuilder->expr()->orX();
+        $childs = $this->_findChildSupplier($supplier);
+        foreach ($childs as $child){
+            $orX->add($queryBuilder->expr()->eq('raw.supplier', $child->getId()));            
+        }
+        $queryBuilder->andWhere($orX);
 
         $rawprice = $queryBuilder->getQuery()->getOneOrNullResult();        
         if ($rawprice){

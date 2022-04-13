@@ -124,8 +124,15 @@ class SupplierController extends AbstractActionController
     
     public function addAction() 
     {     
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findBy(['status' => Supplier::STATUS_ACTIVE], ['name' => 'ASC']);
+        $supplierList = ['--нет--'];
+        foreach ($suppliers as $value) {
+            $supplierList[$value->getId()] = $value->getName();
+        }
         // Создаем форму.
         $form = new SupplierForm($this->entityManager);
+        $form->get('parent')->setValueOptions($supplierList);        
         
         // Проверяем, является ли пост POST-запросом.
         if ($this->getRequest()->isPost()) {
@@ -139,6 +146,12 @@ class SupplierController extends AbstractActionController
                                 
                 // Получаем валидированные данные формы.
                 $data = $form->getData();
+                if (is_numeric($data['parent'])){
+                    $data['parent'] = $this->entityManager->getRepository(Supplier::class)
+                            ->find($data['parent']);
+                } else {
+                    $data['parent'] = null;
+                }
                 
                 // Используем менеджер supplier для добавления нового good в базу данных.                
                 $supplier = $this->supplierManager->addNewSupplier($data);
