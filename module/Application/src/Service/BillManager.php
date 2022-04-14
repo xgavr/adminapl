@@ -656,12 +656,16 @@ class BillManager
     /**
      * Попробовать получить артикул из кода поставщика
      * @param string $iid
+     * @param string $goodName
+     * @return Goods
      */
-    protected function _parseIid($iid)
+    protected function _parseIid($iid, $goodName = null)
     {
         $delimeters = ['^', '_'];
         $articleFilter = new ArticleCode();
+        $producerNameFilter = new ProducerName();
         foreach ($delimeters as $delimetr){
+            $articleStr = $producer = null;
             $art_pro = explode($delimetr, $iid);
             foreach ($art_pro as $value){
                 $code = $articleFilter->filter($value);
@@ -670,6 +674,20 @@ class BillManager
                 if ($good){
                     return $good;
                 }                
+                $producerName = $producerNameFilter->filter($value);
+                if ($producerName){
+                    $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                            ->findOneByName($producerName);
+                    if ($unknownProducer){
+                        if ($unknownProducer->getProducer()){
+                            $producer = $unknownProducer->getProducer();
+                        }    
+                    }
+                }    
+                $articleStr = $value;
+            }
+            if ($articleStr && $producer){
+                return $this->_newGood($articleStr, $producer, $goodName);                
             }
         }
         return;
@@ -735,7 +753,7 @@ class BillManager
                 return $good;
             }
             
-            $good = $this->_parseIid($iid);
+            $good = $this->_parseIid($iid, $goodName);
             if ($good){
                 return $good;
             }
