@@ -9,12 +9,8 @@
 namespace Stock\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Stock\Entity\Ptu;
-use Stock\Entity\PtuGood;
 use Stock\Entity\Vtp;
 use Stock\Entity\VtpGood;
-use Stock\Entity\Unit;
-use Stock\Entity\Ntd;
 use Application\Entity\Supplier;
 use Company\Entity\Office;
 

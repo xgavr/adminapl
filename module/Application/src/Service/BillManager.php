@@ -724,7 +724,7 @@ class BillManager
             }
         }
             
-        if ($producerStr){
+        if ($code && $producerStr){
             $producerNameFilter = new ProducerName();
             $producerName = $producerNameFilter->filter($producerStr);
             $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
