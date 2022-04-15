@@ -50,7 +50,7 @@ class BillSettingForm extends Form
             'name' => 'name',
             'attributes' => [
                 'id' => 'name',
-                'disabled' => true,
+                'readonly' => true,
             ],
             'options' => [
                 'label' => 'Наименование',

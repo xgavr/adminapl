@@ -456,11 +456,12 @@ class Idoc {
         foreach ($strs as $value){
             if ($expec == 'num'){
                 $posNN = \stripos(trim($value), '№');
-                if ($posNN !== false){
+                $strlen = mb_strlen($value);
+                if ($posNN !== false && $strlen > 1){
                     return trim($value, '№');
                 }
                 $posN = \stripos(trim($value), 'N');
-                if ($posN !== false){
+                if ($posN !== false  && $strlen > 1){
                     return trim($value, 'N');
                 }
                 

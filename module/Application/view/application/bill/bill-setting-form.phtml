@@ -356,6 +356,14 @@ $form->prepare();
 </div>    
 
 <div class="modal-footer">
+    <div class="pull-left">
+        <?php If($billSetting):?>
+            <!--<button type="button" class="btn btn-secondary" id="bill-setting-submit" data-new="1">Новый шаблон</button>-->
+            <button type="button" class="btn btn-action" title="Новый шаблон" id="newBtn">
+                <span class="glyphicon glyphicon-new-window"></span>
+            </button>                
+        <?php endif; ?>            
+    </div>
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
     <button type="button" class="btn btn-primary" id="bill-setting-submit">Сохранить</button>
 </div>
@@ -369,6 +377,10 @@ $form->prepare();
         
         $('#eraseBtn').on('click', function(e){
             $('.input-num').val(null);
+        });
+        $('#newBtn').on('click', function(e){
+            $('.input-num').val(null);
+            $('#name').val(null);
         });
         
         changeData();
@@ -426,10 +438,11 @@ $form->prepare();
             });
     });    
     
-    $('#bill-setting-submit').on('click', function() {
+    $('#bill-setting-submit').on('click', function(e) {
+        var url = '/bills/bill-setting-form/<?= $idoc ?  $idoc->getId():""?>?template=<?= ($billSetting ? $billSetting->getId():"") ?>';
         $.ajax({
             type: 'POST',
-            url: '/bills/bill-setting-form/<?= $idoc ?  $idoc->getId():""?>?template=<?= ($billSetting ? $billSetting->getId():"") ?>',
+            url: url,
             data: $('#bill-setting-form').serialize()
         })
             .done(function (data) {

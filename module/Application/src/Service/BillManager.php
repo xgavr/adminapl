@@ -900,10 +900,10 @@ class BillManager
         $this->entityManager->persist($idoc);
         $this->entityManager->flush($idoc);
         
-        $billSettings = $this->entityManager->getRepository(BillSetting::class)
-                ->findBy(['supplier' => $idoc->getSupplier()->getId(), 'status' => Idoc::STATUS_ACTIVE]);
+        $billSetting = $this->entityManager->getRepository(BillSetting::class)
+                ->billSettingForIdoc($idoc);
         $flag = true;
-        foreach ($billSettings as $billSetting){
+        if ($billSetting){
             $idocData = $idoc->idocToPtu($billSetting->toArray());
             if ($idocData['doc_no'] && $idocData['doc_date'] > '1970-01-01' && $idocData['total']){
                 if ($flag = $this->idocToPtu($idoc, $billSetting)){
@@ -912,7 +912,7 @@ class BillManager
             }
         }
         
-        if (count($billSettings) && $flag){
+        if ($billSetting && $flag){
             $idoc->setStatus(Idoc::STATUS_ERROR);
             $this->entityManager->persist($idoc);
             $this->entityManager->flush($idoc);

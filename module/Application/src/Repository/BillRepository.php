@@ -11,10 +11,8 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Idoc;
 use Application\Entity\Rawprice;
 use Application\Entity\Goods;
-use Application\Filter\ArticleCode;
-use Application\Entity\Article;
-use Application\Filter\ProducerName;
 use Application\Entity\Supplier;
+use Application\Entity\BillSetting;
 
 /**
  * Description of BillRepository
@@ -84,6 +82,39 @@ class BillRepository  extends EntityRepository{
 
         return $result['countIdoc'];
     }       
+    
+    /**
+     * Найти шаблон для Idoc
+     * @param Idoc $idoc
+     * @return BillSetting
+     */
+    public function billSettingForIdoc($idoc)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('b')
+            ->from(BillSetting::class, 'b') 
+            ->where('b.supplier = ?1')    
+            ->setParameter('1', $idoc->getSupplier()->getId()) 
+            ->andWhere('b.status = ?2')
+            ->setParameter('2', BillSetting::STATUS_ACTIVE) 
+            ->orderBy('b.id', 'DESC')    
+            ;
+        $billSettings = $queryBuilder->getQuery()->getResult();
+        
+        $result = null;
+        foreach ($billSettings as $billSetting){
+            $result = $billSetting;
+            if ($billSetting->getName() == BillSetting::gname($idoc->getName())){
+                return $billSetting;
+            }
+        }
+        
+        return $result;
+    }
+    
 
     /**
      * Поиск связанных поставщиков
