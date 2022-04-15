@@ -241,6 +241,9 @@ $this->pageBreadcrumbs()->setItems([
         if (value == <?= Idoc::STATUS_RETIRED?>){
             return 'ok';
         }
+        if (value == <?= Idoc::STATUS_PROC?>){
+            return 'pr';
+        }
         return 'er';
     }    
 
