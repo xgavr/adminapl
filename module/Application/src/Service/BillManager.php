@@ -30,6 +30,7 @@ use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use MvlabsPHPExcel\Service;
+use Application\Entity\GoodSupplier;
 
 /**
  * Description of BillManager
@@ -710,11 +711,27 @@ class BillManager
         $articleFilter = new ArticleCode();
         $code = $articleFilter->filter($articleStr);
         if ($code && !$producerStr){
-            $good = $this->entityManager->getRepository(Goods::class)
-                    ->findOneByCode($code);
-            if ($good){
-                return $good;
-            }
+            $goods = $this->entityManager->getRepository(Goods::class)
+                    ->findByCode($code);
+            if ($goods){
+                if (count($goods) == 1){
+                    foreach ($goods as $good){
+                        return $good;
+                    }
+                } else {
+                    foreach ($goods as $good){
+                        $goodSupplierId = $this->entityManager->getRepository(GoodSupplier::class)
+                                ->findGoodSupplierId($good->getId(), $idoc->getSupplier()->getId());
+                        if ($goodSupplierId){
+                            $goodSupplier = $this->entityManager->getRepository(GoodSupplier::class)
+                                    ->find($goodSupplierId);
+                            if ($goodSupplier){
+                                return $goodSupplier->getGood();
+                            }
+                        }
+                    }                    
+                }
+            }    
             $articles = $this->entityManager->getRepository(Article::class)
                     ->findByCode($code);
             foreach ($articles as $article){
