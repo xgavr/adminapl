@@ -164,7 +164,8 @@ class BillRepository  extends EntityRepository{
                 ;            
 
         $orX = $queryBuilder->expr()->orX();
-        $childs = $this->_findChildSupplier($supplier);
+        $childs = $entityManager->getRepository(Supplier::class)
+                ->findChildSupplier($supplier);
         foreach ($childs as $child){
             $orX->add($queryBuilder->expr()->eq('raw.supplier', $child->getId()));            
         }

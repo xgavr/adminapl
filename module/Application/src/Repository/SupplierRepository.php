@@ -251,6 +251,58 @@ class SupplierRepository extends EntityRepository{
         return;        
     }
     
+    /**
+     * Поиск связанных поставщиков
+     * @param Supplier $supplier
+     * @retrun array
+     */
+    public function findChildSupplier($supplier)
+    {
+        $result = [$supplier];
+        
+        if ($supplier->getParent()){
+            $parentSupplier = $supplier->getParent();
+        } else {
+            $parentSupplier = $supplier;
+        }
+        
+        $childs = $this->getEntityManager()->getRepository(Supplier::class)
+                ->findBy(['parent' => $parentSupplier->getId()]);
+        foreach ($childs as $child){
+            $result[] = $child;
+        }
+        
+        return $result;
+    }
+
+    /**
+     * Найти товары связанных поставщиков
+     * @param Goods $good
+     * @param Supplier $supplier
+     * @return GoodSupplier
+     */
+    public function findGoodChildSupplier($good, $supplier)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('gs')
+                ->from(GoodSupplier::class, 'gs')
+                ->where('gs.good = ?1')
+                ->setParameter('1', $good->getId())
+                ->setMaxResults(1)
+                ;
+        
+        $orX = $queryBuilder->expr()->orX();
+        $childs = $this->findChildSupplier($supplier);
+        foreach ($childs as $child){
+            $orX->add($queryBuilder->expr()->eq('gs.supplier', $child->getId()));            
+        }
+        $queryBuilder->andWhere($orX);
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+    
 
     /**
      * Варианты доставок
