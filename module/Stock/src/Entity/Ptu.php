@@ -432,7 +432,7 @@ class Ptu {
      */
     public function getAmount() 
     {
-        return $this->amount;
+        return round($this->amount, 2);
     }
     
     /**
