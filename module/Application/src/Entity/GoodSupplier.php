@@ -116,7 +116,7 @@ class GoodSupplier {
      */    
     public function getGood() 
     {
-        return $this->goods;
+        return $this->good;
     }
 
     /**

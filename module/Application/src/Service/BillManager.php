@@ -720,7 +720,6 @@ class BillManager
                     }
                 } else {
                     foreach ($goods as $good){
-                        var_dump($good->getId());
                         $goodSupplier = $this->entityManager->getRepository(GoodSupplier::class)
                                 ->findGoodChildSupplier($good, $idoc->getSupplier());
                         if ($goodSupplier){
