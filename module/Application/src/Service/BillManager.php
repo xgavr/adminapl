@@ -706,7 +706,7 @@ class BillManager
         $producerStr = empty($data['producer']) ? null:$data['producer'];
         $goodName = empty($data['good_name']) ? null:$data['good_name'];
         $iid = empty($data['supplier_article']) ? null:$data['supplier_article'];
-        $price = empty($data['price']) ? 0:(float) $data['price'];
+        $price = empty($data['price']) ? 0:(int) $data['price'];
         $producer = null;
         
         $articleFilter = new ArticleCode();

@@ -307,7 +307,7 @@ class SupplierRepository extends EntityRepository{
     /**
      * Найти товар связанных поставщиков по артиклю
      * @param string $code
-     * @param float $prices
+     * @param float $price
      * @param Supplier $supplier
      * @return GoodSupplier
      */
