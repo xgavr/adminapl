@@ -304,6 +304,36 @@ class SupplierRepository extends EntityRepository{
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
     
+    /**
+     * Найти товар связанных поставщиков по авртиклю
+     * @param string $code
+     * @param Supplier $supplier
+     * @return GoodSupplier
+     */
+    public function findGoodChildSupplierByCode($code, $supplier)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('gs')
+                ->from(GoodSupplier::class, 'gs')
+                ->join('g.goods', 'g')
+                ->where('g.code = ?1')
+                ->setParameter('1', $code)
+                ->setMaxResults(1)
+                ->orderBy('gs.update', 'DESC')
+                ;
+        
+        $orX = $queryBuilder->expr()->orX();
+        $childs = $this->findChildSupplier($supplier);
+        foreach ($childs as $child){
+            $orX->add($queryBuilder->expr()->eq('gs.supplier', $child->getId()));            
+        }
+        $queryBuilder->andWhere($orX);
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+    
 
     /**
      * Варианты доставок

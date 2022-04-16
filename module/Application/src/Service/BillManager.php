@@ -719,13 +719,11 @@ class BillManager
                         return $good;
                     }
                 } else {
-                    foreach ($goods as $good){
-                        $goodSupplier = $this->entityManager->getRepository(GoodSupplier::class)
-                                ->findGoodChildSupplier($good, $idoc->getSupplier());
-                        if ($goodSupplier){
-                            return $goodSupplier->getGood();
-                        }
-                    }                    
+                    $goodSupplier = $this->entityManager->getRepository(GoodSupplier::class)
+                            ->findGoodChildSupplierByCode($code, $idoc->getSupplier());
+                    if ($goodSupplier){
+                        return $goodSupplier->getGood();
+                    }
                 }
             }    
             $articles = $this->entityManager->getRepository(Article::class)
