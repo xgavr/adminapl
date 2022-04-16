@@ -317,7 +317,7 @@ class SupplierRepository extends EntityRepository{
         
         $queryBuilder->select('gs')
                 ->from(GoodSupplier::class, 'gs')
-                ->join('g.goods', 'g')
+                ->join('gs.good', 'g')
                 ->where('g.code = ?1')
                 ->setParameter('1', $code)
                 ->setMaxResults(1)
