@@ -335,10 +335,9 @@ class SupplierRepository extends EntityRepository{
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         
         $row = $queryBuilder->getQuery()->getOneOrNullResult();
-        var_dump($row); exit;
-        if ($row){
+        if (is_array($row)){
             return $this->getEntityManager()->getRepository(GoodSupplier::class)
-                    ->find($gsId);
+                    ->find($row['goodId']);
         }
         return;
     }
