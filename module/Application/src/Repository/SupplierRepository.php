@@ -305,23 +305,24 @@ class SupplierRepository extends EntityRepository{
     }
     
     /**
-     * Найти товар связанных поставщиков по авртиклю
+     * Найти товар связанных поставщиков по артиклю
      * @param string $code
+     * @param float $prices
      * @param Supplier $supplier
      * @return GoodSupplier
      */
-    public function findGoodChildSupplierByCode($code, $supplier)
+    public function findGoodChildSupplierByCode($code, $price, $supplier)
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('gs')
+        $queryBuilder->select("g.id as goodId, ABS(gs.price-$price) as diff")
                 ->from(GoodSupplier::class, 'gs')
                 ->join('gs.good', 'g')
                 ->where('g.code = ?1')
                 ->setParameter('1', $code)
-                ->setMaxResults(1)
-                ->orderBy('gs.update', 'DESC')
+                ->orderBy('diff', 'ASC')
+                ->addOrderBy('gs.update', 'DESC')
                 ;
         
         $orX = $queryBuilder->expr()->orX();
@@ -331,7 +332,9 @@ class SupplierRepository extends EntityRepository{
         }
         $queryBuilder->andWhere($orX);
         var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getOneOrNullResult();
+        
+        $data = $queryBuilder->getQuery()->getOneOrNullResult();
+        return $gs;
     }
     
 
