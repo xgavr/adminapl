@@ -309,7 +309,7 @@ class SupplierRepository extends EntityRepository{
      * @param string $code
      * @param float $price
      * @param Supplier $supplier
-     * @return GoodSupplier
+     * @return Goods
      */
     public function findGoodChildSupplierByCode($code, $price, $supplier)
     {
@@ -336,7 +336,7 @@ class SupplierRepository extends EntityRepository{
         
         $row = $queryBuilder->getQuery()->getOneOrNullResult();
         if (is_array($row)){
-            return $this->getEntityManager()->getRepository(GoodSupplier::class)
+            return $this->getEntityManager()->getRepository(Goods::class)
                     ->find($row['goodId']);
         }
         return;

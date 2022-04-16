@@ -720,10 +720,10 @@ class BillManager
                         return $good;
                     }
                 } else {
-                    $goodSupplier = $this->entityManager->getRepository(GoodSupplier::class)
+                    $good = $this->entityManager->getRepository(GoodSupplier::class)
                             ->findGoodChildSupplierByCode($code, $price, $idoc->getSupplier());
-                    if ($goodSupplier){
-                        return $goodSupplier->getGood();
+                    if ($good){
+                        return $good;
                     }
                 }
             }    
