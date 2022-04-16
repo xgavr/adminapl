@@ -334,8 +334,9 @@ class SupplierRepository extends EntityRepository{
         $queryBuilder->andWhere($orX);
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         
-        $gsId = $queryBuilder->getQuery()->getOneOrNullResult();
-        if ($gsId){
+        $row = $queryBuilder->getQuery()->getOneOrNullResult();
+        var_dump($row); exit;
+        if ($row){
             return $this->getEntityManager()->getRepository(GoodSupplier::class)
                     ->find($gsId);
         }
