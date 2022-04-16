@@ -330,7 +330,7 @@ class SupplierRepository extends EntityRepository{
             $orX->add($queryBuilder->expr()->eq('gs.supplier', $child->getId()));            
         }
         $queryBuilder->andWhere($orX);
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
     
