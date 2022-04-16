@@ -870,6 +870,7 @@ class BillManager
                 $idoc->setStatus(Idoc::STATUS_ACTIVE);
                 if (count($notFoundArticle) == 0){
                     $idoc->setStatus(Idoc::STATUS_RETIRED);
+                    $idoc->setInfo($ptu->getAmount());
 
                     $ptu->setStatusEx(Ptu::STATUS_EX_NEW);
                     $this->entityManager->persist($ptu);

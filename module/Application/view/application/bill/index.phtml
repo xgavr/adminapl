@@ -44,6 +44,9 @@ $this->pageBreadcrumbs()->setItems([
                     </select>
                     
                 </div>    
+                <div class="form-group">
+                    <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
+                </div>
             </div>
         </div>
         <table id="table" 
@@ -61,9 +64,10 @@ $this->pageBreadcrumbs()->setItems([
             <thead>
                 <tr>
                      <th data-field="id" data-type="numeric" data-width="50">ID</th>
-                     <th data-field="dateCreated" data-width="100">Дата</th>
+                     <th data-field="dateCreated" data-width="150">Дата</th>
                      <th data-field="status" data-formatter="statusFormatter" data-width="20">C</th>
-                     <th data-field="docKey" data-formatter="docFormatter" data-width="75">Документ</th>
+                     <th data-field="docKey" data-formatter="docFormatter" data-width="75">ПТУ</th>
+                     <th data-field="info" data-width="100">ПТУ</th>
                      <th data-field="supplier.name" data-formatter="supplierFormatter">Поставщик</th>
                      <th data-field="name">Файл</th>
                      <th data-field="id" data-formatter="activeFormatter" data-width="50"></th>
@@ -91,6 +95,9 @@ $this->pageBreadcrumbs()->setItems([
         });
         
         $(document).on('change', '#statusSelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#monthSelect', function (e) {
             refreshTable();
         });
         
@@ -194,6 +201,7 @@ $this->pageBreadcrumbs()->setItems([
         }    
         params.supplier = $('#supplierSelect').val();
         params.status = $('#statusSelect').val();
+        params.month = $('#monthSelect').val();
         
         return params;
     }
@@ -213,7 +221,7 @@ $this->pageBreadcrumbs()->setItems([
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
         
-        if (row.info){
+        if (row.info && row.status != <?= Idoc::STATUS_RETIRED?>){
             btn += ' <button';
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs info-show"';

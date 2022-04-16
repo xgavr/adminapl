@@ -47,6 +47,18 @@ class BillRepository  extends EntityRepository{
                 $queryBuilder->andWhere('i.status = ?2')
                         ->setParameter('2', $params['status']);
             }
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(i.dateCreated) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(i.dateCreated) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
         }
         return $queryBuilder->getQuery();
     }       
@@ -76,6 +88,18 @@ class BillRepository  extends EntityRepository{
             if (is_numeric($params['status'])){
                 $queryBuilder->andWhere('i.status = ?2')
                         ->setParameter('2', $params['status']);
+            }
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(i.dateCreated) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(i.dateCreated) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
             }
         }
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
