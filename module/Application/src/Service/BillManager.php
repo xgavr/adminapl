@@ -706,6 +706,7 @@ class BillManager
         $producerStr = empty($data['producer']) ? null:$data['producer'];
         $goodName = empty($data['good_name']) ? null:$data['good_name'];
         $iid = empty($data['supplier_article']) ? null:$data['supplier_article'];
+        $price = empty($data['price']) ? 0:(float) $data['price'];
         $producer = null;
         
         $articleFilter = new ArticleCode();
@@ -720,7 +721,7 @@ class BillManager
                     }
                 } else {
                     $goodSupplier = $this->entityManager->getRepository(GoodSupplier::class)
-                            ->findGoodChildSupplierByCode($code, $idoc->getSupplier());
+                            ->findGoodChildSupplierByCode($code, $price, $idoc->getSupplier());
                     if ($goodSupplier){
                         return $goodSupplier->getGood();
                     }

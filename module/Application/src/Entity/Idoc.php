@@ -608,6 +608,7 @@ class Idoc {
                     if ($tab['amount']){
                         if (!empty($tab['quantity']) && !empty($tab['good_name'])){
                             $total += $tab['amount'];
+                            $tab['price'] = $tab['amount']/$tab['quantity'];
                         }   
                     }            
                 }        
