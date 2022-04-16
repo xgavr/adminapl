@@ -323,6 +323,7 @@ class SupplierRepository extends EntityRepository{
                 ->setParameter('1', $code)
                 ->orderBy('diff', 'ASC')
                 ->addOrderBy('gs.update', 'DESC')
+                ->setMaxResults(1)
                 ;
         
         $orX = $queryBuilder->expr()->orX();
@@ -331,10 +332,14 @@ class SupplierRepository extends EntityRepository{
             $orX->add($queryBuilder->expr()->eq('gs.supplier', $child->getId()));            
         }
         $queryBuilder->andWhere($orX);
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         
-        $data = $queryBuilder->getQuery()->getOneOrNullResult();
-        return $gs;
+        $gsId = $queryBuilder->getQuery()->getOneOrNullResult();
+        if ($gsId){
+            return $this->getEntityManager()->getRepository(GoodSupplier::class)
+                    ->find($gsId);
+        }
+        return;
     }
     
 
