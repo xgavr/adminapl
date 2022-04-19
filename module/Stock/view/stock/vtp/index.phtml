@@ -41,21 +41,8 @@
                     
                 </div>    
                 <div class="form-group">
-                    <select id="yearSelect" style="width: 80px" class="form-control">
-                        <option>год</option>
-                        <?php foreach ($years as $year):?>
-                            <option value="<?= $year?>" <?= ($year == date('Y'))? 'selected':''?>><?= $year?></option>
-                        <?php endforeach;?>
-                    </select>                    
-                </div>    
-                <div class="form-group">
-                    <select id="monthSelect" style="width: 70px" class="form-control">
-                        <option>мес</option>
-                        <?php foreach ($monthes as $month):?>
-                            <option value="<?= $month?>" <?= ($month == date('m'))? 'selected':''?>><?= $month?></option>
-                        <?php endforeach;?>
-                    </select>                    
-                </div>    
+                    <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
+                </div>
             </div>
         </div>
         <table id="table" 
@@ -71,6 +58,7 @@
             data-sort-name="id"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
             >
             <thead>
                 <tr>
@@ -133,9 +121,6 @@
         $(document).on('change', '#officeSelect', function (e) {
             refreshTable();
         });
-        $(document).on('change', '#yearSelect', function (e) {
-            refreshTable();
-        });
         $(document).on('change', '#monthSelect', function (e) {
             refreshTable();
         });
@@ -155,7 +140,6 @@
         }    
         params.supplier = $('#supplierSelect').val();
         params.office = $('#officeSelect').val();
-        params.year = $('#yearSelect').val();
         params.month = $('#monthSelect').val();
         
         return params;

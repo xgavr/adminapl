@@ -76,9 +76,13 @@ class VtpController extends AbstractActionController
         $order = $this->params()->fromQuery('order', 'DESC');
         $supplierId = $this->params()->fromQuery('supplier');
         $officeId = $this->params()->fromQuery('office');
-        $year = $this->params()->fromQuery('year');
-        $month = $this->params()->fromQuery('month');
+        $year_month = $this->params()->fromQuery('month');
         
+        $year = $month = null;
+        if ($year_month){
+            $year = date('Y', strtotime($year_month));
+            $month = date('m', strtotime($year_month));
+        }        
         $params = [
             'q' => $q, 'sort' => $sort, 'order' => $order, 
             'supplierId' => $supplierId, 'officeId' => $officeId,
