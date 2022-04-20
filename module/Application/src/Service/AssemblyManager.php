@@ -241,6 +241,9 @@ class AssemblyManager
             return false;
         }       
         
+        if ($rawprice->getRealRest() < $rawprice->getRealLot()) {
+            return false;
+        }       
         return true;
     }
     

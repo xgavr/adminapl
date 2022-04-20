@@ -894,6 +894,11 @@ class Rawprice {
         return $this->lot;
     }
 
+    public function getRealLot() 
+    {
+        return max(intval($this->lot), 1);
+    }
+
     public function setLot($lot) 
     {
         $this->lot = (string) $lot;
