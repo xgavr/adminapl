@@ -240,11 +240,11 @@ class RawpriceController extends AbstractActionController
             return;                        
         }        
         
-        $articleTokens = null;
+        $articleTokens = $articleBigrams = null;
         if ($rawprice->getCode()){
 //            $articleTokens = $this->entityManager->getRepository(\Application\Entity\Article::class)
 //                    ->findArticleTokens($rawprice->getCode());
-              $rawpriceTokens = $this->nameManager->titleToToken($rawprice);  
+//              $rawpriceTokens = $this->nameManager->titleToToken($rawprice);  
             $articleBigrams = $this->entityManager->getRepository(\Application\Entity\Article::class)
                     ->findArticleBigrams($rawprice->getCode());
         }
