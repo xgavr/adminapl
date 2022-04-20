@@ -772,10 +772,6 @@ class AssemblyManager
             return $this->missingData($rawprice->getId());
         }
         
-        if (!$this->checkRawprice($rawprice)){
-            return $this->missingData($rawprice->getId());            
-        }
-        
         if ($producer){
 
             $article = $rawprice->getCode();
