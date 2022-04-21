@@ -210,7 +210,7 @@ class SupplierRepository extends EntityRepository{
                 ->where('gs.good = ?1')
                 ->setParameter('1', $goodId)
                 ->andWhere('gs.update > ?2')
-                ->setParameter('2', date('Y-m-d', strtotime('-1 days')))
+                ->setParameter('2', date('Y-m-d', strtotime('-2 days')))
                 //->andWhere('g.price > gs.price')
                 ;
         
