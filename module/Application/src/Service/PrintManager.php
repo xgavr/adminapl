@@ -32,7 +32,7 @@ use Company\Entity\Legal;
 class PrintManager {
     
     const TEMPLATE_FOLDER       = './data/template'; // папка с шаблонами
-    const TEMPLATE_TORG2        = './data/template/torg-2.xls'; 
+    const TEMPLATE_TORG2        = './data/template/torg2/torg-2.xls'; 
 
     /**
      * Doctrine entity manager.
@@ -45,12 +45,16 @@ class PrintManager {
         return self::TEMPLATE_FOLDER;
     }        
     
-    private function _addTemplateFolder()
+    private function _addTemplatesFolder()
     {
-        //Создать папк для прайсов
+        //Создать папку для шаблонов
         $template_folder_name = $this->_getTemplateFolder();
         if (!is_dir($template_folder_name)){
             mkdir($template_folder_name);
+        }        
+        $torg2_folder_name = self::TORG2_FOLDER;
+        if (!is_dir($torg2_folder_name)){
+            mkdir($torg2_folder_name);
         }        
     }        
         
@@ -97,5 +101,9 @@ class PrintManager {
         $spreadsheet->setActiveSheetIndex(0)
                 ->setCellValue('A7', $this->_legalPreset($vtp->getPtu()->getContract()->getCompany()))
                 ;
+
+        $writer = IOFactory::createWriter($spreadsheet, "Xls");
+        $newFilename = self::TORG2_FOLDER.'/vtp_'.$vtp->getId().'.xls';
+        $writer->save($newFilename);
     }
 }

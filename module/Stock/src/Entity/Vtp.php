@@ -40,6 +40,9 @@ class Vtp {
     const STATUS_EX_NEW  = 1; // Не отправлено.
     const STATUS_EX_RECD  = 2; // Получено из АПЛ.
     const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
+    
+    const PRINT_FOLDER          = './data/template/vtp'; 
+
 
     /**
      * @ORM\Id
