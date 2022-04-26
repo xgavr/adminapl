@@ -343,6 +343,20 @@ return [
                     ],
                 ],
             ],        
+            'print' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/print[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\PrintController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'pricesettings' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -507,6 +521,7 @@ return [
             Controller\OemController::class => Controller\Factory\OemControllerFactory::class,
             Controller\OrderController::class => Controller\Factory\OrderControllerFactory::class,
             Controller\PriceController::class => Controller\Factory\PriceControllerFactory::class,
+            Controller\PrintController::class => Controller\Factory\PrintControllerFactory::class,
             Controller\PricesettingsController::class => Controller\Factory\PricesettingsControllerFactory::class,
             Controller\ProducerController::class => Controller\Factory\ProducerControllerFactory::class,
             Controller\RateController::class => Controller\Factory\RateControllerFactory::class,
@@ -549,6 +564,7 @@ return [
             Service\OrderManager::class => Service\Factory\OrderManagerFactory::class,
             Service\ParseManager::class => Service\Factory\ParseManagerFactory::class,
             Service\PriceManager::class => Service\Factory\PriceManagerFactory::class,
+            Service\PrintManager::class => Service\Factory\PrintManagerFactory::class,
             Service\ProducerManager::class => Service\Factory\ProducerManagerFactory::class,
             Service\RateManager::class => Service\Factory\RateManagerFactory::class,
             Service\RawManager::class => Service\Factory\RawManagerFactory::class,
@@ -653,6 +669,10 @@ return [
             Controller\PriceController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\PrintController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '*']
             ],
             Controller\PricesettingsController::class => [
                 // Allow access to authenticated users.

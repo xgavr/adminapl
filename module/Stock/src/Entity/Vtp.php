@@ -42,6 +42,7 @@ class Vtp {
     const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
     
     const PRINT_FOLDER          = './data/template/vtp'; 
+    const TEMPLATE_TORG2        = './data/template/torg-2.xls';
 
 
     /**
@@ -125,6 +126,11 @@ class Vtp {
     public function getId() 
     {
         return $this->id;
+    }
+
+    public function getPrintName($ext) 
+    {
+        return self::PRINT_FOLDER.'/'.$this->id.'.'.$ext;
     }
 
     public function getLogKey() 

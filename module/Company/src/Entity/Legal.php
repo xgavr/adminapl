@@ -430,6 +430,52 @@ class Legal {
     }
     
     /**
+     * Представдение компании
+     * @param Office $office
+     * @param array $options
+     * @retrun string
+     */
+    public function getCompanyPresent($office, $options = null)
+    {
+        $result = '';
+        $result .= $this->name;
+        $result .= ', ';
+        $result .= $this->inn.'/'.$this->kpp;
+        $result .= ', ';
+        $result .= $this->address;
+        $result .= ', ';
+        $result .= $office->getLegalContact()->getPhonesAsString();
+        
+        return trim($result);        
+    }
+    
+    /**
+     * Представдение организации
+     * @param Office $office
+     * @param array $options
+     * @retrun string
+     */
+    public function getLegalPresent($options = null)
+    {
+        $result = '';
+        $result .= $this->name;
+        if ($this->inn){
+            $result .= ', ';
+            $result .= $this->inn.'/'.$this->kpp;
+        }
+        if ($this->address){
+            $result .= ', ';
+            $result .= $this->address;
+        }
+        if ($this->contacts[0]->getPhonesAsString()){
+            $result .= ', ';
+            $result .= $this->contacts[0]->getPhonesAsString();
+        }    
+        
+        return trim($result);        
+    }
+    
+    /**
      * Для обновления в Апл
      * @return array
      */

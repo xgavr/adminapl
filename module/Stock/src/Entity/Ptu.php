@@ -409,6 +409,17 @@ class Ptu {
     }
     
     /**
+     * Returns the present of doc.
+     * @param string $docName
+     * @return string     
+     */
+    public function getDocPresent($docName = 'УПД') 
+    {
+        $docDate = date('d-m-Y', strtotime($this->docDate));
+        return "$docName №{$this->docNo} от {$docDate} г.";
+    }
+    
+    /**
      * Sets the number when doc.
      * @param string $docNo     
      */

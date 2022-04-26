@@ -1,0 +1,12 @@
+<?php
+    $this->headTitle('Печать');
+    $this->mainMenu()->setActiveItemId('print');
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Печать'=>$this->url('print'),
+                ]);
+    
+?>    
+<strong>Module:</strong>        Application &raquo;
+<strong>Controller:</strong>    Print &raquo;
+<strong>Action:</strong>        index

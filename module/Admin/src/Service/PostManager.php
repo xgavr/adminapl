@@ -380,7 +380,9 @@ class PostManager {
 	}
         
         $filename = urldecode($filename);
-        if (substr($filename, 0, 2) == '=?'){
+        if (substr($filename, 0, 8) == '=?utf-8?'){
+            $result = mb_decode_mimeheader($filename);
+        } elseif (substr($filename, 0, 2) == '=?'){
             $result = iconv_mime_decode($filename, ICONV_MIME_DECODE_CONTINUE_ON_ERROR, 'utf-8');
         } else {    
             $filter = new \Application\Filter\ToUtf8();

@@ -268,12 +268,25 @@ class VtpGood {
     }    
     
     /**
-     * Returns the amount of doc.
+     * Returns the amount of good.
      * @return float     
      */
     public function getAmount() 
     {
-        return $this->amount;
+        return round($this->amount, 2);
+    }
+    
+    /**
+     * Returns the price of good.
+     * @return float     
+     */
+    public function getPrice() 
+    {
+        if ($this->quantity){
+            return round($this->amount/$this->quantity, 2);
+        }
+        
+        return 0;
     }
     
     /**

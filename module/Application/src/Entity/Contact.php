@@ -394,7 +394,7 @@ class Contact {
       return $this->phones;
    }    
    
-       /**
+    /**
      * Returns the string of assigned phones.
      */
     public function getPhonesAsString()
@@ -468,6 +468,18 @@ class Contact {
         $this->addresses[] = $address;
     }       
     
+    /**
+     * Добавляет новый адрес к этому contact.
+     * @param $address
+     */   
+    public function getAddressForDoc() 
+    {
+        if ($this->addresses[0]){
+            return $this->addresses[0]->getAddress();
+        }
+        return;
+    }       
+
     /**
      * Возвращает мессенджер для этого contact.
      * @return array

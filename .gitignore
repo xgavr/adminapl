@@ -26,3 +26,4 @@ phpunit.xml
 /data/DoctrineORMModule/Proxy/
 /config/development.config.dist.php
 /data/bills/
+/data/template/vtp/
