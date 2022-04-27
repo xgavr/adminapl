@@ -27,3 +27,4 @@ phpunit.xml
 /config/development.config.dist.php
 /data/bills/
 /data/template/vtp/
+/data/template/.~lock.torg-2.xls#

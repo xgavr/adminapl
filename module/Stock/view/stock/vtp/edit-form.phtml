@@ -39,6 +39,10 @@ $form->get('comment')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('info')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -181,6 +185,15 @@ if ($vtp){
                             <?= $this->formLabel($form->get('comment')); ?>
                             <?= $this->formElement($form->get('comment')); ?>
                             <?= $this->formElementErrors($form->get('comment')); ?>                  
+                        </div>                        
+                    </div>                                            
+                </div>        
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('info')); ?>
+                            <?= $this->formElement($form->get('info')); ?>
+                            <?= $this->formElementErrors($form->get('info')); ?>                  
                         </div>                        
                     </div>                                            
                 </div>        

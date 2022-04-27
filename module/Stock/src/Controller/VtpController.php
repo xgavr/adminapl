@@ -240,6 +240,7 @@ class VtpController extends AbstractActionController
                 $data['doc_date'] = $vtp->getDocDate();
                 $data['doc_no'] = $vtp->getDocNo();
                 $data['comment'] = $vtp->getComment();
+                $data['info'] = $vtp->getInfo();
                 $data['status'] = $vtp->getStatus();
             }    
             $form->setData($data);

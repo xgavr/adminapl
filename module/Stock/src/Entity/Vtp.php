@@ -184,7 +184,8 @@ class Vtp {
     
     public function setInfo($info) 
     {
-        $this->info = $this->setJsonInfo($info);
+//        $this->info = $this->setJsonInfo($info);
+        $this->info = $info;
     }     
 
     /**

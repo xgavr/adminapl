@@ -234,6 +234,17 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
             ],
        ]);
         
+        $this->add([
+            'type'  => 'text',
+            'name' => 'info',
+            'attributes' => [                
+                'id' => 'info'
+            ],
+            'options' => [
+                'label' => 'Причина возврата',
+            ],
+       ]);
+
         $this->add([            
             'type'  => 'select',
             'name' => 'status',
@@ -402,6 +413,25 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'comment',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'info',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

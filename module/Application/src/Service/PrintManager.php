@@ -27,6 +27,7 @@ use Company\Entity\Office;
 use Stock\Entity\Ptu;
 use Stock\Entity\VtpGood;
 use Stock\Entity\PtuGood;
+use Company\Entity\Commission;
 
 
 /**
@@ -89,7 +90,7 @@ class PrintManager {
         $spreadsheet = $reader->load(Vtp::TEMPLATE_TORG2);
         
         $spreadsheet->setActiveSheetIndex(0)
-                ->setCellValue('A7', $vtp->getPtu()->getContract()->getCompany()->getLegalPresent())
+                ->setCellValue('A6', $vtp->getPtu()->getContract()->getCompany()->getLegalPresent())
                 ->setCellValue('A9', $vtp->getPtu()->getOffice()->getName())
                 ->setCellValue('CI7', $vtp->getPtu()->getContract()->getCompany()->getOkpo())
                 ->setCellValue('AY17', $vtp->getId())
@@ -98,7 +99,7 @@ class PrintManager {
                 ->setCellValue('CD20', date('d', strtotime($vtp->getDocDate())))
                 ->setCellValue('CI20', date('m', strtotime($vtp->getDocDate())))
                 ->setCellValue('CS20', date('Y', strtotime($vtp->getDocDate())))
-                ->setCellValue('Z23', $vtp->getPtu()->getContract()->getOffice()->getLegalContact()->getAddressForDoc())
+                ->setCellValue('AE23', $vtp->getPtu()->getContract()->getOffice()->getLegalContact()->getAddressForDoc())
                 ->setCellValue('BL24', date('d', strtotime($vtp->getDocDate())))
                 ->setCellValue('BS24', date('m', strtotime($vtp->getDocDate())))
                 ->setCellValue('CS24', date('Y', strtotime($vtp->getDocDate())))
@@ -147,13 +148,34 @@ class PrintManager {
             $row2++;
             $row3++;
         }
+        
+        $sheet4 = $spreadsheet->setActiveSheetIndex(3);
+        $sheet4->setCellValue("A21", $vtp->getInfo());
+        $commission = $vtp->getPtu()->getOffice()->getCommission();
+        $memberRow = 37;
+        foreach ($commission as $commissar){
+            if ($commissar->getStatus() == Commission::STATUS_HEAD){
+                $sheet4->setCellValue("AC34", $commissar->getPosition());
+                $sheet4->setCellValue("CA34", $commissar->getName());
+            }
+            if ($commissar->getStatus() == Commission::STATUS_MEMBER){
+                $sheet4->setCellValue("AC$memberRow", $commissar->getPosition());
+                $sheet4->setCellValue("CA$memberRow", $commissar->getName());  
+                $memberRow += 2;
+            }
+        }
                 
         $writer = IOFactory::createWriter($spreadsheet, $writerType);
         $htmlFilename = $vtp->getPrintName('html');
         $writer->writeAllSheets();
         $writer->save($htmlFilename);
         
-        $mpdf = new Mpdf();
+        $mpdf = new Mpdf([
+            'margin_header' => 10,
+            'margin_footer' => 10,
+            'margin_top' => 5,
+            'margin_bottom' => 5,
+        ]);
         $mpdf->WriteHTML(\file_get_contents($htmlFilename));
         $pdfFilename = $vtp->getPrintName('pdf');
         $mpdf->Output($pdfFilename,'F');

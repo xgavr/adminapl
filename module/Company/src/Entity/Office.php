@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\Criteria;
 use Stock\Entity\Ptu;
 use ApiMarketPlace\Entity\Cash;
 use User\Entity\User;
+use Company\Entity\Commission;
 
 /**
  * Description of Office
@@ -133,6 +134,12 @@ class Office {
    private $users;    
 
    /**
+    * @ORM\OneToMany(targetEntity="Company\Entity\Commission", mappedBy="office")
+    * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
+   */
+   private $commission;    
+
+   /**
      * Constructor.
      */
     public function __construct() 
@@ -143,6 +150,7 @@ class Office {
         $this->shippings = new ArrayCollection();      
         $this->cashes = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->commission = new ArrayCollection();
     }
     
     public function getId() 
@@ -435,6 +443,24 @@ class Office {
     public function addUser($user) 
     {
         $this->users[] = $user;
+    }         
+    
+    /*
+     * Возвращает связанный commission.
+     * @return array
+     */    
+    public function getCommission() 
+    {
+        return $this->commission;
+    }
+
+    /**
+     * Add commisar
+     * @param Commission $commisar
+     */
+    public function addCommisar($commisar) 
+    {
+        $this->commission[] = $commisar;
     }         
     
 }

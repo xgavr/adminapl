@@ -3,9 +3,10 @@ namespace Company\Service;
 
 use Company\Entity\Office;
 use Company\Entity\Region;
+use Company\Entity\Commission;
 
 /**
- * This service is responsible for adding/editing roles.
+ * This service is responsible for adding/editing office.
  */
 class OfficeManager
 {
@@ -116,6 +117,57 @@ class OfficeManager
         $this->entityManager->remove($office);
         $this->entityManager->flush();
         
+    }
+
+    /**
+     * Добавить комиссара
+     * @param Office $office
+     * @param array $data
+     * @return Commission 
+     */
+    public function addCommissar($office, $data)
+    {
+        $commission = new Commission();
+        $commission->setName(empty($data['name'])? null:$data['name']);
+        $commission->setPosition(empty($data['position'])? null:$data['position']);
+        $commission->setStatus(empty($data['status'])? Commission::STATUS_MEMBER:$data['status']);
+        $commission->setOffice($office);
+        
+        $this->entityManager->persist($commission);
+        $this->entityManager->flush($commission);
+        
+        return $commission;
+    }
+
+    /**
+     * Обновить комиссара
+     * @param Commission $commission
+     * @param array $data
+     * @return Commission 
+     */
+    public function updateCommissar($commission, $data)
+    {
+        $commission->setName(empty($data['name'])? null:$data['name']);
+        $commission->setPosition(empty($data['position'])? null:$data['position']);
+        $commission->setStatus(empty($data['status'])? Commission::STATUS_MEMBER:$data['status']);
+        
+        $this->entityManager->persist($commission);
+        $this->entityManager->flush($commission);
+        
+        return $commission;
+    }
+    
+    /**
+     * Удалить комиссара
+     * @param Commission $commission
+     * @return null
+     */
+    public function removeCommissar($commission)
+    {        
+        $this->entityManager->remove($commission);
+        $this->entityManager->flush();
+        
+        return;
     }    
 }
 

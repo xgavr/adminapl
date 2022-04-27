@@ -150,7 +150,8 @@ class VtpManager
         $vtp->setAplId($data['apl_id']);
         //$vtp->setDocNo($data['doc_no']);
         $vtp->setDocDate($data['doc_date']);
-        $vtp->setComment($data['comment']);
+        $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
+        $vtp->setInfo(empty($data['info']) ? null:$data['info']);
         $vtp->setStatusEx($data['status_ex']);
         $vtp->setStatus($data['status']);
         $vtp->setStatusDoc(Vtp::STATUS_DOC_NOT_RECD);
@@ -177,7 +178,8 @@ class VtpManager
         $vtp->setAplId($data['apl_id']);
         $vtp->setDocNo(empty($data['doc_no']) ? null:$data['doc_no']);
         $vtp->setDocDate($data['doc_date']);
-        $vtp->setComment($data['comment']);
+        $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
+        $vtp->setInfo(empty($data['info']) ? null:$data['info']);
         $vtp->setStatusEx($data['status_ex']);
         $vtp->setStatus($data['status']);
         

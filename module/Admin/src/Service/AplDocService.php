@@ -602,6 +602,7 @@ class AplDocService {
             'apl_id' => $data['id'],
             'doc_date' => $docDate,
             'comment' => $data['info'],
+            'info' => $data['info2'],
             'status_ex' => Vtp::STATUS_EX_APL,
             'status' => $this->getVtpStatus($data),
         ];
