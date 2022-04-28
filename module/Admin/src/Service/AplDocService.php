@@ -605,6 +605,7 @@ class AplDocService {
             'info' => $data['info2'],
             'status_ex' => Vtp::STATUS_EX_APL,
             'status' => $this->getVtpStatus($data),
+            'statusDoc' => Vtp::STATUS_DOC_NOT_RECD,
         ];
         
         $ptuAplId = $data['ns'];
