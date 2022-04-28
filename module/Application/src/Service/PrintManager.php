@@ -74,7 +74,7 @@ class PrintManager {
      * @param string $writerType
      * @return string 
      */
-    public function torg2($vtp, $writerType = 'Html')
+    public function torg2($vtp, $writerType = 'Pdf')
     {
         ini_set("pcre.backtrack_limit", "5000000");
         setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
@@ -88,6 +88,9 @@ class PrintManager {
         $inputFileType = 'Xls';
         $reader = IOFactory::createReader($inputFileType);
         $spreadsheet = $reader->load(Vtp::TEMPLATE_TORG2);
+        $spreadsheet->getProperties()
+                ->setTitle($vtp->getDocPresent())
+                ;
         
         $spreadsheet->setActiveSheetIndex(0)
                 ->setCellValue('A6', $vtp->getPtu()->getContract()->getCompany()->getLegalPresent())
@@ -127,7 +130,7 @@ class PrintManager {
             $ptuGood = $this->entityManager->getRepository(PtuGood::class)
                     ->findOneBy(['good' => $vtpGood->getGood()->getId()]);
             if ($ptuGood){
-                $sheet2->setCellValue("A$row2", $vtpGood->getGood()->getName());                
+                $sheet2->setCellValue("A$row2", $vtpGood->getGood()->getNameShort());                
                 $sheet2->setCellValue("AL$row2", $ptuGood->getUnit()->getName());                
                 $sheet2->setCellValue("AS$row2", $ptuGood->getUnit()->getCode());                
                 $sheet2->setCellValue("BA$row2", $vtpGood->getGood()->getCode());                
@@ -164,23 +167,31 @@ class PrintManager {
                 $memberRow += 2;
             }
         }
-                
-        $writer = IOFactory::createWriter($spreadsheet, $writerType);
-        $htmlFilename = $vtp->getPrintName('html');
-        $writer->writeAllSheets();
-        $writer->save($htmlFilename);
         
-        $mpdf = new Mpdf([
-            'margin_header' => 10,
-            'margin_footer' => 10,
-            'margin_top' => 5,
-            'margin_bottom' => 5,
-        ]);
-        $mpdf->WriteHTML(\file_get_contents($htmlFilename));
-        $pdfFilename = $vtp->getPrintName('pdf');
-        $mpdf->Output($pdfFilename,'F');
+        switch ($writerType){
+            case 'Pdf':
+                $writer = IOFactory::createWriter($spreadsheet, 'Html');
+                $htmlFilename = $vtp->getPrintName('html');
+                $writer->writeAllSheets();
+                $writer->save($htmlFilename);
+
+                $mpdf = new Mpdf();
+                $mpdf->WriteHTML(\file_get_contents($htmlFilename));
+                $outFilename = $vtp->getPrintName($writerType);
+                $mpdf->Output($outFilename,'F');
+                break;
+            case 'Xls':
+            case 'Xlsx':
+                $writer = IOFactory::createWriter($spreadsheet, $writerType);
+                $outFilename = $vtp->getPrintName($writerType);
+//                $writer->writeAllSheets();
+                $writer->save($outFilename);
+                break;
+            default: 
+                $outFilename = null;
+        } 
         
         
-        return $pdfFilename;
+        return $outFilename;
     }
 }

@@ -50,6 +50,7 @@ class PrintController extends AbstractActionController
     public function vtpTorg2Action() 
     {       
         $vtpId = (int)$this->params()->fromRoute('id', -1);
+        $ext = $this->params()->fromQuery('ext', 'Pdf');
 
         if ($vtpId<0) {
             $this->getResponse()->setStatusCode(404);
@@ -63,12 +64,12 @@ class PrintController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;
         }        
-        $torg2file = $this->printManager->torg2($vtp);
+        $torg2file = $this->printManager->torg2($vtp, $ext);
         
 //        var_dump($torg2); exit;
         
         // Render the view template.
-        header('Content-type: application/pdf');
+        header('Content-type: application/'. strtolower($ext));
         header('Content-Disposition: inline; filename="' . basename($torg2file) . '"');
         header('Content-Transfer-Encoding: binary');  
         header('Accept-Ranges: bytes');

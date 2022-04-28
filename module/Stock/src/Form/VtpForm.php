@@ -216,7 +216,6 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
             'name' => 'doc_no',
             'attributes' => [                
                 'id' => 'docNo',
-                'required' => 'required',                
             ],
             'options' => [
                 'label' => 'Номер документа',
@@ -248,17 +247,29 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
         $this->add([            
             'type'  => 'select',
             'name' => 'status',
-            'value' => Vtp::STATUS_ACTIVE,
             'attributes' => [                
                 'required' => 'required',                
+                'value' => Vtp::STATUS_ACTIVE,
             ],
             'options' => [
-                'label' => 'Статус',
+                'label' => 'Статус документа',
                 'value_options' => Vtp::getStatusList(),
             ],
         ]);
         
-        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'statusDoc',
+            'attributes' => [                
+                'required' => 'required',                
+                'value' => Vtp::STATUS_DOC_NEW,
+            ],
+            'options' => [
+                'label' => 'Статус возврата',
+                'value_options' => Vtp::getStatusDocList(),
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -457,6 +468,17 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
                 ],                
                 'validators' => [
                     ['name'=>'InArray', 'options'=>['haystack'=> array_keys(Vtp::getStatusList())]]
+                ],
+            ]); 
+
+        $inputFilter->add([
+                'name'     => 'statusDoc',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(Vtp::getStatusDocList())]]
                 ],
             ]); 
 

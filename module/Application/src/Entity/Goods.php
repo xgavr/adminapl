@@ -340,6 +340,16 @@ class Goods {
         return $this->name;
     }
 
+    public function getNameShort() 
+    {
+        if ($this->tokenGroup){
+            if (!empty($this->tokenGroup->getName())){
+                return $this->tokenGroup->getName();
+            }    
+        }
+        return $this->name;
+    }
+
     public function getNameProducerCode() 
     {
         return $this->name.' '.$this->producer->getName().' '.$this->code;

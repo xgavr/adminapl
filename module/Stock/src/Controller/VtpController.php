@@ -72,11 +72,12 @@ class VtpController extends AbstractActionController
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
-        $sort = $this->params()->fromQuery('sort');
+        $sort = $this->params()->fromQuery('sort', 'docDate');
         $order = $this->params()->fromQuery('order', 'DESC');
         $supplierId = $this->params()->fromQuery('supplier');
         $officeId = $this->params()->fromQuery('office');
         $year_month = $this->params()->fromQuery('month');
+        $statusDoc = $this->params()->fromQuery('statusDoc');
         
         $year = $month = null;
         if ($year_month){
@@ -84,9 +85,9 @@ class VtpController extends AbstractActionController
             $month = date('m', strtotime($year_month));
         }        
         $params = [
-            'q' => $q, 'sort' => $sort, 'order' => $order, 
+            'q' => trim($q), 'sort' => $sort, 'order' => $order, 
             'supplierId' => $supplierId, 'officeId' => $officeId,
-            'year' => $year, 'month' => $month,
+            'year' => $year, 'month' => $month, 'statusDoc' => $statusDoc,
         ];
         
         if ($ptu){
@@ -242,6 +243,7 @@ class VtpController extends AbstractActionController
                 $data['comment'] = $vtp->getComment();
                 $data['info'] = $vtp->getInfo();
                 $data['status'] = $vtp->getStatus();
+                $data['statusDoc'] = $vtp->getStatusDoc();
             }    
             $form->setData($data);
         }

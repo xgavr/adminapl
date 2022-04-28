@@ -47,6 +47,10 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('statusDoc')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'vtp-submit']);
 
@@ -76,13 +80,6 @@ if ($vtp){
                 <div class="row">
                     <div class="col-xs-2">                        
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('doc_no')); ?>
-                            <?= $this->formElement($form->get('doc_no')); ?>
-                            <?= $this->formElementErrors($form->get('doc_no')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
                             <?= $this->formLabel($form->get('office_id')); ?>
                             <?= $this->formElement($form->get('office_id')); ?>
                             <?= $this->formElementErrors($form->get('office_id')); ?>                  
@@ -93,6 +90,13 @@ if ($vtp){
                             <?= $this->formLabel($form->get('supplier')); ?>
                             <?= $this->formElement($form->get('supplier')); ?>
                             <?= $this->formElementErrors($form->get('supplier')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('statusDoc')); ?>
+                            <?= $this->formElement($form->get('statusDoc')); ?>
+                            <?= $this->formElementErrors($form->get('statusDoc')); ?>                  
                         </div>
                     </div>    
                     <div class="col-xs-2">                        
@@ -167,7 +171,7 @@ if ($vtp){
                             <thead>
                                 <tr>
                                      <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                                     <th data-field="good.code" data-type="numeric">Артикул</th>
+                                     <th data-field="good.code" data-formatter="goodFormatter">Артикул</th>
                                      <th data-field="good.producer.name" data-type="numeric">Производитель</th>
                                      <th data-field="good.name" data-type="numeric">Наименование</th>
                                      <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
@@ -367,6 +371,16 @@ if ($vtp){
         btn += ' onclick="removeTableRowByUniqueId('+value+')">';
         btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
         btn += '</button>';
+        return btn;
+    }    
+    
+    function goodFormatter(value, row){
+        var url = '/goods/view/'+row.good.id;
+        btn = '<nobr>'+value + ' <a';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-link btn-xs" target="_blank">';
+        btn += '<span class="glyphicon glyphicon-link"></span>';
+        btn += '</a></nobr>';
         return btn;
     }    
     

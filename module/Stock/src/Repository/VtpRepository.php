@@ -109,8 +109,21 @@ class VtpRepository extends EntityRepository{
                             ->setParameter('month', $params['month']);
                 }    
             }
+            if (!empty($params['statusDoc'])){
+                if (is_numeric($params['statusDoc'])){
+                    $queryBuilder->andWhere('v.statusDoc = :statusDoc')
+                            ->setParameter('statusDoc', $params['statusDoc']);
+                }    
+            }
+            if (!empty($params['q'])){                
+                $queryBuilder->distinct()
+                        ->join('v.vtpGoods', 'vg')
+                        ->join('vg.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $params['q'].'%');
+            }
         }
-
+//        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }    
     
@@ -222,6 +235,19 @@ class VtpRepository extends EntityRepository{
                     $queryBuilder->andWhere('MONTH(v.docDate) = :month')
                             ->setParameter('month', $params['month']);
                 }    
+            }
+            if (!empty($params['statusDoc'])){
+                if (is_numeric($params['statusDoc'])){
+                    $queryBuilder->andWhere('v.statusDoc = :statusDoc')
+                            ->setParameter('statusDoc', $params['statusDoc']);
+                }    
+            }
+            if (!empty($params['q'])){                
+                $queryBuilder->distinct()
+                        ->join('v.vtpGoods', 'vg')
+                        ->join('vg.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $params['q'].'%');
             }
         }
         

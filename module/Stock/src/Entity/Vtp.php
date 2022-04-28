@@ -27,16 +27,17 @@ use Laminas\Json\Encoder;
  */
 class Vtp {
         
-     // Ptu status constants.
+     // Vtp status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     //const STATUS_COMMISSION    = 3; // commission.
    
-     // Ptu status doc constants.
-    const STATUS_DOC_RECD       = 1; // Получено.
-    const STATUS_DOC_NOT_RECD  = 2; // Не получено.
+     // Vtp status doc constants.
+    const STATUS_DOC_RECD       = 1; // Отправлен.
+    const STATUS_DOC_NEW       = 3; // Новый.
+    const STATUS_DOC_NOT_RECD  = 2; // Принят поставщиком.
 
-     // Ptu status doc constants.
+     // Vtp status doc constants.
     const STATUS_EX_NEW  = 1; // Не отправлено.
     const STATUS_EX_RECD  = 2; // Получено из АПЛ.
     const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
@@ -128,11 +129,28 @@ class Vtp {
         return $this->id;
     }
 
-    public function getPrintName($ext) 
+    /**
+     * Returns the namefile.
+     * @param string $docName
+     * @return string     
+     */
+    public function getPrintName($ext, $docName = 'ТОРГ2') 
     {
-        return self::PRINT_FOLDER.'/'.$this->id.'.'.$ext;
+        return self::PRINT_FOLDER.'/'.$this->getDocPresent($docName).'.'.strtolower($ext);
     }
 
+    /**
+     * Returns the present of doc.
+     * @param string $docName
+     * @return string     
+     */
+    public function getDocPresent($docName = 'ТОРГ2') 
+    {
+        $docDate = date('d-m-Y', strtotime($this->docDate));
+        $docNo = ($this->aplId) ? $this->aplId:$this->id;
+        return "$docName №{$this->id} от {$docDate}";
+    }
+    
     public function getLogKey() 
     {
         return 'vtp:'.$this->id;
@@ -248,8 +266,9 @@ class Vtp {
     public static function getStatusDocList() 
     {
         return [
-            self::STATUS_DOC_RECD => 'Получено',
-            self::STATUS_DOC_NOT_RECD => 'Не получено'
+            self::STATUS_DOC_NEW => 'Новый',
+            self::STATUS_DOC_RECD => 'Отправлен',
+            self::STATUS_DOC_NOT_RECD => 'Принят'
         ];
     }    
     

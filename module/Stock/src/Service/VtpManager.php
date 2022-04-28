@@ -48,20 +48,22 @@ class VtpManager
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($vtp->getLogKey());
         
-        $data = [
-            'doc_key' => $vtp->getLogKey(),
-            'date_oper' => $vtp->getDocDate(),
-            'status' => $vtp->getStatus(),
-            'revise' => Mutual::REVISE_NOT,
-            'amount' => $vtp->getAmount(),
-            'legal_id' => $vtp->getPtu()->getLegal()->getId(),
-            'contract_id' => $vtp->getPtu()->getContract()->getId(),
-            'office_id' => $vtp->getPtu()->getOffice()->getId(),
-            'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
-        ];
+        if ($vtp->getStatus() == Vtp::STATUS_ACTIVE && $vtp->getStatusDoc() == Vtp::STATUS_DOC_NOT_RECD){
+            $data = [
+                'doc_key' => $vtp->getLogKey(),
+                'date_oper' => $vtp->getDocDate(),
+                'status' => $vtp->getStatus(),
+                'revise' => Mutual::REVISE_NOT,
+                'amount' => $vtp->getAmount(),
+                'legal_id' => $vtp->getPtu()->getLegal()->getId(),
+                'contract_id' => $vtp->getPtu()->getContract()->getId(),
+                'office_id' => $vtp->getPtu()->getOffice()->getId(),
+                'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
+            ];
 
-        $this->entityManager->getRepository(Mutual::class)
-                ->insertMutual($data);
+            $this->entityManager->getRepository(Mutual::class)
+                    ->insertMutual($data);
+        }    
          
         return;
     }    
@@ -77,25 +79,27 @@ class VtpManager
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($vtp->getLogKey());
         
-        $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
-                ->findByVtp($vtp->getId());
-        foreach ($vtpGoods as $vtpGood){
-            $data = [
-                'doc_key' => $vtp->getLogKey(),
-                'doc_row_key' => $vtpGood->getDocRowKey(),
-                'doc_row_no' => $vtpGood->getRowNo(),
-                'date_oper' => $vtp->getDocDate(),
-                'status' => $vtp->getStatus(),
-                'quantity' => -$vtpGood->getQuantity(),
-                'amount' => -$vtpGood->getAmount(),
-                'good_id' => $vtpGood->getGood()->getId(),
-                'office_id' => $vtp->getPtu()->getOffice()->getId(),
-                'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
-            ];
+        if ($vtp->getStatus() == Vtp::STATUS_ACTIVE){
+            $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
+                    ->findByVtp($vtp->getId());
+            foreach ($vtpGoods as $vtpGood){
+                $data = [
+                    'doc_key' => $vtp->getLogKey(),
+                    'doc_row_key' => $vtpGood->getDocRowKey(),
+                    'doc_row_no' => $vtpGood->getRowNo(),
+                    'date_oper' => $vtp->getDocDate(),
+                    'status' => $vtp->getStatus(),
+                    'quantity' => -$vtpGood->getQuantity(),
+                    'amount' => -$vtpGood->getAmount(),
+                    'good_id' => $vtpGood->getGood()->getId(),
+                    'office_id' => $vtp->getPtu()->getOffice()->getId(),
+                    'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
+                ];
 
-            $this->entityManager->getRepository(Movement::class)
-                    ->insertMovement($data);
-        }
+                $this->entityManager->getRepository(Movement::class)
+                        ->insertMovement($data);
+            }
+        }    
         
         return;
     }    
@@ -154,7 +158,7 @@ class VtpManager
         $vtp->setInfo(empty($data['info']) ? null:$data['info']);
         $vtp->setStatusEx($data['status_ex']);
         $vtp->setStatus($data['status']);
-        $vtp->setStatusDoc(Vtp::STATUS_DOC_NOT_RECD);
+        $vtp->setStatusDoc($data['statusDoc']);
         $vtp->setAmount(0);
         $vtp->setDateCreated(date('Y-m-d H:i:s'));
         
@@ -182,6 +186,7 @@ class VtpManager
         $vtp->setInfo(empty($data['info']) ? null:$data['info']);
         $vtp->setStatusEx($data['status_ex']);
         $vtp->setStatus($data['status']);
+        $vtp->setStatusDoc($data['statusDoc']);
         
         $this->entityManager->persist($vtp);
         $this->entityManager->flush($vtp);
