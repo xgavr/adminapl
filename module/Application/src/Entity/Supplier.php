@@ -31,8 +31,8 @@ class Supplier {
     const PREPAY_ON           = 1;//Брать предоплату
     const PREPAY_OFF          = 2;//Не брать предоплату
    
-    const PRICE_LIST_ON       = 1;//Выгружать в прайсы
-    const PRICE_LIST_OFF      = 2;//Не выгружать в прайсы
+    const PRICE_LIST_ON       = 1;//Учавствовать в расчете цены
+    const PRICE_LIST_OFF      = 2;//Не учавствовать
    
     const PRICE_FOLDER       = './data/prices'; // папка с прайсами
     const PRICE_FOLDER_ARX   = './data/prices/arx'; // папка с архивами прайсов
@@ -448,8 +448,8 @@ class Supplier {
     public static function getPriceListStatusList() 
     {
         return [
-            self::PRICE_LIST_ON => 'Выгружать в прайс листы',
-            self::PRICE_LIST_OFF => 'Не выгружать в прайс листы'
+            self::PRICE_LIST_ON => 'Учитывать',
+            self::PRICE_LIST_OFF => 'Не учитывать'
         ];
     }    
     
