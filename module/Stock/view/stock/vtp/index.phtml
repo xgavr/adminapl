@@ -170,9 +170,9 @@
     }
     
     function rowStyle(row){
-        var retired = '';
+        var retired = 'tablerow';
         if (row.status == '<?= Vtp::STATUS_RETIRED?>'){
-           retired = 'retired';
+           retired += ' retired';
         }
         switch(row.statusDoc){
             case '<?= Vtp::STATUS_DOC_NOT_RECD?>': 
@@ -233,5 +233,76 @@
     function responseHandler(res) {
         return res;
     }    
+    
+    function changeStatus(vtpId, status){
+        $.get( "/vtp/status/"+vtpId+'?status='+status, function(data){
+            refreshTable();
+        });        
+    }
+
+    function changeStatusDoc(vtpId, statusDoc){
+        $.get( "/vtp/status-doc/"+vtpId+'?status='+statusDoc, function(data){
+            refreshTable();
+        });        
+    }
+    
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            var rowId = $(rowElem).attr('data-index');
+            return table.bootstrapTable('getData')[rowId];
+        },
+        actionsGroups: [
+           ['statusActiv', 'statusRetired'],
+        ],      
+        actions: {
+            statusDocNew: {
+                name: 'Новый',
+                onClick: function(row) {
+                    changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NEW?>);
+                },
+                isShown: function(row) {
+                  return row.statusDoc != '<?= Vtp::STATUS_DOC_NEW?>';
+                }
+            }, 
+            statusDocRect: {
+                name: 'Отправлен',
+                onClick: function(row) {
+                    changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_RECD?>);
+                },
+                isShown: function(row) {
+                  return row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>';
+                }
+            }, 
+            statusDocNotRect: {
+                name: 'Принят',
+                onClick: function(row) {
+                    changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NOT_RECD?>);
+                },
+                isShown: function(row) {
+                  return row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>';
+                }
+            }, 
+            statusActiv: {
+                name: 'Сделать активным',
+                iconClass: 'glyphicon glyphicon-ok',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Vtp::STATUS_ACTIVE?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Vtp::STATUS_RETIRED?>;
+                }
+            }, 
+            statusRetired: {
+                name: 'Сделать не активным',
+                iconClass: 'glyphicon glyphicon-remove',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Vtp::STATUS_RETIRED?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Vtp::STATUS_ACTIVE?>;
+                }
+            }
+        }
+    });    
 </script>
 

@@ -172,7 +172,7 @@ class VtpManager
      * Update vtp.
      * @param Vtp $vtp
      * @param array $data
-     * @return integer
+     * @return Vtp
      */
     public function updateVtp($vtp, $data)            
     {
@@ -191,9 +191,49 @@ class VtpManager
         $this->entityManager->persist($vtp);
         $this->entityManager->flush($vtp);
         
-        return;
+        $this->repostVtp($vtp);
+        $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
+        
+        return $vtp;
     }
     
+    /**
+     * Update vtp status.
+     * @param Vtp $vtp
+     * @param integer $status
+     * @return integer
+     */
+    public function updateVtpStatus($vtp, $status)            
+    {
+
+        $vtp->setStatus($status);
+        
+        $this->entityManager->persist($vtp);
+        $this->entityManager->flush($vtp);
+
+        $this->repostVtp($vtp);
+        $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
+        
+        return;
+    }
+
+    /**
+     * Update vtp doc status.
+     * @param Vtp $vtp
+     * @param integer $statusDoc
+     * @return integer
+     */
+    public function updateVtpDocStatus($vtp, $statusDoc)            
+    {
+
+        $vtp->setStatusDoc($statusDoc);
+        
+        $this->entityManager->persist($vtp);
+        $this->entityManager->flush($vtp);
+        
+        return;
+    }
+
     /**
      * Adds a new vtp-good.
      * @param integer $vtpId

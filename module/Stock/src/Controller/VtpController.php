@@ -331,4 +331,43 @@ class VtpController extends AbstractActionController
            ['ok']
         );           
     }    
+    
+    public function statusAction()
+    {
+        $vtpId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', Vtp::STATUS_ACTIVE);
+        $vtp = $this->entityManager->getRepository(Vtp::class)
+                ->findOneById($vtpId);        
+
+        if ($vtp == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->vtpManager->updateVtpStatus($vtp, $status);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }        
+    
+    public function statusDocAction()
+    {
+        $vtpId = $this->params()->fromRoute('id', -1);
+        $statusDoc = $this->params()->fromQuery('status', Vtp::STATUS_DOC_NEW);
+        $vtp = $this->entityManager->getRepository(Vtp::class)
+                ->findOneById($vtpId);        
+
+        if ($vtp == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->vtpManager->updateVtpDocStatus($vtp, $statusDoc);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }        
+    
 }
