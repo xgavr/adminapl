@@ -139,6 +139,16 @@ class Contract {
     }     
 
     /**
+     * Представление договора
+     * @param string $ContractName
+     * @return string
+     */
+    public function getContractPresent($ContractName = 'Договор') 
+    {
+        return trim("$ContractName №".$this->act.' от '.date('d.m.Y', strtotime($this->dateStart)).' г.');
+    }
+
+    /**
      * Returns status.
      * @return int     
      */

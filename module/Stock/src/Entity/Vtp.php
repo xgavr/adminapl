@@ -44,6 +44,7 @@ class Vtp {
     
     const PRINT_FOLDER          = './data/template/vtp'; 
     const TEMPLATE_TORG2        = './data/template/torg-2.xls';
+    const TEMPLATE_UPD        = './data/template/upd.xls';
 
 
     /**
@@ -380,7 +381,10 @@ class Vtp {
      */
     public function getDocNo() 
     {
-        return $this->docNo;
+        if (!empty($this->aplId)){
+            return $this->aplId;
+        }
+        return $this->id;
     }
     
     /**

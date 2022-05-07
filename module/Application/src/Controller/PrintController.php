@@ -78,4 +78,35 @@ class PrintController extends AbstractActionController
         @readfile($torg2file);
     }      
     
+    public function vtpUpdAction() 
+    {       
+        $vtpId = (int)$this->params()->fromRoute('id', -1);
+        $ext = $this->params()->fromQuery('ext', 'Pdf');
+
+        if ($vtpId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $vtp = $this->entityManager->getRepository(Vtp::class)
+                ->find($vtpId);
+        
+        if ($vtp == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }        
+        $updfile = $this->printManager->updVtp($vtp, $ext);
+        
+//        var_dump($torg2); exit;
+        
+        // Render the view template.
+        header('Content-type: application/'. strtolower($ext));
+        header('Content-Disposition: inline; filename="' . basename($updfile) . '"');
+        header('Content-Transfer-Encoding: binary');  
+        header('Accept-Ranges: bytes');
+  
+        // Read the file
+        @readfile($updfile);
+    }      
+    
 }

@@ -89,6 +89,7 @@
                      <th data-field='statusDoc' data-sortable="false">Т</th>
                      <th data-field='statusEx' data-sortable="false">О</th>-->
                      <th data-field="id" data-formatter="printFormatter">Торг2</th>
+                     <th data-field="id" data-formatter="updFormatter">УПД</th>
                      <th data-field="id" data-formatter="activeFormatter" data-align="center"></th>
                  </tr>                
             </thead>
@@ -230,6 +231,15 @@
         return btn;
     }    
     
+    function updFormatter(value, row){
+
+        var url = '/print/vtp-upd/'+value;
+        btn = '<a href="'+url+'" target="_blank">pdf</a>';
+        url = '/print/vtp-upd/'+value+'?ext=Xls';
+        btn += ' <a href="'+url+'" target="_blank">xls</a>';
+        return btn;
+    }    
+    
     function responseHandler(res) {
         return res;
     }    
@@ -266,6 +276,7 @@
             }, 
             statusDocRect: {
                 name: 'Отправлен',
+                classNames: 'bg-warning',
                 onClick: function(row) {
                     changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_RECD?>);
                 },
@@ -275,6 +286,8 @@
             }, 
             statusDocNotRect: {
                 name: 'Принят',
+//                iconClass: 'glyphicon glyphicon-ok',
+                classNames: 'bg-success',
                 onClick: function(row) {
                     changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NOT_RECD?>);
                 },
@@ -295,6 +308,7 @@
             statusRetired: {
                 name: 'Сделать не активным',
                 iconClass: 'glyphicon glyphicon-remove',
+//                classNames: 'bg-danger',
                 onClick: function(row) {
                     changeStatus(row.id, <?= Vtp::STATUS_RETIRED?>);
                 },

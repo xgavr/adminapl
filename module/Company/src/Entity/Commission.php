@@ -22,6 +22,7 @@ class Commission {
 
     const STATUS_HEAD       = 1; // глава.
     const STATUS_MEMBER      = 2; // член.
+    const STATUS_SIGN      = 3; // член, подписывает УПД.
     
     /**
      * @ORM\Id
@@ -98,6 +99,7 @@ class Commission {
     {
         return [
             self::STATUS_HEAD => 'Председатель',
+            self::STATUS_SIGN => 'Подписывает УПД',
             self::STATUS_MEMBER => 'Член'
         ];
     }    

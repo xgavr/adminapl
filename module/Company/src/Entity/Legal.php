@@ -170,6 +170,12 @@ class Legal {
         $this->kpp = $filter->filter($kpp);
     }     
 
+    public function getInnKpp($separator = '/') 
+    {
+        return trim($this->inn.$separator.$this->kpp, ' /');
+    }
+
+
     public function getOgrn() 
     {
         return $this->ogrn;

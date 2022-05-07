@@ -16,6 +16,8 @@ use Application\Filter\RawToStr;
 use Application\Filter\CsvDetectDelimiterFilter;
 use MvlabsPHPExcel\Service;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 use Laminas\Validator\File\IsCompressed;
 use Laminas\Filter\Decompress;
@@ -96,7 +98,7 @@ class PrintManager {
                 ->setCellValue('A6', $vtp->getPtu()->getContract()->getCompany()->getLegalPresent())
                 ->setCellValue('A9', $vtp->getPtu()->getOffice()->getName())
                 ->setCellValue('CI7', $vtp->getPtu()->getContract()->getCompany()->getOkpo())
-                ->setCellValue('AY17', $vtp->getId())
+                ->setCellValue('AY17', $vtp->getDocNo())
                 ->setCellValue('BK17', date('d.m.y', strtotime($vtp->getDocDate())))
                 ->setCellValue('CK18', $vtp->getPtu()->getContract()->getCompany()->getHead())
                 ->setCellValue('CD20', date('d', strtotime($vtp->getDocDate())))
@@ -128,7 +130,7 @@ class PrintManager {
         $row3 = 40;
         foreach ($vtpGoods as $vtpGood){
             $ptuGood = $this->entityManager->getRepository(PtuGood::class)
-                    ->findOneBy(['good' => $vtpGood->getGood()->getId()]);
+                    ->findOneBy(['ptu' => $vtp->getPtu()->getId(), 'good' => $vtpGood->getGood()->getId()]);
             if ($ptuGood){
                 $sheet2->setCellValue("A$row2", $vtpGood->getGood()->getNameShort());                
                 $sheet2->setCellValue("AL$row2", $ptuGood->getUnit()->getName());                
@@ -194,4 +196,221 @@ class PrintManager {
         
         return $outFilename;
     }
+    
+    /**
+     * Копирование строк
+     * @param Worksheet $sheet
+     * @param integer $srcRow
+     * @param integer $dstRow
+     * @param integer $maxRow
+     * @param integer $maxCol
+     */
+    private function _copyRows(Worksheet $sheet, $srcRange, $dstCell, Worksheet $destSheet = null) 
+    {
+        if( !isset($destSheet)) {
+            $destSheet = $sheet;
+        }
+
+        if( !preg_match('/^([A-Z]+)(\d+):([A-Z]+)(\d+)$/', $srcRange, $srcRangeMatch) ) {
+            // Invalid src range
+            return;
+        }
+
+        if( !preg_match('/^([A-Z]+)(\d+)$/', $dstCell, $destCellMatch) ) {
+            // Invalid dest cell
+            return;
+        }
+
+        $srcColumnStart = $srcRangeMatch[1];
+        $srcRowStart = $srcRangeMatch[2];
+        $srcColumnEnd = $srcRangeMatch[3];
+        $srcRowEnd = $srcRangeMatch[4];
+
+        $destColumnStart = $destCellMatch[1];
+        $destRowStart = $destCellMatch[2];
+
+        $srcColumnStart = Coordinate::columnIndexFromString($srcColumnStart);
+        $srcColumnEnd = Coordinate::columnIndexFromString($srcColumnEnd);
+        $destColumnStart = Coordinate::columnIndexFromString($destColumnStart);
+
+        $rowCount = 0;
+        for ($row = $srcRowStart; $row <= $srcRowEnd; $row++) {
+            $colCount = 0;
+            for ($col = $srcColumnStart; $col <= $srcColumnEnd; $col++) {
+                $cell = $sheet->getCellByColumnAndRow($col, $row);
+                $style = $sheet->getStyleByColumnAndRow($col, $row);
+                $dstCell = Coordinate::stringFromColumnIndex($destColumnStart + $colCount) . (string)($destRowStart + $rowCount);
+                $destSheet->setCellValue($dstCell, $cell->getValue());
+                $destSheet->duplicateStyle($style, $dstCell);
+
+                // Set width of column, but only once per column
+                if ($rowCount === 0) {
+                    $w = $sheet->getColumnDimensionByColumn($col)->getWidth();
+                    $destSheet->getColumnDimensionByColumn ($destColumnStart + $colCount)->setAutoSize(false);
+                    $destSheet->getColumnDimensionByColumn ($destColumnStart + $colCount)->setWidth($w);
+                }
+
+                $colCount++;
+            }
+
+            $h = $sheet->getRowDimension($row)->getRowHeight();
+            $destSheet->getRowDimension($destRowStart + $rowCount)->setRowHeight($h);
+
+            $rowCount++;
+        }
+
+        foreach ($sheet->getMergeCells() as $mergeCell) {
+            $mc = explode(":", $mergeCell);
+            $mergeColSrcStart = Coordinate::columnIndexFromString(preg_replace("/[0-9]*/", "", $mc[0]));
+            $mergeColSrcEnd = Coordinate::columnIndexFromString(preg_replace("/[0-9]*/", "", $mc[1]));
+            $mergeRowSrcStart = ((int)preg_replace("/[A-Z]*/", "", $mc[0]));
+            $mergeRowSrcEnd = ((int)preg_replace("/[A-Z]*/", "", $mc[1]));
+
+            $relativeColStart = $mergeColSrcStart - $srcColumnStart;
+            $relativeColEnd = $mergeColSrcEnd - $srcColumnStart;
+            $relativeRowStart = $mergeRowSrcStart - $srcRowStart;
+            $relativeRowEnd = $mergeRowSrcEnd - $srcRowStart;
+
+            if (0 <= $mergeRowSrcStart && $mergeRowSrcStart >= $srcRowStart && $mergeRowSrcEnd <= $srcRowEnd) {
+                $targetColStart = Coordinate::stringFromColumnIndex($destColumnStart + $relativeColStart);
+                $targetColEnd = Coordinate::stringFromColumnIndex($destColumnStart + $relativeColEnd);
+                $targetRowStart = $destRowStart + $relativeRowStart;
+                $targetRowEnd = $destRowStart + $relativeRowEnd;
+
+                $merge = (string)$targetColStart . (string)($targetRowStart) . ":" . (string)$targetColEnd . (string)($targetRowEnd);
+                //Merge target cells
+                $destSheet->mergeCells($merge);
+            }
+        }
+    }
+
+    private function _copyStyleXFCollection(Spreadsheet $sourceSheet, Spreadsheet $destSheet) 
+    {
+        $collection = $sourceSheet->getCellXfCollection();
+
+        foreach ($collection as $key => $item) {
+            $destSheet->addCellXf($item);
+        }
+    }
+    
+    
+    /**
+     * УПД возврат
+     * @param Vtp $vtp
+     * @param string $writerType
+     * @return string 
+     */
+    public function updVtp($vtp, $writerType = 'Pdf')
+    {
+        ini_set("pcre.backtrack_limit", "5000000");
+        setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
+//        echo strftime("%B %d, %Y", time()); exit;
+        
+        $upd_folder_name = Vtp::PRINT_FOLDER;
+        if (!is_dir($upd_folder_name)){
+            mkdir($upd_folder_name);
+        }        
+        
+        $inputFileType = 'Xls';
+        $reader = IOFactory::createReader($inputFileType);
+        $spreadsheet = $reader->load(Vtp::TEMPLATE_UPD);
+        $spreadsheet->getProperties()
+                ->setTitle($vtp->getDocPresent('УПД'))
+                ;
+        $sheet = $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('E6', 1)
+                ->setCellValue('V2', $vtp->getDocNo())
+                ->setCellValue('AF2', date('d.m.Y', strtotime($vtp->getDocDate())))
+                ->setCellValue('AB5', $vtp->getPtu()->getContract()->getCompany()->getName())
+                ->setCellValue('AB6', $vtp->getPtu()->getContract()->getCompany()->getAddress())
+                ->setCellValue('AB7', $vtp->getPtu()->getContract()->getCompany()->getInnKpp())
+                ->setCellValue('AD8', 'он же')
+                ->setCellValue('AD9', trim($vtp->getPtu()->getLegal()->getName().' '.$vtp->getPtu()->getLegal()->getAddress()))
+                ->setCellValue('AB12', $vtp->getPtu()->getLegal()->getName())
+                ->setCellValue('AB13', $vtp->getPtu()->getLegal()->getAddress())
+                ->setCellValue('AB14', $vtp->getPtu()->getLegal()->getInnKpp())
+                ->setCellValue('AB15', 'Российский рубль, 643')
+                ->setCellValue('AS16', $vtp->getPtu()->getContract()->getContractPresent(''))
+                
+                ->setCellValue('AR22', number_format($vtp->getAmount(), 2, ',', ' '))
+                ->setCellValue('BM22', number_format($vtp->getAmount(), 2, ',', ' '))
+
+                ->setCellValue('AJ24', $vtp->getPtu()->getContract()->getCompany()->getHead())
+                ->setCellValue('BV24', $vtp->getPtu()->getContract()->getCompany()->getChiefAccount())                
+                ->setCellValue('X36', date('d', strtotime($vtp->getDocDate())))
+                ->setCellValue('AA36', date('m', strtotime($vtp->getDocDate())))
+                ->setCellValue('AL36', date('y', strtotime($vtp->getDocDate())))                
+                ;
+        
+        $signatory = $this->entityManager->getRepository(Commission::class)
+                ->findOneBy(['status' => Commission::STATUS_SIGN]);
+        if ($signatory){
+            $sheet->setCellValue('A34', $signatory->getPosition());
+            $sheet->setCellValue('AC34', $signatory->getName());
+        }
+        
+        $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
+                ->findByVtp($vtp->getId());
+        if ($vtpGoods){
+            $i = 1;
+            $row = 21;
+            $srcRow = $row + count($vtpGoods)-1;
+            if (count($vtpGoods) > 1){
+                $sheet->insertNewRowBefore($row, count($vtpGoods) - 1);            
+            }
+            foreach ($vtpGoods as $vtpGood){
+                if (count($vtpGoods) > 1){
+                    $this->_copyRows($sheet, "A$srcRow:CJ$srcRow", "A$row");
+                } 
+                $ptuGood = $this->entityManager->getRepository(PtuGood::class)
+                        ->findOneBy(['ptu' => $vtp->getPtu()->getId(), 'good' => $vtpGood->getGood()->getId()]);
+                if ($ptuGood){
+                    $sheet->setCellValue("A$row", $i);                
+                    $sheet->setCellValue("C$row", $vtpGood->getGood()->getCode());                
+                    $sheet->setCellValue("I$row", $vtpGood->getGood()->getNameShort());                
+                    $sheet->setCellValue("Z$row", $ptuGood->getUnit()->getCode());                
+                    $sheet->setCellValue("AB$row", $ptuGood->getUnit()->getName());                
+                    $sheet->setCellValue("AI$row", number_format($vtpGood->getQuantity(), 0, ',', ' '));                
+                    $sheet->setCellValue("AM$row", number_format($vtpGood->getPrice(), 2, ',', ' '));                              
+                    $sheet->setCellValue("AR$row", number_format($vtpGood->getAmount(), 2, ',', ' '));                
+                    $sheet->setCellValue("AY$row", 'Без акциза');                
+                    $sheet->setCellValue("BC$row", 'Без налога');                
+                    $sheet->setCellValue("BM$row", number_format($vtpGood->getAmount(), 2, ',', ' '));                
+                    $sheet->setCellValue("BT$row", $ptuGood->getCountry()->getCode());                
+                    $sheet->setCellValue("BX$row", $ptuGood->getCountry()->getName());                
+                    $sheet->setCellValue("CE$row", $ptuGood->getNtd()->getNtd());                
+                } else {
+                    $sheet->setCellValue("I$row", '!Не найдено в приходе!');
+                }
+                $i++;
+                $row++;
+            }
+        }
+                
+        switch ($writerType){
+            case 'Pdf':
+                $writer = IOFactory::createWriter($spreadsheet, 'Html');
+                $htmlFilename = $vtp->getPrintName('html', 'УПД');
+                $writer->writeAllSheets();
+                $writer->save($htmlFilename);
+
+                $mpdf = new Mpdf();
+                $mpdf->WriteHTML(\file_get_contents($htmlFilename));
+                $outFilename = $vtp->getPrintName($writerType, 'УПД');
+                $mpdf->Output($outFilename,'F');
+                break;
+            case 'Xls':
+            case 'Xlsx':
+                $writer = IOFactory::createWriter($spreadsheet, $writerType);
+                $outFilename = $vtp->getPrintName($writerType, 'УПД');
+//                $writer->writeAllSheets();
+                $writer->save($outFilename);
+                break;
+            default: 
+                $outFilename = null;
+        } 
+        
+        
+        return $outFilename;
+    }    
 }
