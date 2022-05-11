@@ -13,6 +13,7 @@ use Stock\Entity\Vtp;
 use Stock\Entity\VtpGood;
 use Application\Entity\Supplier;
 use Company\Entity\Office;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of VtpRepository
@@ -115,12 +116,13 @@ class VtpRepository extends EntityRepository{
                             ->setParameter('statusDoc', $params['statusDoc']);
                 }    
             }
-            if (!empty($params['q'])){                
+            if (!empty($params['q'])){     
+                $articleCodeFilter = new ArticleCode(); 
                 $queryBuilder->distinct()
                         ->join('v.vtpGoods', 'vg')
                         ->join('vg.good', 'g')
                         ->andWhere('g.code like :q')
-                        ->setParameter('q', $params['q'].'%');
+                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
             }
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
