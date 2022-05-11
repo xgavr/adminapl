@@ -163,7 +163,7 @@ class PrintManager {
                 $sheet4->setCellValue("AC34", $commissar->getPosition());
                 $sheet4->setCellValue("CA34", $commissar->getName());
             }
-            if ($commissar->getStatus() == Commission::STATUS_MEMBER){
+            if ($commissar->getStatus() != Commission::STATUS_HEAD){
                 $sheet4->setCellValue("AC$memberRow", $commissar->getPosition());
                 $sheet4->setCellValue("CA$memberRow", $commissar->getName());  
                 $memberRow += 2;
@@ -319,13 +319,13 @@ class PrintManager {
                 ;
         $sheet = $spreadsheet->setActiveSheetIndex(0)
                 ->setCellValue('E6', 1)
-                ->setCellValue('V2', $vtp->getDocNo())
+                ->setCellValue('X2', $vtp->getDocNo())
                 ->setCellValue('AF2', date('d.m.Y', strtotime($vtp->getDocDate())))
                 ->setCellValue('AB5', $vtp->getPtu()->getContract()->getCompany()->getName())
                 ->setCellValue('AB6', $vtp->getPtu()->getContract()->getCompany()->getAddress())
                 ->setCellValue('AB7', $vtp->getPtu()->getContract()->getCompany()->getInnKpp())
-                ->setCellValue('AD8', 'он же')
-                ->setCellValue('AD9', trim($vtp->getPtu()->getLegal()->getName().' '.$vtp->getPtu()->getLegal()->getAddress()))
+                ->setCellValue('AI8', 'он же')
+                ->setCellValue('AI9', trim($vtp->getPtu()->getLegal()->getName().' '.$vtp->getPtu()->getLegal()->getAddress()))
                 ->setCellValue('AB12', $vtp->getPtu()->getLegal()->getName())
                 ->setCellValue('AB13', $vtp->getPtu()->getLegal()->getAddress())
                 ->setCellValue('AB14', $vtp->getPtu()->getLegal()->getInnKpp())
@@ -337,9 +337,9 @@ class PrintManager {
 
                 ->setCellValue('AJ24', $vtp->getPtu()->getContract()->getCompany()->getHead())
                 ->setCellValue('BV24', $vtp->getPtu()->getContract()->getCompany()->getChiefAccount())                
-                ->setCellValue('X36', date('d', strtotime($vtp->getDocDate())))
-                ->setCellValue('AA36', date('m', strtotime($vtp->getDocDate())))
-                ->setCellValue('AL36', date('y', strtotime($vtp->getDocDate())))                
+                ->setCellValue('Z36', date('d', strtotime($vtp->getDocDate())))
+                ->setCellValue('AC36', date('m', strtotime($vtp->getDocDate())))
+                ->setCellValue('AN36', date('y', strtotime($vtp->getDocDate())))                
                 ;
         
         $signatory = $this->entityManager->getRepository(Commission::class)
