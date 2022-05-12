@@ -169,6 +169,7 @@ if ($vtp){
                             data-query-params="vtpgoodQueryParams"
                             data-response-handler="vtpgoodResponseHandler"
                             data-unique-id = "rowNo"
+                            data-classes = "table table-bordered table-hover table-condensed"
                             >
                             <thead>
                                 <tr>
@@ -176,10 +177,10 @@ if ($vtp){
                                      <th data-field="good.code" data-formatter="goodFormatter">Артикул</th>
                                      <th data-field="good.producer.name" data-type="numeric">Производитель</th>
                                      <th data-field="good.name" data-type="numeric">Наименование</th>
-                                     <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
-                                     <th data-field='quantity' data-align="right">Количество</th>
-                                     <th data-field='amount' data-align="right">Сумма</th>
-                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
+                                     <th data-field='amount' data-always-use-formatter="true" data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                                     <th data-field='quantity' data-editable="true" data-align="right">Количество</th>
+                                     <th data-field='amount' data-always-use-formatter="true" data-editable="true" data-formatter="pgAmountFormatter" data-align="right">Сумма</th>
+                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
                                  </tr>                
                             </thead>
                         </table>
@@ -224,7 +225,8 @@ if ($vtp){
         var data = $('#vtpgoodtable').bootstrapTable('getData');
         var amount = 0; var quantity = 0;
         $.each(data, function( index, value ) {
-            amount += Math.round(value.amount*100)/100;
+            let result = value.amount.replace(',', '.');
+            amount += Math.round(result*100)/100;
             quantity += Math.round(value.quantity*100)/100; 
         });
         $('#vtpAmount').html(Math.round(amount*100)/100);
@@ -291,10 +293,11 @@ if ($vtp){
         var data = $('#vtpgoodtable').bootstrapTable('getData');
         var result = [];
         $.each( data, function( index, row ) {
+            let rowAmount = row.amount.replace(',', '.');
             var newRow = {
                 good_id: row.good.id,
                 quantity: row.quantity,
-                amount: row.amount,
+                amount: rowAmount,
             };
             result.push(newRow);
         });   
@@ -314,7 +317,6 @@ if ($vtp){
                 vtpUpdateTotal();
             }            
         }); 
-        
         var forms = $('#vtp-form');
         
         forms.submit(function() {
@@ -333,6 +335,10 @@ if ($vtp){
             }, false);    
         });
     });    
+    
+    $(document).on('editable-save.bs.table', '#vtpgoodtable', function (e, field, row, old, $el) {
+      vtpUpdateTotal();;
+    });        
     
     function vtpGoodRefreshTable(){
         $('#vtpgoodtable').bootstrapTable('refresh');
@@ -357,15 +363,15 @@ if ($vtp){
     function pgActiveFormatter(value, row){
         var url = '/vtp/good-edit-form/';
         btn = '<button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs vtp-good-modal-show"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' unique-id="'+value+'"';
-        btn += ' modal-url="'+url+'">';
-        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-        btn += '</button>';
-
-        btn += ' <button';
+//        btn += ' type="button"';
+//        btn += ' class="btn btn-default btn-xs vtp-good-modal-show"';
+//        btn += ' aria-label="Left Align"'; 
+//        btn += ' unique-id="'+value+'"';
+//        btn += ' modal-url="'+url+'">';
+//        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+//        btn += '</button>';
+//
+//        btn += ' <button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs table-row-remove"';
         btn += ' aria-label="Left Align"'; 
@@ -387,9 +393,15 @@ if ($vtp){
     }    
     
     function pgPriceFormatter(value, row){
-        return Math.round(value*100/row.quantity)/100;
+        let result = value.replace(',', '.');
+        return Math.round(result*100/row.quantity)/100;
     }        
-    
+        
+    function pgAmountFormatter(value, row){
+        let result = value.replace(',', '.');
+        return Math.round(result*100)/100;
+    }        
+
     function vtpgoodResponseHandler(res) {
         return res;
     }     

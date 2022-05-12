@@ -137,16 +137,16 @@ class PrintManager {
                 $sheet2->setCellValue("AS$row2", $ptuGood->getUnit()->getCode());                
                 $sheet2->setCellValue("BA$row2", $vtpGood->getGood()->getCode());                
                 $sheet2->setCellValue("BS$row2", $vtpGood->getQuantity());                
-                $sheet2->setCellValue("CD$row2", $vtpGood->getPrice());                
-                $sheet2->setCellValue("CQ$row2", $vtpGood->getAmount());                
+                $sheet2->setCellValue("CD$row2", number_format($vtpGood->getPrice(), 2, ',', ''));                
+                $sheet2->setCellValue("CQ$row2", number_format($vtpGood->getAmount(), 2, ',', ''));                
 
                 $sheet3->mergeCells("A$row3:N$row3");
                 $sheet3->setCellValue("A$row3", $vtpGood->getGood()->getCode());                
                 $sheet3->setCellValue("O$row3", $vtpGood->getQuantity());                
-                $sheet3->setCellValue("V$row3", $vtpGood->getPrice());                
-                $sheet3->setCellValue("AC$row3", $vtpGood->getAmount());                
+                $sheet3->setCellValue("V$row3", number_format($vtpGood->getPrice(), 2, ',', ''));                
+                $sheet3->setCellValue("AC$row3", number_format($vtpGood->getAmount(), 2, ',', ''));                
                 $sheet3->setCellValue("AJ$row3", $vtpGood->getQuantity());                
-                $sheet3->setCellValue("AQ$row3", $vtpGood->getAmount());                
+                $sheet3->setCellValue("AQ$row3", number_format($vtpGood->getAmount(), 2, ',', ''));                
             } else {
                 $sheet1->setCellValue("A$row2", '!Не найдено в приходе!');
             }
@@ -322,8 +322,8 @@ class PrintManager {
                 ->setCellValue('O15', 'Российский рубль, 643')
                 ->setCellValue('M28', $vtp->getPtu()->getContract()->getContractPresent('Договор'))
                 
-                ->setCellValue('AH22', number_format($vtp->getAmount(), 2, ',', ' '))
-                ->setCellValue('AS22', number_format($vtp->getAmount(), 2, ',', ' '))
+                ->setCellValue('AH22', number_format($vtp->getAmount(), 2, ',', ''))
+                ->setCellValue('AS22', number_format($vtp->getAmount(), 2, ',', ''))
 
                 ->setCellValue('W24', $vtp->getPtu()->getContract()->getCompany()->getHead())
                 ->setCellValue('AU24', $vtp->getPtu()->getContract()->getCompany()->getChiefAccount())                
@@ -359,12 +359,12 @@ class PrintManager {
                     $sheet->setCellValue("H$row", $vtpGood->getGood()->getNameShort());                
                     $sheet->setCellValue("U$row", $ptuGood->getUnit()->getCode());                
                     $sheet->setCellValue("W$row", $ptuGood->getUnit()->getName());                
-                    $sheet->setCellValue("X$row", number_format($vtpGood->getQuantity(), 0, ',', ' '));                
-                    $sheet->setCellValue("AD$row", number_format($vtpGood->getPrice(), 2, ',', ' '));                              
-                    $sheet->setCellValue("AH$row", number_format($vtpGood->getAmount(), 2, ',', ' '));                
+                    $sheet->setCellValue("X$row", number_format($vtpGood->getQuantity(), 0, ',', ''));                
+                    $sheet->setCellValue("AD$row", number_format($vtpGood->getPrice(), 2, ',', ''));                              
+                    $sheet->setCellValue("AH$row", number_format($vtpGood->getAmount(), 2, ',', ''));                
                     $sheet->setCellValue("AK$row", 'Без акциза');                
                     $sheet->setCellValue("AM$row", 'Без НДС');                
-                    $sheet->setCellValue("AS$row", number_format($vtpGood->getAmount(), 2, ',', ' '));                
+                    $sheet->setCellValue("AS$row", number_format($vtpGood->getAmount(), 2, ',', ''));                
                     $sheet->setCellValue("AV$row", $ptuGood->getCountry()->getCode());                
                     $sheet->setCellValue("AW$row", $ptuGood->getCountry()->getName());                
                     $sheet->setCellValue("BG$row", $ptuGood->getNtd()->getNtd());                
