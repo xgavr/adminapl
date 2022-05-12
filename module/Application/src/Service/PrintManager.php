@@ -284,16 +284,6 @@ class PrintManager {
         }
     }
 
-    private function _copyStyleXFCollection(Spreadsheet $sourceSheet, Spreadsheet $destSheet) 
-    {
-        $collection = $sourceSheet->getCellXfCollection();
-
-        foreach ($collection as $key => $item) {
-            $destSheet->addCellXf($item);
-        }
-    }
-    
-    
     /**
      * УПД возврат
      * @param Vtp $vtp
