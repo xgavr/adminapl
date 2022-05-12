@@ -4,6 +4,7 @@ namespace Stock\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Stock\Service\VtpManager;
 use Admin\Service\LogManager;
+use Admin\Service\AdminManager;
 
 /**
  * This is the factory class for VtpManager service. The purpose of the factory
@@ -18,7 +19,8 @@ class VtpManagerFactory
     {        
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
+        $adminManager = $container->get(AdminManager::class);
                         
-        return new VtpManager($entityManager, $logManager);
+        return new VtpManager($entityManager, $logManager, $adminManager);
     }
 }

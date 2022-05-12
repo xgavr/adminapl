@@ -272,7 +272,10 @@
                 },
                 isShown: function(row) {
                   return row.statusDoc != '<?= Vtp::STATUS_DOC_NEW?>';
-                }
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
             }, 
             statusDocRect: {
                 name: 'Отправлен',
@@ -282,7 +285,10 @@
                 },
                 isShown: function(row) {
                   return row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>';
-                }
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
             }, 
             statusDocNotRect: {
                 name: 'Принят',
@@ -293,7 +299,10 @@
                 },
                 isShown: function(row) {
                   return row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>';
-                }
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
             }, 
             statusActiv: {
                 name: 'Сделать активным',
@@ -303,7 +312,10 @@
                 },
                 isShown: function(row) {
                   return row.status == <?= Vtp::STATUS_RETIRED?>;
-                }
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
             }, 
             statusRetired: {
                 name: 'Сделать не активным',
@@ -314,7 +326,10 @@
                 },
                 isShown: function(row) {
                   return row.status == <?= Vtp::STATUS_ACTIVE?>;
-                }
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
             }
         }
     });    

@@ -28,6 +28,8 @@ $form->get('contract_id')->setAttributes([
 
 $form->get('doc_date')->setAttributes([
     'class'=>'form-control', 
+    'min' => date('Y-m-d', strtotime($allowDate.' + 1 day')),
+    'disabled' => $disabled,
     ]);
 
 $form->get('doc_no')->setAttributes([
@@ -212,7 +214,7 @@ if ($vtp){
                 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="vtp-submit">Сохранить</button>
+                <button type="submit" class="btn btn-primary" id="vtp-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
             </div>
             
             <?= $this->form()->closeTag(); ?>

@@ -29,12 +29,33 @@ class VtpManager
     private $logManager;
         
     /**
+     * Admin manager
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+    
+    /**
+     * Дата запрета
+     * @var string
+     */
+    private $allowDate;
+        
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager) 
+    public function __construct($entityManager, $logManager, $adminManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
+        $this->adminManager = $adminManager;
+        
+        $setting = $this->adminManager->getSettings();
+        $this->allowDate = $setting['allow_date'];
+    }
+    
+    public function getAllowDate()
+    {
+        return $this->allowDate; 
     }
     
     /**
@@ -149,23 +170,26 @@ class VtpManager
      */
     public function addVtp($ptu, $data)
     {
-        $vtp = new Vtp();        
-        $vtp->setPtu($ptu);
-        $vtp->setAplId($data['apl_id']);
-        //$vtp->setDocNo($data['doc_no']);
-        $vtp->setDocDate($data['doc_date']);
-        $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
-        $vtp->setInfo(empty($data['info']) ? null:$data['info']);
-        $vtp->setStatusEx($data['status_ex']);
-        $vtp->setStatus($data['status']);
-        $vtp->setStatusDoc($data['statusDoc']);
-        $vtp->setAmount(0);
-        $vtp->setDateCreated(date('Y-m-d H:i:s'));
-        
-        $this->entityManager->persist($vtp);        
-        $this->entityManager->flush();
-        
-        return $vtp;        
+        if ($data['doc_date'] > $this->allowDate){
+            
+            $vtp = new Vtp();        
+            $vtp->setPtu($ptu);
+            $vtp->setAplId($data['apl_id']);
+            //$vtp->setDocNo($data['doc_no']);
+            $vtp->setDocDate($data['doc_date']);
+            $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
+            $vtp->setInfo(empty($data['info']) ? null:$data['info']);
+            $vtp->setStatusEx($data['status_ex']);
+            $vtp->setStatus($data['status']);
+            $vtp->setStatusDoc($data['statusDoc']);
+            $vtp->setAmount(0);
+            $vtp->setDateCreated(date('Y-m-d H:i:s'));
+
+            $this->entityManager->persist($vtp);        
+            $this->entityManager->flush();
+
+            return $vtp;        
+        }    
     }
     
     /**
@@ -179,22 +203,24 @@ class VtpManager
 //        $connection = $this->entityManager->getConnection(); 
 //        $connection->update('ptu', $data, ['id' => $ptu->getId()]);
 //        var_dump($data); exit;
-        $vtp->setAplId($data['apl_id']);
-        $vtp->setDocNo(empty($data['doc_no']) ? null:$data['doc_no']);
-        $vtp->setDocDate($data['doc_date']);
-        $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
-        $vtp->setInfo(empty($data['info']) ? null:$data['info']);
-        $vtp->setStatusEx($data['status_ex']);
-        $vtp->setStatus($data['status']);
-        $vtp->setStatusDoc($data['statusDoc']);
-        
-        $this->entityManager->persist($vtp);
-        $this->entityManager->flush($vtp);
-        
-        $this->repostVtp($vtp);
-        $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
-        
-        return $vtp;
+        if ($data['doc_date'] > $this->allowDate){
+            $vtp->setAplId($data['apl_id']);
+            $vtp->setDocNo(empty($data['doc_no']) ? null:$data['doc_no']);
+            $vtp->setDocDate($data['doc_date']);
+            $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
+            $vtp->setInfo(empty($data['info']) ? null:$data['info']);
+            $vtp->setStatusEx($data['status_ex']);
+            $vtp->setStatus($data['status']);
+            $vtp->setStatusDoc($data['statusDoc']);
+
+            $this->entityManager->persist($vtp);
+            $this->entityManager->flush($vtp);
+
+            $this->repostVtp($vtp);
+            $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
+
+            return $vtp;
+        }    
     }
     
     /**
@@ -206,13 +232,15 @@ class VtpManager
     public function updateVtpStatus($vtp, $status)            
     {
 
-        $vtp->setStatus($status);
-        
-        $this->entityManager->persist($vtp);
-        $this->entityManager->flush($vtp);
+        if ($vtp->getDocDate() > $this->allowDate){
+            $vtp->setStatus($status);
 
-        $this->repostVtp($vtp);
-        $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
+            $this->entityManager->persist($vtp);
+            $this->entityManager->flush($vtp);
+
+            $this->repostVtp($vtp);
+            $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
+        }    
         
         return;
     }
@@ -226,10 +254,15 @@ class VtpManager
     public function updateVtpDocStatus($vtp, $statusDoc)            
     {
 
-        $vtp->setStatusDoc($statusDoc);
-        
-        $this->entityManager->persist($vtp);
-        $this->entityManager->flush($vtp);
+        if ($vtp->getDocDate() > $this->allowDate){
+            $vtp->setStatusDoc($statusDoc);
+
+            $this->entityManager->persist($vtp);
+            $this->entityManager->flush($vtp);
+
+            $this->repostVtp($vtp);
+            $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
+        }    
         
         return;
     }
@@ -282,22 +315,24 @@ class VtpManager
      */
     public function updateVtpAmount($vtp)
     {
-        $preLog = $this->entityManager->getRepository(Log::class)
-                ->findOneByLogKey($vtp->getLogKey());
-        if (!$preLog){
-            $this->logManager->infoVtp($vtp, Log::STATUS_INFO);            
-        }
-        
-        $vtpAmountTotal = $this->entityManager->getRepository(Vtp::class)
-                ->vtpAmountTotal($vtp);
-//        $this->entityManager->getConnection()->update('ptu', ['amount' => $ptuAmountTotal], ['id' => $ptu->getId()]);
-        $vtp->setAmount($vtpAmountTotal);
-        $this->entityManager->persist($vtp);
-        $this->entityManager->flush($vtp);
-        
-        $this->entityManager->refresh($vtp);
-        $this->repostVtp($vtp);
-        $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
+        if ($vtp->getDocDate() > $this->allowDate){        
+            $preLog = $this->entityManager->getRepository(Log::class)
+                    ->findOneByLogKey($vtp->getLogKey());
+            if (!$preLog){
+                $this->logManager->infoVtp($vtp, Log::STATUS_INFO);            
+            }
+
+            $vtpAmountTotal = $this->entityManager->getRepository(Vtp::class)
+                    ->vtpAmountTotal($vtp);
+    //        $this->entityManager->getConnection()->update('ptu', ['amount' => $ptuAmountTotal], ['id' => $ptu->getId()]);
+            $vtp->setAmount($vtpAmountTotal);
+            $this->entityManager->persist($vtp);
+            $this->entityManager->flush($vtp);
+
+            $this->entityManager->refresh($vtp);
+            $this->repostVtp($vtp);
+            $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
+        }    
         return;
     }
     
@@ -320,15 +355,18 @@ class VtpManager
      */
     public function updateVtpGoods($vtp, $data)
     {
-        $this->removeVtpGood($vtp);
         
-        $rowNo = 1;
-        foreach ($data as $row){
-            $this->addVtpGood($vtp->getId(), $row, $rowNo);
-            $rowNo++;
-        }
-        
-        $this->updateVtpAmount($vtp);
+        if ($vtp->getDocDate() > $this->allowDate){
+            $this->removeVtpGood($vtp);
+
+            $rowNo = 1;
+            foreach ($data as $row){
+                $this->addVtpGood($vtp->getId(), $row, $rowNo);
+                $rowNo++;
+            }
+
+            $this->updateVtpAmount($vtp);
+        }    
         return;
     }   
     
@@ -340,14 +378,16 @@ class VtpManager
      */
     public function removeVtp($vtp)
     {
-        $this->logManager->infoVtp($vtp, Log::STATUS_DELETE);
-        $this->entityManager->getRepository(Mutual::class)
-                ->removeDocMutuals($vtp->getLogKey());
-        $this->entityManager->getRepository(Movement::class)
-                ->removeDocMovements($vtp->getLogKey());
-        $this->removeVtpGood($vtp);
-        
-        $this->entityManager->getConnection()->delete('vtp', ['id' => $vtp->getId()]);
+        if ($vtp->getDocDate() > $this->allowDate){
+            $this->logManager->infoVtp($vtp, Log::STATUS_DELETE);
+            $this->entityManager->getRepository(Mutual::class)
+                    ->removeDocMutuals($vtp->getLogKey());
+            $this->entityManager->getRepository(Movement::class)
+                    ->removeDocMovements($vtp->getLogKey());
+            $this->removeVtpGood($vtp);
+
+            $this->entityManager->getConnection()->delete('vtp', ['id' => $vtp->getId()]);
+        }    
         
         return;
     }

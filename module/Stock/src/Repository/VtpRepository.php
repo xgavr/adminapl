@@ -285,5 +285,40 @@ class VtpRepository extends EntityRepository{
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
+    }  
+    
+    /**
+     * Найти записи для отправки в АПЛ
+     */
+    public function findForUpdateApl()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('v')
+            ->from(Vtp::class, 'p')
+            ->where('v.statusEx = ?1')
+            ->setParameter('1', Ptu::STATUS_EX_NEW)    
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        foreach ($data as $ptu){
+            $flag = true;
+            $vtpGoods = $entityManager->getRepository(VtpGood::class)
+                    ->findBy(['vtp' => $vtp->getId()]);
+            foreach ($vtpGoods as $vtpGood){
+               if (empty($vtpGood->getGood()->getAplId())){
+                   $flag = false;
+                   break;
+               }  
+            }
+            if ($flag){
+                return $vtp;
+            }    
+        }
+        
+        return;                
+        
     }        
 }

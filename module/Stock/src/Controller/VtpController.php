@@ -56,6 +56,7 @@ class VtpController extends AbstractActionController
             'offices' => $offices,
             'years' => array_combine(range(date("Y"), 2014), range(date("Y"), 2014)),
             'monthes' => array_combine(range(1, 12), range(1, 12)),
+            'allowDate' => $this->vtpManager->getAllowDate(),
         ]);  
     }
         
@@ -112,6 +113,7 @@ class VtpController extends AbstractActionController
         return new JsonModel([
             'total' => $total,
             'rows' => $result,
+            'allowDate' => $this->vtpManager->getAllowDate(),
         ]);          
     }        
     
@@ -173,6 +175,7 @@ class VtpController extends AbstractActionController
         $ptuId = (int)$this->params()->fromQuery('ptu', -1);
         
         $ptu = $vtp = $supplier = $legal = $company = null;
+        $notDisabled = true;
         if ($ptuId > 0){
             $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->findOneById($ptuId);
@@ -244,6 +247,7 @@ class VtpController extends AbstractActionController
                 $data['info'] = $vtp->getInfo();
                 $data['status'] = $vtp->getStatus();
                 $data['statusDoc'] = $vtp->getStatusDoc();
+                $notDisabled = $vtp->getDocDate() > $this->vtpManager->getAllowDate();
             }    
             $form->setData($data);
         }
@@ -254,6 +258,8 @@ class VtpController extends AbstractActionController
             'form' => $form,
             'vtp' => $vtp,
             'ptu' => $ptu,
+            'allowDate' => $this->vtpManager->getAllowDate(),
+            'disabled' => !$notDisabled,
         ]);        
     }    
         

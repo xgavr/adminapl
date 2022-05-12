@@ -673,6 +673,88 @@ class AplDocService {
         return $vtStatus;
     }
     
+    /**
+     * Отправить втп
+     * 
+     */
+    public function sendVtp()
+    {
+        $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
+
+        $result = false;
+
+        $vtp = $this->entityManager->getRepository(Vtp::class)
+                ->findForUpdateApl();
+        if ($vtp){
+            $post = [
+                'parent' => $vtp->getPtu()->getOffice()->getAplId(),
+                'type' =>   'Resup',
+                'sort' =>   $vtp->getAmount(),
+                'publish' => $vtp->getAplStatusAsString(),
+                'name' =>   $vtp->getPtu()->getSupplier()->getAplId(),
+                'comment' => 'Suppliers',
+                'info' => $vtp->getComment(),
+                'info2' => $vtp->getInfo(),
+//                'user' =>   $ptu->getUserCreator()->getAplId(),
+                'sf' =>     0,
+                'ns' =>     $vtp->getPtu()->getAplId(),
+                'ds' =>     $vtp->getDocDate(),
+                'aa' =>     1,
+            ];
+
+            if ($vtp->getAplId()){
+                $post['id'] = $vtp->getAplId();
+            }
+            
+            $so = [];
+            $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
+                    ->findBy(['vtp' => $vtp->getId()]);
+            foreach ($vtpGoods as $vtpGood){
+                $tp = [
+                    'sort' => $vtpGood->getQuantity(),
+                    'publish' => $vtp->getAplStatusAsString(),
+                    'name' => $vtpGood->getGood()->getAplId(),
+                    'comment' => $vtpGood->getPrice(),                    
+                    'art' => $vtpGood->getGood()->getCode(),
+                    'artid' => $vtpGood->getGood()->getAplId(),
+                ];                
+                $so[] = $tp;
+            }
+            $post['tp'] = $so;
+            
+//            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 60]);
+            $client->setParameterPost($post);            
+
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {                    
+                    $aplId = (int) $response->getBody();
+                    if ($aplId){
+                        $ok = $result = true;
+                    }
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok) {            
+                $vtp->setStatusEx(Vtp::STATUS_EX_APL);
+                $vtp->setAplId($aplId);
+                $this->entityManager->persist($vtp);
+                $this->entityManager->flush($vtp);
+            }
+
+            $this->entityManager->detach($vtp);
+        }
+        
+        return $result;
+    }
     
     /**
      * Загрузить возврат
