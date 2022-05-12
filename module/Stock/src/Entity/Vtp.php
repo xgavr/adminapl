@@ -149,7 +149,7 @@ class Vtp {
     {
         $docDate = date('d-m-Y', strtotime($this->docDate));
         $docNo = ($this->aplId) ? $this->aplId:$this->id;
-        return "$docName №{$this->id} от {$docDate}";
+        return "$docName №{$docNo} от {$docDate}";
     }
     
     public function getLogKey() 

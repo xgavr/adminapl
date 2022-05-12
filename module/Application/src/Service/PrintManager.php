@@ -318,6 +318,125 @@ class PrintManager {
                 ->setTitle($vtp->getDocPresent('УПД'))
                 ;
         $sheet = $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('D6', 1)
+                ->setCellValue('L2', $vtp->getDocNo())
+                ->setCellValue('T2', date('d.m.Y', strtotime($vtp->getDocDate())))
+                ->setCellValue('O5', $vtp->getPtu()->getContract()->getCompany()->getName())
+                ->setCellValue('O6', $vtp->getPtu()->getContract()->getCompany()->getAddress())
+                ->setCellValue('O7', $vtp->getPtu()->getContract()->getCompany()->getInnKpp())
+                ->setCellValue('O8', trim($vtp->getPtu()->getContract()->getCompany()->getName().' '.$vtp->getPtu()->getContract()->getCompany()->getAddress()))
+                ->setCellValue('O9', trim($vtp->getPtu()->getLegal()->getName().' '.$vtp->getPtu()->getLegal()->getAddress()))
+                ->setCellValue('O12', $vtp->getPtu()->getLegal()->getName())
+                ->setCellValue('O13', $vtp->getPtu()->getLegal()->getAddress())
+                ->setCellValue('O14', $vtp->getPtu()->getLegal()->getInnKpp())
+                ->setCellValue('O15', 'Российский рубль, 643')
+                ->setCellValue('M28', $vtp->getPtu()->getContract()->getContractPresent('Договор'))
+                
+                ->setCellValue('AH22', number_format($vtp->getAmount(), 2, ',', ' '))
+                ->setCellValue('AS22', number_format($vtp->getAmount(), 2, ',', ' '))
+
+                ->setCellValue('W24', $vtp->getPtu()->getContract()->getCompany()->getHead())
+                ->setCellValue('AU24', $vtp->getPtu()->getContract()->getCompany()->getChiefAccount())                
+                ->setCellValue('K37', date('d.m.Y', strtotime($vtp->getDocDate())))
+                ;
+        
+        $signatory = $this->entityManager->getRepository(Commission::class)
+                ->findOneBy(['status' => Commission::STATUS_SIGN]);
+        if ($signatory){
+            $sheet->setCellValue('B35', $signatory->getPosition());
+            $sheet->setCellValue('S35', $signatory->getName());
+        }
+        
+        $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
+                ->findByVtp($vtp->getId());
+        if ($vtpGoods){
+            $i = 1;
+            $row = 21;
+            $srcRow = $row + count($vtpGoods)-1;
+            if (count($vtpGoods) > 1){
+                $sheet->insertNewRowBefore($row, count($vtpGoods) - 1);            
+            }
+            foreach ($vtpGoods as $vtpGood){
+                if (count($vtpGoods) > 1){
+                    $this->_copyRows($sheet, "A$srcRow:CJ$srcRow", "A$row");
+                } 
+                $ptuGood = $this->entityManager->getRepository(PtuGood::class)
+                        ->findOneBy(['ptu' => $vtp->getPtu()->getId(), 'good' => $vtpGood->getGood()->getId()]);
+                if ($ptuGood){
+                    $sheet->setCellValue("B$row", $i);                
+                    $sheet->setCellValue("F$row", $i);                
+                    $sheet->setCellValue("C$row", $vtpGood->getGood()->getCode());                
+                    $sheet->setCellValue("H$row", $vtpGood->getGood()->getNameShort());                
+                    $sheet->setCellValue("U$row", $ptuGood->getUnit()->getCode());                
+                    $sheet->setCellValue("W$row", $ptuGood->getUnit()->getName());                
+                    $sheet->setCellValue("X$row", number_format($vtpGood->getQuantity(), 0, ',', ' '));                
+                    $sheet->setCellValue("AD$row", number_format($vtpGood->getPrice(), 2, ',', ' '));                              
+                    $sheet->setCellValue("AH$row", number_format($vtpGood->getAmount(), 2, ',', ' '));                
+                    $sheet->setCellValue("AK$row", 'Без акциза');                
+                    $sheet->setCellValue("AM$row", 'Без НДС');                
+                    $sheet->setCellValue("AS$row", number_format($vtpGood->getAmount(), 2, ',', ' '));                
+                    $sheet->setCellValue("AV$row", $ptuGood->getCountry()->getCode());                
+                    $sheet->setCellValue("AW$row", $ptuGood->getCountry()->getName());                
+                    $sheet->setCellValue("BG$row", $ptuGood->getNtd()->getNtd());                
+                } else {
+                    $sheet->setCellValue("H$row", '!Не найдено в приходе!');
+                }
+                $i++;
+                $row++;
+            }
+        }
+                
+        switch ($writerType){
+            case 'Pdf':
+                $writer = IOFactory::createWriter($spreadsheet, 'Html');
+                $htmlFilename = $vtp->getPrintName('html', 'УПД');
+                $writer->writeAllSheets();
+                $writer->save($htmlFilename);
+
+                $mpdf = new Mpdf();
+                $mpdf->WriteHTML(\file_get_contents($htmlFilename));
+                $outFilename = $vtp->getPrintName($writerType, 'УПД');
+                $mpdf->Output($outFilename,'F');
+                break;
+            case 'Xls':
+            case 'Xlsx':
+                $writer = IOFactory::createWriter($spreadsheet, $writerType);
+                $outFilename = $vtp->getPrintName($writerType, 'УПД');
+//                $writer->writeAllSheets();
+                $writer->save($outFilename);
+                break;
+            default: 
+                $outFilename = null;
+        } 
+        
+        
+        return $outFilename;
+    }    
+
+        /**
+     * УПД возврат
+     * @param Vtp $vtp
+     * @param string $writerType
+     * @return string 
+     */
+    public function updVtp2($vtp, $writerType = 'Pdf')
+    {
+        ini_set("pcre.backtrack_limit", "5000000");
+        setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
+//        echo strftime("%B %d, %Y", time()); exit;
+        
+        $upd_folder_name = Vtp::PRINT_FOLDER;
+        if (!is_dir($upd_folder_name)){
+            mkdir($upd_folder_name);
+        }        
+        
+        $inputFileType = 'Xls';
+        $reader = IOFactory::createReader($inputFileType);
+        $spreadsheet = $reader->load(Vtp::TEMPLATE_UPD);
+        $spreadsheet->getProperties()
+                ->setTitle($vtp->getDocPresent('УПД'))
+                ;
+        $sheet = $spreadsheet->setActiveSheetIndex(0)
                 ->setCellValue('E6', 1)
                 ->setCellValue('X2', $vtp->getDocNo())
                 ->setCellValue('AF2', date('d.m.Y', strtotime($vtp->getDocDate())))
@@ -413,4 +532,5 @@ class PrintManager {
         
         return $outFilename;
     }    
+
 }
