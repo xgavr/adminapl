@@ -44,7 +44,7 @@ class Vtp {
     
     const PRINT_FOLDER          = './data/template/vtp'; 
     const TEMPLATE_TORG2        = './data/template/torg-2.xls';
-    const TEMPLATE_UPD        = './data/template/upd.xls';
+    const TEMPLATE_UPD        = './data/template/upd3.xls';
 
 
     /**
