@@ -458,7 +458,7 @@ class AplDocService {
                         'countryCode' => (isset($tp['countrycode'])) ? $tp['countrycode']:'',
                         'unitName' => (isset($tp['pack'])) ? $tp['pack']:'',
                         'unitCode' => (isset($tp['packcode'])) ? $tp['packcode']:'',
-                        'ntd' => (isset($tp['gtd'])) ? $tp['gtd']:'',
+                        'ntd' => (isset($tp['ntd'])) ? $tp['ntd']:'',
                     ], $rowNo);
                     $rowNo++;
                 }    
