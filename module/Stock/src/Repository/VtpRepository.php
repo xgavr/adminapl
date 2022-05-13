@@ -299,7 +299,7 @@ class VtpRepository extends EntityRepository{
         $queryBuilder->select('v')
             ->from(Vtp::class, 'p')
             ->where('v.statusEx = ?1')
-            ->setParameter('1', Ptu::STATUS_EX_NEW)    
+            ->setParameter('1', Vtp::STATUS_EX_NEW)    
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
