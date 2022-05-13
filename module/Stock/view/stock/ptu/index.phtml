@@ -11,9 +11,6 @@
 
 ?>
 
-
-<h1>Поступление товаров</h1>
-
 <div class="row">
     <div class="col-md-12">
         <div id="toolbar">
@@ -54,6 +51,8 @@
         <table id="table" 
             data-toggle="table" 
             data-url="/ptu/content"
+            data-cookie="true"
+            data-cookie-id-table="vtpSaveId"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -63,12 +62,12 @@
             data-query-params="queryParams"
             data-sort-name="id"
             data-sort-order="desc"            
+            data-classes = "table table-bordered table-hover table-condensed"
             data-response-handler="responseHandler"
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>
-                     <th data-field="aplId" data-type="numeric"data-align="right">AplId</th>
+                     <th data-field="id" data-type="numeric" data-formatter="idFormatter" data-align="right">Id</th>
                      <th data-field="docDate" data-sortable="true">Дата</th>
                      <th data-field="docNo" data-sortable="false">Номер</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
@@ -184,6 +183,14 @@
         
         return params;
     }
+    
+    function idFormatter(value, row){
+        if (row.aplId > 0){
+            return row.aplId;
+        }
+        
+        return value;
+    }    
     
     function linkFormatter(value, row){
         if (!value){

@@ -4,6 +4,7 @@ namespace Stock\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Stock\Service\PtuManager;
 use Admin\Service\LogManager;
+use Admin\Service\AdminManager;
 
 /**
  * This is the factory class for RoleManager service. The purpose of the factory
@@ -18,7 +19,8 @@ class PtuManagerFactory
     {        
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
+        $adminManager = $container->get(AdminManager::class);
                         
-        return new PtuManager($entityManager, $logManager);
+        return new PtuManager($entityManager, $logManager, $adminManager);
     }
 }

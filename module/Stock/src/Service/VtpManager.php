@@ -53,6 +53,10 @@ class VtpManager
         $this->allowDate = $setting['allow_date'];
     }
     
+    /**
+     * Получить дату запрета
+     * @return date
+     */
     public function getAllowDate()
     {
         return $this->allowDate; 

@@ -28,14 +28,40 @@ class PtuManager
     private $logManager;
         
     /**
+     * Admin manager
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+        
+    /**
+     * Дата запрета
+     * @var string
+     */
+    private $allowDate;
+
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager) 
+    public function __construct($entityManager, $logManager, $adminManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
+        $this->adminManager = $adminManager;
+
+        $setting = $this->adminManager->getSettings();
+        $this->allowDate = $setting['allow_date'];
+                
     }
     
+    /**
+     * Получить дату запрета
+     * @return date
+     */
+    public function getAllowDate()
+    {
+        return $this->allowDate; 
+    }
+        
     /**
      * Обновить взаиморасчеты документа
      * 
@@ -47,20 +73,22 @@ class PtuManager
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($ptu->getLogKey());
         
-        $data = [
-            'doc_key' => $ptu->getLogKey(),
-            'date_oper' => $ptu->getDocDate(),
-            'status' => $ptu->getStatus(),
-            'revise' => Mutual::REVISE_NOT,
-            'amount' => -$ptu->getAmount(),
-            'legal_id' => $ptu->getLegal()->getId(),
-            'contract_id' => $ptu->getContract()->getId(),
-            'office_id' => $ptu->getOffice()->getId(),
-            'company_id' => $ptu->getContract()->getCompany()->getId(),
-        ];
+        if ($ptu->getStatus() == Ptu::STATUS_ACTIVE){        
+            $data = [
+                'doc_key' => $ptu->getLogKey(),
+                'date_oper' => $ptu->getDocDate(),
+                'status' => $ptu->getStatus(),
+                'revise' => Mutual::REVISE_NOT,
+                'amount' => -$ptu->getAmount(),
+                'legal_id' => $ptu->getLegal()->getId(),
+                'contract_id' => $ptu->getContract()->getId(),
+                'office_id' => $ptu->getOffice()->getId(),
+                'company_id' => $ptu->getContract()->getCompany()->getId(),
+            ];
 
-        $this->entityManager->getRepository(Mutual::class)
-                ->insertMutual($data);
+            $this->entityManager->getRepository(Mutual::class)
+                    ->insertMutual($data);
+        }    
         
         return;
     }    
@@ -76,25 +104,27 @@ class PtuManager
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($ptu->getLogKey());
         
-        $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
-                ->findByPtu($ptu->getId());
-        foreach ($ptuGoods as $ptuGood){
-            $data = [
-                'doc_key' => $ptu->getLogKey(),
-                'doc_row_key' => $ptuGood->getDocRowKey(),
-                'doc_row_no' => $ptuGood->getRowNo(),
-                'date_oper' => $ptu->getDocDate(),
-                'status' => $ptu->getStatus(),
-                'quantity' => $ptuGood->getQuantity(),
-                'amount' => $ptuGood->getAmount(),
-                'good_id' => $ptuGood->getGood()->getId(),
-                'office_id' => $ptu->getOffice()->getId(),
-                'company_id' => $ptu->getContract()->getCompany()->getId(),
-            ];
+        if ($ptu->getStatus() == Ptu::STATUS_ACTIVE){        
+            $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
+                    ->findByPtu($ptu->getId());
+            foreach ($ptuGoods as $ptuGood){
+                $data = [
+                    'doc_key' => $ptu->getLogKey(),
+                    'doc_row_key' => $ptuGood->getDocRowKey(),
+                    'doc_row_no' => $ptuGood->getRowNo(),
+                    'date_oper' => $ptu->getDocDate(),
+                    'status' => $ptu->getStatus(),
+                    'quantity' => $ptuGood->getQuantity(),
+                    'amount' => $ptuGood->getAmount(),
+                    'good_id' => $ptuGood->getGood()->getId(),
+                    'office_id' => $ptu->getOffice()->getId(),
+                    'company_id' => $ptu->getContract()->getCompany()->getId(),
+                ];
 
-            $this->entityManager->getRepository(Movement::class)
-                    ->insertMovement($data);
-        }
+                $this->entityManager->getRepository(Movement::class)
+                        ->insertMovement($data);
+            }
+        }    
         
         return;
     }    
@@ -145,24 +175,27 @@ class PtuManager
      */
     public function addPtu($data, $userId = 0)
     {
-        $ptu = new Ptu();        
-        $ptu->setAplId($data['apl_id']);
-        $ptu->setDocNo($data['doc_no']);
-        $ptu->setDocDate($data['doc_date']);
-        $ptu->setComment(empty($data['comment']) ? null:$data['comment']);
-        $ptu->setStatusEx($data['status_ex']);
-        $ptu->setStatus($data['status']);
-        $ptu->setOffice($data['office']);
-        $ptu->setLegal($data['legal']);
-        $ptu->setContract($data['contract']); 
-        $ptu->setStatusDoc(Ptu::STATUS_DOC_NOT_RECD);
-        $ptu->setAmount(0);
-        $ptu->setDateCreated(date('Y-m-d H:i:s'));
+        if ($data['doc_date'] > $this->allowDate){
+            $ptu = new Ptu();        
+            $ptu->setAplId($data['apl_id']);
+            $ptu->setDocNo($data['doc_no']);
+            $ptu->setDocDate($data['doc_date']);
+            $ptu->setComment(empty($data['comment']) ? null:$data['comment']);
+            $ptu->setStatusEx($data['status_ex']);
+            $ptu->setStatus($data['status']);
+            $ptu->setOffice($data['office']);
+            $ptu->setLegal($data['legal']);
+            $ptu->setContract($data['contract']); 
+            $ptu->setStatusDoc(Ptu::STATUS_DOC_NOT_RECD);
+            $ptu->setAmount(0);
+            $ptu->setDateCreated(date('Y-m-d H:i:s'));
+
+            $this->entityManager->persist($ptu);
+            $this->entityManager->flush($ptu);        
+            return $ptu;        
+        }    
         
-        $this->entityManager->persist($ptu);
-        $this->entityManager->flush($ptu);
-        
-        return $ptu;        
+        return;
     }
     
     /**
@@ -174,21 +207,20 @@ class PtuManager
      */
     public function updatePtu($ptu, $data, $userId = 0)            
     {
-//        $connection = $this->entityManager->getConnection(); 
-//        $connection->update('ptu', $data, ['id' => $ptu->getId()]);
-//        var_dump($data); exit;
-        $ptu->setAplId($data['apl_id']);
-        $ptu->setDocNo($data['doc_no']);
-        $ptu->setDocDate($data['doc_date']);
-        $ptu->setComment(empty($data['comment']) ? null:$data['comment']);
-        $ptu->setStatusEx($data['status_ex']);
-        $ptu->setStatus($data['status']);
-        $ptu->setOffice($data['office']);
-        $ptu->setLegal($data['legal']);
-        $ptu->setContract($data['contract']);
-        
-        $this->entityManager->persist($ptu);
-        $this->entityManager->flush($ptu);
+        if ($data['doc_date'] > $this->allowDate){
+            $ptu->setAplId($data['apl_id']);
+            $ptu->setDocNo($data['doc_no']);
+            $ptu->setDocDate($data['doc_date']);
+            $ptu->setComment(empty($data['comment']) ? null:$data['comment']);
+            $ptu->setStatusEx($data['status_ex']);
+            $ptu->setStatus($data['status']);
+            $ptu->setOffice($data['office']);
+            $ptu->setLegal($data['legal']);
+            $ptu->setContract($data['contract']);
+
+            $this->entityManager->persist($ptu);
+            $this->entityManager->flush($ptu);
+        }    
         
         return;
     }
@@ -439,14 +471,16 @@ class PtuManager
      */
     public function removePtu($ptu)
     {
-        $this->logManager->infoPtu($ptu, Log::STATUS_DELETE);
-        $this->entityManager->getRepository(Mutual::class)
-                ->removeDocMutuals($ptu->getLogKey());
-        $this->entityManager->getRepository(Movement::class)
-                ->removeDocMovements($ptu->getLogKey());
-        $this->removePtuGood($ptu);
-        
-        $this->entityManager->getConnection()->delete('ptu', ['id' => $ptu->getId()]);
+        if ($ptu->getDocDate() > $this->allowDate){
+            $this->logManager->infoPtu($ptu, Log::STATUS_DELETE);
+            $this->entityManager->getRepository(Mutual::class)
+                    ->removeDocMutuals($ptu->getLogKey());
+            $this->entityManager->getRepository(Movement::class)
+                    ->removeDocMovements($ptu->getLogKey());
+            $this->removePtuGood($ptu);
+
+            $this->entityManager->getConnection()->delete('ptu', ['id' => $ptu->getId()]);
+        }    
         
         return;
     }
