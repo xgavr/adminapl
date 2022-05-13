@@ -35,6 +35,7 @@ use Application\Filter\ArticleCode;
 use Laminas\Validator\Date;
 use Stock\Entity\Revise;
 use Stock\Entity\PtuGood;
+use Stock\Entity\VtpGood;
 
 
 /**
