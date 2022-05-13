@@ -303,7 +303,7 @@ class VtpRepository extends EntityRepository{
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
-        foreach ($data as $ptu){
+        foreach ($data as $vtp){
             $flag = true;
             $vtpGoods = $entityManager->getRepository(VtpGood::class)
                     ->findBy(['vtp' => $vtp->getId()]);
