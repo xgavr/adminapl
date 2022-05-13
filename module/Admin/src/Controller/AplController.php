@@ -704,7 +704,15 @@ class AplController extends AbstractActionController
         ]);
     }    
     
-    
+    public function sendVtpAction()
+    {                
+        $this->aplDocService->sendVtp();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+        
     public function unloadDocsAction()
     {                
         $this->aplDocService->unloadDocs();

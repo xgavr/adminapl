@@ -238,6 +238,7 @@ class VtpManager
 
         if ($vtp->getDocDate() > $this->allowDate){
             $vtp->setStatus($status);
+            $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
 
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);

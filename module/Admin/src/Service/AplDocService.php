@@ -1491,6 +1491,17 @@ class AplDocService {
                 break;
             }    
         }    
+
+        while (true){
+            if ($this->sendVtp()) {
+                usleep(100);
+                if (time() > $startTime + 840){
+                    break;
+                }
+            } else {
+                break;
+            }    
+        }    
         return;
     }    
 }
