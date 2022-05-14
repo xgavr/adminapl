@@ -13,6 +13,7 @@ use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
 use Application\Entity\Supplier;
 use Company\Entity\Office;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of PtuRepository
@@ -102,6 +103,14 @@ class PtuRepository extends EntityRepository{
                     $queryBuilder->andWhere('MONTH(p.docDate) = :month')
                             ->setParameter('month', $params['month']);
                 }    
+            }
+            if (!empty($params['q'])){     
+                $articleCodeFilter = new ArticleCode(); 
+                $queryBuilder->distinct()
+                        ->join('p.ptuGoods', 'pg')
+                        ->join('pg.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
             }
         }
 
@@ -209,6 +218,14 @@ class PtuRepository extends EntityRepository{
                     $queryBuilder->andWhere('MONTH(p.docDate) = :month')
                             ->setParameter('month', $params['month']);
                 }    
+            }
+            if (!empty($params['q'])){     
+                $articleCodeFilter = new ArticleCode(); 
+                $queryBuilder->distinct()
+                        ->join('p.ptuGoods', 'pg')
+                        ->join('pg.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
             }
         }
         

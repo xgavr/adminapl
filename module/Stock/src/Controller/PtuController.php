@@ -100,6 +100,7 @@ class PtuController extends AbstractActionController
         return new JsonModel([
             'total' => $total,
             'rows' => $result,
+            'allowDate' => $this->ptuManager->getAllowDate(),
         ]);          
     }        
     
@@ -144,7 +145,7 @@ class PtuController extends AbstractActionController
         $ptuId = (int)$this->params()->fromRoute('id', -1);
         
         $ptu = $supplier = $legal = $company = null;
-        
+        $notDisabled = true;
         if ($ptuId > 0){
             $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->findOneById($ptuId);
@@ -223,6 +224,7 @@ class PtuController extends AbstractActionController
                     'status' => $ptu->getStatus(),
                 ];
                 $form->setData($data);
+                $notDisabled = $ptu->getDocDate() > $this->ptuManager->getAllowDate();
             }    
         }
         $this->layout()->setTemplate('layout/terminal');
@@ -230,6 +232,8 @@ class PtuController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'ptu' => $ptu,
+            'allowDate' => $this->ptuManager->getAllowDate(),
+            'disabled' => !$notDisabled,
         ]);        
     }    
         

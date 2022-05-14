@@ -684,8 +684,10 @@ class BillManager
                             $producer = $unknownProducer->getProducer();
                         }    
                     }
-                }    
-                $articleStr = $value;
+                }
+                if (!$producer && !$articleStr){
+                    $articleStr = $value;
+                }
             }
             if ($articleStr && $producer){
                 return $this->_newGood($articleStr, $producer, $goodName);                

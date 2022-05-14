@@ -23,6 +23,8 @@ $form->get('contract_id')->setAttributes([
 
 $form->get('doc_date')->setAttributes([
     'class'=>'form-control', 
+    'min' => date('Y-m-d', strtotime($allowDate.' + 1 day')),
+    'disabled' => $disabled,
     ]);
 
 $form->get('doc_no')->setAttributes([
@@ -152,6 +154,7 @@ if ($ptu){
                             data-query-params="ptugoodQueryParams"
                             data-response-handler="ptugoodResponseHandler"
                             data-unique-id = "rowNo"
+                            data-classes = "table table-bordered table-hover table-condensed"
                             >
                             <thead>
                                 <tr>
@@ -188,7 +191,7 @@ if ($ptu){
                 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="ptu-submit">Сохранить</button>
+                <button type="submit" class="btn btn-primary" id="ptu-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
             </div>
             
             <?= $this->form()->closeTag(); ?>

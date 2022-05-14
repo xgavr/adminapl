@@ -1,4 +1,6 @@
 <?php
+    use Stock\Entity\Ptu;
+
     $this->headTitle('Поступление товаров');
 
     $this->mainMenu()->setActiveItemId('supplier');
@@ -15,16 +17,20 @@
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
-<!--                <button class="btn btn-default" data-toggle="modal" data-target="#modal-dialog" value="/ptu/edit-form">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>-->
-                <button class="btn btn-default ptu-modal-show" type="button" modal-url="/ptu/edit-form">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>                
                 <div class="form-group">
-                    <input name="search" style="width: 150px" class="form-control" type="text" placeholder="Поиск">
-                    <button id="ok" type="submit" class="btn btn-default">OK</button>
-                </div>
+                    <button class="btn btn-default ptu-modal-show" type="button" modal-url="/ptu/edit-form">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>    
+                <div class="form-group">
+                    <div class="btn-group">
+                        <input id="searchinput" name="search" style="width: 150px" class="form-control" type="text" placeholder="Артикул">
+                        <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                    </div>
+                    <button id="ok" type="submit" class="btn btn-default" title="Поиск">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>    
                 <div class="form-group">
                     <select id="supplierSelect" style="width: 250px" class="form-control">
                         <option selected>поставщик</option>
@@ -64,6 +70,7 @@
             data-sort-order="desc"            
             data-classes = "table table-bordered table-hover table-condensed"
             data-response-handler="responseHandler"
+            data-row-style="rowStyle"
             >
             <thead>
                 <tr>
@@ -75,9 +82,9 @@
                      <th data-field='contract.name' data-sortable="false">Договор</th>
                      <th data-field='office.name' data-sortable="false">Склад</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
-                     <th data-field='status' data-sortable="false">П</th>
+<!--                     <th data-field='status' data-sortable="false">П</th>
                      <th data-field='statusDoc' data-sortable="false">Т</th>
-                     <th data-field='statusEx' data-sortable="false">О</th>
+                     <th data-field='statusEx' data-sortable="false">О</th>-->
                      <th data-field="" data-formatter="activeFormatter"></th>
                      <th data-field="id" data-formatter="vtpFormatter"></th>
                  </tr>                
@@ -96,7 +103,11 @@
     
     $(function () {
         ok.click(function () {
-            table.bootstrapTable('refresh');
+            refreshTable();
+        });
+        $(".inputclear").click(function(){
+            $("#searchinput").val('');
+            refreshTable();
         });
         $(document).on('click', '.ptu-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
@@ -182,6 +193,18 @@
         params.month = $('#monthSelect').val();
         
         return params;
+    }
+    
+    function rowStyle(row){
+        var retired = 'tablerow';
+        if (row.status == '<?= Ptu::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }
+        if (row.status == '<?= Ptu::STATUS_COMMISSION?>'){
+           retired += ' warning';
+        }
+        
+        return {classes: retired};
     }
     
     function idFormatter(value, row){
