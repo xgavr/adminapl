@@ -25,7 +25,7 @@ $form->get('unit')->setAttributes([
     ]);
 
 $form->get('country')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control basicAutoComplete', 
     'data-url' => '\ptu\autocompete-country',
     'autocomplete' => 'off',
     ]);
@@ -170,49 +170,14 @@ $docName = 'Новый';
     });    
     
     $( document ).ready(function() {
-        $('#good').selectpicker({
-                liveSearch: true,
-            })
-            .ajaxSelectPicker({
-                ajax: {
-                    url: '/goods/live-search',
-                    data: function () {
-                        var params = {
-                            search: '{{{q}}}',
-                            limit: 10
-                        };
-//                        if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
-//                            params.GroupID = gModel.selectedGroup().ContactGroupID;
-//                        }
-                        return params;
-                    }
-                },
-                locale: {
-                    emptyTitle: 'Поиск по артикулу...'
-                },
-                preprocessData: function(data){
-                    var goods = [];
-                    if(data.hasOwnProperty('rows')){
-                        var len = data.rows.length;
-                        for(var i = 0; i < len; i++){
-                            var curr = data.rows[i];
-                            goods.push(
-                                {
-                                    'value': curr.id,
-                                    'text': curr.code + ' ' + curr.producer.name + ' ' + curr.name,
-//                                    'data': {
-//                                        'icon': 'icon-person',
-//                                        'subtext': 'Internal'
-//                                    },
-                                    'disabled': false
-                                }
-                            );
-                        }
-                    }
-                    return goods;
-                },
-                preserveSelected: false
-            });  
+        $('#unit').autoComplete({
+            minLength: 1
+        });
+        $('#country').autoComplete({
+            minLength: 1,
+            bootstrapVersion: 3
+        });
+        $('#ntd').autoComplete();
         
         $("#price").on('input', function(){
             var value = $(this).val();
@@ -234,12 +199,6 @@ $docName = 'Новый';
                     $("#price").val(Math.round($("#amount").val()*100/$(this).val())/100);
                 }    
             }    
-        });
-        
-        $('#unit').autoComplete({
-            minLength: 1
-        });
-        $('#country').autoComplete();
-        $('#ntd').autoComplete();
+        });        
     });    
 </script>

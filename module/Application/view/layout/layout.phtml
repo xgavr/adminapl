@@ -14,7 +14,6 @@
         <?= 
             $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'])
                 ->prependStylesheet($this->basePath('css/style.css'))
-//                ->prependStylesheet($this->basePath('css/ajax-bootstrap-select.min.css'))
 
                 ->prependStylesheet('//cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css')
 
@@ -59,11 +58,9 @@
 
         <!-- Scripts -->
         <?= $this->headScript()
-//            ->prependFile($this->basePath('js/ajax-bootstrap-select.ru-RU.min.js'))
-//            ->prependFile($this->basePath('js/ajax-bootstrap-select.min.js'))
             ->prependFile($this->basePath('js/control-modal.min.js'))
             ->prependFile($this->basePath('js/jquery.mask.min.js'))
-            ->prependFile($this->basePath('js/BootstrapMenu.min.js'))
+//            ->prependFile($this->basePath('js/BootstrapMenu.min.js'))
         
 
             ->prependFile('//cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js')
@@ -88,7 +85,6 @@
             ])
         
             ->prependFile('//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js')
-//            ->prependFile('//code.jquery.com/ui/1.13.1/jquery-ui.js')
 
         ?>
     </head>

@@ -144,6 +144,8 @@ if ($ptu){
                         <table id="ptugoodtable" 
                             data-toggle="ptugoodtable" 
                             data-url="/ptu/good-content/<?= ($ptu) ? $ptu->getId():"" ?>"
+                            data-cookie-id-table="ptugoodSaveId"
+                            data-cookie-expire="1m"
                             data-side-pagination="client"
                             data-pagination="true"
                             data-page-size = "5"
@@ -164,8 +166,14 @@ if ($ptu){
                                      <th data-field="good.name" data-type="numeric">Наименование</th>
                                      <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
                                      <th data-field='quantity' data-align="right">Количество</th>
-                                     <th data-field='amount' data-align="right">Сумма</th>
-                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
+                                     <th data-field='amount' data-align="right" data-formatter="amountFormatter">Сумма</th>
+                                     <th data-field='unit.code' data-visible="false">ЕИ</th>
+                                     <th data-field='unit.name' data-visible="false">ЕИ</th>
+                                     <th data-field='country.code' data-visible="false">Страна</th>
+                                     <th data-field='country.name' data-visible="false">Страна</th>
+                                     <th data-field='ntd.ntd' data-visible="false">НТД</th>
+                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
+                                     <th data-field="rowNo" data-formatter="pgRemoveFormatter" data-width="10"></th>
                                  </tr>                
                             </thead>
                         </table>
@@ -350,7 +358,11 @@ if ($ptu){
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
 
-        btn += ' <button';
+        return btn;
+    }    
+    
+    function pgRemoveFormatter(value, row){
+        btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs table-row-remove"';
         btn += ' aria-label="Left Align"'; 
@@ -360,10 +372,14 @@ if ($ptu){
         btn += '</button>';
         return btn;
     }    
-    
+
     function pgPriceFormatter(value, row){
-        return Math.round(value*100/row.quantity)/100;
+        return (Math.round(value*100/row.quantity)/100).toFixed(2);
     }        
+    
+    function amountFormatter(value){
+        return (Math.round(value*100)/100).toFixed(2);
+    }    
     
     function ptugoodResponseHandler(res) {
         return res;

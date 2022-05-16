@@ -59,6 +59,7 @@
             data-url="/ptu/content"
             data-cookie="true"
             data-cookie-id-table="ptuSaveId"
+            data-cookie-expire="1y"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -66,7 +67,7 @@
             data-show-refresh="true"
             data-show-toggle="true"
             data-query-params="queryParams"
-            data-sort-name="id"
+            data-sort-name="docDate"
             data-sort-order="desc"            
             data-classes = "table table-bordered table-hover table-condensed"
             data-response-handler="responseHandler"
@@ -227,7 +228,7 @@
     }    
     
     function amountFormatter(value){
-        return Math.round(value*100)/100;
+        return (Math.round(value*100)/100).toFixed(2);
     }    
     
     function activeFormatter(value, row){
