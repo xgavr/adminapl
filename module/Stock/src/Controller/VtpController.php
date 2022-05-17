@@ -67,7 +67,7 @@ class VtpController extends AbstractActionController
         $ptu = null;
         if ($ptuId > 0){
             $ptu = $this->entityManager->getRepository(Ptu::class)
-                    ->findOneById($ptuId);
+                    ->find($ptuId);
         }    
         
         $q = $this->params()->fromQuery('search');
@@ -156,7 +156,7 @@ class VtpController extends AbstractActionController
         }    
         
         $ptu = $this->entityManager->getRepository(Ptu::class)
-                ->findOneById($ptuId);
+                ->find($ptuId);
         
         if ($ptu == null){
             $this->getResponse()->setStatusCode(404);
@@ -258,7 +258,7 @@ class VtpController extends AbstractActionController
             'form' => $form,
             'vtp' => $vtp,
             'ptu' => $ptu,
-            'allowDate' => $this->vtpManager->getAllowDate(),
+            'allowDate' => max($this->vtpManager->getAllowDate(), date('Y-m-d', strtotime($ptu->getDocDate().' - 1 day'))),
             'disabled' => !$notDisabled,
         ]);        
     }    

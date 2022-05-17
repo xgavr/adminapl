@@ -1,4 +1,5 @@
 <?php
+use Stock\Entity\Vtp;
 
 if ($ptu){
     $docName = '№ '.$ptu->getDocNo().' от  '.date('d.m.Y', strtotime($ptu->getDocDate()));
@@ -34,22 +35,20 @@ if ($ptu){
             data-sort-name="id"
             data-sort-order="desc"            
             data-response-handler="vtpResponseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-row-style="rowStyle"
             >
             <thead>
                 <tr>
-                     <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
                      <th data-field="docDate" data-sortable="true">Дата</th>
-                     <th data-field="id" data-sortable="false">Номер</th>
-                     <th data-field="aplId" data-type="numeric"data-align="right">AplId</th>
-                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                     <th data-field="id" data-sortable="false" data-formatter="vtpDocNumFormatter">Номер</th>
+                     <th data-field='amount' data-sortable="true" data-align="right" data-formatter="vtpAmountFormatter">Сумма</th>
                      <th data-field='ptu.legal.name' data-sortable="false">Поставщик</th>
-                     <th data-field='ptu.contract.name' data-sortable="false">Договор</th>
                      <th data-field='ptu.office.name' data-sortable="false">Склад</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
-                     <th data-field='status' data-sortable="false">П</th>
-                     <th data-field='statusDoc' data-sortable="false">Т</th>
-                     <th data-field='statusEx' data-sortable="false">О</th>
-                     <th data-field="" data-formatter="vtpActiveFormatter"></th>
+                     <th data-field="id" data-formatter="printFormatter">Торг2</th>
+                     <th data-field="id" data-formatter="updFormatter">УПД</th>
+                     <th data-field="id" data-formatter="vtpActiveFormatter" data-align="center"></th>
                  </tr>                
             </thead>
         </table>
@@ -65,6 +64,20 @@ if ($ptu){
             }            
         });         
     });
+    function rowStyle(row){
+        var retired = 'tablerow';
+        if (row.status == '<?= Vtp::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }
+        switch(row.statusDoc){
+            case '<?= Vtp::STATUS_DOC_NOT_RECD?>': 
+                        return {classes: 'success '+retired}; break;
+            case '<?= Vtp::STATUS_DOC_RECD?>': 
+                        return {classes: 'warning '+retired}; break;
+                default:break;     
+        }        
+        return {classes: retired};
+    }
     
     function vtpRefreshTable(){
         $('#vtptable').bootstrapTable('refresh');
@@ -86,8 +99,19 @@ if ($ptu){
         return params;
     }
 
+    function vtpAmountFormatter(value){
+        return (Math.round(value*100)/100).toFixed(2);
+    }    
+
+    function vtpDocNumFormatter(value, row){
+        if (row.aplId > 0){
+            return row.aplId;
+        }
+        return value;
+    }    
+    
     function vtpActiveFormatter(value, row){
-        var url = '/vtp/edit-form/'+row.id;
+        var url = '/vtp/edit-form/'+value;
         btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs vtp-modal-show"';
@@ -99,7 +123,115 @@ if ($ptu){
         return btn;
     }    
     
+    function printFormatter(value, row){
+
+        var url = '/print/vtp-torg2/'+value;
+        btn = '<a href="'+url+'" target="_blank">pdf</a>';
+        url = '/print/vtp-torg2/'+value+'?ext=Xls';
+        btn += ' <a href="'+url+'" target="_blank">xls</a>';
+        return btn;
+    }    
+    
+    function updFormatter(value, row){
+
+        var url = '/print/vtp-upd/'+value;
+        btn = '<a href="'+url+'" target="_blank">pdf</a>';
+        url = '/print/vtp-upd/'+value+'?ext=Xls';
+        btn += ' <a href="'+url+'" target="_blank">xls</a>';
+        return btn;
+    }    
+    
     function vtpResponseHandler(res) {
         return res;
-    }     
+    }    
+    
+    function changeStatus(vtpId, status){
+        $.get( "/vtp/status/"+vtpId+'?status='+status, function(data){
+            refreshTable();
+        });        
+    }
+
+    function changeStatusDoc(vtpId, statusDoc){
+        $.get( "/vtp/status-doc/"+vtpId+'?status='+statusDoc, function(data){
+            refreshTable();
+        });        
+    }
+    
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            var rowId = $(rowElem).attr('data-index');
+            return table.bootstrapTable('getData')[rowId];
+        },
+        actionsGroups: [
+           ['statusActiv', 'statusRetired'],
+        ],      
+        actions: {
+            statusDocNew: {
+                name: 'Новый',
+                onClick: function(row) {
+                    changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NEW?>);
+                },
+                isShown: function(row) {
+                  return row.statusDoc != '<?= Vtp::STATUS_DOC_NEW?>';
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
+            }, 
+            statusDocRect: {
+                name: 'Отправлен',
+                classNames: 'bg-warning',
+                onClick: function(row) {
+                    changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_RECD?>);
+                },
+                isShown: function(row) {
+                  return row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>';
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
+            }, 
+            statusDocNotRect: {
+                name: 'Принят',
+//                iconClass: 'glyphicon glyphicon-ok',
+                classNames: 'bg-success',
+                onClick: function(row) {
+                    changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NOT_RECD?>);
+                },
+                isShown: function(row) {
+                  return row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>';
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
+            }, 
+            statusActiv: {
+                name: 'Сделать активным',
+                iconClass: 'glyphicon glyphicon-ok',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Vtp::STATUS_ACTIVE?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Vtp::STATUS_RETIRED?>;
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
+            }, 
+            statusRetired: {
+                name: 'Сделать не активным',
+                iconClass: 'glyphicon glyphicon-remove',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Vtp::STATUS_RETIRED?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Vtp::STATUS_ACTIVE?>;
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
+            }
+        }
+    });    
 </script>
