@@ -11,12 +11,17 @@ $form->get('company')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('comiss')->setAttributes([
-    'class'=>'form-control selectpicker', 
+$form->get('comissSearch')->setAttributes([
+    'class'=>'form-control', 
+    'data-provide' => "typeahead",
+    'autocomplete' => 'off',
+    'placeholder' => 'Телефон'
     ]);
 
 $form->get('doc_date')->setAttributes([
     'class'=>'form-control', 
+    'min' => date('Y-m-d', strtotime($allowDate.' + 1 day')),
+    'disabled' => $disabled,
     ]);
 
 $form->get('doc_no')->setAttributes([
@@ -104,9 +109,10 @@ if ($ot){
                     </div>    
                     <div class="col-xs-3">                        
                         <div class="form-group" id="comissGroup">
-                            <?= $this->formLabel($form->get('comiss')); ?>
-                            <?= $this->formElement($form->get('comiss')); ?>
-                            <?= $this->formElementErrors($form->get('comiss')); ?>                  
+                            <?= $this->formLabel($form->get('comissSearch')); ?>
+                            <em id="comissName"><?= $contactName?></em>
+                            <?= $this->formElement($form->get('comissSearch')); ?>
+                            <?= $this->formElementErrors($form->get('comissSearch')); ?>                  
                         </div>
                     </div>    
                     <div class="col-xs-5 text-right">
@@ -144,7 +150,8 @@ if ($ot){
                                      <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
                                      <th data-field='quantity' data-align="right">Количество</th>
                                      <th data-field='amount' data-align="right">Сумма</th>
-                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
+                                     <th data-field="rowNo" data-formatter="pgEditFormatter" data-width="10"></th>
+                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
                                  </tr>                
                             </thead>
                         </table>
@@ -163,6 +170,7 @@ if ($ot){
 
 
 
+                        <?= $this->formElement($form->get('comiss')); ?>
                         <?= $this->formElement($form->get('csrf')); ?>
                     </div>
                 </div>
@@ -170,7 +178,7 @@ if ($ot){
                 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="ot-submit">Сохранить</button>
+                <button type="submit" class="btn btn-primary" id="ot-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
             </div>
             
             <?= $this->form()->closeTag(); ?>
@@ -257,6 +265,20 @@ if ($ot){
             }            
         }); 
         
+        $('#comissSearch').typeahead({
+            source: function(query, process) {
+                return $.post("/contact/live-search",{search: query, limit: 8} ,function (data) {
+                    return process(data.rows);
+                });
+            },
+            changeInputOnSelect: false,
+            afterSelect: function(data) {
+                $('#comiss').val(data.id);
+                $('#comissSearch').val(data.phone);
+                $('#comissName').html(data.contactName);
+            }
+        });
+        
         var forms = $('#ot-form');
         
         forms.submit(function() {
@@ -279,49 +301,6 @@ if ($ot){
             hideComissGroup();
         });
 
-        $('#comiss').selectpicker({
-                liveSearch: true,
-            })
-            .ajaxSelectPicker({
-                ajax: {
-                    url: '/contact/live-search',
-                    data: function () {
-                        var params = {
-                            search: '{{{q}}}',
-                            limit: 10
-                        };
-//                        if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
-//                            params.GroupID = gModel.selectedGroup().ContactGroupID;
-//                        }
-                        return params;
-                    }
-                },
-                locale: {
-                    emptyTitle: 'Поиск по телефону...'
-                },
-                preprocessData: function(data){
-                    var contacts = [];
-                    if(data.hasOwnProperty('rows')){
-                        var len = data.rows.length;
-                        for(var i = 0; i < len; i++){
-                            var curr = data.rows[i];
-                            contacts.push(
-                                {
-                                    'value': curr.id,
-                                    'text': '('+ curr.phone+ ') ' + curr.name,
-//                                    'data': {
-//                                        'icon': 'icon-person',
-//                                        'subtext': 'Internal'
-//                                    },
-                                    'disabled': false
-                                }
-                            );
-                        }
-                    }
-                    return contacts;
-                },
-                preserveSelected: false
-            });  
     });    
     
     function otGoodRefreshTable(){
@@ -344,7 +323,7 @@ if ($ot){
         return params;
     }
     
-    function pgActiveFormatter(value, row){
+    function pgEditFormatter(value, row){
         var url = '/ot/good-edit-form/';
         btn = '<button';
         btn += ' type="button"';
@@ -354,8 +333,11 @@ if ($ot){
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
-
-        btn += ' <button';
+        return btn;
+    }    
+    
+    function pgActiveFormatter(value, row){
+        btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs table-row-remove"';
         btn += ' aria-label="Left Align"'; 

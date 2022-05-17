@@ -115,29 +115,26 @@ class OtForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'type'  => 'hidden',
             'name' => 'comiss',
             'attributes' => [                
                 'id' => 'comiss',
+//                'required' => 'required',                
             ],
             'options' => [
-                'disable_inarray_validator' => true,
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Contact',
                 'label' => 'Комитент',
-                'property'       => 'name',
-                'display_empty_item' => false,
-                'empty_item_label'   => '---',                 
-                'is_method' => false,
-                'find_method'    => [
-                   'name'   => 'formFind',
-                   'params' => [
-                       'params' => ['contact' => $this->comiss],
-                   ],
-                ],                
-//                'label_generator' => function ($targetEntity) {
-//                    return $targetEntity->getFullName();
-//                },
+            ],
+        ]);
+
+        $this->add([
+            'type'  => 'text',
+            'name' => 'comissSearch',
+            'attributes' => [                
+                'id' => 'comissSearch',
+//                'required' => 'required',                
+            ],
+            'options' => [
+                'label' => 'Комитент',
             ],
         ]);
 
@@ -161,7 +158,7 @@ class OtForm extends Form implements ObjectManagerAwareInterface
             'name' => 'doc_no',
             'attributes' => [                
                 'id' => 'docNo',
-//                'required' => 'required',                
+                'disabled' => true,                
             ],
             'options' => [
                 'label' => 'Номер документа',

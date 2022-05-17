@@ -4,6 +4,7 @@ namespace Stock\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Stock\Service\OtManager;
 use Admin\Service\LogManager;
+use Admin\Service\AdminManager;
 
 /**
  * This is the factory class for OtManager service. The purpose of the factory
@@ -18,7 +19,8 @@ class OtManagerFactory
     {        
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
+        $adminManager = $container->get(AdminManager::class);
                         
-        return new OtManager($entityManager, $logManager);
+        return new OtManager($entityManager, $logManager, $adminManager);
     }
 }

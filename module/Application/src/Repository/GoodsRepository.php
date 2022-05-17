@@ -16,7 +16,7 @@ use Application\Filter\ArticleCode;
 use Application\Entity\ArticleTitle;
 use Application\Entity\TokenGroup;
 use Stock\Entity\PtuGood;
-
+use Application\Filter\KeyboardTranslit;
 
 
 /**
@@ -1857,4 +1857,36 @@ class GoodsRepository extends EntityRepository
 
         return $queryBuilder->getQuery()->getResult();       
     }
+    
+    /**
+     * Запрос для автозаполения
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function autocompeteGood($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['search'])){
+                //$ktFilter = new KeyboardTranslit();
+                //$search = $ktFilter->filter($params['search']);
+//                var_dump($search);
+                $queryBuilder
+                    ->where('g.code like ?1')                           
+                    ->setParameter('1', $params['search'].'%')
+                    ->setMaxResults(8)    
+                        ;
+            }            
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery();
+    }        
 }

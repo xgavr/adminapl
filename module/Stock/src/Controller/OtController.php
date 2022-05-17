@@ -60,7 +60,13 @@ class OtController extends AbstractActionController
         $order = $this->params()->fromQuery('order', 'DESC');
         $officeId = $this->params()->fromQuery('office');
         $year = $this->params()->fromQuery('year');
-        $month = $this->params()->fromQuery('month');
+        $year_month = $this->params()->fromQuery('month');
+        
+        $year = $month = null;
+        if ($year_month){
+            $year = date('Y', strtotime($year_month));
+            $month = date('m', strtotime($year_month));
+        }
         
         $params = [
             'q' => $q, 'sort' => $sort, 'order' => $order, 
@@ -121,8 +127,8 @@ class OtController extends AbstractActionController
     {
         $otId = (int)$this->params()->fromRoute('id', -1);
         
-        $ot = $office = $company = $comiss = null;
-        
+        $ot = $office = $company = $comiss = $contactName= null;
+        $notDisabled = true;        
         if ($otId > 0){
             $ot = $this->entityManager->getRepository(Ot::class)
                     ->findOneById($otId);
@@ -196,8 +202,11 @@ class OtController extends AbstractActionController
                 ];
                 if ($ot->getComiss()){
                     $data['comiss'] = $ot->getComiss()->getId();
+                    $data['comissSearch'] = $ot->getComiss()->getPhone()->getName(\User\Filter\PhoneFilter::PHONE_FORMAT_DB);
+                    $contactName = $ot->getComiss()->getName();
                 }
                 $form->setData($data);
+                $notDisabled = $ot->getDocDate() > $this->otManager->getAllowDate();
             }    
         }
         $this->layout()->setTemplate('layout/terminal');
@@ -205,6 +214,9 @@ class OtController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'ot' => $ot,
+            'allowDate' => $this->otManager->getAllowDate(),
+            'disabled' => !$notDisabled,
+            'contactName' => $contactName,
         ]);        
     }    
         
@@ -247,7 +259,9 @@ class OtController extends AbstractActionController
         } else {
             if ($good){
                 $data = [
-                    'good' => $params['good']['id'],
+                    'good' => $good->getId(),
+                    'code' => $good->getCode(),
+                    'goodInputName' => $good->getInputName(),
                     'quantity' => $params['quantity'],
                     'amount' => $params['amount'],
                     'price' => $params['amount']/$params['quantity'],

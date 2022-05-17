@@ -27,14 +27,40 @@ class OtManager
     private $logManager;
         
     /**
+     * Admin manager
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+        
+    /**
+     * Дата запрета
+     * @var string
+     */
+    private $allowDate;
+    
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager) 
+    public function __construct($entityManager, $logManager, $adminManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
+        $this->adminManager = $adminManager;
+        
+        $setting = $this->adminManager->getSettings();
+        $this->allowDate = $setting['allow_date'];
+        
     }
     
+    /**
+     * Получить дату запрета
+     * @return date
+     */
+    public function getAllowDate()
+    {
+        return $this->allowDate; 
+    }
+            
     /**
      * Обновить движения документа
      * 
@@ -49,32 +75,34 @@ class OtManager
         $this->entityManager->getRepository(Comiss::class)
                 ->removeDocComiss($ot->getLogKey());
 
-        $otGoods = $this->entityManager->getRepository(OtGood::class)
-                ->findByOt($ot->getId());
-        
-        foreach ($otGoods as $otGood){
-            $data = [
-                'doc_key' => $ot->getLogKey(),
-                'doc_row_key' => $otGood->getDocRowKey(),
-                'doc_row_no' => $otGood->getRowNo(),
-                'date_oper' => $ot->getDocDate(),
-                'status' => $ot->getStatus(),
-                'quantity' => $otGood->getQuantity(),
-                'amount' => $otGood->getAmount(),
-                'good_id' => $otGood->getGood()->getId(),
-                'office_id' => $ot->getOffice()->getId(),
-                'company_id' => $ot->getCompany()->getId(),
-            ];
+        if ($ot->getStatus() == Ot::STATUS_ACTIVE){        
+            $otGoods = $this->entityManager->getRepository(OtGood::class)
+                    ->findByOt($ot->getId());
 
-            $this->entityManager->getRepository(Movement::class)
-                    ->insertMovement($data);
-            
-            if ($ot->getStatus() == Ot::STATUS_COMMISSION){
-                $data['contact_id'] = $ot->getComiss()->getId();
-                $this->entityManager->getRepository(Comiss::class)
-                        ->insertComiss($data);
+            foreach ($otGoods as $otGood){
+                $data = [
+                    'doc_key' => $ot->getLogKey(),
+                    'doc_row_key' => $otGood->getDocRowKey(),
+                    'doc_row_no' => $otGood->getRowNo(),
+                    'date_oper' => $ot->getDocDate(),
+                    'status' => $ot->getStatus(),
+                    'quantity' => $otGood->getQuantity(),
+                    'amount' => $otGood->getAmount(),
+                    'good_id' => $otGood->getGood()->getId(),
+                    'office_id' => $ot->getOffice()->getId(),
+                    'company_id' => $ot->getCompany()->getId(),
+                ];
+
+                $this->entityManager->getRepository(Movement::class)
+                        ->insertMovement($data);
+
+                if ($ot->getStatus() == Ot::STATUS_COMMISSION){
+                    $data['contact_id'] = $ot->getComiss()->getId();
+                    $this->entityManager->getRepository(Comiss::class)
+                            ->insertComiss($data);
+                }
             }
-        }
+        }    
         
         return;
     }    
@@ -122,28 +150,32 @@ class OtManager
      */
     public function addOt($data)
     {
-        $ot = new Ot();        
-        $ot->setAplId($data['apl_id']);
-        $ot->setDocDate($data['doc_date']);
-        $ot->setComment($data['comment']);
-        $ot->setStatusEx($data['status_ex']);
-        $ot->setStatus($data['status']);
-        $ot->setStatusDoc(Ot::STATUS_DOC_NOT_RECD);
-        $ot->setOffice($data['office']);
-        $ot->setCompany($data['company']);
-        $ot->setAmount(0);
-        $ot->setDateCreated(date('Y-m-d H:i:s'));
-        if (!empty($data['comiss'])){
-            $ot->setComiss($data['comiss']);
-        }
-        if (!empty($data['doc_no'])){
-            $ot->setDocNo($data['doc_no']);
+        if ($data['doc_date'] > $this->allowDate){
+            $ot = new Ot();        
+            $ot->setAplId($data['apl_id']);
+            $ot->setDocDate($data['doc_date']);
+            $ot->setComment($data['comment']);
+            $ot->setStatusEx($data['status_ex']);
+            $ot->setStatus($data['status']);
+            $ot->setStatusDoc(Ot::STATUS_DOC_NOT_RECD);
+            $ot->setOffice($data['office']);
+            $ot->setCompany($data['company']);
+            $ot->setAmount(0);
+            $ot->setDateCreated(date('Y-m-d H:i:s'));
+            if (!empty($data['comiss'])){
+                $ot->setComiss($data['comiss']);
+            }
+            if (!empty($data['doc_no'])){
+                $ot->setDocNo($data['doc_no']);
+            }
+
+            $this->entityManager->persist($ot);        
+            $this->entityManager->flush();
+        
+            return $ot;        
         }
         
-        $this->entityManager->persist($ot);        
-        $this->entityManager->flush();
-        
-        return $ot;        
+        return;
     }
     
     /**
@@ -154,23 +186,25 @@ class OtManager
      */
     public function updateOt($ot, $data)            
     {
-        $ot->setAplId($data['apl_id']);
-        $ot->setDocDate($data['doc_date']);
-        $ot->setComment($data['comment']);
-        $ot->setStatusEx($data['status_ex']);
-        $ot->setStatus($data['status']);
-        $ot->setOffice($data['office']);
-        $ot->setCompany($data['company']);
-        $ot->setComiss(null);
-        if (!empty($data['comiss'])){
-            $ot->setComiss($data['comiss']);
-        }
-        if (!empty($data['doc_no'])){
-            $ot->setDocNo($data['doc_no']);
-        }
-        
-        $this->entityManager->persist($ot);
-        $this->entityManager->flush($ot);
+        if ($data['doc_date'] > $this->allowDate){
+            $ot->setAplId($data['apl_id']);
+            $ot->setDocDate($data['doc_date']);
+            $ot->setComment($data['comment']);
+            $ot->setStatusEx($data['status_ex']);
+            $ot->setStatus($data['status']);
+            $ot->setOffice($data['office']);
+            $ot->setCompany($data['company']);
+            $ot->setComiss(null);
+            if (!empty($data['comiss'])){
+                $ot->setComiss($data['comiss']);
+            }
+            if (!empty($data['doc_no'])){
+                $ot->setDocNo($data['doc_no']);
+            }
+
+            $this->entityManager->persist($ot);
+            $this->entityManager->flush($ot);
+        }    
         
         return;
     }
@@ -283,14 +317,16 @@ class OtManager
      */
     public function removeOt($ot)
     {
-        $this->logManager->infoOt($ot, Log::STATUS_DELETE);
-        $this->entityManager->getRepository(Movement::class)
-                ->removeDocMovements($ot->getLogKey());
-        $this->entityManager->getRepository(Comiss::class)
-                ->removeDocComiss($ot->getLogKey());
-        $this->removeOtGood($ot);
-        
-        $this->entityManager->getConnection()->delete('ot', ['id' => $ot->getId()]);
+        if ($data['doc_date'] > $this->allowDate){
+            $this->logManager->infoOt($ot, Log::STATUS_DELETE);
+            $this->entityManager->getRepository(Movement::class)
+                    ->removeDocMovements($ot->getLogKey());
+            $this->entityManager->getRepository(Comiss::class)
+                    ->removeDocComiss($ot->getLogKey());
+            $this->removeOtGood($ot);
+
+            $this->entityManager->getConnection()->delete('ot', ['id' => $ot->getId()]);
+        }    
         
         return;
     }

@@ -98,7 +98,7 @@ class ContactRepository extends EntityRepository
     }
     
     /**
-     * Запрос по поиска
+     * Поиск по телефону
      * 
      * @param array $params
      * @return object
@@ -109,7 +109,7 @@ class ContactRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c.id, c.name, p.name as phone')
+        $queryBuilder->select('c.id, concat(p.name, \' \', c.name) as name, c.name as contactName, p.name as phone')
             ->from(Contact::class, 'c')
             ->join('c.phones', 'p')
             ->where('u.id = 0')    

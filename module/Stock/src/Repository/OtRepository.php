@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Company\Entity\Office;
 use Stock\Entity\Ot;
 use Stock\Entity\OtGood;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of OtRepository
@@ -90,6 +91,14 @@ class OtRepository extends EntityRepository{
                     $queryBuilder->andWhere('MONTH(o.docDate) = :month')
                             ->setParameter('month', $params['month']);
                 }    
+            }
+            if (!empty($params['q'])){     
+                $articleCodeFilter = new ArticleCode(); 
+                $queryBuilder->distinct()
+                        ->join('o.otGoods', 'og')
+                        ->join('og.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
             }
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -175,6 +184,14 @@ class OtRepository extends EntityRepository{
                     $queryBuilder->andWhere('MONTH(o.docDate) = :month')
                             ->setParameter('month', $params['month']);
                 }    
+            }
+            if (!empty($params['q'])){     
+                $articleCodeFilter = new ArticleCode(); 
+                $queryBuilder->distinct()
+                        ->join('o.otGoods', 'og')
+                        ->join('og.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
             }
         }
         

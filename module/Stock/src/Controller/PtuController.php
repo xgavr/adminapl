@@ -54,8 +54,6 @@ class PtuController extends AbstractActionController
         return new ViewModel([
             'suppliers' => $suppliers,
             'offices' => $offices,
-            'years' => array_combine(range(date("Y"), 2014), range(date("Y"), 2014)),
-            'monthes' => array_combine(range(1, 12), range(1, 12)),
         ]);  
     }
         
@@ -202,6 +200,7 @@ class PtuController extends AbstractActionController
                     $ptu = $this->ptuManager->addPtu($data);
                 }    
                 
+//                var_dump($ptuGood); exit;
                 $this->ptuManager->updatePtuGoods($ptu, $ptuGood);
                 
                 $this->ptuManager->repostPtu($ptu);
@@ -244,7 +243,7 @@ class PtuController extends AbstractActionController
         $good = $rowNo = $result = null;        
         if (isset($params['good'])){
             $good = $this->entityManager->getRepository(Goods::class)
-                    ->findOneById($params['good']['id']);            
+                    ->find($params['good']['id']);            
         }
         if (isset($params['rowNo'])){
             $rowNo = $params['rowNo'];
@@ -258,7 +257,7 @@ class PtuController extends AbstractActionController
             $form->setData($data);
             if (isset($data['good'])){
                 $good = $this->entityManager->getRepository(Goods::class)
-                        ->findOneById($data['good']);            
+                        ->find($data['good']);            
             }
 
             if ($form->isValid()) {
@@ -276,7 +275,9 @@ class PtuController extends AbstractActionController
         } else {
             if ($good){
                 $data = [
-                    'good' => $params['good']['id'],
+                    'good' => $good->getId(),
+                    'code' => $good->getCode(),
+                    'goodInputName' => $good->getInputName(),
                     'quantity' => $params['quantity'],
                     'amount' => $params['amount'],
                     'price' => $params['amount']/$params['quantity'],
@@ -310,11 +311,28 @@ class PtuController extends AbstractActionController
         
         $this->ptuManager->removePtu($ptu);
         
-        // Перенаправляем пользователя на страницу "rb/tax".
         return new JsonModel(
            ['ok']
         );           
     }
+    
+    public function autocompeteGoodAction()
+    {
+        $result = [];
+        $q = $this->params()->fromQuery('q');
+        
+        if ($q){
+            $query = $this->entityManager->getRepository(Goods::class)
+                            ->autocompeteGood(['search' => $q]);
+
+            $data = $query->getResult();
+            foreach ($data as $row){
+                $result[] = ['id' => $row->getId(), 'name' => $row->getInputName(), 'code' => $row->getCode()];
+            }
+        }    
+        
+        return new JsonModel($result);
+    }        
     
     public function autocompeteUnitAction()
     {
@@ -345,7 +363,7 @@ class PtuController extends AbstractActionController
 
             $data = $query->getResult();
             foreach ($data as $row){
-                $result[] = $row->getName();
+                $result[] = $row->getNtd();
             }
         }    
         

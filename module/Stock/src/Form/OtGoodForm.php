@@ -51,31 +51,37 @@ class OtGoodForm extends Form implements ObjectManagerAwareInterface
     {
                 
         $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'type'  => 'hidden',
             'name' => 'good',
             'attributes' => [                
-                'id' => 'good',
+                'id' => 'good'
             ],
             'options' => [
-                'disable_inarray_validator' => true,
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Goods',
-                'label' => 'Товар',
-                'property'       => 'name',
-                'display_empty_item' => false,
-                'empty_item_label'   => '--выберете товар--',                 
-                'is_method' => true,
-                'find_method'    => [
-                   'name'   => 'formFind',
-                   'params' => [
-                       'params' => ['good' => $this->good],
-                   ],
-                ],                
-                'label_generator' => function ($targetEntity) {
-                    return $targetEntity->getCode() . ' ' . $targetEntity->getProducer()->getName() . ' ' . $targetEntity->getName();
-                },
+                'label' => 'Товар Ид',
             ],
-        ]);
+       ]);
+        
+        $this->add([
+            'type'  => 'text',
+            'name' => 'code',
+            'attributes' => [                
+                'id' => 'code'
+            ],
+            'options' => [
+                'label' => 'Артикул',
+            ],
+        ]);        
+
+        $this->add([
+            'type'  => 'text',
+            'name' => 'goodInputName',
+            'attributes' => [                
+                'id' => 'goodInputName'
+            ],
+            'options' => [
+                'label' => 'Товар',
+            ],
+       ]);        
 
         $this->add([
             'type'  => 'number',

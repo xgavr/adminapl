@@ -337,7 +337,10 @@ class Goods {
 
     public function getName() 
     {
-        return $this->name;
+        if ($this->name){
+            return $this->name;
+        }
+        return 'Нет названия';
     }
 
     public function getNameShort() 
@@ -347,7 +350,12 @@ class Goods {
                 return $this->tokenGroup->getName();
             }    
         }
-        return $this->name;
+        return $this->getName();
+    }
+
+    public function getInputName() 
+    {
+        return $this->code.';'.$this->producer->getName().';'.$this->getNameShort();
     }
 
     public function getNameProducerCode() 
