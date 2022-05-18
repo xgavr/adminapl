@@ -75,7 +75,7 @@ class OtManager
         $this->entityManager->getRepository(Comiss::class)
                 ->removeDocComiss($ot->getLogKey());
 
-        if ($ot->getStatus() == Ot::STATUS_ACTIVE){        
+        if ($ot->getStatus() != Ot::STATUS_RETIRED){        
             $otGoods = $this->entityManager->getRepository(OtGood::class)
                     ->findByOt($ot->getId());
 

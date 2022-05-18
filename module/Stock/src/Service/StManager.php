@@ -69,7 +69,7 @@ class StManager
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($st->getLogKey());
         
-        if ($st->getDocDate() == St::STATUS_ACTIVE){
+        if ($st->getStatus() == St::STATUS_ACTIVE){
             $stGoods = $this->entityManager->getRepository(StGood::class)
                     ->findBySt($st->getId());
         
@@ -182,6 +182,7 @@ class StManager
             $st->setDocDate($data['doc_date']);
             $st->setComment($data['comment']);
             $st->setStatus($data['status']);
+            $st->setStatusEx(St::STATUS_EX_NEW);
             $st->setWriteOff($data['writeOff']);
             $st->setOffice($data['office']);
             $st->setCompany($data['company']);
