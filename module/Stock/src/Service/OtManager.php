@@ -166,7 +166,7 @@ class OtManager
                 $ot->setComiss($data['comiss']);
             }
             if (!empty($data['doc_no'])){
-                $ot->setDocNo($data['doc_no']);
+                //$ot->setDocNo($data['doc_no']);
             }
 
             $this->entityManager->persist($ot);        
@@ -199,7 +199,7 @@ class OtManager
                 $ot->setComiss($data['comiss']);
             }
             if (!empty($data['doc_no'])){
-                $ot->setDocNo($data['doc_no']);
+//                $ot->setDocNo($data['doc_no']);
             }
 
             $this->entityManager->persist($ot);
