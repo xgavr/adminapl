@@ -277,6 +277,19 @@ class OtGood {
     }
     
     /**
+     * Returns the price of good.
+     * @return float     
+     */
+    public function getPrice() 
+    {
+        if ($this->quantity){
+            return round($this->amount/$this->quantity, 2);
+        }
+        
+        return 0;
+    }
+    
+    /**
      * Returns the ot.
      * @return Ot     
      */
