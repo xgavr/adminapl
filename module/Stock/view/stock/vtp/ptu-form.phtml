@@ -54,18 +54,23 @@ if ($ptu){
         </table>
     </div>
 </div>    
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+</div>
 
 <script>
-    $( document ).ready(function() {
-        
-        $('#vtptable').bootstrapTable({
+    var vtptable = $('#vtptable');
+    
+    $( document ).ready(function() {        
+        vtptable.bootstrapTable({
             onLoadSuccess: function(res){
                 
             }            
         });         
     });
+    
     function vtpRowStyle(row){
-        var retired = 'tablerow';
+        var retired = 'vtptablerow';
         if (row.status == '<?= Vtp::STATUS_RETIRED?>'){
            retired += ' retired';
         }
@@ -80,7 +85,7 @@ if ($ptu){
     }
     
     function vtpRefreshTable(){
-        $('#vtptable').bootstrapTable('refresh');
+        vtptable.bootstrapTable('refresh');
     }
 
     function vtpQueryParams(params) {
@@ -147,20 +152,20 @@ if ($ptu){
     
     function changeStatus(vtpId, status){
         $.get( "/vtp/status/"+vtpId+'?status='+status, function(data){
-            refreshTable();
+            vtpRefreshTable();
         });        
     }
 
     function changeStatusDoc(vtpId, statusDoc){
         $.get( "/vtp/status-doc/"+vtpId+'?status='+statusDoc, function(data){
-            refreshTable();
+            vtpRefreshTable();
         });        
     }
     
-    var menu = new BootstrapMenu('.tablerow', {
+    var menu = new BootstrapMenu('.vtptablerow', {
         fetchElementData: function(rowElem) {
             var rowId = $(rowElem).attr('data-index');
-            return table.bootstrapTable('getData')[rowId];
+            return vtptable.bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
            ['statusActiv', 'statusRetired'],
