@@ -34,9 +34,15 @@ $priceCols = $goodsManager->priceCols($goods);
                             title="Обновить наименование">
                         <span class="glyphicon glyphicon-refresh" ></span>
                     </button> 
-                    <?php if ($goods->getName()): ?>
-                        <?= $this->escapeHtml($goods->getName()); ?>
-                    <?php endif;?>
+                    <a href="#" 
+                       class="editable" data-type="text" 
+                       data-pk="<?= $goods->getId()?>" 
+                       data-name="name" 
+                       data-url="/goods/name-edit">
+                            <?php if ($goods->getName()): ?>
+                                <?= $this->escapeHtml($goods->getName()); ?>
+                            <?php endif;?>
+                    </a>
                 </h3>
                 <h6>
                     <button value="/name/update-description/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"

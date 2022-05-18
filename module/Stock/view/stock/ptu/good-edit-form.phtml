@@ -227,21 +227,21 @@ $docName = 'Новый';
         });
         $('#unit').typeahead({
             source: function(query, process) {
-                return $.get("/ptu/autocompete-unit?q="+query, function (data) {
+                return $.get("/ptu/autocomplete-unit?q="+query, function (data) {
                     return process(data);
                 });
             }
         });
         $('#country').typeahead({
             source: function(query, process) {
-                return $.get("/ptu/autocompete-country?q="+query, function (data) {
+                return $.get("/ptu/autocomplete-country?q="+query, function (data) {
                     return process(data);
                 });
             },
         });
         $('#ntd').typeahead({
             source: function(query, process) {
-                return $.get("/ptu/autocompete-ntd?q="+query, function (data) {
+                return $.get("/ptu/autocomplete-ntd?q="+query, function (data) {
                     return process(data);
                 });
             },

@@ -20,6 +20,8 @@ use Application\Form\GoodsForm;
 use Application\Form\GoodSettingsForm;
 use Application\Form\UploadForm;
 use Application\Entity\Oem;
+use Application\Entity\UnknownProducer;
+use Application\Filter\ArticleCode;
 
 class GoodsController extends AbstractActionController
 {
@@ -78,6 +80,102 @@ class GoodsController extends AbstractActionController
         $this->externalManager = $externalManager;
         $this->rateManager = $rateManager;
     }  
+    
+    public function autocompleteGoodAction()
+    {
+        $result = [];
+        $q = $this->params()->fromQuery('q');
+        
+        if ($q){
+            $query = $this->entityManager->getRepository(Goods::class)
+                            ->autocompleteGood(['search' => $q]);
+
+            $data = $query->getResult();
+            foreach ($data as $row){
+                $result[] = [
+                    'id' => $row->getId(), 
+                    'name' => $row->getInputName(), 
+                    'nameShort' => $row->getNameShort(), 
+                    'code' => $row->getCode(),
+                    'producer' => $row->getProducer()->getName()
+                ];
+            }
+        }    
+        
+        return new JsonModel($result);
+    }        
+    
+    public function autocompleteProducerAction()
+    {
+        $result = [];
+        $q = $this->params()->fromQuery('q');
+        
+        if ($q){
+            $query = $this->entityManager->getRepository(UnknownProducer::class)
+                            ->autocompleteProducer(['search' => $q]);
+
+            $data = $query->getResult();
+            foreach ($data as $row){
+                $result[] = [
+                    'id' => $row->getId(), 
+                    'name' => $row->getName(), 
+                ];
+            }
+        }    
+        
+        return new JsonModel($result);
+    }        
+    
+    public function editFormAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        
+        $good = $producer = null;
+        if ($goodId > 0){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+        }    
+        
+        $form = new GoodsForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                $producer = $this->assemblyManager->addProducer($data['producer']);
+                if ($producer){
+                    $codeFilter = new ArticleCode();
+                    $codeFiltered = $codeFilter->filter($data['code']);
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->findBy(['code' => $codeFiltered, 'producer' => $producer->getId()]);
+                    if (empty($good)){
+                        $good = $this->assemblyManager->addNewGood($data['code'], $producer, null, 0, $data['name']);
+                    }    
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($good){
+                $data = [
+                    'name' => $good->getName(),
+                    'producer' => $good->getProducer()->getName(),
+                    'code' => $good->getCode(),
+                ];
+                $form->setData($data);
+            }    
+        }
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'good' => $good,
+        ]);        
+    }        
     
     public function assemblyAction()
     {
@@ -316,27 +414,6 @@ class GoodsController extends AbstractActionController
             'total' => $total,
             'rows' => $result,
         ]);          
-    }    
-    
-    public function autocompleteGoodAction()
-    {
-        $result = [];
-        $q = $this->params()->fromQuery('q');
-        
-        if ($q){
-            $query = $this->entityManager->getRepository(Goods::class)
-                            ->autocompleteGood(['search' => $q]);
-
-            $data = $query->getResult(2);
-            foreach ($data as $row){
-                $result[] = [
-                    'value' => $row['goods']['id'],
-                    'text' => $row['goods']['code'].' '.$row['producer']['name'].' '.$row['goods']['name'],
-                ];
-            }
-        }    
-        
-        return new JsonModel($result);
     }    
     
     
@@ -692,6 +769,7 @@ class GoodsController extends AbstractActionController
         ]);           
     }  
     
+
     public function externalApiAction()
     {
         $goodsId = $this->params()->fromRoute('id', -1);
@@ -1172,6 +1250,23 @@ class GoodsController extends AbstractActionController
         ]);          
         
     }
+    
+    public function nameEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $goodId = $data['pk'];
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+                    
+            if ($good && $data['value']){
+                $this->goodsManager->updateGoodName($good, $data['value']);                    
+            }    
+        }
+        
+        exit;
+    }  
     
     public function attributeEditAction()
     {

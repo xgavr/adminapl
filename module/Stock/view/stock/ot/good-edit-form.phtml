@@ -154,7 +154,7 @@ $docName = 'Новый';
         
         $('#code').typeahead({
             source: function(query, process) {
-                return $.get("/ptu/autocompete-good?q="+query, function (data) {
+                return $.get("/ptu/autocomplete-good?q="+query, function (data) {
                     return process(data);
                 });
             },

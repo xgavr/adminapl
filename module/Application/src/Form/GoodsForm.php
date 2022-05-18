@@ -66,7 +66,7 @@ class GoodsForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'text',
             'name' => 'code',
             'attributes' => [                
-                'id' => 'goodscode'
+                'id' => 'code'
             ],
             'options' => [
                 'label' => 'Аритикул',
@@ -74,64 +74,13 @@ class GoodsForm extends Form implements ObjectManagerAwareInterface
        ]);
         
         $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'type'  => 'text',
             'name' => 'producer',
             'attributes' => [                
-                'id' => 'goodsproducer',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
+                'id' => 'producer'
             ],
             'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Producer',
                 'label' => 'Производитель',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--выберете производителя--',                 
-            ],
-       ]);
-        
-        $this->add([
-            'options' => [
-                'label' => 'Налог',
-            ],
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'tax',
-            'attributes' => [                
-                'id' => 'goodstax',
-            ],
-            'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Tax',
-                'label' => 'Налог',
-                'property'       => 'name',
-                'value' => 1,
-            ],
-       ]);
-        
-        $this->add([
-            'type'  => 'select',
-            'name' => 'available',
-            'attributes' => [                
-                'id' => 'goodavailable'
-            ],
-            'options' => [
-                'label' => 'Доступность',
-                'value_options' => [
-                    Goods::AVAILABLE_TRUE => 'Доступно',
-                    Goods::AVAILABLE_FALSE => 'Недоступно',
-                ]
-            ],
-       ]);
-        
-        $this->add([
-            'type'  => 'text',
-            'name' => 'description',
-            'attributes' => [                
-                'id' => 'goodsdescription'
-            ],
-            'options' => [
-                'label' => 'Описание',
             ],
        ]);
         
@@ -144,6 +93,17 @@ class GoodsForm extends Form implements ObjectManagerAwareInterface
                 'id' => 'taxsubmitbutton',
             ],
         ]);        
+
+        // Add the CSRF field
+        $this->add([
+            'type' => 'csrf',
+            'name' => 'csrf',
+            'options' => [
+                'csrf_options' => [
+                'timeout' => 600
+                ]
+            ],
+        ]);
     }
     
     private function addInputFilter() 
@@ -173,7 +133,7 @@ class GoodsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'code',
-                'required' => false,
+                'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],
                     ['name' => 'StripTags'],
@@ -207,45 +167,7 @@ class GoodsForm extends Form implements ObjectManagerAwareInterface
                         ],
                     ],
                 ],
-            ]);
-        
-        $inputFilter->add([
-                'name'     => 'tax',
-                'required' => true,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);          
-        
-        $inputFilter->add([
-                'name'     => 'description',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);                  
+            ]);        
     }    
     
     public function setObjectManager(ObjectManager $objectManager)

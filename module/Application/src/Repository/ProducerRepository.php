@@ -727,4 +727,33 @@ class ProducerRepository  extends EntityRepository{
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();            
     }
+    
+    /**
+     * Запрос для автозаполения
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function autocompleteProducer($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('p')
+            ->from(UnknownProducer::class, 'p')
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['search'])){
+                $queryBuilder
+                    ->where('p.name like ?1')                           
+                    ->setParameter('1', '%'.$params['search'].'%')
+                    ->setMaxResults(8)    
+                        ;
+            }            
+        }
+        return $queryBuilder->getQuery();
+    }        
+    
 }

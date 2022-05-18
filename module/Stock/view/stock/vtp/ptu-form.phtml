@@ -36,7 +36,7 @@ if ($ptu){
             data-sort-order="desc"            
             data-response-handler="vtpResponseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
-            data-row-style="rowStyle"
+            data-row-style="vtpRowStyle"
             >
             <thead>
                 <tr>
@@ -64,7 +64,7 @@ if ($ptu){
             }            
         });         
     });
-    function rowStyle(row){
+    function vtpRowStyle(row){
         var retired = 'tablerow';
         if (row.status == '<?= Vtp::STATUS_RETIRED?>'){
            retired += ' retired';

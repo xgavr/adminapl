@@ -8,15 +8,6 @@ $this->pageBreadcrumbs()->setItems([
             'Товары'=>$this->url('goods')
             ]);
 
-$this->headLink()
-//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
-        ;
-
-$this->headScript()
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-            ;    
 ?>
 
 <div class="row">
@@ -24,17 +15,31 @@ $this->headScript()
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <input type="checkbox" class="checkbox" name="accurate" value=""
-                           data-toggle='tooltip' data-original-title="Точный поиск"
-                           onchange="value = (this.checked) ? 1:0"/>
-                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск">
+                    <button class="btn btn-default good-modal-show" type="button" 
+                            modal-url="/goods/edit-form" 
+                            data-toggle='tooltip' data-original-title="Добавить товар">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>    
+                <div class="form-group">
+                    <div class="btn-group">
+                        <input type="checkbox" class="checkbox" name="accurate" value=""
+                               data-toggle='tooltip' data-original-title="Точный поиск"
+                               onchange="value = (this.checked) ? 1:0"/>
+                        <input id="searchinput" name="search" style="width: 400px" class="form-control" type="text" placeholder="Артикул">
+                        <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                    </div>
+                    <button id="ok" type="submit" class="btn btn-default" title="Поиск">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
                 </div>
-                <button id="ok" type="submit" class="btn btn-default">OK</button>
             </div>
         </div>
         <table id="table" 
             data-toggle="table" 
             data-url="/goods/content"
+            data-cookie="true"
+            data-cookie-id-table="goodSaveId"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -43,6 +48,7 @@ $this->headScript()
             data-show-toggle="true"
             data-query-params="queryParams"
             data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
             >
             <thead>
                 <tr>
@@ -318,6 +324,15 @@ $this->headScript()
         totalFeatures();
     });
     
+    $(document).on('click', '.good-modal-show', function (e) {
+        var url = $(e.currentTarget).attr('modal-url');
+        showFormDialog({
+            id: 'goodModal',
+            url: url,
+//            width: '500px'
+        });
+    });  
+    
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
@@ -327,7 +342,11 @@ $this->headScript()
 
     $(function () {
         ok.click(function () {
-            table.bootstrapTable('refresh');
+            refreshTable();
+        });
+        $(".inputclear").click(function(){
+            $("#searchinput").val('');
+            refreshTable();
         });
     });
     

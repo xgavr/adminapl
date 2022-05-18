@@ -257,7 +257,7 @@ class StockRepository extends EntityRepository{
      * @param array $params
      * @return query
      */
-    public function autocompeteUnit($params = null)
+    public function autocompleteUnit($params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -285,7 +285,7 @@ class StockRepository extends EntityRepository{
      * @param array $params
      * @return query
      */
-    public function autocompeteNtd($params = null)
+    public function autocompleteNtd($params = null)
     {
         $entityManager = $this->getEntityManager();
 

@@ -316,14 +316,14 @@ class PtuController extends AbstractActionController
         );           
     }
     
-    public function autocompeteGoodAction()
+    public function autocompleteGoodAction()
     {
         $result = [];
         $q = $this->params()->fromQuery('q');
         
         if ($q){
             $query = $this->entityManager->getRepository(Goods::class)
-                            ->autocompeteGood(['search' => $q]);
+                            ->autocompleteGood(['search' => $q]);
 
             $data = $query->getResult();
             foreach ($data as $row){
@@ -334,14 +334,14 @@ class PtuController extends AbstractActionController
         return new JsonModel($result);
     }        
     
-    public function autocompeteUnitAction()
+    public function autocompleteUnitAction()
     {
         $result = [];
         $q = $this->params()->fromQuery('q');
         
         if ($q){
             $query = $this->entityManager->getRepository(Unit::class)
-                            ->autocompeteUnit(['search' => $q]);
+                            ->autocompleteUnit(['search' => $q]);
 
             $data = $query->getResult();
             foreach ($data as $row){
@@ -352,14 +352,14 @@ class PtuController extends AbstractActionController
         return new JsonModel($result);
     }        
     
-    public function autocompeteNtdAction()
+    public function autocompleteNtdAction()
     {
         $result = [];
         $q = $this->params()->fromQuery('q');
         
         if ($q){
             $query = $this->entityManager->getRepository(Ntd::class)
-                            ->autocompeteNtd(['search' => $q]);
+                            ->autocompleteNtd(['search' => $q]);
 
             $data = $query->getResult();
             foreach ($data as $row){
@@ -370,14 +370,14 @@ class PtuController extends AbstractActionController
         return new JsonModel($result);
     }        
     
-    public function autocompeteCountryAction()
+    public function autocompleteCountryAction()
     {
         $result = [];
         $q = $this->params()->fromQuery('q');
         
         if ($q){
             $query = $this->entityManager->getRepository(Country::class)
-                            ->autocompeteCountry(['search' => $q]);
+                            ->autocompleteCountry(['search' => $q]);
 
             $data = $query->getResult();
             foreach ($data as $row){

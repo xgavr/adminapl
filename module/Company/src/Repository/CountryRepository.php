@@ -23,7 +23,7 @@ class CountryRepository extends EntityRepository
      * @param array $params
      * @return query
      */
-    public function autocompeteCountry($params = null)
+    public function autocompleteCountry($params = null)
     {
         $entityManager = $this->getEntityManager();
 

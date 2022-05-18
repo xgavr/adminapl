@@ -648,6 +648,20 @@ class AssemblyManager
     }
        
     /**
+     * Добавить производителя
+     * @param string $producerName
+     * @retrun Producer
+     */
+    public function addProducer($producerName)
+    {
+        $unknownProducer = $this->producerManager->addUnknownProducer($producerName);
+        if ($unknownProducer->getProducer()){
+            return $unknownProducer->getProducer();
+        }
+        return $this->producerManager->addProducerFromUnknownProducer($unknownProducer);
+    }
+    
+    /**
      *
      * Собрать производителей из прайса
      * 

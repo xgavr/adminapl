@@ -126,50 +126,6 @@ $docName = 'Новый';
     });    
     
     $( document ).ready(function() {
-        $('#good').selectpicker({
-                liveSearch: true,
-            })
-            .ajaxSelectPicker({
-                ajax: {
-                    url: '/goods/live-search',
-                    data: function () {
-                        var params = {
-                            search: '{{{q}}}',
-                            limit: 10
-                        };
-//                        if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
-//                            params.GroupID = gModel.selectedGroup().ContactGroupID;
-//                        }
-                        return params;
-                    }
-                },
-                locale: {
-                    emptyTitle: 'Поиск по артикулу...'
-                },
-                preprocessData: function(data){
-                    var goods = [];
-                    if(data.hasOwnProperty('rows')){
-                        var len = data.rows.length;
-                        for(var i = 0; i < len; i++){
-                            var curr = data.rows[i];
-                            goods.push(
-                                {
-                                    'value': curr.id,
-                                    'text': curr.code + ' ' + curr.producer.name + ' ' + curr.name,
-//                                    'data': {
-//                                        'icon': 'icon-person',
-//                                        'subtext': 'Internal'
-//                                    },
-                                    'disabled': false
-                                }
-                            );
-                        }
-                    }
-                    return goods;
-                },
-                preserveSelected: false
-            });  
-        
         $("#price").on('input', function(){
             var value = $(this).val();
             $(this).val(value.replace(",","."));

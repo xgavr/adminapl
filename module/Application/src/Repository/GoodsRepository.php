@@ -329,45 +329,6 @@ class GoodsRepository extends EntityRepository
         return $queryBuilder->getQuery();
     }
 
-    /**
-     * Запрос по поиска
-     * 
-     * @param array $params
-     * @return object
-     */
-    public function autocompleteGood($params = null)
-    {
-        $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-
-        $queryBuilder->select('g', 'p')
-            ->from(Goods::class, 'g')
-            ->join('g.producer', 'p', 'WITH')
-            ->where('g.id = 0')    
-                ;
-//        var_dump($params); exit;
-        if (is_array($params)){
-            if (isset($params['search'])){
-                $codeFilter = new ArticleCode();
-                $q = $codeFilter->filter($params['search']);
-                if ($q){
-                    $queryBuilder
-                        ->where('g.code like :code')                           
-                        ->setParameter('code', $q.'%')    
-                            ;
-                }    
-            }
-            if (isset($params['limit'])){
-                $queryBuilder->setMaxResults($params['limit']);
-            }
-            if (isset($params['sort'])){
-                $queryBuilder->orderBy('g.'.$params['sort'], $params['order']);                
-            }            
-        }
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery();
-    }
 
     /**
      * Запрос на выборку товаров для экспорта строк прайса
@@ -1864,7 +1825,7 @@ class GoodsRepository extends EntityRepository
      * @param array $params
      * @return query
      */
-    public function autocompeteGood($params = null)
+    public function autocompleteGood($params = null)
     {
         $entityManager = $this->getEntityManager();
 
