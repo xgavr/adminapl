@@ -974,7 +974,7 @@ class AplDocService {
                 'comment' => 'Stores',
                 'info' => $ot->getComment(),
                 'comiss' => $ot->getComissStatusAsString(),
-                //'comissioner' => $ot->getComissPhone(),
+                'comissioner' => $ot->getComissPhone(),
 //                'user' =>   $ptu->getUserCreator()->getAplId(),
                 'sf' =>     0,
                 'ns' =>     $ot->getDocNo(),
