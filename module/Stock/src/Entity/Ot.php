@@ -288,7 +288,7 @@ class Ot {
     public function setStatus($status) 
     {
         $this->status = $status;
-        if ($status == self::STATUS_COMMISSION){
+        if ($status == self::STATUS_INVENTORY){
             $this->setDocNo('!ИНВ');
         } else {
             $this->setDocNo('');            
