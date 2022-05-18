@@ -521,7 +521,7 @@ class Ot {
     public function getComissPhone() 
     {
         if ($this->comiss){
-            return $this->comiss->getPhone();
+            return $this->comiss->getPhone()->getName();
         }
         
         return;
