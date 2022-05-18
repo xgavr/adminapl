@@ -34,10 +34,15 @@ $priceCols = $goodsManager->priceCols($goods);
                             title="Обновить наименование">
                         <span class="glyphicon glyphicon-refresh" ></span>
                     </button> 
-                    <a href="#" 
-                       class="editable" data-type="text" 
+                    <button class="btn btn-default btn-xs" id="enable-name-editable"
+                            title="Изменить наименование">
+                        <span class="glyphicon glyphicon-edit" ></span>
+                    </button> 
+                    <a href="#" id="good-name-editable" class="editable" 
+                       data-type="text" 
                        data-pk="<?= $goods->getId()?>" 
                        data-name="name" 
+                       data-disabled="true" 
                        data-url="/goods/name-edit">
                             <?php if ($goods->getName()): ?>
                                 <?= $this->escapeHtml($goods->getName()); ?>
@@ -689,6 +694,10 @@ $priceCols = $goodsManager->priceCols($goods);
         $('.editable').editable();
     });
     
+    $("#enable-name-editable").on('click', function() {
+        $('#good-name-editable').editable('enable');
+    });
+
     $('#featureTab a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');

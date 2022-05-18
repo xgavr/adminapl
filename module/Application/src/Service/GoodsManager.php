@@ -140,6 +140,7 @@ class GoodsManager
     public function updateGoodName($good, $name)
     {
         $good->setName($name);
+        $good->setStatusNameEx(Goods::NAME_EX_NEW);
         $this->entityManager->persist($good);
         $this->entityManager->flush($good);        
     }
