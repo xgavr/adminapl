@@ -21,6 +21,7 @@ use Stock\Entity\Vtp;
 use Stock\Entity\Vt;
 use Application\Entity\Order;
 use Stock\Entity\Ot;
+use Stock\Entity\OtGood;
 use Application\Entity\Contact;
 use Application\Entity\Client as AplClient;
 use Stock\Entity\St;
