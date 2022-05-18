@@ -1202,7 +1202,7 @@ class AplDocService {
                 $post['typeout5'] = 'Costs';
             }
 
-            if ($ot->getAplId()){
+            if ($st->getAplId()){
                 $post['id'] = $st->getAplId();
             }
             
