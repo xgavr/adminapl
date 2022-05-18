@@ -229,4 +229,39 @@ class StRepository extends EntityRepository{
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }        
+    
+    /**
+     * Найти записи для отправки в АПЛ
+     */
+    public function findForUpdateApl()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('s')
+            ->from(St::class, 's')
+            ->where('s.statusEx = ?1')
+            ->setParameter('1', St::STATUS_EX_NEW)    
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        foreach ($data as $st){
+            $flag = true;
+            $stGoods = $entityManager->getRepository(StGood::class)
+                    ->findBy(['st' => $st->getId()]);
+            foreach ($stGoods as $stGood){
+               if (empty($stGood->getGood()->getAplId())){
+                   $flag = false;
+                   break;
+               }  
+            }
+            if ($flag){
+                return $st;
+            }    
+        }
+        
+        return;                
+        
+    }                
 }

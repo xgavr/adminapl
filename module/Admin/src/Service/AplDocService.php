@@ -25,7 +25,9 @@ use Stock\Entity\OtGood;
 use Application\Entity\Contact;
 use Application\Entity\Client as AplClient;
 use Stock\Entity\St;
+use Stock\Entity\StGood;
 use Stock\Entity\Pt;
+use Stock\Entity\PtGood;
 use User\Entity\User;
 use Company\Entity\Cost;
 use Application\Entity\Producer;
@@ -1161,6 +1163,99 @@ class AplDocService {
         return false;
     }
 
+    /**
+     * Отправить st
+     * 
+     */
+    public function sendSt()
+    {
+        $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
+
+        $result = false;
+
+        $st = $this->entityManager->getRepository(St::class)
+                ->findForUpdateApl();
+        if ($ot){
+            $post = [
+                'parent' => $st->getOffice()->getAplId(),
+                'type' =>   'Writings',
+                'sort' =>   $st->getAmount(),
+                'publish' => $st->getAplStatusAsString(),
+                'name' =>   $st->getOffice()->getAplId(),
+                'comment' => 'Stores',
+                'info' => $st->getComment(),
+                'sf' =>     0,
+                'ns' =>     $st->getDocNo(),
+                'ds' =>     $st->getDocDate(),
+                'aa' =>     1,
+            ];
+            
+            if ($st->getWriteOff() == St::WRITE_PAY){
+                $post['kind'] = 'out6';
+                $post['parentout6'] = $st->getUser()->getAplId();
+                $post['typeout6'] = 'Staffs';
+            }
+
+            if ($st->getWriteOff() == St::WRITE_COST){
+                $post['kind'] = 'out5';
+                $post['parentout5'] = $st->getCost()->getAplId();
+                $post['typeout5'] = 'Costs';
+            }
+
+            if ($ot->getAplId()){
+                $post['id'] = $st->getAplId();
+            }
+            
+            $so = [];
+            $stGoods = $this->entityManager->getRepository(StGood::class)
+                    ->findBy(['st' => $st->getId()]);
+            foreach ($stGoods as $stGood){
+                $tp = [
+                    'sort' => $stGood->getQuantity(),
+                    'publish' => $st->getAplStatusAsString(),
+                    'name' => $stGood->getGood()->getAplId(),
+                    'comment' => $stGood->getMeanPrice(),                    
+                    'art' => $stGood->getGood()->getCode(),
+                    'artid' => $stGood->getGood()->getAplId(),
+                ];                
+                $so[] = $tp;
+            }
+            $post['tp'] = $so;
+            
+            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 60]);
+            $client->setParameterPost($post);            
+
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {                    
+                    $aplId = (int) $response->getBody();
+                    if ($aplId){
+                        $ok = $result = true;
+                    }
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok) {            
+                $st->setStatusEx(Ot::STATUS_EX_APL);
+                $st->setAplId($aplId);
+                $this->entityManager->persist($st);
+                $this->entityManager->flush($st);
+            }
+
+            $this->entityManager->detach($st);
+        }
+        
+        return $result;
+    }
+    
     /**
      * Получить статус документа ПТ
      * 

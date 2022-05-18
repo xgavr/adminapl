@@ -212,4 +212,40 @@ class PtRepository extends EntityRepository{
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }        
+    
+    /**
+     * Найти записи для отправки в АПЛ
+     */
+    public function findForUpdateApl()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('p')
+            ->from(Pt::class, 'p')
+            ->where('p.statusEx = ?1')
+            ->setParameter('1', Pt::STATUS_EX_NEW)    
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        foreach ($data as $pt){
+            $flag = true;
+            $ptGoods = $entityManager->getRepository(PtGood::class)
+                    ->findBy(['pt' => $pt->getId()]);
+            foreach ($ptGoods as $ptGood){
+               if (empty($ptGood->getGood()->getAplId())){
+                   $flag = false;
+                   break;
+               }  
+            }
+            if ($flag){
+                return $pt;
+            }    
+        }
+        
+        return;                
+        
+    }                
+    
 }
