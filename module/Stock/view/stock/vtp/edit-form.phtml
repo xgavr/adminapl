@@ -174,12 +174,12 @@ if ($vtp){
                             <thead>
                                 <tr>
                                      <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                                     <th data-field="good.code" data-formatter="goodFormatter">Артикул</th>
-                                     <th data-field="good.producer.name" data-type="numeric">Производитель</th>
-                                     <th data-field="good.name" data-type="numeric">Наименование</th>
-                                     <th data-field='amount' data-type="numeric" data-always-use-formatter="true" data-formatter="pgPriceFormatter" data-align="right">Цена</th>
-                                     <th data-field='quantity' data-type="numeric" data-editable="true" data-align="right">Количество</th>
-                                     <th data-field='amount' data-type="numeric" data-always-use-formatter="true" data-editable="true" data-formatter="pgAmountFormatter" data-align="right">Сумма</th>
+                                     <th data-field="vtpg.good.code" data-formatter="goodFormatter">Артикул</th>
+                                     <th data-field="vtpg.good.producer.name" data-type="numeric">Производитель</th>
+                                     <th data-field="vtpg.good.name" data-type="numeric">Наименование</th>
+                                     <th data-field='price' data-type="numeric" data-always-use-formatter="true" data-editable="true" data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                                     <th data-field='quantity' data-type="numeric" data-editable="true" data-always-use-formatter="true" data-align="right">Количество</th>
+                                     <th data-field='amount' data-type="numeric" data-always-use-formatter="true" data-formatter="pgAmountFormatter" data-align="right">Сумма</th>
                                      <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
                                  </tr>                
                             </thead>
@@ -225,8 +225,8 @@ if ($vtp){
         var data = $('#vtpgoodtable').bootstrapTable('getData');
         var amount = 0; var quantity = 0;
         $.each(data, function( index, value ) {
-            let result = value.amount.replace(',', '.');
-            amount += Math.round(result*100)/100;
+            let result = value.price.toString().replace(',', '.');
+            amount += Math.round(result*value.quantity*100)/100;
             quantity += Math.round(value.quantity*100)/100; 
         });
         $('#vtpAmount').html(Math.round(amount*100)/100);
@@ -248,12 +248,15 @@ if ($vtp){
                         name: row.good.name,
                         producer: {name: row.good.producer.name}
                     }
-                    var row = {
+                    var vtpg = {
                         good: good,
+                    }
+                    var row = {
+                        rowNo: index+1,
+                        vtpg: vtpg,
                         amount: row.amount,
                         quantity: row.quantity,
-                        price: Math.round(row.amount*100/row.quantity)/100,
-                        rowNo: index+1
+                        price: Math.round(row.amount*100/row.quantity)/100
                     };
 
                     rows.push(row);
@@ -293,11 +296,11 @@ if ($vtp){
         var data = $('#vtpgoodtable').bootstrapTable('getData');
         var result = [];
         $.each( data, function( index, row ) {
-            let rowAmount = row.amount.replace(',', '.');
+            let rowPrice = row.price.toString().replace(',', '.');
             var newRow = {
-                good_id: row.good.id,
+                good_id: row.vtpg.good.id,
                 quantity: row.quantity,
-                amount: rowAmount,
+                amount: rowPrice*row.quantity,
             };
             result.push(newRow);
         });   
@@ -337,7 +340,7 @@ if ($vtp){
     });    
     
     $(document).on('editable-save.bs.table', '#vtpgoodtable', function (e, field, row, old, $el) {
-      vtpUpdateTotal();;
+        vtpUpdateTotal();
     });        
     
     function vtpGoodRefreshTable(){
@@ -383,7 +386,7 @@ if ($vtp){
     }    
     
     function goodFormatter(value, row){
-        var url = '/goods/view/'+row.good.id;
+        var url = '/goods/view/'+row.vtpg.good.id;
         btn = '<nobr>'+value + ' <a';
         btn += ' href="'+url+'"';
         btn += ' class="btn btn-link btn-xs" target="_blank">';
@@ -393,13 +396,14 @@ if ($vtp){
     }    
     
     function pgPriceFormatter(value, row){
-        let result = value.replace(',', '.');
-        return Math.round(result*100/row.quantity)/100;
+//        console.log(value);
+        let result = value.toString().replace(',', '.');
+        return (Math.round(result*100)/100).toFixed(2);
     }        
         
     function pgAmountFormatter(value, row){
-        let result = value.replace(',', '.');
-        return Math.round(result*100)/100;
+        let result = row.price.toString().replace(',', '.');
+        return (Math.round(result*row.quantity*100)/100).toFixed(2);
     }        
 
     function vtpgoodResponseHandler(res) {

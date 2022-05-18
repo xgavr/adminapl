@@ -327,7 +327,12 @@ class PtuController extends AbstractActionController
 
             $data = $query->getResult();
             foreach ($data as $row){
-                $result[] = ['id' => $row->getId(), 'name' => $row->getInputName(), 'code' => $row->getCode()];
+                $result[] = [
+                    'id' => $row->getId(), 
+                    'name' => $row->getInputName(), 
+                    'code' => $row->getCode(),
+                    'price' => $row->getMeanPrice(),
+                ];
             }
         }    
         

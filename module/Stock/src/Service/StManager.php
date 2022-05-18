@@ -25,14 +25,39 @@ class StManager
     private $logManager;
         
     /**
+     * Admin manager
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+        
+    /**
+     * Дата запрета
+     * @var string
+     */
+    private $allowDate;
+
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager) 
+    public function __construct($entityManager, $logManager, $adminManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
+        $this->adminManager = $adminManager;
+    
+        $setting = $this->adminManager->getSettings();
+        $this->allowDate = $setting['allow_date'];        
     }
     
+    /**
+     * Получить дату запрета
+     * @return date
+     */
+    public function getAllowDate()
+    {
+        return $this->allowDate; 
+    }
+
     /**
      * Обновить движения документа
      * 
@@ -44,25 +69,27 @@ class StManager
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($st->getLogKey());
         
-        $stGoods = $this->entityManager->getRepository(StGood::class)
-                ->findBySt($st->getId());
+        if ($st->getDocDate() == St::STATUS_ACTIVE){
+            $stGoods = $this->entityManager->getRepository(StGood::class)
+                    ->findBySt($st->getId());
         
-        foreach ($stGoods as $stGood){
-            $data = [
-                'doc_key' => $st->getLogKey(),
-                'doc_row_key' => $stGood->getDocRowKey(),
-                'doc_row_no' => $stGood->getRowNo(),
-                'date_oper' => $st->getDocDate(),
-                'status' => $st->getStatus(),
-                'quantity' => -$stGood->getQuantity(),
-                'amount' => -$stGood->getAmount(),
-                'good_id' => $stGood->getGood()->getId(),
-                'office_id' => $st->getOffice()->getId(),
-                'company_id' => $st->getCompany()->getId(),
-            ];
+            foreach ($stGoods as $stGood){
+                $data = [
+                    'doc_key' => $st->getLogKey(),
+                    'doc_row_key' => $stGood->getDocRowKey(),
+                    'doc_row_no' => $stGood->getRowNo(),
+                    'date_oper' => $st->getDocDate(),
+                    'status' => $st->getStatus(),
+                    'quantity' => -$stGood->getQuantity(),
+                    'amount' => -$stGood->getAmount(),
+                    'good_id' => $stGood->getGood()->getId(),
+                    'office_id' => $st->getOffice()->getId(),
+                    'company_id' => $st->getCompany()->getId(),
+                ];
 
-            $this->entityManager->getRepository(Movement::class)
-                    ->insertMovement($data);            
+                $this->entityManager->getRepository(Movement::class)
+                        ->insertMovement($data); 
+            }    
         }
         
         return;
@@ -111,31 +138,35 @@ class StManager
      */
     public function addSt($data)
     {
-        $st = new St();        
-        $st->setAplId($data['apl_id']);
-        $st->setDocDate($data['doc_date']);
-        $st->setComment($data['comment']);
-        $st->setStatusEx($data['status_ex']);
-        $st->setStatus($data['status']);
-        $st->setStatusDoc(St::STATUS_DOC_NOT_RECD);
-        $st->setWriteOff($data['writeOff']);
-        $st->setOffice($data['office']);
-        $st->setCompany($data['company']);
-        $st->setAmount(0);
-        $st->setDateCreated(date('Y-m-d H:i:s'));
-        $st->setCost(null);
-        $st->setUser(null);
-        if (!empty($data['cost'])){
-            $st->setCost($data['cost']);
-        }
-        if (!empty($data['user'])){
-            $st->setUser($data['user']);
-        }
+        if ($data['doc_date'] > $this->allowDate){
+            $st = new St();        
+            $st->setAplId($data['apl_id']);
+            $st->setDocDate($data['doc_date']);
+            $st->setComment($data['comment']);
+            $st->setStatusEx($data['status_ex']);
+            $st->setStatus($data['status']);
+            $st->setStatusDoc(St::STATUS_DOC_NOT_RECD);
+            $st->setWriteOff($data['writeOff']);
+            $st->setOffice($data['office']);
+            $st->setCompany($data['company']);
+            $st->setAmount(0);
+            $st->setDateCreated(date('Y-m-d H:i:s'));
+            $st->setCost(null);
+            $st->setUser(null);
+            if (!empty($data['cost'])){
+                $st->setCost($data['cost']);
+            }
+            if (!empty($data['user'])){
+                $st->setUser($data['user']);
+            }
+
+            $this->entityManager->persist($st);        
+            $this->entityManager->flush();
+
+            return $st;        
+        }    
         
-        $this->entityManager->persist($st);        
-        $this->entityManager->flush();
-        
-        return $st;        
+        return;
     }
     
     /**
@@ -146,24 +177,26 @@ class StManager
      */
     public function updateSt($st, $data)            
     {
-        $st->setAplId($data['apl_id']);
-        $st->setDocDate($data['doc_date']);
-        $st->setComment($data['comment']);
-        $st->setStatus($data['status']);
-        $st->setWriteOff($data['writeOff']);
-        $st->setOffice($data['office']);
-        $st->setCompany($data['company']);
-        $st->setCost(null);
-        $st->setUser(null);
-        if (!empty($data['cost'])){
-            $st->setCost($data['cost']);
-        }
-        if (!empty($data['user'])){
-            $st->setUser($data['user']);
-        }
-        
-        $this->entityManager->persist($st);
-        $this->entityManager->flush($st);
+        if ($data['doc_date'] > $this->allowDate){
+            $st->setAplId($data['apl_id']);
+            $st->setDocDate($data['doc_date']);
+            $st->setComment($data['comment']);
+            $st->setStatus($data['status']);
+            $st->setWriteOff($data['writeOff']);
+            $st->setOffice($data['office']);
+            $st->setCompany($data['company']);
+            $st->setCost(null);
+            $st->setUser(null);
+            if (!empty($data['cost'])){
+                $st->setCost($data['cost']);
+            }
+            if (!empty($data['user'])){
+                $st->setUser($data['user']);
+            }
+
+            $this->entityManager->persist($st);
+            $this->entityManager->flush($st);
+        }    
         
         return;
     }
@@ -276,13 +309,14 @@ class StManager
      */
     public function removeSt($st)
     {
-        $this->logManager->infoSt($st, Log::STATUS_DELETE);
-        $this->entityManager->getRepository(Movement::class)
-                ->removeDocMovements($st->getLogKey());
-        $this->removeStGood($st);
-        
-        $this->entityManager->getConnection()->delete('st', ['id' => $st->getId()]);
-        
+        if ($st->getDocDate() > $this->allowDate){
+            $this->logManager->infoSt($st, Log::STATUS_DELETE);
+            $this->entityManager->getRepository(Movement::class)
+                    ->removeDocMovements($st->getLogKey());
+            $this->removeStGood($st);
+
+            $this->entityManager->getConnection()->delete('st', ['id' => $st->getId()]);
+        }    
         return;
     }
 }

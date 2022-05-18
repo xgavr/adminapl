@@ -11,8 +11,11 @@ $form->get('company')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('user')->setAttributes([
-    'class'=>'form-control selectpicker', 
+$form->get('userSearch')->setAttributes([
+    'class'=>'form-control', 
+    'data-provide' => "typeahead",
+    'autocomplete' => 'off',
+    'placeholder' => 'Телефон'
     ]);
 
 $form->get('cost')->setAttributes([
@@ -21,6 +24,8 @@ $form->get('cost')->setAttributes([
 
 $form->get('doc_date')->setAttributes([
     'class'=>'form-control', 
+    'min' => date('Y-m-d', strtotime($allowDate.' + 1 day')),
+    'disabled' => $disabled,
     ]);
 
 $form->get('doc_no')->setAttributes([
@@ -118,9 +123,10 @@ if ($st){
                     </div>
                     <div class="col-xs-3">                        
                         <div class="form-group" id="userGroup">
-                            <?= $this->formLabel($form->get('user')); ?>
-                            <?= $this->formElement($form->get('user')); ?>
-                            <?= $this->formElementErrors($form->get('user')); ?>                  
+                            <?= $this->formLabel($form->get('userSearch')); ?>
+                            <em id="userName"><?= $contactName?></em>
+                            <?= $this->formElement($form->get('userSearch')); ?>
+                            <?= $this->formElementErrors($form->get('userSearch')); ?>                  
                         </div>
                         <div class="form-group" id="costGroup">
                             <?= $this->formLabel($form->get('cost')); ?>
@@ -163,7 +169,8 @@ if ($st){
                                      <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
                                      <th data-field='quantity' data-align="right">Количество</th>
                                      <th data-field='amount' data-align="right">Сумма</th>
-                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
+                                     <th data-field="rowNo" data-formatter="pgEditFormatter" data-width="10"></th>
+                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
                                  </tr>                
                             </thead>
                         </table>
@@ -179,15 +186,13 @@ if ($st){
                     </div>                                            
                 </div>        
 
-
-
-
+                <?= $this->formElement($form->get('user')); ?>
                 <?= $this->formElement($form->get('csrf')); ?>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="st-submit">Сохранить</button>
+                <button type="submit" class="btn btn-primary" id="st-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
             </div>
 
             <?= $this->form()->closeTag(); ?>
@@ -262,7 +267,7 @@ if ($st){
         $('#user').attr('required', false);
         if ($("#writeOff").val() == <?= St::WRITE_PAY?>){
             $('#userGroup').show();
-            $('#user').attr('required', true);
+            $('#userSearch').attr('required', true);
         }
         
         $('#costGroup').hide();
@@ -282,6 +287,20 @@ if ($st){
                 stUpdateTotal();
             }            
         }); 
+
+        $('#userSearch').typeahead({
+            source: function(query, process) {
+                return $.post("/users/live-search",{search: query, limit: 8} ,function (data) {
+                    return process(data.rows);
+                });
+            },
+            changeInputOnSelect: false,
+            afterSelect: function(data) {
+                $('#user').val(data.id);
+                $('#userSearch').val(data.phone);
+                $('#userName').html(data.fullName);
+            }
+        });
         
         var forms = $('#st-form');
         
@@ -304,50 +323,6 @@ if ($st){
         $('#writeOff').on('change', function(){
             hideUserGroup();
         });
-
-        $('#user').selectpicker({
-                liveSearch: true,
-            })
-            .ajaxSelectPicker({
-                ajax: {
-                    url: '/users/live-search',
-                    data: function () {
-                        var params = {
-                            search: '{{{q}}}',
-                            limit: 10
-                        };
-//                        if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
-//                            params.GroupID = gModel.selectedGroup().ContactGroupID;
-//                        }
-                        return params;
-                    }
-                },
-                locale: {
-                    emptyTitle: 'Поиск по телефону...'
-                },
-                preprocessData: function(data){
-                    var users = [];
-                    if(data.hasOwnProperty('rows')){
-                        var len = data.rows.length;
-                        for(var i = 0; i < len; i++){
-                            var curr = data.rows[i];
-                            users.push(
-                                {
-                                    'value': curr.id,
-                                    'text': '('+ curr.phone+ ') ' + curr.fullName,
-//                                    'data': {
-//                                        'icon': 'icon-person',
-//                                        'subtext': 'Internal'
-//                                    },
-                                    'disabled': false
-                                }
-                            );
-                        }
-                    }
-                    return users;
-                },
-                preserveSelected: false
-            });  
     });    
     
     function stGoodRefreshTable(){
@@ -370,7 +345,7 @@ if ($st){
         return params;
     }
     
-    function pgActiveFormatter(value, row){
+    function pgEditFormatter(value, row){
         var url = '/st/good-edit-form/';
         btn = '<button';
         btn += ' type="button"';
@@ -380,8 +355,11 @@ if ($st){
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
-
-        btn += ' <button';
+        return btn;
+    }    
+    
+    function pgActiveFormatter(value, row){
+        btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs table-row-remove"';
         btn += ' aria-label="Left Align"'; 

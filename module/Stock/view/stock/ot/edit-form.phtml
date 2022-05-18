@@ -149,7 +149,7 @@ if ($ot){
                                      <th data-field="good.name" data-type="numeric">Наименование</th>
                                      <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
                                      <th data-field='quantity' data-align="right">Количество</th>
-                                     <th data-field='amount' data-align="right">Сумма</th>
+                                     <th data-field='amount' data-align="right" data-formatter="pgAmountFormatter">Сумма</th>
                                      <th data-field="rowNo" data-formatter="pgEditFormatter" data-width="10"></th>
                                      <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
                                  </tr>                
@@ -359,7 +359,11 @@ if ($ot){
     }    
     
     function pgPriceFormatter(value, row){
-        return Math.round(value*100/row.quantity)/100;
+        return (Math.round(value*100/row.quantity)/100).toFixed(2);
+    }        
+
+    function pgAmountFormatter(value, row){
+        return (Math.round(value*100/100)).toFixed(2);
     }        
     
     function otgoodResponseHandler(res) {

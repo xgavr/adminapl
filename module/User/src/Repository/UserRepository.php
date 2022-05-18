@@ -87,7 +87,7 @@ class UserRepository  extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('u.id, u.fullName, p.name as phone')
+        $queryBuilder->select('u.id, u.fullName, p.name as phone, concat(p.name, \' \', u.fullName) as name')
             ->from(User::class, 'u')
             ->join('u.contacts', 'c')
             ->join('c.phones', 'p')

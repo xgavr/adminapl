@@ -377,6 +377,11 @@ class St {
     public function setWriteOff($writeOff) 
     {
         $this->writeOff = $writeOff;
+        if ($writeOff == self::WRITE_INVENTORY){
+            $this->setDocNo('!ИНВ');
+        } else {
+            $this->setDocNo('');            
+        }
     }   
     
     /**
@@ -421,7 +426,13 @@ class St {
      */
     public function getDocNo() 
     {
-        return $this->docNo;
+        if ($this->docNo){
+            return $this->docNo;
+        }
+        if ($this->aplId){
+            return $this->aplId;
+        }
+        return $this->id;
     }
     
     /**

@@ -124,33 +124,6 @@ class StForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'user',
-            'attributes' => [                
-                'id' => 'user',
-            ],
-            'options' => [
-                'disable_inarray_validator' => true,
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'User\Entity\User',
-                'label' => 'Сотрудник',
-                'property'       => 'fullName',
-                'display_empty_item' => false,
-                'empty_item_label'   => '---',                 
-                'is_method' => false,
-                'find_method'    => [
-                   'name'   => 'formFind',
-                   'params' => [
-                       'params' => ['user' => $this->user],
-                   ],
-                ],                
-                'label_generator' => function ($targetEntity) {
-                    return $targetEntity->getFullName();
-                },
-            ],
-        ]);
-
-        $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
             'name' => 'cost',
             'attributes' => [                
                 'id' => 'cost',
@@ -177,6 +150,30 @@ class StForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([
+            'type'  => 'hidden',
+            'name' => 'user',
+            'attributes' => [                
+                'id' => 'user',
+//                'required' => 'required',                
+            ],
+            'options' => [
+                'label' => 'Сотрудник',
+            ],
+        ]);
+
+        $this->add([
+            'type'  => 'text',
+            'name' => 'userSearch',
+            'attributes' => [                
+                'id' => 'userSearch',
+//                'required' => 'required',                
+            ],
+            'options' => [
+                'label' => 'Сотрудник',
+            ],
+        ]);
+
+        $this->add([
             'type'  => 'date',
             'name' => 'doc_date',
             'attributes' => [                
@@ -196,7 +193,8 @@ class StForm extends Form implements ObjectManagerAwareInterface
             'name' => 'doc_no',
             'attributes' => [                
                 'id' => 'docNo',
-//                'required' => 'required',                
+//                'required' => 'required', 
+                'disabled' => true,
             ],
             'options' => [
                 'label' => 'Номер документа',

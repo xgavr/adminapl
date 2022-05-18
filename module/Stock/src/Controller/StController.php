@@ -60,9 +60,13 @@ class StController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
         $officeId = $this->params()->fromQuery('office');
-        $year = $this->params()->fromQuery('year');
-        $month = $this->params()->fromQuery('month');
+        $year_month = $this->params()->fromQuery('month');
         
+        $year = $month = null;
+        if ($year_month){
+            $year = date('Y', strtotime($year_month));
+            $month = date('m', strtotime($year_month));
+        }        
         $params = [
             'q' => $q, 'sort' => $sort, 'order' => $order, 
             'officeId' => $officeId,
@@ -122,8 +126,8 @@ class StController extends AbstractActionController
     {
         $stId = (int)$this->params()->fromRoute('id', -1);
         
-        $st = $office = $company = $user = $cost = null;
-        
+        $st = $office = $company = $user = $cost = $contactName = null;
+        $notDisabled = true;        
         if ($stId > 0){
             $st = $this->entityManager->getRepository(St::class)
                     ->findOneById($stId);
@@ -205,11 +209,14 @@ class StController extends AbstractActionController
                 ];
                 if ($st->getUser()){
                     $data['user'] = $st->getUser()->getId();
+                    $data['userSearch'] = $st->getUser()->getlegalContact()->getPhone()->getName(\User\Filter\PhoneFilter::PHONE_FORMAT_DB);
+                    $contactName = $st->getUser()->getFullName();
                 }
                 if ($st->getCost()){
                     $data['cost'] = $st->getCost()->getId();
                 }
                 $form->setData($data);
+                $notDisabled = $st->getDocDate() > $this->stManager->getAllowDate();
             }    
         }
         $this->layout()->setTemplate('layout/terminal');
@@ -217,6 +224,9 @@ class StController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'st' => $st,
+            'allowDate' => $this->stManager->getAllowDate(),
+            'disabled' => !$notDisabled,
+            'contactName' => $contactName,
         ]);        
     }    
         
@@ -263,7 +273,9 @@ class StController extends AbstractActionController
         } else {
             if ($good){
                 $data = [
-                    'good' => $params['good']['id'],
+                    'good' => $good->getId(),
+                    'code' => $good->getCode(),
+                    'goodInputName' => $good->getInputName(),
                     'quantity' => $params['quantity'],
                     'amount' => $params['amount'],
                     'price' => $params['amount']/$params['quantity'],

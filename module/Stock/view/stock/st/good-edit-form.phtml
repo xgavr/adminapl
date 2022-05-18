@@ -2,8 +2,19 @@
 
 $form = $this->form;
 
+$form->get('goodInputName')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => true,
+    ]);
+
+$form->get('code')->setAttributes([
+    'class'=>'form-control', 
+    'data-provide' => "typeahead",
+    'autocomplete' => 'off',
+    ]);
+
 $form->get('good')->setAttributes([
-    'class'=>'form-control selectpicker', 
+    'class'=>'form-control', 
     ]);
 
 $form->get('quantity')->setAttributes([
@@ -38,12 +49,24 @@ $docName = 'Новый';
             </div>
             
             <div class="modal-body">
-                <div class="row">
                     <div class="col-xs-12">                        
                         <div class="form-group">
-                            <?= $this->formLabel($form->get('good')); ?>
-                            <?= $this->formElement($form->get('good')); ?>
-                            <?= $this->formElementErrors($form->get('good')); ?>                  
+<!--                            <?= $this->formLabel($form->get('goodInputName')); ?>
+                            <em>(артикул;производитель;наименование)</em>-->
+                            <?= $this->formElement($form->get('goodInputName')); ?>
+                            <?= $this->formElementErrors($form->get('goodInputName')); ?>                  
+                        </div>
+                    </div>    
+                </div>
+                <div class="row">
+                    <div class="col-xs-8">                        
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('code')); ?>
+                            <div class="btn-group">
+                                <?= $this->formElement($form->get('code')); ?>
+                                <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                            </div>
+                            <?= $this->formElementErrors($form->get('code')); ?>                  
                         </div>
                     </div>    
                 </div>
@@ -71,6 +94,7 @@ $docName = 'Новый';
                     </div>
                 </div>    
 
+                <?= $this->formElement($form->get('good')); ?>
                 <?= $this->formElement($form->get('csrf')); ?>
             </div>    
                 
@@ -128,49 +152,21 @@ $docName = 'Новый';
     });    
     
     $( document ).ready(function() {
-        $('#good').selectpicker({
-                liveSearch: true,
-            })
-            .ajaxSelectPicker({
-                ajax: {
-                    url: '/goods/live-search',
-                    data: function () {
-                        var params = {
-                            search: '{{{q}}}',
-                            limit: 10
-                        };
-//                        if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
-//                            params.GroupID = gModel.selectedGroup().ContactGroupID;
-//                        }
-                        return params;
-                    }
-                },
-                locale: {
-                    emptyTitle: 'Поиск по артикулу...'
-                },
-                preprocessData: function(data){
-                    var goods = [];
-                    if(data.hasOwnProperty('rows')){
-                        var len = data.rows.length;
-                        for(var i = 0; i < len; i++){
-                            var curr = data.rows[i];
-                            goods.push(
-                                {
-                                    'value': curr.id,
-                                    'text': curr.code + ' ' + curr.producer.name + ' ' + curr.name,
-//                                    'data': {
-//                                        'icon': 'icon-person',
-//                                        'subtext': 'Internal'
-//                                    },
-                                    'disabled': false
-                                }
-                            );
-                        }
-                    }
-                    return goods;
-                },
-                preserveSelected: false
-            });  
+        $('#code').typeahead({
+            source: function(query, process) {
+                return $.get("/ptu/autocomplete-good?q="+query, function (data) {
+                    return process(data);
+                });
+            },
+            changeInputOnSelect: false,
+            afterSelect: function(data) {
+                $('#good').val(data.id);
+                $('#code').val(data.code);
+                $('#goodInputName').val(data.name);
+                $('#price').val(data.price);
+                $('#amount').val(data.price*$("#quantity").val());
+            }
+        });
         
         $("#price").on('input', function(){
             var value = $(this).val();

@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Company\Entity\Office;
 use Stock\Entity\St;
 use Stock\Entity\StGood;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of StRepository
@@ -91,6 +92,14 @@ class StRepository extends EntityRepository{
                     $queryBuilder->andWhere('MONTH(s.docDate) = :month')
                             ->setParameter('month', $params['month']);
                 }    
+            }
+            if (!empty($params['q'])){     
+                $articleCodeFilter = new ArticleCode(); 
+                $queryBuilder->distinct()
+                        ->join('s.stGoods', 'sg')
+                        ->join('sg.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
             }
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -176,6 +185,14 @@ class StRepository extends EntityRepository{
                     $queryBuilder->andWhere('MONTH(s.docDate) = :month')
                             ->setParameter('month', $params['month']);
                 }    
+            }
+            if (!empty($params['q'])){     
+                $articleCodeFilter = new ArticleCode(); 
+                $queryBuilder->distinct()
+                        ->join('s.stGoods', 'sg')
+                        ->join('sg.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
             }
         }
         
