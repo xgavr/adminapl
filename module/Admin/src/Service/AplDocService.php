@@ -966,7 +966,7 @@ class AplDocService {
                 ->findForUpdateApl();
         if ($ot){
             $post = [
-                'parent' => $ot->getAplId(),
+                'parent' => $ot->getOffice()->getAplId(),
                 'type' =>   'Postings',
                 'sort' =>   $ot->getAmount(),
                 'publish' => $ot->getAplStatusAsString(),
@@ -1002,7 +1002,7 @@ class AplDocService {
             }
             $post['tp'] = $so;
             
-//            var_dump($post); exit;
+            var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
