@@ -166,6 +166,7 @@ class VtpController extends AbstractActionController
         $this->layout()->setTemplate('layout/terminal');
         return new ViewModel([
             'ptu' => $ptu,
+            'allowDate' => $this->vtpManager->getAllowDate(),
         ]);                
     }
     

@@ -227,5 +227,40 @@ class OtRepository extends EntityRepository{
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
-    }        
+    }      
+    
+    /**
+     * Найти записи для отправки в АПЛ
+     */
+    public function findForUpdateApl()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('o')
+            ->from(Ot::class, 'o')
+            ->where('o.statusEx = ?1')
+            ->setParameter('1', Ot::STATUS_EX_NEW)    
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        foreach ($data as $ot){
+            $flag = true;
+            $otGoods = $entityManager->getRepository(OtGood::class)
+                    ->findBy(['ot' => $ot->getId()]);
+            foreach ($otGoods as $otGood){
+               if (empty($otGood->getGood()->getAplId())){
+                   $flag = false;
+                   break;
+               }  
+            }
+            if ($flag){
+                return $ot;
+            }    
+        }
+        
+        return;                
+        
+    }            
 }

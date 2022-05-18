@@ -952,6 +952,90 @@ class AplDocService {
     }
 
     /**
+     * Отправить ot
+     * 
+     */
+    public function sendOt()
+    {
+        $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
+
+        $result = false;
+
+        $ot = $this->entityManager->getRepository(Ot::class)
+                ->findForUpdateApl();
+        if ($ot){
+            $post = [
+                'parent' => $ot->getAplId(),
+                'type' =>   'Postings',
+                'sort' =>   $ot->getAmount(),
+                'publish' => $ot->getAplStatusAsString(),
+                'name' =>   $ot->getOffice()->getAplId(),
+                'comment' => 'Stores',
+                'info' => $ot->getComment(),
+                'comiss' => $ot->getComissStatusAsString(),
+                'comissioner' => $ot->getComissPhone(),
+//                'user' =>   $ptu->getUserCreator()->getAplId(),
+                'sf' =>     0,
+                'ns' =>     $ot->getDocNo(),
+                'ds' =>     $ot->getDocDate(),
+                'aa' =>     1,
+            ];
+
+            if ($ot->getAplId()){
+                $post['id'] = $ot->getAplId();
+            }
+            
+            $so = [];
+            $otGoods = $this->entityManager->getRepository(OtGood::class)
+                    ->findBy(['ot' => $ot->getId()]);
+            foreach ($otGoods as $otGood){
+                $tp = [
+                    'sort' => $otGood->getQuantity(),
+                    'publish' => $ot->getAplStatusAsString(),
+                    'name' => $otGood->getGood()->getAplId(),
+                    'comment' => $otGood->getPrice(),                    
+                    'art' => $otGood->getGood()->getCode(),
+                    'artid' => $otGood->getGood()->getAplId(),
+                ];                
+                $so[] = $tp;
+            }
+            $post['tp'] = $so;
+            
+            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 60]);
+            $client->setParameterPost($post);            
+
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {                    
+                    $aplId = (int) $response->getBody();
+                    if ($aplId){
+                        $ok = $result = true;
+                    }
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok) {            
+                $ot->setStatusEx(Ot::STATUS_EX_APL);
+                $ot->setAplId($aplId);
+                $this->entityManager->persist($ot);
+                $this->entityManager->flush($ot);
+            }
+
+            $this->entityManager->detach($ot);
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Получить статус документа СТ
      * 
      * @param array $data

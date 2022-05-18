@@ -40,14 +40,6 @@
                     
                 </div>    
                 <div class="form-group">
-                    <select id="yearSelect" style="width: 80px" class="form-control">
-                        <option>год</option>
-                        <?php foreach ($years as $year):?>
-                            <option value="<?= $year?>" <?= ($year == date('Y'))? 'selected':''?>><?= $year?></option>
-                        <?php endforeach;?>
-                    </select>                    
-                </div>    
-                <div class="form-group">
                     <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
                 </div>
             </div>
