@@ -1214,7 +1214,7 @@ class AplDocService {
                     'sort' => $stGood->getQuantity(),
                     'publish' => $st->getAplStatusAsString(),
                     'name' => $stGood->getGood()->getAplId(),
-                    'comment' => $stGood->getMeanPrice(),                    
+                    'comment' => $stGood->getGood()->getMeanPrice(),                    
                     'art' => $stGood->getGood()->getCode(),
                     'artid' => $stGood->getGood()->getAplId(),
                 ];                
