@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Company\Entity\Office;
 use Stock\Entity\Pt;
 use Stock\Entity\PtGood;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of PtRepository
