@@ -5,6 +5,7 @@ use Interop\Container\ContainerInterface;
 use Stock\Service\PtManager;
 use Admin\Service\LogManager;
 use Application\Service\OrderManager;
+use Admin\Service\AdminManager;
 
 /**
  * This is the factory class for PtManager service. The purpose of the factory
@@ -20,7 +21,8 @@ class PtManagerFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
         $orderManager = $container->get(OrderManager::class);
+        $adminManager = $container->get(AdminManager::class);
                         
-        return new PtManager($entityManager, $logManager, $orderManager);
+        return new PtManager($entityManager, $logManager, $orderManager, $adminManager);
     }
 }

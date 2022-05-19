@@ -59,8 +59,13 @@ class PtController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
         $officeId = $this->params()->fromQuery('office');
-        $year = $this->params()->fromQuery('year');
-        $month = $this->params()->fromQuery('month');
+        $year_month = $this->params()->fromQuery('month');
+        
+        $year = $month = null;
+        if ($year_month){
+            $year = date('Y', strtotime($year_month));
+            $month = date('m', strtotime($year_month));
+        }
         
         $params = [
             'q' => $q, 'sort' => $sort, 'order' => $order, 
@@ -122,7 +127,7 @@ class PtController extends AbstractActionController
         $ptId = (int)$this->params()->fromRoute('id', -1);
         
         $pt = $office = $company = $office2 = $company2 = null;
-        
+        $notDisabled = true;        
         if ($ptId > 0){
             $pt = $this->entityManager->getRepository(Pt::class)
                     ->findOneById($ptId);
@@ -201,6 +206,7 @@ class PtController extends AbstractActionController
                     'status' => $pt->getStatus(),
                 ];
                 $form->setData($data);
+                $notDisabled = $pt->getDocDate() > $this->ptManager->getAllowDate();
             }    
         }
         $this->layout()->setTemplate('layout/terminal');
@@ -208,6 +214,8 @@ class PtController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'pt' => $pt,
+            'disabled' => !$notDisabled,
+            'allowDate' => $this->ptManager->getAllowDate(),
         ]);        
     }    
         
@@ -254,7 +262,9 @@ class PtController extends AbstractActionController
         } else {
             if ($good){
                 $data = [
-                    'good' => $params['good']['id'],
+                    'good' => $good->getId(),
+                    'code' => $good->getCode(),
+                    'goodInputName' => $good->getInputName(),
                     'quantity' => $params['quantity'],
                     'amount' => $params['amount'],
                     'price' => $params['amount']/$params['quantity'],

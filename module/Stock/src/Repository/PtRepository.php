@@ -92,6 +92,14 @@ class PtRepository extends EntityRepository{
                             ->setParameter('month', $params['month']);
                 }    
             }
+            if (!empty($params['q'])){     
+                $articleCodeFilter = new ArticleCode(); 
+                $queryBuilder->distinct()
+                        ->join('p.ptGoods', 'pg')
+                        ->join('pg.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
+            }
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
@@ -176,6 +184,14 @@ class PtRepository extends EntityRepository{
                     $queryBuilder->andWhere('MONTH(p.docDate) = :month')
                             ->setParameter('month', $params['month']);
                 }    
+            }
+            if (!empty($params['q'])){     
+                $articleCodeFilter = new ArticleCode(); 
+                $queryBuilder->distinct()
+                        ->join('p.ptGoods', 'pg')
+                        ->join('pg.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
             }
         }
         

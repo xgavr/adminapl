@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Company\Entity\Legal;
 use Company\Entity\Office;
 use Application\Entity\Goods;
+use Stock\Entity\Pt;
 
 
 /**
@@ -218,6 +219,19 @@ class Movement {
         return 'Unknown';
     }    
     
+    /**
+     * Returns possible pt status.
+     * @param Pt $pt
+     * @return integer
+     */
+    public static function getStatusFromPt($pt) 
+    {
+        switch ($pt->getStatus()){
+            case Pt::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+
     /**
      * Sets status.
      * @param int $status     

@@ -21,10 +21,13 @@ $form->get('company2')->setAttributes([
 
 $form->get('doc_date')->setAttributes([
     'class'=>'form-control', 
+    'min' => date('Y-m-d', strtotime($allowDate.' + 1 day')),
+    'disabled' => $disabled,
     ]);
 
 $form->get('doc_no')->setAttributes([
     'class'=>'form-control', 
+    'disabled' => true,
     ]);
 
 $form->get('comment')->setAttributes([
@@ -179,7 +182,7 @@ if ($pt){
                 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="pt-submit">Сохранить</button>
+                <button type="submit" class="btn btn-primary" id="pt-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
             </div>
             
             <?= $this->form()->closeTag(); ?>

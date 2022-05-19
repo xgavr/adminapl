@@ -59,7 +59,6 @@ class OtController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
         $officeId = $this->params()->fromQuery('office');
-        $year = $this->params()->fromQuery('year');
         $year_month = $this->params()->fromQuery('month');
         
         $year = $month = null;

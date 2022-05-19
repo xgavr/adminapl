@@ -28,19 +28,44 @@ class PtManager
     private $logManager;
         
     /**
+     * Admin manager
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+        
+    /**
      * Order manager
      * @var \Application\Service\OrderManager
      */
     private $orderManager;
         
     /**
+     * Дата запрета
+     * @var string
+     */
+    private $allowDate;
+
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager, $orderManager) 
+    public function __construct($entityManager, $logManager, $orderManager, $adminManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->orderManager = $orderManager;
+        $this->adminManager = $adminManager;
+
+        $setting = $this->adminManager->getSettings();
+        $this->allowDate = $setting['allow_date'];        
+    }
+    
+    /**
+     * Получить дату запрета
+     * @return date
+     */
+    public function getAllowDate()
+    {
+        return $this->allowDate; 
     }
     
     /**
@@ -63,7 +88,7 @@ class PtManager
                 'doc_row_key' => $ptGood->getDocRowKey(),
                 'doc_row_no' => $ptGood->getRowNo(),
                 'date_oper' => $pt->getDocDate(),
-                'status' => $pt->getStatus(),
+                'status' => Movement::getStatusFromPt($pt),
                 'quantity' => -$ptGood->getQuantity(),
                 'amount' => -$ptGood->getAmount(),
                 'good_id' => $ptGood->getGood()->getId(),
@@ -79,7 +104,7 @@ class PtManager
                 'doc_row_key' => $ptGood->getDocRowKey(),
                 'doc_row_no' => $ptGood->getRowNo(),
                 'date_oper' => $pt->getDocDate(),
-                'status' => $pt->getStatus(),
+                'status' => Movement::getStatusFromPt($pt),
                 'quantity' => $ptGood->getQuantity(),
                 'amount' => $ptGood->getAmount(),
                 'good_id' => $ptGood->getGood()->getId(),
@@ -107,7 +132,7 @@ class PtManager
             $data = [
                 'doc_key' => $pt->getLogKey(),
                 'date_oper' => $pt->getDocDate(),
-                'status' => ($pt->getStatus() == Pt::STATUS_ACTIVE) ? Retail::STATUS_ACTIVE: Retail::STATUS_RETIRED,
+                'status' => Retail::getStatusFromPt($pt),
                 'revise' => Retail::REVISE_NOT,
                 'amount' => $pt->getAmount(),
                 'contact_id' => $pt->getOffice2()->getLegalContact()->getId(),
@@ -136,7 +161,7 @@ class PtManager
             $data = [
                 'doc_key' => $pt->getLogKey(),
                 'date_oper' => $pt->getDocDate(),
-                'status' => ($pt->getStatus() == Pt::STATUS_ACTIVE) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
+                'status' => Mutual::getStatusFromPt($pt),
                 'revise' => Mutual::REVISE_NOT,
                 'amount' => $pt->getAmount(),
                 'legal_id' => $pt->getCompany2()->getId(),
@@ -195,27 +220,31 @@ class PtManager
      */
     public function addPt($data)
     {
-        $pt = new Pt();        
-        $pt->setAplId($data['apl_id']);
-        $pt->setDocDate($data['doc_date']);
-        $pt->setComment($data['comment']);
-        $pt->setStatusEx($data['status_ex']);
-        $pt->setStatus($data['status']);
-        $pt->setStatusDoc(Pt::STATUS_DOC_NOT_RECD);
-        $pt->setOffice($data['office']);
-        $pt->setCompany($data['company']);
-        $pt->setOffice2($data['office2']);
-        $pt->setCompany2($data['company2']);
-        $pt->setAmount(0);
-        $pt->setDateCreated(date('Y-m-d H:i:s'));
-        if (!empty($data['doc_no'])){
-            $pt->setDocNo($data['doc_no']);
+        if ($data['doc_date'] > $this->allowDate){
+            $pt = new Pt();        
+            $pt->setAplId($data['apl_id']);
+            $pt->setDocDate($data['doc_date']);
+            $pt->setComment($data['comment']);
+            $pt->setStatusEx($data['status_ex']);
+            $pt->setStatus($data['status']);
+            $pt->setStatusDoc(Pt::STATUS_DOC_NOT_RECD);
+            $pt->setOffice($data['office']);
+            $pt->setCompany($data['company']);
+            $pt->setOffice2($data['office2']);
+            $pt->setCompany2($data['company2']);
+            $pt->setAmount(0);
+            $pt->setDateCreated(date('Y-m-d H:i:s'));
+            if (!empty($data['doc_no'])){
+                $pt->setDocNo($data['doc_no']);
+            }
+
+            $this->entityManager->persist($pt);        
+            $this->entityManager->flush();
+
+            return $pt;        
         }
         
-        $this->entityManager->persist($pt);        
-        $this->entityManager->flush();
-        
-        return $pt;        
+        return;
     }
     
     /**
@@ -226,23 +255,25 @@ class PtManager
      */
     public function updatePt($pt, $data)            
     {
-        $pt->setAplId($data['apl_id']);
-        $pt->setDocDate($data['doc_date']);
-        $pt->setComment($data['comment']);
-        $pt->setStatusEx($data['status_ex']);
-        $pt->setStatus($data['status']);
-        $pt->setOffice($data['office']);
-        $pt->setCompany($data['company']);
-        $pt->setOffice2($data['office2']);
-        $pt->setCompany2($data['company2']);
-        if (!empty($data['doc_no'])){
-            $pt->setDocNo($data['doc_no']);
-        }
-        
-        $this->entityManager->persist($pt);
-        $this->entityManager->flush($pt);
-        
-        return;
+        if ($data['doc_date'] > $this->allowDate){
+            $pt->setAplId($data['apl_id']);
+            $pt->setDocDate($data['doc_date']);
+            $pt->setComment($data['comment']);
+            $pt->setStatusEx($data['status_ex']);
+            $pt->setStatus($data['status']);
+            $pt->setOffice($data['office']);
+            $pt->setCompany($data['company']);
+            $pt->setOffice2($data['office2']);
+            $pt->setCompany2($data['company2']);
+            if (!empty($data['doc_no'])){
+                $pt->setDocNo($data['doc_no']);
+            }
+
+            $this->entityManager->persist($pt);
+            $this->entityManager->flush($pt);
+
+            return;
+        }    
     }
     
     /**
@@ -353,13 +384,14 @@ class PtManager
      */
     public function removePt($pt)
     {
-        $this->logManager->infoPt($pt, Log::STATUS_DELETE);
-        $this->entityManager->getRepository(Movement::class)
-                ->removeDocMovements($pt->getLogKey());
-        $this->removePtGood($pt);
-        
-        $this->entityManager->getConnection()->delete('pt', ['id' => $pt->getId()]);
-        
+        if ($pt->getDocDate() > $this->allowDate){
+            $this->logManager->infoPt($pt, Log::STATUS_DELETE);
+            $this->entityManager->getRepository(Movement::class)
+                    ->removeDocMovements($pt->getLogKey());
+            $this->removePtGood($pt);
+
+            $this->entityManager->getConnection()->delete('pt', ['id' => $pt->getId()]);
+        }            
         return;
     }
 }

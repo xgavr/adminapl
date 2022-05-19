@@ -1,4 +1,6 @@
 <?php
+    use Stock\Entity\Pt;
+
     $this->headTitle('Перемещение товаров');
 
     $this->mainMenu()->setActiveItemId('supplier');
@@ -12,9 +14,6 @@
 
 ?>
 
-
-<h1>Перемещение товаров</h1>
-
 <div class="row">
     <div class="col-md-12">
         <div id="toolbar">
@@ -23,9 +22,14 @@
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>                
                 <div class="form-group">
-                    <input name="search" style="width: 150px" class="form-control" type="text" placeholder="Поиск">
-                    <button id="ok" type="submit" class="btn btn-default">OK</button>
-                </div>
+                    <div class="btn-group">
+                        <input id="searchinput" name="search" style="width: 150px" class="form-control" type="text" placeholder="Артикул">
+                        <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                    </div>
+                    <button id="ok" type="submit" class="btn btn-default" title="Поиск">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>    
                 <div class="form-group">
                     <select id="officeSelect" style="width: 100px" class="form-control">
                         <option selected>офис</option>
@@ -36,26 +40,15 @@
                     
                 </div>    
                 <div class="form-group">
-                    <select id="yearSelect" style="width: 80px" class="form-control">
-                        <option>год</option>
-                        <?php foreach ($years as $year):?>
-                            <option value="<?= $year?>" <?= ($year == date('Y'))? 'selected':''?>><?= $year?></option>
-                        <?php endforeach;?>
-                    </select>                    
-                </div>    
-                <div class="form-group">
-                    <select id="monthSelect" style="width: 70px" class="form-control">
-                        <option>мес</option>
-                        <?php foreach ($monthes as $month):?>
-                            <option value="<?= $month?>" <?= ($month == date('m'))? 'selected':''?>><?= $month?></option>
-                        <?php endforeach;?>
-                    </select>                    
-                </div>    
+                    <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
+                </div>
             </div>
         </div>
         <table id="table" 
             data-toggle="table" 
             data-url="/pt/content"
+            data-cookie="true"
+            data-cookie-id-table="ptSaveId"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -63,23 +56,21 @@
             data-show-refresh="true"
             data-show-toggle="true"
             data-query-params="queryParams"
-            data-sort-name="id"
+            data-sort-name="docDate"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-row-style="rowStyle"
             >
             <thead>
                 <tr>
-                     <th data-field="docDate" data-sortable="true">Дата</th>
-                     <th data-field="id" data-sortable="false">Номер</th>
-                     <th data-field="aplId" data-type="numeric"data-align="right">AplId</th>
+                     <th data-field="docDate" data-sortable="true" data-width="100">Дата</th>
+                     <th data-field="id" data-sortable="false" data-type="numeric"data-align="right" data-formatter="idFormatter" data-width="80">Номер</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
                      <th data-field='office.name' data-sortable="false">Отправитель</th>
                      <th data-field='office2.name' data-sortable="false">Получатель</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
-                     <th data-field='status' data-sortable="false">П</th>
-                     <th data-field='statusDoc' data-sortable="false">Т</th>
-                     <th data-field='statusEx' data-sortable="false">О</th>
-                     <th data-field="" data-formatter="activeFormatter"></th>
+                     <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
                  </tr>                
             </thead>
         </table>
@@ -87,17 +78,31 @@
 </div>    
 
 <script type="text/javascript">
-    function refreshTable(){
-        $('#table').bootstrapTable('refresh');
+    function rowStyle(row){
+        var retired = 'tablerow';
+        if (row.status == '<?= Pt::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }
+        return {classes: retired};
     }
 
     var table = $('#table'),
         ok = $('#ok');
     
+    function refreshTable(){
+        table.bootstrapTable('refresh');
+    }
+
     $(function () {
         ok.click(function () {
             table.bootstrapTable('refresh');
         });
+
+        $(".inputclear").click(function(){
+            $("#searchinput").val('');
+            refreshTable();
+        });
+        
         $(document).on('click', '.pt-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
@@ -161,8 +166,15 @@
         ].join(''); 
     }    
     
+    function idFormatter(value, row){
+        if (row.aplId){
+            return row.aplId;
+        }
+        return value;
+    }    
+    
     function amountFormatter(value){
-        return Math.round(value*100)/100;
+        return (Math.round(value*100)/100).toFixed(2);
     }    
     
     function activeFormatter(value, row){

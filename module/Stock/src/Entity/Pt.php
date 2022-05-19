@@ -364,7 +364,13 @@ class Pt {
      */
     public function getDocNo() 
     {
-        return $this->docNo;
+        if ($this->docNo){
+            return $this->docNo;
+        }    
+        if ($this->aplId){
+            return $this->aplId;
+        }    
+        return $this->id;
     }
     
     /**
