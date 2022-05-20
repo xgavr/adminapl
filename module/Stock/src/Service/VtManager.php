@@ -37,15 +37,40 @@ class VtManager
     private $orderManager;
         
     /**
+     * Admin manager
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+
+    /**
+     * Дата запрета
+     * @var string
+     */
+    private $allowDate;
+    
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager, $orderManager) 
+    public function __construct($entityManager, $logManager, $orderManager, $adminManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->orderManager = $orderManager;
+        $this->adminManager = $adminManager;
+
+        $setting = $this->adminManager->getSettings();
+        $this->allowDate = $setting['allow_date'];        
     }
     
+    /**
+     * Получить дату запрета
+     * @return date
+     */
+    public function getAllowDate()
+    {
+        return $this->allowDate; 
+    }
+                
     /**
      * Обновить взаиморасчеты документа
      * 
@@ -64,7 +89,7 @@ class VtManager
         $data = [
             'doc_key' => $vt->getLogKey(),
             'date_oper' => $vt->getDocDate(),
-            'status' => $vt->getStatus(),
+            'status' => Mutual::getStatusFromVt($vt),
             'revise' => Mutual::REVISE_NOT,
             'amount' => -$vt->getAmount(),
             'legal_id' => $vt->getOrder()->getLegal()->getId(),
@@ -92,7 +117,7 @@ class VtManager
         $data = [
             'doc_key' => $vt->getLogKey(),
             'date_oper' => $vt->getDocDate(),
-            'status' => $vt->getStatus(),
+            'status' => Retail::getStatusFromVt($vt),
             'revise' => Retail::REVISE_NOT,
             'amount' => -$vt->getAmount(),
             'contact_id' => $vt->getOrder()->getContact()->getId(),
@@ -126,7 +151,7 @@ class VtManager
                 'doc_row_key' => $vtGood->getDocRowKey(),
                 'doc_row_no' => $vtGood->getRowNo(),
                 'date_oper' => $vt->getDocDate(),
-                'status' => $vt->getStatus(),
+                'status' => Movement::getStatusFromVt($vt),
                 'quantity' => $vtGood->getQuantity(),
                 'amount' => $vtGood->getAmount(),
                 'good_id' => $vtGood->getGood()->getId(),
@@ -192,23 +217,26 @@ class VtManager
      */
     public function addVt($office, $order, $data)
     {
-        $vt = new Vt();     
-        $vt->setOffice($office);
-        $vt->setOrder($order);
-        $vt->setAplId($data['apl_id']);
-        //$vt->setDocNo($data['doc_no']);
-        $vt->setDocDate($data['doc_date']);
-        $vt->setComment($data['comment']);
-        $vt->setStatusEx($data['status_ex']);
-        $vt->setStatus($data['status']);
-        $vt->setStatusDoc(Vt::STATUS_DOC_NOT_RECD);
-        $vt->setAmount(0);
-        $vt->setDateCreated(date('Y-m-d H:i:s'));
-        
-        $this->entityManager->persist($vt);        
-        $this->entityManager->flush();
-        
-        return $vt;        
+        if ($data['doc_date'] > $this->allowDate){
+            $vt = new Vt();     
+            $vt->setOffice($office);
+            $vt->setOrder($order);
+            $vt->setAplId($data['apl_id']);
+            //$vt->setDocNo($data['doc_no']);
+            $vt->setDocDate($data['doc_date']);
+            $vt->setComment($data['comment']);
+            $vt->setStatusEx($data['status_ex']);
+            $vt->setStatus($data['status']);
+            $vt->setStatusDoc(Vt::STATUS_DOC_NOT_RECD);
+            $vt->setAmount(0);
+            $vt->setDateCreated(date('Y-m-d H:i:s'));
+
+            $this->entityManager->persist($vt);        
+            $this->entityManager->flush();
+
+            return $vt;
+        }
+        return;
     }
     
     /**
@@ -219,16 +247,17 @@ class VtManager
      */
     public function updateVt($vt, $data)            
     {
-        $vt->setAplId($data['apl_id']);
-        //$vt->setDocNo($data['doc_no']);
-        $vt->setDocDate($data['doc_date']);
-        $vt->setComment($data['comment']);
-        $vt->setStatusEx($data['status_ex']);
-        $vt->setStatus($data['status']);
-        
-        $this->entityManager->persist($vt);
-        $this->entityManager->flush($vt);
-        
+        if ($data['doc_date'] > $this->allowDate){
+            $vt->setAplId($data['apl_id']);
+            //$vt->setDocNo($data['doc_no']);
+            $vt->setDocDate($data['doc_date']);
+            $vt->setComment($data['comment']);
+            $vt->setStatusEx($data['status_ex']);
+            $vt->setStatus($data['status']);
+
+            $this->entityManager->persist($vt);
+            $this->entityManager->flush($vt);
+        }    
         return;
     }
     
@@ -338,14 +367,16 @@ class VtManager
      */
     public function removeVt($vt)
     {
-        $this->logManager->infoVt($vt, Log::STATUS_DELETE);
-        $this->entityManager->getRepository(Mutual::class)
-                ->removeDocMutuals($vt->getLogKey());
-        $this->entityManager->getRepository(Movement::class)
-                ->removeDocMovements($vt->getLogKey());
-        $this->removeVtGood($vt);
-        
-        $this->entityManager->getConnection()->delete('vt', ['id' => $vt->getId()]);
+        if ($vt->getDocDate() > $this->allowDate){
+            $this->logManager->infoVt($vt, Log::STATUS_DELETE);
+            $this->entityManager->getRepository(Mutual::class)
+                    ->removeDocMutuals($vt->getLogKey());
+            $this->entityManager->getRepository(Movement::class)
+                    ->removeDocMovements($vt->getLogKey());
+            $this->removeVtGood($vt);
+
+            $this->entityManager->getConnection()->delete('vt', ['id' => $vt->getId()]);
+        }    
         
         return;
     }

@@ -13,6 +13,10 @@ use Company\Entity\Legal;
 use Company\Entity\Office;
 use Application\Entity\Goods;
 use Stock\Entity\Pt;
+use Stock\Entity\Vt;
+use Stock\Entity\St;
+use Stock\Entity\Ptu;
+use Stock\Entity\Ot;
 
 
 /**
@@ -228,6 +232,32 @@ class Movement {
     {
         switch ($pt->getStatus()){
             case Pt::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+
+    /**
+     * Returns possible vt status.
+     * @param Vt $vt
+     * @return integer
+     */
+    public static function getStatusFromVt($vt) 
+    {
+        switch ($vt->getStatus()){
+            case Vt::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+
+    /**
+     * Returns possible st status.
+     * @param St $st
+     * @return integer
+     */
+    public static function getStatusFromSt($st) 
+    {
+        switch ($st->getStatus()){
+            case St::STATUS_RETIRED: return self::STATUS_RETIRED;
             default: return self::STATUS_ACTIVE;    
         }
     }    

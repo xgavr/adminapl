@@ -163,6 +163,20 @@ class Retail {
     }    
     
     /**
+     * Returns possible vt status.
+     * @param Vt $pt
+     * @return integer
+     */
+    public static function getStatusFromVt($vt) 
+    {
+        switch ($vt->getStatus()){
+            case Vt::STATUS_RETIRED: return self::STATUS_RETIRED;
+            case Vt::STATUS_COMMISSION: return self::STATUS_COMMISSION;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+    
+    /**
      * Returns possible statuses as array.
      * @return array
      */

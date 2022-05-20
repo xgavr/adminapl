@@ -9,14 +9,8 @@
 namespace Stock\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Application\Entity\Order;
-use Application\Entity\Bid;
 use Stock\Entity\Vt;
 use Stock\Entity\VtGood;
-use Stock\Entity\Unit;
-use Stock\Entity\Ntd;
-use Application\Entity\Supplier;
-use Company\Entity\Office;
 
 /**
  * Description of VtRepository
@@ -95,6 +89,14 @@ class VtRepository extends EntityRepository{
                     $queryBuilder->andWhere('MONTH(v.docDate) = :month')
                             ->setParameter('month', $params['month']);
                 }    
+            }
+            if (!empty($params['q'])){     
+                $articleCodeFilter = new ArticleCode(); 
+                $queryBuilder->distinct()
+                        ->join('v.vtGoods', 'vg')
+                        ->join('vg.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
             }
         }
 
@@ -178,6 +180,14 @@ class VtRepository extends EntityRepository{
                             ->setParameter('month', $params['month']);
                 }    
             }
+            if (!empty($params['q'])){     
+                $articleCodeFilter = new ArticleCode(); 
+                $queryBuilder->distinct()
+                        ->join('v.vtGoods', 'vg')
+                        ->join('vg.good', 'g')
+                        ->andWhere('g.code like :q')
+                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
+            }
         }
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
@@ -213,4 +223,39 @@ class VtRepository extends EntityRepository{
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }        
+    
+    /**
+     * Найти записи для отправки в АПЛ
+     */
+    public function findForUpdateApl()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('v')
+            ->from(Vt::class, 'v')
+            ->where('v.statusEx = ?1')
+            ->setParameter('1', Vt::STATUS_EX_NEW)    
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        foreach ($data as $vt){
+            $flag = true;
+            $vtGoods = $entityManager->getRepository(VtGood::class)
+                    ->findBy(['vt' => $vt->getId()]);
+            foreach ($vtGoods as $vtGood){
+               if (empty($vtGood->getGood()->getAplId())){
+                   $flag = false;
+                   break;
+               }  
+            }
+            if ($flag){
+                return $vt;
+            }    
+        }
+        
+        return;                
+        
+    }                    
 }

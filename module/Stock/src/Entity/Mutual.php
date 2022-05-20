@@ -13,6 +13,7 @@ use Company\Entity\Legal;
 use Company\Entity\Office;
 use Company\Entity\Contract;
 use Stock\Entity\Pt;
+use Stock\Entity\Vt;
 
 
 /**
@@ -164,6 +165,20 @@ class Mutual {
     {
         switch ($pt->getStatus()){
             case Pt::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+    
+    /**
+     * Returns possible vt status.
+     * @param Vt $pt
+     * @return integer
+     */
+    public static function getStatusFromVt($vt) 
+    {
+        switch ($vt->getStatus()){
+            case Vt::STATUS_RETIRED: return self::STATUS_RETIRED;
+            case Vt::STATUS_COMMISSION: return self::STATUS_COMMISSION;
             default: return self::STATUS_ACTIVE;    
         }
     }    

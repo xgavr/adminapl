@@ -5,6 +5,7 @@ use Interop\Container\ContainerInterface;
 use Stock\Service\VtManager;
 use Admin\Service\LogManager;
 use Application\Service\OrderManager;
+use Admin\Service\AdminManager;
 
 /**
  * This is the factory class for VtManager service. The purpose of the factory
@@ -20,7 +21,8 @@ class VtManagerFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
         $orderManager = $container->get(OrderManager::class);
+        $adminManager = $container->get(AdminManager::class);
                         
-        return new VtManager($entityManager, $logManager, $orderManager);
+        return new VtManager($entityManager, $logManager, $orderManager, $adminManager);
     }
 }

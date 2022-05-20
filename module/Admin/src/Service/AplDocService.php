@@ -19,6 +19,7 @@ use Company\Entity\Contract;
 use Stock\Entity\Ptu;
 use Stock\Entity\Vtp;
 use Stock\Entity\Vt;
+use Stock\Entity\VtGood;
 use Application\Entity\Order;
 use Stock\Entity\Ot;
 use Stock\Entity\OtGood;
@@ -835,6 +836,89 @@ class AplDocService {
     }
 
     /**
+     * Отправить вт
+     * 
+     */
+    public function sendVt()
+    {
+        $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
+
+        $result = false;
+
+        $vt = $this->entityManager->getRepository(Vt::class)
+                ->findForUpdateApl();
+        if ($vt){
+            $post = [
+                'parent' => $vtp->getPtu()->getOffice()->getAplId(),
+                'type' =>   'Resup',
+                'sort' =>   $vtp->getAmount(),
+                'publish' => $vtp->getAplStatusAsString(),
+                'name' =>   $vtp->getPtu()->getSupplier()->getAplId(),
+                'comment' => 'Suppliers',
+                'info' => $vtp->getComment(),
+                'info2' => $vtp->getInfo(),
+//                'user' =>   $ptu->getUserCreator()->getAplId(),
+                'sf' =>     0,
+                'ns' =>     $vtp->getPtu()->getAplId(),
+                'ds' =>     $vtp->getDocDate(),
+                'aa' =>     1,
+            ];
+
+            if ($vtp->getAplId()){
+                $post['id'] = $vtp->getAplId();
+            }
+            
+            $so = [];
+            $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
+                    ->findBy(['vtp' => $vtp->getId()]);
+            foreach ($vtpGoods as $vtpGood){
+                $tp = [
+                    'sort' => $vtpGood->getQuantity(),
+                    'publish' => $vtp->getAplStatusAsString(),
+                    'name' => $vtpGood->getGood()->getAplId(),
+                    'comment' => $vtpGood->getPrice(),                    
+                    'art' => $vtpGood->getGood()->getCode(),
+                    'artid' => $vtpGood->getGood()->getAplId(),
+                ];                
+                $so[] = $tp;
+            }
+            $post['tp'] = $so;
+            
+//            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 60]);
+            $client->setParameterPost($post);            
+
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {                    
+                    $aplId = (int) $response->getBody();
+                    if ($aplId){
+                        $ok = $result = true;
+                    }
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok) {            
+                $vtp->setStatusEx(Vtp::STATUS_EX_APL);
+                $vtp->setAplId($aplId);
+                $this->entityManager->persist($vtp);
+                $this->entityManager->flush($vtp);
+            }
+
+            $this->entityManager->detach($vtp);
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Получить статус документа ОТ
      * 
      * @param array $data
@@ -1244,7 +1328,7 @@ class AplDocService {
             }    
 
             if ($ok) {            
-                $st->setStatusEx(Ot::STATUS_EX_APL);
+                $st->setStatusEx(St::STATUS_EX_APL);
                 $st->setAplId($aplId);
                 $this->entityManager->persist($st);
                 $this->entityManager->flush($st);
@@ -1351,6 +1435,87 @@ class AplDocService {
         return false;
     }
 
+    /**
+     * Отправить pt
+     * 
+     */
+    public function sendPt()
+    {
+        $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
+
+        $result = false;
+
+        $pt = $this->entityManager->getRepository(Pt::class)
+                ->findForUpdateApl();
+        if ($st){
+            $post = [
+                'parent' => $pt->getOffice()->getAplId(),
+                'type' =>   'Relocations',
+                'sort' =>   $pt->getAmount(),
+                'publish' => $pt->getAplStatusAsString(),
+                'name' =>   $pt->getOffice2()->getAplId(),
+                'comment' => 'Stores',
+                'info' => $pt->getComment(),
+                'sf' =>     0,
+                'ns' =>     $pt->getDocNo(),
+                'ds' =>     $pt->getDocDate(),
+                'aa' =>     1,
+            ];
+            
+            if ($pt->getAplId()){
+                $post['id'] = $pt->getAplId();
+            }
+            
+            $so = [];
+            $ptGoods = $this->entityManager->getRepository(PtGood::class)
+                    ->findBy(['pt' => $pt->getId()]);
+            foreach ($ptGoods as $ptGood){
+                $tp = [
+                    'sort' => $ptGood->getQuantity(),
+                    'publish' => $pt->getAplStatusAsString(),
+                    'name' => $ptGood->getGood()->getAplId(),
+                    'comment' => $ptGood->getGood()->getMeanPrice(),                    
+                    'art' => $ptGood->getGood()->getCode(),
+                    'artid' => $ptGood->getGood()->getAplId(),
+                ];                
+                $so[] = $tp;
+            }
+            $post['tp'] = $so;
+            
+//            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 60]);
+            $client->setParameterPost($post);            
+
+            $ok = $result = false;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {                    
+                    $aplId = (int) $response->getBody();
+                    if ($aplId){
+                        $ok = $result = true;
+                    }
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok) {            
+                $st->setStatusEx(Pt::STATUS_EX_APL);
+                $st->setAplId($aplId);
+                $this->entityManager->persist($pt);
+                $this->entityManager->flush($pt);
+            }
+
+            $this->entityManager->detach($pt);
+        }
+        
+        return $result;
+    }
+    
     /**
      * Получить статус документа Revise
      * 

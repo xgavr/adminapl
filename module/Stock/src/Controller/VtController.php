@@ -17,12 +17,6 @@ use Application\Entity\Goods;
 use Stock\Form\VtForm;
 use Stock\Form\VtGoodForm;
 use Company\Entity\Office;
-use Stock\Entity\Unit;
-use Stock\Entity\Ntd;
-use Company\Entity\Country;
-use Application\Entity\Client;
-use Company\Entity\Legal;
-use Company\Entity\Contract;
 
 class VtController extends AbstractActionController
 {
@@ -72,8 +66,13 @@ class VtController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
         $officeId = $this->params()->fromQuery('office');
-        $year = $this->params()->fromQuery('year');
-        $month = $this->params()->fromQuery('month');
+        $year_month = $this->params()->fromQuery('month');
+        
+        $year = $month = null;
+        if ($year_month){
+            $year = date('Y', strtotime($year_month));
+            $month = date('m', strtotime($year_month));
+        }
         
         $params = [
             'q' => $q, 'sort' => $sort, 'order' => $order, 
@@ -164,6 +163,7 @@ class VtController extends AbstractActionController
         $orderId = (int)$this->params()->fromQuery('order', -1);
         
         $order = $vt = $client = $legal = $company = null;
+        $notDisabled = true;        
         if ($orderId > 0){
             $order = $this->entityManager->getRepository(Order::class)
                     ->find($orderId);
@@ -228,6 +228,7 @@ class VtController extends AbstractActionController
                 $data['doc_no'] = $vt->getDocNo();
                 $data['comment'] = $vt->getComment();
                 $data['status'] = $vt->getStatus();
+                $notDisabled = $vt->getDocDate() > $this->vtManager->getAllowDate();
             }    
             $form->setData($data);
         }
@@ -238,6 +239,8 @@ class VtController extends AbstractActionController
             'form' => $form,
             'vt' => $vt,
             'order' => $order,
+            'allowDate' => max($this->vtManager->getAllowDate(), date('Y-m-d', strtotime($order->getDateShipment().' - 1 day'))),
+            'disabled' => !$notDisabled,
         ]);        
     }    
         
