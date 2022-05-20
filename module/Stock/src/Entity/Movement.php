@@ -17,6 +17,7 @@ use Stock\Entity\Vt;
 use Stock\Entity\St;
 use Stock\Entity\Ptu;
 use Stock\Entity\Ot;
+use Application\Entity\Order;
 
 
 /**
@@ -223,6 +224,19 @@ class Movement {
         return 'Unknown';
     }    
     
+    /**
+     * Returns possible order status.
+     * @param Order $order
+     * @return integer
+     */
+    public static function getStatusFromOrder($order) 
+    {
+        switch ($order->getStatus()){
+            case Order::STATUS_SHIPPED: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }    
+
     /**
      * Returns possible pt status.
      * @param Pt $pt

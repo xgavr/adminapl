@@ -13,6 +13,7 @@ use Company\Entity\Legal;
 use Company\Entity\Office;
 use Application\Entity\Contact;
 use Stock\Entity\Pt;
+use Application\Entity\Order;
 
 
 /**
@@ -149,6 +150,19 @@ class Retail {
         return $this->status;
     }
 
+    /**
+     * Returns possible order status.
+     * @param Order $order
+     * @return integer
+     */
+    public static function getStatusFromOrder($order) 
+    {
+        switch ($order->getStatus()){
+            case Order::STATUS_SHIPPED: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }    
+    
     /**
      * Returns possible pt status.
      * @param Pt $pt

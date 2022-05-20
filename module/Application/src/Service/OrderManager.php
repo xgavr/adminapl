@@ -62,14 +62,39 @@ class OrderManager
      */
     private $legalManager;
     
+    /**
+     * Admin manager
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+    
+    /**
+     * Дата запрета
+     * @var string
+     */
+    private $allowDate;
+    
     // Конструктор, используемый для внедрения зависимостей в сервис.
     public function __construct($entityManager, $authService, $logManager,
-            $legalManager)
+            $legalManager, $adminManager)
     {
         $this->entityManager = $entityManager;
         $this->authService = $authService;
         $this->logManager = $logManager;
         $this->legalManager = $legalManager;
+        $this->adminManager = $adminManager;
+
+        $setting = $this->adminManager->getSettings();
+        $this->allowDate = $setting['allow_date'];
+    }
+    
+    /**
+     * Получить дату запрета
+     * @return date
+     */
+    public function getAllowDate()
+    {
+        return $this->allowDate; 
     }
     
     /**
@@ -92,7 +117,7 @@ class OrderManager
         $data = [
             'doc_key' => $order->getLogKey(),
             'date_oper' => $order->getDateOper(),
-            'status' => ($order->getStatus() == Order::STATUS_SHIPPED) ? Retail::STATUS_ACTIVE: Retail::STATUS_RETIRED,
+            'status' => Retail::getStatusFromOrder($order),
             'revise' => Retail::REVISE_NOT,
             'amount' => $order->getTotal(),
             'contact_id' => $order->getContact()->getId(),
@@ -155,7 +180,7 @@ class OrderManager
         $data = [
             'doc_key' => $order->getLogKey(),
             'date_oper' => $order->getDateOper(),
-            'status' => ($order->getStatus() == Order::STATUS_SHIPPED) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
+            'status' => Mutual::getStatusFromOrder($order),
             'revise' => Mutual::REVISE_NOT,
             'amount' => $order->getTotal(),
             'legal_id' => $order->getLegal()->getId(),
@@ -186,7 +211,7 @@ class OrderManager
                 'doc_row_key' => $bid->getRowKey(),
                 'doc_row_no' => $bid->getRowNo(),
                 'date_oper' => $order->getDateOper(),
-                'status' => ($order->getStatus() == Order::STATUS_SHIPPED) ? Movement::STATUS_ACTIVE: Movement::STATUS_RETIRED,
+                'status' => Movement::getStatusFromOrder($order),
                 'quantity' => -$bid->getNum(),
                 'amount' => -$bid->getPrice()*$bid->getNum(),
                 'good_id' => $bid->getGood()->getId(),
@@ -374,98 +399,102 @@ class OrderManager
         $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
         $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
         
-        // Создаем новую сущность.
-        $order = new Order();
-        $order->setAddress(!empty($data['address']) ? $data['address'] : null);
-        $order->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
-        $order->setDateMod($dateMod);
-        $order->setDateOper($dateOper);
-        $order->setDateShipment(!empty($data['dateShipment']) ? $data['dateShipment'] : null);
-        $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
-        $order->setInfo(!empty($data['info']) ? $data['info'] : null);
-        $order->setInvoiceInfo(!empty($data['invoiceInfo']) ? $data['invoiceInfo'] : null);
-        $order->setMode(!empty($data['mode']) ? $data['mode'] : Order::MODE_MAN);
-        $order->setShipmentDistance(!empty($data['shipmentDistance']) ? $data['shipmentDistance'] : 0);
-        $order->setShipmentRate(!empty($data['shipmentRate']) ? $data['shipmentRate'] : 0);
-        $order->setShipmetAddRate(!empty($data['shipmentAddRate']) ? $data['shipmentAddRate'] : 0);
-        $order->setShipmetTotal(!empty($data['shipmentTotal']) ? $data['shipmentTotal'] : 0);
-        $order->setStatus(!empty($data['status']) ? $data['status'] : Order::STATUS_NEW);
-        $order->setTotal(!empty($data['total']) ? $data['total'] : 0);
-        $order->setTrackNumber(!empty($data['trackNumber']) ? $data['trackNumber'] : null);
-        
-        $order->setOffice($office);
-        if (empty($data['company'])){
-            $company = $this->entityManager->getRepository(Office::class)
-                    ->findDefaultCompany($office, !empty($data['dateOper']) ? $data['dateOper'] : null);
-        } else {
-            $company = $this->entityManager->getRepository(Legal::class)
-                    ->find($data['company']);
-        }
-        $order->setCompany($company);
-        
-        $order->setContact($contact);
-        
-        $order->setContactCar(null);
-        if (!empty($data['contactCar'])){
-            $contactCar = $this->entityManager->getRepository(ContactCar::class)
-                    ->find($data['contactCar']);
-            $order->setContactCar($contactCar);
-        }
-        
-        $order->setCourier(null);
-        if (!empty($data['courier'])){
-            $courier = $this->entityManager->getRepository(Courier::class)
-                    ->find($data['courier']);
-            $order->setCourier($courier);
-        }
-        
-        $order->setLegal(null);
-        if (!empty($data['legal'])){
-            $legal = $this->entityManager->getRepository(Legal::class)
-                    ->find($data['legal']);
-            $order->setRecipient($legal);
-        }
+        if ($dateOper > $this->allowDate){
+            // Создаем новую сущность.
+            $order = new Order();
+            $order->setAddress(!empty($data['address']) ? $data['address'] : null);
+            $order->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
+            $order->setDateMod($dateMod);
+            $order->setDateOper($dateOper);
+            $order->setDateShipment(!empty($data['dateShipment']) ? $data['dateShipment'] : null);
+            $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
+            $order->setInfo(!empty($data['info']) ? $data['info'] : null);
+            $order->setInvoiceInfo(!empty($data['invoiceInfo']) ? $data['invoiceInfo'] : null);
+            $order->setMode(!empty($data['mode']) ? $data['mode'] : Order::MODE_MAN);
+            $order->setShipmentDistance(!empty($data['shipmentDistance']) ? $data['shipmentDistance'] : 0);
+            $order->setShipmentRate(!empty($data['shipmentRate']) ? $data['shipmentRate'] : 0);
+            $order->setShipmetAddRate(!empty($data['shipmentAddRate']) ? $data['shipmentAddRate'] : 0);
+            $order->setShipmetTotal(!empty($data['shipmentTotal']) ? $data['shipmentTotal'] : 0);
+            $order->setStatus(!empty($data['status']) ? $data['status'] : Order::STATUS_NEW);
+            $order->setTotal(!empty($data['total']) ? $data['total'] : 0);
+            $order->setTrackNumber(!empty($data['trackNumber']) ? $data['trackNumber'] : null);
 
-        $order->setRecipient(null);
-        if (!empty($data['recipient'])){
-            $recipient = $this->entityManager->getRepository(Legal::class)
-                    ->find($data['recipient']);
-            $order->setRecipient($recipient);
-        }
+            $order->setOffice($office);
+            if (empty($data['company'])){
+                $company = $this->entityManager->getRepository(Office::class)
+                        ->findDefaultCompany($office, !empty($data['dateOper']) ? $data['dateOper'] : null);
+            } else {
+                $company = $this->entityManager->getRepository(Legal::class)
+                        ->find($data['company']);
+            }
+            $order->setCompany($company);
 
-        if (!empty($data['shipping'])){
-            $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->find($data['shipping']);
-            $order->setShipping($shipping);
-        } else {
-            $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
-        }
+            $order->setContact($contact);
 
-        $order->setSkiper(null);
-        if (!empty($data['skiper'])){
-            $skiper = $this->entityManager->getRepository(User::class)
-                    ->find($data['skiper']);
-            $order->setSkiper($skiper);
-        }
+            $order->setContactCar(null);
+            if (!empty($data['contactCar'])){
+                $contactCar = $this->entityManager->getRepository(ContactCar::class)
+                        ->find($data['contactCar']);
+                $order->setContactCar($contactCar);
+            }
 
-        $order->setUser(null);
-        if (!empty($data['user'])){
-            $user = $this->entityManager->getRepository(User::class)
-                    ->find($data['user']);
-            $order->setUser($user);
-        }
+            $order->setCourier(null);
+            if (!empty($data['courier'])){
+                $courier = $this->entityManager->getRepository(Courier::class)
+                        ->find($data['courier']);
+                $order->setCourier($courier);
+            }
 
-        $currentDate = date('Y-m-d H:i:s');        
-        $order->setDateCreated($currentDate);
-                
-        // Добавляем сущность в менеджер сущностей.
-        $this->entityManager->persist($order);
+            $order->setLegal(null);
+            if (!empty($data['legal'])){
+                $legal = $this->entityManager->getRepository(Legal::class)
+                        ->find($data['legal']);
+                $order->setRecipient($legal);
+            }
+
+            $order->setRecipient(null);
+            if (!empty($data['recipient'])){
+                $recipient = $this->entityManager->getRepository(Legal::class)
+                        ->find($data['recipient']);
+                $order->setRecipient($recipient);
+            }
+
+            if (!empty($data['shipping'])){
+                $shipping = $this->entityManager->getRepository(Shipping::class)
+                        ->find($data['shipping']);
+                $order->setShipping($shipping);
+            } else {
+                $shipping = $this->entityManager->getRepository(Shipping::class)
+                        ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
+            }
+
+            $order->setSkiper(null);
+            if (!empty($data['skiper'])){
+                $skiper = $this->entityManager->getRepository(User::class)
+                        ->find($data['skiper']);
+                $order->setSkiper($skiper);
+            }
+
+            $order->setUser(null);
+            if (!empty($data['user'])){
+                $user = $this->entityManager->getRepository(User::class)
+                        ->find($data['user']);
+                $order->setUser($user);
+            }
+
+            $currentDate = date('Y-m-d H:i:s');        
+            $order->setDateCreated($currentDate);
+
+            // Добавляем сущность в менеджер сущностей.
+            $this->entityManager->persist($order);
+
+            // Применяем изменения к базе данных.
+            $this->entityManager->flush();
+
+            return $order;
+        }
         
-        // Применяем изменения к базе данных.
-        $this->entityManager->flush();
-        
-        return $order;
+        return;
     }   
     
     /**
@@ -479,87 +508,91 @@ class OrderManager
     {
         $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
         $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
+        
+        if ($dateOper > $this->allowDate){
+            $upd = [
+                'address' =>  (!empty($data['address'])) ? $data['address'] : null,
+                'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
+                'date_mod' =>  $dateMod,
+                'date_oper' =>  $dateOper,
+                'date_shipment' =>  (!empty($data['dateShipment'])) ? $data['dateShipment'] : null,
+                'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
+                'info' =>  (!empty($data['info'])) ? $data['info'] : null,
+                'invoice_info' =>  (!empty($data['invoiceInfo'])) ? $data['invoiceInfo'] : null,
+                'mode' =>  (!empty($data['mode'])) ? $data['mode'] : Order::MODE_MAN,
+                'shipment_distance' =>  (!empty($data['shipmentDistance'])) ? $data['shipmentDistance'] : 0,
+                'shipment_rate' =>  (!empty($data['shipmentRate'])) ? $data['shipmentRate'] : 0,
+                'shipment_add_rate' =>  (!empty($data['shipmentAddRate'])) ? $data['shipmentAddRate'] : 0,
+                'shipment_total' =>  (!empty($data['shipmentTotal'])) ? $data['shipmentTotal'] : 0,
+                'status' =>  (!empty($data['status'])) ? $data['status'] : Order::STATUS_NEW,
+                'total' =>  (!empty($data['total'])) ? $data['total'] : 0,
+                'track_number' =>  (!empty($data['trackNumber'])) ? $data['trackNumber'] : null,
+                'contact_car_id' => null,
+                'courier_id' => null,
+                'legal_id' => null,
+                'recipient_id' => null,
+                'shipping_id' => null,
+                'skiper_id' => null,
+                'user_id' => null,
+                'office_id' => $office->getId(),
+                'contact_id' => $contact->getId(),
+                'date_created' => date('Y-m-d H:i:s'),
+            ];
 
-        $upd = [
-            'address' =>  (!empty($data['address'])) ? $data['address'] : null,
-            'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
-            'date_mod' =>  $dateMod,
-            'date_oper' =>  $dateOper,
-            'date_shipment' =>  (!empty($data['dateShipment'])) ? $data['dateShipment'] : null,
-            'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
-            'info' =>  (!empty($data['info'])) ? $data['info'] : null,
-            'invoice_info' =>  (!empty($data['invoiceInfo'])) ? $data['invoiceInfo'] : null,
-            'mode' =>  (!empty($data['mode'])) ? $data['mode'] : Order::MODE_MAN,
-            'shipment_distance' =>  (!empty($data['shipmentDistance'])) ? $data['shipmentDistance'] : 0,
-            'shipment_rate' =>  (!empty($data['shipmentRate'])) ? $data['shipmentRate'] : 0,
-            'shipment_add_rate' =>  (!empty($data['shipmentAddRate'])) ? $data['shipmentAddRate'] : 0,
-            'shipment_total' =>  (!empty($data['shipmentTotal'])) ? $data['shipmentTotal'] : 0,
-            'status' =>  (!empty($data['status'])) ? $data['status'] : Order::STATUS_NEW,
-            'total' =>  (!empty($data['total'])) ? $data['total'] : 0,
-            'track_number' =>  (!empty($data['trackNumber'])) ? $data['trackNumber'] : null,
-            'contact_car_id' => null,
-            'courier_id' => null,
-            'legal_id' => null,
-            'recipient_id' => null,
-            'shipping_id' => null,
-            'skiper_id' => null,
-            'user_id' => null,
-            'office_id' => $office->getId(),
-            'contact_id' => $contact->getId(),
-            'date_created' => date('Y-m-d H:i:s'),
-        ];
+            $company = null;
+            if (!empty($data['company'])){
+                $company = $this->entityManager->getRepository(Legal::class)
+                        ->find($data['company']);
+            }
 
-        $company = null;
-        if (!empty($data['company'])){
-            $company = $this->entityManager->getRepository(Legal::class)
-                    ->find($data['company']);
-        }
-        
-        if (!$company){
-            $company = $this->entityManager->getRepository(Office::class)
-                    ->findDefaultCompany($office, !empty($data['dateOper']) ? $data['dateOper'] : null);            
-        }
-        
-        $upd['company_id'] = $company->getId();
-        
-        if (!empty($data['contactCar'])){
-            $upd['contact_car_id'] = $data['contactCar'];
-        }
-        
-        if (!empty($data['courier'])){
-            $upd['courier_id'] = $data['courier'];
-        }
-        
-        if (!empty($data['legal'])){
-            $upd['legal_id'] = $data['legal'];
-        }
+            if (!$company){
+                $company = $this->entityManager->getRepository(Office::class)
+                        ->findDefaultCompany($office, !empty($data['dateOper']) ? $data['dateOper'] : null);            
+            }
 
-        if (!empty($data['recipient'])){
-            $upd['recipient_id'] = $data['recipient'];
-        }
+            $upd['company_id'] = $company->getId();
 
-        if (!empty($data['shipping'])){
-            $upd['shipping_id'] = $data['shipping'];
-        } else {
-            $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
-            $upd['shipping_id'] = $shipping->getId();
-        }
+            if (!empty($data['contactCar'])){
+                $upd['contact_car_id'] = $data['contactCar'];
+            }
 
-        if (!empty($data['skiper'])){
-            $upd['skiper_id'] = $data['skiper'];
-        }
+            if (!empty($data['courier'])){
+                $upd['courier_id'] = $data['courier'];
+            }
 
-        if (!empty($data['user'])){
-            $upd['user_id'] = $data['user'];
+            if (!empty($data['legal'])){
+                $upd['legal_id'] = $data['legal'];
+            }
+
+            if (!empty($data['recipient'])){
+                $upd['recipient_id'] = $data['recipient'];
+            }
+
+            if (!empty($data['shipping'])){
+                $upd['shipping_id'] = $data['shipping'];
+            } else {
+                $shipping = $this->entityManager->getRepository(Shipping::class)
+                        ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
+                $upd['shipping_id'] = $shipping->getId();
+            }
+
+            if (!empty($data['skiper'])){
+                $upd['skiper_id'] = $data['skiper'];
+            }
+
+            if (!empty($data['user'])){
+                $upd['user_id'] = $data['user'];
+            }
+
+            $this->entityManager->getConnection()
+                    ->insert('orders', $upd);
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->findOneBy([], ['id'=>'DESC'],1,0);
+
+            return $order;
         }
         
-        $this->entityManager->getConnection()
-                ->insert('orders', $upd);
-        $order = $this->entityManager->getRepository(Order::class)
-                ->findOneBy([], ['id'=>'DESC'],1,0);
-        
-        return $order;
+        return;
     }   
 
     /**
@@ -656,77 +689,79 @@ class OrderManager
         $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
         $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
 
-        $order->setAddress(!empty($data['address']) ? $data['address'] : null);
-        $order->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
-        $order->setDateMod($dateMod);
-        $order->setDateOper($dateOper);
-        $order->setDateShipment(!empty($data['dateShipment']) ? $data['dateShipment'] : null);
-        $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
-        $order->setInfo(!empty($data['info']) ? $data['info'] : null);
-        $order->setInvoiceInfo(!empty($data['invoiceInfo']) ? $data['invoiceInfo'] : null);
-        $order->setMode(!empty($data['mode']) ? $data['mode'] : Order::MODE_MAN);
-        $order->setShipmentDistance(!empty($data['shipmentDistance']) ? $data['shipmentDistance'] : 0);
-        $order->setShipmentRate(!empty($data['shipmentRate']) ? $data['shipmentRate'] : 0);
-        $order->setShipmetAddRate(!empty($data['shipmentAddRate']) ? $data['shipmentAddRate'] : 0);
-        $order->setShipmetTotal(!empty($data['shipmentTotal']) ? $data['shipmentTotal'] : 0);
-        $order->setStatus(!empty($data['status']) ? $data['status'] : Order::STATUS_NEW);
-        $order->setTotal(!empty($data['total']) ? $data['total'] : 0);
-        $order->setTrackNumber(!empty($data['trackNumber']) ? $data['trackNumber'] : null);
-                
-        $order->setContactCar(null);
-        if (!empty($data['contactCar'])){
-            $contactCar = $this->entityManager->getRepository(ContactCar::class)
-                    ->find($data['contactCar']);
-            $order->setContactCar($contactCar);
-        }
-        
-        $order->setCourier(null);
-        if (!empty($data['courier'])){
-            $courier = $this->entityManager->getRepository(Courier::class)
-                    ->find($data['courier']);
-            $order->setCourier($courier);
-        }
-        
-        $order->setLegal(null);
-        if (!empty($data['legal'])){
-            $legal = $this->entityManager->getRepository(Legal::class)
-                    ->find($data['legal']);
-            $order->setLegal($legal);
-        }
+        if ($dateOper > $this->allowDate){
+            $order->setAddress(!empty($data['address']) ? $data['address'] : null);
+            $order->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
+            $order->setDateMod($dateMod);
+            $order->setDateOper($dateOper);
+            $order->setDateShipment(!empty($data['dateShipment']) ? $data['dateShipment'] : null);
+            $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
+            $order->setInfo(!empty($data['info']) ? $data['info'] : null);
+            $order->setInvoiceInfo(!empty($data['invoiceInfo']) ? $data['invoiceInfo'] : null);
+            $order->setMode(!empty($data['mode']) ? $data['mode'] : Order::MODE_MAN);
+            $order->setShipmentDistance(!empty($data['shipmentDistance']) ? $data['shipmentDistance'] : 0);
+            $order->setShipmentRate(!empty($data['shipmentRate']) ? $data['shipmentRate'] : 0);
+            $order->setShipmetAddRate(!empty($data['shipmentAddRate']) ? $data['shipmentAddRate'] : 0);
+            $order->setShipmetTotal(!empty($data['shipmentTotal']) ? $data['shipmentTotal'] : 0);
+            $order->setStatus(!empty($data['status']) ? $data['status'] : Order::STATUS_NEW);
+            $order->setTotal(!empty($data['total']) ? $data['total'] : 0);
+            $order->setTrackNumber(!empty($data['trackNumber']) ? $data['trackNumber'] : null);
 
-        $order->setRecipient(null);
-        if (!empty($data['recipient'])){
-            $recipient = $this->entityManager->getRepository(Legal::class)
-                    ->find($data['recipient']);
-            $order->setRecipient($recipient);
-        }
+            $order->setContactCar(null);
+            if (!empty($data['contactCar'])){
+                $contactCar = $this->entityManager->getRepository(ContactCar::class)
+                        ->find($data['contactCar']);
+                $order->setContactCar($contactCar);
+            }
 
-        if (!empty($data['shipping'])){
-            $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->find($data['shipping']);
-            $order->setShipping($shipping);
-        } else {
-            $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
-        }
+            $order->setCourier(null);
+            if (!empty($data['courier'])){
+                $courier = $this->entityManager->getRepository(Courier::class)
+                        ->find($data['courier']);
+                $order->setCourier($courier);
+            }
 
-        $order->setSkiper(null);
-        if (!empty($data['skiper'])){
-            $skiper = $this->entityManager->getRepository(User::class)
-                    ->find($data['skiper']);
-            $order->setSkiper($skiper);
-        }
+            $order->setLegal(null);
+            if (!empty($data['legal'])){
+                $legal = $this->entityManager->getRepository(Legal::class)
+                        ->find($data['legal']);
+                $order->setLegal($legal);
+            }
 
-        $order->setUser(null);
-        if (!empty($data['user'])){
-            $user = $this->entityManager->getRepository(User::class)
-                    ->find($data['user']);
-            $order->setUser($user);
-        }
+            $order->setRecipient(null);
+            if (!empty($data['recipient'])){
+                $recipient = $this->entityManager->getRepository(Legal::class)
+                        ->find($data['recipient']);
+                $order->setRecipient($recipient);
+            }
 
-        $this->entityManager->persist($order);
-        // Применяем изменения к базе данных.
-        $this->entityManager->flush();
+            if (!empty($data['shipping'])){
+                $shipping = $this->entityManager->getRepository(Shipping::class)
+                        ->find($data['shipping']);
+                $order->setShipping($shipping);
+            } else {
+                $shipping = $this->entityManager->getRepository(Shipping::class)
+                        ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
+            }
+
+            $order->setSkiper(null);
+            if (!empty($data['skiper'])){
+                $skiper = $this->entityManager->getRepository(User::class)
+                        ->find($data['skiper']);
+                $order->setSkiper($skiper);
+            }
+
+            $order->setUser(null);
+            if (!empty($data['user'])){
+                $user = $this->entityManager->getRepository(User::class)
+                        ->find($data['user']);
+                $order->setUser($user);
+            }
+
+            $this->entityManager->persist($order);
+            // Применяем изменения к базе данных.
+            $this->entityManager->flush();
+        }    
         
         return;
     }    
@@ -740,69 +775,74 @@ class OrderManager
     {
         $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
         $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
+        
+        if ($dateOper > $this->allowDate){
 
-        $upd = [
-            'address' =>  (!empty($data['address'])) ? $data['address'] : null,
-            'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
-            'date_mod' =>  $dateMod,
-            'date_oper' =>  $dateOper,
-            'date_shipment' =>  (!empty($data['dateShipment'])) ? $data['dateShipment'] : null,
-            'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
-            'info' =>  (!empty($data['info'])) ? $data['info'] : null,
-            'invoice_info' =>  (!empty($data['invoiceInfo'])) ? $data['invoiceInfo'] : null,
-            'mode' =>  (!empty($data['mode'])) ? $data['mode'] : Order::MODE_MAN,
-            'shipment_distance' =>  (!empty($data['shipmentDistance'])) ? $data['shipmentDistance'] : 0,
-            'shipment_rate' =>  (!empty($data['shipmentRate'])) ? $data['shipmentRate'] : 0,
-            'shipment_add_rate' =>  (!empty($data['shipmentAddRate'])) ? $data['shipmentAddRate'] : 0,
-            'shipment_total' =>  (!empty($data['shipmentTotal'])) ? $data['shipmentTotal'] : 0,
-            'status' =>  (!empty($data['status'])) ? $data['status'] : Order::STATUS_NEW,
-            'total' =>  (!empty($data['total'])) ? $data['total'] : 0,
-            'track_number' =>  (!empty($data['trackNumber'])) ? $data['trackNumber'] : null,
-            'contact_car_id' => null,
-            'courier_id' => null,
-            'legal_id' => null,
-            'recipient_id' => null,
-            'shipping_id' => null,
-            'skiper_id' => null,
-            'user_id' => null,
-        ];
-                
-        if (!empty($data['contactCar'])){
-            $upd['contact_car_id'] = $data['contactCar'];
+            $upd = [
+                'address' =>  (!empty($data['address'])) ? $data['address'] : null,
+                'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
+                'date_mod' =>  $dateMod,
+                'date_oper' =>  $dateOper,
+                'date_shipment' =>  (!empty($data['dateShipment'])) ? $data['dateShipment'] : null,
+                'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
+                'info' =>  (!empty($data['info'])) ? $data['info'] : null,
+                'invoice_info' =>  (!empty($data['invoiceInfo'])) ? $data['invoiceInfo'] : null,
+                'mode' =>  (!empty($data['mode'])) ? $data['mode'] : Order::MODE_MAN,
+                'shipment_distance' =>  (!empty($data['shipmentDistance'])) ? $data['shipmentDistance'] : 0,
+                'shipment_rate' =>  (!empty($data['shipmentRate'])) ? $data['shipmentRate'] : 0,
+                'shipment_add_rate' =>  (!empty($data['shipmentAddRate'])) ? $data['shipmentAddRate'] : 0,
+                'shipment_total' =>  (!empty($data['shipmentTotal'])) ? $data['shipmentTotal'] : 0,
+                'status' =>  (!empty($data['status'])) ? $data['status'] : Order::STATUS_NEW,
+                'total' =>  (!empty($data['total'])) ? $data['total'] : 0,
+                'track_number' =>  (!empty($data['trackNumber'])) ? $data['trackNumber'] : null,
+                'contact_car_id' => null,
+                'courier_id' => null,
+                'legal_id' => null,
+                'recipient_id' => null,
+                'shipping_id' => null,
+                'skiper_id' => null,
+                'user_id' => null,
+            ];
+
+            if (!empty($data['contactCar'])){
+                $upd['contact_car_id'] = $data['contactCar'];
+            }
+
+            if (!empty($data['courier'])){
+                $upd['courier_id'] = $data['courier'];
+            }
+
+            if (!empty($data['legal'])){
+                $upd['legal_id'] = $data['legal'];
+            }
+
+            if (!empty($data['recipient'])){
+                $upd['recipient_id'] = $data['recipient'];
+            }
+
+            if (!empty($data['shipping'])){
+                $upd['shipping_id'] = $data['shipping'];
+            } else {
+                $shipping = $this->entityManager->getRepository(Shipping::class)
+                        ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
+                $upd['shipping_id'] = $shipping->getId();
+            }
+
+            if (!empty($data['skiper'])){
+                $upd['skiper_id'] = $data['skiper'];
+            }
+
+            if (!empty($data['user'])){
+                $upd['user_id'] = $data['user'];
+            }
+
+            $this->entityManager->getConnection()
+                    ->update('orders', $upd, ['id' => $order->getId()]);
+
+            return $order;
         }
         
-        if (!empty($data['courier'])){
-            $upd['courier_id'] = $data['courier'];
-        }
-        
-        if (!empty($data['legal'])){
-            $upd['legal_id'] = $data['legal'];
-        }
-
-        if (!empty($data['recipient'])){
-            $upd['recipient_id'] = $data['recipient'];
-        }
-
-        if (!empty($data['shipping'])){
-            $upd['shipping_id'] = $data['shipping'];
-        } else {
-            $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
-            $upd['shipping_id'] = $shipping->getId();
-        }
-
-        if (!empty($data['skiper'])){
-            $upd['skiper_id'] = $data['skiper'];
-        }
-
-        if (!empty($data['user'])){
-            $upd['user_id'] = $data['user'];
-        }
-        
-        $this->entityManager->getConnection()
-                ->update('orders', $upd, ['id' => $order->getId()]);
-
-        return $order;
+        return;
     }    
     
     /**
@@ -839,11 +879,19 @@ class OrderManager
         return;
     }
     
+    /**
+     * Удалить заказ
+     * @param Order $order
+     * @return null
+     */
     public function removeOrder($order) 
     {   
-        $this->removeOrderBids($order);
-        $this->entityManager->remove($order);
-        $this->entityManager->flush();
+        if ($order->getDateOper() > $this->allowDate){
+            $this->removeOrderBids($order);
+            $this->removeOrderSelections($order);
+            $this->entityManager->remove($order);
+            $this->entityManager->flush();
+        }    
         return;        
     }    
 

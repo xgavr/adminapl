@@ -14,6 +14,7 @@ use Company\Entity\Office;
 use Company\Entity\Contract;
 use Stock\Entity\Pt;
 use Stock\Entity\Vt;
+use Application\Entity\Order;
 
 
 /**
@@ -156,6 +157,19 @@ class Mutual {
         return $this->status;
     }
 
+    /**
+     * Returns possible order status.
+     * @param Order $order
+     * @return integer
+     */
+    public static function getStatusFromOrder($order) 
+    {
+        switch ($order->getStatus()){
+            case Order::STATUS_SHIPPED: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }    
+    
     /**
      * Returns possible pt status.
      * @param Pt $pt
