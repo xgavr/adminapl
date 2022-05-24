@@ -199,14 +199,16 @@ class OrderController extends AbstractActionController
                 if ($order){
                     $this->orderManager->updateOrder($order, $data);
                 } else {
-                    $order = $this->orderManager->addNewOrder($data);
+                    $order = $this->orderManager->insOrder($office,$data);
                 }    
                 
                 return new JsonModel(
-                   ['ok']
+                   ['id' => $order->getAplId()]
                 );           
             } else {
-//                var_dump($form->getMessages());
+                return new JsonModel(
+                   ['error' => $form->getMessages()]
+                );           
             }
         } else {
             if ($order){

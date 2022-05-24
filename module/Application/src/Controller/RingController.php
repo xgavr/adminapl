@@ -125,7 +125,7 @@ class RingController extends AbstractActionController
     
     public function findPhoneAction()
     {
-        $contactName = $cars = $orders = $contact = null;
+        $contactName = $email = $cars = $orders = $contact = null;
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $phonePost = $data['phone'];
@@ -138,6 +138,7 @@ class RingController extends AbstractActionController
                                 ->findOneByName(['name' => $phoneNum]);
                 if ($phone){
                     $contactName = $phone->getContact()->getName();
+                    $email = $phone->getContact()->getEmail()->getName();
                     $contact = $phone->getContact()->getId();
                     $contactCars = $this->entityManager->getRepository(ContactCar::class)
                             ->findByContact($contact, ['id' => 'DESC']);                    
@@ -164,6 +165,7 @@ class RingController extends AbstractActionController
         }    
         return new JsonModel([
             'name' => $contactName,
+            'email' => $email,
             'cars' => $cars,
             'orders' => $orders,
             'contact' => $contact,

@@ -292,7 +292,7 @@ if ($order){
 </div>
 <div class="col-md-3">
     <button type="submit" class="btn btn-primary btn-sm" id="order-submit">Сохранить</button>    
-    <button type="button" class="btn btn-secondary btn-sm" >Закрыть</button>
+    <button type="button" class="btn btn-secondary btn-sm" id="order-reset">Закрыть</button>
 </div>
 
 <?= $this->formElement($form->get('shipmentRate')); ?>            
@@ -308,6 +308,37 @@ if ($order){
     };
     
     $('.phone').mask('8 (000) 000-0000', {selectOnFocus: true});
+    
+    function setTextValue(node, value, clear = false)
+    {
+        if (!$(node).val()){
+            $(node).val(value);
+            if (clear){
+                $(node).next().toggle(Boolean($(node).val()));
+            }    
+        }           
+    }
+
+    $('.phone').on('input', function(){
+        var value = $( this ).val();
+        if (value.length == 16){
+            $.post('/ring/find-phone', {phone: value}, function (data) {
+                if (data){
+                    setTextValue('#contact', data.contact);
+                    setTextValue('#name', data.name, true);
+                    setTextValue('#email', data.email, true);
+                    if (data.cars){
+                        setTextValue('#make', data.cars[0].id);
+                        setTextValue('#vin', data.cars[0].vin, true);
+                        $("#vinLength").html($("#vin").val().length);
+                        setTextValue('#make', data.cars[0].makeName, false);
+                    }    
+//                        $.each(data.cars, function( i, car ){
+//                        });                    
+                }    
+            })
+        }    
+    });    
     
     $('#vin').on('input', function(){
         $("#vinLength").html($("#vin").val().length);
@@ -337,11 +368,12 @@ if ($order){
     });  
     
     function submitForm(){
+        window.onbeforeunload = false;
         var data = serializeForm('#order-form');
         data.orderGood = getFormatedOrderGood();
         $.ajax({
             type: 'POST',
-            url: '/order/edit-form/<?= ($order) ? $order->getId():"" ?>',
+            url: '/order/intro/<?= ($order) ? $order->getId():"" ?>',
             data: $.param(data)
         })
             .done(function (data) {

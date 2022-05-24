@@ -388,7 +388,7 @@ class OrderManager
     }
 
     /**
-     * Новый заказ
+     * Новый заказ ИСПОЛЬЗОВАТЬ insOrder
      * @param Office $office
      * @param Contact $contact
      * @param array $data
@@ -933,5 +933,4 @@ class OrderManager
         
         return;
     }
-        
 }

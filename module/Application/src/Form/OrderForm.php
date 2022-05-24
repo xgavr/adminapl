@@ -11,6 +11,9 @@ use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
 use Application\Entity\Client;
 use Application\Entity\Order;
+use User\Filter\PhoneFilter;
+use User\Validator\PhoneExistsValidator;
+use User\Validator\EmailExistsValidator;
 
 /**
  * Description of Order
@@ -313,7 +316,58 @@ class OrderForm extends Form
                 ],
             ]);
         
-                
+        $inputFilter->add([
+                'name'     => 'courier',
+                'required' => false,
+                'filters'  => [],                
+                'validators' => [],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'shipmentDistance',
+                'required' => false,
+                'filters'  => [],                
+                'validators' => [],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'phone',
+                'required' => true,
+                'filters'  => [
+                    [
+                        'name' => PhoneFilter::class,
+                        'options' => [
+                            'format' => PhoneFilter::PHONE_FORMAT_DB,
+                        ]
+                    ],
+                ],                
+                'validators' => [],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'email',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                    [
+                        'name' => 'EmailAddress',
+                        'options' => [
+                            'allow' => \Laminas\Validator\Hostname::ALLOW_DNS,
+                            'useMxCheck'    => false,                            
+                        ],
+                    ],                  
+                ],
+            ]);        
+        
     }    
     
     
