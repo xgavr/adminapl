@@ -3,7 +3,8 @@
 
     $this->headTitle('Поступление товаров');
 
-    $this->mainMenu()->setActiveItemId('supplier');
+    $this->mainMenu()->setActiveItemId('raw');
+    $this->mainMenu()->setActiveUrl($this->url('ptu'));
 
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),
@@ -59,7 +60,7 @@
             data-url="/ptu/content"
             data-cookie="true"
             data-cookie-id-table="ptuSaveId"
-            data-cookie-expire="1y"
+            data-cookie-expire="1m"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"

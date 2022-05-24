@@ -3,7 +3,9 @@
 use Application\Entity\Order;
 
 $this->headTitle('Заказы');
-$this->mainMenu()->setActiveItemId('order');
+$this->mainMenu()->setActiveItemId('client');
+$this->mainMenu()->setActiveUrl($this->url('order'));
+
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'Заказы'=>$this->url('order'),
@@ -14,9 +16,9 @@ $this->pageBreadcrumbs()->setItems([
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
-                <button class="btn btn-default order-modal-show" type="button" modal-url="/order/edit-form">
+                <a class="btn btn-default" type="button" href="<?= $this->url('order', ['action' => 'intro'])?>">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>                
+                </a>                
                 <div class="form-group">
                     <select id="officeSelect" style="width: 100px" class="form-control refresh-table" name="officeId">
                         <option>все</option>
@@ -56,6 +58,7 @@ $this->pageBreadcrumbs()->setItems([
             data-sort-name="id"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
             data-row-style="rowStyle"
             >
             <thead>

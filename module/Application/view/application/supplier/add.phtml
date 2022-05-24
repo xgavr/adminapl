@@ -1,7 +1,8 @@
 <?php
 $this->headTitle('Добавить поставщика');
 
-$this->mainMenu()->setActiveItemId('supplier');
+$this->mainMenu()->setActiveItemId('raw');
+    $this->mainMenu()->setActiveUrl($this->url('supplier'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),

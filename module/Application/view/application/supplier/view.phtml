@@ -1,7 +1,8 @@
 <?php
 $this->headTitle($supplier->getName());
 
-$this->mainMenu()->setActiveItemId('supplier');
+$this->mainMenu()->setActiveItemId('raw');
+$this->mainMenu()->setActiveUrl($this->url('supplier'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
@@ -10,11 +11,49 @@ $this->pageBreadcrumbs()->setItems([
             ]);  
 
 ?>
+<style>
+    .affix-top,.affix{
+        position: static;
+    }
+
+    @media (min-width: 979px) {
+      #sidebar.affix-top {
+        position: static;
+        margin-top:30px;
+        width:228px;
+      }
+
+      #sidebar.affix-bottom {
+        position: relative;
+      }
+
+      #sidebar.affix {
+        position: fixed;
+        top:70px;
+        width:228px;
+      }
+    }
+
+    #sidebar li.active {
+/*        border:0 #eee solid;
+        border-right-width:4px;*/
+        font-weight: bold;
+    }
+
+    #sidebar li a {
+        padding: 1px 1px;
+    }
+
+    #sidebar li li.active {
+        border:0 #ccc solid;
+        border-right-width:3px;    
+}
+</style>
 <div class="row">
     <div class="col-sm-9">
-        <div class="panel panel-default" id="section1">
+        <div class="panel panel-default">
             <div class="panel-heading">
-                <h2><?= $supplier->getName() ?></h2>                
+                <h2><a class="anchor" id="section1"><?= $supplier->getName() ?></a></h2>                
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
@@ -59,9 +98,9 @@ $this->pageBreadcrumbs()->setItems([
             </div>
         </div>
 
-        <div class="panel panel-default" id="section2">
+        <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title pull-left">Как заказать?</h3>
+                <h3 class="panel-title pull-left"><a class="anchor" id="section2">Как заказать?</a></h3>
                 <div class="pull-right">
                     <button value="/supplier/request-setting-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
                             data-toggle="modal" data-target="#modal-dialog" title="Добавить">
@@ -97,15 +136,15 @@ $this->pageBreadcrumbs()->setItems([
             </div>
         </div>
 
-        <div class="panel panel-default" id="section3">
+        <div class="panel panel-default">
             <?php echo $this->partial('/application/contact/other-partial-view', ['supplier' => $supplier]); ?>
         </div>
-        <div class="panel panel-default" id="section4">
+        <div class="panel panel-default">
             <?php echo $this->partial('/company/legal/partial-view', ['legalContact' => $legalContact, 'supplier' => $supplier]); ?>
         </div>    
-        <div class="panel panel-default" id="section5">
+        <div class="panel panel-default">            
             <div class="panel-heading">
-                <h3 class="panel-title pull-left">Настройки получения прайса</h3>
+                <h3 class="panel-title pull-left"><a class="anchor" id="section5">Настройки получения прайса</a></h3>
                 <div class="pull-right">
                     <button value="/supplier/price-getting-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
                             data-toggle="modal" data-target="#modal-dialog" title="Добавить">
@@ -194,54 +233,9 @@ $this->pageBreadcrumbs()->setItems([
             </div>
         </div>
         
-        <div class="panel panel-default" id="section6">
+        <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title pull-left">Настройки Апи</h3>
-                <div class="pull-right">
-                    <button value="/supplier/supplier-api-setting-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
-                            data-toggle="modal" data-target="#modal-dialog" title="Добавить">
-                        <span class="glyphicon glyphicon-plus" ></span>
-                    </button>                                                                        
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <div class="panel-body">
-                <?php if ($supplier->getSupplierApiSettings()): ?>                    
-                    <div class="panel-group">
-                        <?php foreach ($supplier->getSupplierApiSettings() as $supplierApiSetting): ?>                
-                            <div class="panel panel-info">
-                                <div class="panel-body">
-                                    <div class="pull-left">
-                                        <?= $supplierApiSetting->getName() ?><br/>
-                                        <a href="<?= $supplierApiSetting->getBaseUri() ?>" target="_blank"><?= $supplierApiSetting->getBaseUri() ?></a><br/>
-                                        Логин: <span><?= $supplierApiSetting->getLogin() ?></span><br/>
-                                        Пароль: <span><?= $supplierApiSetting->getPassword() ?></span><br/>
-                                        Ключ: <span><?= $supplierApiSetting->getUserId() ?></span><br/>
-                                        <a href="<?= $supplierApiSetting->getTestUri() ?>" target="_blank"><?= $supplierApiSetting->getTestUri() ?></a><br/>
-                                        <br/>
-                                        Статус: <span><?= $supplierApiSetting->getStatusAsString() ?></span><br/>
-                                    </div>        
-                                    <div class="pull-right">                                
-                                        <button value="/supplier/supplier-api-setting-form/<?= $supplier->getId() ?>?supplierApiSetting=<?= $supplierApiSetting->getId() ?>" class="btn btn-default btn-xs"
-                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                                            <span class="glyphicon glyphicon-edit" ></span>
-                                        </button>                                                    
-                                        <button value="/supplier/delete-supplier-api-setting-form/<?= $supplierApiSetting->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                                title="Удалить">
-                                            <span class="glyphicon glyphicon-remove" ></span>
-                                        </button>                                                           
-                                    </div>                                                                        
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <div class="panel panel-default" id="section7">
-            <div class="panel-heading">
-                Загруженные прайсы
+                <h3 class="panel-title pull-left"><a class="anchor" id="section7">Загруженные прайсы</a></h3>                
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
@@ -302,7 +296,7 @@ $this->pageBreadcrumbs()->setItems([
         
         <div class="panel panel-default" id="section8">
             <div class="panel-heading">
-                <h3 class="panel-title pull-left">Подвоз</h3>
+                <h3 class="panel-title pull-left"><a class="anchor" id="section8">Подвоз</a></h3>
                 <div class="pull-right">
                     <button value="/supplier/supply-setting-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
                             data-toggle="modal" data-target="#modal-dialog" title="Добавить">
@@ -347,7 +341,7 @@ $this->pageBreadcrumbs()->setItems([
         </div>
         <div class="panel panel-default" id="section9">
             <div class="panel-heading">
-                <h3 class="panel-title pull-left">Получение электронных накладных</h3>
+                <h3 class="panel-title pull-left"><a class="anchor" id="section9">Получение электронных накладных</a></h3>
                 <div class="pull-right">
                     <button value="/supplier/bill-getting-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
                             data-toggle="modal" data-target="#modal-dialog" title="Добавить">
@@ -392,77 +386,78 @@ $this->pageBreadcrumbs()->setItems([
                 <?php endif; ?>
             </div>
         </div>
-    </div>
-    <div class="col-sm-3" id="side-nav" >
-        <div class="nav nav-stacked nav-list affix">
-            <div class="panel-group">
-                <div class="panel panel-info">
-                    <div class="panel-body">
-                        <ul>
-                            <li class="active"><a href="#section1"><?= $supplier->getName() ?></a></li>
-                            <li><a href="#section2">Как заказать?</a></li>
-                            <li><a href="#section3">Контакты</a></li>
-                            <li><a href="#section4">Юридические лица</a></li>
-                            <li><a href="#section5">Настройки получения прайса</a></li>
-                            <li><a href="#section6">Настройки Api</a></li>
-                            <li><a href="#section7">Загруженные прайсы</a></li>
-                            <li><a href="#section8">Подвоз</a></li>
-                            <li><a href="#section9">Получение электронных накладных</a></li>
-                        </ul>
+        <div class="panel panel-default" id="section6">
+            <div class="panel-heading">
+                <h3 class="panel-title pull-left"><a class="anchor" id="section6">Настройки Апи</a></h3>
+                <div class="pull-right">
+                    <button value="/supplier/supplier-api-setting-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
+                            data-toggle="modal" data-target="#modal-dialog" title="Добавить">
+                        <span class="glyphicon glyphicon-plus" ></span>
+                    </button>                                                                        
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <?php if ($supplier->getSupplierApiSettings()): ?>                    
+                    <div class="panel-group">
+                        <?php foreach ($supplier->getSupplierApiSettings() as $supplierApiSetting): ?>                
+                            <div class="panel panel-info">
+                                <div class="panel-body">
+                                    <div class="pull-left">
+                                        <?= $supplierApiSetting->getName() ?><br/>
+                                        <a href="<?= $supplierApiSetting->getBaseUri() ?>" target="_blank"><?= $supplierApiSetting->getBaseUri() ?></a><br/>
+                                        Логин: <span><?= $supplierApiSetting->getLogin() ?></span><br/>
+                                        Пароль: <span><?= $supplierApiSetting->getPassword() ?></span><br/>
+                                        Ключ: <span><?= $supplierApiSetting->getUserId() ?></span><br/>
+                                        <a href="<?= $supplierApiSetting->getTestUri() ?>" target="_blank"><?= $supplierApiSetting->getTestUri() ?></a><br/>
+                                        <br/>
+                                        Статус: <span><?= $supplierApiSetting->getStatusAsString() ?></span><br/>
+                                    </div>        
+                                    <div class="pull-right">                                
+                                        <button value="/supplier/supplier-api-setting-form/<?= $supplier->getId() ?>?supplierApiSetting=<?= $supplierApiSetting->getId() ?>" class="btn btn-default btn-xs"
+                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                            <span class="glyphicon glyphicon-edit" ></span>
+                                        </button>                                                    
+                                        <button value="/supplier/delete-supplier-api-setting-form/<?= $supplierApiSetting->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                title="Удалить">
+                                            <span class="glyphicon glyphicon-remove" ></span>
+                                        </button>                                                           
+                                    </div>                                                                        
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                </div>
-                <div class="panel panel-info">
-                    <div class="panel-body">
-                        <div class="pull-right">                                
-                            <button value="/supplier/upload-price-form/<?= $supplier->getId() ?>" class="btn btn-info btn-xs"
-                                    data-toggle="modal" data-target="#modal-dialog" title="Загрузить прайс">
-                                <span class="glyphicon glyphicon-export" >Загрузить прайс</span>
-                            </button>                            
-                        </div>
-                    </div>    
-                </div>
-                <?php if ($this->access('rate.manage')):?>
-<!--                    <div class="panel panel-info">
-                        <?php if ($rate):?>
-                            <div class="panel-heading">
-                                Расценка
-                            </div>
-                            <div class="panel-body">
-                                <div class="pull-left">
-                                    Мин. цена
-                                </div>
-                                <div class="pull-right">
-                                    <?= $rate->getMinPrice()?>
-                                </div>
-                            </div>
-                            <div class="panel-body">
-                                <div class="pull-left">
-                                   Макс. цена
-                                </div>
-                                <div class="pull-right">
-                                    <?= $rate->getMaxPrice()?>
-                                </div>
-                            </div>
-                            <div class="panel-body">
-                                <div class="pull-left">
-                                    <a href="<?= $this->url('rate', ['action' => 'view', 'id' => $rate->getId()])?>">
-                                        <?= $rate->getName()?>
-                                    </a>
-                                </div>
-                                <?php if (!$rate->getSupplier()):?>
-                                    <div class="pull-right">
-                                        <button value="/rate/add/?supplier=<?= $supplier->getId()?>&prompt=Расценка для <?= $supplier->getName()?>" class="btn btn-info btn-xs refresh-button"
-                                                title="Создать специальную расценку">
-                                            <span class="glyphicon glyphicon-plus" ></span>
-                                        </button> 
-                                    </div>
-                                <?php else:?>
-                                <?php endif;?>
-                            </div>
-                        <?php endif; ?>
-                    </div>-->
                 <?php endif; ?>
             </div>
         </div>
+    </div>
+    <div class="col-sm-3 hidden-xs" id="rightCol">
+        <ul class="nav affix-top" id="sidebar" data-spy="affix" data-offset-top="0">
+            <li class="active"><a class="text-muted" href="#section1"><?= $supplier->getName() ?></a></li>
+            <li><a href="#section2" class="text-muted">Как заказать?</a></li>
+            <li><a href="#sectionContact" class="text-muted">Контакты</a></li>
+            <li><a href="#sectionLegal" class="text-muted">Юридические лица</a></li>
+            <li><a href="#section5" class="text-muted">Настройки получения прайса</a></li>
+            <li><a href="#section7" class="text-muted">Загруженные прайсы</a></li>
+            <li><a href="#section8" class="text-muted">Подвоз</a></li>
+            <li><a href="#section9" class="text-muted">Получение электронных накладных</a></li>
+            <li><a href="#section6" class="text-muted">Настройки Api</a></li>
+            <li>
+                <button value="/supplier/upload-price-form/<?= $supplier->getId() ?>" class="btn btn-default btn-xs"
+                        data-toggle="modal" data-target="#modal-dialog" title="Загрузить прайс">
+                    <span class="glyphicon glyphicon-import">Загрузить прайс</span>
+                </button>                                                
+            </li>
+        </ul>
     </div>    
 </div>    
+
+<script>
+    var $body = $(document.body);
+    var navHeight = $('.navbar').outerHeight(true) + 10;
+
+    $body.scrollspy({
+            target: '#rightCol',
+            offset: navHeight
+    });
+</script>

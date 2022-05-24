@@ -1,7 +1,8 @@
 <?php
 $this->headTitle('Обмен с autopartslist.ru');
 
-$this->mainMenu()->setActiveItemId('apl');
+$this->mainMenu()->setActiveItemId('admin');
+$this->mainMenu()->setActiveUrl($this->url('apl'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),

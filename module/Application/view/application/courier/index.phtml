@@ -4,6 +4,7 @@ use Application\Entity\Courier;
 $this->headTitle('Транспортные компании');
 
 $this->mainMenu()->setActiveItemId('client');
+$this->mainMenu()->setActiveUrl($this->url('courier'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),

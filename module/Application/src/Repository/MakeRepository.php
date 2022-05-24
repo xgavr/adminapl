@@ -11,6 +11,7 @@ namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Make;
 use Application\Entity\Model;
+use Application\Filter\KeyboardTranslit;
 
 /**
  * Description of MakeRepository
@@ -299,4 +300,37 @@ class MakeRepository extends EntityRepository{
         return ;
     }    
 
+    /**
+     * Запрос для автозаполения
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function autocomplete($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('m')
+            ->from(Make::class, 'm')
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['search'])){
+//                $ktFilter = new KeyboardTranslit();
+//                $search = $params['search'];                
+//                $searchKt = $ktFilter->filter($params['search']);
+//                var_dump($search);
+                $queryBuilder
+                    ->where('m.name like ?1') 
+                    //->andWhere('m.goodCount > 0')    
+                    ->setParameter('1', $params['search'].'%')
+                    ->setMaxResults(8)    
+                        ;
+            }            
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery();
+    }        
 }

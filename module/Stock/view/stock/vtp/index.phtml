@@ -3,7 +3,8 @@
     
     $this->headTitle('Возврат товаров поставщику');
 
-    $this->mainMenu()->setActiveItemId('supplier');
+    $this->mainMenu()->setActiveItemId('raw');
+    $this->mainMenu()->setActiveUrl($this->url('vtp'));
 
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),

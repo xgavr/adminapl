@@ -90,62 +90,76 @@
         ?>
     </head>
     <style>
-        .retired{
-          text-decoration: line-through;
-        }        
-        .inputclear {
-            position: absolute;
-            right: 5px;
-            top: 0;
-            bottom: 0;
-            height: 14px;
-            margin: auto;
-            font-size: 14px;
-            cursor: pointer;
-            color: #ccc;
-        }
     </style>
     <body>
-        <div class="container">
-            <div class="col-md-12">
-                <?php
-                    // Check if the activeMenuItemId passed to layout view model
-                    // and if so, use it for setting active navbar item.
-                    if (isset($activeMenuItemId)) {
-                        $this->mainMenu()->setActiveItemId($activeMenuItemId);
-                    }
-
-                    // Render the navbar
-                    echo $this->mainMenu()->render(); 
-                ?>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="/"><strong>АдминАПЛ</strong><sup>.ru</sup></a>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- Breadcrumbs -->
-                    <?= $this->pageBreadcrumbs()->render(); ?>
-                </div>
-            </div>                
-            <div class="row">
-                <?= $this->content ?>
-                <hr>
-                <footer>
-                    <p>&copy; <?= date('Y') ?> adminapl.ru</p>
-                </footer>
+            <div id="navbar" class="navbar-collapse collapse">
+<!--              <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Help</a></li>
+              </ul>-->
+<!--              <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+              </form>-->
             </div>
-        </div>
+          </div>
+        </nav>        
         
-        <div class="modal fade" id="modal-dialog" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content" id="modal-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <?php
+                        if (isset($activeMenuItemId)) {
+                            $this->mainMenu()->setActiveItemId($activeMenuItemId);
+                        }
+
+                        echo $this->mainMenu()->render(); 
+                    ?>
+                </div>                
+                
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+                    <!--<div class="row">
+                        <div class="col-md-12">
+                             Breadcrumbs 
+                            <?php //echo $this->pageBreadcrumbs()->render(); ?>
+                        </div>
+                    </div>                -->
+
+                    <?php echo $this->content ?>
+
+                    <div class="modal fade" id="modal-dialog" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content" id="modal-content">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </div>        
     </body>
 </html>
 
         
 <?= $this->inlineScript() ?>
 <script type="text/javascript">
+    
+    $('.nav-second').on('show.bs.collapse', function () {
+        $('.nav-second.in').collapse('hide');
+    });
+    
     /*
     * проверка на авторизацию
     */

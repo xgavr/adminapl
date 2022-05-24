@@ -2,6 +2,7 @@
     $this->headTitle('Поставщики');
 
     $this->mainMenu()->setActiveItemId('raw');
+    $this->mainMenu()->setActiveUrl($this->url('supplier'));
 
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),
@@ -15,21 +16,14 @@
     }    
 </style>
 
-<p>
-    <a class="btn btn-default" href="
-        <?= $this->url('supplier', ['action'=>'add']); ?>">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Новый поставщик
-    </a>     
-<!--    <a href="/supplier/update-amounts" class="btn btn-default btn-xs"
-            title="Обновить сумму поставок">
-        <span class="glyphicon glyphicon-refresh" ></span>
-    </a>                                                    -->
-</p>
-
 <div class="row">
     <div class="col-md-9">
         <div id="toolbar">
             <div class="form-inline" role="form">
+                <a class="btn btn-default" href="
+                    <?= $this->url('supplier', ['action'=>'add']); ?>">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true" title="Новый поставщик"></span> 
+                </a>     
                 <div class="form-group">
                     <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
                 </div>
@@ -44,6 +38,9 @@
         <table id="table" 
             data-toggle="table" 
             data-url="/supplier/content"
+            data-cookie="true"
+            data-cookie-id-table="supplierSaveId"
+            data-cookie-expire="1m"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -54,6 +51,7 @@
             data-response-handler="responseHandler"
             data-sort-name="name"
             data-sort-order="asc"
+            data-classes = "table table-bordered table-hover table-condensed"
             >
             <thead>
                 <tr>

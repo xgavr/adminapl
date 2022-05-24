@@ -1,0 +1,582 @@
+<?php
+use Application\Entity\Order;
+use Application\Entity\Shipping;
+
+$this->headTitle(($order)? $order->getId():'Новый');
+
+$this->mainMenu()->setActiveItemId('client');
+$this->mainMenu()->setActiveUrl($this->url('order'));
+
+
+$form = $this->form;
+
+$form->get('office')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Офис',
+    ]);
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'style' => "text-transform:capitalize",
+    'placeholder' => 'Имя',
+    ]);
+
+$form->get('phone')->setAttributes([
+    'class'=>'form-control phone', 
+    'placeholder' => 'Телефон',
+    ]);
+
+$form->get('email')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Email',
+    ]);
+
+$form->get('info')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Что нужно',
+    'rows' => 1,
+    ]);
+
+$form->get('dateShipment')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Дата доставки/самовывоза',
+    'title' => 'Дата доставки/самовывоза',
+    'min' => ($order)? null:date('Y-m-d'),
+    ]);
+
+$form->get('timeShipment')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Время доставки/самовываза',
+    'title' => 'Время доставки/самовывоза',
+    ]);
+
+$form->get('shipping')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Вариант доставки',
+    ]);
+
+$form->get('shipmentTotal')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Стоимость доставки',
+    ]);
+
+$form->get('trackNumber')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Накладная ТК',
+    ]);
+
+$form->get('courier')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'ТК',
+    ]);
+
+$form->get('shipmentDistance')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'КМ',
+    ]);
+
+$form->get('address')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Адрес доставки',
+    'rows' => 1,
+    ]);
+
+$form->get('vin')->setAttributes([
+    'class' => 'form-control', 
+    'style' => "text-transform:uppercase",
+    'placeholder' => 'VIN',
+    ]);
+
+$form->get('make')->setAttributes([
+    'class'=>'form-control', 
+    'style' => "text-transform:none",
+    'data-provide' => "typeahead",
+    'placeholder' => 'Марка машины',
+    ]);
+
+$form->get('makeComment')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Дополнительно о машине',
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'order-submit']);
+
+$form->prepare();
+
+$docName = 'Новый';
+if ($order){
+    $docName = '№ '.$order->getId().' от  '.date('d.m.Y', strtotime($order->getDateCreated()));
+}
+
+?>
+            
+<?= $this->form()->openTag($form); ?>
+<div class="col-md-9">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('phone')); ?>
+                <?= $this->formElement($form->get('phone')); ?>
+                <?= $this->formElementErrors($form->get('phone')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('email')); ?>
+                <?= $this->formElement($form->get('email')); ?>
+                <?= $this->formElementErrors($form->get('email')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('office')); ?>
+                <?= $this->formElement($form->get('office')); ?>
+                <?= $this->formElementErrors($form->get('office')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2 text-right">
+            <h5 class="display-4" id="orderQuantity"></h5>
+        </div>    
+        <div class="col-xs-1 text-right">
+            <h5 class="display-4" id="orderAmount"><?= ($order) ? round($order->getTotal(), 2):"" ?></h5>                        
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-3">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('vin')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('vin')); ?>
+                    <div class="input-group-addon" id="vinLength">0</div>
+                </div>
+                <?= $this->formElementErrors($form->get('vin')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('make')); ?>
+                <?= $this->formElement($form->get('make')); ?>
+                <?= $this->formElementErrors($form->get('make')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-7">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('makeComment')); ?>
+                <?= $this->formElement($form->get('makeComment')); ?>
+                <?= $this->formElementErrors($form->get('makeComment')); ?>                  
+            </div>
+        </div>    
+    </div>        
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('info')); ?>
+                <?= $this->formElement($form->get('info')); ?>
+                <?= $this->formElementErrors($form->get('info')); ?>                  
+            </div>
+        </div>
+    </div>        
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('dateShipment')); ?>
+                <?= $this->formElement($form->get('dateShipment')); ?>
+                <?= $this->formElementErrors($form->get('dateShipment')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-1">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('timeShipment')); ?>
+                <?= $this->formElement($form->get('timeShipment')); ?>
+                <?= $this->formElementErrors($form->get('timeShipment')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-3">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('shipping')); ?>
+                <?= $this->formElement($form->get('shipping')); ?>
+                <?= $this->formElementErrors($form->get('shipping')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-1">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('shipmentDistance')); ?>
+                <?= $this->formElement($form->get('shipmentDistance')); ?>
+                <?= $this->formElementErrors($form->get('shipmentDistance')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-1">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('shipmentTotal')); ?>
+                <?= $this->formElement($form->get('shipmentTotal')); ?>
+                <?= $this->formElementErrors($form->get('shipmentTotal')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('courier')); ?>
+                <?= $this->formElement($form->get('courier')); ?>
+                <?= $this->formElementErrors($form->get('courier')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('trackNumber')); ?>
+                <?= $this->formElement($form->get('trackNumber')); ?>
+                <?= $this->formElementErrors($form->get('trackNumber')); ?>                  
+            </div>
+        </div>
+    </div>        
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('address')); ?>
+                <?= $this->formElement($form->get('address')); ?>
+                <?= $this->formElementErrors($form->get('address')); ?>                  
+            </div>
+        </div>
+    </div>        
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="ordergoodtoolbar">
+                <div class="form-inline" role="form">
+                    <div class="form-group form-group-sm">
+                        <button type="button" class="btn btn-default order-good-modal-show" modal-url="/order/good-edit-form">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+                    </div>    
+                </div>
+            </div>
+            <table id="ordergoodtable" 
+                data-toggle="ordergoodtable" 
+                data-url="/order/good-content/<?= ($order) ? $order->getId():"" ?>"
+                data-side-pagination="client"
+                data-pagination="true"
+                data-page-size = "100"
+                data-page-list="[100, 200]"
+                data-toolbar="#ordergoodtoolbar"
+                data-show-refresh="true"
+                data-query-params="ordergoodQueryParams"
+                data-response-handler="ordergoodResponseHandler"
+                data-classes = "table table-bordered table-hover table-condensed"
+                data-unique-id = "rowNo"                
+                >
+                <thead>
+                    <tr>
+                         <th data-field="rowNo" data-type="numeric" data-align="right" data-width="10">N</th>
+                         <th data-field="good.code" data-width="150">Артикул</th>
+                         <th data-field="good.producer.name" data-type="numeric" data-width="100">Производитель</th>
+                         <th data-field="displayName" data-editable="true">Наименование</th>
+                         <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-align="right" data-width="100">Цена</th>
+                         <th data-field='num' data-align="right" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-width="50">Количество</th>
+                         <th data-field='amount' data-align="right" data-formatter="geAmountFormatter" data-always-use-formatter="true" data-type="numeric" data-width="100">Сумма</th>
+                         <th data-field="rowNo" data-formatter="geActiveFormatter" data-width="10"></th>
+                         <th data-field="rowNo" data-formatter="grActiveFormatter" data-width="10"></th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">
+        </div>                                            
+    </div>        
+</div>
+<div class="col-md-3">
+    <button type="submit" class="btn btn-primary btn-sm" id="order-submit">Сохранить</button>    
+    <button type="button" class="btn btn-secondary btn-sm" >Закрыть</button>
+</div>
+
+<?= $this->formElement($form->get('shipmentRate')); ?>            
+<?= $this->formElement($form->get('rateDistance')); ?>            
+<?= $this->formElement($form->get('csrf')); ?>            
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    var table = $('#ordergoodtable');
+    
+    set_onbeforeunload = function(){
+            return true;
+    };
+    
+    $('.phone').mask('8 (000) 000-0000', {selectOnFocus: true});
+    
+    $('#vin').on('input', function(){
+        $("#vinLength").html($("#vin").val().length);
+    });
+    
+    $('#make').typeahead({
+        source: function(query, process) {
+            return $.get("/make/autocomplete?q="+query, function (data) {
+                return process(data);
+            });
+        },
+        changeInputOnSelect: true,
+    });
+    
+    $(document).on('click', '.order-good-modal-show', function (e) {
+        var url = $(e.currentTarget).attr('modal-url');
+        var uniqueId = $(e.currentTarget).attr('unique-id');
+        if (uniqueId){
+            var row = $('#ordergoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
+            url = url+'?'+$.param(row);
+        }    
+        showFormDialog({
+            id: 'orderGoodModal',
+            url: url,
+            zIndex: 9999
+        });
+    });  
+    
+    function submitForm(){
+        var data = serializeForm('#order-form');
+        data.orderGood = getFormatedOrderGood();
+        $.ajax({
+            type: 'POST',
+            url: '/order/edit-form/<?= ($order) ? $order->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#orderModal').modal('hide');
+                    $('#table').bootstrapTable('refresh');
+                } else {
+                    $('#orderModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    function getFormatedOrderGood(){
+        var data = $('#ordergoodtable').bootstrapTable('getData');
+        var result = [];
+        $.each( data, function( index, row ) {
+            var newRow = {
+                good_id: row.good.id,
+                displayName: row.displayName,
+                num: row.num,
+                amount: row.amount
+            };
+            result.push(newRow);
+        });   
+        return result;
+    }
+    
+    function shippingUpdate(){
+        let shipmentRate = Number($('#shipmentRate').val());
+        let rateDistance = Number($('#rateDistance').val());
+        let distance = Number($('#shipmentDistance').val());
+        $('#shipmentTotal').val(shipmentRate + rateDistance*distance);    
+        orderUpdateTotal();
+    }
+    
+    function shippingParams(){
+        $('#shipmentRate').val(0);
+        $('#rateDistance').val(0);        
+        $('#shipmentDistance').val(0);        
+        $('#shipmentTotal').val(0);
+        let shipping = $('#shipping').val();
+        $('#shipmentDistance').attr('disabled', true);
+        $('#trackNumber').attr('disabled', true);
+        $('#courier').attr('disabled', true);
+        if (shipping > 0){
+            $.get('/order/shipping/'+shipping, function(data){
+                switch(data.rate){
+                    case '<?= Shipping::RATE_TK?>':
+                        $('#trackNumber').attr('disabled', false);
+                        $('#courier').attr('disabled', false);
+                        break;
+                    case '<?= Shipping::RATE_DISTANCE?>':
+                        $('#shipmentDistance').attr('disabled', false);
+                        $('#rateDistance').val(data.rateDistance);        
+                    case '<?= Shipping::RATE_TRIP?>':
+                    default:     
+                        $('#shipmentRate').val(data.rateTrip); break;
+                    };
+                shippingUpdate();    
+            });    
+        }    
+    }
+    
+    function shippingList(){
+        //alert(11);
+        $.getJSON( '/order/shippings/'+$('#office').val(), function( data ) {
+            $('#shipping').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#shipping').append('<option value="' + value.id + '">' + value.name + '</option>');
+            });
+            shippingParams();
+        });    
+    }
+
+    function contractList(){
+        //alert(11);
+        $.getJSON( '/contracts/select/?company='+$('#company').val()+'&legal='+$('#legal').val(), function( data ) {
+            $('#contract').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#contract').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    }
+
+    $(document).on('editable-save.bs.table', '#ordergoodtable', function (e, field, row, old, $el) {
+        orderUpdateTotal();
+    });        
+    
+    $('#office').on('change', function(){
+        shippingList();
+        
+////        $.getJSON( '/offices/legals/'+$('#office').val(), function( data ) {
+//            $('#company').empty();
+//            $.each( data.rows, function( key, value ) {
+//                $('#company').append('<option value="' + key + '">' + value.name + '</option>');
+//            });
+//            contractList();
+//        });    
+    });
+
+    $('#shipping').on('change', function(){
+        shippingParams();        
+    });
+
+    $('#shipmentDistance').on('change', function(){
+        shippingUpdate();        
+    });
+
+    $('#shipmentTotal').on('change', function(){
+        orderUpdateTotal();        
+    });
+    
+    $('#plusGood').on('click', function(){
+        insertGood();        
+    });
+
+    $('#company').on('change', function(){
+        contractList();
+    });    
+    
+    $('#legal').on('change', function(){
+        contractList();
+    });
+    
+    function orderUpdateTotal(){
+        var amount = 0; var num = 0;
+        let shipmentTotal = Number($('#shipmentTotal').val());
+        var data = $('#ordergoodtable').bootstrapTable('getData');
+        $.each(data, function( index, value ) {
+            amount += Math.round(value.price*value.num*100)/100;
+            num += Math.round(value.num*100)/100; 
+        });
+        $('#orderAmount').html((Math.round((amount + shipmentTotal)*100)/100).toFixed(0));
+        $('#orderQuantity').html((Math.round(num*100)/100).toFixed(0));
+    }
+    
+    //удаление строки из таблицы
+    function removeTableRowByUniqueId(index){
+        $('#ordergoodtable').bootstrapTable('removeByUniqueId', index);
+        orderUpdateTotal();
+    }
+    
+    $( document ).ready(function() {
+        
+	$(document).on('input', ':input', function() {
+		window.onbeforeunload = set_onbeforeunload;
+	});
+        
+        $('#ordergoodtable').bootstrapTable({
+            onLoadSuccess: function(res){
+                orderUpdateTotal();
+            }            
+        }); 
+        
+        <?php if(!$order):?>
+            shippingParams();    
+        <?php endif; ?>        
+        
+        var forms = $('#order-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('order-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });    
+    
+    function orderGoodRefreshTable(){
+        $('#ordergoodtable').bootstrapTable('refresh');
+    }
+    
+    function ordergoodQueryParams(params) {
+        $('#ordergoodtoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#ordergoodtable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#ordergoodtable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function geActiveFormatter(value, row){
+        var url = '/order/good-edit-form/';
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs order-good-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' unique-id="'+value+'"';
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        return btn;
+    }    
+    function grActiveFormatter(value, row){
+        let btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs table-row-remove"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function gePriceFormatter(value){
+        return (Math.round(value)).toFixed(0);
+    }        
+
+    function geAmountFormatter(value, row){
+        return (Math.round(row.price*row.num*100)/100).toFixed(0);
+    }        
+    
+    function ordergoodResponseHandler(res) {
+        return res;
+    }     
+</script>

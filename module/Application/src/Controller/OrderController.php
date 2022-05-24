@@ -14,10 +14,10 @@ use Application\Entity\Order;
 use User\Entity\User;
 use Company\Entity\Office;
 use Application\Form\OrderForm;
-
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use Laminas\Paginator\Paginator;
+use Application\Entity\Shipping;
+use Application\Entity\Bid;
+use Application\Form\OrderGoodForm;
+use Application\Entity\Goods;
 
 class OrderController extends AbstractActionController
 {
@@ -106,6 +106,123 @@ class OrderController extends AbstractActionController
         ]);                  
     }
     
+    public function goodContentAction()
+    {
+        	        
+        $orderId = $this->params()->fromRoute('id', -1);
+        $result = [];
+        
+        if ($orderId>1) {
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);        
+            if ($order) {
+                $query = $this->entityManager->getRepository(Bid::class)
+                                ->findBidOrder($order);
+
+                $total = count($query->getResult(2));
+
+                $result = $query->getResult(2);
+            }        
+        }        
+        
+        return new JsonModel($result);          
+    }            
+    
+    public function shippingsAction()
+    {
+        $officeId = (int)$this->params()->fromRoute('id', -1);
+        if ($officeId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $office = $this->entityManager->getRepository(Office::class)
+                ->find($officeId);
+        
+        if ($office == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $result = $this->entityManager->getRepository(Shipping::class)
+                ->shippingSelect($office);
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }
+
+    public function shippingAction()
+    {
+        $shippingId = (int)$this->params()->fromRoute('id', -1);
+        if ($shippingId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $shipping = $this->entityManager->getRepository(Shipping::class)
+                ->find($shippingId);
+        
+        if ($shipping == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        return new JsonModel($shipping->toArray());                  
+    }
+
+    
+    public function introAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        $order = null;
+        $office = $this->orderManager->currentUser()->getOffice();
+        
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }    
+        
+        $form = new OrderForm($this->entityManager);
+        
+        $form->get('office')->setValue($office->getId());
+        $form->get('shipping')->setValueOptions($this->entityManager->getRepository(Shipping::class)->shippingOptions($office));
+        
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();            
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                
+                if ($order){
+                    $this->orderManager->updateOrder($order, $data);
+                } else {
+                    $order = $this->orderManager->addNewOrder($data);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+//                var_dump($form->getMessages());
+            }
+        } else {
+            if ($order){
+                $data = $order->toArray();
+//                var_dump($data);
+                $form->setData($data);
+            }    
+        }
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'order' => $order,
+        ]);        
+    }        
+    
+    
     public function editFormAction()
     {
         $orderId = (int)$this->params()->fromRoute('id', -1);
@@ -151,6 +268,93 @@ class OrderController extends AbstractActionController
             'form' => $form,
             'order' => $order,
         ]);        
+    }        
+    
+    public function goodEditFormAction()
+    {        
+        $params = $this->params()->fromQuery();
+//        var_dump($params); exit;
+        $good = $rowNo = $result = null;        
+        if (isset($params['good'])){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($params['good']['id']);            
+        }
+        if (isset($params['rowNo'])){
+            $rowNo = $params['rowNo'];
+        }
+        
+        $form = new OrderGoodForm($this->entityManager, $good);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+            if (isset($data['good'])){
+                $good = $this->entityManager->getRepository(Goods::class)
+                        ->find($data['good']);            
+            }
+
+            if ($form->isValid()) {
+                $result = 'ok';
+                return new JsonModel([
+                    'result' => $result,
+                    'good' => [
+                        'id' => $good->getId(),
+                        'code' => $good->getCode(),
+                        'name' => $good->getName(),
+                        'producer' => $good->getProducer()->getName(),
+                    ],
+                ]);        
+            }
+        } else {
+            if ($good){
+                $data = [
+                    'good' => $good->getId(),
+                    'code' => $good->getCode(),
+                    'goodInputName' => $good->getInputName(),
+                    'quantity' => $params['quantity'],
+                    'amount' => $params['amount'],
+                    'price' => $params['amount']/$params['quantity'],
+                    'unit' => (isset($params['unit']['name'])) ? $params['unit']['name']:null,
+                    'country' => (isset($params['country']['name'])) ? $params['country']['name']:null,
+                    'ntd' => (isset($params['ntd']['ntd'])) ? $params['ntd']['ntd']:null,
+                ];
+                $form->setData($data);
+            }    
+        }        
+
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'rowNo' => $rowNo,
+            'good' => $good,
+        ]);        
+    }
+    
+    public function autocompleteGoodAction()
+    {
+        $result = [];
+        $q = $this->params()->fromQuery('q');
+        
+        if ($q){
+            $query = $this->entityManager->getRepository(Goods::class)
+                            ->autocompleteGood(['search' => $q]);
+
+            $data = $query->getResult();
+            foreach ($data as $row){
+                $result[] = [
+                    'id' => $row->getId(), 
+                    'name' => $row->getInputName(), 
+                    'code' => $row->getCode(),
+                    'price' => $row->getMeanPrice(),
+                    'retailPrice' => $row->getPrice(),
+                    'opts' => $row->getOpts(),
+                ];
+            }
+        }    
+        
+        return new JsonModel($result);
     }        
     
     public function viewAction() 

@@ -27,6 +27,7 @@ class Shipping {
     
     const RATE_TRIP       = 1; // За поездку.
     const RATE_DISTANCE   = 2; // За км
+    const RATE_TK         = 3; // Транспортная компания
 
     /**
      * @ORM\Id
@@ -138,7 +139,7 @@ class Shipping {
     
     public function getRateTrip() 
     {
-        return $this->rateTrip;
+        return (int) $this->rateTrip;
     }
 
     /**
@@ -154,7 +155,7 @@ class Shipping {
         if ($orderTotal >= $this->office->getShippingLimit1()){
             return $this->rateTrip1;
         }
-        return $this->rateTrip;
+        return (int) $this->rateTrip;
     }
     
     public function setRateTrip($rateTrip) 
@@ -164,7 +165,7 @@ class Shipping {
     
     public function getRateTrip1() 
     {
-        return $this->rateTrip1;
+        return (int) $this->rateTrip1;
     }
 
     public function setRateTrip1($rateTrip1) 
@@ -174,7 +175,7 @@ class Shipping {
     
     public function getRateTrip2() 
     {
-        return $this->rateTrip2;
+        return (int) $this->rateTrip2;
     }
 
     public function setRateTrip2($rateTrip2) 
@@ -184,7 +185,7 @@ class Shipping {
     
     public function getRateDistance() 
     {
-        return $this->rateDistance;
+        return (int) $this->rateDistance;
     }
 
     public function setRateDistance($rateDistance) 
@@ -265,7 +266,8 @@ class Shipping {
     {
         return [
             self::RATE_TRIP => 'За поездку',
-            self::RATE_DISTANCE => 'За км'
+            self::RATE_DISTANCE => 'За км',
+            self::RATE_TK => 'Транспортная компания'
         ];
     }    
     
@@ -311,4 +313,23 @@ class Shipping {
         return $this->office;
     }
        
+    public function toArray()
+    {
+        $result = [
+            'id' => $this->getId(),
+            'aplId' => $this->getAplId(),
+            'comment' => $this->getComment(),
+            'name' => $this->getName(),
+            'office' => $this->getOffice()->getId(),
+            'rate' => $this->getRate(),
+            'rateDistance' => $this->getRateDistance(),
+            'rateTrip' => $this->getRateTrip(),
+            'rateTrip1' => $this->getRateTrip1(),
+            'rateTrip2' => $this->getRateTrip2(),
+            'sorting' => $this->getSorting(),
+            'status' => $this->getStatus(),
+        ];
+        
+        return $result;        
+    }
 }

@@ -4,6 +4,7 @@ use Application\Entity\Idoc;
 $this->headTitle('Электронные накладные');
 
 $this->mainMenu()->setActiveItemId('raw');
+$this->mainMenu()->setActiveUrl($this->url('bills'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
@@ -11,9 +12,6 @@ $this->pageBreadcrumbs()->setItems([
             'Электронные накладные'=>$this->url('bills'),
             ]);
 ?>
-
-<h1>Электронные накладные</h1>
-
 <div class="row">
     <div class="col-md-12">
         <div id="toolbar">
@@ -52,6 +50,9 @@ $this->pageBreadcrumbs()->setItems([
         <table id="table" 
             data-toggle="table" 
             data-url="/bills/content"
+            data-cookie="true"
+            data-cookie-id-table="billSaveId"
+            data-cookie-expire="1m"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -60,6 +61,7 @@ $this->pageBreadcrumbs()->setItems([
             data-show-toggle="true"
             data-query-params="queryParams"
             data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
             >
             <thead>
                 <tr>
@@ -67,7 +69,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="dateCreated" data-width="150">Дата</th>
                      <th data-field="status" data-formatter="statusFormatter" data-width="20">C</th>
                      <th data-field="docKey" data-formatter="docFormatter">ПТУ</th>
-                     <th data-field="info" data-width="100">Инфо</th>
+                     <th data-field="info" data-width="100" data-align="right" data-formatter="amountFormatter">Инфо</th>
                      <th data-field="supplier.name" data-formatter="supplierFormatter">Поставщик</th>
                      <th data-field="name">Файл</th>
                      <th data-field="id" data-formatter="activeFormatter" data-width="50"></th>
@@ -205,6 +207,14 @@ $this->pageBreadcrumbs()->setItems([
         
         return params;
     }
+    
+    function amountFormatter(value){
+        if (isNaN(value)){
+            return value;
+        } else {
+            return (Math.round(value*100)/100).toFixed(2);
+        }    
+    }    
     
     function docFormatter(value, row){
         if (!value){

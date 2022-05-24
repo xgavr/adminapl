@@ -21,6 +21,12 @@ class Menu extends AbstractHelper
     protected $activeItemId = '';
     
     /**
+     * Active url.
+     * @var string  
+     */
+    protected $activeUrl = '';
+    
+    /**
      * Constructor.
      * @param array $items Menu items.
      */
@@ -48,6 +54,15 @@ class Menu extends AbstractHelper
     }
     
     /**
+     * Sets url of the active items.
+     * @param string $url
+     */
+    public function setActiveUrl($url) 
+    {
+        $this->activeUrl = $url;
+    }
+    
+    /**
      * Renders the menu.
      * @return string HTML code of the menu.
      */
@@ -56,20 +71,19 @@ class Menu extends AbstractHelper
         if (count($this->items)==0)
             return ''; // Do nothing if there are no items.
         
-        $result = '<nav class="navbar navbar-default navbar-fixed-top" role="navigation">';
-        $result .= '<div class="container-fluid">';
-        $result .= '<div class="navbar-header">';
-        $result .= '<button type="button" class="navbar-toggle" data-toggle="collapse"';
-        $result .= 'data-target=".navbar-ex1-collapse">';
-        $result .= '<span class="sr-only">Toggle navigation</span>';
-        $result .= '<span class="icon-bar"></span>';
-        $result .= '<span class="icon-bar"></span>';
-        $result .= '<span class="icon-bar"></span>';
-        $result .= '</button>';
-        $result .= '</div>';
-        
+//        $result = '<nav class="navbar navbar-default navbar-fixed-top" role="navigation">';
+//        $result .= '<div class="container-fluid">';
+//        $result .= '<div class="navbar-header">';
+//        $result .= '<button type="button" class="navbar-toggle" data-toggle="collapse"';
+//        $result .= 'data-target=".navbar-ex1-collapse">';
+//        $result .= '<span class="sr-only">Toggle navigation</span>';
+//        $result .= '<span class="icon-bar"></span>';
+//        $result .= '<span class="icon-bar"></span>';
+//        $result .= '<span class="icon-bar"></span>';
+//        $result .= '</button>';
+//        $result .= '</div>';
         $result .= '<div class="collapse navbar-collapse navbar-ex1-collapse">';        
-        $result .= '<ul class="nav navbar-nav">';
+        $result .= '<ul class="nav nav-sidebar">';
         
         // Render items
         foreach ($this->items as $item) {
@@ -78,7 +92,7 @@ class Menu extends AbstractHelper
         }
         
         $result .= '</ul>';
-        $result .= '<ul class="nav navbar-nav navbar-right">';
+        $result .= '<ul class="nav nav-sidebar">';
         
         // Render items
         foreach ($this->items as $item) {
@@ -88,7 +102,7 @@ class Menu extends AbstractHelper
         
         $result .= '</ul>';
         $result .= '</div>';
-        $result .= '</nav>';
+//        $result .= '</nav>';
         
         return $result;
         
@@ -107,25 +121,28 @@ class Menu extends AbstractHelper
         $isActive = ($id==$this->activeItemId);
         $label = isset($item['label']) ? $item['label'] : '';
         $labelHTML = isset($item['labelHTML']) ? $item['labelHTML'] : $escapeHtml($label);
+        $isActiveUrl = false;
              
         $result = ''; 
      
+//        var_dump($id);
         
         if (isset($item['dropdown'])) {
             
             $dropdownItems = $item['dropdown'];
             
-            $result .= '<li class="dropdown ' . ($isActive?'active':'') .'">';
-            $result .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">';
+            $result .= '<li class="dropdown' . ($isActive?' active':'') .'">';
+            $result .= '<a href="#'.$id.'" class="dropdown-toggle" data-toggle="collapse" aria-expanded="'.($isActive?'true':'false') .'">';
             $result .= $labelHTML . '<b class="caret"></b>';
             $result .= '</a>';
            
-            $result .= '<ul class="dropdown-menu">';
+            $result .= '<ul id="'.$id.'" class="nav-second collapse '.($isActive?'in':'').'">';
             foreach ($dropdownItems as $item) {
+                $isActiveUrl = ($item['link']==$this->activeUrl);
                 $link = isset($item['link']) ? $item['link'] : '#';
                 $label = isset($item['label']) ? $escapeHtml($item['label']) : '';
                 
-                $result .= '<li>';
+                $result .= $isActiveUrl?'<li class="active">':'<li>';
                 $result .= '<a href="'.$escapeHtml($link).'">'.$label.'</a>';
                 $result .= '</li>';
             }

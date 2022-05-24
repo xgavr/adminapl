@@ -474,4 +474,25 @@ class MakeController extends AbstractActionController
             'rows' => $result,
         ]);                  
     }
+    
+    public function autocompleteAction()
+    {
+        $result = [];
+        $q = $this->params()->fromQuery('q');
+        
+        if ($q){
+            $query = $this->entityManager->getRepository(Make::class)
+                            ->autocomplete(['search' => $q]);
+
+            $data = $query->getResult();
+            foreach ($data as $row){
+                $result[] = [
+                    'id' => $row->getId(), 
+                    'name' => $row->getName(), 
+                ];
+            }
+        }    
+        
+        return new JsonModel($result);
+    }            
 }

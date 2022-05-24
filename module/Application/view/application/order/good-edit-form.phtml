@@ -25,39 +25,17 @@ $form->get('price')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('unit')->setAttributes([
-    'class'=>'form-control', 
-    'data-provide' => "typeahead",
-//    'data-url' => '\ptu\autocompete-unit',
-    'autocomplete' => 'off',
-    ]);
-
-$form->get('country')->setAttributes([
-    'class'=>'form-control', 
-    'data-provide' => "typeahead",
-//    'data-url' => '\ptu\autocompete-country',
-    'autocomplete' => 'off',
-    ]);
-
-$form->get('ntd')->setAttributes([
-    'class'=>'form-control', 
-    'data-provide' => "typeahead",
-//    'data-url' => '\ptu\autocompete-ntd',
-    'autocomplete' => 'off',
-    ]);
-
-$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'ptu-good-submit']);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'order-good-submit']);
 
 $form->prepare();
 
-$docName = 'Новый';
 
 ?>
             
             <?= $this->form()->openTag($form); ?>
             
             <div class="modal-header">
-                <h5 class="modal-title" id="ptuGoodModalLabel">Строка поступления товаров</h5>
+                <h5 class="modal-title">Строка товаров</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -89,6 +67,13 @@ $docName = 'Новый';
                 <div class="row">
                     <div class="col-xs-3">                        
                         <div class="form-group">
+                            <?= $this->formLabel($form->get('price')); ?>
+                            <?= $this->formElement($form->get('price')); ?>
+                            <?= $this->formElementErrors($form->get('price')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-3">                        
+                        <div class="form-group">
                             <?= $this->formLabel($form->get('quantity')); ?>
                             <?= $this->formElement($form->get('quantity')); ?>
                             <?= $this->formElementErrors($form->get('quantity')); ?>                  
@@ -101,36 +86,6 @@ $docName = 'Новый';
                             <?= $this->formElementErrors($form->get('amount')); ?>                  
                         </div>
                     </div>
-                    <div class="col-xs-3">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('price')); ?>
-                            <?= $this->formElement($form->get('price')); ?>
-                            <?= $this->formElementErrors($form->get('price')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-3">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('unit')); ?>
-                            <?= $this->formElement($form->get('unit')); ?>
-                            <?= $this->formElementErrors($form->get('unit')); ?>                  
-                        </div>
-                    </div>
-                </div>    
-                <div class="row">
-                    <div class="col-xs-5">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('country')); ?>
-                            <?= $this->formElement($form->get('country')); ?>
-                            <?= $this->formElementErrors($form->get('country')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-7">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('ntd')); ?>
-                            <?= $this->formElement($form->get('ntd')); ?>
-                            <?= $this->formElementErrors($form->get('ntd')); ?>                  
-                        </div>
-                    </div>
                 </div>    
 
                 <?= $this->formElement($form->get('good')); ?>
@@ -139,7 +94,7 @@ $docName = 'Новый';
                 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary" id="ptu-good-submit">Сохранить</button>
+                <button type="button" class="btn btn-primary" id="order-good-submit">Сохранить</button>
             </div>
             
             <?= $this->form()->closeTag(); ?>
@@ -154,55 +109,44 @@ $docName = 'Новый';
         $("#goodInputName").val('');
     });    
 
-    $('#ptu-good-submit').on('click', function() {
+    $('#order-good-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/ptu/good-edit-form/',
-            data: $('#ptu-good-form').serialize()
+            url: '/order/good-edit-form/',
+            data: $('#order-good-form').serialize()
         })
             .done(function (answer) {
 //                console.log(answer);
                 if (answer.result == 'ok'){
-                    var data = serializeForm('#ptu-good-form');
+                    var data = serializeForm('#order-good-form');
                     var good = {
                         id: answer.good.id,
                         code: answer.good.code,
                         name: answer.good.name,
                         producer: {name: answer.good.producer},
                     }
-                    var unit = {
-                        name: data.unit
-                    }
-                    var country = {
-                        name: data.country
-                    }
-                    var ntd = {
-                        ntd: data.ntd
-                    }
                     var row = {
                         good: good,
+                        displayName: answer.good.name,
                         amount: data.amount,
-                        quantity: data.quantity,
+                        num: data.quantity,
                         price: Math.round(data.amount*100/data.quantity)/100,
-                        unit: unit,
-                        country: country,
-                        ntd: ntd
                     };
 
                     <?php if($rowNo): ?>
-                        $('#ptugoodtable').bootstrapTable('updateByUniqueId', {id: <?= $rowNo ?>, row: row});
+                        $('#ordergoodtable').bootstrapTable('updateByUniqueId', {id: <?= $rowNo ?>, row: row});
                     <?php else:?>
-                        var newRowNo = getNewTableUniqueId('ptugoodtable', 'rowNo');
+                        var newRowNo = getNewTableUniqueId('ordergoodtable', 'rowNo');
                         row.rowNo = newRowNo;
                         var rows = [];
                         rows.push(row);
-                        $('#ptugoodtable').bootstrapTable('prepend', rows);                        
+                        $('#ordergoodtable').bootstrapTable('prepend', rows);                        
                     <?php endif; ?>        
-                    ptuUpdateTotal();    
+                    orderUpdateTotal();    
                     
-                    $('#ptuGoodModal').modal('hide');
+                    $('#orderGoodModal').modal('hide');
                 } else {
-                    $('#ptuGoodModal .modal-content').html(answer);
+                    $('#orderGoodModal .modal-content').html(answer);
                 }    
             })
             .fail(function () {
@@ -214,7 +158,7 @@ $docName = 'Новый';
     $( document ).ready(function() {
         $('#code').typeahead({
             source: function(query, process) {
-                return $.get("/ptu/autocomplete-good?q="+query, function (data) {
+                return $.get("/order/autocomplete-good?q="+query, function (data) {
                     return process(data);
                 });
             },
@@ -223,28 +167,9 @@ $docName = 'Новый';
                 $('#good').val(data.id);
                 $('#code').val(data.code);
                 $('#goodInputName').val(data.name);
+                $('#price').val(data.retailPrice);
+                $("#amount").val(Math.round($('#price').val()*$("#quantity").val()*100)/100);
             }
-        });
-        $('#unit').typeahead({
-            source: function(query, process) {
-                return $.get("/ptu/autocomplete-unit?q="+query, function (data) {
-                    return process(data);
-                });
-            }
-        });
-        $('#country').typeahead({
-            source: function(query, process) {
-                return $.get("/ptu/autocomplete-country?q="+query, function (data) {
-                    return process(data);
-                });
-            },
-        });
-        $('#ntd').typeahead({
-            source: function(query, process) {
-                return $.get("/ptu/autocomplete-ntd?q="+query, function (data) {
-                    return process(data);
-                });
-            },
         });
         
         $("#price").on('input', function(){

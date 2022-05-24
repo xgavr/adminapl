@@ -4,6 +4,7 @@ use Application\Entity\Shipping;
 $this->headTitle('Офис '.$office->getName());
 
 $this->mainMenu()->setActiveItemId('company');
+$this->mainMenu()->setActiveUrl($this->url('offices'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),

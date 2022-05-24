@@ -29,3 +29,5 @@ phpunit.xml
 /data/template/vtp/
 /data/template/.~lock.torg-2.xls#
 /data/template/.~lock.upd.xls#
+/bower_components/
+/bower.json

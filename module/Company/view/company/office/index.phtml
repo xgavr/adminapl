@@ -2,6 +2,7 @@
 $this->headTitle('Офисы');
 
 $this->mainMenu()->setActiveItemId('company');
+$this->mainMenu()->setActiveUrl($this->url('offices'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),

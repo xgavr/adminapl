@@ -55,4 +55,42 @@ class CourierRepository extends EntityRepository{
 
         return $queryBuilder->getQuery()->getOneOrNullResult();        
     }
+    
+    /**
+     * Доставки офиса для select
+     * @param Office $office
+     * @param array $options
+     * @return array
+     */
+    public function shippingSelect($office, $options = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('s')
+            ->from(Shipping::class, 's')
+            ->where('s.office = ?1')
+            ->setParameter('1', $office->getId())    
+            ->orderBy('s.id')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult(2);        
+    }
+    
+    /**
+     * Доставки офиса для select options
+     * @param Office $office
+     * @param array $options
+     * @return array
+     */
+    public function shippingOptions($office, $options = null)
+    {
+        $shippings = $this->shippingSelect($office, $options);
+        $result = [];
+        foreach ($shippings as $shipping){
+            $result[$shipping['id']] = $shipping['name'];
+        }
+        return $result;        
+    }
 }

@@ -46,12 +46,45 @@ class OrderForm extends Form
     protected function addElements() 
     {
                 
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'office',
+            'attributes' => [                
+                'id' => 'office',
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'Company\Entity\Office',
+                'label' => 'Офис',
+                'property'       => 'name',
+                'display_empty_item' => false,
+                'empty_item_label'   => '--выберете офис--',
+            ],
+        ]);
+
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'courier',
+            'attributes' => [                
+                'id' => 'courier',
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'Application\Entity\Courier',
+                'label' => 'ТК',
+                'property' => 'name',
+                'display_empty_item' => true,
+                'empty_item_label'   => '--выберете ТК--',
+            ],
+        ]);
+        
         // Добавляем поле "name"
         $this->add([           
-            'type'  => 'text',
+            'type'  => 'search',
             'name' => 'name',
             'attributes' => [
-                'id' => 'name'
+                'id' => 'name',
+                'autocomplete' => 'off',
             ],
             'options' => [
                 'label' => 'Имя',
@@ -59,9 +92,11 @@ class OrderForm extends Form
         ]);
         
         $this->add([           
-            'type'  => 'text',
+            'type'  => 'search',
             'name' => 'phone',
             'attributes' => [
+                'id' => 'phone',
+                'autocomplete' => 'off',
             ],
             'options' => [
                 'label' => 'Телефон',
@@ -69,16 +104,63 @@ class OrderForm extends Form
         ]);
         
         $this->add([           
-            'type'  => 'text',
+            'type'  => 'search',
             'name' => 'email',
             'attributes' => [
-                'id' => 'email'
+                'id' => 'email',
+                'autocomplete' => 'off',
             ],
             'options' => [
                 'label' => 'Email',
             ],
         ]);
                 
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'vin',
+            'attributes' => [
+                'id' => 'vin',
+                'autocomplete' => 'off',
+            ],
+            'options' => [
+                'label' => 'VIN',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'make',
+            'attributes' => [
+                'id' => 'make',
+                'autocomplete' => 'off',
+            ],
+            'options' => [
+                'label' => 'Авто',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'makeComment',
+            'attributes' => [
+                'id' => 'makeComment'
+            ],
+            'options' => [
+                'label' => 'Дополнительно о машине',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'textarea',
+            'name' => 'info',
+            'attributes' => [
+                'id' => 'info'
+            ],
+            'options' => [
+                'label' => 'Что нужно',
+            ],
+        ]);
+        
         // Добавляем поле "address"
         $this->add([           
             'type'  => 'textarea',
@@ -91,12 +173,103 @@ class OrderForm extends Form
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'date',
+            'name' => 'dateShipment',
+            'attributes' => [
+                'id' => 'dateShipment',
+//                'min' => date('Y-m-d'),
+                'value' => date('Y-m-d'),
+            ],
+            'options' => [
+                'label' => 'Дата доставки',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'select',
+            'name' => 'timeShipment',
+            'attributes' => [
+                'id' => 'timeShipment'
+            ],
+            'options' => [
+                'label' => 'Время доставки',
+                'value_options' => [13 => 'к 13', 15 => 'к 15', 17 => 'к 17', 19 => 'к 19'],
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'select',
+            'name' => 'shipping',
+            'attributes' => [
+                'id' => 'shipping'
+            ],
+            'options' => [
+                'label' => 'Вариант доставки',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'shipmentRate',
+            'attributes' => [
+                'id' => 'shipmentRate'
+            ],
+            'options' => [
+                'label' => 'Тариф',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'number',
+            'name' => 'shipmentDistance',
+            'attributes' => [
+                'id' => 'shipmentDistance'
+            ],
+            'options' => [
+                'label' => 'Расстояние',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'rateDistance',
+            'attributes' => [
+                'id' => 'rateDistance'
+            ],
+            'options' => [
+                'label' => 'Цена за км',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'number',
+            'name' => 'shipmentTotal',
+            'attributes' => [
+                'id' => 'shipmentTotal'
+            ],
+            'options' => [
+                'label' => 'Стоимость доставки',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'trackNumber',
+            'attributes' => [
+                'id' => 'trackNumber'
+            ],
+            'options' => [
+                'label' => 'Накладная ТК',
+            ],
+        ]);
+
         $this->add([
             'type' => 'csrf',
             'name' => 'csrf',
             'options' => [
                 'csrf_options' => [
-                'timeout' => 600
+                'timeout' => 3600
                 ]
             ],
         ]);
