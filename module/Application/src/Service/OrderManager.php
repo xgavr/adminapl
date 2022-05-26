@@ -337,7 +337,7 @@ class OrderManager
      * @param array $row
      * @param User $currentUser
      */
-    public function insBid($order, $row, $curretUser = null)
+    public function insBid($order, $row, $currentUser = null)
     {
         $upd = [
             'row_no' => $row['rowNo'],
@@ -349,7 +349,7 @@ class OrderManager
             'order_id' => $order->getId(),
         ];
 
-        if ($data['good'] instanceof Goods){
+        if ($row['good'] instanceof Goods){
             $upd['good_id'] = $row['good']->getId();
         } else {
             $upd['good_id'] = $row['good'];
@@ -357,7 +357,7 @@ class OrderManager
         
         if (!empty($row['oem'])){
             $filter = new ArticleCode();
-            $oe = $filter->filter($data['oem']);
+            $oe = $filter->filter($row['oem']);
             if ($oe){
                 $oem = $this->entityManager->getRepository(Oem::class)
                         ->findOneByOe($oe);
@@ -367,7 +367,7 @@ class OrderManager
             }    
         }
         
-        if (!$curretUser){
+        if (!$currentUser){
             $currentUser = $this->currentUser();
         }    
         if ($currentUser){

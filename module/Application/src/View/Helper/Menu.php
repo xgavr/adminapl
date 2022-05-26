@@ -82,7 +82,7 @@ class Menu extends AbstractHelper
 //        $result .= '<span class="icon-bar"></span>';
 //        $result .= '</button>';
 //        $result .= '</div>';
-        $result .= '<div class="collapse navbar-collapse navbar-ex1-collapse">';        
+        $result = '<div class="collapse navbar-collapse navbar-ex1-collapse">';        
         $result .= '<ul class="nav nav-sidebar">';
         
         // Render items
