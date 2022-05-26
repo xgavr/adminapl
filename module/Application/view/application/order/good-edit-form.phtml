@@ -14,15 +14,15 @@ $form->get('code')->setAttributes([
     ]);
 
 $form->get('quantity')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control select-on-focus', 
     ]);
 
 $form->get('amount')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control select-on-focus', 
     ]);
 
 $form->get('price')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control select-on-focus', 
     ]);
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'order-good-submit']);
@@ -109,7 +109,9 @@ $form->prepare();
         $("#goodInputName").val('');
     });    
 
-    $('#order-good-submit').on('click', function() {
+    var $orderGoodSubmit = $('#order-good-submit');
+    $orderGoodSubmit.on('click', function() {
+        $orderGoodSubmit.attr('disabled', true);
         $.ajax({
             type: 'POST',
             url: '/order/good-edit-form/',
@@ -117,6 +119,7 @@ $form->prepare();
         })
             .done(function (answer) {
 //                console.log(answer);
+                $orderGoodSubmit.attr('disabled', false);
                 if (answer.result == 'ok'){
                     var data = serializeForm('#order-good-form');
                     var good = {
@@ -142,7 +145,7 @@ $form->prepare();
                         rows.push(row);
                         $('#ordergoodtable').bootstrapTable('prepend', rows);                        
                     <?php endif; ?>        
-                    orderUpdateTotal();    
+                    shippingUpdate();    
                     
                     $('#orderGoodModal').modal('hide');
                 } else {
@@ -150,12 +153,19 @@ $form->prepare();
                 }    
             })
             .fail(function () {
+                $orderGoodSubmit.attr('disabled', false);
                 alert("Ошибка при открытии формы.");
 
             });
     });    
     
     $( document ).ready(function() {
+        $('.select-on-focus').on('click', function () {
+            if ($(this).val() == '0'){
+                $(this).select();
+            }
+        });
+    
         $('#code').typeahead({
             source: function(query, process) {
                 return $.get("/order/autocomplete-good?q="+query, function (data) {

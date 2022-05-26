@@ -18,6 +18,7 @@ use Application\Entity\Shipping;
 use Application\Entity\Bid;
 use Application\Form\OrderGoodForm;
 use Application\Entity\Goods;
+use Application\Entity\Comment;
 
 class OrderController extends AbstractActionController
 {
@@ -46,13 +47,20 @@ class OrderController extends AbstractActionController
      */
     private $rbacManager; 
     
+    /**
+     * Comment manager.
+     * @var \Application\Service\CommentManager
+     */
+    private $commentManager; 
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $orderManager, $authService, $rbacManager) 
+    public function __construct($entityManager, $orderManager, $authService, $rbacManager, $commentManager) 
     {
         $this->entityManager = $entityManager;
         $this->orderManager = $orderManager;
         $this->authService = $authService;
         $this->rbacManager = $rbacManager;
+        $this->commentManager = $commentManager;
     }    
     
     public function indexAction()
@@ -176,18 +184,27 @@ class OrderController extends AbstractActionController
     {
         $orderId = (int)$this->params()->fromRoute('id', -1);
         
-        $order = null;
+        $order = $orderComments = null;
         $office = $this->orderManager->currentUser()->getOffice();
         
         if ($orderId > 0){
             $order = $this->entityManager->getRepository(Order::class)
                     ->find($orderId);
+            $orderComments = $this->entityManager->getRepository(Comment::class)
+                    ->findBy(['order' => $order->getId()], ['id' => 'DESC']);
+                    
         }    
         
         $form = new OrderForm($this->entityManager);
         
         $form->get('office')->setValue($office->getId());
         $form->get('shipping')->setValueOptions($this->entityManager->getRepository(Shipping::class)->shippingOptions($office));
+        if ($order){
+            $form->get('orderId')->setValue($order->getId());
+            $form->get('trackNumber')->setAttribute('disabled', $order->getShipping()->getRate() != Shipping::RATE_TK);
+            $form->get('courier')->setAttribute('disabled', $order->getShipping()->getRate() != Shipping::RATE_TK);
+            $form->get('shipmentDistance')->setAttribute('disabled', $order->getShipping()->getRate() != Shipping::RATE_DISTANCE);
+        }    
         
         if ($this->getRequest()->isPost()) {
             
@@ -196,14 +213,30 @@ class OrderController extends AbstractActionController
 
             if ($form->isValid()) {
                 
+                $contact = $this->orderManager->findContactByOrderData($data);
+//                $data['dateShipment'] = 
+                $data['total'] = $data['shipmentTotal'];
+                
                 if ($order){
                     $this->orderManager->updateOrder($order, $data);
                 } else {
-                    $order = $this->orderManager->insOrder($office,$data);
+                    $order = $this->orderManager->addNewOrder($office, $contact, $data);
                 }    
+                if ($order && is_array($data['orderGood'])){
+                    $this->orderManager->updateBids($order, $data['orderGood']);
+                }
+                if ($order && isset($data['comments'])){
+                    foreach ($data['comments'] as $comment){
+                        $this->commentManager->addOrderComment($order, $comment);
+                    }    
+                }
                 
                 return new JsonModel(
-                   ['id' => $order->getAplId()]
+                   [
+                       'aplId' => $order->getAplId(), 
+                       'id' => $order->getId(),
+                       'contact' => $order->getContact()->getId(),
+                    ]
                 );           
             } else {
                 return new JsonModel(
@@ -220,7 +253,8 @@ class OrderController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'order' => $order,
+            'orderId' => ($order) ? $order->getId():null,
+            'comments' => $orderComments,
         ]);        
     }        
     
@@ -314,12 +348,10 @@ class OrderController extends AbstractActionController
                     'good' => $good->getId(),
                     'code' => $good->getCode(),
                     'goodInputName' => $good->getInputName(),
-                    'quantity' => $params['quantity'],
-                    'amount' => $params['amount'],
-                    'price' => $params['amount']/$params['quantity'],
-                    'unit' => (isset($params['unit']['name'])) ? $params['unit']['name']:null,
-                    'country' => (isset($params['country']['name'])) ? $params['country']['name']:null,
-                    'ntd' => (isset($params['ntd']['ntd'])) ? $params['ntd']['ntd']:null,
+                    'quantity' => $params['num'],
+                    'price' => $params['price'],
+                    'amount' => $params['price']*$params['num'],
+//                    'unit' => (isset($params['unit']['name'])) ? $params['unit']['name']:null,
                 ];
                 $form->setData($data);
             }    

@@ -69,7 +69,8 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="aplId" data-sortable="false" data-width="50">AplId</th>
                      <th data-field="contact.name" data-sortable="false">Покупатель</th>
                      <th data-field='total' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Сумма</th>
-                     <!--<th data-field='.userCreator.fullName' data-sortable="false" data-width="50">Отв.</th>-->
+                     <th data-field='user.fullName' data-sortable="false" data-width="50">Отв.</th>
+                    <th data-field="id" data-formatter="oeActiveFormatter" data-width="10"></th>
                  </tr>                
             </thead>
         </table>
@@ -170,6 +171,18 @@ $this->pageBreadcrumbs()->setItems([
         return;
     }    
         
+    function oeActiveFormatter(value, row){
+        var url = '<?= $this->url('order', ['action' => 'intro'])?>/'+value;
+        btn = '<a';
+        btn += ' type="button"';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-default btn-xs"';
+        btn += ' aria-label="Left Align">'; 
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</a>';
+
+        return btn;
+    }    
     
     function responseHandler(res) {
         return res;

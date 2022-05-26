@@ -1,0 +1,33 @@
+<div id="orderComments">
+    <?php if ($comments):?>
+        <ul class="list-unstyled">        
+        <?php foreach ($comments as $comment):?>
+            <li>
+                <h6>
+                    <small><?= $comment->getDateCreatedShort()?></small>
+                    <small><?= $comment->getUser()->getFullName()?></small>                                                                                
+                    <?= $comment->getComment()?>
+                </h6>                                        
+            </li>
+        <?php endforeach;?>
+        </ul>
+    <?php endif; ?>
+</div>
+
+<script>
+$(function(){
+    $('#managerCommentBtn').on('click', function(){
+        if ($('#note').val()){
+            $('#orderComments').prepend('<li><a href="#" data-type="textarea" class="new-manager-comment">'+$('#note').val()+'</a></li>');
+            $('#note').val('');
+        }    
+        $('.new-manager-comment').editable();
+    });
+    
+    $('#newComment').editable({
+        emptytext: "Добавить комментарий",
+        success: function(response, newValue) {
+        }
+    });
+});
+</script>

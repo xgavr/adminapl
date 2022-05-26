@@ -14,6 +14,8 @@ use Application\Entity\Contact;
 use Application\Entity\Email;
 use Admin\Filter\EmailFromStr;
 use Laminas\Validator\EmailAddress;
+use Application\Entity\Phone;
+use User\Filter\PhoneFilter;
 
 /**
  * Description of ContactRepository
@@ -154,4 +156,19 @@ class ContactRepository extends EntityRepository
         return $queryBuilder->getQuery();
     }        
     
+    /**
+     * Найти по телефону
+     * @param string $phoneName
+     * @return Contact
+     */
+    public function findByPhoneName($phoneName)
+    {
+        $phoneFilter = new PhoneFilter(['format' => PhoneFilter::PHONE_FORMAT_DB]);
+        $phone = $this->getEntityManager()->getRepository(Phone::class)
+                ->findOneByName($phoneFilter->filter($phoneName));
+        if ($phone){
+            return $phone->getContact();
+        }
+        return;
+    }
 }

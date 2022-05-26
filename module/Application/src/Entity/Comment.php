@@ -94,6 +94,14 @@ class Comment {
         return $this->dateCreated;
     }
 
+    public function getDateCreatedShort() 
+    {
+        if (date('Y-m-d') == date('Y-m-d', strtotime($this->dateCreated))){
+            return date('H:i', strtotime($this->dateCreated));            
+        }
+        return date('d.m.y H:i', strtotime($this->dateCreated));
+    }
+
     public function setDateCreated($dateCreated) 
     {
         $this->dateCreated = $dateCreated;

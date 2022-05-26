@@ -12,7 +12,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\OrderController;
 use Application\Service\OrderManager;
 use User\Service\RbacManager;
-
+use Application\Service\CommentManager;
 
 /**
  * Description of OrderControllerFactory
@@ -28,8 +28,10 @@ class OrderControllerFactory implements FactoryInterface {
         $orderManager = $container->get(OrderManager::class);
         $authService = $container->get(\Laminas\Authentication\AuthenticationService::class);
         $rbacManager = $container->get(RbacManager::class);
+        $commentManager = $container->get(CommentManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new OrderController($entityManager, $orderManager, $authService, $rbacManager);
+        return new OrderController($entityManager, $orderManager, $authService, 
+                $rbacManager, $commentManager);
     }
 }

@@ -11,6 +11,9 @@ use Laminas\ServiceManager\ServiceManager;
 use Application\Entity\Client;
 use Application\Entity\Contact;
 use User\Entity\User;
+use Application\Entity\Phone;
+use Application\Entity\Email;
+use User\Filter\PhoneFilter;
 
 /**
  * Description of ClientService
@@ -58,18 +61,12 @@ class ClientManager
     {
         // Создаем новую сущность.
         $client = new Client();
-        $client->setAplId($data['aplId']);
+        $client->setAplId((empty($data['aplId'])) ? 0:$data['aplId']);
         $client->setName((empty($data['name'])) ? 'NaN':$data['name']);
         $client->setStatus($data['status']);
         
         $currentDate = date('Y-m-d H:i:s');
-        $client->setDateCreated($currentDate);        
-        
-//        $currentUser = $this->entityManager->getRepository(User::class)
-//                ->findOneByEmail($this->authService->getIdentity());
-//        
-//        $client->setManager($currentUser);
-        
+        $client->setDateCreated($currentDate);    
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($client);
@@ -91,7 +88,7 @@ class ClientManager
         $currentDate = date('Y-m-d H:i:s');
         
         $add = [
-            'apl_id' => (empty($data['aplId'])) ? null:$data['aplId'],
+            'apl_id' => (empty($data['aplId'])) ? 0:$data['aplId'],
             'name' => (empty($data['name'])) ? 'NaN':$data['name'],
             'status' => $data['status'],
             'date_created' => $currentDate,
@@ -136,6 +133,22 @@ class ClientManager
         $this->entityManager->getConnection()
                 ->update('client', $upd, ['id' => $client->getId()]);
     }    
+    
+    /**
+     * Поиск клиента по телефону
+     * @param string $phoneName
+     * @return Client 
+     */
+    public function findByPhoneName($phoneName)
+    {
+        $phoneFilter = new PhoneFilter(['format' => PhoneFilter::PHONE_FORMAT_DB]);
+        $phone = $this->entityManager->getRepository(Phone::class)
+                ->findByName($phoneFilter->filter($phoneName));
+        if ($phone){
+            $contact = $phone->getContact();
+        }
+        return;        
+    }
     
     /**
      * Возможность удаления
@@ -207,7 +220,7 @@ class ClientManager
      // Этот метод добавляет новый контакт.
     public function addContactToClient($client, $data) 
     {
-        $this->contactManager->addNewContact($client, $data);
+        return $this->contactManager->addNewContact($client, $data);
     }   
     
     /**

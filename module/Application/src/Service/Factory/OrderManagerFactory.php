@@ -14,6 +14,8 @@ use Application\Service\OrderManager;
 use Admin\Service\LogManager;
 use Company\Service\LegalManager;
 use Admin\Service\AdminManager;
+use Application\Service\ContactManager;
+use Application\Service\ClientManager;
 
 /**
  * Description of OrderManagerFactory
@@ -31,9 +33,11 @@ class OrderManagerFactory  implements FactoryInterface
         $logManager = $container->get(LogManager::class);
         $legalManager = $container->get(LegalManager::class);
         $adminManager = $container->get(AdminManager::class);
+        $contactManager = $container->get(ContactManager::class);
+        $clientManager = $container->get(ClientManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new OrderManager($entityManager, $authService, $logManager,
-                $legalManager, $adminManager);
+                $legalManager, $adminManager, $contactManager, $clientManager);
     }
 }

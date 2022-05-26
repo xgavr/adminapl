@@ -138,7 +138,9 @@ class RingController extends AbstractActionController
                                 ->findOneByName(['name' => $phoneNum]);
                 if ($phone){
                     $contactName = $phone->getContact()->getName();
-                    $email = $phone->getContact()->getEmail()->getName();
+                    if ($phone->getContact()->getEmail()){
+                        $email = $phone->getContact()->getEmail()->getName();
+                    }    
                     $contact = $phone->getContact()->getId();
                     $contactCars = $this->entityManager->getRepository(ContactCar::class)
                             ->findByContact($contact, ['id' => 'DESC']);                    

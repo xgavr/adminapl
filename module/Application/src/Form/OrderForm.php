@@ -81,6 +81,38 @@ class OrderForm extends Form
             ],
         ]);
         
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'user',
+            'attributes' => [                
+                'id' => 'user',
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'User\Entity\User',
+                'label' => 'Менеджер',
+                'property' => 'fullName',
+                'display_empty_item' => true,
+                'empty_item_label'   => '--ответственный--',
+            ],
+        ]);
+        
+        $this->add([
+            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'name' => 'skiper',
+            'attributes' => [                
+                'id' => 'skiper',
+            ],
+            'options' => [
+                'object_manager' => $this->entityManager,
+                'target_class'   => 'User\Entity\User',
+                'label' => 'Водитель',
+                'property' => 'fullName',
+                'display_empty_item' => true,
+                'empty_item_label'   => '--водитель--',
+            ],
+        ]);
+        
         // Добавляем поле "name"
         $this->add([           
             'type'  => 'search',
@@ -103,6 +135,18 @@ class OrderForm extends Form
             ],
             'options' => [
                 'label' => 'Телефон',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'search',
+            'name' => 'phone2',
+            'attributes' => [
+                'id' => 'phone2',
+                'autocomplete' => 'off',
+            ],
+            'options' => [
+                'label' => 'Телефон дополнительный',
             ],
         ]);
         
@@ -224,6 +268,39 @@ class OrderForm extends Form
         ]);
 
         $this->add([           
+            'type'  => 'hidden',
+            'name' => 'rate',
+            'attributes' => [
+                'id' => 'rate'
+            ],
+            'options' => [
+                'label' => 'Способ расчета доставки',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'shipmentRate1',
+            'attributes' => [
+                'id' => 'shipmentRate1'
+            ],
+            'options' => [
+                'label' => 'Тариф1',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'shipmentRate2',
+            'attributes' => [
+                'id' => 'shipmentRate2'
+            ],
+            'options' => [
+                'label' => 'Тариф2',
+            ],
+        ]);
+
+        $this->add([           
             'type'  => 'number',
             'name' => 'shipmentDistance',
             'attributes' => [
@@ -267,15 +344,71 @@ class OrderForm extends Form
             ],
         ]);
 
-        $this->add([
-            'type' => 'csrf',
-            'name' => 'csrf',
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'note',
+            'attributes' => [
+                'id' => 'note',
+                //'autocomplete' => 'off',
+            ],
             'options' => [
-                'csrf_options' => [
-                'timeout' => 3600
-                ]
+                'label' => 'Комментарий менеджера',
             ],
         ]);
+
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'contact',
+            'attributes' => [
+                'id' => 'contact'
+            ],
+            'options' => [
+                'label' => 'Контакт',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'orderId',
+            'attributes' => [
+                'id' => 'orderId'
+            ],
+            'options' => [
+                'label' => 'Id',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'shippingLimit1',
+            'attributes' => [
+                'id' => 'shippingLimit1'
+            ],
+            'options' => [
+                'label' => 'Лимит для расчета доставки 1',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'shippingLimit2',
+            'attributes' => [
+                'id' => 'shippingLimit2'
+            ],
+            'options' => [
+                'label' => 'Лимит для расчета доставки 2',
+            ],
+        ]);
+
+//        $this->add([
+//            'type' => 'csrf',
+//            'name' => 'csrf',
+//            'options' => [
+//                'csrf_options' => [
+//                    'timeout' => 60*60*24,
+//                ]
+//            ],
+//        ]);
         
         // Добавляем кнопку отправки формы
         $this->add([
@@ -318,6 +451,20 @@ class OrderForm extends Form
         
         $inputFilter->add([
                 'name'     => 'courier',
+                'required' => false,
+                'filters'  => [],                
+                'validators' => [],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'user',
+                'required' => false,
+                'filters'  => [],                
+                'validators' => [],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'skiper',
                 'required' => false,
                 'filters'  => [],                
                 'validators' => [],

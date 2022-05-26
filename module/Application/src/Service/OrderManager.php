@@ -29,6 +29,8 @@ use Stock\Entity\Retail;
 use Admin\Entity\Log;
 use Company\Entity\Contract;
 use Laminas\Validator\Date;
+use Application\Entity\Email;
+use Application\Entity\Phone;
 
 /**
  * Description of OrderService
@@ -69,6 +71,18 @@ class OrderManager
     private $adminManager;
     
     /**
+     * Contact manager
+     * @var \Application\Service\ContactManager
+     */
+    private $contactManager;
+
+    /**
+     * Client manager
+     * @var \Application\Service\ClientManager
+     */
+    private $clientManager;
+
+    /**
      * Дата запрета
      * @var string
      */
@@ -76,13 +90,15 @@ class OrderManager
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
     public function __construct($entityManager, $authService, $logManager,
-            $legalManager, $adminManager)
+            $legalManager, $adminManager, $contactManager, $clientManager)
     {
         $this->entityManager = $entityManager;
         $this->authService = $authService;
         $this->logManager = $logManager;
         $this->legalManager = $legalManager;
         $this->adminManager = $adminManager;
+        $this->contactManager= $contactManager;
+        $this->clientManager = $clientManager;
 
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];
@@ -227,6 +243,42 @@ class OrderManager
     }    
     
     /**
+     * Найти контакт по данным из формы
+     * @param array $data
+     */
+    public function findContactByOrderData($data)
+    {
+        $contact = $client = null;
+        if (isset($data['contact'])){
+            $contact = $this->entityManager->getRepository(Contact::class)
+                    ->find($data['contact']);
+        }
+        if (!$contact && isset($data['email'])){
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findByName($data['email']);
+            if ($email){
+                $contact = $email->getContact();
+            }
+        }      
+        if ($contact){
+            $client = $contact->getClient();
+            if (!$client){
+                $client = $this->clientManager->addNewClient(['name' => $data['name'], 'status' => Client::STATUS_ACTIVE]);
+                $contact->setClient($client);
+                $this->entityManager->persist($contact);
+                $this->entityManager->flush($contact);
+            }
+        }
+        if (!$contact){
+            $client = $this->clientManager->addNewClient(['name' => $data['name'], 'status' => Client::STATUS_ACTIVE]);
+            $data['status'] = Contact::STATUS_LEGAL;
+            $contact = $this->clientManager->addContactToClient($client, $data);
+        }    
+        
+        return $contact;
+    }
+    
+    /**
      * Добавить строку заказа
      * @param Order $order
      * @param array $data
@@ -282,27 +334,28 @@ class OrderManager
     /**
      * Добавить строку заказа
      * @param Order $order
-     * @param array $data
+     * @param array $row
+     * @param User $currentUser
      */
-    public function insBid($order, $data)
+    public function insBid($order, $row, $curretUser = null)
     {
         $upd = [
-            'row_no' => $data['rowNo'],
-            'num' => $data['num'],
-            'price' => $data['price'],
-            'display_name' => (empty($data['displayName'])) ? null:$data['displayName'],
+            'row_no' => $row['rowNo'],
+            'num' => $row['num'],
+            'price' => $row['price'],
+            'display_name' => (empty($row['displayName'])) ? null:$row['displayName'],
             'date_created' => date('Y-m-d H:i:s'),
             'oem_id' => null,
             'order_id' => $order->getId(),
         ];
 
         if ($data['good'] instanceof Goods){
-            $upd['good_id'] = $data['good']->getId();
+            $upd['good_id'] = $row['good']->getId();
         } else {
-            $upd['good_id'] = $data['good'];
+            $upd['good_id'] = $row['good'];
         }    
         
-        if (!empty($data['oem'])){
+        if (!empty($row['oem'])){
             $filter = new ArticleCode();
             $oe = $filter->filter($data['oem']);
             if ($oe){
@@ -314,14 +367,34 @@ class OrderManager
             }    
         }
         
-        $currentUser = $this->entityManager->getRepository(User::class)
-                ->findOneByEmail($this->authService->getIdentity());
+        if (!$curretUser){
+            $currentUser = $this->currentUser();
+        }    
         if ($currentUser){
             $upd['user_id'] = $currentUser->getId();
         }    
         
         $this->entityManager->getConnection()
                 ->insert('bid', $upd);        
+        return;
+    }
+    
+    /**
+     * Добавить строки заказа
+     * @param Order $order
+     * @param array $data
+     */
+    public function updateBids($order, $data)
+    {
+        $this->removeOrderBids($order);
+        $rowNo = 1;
+        foreach ($data as $key => $row){
+            $row['rowNo'] = $rowNo;
+            $this->insBid($order, $row);
+            $rowNo++;
+        }
+        $this->updOrderTotal($order);
+        return;
     }
 
     /**
@@ -388,7 +461,25 @@ class OrderManager
     }
 
     /**
-     * Новый заказ ИСПОЛЬЗОВАТЬ insOrder
+     * Дата и время отгрузки из данных формы
+     * @param array $data
+     * @retrun string;
+     */
+    private function _shipmentDateTime($data)
+    {
+        $result = null;
+        if (isset($data['dateShipment'])){
+            $result = date('Y-m-d', strtotime($data['dateShipment']));
+            if (isset($data['timeShipment'])){                
+                $result = date('Y-m-d H:i:s', strtotime($data['dateShipment'].' '.$data['timeShipment'].':00:00'));
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Новый заказ
      * @param Office $office
      * @param Contact $contact
      * @param array $data
@@ -406,7 +497,7 @@ class OrderManager
             $order->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
             $order->setDateMod($dateMod);
             $order->setDateOper($dateOper);
-            $order->setDateShipment(!empty($data['dateShipment']) ? $data['dateShipment'] : null);
+            $order->setDateShipment($this->_shipmentDateTime($data));
             $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
             $order->setInfo(!empty($data['info']) ? $data['info'] : null);
             $order->setInvoiceInfo(!empty($data['invoiceInfo']) ? $data['invoiceInfo'] : null);
@@ -480,6 +571,8 @@ class OrderManager
                 $user = $this->entityManager->getRepository(User::class)
                         ->find($data['user']);
                 $order->setUser($user);
+            } else {
+                $order->setUser($this->currentUser());
             }
 
             $currentDate = date('Y-m-d H:i:s');        
@@ -515,7 +608,7 @@ class OrderManager
                 'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
                 'date_mod' =>  $dateMod,
                 'date_oper' =>  $dateOper,
-                'date_shipment' =>  (!empty($data['dateShipment'])) ? $data['dateShipment'] : null,
+                'date_shipment' => $this->_shipmentDateTime($data),
                 'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
                 'info' =>  (!empty($data['info'])) ? $data['info'] : null,
                 'invoice_info' =>  (!empty($data['invoiceInfo'])) ? $data['invoiceInfo'] : null,
@@ -577,11 +670,21 @@ class OrderManager
             }
 
             if (!empty($data['skiper'])){
-                $upd['skiper_id'] = $data['skiper'];
+                $user = $this->entityManager->getRepository(User::class)
+                        ->find($data['skiper']);
+                if ($user){
+                    $upd['skiper_id'] = $user->getId();
+                }    
             }
 
             if (!empty($data['user'])){
-                $upd['user_id'] = $data['user'];
+                $user = $this->entityManager->getRepository(User::class)
+                        ->find($data['user']);
+                if ($user){
+                    $upd['user_id'] = $user->getId();
+                }    
+            } elseif ($this->currentUser()){
+                $upd['user_id'] = $this->currentUser()->getId();
             }
 
             $this->entityManager->getConnection()
@@ -640,7 +743,8 @@ class OrderManager
         if (count($result)){
             $total = $result[0]['total'];
         }
-        $order->setTotal($total);
+        
+        $order->setTotal($total + $order->getShipmentTotal());
 
 
         $this->entityManager->persist($order);
@@ -672,7 +776,7 @@ class OrderManager
             $total = $result[0]['total'];
         }
         $this->entityManager->getConnection()
-                ->update('orders', ['total' => $total], ['id' => $order->getId()]);
+                ->update('orders', ['total' => $total + $order->getShipmentTotal()], ['id' => $order->getId()]);
         
         $this->entityManager->refresh($order);
         $this->repostOrder($order);
@@ -694,7 +798,7 @@ class OrderManager
             $order->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
             $order->setDateMod($dateMod);
             $order->setDateOper($dateOper);
-            $order->setDateShipment(!empty($data['dateShipment']) ? $data['dateShipment'] : null);
+            $order->setDateShipment($this->_shipmentDateTime($data));
             $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
             $order->setInfo(!empty($data['info']) ? $data['info'] : null);
             $order->setInvoiceInfo(!empty($data['invoiceInfo']) ? $data['invoiceInfo'] : null);
@@ -750,12 +854,14 @@ class OrderManager
                         ->find($data['skiper']);
                 $order->setSkiper($skiper);
             }
-
+            
             $order->setUser(null);
             if (!empty($data['user'])){
                 $user = $this->entityManager->getRepository(User::class)
                         ->find($data['user']);
                 $order->setUser($user);
+            }else {
+                $order->setUser($this->currentUser());
             }
 
             $this->entityManager->persist($order);
@@ -783,7 +889,7 @@ class OrderManager
                 'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
                 'date_mod' =>  $dateMod,
                 'date_oper' =>  $dateOper,
-                'date_shipment' =>  (!empty($data['dateShipment'])) ? $data['dateShipment'] : null,
+                'date_shipment' => $this->_shipmentDateTime($data),
                 'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
                 'info' =>  (!empty($data['info'])) ? $data['info'] : null,
                 'invoice_info' =>  (!empty($data['invoiceInfo'])) ? $data['invoiceInfo'] : null,
@@ -829,11 +935,23 @@ class OrderManager
             }
 
             if (!empty($data['skiper'])){
-                $upd['skiper_id'] = $data['skiper'];
+                $user = $this->entityManager->getRepository(User::class)
+                        ->find($data['skiper']);
+                if ($user){
+                    $upd['skiper_id'] = $user->getId();
+                }    
             }
 
             if (!empty($data['user'])){
-                $upd['user_id'] = $data['user'];
+                $user = $this->entityManager->getRepository(User::class)
+                        ->find($data['user']);
+                if ($user){
+                    $upd['user_id'] = $user->getId();
+                }    
+            }else {
+                if ($this->currentUser()){
+                    $upd['user_id'] = $this->currentUser()->getId();
+                }    
             }
 
             $this->entityManager->getConnection()

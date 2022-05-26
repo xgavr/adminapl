@@ -88,8 +88,10 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('b')
+        $queryBuilder->select('b, g, p')
             ->from(Bid::class, 'b')
+            ->join('b.good', 'g')    
+            ->join('g.producer', 'p')    
             ->where('b.order = ?1')    
             ->orderBy('b.rowNo')
             ->setParameter('1', $order->getId())    

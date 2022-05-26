@@ -792,7 +792,83 @@ class Order {
     {
         $this->marketplaceUpdates[] = $marketplaceUpdate;
     }
-                
+           
+    private function _getContactEmail()
+    {
+        if ($this->contact){
+            if ($this->contact->getEmail()){
+                return  $this->contact->getEmail()->getName();
+            }            
+        }
+        return;    
+    }
+    
+    private function _getContactPhone()
+    {
+        if ($this->contact){
+            if ($this->contact->getPhone()){
+                return  $this->contact->getPhone()->getName();
+            }            
+        }
+        return;    
+    }
+    
+    private function _getContactCarMake()
+    {
+        if ($this->contactCar){
+            if ($this->contactCar->getMake()){
+                return  $this->contactCar->getMake()->getName();
+            }            
+        }
+        return;    
+    }
+    
+    /**
+     * Лог
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'orderId' => $this->getId(),
+            'aplId' => $this->getAplId(),
+            'phone' => $this->_getContactPhone(),
+            'email' => $this->_getContactEmail(),
+            'name' => ($this->getContact()) ? $this->getContact()->getName():null,
+            'vin' => ($this->getContactCar()) ? $this->getContactCar()->getVin():null,
+            'make' => $this->_getContactCarMake(),
+            'makeComment' => ($this->getContactCar()) ? $this->getContactCar()->getComment():null,
+            'address' => $this->getAddress(),
+            'company' => $this->getCompany()->getId(),
+            'contact' => $this->getContact()->getId(),
+            'operDate' => (string) $this->getDateOper(),
+            'dateShipment' => date('Y-m-d', strtotime($this->getDateShipment())),
+            'timeShipment' => date('H', strtotime($this->getDateShipment())),
+            'courier' => ($this->getCounrier()) ? $this->getCounrier()->getId():null,
+            'office' => $this->getOffice()->getId(),
+            'status' => $this->getStatus(),
+            'info' => $this->getInfo(),
+            'invoiceInfo' => $this->getInvoiceInfo(),
+            'legal' => ($this->getLegal()) ? $this->getLegal()->getId():null,
+            'mode' =>$this->getMode(),
+            'trackNumber' => $this->getTrackNumber(),
+            'user' => ($this->getUser()) ? $this->getUser()->getId():null,
+            'skiper' => ($this->getSkiper()) ? $this->getSkiper()->getId():null,
+            'shipping' => ($this->getShipping()) ? $this->getShipping()->getId():null,
+            'shipmentTotal' => $this->getShipmentTotal(),
+            'shipmentRate' => $this->getShipmentRate(),
+            'rate' => ($this->getShipping()) ? $this->getShipping()->getRate():null,
+            'shipmentRate1' => ($this->getShipping()) ? $this->getShipping()->getRateTrip1():null,
+            'shipmentRate2' => ($this->getShipping()) ? $this->getShipping()->getRateTrip2():null,
+            'shippingLimit1' => $this->getOffice()->getShippingLimit1(),
+            'shippingLimit2' => $this->getOffice()->getShippingLimit2(),
+            'shipmentDistance' => $this->getShipmentDistance(),
+            'rateDistance' => ($this->getShipping()) ? $this->getShipping()->getRateDistance():null,
+            'recipient' => ($this->getRecipient()) ? $this->getRecipient()->getId():null,
+            'goods' => [],
+        ];
+    }    
+
     /**
      * Лог
      * @return array

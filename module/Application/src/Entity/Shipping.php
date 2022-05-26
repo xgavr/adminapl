@@ -328,6 +328,8 @@ class Shipping {
             'rateTrip2' => $this->getRateTrip2(),
             'sorting' => $this->getSorting(),
             'status' => $this->getStatus(),
+            'shippingLimit1' => $this->getOffice()->getShippingLimit1(),
+            'shippingLimit2' => $this->getOffice()->getShippingLimit2(),
         ];
         
         return $result;        
