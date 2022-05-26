@@ -506,7 +506,13 @@ class AplOrderService {
                 $userId = $user->getId();
             }    
         }    
-
+        $info = '';
+        if (!empty($data['info21'])){
+            $info .= $data['info21'].' ';
+        }
+        if (!empty($data['info2'])){
+            $info .= $data['info2'];
+        }
         $orderData = [
             'address' => (empty($data['address'])) ? null:$data['address'],
             'aplId' => $data['id'],
@@ -514,7 +520,7 @@ class AplOrderService {
             'dateOper' => $dateOper,
             'dateShipment' => $dateOper,
             'geo' => (empty($data['geo'])) ? null:$data['geo'],
-            'info' => (empty($data['info21'])) ? null:$data['info21'],
+            'info' => trim($info),
             'mode' => $this->orderMode($data),
             'shipmentDistance' => (empty($data['delivery_distance'])) ? null:$data['delivery_distance'],
             'shipmentRate' => (empty($data['delivery_rate'])) ? null:$data['delivery_rate'],

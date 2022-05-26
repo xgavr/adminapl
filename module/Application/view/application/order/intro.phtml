@@ -236,8 +236,14 @@ $form->prepare();
             <div id="ordergoodtoolbar">
                 <div class="form-inline" role="form">
                     <div class="form-group form-group-sm">
-                        <span class="label label-primary" id="orderQuantity"></span>
+                        <span class="label label-default" id="orderQuantity"></span>
                     </div>    
+                    <div class="form-group form-group-sm">
+                        <span class="label label-primary" id="shippingTotal"></span>
+                    </div> +    
+                    <div class="form-group form-group-sm">
+                        <span class="label label-primary" id="bidTotal"></span>
+                    </div> =   
                     <div class="form-group form-group-sm">
                         <span class="label label-primary" id="orderAmount"></span>                        
                     </div>    
@@ -268,7 +274,7 @@ $form->prepare();
                          <th data-field="rowNo" data-type="numeric" data-align="right" data-width="10">N</th>
                          <th data-field="good.code" data-width="150" data-formatter="goodFormatter">Артикул</th>
                          <th data-field="good.producer.name" data-type="numeric" data-width="100">Производитель</th>
-                         <th data-field="displayName" data-editable="true">Наименование</th>
+                         <th data-field="displayName" data-formatter="geNameFormatter" data-editable="true">Наименование</th>
                          <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-align="right" data-width="100">Цена</th>
                          <th data-field='num' data-align="right" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-width="50">Количество</th>
                          <th data-field='amount' data-align="right" data-formatter="geAmountFormatter" data-always-use-formatter="true" data-type="numeric" data-width="100">Сумма</th>
@@ -493,7 +499,7 @@ $form->prepare();
         $.each(data, function( index, value ) {
             amount += Math.round(value.price*value.num*100)/100;
         });
-        
+        $('#bidTotal').html(amount);            
         return amount;
     }
     
@@ -516,6 +522,7 @@ $form->prepare();
             }
         }    
         $('#shipmentTotal').val(shipmentRate + rateDistance*distance);    
+        $('#shippingTotal').html($('#shipmentTotal').val());    
         orderUpdateTotal();
     }
     
@@ -641,6 +648,8 @@ $form->prepare();
         
         $('#ordergoodtable').bootstrapTable({
             onLoadSuccess: function(res){
+                $('#shippingTotal').html($('#shipmentTotal').val());    
+                bidTotal();
                 orderUpdateTotal();
             }            
         }); 
@@ -698,6 +707,13 @@ $form->prepare();
         return btn;
     }    
 
+    function geNameFormatter(value, row){
+        if (value) return value;
+        if (row.good.tokenGroup.name) return row.good.tokenGroup.name;        
+        if (row.good.name) return row.good.name; 
+        if (row.good.description)return row.good.description;
+        return 'Нет названия';
+    }    
     
     function geActiveFormatter(value, row){
         var url = '/order/good-edit-form/';
