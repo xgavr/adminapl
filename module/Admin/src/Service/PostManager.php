@@ -421,14 +421,14 @@ class PostManager {
             foreach ($params['folders'] as $foldername){
 
 //                $hostname = $params['server'].mb_convert_encoding($foldername, 'UTF7-IMAP', 'UTF-8');
-                $hostname = $params['server'].imap_utf8_to_mutf7($foldername);
-var_dump($hostname); exit;
+                $hostname = $params['server'];//.imap_utf8_to_mutf7($foldername);
                 $connection = imap_open(
                         $hostname, 
                         $params['user'], 
                         $params['password']
                 );
-
+                $mailboxes = imap_list($connection, $server, '*');
+                var_dump($mailboxes); exit;
                 if ($connection){
                       //Просмотр названий папок
     //                $list = imap_list($connection, '{imap.yandex.ru:993/imap/ssl}', '*');
