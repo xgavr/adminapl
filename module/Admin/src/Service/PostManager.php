@@ -415,7 +415,7 @@ class PostManager {
         if (!isset($params['folders'])){
             $params['folders'] = ['INBOX', 'Spam'];
         }            
-        if (!isset($params['trash'])) $params['trash'] = 'Удаленные';
+        if (!isset($params['trash'])) $params['trash'] = 'Trash';
         
         if (is_array($params['folders'])){
             foreach ($params['folders'] as $foldername){
@@ -427,9 +427,22 @@ class PostManager {
                         $params['password']
                 );
                 
-                $mailboxes = imap_list($connection, $params['server'], '*');
-                var_dump($mailboxes); exit;
-                
+//                $mailboxes = imap_list($connection, $params['server'], '*');
+//                var_dump($mailboxes); exit;
+//                array(6) {
+//                  [0]=>
+//                  string(35) "{imap.yandex.ru:993/imap/ssl}Drafts"
+//                  [1]=>
+//                  string(34) "{imap.yandex.ru:993/imap/ssl}INBOX"
+//                  [2]=>
+//                  string(35) "{imap.yandex.ru:993/imap/ssl}Outbox"
+//                  [3]=>
+//                  string(33) "{imap.yandex.ru:993/imap/ssl}Sent"
+//                  [4]=>
+//                  string(33) "{imap.yandex.ru:993/imap/ssl}Spam"
+//                  [5]=>
+//                  string(34) "{imap.yandex.ru:993/imap/ssl}Trash"
+//                }                
                 if ($connection){
                       //Просмотр названий папок
     //                $list = imap_list($connection, '{imap.yandex.ru:993/imap/ssl}', '*');
