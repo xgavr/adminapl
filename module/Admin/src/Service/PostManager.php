@@ -427,7 +427,7 @@ class PostManager {
                         $params['user'], 
                         $params['password']
                 );
-                $mailboxes = imap_list($connection, $server, '*');
+                $mailboxes = imap_list($connection, $params['server'], '*');
                 var_dump($mailboxes); exit;
                 if ($connection){
                       //Просмотр названий папок
