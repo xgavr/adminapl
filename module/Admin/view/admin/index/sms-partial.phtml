@@ -1,0 +1,13 @@
+
+<script>
+$(document).on('click', '.sms-message-modal-show', function (e) {
+    var url = $(e.currentTarget).attr('modal-url');
+    showFormDialog({
+        id: 'smsMessageModal',
+        url: url,
+        zIndex: 9999,
+        width: $(window).width()-150
+    });
+});  
+
+</script>

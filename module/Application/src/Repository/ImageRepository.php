@@ -328,7 +328,7 @@ class ImageRepository extends EntityRepository
             if (!$fp = curl_init($url)) {
                 return;
             } 
-            $headers = get_headers($url);
+            $headers = @get_headers($url);
 //            var_dump($headers);
         }
         

@@ -139,6 +139,31 @@ class CommentController extends AbstractActionController
         
     }
 
+    public function editLocalFormAction()
+    {        
+        $form = new CommentForm();
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        }    
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'currentUser' => $this->commentManager->currentUser(),
+        ]);                
+        
+    }
+
     public function viewAction() 
     {       
         $commentId = (int)$this->params()->fromRoute('id', -1);

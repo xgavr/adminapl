@@ -420,7 +420,8 @@ class PostManager {
         if (is_array($params['folders'])){
             foreach ($params['folders'] as $foldername){
 
-                $hostname = $params['server'].mb_convert_encoding($foldername, 'UTF7-IMAP', 'UTF-8');
+//                $hostname = $params['server'].mb_convert_encoding($foldername, 'UTF7-IMAP', 'UTF-8');
+                $hostname = $params['server'].imap_utf8_to_mutf7($foldername);
 
                 $connection = imap_open(
                         $hostname, 

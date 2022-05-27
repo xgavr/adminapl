@@ -17,6 +17,7 @@ use Admin\Form\AbcpSettings;
 use Admin\Form\PartsApiSettings;
 use Admin\Form\ZetasoftSettings;
 use Admin\Form\ApiMarketPlaces;
+use Admin\Form\SmsForm;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -828,7 +829,31 @@ class IndexController extends AbstractActionController
         ]);  
         
     }
+    
+    public function smsFormAction()
+    {        
+        $form = new SmsForm();
 
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        }    
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+        ]);                
+        
+    }
+    
     public function testSmsAction()
     {
         $this->smsManager->send(['phone' => '79096319425', 'text' => 'тест']);

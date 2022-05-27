@@ -15,6 +15,16 @@
 </div>
 
 <script>
+$(document).on('click', '.order-comment-modal-show', function (e) {
+    var url = $(e.currentTarget).attr('modal-url');
+    showFormDialog({
+        id: 'orderCommentModal',
+        url: url,
+        zIndex: 9999,
+        width: $(window).width()-150
+    });
+});  
+
 $(function(){
     $('#managerCommentBtn').on('click', function(){
         if ($('#note').val()){

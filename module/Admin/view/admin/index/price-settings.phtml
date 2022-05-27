@@ -1,7 +1,8 @@
 <?php
 $this->headTitle('Настройки загрузки прайсов');
 
-$this->mainMenu()->setActiveItemId('raw');
+$this->mainMenu()->setActiveItemId('settings');
+$this->mainMenu()->setActiveUrl($this->url('settings', ['action' => 'price-settings']));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),

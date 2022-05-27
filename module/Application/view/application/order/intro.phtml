@@ -137,11 +137,12 @@ $form->prepare();
                 <div class="input-group">
                     <?= $this->formElement($form->get('phone')); ?>
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-sm" title="Отправить сообщение" id="smsSendBtn">
+                        <button type="button" class="btn btn-default btn-sm sms-message-modal-show" modal-url="/admin/sms-form" title="Отправить сообщение">
                             <span class="glyphicon glyphicon-envelope"></span>
                         </button>
                     </span>    
                 </div>    
+                <?php echo $this->partial('/admin/index/sms-partial', ['phoneNode' => 'phone']); ?>
                 <?= $this->formElementErrors($form->get('phone')); ?>                  
             </div>
         </div>    
@@ -215,20 +216,18 @@ $form->prepare();
                 <?= $this->formElementErrors($form->get('info')); ?>                  
             </div>
         </div>                    
-        <div class="col-xs-6">     
+        <div class="col-xs-5">     
             <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('note')); ?>
-                <div class="input-group">
-                    <?= $this->formElement($form->get('note')); ?>
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default btn-sm" title="Добавить комментарий" id="managerCommentBtn">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                    </span>    
-                </div>    
-                <?= $this->formElementErrors($form->get('note')); ?>                  
+                <?php echo $this->partial('/application/comment/order-partial', ['comments' => $comments]); ?>
+            </div>    
+        </div>    
+        <div class="col-xs-1 text-right">     
+            <div class="form-group form-group-sm">
+                <button type="button" class="btn btn-default btn-sm order-comment-modal-show" 
+                        title="Добавить комментарий" modal-url="/comments/edit-local-form">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
             </div>
-            <?php echo $this->partial('/application/comment/order-partial', ['comments' => $comments]); ?>                    
         </div>    
     </div>        
     <div class="row">
