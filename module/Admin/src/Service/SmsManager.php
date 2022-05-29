@@ -24,12 +24,29 @@ class SmsManager {
      */
     private $entityManager;
     
+    /**
+     * Admin manager
+     * @var \Admin\Service\AdminManager
+     */
     private $adminManager;
+    
+    /**
+     * Log manager
+     * @var \Admin\Service\LogManager
+     */
+    private $logManager;
 
-    public function __construct($entityManager, $adminManager)
+
+    public function __construct($entityManager, $adminManager, $logManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
+        $this->logManager = $logManager;
+    }
+    
+    public function currentUser()
+    {
+        return $this->logManager->currentUser();
     }
     
     /**

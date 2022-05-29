@@ -1,13 +1,17 @@
 
 <script>
 $(document).on('click', '.sms-message-modal-show', function (e) {
-    var url = $(e.currentTarget).attr('modal-url');
-    showFormDialog({
-        id: 'smsMessageModal',
-        url: url,
-        zIndex: 9999,
-        width: $(window).width()-150
-    });
+    let orderId = $('#<?= $idNode ?>').val();
+    let phone = $('#<?= $phoneNode ?>').val();
+    if (orderId){
+        var url = $(e.currentTarget).attr('modal-url');
+        showFormDialog({
+            id: 'smsMessageModal',
+            url: url+orderId+'?phone='+phone,
+            zIndex: 9999,
+            width: $(window).width()-150
+        });
+    }    
 });  
 
 </script>

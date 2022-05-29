@@ -113,6 +113,7 @@ class AdminManager {
         $config->admin->allow_date = $data['allow_date'];
         
         $config->admin->mail_token = $data['mail_token'];
+        $config->admin->turbo_passphrase = $data['turbo_passphrase'];
         
         $writer = new PhpArray();
         

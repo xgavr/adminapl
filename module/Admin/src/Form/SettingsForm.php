@@ -266,6 +266,16 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'turbo_passphrase',
+            'attributes' => [
+                'id' => 'turbo_passphrase'
+            ],
+            'options' => [
+                'label' => 'Пароль на турбоссылку',
+            ],
+        ]);
                 
         // Добавляем кнопку отправки формы
         $this->add([

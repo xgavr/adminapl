@@ -18,6 +18,8 @@ use Stock\Entity\Ptu;
 use ApiMarketPlace\Entity\Cash;
 use User\Entity\User;
 use Company\Entity\Commission;
+use User\Filter\PhoneFilter;
+use Application\Entity\Messenger;
 
 /**
  * Description of Office
@@ -78,6 +80,18 @@ class Office {
      * @ORM\Column(name="shipping_limit_2")   
      */
     protected $shippingLimit2;
+    
+    /**
+     * Карта сб
+     * @ORM\Column(name="sb_card")   
+     */
+    protected $sbCard;
+    
+    /**
+     * Держатель карты сб
+     * @ORM\Column(name="sb_owner")   
+     */
+    protected $sbOwner;
     
     /**
     * @ORM\OneToMany(targetEntity="\Application\Entity\Contact", mappedBy="office")
@@ -213,6 +227,26 @@ class Office {
         $this->shippingLimit2 = $shippingLimit2;
     }     
 
+    public function getSbCard() 
+    {
+        return $this->sbCard;
+    }
+
+    public function setSbCard($sbCard) 
+    {
+        $this->sbCard = $sbCard;
+    }     
+
+    public function getSbOwner() 
+    {
+        return $this->sbOwner;
+    }
+
+    public function setSbOwner($sbOwner) 
+    {
+        $this->sbOwner = $sbOwner;
+    }     
+
     /**
      * Returns status.
      * @return int     
@@ -310,6 +344,44 @@ class Office {
     {
         $contacts = $this->getLegalContacts();
         return $contacts[0];
+    }
+    
+    public function getLegalContactPhone()
+    {
+        $contact = $this->getLegalContact();
+        if ($contact){
+            if ($contact->getPhone()){
+                $filter = new PhoneFilter(['format' => PhoneFilter::PHONE_FORMAT_RU]);
+                return $filter->filter($contact->getPhone()->getName());
+            }
+        }
+        return;
+    }
+        
+    public function getLegalContactSmsAddress()
+    {
+        $contact = $this->getLegalContact();
+        if ($contact){
+            if ($contact->getAddress()){
+                return $contact->getAddress()->getAddressSms();
+            }    
+        }
+        return;
+    }
+        
+    public function getLegalContactWhatsapp()
+    {
+        $contact = $this->getLegalContact();
+        if ($contact){
+            if ($contact->getMessengers()){
+                foreach ($contact->getMessengers() as $messenger){
+                    if ($messenger->getType() == Messenger::TYPE_WHATSAPP){
+                        return $messenger->getIdent();
+                    }    
+                }    
+            }    
+        }
+        return;
     }
         
     /**

@@ -16,6 +16,7 @@ use Application\Entity\Courier;
 use Application\Entity\Shipping;
 use ApiMarketPlace\Entity\MarketplaceUpdate;
 use Stock\Entity\Vt;
+use Admin\Filter\ClickFilter;
 
 
 /**
@@ -236,6 +237,10 @@ class Order {
      */
     private $vt;
     
+    private $ciphering = "AES-128-CTR"; //Метод шифрования
+    
+    private $iv = "1234567891011121"; // Non-NULL Initialization Vector for encryption
+    
     /**
      * Constructor.
      */
@@ -247,6 +252,20 @@ class Order {
         $this->marketplaceUpdates = new ArrayCollection();
         $this->vt = new ArrayCollection();
     }
+    
+    protected function _encrypt($unencryptedText, $passphrase)
+    { 
+        $options = 0; 
+        //$iv_length = openssl_cipher_iv_length($this->ciphering);
+        
+        return openssl_encrypt($unencryptedText, $this->ciphering, $passphrase, $options, $this->iv);
+    }
+
+    protected function _decrypt($unencryptedText, $passphrase) 
+    {
+        $options = 0; 
+        return openssl_decrypt($unencryptedText, $this->ciphering, $passphrase, $options, $this->iv);
+    }	
     
     public function getId() 
     {
@@ -271,6 +290,34 @@ class Order {
     public function getAplId() 
     {
         return $this->aplId;
+    }
+    
+    public function getAplTurboId($passphrase)
+    {
+        return "https://autopartslist.ru/index/turbo?order=".base64_encode($this->_encrypt($this->aplId, $passphrase));
+    }
+
+    public function getAplTurboClick($passphrase)
+    {
+        $filter = new ClickFilter();
+        return $filter->filter($this->getAplTurboId($passphrase));
+    }
+    
+    /**
+     * Сыылка на платежную форму
+     * @param float $prepay
+     * @return string
+     */
+    public function getAplPaymentLink($prepay = 0)
+    {
+        $sum = ($prepay) ? $prepay:$this->total;
+        return 'https://autopartslist.ru/payments/sb-register/amount/'.$sum.'/id/'.$this->aplId;
+    }
+
+    public function getAplPaymentLinkClick($prepay = 0)
+    {
+        $filter = new ClickFilter();
+        return $filter->filter($this->getAplPaymentLink($prepay));
     }
 
     public function getAplIdLink() 
@@ -416,6 +463,11 @@ class Order {
     public function getTotal() 
     {
         return $this->total;
+    }
+
+    public function getPrepay() 
+    {
+        return round($this->total/10, -2);
     }
 
     public function setTotal($total) 
@@ -670,7 +722,7 @@ class Order {
      * @return Courier
      */    
     
-    public function getCounrier() 
+    public function getCourier() 
     {
         return $this->courier;
     }
@@ -844,7 +896,7 @@ class Order {
             'operDate' => (string) $this->getDateOper(),
             'dateShipment' => date('Y-m-d', strtotime($this->getDateShipment())),
             'timeShipment' => date('H', strtotime($this->getDateShipment())),
-            'courier' => ($this->getCounrier()) ? $this->getCounrier()->getId():null,
+            'courier' => ($this->getCourier()) ? $this->getCourier()->getId():null,
             'office' => $this->getOffice()->getId(),
             'status' => $this->getStatus(),
             'info' => $this->getInfo(),
@@ -887,5 +939,5 @@ class Order {
             'status' => $this->getStatus(),
             'goods' => [],
         ];
-    }    
+    }        
 }

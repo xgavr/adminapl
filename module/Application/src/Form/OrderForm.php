@@ -379,6 +379,18 @@ class OrderForm extends Form
         ]);
 
         $this->add([           
+            'type'  => 'text',
+            'name' => 'aplId',
+            'attributes' => [
+                'id' => 'aplId',
+                'readOnly' => true,
+            ],
+            'options' => [
+                'label' => 'aplId',
+            ],
+        ]);
+
+        $this->add([           
             'type'  => 'hidden',
             'name' => 'shippingLimit1',
             'attributes' => [

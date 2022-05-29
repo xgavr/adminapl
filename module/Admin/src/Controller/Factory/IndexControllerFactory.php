@@ -28,6 +28,7 @@ class IndexControllerFactory implements FactoryInterface {
     public function __invoke(ContainerInterface $container, 
                      $requestedName, array $options = null)
     {
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $telegrammManager = $container->get(TelegrammManager::class);
         $adminManager = $container->get(AdminManager::class);
         $smsManager = $container->get(SmsManager::class);
@@ -36,7 +37,7 @@ class IndexControllerFactory implements FactoryInterface {
         $autoruManager = $container->get(AutoruManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new IndexController($telegrammManager, $adminManager, $smsManager, 
+        return new IndexController($entityManager, $telegrammManager, $adminManager, $smsManager, 
                 $tamtamManager, $annManager, $autoruManager);
     }
 }

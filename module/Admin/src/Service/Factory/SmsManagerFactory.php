@@ -12,6 +12,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\SmsManager;
 use Admin\Service\AdminManager;
+use Admin\Service\LogManager;
 
 /**
  * Description of ShopManagerFactory
@@ -26,8 +27,9 @@ class SmsManagerFactory  implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $adminManager = $container->get(AdminManager::class);
+        $logManager = $container->get(LogManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new SmsManager($entityManager, $adminManager);
+        return new SmsManager($entityManager, $adminManager, $logManager);
     }
 }

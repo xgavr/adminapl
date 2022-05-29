@@ -73,6 +73,28 @@ class OfficeForm extends Form implements ObjectManagerAwareInterface
         ]);
         
         $this->add([           
+            'type'  => 'text',
+            'name' => 'sbCard',
+            'attributes' => [
+                'id' => 'sbCard'
+            ],
+            'options' => [
+                'label' => 'Карта СБ',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'sbOwner',
+            'attributes' => [
+                'id' => 'sbOwner'
+            ],
+            'options' => [
+                'label' => 'Держатель карты СБ',
+            ],
+        ]);
+        
+        $this->add([           
             'type'  => 'number',
             'name' => 'shippingLimit1',
             'attributes' => [

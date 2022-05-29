@@ -36,6 +36,7 @@ $legalContact = $office->getLegalContact();
                     ID: <?= $this->escapeHtml($office->getId()) ?>, AplId: <?= $this->escapeHtml($office->getAplId()) ?><br/>
                     Наименование: <?= $this->escapeHtml($office->getName()) ?><br/>
                     Регион: <?= $this->escapeHtml($office->getRegion()->getFullName()) ?><br/>
+                    Карта СБ: <?= $this->escapeHtml($office->getSbCard()) ?> <?= $this->escapeHtml($office->getSbOwner()) ?><br/>
                     Статус: <?= $this->escapeHtml($office->getStatusAsString()) ?><br/>
                 </div>
                 <div class="pull-right">

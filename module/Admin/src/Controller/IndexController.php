@@ -18,6 +18,8 @@ use Admin\Form\PartsApiSettings;
 use Admin\Form\ZetasoftSettings;
 use Admin\Form\ApiMarketPlaces;
 use Admin\Form\SmsForm;
+use Application\Entity\Order;
+use User\Filter\PhoneFilter;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -25,6 +27,12 @@ use Laminas\View\Model\JsonModel;
 
 class IndexController extends AbstractActionController
 {
+    
+    /**
+     * Менеджер сущностей.
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $entityManager;
     
     /**
      * TelegrammManager manager.
@@ -64,8 +72,9 @@ class IndexController extends AbstractActionController
     
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($telegramManager, $adminManager, $smsManager, $tamtamManager, $annManager, $autoruManager) 
+    public function __construct($entityManager, $telegramManager, $adminManager, $smsManager, $tamtamManager, $annManager, $autoruManager) 
     {
+        $this->entityManager = $entityManager;
         $this->telegramManager = $telegramManager;        
         $this->adminManager = $adminManager;        
         $this->smsManager = $smsManager;        
@@ -832,7 +841,20 @@ class IndexController extends AbstractActionController
     
     public function smsFormAction()
     {        
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        $phone = $this->params()->fromQuery('phone');
+        
+        $order = null;
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);                    
+        }    
+        
+        $settings = $this->adminManager->getSettings();
+        $turbo_passphrase = $settings['turbo_passphrase'];
+
         $form = new SmsForm();
+        $form->get('phone')->setValue($phone);
 
         if ($this->getRequest()->isPost()) {
             
@@ -850,10 +872,50 @@ class IndexController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-        ]);                
-        
+            'order' => $order,
+            'turbo' => $order->getAplTurboId($turbo_passphrase),
+            'currentUser' => $this->smsManager->currentUser(),
+        ]);                        
     }
     
+    public function orderPrepayAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        $prepay = $this->params()->fromQuery('prepay', 0);
+        
+        $result = [];
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+            $result['prepayLink'] = $order->getAplPaymentLinkClick($prepay);
+        }
+        
+        return new JsonModel($result);                   
+    }
+    
+    public function smsAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            $result = 'Не ушло! Проверте данные';
+            $data = $this->params()->fromPost();
+            if (!empty($data['phone']) && !empty($data['message']) && !empty($data['mode'])){
+                $filter = new PhoneFilter(['filter' => PhoneFilter::PHONE_FORMAT_DB]);
+                $phone = '7'.$filter->filter($data['phone']);
+                if ($data['mode'] == 1){
+                    $result = $this->smsManager->send(['phone' => $phone, 'text' => $data['message']]);
+                }    
+                if ($data['mode'] == 2){
+                    $result = $this->smsManager->wamm(['phone' => $phone, 'text' => $data['message']]);
+                }    
+            }    
+
+            return new JsonModel([
+                'result' => $result
+            ]);        
+        }    
+        exit;    
+    }
+
     public function testSmsAction()
     {
         $this->smsManager->send(['phone' => '79096319425', 'text' => 'тест']);

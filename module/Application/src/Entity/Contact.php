@@ -224,7 +224,7 @@ class Contact {
     
     public function getAddress()
     {
-        return $this->address;
+        return $this->addresses[0];
     }
     
     public function setAddress($address)

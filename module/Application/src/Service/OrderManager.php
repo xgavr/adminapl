@@ -59,6 +59,12 @@ class OrderManager
     private $logManager;
     
     /**
+     * Apl manager
+     * @var \Admin\Service\AplService
+     */
+    private $aplManager;
+    
+    /**
      * Legal manager
      * @var \Company\Service\LegalManager
      */
@@ -90,7 +96,7 @@ class OrderManager
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
     public function __construct($entityManager, $authService, $logManager,
-            $legalManager, $adminManager, $contactManager, $clientManager)
+            $legalManager, $adminManager, $contactManager, $clientManager, $aplManager)
     {
         $this->entityManager = $entityManager;
         $this->authService = $authService;
@@ -99,6 +105,7 @@ class OrderManager
         $this->adminManager = $adminManager;
         $this->contactManager= $contactManager;
         $this->clientManager = $clientManager;
+        $this->aplManager = $aplManager;
 
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];
@@ -583,6 +590,8 @@ class OrderManager
 
             // Применяем изменения к базе данных.
             $this->entityManager->flush();
+            
+            $this->checkoutOrder($order);
 
             return $order;
         }
@@ -1051,4 +1060,52 @@ class OrderManager
         
         return;
     }
+    
+    /**
+     * Обновить заказ в Апл
+     * @param Order $order
+     * @return type
+     */    
+    protected function checkoutOrder($order)
+    {
+
+        $items = [];
+        foreach ($order->getBids() as $bid){
+            $items[] = [
+                'offerId' => $bid->getGood()->getAplId(),
+                'count' => $big->getNum(),
+                'price' => $bid->getPrice(),
+            ];            
+        }
+
+        if ($phone = $filtered['phone']){
+            $data = [
+                'bo' => $order->getOffice()->getAplId(),
+                'name' => $order->getContact()->getName(),
+                'info2' => $order->getInfo(),
+                'phone' => $order->getContact()->getPhone(),
+                'email' => $order->getContact()->getEmail(),
+                'address' => $$order->getAddress(),
+                'items' => $items,
+            ];
+//            var_dump($data); exit;
+
+            $aplResponce = $this->aplService->checkout($data);
+            if (is_array($aplResponce)){
+                $orderData = (array) $aplResponce['order'];
+                if ($orderId = $orderData['id']){
+                    if (!$order->getAplId()){
+                        $order->setAplId($orderId);
+                        $this->entityManager->persist($order);
+                        $this->entityManager->flush($order);
+                    }
+                    return $orderId;
+//                    $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$orderId";
+                }
+            }                
+        }    
+        
+        return;
+    }
+    
 }

@@ -43,7 +43,29 @@ class SmsForm extends Form
     protected function addElements() 
     {
                 
-        // Добавляем поле "comment"
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'phone',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Телефон',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'select',
+            'name' => 'mode',
+            'attributes' => [
+                'id' => 'smsMode',
+            ],
+            'options' => [
+                'label' => 'Способ связи',
+                'value_options' => [1 => 'SMS', 2 => 'WhatsApp']
+            ],
+        ]);
+
+        // Добавляем поле "message"
         $this->add([           
             'type'  => 'textarea',
             'name' => 'message',

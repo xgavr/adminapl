@@ -99,6 +99,10 @@ $form->get('mail_token')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('turbo_passphrase')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -158,8 +162,13 @@ $form->prepare();
             <?= $this->formElement($form->get('dadata_standart_key')); ?>
             <?= $this->formElementErrors($form->get('dadata_standart_key')); ?>                  
         </div>                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('turbo_passphrase')); ?>
+            <?= $this->formElement($form->get('turbo_passphrase')); ?>
+            <?= $this->formElementErrors($form->get('turbo_passphrase')); ?>                  
+        </div>        
     </div>   
-    <div class="col-md-3">
+<!--    <div class="col-md-3">
         
         <div class="form-group">
             <?= $this->formLabel($form->get('ftp_apl_suppliers_price')); ?>
@@ -191,7 +200,7 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('ftp_apl_market_price_password')); ?>                  
         </div>
         
-    </div>   
+    </div>   -->
     <div class="col-md-3">
         
         <div class="form-group">
