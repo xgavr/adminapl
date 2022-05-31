@@ -115,13 +115,13 @@ class PostManager {
             'connection_config' => [
                 'username' => $options['username'],
                 'password' => $options['password'],
-                'ssl'      => 'tls',
+                'ssl'      => 'SSL',
             ],
         ]);
         $transport->setOptions($options);
         try {
             $transport->send($message);
-        } catch (Exception $ex){
+        } catch (Laminas\Mail\Protocol\Exception\RuntimeException $ex){
             return $ex->getMessage();
         }
         return 'ok';
