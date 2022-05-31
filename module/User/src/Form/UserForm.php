@@ -86,6 +86,23 @@ class UserForm extends Form
             ],
         ]);
         
+        // Add "sign" field
+        $this->add([            
+            'type'  => 'textarea',
+            'name' => 'sign',            
+            'options' => [
+                'label' => 'Подпись',
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'mailPassword',            
+            'options' => [
+                'label' => 'Пароль почты',
+            ],
+        ]);
+        
         $this->add([            
             'type'  => 'date',
             'name' => 'birthday',            
@@ -218,6 +235,25 @@ class UserForm extends Form
                             'max' => 512
                         ],
                     ],
+                ],
+            ]);
+        
+        // Add input for "sign" field
+        $inputFilter->add([
+                'name'     => 'sign',
+                'required' => false,
+                'filters'  => [                    
+                ],                
+                'validators' => [
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'mailPassword',
+                'required' => false,
+                'filters'  => [                    
+                ],                
+                'validators' => [
                 ],
             ]);
         

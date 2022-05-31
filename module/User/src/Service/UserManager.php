@@ -84,6 +84,8 @@ class UserManager
         
         $user->setStatus($data['status']);
         $user->setAplId($data['aplId']);
+        $user->setSign(empty($data['sign']) ? null:$data['sign']);
+        $user->setMailPassword(empty($data['mailPassword']) ? null:$data['mailPassword']);
         $user->setBirthday(null);
         if (!empty($data['birthday'])){
             $user->setBirthday($data['birthday']);
@@ -140,6 +142,8 @@ class UserManager
         $user->setEmail($data['email']);
         $user->setFullName($data['full_name']);        
         $user->setStatus($data['status']);
+        $user->setSign(empty($data['sign']) ? null:$data['sign']);
+        $user->setMailPassword(empty($data['mailPassword']) ? null:$data['mailPassword']);
         if (isset($data['aplId'])){
             $user->setAplId($data['aplId']);
         }    

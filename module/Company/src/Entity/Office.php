@@ -358,6 +358,21 @@ class Office {
         return;
     }
         
+    public function getLegalContactPhones()
+    {
+        $result = [];
+        $contact = $this->getLegalContact();
+        if ($contact){
+            if ($contact->getPhones()){
+                foreach ($contact->getPhones() as $phone){
+                    $filter = new PhoneFilter(['format' => PhoneFilter::PHONE_FORMAT_RU]);
+                    $result[] = $filter->filter($phone->getName());
+                }    
+            }
+        }
+        return implode(', ', $result);
+    }
+        
     public function getLegalContactSmsAddress()
     {
         $contact = $this->getLegalContact();

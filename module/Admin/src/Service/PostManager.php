@@ -22,6 +22,7 @@ use Laminas\Log\Logger;
 use Admin\Filter\HtmlFilter;
 use Admin\Filter\EmailFromStr;
 use Admin\Entity\PostLog;
+use User\Entity\User;
 
 /**
  * Description of PostManager
@@ -41,9 +42,16 @@ class PostManager {
      */
     private $entityManager;
     
-    public function __construct($entityManager)
+    /**
+     * Log manager.
+     * @var \Admin\Service\LogManager
+     */
+    private $logManager;            
+    
+    public function __construct($entityManager, $logManager)
     {
         $this->entityManager = $entityManager;
+        $this->logManager = $logManager;
         
         if (!is_dir($this::LOG_FOLDER)){
             mkdir($this::LOG_FOLDER);
@@ -51,10 +59,24 @@ class PostManager {
         
     }
     
+    /**
+     * Current user
+     * @return User
+     */
+    public function currentUser()
+    {
+        return $this->logManager->currentUser();
+    }
+    
+    /**
+     * Отправить письмо
+     * @param array $options
+     * @return null
+     */
     public function send($options)
     {
         if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') return; //если отладка на локальной машине, либо использовать sendmail
-
+        
         $breaks = array("<br />","<br>","<br/>");  
         $text = strip_tags(str_ireplace($breaks, PHP_EOL, $options['body']));
         
@@ -82,21 +104,23 @@ class PostManager {
         $contentTypeHeader = $message->getHeaders()->get('Content-Type');
         $contentTypeHeader->setType('multipart/alternative');
 
-        // Setup SMTP transport using LOGIN authentication
+        // Setup SMTP transport using PLAIN authentication over TLS
         $transport = new SmtpTransport();
         $options   = new SmtpOptions([
-            'name'              => 'localhost.localdomain',
-            'host'              => '127.0.0.1',
-//            'connection_class'  => 'login',
-//            'connection_config' => [
-//                'username' => 'user',
-//                'password' => 'pass',
-//            ],
+            'name'              => 'smtp.yandex.ru',
+            'host'              => 'smtp.yandex.ru',
+            'port'              => 587,
+            // Notice port change for TLS is 587
+            'connection_class'  => 'plain',
+            'connection_config' => [
+                'username' => $options['username'],
+                'password' => $options['password'],
+                'ssl'      => 'tls',
+            ],
         ]);
-        
         $transport->setOptions($options);
         $transport->send($message);
-
+        return 'ok';
     }
     
     protected function readPart($iterator, $message, $logger = null)

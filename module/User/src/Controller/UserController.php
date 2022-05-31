@@ -225,6 +225,8 @@ class UserController extends AbstractActionController
                     'aplId' => $user->getAplId(),
                     'full_name'=>$user->getFullName(),
                     'email'=>$user->getEmail(),
+                    'sign' => $user->getSign(),
+                    'mailPassword' => $user->getMailPassword(),
                     'status'=>$user->getStatus(), 
                     'roles' => $userRoleIds,
                     'office' => $user->getOffice()->getId(),

@@ -653,6 +653,24 @@ class Order {
         return $this->skiper;
     }
 
+    public function getSkiperPhone() 
+    {
+        if ($this->skiper){
+            if ($this->skiper->getLegalContact()->getPhone()){
+                return $this->skiper->getLegalContact()->getPhone()->getName();
+            }
+        }
+        return;
+    }
+
+    public function getSkiperName() 
+    {
+        if ($this->skiper){
+            return $this->skiper->getFullName();
+        }
+        return;
+    }
+
     /**
      * Задает связанный skiper.
      * @param \User\Entity\User $skiper
@@ -701,11 +719,22 @@ class Order {
     /*
      * Возвращает связанный contactCar.
      * @return ContactCar
-     */
-    
+     */    
     public function getContactCar() 
     {
         return $this->contactCar;
+    }
+
+    /*
+     * Возвращает VIN.
+     * @return string
+     */    
+    public function getContactCarVin() 
+    {
+        if ($this->contactCar){
+            return $this->contactCar->getVin();
+        }
+        return;
     }
 
     /**
@@ -725,6 +754,30 @@ class Order {
     public function getCourier() 
     {
         return $this->courier;
+    }
+
+    public function getCourierName() 
+    {
+        if ($this->courier){
+            return $this->courier->getName();
+        }
+        return;
+    }
+
+    public function getCourierNameLink() 
+    {
+        if ($this->courier){
+            return $this->courier->getNameLink();
+        }
+        return;
+    }
+
+    public function getTrackLink() 
+    {
+        if ($this->courier && $this->trackNumber){
+            return $this->courier->getTrackLink($this->trackNumber);
+        }
+        return;
     }
 
     /**
@@ -762,6 +815,133 @@ class Order {
     public function getBids()
     {
         return $this->bids;
+    }
+    
+    /**
+     * Для вставки в письмо заголовок таблицы
+     * @param bool $showCode //показывать артикли
+     * @return string
+     */
+    private function getBidsAsHtmlHeader($showCode = false)
+    {
+        $result .= "<tr>";
+
+        $result .= "<th class='article-code' align='center'>";
+        if ($showCode){
+            $result .= "Артикул";
+        } else {
+            $result .= "N";
+        }   
+        $result .= "</th>";
+
+        $result .= "<th align='center'>";
+        $result .= "Производитель";
+        $result .= "</th>";
+
+        $result .= "<th align='center'>";
+        $result .= "Наименование";
+        $result .= "</th>";
+
+        $result .= "<th align='center'>";
+        $result .= "Цена";
+        $result .= "</th>";
+
+        $result .= "<th align='center'>";
+        $result .= "Количество";
+        $result .= "</th>";
+
+        $result .= "<th align='center'>";
+        $result .= "Сумма";
+        $result .= "</th>";
+
+        $result .= "</tr>";
+        
+        return $result;
+    }
+
+    /**
+     * Для вставки в письмо тело таблицы
+     * @param bool $showCode //показывать артикли
+     * @return string
+     */
+    private function getBidsAsHtmlBody($showCode = false)
+    {
+        $result = '';
+        $i = 0;
+        foreach ($this->bids as $bid){
+            $i++;
+            
+            $result .= "<tr>";
+
+            $result .= "<td class='article-code'>";
+            if ($showCode){
+                $result .= $bid->getGood()->getAplIdLinkCode();
+            } else {
+                $result .= $i;
+            }    
+            $result .= "</td>";
+
+            $result .= "<td>";
+            $result .= $bid->getGood()->getProducer()->getName();
+            $result .= "</td>";
+
+            $result .= "<td>";
+            $result .= $bid->getDisplayName();
+            $result .= "</td>";
+
+            $result .= "<td align='right'>";
+            $result .= $bid->getPrice();
+            $result .= "</td>";
+
+            $result .= "<td align='right'>";
+            $result .= $bid->getNum();
+            $result .= "</td>";
+
+            $result .= "<td align='right'>";
+            $result .= $bid->getTotal();
+            $result .= "</td>";
+
+            $result .= "</tr>";
+        }
+        
+        return $result;
+    }
+
+    /**
+     * Для вставки в письмо подвал таблицы
+     * @return string
+     */
+    private function getBidsAsHtmlFooter()
+    {
+        $result .= "<tr>";
+
+        $result .= "<td colspan='5' align='right'>";
+        $result .= "<strong>Итого:</strong>";
+        $result .= "</td>";
+
+        $result .= "<td align='right'><strong>";
+        $result .= $this->total;
+        $result .= "</strong></td>";
+
+        $result .= "</tr>";
+        
+        return $result;
+    }
+
+    /**
+     * Для вставки в письмо
+     * @param bool $showCode //показывать артикли
+     * @return string
+     */
+    public function getBidsAsHtml($showCode = false)
+    {
+        $result = "<table width='50%' border='1'>";
+        $result .= $this->getBidsAsHtmlHeader($showCode);
+        $result .= $this->getBidsAsHtmlBody($showCode);
+        $result .= $this->getBidsAsHtmlFooter();
+        $result .= "</table>";
+        
+        return $result;
     }
         
     /**

@@ -161,7 +161,15 @@ $form->prepare();
         <div class="col-xs-2">                        
             <div class="form-group form-group-sm">
                 <?//= $this->formLabel($form->get('email')); ?>
-                <?= $this->formElement($form->get('email')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('email')); ?>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-sm post-message-modal-show" modal-url="/post/post-form/" title="Отправить сообщение">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                        </button>
+                    </span>    
+                </div>    
+                <?php echo $this->partial('/admin/post/post-partial', ['emailNode' => 'email', 'idNode' => 'orderId']); ?>
                 <?= $this->formElementErrors($form->get('email')); ?>                  
             </div>
         </div>    
@@ -466,6 +474,7 @@ $form->prepare();
                     $('#aplId').val(data.aplId);
                     $('#contact').val(data.contact);
                     enableSms();
+                    enablePost();
                 }    
             })
             .fail(function () {
@@ -599,6 +608,11 @@ $form->prepare();
         $('.sms-message-modal-show').attr('disabled', !aplId);
     }
     
+    function enablePost(){
+        let aplId = Number($('#aplId').val());
+        $('.post-message-modal-show').attr('disabled', !aplId);
+    }
+    
     $(document).on('editable-save.bs.table', '#ordergoodtable', function (e, field, row, old, $el) {
         shippingUpdate();
     });        
@@ -671,6 +685,9 @@ $form->prepare();
         }); 
         
         enableSms();
+        enablePost();
+        $("#vinLength").html($("#vin").val().length);
+
         
         <?php if (!$orderId): ?>
             shippingParams();    

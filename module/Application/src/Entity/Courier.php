@@ -122,6 +122,21 @@ class Courier {
         return $this->site;
     }
 
+    public function getNameLink() 
+    {
+        return '<a href="'.$this->site.'" target="_blank">'.$this->name.'</a>';
+    }
+
+    /**
+     * Ссылка на отслеживание
+     * @param string $trackNumber
+     * @return string
+     */
+    public function getTrackLink($trackNumber) 
+    {
+        return '<a href="'.$this->track.$trackNumber.'" target="_blank">'.$trackNumber.'</a>';
+    }
+
     public function setSite($site) 
     {
         $this->site = $site;

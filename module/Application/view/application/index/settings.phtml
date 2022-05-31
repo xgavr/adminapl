@@ -7,7 +7,7 @@ $this->pageBreadcrumbs()->setItems([
             ]);
 
 $phoneForm = $this->phoneForm;
-$phoneForm->get('name')->setAttributes([
+$phoneForm->get('phone')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'8 (000) 000-0000',
     'aria-describedby' => "basic-addon2",
@@ -59,13 +59,13 @@ $this->headScript()
         <p>
             <?= $this->form()->openTag($phoneForm); ?>
             <div class="input-group">
-                <?= $this->formElement($phoneForm->get('name')); ?>
+                <?= $this->formElement($phoneForm->get('phone')); ?>
                 <div class="input-group-btn">
                     <?= $this->formElement($phoneForm->get('submit')); ?>
                 </div>    
             </div>    
             <div class="input-group">
-                <?= $this->formElementErrors($phoneForm->get('name')); ?>                  
+                <?= $this->formElementErrors($phoneForm->get('phone')); ?>                  
             </div>    
 
             <?= $this->form()->closeTag(); ?>                        

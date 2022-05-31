@@ -13,6 +13,7 @@ use Admin\Controller\PostController;
 use Admin\Service\PostManager;
 use Admin\Service\AutoruManager;
 use Admin\Service\HelloManager;
+use Admin\Service\AdminManager;
 
 
 /**
@@ -29,8 +30,9 @@ class PostControllerFactory implements FactoryInterface {
         $postManager = $container->get(PostManager::class);
         $autoruManager = $container->get(AutoruManager::class);
         $helloManager = $container->get(HelloManager::class);
+        $adminManager = $container->get(AdminManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new PostController($entityManager, $postManager, $autoruManager, $helloManager);
+        return new PostController($entityManager, $postManager, $autoruManager, $helloManager, $adminManager);
     }
 }

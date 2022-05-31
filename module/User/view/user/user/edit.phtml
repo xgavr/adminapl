@@ -18,6 +18,14 @@ $form->get('email')->setAttributes([
     'placeholder'=>'name@example.com'
     ]);
 
+$form->get('mailPassword')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('sign')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('full_name')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'John Doe'
@@ -41,7 +49,7 @@ $form->get('office')->setAttributes([
 
 $form->get('submit')
         ->setAttributes(['class'=>'btn btn-primary'])
-        ->setValue('Save');
+        ->setValue('Сохранить');
 
 $form->prepare();
 ?>
@@ -59,12 +67,6 @@ $form->prepare();
         </div>
         
         <div class="form-group">
-            <?= $this->formLabel($form->get('email')); ?>
-            <?= $this->formElement($form->get('email')); ?>
-            <?= $this->formElementErrors($form->get('email')); ?>                  
-        </div>
-        
-        <div class="form-group">
             <?= $this->formLabel($form->get('full_name')); ?>
             <?= $this->formElement($form->get('full_name')); ?>
             <?= $this->formElementErrors($form->get('full_name')); ?>                  
@@ -75,7 +77,6 @@ $form->prepare();
             <?= $this->formElement($form->get('birthday')); ?>
             <?= $this->formElementErrors($form->get('birthday')); ?>                  
         </div>
-                
         <div class="form-group">
             <?= $this->formLabel($form->get('status')); ?>
             <?= $this->formElement($form->get('status')); ?>
@@ -87,7 +88,7 @@ $form->prepare();
             <?= $this->formElement($form->get('office')); ?>
             <?= $this->formElementErrors($form->get('office')); ?>                  
         </div>
-        
+
         <div class="form-group">
             <?= $this->formLabel($form->get('roles')); ?>
             <?= $this->formElement($form->get('roles')); ?>
@@ -96,7 +97,35 @@ $form->prepare();
         
         <?= $this->formElement($form->get('submit')); ?>
         
+    </div>
+    <div class="col-md-6">
+        
+        <div class="form-group form-inline">
+            <?= $this->formLabel($form->get('email')); ?>
+            <?= $this->formElement($form->get('email')); ?>
+            <?= $this->formElementErrors($form->get('email')); ?>                  
+
+            <?= $this->formLabel($form->get('mailPassword')); ?>
+            <?= $this->formElement($form->get('mailPassword')); ?>
+            <?= $this->formElementErrors($form->get('mailPassword')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('sign')); ?>
+            <?= $this->formElement($form->get('sign')); ?>
+            <?= $this->formElementErrors($form->get('sign')); ?>                  
+        </div>
+        
         <?= $this->form()->closeTag(); ?>
     </div>    
 </div>   
 
+<script>
+    $( document ).ready(function() {
+        $('textarea[name="sign"]').summernote({
+            lang: 'ru-RU', // default: 'en-US'
+            height: 200
+        });
+        
+    });
+</script>

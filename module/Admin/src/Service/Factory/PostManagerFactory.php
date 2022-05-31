@@ -11,9 +11,10 @@ namespace Admin\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\PostManager;
+use Admin\Service\LogManager;
 
 /**
- * Description of ShopManagerFactory
+ * Description of PostManagerFactory
  *
  * @author Daddy
  */
@@ -24,8 +25,9 @@ class PostManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $logManager = $container->get(LogManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new PostManager($entityManager);
+        return new PostManager($entityManager, $logManager);
     }
 }

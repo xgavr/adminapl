@@ -124,6 +124,11 @@ class Bid {
         $this->num = $num;
     }     
     
+    public function getTotal() 
+    {
+        return $this->num*$this->price;
+    }
+
     public function getOpts() 
     {
         return $this->opts;

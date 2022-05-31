@@ -330,6 +330,11 @@ class Goods {
         return $this->aplId;
     }
 
+    public function getAplIdLinkCode() 
+    {
+        return "<a href='https://autopartslist.ru/catalog/view/id/{$this->aplId}' target=_blank>{$this->code}</a>";
+    }
+    
     public function setAplId($aplId) 
     {
         $this->aplId = $aplId;
