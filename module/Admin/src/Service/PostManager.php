@@ -119,7 +119,11 @@ class PostManager {
             ],
         ]);
         $transport->setOptions($options);
-        $transport->send($message);
+        try {
+            $transport->send($message);
+        } catch (Exception $ex){
+            return $ex->getMessage();
+        }
         return 'ok';
     }
     
