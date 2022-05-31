@@ -115,7 +115,7 @@ class PostManager {
             'connection_config' => [
                 'username' => $options['username'],
                 'password' => $options['password'],
-                'ssl'      => 'SSL',
+//                'ssl'      => 'SSL',
             ],
         ]);
         $transport->setOptions($options);
