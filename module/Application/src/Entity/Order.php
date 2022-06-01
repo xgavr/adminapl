@@ -925,6 +925,18 @@ class Order {
 
         $result .= "</tr>";
         
+        $result .= "<tr>";
+
+        $result .= "<td colspan='5' align='right'>";
+        $result .= "В том числе НДС:";
+        $result .= "</td>";
+
+        $result .= "<td align='right'>";
+        $result .= "Без НДС";
+        $result .= "</td>";
+
+        $result .= "</tr>";
+
         return $result;
     }
 
