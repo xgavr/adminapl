@@ -95,6 +95,9 @@ class PostManager {
         $message->addTo($options['to']);
         $message->addFrom($options['from']);
         $message->setSubject($options['subject']);
+        if ($options['copyMe']){
+            $message->setCc($options['from']);
+        }    
         
         $body = new MimeMessage();
         $body->setParts([$text, $html]);

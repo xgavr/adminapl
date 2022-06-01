@@ -84,6 +84,7 @@ class PostController extends AbstractActionController
                 if ($user){
                     $options['to'] = $data['toEmail'];
                     $options['from'] = $data['fromEmail'];
+                    $options['copyMe'] = $data['copyMe'];
                     $options['subject'] = $data['subject'];
                     $options['body'] = $data['message'];
                     $options['username'] = $data['fromEmail'];
