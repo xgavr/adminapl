@@ -106,11 +106,11 @@ class PostManager {
 
         $transport = new SmtpTransport();
         $options   = new SmtpOptions([
-            'name'              => 'smtp.yandex.ru',
+            'name'              => 'yandex',
             'host'              => 'smtp.yandex.ru',
             'port'              => 465,
             // Setup SMTP transport using LOGIN authentication
-            'connection_class'  => 'plain',
+            'connection_class'  => 'login',
             'connection_config' => [
                 'username' => $options['username'],
                 'password' => $options['password'],
