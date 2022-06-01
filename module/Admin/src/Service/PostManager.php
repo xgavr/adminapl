@@ -105,7 +105,7 @@ class PostManager {
         $contentTypeHeader->setType('multipart/alternative');
 
         $transport = new SmtpTransport();
-        $options   = new SmtpOptions([
+        $smtpOptions   = new SmtpOptions([
             'name'              => 'yandex',
             'host'              => 'smtp.yandex.ru',
             'port'              => 465,
@@ -118,7 +118,7 @@ class PostManager {
             ],
         ]);
         var_dump($options); exit;
-        $transport->setOptions($options);
+        $transport->setOptions($smtpOptions);
         try {
             $transport->send($message);
         } catch (Laminas\Mail\Protocol\Exception\RuntimeException $ex){
