@@ -66,6 +66,12 @@ class PostController extends AbstractActionController
         return [];
     }
     
+    public function checkConnAction()
+    {
+        var_dump(fsockopen("ssl://smtp.yandex.ru",465));
+        exit;
+    }
+    
     public function sendAction()
     {
         if ($this->getRequest()->isPost()) {
