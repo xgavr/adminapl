@@ -68,7 +68,7 @@ class PostController extends AbstractActionController
     
     public function checkConnAction()
     {
-        var_dump(fsockopen("ssl://smtp.yandex.ru",465));
+        var_dump(fsockopen("ssl://smtp.yandex.ru",25));
         exit;
     }
     
