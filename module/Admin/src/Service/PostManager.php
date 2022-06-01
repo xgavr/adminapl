@@ -108,7 +108,7 @@ class PostManager {
         $options   = new SmtpOptions([
             'name'              => 'smtp.yandex.ru',
             'host'              => 'smtp.yandex.ru',
-//            'port'              => 587,
+            'port'              => 465,
             // Setup SMTP transport using LOGIN authentication
             'connection_class'  => 'login',
             'connection_config' => [
