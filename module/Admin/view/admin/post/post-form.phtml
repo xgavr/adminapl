@@ -416,12 +416,14 @@ $form->prepare();
     $('#post-submit').on('click', function() {
         $.post( "/post/send", $('#post-form').serialize())
           .done(function( data ) {
-            $('#postMessageModal').modal('hide');
+            if (data.result == 'ok'){  
+                $('#postMessageModal').modal('hide');
+            }    
             alert(data.result);
 //            console.log(data);
           })
         .fail(function(data) {
-            alert( "Не ушло!" );
+            alert( "Ошибка при отправке!" );
             console.log(data);
         });      
     });    

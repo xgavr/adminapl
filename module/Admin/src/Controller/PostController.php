@@ -88,7 +88,7 @@ class PostController extends AbstractActionController
                     $options['body'] = $data['message'];
                     $options['username'] = $data['fromEmail'];
                     $options['password'] = $user->getMailPassword();
-                    $this->postManager->send($options);
+                    $result = $this->postManager->send($options);
                 }    
             }    
 
