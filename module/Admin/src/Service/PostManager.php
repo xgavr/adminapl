@@ -117,6 +117,7 @@ class PostManager {
                 'ssl'      => 'SSL',
             ],
         ]);
+        var_dump($options); exit;
         $transport->setOptions($options);
         try {
             $transport->send($message);
