@@ -13,6 +13,7 @@ use User\Form\PasswordResetPhoneForm;
 use User\Filter\PhoneFilter;
 use Laminas\View\Model\JsonModel;
 use Company\Entity\Office;
+use Application\Entity\Email;
 
 /**
  * This controller is responsible for user management (adding, editing, 
@@ -220,13 +221,18 @@ class UserController extends AbstractActionController
             foreach ($user->getRoles() as $role) {
                 $userRoleIds[] = $role->getId();
             }
-            
+            $mailPassword = null;
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneByName($user->getEmail());
+            if ($email){
+                $mailPassword = $email->getMailPassword();
+            }
             $form->setData(array(
                     'aplId' => $user->getAplId(),
                     'full_name'=>$user->getFullName(),
                     'email'=>$user->getEmail(),
                     'sign' => $user->getSign(),
-                    'mailPassword' => $user->getMailPassword(),
+                    'mailPassword' => $mailPassword,
                     'status'=>$user->getStatus(), 
                     'roles' => $userRoleIds,
                     'office' => $user->getOffice()->getId(),

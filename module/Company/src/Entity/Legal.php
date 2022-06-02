@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Laminas\Filter\Digits;
 use Stock\Entity\Ptu;
+use Application\Entity\Order;
 
 /**
  * Description of Legal
@@ -117,6 +118,12 @@ class Legal {
    */
    private $ptu;            
 
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Order", mappedBy="legal")
+    * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
+     */
+    private $orders;
+    
     /**
      * Constructor.
      */
@@ -515,5 +522,14 @@ class Legal {
     public function getPtu() 
     {
         return $this->ptu;
+    }    
+
+    /*
+     * Возвращает связанный orders.
+     * @return array
+     */    
+    public function getOrders() 
+    {
+        return $this->orders;
     }    
 }

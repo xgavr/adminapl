@@ -35,11 +35,6 @@ class User
      */
     protected $email;
     
-    /**
-     * @ORM\Column(name="mail_password")  
-     */
-    protected $mailPassword;
-    
     /** 
      * @ORM\Column(name="full_name")  
      */
@@ -74,11 +69,6 @@ class User
      * @ORM\Column(name="pwd_reset_token_creation_date")  
      */
     protected $passwordResetTokenCreationDate;
-    
-    /**
-     * @ORM\Column(name="sign")  
-     */
-    protected $sign;
     
     /**
      * @ORM\ManyToMany(targetEntity="User\Entity\Role")
@@ -169,24 +159,6 @@ class User
     public function setEmail($email) 
     {
         $this->email = $email;
-    }
-    
-    /**
-     * Returns mail password.
-     * @return string
-     */
-    public function getMailPassword() 
-    {
-       return $this->mailPassword; 
-    }
-    
-    /**
-     * Sets mail password.     
-     * @param string $mailPassword
-     */
-    public function setMailPassword($mailPassword) 
-    {
-        $this->mailPassword = $mailPassword;
     }
     
     /**
@@ -348,22 +320,7 @@ class User
     {
         $this->passwordResetTokenCreationDate = $date;
     }
-    
-    
-    public function getSign()
-    {
-        if ($this->sign){
-            return $this->sign;
-        }
         
-        return '';
-    }
-    
-    public function setSign($sign)
-    {
-        $this->sign = $sign;
-    }
-    
     /**
      * Returns the array of roles assigned to this user.
      * @return array
@@ -446,6 +403,20 @@ class User
     {
         $contacts = $this->getLegalContacts();
         return $contacts[0];
+    }
+        
+    /**
+     * Подпись в письме
+     * @return string
+     */
+    public function getSign()
+    {
+        $legalContact = $this->getLegalContact();
+        if ($legalContact){
+            return $legalContact->getSignature();
+        }
+        
+        return;
     }
         
     /**

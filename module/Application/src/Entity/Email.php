@@ -10,6 +10,8 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Application\Entity\Contact;
+use Laminas\Filter\Encrypt;
+use Laminas\Filter\Decrypt;
 
 /**
  * Description of Email
@@ -37,6 +39,11 @@ class Email {
      */
     protected $name;
    
+    /**
+     * @ORM\Column(name="mail_password")   
+     */
+    protected $mailPassword;
+   
     /** 
      * @ORM\Column(name="date_created")  
      */
@@ -58,6 +65,38 @@ class Email {
     public function setId($id) 
     {
         $this->id = $id;
+    }     
+
+    /**
+     * Получить пароль почты
+     * @param string $secretKey
+     * @return string
+     */
+    public function getMailPassword($secretKey) 
+    {
+        if (!empty($mailPassword)){
+            $filter = new Decrypt();
+            $filter->setKey($secretKey);
+            return $filter->filter($this->mailPassword);
+        }    
+        return $this->mailPassword;
+    }
+
+    /**
+     * Сохранить пароль на почту с шифрованием
+     * @param string $mailPassword
+     * @param string $secretKey
+     * @return string
+     */
+    public function setMailPassword($mailPassword, $secretKey) 
+    {
+        if (!empty($mailPassword)){
+            $filter = new Encript();
+            $filter->setKey($secretKey);
+            $this->mailPassword = $filter->filter($mailPassword);
+        } else {
+            $this->mailPassword = $mailPassword;            
+        }    
     }     
 
     public function getName() 

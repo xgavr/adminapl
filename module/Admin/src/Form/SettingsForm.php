@@ -273,7 +273,7 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
                 'id' => 'turbo_passphrase'
             ],
             'options' => [
-                'label' => 'Пароль на турбоссылку',
+                'label' => 'Пароль шифрования (турбоссылка, пароли почты)',
             ],
         ]);
                 

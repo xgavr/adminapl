@@ -10,6 +10,7 @@ namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Laminas\Filter\Digits;
+use Application\Entity\Order;
 
 /**
  * Description of BankAccount
@@ -87,6 +88,12 @@ class BankAccount {
      */
     private $legal;
     
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Order", mappedBy="bankAccount")
+    * @ORM\JoinColumn(name="id", referencedColumnName="bank_account_id")
+     */
+    private $orders;
+
     /**
      * Constructor.
      */
@@ -334,5 +341,13 @@ class BankAccount {
         $this->legal = $legal;
         $legal->addBankAccount($this);
     }     
-        
+
+    /*
+     * Возвращает связанный orders.
+     * @return array
+     */    
+    public function getOrders() 
+    {
+        return $this->orders;
+    }        
 }

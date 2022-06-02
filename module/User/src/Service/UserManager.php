@@ -50,16 +50,23 @@ class UserManager
     private $smsManager;
     
     /**
+     * Admin manager.
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+    
+    /**
      * Constructs the service.
      */
     public function __construct($entityManager, $roleManager, $permissionManager,
-            $postManager, $smsManager) 
+            $postManager, $smsManager, $adminManager) 
     {
         $this->entityManager = $entityManager;
         $this->roleManager = $roleManager;
         $this->permissionManager = $permissionManager;
         $this->postManager = $postManager;
         $this->smsManager = $smsManager;
+        $this->adminManager = $adminManager;
     }
     
     /**
@@ -84,8 +91,6 @@ class UserManager
         
         $user->setStatus($data['status']);
         $user->setAplId($data['aplId']);
-        $user->setSign(empty($data['sign']) ? null:$data['sign']);
-        $user->setMailPassword(empty($data['mailPassword']) ? null:$data['mailPassword']);
         $user->setBirthday(null);
         if (!empty($data['birthday'])){
             $user->setBirthday($data['birthday']);
@@ -100,6 +105,31 @@ class UserManager
         
         // Assign roles to user.
         $this->assignRoles($user, $data['roles']);        
+        
+        //Legal contact
+        $contact = new Contact();
+        $contact->setName($data['full_name']);        
+        $contact->setStatus(Contact::STATUS_LEGAL);
+        $contact->setDescription('');
+        $contact->setSignature(empty($data['sign']) ? null:$data['sign']);
+
+        $contact->setDateCreated($currentDate);
+        $contact->setUser($user);         
+        $this->entityManager->persist($contact);
+        
+        $email = $this->entityManager->getRepository(Email::class)
+                ->findOneByName($data['email']);
+        $settings = $this->adminManager->getSettings();
+        if ($email){
+            $email->setMailPassword(empty($data['mailPassword']) ? null:$data['mailPassword'], $settings['turbo_passphrase']);
+        } else {
+            $email = new Email();
+            $email->setDateCreated($currentDate);
+            $email->setMailPassword(empty($data['mailPassword']) ? null:$data['mailPassword'], $settings['turbo_passphrase']);
+            $email->setName($data['email']);
+            $email->setContact($contact);
+        }
+        $this->entityManager->persist($email);
         
         // Add the entity to the entity manager.
         $this->entityManager->persist($user);
@@ -142,8 +172,6 @@ class UserManager
         $user->setEmail($data['email']);
         $user->setFullName($data['full_name']);        
         $user->setStatus($data['status']);
-        $user->setSign(empty($data['sign']) ? null:$data['sign']);
-        $user->setMailPassword(empty($data['mailPassword']) ? null:$data['mailPassword']);
         if (isset($data['aplId'])){
             $user->setAplId($data['aplId']);
         }    
@@ -159,23 +187,57 @@ class UserManager
         // Assign roles to user.
         $this->assignRoles($user, $data['roles']);
         
+        $currentDate = date('Y-m-d H:i:s');
         $legalContact = $user->getLegalContact();
         if (!$legalContact){
-            $contact = new Contact();
-            $contact->setName($data['full_name']);        
-            $contact->setStatus(Contact::STATUS_LEGAL);
-            $contact->setDescription('');
+            $legalContact = new Contact();
+            $legalContact->setName($data['full_name']);        
+            $legalContact->setStatus(Contact::STATUS_LEGAL);
+            $legalContact->setDescription('');
+            $legalContact->setSignature(empty($data['sign']) ? null:$data['sign']);
 
-            $currentDate = date('Y-m-d H:i:s');
-            $contact->setDateCreated($currentDate);
-            $contact->setUser($user);         
+            $legalContact->setDateCreated($currentDate);
+            $legalContact->setUser($user);         
             // Добавляем сущность в менеджер сущностей.
-            $this->entityManager->persist($contact);
+        } else {
+            $legalContact->setSignature(empty($data['sign']) ? null:$data['sign']);            
         }
+        $this->entityManager->persist($legalContact);
+        
+        $email = $this->entityManager->getRepository(Email::class)
+                ->findOneByName($data['email']);
+        $settings = $this->adminManager->getSettings();
+        if ($email){
+            $email->setMailPassword(empty($data['mailPassword']) ? null:$data['mailPassword'], $settings['turbo_passphrase']);
+        } else {
+            $email = new Email();
+            $email->setDateCreated($dateCreated);
+            $email->setMailPassword(empty($data['mailPassword']) ? null:$data['mailPassword'], $settings['turbo_passphrase']);
+            $email->setName($data['email']);
+            $email->setContact($legalContact);
+        }
+        $this->entityManager->persist($email);
+        
         // Apply changes to database.
         $this->entityManager->flush();
         
         return $flag;
+    }
+    
+    /**
+     * Пароль почты пользователя
+     * @param User $user 
+     * @return string
+     */
+    public function userMailPassword($user)
+    {
+        $settings = $this->adminManager->getSettings();
+        $email = $this->entityManager->getRepository(Email::class)
+                ->findOneByName($user->getEmail());
+        if ($email){
+            return $email->getMailPassword($settings['turbo_passphrase']);
+        }
+        return;
     }
     
     /**
