@@ -421,7 +421,127 @@ class OrderForm extends Form
 //                ]
 //            ],
 //        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'legalName',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Покупатель наименование',
+            ],
+        ]);
         
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'legalInn',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Покупатель ИНН',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'legalKpp',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Покупатель КПП',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'legalOgrn',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Покупатель ОГРН',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'legalAddress',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Покупатель Местонахождение',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'legal',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Покупатель ЮЛ',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'recipientName',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Грузополучатель наименование',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'recipientInn',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Грузополучатель ИНН',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'recipientKpp',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Грузополучатель КПП',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'recipientOgrn',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Грузополучатель ОГРН',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'recipientAddress',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Грузополучатель Местонахождение',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'recipient',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Грузополучатель',
+            ],
+        ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',

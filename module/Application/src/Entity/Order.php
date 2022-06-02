@@ -177,6 +177,12 @@ class Order {
     protected $legal;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\BankAccount", inversedBy="orders") 
+     * @ORM\JoinColumn(name="bank_account_id", referencedColumnName="id")
+     */
+    protected $bankAccount;
+    
+    /**
      * Грузополучатель
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="orders") 
      * @ORM\JoinColumn(name="recipient_id", referencedColumnName="id")
@@ -604,6 +610,24 @@ class Order {
     public function setLegal($legal) 
     {
         $this->legal = $legal;
+    }         
+ 
+    /*
+     * Возвращает связанный bank account.
+     * @return \Company\Entity\BankAccount
+     */    
+    public function getBankAccount() 
+    {
+        return $this->bankAccount;
+    }
+
+    /**
+     * Задает связанный bank account.
+     * @param \Company\Entity\BankAccount $bankAccount
+     */    
+    public function setAccount($bankAccount) 
+    {
+        $this->bankAccount = $bankAccount;
     }         
  
     /*

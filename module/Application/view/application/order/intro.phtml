@@ -126,6 +126,55 @@ $form->get('note')->setAttributes([
     'placeholder' => 'Комментарий менеджера',
     ]);
 
+$form->get('legalName')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Наименование ЮЛ',
+    ]);
+
+$form->get('legalInn')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'ИНН ЮЛ',
+    ]);
+
+$form->get('legalKpp')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'КПП ЮЛ',
+    ]);
+
+$form->get('legalOgrn')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'ОГРН ЮЛ',
+    ]);
+
+$form->get('legalAddress')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Местонахождение ЮЛ',
+    ]);
+
+$form->get('recipientName')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Грузополучатель',
+    ]);
+
+$form->get('recipientInn')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'ИНН Грузополучателя',
+    ]);
+
+$form->get('recipientKpp')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'КПП Грузополучателя',
+    ]);
+
+$form->get('recipientOgrn')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'ОГРН Грузополучателя',
+    ]);
+
+$form->get('recipientAddress')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Местонахождение Грузополучателя',
+    ]);
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'order-submit']);
 
@@ -387,6 +436,8 @@ $form->prepare();
 <?= $this->formElement($form->get('shippingLimit1')); ?>            
 <?= $this->formElement($form->get('shippingLimit2')); ?>            
 <?= $this->formElement($form->get('rateDistance')); ?>            
+<?= $this->formElement($form->get('legal')); ?>            
+<?= $this->formElement($form->get('recipient')); ?>            
 <?//= $this->formElement($form->get('csrf')); ?>            
 <?= $this->form()->closeTag(); ?>
             
