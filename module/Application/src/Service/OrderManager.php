@@ -551,7 +551,7 @@ class OrderManager
                         ->find($data['legal']);
                 $order->setLegal($legal);
             }
-            if (empty($data['legal']) && !empty(data['legalInn']) && !empty($data['legalName'])){
+            if (empty($data['legal']) && !empty($data['legalInn']) && !empty($data['legalName'])){
                 $legal = $this->legalManager->addLegal($contact, [
                     'inn' => data['legalInn'],
                     'name' => data['legalName'],
@@ -589,7 +589,7 @@ class OrderManager
                         ->find($data['recipient']);
                 $order->setRecipient($recipient);
             }
-            if (empty($data['recipient']) && !empty(data['recipientInn']) && !empty($data['recipientName'])){
+            if (empty($data['recipient']) && !empty($data['recipientInn']) && !empty($data['recipientName'])){
                 $legal = $this->legalManager->addLegal($contact, [
                     'inn' => data['recipientInn'],
                     'name' => data['recipientName'],
@@ -715,7 +715,7 @@ class OrderManager
                         ->find($data['legal']);
                 $upd['legal_id'] = $data['legal'];
             }
-            if (empty($data['legal']) && !empty(data['legalInn']) && !empty($data['legalName'])){
+            if (empty($data['legal']) && !empty($data['legalInn']) && !empty($data['legalName'])){
                 $legal = $this->legalManager->addLegal($contact, [
                     'inn' => data['legalInn'],
                     'name' => data['legalName'],
@@ -747,7 +747,7 @@ class OrderManager
             if (!empty($data['recipient'])){
                 $upd['recipient_id'] = $data['recipient'];
             }
-            if (empty($data['recipient']) && !empty(data['recipientInn']) && !empty($data['recipientName'])){
+            if (empty($data['recipient']) && !empty($data['recipientInn']) && !empty($data['recipientName'])){
                 $legal = $this->legalManager->addLegal($contact, [
                     'inn' => data['recipientInn'],
                     'name' => data['recipientName'],

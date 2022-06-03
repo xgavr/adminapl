@@ -12,39 +12,41 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
      *      three parameters, being respectively the proxy object to be initialized, the method that triggered the
      *      initialization process and an array of ordered parameters that were passed to that method.
      *
-     * @see \Doctrine\Common\Persistence\Proxy::__setInitializer
+     * @see \Doctrine\Common\Proxy\Proxy::__setInitializer
      */
     public $__initializer__;
 
     /**
      * @var \Closure the callback responsible of loading properties that need to be copied in the cloned object
      *
-     * @see \Doctrine\Common\Persistence\Proxy::__setCloner
+     * @see \Doctrine\Common\Proxy\Proxy::__setCloner
      */
     public $__cloner__;
 
     /**
      * @var boolean flag indicating if this object was already initialized
      *
-     * @see \Doctrine\Common\Persistence\Proxy::__isInitialized
+     * @see \Doctrine\Persistence\Proxy::__isInitialized
      */
     public $__isInitialized__ = false;
 
     /**
-     * @var array properties to be lazy loaded, with keys being the property
-     *            names and values being their default values
-     *
-     * @see \Doctrine\Common\Persistence\Proxy::__getLazyProperties
+     * @var array<string, null> properties to be lazy loaded, indexed by property name
      */
-    public static $lazyPropertiesDefaults = [];
-
-
+    public static $lazyPropertiesNames = array (
+);
 
     /**
-     * @param \Closure $initializer
-     * @param \Closure $cloner
+     * @var array<string, mixed> default values of properties to be lazy loaded, with keys being the property names
+     *
+     * @see \Doctrine\Common\Proxy\Proxy::__getLazyProperties
      */
-    public function __construct($initializer = null, $cloner = null)
+    public static $lazyPropertiesDefaults = array (
+);
+
+
+
+    public function __construct(?\Closure $initializer = null, ?\Closure $cloner = null)
     {
 
         $this->__initializer__ = $initializer;
@@ -64,10 +66,10 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'status', 'dateCreated', 'name', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'cart', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'order', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'manager'];
+            return ['__isInitialized__', 'id', 'aplId', 'status', 'dateCreated', 'name', 'salesTotal', 'salesOrder', 'salesGood', 'pricecol', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'cart', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'manager', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'comments'];
         }
 
-        return ['__isInitialized__', 'id', 'status', 'dateCreated', 'name', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'cart', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'order', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'manager'];
+        return ['__isInitialized__', 'id', 'aplId', 'status', 'dateCreated', 'name', 'salesTotal', 'salesOrder', 'salesGood', 'pricecol', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'contacts', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'cart', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'manager', '' . "\0" . 'Application\\Entity\\Client' . "\0" . 'comments'];
     }
 
     /**
@@ -82,7 +84,7 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
 
                 $existingProperties = get_object_vars($proxy);
 
-                foreach ($proxy->__getLazyProperties() as $property => $defaultValue) {
+                foreach ($proxy::$lazyPropertiesDefaults as $property => $defaultValue) {
                     if ( ! array_key_exists($property, $existingProperties)) {
                         $proxy->$property = $defaultValue;
                     }
@@ -165,6 +167,7 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      * @internal generated method: use only when explicitly handling proxy specific loading logic
+     * @deprecated no longer in use - generated code now relies on internal components rather than generated public API
      * @static
      */
     public function __getLazyProperties()
@@ -202,6 +205,28 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      */
+    public function getAplId()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAplId', []);
+
+        return parent::getAplId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAplId($aplId)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAplId', [$aplId]);
+
+        return parent::setAplId($aplId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
 
@@ -219,6 +244,72 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setName', [$name]);
 
         return parent::setName($name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSalesTotal()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSalesTotal', []);
+
+        return parent::getSalesTotal();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setSalesTotal($salesTotal)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSalesTotal', [$salesTotal]);
+
+        return parent::setSalesTotal($salesTotal);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSalesOrder()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSalesOrder', []);
+
+        return parent::getSalesOrder();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setSalesOrder($salesOrder)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSalesOrder', [$salesOrder]);
+
+        return parent::setSalesOrder($salesOrder);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSalesGood()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSalesGood', []);
+
+        return parent::getSalesGood();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setSalesGood($salesGood)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSalesGood', [$salesGood]);
+
+        return parent::setSalesGood($salesGood);
     }
 
     /**
@@ -252,6 +343,39 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setStatus', [$status]);
 
         return parent::setStatus($status);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPricecol()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPricecol', []);
+
+        return parent::getPricecol();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPriceColAsString()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPriceColAsString', []);
+
+        return parent::getPriceColAsString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPricecol($pricecol)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPricecol', [$pricecol]);
+
+        return parent::setPricecol($pricecol);
     }
 
     /**
@@ -301,6 +425,39 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      */
+    public function getLegalContacts()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLegalContacts', []);
+
+        return parent::getLegalContacts();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLegalContact()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLegalContact', []);
+
+        return parent::getLegalContact();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getOtherContacts()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getOtherContacts', []);
+
+        return parent::getOtherContacts();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getCart()
     {
 
@@ -323,12 +480,23 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
     /**
      * {@inheritDoc}
      */
-    public function getOrder()
+    public function getComments()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getOrder', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getComments', []);
 
-        return parent::getOrder();
+        return parent::getComments();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addComment($comment)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addComment', [$comment]);
+
+        return parent::addComment($comment);
     }
 
     /**
@@ -351,17 +519,6 @@ class Client extends \Application\Entity\Client implements \Doctrine\ORM\Proxy\P
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setManager', [$user]);
 
         return parent::setManager($user);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addOrder($order)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addOrder', [$order]);
-
-        return parent::addOrder($order);
     }
 
 }

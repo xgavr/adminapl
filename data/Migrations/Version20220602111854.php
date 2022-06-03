@@ -14,7 +14,8 @@ final class Version20220602111854 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('orders');
-        $table->addColumn('bank_account_id', 'integer', ['notnull' => true]);
+//        $table->removeForeignKey('client_id_orders_client_id_fk');
+        $table->addColumn('bank_account_id', 'integer', ['notnull' => false]);
         $table->addForeignKeyConstraint('bank_account', ['bank_account_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'ba_id_orders_ba_id_fk');
         
