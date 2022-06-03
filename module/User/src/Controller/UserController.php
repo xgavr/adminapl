@@ -221,18 +221,12 @@ class UserController extends AbstractActionController
             foreach ($user->getRoles() as $role) {
                 $userRoleIds[] = $role->getId();
             }
-            $mailPassword = null;
-            $email = $this->entityManager->getRepository(Email::class)
-                    ->findOneByName($user->getEmail());
-            if ($email){
-                $mailPassword = $email->getMailPassword();
-            }
             $form->setData(array(
                     'aplId' => $user->getAplId(),
                     'full_name'=>$user->getFullName(),
                     'email'=>$user->getEmail(),
                     'sign' => $user->getSign(),
-                    'mailPassword' => $mailPassword,
+                    'mailPassword' => $this->userManager->userMailPassword($user),
                     'status'=>$user->getStatus(), 
                     'roles' => $userRoleIds,
                     'office' => $user->getOffice()->getId(),

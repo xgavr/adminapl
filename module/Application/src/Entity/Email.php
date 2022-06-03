@@ -74,7 +74,7 @@ class Email {
      */
     public function getMailPassword($secretKey) 
     {
-        if (!empty($mailPassword)){
+        if (!empty($this->mailPassword)){
             $filter = new Decrypt();
             $filter->setKey($secretKey);
             return $filter->filter($this->mailPassword);
@@ -91,7 +91,7 @@ class Email {
     public function setMailPassword($mailPassword, $secretKey) 
     {
         if (!empty($mailPassword)){
-            $filter = new Encript();
+            $filter = new Encrypt();
             $filter->setKey($secretKey);
             $this->mailPassword = $filter->filter($mailPassword);
         } else {

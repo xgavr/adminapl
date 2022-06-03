@@ -542,6 +542,66 @@ class OrderForm extends Form
             ],
         ]);
 
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'rs',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Расчетный счет',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'ks',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Корр. счет',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'bik',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'БИК банка',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'bankName',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Наименованние банка',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'bankCity',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Город банка',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'bankAccount',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Банк плательщика',
+            ],
+        ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -611,7 +671,7 @@ class OrderForm extends Form
 
         $inputFilter->add([
                 'name'     => 'phone',
-                'required' => true,
+                'required' => false,
                 'filters'  => [
                     [
                         'name' => PhoneFilter::class,

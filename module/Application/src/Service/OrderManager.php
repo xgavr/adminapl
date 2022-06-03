@@ -31,6 +31,7 @@ use Company\Entity\Contract;
 use Laminas\Validator\Date;
 use Application\Entity\Email;
 use Application\Entity\Phone;
+use Company\Entity\BankAccount;
 
 /**
  * Description of OrderService
@@ -543,11 +544,43 @@ class OrderManager
                 $order->setCourier($courier);
             }
 
-            $order->setLegal(null);
+            $legal = null;
+            $order->setLegal($legal);
             if (!empty($data['legal'])){
                 $legal = $this->entityManager->getRepository(Legal::class)
                         ->find($data['legal']);
-                $order->setRecipient($legal);
+                $order->setLegal($legal);
+            }
+            if (empty($data['legal']) && !empty(data['legalInn']) && !empty($data['legalName'])){
+                $legal = $this->legalManager->addLegal($contact, [
+                    'inn' => data['legalInn'],
+                    'name' => data['legalName'],
+                    'kpp' => empty(data['legalKpp']) ? null:data['legalKpp'],
+                    'ogrn' => empty(data['legalOgrn']) ? null:data['legalOgrn'],
+                    'okpo' => empty(data['legalOkpo']) ? null:data['legalOkpo'],
+                    'head' => empty(data['legalHead']) ? null:data['legalHead'],
+                    'chiefAccount' => empty(data['legalChiefAccount']) ? null:data['legalChiefAccount'],
+                    'info' => empty(data['legalInfo']) ? null:data['legalInfo'],
+                    'address' => empty(data['legalAddress']) ? null:data['legalAddress'],
+                ]);
+                $order->setLegal($legal);
+            }
+
+            $order->setBankAccount(null);
+            if (!empty($data['bankAccount'])){
+                $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                        ->find($data['bankAccount']);
+                $order->setBankAccount($bankAccount);
+            }
+            if ($legal && empty($data['bankAccount']) && !empty(data['rs']) && !empty($data['bik']) && !empty(data['bankName'])){
+                $bankAccount = $this->legalManager->addBankAccount($legal, [
+                    'rs' => data['rs'],
+                    'bik' => data['bik'],
+                    'name' => data['bankName'],
+                    'city' => empty(data['bankCity']) ? null:data['bankCity'],
+                    'ks' => empty(data['ks']) ? null:data['ks'],
+                ]);
+                $order->setBankAccount($bankAccount);
             }
 
             $order->setRecipient(null);
@@ -555,6 +588,20 @@ class OrderManager
                 $recipient = $this->entityManager->getRepository(Legal::class)
                         ->find($data['recipient']);
                 $order->setRecipient($recipient);
+            }
+            if (empty($data['recipient']) && !empty(data['recipientInn']) && !empty($data['recipientName'])){
+                $legal = $this->legalManager->addLegal($contact, [
+                    'inn' => data['recipientInn'],
+                    'name' => data['recipientName'],
+                    'kpp' => empty(data['recipientKpp']) ? null:data['recipientKpp'],
+                    'ogrn' => empty(data['recipientOgrn']) ? null:data['recipientOgrn'],
+                    'okpo' => empty(data['recipientOkpo']) ? null:data['recipientOkpo'],
+                    'head' => empty(data['recipientHead']) ? null:data['recipientHead'],
+                    'chiefAccount' => empty(data['recipientChiefAccount']) ? null:data['recipientChiefAccount'],
+                    'info' => empty(data['recipientInfo']) ? null:data['recipientInfo'],
+                    'address' => empty(data['recipientAddress']) ? null:data['recipientAddress'],
+                ]);
+                $order->setLegal($legal);
             }
 
             if (!empty($data['shipping'])){
@@ -662,12 +709,57 @@ class OrderManager
                 $upd['courier_id'] = $data['courier'];
             }
 
+            $legal = null;
             if (!empty($data['legal'])){
+                $legal = $this->entityManager->getRepository(Legal::class)
+                        ->find($data['legal']);
                 $upd['legal_id'] = $data['legal'];
+            }
+            if (empty($data['legal']) && !empty(data['legalInn']) && !empty($data['legalName'])){
+                $legal = $this->legalManager->addLegal($contact, [
+                    'inn' => data['legalInn'],
+                    'name' => data['legalName'],
+                    'kpp' => empty(data['legalKpp']) ? null:data['legalKpp'],
+                    'ogrn' => empty(data['legalOgrn']) ? null:data['legalOgrn'],
+                    'okpo' => empty(data['legalOkpo']) ? null:data['legalOkpo'],
+                    'head' => empty(data['legalHead']) ? null:data['legalHead'],
+                    'chiefAccount' => empty(data['legalChiefAccount']) ? null:data['legalChiefAccount'],
+                    'info' => empty(data['legalInfo']) ? null:data['legalInfo'],
+                    'address' => empty(data['legalAddress']) ? null:data['legalAddress'],
+                ]);
+                $upd['legal_id'] = $legal->getId();
+            }
+
+            if (!empty($data['bankAccount'])){
+                $upd['bank_account_id'] = $data['bankAccount'];
+            }
+            if ($legal && empty($data['bankAccount']) && !empty(data['rs']) && !empty($data['bik']) && !empty(data['bankName'])){
+                $bankAccount = $this->legalManager->addBankAccount($legal, [
+                    'rs' => data['rs'],
+                    'bik' => data['bik'],
+                    'name' => data['bankName'],
+                    'city' => empty(data['bankCity']) ? null:data['bankCity'],
+                    'ks' => empty(data['ks']) ? null:data['ks'],
+                ]);
+                $upd['bank_account_id'] = $legal->getId();
             }
 
             if (!empty($data['recipient'])){
                 $upd['recipient_id'] = $data['recipient'];
+            }
+            if (empty($data['recipient']) && !empty(data['recipientInn']) && !empty($data['recipientName'])){
+                $legal = $this->legalManager->addLegal($contact, [
+                    'inn' => data['recipientInn'],
+                    'name' => data['recipientName'],
+                    'kpp' => empty(data['recipientKpp']) ? null:data['recipientKpp'],
+                    'ogrn' => empty(data['recipientOgrn']) ? null:data['recipientOgrn'],
+                    'okpo' => empty(data['recipientOkpo']) ? null:data['recipientOkpo'],
+                    'head' => empty(data['recipientHead']) ? null:data['recipientHead'],
+                    'chiefAccount' => empty(data['recipientChiefAccount']) ? null:data['recipientChiefAccount'],
+                    'info' => empty(data['recipientInfo']) ? null:data['recipientInfo'],
+                    'address' => empty(data['recipientAddress']) ? null:data['recipientAddress'],
+                ]);
+                $upd['recipient_id'] = $legal->getId();
             }
 
             if (!empty($data['shipping'])){
@@ -834,11 +926,43 @@ class OrderManager
                 $order->setCourier($courier);
             }
 
-            $order->setLegal(null);
+            $legal = null;
+            $order->setLegal($legal);
             if (!empty($data['legal'])){
                 $legal = $this->entityManager->getRepository(Legal::class)
                         ->find($data['legal']);
                 $order->setLegal($legal);
+            }
+            if (empty($data['legal']) && !empty(data['legalInn']) && !empty($data['legalName'])){
+                $legal = $this->legalManager->addLegal($contact, [
+                    'inn' => data['legalInn'],
+                    'name' => data['legalName'],
+                    'kpp' => empty(data['legalKpp']) ? null:data['legalKpp'],
+                    'ogrn' => empty(data['legalOgrn']) ? null:data['legalOgrn'],
+                    'okpo' => empty(data['legalOkpo']) ? null:data['legalOkpo'],
+                    'head' => empty(data['legalHead']) ? null:data['legalHead'],
+                    'chiefAccount' => empty(data['legalChiefAccount']) ? null:data['legalChiefAccount'],
+                    'info' => empty(data['legalInfo']) ? null:data['legalInfo'],
+                    'address' => empty(data['legalAddress']) ? null:data['legalAddress'],
+                ]);
+                $order->setLegal($legal);
+            }
+
+            $order->setBankAccount(null);
+            if (!empty($data['bankAccount'])){
+                $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                        ->find($data['bankAccount']);
+                $order->setBankAccount($bankAccount);
+            }
+            if ($legal && empty($data['bankAccount']) && !empty(data['rs']) && !empty($data['bik']) && !empty(data['bankName'])){
+                $bankAccount = $this->legalManager->addBankAccount($legal, [
+                    'rs' => data['rs'],
+                    'bik' => data['bik'],
+                    'name' => data['bankName'],
+                    'city' => empty(data['bankCity']) ? null:data['bankCity'],
+                    'ks' => empty(data['ks']) ? null:data['ks'],
+                ]);
+                $order->setBankAccount($bankAccount);
             }
 
             $order->setRecipient(null);
@@ -847,14 +971,26 @@ class OrderManager
                         ->find($data['recipient']);
                 $order->setRecipient($recipient);
             }
+            if (empty($data['recipient']) && !empty(data['recipientInn']) && !empty($data['recipientName'])){
+                $legal = $this->legalManager->addLegal($contact, [
+                    'inn' => data['recipientInn'],
+                    'name' => data['recipientName'],
+                    'kpp' => empty(data['recipientKpp']) ? null:data['recipientKpp'],
+                    'ogrn' => empty(data['recipientOgrn']) ? null:data['recipientOgrn'],
+                    'okpo' => empty(data['recipientOkpo']) ? null:data['recipientOkpo'],
+                    'head' => empty(data['recipientHead']) ? null:data['recipientHead'],
+                    'chiefAccount' => empty(data['recipientChiefAccount']) ? null:data['recipientChiefAccount'],
+                    'info' => empty(data['recipientInfo']) ? null:data['recipientInfo'],
+                    'address' => empty(data['recipientAddress']) ? null:data['recipientAddress'],
+                ]);
+                $order->setLegal($legal);
+            }
 
+            $order->setShipping(null);
             if (!empty($data['shipping'])){
                 $shipping = $this->entityManager->getRepository(Shipping::class)
                         ->find($data['shipping']);
                 $order->setShipping($shipping);
-            } else {
-                $shipping = $this->entityManager->getRepository(Shipping::class)
-                        ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
             }
 
             $order->setSkiper(null);
@@ -864,13 +1000,11 @@ class OrderManager
                 $order->setSkiper($skiper);
             }
             
-            $order->setUser(null);
+            $order->setUser($this->currentUser());
             if (!empty($data['user'])){
                 $user = $this->entityManager->getRepository(User::class)
                         ->find($data['user']);
                 $order->setUser($user);
-            }else {
-                $order->setUser($this->currentUser());
             }
 
             $this->entityManager->persist($order);
@@ -923,26 +1057,70 @@ class OrderManager
                 $upd['contact_car_id'] = $data['contactCar'];
             }
 
+            $upd['courier_id'] = null;
             if (!empty($data['courier'])){
                 $upd['courier_id'] = $data['courier'];
             }
 
+            $legal = null;
             if (!empty($data['legal'])){
+                $legal = $this->entityManager->getRepository(Legal::class)
+                        ->find($data['legal']);
                 $upd['legal_id'] = $data['legal'];
+            }
+            if (empty($data['legal']) && !empty(data['legalInn']) && !empty($data['legalName'])){
+                $legal = $this->legalManager->addLegal($contact, [
+                    'inn' => data['legalInn'],
+                    'name' => data['legalName'],
+                    'kpp' => empty(data['legalKpp']) ? null:data['legalKpp'],
+                    'ogrn' => empty(data['legalOgrn']) ? null:data['legalOgrn'],
+                    'okpo' => empty(data['legalOkpo']) ? null:data['legalOkpo'],
+                    'head' => empty(data['legalHead']) ? null:data['legalHead'],
+                    'chiefAccount' => empty(data['legalChiefAccount']) ? null:data['legalChiefAccount'],
+                    'info' => empty(data['legalInfo']) ? null:data['legalInfo'],
+                    'address' => empty(data['legalAddress']) ? null:data['legalAddress'],
+                ]);
+                $upd['legal_id'] = $legal->getId();
+            }
+
+            if (!empty($data['bankAccount'])){
+                $upd['bank_account_id'] = $data['bankAccount'];
+            }
+            if ($legal && empty($data['bankAccount']) && !empty(data['rs']) && !empty($data['bik']) && !empty(data['bankName'])){
+                $bankAccount = $this->legalManager->addBankAccount($legal, [
+                    'rs' => data['rs'],
+                    'bik' => data['bik'],
+                    'name' => data['bankName'],
+                    'city' => empty(data['bankCity']) ? null:data['bankCity'],
+                    'ks' => empty(data['ks']) ? null:data['ks'],
+                ]);
+                $upd['bank_account_id'] = $legal->getId();
             }
 
             if (!empty($data['recipient'])){
                 $upd['recipient_id'] = $data['recipient'];
             }
-
-            if (!empty($data['shipping'])){
-                $upd['shipping_id'] = $data['shipping'];
-            } else {
-                $shipping = $this->entityManager->getRepository(Shipping::class)
-                        ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
-                $upd['shipping_id'] = $shipping->getId();
+            if (empty($data['recipient']) && !empty(data['recipientInn']) && !empty($data['recipientName'])){
+                $legal = $this->legalManager->addLegal($contact, [
+                    'inn' => data['recipientInn'],
+                    'name' => data['recipientName'],
+                    'kpp' => empty(data['recipientKpp']) ? null:data['recipientKpp'],
+                    'ogrn' => empty(data['recipientOgrn']) ? null:data['recipientOgrn'],
+                    'okpo' => empty(data['recipientOkpo']) ? null:data['recipientOkpo'],
+                    'head' => empty(data['recipientHead']) ? null:data['recipientHead'],
+                    'chiefAccount' => empty(data['recipientChiefAccount']) ? null:data['recipientChiefAccount'],
+                    'info' => empty(data['recipientInfo']) ? null:data['recipientInfo'],
+                    'address' => empty(data['recipientAddress']) ? null:data['recipientAddress'],
+                ]);
+                $upd['recipient_id'] = $legal->getId();
             }
 
+            $upd['shipping_id'] = null;                
+            if (!empty($data['shipping'])){
+                $upd['shipping_id'] = $data['shipping'];
+            }
+
+            $upd['skiper_id'] = null;                
             if (!empty($data['skiper'])){
                 $user = $this->entityManager->getRepository(User::class)
                         ->find($data['skiper']);
@@ -957,10 +1135,10 @@ class OrderManager
                 if ($user){
                     $upd['user_id'] = $user->getId();
                 }    
-            }else {
+            } else {
                 if ($this->currentUser()){
                     $upd['user_id'] = $this->currentUser()->getId();
-                }    
+                }                    
             }
 
             $this->entityManager->getConnection()

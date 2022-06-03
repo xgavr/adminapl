@@ -23,7 +23,7 @@ final class Version20220602111854 extends AbstractMigration
         $table->dropColumn('mail_password');
         
         $table = $schema->getTable('email');
-        $table->addColumn('mail_password', 'string', ['notnull' => false, 'length' => 64]);        
+        $table->addColumn('mail_password', 'string', ['notnull' => false, 'length' => 256]);        
     }
 
     public function down(Schema $schema) : void

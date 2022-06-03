@@ -1,0 +1,91 @@
+<script>
+    var _dadata;
+    
+    function setDadata(data){
+        _dadata = data;
+    }
+    function getDadata(){
+        return _dadata;
+    }
+    
+    function fillFromData(index, targetGroup = ''){
+        var data = getDadata();
+        if (data){
+            var row = data[index];
+            $('input[name="'+targetGroup+'Inn"]').val(row.data.inn);
+            $('input[name="'+targetGroup+'Name"]').val(row.data.name.short_with_opf);
+            $('input[name="'+targetGroup+'Kpp"]').val(row.data.kpp);
+            $('input[name="'+targetGroup+'Ogrn"]').val(row.data.ogrn);
+            $('input[name="'+targetGroup+'Okpo"]').val(row.data.okpo);
+            $('input[name="'+targetGroup+'Address"]').val(row.data.address.unrestricted_value);
+            if (row.data.management){
+                $('input[name="'+targetGroup+'Head"]').val(row.data.management.name);
+            } else {
+                $('input[name="'+targetGroup+'Head"]').val('');
+            }
+        }    
+        $('.bootbox.modal').modal('hide');
+    }
+
+    $('.inn-fill').on('click', function() {  
+        var targetGroup = $(this).attr('target-group');
+        var inn = $('input[name="'+targetGroup+'Inn"]').val();
+        if (inn){
+            $.ajax({
+                type: 'GET',
+                url: '/legals/inn-info/?inn='+inn,
+            })
+                .done(function (data) {
+//                    console.log(data);
+                    setDadata(data);
+                    var message = '<table class="table table-striped">';
+                    for (var i in data){
+                        row = data[i];
+                        message += '<tr>';
+                        message += '<td>'+row.data.inn+'<br/>'+row.data.kpp+'</td>';
+                        message += ' <td>'+row.data.name.short_with_opf+'</td>';
+                        message += ' <td>'+row.data.address.unrestricted_value+'</td>';
+                        message += ' <td><button onclick="fillFromData('+i+', \''+targetGroup+'\')">Выбрать</button></td>';
+                        message += '</tr>';
+                    }
+                    message += '</table>';
+                    bootbox.dialog({
+                        title: "Выберете организацию",
+                        message: message,
+                        size: 'large',
+                        buttons: {
+                            cancel: {
+                                label: 'Закрыть',
+                                className: 'btn-default'
+                            }
+                        },                            
+                    });
+                })
+                .fail(function (error) {
+                    console.log(error);
+                });
+            }        
+    })
+
+    $('.bik-fill').on('click', function() {
+        var targetName = $(this).attr('target-name');
+        var bik = $('input[name="'+targetName+'"]').val();
+        if (bik){
+            $.ajax({
+                type: 'GET',
+                url: '/legals/bik-info/'+bik
+            })
+                .done(function (data) {
+                    if (data){
+                        $('input[name="bankName"]').val($('<div/>').html(data.name).text());
+                        $('input[name="bankCity"]').val('г. '+data.city);
+                        $('input[name="ks"]').val(data.ks);
+                    }
+                })
+                .fail(function (e) {
+                    console.log(e);
+                });    
+            }        
+    });    
+
+</script>

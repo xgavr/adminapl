@@ -625,7 +625,7 @@ class Order {
      * Задает связанный bank account.
      * @param \Company\Entity\BankAccount $bankAccount
      */    
-    public function setAccount($bankAccount) 
+    public function setBankAccount($bankAccount) 
     {
         $this->bankAccount = $bankAccount;
     }         
@@ -1117,7 +1117,6 @@ class Order {
             'status' => $this->getStatus(),
             'info' => $this->getInfo(),
             'invoiceInfo' => $this->getInvoiceInfo(),
-            'legal' => ($this->getLegal()) ? $this->getLegal()->getId():null,
             'mode' =>$this->getMode(),
             'trackNumber' => $this->getTrackNumber(),
             'user' => ($this->getUser()) ? $this->getUser()->getId():null,
@@ -1132,7 +1131,24 @@ class Order {
             'shippingLimit2' => $this->getOffice()->getShippingLimit2(),
             'shipmentDistance' => $this->getShipmentDistance(),
             'rateDistance' => ($this->getShipping()) ? $this->getShipping()->getRateDistance():null,
+            'legal' => ($this->getLegal()) ? $this->getLegal()->getId():null,
+            'legalName' => ($this->getLegal()) ? $this->getLegal()->getName():null,
+            'legalInn' => ($this->getLegal()) ? $this->getLegal()->getInn():null,
+            'legalKpp' => ($this->getLegal()) ? $this->getLegal()->getKpp():null,
+            'legalOgrn' => ($this->getLegal()) ? $this->getLegal()->getOgrn():null,
+            'legalAddress' => ($this->getLegal()) ? $this->getLegal()->getAddress():null,
             'recipient' => ($this->getRecipient()) ? $this->getRecipient()->getId():null,
+            'recipientName' => ($this->getRecipient()) ? $this->getRecipient()->getName():null,
+            'recipientInn' => ($this->getRecipient()) ? $this->getRecipient()->getInn():null,
+            'recipientKpp' => ($this->getRecipient()) ? $this->getRecipient()->getKpp():null,
+            'recipientOgrn' => ($this->getRecipient()) ? $this->getRecipient()->getOgrn():null,
+            'recipientAddress' => ($this->getRecipient()) ? $this->getRecipient()->getAddress():null,
+            'bankAccount' => ($this->getBankAccount()) ? $this->getBankAccount()->getId():null,
+            'bankName' => ($this->getBankAccount()) ? $this->getBankAccount()->getName():null,
+            'rs' => ($this->getBankAccount()) ? $this->getBankAccount()->getRs():null,
+            'ks' => ($this->getBankAccount()) ? $this->getBankAccount()->getKs():null,
+            'bik' => ($this->getBankAccount()) ? $this->getBankAccount()->getBik():null,
+            'bankSity' => ($this->getBankAccount()) ? $this->getBankAccount()->getSity():null,
             'goods' => [],
         ];
     }    

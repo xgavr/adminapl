@@ -14,6 +14,7 @@ use Admin\Entity\PostLog;
 use Application\Entity\Order;
 use Admin\Form\PostForm;
 use User\Entity\User;
+use Application\Entity\Email;
 
 
 class PostController extends AbstractActionController
@@ -80,15 +81,17 @@ class PostController extends AbstractActionController
             if (!empty($data['fromEmail']) && !empty($data['toEmail'])){
                 $user = $this->entityManager->getRepository(User::class)
                         ->findOneByEmail($data['fromEmail']);
-                
-                if ($user){
+                $email = $this->entityManager->getRepository(Email::class)
+                        ->findOneByName($data['fromEmail']);
+                if ($user && $email){
+                    $setting = $this->adminManager->getSettings();
                     $options['to'] = $data['toEmail'];
                     $options['from'] = $data['fromEmail'];
                     $options['copyMe'] = $data['copyMe'];
                     $options['subject'] = $data['subject'];
                     $options['body'] = $data['message'];
                     $options['username'] = $data['fromEmail'];
-                    $options['password'] = $user->getMailPassword();
+                    $options['password'] = $email->getMailPassword($settings['turbo_passphrase']);
                     $result = $this->postManager->send($options);
                 }    
             }    
