@@ -2,6 +2,7 @@
 $this->headTitle('Настройки АПИ ТП');
 
 $this->mainMenu()->setActiveItemId('settings');
+$this->mainMenu()->setActiveUrl($this->url('settings', ['action' => 'api-market-places']));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
