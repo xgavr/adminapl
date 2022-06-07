@@ -601,14 +601,16 @@ $form->prepare();
         </div>    
         <?php echo $this->partial('/company/legal/bik-inn-partial', []); ?>
     </div>
-    <div class="col-xs-1">
-        <div class="form-group form-group-sm">
-            <?//= $this->formLabel($form->get('aplId')); ?>
-            <?= $this->formElement($form->get('aplId')); ?>
-            <?= $this->formElementErrors($form->get('aplId')); ?>                  
-        </div>
-        <button type="button" class="btn btn-primary btn-sm btn-block" id="order-submit">Сохранить</button>    
-        <button type="button" class="btn btn-secondary btn-sm btn-block" id="order-reset">Закрыть</button>
+    <div class="col-sm-1">
+        <div data-spy="affix" data-offset-top="20">        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('aplId')); ?>
+                <?= $this->formElement($form->get('aplId')); ?>
+                <?= $this->formElementErrors($form->get('aplId')); ?>                  
+            </div>
+            <button type="button" class="btn btn-primary btn-sm btn-block" id="order-submit">Сохранить</button>    
+            <button type="button" class="btn btn-secondary btn-sm btn-block" id="order-reset">Закрыть</button>
+        </div>    
     </div>
 </div>    
 
