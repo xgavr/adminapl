@@ -529,8 +529,6 @@ class MarketManager
      */
     public function marketXLSX($market, $offset = 0, $block = 0)
     {
-        $this->_clearMarketFolder($market);
-        
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -607,7 +605,6 @@ class MarketManager
      */
     public function marketYML($market, $offset = 0, $block=0)
     {
-        $this->_clearMarketFolder($market);
         
         $path = $this->blockFilenamePath($market, 0, $block);
 
@@ -760,6 +757,7 @@ class MarketManager
     {
         ini_set('memory_limit', '4096M');
         set_time_limit(0);
+        $this->_clearMarketFolder($market);
         
         $maxRowCount = ($market->getMaxRowCount()) ? $market->getMaxRowCount():MarketPriceSetting::MAX_BLOCK_ROW_COUNT;
         $maxBlockCount = ($market->getBlockRowCount()) ? $market->getBlockRowCount():MarketPriceSetting::MAX_BLOCK_COUNT;
