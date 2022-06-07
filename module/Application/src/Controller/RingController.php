@@ -146,9 +146,10 @@ class RingController extends AbstractActionController
                             ->findByContact($contact, ['id' => 'DESC']);                    
                     foreach ($contactCars as $contactCar){
                         $cars[] = [
-                            'makeName' => ($contactCar->getMake()) ? $contactCar->getMake()->getName():'',
-                            'vin' => $contactCar->getVin(),
                             'id' => $contactCar->getId(),
+                            'vin' => $contactCar->getVin(),
+                            'makeName' => ($contactCar->getMake()) ? $contactCar->getMake()->getName():'',
+                            'comment' => $contactCar->getComment(),
                             ];
                     }                    
                     $orders = $this->entityManager->getRepository(Order::class)

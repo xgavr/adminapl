@@ -201,6 +201,10 @@ $form->get('bankCity')->setAttributes([
     'placeholder' => 'Город банка',
     ]);
 
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'order-submit']);
 
 $form->prepare();
@@ -208,392 +212,409 @@ $form->prepare();
 ?>
             
 <?= $this->form()->openTag($form); ?>
-<div class="col-xs-9">
-    <div class="row">
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('phone')); ?>
-                <div class="input-group">
-                    <?= $this->formElement($form->get('phone')); ?>
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-sm sms-message-modal-show" modal-url="/admin/sms-form/" title="Отправить сообщение">
-                            <span class="glyphicon glyphicon-envelope"></span>
-                        </button>
-                    </span>    
-                </div>    
-                <?php echo $this->partial('/admin/index/sms-partial', ['phoneNode' => 'phone', 'idNode' => 'orderId']); ?>
-                <?= $this->formElementErrors($form->get('phone')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('name')); ?>
-                <?= $this->formElement($form->get('name')); ?>
-                <?= $this->formElementErrors($form->get('name')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('email')); ?>
-                <div class="input-group">
-                    <?= $this->formElement($form->get('email')); ?>
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-sm post-message-modal-show" modal-url="/post/post-form/" title="Отправить сообщение">
-                            <span class="glyphicon glyphicon-envelope"></span>
-                        </button>
-                    </span>    
-                </div>    
-                <?php echo $this->partial('/admin/post/post-partial', ['emailNode' => 'email', 'idNode' => 'orderId']); ?>
-                <?= $this->formElementErrors($form->get('email')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('office')); ?>
-                <?= $this->formElement($form->get('office')); ?>
-                <?= $this->formElementErrors($form->get('office')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('user')); ?>
-                <?= $this->formElement($form->get('user')); ?>
-                <?= $this->formElementErrors($form->get('user')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-1">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('aplId')); ?>
-                <?= $this->formElement($form->get('aplId')); ?>
-                <?= $this->formElementErrors($form->get('aplId')); ?>                  
-            </div>
-        </div>    
-    </div>    
-    <div class="row">
-        <div class="col-xs-3">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('vin')); ?>
-                <div class="input-group">
-                    <?= $this->formElement($form->get('vin')); ?>
-                    <div class="input-group-addon" id="vinLength">0</div>
+<div class="row">
+    <div class="col-xs-11">
+        <div class="row">
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('phone')); ?>
+                    <div class="input-group">
+                        <?= $this->formElement($form->get('phone')); ?>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default btn-sm sms-message-modal-show" modal-url="/admin/sms-form/" title="Отправить сообщение">
+                                <span class="glyphicon glyphicon-envelope"></span>
+                            </button>
+                        </span>    
+                    </div>    
+                    <?php echo $this->partial('/admin/index/sms-partial', ['phoneNode' => 'phone', 'idNode' => 'orderId']); ?>
+                    <?= $this->formElementErrors($form->get('phone')); ?>                  
                 </div>
-                <?= $this->formElementErrors($form->get('vin')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-3">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('make')); ?>
-                <?= $this->formElement($form->get('make')); ?>
-                <?= $this->formElementErrors($form->get('make')); ?>                  
-            </div>
-        </div>                    
-        <div class="col-xs-6">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('makeComment')); ?>
-                <?= $this->formElement($form->get('makeComment')); ?>
-                <?= $this->formElementErrors($form->get('makeComment')); ?>                  
-            </div>
-        </div>                            
-    </div>
-    <div class="row">
-        <div class="col-xs-6">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('info')); ?>
-                <?= $this->formElement($form->get('info')); ?>
-                <?= $this->formElementErrors($form->get('info')); ?>                  
-            </div>
-        </div>                    
-        <div class="col-xs-5">     
-            <div class="form-group form-group-sm">
-                <?php echo $this->partial('/application/comment/order-partial', ['comments' => $comments]); ?>
+            </div>    
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('name')); ?>
+                    <?= $this->formElement($form->get('name')); ?>
+                    <?= $this->formElementErrors($form->get('name')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('email')); ?>
+                    <div class="input-group">
+                        <?= $this->formElement($form->get('email')); ?>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default btn-sm post-message-modal-show" modal-url="/post/post-form/" title="Отправить сообщение">
+                                <span class="glyphicon glyphicon-envelope"></span>
+                            </button>
+                        </span>    
+                    </div>    
+                    <?php echo $this->partial('/admin/post/post-partial', ['emailNode' => 'email', 'idNode' => 'orderId']); ?>
+                    <?= $this->formElementErrors($form->get('email')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('office')); ?>
+                    <?= $this->formElement($form->get('office')); ?>
+                    <?= $this->formElementErrors($form->get('office')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('user')); ?>
+                    <?= $this->formElement($form->get('user')); ?>
+                    <?= $this->formElementErrors($form->get('user')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('status')); ?>
+                    <?= $this->formElement($form->get('status')); ?>
+                    <?= $this->formElementErrors($form->get('status')); ?>                  
+                </div>
             </div>    
         </div>    
-        <div class="col-xs-1 text-right">     
-            <div class="form-group form-group-sm">
-                <button type="button" class="btn btn-default btn-sm order-comment-modal-show" 
-                        title="Добавить комментарий" modal-url="/comments/edit-local-form">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </button>
+        <div class="row">
+            <div class="col-xs-3">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('vin')); ?>
+                    <div class="input-group">
+                        <?= $this->formElement($form->get('vin')); ?>
+                        <div class="input-group-addon" id="vinLength">0</div>
+                    </div>
+                    <?= $this->formElementErrors($form->get('vin')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-3">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('make')); ?>
+                    <?= $this->formElement($form->get('make')); ?>
+                    <?= $this->formElementErrors($form->get('make')); ?>                  
+                </div>
+            </div>                    
+            <div class="col-xs-6">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('makeComment')); ?>
+                    <?= $this->formElement($form->get('makeComment')); ?>
+                    <?= $this->formElementErrors($form->get('makeComment')); ?>                  
+                </div>
+            </div>                            
+        </div>
+        <div class="row">
+            <div class="col-xs-6">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('info')); ?>
+                    <?= $this->formElement($form->get('info')); ?>
+                    <?= $this->formElementErrors($form->get('info')); ?>                  
+                </div>
+            </div>                    
+            <div class="col-xs-5">     
+                <div class="form-group form-group-sm">
+                    <?php echo $this->partial('/application/comment/order-partial', ['comments' => $comments]); ?>
+                </div>    
+            </div>    
+            <div class="col-xs-1 text-right">     
+                <div class="form-group form-group-sm">
+                    <button type="button" class="btn btn-default btn-sm order-comment-modal-show" 
+                            title="Добавить комментарий" modal-url="/comments/edit-local-form">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </div>
+            </div>    
+        </div>        
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="ordergoodtoolbar">
+                    <div class="form-inline" role="form">
+                        <div class="form-group form-group-sm">
+                            <span class="label label-default" id="orderQuantity"></span>
+                        </div>    
+                        <div class="form-group form-group-sm">
+                            <span class="label label-primary" id="shippingTotal"></span>
+                        </div> +    
+                        <div class="form-group form-group-sm">
+                            <span class="label label-primary" id="bidTotal"></span>
+                        </div> =   
+                        <div class="form-group form-group-sm">
+                            <span class="label label-primary" id="orderAmount"></span>                        
+                        </div>    
+                        <div class="form-group form-group-sm">
+                            <button type="button" class="btn btn-default btn-sm order-good-modal-show" modal-url="/order/good-edit-form" title="Добавить товар">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </button>
+                        </div>    
+                    </div>
+                </div>
+                <table id="ordergoodtable" 
+                    data-toggle="ordergoodtable" 
+                    data-url="/order/good-content/<?= ($orderId) ? $orderId:""?>"
+                    data-side-pagination="client"
+                    data-pagination="true"
+                    data-icon-size="sm"
+                    data-page-size = "100"
+                    data-page-list="[100, 200]"
+                    data-toolbar="#ordergoodtoolbar"
+                    data-toolbar-align="right"
+                    data-query-params="ordergoodQueryParams"
+                    data-response-handler="ordergoodResponseHandler"
+                    data-classes = "table table-bordered table-hover table-condensed"
+                    data-unique-id = "rowNo"                
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="rowNo" data-type="numeric" data-align="right" data-width="10">N</th>
+                             <th data-field="good.code" data-width="150" data-formatter="goodFormatter">Артикул</th>
+                             <th data-field="good.producer.name" data-type="numeric" data-width="100">Производитель</th>
+                             <th data-field="displayName" data-formatter="geNameFormatter" data-editable="true">Наименование</th>
+                             <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-align="right" data-width="100">Цена</th>
+                             <th data-field='num' data-align="right" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-width="50">Кол-во</th>
+                             <th data-field='amount' data-align="right" data-formatter="geAmountFormatter" data-always-use-formatter="true" data-type="numeric" data-width="100">Сумма</th>
+                             <th data-field="rowNo" data-formatter="geActiveFormatter" data-width="10"></th>
+                             <th data-field="rowNo" data-formatter="grActiveFormatter" data-width="10"></th>
+                         </tr>                
+                    </thead>
+                </table>
             </div>
         </div>    
-    </div>        
-    <div class="row">
-        <div class="col-xs-12">
-            <div id="ordergoodtoolbar">
-                <div class="form-inline" role="form">
-                    <div class="form-group form-group-sm">
-                        <span class="label label-default" id="orderQuantity"></span>
-                    </div>    
-                    <div class="form-group form-group-sm">
-                        <span class="label label-primary" id="shippingTotal"></span>
-                    </div> +    
-                    <div class="form-group form-group-sm">
-                        <span class="label label-primary" id="bidTotal"></span>
-                    </div> =   
-                    <div class="form-group form-group-sm">
-                        <span class="label label-primary" id="orderAmount"></span>                        
-                    </div>    
-                    <div class="form-group form-group-sm">
-                        <button type="button" class="btn btn-default btn-sm order-good-modal-show" modal-url="/order/good-edit-form" title="Добавить товар">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        </button>
-                    </div>    
+        <hr/>
+        <div class="row">
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('dateShipment')); ?>
+                    <?= $this->formElement($form->get('dateShipment')); ?>
+                    <?= $this->formElementErrors($form->get('dateShipment')); ?>                  
                 </div>
             </div>
-            <table id="ordergoodtable" 
-                data-toggle="ordergoodtable" 
-                data-url="/order/good-content/<?= ($orderId) ? $orderId:""?>"
-                data-side-pagination="client"
-                data-pagination="true"
-                data-icon-size="sm"
-                data-page-size = "100"
-                data-page-list="[100, 200]"
-                data-toolbar="#ordergoodtoolbar"
-                data-toolbar-align="right"
-                data-query-params="ordergoodQueryParams"
-                data-response-handler="ordergoodResponseHandler"
-                data-classes = "table table-bordered table-hover table-condensed"
-                data-unique-id = "rowNo"                
-                >
-                <thead>
-                    <tr>
-                         <th data-field="rowNo" data-type="numeric" data-align="right" data-width="10">N</th>
-                         <th data-field="good.code" data-width="150" data-formatter="goodFormatter">Артикул</th>
-                         <th data-field="good.producer.name" data-type="numeric" data-width="100">Производитель</th>
-                         <th data-field="displayName" data-formatter="geNameFormatter" data-editable="true">Наименование</th>
-                         <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-align="right" data-width="100">Цена</th>
-                         <th data-field='num' data-align="right" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-width="50">Количество</th>
-                         <th data-field='amount' data-align="right" data-formatter="geAmountFormatter" data-always-use-formatter="true" data-type="numeric" data-width="100">Сумма</th>
-                         <th data-field="rowNo" data-formatter="geActiveFormatter" data-width="10"></th>
-                         <th data-field="rowNo" data-formatter="grActiveFormatter" data-width="10"></th>
-                     </tr>                
-                </thead>
-            </table>
-        </div>
-    </div>    
-    <hr/>
-    <div class="row">
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('dateShipment')); ?>
-                <?= $this->formElement($form->get('dateShipment')); ?>
-                <?= $this->formElementErrors($form->get('dateShipment')); ?>                  
+            <div class="col-xs-1">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('timeShipment')); ?>
+                    <?= $this->formElement($form->get('timeShipment')); ?>
+                    <?= $this->formElementErrors($form->get('timeShipment')); ?>                  
+                </div>
             </div>
-        </div>
-        <div class="col-xs-1">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('timeShipment')); ?>
-                <?= $this->formElement($form->get('timeShipment')); ?>
-                <?= $this->formElementErrors($form->get('timeShipment')); ?>                  
+            <div class="col-xs-3">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('shipping')); ?>
+                    <?= $this->formElement($form->get('shipping')); ?>
+                    <?= $this->formElementErrors($form->get('shipping')); ?>                  
+                </div>
             </div>
-        </div>
-        <div class="col-xs-3">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('shipping')); ?>
-                <?= $this->formElement($form->get('shipping')); ?>
-                <?= $this->formElementErrors($form->get('shipping')); ?>                  
+            <div class="col-xs-1">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('shipmentDistance')); ?>
+                    <?= $this->formElement($form->get('shipmentDistance')); ?>
+                    <?= $this->formElementErrors($form->get('shipmentDistance')); ?>                  
+                </div>
             </div>
-        </div>
-        <div class="col-xs-1">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('shipmentDistance')); ?>
-                <?= $this->formElement($form->get('shipmentDistance')); ?>
-                <?= $this->formElementErrors($form->get('shipmentDistance')); ?>                  
+            <div class="col-xs-1">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('shipmentTotal')); ?>
+                    <?= $this->formElement($form->get('shipmentTotal')); ?>
+                    <?= $this->formElementErrors($form->get('shipmentTotal')); ?>                  
+                </div>
             </div>
-        </div>
-        <div class="col-xs-1">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('shipmentTotal')); ?>
-                <?= $this->formElement($form->get('shipmentTotal')); ?>
-                <?= $this->formElementErrors($form->get('shipmentTotal')); ?>                  
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('courier')); ?>
+                    <?= $this->formElement($form->get('courier')); ?>
+                    <?= $this->formElementErrors($form->get('courier')); ?>                  
+                </div>
             </div>
-        </div>
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('courier')); ?>
-                <?= $this->formElement($form->get('courier')); ?>
-                <?= $this->formElementErrors($form->get('courier')); ?>                  
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('trackNumber')); ?>
+                    <?= $this->formElement($form->get('trackNumber')); ?>
+                    <?= $this->formElementErrors($form->get('trackNumber')); ?>                  
+                </div>
             </div>
-        </div>
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('trackNumber')); ?>
-                <?= $this->formElement($form->get('trackNumber')); ?>
-                <?= $this->formElementErrors($form->get('trackNumber')); ?>                  
+        </div>        
+        <div class="row">
+            <div class="col-xs-8">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('address')); ?>
+                    <?= $this->formElement($form->get('address')); ?>
+                    <?= $this->formElementErrors($form->get('address')); ?>                  
+                </div>
             </div>
-        </div>
-    </div>        
-    <div class="row">
-        <div class="col-xs-8">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('address')); ?>
-                <?= $this->formElement($form->get('address')); ?>
-                <?= $this->formElementErrors($form->get('address')); ?>                  
-            </div>
-        </div>
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('phone2')); ?>
-                <?= $this->formElement($form->get('phone2')); ?>
-                <?= $this->formElementErrors($form->get('phone2')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('skiper')); ?>
-                <?= $this->formElement($form->get('skiper')); ?>
-                <?= $this->formElementErrors($form->get('skiper')); ?>                  
-            </div>
-        </div>    
-    </div>        
-    <hr/>
-    <div class="row legal">
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('legalInn')); ?>
-                <span class="input-group">
-                    <?= $this->formElement($form->get('legalInn')); ?>
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-sm inn-fill" target-group="legal" data-toggle="tooltip" title="Заполнить по ИНН">
-                            <span class="glyphicon glyphicon-option-horizontal"></span>
-                        </button>
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('phone2')); ?>
+                    <?= $this->formElement($form->get('phone2')); ?>
+                    <?= $this->formElementErrors($form->get('phone2')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('skiper')); ?>
+                    <?= $this->formElement($form->get('skiper')); ?>
+                    <?= $this->formElementErrors($form->get('skiper')); ?>                  
+                </div>
+            </div>    
+        </div>        
+        <hr/>
+        <div class="row legal">
+            <div class="col-xs-3">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('legalInn')); ?>
+                    <span class="input-group">
+                        <?= $this->formElement($form->get('legalInn')); ?>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default btn-sm inn-fill" target-group="legal" data-toggle="tooltip" title="Заполнить по ИНН">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm inn-clear" target-group="legal" data-toggle="tooltip" title="Очистить">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                            </button>
+                        </span>    
                     </span>    
-                </span>    
-                <?= $this->formElementErrors($form->get('legalInn')); ?>                  
+                    <?= $this->formElementErrors($form->get('legalInn')); ?>                  
+                </div>
             </div>
-        </div>
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('legalKpp')); ?>
-                <?= $this->formElement($form->get('legalKpp')); ?>
-                <?= $this->formElementErrors($form->get('legalKpp')); ?>                  
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('legalKpp')); ?>
+                    <?= $this->formElement($form->get('legalKpp')); ?>
+                    <?= $this->formElementErrors($form->get('legalKpp')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('legalOgrn')); ?>
+                    <?= $this->formElement($form->get('legalOgrn')); ?>
+                    <?= $this->formElementErrors($form->get('legalOgrn')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-5">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('legalName')); ?>
+                    <?= $this->formElement($form->get('legalName')); ?>
+                    <?= $this->formElementErrors($form->get('legalName')); ?>                  
+                </div>
+            </div>    
+        </div>            
+        <div class="row">
+            <div class="col-xs-12">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('legalAddress')); ?>
+                    <?= $this->formElement($form->get('legalAddress')); ?>
+                    <?= $this->formElementErrors($form->get('legalAddress')); ?>                  
+                </div>
             </div>
         </div>    
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('legalOgrn')); ?>
-                <?= $this->formElement($form->get('legalOgrn')); ?>
-                <?= $this->formElementErrors($form->get('legalOgrn')); ?>                  
+        <hr/>
+        <div class="row bank-account">
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('rs')); ?>
+                    <?= $this->formElement($form->get('rs')); ?>
+                    <?= $this->formElementErrors($form->get('rs')); ?>                  
+                </div>
             </div>
-        </div>    
-        <div class="col-xs-6">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('legalName')); ?>
-                <?= $this->formElement($form->get('legalName')); ?>
-                <?= $this->formElementErrors($form->get('legalName')); ?>                  
-            </div>
-        </div>    
-    </div>            
-    <div class="row">
-        <div class="col-xs-12">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('legalAddress')); ?>
-                <?= $this->formElement($form->get('legalAddress')); ?>
-                <?= $this->formElementErrors($form->get('legalAddress')); ?>                  
-            </div>
-        </div>
-    </div>    
-    <hr/>
-    <div class="row bank-account">
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('rs')); ?>
-                <?= $this->formElement($form->get('rs')); ?>
-                <?= $this->formElementErrors($form->get('rs')); ?>                  
-            </div>
-        </div>
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('bik')); ?>
-                <div class="input-group">
-                    <?= $this->formElement($form->get('bik')); ?>
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-sm bik-fill" data-toggle="tooltip" target-name="bik" title="Заполнить из справочника БИК">
-                            <span class="glyphicon glyphicon-option-horizontal"></span>
-                        </button>
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('bik')); ?>
+                    <div class="input-group">
+                        <?= $this->formElement($form->get('bik')); ?>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default btn-sm bik-fill" data-toggle="tooltip" target-name="bik" title="Заполнить из справочника БИК">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm bik-clear" data-toggle="tooltip" title="Очистить">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                            </button>
+                        </span>    
+                    </div>    
+                    <?= $this->formElementErrors($form->get('bik')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-4">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('bankName')); ?>
+                    <?= $this->formElement($form->get('bankName')); ?>
+                    <?= $this->formElementErrors($form->get('bankName')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('bankCity')); ?>
+                    <?= $this->formElement($form->get('bankCity')); ?>
+                    <?= $this->formElementErrors($form->get('bankCity')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('ks')); ?>
+                    <?= $this->formElement($form->get('ks')); ?>
+                    <?= $this->formElementErrors($form->get('ks')); ?>                  
+                </div>
+            </div>    
+        </div>          
+        <hr/>
+        <div class="row recipient">
+            <div class="col-xs-3">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('recipientInn')); ?>
+                    <span class="input-group">
+                        <?= $this->formElement($form->get('recipientInn')); ?>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default btn-sm inn-fill" target-group="recipient" data-toggle="tooltip" title="Заполнить по ИНН">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm inn-clear" target-group="recipient" data-toggle="tooltip" title="Очистить">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                            </button>
+                        </span>    
                     </span>    
-                </div>    
-                <?= $this->formElementErrors($form->get('bik')); ?>                  
+                    <?= $this->formElementErrors($form->get('recipientInn')); ?>                  
+                </div>
+            </div>
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('recipientKpp')); ?>
+                    <?= $this->formElement($form->get('recipientKpp')); ?>
+                    <?= $this->formElementErrors($form->get('recipientKpp')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-2">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('recipientOgrn')); ?>
+                    <?= $this->formElement($form->get('recipientOgrn')); ?>
+                    <?= $this->formElementErrors($form->get('recipientOgrn')); ?>                  
+                </div>
+            </div>    
+            <div class="col-xs-5">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('recipientName')); ?>
+                    <?= $this->formElement($form->get('recipientName')); ?>
+                    <?= $this->formElementErrors($form->get('recipientName')); ?>                  
+                </div>
+            </div>    
+        </div>            
+        <div class="row">
+            <div class="col-xs-12">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('recipientAddress')); ?>
+                    <?= $this->formElement($form->get('recipientAddress')); ?>
+                    <?= $this->formElementErrors($form->get('recipientAddress')); ?>                  
+                </div>
             </div>
         </div>    
-        <div class="col-xs-4">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('bankName')); ?>
-                <?= $this->formElement($form->get('bankName')); ?>
-                <?= $this->formElementErrors($form->get('bankName')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('bankCity')); ?>
-                <?= $this->formElement($form->get('bankCity')); ?>
-                <?= $this->formElementErrors($form->get('bankCity')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('ks')); ?>
-                <?= $this->formElement($form->get('ks')); ?>
-                <?= $this->formElementErrors($form->get('ks')); ?>                  
-            </div>
-        </div>    
-    </div>          
-    <hr/>
-    <div class="row recipient">
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('recipientInn')); ?>
-                <span class="input-group">
-                    <?= $this->formElement($form->get('recipientInn')); ?>
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-sm inn-fill" target-group="recipient" data-toggle="tooltip" title="Заполнить по ИНН">
-                            <span class="glyphicon glyphicon-option-horizontal"></span>
-                        </button>
-                    </span>    
-                </span>    
-                <?= $this->formElementErrors($form->get('recipientInn')); ?>                  
-            </div>
+        <?php echo $this->partial('/company/legal/bik-inn-partial', []); ?>
+    </div>
+    <div class="col-xs-1">
+        <div class="form-group form-group-sm">
+            <?//= $this->formLabel($form->get('aplId')); ?>
+            <?= $this->formElement($form->get('aplId')); ?>
+            <?= $this->formElementErrors($form->get('aplId')); ?>                  
         </div>
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('recipientKpp')); ?>
-                <?= $this->formElement($form->get('recipientKpp')); ?>
-                <?= $this->formElementErrors($form->get('recipientKpp')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-2">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('recipientOgrn')); ?>
-                <?= $this->formElement($form->get('recipientOgrn')); ?>
-                <?= $this->formElementErrors($form->get('recipientOgrn')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-6">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('recipientName')); ?>
-                <?= $this->formElement($form->get('recipientName')); ?>
-                <?= $this->formElementErrors($form->get('recipientName')); ?>                  
-            </div>
-        </div>    
-    </div>            
-    <div class="row">
-        <div class="col-xs-12">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('recipientAddress')); ?>
-                <?= $this->formElement($form->get('recipientAddress')); ?>
-                <?= $this->formElementErrors($form->get('recipientAddress')); ?>                  
-            </div>
-        </div>
-    </div>    
-    <?php echo $this->partial('/company/legal/bik-inn-partial', []); ?>
-</div>
-<div class="col-xs-3">
-    <button type="submit" class="btn btn-primary btn-sm" id="order-submit">Сохранить</button>    
-    <button type="button" class="btn btn-secondary btn-sm" id="order-reset">Закрыть</button>
-</div>
+        <button type="button" class="btn btn-primary btn-sm btn-block" id="order-submit">Сохранить</button>    
+        <button type="button" class="btn btn-secondary btn-sm btn-block" id="order-reset">Закрыть</button>
+    </div>
+</div>    
 
 <?= $this->formElement($form->get('orderId')); ?>            
 <?= $this->formElement($form->get('contact')); ?>            
+<?= $this->formElement($form->get('contactCar')); ?>            
 <?= $this->formElement($form->get('rate')); ?>            
 <?= $this->formElement($form->get('shipmentRate')); ?>            
 <?= $this->formElement($form->get('shipmentRate1')); ?>            
@@ -614,15 +635,13 @@ $form->prepare();
             return true;
     };
     
-    $('.phone').mask('8 (000) 000-0000', {selectOnFocus: true});
-    
     function setTextValue(node, value, clear = false)
     {
         if (!$(node).val()){
             $(node).val(value);
-            if (clear){
-                $(node).next().toggle(Boolean($(node).val()));
-            }    
+//            if (clear){
+//                $(node).next().toggle(Boolean($(node).val()));
+//            }    
         }           
     }
 
@@ -635,10 +654,11 @@ $form->prepare();
                     setTextValue('#name', data.name, true);
                     setTextValue('#email', data.email, true);
                     if (data.cars){
-                        setTextValue('#make', data.cars[0].id);
-                        setTextValue('#vin', data.cars[0].vin, true);
-                        $("#vinLength").html($("#vin").val().length);
-                        setTextValue('#make', data.cars[0].makeName, false);
+                        setTextValue('input[name="contactCar"]', data.cars[0].id);
+                        setTextValue('input[name="vin"]', data.cars[0].vin, true);
+                        $("#vinLength").html($('input[name="vin"]').val().length);
+                        setTextValue('input[name="make"]', data.cars[0].makeName, false);
+                        setTextValue('input[name="makeComment"]', data.cars[0].comment, false);
                     }    
 //                        $.each(data.cars, function( i, car ){
 //                        });                    
@@ -647,11 +667,11 @@ $form->prepare();
         }    
     });    
     
-    $('#vin').on('input', function(){
-        $("#vinLength").html($("#vin").val().length);
+    $('input[name="vin"]').on('input', function(){
+        $("#vinLength").html($('input[name="vin"]').val().length);
     });
     
-    $('#make').typeahead({
+    $('input[name="make"]').typeahead({
         source: function(query, process) {
             return $.get("/make/autocomplete?q="+query, function (data) {
                 return process(data);
@@ -687,16 +707,27 @@ $form->prepare();
             .done(function (data) {
                 if (data.id){
                     document.title = data.id;
+                    let reload = $('#orderId').val() == '';
                     $('#orderId').val(data.id);
                     $('#aplId').val(data.aplId);
                     $('#contact').val(data.contact);
+                    $('#legal').val(data.legal);
+                    $('#recipient').val(data.recipient);
+                    $('#bankAccount').val(data.bankAccount);
                     enableSms();
                     enablePost();
+                    console.log(reload);
+                    if (reload && data.id){
+                        window.location.href = '/order/intro/'+data.id;
+                    }
                 }    
             })
             .fail(function () {
                 alert("Ошибка при открытии формы.");
 
+            })    
+            .always(function () {
+                $('#order-submit').attr('disabled', false);
             });    
     };
     
@@ -811,7 +842,6 @@ $form->prepare();
     }
 
     function contractList(){
-        //alert(11);
         $.getJSON( '/contracts/select/?company='+$('#company').val()+'&legal='+$('#legal').val(), function( data ) {
             $('#contract').empty();
             $.each( data.rows, function( key, value ) {
@@ -903,30 +933,35 @@ $form->prepare();
         
         enableSms();
         enablePost();
-        $("#vinLength").html($("#vin").val().length);
+        $("#vinLength").html($('input[name="vin"]').val().length);
 
         
         <?php if (!$orderId): ?>
             shippingParams();    
         <?php endif; ?>    
-        
-        var forms = $('#order-form');
-        
-        forms.submit(function() {
+            
+        $('#order-submit').on('click', function(){
+            $('#order-submit').attr('disabled', true);
             submitForm();
-            return false;
-        });
-        // Loop over them and prevent submission
-        var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('order-submit', function(event) {
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-                submitForm();
-            }, false);    
-        });
+        })    
+        
+//        var forms = $('#order-form');
+//        
+//        forms.submit(function() {
+//            submitForm();
+//            return false;
+//        });
+//        // Loop over them and prevent submission
+//        var validation = Array.prototype.filter.call(forms, function(form) {
+//            form.addEventListener('order-submit', function(event) {
+//                if (form.checkValidity() === false) {
+//                    event.preventDefault();
+//                    event.stopPropagation();
+//                }
+//                form.classList.add('was-validated');
+//                submitForm();
+//            }, false);    
+//        });
     });    
     
     function orderGoodRefreshTable(){

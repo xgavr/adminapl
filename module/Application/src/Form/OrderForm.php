@@ -113,6 +113,17 @@ class OrderForm extends Form
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'select',
+            'name' => 'status',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Статус',
+                'value_options' => Order::getStatusList(),
+            ],
+        ]);
+        
         // Добавляем поле "name"
         $this->add([           
             'type'  => 'search',
@@ -163,10 +174,18 @@ class OrderForm extends Form
         ]);
                 
         $this->add([           
+            'type'  => 'hidden',
+            'name' => 'contactCar',
+            'attributes' => [
+            ],
+            'options' => [
+            ],
+        ]);
+
+        $this->add([           
             'type'  => 'text',
             'name' => 'vin',
             'attributes' => [
-                'id' => 'vin',
                 'autocomplete' => 'off',
             ],
             'options' => [
@@ -178,7 +197,6 @@ class OrderForm extends Form
             'type'  => 'text',
             'name' => 'make',
             'attributes' => [
-                'id' => 'make',
                 'autocomplete' => 'off',
             ],
             'options' => [
@@ -190,7 +208,6 @@ class OrderForm extends Form
             'type'  => 'text',
             'name' => 'makeComment',
             'attributes' => [
-                'id' => 'makeComment'
             ],
             'options' => [
                 'label' => 'Дополнительно о машине',
@@ -201,7 +218,6 @@ class OrderForm extends Form
             'type'  => 'textarea',
             'name' => 'info',
             'attributes' => [
-                'id' => 'info'
             ],
             'options' => [
                 'label' => 'Что нужно',
@@ -213,7 +229,6 @@ class OrderForm extends Form
             'type'  => 'textarea',
             'name' => 'address',
             'attributes' => [
-                'id' => 'address'
             ],
             'options' => [
                 'label' => 'Адрес доставки',
@@ -225,7 +240,6 @@ class OrderForm extends Form
             'name' => 'dateShipment',
             'attributes' => [
                 'id' => 'dateShipment',
-//                'min' => date('Y-m-d'),
                 'value' => date('Y-m-d'),
             ],
             'options' => [

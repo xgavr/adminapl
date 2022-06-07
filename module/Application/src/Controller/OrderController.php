@@ -214,7 +214,6 @@ class OrderController extends AbstractActionController
             if ($form->isValid()) {
                 
                 $contact = $this->orderManager->findContactByOrderData($data);
-//                $data['dateShipment'] = 
                 $data['total'] = $data['shipmentTotal'];
                 
                 if ($order){
@@ -236,6 +235,9 @@ class OrderController extends AbstractActionController
                        'aplId' => $order->getAplId(), 
                        'id' => $order->getId(),
                        'contact' => $order->getContact()->getId(),
+                       'legal' => ($order->getLegal()) ? $order->getLegal()->getId():null,
+                       'recipient' => ($order->getRecipient()) ? $order->getRecipient()->getId():null,
+                       'bankAccount' => ($order->getBankAccount()) ? $order->getBankAccount()->getId():null,
                     ]
                 );           
             } else {

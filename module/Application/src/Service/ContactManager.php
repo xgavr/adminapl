@@ -86,7 +86,8 @@ class ContactManager
     }
 
     public function addPhone($contact, $data, $flushnow = false)
-    {                
+    {            
+        $phone = null;
         if (is_array($data)){
             if ($data['phone']){
                 $filter = new PhoneFilter();
@@ -113,16 +114,18 @@ class ContactManager
                         $phone->setContact($contact);
 
                         if ($flushnow){
-                            $this->entityManager->flush();                
+                            $this->entityManager->flush($phone);                
                         }
                     }    
                 }    
             }
         }    
+        return $phone;
     }
     
     public function addEmail($contact, $emailstr, $flushnow = false)
-    {                
+    {               
+        $email = null;
         if ($emailstr){
             
             $email = $this->entityManager->getRepository(Email::class)
@@ -141,10 +144,11 @@ class ContactManager
                 $this->entityManager->persist($email);
 
                 if ($flushnow){
-                    $this->entityManager->flush();                
+                    $this->entityManager->flush($email);                
                 }
             }    
         } 
+        return $email;
     }
     
     public function addNewContact($parent, $data) 

@@ -1148,7 +1148,7 @@ class Order {
             'rs' => ($this->getBankAccount()) ? $this->getBankAccount()->getRs():null,
             'ks' => ($this->getBankAccount()) ? $this->getBankAccount()->getKs():null,
             'bik' => ($this->getBankAccount()) ? $this->getBankAccount()->getBik():null,
-            'bankSity' => ($this->getBankAccount()) ? $this->getBankAccount()->getSity():null,
+            'bankCity' => ($this->getBankAccount()) ? $this->getBankAccount()->getCity():null,
             'goods' => [],
         ];
     }    

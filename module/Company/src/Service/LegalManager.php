@@ -68,7 +68,7 @@ class LegalManager
         }
 
         $this->entityManager->persist($legal);        
-        $this->entityManager->flush();                
+        $this->entityManager->flush($legal);                
         
         return $legal;
     }
@@ -124,7 +124,7 @@ class LegalManager
             
             $legal->addContact($contact);
             $this->entityManager->persist($legal);
-            $this->entityManager->flush();                
+            $this->entityManager->flush($legal);                
         }   
         
         return $legal;
@@ -216,6 +216,8 @@ class LegalManager
         if ($flushnow){
             $this->entityManager->flush();                
         }
+        
+        return $bankAccount;
     }
    
     /**
@@ -241,6 +243,7 @@ class LegalManager
         if ($flushnow){
             $this->entityManager->flush();                
         }
+        return $bankAccount;
     }
     
     /**
