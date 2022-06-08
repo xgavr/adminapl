@@ -97,10 +97,20 @@ class PostForm extends Form
         $this->add([           
             'type'  => 'checkbox',
             'name' => 'bill',
-            'attributes' => [
+            'attributes' => [                
             ],
             'options' => [
                 'label' => 'Счет',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'orderId',
+            'attributes' => [                
+            ],
+            'options' => [
+                'label' => 'Заказ',
             ],
         ]);
         

@@ -84,10 +84,14 @@ class PostController extends AbstractActionController
                 $email = $this->entityManager->getRepository(Email::class)
                         ->findOneByName($data['fromEmail']);
                 if ($user && $email){
-                    $setting = $this->adminManager->getSettings();
+                    $settings = $this->adminManager->getSettings();
                     $options['to'] = $data['toEmail'];
                     $options['from'] = $data['fromEmail'];
                     $options['copyMe'] = $data['copyMe'];
+                    $options['bill'] = $data['bill'];
+                    $options['offer'] = $data['offer'];
+                    $options['showCode'] = $data['showCode'];
+                    $options['orderId'] = $data['orderId'];
                     $options['subject'] = $data['subject'];
                     $options['body'] = $data['message'];
                     $options['username'] = $data['fromEmail'];

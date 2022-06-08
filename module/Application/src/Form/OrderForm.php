@@ -616,6 +616,16 @@ class OrderForm extends Form
             ],
         ]);
 
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'invoiceInfo',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Комментарий к счету',
+            ],
+        ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',

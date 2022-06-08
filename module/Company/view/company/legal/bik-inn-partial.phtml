@@ -27,7 +27,16 @@
         $('.bootbox.modal').modal('hide');
     }
 
-    function clearFromData(targetGroup = ''){
+    function clearBankFormData(){
+        $('input[name="bankName"]').val('');
+        $('input[name="bankCity"]').val('');
+        $('input[name="ks"]').val('');
+        $('input[name="bik"]').val('');
+        $('input[name="rs"]').val('');
+        $('input[name="bankAccount"]').val('');
+    }
+
+    function clearLegalFromData(targetGroup = ''){
         $('input[name="'+targetGroup+'Inn"]').val('');
         $('input[name="'+targetGroup+'Name"]').val('');
         $('input[name="'+targetGroup+'Kpp"]').val('');
@@ -36,6 +45,7 @@
         $('input[name="'+targetGroup+'Address"]').val('');
         $('input[name="'+targetGroup+'Head"]').val('');
         $('input[name="'+targetGroup+'"]').val('');
+        clearBankFormData();
     }
 
     $('.inn-fill').on('click', function() {  
@@ -80,7 +90,7 @@
 
     $('.inn-clear').on('click', function() {  
         var targetGroup = $(this).attr('target-group');
-        clearFromData(targetGroup);
+        clearLegalFromData(targetGroup);
     })
 
     $('.bik-fill').on('click', function() {
@@ -105,10 +115,6 @@
     });    
 
     $('.bik-clear').on('click', function() {  
-        $('input[name="bankName"]').val('');
-        $('input[name="bankCity"]').val('');
-        $('input[name="ks"]').val('');
-        $('input[name="bik"]').val('');
-//        $('input[name="rs"]').val('');
+        clearBankFormData();
     })
 </script>

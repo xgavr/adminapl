@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\Criteria;
 use Laminas\Filter\Digits;
 use Stock\Entity\Ptu;
 use Application\Entity\Order;
+use Company\Entity\BankAccount;
 
 /**
  * Description of Legal
@@ -353,6 +354,10 @@ class Legal {
         return new ArrayCollection(iterator_to_array($iterator));
     }    
     
+    /**
+     * Банковский счет
+     * @return BankAccount
+     */
     public function getLastActiveBankAccount()
     {
         $criteria = Criteria::create()

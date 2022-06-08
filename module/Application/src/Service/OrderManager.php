@@ -1153,6 +1153,7 @@ class OrderManager
                 $upd['legal_id'] = $legal->getId();
             }
 
+            $upd['bank_account_id'] = null;
             if (!empty($data['bankAccount'])){
                 $upd['bank_account_id'] = $data['bankAccount'];
             }

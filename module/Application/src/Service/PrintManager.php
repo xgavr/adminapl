@@ -30,6 +30,9 @@ use Stock\Entity\Ptu;
 use Stock\Entity\VtpGood;
 use Stock\Entity\PtuGood;
 use Company\Entity\Commission;
+use Application\Entity\Order;
+use Application\Entity\Bid;
+use Application\Filter\NumToStr;
 
 
 /**
@@ -403,7 +406,7 @@ class PrintManager {
         return $outFilename;
     }    
 
-        /**
+    /**
      * УПД возврат
      * @param Vtp $vtp
      * @param string $writerType
@@ -523,4 +526,134 @@ class PrintManager {
         return $outFilename;
     }    
 
+    /**
+     * Счет на оплату
+     * @param Order $order
+     * @param string $writerType
+     * @param bool $stamp
+     * @param bool $code
+     * @return string 
+     */
+    public function bill($order, $writerType = 'Pdf', $stamp = false, $code = true)
+    {
+        ini_set("pcre.backtrack_limit", "5000000");
+        setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
+//        echo strftime("%B %d, %Y", time()); exit;
+
+        $folder_name = Order::PRINT_FOLDER;
+        if (!is_dir($folder_name)){
+            mkdir($folder_name);
+        }        
+        
+        $numToStrFilter = new NumToStr();
+        
+        $inputFileType = 'Xls';
+        $reader = IOFactory::createReader($inputFileType);
+        $spreadsheet = $reader->load(Order::TEMPLATE_BILL);
+        $spreadsheet->getProperties()
+                ->setTitle($order->getDocPresent('Счет'))
+                ;
+        $sheet = $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('B3', $order->getCompany()->getLastActiveBankAccount()->getName())
+                ->setCellValue('W3', $order->getCompany()->getLastActiveBankAccount()->getBik())
+                ->setCellValue('W4', $order->getCompany()->getLastActiveBankAccount()->getRs())
+                ->setCellValue('D6', $order->getCompany()->getInn())
+                ->setCellValue('M6', $order->getCompany()->getKpp())
+                ->setCellValue('W6', $order->getCompany()->getLastActiveBankAccount()->getKs())
+                ->setCellValue('B7', $order->getCompany()->getName())
+                ->setCellValue('B11', 'Счет на оплату №'.$order->getDocNo().' от '.date('d.m.Y', strtotime($order->getDocDate())))
+                ->setCellValue('H13', $order->getCompany()->getName())
+                ->setCellValue('H15', ($order->getLegal()) ? $order->getLegal()->getName():$order->getContact()->getName())
+                ->setCellValue('H17', $order->getInvoiceInfo())
+                ->setCellValue('AH22', number_format($order->getTotal(), 2, ',', ' '))
+                ->setCellValue('AH23', 'Без НДС')
+                ->setCellValue('AH24', number_format($order->getTotal(), 2, ',', ' '))
+                
+                ->setCellValue('B25', 'Всего наименований '.$order->getBids()->count().', на сумму '.number_format($order->getTotal(), 2, ',', ' ').' руб.')
+                ->setCellValue('B26', ucfirst($numToStrFilter->filter($order->getTotal())))                
+                ;
+        
+        if (!$stamp){
+            $sheet
+                ->setCellValue('G30', $order->getCompany()->getHead())
+                ->setCellValue('Y30', $order->getCompany()->getChiefAccount())
+                ;
+            $sheet->removeRow(31);
+        }
+        if ($stamp){            
+
+            $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+            $drawing->setName('Stamp');
+            $drawing->setDescription('Stamp');
+            $drawing->setPath(Order::STAMP_IMG, false); // put your path and image here
+            $drawing->setCoordinates('B31');
+            $drawing->getShadow()->setVisible(true);
+            $drawing->setWorksheet($sheet);            
+
+            $sheet->removeRow(30);
+        }
+        
+        if (!$code){
+            $sheet->setCellValue('D19', 'Код');
+        }
+        
+        $bids = $this->entityManager->getRepository(Bid::class)
+                ->findByOrder($order->getId());
+        if ($bids){
+            $i = 1;
+            $row = 20;
+            $bidsShipmentCount = ($order->getShipmentTotal()) ? count($bids)+1:count($bids);
+            $srcRow = $row + $bidsShipmentCount - 1;
+            if ($bidsShipmentCount > 1){
+                $sheet->insertNewRowBefore($row, $bidsShipmentCount - 1);            
+            }
+            foreach ($bids as $bid){
+                if ($bidsShipmentCount > 1){
+                    $this->_copyRows($sheet, "A$srcRow:AH$srcRow", "A$row");
+                } 
+                $sheet->setCellValue("B$row", $i);       
+                if ($code){
+                    $sheet->setCellValue("D$row", $bid->getGood()->getCode());                
+                } else {
+                    $sheet->setCellValue("D$row", $bid->getGood()->getId());                                    
+                }    
+                $sheet->setCellValue("H$row", $bid->getGood()->getNameShort());                
+                $sheet->setCellValue("Y$row", number_format($bid->getNum(), 0, ',', ' '));                
+                $sheet->setCellValue("AD$row", number_format($bid->getPrice(), 2, ',', ' '));                              
+                $sheet->setCellValue("AH$row", number_format($bid->getTotal(), 2, ',', ' '));                
+                $i++;
+                $row++;
+            }
+        }
+        
+        if ($order->getShipmentTotal()){
+            $this->_copyRows($sheet, "A$srcRow:AH$srcRow", "A$row");
+            $sheet->setCellValue("B$row", $i);       
+            $sheet->setCellValue("D$row", '');                                    
+            $sheet->setCellValue("H$row", 'Организация доставки груза');                
+            $sheet->setCellValue("Y$row", '');                
+            $sheet->setCellValue("AD$row", '');                              
+            $sheet->setCellValue("AH$row", number_format($order->getShipmentTotal(), 2, ',', ' '));                            
+        }
+                
+        switch ($writerType){
+            case 'Pdf':
+                $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
+                $outFilename = $order->getPrintName($writerType, 'Счет');
+                $writer->save($outFilename);
+                break;
+            case 'Xls':
+            case 'Xlsx':
+                $writer = IOFactory::createWriter($spreadsheet, $writerType);
+                $outFilename = $order->getPrintName($writerType, 'Счет');
+//                $writer->writeAllSheets();
+                $writer->save($outFilename);
+                break;
+            default: 
+                $outFilename = null;
+        } 
+        
+        
+        return $outFilename;
+    }    
 }

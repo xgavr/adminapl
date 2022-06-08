@@ -23,6 +23,7 @@ $form->get('user')->setAttributes([
 $form->get('aplId')->setAttributes([
     'class'=>'form-control', 
     'placeholder' => 'Номер АПЛ',
+    'style' => 'width:100px',
     ]);
 
 $form->get('skiper')->setAttributes([
@@ -199,6 +200,11 @@ $form->get('bankName')->setAttributes([
 $form->get('bankCity')->setAttributes([
     'class'=>'form-control', 
     'placeholder' => 'Город банка',
+    ]);
+
+$form->get('invoiceInfo')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Комментарий к счету',
     ]);
 
 $form->get('status')->setAttributes([
@@ -501,6 +507,15 @@ $form->prepare();
                 </div>
             </div>
         </div>    
+        <div class="row">
+            <div class="col-xs-12">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('invoiceInfo')); ?>
+                    <?= $this->formElement($form->get('invoiceInfo')); ?>
+                    <?= $this->formElementErrors($form->get('invoiceInfo')); ?>                  
+                </div>
+            </div>
+        </div>    
         <hr/>
         <div class="row bank-account">
             <div class="col-xs-2">                        
@@ -602,7 +617,7 @@ $form->prepare();
         <?php echo $this->partial('/company/legal/bik-inn-partial', []); ?>
     </div>
     <div class="col-sm-1">
-        <div data-spy="affix" data-offset-top="20">        
+        <div class="list-group" data-spy="affix" data-offset-top="20">        
             <div class="form-group form-group-sm">
                 <?//= $this->formLabel($form->get('aplId')); ?>
                 <?= $this->formElement($form->get('aplId')); ?>
@@ -610,6 +625,18 @@ $form->prepare();
             </div>
             <button type="button" class="btn btn-primary btn-sm btn-block" id="order-submit">Сохранить</button>    
             <button type="button" class="btn btn-secondary btn-sm btn-block" id="order-reset">Закрыть</button>
+            <button type="button" class="btn btn-secondary btn-sm btn-block" id="print-check">
+                Товарный чек
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm btn-block" id="print-torg12">
+                ТОРГ-12
+            </button>
+            <a type="button" class="btn btn-secondary btn-sm btn-block" href="/print/order-bill/<?= $orderId?>?ext=Pdf" target="_blank">
+                Счет
+            </a>
+            <a type="button" class="btn btn-secondary btn-sm btn-block" href="/print/order-bill/<?= $orderId?>?ext=Pdf&stamp=1" target="_blank">
+                Счет с печатью
+            </a>
         </div>    
     </div>
 </div>    
@@ -698,6 +725,9 @@ $form->prepare();
         
     function submitForm(){
         window.onbeforeunload = false;
+        $(".has-error").each(function( index ) {
+            $(this).removeClass('has-error');
+        });    
         var data = serializeForm('#order-form');
         data.orderGood = getFormatedOrderGood();
         data.comments = getUnsavedOrderComments();
@@ -722,7 +752,15 @@ $form->prepare();
                     if (reload && data.id){
                         window.location.href = '/order/intro/'+data.id;
                     }
-                }    
+                }
+                if (data.error){
+                    var errorFields = '';
+                    $.each( data.error, function( key, value ) {
+                        $('input[name="'+key+'"]').parents('.form-group').addClass('has-error');
+                        errorFields += $('input[name="'+key+'"]').attr('placeholder')+' ';
+                    });    
+                    alert('Не сохранено! Ошибка в поле '+errorFields.trim());                    
+                }
             })
             .fail(function () {
                 alert("Ошибка при открытии формы.");

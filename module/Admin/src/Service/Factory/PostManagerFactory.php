@@ -12,6 +12,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\PostManager;
 use Admin\Service\LogManager;
+use Application\Service\PrintManager;
 
 /**
  * Description of PostManagerFactory
@@ -26,8 +27,9 @@ class PostManagerFactory  implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
+        $printManager = $container->get(PrintManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new PostManager($entityManager, $logManager);
+        return new PostManager($entityManager, $logManager, $printManager);
     }
 }

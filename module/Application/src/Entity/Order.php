@@ -42,6 +42,11 @@ class Order {
     const MODE_FAST  = 4; // Быстрый заказ
     const MODE_INNER  = 5; // Внутренний заказ
         
+    const PRINT_FOLDER         = './data/template/order'; 
+    const TEMPLATE_TORG12      = './data/template/torg-12.xls';
+    const TEMPLATE_BILL        = './data/template/bill.xls';
+    const STAMP_IMG            = '/img/stamp.png';
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -277,10 +282,40 @@ class Order {
     {
         return $this->id;
     }
+    
+    public function getDocNo()
+    {
+        if ($this->aplId){
+            return $this->aplId;
+        }
+        return $this->id;        
+    }
 
     public function getIdLink() 
     {
         return "<a href='/order/view/{$this->id}' target=_blank>{$this->id}</a>";
+    }
+
+    /**
+     * Returns the namefile.
+     * @param string $docName
+     * @return string     
+     */
+    public function getPrintName($ext, $docName = 'ТОРГ12') 
+    {
+        return self::PRINT_FOLDER.'/'.$this->getDocPresent($docName).'.'.strtolower($ext);
+    }
+
+    /**
+     * Returns the present of doc.
+     * @param string $docName
+     * @return string     
+     */
+    public function getDocPresent($docName = 'ТОРГ12') 
+    {
+        $docDate = date('d-m-Y', strtotime($this->getDocDate()));
+        $docNo = $this->getDocNo();
+        return "$docName №{$docNo} от {$docDate}";
     }
 
     public function getLogKey() 
@@ -465,6 +500,14 @@ class Order {
     {
         $this->dateCreated = $dateCreated;
     }     
+    
+    public function getDocDate()
+    {
+        if ($this->dateOper){
+            return $this->dateOper;
+        }
+        return $this->dateCreated;
+    }
 
     public function getTotal() 
     {

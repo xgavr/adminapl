@@ -39,6 +39,11 @@ $form->get('message')->setAttributes([
     'rows' => 8
     ]);
 
+$form->get('orderId')->setAttributes([
+    'class'=>'form-control', 
+    'value' => $order->getId(),
+    ]);
+
 $form->prepare();
 
 ?>
@@ -348,6 +353,7 @@ $form->prepare();
     </div>
 </div>    
 
+<?= $this->formElement($form->get('orderId')); ?>
 <?= $this->form()->closeTag(); ?>
 
 <div class="text-hide" id="mail-welcome">
@@ -362,6 +368,8 @@ $form->prepare();
 <script>    
     var $bodyEditor = $('textarea[name="message"]');
     var $showCode = $('input[name="showCode"]');
+    var $bill = $('input[name="bill"]');
+    var $offer = $('input[name="offer"]');
     var $currentNode = null;
     
     $( document ).ready(function() {
@@ -377,16 +385,29 @@ $form->prepare();
         let info = $('#mail-info').html();
         let str = $currentNode.children('.text-hide').html();
         $.get('/post/order-body/<?= $order->getId()?>?showCode='+$showCode.prop('checked'), function( data ) {                
-            $bodyEditor.summernote('code', welcome + info + data.body + '<br/><br/>' + $.trim(str) + sberForm + data.sign);
+            let sign = (data.sign) ? data.sign:'';
+            $bodyEditor.summernote('code', welcome + info + data.body + '<br/><br/>' + $.trim(str) + sberForm + sign);
         });        
     }
     
     $showCode.on('click', function(){
+        $(this).val(0);
+        if ($(this).prop('checked')) $(this).val(1);
         if ($currentNode){
             renderBody();
         }    
     });
         
+    $bill.on('click', function(){
+        $(this).val(0);
+        if ($(this).prop('checked')) $(this).val(1);
+    });
+
+    $offer.on('click', function(){
+        $(this).val(0);
+        if ($(this).prop('checked')) $(this).val(1);
+    });
+
     $('.local-comment').on('click', function() {
         $currentNode = $(this);
         renderBody();
