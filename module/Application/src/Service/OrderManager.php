@@ -779,7 +779,7 @@ class OrderManager
             $upd['company_id'] = $company->getId();
 
             $contactCar = $this->findContactCarByOrderData($contact, $data);
-            $upd['contact_car_id'] = $contactCar->getId();
+            $upd['contact_car_id'] = ($contactCar) ? $contactCar->getId():null;
 
             if (!empty($data['courier'])){
                 $upd['courier_id'] = $data['courier'];
@@ -1125,7 +1125,7 @@ class OrderManager
             ];
 
             $contactCar = $this->findContactCarByOrderData($order->getContact(), $data);
-            $upd['contact_car_id'] = $contactCar->getId();
+            $upd['contact_car_id'] = ($contactCar) ? $contactCar->getId():null;
 
             $upd['courier_id'] = null;
             if (!empty($data['courier'])){
