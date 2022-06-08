@@ -98,10 +98,7 @@ class PostManager {
         $html->charset = 'utf-8';
         $html->encoding = Mime::ENCODING_QUOTEDPRINTABLE;        
         
-        $content = new MimeMessage();
-        $content->setParts([$text, $html]);
-        $contentPart = new MimePart($content->generateMessage());
-        $parts = [$contentPart];
+        $parts = [$html, $text];
         
         if (!empty($options['bill'])){
             $order = $this->entityManager->getRepository(Order::class)
@@ -110,8 +107,8 @@ class PostManager {
                 $billFileName = $this->printManager->bill($order, 'Pdf', true, !empty($options['showCode']));
                 if (file_exists($billFileName)){
                     $billFile              = new MimePart(fopen($billFileName, 'r'));
-                    $billFile->type        = 'application/octet-stream';
-                    $billFile->filename    = basename($billFileName);
+                    $billFile->type        = 'application/pdf';
+                    $billFile->filename    = iconv_mime_encode(basename($billFileName));
                     $billFile->disposition = Mime::DISPOSITION_ATTACHMENT;
                     $billFile->encoding    = Mime::ENCODING_BASE64;      
                     
@@ -120,22 +117,22 @@ class PostManager {
             }    
         }
         
-//        if (!empty($options['offer'])){
-//            $order = $this->entityManager->getRepository(Order::class)
-//                    ->find($options['orderId']);
-//            if ($order){
-//                $offerFileName = $this->printManager->offer($order, 'Pdf', true, !empty($options['showCode']));
-//                if (file_exists($offerFileName)){
-//                    $offerFile              = new MimePart(fopen($offerFileName, 'r'));
-//                    $offerFile->type        = 'application/octet-stream';
-//                    $offerFile->filename    = basename($offerFileName);
-//                    $offerFile->disposition = Mime::DISPOSITION_ATTACHMENT;
-//                    $offerFile->encoding    = Mime::ENCODING_BASE64;      
-//                    
-//                    $parts[] = $offerFile;
-//                }
-//            }    
-//        }
+        if (!empty($options['offer'])){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($options['orderId']);
+            if ($order){
+                $offerFileName = $this->printManager->offer($order, 'Pdf', true, !empty($options['showCode']));
+                if (file_exists($offerFileName)){
+                    $offerFile              = new MimePart(fopen($offerFileName, 'r'));
+                    $offerFile->type        = 'application/pdf';
+                    $offerFile->filename    = iconv_mime_encode(basename($offerFileName));
+                    $offerFile->disposition = Mime::DISPOSITION_ATTACHMENT;
+                    $offerFile->encoding    = Mime::ENCODING_BASE64;      
+                    
+                    $parts[] = $offerFile;
+                }
+            }    
+        }
         
         $body = new MimeMessage();
         $body->setParts($parts);
