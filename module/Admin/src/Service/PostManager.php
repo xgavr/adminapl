@@ -110,7 +110,7 @@ class PostManager {
                 $billFileName = $this->printManager->bill($order, 'Pdf', true, !empty($options['showCode']));
                 if (file_exists($billFileName)){
                     $billFile              = new MimePart(fopen($billFileName, 'r'));
-                    $billFile->type        = 'application/pdf';
+                    $billFile->type        = 'application/octet-stream';
                     $billFile->filename    = basename($billFileName);
                     $billFile->disposition = Mime::DISPOSITION_ATTACHMENT;
                     $billFile->encoding    = Mime::ENCODING_BASE64;      
@@ -127,7 +127,7 @@ class PostManager {
                 $offerFileName = $this->printManager->offer($order, 'Pdf', true, !empty($options['showCode']));
                 if (file_exists($offerFileName)){
                     $offerFile              = new MimePart(fopen($offerFileName, 'r'));
-                    $offerFile->type        = 'application/pdf';
+                    $offerFile->type        = 'application/octet-stream';
                     $offerFile->filename    = basename($offerFileName);
                     $offerFile->disposition = Mime::DISPOSITION_ATTACHMENT;
                     $offerFile->encoding    = Mime::ENCODING_BASE64;      
@@ -152,7 +152,7 @@ class PostManager {
         $message->setBody($body);
         
         $contentTypeHeader = $message->getHeaders()->get('Content-Type');
-        $contentTypeHeader->setType('multipart/alternative');
+        $contentTypeHeader->setType('multipart/related');
 
         $transport = new SmtpTransport();
         $smtpOptions   = new SmtpOptions([
