@@ -120,22 +120,22 @@ class PostManager {
             }    
         }
         
-        if (!empty($options['offer'])){
-            $order = $this->entityManager->getRepository(Order::class)
-                    ->find($options['orderId']);
-            if ($order){
-                $offerFileName = $this->printManager->offer($order, 'Pdf', true, !empty($options['showCode']));
-                if (file_exists($offerFileName)){
-                    $offerFile              = new MimePart(fopen($offerFileName, 'r'));
-                    $offerFile->type        = 'application/octet-stream';
-                    $offerFile->filename    = basename($offerFileName);
-                    $offerFile->disposition = Mime::DISPOSITION_ATTACHMENT;
-                    $offerFile->encoding    = Mime::ENCODING_BASE64;      
-                    
-                    $parts[] = $offerFile;
-                }
-            }    
-        }
+//        if (!empty($options['offer'])){
+//            $order = $this->entityManager->getRepository(Order::class)
+//                    ->find($options['orderId']);
+//            if ($order){
+//                $offerFileName = $this->printManager->offer($order, 'Pdf', true, !empty($options['showCode']));
+//                if (file_exists($offerFileName)){
+//                    $offerFile              = new MimePart(fopen($offerFileName, 'r'));
+//                    $offerFile->type        = 'application/octet-stream';
+//                    $offerFile->filename    = basename($offerFileName);
+//                    $offerFile->disposition = Mime::DISPOSITION_ATTACHMENT;
+//                    $offerFile->encoding    = Mime::ENCODING_BASE64;      
+//                    
+//                    $parts[] = $offerFile;
+//                }
+//            }    
+//        }
         
         $body = new MimeMessage();
         $body->setParts($parts);
