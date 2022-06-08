@@ -1138,7 +1138,7 @@ class OrderManager
                         ->find($data['legal']);
                 $upd['legal_id'] = $data['legal'];
             }
-            if (empty($data['legal']) && !empty(data['legalInn']) && !empty($data['legalName'])){
+            if (empty($data['legal']) && !empty($data['legalInn']) && !empty($data['legalName'])){
                 $legal = $this->legalManager->addLegal($order->getContact(), [
                     'inn' => $data['legalInn'],
                     'name' => $data['legalName'],
@@ -1157,13 +1157,13 @@ class OrderManager
             if (!empty($data['bankAccount'])){
                 $upd['bank_account_id'] = $data['bankAccount'];
             }
-            if ($legal && empty($data['bankAccount']) && !empty(data['rs']) && !empty($data['bik']) && !empty($data['bankName'])){
+            if ($legal && empty($data['bankAccount']) && !empty($data['rs']) && !empty($data['bik']) && !empty($data['bankName'])){
                 $bankAccount = $this->legalManager->addBankAccount($legal, [
-                    'rs' => data['rs'],
-                    'bik' => data['bik'],
-                    'name' => data['bankName'],
-                    'city' => empty(data['bankCity']) ? null:data['bankCity'],
-                    'ks' => empty(data['ks']) ? null:data['ks'],
+                    'rs' => $data['rs'],
+                    'bik' => $data['bik'],
+                    'name' => $data['bankName'],
+                    'city' => empty($data['bankCity']) ? null:$data['bankCity'],
+                    'ks' => empty($data['ks']) ? null:$data['ks'],
                 ]);
                 $upd['bank_account_id'] = $bankAccount->getId();
             }
@@ -1171,7 +1171,7 @@ class OrderManager
             if (!empty($data['recipient'])){
                 $upd['recipient_id'] = $data['recipient'];
             }
-            if (empty($data['recipient']) && !empty(data['recipientInn']) && !empty($data['recipientName'])){
+            if (empty($data['recipient']) && !empty($data['recipientInn']) && !empty($data['recipientName'])){
                 $recipient = $this->legalManager->addLegal($order->getContact(), [
                     'inn' => data['recipientInn'],
                     'name' => data['recipientName'],

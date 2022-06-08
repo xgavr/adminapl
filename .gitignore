@@ -31,3 +31,4 @@ phpunit.xml
 /data/template/.~lock.upd.xls#
 /bower_components/
 /bower.json
+/data/template/order/
