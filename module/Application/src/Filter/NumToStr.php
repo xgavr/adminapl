@@ -79,8 +79,10 @@ class NumToStr extends AbstractFilter
 		array('миллиард','милиарда','миллиардов',0),
 	);
 	//
-	list($rub,$kop) = explode('.',sprintf("%015.2f", number_format(floatval($value), 2, '.', '')));
-        if (!$kop) $kop = 0;
+	$rubKop = explode('.', sprintf("%015.2f", floatval($value)));
+        $rub = 0; $kop = 0;
+        if (isset($rubKop[0])) $rub = $rubKop[0];
+        if (isset($rubKop[1])) $kop = $rubKop[1];
 	$out = array();
 	if (intval($rub)>0) {
 		foreach(str_split($rub,3) as $uk=>$v) { // by 3 symbols
