@@ -108,7 +108,7 @@ class PostManager {
                 if (file_exists($billFileName)){
                     $billFile              = new MimePart(fopen($billFileName, 'r'));
                     $billFile->type        = 'application/pdf';
-                    $billFile->filename    = iconv_mime_encode(basename($billFileName));
+                    $billFile->filename    = basename($billFileName);
                     $billFile->disposition = Mime::DISPOSITION_ATTACHMENT;
                     $billFile->encoding    = Mime::ENCODING_BASE64;      
                     
@@ -125,7 +125,7 @@ class PostManager {
                 if (file_exists($offerFileName)){
                     $offerFile              = new MimePart(fopen($offerFileName, 'r'));
                     $offerFile->type        = 'application/pdf';
-                    $offerFile->filename    = iconv_mime_encode(basename($offerFileName));
+                    $offerFile->filename    = basename($offerFileName);
                     $offerFile->disposition = Mime::DISPOSITION_ATTACHMENT;
                     $offerFile->encoding    = Mime::ENCODING_BASE64;      
                     
