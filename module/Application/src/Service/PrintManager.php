@@ -570,7 +570,7 @@ class PrintManager {
                 ->setCellValue('AH24', number_format($order->getTotal(), 2, ',', ' '))
                 
                 ->setCellValue('B25', 'Всего наименований '.$order->getBids()->count().', на сумму '.number_format($order->getTotal(), 2, ',', ' ').' руб.')
-                ->setCellValue('B26', ucfirst($numToStrFilter->filter($order->getTotal())))                
+                ->setCellValue('B26', $numToStrFilter->filter($order->getTotal()))               
                 ;
         
         if (!$stamp){
@@ -617,7 +617,7 @@ class PrintManager {
                 } else {
                     $sheet->setCellValue("D$row", $bid->getGood()->getId());                                    
                 }    
-                $sheet->setCellValue("H$row", $bid->getGood()->getNameShort());                
+                $sheet->setCellValue("H$row", ($bid->getDisplayName()) ? $bid->getDisplayName():$bid->getGood()->getNameShort());                
                 $sheet->setCellValue("Y$row", number_format($bid->getNum(), 0, ',', ' '));                
                 $sheet->setCellValue("AD$row", number_format($bid->getPrice(), 2, ',', ' '));                              
                 $sheet->setCellValue("AH$row", number_format($bid->getTotal(), 2, ',', ' '));                
@@ -656,4 +656,125 @@ class PrintManager {
         
         return $outFilename;
     }    
+    
+    /**
+     * Торг12
+     * @param Order $order
+     * @param string $writerType
+     * @param bool $code
+     * @return string 
+     */
+    public function torg12($order, $writerType = 'Pdf', $code = true)
+    {
+        ini_set("pcre.backtrack_limit", "5000000");
+        setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
+//        echo strftime("%B %d, %Y", time()); exit;
+
+        $folder_name = Order::PRINT_FOLDER;
+        if (!is_dir($folder_name)){
+            mkdir($folder_name);
+        }        
+        
+        $rubToStrFilter = new NumToStr();
+        $numToStrFilter = new NumToStr(['format' => NumToStr::FORMAT_NUM]);
+        
+        $inputFileType = 'Xls';
+        $reader = IOFactory::createReader($inputFileType);
+        $spreadsheet = $reader->load(Order::TEMPLATE_TORG12);
+        $spreadsheet->getProperties()
+                ->setTitle($order->getDocPresent('Накладная'))
+                ;
+        
+        $recipient = ($order->getRecipient()) ? $order->getRecipient():$order->getLegal();
+        
+        $sheet = $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('B3', $order->getCompany()->getCompanyBankAccountPresent($order->getOffice()))
+                ->setCellValue('AL4', $order->getCompany()->getOkpo())
+                ->setCellValue('D8', ($recipient) ? $recipient->getLegalBankAccountPresent():'')
+                ->setCellValue('AL9', $order->getCompany()->getOkpo())
+                ->setCellValue('D10', $order->getCompany()->getCompanyBankAccountPresent($order->getOffice()))
+                ->setCellValue('D12', ($order->getLegal()) ? $order->getLegal()->getLegalBankAccountPresent():'')
+//                ->setCellValue('D14', ($order->getContract()) ? $order->getContract()->getContractPresent():'')
+                ->setCellValue('K17', $order->getDocNo())
+                ->setCellValue('O17', date('d.m.Y', strtotime($order->getDocDate())))
+                ->setCellValue('Z25', number_format($order->getBidTotal(), 2, ',', ' '))
+                ->setCellValue('AK25', number_format($order->getBidTotal(), 2, ',', ' '))
+                
+                ->setCellValue('F27', $numToStrFilter->filter($order->getBids()->count()))
+                ->setCellValue('B37', $rubToStrFilter->filter($order->getBidTotal()))                
+                ->setCellValue('J39', $order->getCompany()->getHead())
+                ->setCellValue('J41', $order->getCompany()->getChiefAccount())
+
+                ->setCellValue('F46', '"'.date('d', strtotime($order->getDocDate())).'"')
+                ->setCellValue('G46', date('m', strtotime($order->getDocDate())))
+                ->setCellValue('I46', date('Y', strtotime($order->getDocDate())).' года')                
+                ;
+        
+        
+        $bids = $this->entityManager->getRepository(Bid::class)
+                ->findByOrder($order->getId());
+        if ($bids){
+            $i = 1;
+            $row = 23;
+            $totalNum = $pageNum = $pageTotal = 0;
+            $bidsCount = count($bids);
+            $srcRow = $row + $bidsCount - 1;
+            if ($bidsCount > 1){
+                $sheet->insertNewRowBefore($row, $bidsCount - 1);            
+            }
+            foreach ($bids as $bid){
+                if ($bidsCount > 1){
+                    $this->_copyRows($sheet, "A$srcRow:AN$srcRow", "A$row");
+                } 
+                $sheet->setCellValue("B$row", $i);       
+                $sheet->setCellValue("C$row", ($bid->getDisplayName()) ? $bid->getDisplayName():$bid->getGood()->getNameShort());                
+                if ($code){
+                    $sheet->setCellValue("G$row", $bid->getGood()->getCode());                
+                } else {
+                    $sheet->setCellValue("G$row", $bid->getGood()->getId());                                    
+                }    
+                $sheet->setCellValue("V$row", number_format($bid->getNum(), 0, ',', ' '));                
+                $sheet->setCellValue("X$row", number_format($bid->getPrice(), 2, ',', ' '));                              
+                $sheet->setCellValue("Z$row", number_format($bid->getTotal(), 2, ',', ' '));                
+                $sheet->setCellValue("AK$row", number_format($bid->getTotal(), 2, ',', ' '));                
+                $i++;
+                $row++;
+                $totalNum += $bid->getNum();
+                $pageNum += $bid->getNum();
+                $pageTotal += $bid->getTotal();
+            }
+            $sheet->setCellValue('V'.(24+$bidsCount-1), $pageNum);
+            $sheet->setCellValue('V'.(25+$bidsCount-1), $totalNum);
+            $sheet->setCellValue('Z'.(24+$bidsCount-1), number_format($pageTotal, 2, ',', ' '));
+            $sheet->setCellValue('AK'.(24+$bidsCount-1), number_format($pageTotal, 2, ',', ' '));
+        }
+        
+        $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        $sheet->getPageMargins()
+            ->setLeft(0.5)
+            ->setRight(0.5)
+            ->setTop(0.2)
+            ->setBottom(0.2)
+            ->setHeader(0);
+        
+        switch ($writerType){
+            case 'Pdf':
+                $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
+                $outFilename = $order->getPrintName($writerType, 'Счет');
+                $writer->save($outFilename);
+                break;
+            case 'Xls':
+            case 'Xlsx':
+                $writer = IOFactory::createWriter($spreadsheet, $writerType);
+                $outFilename = $order->getPrintName($writerType, 'Счет');
+//                $writer->writeAllSheets();
+                $writer->save($outFilename);
+                break;
+            default: 
+                $outFilename = null;
+        } 
+        
+        
+        return $outFilename;
+    }        
 }

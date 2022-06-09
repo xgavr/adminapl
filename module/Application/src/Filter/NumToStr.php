@@ -20,10 +20,14 @@ use Laminas\Filter\StringTrim;
  */
 class NumToStr extends AbstractFilter
 {
+    const FORMAT_RUB = 1;
+    const FORMAT_NUM = 2;
     
     // Доступные опции фильтра.
     protected $options = [
     ];    
+    
+    private $format = self::FORMAT_RUB;
 
     // Конструктор.
     public function __construct($options = null) 
@@ -31,6 +35,7 @@ class NumToStr extends AbstractFilter
         // Задает опции фильтра (если они предоставлены).
         if(is_array($options)) {
             if(isset($options['format'])){
+                $this->format = $options['format'];
             }
         }    
     }
@@ -99,8 +104,10 @@ class NumToStr extends AbstractFilter
 		} //foreach
 	}
 	else $out[] = $nul;
-	$out[] = $this->morph(intval($rub), $unit[1][0],$unit[1][1],$unit[1][2]); // rub
-	$out[] = $kop.' '.$this->morph($kop,$unit[0][0],$unit[0][1],$unit[0][2]); // kop
+        if ($this->format == self::FORMAT_RUB){
+            $out[] = $this->morph(intval($rub), $unit[1][0],$unit[1][1],$unit[1][2]); // rub
+            $out[] = $kop.' '.$this->morph($kop,$unit[0][0],$unit[0][1],$unit[0][2]); // kop
+        }    
 	return $this->mb_ucfirst(trim(preg_replace('/ {2,}/', ' ', join(' ',$out))));            
     }
     

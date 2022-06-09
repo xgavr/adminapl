@@ -32,3 +32,4 @@ phpunit.xml
 /bower_components/
 /bower.json
 /data/template/order/
+/data/template/.~lock.torg12.xls#

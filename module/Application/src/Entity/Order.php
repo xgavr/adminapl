@@ -43,7 +43,7 @@ class Order {
     const MODE_INNER  = 5; // Внутренний заказ
         
     const PRINT_FOLDER         = './data/template/order'; 
-    const TEMPLATE_TORG12      = './data/template/torg-12.xls';
+    const TEMPLATE_TORG12      = './data/template/torg12.xls';
     const TEMPLATE_BILL        = './data/template/bill.xls';
     const STAMP_IMG            = '../data/template/stamp.png';
 //    const STAMP_IMG            = '/img/stamp.png';
@@ -513,6 +513,11 @@ class Order {
     public function getTotal() 
     {
         return $this->total;
+    }
+
+    public function getBidTotal() 
+    {
+        return $this->total - $this->shipmentTotal;
     }
 
     public function getPrepay() 
@@ -1015,7 +1020,7 @@ class Order {
      */
     public function getBidsAsHtml($showCode = false)
     {
-        $result = "<table width='50%' border='1'>";
+        $result = "<table width='75%' border='1'>";
         $result .= $this->getBidsAsHtmlHeader($showCode);
         $result .= $this->getBidsAsHtmlBody($showCode);
         $result .= $this->getBidsAsHtmlFooter();

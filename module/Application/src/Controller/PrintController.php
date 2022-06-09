@@ -141,4 +141,36 @@ class PrintController extends AbstractActionController
         // Read the file
         @readfile($updfile);
     }      
+    
+    public function torg12Action() 
+    {       
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        $ext = $this->params()->fromQuery('ext', 'Pdf');
+        $code = $this->params()->fromQuery('code', true);
+
+        if ($orderId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);
+        
+        if ($order == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }        
+        $updfile = $this->printManager->torg12($order, $ext, boolval($code));
+        
+//        var_dump($torg2); exit;
+        
+        // Render the view template.
+        header('Content-type: application/'. strtolower($ext));
+        header('Content-Disposition: inline; filename="' . basename($updfile) . '"');
+        header('Content-Transfer-Encoding: binary');  
+        header('Accept-Ranges: bytes');
+  
+        // Read the file
+        @readfile($updfile);
+    }          
 }

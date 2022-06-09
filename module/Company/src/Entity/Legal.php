@@ -374,6 +374,27 @@ class Legal {
     }
         
     /**
+     * Представдение расчетного счета
+     * @param array $options
+     * @retrun string
+     */
+    public function getBankAccountPresent($options = null)
+    {
+        $bankAccount = $this->getLastActiveBankAccount();
+        $result = '';
+        if ($bankAccount){
+            $result .= 'р/с '.$bankAccount->getRs();
+            $result .= ', ';
+            $result .= 'в банке '.$bankAccount->getNameWithCity();
+            $result .= ', ';
+            $result .= 'БИК '.$bankAccount->getBik();
+            $result .= ', ';
+            $result .= 'к/с '.$bankAccount->getKs();
+        }    
+        return trim($result);        
+    }
+    
+    /**
      * Assigns.
      */
     public function addBankAccount($bankAccount)
@@ -468,8 +489,25 @@ class Legal {
     }
     
     /**
-     * Представдение организации
+     * Представдение организации с р/с
      * @param Office $office
+     * @param array $options
+     * @retrun string
+     */
+    public function getCompanyBankAccountPresent($office, $options = null)
+    {
+        $result = '';
+        $result .= $this->getCompanyPresent($office, $options);
+        $bankPresent = $this->getBankAccountPresent($options);
+        if ($bankPresent){
+            $result .= ', '.$bankPresent;
+        }
+        
+        return trim($result);        
+    }
+    
+    /**
+     * Представдение организации
      * @param array $options
      * @retrun string
      */
@@ -493,6 +531,23 @@ class Legal {
         return trim($result);        
     }
     
+    /**
+     * Представдение организации с р/с
+     * @param array $options
+     * @retrun string
+     */
+    public function getLegalBankAccountPresent($options = null)
+    {
+        $result = '';
+        $result .= $this->getLegalPresent($options);
+        $bankPresent = $this->getBankAccountPresent($options);
+        if ($bankPresent){
+            $result .= ', '.$bankPresent;
+        }
+        
+        return trim($result);        
+    }
+
     /**
      * Для обновления в Апл
      * @return array
