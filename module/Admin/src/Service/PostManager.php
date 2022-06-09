@@ -98,7 +98,7 @@ class PostManager {
         $html->charset = 'utf-8';
         $html->encoding = Mime::ENCODING_QUOTEDPRINTABLE;        
         
-        $parts = [$html, $text];
+        $parts = [$html];
         
         if (!empty($options['bill'])){
             $order = $this->entityManager->getRepository(Order::class)

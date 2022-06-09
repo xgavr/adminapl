@@ -954,7 +954,7 @@ class Order {
             $result .= "</td>";
 
             $result .= "<td>";
-            $result .= $bid->getDisplayName();
+            $result .= ($bid->getDisplayName()) ? $bid->getDisplayName():$bid->getGood()->getNameShort();
             $result .= "</td>";
 
             $result .= "<td align='right'>";
