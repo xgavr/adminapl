@@ -141,7 +141,24 @@ class Bid {
     
     public function getDisplayName() 
     {
-        return $this->displayName;
+        if ($this->displayName){
+            return $this->displayName;
+        }
+        
+        return$this->getGood()->getNameShort();
+    }
+
+    public function getDisplayNameProducer() 
+    {
+        $producerName = $this->getGood()->getProducer()->getName();
+        return $producerName.' '.$this->getDisplayName();
+    }
+
+    public function getDisplayNameProducerCode() 
+    {
+        $producerName = $this->getGood()->getProducer()->getName();
+        $code = $this->getGood()->getCode();
+        return $code.' '.$producerName.' '.$this->getDisplayName();
     }
 
     public function setDisplayName($displayName) 
