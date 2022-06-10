@@ -777,4 +777,65 @@ class PrintManager {
         
         return $outFilename;
     }        
+    
+    /**
+     * Акт на услуги доставки
+     * @param Order $order
+     * @param string $writerType
+     * @return string 
+     */
+    public function act($order, $writerType = 'Pdf')
+    {
+        ini_set("pcre.backtrack_limit", "5000000");
+        setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
+//        echo strftime("%B %d, %Y", time()); exit;
+
+        $folder_name = Order::PRINT_FOLDER;
+        if (!is_dir($folder_name)){
+            mkdir($folder_name);
+        }        
+        
+        $numToStrFilter = new NumToStr();
+        
+        $inputFileType = 'Xls';
+        $reader = IOFactory::createReader($inputFileType);
+        $spreadsheet = $reader->load(Order::TEMPLATE_ACT);
+        $spreadsheet->getProperties()
+                ->setTitle($order->getDocPresent('Акт'))
+                ;
+        $sheet = $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('B3', $order->getDocPresent('Акт'))
+                ->setCellValue('F5', $order->getCompany()->getName())
+                ->setCellValue('F7', ($order->getLegal()) ? $order->getLegal()->getName():$order->getContact()->getName())
+                ->setCellValue('Z11', number_format($order->getShipmentTotal(), 2, ',', ' '))
+                ->setCellValue('AD11', number_format($order->getShipmentTotal(), 2, ',', ' '))
+                ->setCellValue('AD13', number_format($order->getShipmentTotal(), 2, ',', ' '))
+                
+                ->setCellValue('B16', 'Всего оказано услуг 1, на сумму '.number_format($order->getShipmentTotal(), 2, ',', ' ').' руб.')
+                ->setCellValue('B17', $numToStrFilter->filter($order->getShipmentTotal()))               
+                ->setCellValue('B22', 'Генеральный директор '.$order->getCompany()->getName())
+                ->setCellValue('B24', $order->getCompany()->getHead())
+                ;
+        
+        switch ($writerType){
+            case 'Pdf':
+                $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
+                $outFilename = $order->getPrintName($writerType, 'Счет');
+                $writer->save($outFilename);
+                break;
+            case 'Xls':
+            case 'Xlsx':
+                $writer = IOFactory::createWriter($spreadsheet, $writerType);
+                $outFilename = $order->getPrintName($writerType, 'Счет');
+//                $writer->writeAllSheets();
+                $writer->save($outFilename);
+                break;
+            default: 
+                $outFilename = null;
+        } 
+        
+        
+        return $outFilename;
+    }    
+
 }

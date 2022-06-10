@@ -46,7 +46,7 @@ class Order {
     const TEMPLATE_TORG12      = './data/template/torg12.xls';
     const TEMPLATE_BILL        = './data/template/bill.xls';
     const STAMP_IMG            = '../data/template/stamp.png';
-//    const STAMP_IMG            = '/img/stamp.png';
+    const TEMPLATE_ACT        = './data/template/act.xls';
     
     /**
      * @ORM\Id
