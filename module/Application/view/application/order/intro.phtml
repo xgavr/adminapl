@@ -987,7 +987,9 @@ $form->prepare();
     function priceColSets(col){
         let data = $table.bootstrapTable('getData');
         $.each(data, function( index, value ) {
-            if ($.isArray(value.opts)){
+            let opts = $.parseJSON(value.opts);
+            console.log(opts);
+            if ($.isArray(opts)){
                 let price = value.opts[col];
                 let uid = value.id;
                 if (price){
