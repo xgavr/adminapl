@@ -1119,7 +1119,7 @@ class PrintManager {
                 $tabData[] = str_replace(array_keys($tabReplace), array_values($tabReplace), $tabTmpl);
             }
         }
-        if ($order->getShipping() != Shipping::RATE_PICKUP){
+        if ($order->getShipping()->getRate() != Shipping::RATE_PICKUP){
             $tabReplace = [
                 '[НомерСтроки]' => $i,
                 '[Артикул]' => '',

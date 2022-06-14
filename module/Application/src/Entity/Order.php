@@ -924,7 +924,7 @@ class Order {
      */
     private function getBidsAsHtmlHeader($showCode = false)
     {
-        $result .= "<tr>";
+        $result = "<tr>";
 
         $result .= "<th class='article-code' align='center'>";
         if ($showCode){
@@ -1013,7 +1013,7 @@ class Order {
      */
     private function getBidsAsHtmlFooter()
     {
-        $result .= "<tr>";
+        $result = "<tr>";
 
         $result .= "<td colspan='5' align='right'>";
         $result .= "<strong>Итого:</strong>";

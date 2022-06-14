@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\ScaleTreshold;
 use Laminas\Json\Decoder;
+use Laminas\Json\Encoder;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -411,6 +412,16 @@ class Goods {
     public function getOpts()
     {
         return $this->optPrices($this->price, $this->meanPrice);
+    }
+
+    public function getOptsJson()
+    {
+        $opts = $this->getOpts();
+        if (is_array($opts)){
+            return Encoder::encode($opts);
+        }
+        
+        return;
     }
 
     public function setPrice($price) 

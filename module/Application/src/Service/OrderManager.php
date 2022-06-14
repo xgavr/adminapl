@@ -386,10 +386,12 @@ class OrderManager
         
         if ($data['good'] instanceof Goods){
             $bid->setGood($data['good']);            
+            $bid->setOpts($data['good']->getOptsJson());
         } else {
             $good = $this->entityManager->getRepository(Goods::class)
                         ->findOneById($data['good']);        
             $bid->setGood($good);
+            $bid->setOpts($good->getOptsJson());
         }    
         
         $bid->setOem(null);
@@ -441,8 +443,10 @@ class OrderManager
 
         if ($row['good'] instanceof Goods){
             $upd['good_id'] = $row['good']->getId();
+            $upd['opts'] = $row['good']->getOptsJson();
         } else {
             $upd['good_id'] = $row['good'];
+            $upd['opts'] = (empty($row['opts'])) ? null:$row['opts'];
         }    
         
         if (!empty($row['oem'])){

@@ -579,7 +579,8 @@ class AplOrderService {
                             'price' => $tp['comment'],
                             'good' => $good,
                             'displayName' => (empty($tp['dispname'])) ? null:$tp['dispname'],
-                            'oem' => (empty($tp['selection'])) ? null:mb_substr($tp['selection'], 3),                        
+                            'oem' => (empty($tp['selection'])) ? null:mb_substr($tp['selection'], 3),
+                            'opts' => $good->getOptsJson(),
                         ]);
                         $rowNo++;
                     } 
