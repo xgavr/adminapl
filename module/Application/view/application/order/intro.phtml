@@ -991,9 +991,8 @@ $form->prepare();
             if ($.isArray(opts)){
                 let price = opts[col];
                 let uid = value.id;
-                console.log(price);
                 if (price){
-                    $table.bootstrapTable('updateCellByUniqueId', {id: uid, field: 'price', value: price});
+                    $table.bootstrapTable('updateCellByUniqueId', {id: index, field: 'price', value: price});
                 }    
             }    
         });
