@@ -1,6 +1,4 @@
 <?php
-
-//https://stackoverflow.com/questions/48570153/populate-bootstraptable-x-editable-select-box-based-on-another-column
 use Application\Entity\Order;
 use Application\Entity\Shipping;
 
@@ -934,7 +932,19 @@ $form->prepare();
         $('.post-message-modal-show').attr('disabled', !aplId);
     }
     
-    $(document).on('editable-save.bs.table', '#ordergoodtable', function (e, field, row, old, $el) {
+    $table.on('editable-init.bs.table', function(e){
+        var $els =  $table.find('.editable');
+        $els.each(function(index, value){
+            if ($(this).attr('data-type') == 'select'){
+                let data = $.parseJSON($(this).html());
+                if ($.isArray(data)){
+                    $(this).editable('option', 'source', data);
+                }    
+            }    
+        });
+    });    
+    
+    $table.on('editable-save.bs.table', function (e, field, row, old, $el) {
         shippingUpdate();
     });        
     
@@ -992,9 +1002,8 @@ $form->prepare();
             let opts = $.parseJSON(value.opts);
             if ($.isArray(opts)){
                 let price = opts[col];
-                let uid = value.id;
                 if (price){
-                    $table.bootstrapTable('updateCellByUniqueId', {id: index, field: 'price', value: price});
+                    $table.bootstrapTable('updateCellByUniqueId', {id: value.rowNo, field: 'price', value: price});
                 }    
             }    
         });
@@ -1026,13 +1035,13 @@ $form->prepare();
         $("#vinLength").html($('input[name="vin"]').val().length);
 
         $('.price-select-btn').on('click', function(){
-            $('.price-select-btn.btn-info').addClass('btn-default')
-            $('.btn-info.price-select-btn').removeClass('btn-info')
-            $(this).removeClass('btn-default')
-            $(this).addClass('btn-info')
+            $('.price-select-btn.btn-info').addClass('btn-default');
+            $('.btn-info.price-select-btn').removeClass('btn-info');
+            $(this).removeClass('btn-default');
+            $(this).addClass('btn-info');
             let col = $(this).html();
             priceColSets(col);
-        })    
+        });    
         
         <?php if (!$orderId): ?>
             shippingParams();    
@@ -1041,7 +1050,7 @@ $form->prepare();
         $('#order-submit').on('click', function(){
             $('#order-submit').attr('disabled', true);
             submitForm();
-        })    
+        });    
         
 //        var forms = $('#order-form');
 //        
