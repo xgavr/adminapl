@@ -936,10 +936,12 @@ $form->prepare();
         var $els =  $table.find('.editable');
         $els.each(function(index, value){
             if ($(this).attr('data-type') == 'select'){
-                let data = $.parseJSON($(this).html());
-                if ($.isArray(data)){
-                    $(this).editable('option', 'source', data);
-                }    
+                let html = $(this).html();
+                console.log(html);
+//                let data = $.parseJSON($(this).html());
+//                if ($.isArray(data)){
+//                    $(this).editable('option', 'source', data);
+//                }    
             }    
         });
     });    
