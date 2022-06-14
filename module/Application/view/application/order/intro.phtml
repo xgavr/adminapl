@@ -988,12 +988,12 @@ $form->prepare();
         let data = $table.bootstrapTable('getData');
         $.each(data, function( index, value ) {
             let opts = $.parseJSON(value.opts);
-            console.log(opts);
             if ($.isArray(opts)){
                 let price = value.opts[col];
                 let uid = value.id;
+                console.log(price);
                 if (price){
-                    $table.bootstrapTable('updateCellByUniqueId', {id: uid, field: 'price', value: price})
+                    $table.bootstrapTable('updateCellByUniqueId', {id: uid, field: 'price', value: price});
                 }    
             }    
         });
