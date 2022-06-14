@@ -370,14 +370,23 @@ $form->prepare();
                     data-response-handler="ordergoodResponseHandler"
                     data-classes = "table table-bordered table-hover table-condensed"
                     data-unique-id = "rowNo"                
-                    >
+                    data-use-row-attr-func="true"
+                    data-reorderable-rows="true"                    >
                     <thead>
                         <tr>
                              <th data-field="rowNo" data-type="numeric" data-align="right" data-width="10">N</th>
                              <th data-field="good.code" data-width="150" data-formatter="goodFormatter">Артикул</th>
                              <th data-field="good.producer.name" data-type="numeric" data-width="100">Производитель</th>
                              <th data-field="displayName" data-formatter="geNameFormatter" data-editable="true">Наименование</th>
-                             <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-align="right" data-width="100">Цена</th>
+                             <th data-field='opts' data-align="right" data-editable="true" data-editable-type="select" data-type="numeric" data-width="50">Опт</th>
+                             <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-align="right" data-width="100">
+                                 <button type="button" class="btn btn-info btn-xs price-select-btn">0</button>
+                                 <button type="button" class="btn btn-default btn-xs price-select-btn">1</button>
+                                 <button type="button" class="btn btn-default btn-xs price-select-btn">2</button>
+                                 <button type="button" class="btn btn-default btn-xs price-select-btn">3</button>
+                                 <button type="button" class="btn btn-default btn-xs price-select-btn">4</button>
+                                 <button type="button" class="btn btn-default btn-xs price-select-btn">5</button>
+                             </th>
                              <th data-field='num' data-align="right" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-width="50">Кол-во</th>
                              <th data-field='amount' data-align="right" data-formatter="geAmountFormatter" data-always-use-formatter="true" data-type="numeric" data-width="100">Сумма</th>
                              <th data-field="rowNo" data-formatter="geActiveFormatter" data-width="10"></th>
@@ -681,7 +690,7 @@ $form->prepare();
 <?= $this->form()->closeTag(); ?>
             
 <script>
-    var table = $('#ordergoodtable');
+    var $table = $('#ordergoodtable');
     
     set_onbeforeunload = function(){
             return true;
@@ -795,7 +804,7 @@ $form->prepare();
     };
     
     function getFormatedOrderGood(){
-        var data = $('#ordergoodtable').bootstrapTable('getData');
+        var data = $table.bootstrapTable('getData');
         var result = [];
         $.each( data, function( index, row ) {
             var newRow = {
@@ -825,7 +834,7 @@ $form->prepare();
 
     function bidTotal(){
         var amount = 0;
-        var data = $('#ordergoodtable').bootstrapTable('getData');
+        var data = $table.bootstrapTable('getData');
         $.each(data, function( index, value ) {
             amount += Math.round(value.price*value.num*100)/100;
         });
@@ -974,6 +983,21 @@ $form->prepare();
         orderUpdateTotal();
     }
     
+    // установка цен в таблице
+    function priceColSets(col){
+        let data = $table.bootstrapTable('getData');
+        $.each(data, function( index, value ) {
+            if ($.isArray(value.opts)){
+                let price = value.opts[col];
+                let uid = value.id;
+                if (price){
+                    $table.bootstrapTable('updateCellByUniqueId', {id: uid, field: 'price', value: price})
+                }    
+            }    
+        });
+        
+    }
+        
     $( document ).ready(function() {
         
 	$(document).on('input', ':input', function() {
@@ -986,7 +1010,7 @@ $form->prepare();
             }
         });
         
-        $('#ordergoodtable').bootstrapTable({
+        $table.bootstrapTable({
             onLoadSuccess: function(res){
                 $('#shippingTotal').html($('#shipmentTotal').val());    
                 bidTotal();
@@ -998,6 +1022,14 @@ $form->prepare();
         enablePost();
         $("#vinLength").html($('input[name="vin"]').val().length);
 
+        $('.price-select-btn').on('click', function(){
+            $('.price-select-btn.btn-info').addClass('btn-default')
+            $('.btn-info.price-select-btn').removeClass('btn-info')
+            $(this).removeClass('btn-default')
+            $(this).addClass('btn-info')
+            let col = $(this).html();
+            priceColSets(col);
+        })    
         
         <?php if (!$orderId): ?>
             shippingParams();    
@@ -1028,7 +1060,7 @@ $form->prepare();
     });    
     
     function orderGoodRefreshTable(){
-        $('#ordergoodtable').bootstrapTable('refresh');
+        $table.bootstrapTable('refresh');
     }
     
     function ordergoodQueryParams(params) {
