@@ -599,6 +599,7 @@ class OrderManager
             $order->setStatus(!empty($data['status']) ? $data['status'] : Order::STATUS_NEW);
             $order->setTotal(!empty($data['total']) ? $data['total'] : 0);
             $order->setTrackNumber(!empty($data['trackNumber']) ? $data['trackNumber'] : null);
+            $order->setInfoShipping(!empty($data['infoShipping']) ? $data['infoShipping'] : null);
 
             $order->setOffice($office);
             if (empty($data['company'])){
@@ -753,6 +754,7 @@ class OrderManager
                 'status' =>  (!empty($data['status'])) ? $data['status'] : Order::STATUS_NEW,
                 'total' =>  (!empty($data['total'])) ? $data['total'] : 0,
                 'track_number' =>  (!empty($data['trackNumber'])) ? $data['trackNumber'] : null,
+                'info_shipping' => (!empty($data['infoShipping']) ? $data['infoShipping'] : null),
                 'contact_car_id' => null,
                 'courier_id' => null,
                 'legal_id' => null,
@@ -987,6 +989,7 @@ class OrderManager
             $order->setStatus(!empty($data['status']) ? $data['status'] : Order::STATUS_NEW);
             $order->setTotal(!empty($data['total']) ? $data['total'] : 0);
             $order->setTrackNumber(!empty($data['trackNumber']) ? $data['trackNumber'] : null);
+            $order->setInfoShipping(!empty($data['infoShipping']) ? $data['infoShipping'] : null);
 
             $order->setContactCar($this->findContactCarByOrderData($order->getContact(), $data));
             
@@ -1115,6 +1118,7 @@ class OrderManager
                 'status' =>  (!empty($data['status'])) ? $data['status'] : Order::STATUS_NEW,
                 'total' =>  (!empty($data['total'])) ? $data['total'] : 0,
                 'track_number' =>  (!empty($data['trackNumber'])) ? $data['trackNumber'] : null,
+                'info_shipping' => (!empty($data['infoShipping']) ? $data['infoShipping'] : null),
                 'contact_car_id' => null,
                 'courier_id' => null,
                 'legal_id' => null,

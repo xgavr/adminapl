@@ -83,6 +83,11 @@ $form->get('shipmentTotal')->setAttributes([
     'placeholder' => 'Стоимость доставки',
     ]);
 
+$form->get('infoShipping')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Комментарий к доставке',
+    ]);
+
 $form->get('trackNumber')->setAttributes([
     'class'=>'form-control', 
     'placeholder' => 'Накладная ТК',
@@ -457,6 +462,15 @@ $form->prepare();
                 </div>
             </div>    
         </div>        
+        <div class="row">
+            <div class="col-xs-12">                        
+                <div class="form-group form-group-sm">
+                    <?//= $this->formLabel($form->get('infoShipping')); ?>
+                    <?= $this->formElement($form->get('infoShipping')); ?>
+                    <?= $this->formElementErrors($form->get('infoShipping')); ?>                  
+                </div>
+            </div>
+        </div>    
         <hr/>
         <div class="row legal">
             <div class="col-xs-3">                        
@@ -625,7 +639,7 @@ $form->prepare();
             </div>
             <button type="button" class="btn btn-primary btn-sm btn-block" id="order-submit">Сохранить</button>    
             <button type="button" class="btn btn-secondary btn-sm btn-block" id="order-reset">Закрыть</button>
-            <button type="button" class="btn btn-secondary btn-sm btn-block" id="print-check">
+            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="prnt('/print/check/<?= $orderId?>?ext=Html')">
                 Товарный чек
             </button>
             <a type="button" class="btn btn-secondary btn-sm btn-block" href="/print/order-bill/<?= $orderId?>?ext=Pdf" target="_blank">

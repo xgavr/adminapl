@@ -33,6 +33,7 @@ use Company\Entity\Commission;
 use Application\Entity\Order;
 use Application\Entity\Bid;
 use Application\Filter\NumToStr;
+use Application\Entity\Shipping;
 
 
 /**
@@ -1055,4 +1056,109 @@ class PrintManager {
         return $outFilename;
     }    
     
+    /**
+     * Товарный чек
+     * @param Order $order
+     * @param string $writerType
+     * @return string 
+     */
+    public function check($order, $writerType = 'Pdf')
+    {
+        ini_set("pcre.backtrack_limit", "5000000");
+        setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
+//        echo strftime("%B %d, %Y", time()); exit;
+
+        $folder_name = Order::PRINT_FOLDER;
+        if (!is_dir($folder_name)){
+            mkdir($folder_name);
+        }        
+        
+        $content = file_get_contents(Order::TEMPLATE_CHECK);
+        
+        $out = []; $outShip = [];
+        preg_match('|<tabparts>(.*)</tabparts>|Uis', $content, $out);
+        $tabTmpl = $out[1];
+
+        preg_match('|<shipparts>(.*)</shipparts>|Uis', $content, $outShip);
+        $shipTmpl = $outShip[1];
+        
+        $replace = [
+            '[ПредставлениеДокумента]' => $order->getDocPresent('Товарный чек'),
+            '[ТелефонОфиса]' => $order->getOffice()->getLegalContactPhones(),
+            '[Продавец]' => $order->getCompany()->getName(),
+            '[ИНН]' => $order->getCompany()->getInn(),
+            '[ОГРН]' => $order->getCompany()->getOgrn(),
+            '[ФактическийАдрес]' => $order->getOffice()->getLegalContactSmsAddress(),
+            '[Покупатель]' => ($order->getLegal()) ? $order->getLegal()->getName():$order->getContact()->getName(),
+            '[Телефон]' => $order->_getContactPhone(),
+            '[АдресДоставки]' => $order->getAddress(),
+            '[ИтогоКоличество]' => $order->getBids()->count(),
+            '[Всего]' => number_format($order->getTotal(), 2, ',', ' '),
+            '[Предоплата]' => 0,
+            '[КОплате]' => number_format($order->getTotal(), 2, ',', ' '),
+            '[КомментарийКЗаказу]' => $order->getInfoShipping(),
+        ];
+        
+        $tabData = [];
+        $bids = $this->entityManager->getRepository(Bid::class)
+                ->findByOrder($order->getId());
+        if ($bids){
+            $i = 1;
+            foreach ($bids as $bid){                
+                $tabReplace = [
+                    '[НомерСтроки]' => $i,
+                    '[Артикул]' => $bid->getGood()->getCode(),
+                    '[Производитель]' => $bid->getGood()->getProducer()->getName(),
+                    '[Наименование]' => $bid->getDisplayName(),
+                    '[Количество]' => $bid->getNum(),
+                    '[ЕИ]' => 'шт.',
+                    '[Цена]' => number_format($bid->getPrice(), 2, ',', ' '),
+                    '[Сумма]' => number_format($bid->getTotal(), 2, ',', ' '),
+                ];                
+                $i++;
+                $tabData[] = str_replace(array_keys($tabReplace), array_values($tabReplace), $tabTmpl);
+            }
+        }
+        if ($order->getShipping() != Shipping::RATE_PICKUP){
+            $tabReplace = [
+                '[НомерСтроки]' => $i,
+                '[Артикул]' => '',
+                '[Производитель]' => '',
+                '[Наименование]' => 'Организация доставки груза',
+                '[Количество]' => '',
+                '[ЕИ]' => '',
+                '[Цена]' => '',
+                '[Сумма]' => number_format($order->getShipmentTotal(), 2, ',', ' '),
+            ];                
+            $tabData[] = str_replace(array_keys($tabReplace), array_values($tabReplace), $tabTmpl);
+        } else {
+            $content = str_replace($shipTmpl, "", $content);
+        }
+                
+        $content = str_replace($tabTmpl, implode("",$tabData), $content);
+        $result = str_replace(array_keys($replace), array_values($replace), $content);
+        
+        switch ($writerType){
+            case 'Pdf':
+                $mpdf = new Mpdf([
+                    'margin_top' => 10,
+                    'margin_bottom' => 10,
+                    'margin_left' => 10,
+                    'margin_right' => 10,                    
+                ]);
+                $mpdf->WriteHTML($result);
+                $outFilename = $order->getPrintName($writerType);
+                $mpdf->Output($outFilename,'F');
+                break;
+            case 'Html':
+//                $outFilename = $order->getPrintName($writerType);
+//                file_put_contents($outFilename, $result);
+                return $result;
+                break;
+            default: 
+                $outFilename = null;
+        }         
+        
+        return $outFilename;
+    }    
 }

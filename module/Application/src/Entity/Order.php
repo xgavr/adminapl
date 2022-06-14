@@ -49,6 +49,7 @@ class Order {
     const TEMPLATE_ACT         = './data/template/act.xls';
     const TEMPLATE_PREORDER    = './data/template/preorder.xls';
     const TEMPLATE_OFFER       = './data/template/offer.xls';
+    const TEMPLATE_CHECK       = './data/template/check.html';
     
     /**
      * @ORM\Id
@@ -126,6 +127,12 @@ class Order {
      * @ORM\Column(name="date_shipment")  
      */
     protected $dateShipment;    
+
+    /**
+     * Комментарий к доставке
+     * @ORM\Column(name="info_shipping")  
+     */
+    protected $infoShipping;    
 
     /**
      * Дата модификации
@@ -755,6 +762,24 @@ class Order {
         $this->skiper = $skiper;
     }         
  
+    /**
+     * Возвращает комментарий к доставке
+     * @return string
+     */
+    public function getInfoShipping() 
+    {
+        return $this->infoShipping;
+    }
+
+    /**
+     * Задает комментарий к лоставке
+     * @param string $infoShipping
+     */    
+    public function setInfoShipping($infoShipping) 
+    {
+        $this->infoShipping = $infoShipping;
+    }         
+ 
     /*
      * Возвращает связанный office.
      * @return \Company\Entity\Office
@@ -1105,14 +1130,14 @@ class Order {
         
     /**
      * Assigns.
-     * @param MarketplaceUpdate $marketplaceupdate
+     * @param MarketplaceUpdate $marketplaceUpdate
      */
     public function addMarketplaceUpdate($marketplaceUpdate)
     {
         $this->marketplaceUpdates[] = $marketplaceUpdate;
     }
            
-    private function _getContactEmail()
+    public function _getContactEmail()
     {
         if ($this->contact){
             if ($this->contact->getEmail()){
@@ -1122,7 +1147,7 @@ class Order {
         return;    
     }
     
-    private function _getContactPhone()
+    public function _getContactPhone()
     {
         if ($this->contact){
             if ($this->contact->getPhone()){
@@ -1182,6 +1207,7 @@ class Order {
             'shippingLimit2' => $this->getOffice()->getShippingLimit2(),
             'shipmentDistance' => $this->getShipmentDistance(),
             'rateDistance' => ($this->getShipping()) ? $this->getShipping()->getRateDistance():null,
+            'infoShipping' => $this->getInfoShipping(),
             'legal' => ($this->getLegal()) ? $this->getLegal()->getId():null,
             'legalName' => ($this->getLegal()) ? $this->getLegal()->getName():null,
             'legalInn' => ($this->getLegal()) ? $this->getLegal()->getInn():null,

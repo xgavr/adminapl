@@ -28,6 +28,7 @@ class Shipping {
     const RATE_TRIP       = 1; // За поездку.
     const RATE_DISTANCE   = 2; // За км
     const RATE_TK         = 3; // Транспортная компания
+    const RATE_PICKUP     = 4; // Самовывоз
 
     /**
      * @ORM\Id

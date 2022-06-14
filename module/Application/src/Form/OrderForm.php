@@ -349,6 +349,16 @@ class OrderForm extends Form
 
         $this->add([           
             'type'  => 'text',
+            'name' => 'infoShipping',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Комментарий к доставке',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
             'name' => 'trackNumber',
             'attributes' => [
                 'id' => 'trackNumber'
