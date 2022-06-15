@@ -1,4 +1,4 @@
-<table class="table table-striped">
+<table class="table table-striped table-condensed">
 
    <tr>
         <th>Цена</th>
@@ -13,7 +13,7 @@
     <?php foreach ($goodSuppliers as $goodSupplier): ?>
     
         <tr>
-            <td class="text-right">
+            <td class="text-right success">
                 <?= round($goodSupplier->getPrice(), 0) ?>
             </td>
             <td>
