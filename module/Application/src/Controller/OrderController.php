@@ -19,6 +19,7 @@ use Application\Entity\Bid;
 use Application\Form\OrderGoodForm;
 use Application\Entity\Goods;
 use Application\Entity\Comment;
+use Application\Entity\GoodSupplier;
 
 class OrderController extends AbstractActionController
 {
@@ -452,4 +453,23 @@ class OrderController extends AbstractActionController
         ]);
     }   
     
+    public function goodSuppliersAction()
+    {                
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $goodSuppliersQuery = $this->entityManager->getRepository(GoodSupplier::class)
+                ->orderGoodSuppliers($goodId);
+        $result = $goodSuppliersQuery->getResult();
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'goodSuppliers' => $result,
+        ]);        
+    }   
 }

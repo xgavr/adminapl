@@ -189,6 +189,12 @@ class Supplier {
     private $parent;    
     
    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\SupplierOrder", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+   */
+   private $supplierOrders;
+
+   /**
      * Constructor.
      */
     public function __construct() 
@@ -852,4 +858,13 @@ class Supplier {
         
         return;
     }    
+    
+    /**
+     * Returns the array of supplier orders assigned to this token.
+     * @return array
+     */
+    public function getSupplierOrders()
+    {
+        return $this->supplierOrders;
+    }            
 }

@@ -302,7 +302,13 @@ class Goods {
      */
     private $goodTitles;    
 
-    /**
+   /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\SupplierOrder", mappedBy="good")
+    * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
+   */
+   private $supplierOrders;
+
+   /**
      * Конструктор.
      */
     public function __construct() 
@@ -1044,4 +1050,12 @@ class Goods {
         return $this->goodTitles;
     }        
         
+    /**
+     * Returns the array of supplier orders assigned to this token.
+     * @return array
+     */
+    public function getSupplierOrders()
+    {
+        return $this->supplierOrders;
+    }                
 }

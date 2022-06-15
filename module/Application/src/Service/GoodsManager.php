@@ -162,6 +162,23 @@ class GoodsManager
     }
     
     /**
+     * Удалить заказы поставщикам
+     * @param Good $good
+     */
+    public function removeSupplierOrders($good)
+    {
+        $supplierOrders = $this->entityManager->getRepository(SupplierOrder::class)
+                    ->findByGood($good->getId());
+        
+        foreach ($supplierOrders as $supplierOrder){
+            $this->entityManager->remove($supplierOrder);
+        }
+        
+        $this->entityManager->flush();
+        return;
+    }
+    
+    /**
      * Удалене карточки товара
      * 
      * @param Goods $good
@@ -195,6 +212,8 @@ class GoodsManager
                 ->removeIntersectOem($good);
         
         $this->entityManager->getConnection()->delete('good_supplier', ['good_id' => $good->getId()]);
+        
+        $this->removeSupplierOrders($good);
                 
         $this->entityManager->remove($good);
         

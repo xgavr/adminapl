@@ -574,6 +574,7 @@ return [
             Service\ShopManager::class => Service\Factory\ShopManagerFactory::class,
             Service\SupplierApi\AutoEuroManager::class => Service\Factory\SupplierApi\AutoEuroManagerFactory::class,
             Service\SupplierManager::class => Service\Factory\SupplierManagerFactory::class,
+            Service\SupplierOrderManager::class => Service\Factory\SupplierOrderManagerFactory::class,
             'doctrine.cache.doctrine_cache' => Service\Factory\DoctrineCacheFactory::class,
         ],
     ],    

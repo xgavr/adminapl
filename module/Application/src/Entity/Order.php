@@ -258,6 +258,12 @@ class Order {
      */
     private $vt;
     
+   /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\SupplierOrder", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
+   */
+   private $supplierOrders;
+    
     private $ciphering = "AES-128-CTR"; //Метод шифрования
     
     private $iv = "1234567891011121"; // Non-NULL Initialization Vector for encryption
@@ -1136,7 +1142,16 @@ class Order {
     {
         $this->marketplaceUpdates[] = $marketplaceUpdate;
     }
-           
+       
+    /**
+     * Returns the array of supplier orders assigned to this token.
+     * @return array
+     */
+    public function getSupplierOrders()
+    {
+        return $this->supplierOrders;
+    }        
+    
     public function _getContactEmail()
     {
         if ($this->contact){

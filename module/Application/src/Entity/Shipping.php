@@ -268,7 +268,8 @@ class Shipping {
         return [
             self::RATE_TRIP => 'За поездку',
             self::RATE_DISTANCE => 'За км',
-            self::RATE_TK => 'Транспортная компания'
+            self::RATE_TK => 'Транспортная компания',
+            self::RATE_PICKUP => 'Самовывоз'
         ];
     }    
     

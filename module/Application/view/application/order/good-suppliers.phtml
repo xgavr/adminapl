@@ -1,0 +1,36 @@
+<table class="table table-striped">
+
+   <tr>
+        <th>Цена</th>
+        <th>Поставщик</th>
+        <th>Наценка</th>
+        <th>Наличие</th>
+        <th>Мин.</th>
+        <th>Дата прайса</th>
+    </tr>
+    
+    <?php foreach ($goodSuppliers as $goodSupplier): ?>
+    
+        <tr>
+            <td>
+                <?= $goodSupplier->getPrice() ?>
+            </td>
+            <td>
+                <?= $goodSupplier->getSupplier()->getName() ?>
+            </td>
+            <td>
+                <?= $goodSupplier->getRest() ?>
+            </td>
+            <td>
+                <?= $goodSupplier->getLot() ?>
+            </td>
+            <td>
+                <?= $goodSupplier->getFormatUpdate(); ?>
+            </td>
+            <td>
+            </td>    
+        </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>

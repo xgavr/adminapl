@@ -19,6 +19,7 @@ use Company\Entity\Office;
 use Laminas\File\ClassFileLocator;
 use Stock\Entity\Mutual;
 use Application\Entity\SupplierApiSetting;
+use Application\Entity\SupplierOrder;
 
 
 /**
@@ -252,6 +253,23 @@ class SupplierManager
     }    
     
     /**
+     * Удалить заказы поставщикам
+     * @param Supplier $supplier
+     */
+    public function removeSupplierOrders($supplier)
+    {
+        $supplierOrders = $this->entityManager->getRepository(SupplierOrder::class)
+                    ->findBySupplier($supplier->getId());
+        
+        foreach ($supplierOrders as $supplierOrder){
+            $this->entityManager->remove($supplierOrder);
+        }
+        
+        $this->entityManager->flush();
+        return;
+    }
+
+    /**
      * Удалить поставщика 
      * 
      * @param Supplier $supplier
@@ -294,6 +312,8 @@ class SupplierManager
             $this->removeBillGetting($billGetting);
         }
 
+        $this->removeSupplierOrders($supplier);
+        
         $raws = $supplier->getRaw();
         foreach ($raws as $raw) {
             $this->rawManager->removeRaw($raw);

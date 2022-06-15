@@ -33,6 +33,7 @@ use Application\Entity\Email;
 use Application\Entity\Phone;
 use Company\Entity\BankAccount;
 use Application\Entity\Make;
+use Application\Entity\SupplierOrder;
 
 /**
  * Description of OrderService
@@ -1257,6 +1258,23 @@ class OrderManager
         
         foreach ($selections as $selection){
             $this->entityManager->remove($selection);
+        }
+        
+        $this->entityManager->flush();
+        return;
+    }
+    
+    /**
+     * Удалить заказы поставщикам
+     * @param Order $order
+     */
+    public function removeSupplierOrders($order)
+    {
+        $supplierOrders = $this->entityManager->getRepository(SupplierOrder::class)
+                    ->findByOrder($order->getId());
+        
+        foreach ($supplierOrders as $supplierOrder){
+            $this->entityManager->remove($supplierOrder);
         }
         
         $this->entityManager->flush();

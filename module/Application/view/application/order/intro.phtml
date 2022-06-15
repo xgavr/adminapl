@@ -378,7 +378,8 @@ $form->prepare();
                              <th data-field="good.code" data-width="150" data-formatter="goodFormatter">Артикул</th>
                              <th data-field="good.producer.name" data-type="numeric" data-width="100">Производитель</th>
                              <th data-field="displayName" data-formatter="geNameFormatter" data-editable="true">Наименование</th>
-                             <th data-field='opts' data-width="50">Опт</th>
+                             <th data-field='good.id' data-width="50" data-formatter="soFormatter"></th>
+                             <!--<th data-field='opts' data-width="50">Опт</th>-->
                              <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-align="right" data-width="100">
                                  <button type="button" class="btn btn-info btn-xs price-select-btn">0</button>
                                  <button type="button" class="btn btn-default btn-xs price-select-btn">1</button>
@@ -1000,7 +1001,22 @@ $form->prepare();
         });
         orderUpdateTotal();
     }
-        
+     
+    function goodSuppliers(goodId){
+        $.get( '/order/good-suppliers/'+goodId, function( data ) {
+            bootbox.dialog({
+                title: 'Доступные поставщики',
+                message: data,
+                buttons: {
+                    ok: {
+                        label: "OK",
+                        className: 'btn-info'
+                    }                    
+                }
+            }); 
+        });    
+    }
+     
     $( document ).ready(function() {
         
 	$(document).on('input', ':input', function() {
@@ -1018,11 +1034,20 @@ $form->prepare();
                 $('#shippingTotal').html($('#shipmentTotal').val());    
                 bidTotal();
                 orderUpdateTotal();
+                
+                $('.supplier-list').on('click', function(){
+                    let goodId = $(this).attr('good-id');
+                    console.log(goodId);
+                    if (goodId){
+                        goodSuppliers(goodId);
+                    }
+                });    
             }            
         }); 
         
         enableSms();
         enablePost();
+        
         $("#vinLength").html($('input[name="vin"]').val().length);
 
         $('.price-select-btn').on('click', function(){
@@ -1113,6 +1138,7 @@ $form->prepare();
 
         return btn;
     }    
+    
     function grActiveFormatter(value, row){
         let btn = '<button';
         btn += ' type="button"';
@@ -1132,6 +1158,19 @@ $form->prepare();
     function geAmountFormatter(value, row){
         return (Math.round(row.price*row.num*100)/100).toFixed(0);
     }        
+    
+    function soFormatter(value, row){
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs supplier-list"';
+        btn += ' aria-label="Center Align"'; 
+        btn += ' title="Доступные поставщики"'; 
+        btn += ' good-id="'+value+'">';
+        btn += '<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        return btn;
+    }    
     
     function ordergoodResponseHandler(res) {
         return res;

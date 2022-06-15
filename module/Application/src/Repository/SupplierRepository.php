@@ -194,6 +194,29 @@ class SupplierRepository extends EntityRepository{
     }
     
     /**
+     * Поставщики товара для заказа
+     * @param integer $goodId
+     * @param MarketPriceSetting $market
+     */
+    public function orderGoodSuppliers($goodId)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('gs')
+                ->from(GoodSupplier::class, 'gs')
+                ->where('gs.good = ?1')
+                ->setParameter('1', $goodId)
+                ->andWhere('gs.update > ?2')
+                ->setParameter('2', date('Y-m-d', strtotime('-1 days')))
+                //->andWhere('g.price > gs.price')
+                ->orderBy('gs.price', 'asc')
+                ;
+        
+        return $queryBuilder->getQuery();        
+    }
+
+    /**
      * Поставщики товара
      * @param integer $goodId
      * @param MarketPriceSetting $market
