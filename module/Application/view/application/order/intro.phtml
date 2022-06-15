@@ -378,7 +378,7 @@ $form->prepare();
                              <th data-field="good.code" data-width="150" data-formatter="goodFormatter">Артикул</th>
                              <th data-field="good.producer.name" data-type="numeric" data-width="100">Производитель</th>
                              <th data-field="displayName" data-formatter="geNameFormatter" data-editable="true">Наименование</th>
-                             <th data-field='opts' data-align="right" data-editable="true" data-editable-type="select" data-type="numeric" data-width="50">Опт</th>
+                             <th data-field='opts' data-width="50">Опт</th>
                              <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-align="right" data-width="100">
                                  <button type="button" class="btn btn-info btn-xs price-select-btn">0</button>
                                  <button type="button" class="btn btn-default btn-xs price-select-btn">1</button>
@@ -933,17 +933,6 @@ $form->prepare();
     }
     
     $table.on('editable-init.bs.table', function(e){
-        var $els =  $table.find('.editable');
-        $els.each(function(index, value){
-            if ($(this).attr('data-type') == 'select'){
-                let html = $(this).html();
-                console.log(html);
-//                let data = $.parseJSON($(this).html());
-//                if ($.isArray(data)){
-//                    $(this).editable('option', 'source', data);
-//                }    
-            }    
-        });
     });    
     
     $table.on('editable-save.bs.table', function (e, field, row, old, $el) {
@@ -1009,7 +998,7 @@ $form->prepare();
                 }    
             }    
         });
-        
+        orderUpdateTotal();
     }
         
     $( document ).ready(function() {

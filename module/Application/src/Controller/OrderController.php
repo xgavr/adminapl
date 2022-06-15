@@ -422,6 +422,27 @@ class OrderController extends AbstractActionController
         ]);
     } 
     
+    public function goodOptsEditableFormatAction() 
+    {       
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $good = $this->entityManager->getRepository(Good::class)
+                ->find($goodId);
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+      
+        return new JsonModel($good->getOptsJsonEditableFormat());
+    } 
+
     public function repostAllOrderAction()
     {                
         $this->orderManager->repostAllOrder();

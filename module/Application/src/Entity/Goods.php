@@ -424,6 +424,22 @@ class Goods {
         return;
     }
 
+    public function getOptsJsonEditableFormat()
+    {
+        $opts = $this->getOpts();
+        $result = [];
+        if (is_array($opts)){
+            foreach ($opts as $key => $value){
+                $result[] = [
+                    'value' => $key,
+                    'text' => $value,
+                ];
+            }
+        }
+        
+        return $result;
+    }
+
     public function setPrice($price) 
     {
         $this->price = $price;
