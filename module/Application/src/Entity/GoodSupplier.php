@@ -117,10 +117,7 @@ class GoodSupplier {
 
     public function getFormatUpdate()
     {
-        if (date('Y-m-d') == date('Y-m-d', strtotime($this->update))){
-            return date('H:i', strtotime($this->update));
-        }
-        return date('H:i d-m-y', strtotime($this->update));        
+        return date('d.m H', strtotime($this->update));        
     }
 
     public function setUpdate($update)
