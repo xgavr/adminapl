@@ -85,6 +85,16 @@ class GoodSupplier {
         return $this->price;
     }
 
+    public function getMarkup($retailPrice)
+    {
+        return round(($retailPrice - $this->price)/$this->price*100, 2);
+    }
+
+    public function getMargin($retailPrice)
+    {
+        return round(($retailPrice - $this->price)/$retailPrice*100, 2);
+    }
+
     public function setPrice($price)
     {
         $this->price = $price;
@@ -108,9 +118,9 @@ class GoodSupplier {
     public function getFormatUpdate()
     {
         if (date('Y-m-d') == date('Y-m-d', strtotime($this->update))){
-            return date('H:i', $this->update);
+            return date('H:i', strtotime($this->update));
         }
-        return date('H:i d-m-y', $this->update);        
+        return date('H:i d-m-y', strtotime($this->update));        
     }
 
     public function setUpdate($update)

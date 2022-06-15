@@ -4,6 +4,7 @@
         <th>Цена</th>
         <th>Поставщик</th>
         <th>Наценка</th>
+        <th>Маржа</th>
         <th>Наличие</th>
         <th>Мин.</th>
         <th>Дата прайса</th>
@@ -12,23 +13,27 @@
     <?php foreach ($goodSuppliers as $goodSupplier): ?>
     
         <tr>
-            <td>
-                <?= $goodSupplier->getPrice() ?>
+            <td class="text-right">
+                <?= round($goodSupplier->getPrice(), 0) ?>
             </td>
             <td>
-                <?= $goodSupplier->getSupplier()->getName() ?>
+                <?= $goodSupplier->getSupplier()->getName() ?>                
             </td>
-            <td>
+            <td class="text-right">
+                <?= $goodSupplier->getMarkup($goodSupplier->getGood()->getPrice()) ?>                                
+            </td>
+            <td class="text-right">
+                <?= $goodSupplier->getMargin($goodSupplier->getGood()->getPrice()) ?>                                
+            </td>
+            <td class="text-right">
                 <?= $goodSupplier->getRest() ?>
             </td>
-            <td>
+            <td class="text-right">
                 <?= $goodSupplier->getLot() ?>
             </td>
             <td>
                 <?= $goodSupplier->getFormatUpdate(); ?>
             </td>
-            <td>
-            </td>    
         </tr>
         
     <?php endforeach; ?>   
