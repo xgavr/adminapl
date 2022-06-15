@@ -1034,14 +1034,6 @@ $form->prepare();
                 $('#shippingTotal').html($('#shipmentTotal').val());    
                 bidTotal();
                 orderUpdateTotal();
-                
-                $('.supplier-list').on('click', function(){
-                    let goodId = $(this).attr('good-id');
-                    console.log(goodId);
-                    if (goodId){
-                        goodSuppliers(goodId);
-                    }
-                });    
             }            
         }); 
         
@@ -1165,7 +1157,7 @@ $form->prepare();
         btn += ' class="btn btn-default btn-xs supplier-list"';
         btn += ' aria-label="Center Align"'; 
         btn += ' title="Доступные поставщики"'; 
-        btn += ' good-id="'+value+'">';
+        btn += ' onclick="goodSuppliers('+value+')">';
         btn += '<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>';
         btn += '</button>';
 
