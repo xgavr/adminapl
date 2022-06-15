@@ -20,10 +20,10 @@
                 <?= $goodSupplier->getSupplier()->getName() ?>                
             </td>
             <td class="text-right">
-                <?= $goodSupplier->getMarkup($goodSupplier->getGood()->getPrice()) ?>                                
+                <?= $goodSupplier->getMarkup($goodSupplier->getGood()->getPrice()) ?>%                                
             </td>
             <td class="text-right">
-                <?= $goodSupplier->getMargin($goodSupplier->getGood()->getPrice()) ?>                                
+                <?= $goodSupplier->getMargin($goodSupplier->getGood()->getPrice()) ?>%                               
             </td>
             <td class="text-right">
                 <?= $goodSupplier->getRest() ?>
