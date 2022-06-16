@@ -24,6 +24,7 @@ use Application\Entity\Article;
 use Stock\Entity\Movement;
 use Application\Entity\Bid;
 use Application\Entity\GoodSupplier;
+use Application\Entity\SupplierOrder;
 
 /**
  * Description of GoodsService
