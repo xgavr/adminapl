@@ -20,6 +20,8 @@ use Application\Form\OrderGoodForm;
 use Application\Entity\Goods;
 use Application\Entity\Comment;
 use Application\Entity\GoodSupplier;
+use Application\Entity\Selection;
+use Application\Form\SelectionForm;
 
 class OrderController extends AbstractActionController
 {
@@ -369,6 +371,62 @@ class OrderController extends AbstractActionController
         ]);        
     }
     
+    public function selectionFormAction()
+    {        
+        $params = $this->params()->fromQuery();
+//        var_dump($params); exit;
+        $good = null;        
+        if (isset($params['good'])){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($params['good']['id']);            
+        }
+
+        $form = new SelectionForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+            if (isset($data['good'])){
+                $good = $this->entityManager->getRepository(Goods::class)
+                        ->find($data['good']);            
+            }
+
+            if ($form->isValid()) {
+                $result = 'ok';
+                return new JsonModel([
+                    'result' => $result,
+                    'good' => [
+                        'id' => $good->getId(),
+                        'code' => $good->getCode(),
+                        'name' => $good->getName(),
+                        'producer' => $good->getProducer()->getName(),
+                    ],
+                ]);        
+            }
+        } else {
+            if ($good){
+                $data = [
+                    'good' => $good->getId(),
+                    'code' => $good->getCode(),
+                    'goodInputName' => $good->getInputName(),
+                    'quantity' => $params['num'],
+                    'price' => $params['price'],
+                    'amount' => $params['price']*$params['num'],
+//                    'unit' => (isset($params['unit']['name'])) ? $params['unit']['name']:null,
+                ];
+                $form->setData($data);
+            }    
+        }        
+
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'good' => $good,
+        ]);        
+    }
+
     public function autocompleteGoodAction()
     {
         $result = [];

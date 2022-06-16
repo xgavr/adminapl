@@ -1,0 +1,11 @@
+
+<script>
+    $(document).on('click', '.selection-modal-show', function (e) {
+        showFormDialog({
+            id: 'selectionModal',
+            url: '/order/selection-form',
+            zIndex: 9999,
+            width: $(window).width()-150
+        });
+    });     
+</script>

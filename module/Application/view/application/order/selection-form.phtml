@@ -1,0 +1,146 @@
+<?php
+$form = $this->form;
+
+$form->get('info')->setAttributes([
+    'class'=>'form-control', 
+    'rows' => 6,
+    'placeholder' => 'Что нужно'
+    ]);
+
+$form->get('oem')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder' => 'Номер ОЕ',
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->prepare();
+
+?>
+            
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <!--<button type="button" class="btn btn-primary">Сохранить</button>-->
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-4">                        
+            <div class="form-group">
+                <?//= $this->formLabel($form->get('info')); ?>
+                <?= $this->formElement($form->get('info')); ?>
+                <?= $this->formElementErrors($form->get('info')); ?>                  
+            </div>
+        </div>    
+        <div class="col-sm-3">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('oem')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('oem')); ?>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-sm selection-add" title="Добавить ОЕ">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </span>    
+                </div>    
+                <?= $this->formElementErrors($form->get('oem')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-sm-12">
+                </div>
+            </div>                
+        </div>
+        <div class="col-sm-8">
+            <ul id="selection-tab-list" class="nav nav-tabs" role="tablist">
+            </ul>
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- Tab panes -->
+                    <div id="selection-tab-content" class="tab-content">
+                    </div>        
+                </div>
+            </div>    
+        </div>
+    </div>    
+</div>
+
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    var selectionTabId = 0;
+
+    function resetSelectionTab(){
+            var tabs=$("#selection-tab-list li:not(:first)");
+            var len=1
+            $(tabs).each(function(k,v){
+                len++;
+                $(this).find('a').html('Tab ' + len + button);
+            })
+            selectionTabId--;
+    }
+    
+    function selectedTable(selectionTableId, tabName){
+        $.ajax({
+            url: '/goods/content?search='+tabName,
+            cache: false
+        })
+        .done(function( data ) {
+            $('#'+selectionTableId).bootstrapTable({
+                idField: 'id',
+                pagination: true,
+                search: true,
+                columns: [{
+                    field: 'id', title: 'Id'
+                }, {
+                    field: 'producer.name',title: 'Производитель'
+                }, {
+                    field: 'code',title: 'Артикул'
+                }, {
+                    field: 'name',title: 'Наименование'
+                }, {
+                    field: 'price',title: 'Цена'
+                }, {
+                    field: 'id',title: 'Кнопки'
+                }],
+                data: data
+            });
+        });
+    }
+
+    $(document).ready(function() {
+        $('.selection-add').click(function() {
+            let tabName = $('input[name="oem"]').val(); 
+            if (tabName){
+                selectionTabId++;
+                let selectionTableId = 'st'+selectionTabId;
+                $('#selection-tab-list').append($('<li><a href="#selection-tab' + selectionTabId + '" role="tab" data-toggle="tab"><span>' + tabName + '</span><button class="close selection-close" type="button" title="Закрыть">×</button></a></li>'));
+                $('#selection-tab-content').append($('<div class="tab-pane fade" id="selection-tab' + selectionTabId + '"><table id="' + selectionTableId + '" class="table-bordered table-hover table-condensed"></table></div>'));
+                $('input[name="oem"]').val('');
+                selectedTable(selectionTableId, tabName);
+                $('#selection-tab-list a[href="#selection-tab'+selectionTabId+'"]').tab('show');
+            }    
+        });
+
+        $('#selection-tab-list').on('click', '.selection-close', function() {
+            var tabID = $(this).parents('a').attr('href');
+            $(this).parents('li').remove();
+            $(selectionTabId).remove();
+
+            //display first tab
+            var tabFirst = $('#selection-tab-list a:first');
+            resetSelectionTab();
+            tabFirst.tab('show');
+        });
+
+        var list = document.getElementById("selection-tab-list");
+    });    
+</script>
