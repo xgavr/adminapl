@@ -185,10 +185,11 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('g', 'p')
+        $queryBuilder->select('g', 'p', 'tg')
 //            ->distinct()    
             ->from(Goods::class, 'g')
             ->join('g.producer', 'p', 'WITH')    
+            ->leftJoin('g.tokenGroup', 'tg')    
                 ;
 
         if (is_array($params)){

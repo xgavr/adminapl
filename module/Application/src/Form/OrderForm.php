@@ -636,6 +636,16 @@ class OrderForm extends Form
             ],
         ]);
 
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'selections',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Подбор',
+            ],
+        ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',

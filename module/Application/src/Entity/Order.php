@@ -17,6 +17,7 @@ use Application\Entity\Shipping;
 use ApiMarketPlace\Entity\MarketplaceUpdate;
 use Stock\Entity\Vt;
 use Admin\Filter\ClickFilter;
+use Laminas\Json\Encoder;
 
 
 /**
@@ -1075,9 +1076,19 @@ class Order {
      * Returns the array of selection assigned to this.
      * @return array
      */
-    public function getSelections()
+    public function  getSelections()
     {
         return $this->selections;
+    }
+        
+    public function  getSelectionsAsString()
+    {
+        $result = [];
+        foreach ($this->selections as $selection){
+            $result[] = $selection->getOem()->getOe();
+        } 
+        
+        return Encoder::encode($result);
     }
         
     /**
@@ -1242,6 +1253,7 @@ class Order {
             'bik' => ($this->getBankAccount()) ? $this->getBankAccount()->getBik():null,
             'bankCity' => ($this->getBankAccount()) ? $this->getBankAccount()->getCity():null,
             'goods' => [],
+            'selections' => $this->getSelectionsAsString(),
         ];
     }    
 

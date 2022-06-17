@@ -133,3 +133,10 @@ body {
     cursor: pointer;
     color: #ccc;
 }
+
+/*
+* Bootbox поверх окон
+*/
+.bootbox.modal > .modal-dialog {
+  z-index: 1050 !important;
+}

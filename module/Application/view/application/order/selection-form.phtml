@@ -3,7 +3,7 @@ $form = $this->form;
 
 $form->get('info')->setAttributes([
     'class'=>'form-control', 
-    'rows' => 6,
+    'rows' => 3,
     'placeholder' => 'Что нужно'
     ]);
 
@@ -23,14 +23,9 @@ $form->prepare();
             
 <?= $this->form()->openTag($form); ?>
 
-<div class="modal-header">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-    <!--<button type="button" class="btn btn-primary">Сохранить</button>-->
-</div>
-
 <div class="modal-body">
     <div class="row">
-        <div class="col-sm-4">                        
+        <div class="col-sm-6">                        
             <div class="form-group">
                 <?//= $this->formLabel($form->get('info')); ?>
                 <?= $this->formElement($form->get('info')); ?>
@@ -53,13 +48,16 @@ $form->prepare();
         </div>    
     </div>    
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-6">
             <div class="row">
                 <div class="col-sm-12">
+                    <div id="order-tab-content">
+                        <table id="selectionGoodTable" class="table-bordered table-hover table-condensed"></table>
+                    </div>                            
                 </div>
             </div>                
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-6">
             <ul id="selection-tab-list" class="nav nav-tabs" role="tablist">
             </ul>
             <div class="row">
@@ -70,25 +68,108 @@ $form->prepare();
                 </div>
             </div>    
         </div>
-    </div>    
+    </div>   
+</div>    
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary selections-submit">Сохранить</button>
 </div>
+
 
 <?= $this->form()->closeTag(); ?>
             
 <script>
     var selectionTabId = 0;
+    var button = '<button class="close selection-close" type="button" title="Закрыть">×</button>';
+    
+    function upddateOrderGoodtable(){
+        $('#ordergoodtable').bootstrapTable('load', $('#selectionGoodTable').bootstrapTable('getData'));
+    }
+    
+    function submitSelectionForm(){
+        var selections = [];
+        $('.selection-name').each(function(){
+           selections.push($(this).html()); 
+        });
+        $('#order-form').find('input[name="selections"]').val(JSON.stringify(selections));
+        upddateOrderGoodtable();
+        $('#selectionModal').modal('hide');
+    }
 
     function resetSelectionTab(){
             var tabs=$("#selection-tab-list li:not(:first)");
             var len=1
             $(tabs).each(function(k,v){
                 len++;
-                $(this).find('a').html('Tab ' + len + button);
+//                $(this).find('a').html('Tab ' + len + button);
             })
             selectionTabId--;
     }
+
+    function addRowToOrderGoodTable(tableId, rowId){
+        var oem = $("ul#selection-tab-list li.active").find('.selection-name').html();
+        let row = $('#'+tableId).bootstrapTable('getRowByUniqueId', rowId);
+        var good = {
+            id: row.id,
+            code: row.code,
+            name: row.name,
+            producer: {name: row.producer.name},
+        }
+        var newRow = {
+            good: good,
+            displayName: (row.tokenGroup) ? row.tokenGroup.name:row.name,
+            amount: row.price,
+            num: 1,
+            price: row.price,
+            oem: oem
+        };
+
+        var newRowNo = getNewTableUniqueId('selectionGoodTable', 'rowNo');
+        newRow.rowNo = newRowNo;
+        console.log(newRow);
+        var rows = [];
+        rows.push(newRow);
+        $('#selectionGoodTable').bootstrapTable('prepend', rows);                        
+    }
     
-    function selectedTable(selectionTableId, tabName){
+    function removeSelectionTableRowByUniqueId(index){
+        $('#selectionGoodTable').bootstrapTable('removeByUniqueId', index);
+//        orderUpdateTotal();
+    }
+
+    function selectionGoodTable(){
+        let data = $('#ordergoodtable').bootstrapTable('getData');
+        $('#selectionGoodTable').bootstrapTable({
+            idField: 'rowNo',
+            uniqueId: 'rowNo',
+            pagination: true,
+//            reorderableRows: true,
+            columns: [{
+                field: 'rowNo', title: 'N'
+            }, {
+                field: 'good.code',title: 'Артикул', formatter: 'goodFormatter'
+            }, {
+                field: 'good.producer.name',title: 'Производитель'
+            }, {
+                field: 'displayName',title: 'Наименование', editable: true 
+            }, {
+                field: 'good.id',title: '', formatter: 'soFormatter', width: 10
+            }, {
+                field: 'price',title: 'Цена', align: 'right', formatter: 'gePriceFormatter'
+            }, {
+                field: 'num',title: 'Кол-во', align: 'right', editable: true
+            }, {
+                field: 'amount',title: 'Сумма', align: 'right', formatter: 'geAmountFormatter'
+            }, {
+                field: 'rowNo',title: '', formatter: 'stActiveFormatter', width: 10
+            }, {
+                field: 'oem',title: 'OE', visible: false
+            }],
+            data: data
+        });        
+    }
+    
+    function addSelectedTable(selectionTableId, tabName){
         $.ajax({
             url: '/goods/content?search='+tabName,
             cache: false
@@ -96,51 +177,139 @@ $form->prepare();
         .done(function( data ) {
             $('#'+selectionTableId).bootstrapTable({
                 idField: 'id',
+                uniqueId: 'id',
                 pagination: true,
-                search: true,
+                search: false,
+                refresh: true,
                 columns: [{
-                    field: 'id', title: 'Id'
+                    field: 'id', title: '', formatter: 'stAddFormatter', width: 10
+                }, {
+                    field: 'code',title: 'Артикул', formatter: 'stGoodFormatter'
                 }, {
                     field: 'producer.name',title: 'Производитель'
                 }, {
-                    field: 'code',title: 'Артикул'
+                    field: 'name',title: 'Наименование', formatter: 'stNameFormatter'
                 }, {
-                    field: 'name',title: 'Наименование'
+                    field: 'id',title: '', formatter: 'soFormatter', width: 10
                 }, {
                     field: 'price',title: 'Цена'
                 }, {
                     field: 'id',title: 'Кнопки'
                 }],
-                data: data
+                data: data,
+                onPostBody: function(res){
+                    $('#'+selectionTableId).find('.add-good-selections').on('click', function(){
+                        var tableId = $(this).closest('table').attr('id');
+                        var rowId = $(this).closest('tr').attr('data-uniqueid');
+                        addRowToOrderGoodTable(tableId, rowId);
+                    });
+                }
             });
         });
     }
+    
+    function addSelectedTab(selectionTabId, tabName){
+        let selectionTableId = 'st'+selectionTabId;
+        $('#selection-tab-list').append($('<li><a href="#selection-tab' + selectionTabId + '" role="tab" data-toggle="tab"><span class="selection-name">' + tabName + '</span><button class="close selection-close" type="button" title="Закрыть">×</button></a></li>'));
+        $('#selection-tab-content').append($('<div class="tab-pane fade" id="selection-tab' + selectionTabId + '"><table id="' + selectionTableId + '" class="table-bordered table-hover table-condensed"></table></div>'));
+        $('input[name="oem"]').val('');
+        addSelectedTable(selectionTableId, tabName);
+    }
 
     $(document).ready(function() {
+        $('.selection-modal-show').attr('disabled', false);
+                
+        $('.selections-submit').click(function(){
+            submitSelectionForm();
+        });        
+        
         $('.selection-add').click(function() {
             let tabName = $('input[name="oem"]').val(); 
             if (tabName){
                 selectionTabId++;
-                let selectionTableId = 'st'+selectionTabId;
-                $('#selection-tab-list').append($('<li><a href="#selection-tab' + selectionTabId + '" role="tab" data-toggle="tab"><span>' + tabName + '</span><button class="close selection-close" type="button" title="Закрыть">×</button></a></li>'));
-                $('#selection-tab-content').append($('<div class="tab-pane fade" id="selection-tab' + selectionTabId + '"><table id="' + selectionTableId + '" class="table-bordered table-hover table-condensed"></table></div>'));
-                $('input[name="oem"]').val('');
-                selectedTable(selectionTableId, tabName);
-                $('#selection-tab-list a[href="#selection-tab'+selectionTabId+'"]').tab('show');
+                addSelectedTab(selectionTabId, tabName);
+                $('#selection-tab-list a[href="#selection-tab'+selectionTabId+'"]').tab('show');        
             }    
         });
 
         $('#selection-tab-list').on('click', '.selection-close', function() {
-            var tabID = $(this).parents('a').attr('href');
+            var selectionTabId = $(this).parents('a').attr('href');
             $(this).parents('li').remove();
+            let selectionTableId = 'st'+selectionTabId;
+            $('#'+selectionTableId).bootstrapTable('destroy');
             $(selectionTabId).remove();
 
             //display first tab
             var tabFirst = $('#selection-tab-list a:first');
-            resetSelectionTab();
-            tabFirst.tab('show');
+            if (tabFirst){
+                resetSelectionTab();
+                tabFirst.tab('show');
+            }    
         });
-
-        var list = document.getElementById("selection-tab-list");
+        
+        $('#selection-form').find('textarea[name="info"]').val($('#order-form').find('textarea[name="info"]').val());
+        
+        selectionGoodTable();
+        
+        let inputSelections = $('#order-form').find('input[name="selections"]').val();
+        if (inputSelections){
+            let selections = $.parseJSON(inputSelections);
+            if ($.isArray(selections)){
+                $.each(selections, function(key, tabName){
+                    selectionTabId++;
+                    addSelectedTab(selectionTabId, tabName);
+                });
+                $('#selection-tab-list a:first').tab('show');
+            }
+        }
+        
     });    
+    
+    function stGoodFormatter(value, row){
+        var url = '/goods/view/'+row.id;
+        btn = '<nobr><a';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-link btn-xs" target="_blank">';
+        btn += '<span class="glyphicon glyphicon-link"></span>';
+        btn += '</a>'+value + '</nobr>';
+        return btn;
+    }    
+
+    function stNameFormatter(value, row){
+        if (row.tokenGroup){
+            return row.tokenGroup.name;
+        }
+        if (row.name){
+            return row.name;
+        }        
+        if (row.description){
+            return row.description;
+        }
+        return 'Нет названия';
+    }
+    
+    function stAddFormatter(value, row){
+        let btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs add-good-selections"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Добавить"'; 
+        btn += ' >';
+        btn += '<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+
+function stActiveFormatter(value, row){
+        let btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="removeSelectionTableRowByUniqueId('+value+')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
 </script>

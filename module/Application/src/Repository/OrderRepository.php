@@ -92,7 +92,7 @@ class OrderRepository extends EntityRepository{
             ->from(Bid::class, 'b')
             ->join('b.good', 'g')    
             ->join('g.producer', 'p')    
-            ->join('g.tokenGroup', 'tg')    
+            ->leftJoin('g.tokenGroup', 'tg')    
             ->where('b.order = ?1')    
             ->orderBy('b.rowNo')
             ->setParameter('1', $order->getId())    

@@ -1,11 +1,12 @@
 
 <script>
     $(document).on('click', '.selection-modal-show', function (e) {
+        $(this).attr('disabled', true);
         showFormDialog({
             id: 'selectionModal',
             url: '/order/selection-form',
-            zIndex: 9999,
-            width: $(window).width()-150
+            zIndex: 0,
+            width: $(window).width()-50
         });
     });     
 </script>

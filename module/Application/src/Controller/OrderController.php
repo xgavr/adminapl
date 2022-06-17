@@ -22,6 +22,7 @@ use Application\Entity\Comment;
 use Application\Entity\GoodSupplier;
 use Application\Entity\Selection;
 use Application\Form\SelectionForm;
+use Application\Entity\Oem;
 
 class OrderController extends AbstractActionController
 {
@@ -129,9 +130,7 @@ class OrderController extends AbstractActionController
             if ($order) {
                 $query = $this->entityManager->getRepository(Bid::class)
                                 ->findBidOrder($order);
-
-                $total = count($query->getResult(2));
-
+                
                 $result = $query->getResult(2);
             }        
         }        
@@ -227,6 +226,7 @@ class OrderController extends AbstractActionController
                 if ($order && is_array($data['orderGood'])){
                     $this->orderManager->updateBids($order, $data['orderGood']);
                 }
+                $this->orderManager->updateSelectionsFromJson($order, $data['selections']);
                 if ($order && isset($data['comments'])){
                     foreach ($data['comments'] as $comment){
                         $this->commentManager->addOrderComment($order, $comment);
@@ -374,13 +374,10 @@ class OrderController extends AbstractActionController
     public function selectionFormAction()
     {        
         $params = $this->params()->fromQuery();
-//        var_dump($params); exit;
-        $good = null;        
-        if (isset($params['good'])){
-            $good = $this->entityManager->getRepository(Goods::class)
-                    ->find($params['good']['id']);            
-        }
-
+        $orderId = $this->params()->fromRoute('id', -1);
+        
+        $selections = null;
+        
         $form = new SelectionForm($this->entityManager);
 
         if ($this->getRequest()->isPost()) {
@@ -405,25 +402,28 @@ class OrderController extends AbstractActionController
                 ]);        
             }
         } else {
-            if ($good){
-                $data = [
-                    'good' => $good->getId(),
-                    'code' => $good->getCode(),
-                    'goodInputName' => $good->getInputName(),
-                    'quantity' => $params['num'],
-                    'price' => $params['price'],
-                    'amount' => $params['price']*$params['num'],
-//                    'unit' => (isset($params['unit']['name'])) ? $params['unit']['name']:null,
-                ];
-                $form->setData($data);
-            }    
+            if ($orderId > 0){
+                $selections = $this->entityManager->getRepository(Selection::class)
+                        ->findByOrder($orderId);
+            }
+//                $data = [
+//                    'good' => $good->getId(),
+//                    'code' => $good->getCode(),
+//                    'goodInputName' => $good->getInputName(),
+//                    'quantity' => $params['num'],
+//                    'price' => $params['price'],
+//                    'amount' => $params['price']*$params['num'],
+////                    'unit' => (isset($params['unit']['name'])) ? $params['unit']['name']:null,
+//                ];
+//                $form->setData($data);
+//            }    
         }        
 
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'good' => $good,
+            'selections' => $selections,
         ]);        
     }
 
@@ -528,6 +528,25 @@ class OrderController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'goodSuppliers' => $result,
+        ]);        
+    }   
+
+    public function goodOemAction()
+    {                
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $oems = $this->entityManager->getRepository(Oem::class)
+                ->findByGood($goodId, null, 50);
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'oems' => $oems,
         ]);        
     }   
 }

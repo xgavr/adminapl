@@ -382,9 +382,9 @@ $form->prepare();
                         <tr>
                              <th data-field="rowNo" data-type="numeric" data-align="right" data-width="10">N</th>
                              <th data-field="good.code" data-width="150" data-formatter="goodFormatter">Артикул</th>
-                             <th data-field="good.producer.name" data-type="numeric" data-width="100">Производитель</th>
+                             <th data-field="good.producer.name" data-type="numeric" data-width="150">Производитель</th>
                              <th data-field="displayName" data-formatter="geNameFormatter" data-editable="true">Наименование</th>
-                             <th data-field='good.id' data-width="50" data-formatter="soFormatter"></th>
+                             <th data-field='good.id' data-width="10" data-formatter="soFormatter"></th>
                              <!--<th data-field='opts' data-width="50">Опт</th>-->
                              <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-align="right" data-width="100">
                                  <button type="button" class="btn btn-info btn-xs price-select-btn">0</button>
@@ -398,6 +398,7 @@ $form->prepare();
                              <th data-field='amount' data-align="right" data-formatter="geAmountFormatter" data-always-use-formatter="true" data-type="numeric" data-width="100">Сумма</th>
                              <th data-field="rowNo" data-formatter="geActiveFormatter" data-width="10"></th>
                              <th data-field="rowNo" data-formatter="grActiveFormatter" data-width="10"></th>
+                             <th data-field="oem" data-visible="false"></th>
                          </tr>                
                     </thead>
                 </table>
@@ -693,6 +694,7 @@ $form->prepare();
 <?= $this->formElement($form->get('legal')); ?>            
 <?= $this->formElement($form->get('recipient')); ?>            
 <?= $this->formElement($form->get('bankAccount')); ?>            
+<?= $this->formElement($form->get('selections')); ?>            
 <?//= $this->formElement($form->get('csrf')); ?>            
 <?= $this->form()->closeTag(); ?>
             
@@ -787,7 +789,6 @@ $form->prepare();
                     $('#bankAccount').val(data.bankAccount);
                     enableSms();
                     enablePost();
-                    console.log(reload);
                     if (reload && data.id){
                         window.location.href = '/order/intro/'+data.id;
                     }
@@ -818,7 +819,8 @@ $form->prepare();
                 good: row.good.id,
                 displayName: row.displayName,
                 num: row.num,
-                price: row.price
+                price: row.price,
+                oem: row.oem
             };
             result.push(newRow);
         });   
@@ -1023,6 +1025,21 @@ $form->prepare();
         });    
     }
      
+    function oems(goodId){
+        $.get( '/order/good-oem/'+goodId, function( data ) {
+            bootbox.dialog({
+                title: 'Оригинальные номера',
+                message: data,
+                buttons: {
+                    ok: {
+                        label: "OK",
+                        className: 'btn-info'
+                    }                    
+                }
+            }); 
+        });    
+    }
+     
     $( document ).ready(function() {
         
 	$(document).on('input', ':input', function() {
@@ -1117,7 +1134,9 @@ $form->prepare();
 
     function geNameFormatter(value, row){
         if (value) return value;
-        if (row.good.tokenGroup.name) return row.good.tokenGroup.name;        
+        if (row.good.tokenGroup){
+            if (row.good.tokenGroup.name) return row.good.tokenGroup.name;        
+        }    
         if (row.good.name) return row.good.name; 
         if (row.good.description)return row.good.description;
         return 'Нет названия';
@@ -1158,7 +1177,8 @@ $form->prepare();
     }        
     
     function soFormatter(value, row){
-        btn = '<button';
+        btn = '<span class="text-nowrap">';
+        btn += '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs supplier-list"';
         btn += ' aria-label="Center Align"'; 
@@ -1167,6 +1187,15 @@ $form->prepare();
         btn += '<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>';
         btn += '</button>';
 
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs supplier-list"';
+        btn += ' aria-label="Center Align"'; 
+        btn += ' title="Оригинальные номера"'; 
+        btn += ' onclick="oems('+value+')">';
+        btn += '<span class="glyphicon" aria-hidden="true">OE</span>';
+        btn += '</button>';
+        btn += '</span>';
         return btn;
     }    
     

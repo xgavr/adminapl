@@ -34,6 +34,7 @@ use Application\Entity\Phone;
 use Company\Entity\BankAccount;
 use Application\Entity\Make;
 use Application\Entity\SupplierOrder;
+use Laminas\Json\Decoder;
 
 /**
  * Description of OrderService
@@ -518,7 +519,7 @@ class OrderManager
                     $this->entityManager->persist($selection);
 
                     // Применяем изменения к базе данных.
-                    $this->entityManager->flush(); 
+                    $this->entityManager->flush($selection); 
                 }    
             }    
         }
@@ -1236,8 +1237,8 @@ class OrderManager
      */
     public function removeOrderBids($order)
     {
-        $bids = $this->entityManager->getRepository(Order::class)
-                    ->findBidOrder($order)->getResult();
+        $bids = $this->entityManager->getRepository(Bid::class)
+                    ->findByOrder($order->getId());
         
         foreach ($bids as $bid){
             $this->entityManager->remove($bid);
@@ -1312,6 +1313,28 @@ class OrderManager
         return;
     }
     
+    /**
+     * Обновить подборы
+     * @param Order $order
+     * @param string $strSelections
+     */
+    public function updateSelectionsFromJson($order, $strSelections)
+    {
+        $this->removeOrderSelections($order);
+        
+        try{
+            $selections = Decoder::decode($strSelections);
+        } catch (Exception $ex){
+            
+        }    
+
+        if (is_array($selections)){
+            foreach ($selections as $selection){
+                $this->insSelection($order, ['oem' => $selection]);
+            }    
+        }
+        return;
+    }
     
     /**
      * Перепроведение всех заказов
