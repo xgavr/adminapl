@@ -32,6 +32,7 @@ use Laminas\Http\Client;
 use Application\Filter\ParseRawpriceApl;
 use Application\Entity\Article;
 use Application\Entity\CarFillVolume;
+use Laminas\Filter\Digits;
 
 /**
  * Description of AplService
@@ -752,12 +753,12 @@ class AplService {
                }
             }
         }
-
+        $digitsFilter = new Digits();
         $client_data = [
             'name' => $row['name'],
             'status' => ($row['publish'] == 1 ? AplClient::STATUS_ACTIVE:AplClient::STATUS_RETIRED),
             'aplId' => $row['id'],
-            'pricecol' => $row['pricecol'],
+            'pricecol' => $digitsFilter->filter($row['pricecol']),
         ];    
 
         if ($client){                    
