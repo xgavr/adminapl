@@ -17,6 +17,7 @@ use Application\Entity\ArticleTitle;
 use Application\Entity\TokenGroup;
 use Stock\Entity\PtuGood;
 use Application\Filter\KeyboardTranslit;
+use Stock\Entity\Movement;
 
 
 /**
@@ -1346,6 +1347,30 @@ class GoodsRepository extends EntityRepository
         return $queryBuilder->getQuery();            
     }
     
+    /**
+     * Движения товара
+     * 
+     * @param Goods $good
+     * @param array $params
+     * @return Query
+     */
+    public function movements($good, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('m')
+            ->from(Movement::class, 'm')
+            ->where('m.good = ?1')
+            ->setParameter('1', $good->getId())
+            ->orderBy('m.dateOper','ASC')    
+            ;
+        
+        if (is_array($params)){
+        }
+        
+        return $queryBuilder->getQuery();            
+    }
     
     /**
      * Найти прайсы товара

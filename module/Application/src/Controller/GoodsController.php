@@ -22,6 +22,7 @@ use Application\Form\UploadForm;
 use Application\Entity\Oem;
 use Application\Entity\UnknownProducer;
 use Application\Filter\ArticleCode;
+use Stock\Entity\Movement;
 
 class GoodsController extends AbstractActionController
 {
@@ -552,7 +553,7 @@ class GoodsController extends AbstractActionController
         );           
     }    
 
-    public function viewAction() 
+    public function viewingAction() 
     {       
         $goodsId = (int)$this->params()->fromRoute('id', -1);
         $page = $this->params()->fromQuery('page', 1);        
@@ -601,6 +602,47 @@ class GoodsController extends AbstractActionController
         ]);
     }      
     
+    public function viewAction() 
+    {       
+        $goodsId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($goodsId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->find($goodsId);
+        
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $images = $this->entityManager->getRepository(Images::class)
+                ->findByGood($goods->getId());
+        
+        $rate = $this->entityManager->getRepository(Rate::class)
+                ->findGoodRate($goods);
+        
+        $titleFeatures = $this->entityManager->getRepository(TitleToken::class)
+                ->goodTitleFeatures($goods);
+
+        // Render the view template.
+        return new ViewModel([
+            'goods' => $goods,
+            'articleManager' => $this->articleManager,
+            'goodsManager' => $this->goodsManager,
+            'images' => $images,
+            'oemStatuses' => \Application\Entity\Oem::getStatusList(),
+            'oemSources' => \Application\Entity\Oem::getSourceList(),
+            'priceStatuses' => Rawprice::getStatusList(),
+            'rate' => $rate,
+            'titleFeatures' => $titleFeatures,
+        ]);
+    }      
+
     public function carContentAction()
     {
         
@@ -689,6 +731,50 @@ class GoodsController extends AbstractActionController
         ]);                  
     }
     
+    public function movementsAction()
+    {
+        
+        $goodsId = (int)$this->params()->fromRoute('id', -1);
+
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $search = $this->params()->fromQuery('search');
+        $source = $this->params()->fromQuery('source');
+        
+        // Validate input parameter
+        if ($goodsId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->find($goodsId);
+
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $query = $this->entityManager->getRepository(Goods::class)
+                        ->movements($goods, ['q' => $search, 'source' => $source]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }
+
     public function priceContentAction()
     {
         

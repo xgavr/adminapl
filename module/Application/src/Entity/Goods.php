@@ -309,6 +309,12 @@ class Goods {
    private $supplierOrders;
 
    /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Movement", mappedBy="good")
+    * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
+   */
+   private $movements;
+
+   /**
      * Конструктор.
      */
     public function __construct() 
@@ -1033,7 +1039,7 @@ class Goods {
     }     
     
     /**
-     * Returns the array of good tokens assigned to this token.
+     * Returns the array of good tokens assigned to this good
      * @return array
      */
     public function getGoodTokens()
@@ -1042,7 +1048,7 @@ class Goods {
     }        
         
     /**
-     * Returns the array of good tokens assigned to this token.
+     * Returns the array of good tokens assigned to this good.
      * @return array
      */
     public function getGoodTitles()
@@ -1051,11 +1057,20 @@ class Goods {
     }        
         
     /**
-     * Returns the array of supplier orders assigned to this token.
+     * Returns the array of supplier orders assigned to this good.
      * @return array
      */
     public function getSupplierOrders()
     {
         return $this->supplierOrders;
+    }                
+
+    /**
+     * Returns the array of mvements assigned to this good.
+     * @return array
+     */
+    public function getMovements()
+    {
+        return $this->movemets;
     }                
 }
