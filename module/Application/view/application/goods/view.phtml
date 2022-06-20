@@ -96,7 +96,7 @@
                                                class="editable" data-type="text" 
                                                data-pk="<?= $attributeValue->getAttribute()->getId()?>" 
                                                data-name="name" 
-                                               data-enable="false"
+                                               data-enabled="false"
                                                data-url="/goods/attribute-edit">
                                                 <?= $attributeValue->getAttribute()->getName()?>
                                             </a>
@@ -200,10 +200,10 @@
                             >
                             <thead>
                                 <tr>
-                                     <th data-field="dateOper" data-sortable="true" data-formatter="dateOperFormatter">Дата</th>
+                                     <th data-field="dateOper" data-sortable="true">Дата</th>
                                      <th data-field="quantity" data-type="numeric" data-align="right">Движение</th>
                                      <th data-field="docKey" >Документ</th>
-                                     <th data-field="office">Офис</th>
+                                     <th data-field="office.name">Офис</th>
                                  </tr>                
                             </thead>
                         </table>
@@ -223,9 +223,9 @@
                             >
                             <thead>
                                 <tr>
-                                     <th data-field="id" data-sortable="true" data-type="numeric">ID</th>
+<!--                                     <th data-field="id" data-sortable="true" data-type="numeric">ID</th>
                                      <th data-field="tdId" data-sortable="true" data-type="numeric">TD</th>
-                                     <th data-field="aplId" data-sortable="true" data-type="numeric">APL</th>
+                                     <th data-field="aplId" data-sortable="true" data-type="numeric">APL</th>-->
                                      <th data-field="fullName" data-sortable="true" data-formatter="carFormatter">Машина</th>
                                      <th data-field="goodCount" data-sortable="true">Товаров</th>
                                  </tr>                
@@ -257,7 +257,8 @@
                             <thead>
                                 <tr>
                                      <!--<th data-field="id" data-type="numeric">ID</th>-->
-                                     <th data-field="supplier" data-formatter="supplierFormatter">Поставщик</th>
+                                     <th data-field="dateCreated">Дата</th>
+                                     <th data-field="supplier">Поставщик</th>
                                      <th data-field="goodname" >Описание</th>
                                      <th data-field="rest" data-align='right'>Наличие</th>
                                      <th data-field="price" data-formatter="priceFormatter" data-align='right'>Цена</th>
