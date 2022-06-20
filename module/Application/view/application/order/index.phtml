@@ -20,6 +20,15 @@ $this->pageBreadcrumbs()->setItems([
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </a>                
                 <div class="form-group">
+                    <div class="btn-group">
+                        <input id="searchinput" name="search" style="width: 350px" class="form-control" type="text" placeholder="Артикул, VIN, телефон, email">
+                        <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                    </div>
+                    <button id="ok" type="submit" class="btn btn-default" title="Поиск">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>    
+                <div class="form-group">
                     <select id="officeSelect" style="width: 100px" class="form-control refresh-table" name="officeId">
                         <option>все</option>
                         <?php foreach ($offices as $office):?>
@@ -43,11 +52,16 @@ $this->pageBreadcrumbs()->setItems([
                         <?php endforeach;?>
                     </select>
                 </div>    
+<!--                <div class="form-group">
+                    <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
+                </div>-->
             </div>
         </div>
         <table id="table" 
             data-toggle="table" 
             data-url="/order/content"
+            data-cookie-id-table="ptuSaveId"
+            data-cookie-expire="1m"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -78,13 +92,13 @@ $this->pageBreadcrumbs()->setItems([
 </div>  
 
 <script type="text/javascript">
-    var table = $('#table').bootstrapTable({
+    var $table = $('#table').bootstrapTable({
         onLoadSuccess: function() {
         } 
     });
     
     function refreshTable(){
-        table.bootstrapTable('refresh');
+        $table.bootstrapTable('refresh');
     }
 
     function officeChange(){
@@ -100,6 +114,11 @@ $this->pageBreadcrumbs()->setItems([
     $(function () {        
         $('#officeSelect').val("<?= $currentUser->getOffice()->getId()?>");
         
+        $(".inputclear").click(function(){
+            $("#searchinput").val('');
+            refreshTable();
+        });
+
         $(document).on('click', '.order-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
@@ -119,7 +138,7 @@ $this->pageBreadcrumbs()->setItems([
             officeChange();
         });
         $(document).on('change', '#userSelect', function (e) {
-            table.bootstrapTable('selectPage', 1);
+            $table.bootstrapTable('selectPage', 1);
         });
 
     });

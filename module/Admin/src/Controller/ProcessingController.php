@@ -1453,7 +1453,7 @@ class ProcessingController extends AbstractActionController
         
         $settings = $this->adminManager->getAplExchangeSettings();
 
-        if ($settings['ptu'] == 1){
+        if ($settings['order'] == 1){
             $this->aplService->uploadUsers();
         }    
         

@@ -24,6 +24,7 @@ class Bigram {
     const EN_EN       = 40; // RU + NUM
     const EN_NUM      = 50; // RU + NUM
     const NUM_NUM     = 60; // RU + NUM
+    const UNKNOWN     = 90; // Неизвестно что
 
     const WHITE_LIST   = 1; // белый список 
     const GRAY_LIST    = 8; // серый список 
@@ -196,6 +197,7 @@ class Bigram {
             self::EN_EN => 'EN+EN',
             self::EN_NUM => 'EN+NUM',
             self::NUM_NUM => 'NUM+NUM',
+            self::UNKNOWN => 'UNKNOWN',
         ];
     }    
     

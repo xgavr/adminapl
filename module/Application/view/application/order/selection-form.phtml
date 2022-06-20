@@ -170,41 +170,37 @@ $form->prepare();
     }
     
     function addSelectedTable(selectionTableId, tabName){
-        $.ajax({
-            url: '/goods/content?search='+tabName,
-            cache: false
-        })
-        .done(function( data ) {
-            $('#'+selectionTableId).bootstrapTable({
-                idField: 'id',
-                uniqueId: 'id',
-                pagination: true,
-                search: false,
-                refresh: true,
-                columns: [{
-                    field: 'id', title: '', formatter: 'stAddFormatter', width: 10
-                }, {
-                    field: 'code',title: 'Артикул', formatter: 'stGoodFormatter'
-                }, {
-                    field: 'producer.name',title: 'Производитель'
-                }, {
-                    field: 'name',title: 'Наименование', formatter: 'stNameFormatter'
-                }, {
-                    field: 'id',title: '', formatter: 'soFormatter', width: 10
-                }, {
-                    field: 'price',title: 'Цена'
-                }, {
-                    field: 'id',title: 'Кнопки'
-                }],
-                data: data,
-                onPostBody: function(res){
-                    $('#'+selectionTableId).find('.add-good-selections').on('click', function(){
-                        var tableId = $(this).closest('table').attr('id');
-                        var rowId = $(this).closest('tr').attr('data-uniqueid');
-                        addRowToOrderGoodTable(tableId, rowId);
-                    });
-                }
-            });
+        $('#'+selectionTableId).bootstrapTable({
+            idField: 'id',
+            uniqueId: 'id',
+            pagination: true,
+            search: false,
+            showRefresh: true,
+            url: '/goods/content?opts=1&search='+tabName,
+            buttonsPrefix: 'btn-xs btn',
+            columns: [{
+                field: 'id', title: '', formatter: 'stAddFormatter', width: 10
+            }, {
+                field: 'code',title: 'Артикул', formatter: 'stGoodFormatter'
+            }, {
+                field: 'producer.name',title: 'Производитель'
+            }, {
+                field: 'name',title: 'Наименование', formatter: 'stNameFormatter'
+            }, {
+                field: 'id',title: '', formatter: 'soFormatter', width: 10
+            }, {
+                field: 'price',title: 'Цена', align: 'right'
+            }, {
+                field: 'id',title: 'Кнопки'
+            }],
+            //data: data,
+            onLoadSuccess: function(res){
+                $('#'+selectionTableId).find('.add-good-selections').on('click', function(){
+                    var tableId = $(this).closest('table').attr('id');
+                    var rowId = $(this).closest('tr').attr('data-uniqueid');
+                    addRowToOrderGoodTable(tableId, rowId);
+                });
+            }
         });
     }
     

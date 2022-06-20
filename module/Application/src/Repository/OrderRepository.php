@@ -13,6 +13,8 @@ use Application\Entity\Order;
 use Application\Entity\Bid;
 use Application\Entity\Contact;
 use Application\Entity\ContactCar;
+use Laminas\Filter\Digits;
+use Laminas\I18n\Filter\Alnum;
 
 /**
  * Description of OrderRepository
@@ -117,7 +119,7 @@ class OrderRepository extends EntityRepository{
             ->from(Order::class, 'o')
             ->leftJoin('o.contact', 'c')
             ->leftJoin('o.user', 'u')
-            ->orderBy('o.dateCreated', 'DESC')                 
+//            ->orderBy('o.dateCreated', 'DESC')                 
             ->addOrderBy('o.id', 'DESC')                 
                 ;
         
@@ -140,8 +142,42 @@ class OrderRepository extends EntityRepository{
             if (isset($params['sort'])){
                 $queryBuilder->addOrderBy('o.'.$params['sort'], $params['order']);
             }            
-        }
+            if (isset($params['search'])){
+                $search = trim($params['search']);
+                if ($search){
+                    $queryBuilder->join('c.emails', 'e');
 
+                    $orX = $queryBuilder->expr()->orX();
+                    $orX->add($queryBuilder->expr()->like('e.name', ':search'));
+                    $queryBuilder->setParameter('search', '%' . $search . '%');
+
+                    $digitsFilter = new Digits();
+                    $alnumFilter = new Alnum();
+                    $digits = $digitsFilter->filter($search);
+                    $alnum = $alnumFilter->filter($search);
+                    if ($digits){
+                        $queryBuilder->join('c.phones', 'p');
+                        $orX->add($queryBuilder->expr()->like('p.name', ':digits'));
+                        $queryBuilder->setParameter('digits', '%' . $digits . '%');
+                    }    
+                    if ($alnum){
+                        $queryBuilder
+                            ->join('o.bids', 'b')
+                            ->join('b.good', 'g')
+                            ->leftJoin('g.oems', 'oe')
+                            ->leftJoin('o.contactCar', 'cc')
+                                ;
+
+                        $orX->add($queryBuilder->expr()->like('oe.oe', ':alnum'));
+                        $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
+                        $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
+                        $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
+                    }    
+                    $queryBuilder->andWhere($orX);
+                }    
+            }
+        }
+//var_dump($queryBuilder->getParameters('alnum')); exit;
         return $queryBuilder->getQuery();
     }      
     
@@ -160,8 +196,6 @@ class OrderRepository extends EntityRepository{
         $queryBuilder->select('count(o.id) as orderCount')
             ->from(Order::class, 'o')
             ->leftJoin('o.contact', 'c')
-            ->leftJoin('c.phones', 'p')
-            ->leftJoin('c.emails', 'e')
             ->leftJoin('o.user', 'u')
                 ;
         

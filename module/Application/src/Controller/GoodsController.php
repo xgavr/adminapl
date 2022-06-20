@@ -366,6 +366,7 @@ class GoodsController extends AbstractActionController
         $producer = $this->params()->fromQuery('producer');
         $group = $this->params()->fromQuery('group');
         $accurate = $this->params()->fromQuery('accurate');
+        $opts = $this->params()->fromQuery('opts', false);
         
         $query = $this->entityManager->getRepository(Goods::class)
                         ->findAllGoods([
@@ -388,7 +389,11 @@ class GoodsController extends AbstractActionController
         }
 
         $result = $query->getResult(2);
-        
+        if ($opts){
+            foreach ($result as $key => $value){
+                $result[$key]['opts'] = Goods::optPrices($value['price'], $value['meanprice']);
+            }
+        }
         return new JsonModel([
             'total' => $total,
             'rows' => $result,

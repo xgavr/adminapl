@@ -91,10 +91,11 @@ class OrderController extends AbstractActionController
         $userId = $this->params()->fromQuery('user');
         $status = $this->params()->fromQuery('status');
         $dateOper = $this->params()->fromQuery('dateOper');
+        $search = $this->params()->fromQuery('search');
         
         $params = [
             'sort' => $sort, 'order' => $order, 'officeId' => $officeId,
-            'userId' => $userId, 'status' => $status,
+            'userId' => $userId, 'status' => $status, 'search' => $search,
         ];
         
         $query = $this->entityManager->getRepository(Order::class)
@@ -464,7 +465,7 @@ class OrderController extends AbstractActionController
         
         // Find the tax order ID
         $order = $this->entityManager->getRepository(Order::class)
-                ->findOneById($orderId);
+                ->find($orderId);
         
         if ($order == null) {
             $this->getResponse()->setStatusCode(404);
@@ -481,6 +482,22 @@ class OrderController extends AbstractActionController
         ]);
     } 
     
+    public function searchAction() 
+    {       
+        $orderId = (int)$this->params()->fromQuery('orderId', -1);
+        
+        // Validate input parameter
+        if ($orderId>0) {
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->findOneByAplId($orderId);
+
+            if ($order) {
+                return $this->redirect()->toRoute('order', ['action'=>'intro', 'id' => $order->getId()]);
+            }        
+        }
+        return $this->redirect()->toRoute('order', ['action'=>'index']);        
+    } 
+
     public function goodOptsEditableFormatAction() 
     {       
         $goodId = (int)$this->params()->fromRoute('id', -1);

@@ -80,6 +80,8 @@ class BigramRepository  extends EntityRepository
                 return Bigram::NUM_NUM;
             }
         }
+        
+        return Bigram::UNKNOWN;
     }
 
     /**

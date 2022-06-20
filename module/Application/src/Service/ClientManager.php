@@ -64,6 +64,7 @@ class ClientManager
         $client->setAplId((empty($data['aplId'])) ? 0:$data['aplId']);
         $client->setName((empty($data['name'])) ? 'NaN':$data['name']);
         $client->setStatus($data['status']);
+        $client->setPricecol(empty($data['pricecol']) ? Client::PRICE_0: $data['pricecol']);
         
         $currentDate = date('Y-m-d H:i:s');
         $client->setDateCreated($currentDate);    
@@ -92,6 +93,7 @@ class ClientManager
             'name' => (empty($data['name'])) ? 'NaN':$data['name'],
             'status' => $data['status'],
             'date_created' => $currentDate,
+            'pricecol' => empty($data['pricecol']) ? Client::PRICE_0: $data['pricecol'],
         ];
                 
         $this->entityManager->getConnection()
@@ -112,6 +114,7 @@ class ClientManager
         $client->setAplId($data['aplId']);
         $client->setName($data['name']);
         $client->setStatus($data['status']);
+        $client->setPricecol(empty($data['pricecol']) ? Client::PRICE_0: $data['pricecol']);
 
         $this->entityManager->persist($client);
         // Применяем изменения к базе данных.
@@ -129,6 +132,7 @@ class ClientManager
             'apl_id' => $data['aplId'],
             'name' => $data['name'],
             'status' => $data['status'],
+            'pricecol' => empty($data['pricecol']) ? Client::PRICE_0: $data['pricecol'],
         ];
         $this->entityManager->getConnection()
                 ->update('client', $upd, ['id' => $client->getId()]);
