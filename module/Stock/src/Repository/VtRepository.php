@@ -11,6 +11,7 @@ namespace Stock\Repository;
 use Doctrine\ORM\EntityRepository;
 use Stock\Entity\Vt;
 use Stock\Entity\VtGood;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of VtRepository

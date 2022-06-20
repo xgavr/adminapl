@@ -15,6 +15,7 @@ use Application\Entity\Contact;
 use Application\Entity\ContactCar;
 use Laminas\Filter\Digits;
 use Laminas\I18n\Filter\Alnum;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of OrderRepository
@@ -215,6 +216,40 @@ class OrderRepository extends EntityRepository{
                     ->setParameter('3', $params['status'])
                         ;
             }            
+            if (isset($params['search'])){
+                $search = trim($params['search']);
+                if ($search){
+                    $queryBuilder->join('c.emails', 'e');
+
+                    $orX = $queryBuilder->expr()->orX();
+                    $orX->add($queryBuilder->expr()->like('e.name', ':search'));
+                    $queryBuilder->setParameter('search', '%' . $search . '%');
+
+                    $digitsFilter = new Digits();
+                    $alnumFilter = new Alnum();
+                    $digits = $digitsFilter->filter($search);
+                    $alnum = $alnumFilter->filter($search);
+                    if ($digits){
+                        $queryBuilder->join('c.phones', 'p');
+                        $orX->add($queryBuilder->expr()->like('p.name', ':digits'));
+                        $queryBuilder->setParameter('digits', '%' . $digits . '%');
+                    }    
+                    if ($alnum){
+                        $queryBuilder
+                            ->join('o.bids', 'b')
+                            ->join('b.good', 'g')
+                            ->leftJoin('g.oems', 'oe')
+                            ->leftJoin('o.contactCar', 'cc')
+                                ;
+
+                        $orX->add($queryBuilder->expr()->like('oe.oe', ':alnum'));
+                        $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
+                        $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
+                        $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
+                    }    
+                    $queryBuilder->andWhere($orX);
+                }    
+            }
         }
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
