@@ -96,11 +96,12 @@
                                                class="editable" data-type="text" 
                                                data-pk="<?= $attributeValue->getAttribute()->getId()?>" 
                                                data-name="name" 
+                                               data-enable="false"
                                                data-url="/goods/attribute-edit">
                                                 <?= $attributeValue->getAttribute()->getName()?>
                                             </a>
                                         </td>
-                                        <td width="5">
+<!--                                        <td width="5">
                                             <input type="checkbox" class="similarGoodCheckbox checkbox" 
                                                    data-toggle='tooltip' data-original-title="Использовать в аналогичных товарах"
                                                    value="<?= $attributeValue->getAttribute()->getId()?>" <?= $attributeValue->getAttribute()->getSimilarGoodAsHtml()?>/>
@@ -109,7 +110,7 @@
                                             <input type="checkbox" class="toBestNameCheckbox checkbox" 
                                                    data-toggle='tooltip' data-original-title="Использовать в наименовании"
                                                    value="<?= $attributeValue->getAttribute()->getId()?>" <?= $attributeValue->getAttribute()->getToBestNameAsHtml()?>/>
-                                        </td>
+                                        </td>-->
                                         <td>
                                             <?= $attributeValue->getAttributeValue()->getValue();?>
                                         </td>
@@ -199,8 +200,8 @@
                             >
                             <thead>
                                 <tr>
-                                     <th data-field="dateOper" data-sortable="true">Дата</th>
-                                     <th data-field="quantity" data-type="numeric">Движение</th>
+                                     <th data-field="dateOper" data-sortable="true" data-formatter="dateOperFormatter">Дата</th>
+                                     <th data-field="quantity" data-type="numeric" data-align="right">Движение</th>
                                      <th data-field="docKey" >Документ</th>
                                      <th data-field="office">Офис</th>
                                  </tr>                
@@ -257,8 +258,7 @@
                                 <tr>
                                      <!--<th data-field="id" data-type="numeric">ID</th>-->
                                      <th data-field="supplier" data-formatter="supplierFormatter">Поставщик</th>
-                                     <th data-field="code" data-formatter="codeFormatter">Артикул</th>
-                                     <th data-field="goodname" data-formatter="goodnameFormatter">Описание</th>
+                                     <th data-field="goodname" >Описание</th>
                                      <th data-field="rest" data-align='right'>Наличие</th>
                                      <th data-field="price" data-formatter="priceFormatter" data-align='right'>Цена</th>
                                      <th data-field="statusEx" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle"></th>
@@ -308,7 +308,7 @@
                                             <tr>
                                                 <td>Расценка</td>
                                                 <td></td>
-                                                <td><a href="<?= $this->url('rate', ['action' => 'view', 'id' => $rate->getId()])?>" target="_blank"><?= $rate->getName()?></a></td>
+                                                <td><?= $rate->getName()?></td>
                                             </tr>
                                         <?php endif; ?>    
                                         <tr>
@@ -366,13 +366,6 @@
                                             </td>
                                         </tr>                                              
                                     </table>                                                    
-                                </div>
-                                <div class="col-md-2">
-                                    <button value="/goods/update-prices/<?= $goods->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-                                            title="Обновить">
-                                        Обновить
-                                        <span class="glyphicon glyphicon-refresh" ></span>
-                                    </button>                                 
                                 </div>
                             </div>                            
                         </p>
@@ -501,7 +494,7 @@
     }    
     
     function carFormatter(value, row) {
-        return '<a href="/car/view/'+row.id+'" target="_blank">'+value+'</a>';
+        return value;
     }    
     
     function goodnameFormatter(value, row) {
@@ -531,12 +524,18 @@
         }
     }    
     
+    function dateOperFormatter(value) {
+        var dateOper = new Date(value);
+        var dateOperStr = dateOper.getDate()+'-'+ (dateOper.getMonth()+1) + '-' + dateOper.getYear();
+        return dateOperStr;
+    }    
+    
     function supplierFormatter(value, row) {
         var priceDate = new Date(row.dateCreated);
         var priceDateStr = priceDate.getDate()+'-'+ (priceDate.getMonth()+1) + ' ' + priceDate.getHours() + ':' + priceDate.getMinutes();
-        return '<a href="/supplier/view/'+row.supplierId+'" target="_blank">'+value+'</a>' + '<br/>' + priceDateStr ;
+        return value + '<br/>' + priceDateStr ;
     }    
-    
+
     function inSigma(data){
         if (data.inSigma == false){
             $('#rawprice'+data.id).css('color', 'red');
