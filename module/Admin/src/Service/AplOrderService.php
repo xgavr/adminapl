@@ -571,6 +571,7 @@ class AplOrderService {
                     }    
                     if (empty($good)){
         //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                        return false;
                     } else {
 
                         $this->orderManager->insBid($order, [
