@@ -80,7 +80,7 @@ class StManager
         
             foreach ($stGoods as $stGood){
                 $bases = $this->entityManager->getRepository(Movement::class)
-                        ->findBases($stGood->getGood()->getId(), $st->getDateOper(), $st->getOffice()->getId());
+                        ->findBases($stGood->getGood()->getId(), $st->getDocDate(), $st->getOffice()->getId());
                 
                 $write = $stGood->getQuantity();
                 
