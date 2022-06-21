@@ -88,7 +88,7 @@ class StManager
                 
                 foreach ($bases as $base){
                     $movement = $this->entityManager->getRepository(Movement::class)
-                            ->finOneByDocKey($base['docKey']);
+                            ->findOneByDocKey($base['docKey']);
                     
                     $quantity = min($base['rest'], $write);
                     $amount = $quantity*$stGood->getAmount()/$stGood->getQuantity();
