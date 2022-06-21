@@ -566,11 +566,12 @@ class AplOrderService {
             if (isset($data['tp'])){
                 $rowNo = 1;
                 foreach ($data['tp'] as $tp){
-                    if (isset($tp['good'])){
+                    if (!empty($tp['good'])){                        
                         $good = $this->aplDocService->findGood($tp['good']);   
                     }    
                     if (empty($good)){
         //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+//            var_dump($tp); exit;
                         return false;
                     } else {
 

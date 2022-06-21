@@ -809,10 +809,8 @@ class AssemblyManager
                 $this->entityManager->getRepository(Article::class)
                         ->updateArticle($article->getId(), ['good_id' => $good->getId()]);
                 
-                $retailCount = $this->entityManager->getRepository(Movement::class)
-                        ->goodMovementRetail($good->getId());
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good->getId(), ['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW, 'retailCount' => $retailCount]);                
+                        ->updateGood($good->getId(), ['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);                
             }
             
             if (!$supplier){
