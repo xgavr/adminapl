@@ -169,11 +169,6 @@ class Order {
     protected $mode;    
 
     /**
-     * @ORM\Column(name="take")  
-     */
-    protected $take;    
-
-    /**
      * @ORM\Column(name="status_ex")  
      */
     protected $statusEx;    
