@@ -42,7 +42,10 @@ class St {
     const WRITE_COST       = 1; // Списать в зп.
     const WRITE_PAY        = 2; // Списать на расходы.
     const WRITE_INVENTORY  = 3; // инвентаризация
+    const WRITE_COMMISSION  = 4; // вернуть комиссару
 
+    const STATUS_ACCOUNT_OK  = 1;// обновлено 
+    const STATUS_ACCOUNT_NO  = 2;// не обновлено
 
     /**
      * @ORM\Id
@@ -90,6 +93,11 @@ class St {
      * @ORM\Column(name="write_off")  
      */
     protected $writeOff;
+
+    /** 
+     * @ORM\Column(name="status_account")  
+     */
+    protected $statusAccount;
 
     /** 
      * @ORM\Column(name="doc_no")  
@@ -380,6 +388,7 @@ class St {
             self::WRITE_COST => 'Списать на расходы',
             self::WRITE_PAY => 'Списать в зп',
             self::WRITE_INVENTORY => 'Инвентаризация',
+            self::WRITE_COMMISSION => 'Вернуть с коммиссии',
         ];
     }    
     
@@ -409,6 +418,50 @@ class St {
             $this->setDocNo('');            
         }
     }   
+    
+    /**
+     * Returns statusAccount.
+     * @return int     
+     */
+    public function getStatusAccount() 
+    {
+        return $this->statusAccount;
+    }
+
+    /**
+     * Returns possible statusAccount as array.
+     * @return array
+     */
+    public static function getStatusAccountList() 
+    {
+        return [
+            self::STATUS_ACCOUNT_OK => 'Обновлено',
+            self::STATUS_ACCOUNT_NO=> 'Не обновлено',
+        ];
+    }    
+    
+    /**
+     * Returns statusAccount as string.
+     * @return string
+     */
+    public function getStatusAccountAsString()
+    {
+        $list = self::getStatusAccountList();
+        if (isset($list[$this->statusAccount]))
+            return $list[$this->statusAccount];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets statusAccount.
+     * @param int $statusAccount     
+     */
+    public function setStatusAccount($statusAccount) 
+    {
+        $this->statusAccount = $statusAccount;
+    }   
+    
     
     /**
      * Returns the date of user creation.

@@ -1,5 +1,7 @@
 <?php
     use Application\Entity\Oem;
+    
+    $priceCols = $goodsManager->priceCols($goods);
 ?>
 
 <div class="row">
@@ -96,7 +98,7 @@
                                                class="editable" data-type="text" 
                                                data-pk="<?= $attributeValue->getAttribute()->getId()?>" 
                                                data-name="name" 
-                                               data-enabled="false"
+                                               data-disabled="true"
                                                data-url="/goods/attribute-edit">
                                                 <?= $attributeValue->getAttribute()->getName()?>
                                             </a>
@@ -300,6 +302,7 @@
                                                    class="editable" data-type="text" 
                                                    data-pk="<?= $goods->getId()?>" 
                                                    data-name="fixPrice" 
+                                                   data-disabled="true"
                                                    data-url="/goods/update-fix-price">
                                                     <?= $goods->getFixPrice()?>
                                                 </a>

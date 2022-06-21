@@ -14,6 +14,7 @@ use Company\Entity\Office;
 use Application\Entity\Contact;
 use Stock\Entity\Pt;
 use Application\Entity\Order;
+use Stock\Entity\St;
 
 
 /**
@@ -43,6 +44,16 @@ class Retail {
      */
     protected $docKey;
     
+    /**
+     * @ORM\Column(name="doc_type")   
+     */
+    protected $docType;
+    
+    /**
+     * @ORM\Column(name="doc_id")   
+     */
+    protected $docId;
+
     /** 
      * @ORM\Column(name="date_oper")  
      */
@@ -104,6 +115,26 @@ class Retail {
         return $this->docKey;
     }
 
+    public function getDocType() 
+    {
+        return $this->docType;
+    }
+
+    public function setDocType($docType) 
+    {
+        $this->docType = $docType;
+    }     
+
+    public function getDocId() 
+    {
+        return $this->docId;
+    }
+
+    public function setDocId($docId) 
+    {
+        $this->docId = $docId;
+    }     
+    
     /**
      * Returns the date of operation.
      * @return string     
@@ -165,6 +196,19 @@ class Retail {
     
     /**
      * Returns possible pt status.
+     * @param St $st
+     * @return integer
+     */
+    public static function getStatusFromSt($st) 
+    {
+        switch ($st->getStatus()){
+            case St::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+    
+    /**
+     * Returns possible pt status.
      * @param Pt $pt
      * @return integer
      */
@@ -178,7 +222,7 @@ class Retail {
     
     /**
      * Returns possible vt status.
-     * @param Vt $pt
+     * @param Vt $vt
      * @return integer
      */
     public static function getStatusFromVt($vt) 

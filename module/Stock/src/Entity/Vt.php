@@ -41,6 +41,9 @@ class Vt {
     const STATUS_EX_RECD  = 2; // Получено из АПЛ.
     const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
 
+    const STATUS_ACCOUNT_OK  = 1;// обновлено 
+    const STATUS_ACCOUNT_NO  = 2;// не обновлено
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -82,6 +85,11 @@ class Vt {
      * @ORM\Column(name="status_ex")  
      */
     protected $statusEx;
+
+    /** 
+     * @ORM\Column(name="status_account")  
+     */
+    protected $statusAccount;
 
     /** 
      * @ORM\Column(name="doc_no")  
@@ -342,6 +350,49 @@ class Vt {
         $this->statusEx = $statusEx;
     }   
 
+    /**
+     * Returns statusAccount.
+     * @return int     
+     */
+    public function getStatusAccount() 
+    {
+        return $this->statusAccount;
+    }
+
+    /**
+     * Returns possible statusAccount as array.
+     * @return array
+     */
+    public static function getStatusAccountList() 
+    {
+        return [
+            self::STATUS_ACCOUNT_OK => 'Обновлено',
+            self::STATUS_ACCOUNT_NO=> 'Не обновлено',
+        ];
+    }    
+    
+    /**
+     * Returns statusAccount as string.
+     * @return string
+     */
+    public function getStatusAccountAsString()
+    {
+        $list = self::getStatusAccountList();
+        if (isset($list[$this->statusAccount]))
+            return $list[$this->statusAccount];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets statusAccount.
+     * @param int $statusAccount     
+     */
+    public function setStatusAccount($statusAccount) 
+    {
+        $this->statusAccount = $statusAccount;
+    }   
+    
     /**
      * Returns the date of user creation.
      * @return string     

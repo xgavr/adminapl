@@ -23,6 +23,9 @@ use Laminas\Json\Encoder;
  */
 class StGood {
         
+    const TAKE_OK  = 1;// учтено 
+    const TAKE_NO  = 2;// не учтено 
+    
      // St status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
@@ -63,6 +66,11 @@ class StGood {
      * @ORM\Column(name="status_doc")  
      */
     protected $statusDoc;
+
+    /**
+     * @ORM\Column(name="take")   
+     */
+    protected $take;
 
     /** 
      * @ORM\Column(name="quantity")  
@@ -239,6 +247,49 @@ class StGood {
         $this->statusDoc = $statusDoc;
     }   
 
+    /**
+     * Returns take.
+     * @return int     
+     */
+    public function getTake() 
+    {
+        return $this->take;
+    }
+
+    /**
+     * Returns possible take as array.
+     * @return array
+     */
+    public static function getTakeList() 
+    {
+        return [
+            self::TAKE_OK => 'Проведено',
+            self::TAKE_NO => 'Не проведено',
+        ];
+    }    
+    
+    /**
+     * Returns take as string.
+     * @return string
+     */
+    public function getTakeAsString()
+    {
+        $list = self::getTakeList();
+        if (isset($list[$this->take]))
+            return $list[$this->take];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets take.
+     * @param int $take     
+     */
+    public function setTake($take) 
+    {
+        $this->take = $take;
+    }   
+    
     /**
      * Sets  quantity.
      * @param float $quantity     

@@ -18,6 +18,7 @@ use Application\Entity\GenericGroup;
 use Application\Entity\Oem;
 use Application\Entity\GoodSupplier;
 use Application\Entity\Supplier;
+use Stock\Entity\Movement;
 
 /**
  * Description of AssemblyManager
@@ -91,6 +92,7 @@ class AssemblyManager
         $good->setStatusRawpriceEx(Goods::RAWPRICE_EX_NEW);
         $good->setDateEx(date('Y-m-d H:i:s'));
         $good->setCarCount(0);
+        $good->setRetailCount(0);
         
         if (!$zeroGroup){
             $zeroGroup = $this->entityManager->getRepository(GenericGroup::class)
@@ -155,6 +157,7 @@ class AssemblyManager
             'group_apl' => Goods::DEFAULT_GROUP_APL_ID,
             'token_group_id' => NULL,
             'upd_week' => date('W'),
+            'retail_count' => 0,
         ];
 
         if (!$zeroGroup){
@@ -806,8 +809,10 @@ class AssemblyManager
                 $this->entityManager->getRepository(Article::class)
                         ->updateArticle($article->getId(), ['good_id' => $good->getId()]);
                 
+                $retailCount = $this->entityManager->getRepository(Movement::class)
+                        ->goodMovementRetail($good->getId());
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good->getId(), ['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);                
+                        ->updateGood($good->getId(), ['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW, 'retailCount' => $retailCount]);                
             }
             
             if (!$supplier){

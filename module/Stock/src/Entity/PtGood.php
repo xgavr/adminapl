@@ -31,6 +31,9 @@ class PtGood {
     const STATUS_DOC_RECD       = 1; // Получено.
     const STATUS_DOC_NOT_RECD  = 2; // Не получено.
 
+    const TAKE_OK  = 1;// учтено 
+    const TAKE_NO  = 2;// не учтено 
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -72,6 +75,11 @@ class PtGood {
      * @ORM\Column(name="amount")  
      */
     protected $amount;
+
+    /**
+     * @ORM\Column(name="take")   
+     */
+    protected $take;
 
     /**
      * @ORM\ManyToOne(targetEntity="Stock\Entity\Pt", inversedBy="ptGoods") 
@@ -236,6 +244,49 @@ class PtGood {
     public function setStatusDoc($statusDoc) 
     {
         $this->statusDoc = $statusDoc;
+    }   
+
+    /**
+     * Returns take.
+     * @return int     
+     */
+    public function getTake() 
+    {
+        return $this->take;
+    }
+
+    /**
+     * Returns possible take as array.
+     * @return array
+     */
+    public static function getTakeList() 
+    {
+        return [
+            self::TAKE_OK => 'Проведено',
+            self::TAKE_NO => 'Не проведено',
+        ];
+    }    
+    
+    /**
+     * Returns take as string.
+     * @return string
+     */
+    public function getTakeAsString()
+    {
+        $list = self::getTakeList();
+        if (isset($list[$this->take]))
+            return $list[$this->take];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets take.
+     * @param int $take     
+     */
+    public function setTake($take) 
+    {
+        $this->take = $take;
     }   
 
     /**

@@ -758,7 +758,7 @@ class AplService {
             'name' => $row['name'],
             'status' => ($row['publish'] == 1 ? AplClient::STATUS_ACTIVE:AplClient::STATUS_RETIRED),
             'aplId' => $row['id'],
-            'pricecol' => $digitsFilter->filter($row['pricecol']),
+            'pricecol' => $digitsFilter->filter(empty($row['pricecol']) ? 0:$row['pricecol']),
         ];    
 
         if ($client){                    

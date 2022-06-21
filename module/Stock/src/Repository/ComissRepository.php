@@ -43,6 +43,34 @@ class ComissRepository extends EntityRepository{
     }
 
     /**
+     * Найт остаток товара на комиссии
+     * 
+     * @param integer $goodId
+     * @param date $dateOper
+     * @param integer $officeId
+     */
+    public function findActiveComissioners($goodId, $dateOper, $officeId)
+    {
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('sum(c.quantity) as rest, sum(c.amount) as amount, identity(c.contact) as contactId')
+                ->from(Comiss::class, 'c')
+                ->where('c.good = ?1')
+                ->andWhere('c.dateOper <= ?2')
+                ->andWhere('c.office = ?3')
+                ->setParameter('1', $goodId)
+                ->setParameter('2', $dateOper)
+                ->setParameter('3', $officeId)
+                ->groupBy('contactId')
+                ->having('rest > 0')
+                ;
+        
+        return $qb->getQuery()->getResult();
+    }
+
+
+    /**
      * Добавление записей движения товара
      * 
      * @param array $data

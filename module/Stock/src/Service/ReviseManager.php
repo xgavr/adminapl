@@ -12,6 +12,7 @@ use Company\Entity\Contract;
 use Application\Entity\Supplier;
 use Company\Entity\Office;
 use User\Filter\PhoneFilter;
+use Stock\Entity\Movement;
 
 /**
  * This service is responsible for adding/editing revise.
@@ -58,6 +59,8 @@ class ReviseManager
         if ($revise->getKind() == Revise::KIND_REVISE_SUPPLIER){
             $data = [
                 'doc_key' => $revise->getLogKey(),
+                'doc_type' => Movement::DOC_REVISE,
+                'doc_id' => $revise->getId(),
                 'date_oper' => $revise->getDocDate(),
                 'status' => ($revise->getStatus() == Revise::STATUS_ACTIVE) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
                 'revise' => Mutual::REVISE_NOT,
@@ -88,6 +91,8 @@ class ReviseManager
         if ($revise->getKind() == Revise::KIND_REVISE_CLIENT){
             $data = [
                 'doc_key' => $revise->getLogKey(),
+                'doc_type' => Movement::DOC_REVISE,
+                'doc_id' => $revise->getId(),
                 'date_oper' => $revise->getDocDate(),
                 'status' => ($revise->getStatus() == Revise::STATUS_ACTIVE) ? Retail::STATUS_ACTIVE: Retail::STATUS_RETIRED,
                 'revise' => Retail::REVISE_NOT,

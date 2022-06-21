@@ -32,6 +32,16 @@ class Movement {
     const STATUS_RETIRED      = 2; // Retired.
     const STATUS_COMMISSION    = 3; // commission.
     
+    const DOC_PTU = 1;
+    const DOC_OT = 2;
+    const DOC_PT = 3;
+    const DOC_VT = 4;
+    const DOC_ORDER = 5;
+    const DOC_ST = 6;
+    const DOC_VTP = 7;
+    const DOC_REVISE = 8;
+    
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -43,6 +53,26 @@ class Movement {
      * @ORM\Column(name="doc_key")   
      */
     protected $docKey;
+    
+    /**
+     * @ORM\Column(name="doc_type")   
+     */
+    protected $docType;
+    
+    /**
+     * @ORM\Column(name="doc_id")   
+     */
+    protected $docId;
+    
+    /**
+     * @ORM\Column(name="base_type")   
+     */
+    protected $baseType;
+    
+    /**
+     * @ORM\Column(name="base_id")   
+     */
+    protected $baseId;
     
     /**
      * @ORM\Column(name="doc_row_key")   
@@ -113,6 +143,46 @@ class Movement {
     public function setDocKey($docKey) 
     {
         $this->docKey = $docKey;
+    }     
+
+    public function getDocType() 
+    {
+        return $this->docType;
+    }
+
+    public function setDocType($docType) 
+    {
+        $this->docType = $docType;
+    }     
+
+    public function getDocId() 
+    {
+        return $this->docId;
+    }
+
+    public function setDocId($docId) 
+    {
+        $this->docId = $docId;
+    }     
+
+    public function getBaseType() 
+    {
+        return $this->baseType;
+    }
+
+    public function setBaseType($baseType) 
+    {
+        $this->baseType = $baseType;
+    }     
+
+    public function getBaseId() 
+    {
+        return $this->baseId;
+    }
+
+    public function setBaseId($baseId) 
+    {
+        $this->baseId = $baseId;
     }     
 
     public function getDocRowKey() 
@@ -259,6 +329,7 @@ class Movement {
     {
         switch ($vt->getStatus()){
             case Vt::STATUS_RETIRED: return self::STATUS_RETIRED;
+            case VT::STATUS_COMMISSION: return self::STATUS_COMMISSION;    
             default: return self::STATUS_ACTIVE;    
         }
     }    

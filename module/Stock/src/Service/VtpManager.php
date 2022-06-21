@@ -76,6 +76,8 @@ class VtpManager
         if ($vtp->getStatus() == Vtp::STATUS_ACTIVE && $vtp->getStatusDoc() == Vtp::STATUS_DOC_NOT_RECD){
             $data = [
                 'doc_key' => $vtp->getLogKey(),
+                'doc_type' => Movement::DOC_VTP,
+                'doc_id' => $vtp->getId(),
                 'date_oper' => $vtp->getDocDate(),
                 'status' => $vtp->getStatus(),
                 'revise' => Mutual::REVISE_NOT,
@@ -110,6 +112,10 @@ class VtpManager
             foreach ($vtpGoods as $vtpGood){
                 $data = [
                     'doc_key' => $vtp->getLogKey(),
+                    'doc_type' => Movement::DOC_VTP,
+                    'doc_id' => $vtp->getId(),
+                    'base_type' => Movement::DOC_PTU,
+                    'base_id' => $vtp->getPtu()->getId(),
                     'doc_row_key' => $vtpGood->getDocRowKey(),
                     'doc_row_no' => $vtpGood->getRowNo(),
                     'date_oper' => $vtp->getDocDate(),

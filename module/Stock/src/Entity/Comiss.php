@@ -39,6 +39,16 @@ class Comiss {
     protected $docKey;
     
     /**
+     * @ORM\Column(name="doc_type")   
+     */
+    protected $docType;
+    
+    /**
+     * @ORM\Column(name="doc_id")   
+     */
+    protected $docId;
+
+    /**
      * @ORM\Column(name="doc_row_key")   
      */
     protected $docRowKey;
@@ -115,6 +125,26 @@ class Comiss {
         $this->docKey = $docKey;
     }     
 
+    public function getDocType() 
+    {
+        return $this->docType;
+    }
+
+    public function setDocType($docType) 
+    {
+        $this->docType = $docType;
+    }     
+
+    public function getDocId() 
+    {
+        return $this->docId;
+    }
+
+    public function setDocId($docId) 
+    {
+        $this->docId = $docId;
+    }     
+    
     public function getDocRowKey() 
     {
         return $this->docRowKey;

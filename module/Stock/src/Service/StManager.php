@@ -6,6 +6,7 @@ use Stock\Entity\StGood;
 use Admin\Entity\Log;
 use Stock\Entity\Movement;
 use Stock\Entity\Comiss;
+use Stock\Entity\Retail;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -68,27 +69,102 @@ class StManager
         
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($st->getLogKey());
+        $this->entityManager->getRepository(Comiss::class)
+                ->removeDocComiss($st->getLogKey());
+        $this->entityManager->getRepository(Retail::class)
+                ->removeOrderRetails($st->getLogKey());
         
         if ($st->getStatus() == St::STATUS_ACTIVE){
             $stGoods = $this->entityManager->getRepository(StGood::class)
                     ->findBySt($st->getId());
         
             foreach ($stGoods as $stGood){
-                $data = [
-                    'doc_key' => $st->getLogKey(),
-                    'doc_row_key' => $stGood->getDocRowKey(),
-                    'doc_row_no' => $stGood->getRowNo(),
-                    'date_oper' => $st->getDocDate(),
-                    'status' => $st->getStatus(),
-                    'quantity' => -$stGood->getQuantity(),
-                    'amount' => -$stGood->getAmount(),
-                    'good_id' => $stGood->getGood()->getId(),
-                    'office_id' => $st->getOffice()->getId(),
-                    'company_id' => $st->getCompany()->getId(),
-                ];
+                $bases = $this->entityManager->getRepository(Movement::class)
+                        ->findBases($stGood->getGood()->getId(), $st->getDateOper(), $st->getOffice()->getId());
+                
+                $write = $stGood->getQuantity();
+                
+                $take = StGood::TAKE_NO;
+                
+                foreach ($bases as $base){
+                    $movement = $this->entityManager->getRepository(Movement::class)
+                            ->finOneByDocKey($base['docKey']);
+                    
+                    $quantity = min($base['rest'], $write);
+                    $amount = $quantity*$stGood->getAmount()/$stGood->getQuantity();
 
-                $this->entityManager->getRepository(Movement::class)
-                        ->insertMovement($data); 
+                    $data = [
+                        'doc_key' => $st->getLogKey(),
+                        'doc_type' => Movement::DOC_ST,
+                        'doc_id' => $st->getId(),
+                        'base_type' => $movement->getDocType(),
+                        'base_id' => $movement->getDocId(),
+                        'doc_row_key' => $stGood->getDocRowKey(),
+                        'doc_row_no' => $stGood->getRowNo(),
+                        'date_oper' => $st->getDocDate(),
+                        'status' => Movement::getStatusFromSt($st),
+                        'quantity' => -$quantity,
+                        'amount' => -$amount,
+                        'good_id' => $stGood->getGood()->getId(),
+                        'office_id' => $st->getOffice()->getId(),
+                        'company_id' => $st->getCompany()->getId(),
+                    ];
+
+                    $this->entityManager->getRepository(Movement::class)
+                            ->insertMovement($data); 
+
+                    if ($movement->getStatus() == Movement::STATUS_COMMISSION){
+                        $comiss = $this->entityManager->getRepository(Comiss::class)
+                                ->findOneByDocKey($base['docKey']);
+                        $data = [
+                            'doc_key' => $st->getLogKey(),
+                            'doc_type' => Movement::DOC_ST,
+                            'doc_id' => $vt->getId(),
+                            'doc_row_key' => $stGood->getRowKey(),
+                            'doc_row_no' => $stGood->getRowNo(),
+                            'date_oper' => $st->getDateOper(),
+                            'status' => Movement::getStatusFromSt($st),
+                            'quantity' => -$quantity,
+                            'amount' => -$amount,
+                            'good_id' => $stGood->getGood()->getId(),
+                            'office_id' => $st->getOffice()->getId(),
+                            'company_id' => $st->getCompany()->getId(),
+                            'contact_id' => $comiss->getContact()->getId(),
+                        ];
+                        $this->entityManager->getRepository(Comiss::class)
+                                ->insertComiss($data);
+
+                        if ($st->getWriteOff() != St::WRITE_COMMISSION){
+                            $data = [
+                                'doc_key' => $st->getLogKey(),
+                                'doc_type' => Movement::DOC_ST,
+                                'doc_id' => $st->getId(),
+                                'date_oper' => $st->getDateOper(),
+                                'status' => Retail::getStatusFromSt($st),
+                                'revise' => Retail::REVISE_NOT,
+                                'amount' => -$amount,
+                                'contact_id' => $comiss->getContact()->getId(),
+                                'office_id' => $st->getOffice()->getId(),
+                                'company_id' => $st->getCompany()->getId(),
+                            ];
+
+                            $this->entityManager->getRepository(Retail::class)
+                                    ->insertRetail($data);   
+                        }
+                    }                    
+                    
+                    $write -= $quantity;
+                    if ($write <= 0){
+                        break;
+                    }
+                }    
+                
+                if ($write == 0){
+                    $take = StGood::TAKE_OK;
+                }
+                
+                $this->entityManager->getConnection()
+                        ->update('st_good', ['take' => $take], ['id' => $stGood->getId()]);
             }    
         }
         
@@ -153,6 +229,7 @@ class StManager
             $st->setDateCreated(date('Y-m-d H:i:s'));
             $st->setCost(null);
             $st->setUser(null);
+            $st->setStatusAccount(St::STATUS_ACCOUNT_NO);
             if (!empty($data['cost'])){
                 $st->setCost($data['cost']);
             }
@@ -188,6 +265,7 @@ class StManager
             $st->setCompany($data['company']);
             $st->setCost(null);
             $st->setUser(null);
+            $st->setStatusAccount(St::STATUS_ACCOUNT_NO);
             if (!empty($data['cost'])){
                 $st->setCost($data['cost']);
             }
@@ -223,6 +301,7 @@ class StManager
             'comment' => (isset($data['comment'])) ? $data['comment']:'',
 //            'info' => $data['info'],
             'row_no' => $rowNo,
+            'take' => StGood::TAKE_NO,
         ];
         //var_dump($stGood); exit;
         
@@ -314,6 +393,10 @@ class StManager
             $this->logManager->infoSt($st, Log::STATUS_DELETE);
             $this->entityManager->getRepository(Movement::class)
                     ->removeDocMovements($st->getLogKey());
+            $this->entityManager->getRepository(Comiss::class)
+                    ->removeDocComiss($st->getLogKey());
+            $this->entityManager->getRepository(Retail::class)
+                    ->removeOrderRetails($st->getLogKey());
             $this->removeStGood($st);
 
             $this->entityManager->getConnection()->delete('st', ['id' => $st->getId()]);

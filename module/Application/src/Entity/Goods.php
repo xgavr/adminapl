@@ -231,6 +231,11 @@ class Goods {
     protected $updWeek;        
     
     /**
+     * @ORM\Column(name="retail_count")  
+     */
+    protected $retailCount = 0;        
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="goods") 
      * @ORM\JoinColumn(name="producer_id", referencedColumnName="id")
      * 
@@ -640,6 +645,16 @@ class Goods {
     public function setDatePrice($datePrice) 
     {
         $this->datePrice = $datePrice;
+    }     
+
+    public function getRetailCount() 
+    {
+        return $this->retailCount;
+    }
+
+    public function setRetailCount($retailCount) 
+    {
+        $this->retailCount = $retailCount;
     }     
 
     /**

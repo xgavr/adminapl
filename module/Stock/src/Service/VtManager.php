@@ -12,6 +12,7 @@ use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
 use Stock\Entity\Retail;
 use Company\Entity\Office;
+use Stock\Entity\Comiss;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -88,6 +89,8 @@ class VtManager
         
         $data = [
             'doc_key' => $vt->getLogKey(),
+            'doc_type' => Movement::DOC_VT,
+            'doc_id' => $vt->getId(),
             'date_oper' => $vt->getDocDate(),
             'status' => Mutual::getStatusFromVt($vt),
             'revise' => Mutual::REVISE_NOT,
@@ -116,6 +119,8 @@ class VtManager
         
         $data = [
             'doc_key' => $vt->getLogKey(),
+            'doc_type' => Movement::DOC_VT,
+            'doc_id' => $vt->getId(),
             'date_oper' => $vt->getDocDate(),
             'status' => Retail::getStatusFromVt($vt),
             'revise' => Retail::REVISE_NOT,
@@ -142,25 +147,89 @@ class VtManager
         
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($vt->getLogKey());
+        $this->entityManager->getRepository(Comiss::class)
+                ->removeDocComiss($vt->getLogKey());        
         
         $vtGoods = $this->entityManager->getRepository(VtGood::class)
                 ->findByVt($vt->getId());
-        foreach ($vtGoods as $vtGood){
-            $data = [
-                'doc_key' => $vt->getLogKey(),
-                'doc_row_key' => $vtGood->getDocRowKey(),
-                'doc_row_no' => $vtGood->getRowNo(),
-                'date_oper' => $vt->getDocDate(),
-                'status' => Movement::getStatusFromVt($vt),
-                'quantity' => $vtGood->getQuantity(),
-                'amount' => $vtGood->getAmount(),
-                'good_id' => $vtGood->getGood()->getId(),
-                'office_id' => $vt->getOffice()->getId(),
-                'company_id' => $vt->getOrder()->getCompany()->getId(),
-            ];
+        
+        if ($vt->getStatus() != Vt::STATUS_RETIRED){
+            foreach ($vtGoods as $vtGood){
+                $movements = $this->entityManager->getRepository(Movement::class)
+                        ->findBy(['docKey' => $vt->getOrder()->getLogKey(), 'good' => $vtGood->getGood()->getId()]);
+                
+                $posting = $vtGood->getQuantity();
+                
+                $take = VtGood::TAKE_NO;
+                foreach ($movements as $movement){
 
-            $this->entityManager->getRepository(Movement::class)
-                    ->insertMovement($data);
+                    $quantity = min($vtGood->getQuantity(), -$movement->getQuantity());
+                    $amount = $quantity*$vtGood->getAmount()/$vtGood->getQuantity();
+
+                    $data = [
+                        'doc_key' => $vt->getLogKey(),
+                        'doc_type' => Movement::DOC_VT,
+                        'doc_id' => $vt->getId(),
+                        'base_type' => ($vt->getStatus() == Vt::STATUS_COMMISSION) ? Movement::DOC_VT:$movement->getBaseType(),
+                        'base_id' => ($vt->getStatus() == Vt::STATUS_COMMISSION) ? $vt->getId():$movement->getBaseId(),
+                        'doc_row_key' => $vtGood->getDocRowKey(),
+                        'doc_row_no' => $vtGood->getRowNo(),
+                        'date_oper' => $vt->getDocDate(),
+                        'status' => Movement::getStatusFromVt($vt),
+                        'quantity' => $quantity,
+                        'amount' => $amount,
+                        'good_id' => $vtGood->getGood()->getId(),
+                        'office_id' => $vt->getOffice()->getId(),
+                        'company_id' => $vt->getOrder()->getCompany()->getId(),
+                    ];
+
+                    $this->entityManager->getRepository(Movement::class)
+                            ->insertMovement($data);
+
+                    if ($vt->getStatus() == Vt::STATUS_COMMISSION){
+                        unset($data['base_type']);
+                        unset($data['base_id']);
+                        $data['contact_id'] = $vt->getOrder()->getContact()->getId();
+                        $this->entityManager->getRepository(Comiss::class)
+                                ->insertComiss($data);
+                    } else {
+                        if ($movement->getStatus() == Movement::STATUS_COMMISSION){
+                            // вернуть на комиссию
+                            unset($data['base_type']);
+                            unset($data['base_id']);
+                            $data['contact_id'] = $movement->getContact()->getId();
+                            $this->entityManager->getRepository(Comiss::class)
+                                    ->insertComiss($data);                            
+                            
+                            $data = [
+                                'doc_key' => $vt->getLogKey(),
+                                'doc_type' => Movement::DOC_ORDER,
+                                'doc_id' => $vt->getId(),
+                                'date_oper' => $vt->getDateOper(),
+                                'status' => Retail::getStatusFromVt($vt),
+                                'revise' => Retail::REVISE_NOT,
+                                'amount' => $amount,
+                                'contact_id' => $movement->getContact()->getId(),
+                                'office_id' => $vt->getOffice()->getId(),
+                                'company_id' => $vt->getOrder()->getCompany()->getId(),
+                            ];
+
+                            $this->entityManager->getRepository(Retail::class)
+                                    ->insertRetail($data);                                
+                        }
+                    }
+                    
+                    $posting -= $quantity;
+                    if ($posting <= 0){
+                        break;
+                    }
+                }    
+                if ($posting == 0){
+                    $take = VtGood::TAKE_OK;
+                }
+                $this->entityManager->getConnection()
+                        ->update('vt_good', ['take' => $take], ['id' => $vtGood->getId()]);
+            }    
         }
         
         return;
@@ -230,6 +299,7 @@ class VtManager
             $vt->setStatusDoc(Vt::STATUS_DOC_NOT_RECD);
             $vt->setAmount(0);
             $vt->setDateCreated(date('Y-m-d H:i:s'));
+            $vt->setStatusAccount(Vt::STATUS_ACCOUNT_NO);
 
             $this->entityManager->persist($vt);        
             $this->entityManager->flush();
@@ -254,6 +324,7 @@ class VtManager
             $vt->setComment($data['comment']);
             $vt->setStatusEx($data['status_ex']);
             $vt->setStatus($data['status']);
+            $vt->setStatusAccount(Vt::STATUS_ACCOUNT_NO);
 
             $this->entityManager->persist($vt);
             $this->entityManager->flush($vt);
@@ -282,6 +353,7 @@ class VtManager
             'comment' => (isset($data['comment'])) ? $data['comment']:'',
 //            'info' => $data['info'],
             'row_no' => $rowNo,
+            'take' => VtGood::TAKE_NO,
         ];
         
         $connection = $this->entityManager->getConnection(); 
@@ -371,8 +443,12 @@ class VtManager
             $this->logManager->infoVt($vt, Log::STATUS_DELETE);
             $this->entityManager->getRepository(Mutual::class)
                     ->removeDocMutuals($vt->getLogKey());
+            $this->entityManager->getRepository(Retail::class)
+                    ->removeOrderRetails($vt->getLogKey());        
             $this->entityManager->getRepository(Movement::class)
                     ->removeDocMovements($vt->getLogKey());
+            $this->entityManager->getRepository(Comiss::class)
+                    ->removeDocComiss($vt->getLogKey());        
             $this->removeVtGood($vt);
 
             $this->entityManager->getConnection()->delete('vt', ['id' => $vt->getId()]);

@@ -42,7 +42,13 @@ class Order {
     const MODE_ORDER  = 3; // Заказ с сайта
     const MODE_FAST  = 4; // Быстрый заказ
     const MODE_INNER  = 5; // Внутренний заказ
+    
+    const STATUS_EX_OK  = 1;// обновлено 
+    const STATUS_EX_NO  = 2;// не обновлено
         
+    const STATUS_ACCOUNT_OK  = 1;// обновлено 
+    const STATUS_ACCOUNT_NO  = 2;// не обновлено
+
     const PRINT_FOLDER         = './data/template/order'; 
     const TEMPLATE_TORG12      = './data/template/torg12.xls';
     const TEMPLATE_BILL        = './data/template/bill.xls';
@@ -161,6 +167,21 @@ class Order {
      * @ORM\Column(name="mode")  
      */
     protected $mode;    
+
+    /**
+     * @ORM\Column(name="take")  
+     */
+    protected $take;    
+
+    /**
+     * @ORM\Column(name="status_ex")  
+     */
+    protected $statusEx;    
+
+    /**
+     * @ORM\Column(name="status_account")  
+     */
+    protected $statusAccount;    
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\ContactCar", inversedBy="orders") 
@@ -637,6 +658,92 @@ class Order {
     public function setMode($mode) 
     {
         $this->mode = $mode;
+    }   
+
+    /**
+     * Returns statusEx.
+     * @return int     
+     */
+    public function getStatusEx() 
+    {
+        return $this->statusEx;
+    }
+
+    /**
+     * Returns possible statusEx as array.
+     * @return array
+     */
+    public static function getStatusExList() 
+    {
+        return [
+            self::STATUS_EX_OK => 'Обновлено',
+            self::STATUS_EX_NO => 'Не обновлено',
+        ];
+    }    
+    
+    /**
+     * Returns statusEx as string.
+     * @return string
+     */
+    public function getStatusExAsString()
+    {
+        $list = self::getStatusExList();
+        if (isset($list[$this->statusEx]))
+            return $list[$this->statusEx];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets statusEx.
+     * @param int $statusEx     
+     */
+    public function setStatusEx($statusEx) 
+    {
+        $this->statusEx = $statusEx;
+    }   
+
+    /**
+     * Returns statusAccount.
+     * @return int     
+     */
+    public function getStatusAccount() 
+    {
+        return $this->statusAccount;
+    }
+
+    /**
+     * Returns possible statusAccount as array.
+     * @return array
+     */
+    public static function getStatusAccountList() 
+    {
+        return [
+            self::STATUS_ACCOUNT_OK => 'Обновлено',
+            self::STATUS_ACCOUNT_NO=> 'Не обновлено',
+        ];
+    }    
+    
+    /**
+     * Returns statusAccount as string.
+     * @return string
+     */
+    public function getStatusAccountAsString()
+    {
+        $list = self::getStatusAccountList();
+        if (isset($list[$this->statusAccount]))
+            return $list[$this->statusAccount];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets statusAccount.
+     * @param int $statusAccount     
+     */
+    public function setStatusAccount($statusAccount) 
+    {
+        $this->statusAccount = $statusAccount;
     }   
 
     /*

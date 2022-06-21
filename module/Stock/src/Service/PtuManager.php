@@ -76,6 +76,8 @@ class PtuManager
         if ($ptu->getStatus() == Ptu::STATUS_ACTIVE){        
             $data = [
                 'doc_key' => $ptu->getLogKey(),
+                'doc_type' => Movement::DOC_PTU,
+                'doc_id' => $ptu->getId(),
                 'date_oper' => $ptu->getDocDate(),
                 'status' => $ptu->getStatus(),
                 'revise' => Mutual::REVISE_NOT,
@@ -110,6 +112,10 @@ class PtuManager
             foreach ($ptuGoods as $ptuGood){
                 $data = [
                     'doc_key' => $ptu->getLogKey(),
+                    'doc_type' => Movement::DOC_PTU,
+                    'doc_id' => $ptu->getId(),
+                    'base_type' => Movement::DOC_PTU,
+                    'base_id' => $ptu->getId(),
                     'doc_row_key' => $ptuGood->getDocRowKey(),
                     'doc_row_no' => $ptuGood->getRowNo(),
                     'date_oper' => $ptu->getDocDate(),
