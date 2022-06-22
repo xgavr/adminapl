@@ -852,39 +852,42 @@ class AplOrderService {
         }    
         
 //        var_dump($result); exit;
-        $comment = $this->entityManager->getRepository(Comment::class)
-                ->findOneBy(['aplId' => $result['id']]);
-        $order = $client = null;
-        if ($result['type'] == 'Orders'){
-            $order = $this->entityManager->getRepository(Order::class)
-                    ->findOneByAplId($result['parent']);
-        }    
-        if ($result['type'] == 'Users'){
-            $client = $this->entityManager->getRepository(AplClient::class)
-                    ->findOneByAplId($result['parent']);
-        }    
-        $user = $this->entityManager->getRepository(User::class)
-                ->findOneByAplId($result['user']);
-        $data = [
-            'aplId' => $result['id'],
-            'comment' => $result['comment'],
-            'dateCreated' => $result['created'],
-            'user' => $user,
-        ];    
+        if (is_array($result)){
+            $comment = $this->entityManager->getRepository(Comment::class)
+                    ->findOneBy(['aplId' => $result['id']]);
+            $order = $client = null;
+            if ($result['type'] == 'Orders'){
+                $order = $this->entityManager->getRepository(Order::class)
+                        ->findOneByAplId($result['parent']);
+            }    
+            if ($result['type'] == 'Users'){
+                $client = $this->entityManager->getRepository(AplClient::class)
+                        ->findOneByAplId($result['parent']);
+            }    
+            $user = $this->entityManager->getRepository(User::class)
+                    ->findOneByAplId($result['user']);
+            $data = [
+                'aplId' => $result['id'],
+                'comment' => $result['comment'],
+                'dateCreated' => $result['created'],
+                'user' => $user,
+            ];    
 
-        if ($comment){                    
-            $this->commentManager->updateComment($comment, $data);                    
-        } else {                            
-            if ($order){
-                $comment = $this->commentManager->addOrderComment($order, $data);
-            } elseif ($client) {
-                $comment = $this->commentManager->addClientComment($client, $data);                            
-            } else {
-                //return false;
-            }   
+            if ($comment){                    
+                $this->commentManager->updateComment($comment, $data);                    
+            } else {                            
+                if ($order){
+                    $comment = $this->commentManager->addOrderComment($order, $data);
+                } elseif ($client) {
+                    $comment = $this->commentManager->addClientComment($client, $data);                            
+                } else {
+                    //return false;
+                }   
+            }
+
+            return $result['id'];
         }
-
-        return $result['id'];
+        return true;
     }
     
         /**

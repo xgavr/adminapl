@@ -36,6 +36,7 @@ use Application\Entity\Make;
 use Application\Entity\SupplierOrder;
 use Laminas\Json\Decoder;
 use Stock\Entity\Comiss;
+use Stock\Entity\Register;
 
 /**
  * Description of OrderService
@@ -234,7 +235,7 @@ class OrderManager
      */
     public function updateOrderMovement($order)
     {
-                
+                        
         if ($order->getStatus() == Order::STATUS_SHIPPED){
             
             $bids = $this->entityManager->getRepository(Bid::class)
@@ -972,6 +973,8 @@ class OrderManager
     public function repostOrder($order)
     {
         
+        $this->entityManager->getRepository(Register::class)
+                ->orderRegister($order);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($order->getLogKey());        
         $this->entityManager->getRepository(Comiss::class)

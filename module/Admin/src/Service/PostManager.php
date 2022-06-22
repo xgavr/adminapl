@@ -496,7 +496,7 @@ class PostManager {
             foreach ($params['folders'] as $foldername){
 
                 $hostname = $params['server'].mb_convert_encoding($foldername, 'UTF7-IMAP', 'UTF-8');
-                @$connection = imap_open(
+                $connection = imap_open(
                         $hostname, 
                         $params['user'], 
                         $params['password']

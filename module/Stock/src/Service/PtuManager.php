@@ -9,6 +9,7 @@ use Stock\Entity\PtuGood;
 use Admin\Entity\Log;
 use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
+use Stock\Entity\Register;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -102,7 +103,8 @@ class PtuManager
      */
     public function updatePtuMovement($ptu)
     {
-        
+        $this->entityManager->getRepository(Register::class)
+                ->ptuRegister($ptu);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($ptu->getLogKey());
         

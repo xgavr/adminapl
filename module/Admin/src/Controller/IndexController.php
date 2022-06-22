@@ -20,6 +20,7 @@ use Admin\Form\ApiMarketPlaces;
 use Admin\Form\SmsForm;
 use Application\Entity\Order;
 use User\Filter\PhoneFilter;
+use Stock\Entity\Register;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -966,6 +967,16 @@ class IndexController extends AbstractActionController
         ]);
     }
     
+    public function docRegisterAction()
+    {
+        $this->entityManager->getRepository(Register::class)
+                ->allRegister();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);        
+    }
+
     public function checkProxyAction()
     {
         $proxy = $this->telegramManager->getProxy();

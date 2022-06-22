@@ -7,6 +7,7 @@ use Admin\Entity\Log;
 use Stock\Entity\Movement;
 use Stock\Entity\Comiss;
 use Stock\Entity\Retail;
+use Stock\Entity\Register;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -67,6 +68,8 @@ class StManager
     public function updateStMovement($st)
     {
         
+        $this->entityManager->getRepository(Register::class)
+                ->stRegister($st);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($st->getLogKey());
         $this->entityManager->getRepository(Comiss::class)

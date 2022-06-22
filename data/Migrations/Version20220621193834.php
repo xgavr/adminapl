@@ -23,11 +23,19 @@ final class Version20220621193834 extends AbstractMigration
         $table->addIndex(['doc_type', 'doc_id'], 'doc_indx');
         $table->addOption('engine' , 'InnoDB');        
 
+        $table = $schema->createTable('register_variable');
+        $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
+        $table->addColumn('date_var', 'datetime', ['notnull'=>true]);
+        $table->addColumn('var_type', 'integer', ['notnull' => true]);
+        $table->addColumn('var_id', 'integer', ['notnull' => true]);
+        $table->setPrimaryKey(['id']);
+        $table->addOption('engine' , 'InnoDB');        
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->dropTable('register');
+        $schema->dropTable('register_variable');
     }
 }

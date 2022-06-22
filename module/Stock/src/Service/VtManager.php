@@ -13,6 +13,7 @@ use Stock\Entity\Mutual;
 use Stock\Entity\Retail;
 use Company\Entity\Office;
 use Stock\Entity\Comiss;
+use Stock\Entity\Register;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -145,6 +146,8 @@ class VtManager
     public function updateVtMovement($vt)
     {
         
+        $this->entityManager->getRepository(Register::class)
+                ->vtRegister($vt);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($vt->getLogKey());
         $this->entityManager->getRepository(Comiss::class)

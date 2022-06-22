@@ -98,6 +98,8 @@ class LegalManager
         if ($legal){
             $contact->removeLegalAssociation($legal);
             $contact->addLegal($legal);
+            $this->entityManager->persist($contact);
+            $this->entityManager->flush();                
             $this->updateLegal($legal, $data);
         }
 
@@ -124,7 +126,7 @@ class LegalManager
             
             $legal->addContact($contact);
             $this->entityManager->persist($legal);
-            $this->entityManager->flush($legal);                
+            $this->entityManager->flush();                
         }   
         
         return $legal;

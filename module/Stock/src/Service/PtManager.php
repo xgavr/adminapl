@@ -9,6 +9,7 @@ use Stock\Entity\Mutual;
 use Stock\Entity\Retail;
 use Stock\Entity\Comiss;
 use Company\Entity\Office;
+use Stock\Entity\Register;
 
 /**
  * This service is responsible for adding/editing pt.
@@ -76,6 +77,8 @@ class PtManager
     public function updatePtMovement($pt)
     {
         
+        $this->entityManager->getRepository(Register::class)
+                ->ptRegister($pt);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($pt->getLogKey());
         $this->entityManager->getRepository(Comiss::class)

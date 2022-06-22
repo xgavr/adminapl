@@ -10,6 +10,7 @@ use Stock\Entity\VtpGood;
 use Admin\Entity\Log;
 use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
+use Stock\Entity\Register;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -103,6 +104,8 @@ class VtpManager
     public function updateVtpMovement($vtp)
     {
         
+        $this->entityManager->getRepository(Register::class)
+                ->vtpRegister($vtp);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($vtp->getLogKey());
         
