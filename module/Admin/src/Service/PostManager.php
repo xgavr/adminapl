@@ -668,7 +668,7 @@ class PostManager {
                                 $this->addMessageToLog($result[$messageNumber]);
                             
                                 if (!$params['leave_message']){
-                                    $move = imap_mail_move($connection, (string) $messageNumber, mb_convert_encoding($params['trash'], 'UTF7-IMAP', 'UTF-8'));
+                                    $move = imap_mail_move($connection, (string) $messageNumber, mb_convert_encoding('Trash', 'UTF7-IMAP', 'UTF-8'));
                                     if (!$move){
                                         imap_delete($connection, $messageNumber);                                
                                     }    
