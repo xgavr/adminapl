@@ -392,7 +392,7 @@ class GoodsController extends AbstractActionController
         $result = $query->getResult(2);
         if ($opts){
             foreach ($result as $key => $value){
-                $result[$key]['opts'] = Goods::optPrices($value['price'], $value['meanprice']);
+                $result[$key]['opts'] = Goods::optPrices($value['price'], $value['meanPrice']);
             }
         }
         return new JsonModel([

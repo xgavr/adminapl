@@ -224,7 +224,7 @@ class OrderController extends AbstractActionController
                 } else {
                     $order = $this->orderManager->addNewOrder($office, $contact, $data);
                 }    
-                if ($order && is_array($data['orderGood'])){
+                if ($order && !empty($data['orderGood'])){
                     $this->orderManager->updateBids($order, $data['orderGood']);
                 }
                 $this->orderManager->updateSelectionsFromJson($order, $data['selections']);
