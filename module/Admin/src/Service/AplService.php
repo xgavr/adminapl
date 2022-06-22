@@ -526,8 +526,14 @@ class AplService {
         $aplId = $contact->getUser()->getAplId();
         if ($aplId){
             $url = $this->aplApi().'get-staff-phone/id/'.$aplId.'?api='.$this->aplApiKey();
+            
+            $ctx = stream_context_create(array('http'=>
+                array(
+                    'timeout' => 60,  //
+                )
+            ));
 
-            $data = file_get_contents($url);
+            $data = file_get_contents($url, false, $ctx);
             if ($data === false){
                 echo 'Потерян доступ к Апл!';
                 exit;
@@ -660,8 +666,14 @@ class AplService {
         $aplId = $contact->getClient()->getAplId();
         if ($aplId){
             $url = $this->aplApi().'get-staff-phone/id/'.$aplId.'?api='.$this->aplApiKey();
-
-            $data = file_get_contents($url);
+            
+            $ctx = stream_context_create(array('http'=>
+                array(
+                    'timeout' => 60,  //
+                )
+            ));
+            
+            $data = file_get_contents($url, false, $ctx);
             if ($data === false){
                 echo 'Потерян доступ к Апл!';
                 exit;
