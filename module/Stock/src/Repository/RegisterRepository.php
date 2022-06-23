@@ -182,7 +182,7 @@ class RegisterRepository extends EntityRepository
     
     public function allRegister()
     {
-        ini_set('memory_limit', '4096M');
+        ini_set('memory_limit', '8192M');
         set_time_limit(0);
         
         $ptus = $this->getEntityManager()->getRepository(Ptu::class)
