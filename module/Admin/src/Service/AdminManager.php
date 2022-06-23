@@ -111,6 +111,7 @@ class AdminManager {
         $config->admin->telefonistka_email_password = $data['telefonistka_email_password'];
         
         $config->admin->allow_date = $data['allow_date'];
+        $config->admin->doc_actualize = $data['doc_actualize'];
         
         $config->admin->mail_token = $data['mail_token'];
         $config->admin->turbo_passphrase = $data['turbo_passphrase'];

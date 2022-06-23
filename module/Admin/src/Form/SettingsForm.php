@@ -256,6 +256,18 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([            
             'type'  => 'select',
+            'name' => 'doc_actualize',
+            'options' => [
+                'label' => 'Восстановление последовательности',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'select',
             'name' => 'mail_token',
             'options' => [
                 'label' => 'Обрабатка токенов писем',

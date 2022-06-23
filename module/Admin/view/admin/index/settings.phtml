@@ -95,6 +95,10 @@ $form->get('allow_date')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('doc_actualize')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('mail_token')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -258,6 +262,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('mail_token')); ?>
             <?= $this->formElement($form->get('mail_token')); ?>
             <?= $this->formElementErrors($form->get('mail_token')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('doc_actualize')); ?>
+            <?= $this->formElement($form->get('doc_actualize')); ?>
+            <?= $this->formElementErrors($form->get('doc_actualize')); ?>                  
         </div>
 
         <ul class="nav nav-stacked nav-list affix">

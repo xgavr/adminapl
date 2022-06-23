@@ -206,6 +206,7 @@ return [
             Service\OtManager::class => Service\Factory\OtManagerFactory::class,
             Service\PtManager::class => Service\Factory\PtManagerFactory::class,
             Service\PtuManager::class => Service\Factory\PtuManagerFactory::class,
+            Service\RegisterManager::class => Service\Factory\RegisterManagerFactory::class,
             Service\ReviseManager::class => Service\Factory\ReviseManagerFactory::class,
             Service\StManager::class => Service\Factory\StManagerFactory::class,
             Service\VtManager::class => Service\Factory\VtManagerFactory::class,

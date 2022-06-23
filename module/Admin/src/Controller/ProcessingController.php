@@ -176,13 +176,19 @@ class ProcessingController extends AbstractActionController
      */
     private $billManager;    
 
+    /**
+     * Register manager.
+     * @var \Stock\Service\RegisterManager
+     */
+    private $registerManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
-            $aplCashService, $billManager) 
+            $aplCashService, $billManager, $registerManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -210,6 +216,7 @@ class ProcessingController extends AbstractActionController
         $this->aplOrderService = $aplOrderService;
         $this->aplCashService = $aplCashService;
         $this->billManager = $billManager;
+        $this->registerManager = $registerManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -245,6 +252,18 @@ class ProcessingController extends AbstractActionController
         if ($settings['hello_check'] == 1){
             $this->helloManager->checkingMail();
             $this->billManager->billsByMail();
+        }    
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    public function actualizeAction()
+    {       
+        $settings = $this->adminManager->getSettings();
+        
+        if ($settings['doc_actualize'] == 1){
+            $this->registerManager->actualize();
         }    
         return new JsonModel(
             ['ok']

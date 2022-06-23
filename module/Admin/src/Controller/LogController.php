@@ -12,6 +12,7 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Admin\Entity\Log;
 use Admin\Entity\Setting;
+use Stock\Entity\RegisterVariable;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -70,8 +71,11 @@ class LogController extends AbstractActionController
     
     public function settingAction()
     {
+        $variable = $this->entityManager->getRepository(RegisterVariable::class)
+                ->findOneBy([]);
         // Визуализируем шаблон представления.
         return new ViewModel([
+            'variable' => $variable,
          ]);          
     }
 

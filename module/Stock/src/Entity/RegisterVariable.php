@@ -9,11 +9,8 @@
 namespace Stock\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Company\Entity\Legal;
-use Company\Entity\Office;
-use Application\Entity\Contact;
-use User\Entity\User;
-use Laminas\Json\Encoder;
+use Stock\Entity\Movement;
+use Stock\Entity\Register;
 
 
 /**
@@ -90,5 +87,14 @@ class RegisterVariable {
     public function setDateVar($dateVar) 
     {
         $this->dateVar = $dateVar;
-    }            
+    }  
+    
+    /**
+     * Представление документа
+     * @return string
+     */
+    public function getDoc()
+    {
+        return Register::getDocLink($this->varType, $this->varId);
+    }
 }

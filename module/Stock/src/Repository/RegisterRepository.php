@@ -95,6 +95,31 @@ class RegisterRepository extends EntityRepository
         return;        
     }
     
+    /**
+     * Найти документы для восстановления последовательности
+     */
+    public function findForActualize()
+    {
+        $var = $entityManager->getRepository(RegisterVariable::class)
+                ->findOneBy([]);
+        
+        if ($var){
+            $entityManager = $this->getEntityManager();
+            $queryBuilder = $entityManager->createQueryBuilder();
+
+            $queryBuilder->select('r')
+                    ->from(Register::class, 'r')
+                    ->where('r.dateOper >= ?1')
+                    ->setParameter('1', $var->getDateVar())
+                    ->orderBy('r.dateOper', 'ASC')
+                    ->setMaxResults(10000)
+                    ;
+
+            return $queryBuilder->getQuery()->getResult();        
+        }
+        
+        return;
+    }
     
     /**
      * Регистриция Pt
@@ -185,29 +210,29 @@ class RegisterRepository extends EntityRepository
         ini_set('memory_limit', '8192M');
         set_time_limit(0);
         
-        $ptus = $this->getEntityManager()->getRepository(Ptu::class)
-                ->findBy([]);
-        foreach ($ptus as $ptu){
-            $this->ptuRegister($ptu);
-        }
+//        $ptus = $this->getEntityManager()->getRepository(Ptu::class)
+//                ->findBy([]);
+//        foreach ($ptus as $ptu){
+//            $this->ptuRegister($ptu);
+//        }
 
-        $ots = $this->getEntityManager()->getRepository(Ot::class)
-                ->findBy([]);
-        foreach ($ots as $ot){
-            $this->otRegister($ot);
-        }
+//        $ots = $this->getEntityManager()->getRepository(Ot::class)
+//                ->findBy([]);
+//        foreach ($ots as $ot){
+//            $this->otRegister($ot);
+//        }
 
-        $pts = $this->getEntityManager()->getRepository(Pt::class)
-                ->findBy([]);
-        foreach ($pts as $pt){
-            $this->ptRegister($pt);
-        }
+//        $pts = $this->getEntityManager()->getRepository(Pt::class)
+//                ->findBy([]);
+//        foreach ($pts as $pt){
+//            $this->ptRegister($pt);
+//        }
 
-        $orders = $this->getEntityManager()->getRepository(Order::class)
-                ->findBy([]);
-        foreach ($orders as $order){
-            $this->orderRegister($order);
-        }
+//        $orders = $this->getEntityManager()->getRepository(Order::class)
+//                ->findBy([]);
+//        foreach ($orders as $order){
+//            $this->orderRegister($order);
+//        }
 
         $vts = $this->getEntityManager()->getRepository(Vt::class)
                 ->findBy([]);
