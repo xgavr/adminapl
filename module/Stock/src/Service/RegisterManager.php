@@ -183,6 +183,7 @@ class RegisterManager
                     $flag = $this->vtpManager->repostVtp($vtp);
                 }
                 break;
+            default: $flag = false;    
         }
         
         $this->updateVar($register);

@@ -100,7 +100,7 @@ class RegisterRepository extends EntityRepository
      */
     public function findForActualize()
     {
-        $var = $entityManager->getRepository(RegisterVariable::class)
+        $var = $this->getEntityManager()->getRepository(RegisterVariable::class)
                 ->findOneBy([]);
         
         if ($var){
