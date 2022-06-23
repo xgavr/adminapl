@@ -329,7 +329,21 @@ class Movement {
     {
         switch ($vt->getStatus()){
             case Vt::STATUS_RETIRED: return self::STATUS_RETIRED;
-            case VT::STATUS_COMMISSION: return self::STATUS_COMMISSION;    
+            case Vt::STATUS_COMMISSION: return self::STATUS_COMMISSION;    
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+
+    /**
+     * Returns possible ot status.
+     * @param Ot $ot
+     * @return integer
+     */
+    public static function getStatusFromOt($ot) 
+    {
+        switch ($ot->getStatus()){
+            case Ot::STATUS_RETIRED: return self::STATUS_RETIRED;
+            case Ot::STATUS_COMMISSION: return self::STATUS_COMMISSION;    
             default: return self::STATUS_ACTIVE;    
         }
     }    

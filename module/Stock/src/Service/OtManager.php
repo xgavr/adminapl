@@ -93,7 +93,7 @@ class OtManager
                     'doc_row_key' => $otGood->getDocRowKey(),
                     'doc_row_no' => $otGood->getRowNo(),
                     'date_oper' => $ot->getDocDate(),
-                    'status' => $ot->getStatus(),
+                    'status' => Movement::getStatusFromOt($ot),
                     'quantity' => $otGood->getQuantity(),
                     'amount' => $otGood->getAmount(),
                     'good_id' => $otGood->getGood()->getId(),
@@ -105,7 +105,9 @@ class OtManager
                         ->insertMovement($data);
 
                 if ($ot->getStatus() == Ot::STATUS_COMMISSION){
-                    $data['contact_id'] = $ot->getComiss()->getId();
+                    unset($data['base_type']);
+                    unset($data['base_id']);
+                    $data['contact_id'] = $ot->getComiss()->getId();                    
                     $this->entityManager->getRepository(Comiss::class)
                             ->insertComiss($data);
                 }
