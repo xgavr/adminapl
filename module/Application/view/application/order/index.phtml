@@ -79,7 +79,7 @@ $this->pageBreadcrumbs()->setItems([
             <thead>
                 <tr>
                      <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
-                     <th data-field="dateCreated" data-sortable="false" data-width="150">Дата</th>
+                     <th data-field="dateOper" data-sortable="false" data-width="150">Дата</th>
                      <th data-field="id" data-sortable="false" data-width="50">Номер</th>
                      <th data-field="aplId" data-sortable="false" data-width="50">AplId</th>
                      <th data-field="contact.name" data-sortable="false">Покупатель</th>
@@ -161,6 +161,24 @@ $this->pageBreadcrumbs()->setItems([
         params.status = $('#statusSelect').val();
         return params;
     }
+
+    function rowStyle(row){
+        var retired = 'tablerow';
+        if (row.status == '<?= Order::STATUS_CANCELED?>'){
+           retired += ' retired';
+        }
+        switch(row.status){
+            case '<?= Order::STATUS_SHIPPED?>': 
+                        return {classes: 'success '+retired}; break;
+            case '<?= Order::STATUS_DELIVERY?>': 
+                        return {classes: 'info '+retired}; break;
+            case '<?= Order::STATUS_CONFIRMED?>': 
+                        return {classes: 'warning '+retired}; break;
+                default:break;     
+        }
+        
+        return {classes: retired};
+    }
     
     function linkFormatter(value, row){
         if (!value){
@@ -207,5 +225,84 @@ $this->pageBreadcrumbs()->setItems([
     function responseHandler(res) {
         return res;
     }    
+    
+//    var menu = new BootstrapMenu('.tablerow', {
+//        fetchElementData: function(rowElem) {
+//            var rowId = $(rowElem).attr('data-index');
+//            return table.bootstrapTable('getData')[rowId];
+//        },
+//        actionsGroups: [
+//           ['statusActiv', 'statusRetired'],
+//        ],      
+//        actions: {
+//            statusDocNew: {
+//                name: 'Новый',
+//                onClick: function(row) {
+//                    changeStatusDoc(row.id, <?//= Vtp::STATUS_DOC_NEW?>);
+//                },
+//                isShown: function(row) {
+//                  return row.statusDoc != '<?//= Vtp::STATUS_DOC_NEW?>';
+//                },
+//                isEnabled: function(row) {
+//                    return row.docDate > '<?//= $allowDate?>';
+//                }                
+//            }, 
+//            statusDocRect: {
+//                name: 'Отправлен',
+//                classNames: 'bg-warning',
+//                onClick: function(row) {
+//                    changeStatusDoc(row.id, <?//= Vtp::STATUS_DOC_RECD?>);
+//                },
+//                isShown: function(row) {
+//                  return row.statusDoc != '<?//= Vtp::STATUS_DOC_RECD?>';
+//                },
+//                isEnabled: function(row) {
+//                    return row.docDate > '<?//= $allowDate?>';
+//                }                
+//            }, 
+//            statusDocNotRect: {
+//                name: 'Принят',
+////                iconClass: 'glyphicon glyphicon-ok',
+//                classNames: 'bg-success',
+//                onClick: function(row) {
+//                    changeStatusDoc(row.id, <?//= Vtp::STATUS_DOC_NOT_RECD?>);
+//                },
+//                isShown: function(row) {
+//                  return row.statusDoc != '<?//= Vtp::STATUS_DOC_NOT_RECD?>';
+//                },
+//                isEnabled: function(row) {
+//                    return row.docDate > '<?//= $allowDate?>';
+//                }                
+//            }, 
+//            statusActiv: {
+//                name: 'Сделать активным',
+//                iconClass: 'glyphicon glyphicon-ok',
+//                onClick: function(row) {
+//                    changeStatus(row.id, <?//= Vtp::STATUS_ACTIVE?>);
+//                },
+//                isShown: function(row) {
+//                  return row.status == <?//= Vtp::STATUS_RETIRED?>;
+//                },
+//                isEnabled: function(row) {
+//                    return row.docDate > '<?//= $allowDate?>';
+//                }                
+//            }, 
+//            statusRetired: {
+//                name: 'Сделать не активным',
+//                iconClass: 'glyphicon glyphicon-remove',
+////                classNames: 'bg-danger',
+//                onClick: function(row) {
+//                    changeStatus(row.id, <?//= Vtp::STATUS_RETIRED?>);
+//                },
+//                isShown: function(row) {
+//                  return row.status == <?//= Vtp::STATUS_ACTIVE?>;
+//                },
+//                isEnabled: function(row) {
+//                    return row.docDate > '<?//= $allowDate?>';
+//                }                
+//            }
+//        }
+//    });    
+    
 </script>
 
