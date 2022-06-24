@@ -232,6 +232,13 @@ class VtManager
                 }
                 $this->entityManager->getConnection()
                         ->update('vt_good', ['take' => $take], ['id' => $vtGood->getId()]);
+                
+                //обновить количество продаж товара
+                $rCount = $this->entityManager->getRepository(Movement::class)
+                        ->goodMovementRetail($vtGood->getGood()->getId());
+                
+                $this->entityManager->getConnection()
+                        ->update('goods', ['retail_count' => $rCount], ['id' => $vtGood->getGood()->getId()]);
             }    
         }
         

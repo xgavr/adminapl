@@ -212,9 +212,11 @@ class MovementRepository extends EntityRepository{
                 ->from(Movement::class, 'm')
                 ->where('m.good = ?1')
                 ->andWhere('m.docType = ?2 or m.docType = ?3')
+                ->andWhere('m.status = ?4')
                 ->setParameter('1', $goodId)
                 ->setParameter('2', Movement::DOC_ORDER)
                 ->setParameter('3', Movement::DOC_VT)
+                ->setParameter('4', Movement::STATUS_ACTIVE)
                 ;
         
         $result = $qb->getQuery()->getOneOrNullResult();

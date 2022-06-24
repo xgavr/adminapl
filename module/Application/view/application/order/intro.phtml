@@ -1,6 +1,7 @@
 <?php
 use Application\Entity\Order;
 use Application\Entity\Shipping;
+use Application\Entity\Bid;
 
 $this->headTitle(($orderId)?$orderId:'Новый');
 
@@ -377,7 +378,9 @@ $form->prepare();
                     data-classes = "table table-bordered table-hover table-condensed"
                     data-unique-id = "rowNo"                
                     data-use-row-attr-func="true"
-                    data-reorderable-rows="true"                    >
+                    data-reorderable-rows="true"   
+                    data-row-style="bidStyle"
+                    >
                     <thead>
                         <tr>
                              <th data-field="rowNo" data-type="numeric" data-align="right" data-width="10">N</th>
@@ -1120,6 +1123,19 @@ $form->prepare();
         }    
         
         return params;
+    }
+    
+    function bidStyle(row){
+        let orderStatus = $('input[name="status"]').val();
+        if (orderStatus == <?= Order::STATUS_SHIPPED?>){
+            switch(row.take){
+                case '<?= Bid::TAKE_NO?>': 
+                            return {classes: 'warning'}; break;
+                    default:break;     
+            }
+        }    
+        
+        return {classes: ''};
     }
     
     function goodFormatter(value, row){

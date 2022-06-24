@@ -325,6 +325,13 @@ class OrderManager
                 }
                 $this->entityManager->getConnection()
                         ->update('bid', ['take' => $take], ['id' => $bid->getId()]);
+                
+                //обновить количество продаж товара
+                $rCount = $this->entityManager->getRepository(Movement::class)
+                        ->goodMovementRetail($bid->getGood()->getId());
+                
+                $this->entityManager->getConnection()
+                        ->update('goods', ['retail_count' => $rCount], ['id' => $bid->getGood()->getId()]);
             }    
         }
         
