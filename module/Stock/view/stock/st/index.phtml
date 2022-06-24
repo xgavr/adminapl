@@ -3,7 +3,8 @@
     
     $this->headTitle('Списание товаров');
 
-    $this->mainMenu()->setActiveItemId('supplier');
+    $this->mainMenu()->setActiveItemId('stock');
+    $this->mainMenu()->setActiveUrl($this->url('st'));
 
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),

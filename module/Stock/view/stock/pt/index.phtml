@@ -3,7 +3,8 @@
 
     $this->headTitle('Перемещение товаров');
 
-    $this->mainMenu()->setActiveItemId('supplier');
+    $this->mainMenu()->setActiveItemId('stock');
+    $this->mainMenu()->setActiveUrl($this->url('pt'));
 
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),

@@ -3,7 +3,8 @@
     
     $this->headTitle('Оприходование товаров');
 
-    $this->mainMenu()->setActiveItemId('supplier');
+    $this->mainMenu()->setActiveItemId('stock');
+    $this->mainMenu()->setActiveUrl($this->url('ot'));
 
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),

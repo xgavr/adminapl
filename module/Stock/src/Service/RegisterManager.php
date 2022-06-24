@@ -22,6 +22,10 @@ use Stock\Entity\Ptu;
 use Stock\Entity\St;
 use Stock\Entity\Vt;
 use Stock\Entity\Vtp;
+use Application\Entity\Bid;
+use Stock\Entity\PtGood;
+use Stock\Entity\StGood;
+use Stock\Entity\VtGood;
 
 /**
  * This service register.
@@ -119,8 +123,8 @@ class RegisterManager
         $var->setVarId($register->getDocId());
         $var->setVarType($register->getDocType());
         
-        $entityManager->persist($var);
-        $entityManager->flush($var);
+        $this->entityManager->persist($var);
+        $this->entityManager->flush($var);
         
         return;
     }
@@ -132,55 +136,71 @@ class RegisterManager
      */
     private function docActualize($register)
     {
-        $flag = true;
+        $flag = false;
         switch ($register->getDocType()){
             case Movement::DOC_ORDER:
                 $order = $this->entityManager->getRepository(Order::class)
                     ->find($register->getDocId());
                 if ($order){
-                    $flag = $this->orderManager->repostOrder($order);
+                    $this->orderManager->repostOrder($order);
+                    $takeNo = $this->entityManager->getRepository(Bid::class)
+                            ->count(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
+                    $flag = $takeNo == 0;
+        
                 }
                 break;
             case Movement::DOC_OT:
                 $ot = $this->entityManager->getRepository(Ot::class)
                     ->find($register->getDocId());
                 if ($ot){
-                    $flag = $this->otManager->repostOt($ot);
+                    $this->otManager->repostOt($ot);
+                    $flag = true;
                 }
                 break;
             case Movement::DOC_PT:
                 $pt = $this->entityManager->getRepository(Pt::class)
                     ->find($register->getDocId());
                 if ($pt){
-                    $flag = $this->ptManager->repostPt($pt);
+                    $this->ptManager->repostPt($pt);
+                    $takeNo = $this->entityManager->getRepository(PtGood::class)
+                            ->count(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
+                    $flag = $takeNo == 0;
                 }
                 break;
             case Movement::DOC_PTU:
                 $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->find($register->getDocId());
                 if ($ptu){
-                    $flag = $this->ptuManager->repostPtu($ptu);
+                    $this->ptuManager->repostPtu($ptu);
+                    $flag = true;
                 }
                 break;
             case Movement::DOC_ST:
                 $st = $this->entityManager->getRepository(St::class)
                     ->find($register->getDocId());
                 if ($st){
-                    $flag = $this->stManager->repostSt($st);
+                    $this->stManager->repostSt($st);
+                    $takeNo = $this->entityManager->getRepository(StGood::class)
+                            ->count(['st' => $st->getId(), 'take' => StGood::TAKE_NO]);
+                    $flag = $takeNo == 0;
                 }
                 break;
             case Movement::DOC_VT:
                 $vt = $this->entityManager->getRepository(Vt::class)
                     ->find($register->getDocId());
                 if ($vt){
-                    $flag = $this->vtManager->repostVt($vt);
+                    $this->vtManager->repostVt($vt);
+                    $takeNo = $this->entityManager->getRepository(VtGood::class)
+                            ->count(['vt' => $vt->getId(), 'take' => VtGood::TAKE_NO]);
+                    $flag = $takeNo == 0;
                 }
                 break;
             case Movement::DOC_VTP:
                 $vtp = $this->entityManager->getRepository(Vtp::class)
                     ->find($register->getDocId());
                 if ($vtp){
-                    $flag = $this->vtpManager->repostVtp($vtp);
+                    $this->vtpManager->repostVtp($vtp);
+                    $flag = true;
                 }
                 break;
             default: $flag = false;    
@@ -203,12 +223,13 @@ class RegisterManager
         
         $registers = $this->entityManager->getRepository(Register::class)
                 ->findForActualize();
+
         if ($registers){
             foreach ($registers as $register){
                 if ($this->docActualize($register)){
                     usleep(100);                    
                 } else {
-                    throw new Exception('Не проводится документ!');
+                    throw new \Exception('Документ не проведен!');
                 }
                 if (time() > $startTime + 840){
                     break;

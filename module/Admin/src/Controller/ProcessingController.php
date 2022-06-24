@@ -258,7 +258,7 @@ class ProcessingController extends AbstractActionController
         );        
     }
     
-    public function actualizeAction()
+    public function varactAction()
     {       
         $settings = $this->adminManager->getSettings();
         
@@ -266,7 +266,7 @@ class ProcessingController extends AbstractActionController
             $this->registerManager->actualize();
         }    
         return new JsonModel(
-            ['ok']
+            ['oke']
         );        
     }
     
