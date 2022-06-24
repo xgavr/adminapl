@@ -329,7 +329,6 @@ class OrderManager
                 //обновить количество продаж товара
                 $rCount = $this->entityManager->getRepository(Movement::class)
                         ->goodMovementRetail($bid->getGood()->getId());
-                var_dump($rCount); exit;
                 $this->entityManager->getConnection()
                         ->update('goods', ['retail_count' => $rCount], ['id' => $bid->getGood()->getId()]);
             }    
