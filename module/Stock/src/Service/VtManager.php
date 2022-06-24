@@ -156,8 +156,8 @@ class VtManager
         $vtGoods = $this->entityManager->getRepository(VtGood::class)
                 ->findByVt($vt->getId());
         
-        if ($vt->getStatus() != Vt::STATUS_RETIRED){
-            foreach ($vtGoods as $vtGood){
+        foreach ($vtGoods as $vtGood){
+            if ($vt->getStatus() != Vt::STATUS_RETIRED){
                 $movements = $this->entityManager->getRepository(Movement::class)
                         ->findBy(['docKey' => $vt->getOrder()->getLogKey(), 'good' => $vtGood->getGood()->getId()]);
                 
@@ -232,14 +232,13 @@ class VtManager
                 }
                 $this->entityManager->getConnection()
                         ->update('vt_good', ['take' => $take], ['id' => $vtGood->getId()]);
-                
-                //обновить количество продаж товара
-                $rCount = $this->entityManager->getRepository(Movement::class)
-                        ->goodMovementRetail($vtGood->getGood()->getId());
-                
-                $this->entityManager->getConnection()
-                        ->update('goods', ['retail_count' => $rCount], ['id' => $vtGood->getGood()->getId()]);
             }    
+            //обновить количество продаж товара
+            $rCount = $this->entityManager->getRepository(Movement::class)
+                    ->goodMovementRetail($vtGood->getGood()->getId());
+
+            $this->entityManager->getConnection()
+                    ->update('goods', ['retail_count' => -$rCount], ['id' => $vtGood->getGood()->getId()]);
         }
         
         return;
