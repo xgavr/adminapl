@@ -136,17 +136,18 @@ class RegisterManager
      */
     private function docActualize($register)
     {
-        $flag = false;
+        $flag = true;
         switch ($register->getDocType()){
             case Movement::DOC_ORDER:
                 $order = $this->entityManager->getRepository(Order::class)
                     ->find($register->getDocId());
                 if ($order){
                     $this->orderManager->repostOrder($order);
-                    $takeNo = $this->entityManager->getRepository(Bid::class)
-                            ->count(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
-                    $flag = $takeNo == 0;
-        
+                    if ($order->getStatus() == Order::STATUS_SHIPPED){
+                        $takeNo = $this->entityManager->getRepository(Bid::class)
+                                ->count(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
+                        $flag = $takeNo == 0;
+                    }    
                 }
                 break;
             case Movement::DOC_OT:
@@ -162,9 +163,11 @@ class RegisterManager
                     ->find($register->getDocId());
                 if ($pt){
                     $this->ptManager->repostPt($pt);
-                    $takeNo = $this->entityManager->getRepository(PtGood::class)
-                            ->count(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
-                    $flag = $takeNo == 0;
+                    if ($pt->getStatus() == Pt::STATUS_ACTIVE){
+                        $takeNo = $this->entityManager->getRepository(PtGood::class)
+                                ->count(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
+                        $flag = $takeNo == 0;
+                    }    
                 }
                 break;
             case Movement::DOC_PTU:
@@ -180,9 +183,11 @@ class RegisterManager
                     ->find($register->getDocId());
                 if ($st){
                     $this->stManager->repostSt($st);
-                    $takeNo = $this->entityManager->getRepository(StGood::class)
-                            ->count(['st' => $st->getId(), 'take' => StGood::TAKE_NO]);
-                    $flag = $takeNo == 0;
+                    if ($st->getStatus() == St::STATUS_ACTIVE){
+                        $takeNo = $this->entityManager->getRepository(StGood::class)
+                                ->count(['st' => $st->getId(), 'take' => StGood::TAKE_NO]);
+                        $flag = $takeNo == 0;
+                    }    
                 }
                 break;
             case Movement::DOC_VT:
@@ -190,9 +195,11 @@ class RegisterManager
                     ->find($register->getDocId());
                 if ($vt){
                     $this->vtManager->repostVt($vt);
-                    $takeNo = $this->entityManager->getRepository(VtGood::class)
-                            ->count(['vt' => $vt->getId(), 'take' => VtGood::TAKE_NO]);
-                    $flag = $takeNo == 0;
+                    if ($vt->getStatus() == Vt::STATUS_ACTIVE){
+                        $takeNo = $this->entityManager->getRepository(VtGood::class)
+                                ->count(['vt' => $vt->getId(), 'take' => VtGood::TAKE_NO]);
+                        $flag = $takeNo == 0;
+                    }   
                 }
                 break;
             case Movement::DOC_VTP:
