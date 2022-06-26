@@ -324,9 +324,14 @@ class Order {
         return $this->id;        
     }
 
+    public static function getIntroLink($orderId)
+    {
+        return "<a href='/order/view/{$orderId}' target=_blank>{$orderId}</a>";        
+    }
+    
     public function getIdLink() 
     {
-        return "<a href='/order/view/{$this->id}' target=_blank>{$this->id}</a>";
+        return $this->getIntroLink($this->id);
     }
 
     /**

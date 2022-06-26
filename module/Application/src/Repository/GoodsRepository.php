@@ -1364,10 +1364,13 @@ class GoodsRepository extends EntityRepository
             ->join('m.office', 'o')    
             ->where('m.good = ?1')
             ->setParameter('1', $good->getId())
-            ->orderBy('m.dateOper','ASC')    
+//            ->orderBy('m.dateOper','ASC')    
             ;
         
         if (is_array($params)){
+            if (!empty($params['sort'])){
+                $queryBuilder->addOrderBy('m.'.$params['sort'], $params['order']);
+            }
         }
         
         return $queryBuilder->getQuery();            

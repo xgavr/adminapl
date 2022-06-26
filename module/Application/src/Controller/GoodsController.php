@@ -740,6 +740,8 @@ class GoodsController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $search = $this->params()->fromQuery('search');
         $source = $this->params()->fromQuery('source');
+        $sort = $this->params()->fromQuery('sort', 'dateOper');
+        $order = $this->params()->fromQuery('order', 'ASC');
         
         // Validate input parameter
         if ($goodsId<0) {
@@ -756,7 +758,8 @@ class GoodsController extends AbstractActionController
         }        
         
         $query = $this->entityManager->getRepository(Goods::class)
-                        ->movements($goods, ['q' => $search, 'source' => $source]);
+                        ->movements($goods, ['q' => $search, 'source' => $source, 
+                            'sort' => $sort, 'order' => $order]);
 
         $total = count($query->getResult(2));
         

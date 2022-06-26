@@ -1,7 +1,11 @@
 <?php
     use Application\Entity\Oem;
+    use Stock\Entity\Movement;
+    use Application\Entity\Order;
     
     $priceCols = $goodsManager->priceCols($goods);
+    
+    $this->headTitle($goods->getName());
 ?>
 
 <div class="row">
@@ -39,6 +43,9 @@
                         </button>                            
                     </div>                    
                 </div>-->
+                <?php if(!count($images)):?>
+                    <img src="/img/no_img.jpg" class="img-thumbnail">
+                <?php endif ?>
                 <?php foreach($images as $image):?>
                     <?php if ($image->getPublicPath()):?>
                         <div class="thumbnail">
@@ -79,8 +86,8 @@
             </div>
             <div class="col-md-9">
                 <ul class="nav nav-tabs" id="featureTab" role="tablist">
-                    <li role="presentation"><a href="#price" role="tab" id="price-tab" data-toggle="tab" aria-controls="price" aria-expanded="true">Прайсы <span id="priceBadge" class="badge">0</span></a></li>
                     <li role="presentation"><a href="#movements" role="tab" id="home-tab" data-toggle="tab" aria-controls="movements" aria-expanded="true">Движения <span id="movementBadge" class="badge"><?//= count($goods->getMovements()); ?></span></a></li>
+                    <li role="presentation"><a href="#price" role="tab" id="price-tab" data-toggle="tab" aria-controls="price" aria-expanded="true">Прайсы <span id="priceBadge" class="badge">0</span></a></li>
                     <li role="presentation"><a href="#home" role="tab" id="home-tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Описание <span id="homeBadge" class="badge"><?= count($goods->getAttributeValues()); ?></span></a></li>
                     <li role="presentation"><a href="#oem" role="tab" id="oem-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера <span id="oemBadge" class="badge">0</span></a></li>
                     <li role="presentation"><a href="#linked" role="tab" id="linked-tab" data-toggle="tab" aria-controls="linked" aria-expanded="true">Применимость <span id="linkedBadge" class="badge">0</span></a></li>
@@ -177,7 +184,7 @@
                             >
                             <thead>
                                 <tr>
-                                     <th data-field="id" data-type="numeric">ID</th>
+                                     <th data-field="id" data-type="numeric">Id</th>
                                      <th data-field="oeNumber" data-formatter="oeNumberFormatter">Номер</th>
                                      <th data-field="brandName">Бренд</th>
                                      <th data-field="source" data-formatter="sourceFormatter">Источник</th>
@@ -197,15 +204,17 @@
                             data-toolbar="#movementsToolbar"
                             data-show-refresh="true"
                             data-show-toggle="true"
+                            data-sort-name="dateOper"
+                            data-sort-order="asc"            
                             data-query-params="movementsQueryParams"
                             data-response-handler="responseHandler"
                             >
                             <thead>
                                 <tr>
-                                     <th data-field="dateOper" data-sortable="true">Дата</th>
-                                     <th data-field="quantity" data-type="numeric" data-align="right">Движение</th>
+                                     <th data-field="dateOper" data-sortable="true" data-width="150">Дата</th>
+                                     <th data-field="quantity" data-type="numeric" data-align="right" data-width="50" data-formatter="movementFormatter">Движение</th>
                                      <th data-field="docKey" >Документ</th>
-                                     <th data-field="office.name">Офис</th>
+                                     <th data-field="office.name" data-width="50">Офис</th>
                                  </tr>                
                             </thead>
                         </table>
@@ -464,6 +473,14 @@
 //            color: 'blue'
           }
         };   
+    }
+    
+    function movementFormatter(value, row){
+        switch(row.docType){
+            case '<?= Movement::DOC_ORDER?>': return "<a href='/order/view/'"+row.docId+" target=_blank>Заказ №"+row.docId+"</a>";
+            default: return value;            
+        }
+        
     }
     
     function oemActiveFormatter(value, row){
