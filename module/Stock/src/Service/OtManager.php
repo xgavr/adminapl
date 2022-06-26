@@ -106,6 +106,7 @@ class OtManager
                         ->insertMovement($data);
 
                 if ($ot->getStatus() == Ot::STATUS_COMMISSION){
+                    unset($data['base_key']);
                     unset($data['base_type']);
                     unset($data['base_id']);
                     $data['contact_id'] = $ot->getComiss()->getId();                    
