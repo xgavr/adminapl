@@ -71,9 +71,16 @@ class IndexController extends AbstractActionController
      */
     private $autoruManager;    
     
+    /**
+     * RegisterManager manager.
+     * @var \Stock\Service\RegisterManager
+     */
+    private $registerManager;    
+    
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $telegramManager, $adminManager, $smsManager, $tamtamManager, $annManager, $autoruManager) 
+    public function __construct($entityManager, $telegramManager, $adminManager, 
+            $smsManager, $tamtamManager, $annManager, $autoruManager, $registerManager) 
     {
         $this->entityManager = $entityManager;
         $this->telegramManager = $telegramManager;        
@@ -82,6 +89,7 @@ class IndexController extends AbstractActionController
         $this->tamtamManager = $tamtamManager;        
         $this->annManager = $annManager;        
         $this->autoruManager = $autoruManager;
+        $this->registerManager = $registerManager;
     }   
     
     public function indexAction()

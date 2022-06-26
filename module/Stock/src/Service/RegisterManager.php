@@ -226,7 +226,6 @@ class RegisterManager
         ini_set('memory_limit', '512M');
         set_time_limit(900);
         $startTime = time();
-        $start = 0;
         
         $registers = $this->entityManager->getRepository(Register::class)
                 ->findForActualize();
