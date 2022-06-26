@@ -142,9 +142,9 @@ class RegisterManager
                 $otData = [
                     'apl_id' => 0,
                     'doc_date' => $order->getDateOper(),
-                    'comment' => 'Дооприходование для заказов раньше 2013-12-15',
+                    'comment' => "Дооприходование для заказа {$order->getId()} раньше 2013-12-15",
                     'status_ex' => Ot::STATUS_EX_APL, 
-                    'status' => Ot::STATUS_ACTIVE,
+                    'status' => Ot::STATUS_INVENTORY,
                     'office' => $order->getOffice(),
                     'company' => $order->getCompany(),
                 ];
