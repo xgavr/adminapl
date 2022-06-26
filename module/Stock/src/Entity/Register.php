@@ -102,7 +102,7 @@ class Register {
     {
         switch($docType){
             case Movement::DOC_ORDER:
-                return "<a href='/order/intro/{$docId}'>Заказ №{$docId}</a>";
+                return "<a href='/order/intro/{$docId}' target='_blank'>Заказ №{$docId}</a>";
             case Movement::DOC_OT:
                 return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/{$docId}'>Оприходование №{$docId}</a>";
             case Movement::DOC_PT:
