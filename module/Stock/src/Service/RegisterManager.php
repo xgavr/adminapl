@@ -145,8 +145,8 @@ class RegisterManager
                     'comment' => 'Дооприходование для заказов раньше 2013-12-15',
                     'status_ex' => Ot::STATUS_EX_APL, 
                     'status' => Ot::STATUS_ACTIVE,
-                    'office' => $order->getOffice()->getId(),
-                    'company' => $order->getCompany()->getId(),
+                    'office' => $order->getOffice(),
+                    'company' => $order->getCompany(),
                 ];
 
                 $ot = $this->otManager->addOt($otData);
