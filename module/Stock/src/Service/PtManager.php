@@ -114,7 +114,7 @@ class PtManager
                         'base_id' => $movement->getDocId(),
                         'doc_row_key' => $ptGood->getDocRowKey(),
                         'doc_row_no' => $ptGood->getRowNo(),
-                        'date_oper' => $pt->getDocDate(),
+                        'date_oper' => date('Y-m-d 12:00:00', strtotime($pt->getDocDate())),
                         'status' => $movement->getStatus(),
                         'quantity' => -$quantity,
                         'amount' => -$amount,

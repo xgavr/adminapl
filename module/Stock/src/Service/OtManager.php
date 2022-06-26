@@ -92,7 +92,7 @@ class OtManager
                     'base_id' => $ot->getId(),
                     'doc_row_key' => $otGood->getDocRowKey(),
                     'doc_row_no' => $otGood->getRowNo(),
-                    'date_oper' => $ot->getDocDate(),
+                    'date_oper' => date('Y-m-d 00:00:00', strtotime($ot->getDocDate())),
                     'status' => Movement::getStatusFromOt($ot),
                     'quantity' => $otGood->getQuantity(),
                     'amount' => $otGood->getAmount(),

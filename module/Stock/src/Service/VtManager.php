@@ -177,7 +177,7 @@ class VtManager
                         'base_id' => ($vt->getStatus() == Vt::STATUS_COMMISSION) ? $vt->getId():$movement->getBaseId(),
                         'doc_row_key' => $vtGood->getDocRowKey(),
                         'doc_row_no' => $vtGood->getRowNo(),
-                        'date_oper' => $vt->getDocDate(),
+                        'date_oper' => date('Y-m-d 21:00:00', strtotime($vt->getDocDate())),
                         'status' => Movement::getStatusFromVt($vt),
                         'quantity' => $quantity,
                         'amount' => $amount,

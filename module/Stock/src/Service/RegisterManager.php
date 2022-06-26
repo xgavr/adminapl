@@ -142,7 +142,7 @@ class RegisterManager
             if (count($bids)){
                 $otData = [
                     'apl_id' => 0,
-                    'doc_date' => date('Y-m-d', strtotime($order->getDateOper(), '-1 day')),
+                    'doc_date' => date('Y-m-d', strtotime($order->getDateOper(), '-1 days')),
                     'comment' => "Дооприходование для заказа {$order->getId()} раньше 2013-12-15",
                     'status_ex' => Ot::STATUS_EX_APL, 
                     'status' => Ot::STATUS_INVENTORY,
@@ -196,7 +196,8 @@ class RegisterManager
                             if ($ot){
                                 $otRegister = $this->entityManager->getRepository(Register::class)
                                         ->findOneBy(['docType' => Movement::DOC_OT, 'docId' => $ot->getId()]);
-                                $flag = $this->docActualize($otRegister);
+                                $this->docActualize($otRegister);
+                                $flag = $this->docActualize($register);
                             }
                         }
                     }   

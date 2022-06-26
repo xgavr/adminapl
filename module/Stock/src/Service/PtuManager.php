@@ -120,7 +120,7 @@ class PtuManager
                     'base_id' => $ptu->getId(),
                     'doc_row_key' => $ptuGood->getDocRowKey(),
                     'doc_row_no' => $ptuGood->getRowNo(),
-                    'date_oper' => $ptu->getDocDate(),
+                    'date_oper' => date('Y-m-d 00:00:00', strtotime($ptu->getDocDate())),
                     'status' => $ptu->getStatus(),
                     'quantity' => $ptuGood->getQuantity(),
                     'amount' => $ptuGood->getAmount(),

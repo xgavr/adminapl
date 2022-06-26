@@ -104,7 +104,7 @@ class StManager
                         'base_id' => $movement->getDocId(),
                         'doc_row_key' => $stGood->getDocRowKey(),
                         'doc_row_no' => $stGood->getRowNo(),
-                        'date_oper' => $st->getDocDate(),
+                        'date_oper' => date('Y-m-d 23:00:00', strtotime($st->getDocDate())),
                         'status' => Movement::getStatusFromSt($st),
                         'quantity' => -$quantity,
                         'amount' => -$amount,
