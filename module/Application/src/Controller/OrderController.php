@@ -86,7 +86,7 @@ class OrderController extends AbstractActionController
     {       
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
-        $sort = $this->params()->fromQuery('sort');
+        $sort = $this->params()->fromQuery('sort', 'dateOper');
         $order = $this->params()->fromQuery('order', 'DESC');
         $officeId = $this->params()->fromQuery('office');
         $userId = $this->params()->fromQuery('user');
