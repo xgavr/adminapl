@@ -173,6 +173,7 @@ class VtManager
                         'doc_key' => $vt->getLogKey(),
                         'doc_type' => Movement::DOC_VT,
                         'doc_id' => $vt->getId(),
+                        'base_key' => ($vt->getStatus() == Vt::STATUS_COMMISSION) ? $vt->getLogKey():$movement->getBaseKey(),
                         'base_type' => ($vt->getStatus() == Vt::STATUS_COMMISSION) ? Movement::DOC_VT:$movement->getBaseType(),
                         'base_id' => ($vt->getStatus() == Vt::STATUS_COMMISSION) ? $vt->getId():$movement->getBaseId(),
                         'doc_row_key' => $vtGood->getDocRowKey(),
@@ -190,6 +191,7 @@ class VtManager
                             ->insertMovement($data);
 
                     if ($vt->getStatus() == Vt::STATUS_COMMISSION){
+                        unset($data['base_key']);
                         unset($data['base_type']);
                         unset($data['base_id']);
                         $data['contact_id'] = $vt->getOrder()->getContact()->getId();
@@ -198,6 +200,7 @@ class VtManager
                     } else {
                         if ($movement->getStatus() == Movement::STATUS_COMMISSION){
                             // вернуть на комиссию
+                            unset($data['base_key']);
                             unset($data['base_type']);
                             unset($data['base_id']);
                             $data['contact_id'] = $movement->getContact()->getId();

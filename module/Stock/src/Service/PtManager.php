@@ -101,7 +101,7 @@ class PtManager
                 foreach ($bases as $base){
              
                     $movement = $this->entityManager->getRepository(Movement::class)
-                            ->findOneByDocKey($base['docKey']);
+                            ->findOneByDocKey($base['baseKey']);
                     
                     $quantity = min($base['rest'], $write);
                     $amount = $quantity*$stGood->getAmount()/$stGood->getQuantity();
@@ -110,8 +110,9 @@ class PtManager
                         'doc_key' => $pt->getLogKey(),
                         'doc_type' => Movement::DOC_PT,
                         'doc_id' => $pt->getId(),
-                        'base_type' => $movement->getDocType(),
-                        'base_id' => $movement->getDocId(),
+                        'base_key' => $movement->getBaseKey(),
+                        'base_type' => $movement->getBaseType(),
+                        'base_id' => $movement->getBaseId(),
                         'doc_row_key' => $ptGood->getDocRowKey(),
                         'doc_row_no' => $ptGood->getRowNo(),
                         'date_oper' => date('Y-m-d 12:00:00', strtotime($pt->getDocDate())),
@@ -128,7 +129,7 @@ class PtManager
                     
                     if ($movement->getStatus() == Movement::STATUS_COMMISSION){
                         $comiss = $this->entityManager->getRepository(Comiss::class)
-                                ->findOneByDocKey($base['docKey']);
+                                ->findOneByDocKey($base['baseKey']);
                         $data = [
                             'doc_key' => $pt->getLogKey(),
                             'doc_type' => Movement::DOC_PT,
@@ -152,8 +153,9 @@ class PtManager
                         'doc_key' => $pt->getLogKey(),
                         'doc_type' => Movement::DOC_PT,
                         'doc_id' => $pt->getId(),
-                        'base_type' => $movement->getDocType(),
-                        'base_id' => $movement->getDocId(),
+                        'base_key' => $movement->getBaseKey(),
+                        'base_type' => $movement->getBaseType(),
+                        'base_id' => $movement->getBaseId(),
                         'doc_row_key' => $ptGood->getDocRowKey(),
                         'doc_row_no' => $ptGood->getRowNo(),
                         'date_oper' => $pt->getDocDate(),
@@ -174,7 +176,7 @@ class PtManager
                         $data = [
                             'doc_key' => $pt->getLogKey(),
                             'doc_type' => Movement::DOC_PT,
-                            'doc_id' => $vt->getId(),
+                            'doc_id' => $pt->getId(),
                             'doc_row_key' => $ptGood->getRowKey(),
                             'doc_row_no' => $ptGood->getRowNo(),
                             'date_oper' => $pt->getDateOper(),

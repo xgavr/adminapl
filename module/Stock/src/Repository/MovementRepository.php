@@ -72,7 +72,7 @@ class MovementRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
         $qb = $entityManager->createQueryBuilder();
-        $qb->select('sum(m.quantity) as rest, m.docKey')
+        $qb->select('sum(m.quantity) as rest, m.baseKey')
                 ->from(Movement::class, 'm')
                 ->where('m.good = ?1')
                 ->andWhere('m.dateOper <= ?2')
@@ -82,7 +82,7 @@ class MovementRepository extends EntityRepository{
                 ->setParameter('2', $dateOper)
                 ->setParameter('3', $officeId)
                 ->setParameter('4', Movement::STATUS_RETIRED)
-                ->groupBy('m.docKey')
+                ->groupBy('m.baseKey')
                 ->having('rest > 0')
                 ;
         

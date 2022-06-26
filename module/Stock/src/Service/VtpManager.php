@@ -117,6 +117,7 @@ class VtpManager
                     'doc_key' => $vtp->getLogKey(),
                     'doc_type' => Movement::DOC_VTP,
                     'doc_id' => $vtp->getId(),
+                    'base_key' => $vtp->getPtu()->getLogKey(),
                     'base_type' => Movement::DOC_PTU,
                     'base_id' => $vtp->getPtu()->getId(),
                     'doc_row_key' => $vtpGood->getDocRowKey(),

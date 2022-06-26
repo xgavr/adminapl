@@ -91,7 +91,7 @@ class StManager
                 
                 foreach ($bases as $base){
                     $movement = $this->entityManager->getRepository(Movement::class)
-                            ->findOneByDocKey($base['docKey']);
+                            ->findOneByDocKey($base['baseKey']);
                     
                     $quantity = min($base['rest'], $write);
                     $amount = $quantity*$stGood->getAmount()/$stGood->getQuantity();
@@ -100,8 +100,9 @@ class StManager
                         'doc_key' => $st->getLogKey(),
                         'doc_type' => Movement::DOC_ST,
                         'doc_id' => $st->getId(),
-                        'base_type' => $movement->getDocType(),
-                        'base_id' => $movement->getDocId(),
+                        'base_key' => $movement->getBaseKey(),
+                        'base_type' => $movement->getBaseType(),
+                        'base_id' => $movement->getBaseId(),
                         'doc_row_key' => $stGood->getDocRowKey(),
                         'doc_row_no' => $stGood->getRowNo(),
                         'date_oper' => date('Y-m-d 23:00:00', strtotime($st->getDocDate())),

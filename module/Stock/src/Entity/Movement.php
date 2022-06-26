@@ -65,6 +65,11 @@ class Movement {
     protected $docId;
     
     /**
+     * @ORM\Column(name="base_key")   
+     */
+    protected $baseKey;
+
+    /**
      * @ORM\Column(name="base_type")   
      */
     protected $baseType;
@@ -165,6 +170,16 @@ class Movement {
         $this->docId = $docId;
     }     
 
+    public function getBaseKey() 
+    {
+        return $this->baseKey;
+    }
+
+    public function setBaseKey($baseKey) 
+    {
+        $this->baseKey = $baseKey;
+    }     
+    
     public function getBaseType() 
     {
         return $this->baseType;

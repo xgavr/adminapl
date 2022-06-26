@@ -116,6 +116,7 @@ class PtuManager
                     'doc_key' => $ptu->getLogKey(),
                     'doc_type' => Movement::DOC_PTU,
                     'doc_id' => $ptu->getId(),
+                    'base_key' => $ptu->getLogKey(),
                     'base_type' => Movement::DOC_PTU,
                     'base_id' => $ptu->getId(),
                     'doc_row_key' => $ptuGood->getDocRowKey(),

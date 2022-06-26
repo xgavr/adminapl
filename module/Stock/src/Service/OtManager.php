@@ -86,6 +86,7 @@ class OtManager
             foreach ($otGoods as $otGood){
                 $data = [
                     'doc_key' => $ot->getLogKey(),
+                    'base_key' => $ot->getLogKey(),
                     'doc_type' => Movement::DOC_OT,
                     'doc_id' => $ot->getId(),
                     'base_type' => Movement::DOC_OT,
