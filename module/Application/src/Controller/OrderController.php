@@ -78,6 +78,7 @@ class OrderController extends AbstractActionController
             'users' =>  $users,
             'offices' =>  $offices,
             'currentUser' => $currentUser,
+            'allowDate' => $this->orderManager->getAllowDate(),
         ]);
     }
     
@@ -566,4 +567,24 @@ class OrderController extends AbstractActionController
             'oems' => $oems,
         ]);        
     }   
+    
+    public function statusAction()
+    {
+        $orderId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', Order::STATUS_NEW);
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);        
+
+        if ($order == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->orderManager->updateOrderStatus($order, $status);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }        
+    
 }

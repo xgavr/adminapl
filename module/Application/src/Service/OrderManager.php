@@ -1328,6 +1328,28 @@ class OrderManager
     }    
     
     /**
+     * Update order status.
+     * @param Order $order
+     * @param integer $status
+     * @return integer
+     */
+    public function updateOrderStatus($order, $status)            
+    {
+
+        if ($order->getDateOper() > $this->allowDate){
+            $order->setStatus($status);
+
+            $this->entityManager->persist($order);
+            $this->entityManager->flush($order);
+
+            $this->repostOrder($order);
+            $this->logManager->infoOrder($order, Log::STATUS_UPDATE);
+        }    
+        
+        return;
+    }
+    
+    /**
      * Удалить строки заказа
      * @param Order $order
      */

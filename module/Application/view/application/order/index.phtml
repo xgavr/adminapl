@@ -226,83 +226,101 @@ $this->pageBreadcrumbs()->setItems([
         return res;
     }    
     
-//    var menu = new BootstrapMenu('.tablerow', {
-//        fetchElementData: function(rowElem) {
-//            var rowId = $(rowElem).attr('data-index');
-//            return table.bootstrapTable('getData')[rowId];
-//        },
+    function changeOrderStatus(orderId, status){
+        $.get( "/order/status/"+orderId+'?status='+status, function(data){
+            refreshTable();
+        });        
+    }
+
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            var rowId = $(rowElem).attr('data-index');
+            return $table.bootstrapTable('getData')[rowId];
+        },
 //        actionsGroups: [
 //           ['statusActiv', 'statusRetired'],
 //        ],      
-//        actions: {
-//            statusDocNew: {
-//                name: 'Новый',
-//                onClick: function(row) {
-//                    changeStatusDoc(row.id, <?//= Vtp::STATUS_DOC_NEW?>);
-//                },
-//                isShown: function(row) {
-//                  return row.statusDoc != '<?//= Vtp::STATUS_DOC_NEW?>';
-//                },
-//                isEnabled: function(row) {
-//                    return row.docDate > '<?//= $allowDate?>';
-//                }                
-//            }, 
-//            statusDocRect: {
-//                name: 'Отправлен',
-//                classNames: 'bg-warning',
-//                onClick: function(row) {
-//                    changeStatusDoc(row.id, <?//= Vtp::STATUS_DOC_RECD?>);
-//                },
-//                isShown: function(row) {
-//                  return row.statusDoc != '<?//= Vtp::STATUS_DOC_RECD?>';
-//                },
-//                isEnabled: function(row) {
-//                    return row.docDate > '<?//= $allowDate?>';
-//                }                
-//            }, 
-//            statusDocNotRect: {
-//                name: 'Принят',
-////                iconClass: 'glyphicon glyphicon-ok',
-//                classNames: 'bg-success',
-//                onClick: function(row) {
-//                    changeStatusDoc(row.id, <?//= Vtp::STATUS_DOC_NOT_RECD?>);
-//                },
-//                isShown: function(row) {
-//                  return row.statusDoc != '<?//= Vtp::STATUS_DOC_NOT_RECD?>';
-//                },
-//                isEnabled: function(row) {
-//                    return row.docDate > '<?//= $allowDate?>';
-//                }                
-//            }, 
-//            statusActiv: {
-//                name: 'Сделать активным',
+        actions: {
+            statusNew: {
+                name: 'Новый',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_NEW?>);
+                },
+                isShown: function(row) {
+                  return row.status != '<?= Order::STATUS_NEW?>';
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            }, 
+            statusProcessed: {
+                name: 'Обработан',
+                classNames: 'bg-default',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_PROCESSED?>);
+                },
+                isShown: function(row) {
+                  return row.status != '<?= Order::STATUS_PROCESSED?>';
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            }, 
+            statusConfirmed: {
+                name: 'Подтвержден',
+                classNames: 'bg-warning',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_CONFIRMED?>);
+                },
+                isShown: function(row) {
+                  return row.status != '<?= Order::STATUS_CONFIRMED?>';
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            }, 
+            statusDelivery: {
+                name: 'На доставке',
 //                iconClass: 'glyphicon glyphicon-ok',
-//                onClick: function(row) {
-//                    changeStatus(row.id, <?//= Vtp::STATUS_ACTIVE?>);
-//                },
-//                isShown: function(row) {
-//                  return row.status == <?//= Vtp::STATUS_RETIRED?>;
-//                },
-//                isEnabled: function(row) {
-//                    return row.docDate > '<?//= $allowDate?>';
-//                }                
-//            }, 
-//            statusRetired: {
-//                name: 'Сделать не активным',
-//                iconClass: 'glyphicon glyphicon-remove',
-////                classNames: 'bg-danger',
-//                onClick: function(row) {
-//                    changeStatus(row.id, <?//= Vtp::STATUS_RETIRED?>);
-//                },
-//                isShown: function(row) {
-//                  return row.status == <?//= Vtp::STATUS_ACTIVE?>;
-//                },
-//                isEnabled: function(row) {
-//                    return row.docDate > '<?//= $allowDate?>';
-//                }                
-//            }
-//        }
-//    });    
+                classNames: 'bg-info',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_DELIVERY?>);
+                },
+                isShown: function(row) {
+                  return row.status != <?= Order::STATUS_DELIVERY?>;
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            }, 
+            statusShipped: {
+                name: 'Отгружен',
+                classNames: 'bg-success',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_SHIPPED?>);
+                },
+                isShown: function(row) {
+                  return row.status != <?= Order::STATUS_SHIPPED?>;
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            },
+            statusCanceled: {
+                name: 'Отменен',
+                classNames: 'bg-default',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_CANCELED?>);
+                },
+                isShown: function(row) {
+                  return row.status != <?= Order::STATUS_CANCELED?>;
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            }
+        }
+    });    
     
 </script>
 
