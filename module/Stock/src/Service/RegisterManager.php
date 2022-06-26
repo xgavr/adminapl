@@ -132,6 +132,7 @@ class RegisterManager
     /**
      * Добавить оприходование раньше 2013-12-15
      * @param Order $order
+     * @return Ot
      */
     private function oldOt($order)
     {
@@ -164,6 +165,8 @@ class RegisterManager
                 }
                 
                 $this->otManager->updateOtAmount($ot);
+                
+                return $ot;
             }                
         }
         
@@ -189,7 +192,12 @@ class RegisterManager
                                 ->count(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
                         $flag = $takeNo == 0;
                         if (!$flag){
-                            $this->oldOt($order);
+                            $ot = $this->oldOt($order);
+                            if ($ot){
+                                $otRegister = $this->entityManager->getRepository(Register::class)
+                                        ->findOneBy(['docType' => Movement::DOC_OT, 'docId' => $ot->getId()]);
+                                $this->docActualize($otRegister);
+                            }
                         }
                     }   
                 }
