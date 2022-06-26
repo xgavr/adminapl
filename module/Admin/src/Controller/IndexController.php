@@ -1028,5 +1028,14 @@ class IndexController extends AbstractActionController
         ]);                
         
     }
+
+    public function varactAction()
+    {       
+        $this->registerManager->actualize();
+
+        return new JsonModel(
+            ['ok']
+        );        
+    }
     
 }
