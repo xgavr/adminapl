@@ -223,12 +223,15 @@ class ProcessingController extends AbstractActionController
     {
         $controllerName = $this->params('controller');
         $actionName = str_replace('-', '', lcfirst(ucwords($this->params('action'), '-')));
+        $admin = $this->params()->fromQuery('admin');
 
-        if ($this->settingManager->canStart($controllerName, $actionName)){
-            $this->settingManager->addProcess($controllerName, $actionName);
-        } else {    
-            exit;
-        }
+        if (empty($admin)){
+            if ($this->settingManager->canStart($controllerName, $actionName)){
+                $this->settingManager->addProcess($controllerName, $actionName);
+            } else {    
+                exit;
+            }
+        }    
         return parent::dispatch($request, $response);
     }    
 
