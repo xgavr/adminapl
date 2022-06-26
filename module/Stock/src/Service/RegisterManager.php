@@ -142,7 +142,7 @@ class RegisterManager
             if (count($bids)){
                 $otData = [
                     'apl_id' => 0,
-                    'doc_date' => $order->getDateOper(),
+                    'doc_date' => date('Y-m-d', strtotime($order->getDateOper(), '-1 day')),
                     'comment' => "Дооприходование для заказа {$order->getId()} раньше 2013-12-15",
                     'status_ex' => Ot::STATUS_EX_APL, 
                     'status' => Ot::STATUS_INVENTORY,

@@ -668,7 +668,8 @@ class OrderManager
     public function addNewOrder($office, $contact, $data) 
     {
         $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
-        $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
+        $dateShipment = $this->_shipmentDateTime($data);
+        $dateOper = !empty($dateShipment) ? $dateShipment : $dateMod;
         
         if ($dateOper > $this->allowDate){
             // Создаем новую сущность.
@@ -677,7 +678,7 @@ class OrderManager
             $order->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
             $order->setDateMod($dateMod);
             $order->setDateOper($dateOper);
-            $order->setDateShipment($this->_shipmentDateTime($data));
+            $order->setDateShipment($dateShipment);
             $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
             $order->setInfo(!empty($data['info']) ? $data['info'] : null);
             $order->setInvoiceInfo(!empty($data['invoiceInfo']) ? $data['invoiceInfo'] : null);
@@ -826,7 +827,8 @@ class OrderManager
     public function insOrder($office, $contact, $data) 
     {
         $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
-        $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
+        $dateShipment = $this->_shipmentDateTime($data);
+        $dateOper = !empty($dateShipment) ? $dateShipment : $dateMod;
         
         if ($dateOper > $this->allowDate){
             $upd = [
@@ -834,7 +836,7 @@ class OrderManager
                 'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
                 'date_mod' =>  $dateMod,
                 'date_oper' =>  $dateOper,
-                'date_shipment' => $this->_shipmentDateTime($data),
+                'date_shipment' => $dateShipment,
                 'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
                 'info' =>  (!empty($data['info'])) ? $data['info'] : null,
                 'invoice_info' =>  (!empty($data['invoiceInfo'])) ? $data['invoiceInfo'] : null,
@@ -1068,14 +1070,15 @@ class OrderManager
     public function updateOrder($order, $data) 
     {
         $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
-        $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
+        $dateShipment = $this->_shipmentDateTime($data);
+        $dateOper = !empty($dateShipment) ? $dateShipment : $dateMod;
 
         if ($dateOper > $this->allowDate){
             $order->setAddress(!empty($data['address']) ? $data['address'] : null);
             $order->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
             $order->setDateMod($dateMod);
             $order->setDateOper($dateOper);
-            $order->setDateShipment($this->_shipmentDateTime($data));
+            $order->setDateShipment($dateShipment);
             $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
             $order->setInfo(!empty($data['info']) ? $data['info'] : null);
             $order->setInvoiceInfo(!empty($data['invoiceInfo']) ? $data['invoiceInfo'] : null);
@@ -1197,7 +1200,8 @@ class OrderManager
     public function updOrder($order, $data) 
     {
         $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
-        $dateOper = !empty($data['dateOper']) ? $data['dateOper'] : $dateMod;
+        $dateShipment = $this->_shipmentDateTime($data);
+        $dateOper = !empty($dateShipment) ? $dateShipment : $dateMod;
         
         if ($dateOper > $this->allowDate){
 
@@ -1206,7 +1210,7 @@ class OrderManager
                 'apl_id' =>  (!empty($data['aplId'])) ? $data['aplId'] : null,
                 'date_mod' =>  $dateMod,
                 'date_oper' =>  $dateOper,
-                'date_shipment' => $this->_shipmentDateTime($data),
+                'date_shipment' => $dateShipment,
                 'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
                 'info' =>  (!empty($data['info'])) ? $data['info'] : null,
                 'invoice_info' =>  (!empty($data['invoiceInfo'])) ? $data['invoiceInfo'] : null,
