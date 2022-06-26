@@ -130,6 +130,47 @@ class RegisterManager
     }
     
     /**
+     * Добавить оприходование раньше 2013-12-15
+     * @param Order $order
+     */
+    private function oldOt($order)
+    {
+        if ($order->getDateOper() <= '2013-12-15'){
+            $bids = $this->entityManager->getRepository(Bid::class)
+                    ->findBy(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
+            if (count($bids)){
+                $otData = [
+                    'apl_id' => 0,
+                    'doc_date' => $order->getDateOper(),
+                    'comment' => 'Дооприходование для заказов раньше 2013-12-15',
+                    'status_ex' => Ot::STATUS_EX_APL, 
+                    'status' => Ot::STATUS_ACTIVE,
+                    'office' => $order->getOffice()->getId(),
+                    'company' => $order->getCompany()->getId(),
+                ];
+
+                $ot = $this->otManager->addOt($otData);
+                
+                $i = 1;
+                foreach ($bids as $bid){
+                    $otgGoodData = [
+                        'quantity' => $bid->getNum(),
+                        'amount' => $bid->getNum()*$bid->getPrice(),
+                        'good_id' => $bid->getGood()->getId(),
+                    ];
+
+                    $this->otManager->addOtGood($ot->getId(), $otgGoodData, $i);
+                    $i++;
+                }
+                
+                $this->otManager->updateOtAmount($ot);
+            }                
+        }
+        
+        return;
+    }
+    
+    /**
      * Актализировать документ
      * @param Register $register
      * @return null
@@ -147,7 +188,10 @@ class RegisterManager
                         $takeNo = $this->entityManager->getRepository(Bid::class)
                                 ->count(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
                         $flag = $takeNo == 0;
-                    }    
+                        if (!$flag){
+                            $this->oldOt($order);
+                        }
+                    }   
                 }
                 break;
             case Movement::DOC_OT:
