@@ -196,7 +196,7 @@ class RegisterManager
                             if ($ot){
                                 $otRegister = $this->entityManager->getRepository(Register::class)
                                         ->findOneBy(['docType' => Movement::DOC_OT, 'docId' => $ot->getId()]);
-                                $this->docActualize($otRegister);
+                                $flag = $this->docActualize($otRegister);
                             }
                         }
                     }   
