@@ -23,6 +23,7 @@ use Application\Entity\Oem;
 use Application\Entity\UnknownProducer;
 use Application\Filter\ArticleCode;
 use Stock\Entity\Movement;
+use Company\Entity\Office;
 
 class GoodsController extends AbstractActionController
 {
@@ -626,8 +627,14 @@ class GoodsController extends AbstractActionController
         $rate = $this->entityManager->getRepository(Rate::class)
                 ->findGoodRate($goods);
         
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy([]);
+        
         $titleFeatures = $this->entityManager->getRepository(TitleToken::class)
                 ->goodTitleFeatures($goods);
+        
+        $rest = $this->entityManager->getRepository(Movement::class)
+                ->goodRest($goods->getId(), date('Y-m-d 23:59:59'));
 
         // Render the view template.
         return new ViewModel([
@@ -640,6 +647,8 @@ class GoodsController extends AbstractActionController
             'priceStatuses' => Rawprice::getStatusList(),
             'rate' => $rate,
             'titleFeatures' => $titleFeatures,
+            'offices' => $offices,
+            'rest' => $rest,
         ]);
     }      
 
@@ -740,6 +749,7 @@ class GoodsController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $search = $this->params()->fromQuery('search');
         $source = $this->params()->fromQuery('source');
+        $office = $this->params()->fromQuery('office');
         $sort = $this->params()->fromQuery('sort', 'dateOper');
         $order = $this->params()->fromQuery('order', 'ASC');
         
@@ -759,7 +769,7 @@ class GoodsController extends AbstractActionController
         
         $query = $this->entityManager->getRepository(Goods::class)
                         ->movements($goods, ['q' => $search, 'source' => $source, 
-                            'sort' => $sort, 'order' => $order]);
+                            'sort' => $sort, 'order' => $order, 'office' => $office]);
 
         $total = count($query->getResult(2));
         

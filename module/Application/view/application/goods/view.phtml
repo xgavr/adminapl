@@ -195,13 +195,23 @@
                         </table>
                     </div>
                     <div class="tab-pane fade" role="tabpanel" id="movements" aria-labelledby="movements-tab">
+                        <div id="movementToolbar">
+                            <div class="form-inline" role="form">
+                                <select id="officeSelect" style="width: 200px" class="form-control refresh-table" name="office">
+                                    <option>все</option>
+                                    <?php foreach ($offices as $office):?>
+                                        <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                                    <?php endforeach;?>
+                                </select>                    
+                            </div>
+                        </div>
                         <table id="linkedTable" 
                             data-toggle="table" 
                             data-url="/goods/movements/<?= $goods->getId()?>"
                             data-side-pagination="server"
                             data-pagination="true" 
                             data-page-list="[5, 10, 20, 50]"
-                            data-toolbar="#movementsToolbar"
+                            data-toolbar="#movementToolbar"
                             data-show-refresh="true"
                             data-show-toggle="true"
                             data-sort-name="dateOper"
@@ -213,6 +223,7 @@
                                 <tr>
                                      <th data-field="dateOper" data-sortable="true" data-width="150">Дата</th>
                                      <th data-field="quantity" data-type="numeric" data-align="right" data-width="50">Движение</th>
+                                     <th data-field="docKey" data-type="numeric" data-align="right">Остаток</th>
                                      <th data-field="docKey" data-formatter="movementFormatter">Документ</th>
                                      <th data-field="office.name" data-width="50">Офис</th>
                                  </tr>                

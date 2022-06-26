@@ -1371,10 +1371,43 @@ class GoodsRepository extends EntityRepository
             if (!empty($params['sort'])){
                 $queryBuilder->addOrderBy('m.'.$params['sort'], $params['order']);
             }
+            if (!empty($params['office'])){
+                $queryBuilder->andWhere('m.office = ?2')
+                    ->setParameter('2', $params['office']);
+            }
         }
         
         return $queryBuilder->getQuery();            
     }
+    
+    /**
+     * Движения товара
+     * 
+     * @param Goods $good
+     * @param array $params
+     * @return Query
+     */
+    public function movementRest($good, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('m, o')
+            ->from(Movement::class, 'm')
+            ->join('m.office', 'o')    
+            ->where('m.good = ?1')
+            ->setParameter('1', $good->getId())
+//            ->orderBy('m.dateOper','ASC')    
+            ;
+        
+        if (is_array($params)){
+            if (!empty($params['sort'])){
+                $queryBuilder->addOrderBy('m.'.$params['sort'], $params['order']);
+            }
+        }
+        
+        return $queryBuilder->getQuery();            
+    }    
     
     /**
      * Найти прайсы товара
