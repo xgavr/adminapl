@@ -86,7 +86,7 @@
             </div>
             <div class="col-md-9">
                 <ul class="nav nav-tabs" id="featureTab" role="tablist">
-                    <li role="presentation"><a href="#movements" role="tab" id="home-tab" data-toggle="tab" aria-controls="movements" aria-expanded="true">Движения <span id="movementBadge" class="badge"><?//= count($goods->getMovements()); ?></span></a></li>
+                    <li role="presentation"><a href="#movements" role="tab" id="home-tab" data-toggle="tab" aria-controls="movements" aria-expanded="true">Движения <span id="movementBadge" class="badge"></span></a></li>
                     <li role="presentation"><a href="#price" role="tab" id="price-tab" data-toggle="tab" aria-controls="price" aria-expanded="true">Прайсы <span id="priceBadge" class="badge">0</span></a></li>
                     <li role="presentation"><a href="#home" role="tab" id="home-tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Описание <span id="homeBadge" class="badge"><?= count($goods->getAttributeValues()); ?></span></a></li>
                     <li role="presentation"><a href="#oem" role="tab" id="oem-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера <span id="oemBadge" class="badge">0</span></a></li>
@@ -200,12 +200,12 @@
                                 <select id="officeSelect" style="width: 200px" class="form-control refresh-table" name="office">
                                     <option>все</option>
                                     <?php foreach ($offices as $office):?>
-                                        <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                                        <option value="<?= $office->getId()?>" <?= ($office->getId() == $currentUser->getOffice()->getId()) ? 'selected':''?>><?= $office->getName()?></option>
                                     <?php endforeach;?>
                                 </select>                    
                             </div>
                         </div>
-                        <table id="linkedTable" 
+                        <table id="movementTable" 
                             data-toggle="table" 
                             data-url="/goods/movements/<?= $goods->getId()?>"
                             data-side-pagination="server"
@@ -223,7 +223,7 @@
                                 <tr>
                                      <th data-field="dateOper" data-sortable="true" data-width="150">Дата</th>
                                      <th data-field="quantity" data-type="numeric" data-align="right" data-width="50">Движение</th>
-                                     <th data-field="docKey" data-type="numeric" data-align="right">Остаток</th>
+                                     <th data-field="rest" data-type="numeric" data-align="right" data-width="50">Остаток</th>
                                      <th data-field="docKey" data-formatter="movementFormatter">Документ</th>
                                      <th data-field="office.name" data-width="50">Офис</th>
                                  </tr>                
@@ -406,6 +406,18 @@
         $('.editable').editable();
     });
 
+    $(function () {
+        $('#priceStatusSelect').change(function (){
+            $('#priceTable').bootstrapTable('refresh');
+        })
+        $('#oemSourceSelect').change(function (){
+            $('#oemTable').bootstrapTable('refresh');
+        })
+        $('select[name="office"]').change(function (){
+            $('#movementTable').bootstrapTable('refresh');
+        })
+    });
+
     function tabQueryParams(tab, params) {
         $(tab +'Toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
@@ -432,6 +444,7 @@
     }
     
     function movementsQueryParams(params) {
+        params.office = $('select[name="office"]').val();
         return tabQueryParams('#movements', params);
     }
     
@@ -443,7 +456,31 @@
     function responseHandler(res) {
         return res;
     }       
+        
+    var linkedTable = $('#linkedTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('#linkedBadge').html($('#linkedTable').bootstrapTable('getOptions').totalRows)
+        }
+    });
     
+    var oemTable = $('#oemTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('#oemBadge').html($('#oemTable').bootstrapTable('getOptions').totalRows)
+        }
+    });
+
+    var priceTable = $('#priceTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('#priceBadge').html($('#priceTable').bootstrapTable('getOptions').totalRows)
+        }
+    });
+    
+    var movementTable = $('#movementTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('#movementBadge').html($('#movementTable').bootstrapTable('getOptions').totalRows)
+        }
+    });
+
     function sourceFormatter(value){
         switch(value){
             <?php foreach ($oemSources as $key => $value):?>

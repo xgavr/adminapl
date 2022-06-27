@@ -70,9 +70,15 @@ class GoodsController extends AbstractActionController
      */
     private $externalManager;
     
+    /**
+     * Log manager.
+     * @var \Admin\Service\LogManager 
+     */
+    private $logManager;
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $goodsManager, $assemblyManager, 
-            $articleManager, $nameManager, $externalManager, $rateManager) 
+            $articleManager, $nameManager, $externalManager, $rateManager, $logManager) 
     {
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
@@ -80,6 +86,7 @@ class GoodsController extends AbstractActionController
         $this->articleManager = $articleManager;
         $this->nameManager = $nameManager;
         $this->externalManager = $externalManager;
+        $this->logManager = $logManager;
         $this->rateManager = $rateManager;
     }  
     
@@ -649,6 +656,7 @@ class GoodsController extends AbstractActionController
             'titleFeatures' => $titleFeatures,
             'offices' => $offices,
             'rest' => $rest,
+            'currentUser' => $this->logManager->currentUser(),
         ]);
     }      
 
@@ -749,7 +757,7 @@ class GoodsController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $search = $this->params()->fromQuery('search');
         $source = $this->params()->fromQuery('source');
-        $office = $this->params()->fromQuery('office');
+        $office = $this->params()->fromQuery('office', $this->logManager->currentUser()->getOffice()->getId());
         $sort = $this->params()->fromQuery('sort', 'dateOper');
         $order = $this->params()->fromQuery('order', 'ASC');
         
@@ -781,6 +789,10 @@ class GoodsController extends AbstractActionController
         }
 
         $result = $query->getResult(2);
+        foreach ($result as $key=>$value){
+            $result[$key]['rest'] = $this->entityManager->getRepository(Movement::class)
+                ->goodRest($goodsId, $valuep['dateOper'], $office);
+        }
         
         return new JsonModel([
             'total' => $total,
@@ -1570,4 +1582,26 @@ class GoodsController extends AbstractActionController
         
         exit;
     }
+    
+    public function restAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        $dateOper = $this->params()->fromQuery('dateOper', date('Y-m-d'));
+        $officeId = $this->params()->fromQuery('office', $this->logManager->currentUser()->getOffice()->getId());
+        $companyId = $this->params()->fromQuery('company');
+        $rest = 0;
+
+        if ($goodId<0) {
+            goto e;
+        }
+        
+        $rest = $this->entityManager->getRepository(Movement::class)
+                ->goodRest($goodId, $dateOper, $officeId, $companyId);
+        
+        e:        
+        return new JsonModel([
+            'id' => $goodId,
+            'rest' => $rest,
+        ]);          
+    }    
 }

@@ -178,24 +178,29 @@ class MovementRepository extends EntityRepository{
         $qb->select('sum(m.quantity) as rSum')
                 ->from(Movement::class, 'm')
                 ->where('m.good = ?1')
-                ->andWhere('m.dateOper = ?2') 
+                ->andWhere('m.dateOper <= ?2') 
                 ->setParameter('1', $goodId)
                 ->setParameter('2', $dateOper)
                 ;
         if (!empty($officeId)){
-            $qb->andWhere('m.office = ?3');
-            $qb->setParameter('3', $officeId);
+            if (is_numeric($officeId)){
+                $qb->andWhere('m.office = ?3');
+                $qb->setParameter('3', $officeId);
+            }    
         }
         
         if (!empty($companyId)){
-            $qb->andWhere('m.company = ?4');
-            $qb->setParameter('4', $companyId);
+            if (is_numeric($companyId)){
+                $qb->andWhere('m.company = ?4');
+                $qb->setParameter('4', $companyId);
+            }    
         }
         
         $result = $qb->getQuery()->getOneOrNullResult();
         
         return $result['rSum'];
     }            
+
 
     /**
     * Количество продаж у товара

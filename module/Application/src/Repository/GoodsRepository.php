@@ -1372,8 +1372,10 @@ class GoodsRepository extends EntityRepository
                 $queryBuilder->addOrderBy('m.'.$params['sort'], $params['order']);
             }
             if (!empty($params['office'])){
-                $queryBuilder->andWhere('m.office = ?2')
-                    ->setParameter('2', $params['office']);
+                if (is_numeric($params['office'])){
+                    $queryBuilder->andWhere('m.office = ?2')
+                        ->setParameter('2', $params['office']);
+                }    
             }
         }
         
