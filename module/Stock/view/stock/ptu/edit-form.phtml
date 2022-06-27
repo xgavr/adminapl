@@ -363,11 +363,11 @@ if ($ptu){
     
     function goodFormatter(value, row){
         var url = '/goods/view/'+row.good.id;
-        btn = '<nobr>'+value + ' <a';
+        btn = '<nobr><a';
         btn += ' href="'+url+'"';
         btn += ' class="btn btn-link btn-xs" target="_blank">';
         btn += '<span class="glyphicon glyphicon-link"></span>';
-        btn += '</a></nobr>';
+        btn += '</a>'+value+'</nobr>';
         return btn;
     }    
     
