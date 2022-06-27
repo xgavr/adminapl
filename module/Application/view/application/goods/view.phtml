@@ -527,9 +527,35 @@
     function docFormatter(docType, docId, docKey){
         switch(docType){
             case '<?= Movement::DOC_ORDER?>': return "<a href='/order/intro/"+docId+"' target='_blank'>Заказ №"+docId+"</a>";
+            case '<?= Movement::DOC_VT?>': 
+                        return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Взврат покупателя №"+docId+"</a>"";
             default: return docKey;            
         }
     }
+    
+    $(document).on('click', '.vt-modal-show', function (e) {
+        var url = $(e.currentTarget).attr('modal-url');
+        showFormDialog({
+            id: 'vtModal',
+            url: url,
+            width: '1440px'
+        });
+    });  
+    
+    $(document).on('click', '.vt-good-modal-show', function (e) {
+        var url = $(e.currentTarget).attr('modal-url');
+        var uniqueId = $(e.currentTarget).attr('unique-id');
+        if (uniqueId){
+            var row = $('#vtgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
+            url = url+'?'+$.param(row);
+        }    
+        showFormDialog({
+            id: 'vtGoodModal',
+            url: url,
+            zIndex: 9999
+        });
+    });  
+
     
     function movementFormatter(value, row){
         return docFormatter(row.docType, row.docId, value);
