@@ -115,6 +115,28 @@ $this->pageBreadcrumbs()->setItems([
             });
         });
         
+        $(document).on('click', '.ptu-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'ptuModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+        $(document).on('click', '.ptu-good-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            var uniqueId = $(e.currentTarget).attr('unique-id');
+            if (uniqueId){
+                var row = $('#ptugoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
+                url = url+'?'+$.param(row);
+            }    
+            showFormDialog({
+                id: 'ptuGoodModal',
+                url: url,
+                zIndex: 9999
+            });
+        });  
+
         $(document).on('click', '.pt-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
