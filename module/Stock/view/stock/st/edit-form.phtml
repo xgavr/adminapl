@@ -1,5 +1,6 @@
 <?php
 use Stock\Entity\St;
+use Stock\Entity\StGood;
 
 $form = $this->form;
 
@@ -159,6 +160,7 @@ if ($st){
                             data-query-params="stgoodQueryParams"
                             data-response-handler="stgoodResponseHandler"
                             data-unique-id = "rowNo"
+                            data-row-style="takeStyle"
                             >
                             <thead>
                                 <tr>
@@ -344,7 +346,7 @@ if ($st){
         
         return params;
     }
-    
+        
     function goodFormatter(value, row){
         var url = '/goods/view/'+row.good.id;
         btn = '<nobr><a';

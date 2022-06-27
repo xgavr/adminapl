@@ -475,4 +475,19 @@
 
         iframe.src = url;
     }
+
+    /**
+    * Пометка товара в документе
+
+     * @param {type} row
+     * 
+     * */
+    function takeStyle(row){
+        var classes = 'default';
+        if (row.take == '2'){
+            classes = 'danger';
+        }        
+        return {classes: classes};
+    }
+    
 </script>        
