@@ -181,9 +181,9 @@ class RegisterManager
      * @param Pt $pt
      * @return Ot
      */
-    private function oldOtPt($order)
+    private function oldOtPt($pt)
     {
-        if ($order->getDateOper() <= $this->meDate){
+        if ($pt->getDocDate() <= $this->meDate){
             $ptGoods = $this->entityManager->getRepository(PtGood::class)
                     ->findBy(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
             if (count($ptGoods)){
