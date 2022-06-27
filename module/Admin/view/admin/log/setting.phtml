@@ -137,6 +137,28 @@ $this->pageBreadcrumbs()->setItems([
             });
         });  
         
+        $(document).on('click', '.vt-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'vtModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+        $(document).on('click', '.vt-good-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            var uniqueId = $(e.currentTarget).attr('unique-id');
+            if (uniqueId){
+                var row = $('#vtgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
+                url = url+'?'+$.param(row);
+            }    
+            showFormDialog({
+                id: 'vtGoodModal',
+                url: url,
+                zIndex: 9999
+            });
+        });  
+        
     });    
     
     function tabQueryParams(tab, params) {
