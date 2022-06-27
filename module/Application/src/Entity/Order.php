@@ -326,7 +326,7 @@ class Order {
 
     public static function getIntroLink($orderId)
     {
-        return "<a href='/order/view/{$orderId}' target=_blank>{$orderId}</a>";        
+        return "<a href='/order/view/{$orderId}' target='_blank'>{$orderId}</a>";        
     }
     
     public function getIdLink() 

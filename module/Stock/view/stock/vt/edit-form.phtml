@@ -29,7 +29,7 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'С�
 $form->prepare();
 
 $docName = 'Новый';
-$orderDocName = '№ '.$order->getAplId().' от  '.date('d.m.Y', strtotime($order->getDateOper()));
+$orderDocName = '№ '.$order->getIntroLink().' от  '.date('d.m.Y', strtotime($order->getDateOper()));
 if ($vt){
     $docName = '№ '.$vt->getId().' от  '.date('d.m.Y', strtotime($vt->getDocDate()));
 }
@@ -115,7 +115,7 @@ if ($vt){
                             <thead>
                                 <tr>
                                      <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                                     <th data-field="good.code" data-type="numeric">Артикул</th>
+                                     <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
                                      <th data-field="good.producer.name" data-type="numeric">Производитель</th>
                                      <th data-field="good.name" data-type="numeric">Наименование</th>
                                      <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
@@ -286,6 +286,16 @@ if ($vt){
         
         return params;
     }
+    
+    function goodFormatter(value, row){
+        var url = '/goods/view/'+row.good.id;
+        btn = '<nobr><a';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-link btn-xs" target="_blank">';
+        btn += '<span class="glyphicon glyphicon-link"></span>';
+        btn += '</a>'+value+'</nobr>';
+        return btn;
+    }    
     
     function pgActiveFormatter(value, row){
         var url = '/vt/good-edit-form/';
