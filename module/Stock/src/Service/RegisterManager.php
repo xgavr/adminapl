@@ -85,6 +85,9 @@ class RegisterManager
      * @var \Application\Service\OrderManager
      */
     private $orderManager;
+    
+    
+    private $meDate = '2022-01-31';
 
     /**
      * Constructs the service.
@@ -136,14 +139,14 @@ class RegisterManager
      */
     private function oldOt($order)
     {
-        if ($order->getDateOper() <= '2015-01-31'){
+        if ($order->getDateOper() <= $this->meDate){
             $bids = $this->entityManager->getRepository(Bid::class)
                     ->findBy(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
             if (count($bids)){
                 $otData = [
                     'apl_id' => 0,
                     'doc_date' => date('Y-m-d', strtotime($order->getDateOper(), '-1 days')),
-                    'comment' => "Дооприходование для заказа {$order->getId()} раньше 2013-12-15",
+                    'comment' => "Дооприходование для заказа {$order->getId()} раньше {$this->meDate}",
                     'status_ex' => Ot::STATUS_EX_APL, 
                     'status' => Ot::STATUS_INVENTORY,
                     'office' => $order->getOffice(),
@@ -158,6 +161,50 @@ class RegisterManager
                         'quantity' => $bid->getNum(),
                         'amount' => $bid->getNum()*$bid->getPrice(),
                         'good_id' => $bid->getGood()->getId(),
+                    ];
+
+                    $this->otManager->addOtGood($ot->getId(), $otgGoodData, $i);
+                    $i++;
+                }
+                
+                $this->otManager->updateOtAmount($ot);
+                
+                return $ot;
+            }                
+        }
+        
+        return;
+    }
+    
+    /**
+     * Добавить оприходование раньше 2013-12-15
+     * @param Pt $pt
+     * @return Ot
+     */
+    private function oldOtPt($order)
+    {
+        if ($order->getDateOper() <= $this->meDate){
+            $ptGoods = $this->entityManager->getRepository(PtGood::class)
+                    ->findBy(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
+            if (count($ptGoods)){
+                $otData = [
+                    'apl_id' => 0,
+                    'doc_date' => date('Y-m-d', strtotime($pt->getDocDate(), '-1 days')),
+                    'comment' => "Дооприходование для перемещения {$pt->getId()} раньше {$this->meDate}",
+                    'status_ex' => Ot::STATUS_EX_APL, 
+                    'status' => Ot::STATUS_INVENTORY,
+                    'office' => $pt->getOffice(),
+                    'company' => $pt->getCompany(),
+                ];
+
+                $ot = $this->otManager->addOt($otData);
+                
+                $i = 1;
+                foreach ($ptGoods as $ptGood){
+                    $otgGoodData = [
+                        'quantity' => $ptGood->getQuantity(),
+                        'amount' => $ptGood->getAmount(),
+                        'good_id' => $ptGood->getGood()->getId(),
                     ];
 
                     $this->otManager->addOtGood($ot->getId(), $otgGoodData, $i);
@@ -220,6 +267,15 @@ class RegisterManager
                         $takeNo = $this->entityManager->getRepository(PtGood::class)
                                 ->count(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
                         $flag = $takeNo == 0;
+                        if (!$flag){
+                            $ot = $this->oldOtPt($pt);
+                            if ($ot){
+                                $otRegister = $this->entityManager->getRepository(Register::class)
+                                        ->findOneBy(['docType' => Movement::DOC_OT, 'docId' => $ot->getId()]);
+                                $this->docActualize($otRegister);
+                                $flag = $this->docActualize($register);
+                            }
+                        }
                     }    
                 }
                 break;
