@@ -525,7 +525,7 @@
     
     function movementFormatter(value, row){
         switch(row.docType){
-            case '<?= Movement::DOC_ORDER?>': return "<a href='/order/view/'"+row.docId+" target=_blank>Заказ №"+row.docId+"</a>";
+            case '<?= Movement::DOC_ORDER?>': return "<a href='/order/view/"+row.docId+"' target='_blank'>Заказ №"+row.docId+"</a>";
             default: return value;            
         }
         
