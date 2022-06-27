@@ -104,7 +104,7 @@ class PtManager
                             ->findOneByDocKey($base['baseKey']);
                     
                     $quantity = min($base['rest'], $write);
-                    $amount = $quantity*$stGood->getAmount()/$stGood->getQuantity();
+                    $amount = $quantity*$ptGood->getAmount()/$ptGood->getQuantity();
                     
                     $data = [
                         'doc_key' => $pt->getLogKey(),
