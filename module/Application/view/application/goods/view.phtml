@@ -526,7 +526,7 @@
     
     function docFormatter(docType, docId, docKey){
         switch(docType){
-            case '<?= Movement::DOC_ORDER?>': return "<a href='/order/view/"+docId+"' target='_blank'>Заказ №"+docId+"</a>";
+            case '<?= Movement::DOC_ORDER?>': return "<a href='/order/intro/"+docId+"' target='_blank'>Заказ №"+docId+"</a>";
             default: return docKey;            
         }
     }
