@@ -265,7 +265,7 @@ class OrderManager
                         'base_id' => $movement->getBaseId(),
                         'doc_row_key' => $bid->getRowKey(),
                         'doc_row_no' => $bid->getRowNo(),
-                        'date_oper' => date('Y-m-d 21:00:00', strtotime($order->getDocDate())),
+                        'date_oper' => date('Y-m-d 22:00:00', strtotime($order->getDocDate())),
                         'status' => Movement::getStatusFromOrder($order),
                         'quantity' => -$quantity,
                         'amount' => -$amount,
