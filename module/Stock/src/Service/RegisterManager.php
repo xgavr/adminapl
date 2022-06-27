@@ -136,7 +136,7 @@ class RegisterManager
      */
     private function oldOt($order)
     {
-        if ($order->getDateOper() <= '2014-12-31'){
+        if ($order->getDateOper() <= '2015-01-31'){
             $bids = $this->entityManager->getRepository(Bid::class)
                     ->findBy(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
             if (count($bids)){
