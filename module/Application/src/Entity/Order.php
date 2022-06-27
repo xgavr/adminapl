@@ -324,6 +324,11 @@ class Order {
         return $this->id;        
     }
 
+    /**
+     * Ссылка на интро
+     * @param integer $orderId
+     * @return string
+     */
     public static function getIntroLink($orderId)
     {
         return "<a href='/order/intro/{$orderId}' target='_blank'>{$orderId}</a>";        
