@@ -78,56 +78,16 @@
     </div>
 </div>    
 
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
+
 <script type="text/javascript">
-    var table = $('#table'),
-        ok = $('#ok');
+    var $table = $('#table'),
+        $ok = $('#ok');
     
     function refreshTable(){
-        table.bootstrapTable('refresh');
+        $table.bootstrapTable('refresh');
     }
 
-    $(function () {
-        $(".inputclear").click(function(){
-            $("#searchinput").val('');
-            table.bootstrapTable('refresh');
-        });
-
-        ok.click(function () {
-            table.bootstrapTable('refresh');
-        });
-        $(document).on('click', '.st-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'stModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.st-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
-            if (uniqueId){
-                var row = $('#stgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
-                url = url+'?'+$.param(row);
-            }    
-            showFormDialog({
-                id: 'stGoodModal',
-                url: url,
-                zIndex: 9999
-            });
-        });  
-        
-        $(document).on('change', '#officeSelect', function (e) {
-            refreshTable();
-        });
-        $(document).on('change', '#yearSelect', function (e) {
-            refreshTable();
-        });
-        $(document).on('change', '#monthSelect', function (e) {
-            refreshTable();
-        });
-    });
-    
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();

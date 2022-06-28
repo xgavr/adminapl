@@ -81,6 +81,8 @@
     </div>
 </div>    
 
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
+
 <script type="text/javascript">
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
@@ -98,49 +100,9 @@
         return {classes: retired};
     }
     
-    var table = $('#table'),
-        ok = $('#ok');
-    
-    $(function () {
-        ok.click(function () {
-            refreshTable();
-        });
+    var $table = $('#table'),
+        $ok = $('#ok');
         
-        $(".inputclear").click(function(){
-            $("#searchinput").val('');
-            refreshTable();
-        });
-
-        $(document).on('click', '.ot-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'otModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.ot-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
-            if (uniqueId){
-                var row = $('#otgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
-                url = url+'?'+$.param(row);
-            }    
-            showFormDialog({
-                id: 'otGoodModal',
-                url: url,
-                zIndex: 9999
-            });
-        });  
-        
-        $(document).on('change', '#officeSelect', function (e) {
-            refreshTable();
-        });
-        $(document).on('change', '#monthSelect', function (e) {
-            refreshTable();
-        });
-    });
-    
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();

@@ -101,54 +101,18 @@
     </div>
 </div>    
 
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
+
 <script type="text/javascript">
-    var table = $('#vtptable'),
-       ok = $('#ok');
+    var $table = $('#vtptable'),
+       $ok = $('#ok');
 
     function refreshTable(){
-        table.bootstrapTable('refresh');
+        $table.bootstrapTable('refresh');
     }
 
     
     $(function () {
-        ok.click(function () {
-            table.bootstrapTable('refresh');
-        });
-        $(".inputclear").click(function(){
-            $("#searchinput").val('');
-            table.bootstrapTable('refresh');
-        });
-        $(document).on('click', '.vtp-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'vtpModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.vtp-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
-            if (uniqueId){
-                var row = $('#vtpgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
-                url = url+'?'+$.param(row);
-            }    
-            showFormDialog({
-                id: 'vtpGoodModal',
-                url: url,
-                zIndex: 9999
-            });
-        });  
-        
-        $(document).on('change', '#supplierSelect', function (e) {
-            refreshTable();
-        });
-        $(document).on('change', '#officeSelect', function (e) {
-            refreshTable();
-        });
-        $(document).on('change', '#monthSelect', function (e) {
-            refreshTable();
-        });
         $(document).on('change', '#statusDocSelect', function (e) {
             refreshTable();
         });

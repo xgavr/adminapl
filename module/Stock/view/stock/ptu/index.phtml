@@ -95,89 +95,16 @@
     </div>
 </div>    
 
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
+
 <script type="text/javascript">
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
 
-    var table = $('#table'),
-        ok = $('#ok');
-    
-    $(function () {
-        ok.click(function () {
-            refreshTable();
-        });
-        $(".inputclear").click(function(){
-            $("#searchinput").val('');
-            refreshTable();
-        });
-        $(document).on('click', '.ptu-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'ptuModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.ptu-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
-            if (uniqueId){
-                var row = $('#ptugoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
-                url = url+'?'+$.param(row);
-            }    
-            showFormDialog({
-                id: 'ptuGoodModal',
-                url: url,
-                zIndex: 9999
-            });
-        });  
+    var $table = $('#table'),
+        $ok = $('#ok');
         
-        $(document).on('click', '.vtp-index-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'vtpIndexModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.vtp-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'vtpModal',
-                url: url,
-                width: '1440px',
-                zIndex: 9990
-            });
-        });  
-        $(document).on('click', '.vtp-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
-            if (uniqueId){
-                var row = $('#vtpgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
-                url = url+'?'+$.param(row);
-            }    
-            showFormDialog({
-                id: 'vtpGoodModal',
-                url: url,
-                zIndex: 9999
-            });
-        });  
-        
-        $(document).on('change', '#supplierSelect', function (e) {
-            refreshTable();
-        });
-        $(document).on('change', '#officeSelect', function (e) {
-            refreshTable();
-        });
-//        $(document).on('change', '#yearSelect', function (e) {
-//            refreshTable();
-//        });
-        $(document).on('change', '#monthSelect', function (e) {
-            refreshTable();
-        });
-    });
-    
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();

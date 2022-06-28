@@ -74,7 +74,10 @@ $this->pageBreadcrumbs()->setItems([
     </div>
 </div>
 
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
+
 <script type="text/javascript">
+    var $ok = $('#ok');
 
     $(window).on('load', function() {
         $('.editable').editable();
@@ -97,15 +100,16 @@ $this->pageBreadcrumbs()->setItems([
         }
     });
 
-    var ok = $('#ok');
 
     $(function () {
-        ok.click(function () {
+        $ok.click(function () {
             table.bootstrapTable('refresh');
         });
+
         $('#statusSelect').change(function (){
             $('#table').bootstrapTable('refresh');
         })
+        
         $(document).on('click', '.error-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
@@ -113,95 +117,7 @@ $this->pageBreadcrumbs()->setItems([
                 url: url,
                 width: '1440px'
             });
-        });
-        
-        $(document).on('click', '.ptu-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'ptuModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.ptu-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
-            if (uniqueId){
-                var row = $('#ptugoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
-                url = url+'?'+$.param(row);
-            }    
-            showFormDialog({
-                id: 'ptuGoodModal',
-                url: url,
-                zIndex: 9999
-            });
-        });  
-
-        $(document).on('click', '.pt-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'ptModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.pt-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
-            if (uniqueId){
-                var row = $('#ptgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
-                url = url+'?'+$.param(row);
-            }    
-            showFormDialog({
-                id: 'ptGoodModal',
-                url: url,
-                zIndex: 9999
-            });
-        });  
-        
-        $(document).on('click', '.vt-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'vtModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.vt-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
-            if (uniqueId){
-                var row = $('#vtgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
-                url = url+'?'+$.param(row);
-            }    
-            showFormDialog({
-                id: 'vtGoodModal',
-                url: url,
-                zIndex: 9999
-            });
-        });  
-        
-        $(document).on('click', '.st-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'stModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.st-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
-            if (uniqueId){
-                var row = $('#stgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
-                url = url+'?'+$.param(row);
-            }    
-            showFormDialog({
-                id: 'stGoodModal',
-                url: url,
-                zIndex: 9999
-            });
-        });  
+        });        
     });    
     
     function tabQueryParams(tab, params) {

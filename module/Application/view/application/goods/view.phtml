@@ -401,7 +401,11 @@
     </div>
 </div>
 
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
+
 <script type="text/javascript">
+    var $ok = $('#ok');
+    
     $(window).on('load', function() {
         $('.nav-tabs a:first').tab('show');
         $('.editable').editable();
@@ -529,34 +533,20 @@
             case '<?= Movement::DOC_ORDER?>': return "<a href='/order/intro/"+docId+"' target='_blank'>Заказ №"+docId+"</a>";
             case '<?= Movement::DOC_VT?>': 
                         return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Взврат покупателя №"+docId+"</a>";
+            case '<?= Movement::DOC_PTU?>': 
+                        return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a>";
+            case '<?= Movement::DOC_OT?>': 
+                        return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
+            case '<?= Movement::DOC_PT?>': 
+                        return "<a href='#' class='pt-modal-show' modal-url='/pt/edit-form/"+docId+"'>Перемещение №"+docId+"</a>";
+            case '<?= Movement::DOC_ST?>': 
+                        return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
+            case '<?= Movement::DOC_VTP?>': 
+                        return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
             default: return docKey;            
         }
     }
-    
-    $(document).on('click', '.vt-modal-show', function (e) {
-        var url = $(e.currentTarget).attr('modal-url');
-        showFormDialog({
-            id: 'vtModal',
-            url: url,
-            width: '1440px'
-        });
-    });  
-    
-    $(document).on('click', '.vt-good-modal-show', function (e) {
-        var url = $(e.currentTarget).attr('modal-url');
-        var uniqueId = $(e.currentTarget).attr('unique-id');
-        if (uniqueId){
-            var row = $('#vtgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
-            url = url+'?'+$.param(row);
-        }    
-        showFormDialog({
-            id: 'vtGoodModal',
-            url: url,
-            zIndex: 9999
-        });
-    });  
-
-    
+        
     function movementFormatter(value, row){
         return docFormatter(row.docType, row.docId, value);
     }
