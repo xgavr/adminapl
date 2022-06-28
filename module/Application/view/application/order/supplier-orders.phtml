@@ -14,7 +14,7 @@
     
         <tr>
             <td>
-                <?= $supplierOrder->getGood()->getCode().' '.$supplierOrder->getProducer()->getName() ?>
+                <?= $supplierOrder->getGood()->getCode().' '.$supplierOrder->getGood()->getProducer()->getName() ?>
             </td>
             <td align="right">
                 <?= $supplierOrder->getQuantity() ?>                
