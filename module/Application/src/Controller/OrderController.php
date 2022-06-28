@@ -23,6 +23,7 @@ use Application\Entity\GoodSupplier;
 use Application\Entity\Selection;
 use Application\Form\SelectionForm;
 use Application\Entity\Oem;
+use Application\Entity\SupplierOrder;
 
 class OrderController extends AbstractActionController
 {
@@ -549,6 +550,25 @@ class OrderController extends AbstractActionController
         ]);        
     }   
 
+    public function supplierOrdersAction()
+    {                
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($orderId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $supplierOrders = $this->entityManager->getRepository(SupplierOrder::class)
+                ->findByOrder($orderId);
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'supplierOrders' => $supplierOrders,
+        ]);        
+    }   
+    
     public function goodOemAction()
     {                
         $goodId = (int)$this->params()->fromRoute('id', -1);

@@ -1,0 +1,35 @@
+<?php
+?>
+<table class="table table-striped table-condensed">
+
+   <tr>
+        <th>Товар</th>
+        <th>Количество</th>
+        <th>Поставщик</th>
+        <th>Заказно</th>
+        <th>Получено</th>
+    </tr>
+    
+    <?php foreach ($supplierOrders as $supplierOrder): ?>
+    
+        <tr>
+            <td>
+                <?= $supplierOrder->getGood()->getCode().' '.$supplierOrder->getProducer()->getName() ?>
+            </td>
+            <td align="right">
+                <?= $supplierOrder->getQuantity() ?>                
+            </td>
+            <td>
+                <?= $supplierOrder->getSupplier()->getName() ?>
+            </td>
+            <td class="text-muted small">
+                <?= $supplierOrder->getStatusOrderAsString() ?>
+            </td>
+            <td class="text-muted small">
+                <?= $supplierOrder->getStatusAsString() ?>
+            </td>
+        </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>

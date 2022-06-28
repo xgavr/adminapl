@@ -360,6 +360,11 @@ $form->prepare();
                                 <span class="glyphicon" aria-hidden="true">Подбор</span>
                             </button>
                         </div>    
+                        <div class="form-group form-group-sm">
+                            <button type="button" class="btn btn-default btn-sm" onclick="supplierOrders()">
+                                <span class="glyphicon" aria-hidden="true">Заказать</span>
+                            </button>
+                        </div>    
                     </div>
                 </div>
                 <?php echo $this->partial('/application/order/selection-partial', []); ?>
@@ -1055,6 +1060,24 @@ $form->prepare();
                 }
             }); 
         });    
+    }
+     
+    function supplierOrders(){
+        let orderId = $('#orderId').val();
+        if (orderId){
+            $.get( '/order/supplier-orders/'+orderId, function( data ) {
+                bootbox.dialog({
+                    title: 'Заказано у поставщиков',
+                    message: data,
+                    buttons: {
+                        ok: {
+                            label: "OK",
+                            className: 'btn-info'
+                        }                    
+                    }
+                }); 
+            });    
+        }    
     }
      
     $( document ).ready(function() {
