@@ -407,90 +407,96 @@ $form->prepare();
                 </table>
             </div>
         </div>    
-        <hr/>
-        <div class="row">
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('dateShipment')); ?>
-                    <?= $this->formElement($form->get('dateShipment')); ?>
-                    <?= $this->formElementErrors($form->get('dateShipment')); ?>                  
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Доставка</h3>
             </div>
-            <div class="col-xs-1">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('timeShipment')); ?>
-                    <?= $this->formElement($form->get('timeShipment')); ?>
-                    <?= $this->formElementErrors($form->get('timeShipment')); ?>                  
-                </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('dateShipment')); ?>
+                            <?= $this->formElement($form->get('dateShipment')); ?>
+                            <?= $this->formElementErrors($form->get('dateShipment')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-1">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('timeShipment')); ?>
+                            <?= $this->formElement($form->get('timeShipment')); ?>
+                            <?= $this->formElementErrors($form->get('timeShipment')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-3">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('shipping')); ?>
+                            <?= $this->formElement($form->get('shipping')); ?>
+                            <?= $this->formElementErrors($form->get('shipping')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-1">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('shipmentDistance')); ?>
+                            <?= $this->formElement($form->get('shipmentDistance')); ?>
+                            <?= $this->formElementErrors($form->get('shipmentDistance')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-1">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('shipmentTotal')); ?>
+                            <?= $this->formElement($form->get('shipmentTotal')); ?>
+                            <?= $this->formElementErrors($form->get('shipmentTotal')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('courier')); ?>
+                            <?= $this->formElement($form->get('courier')); ?>
+                            <?= $this->formElementErrors($form->get('courier')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('trackNumber')); ?>
+                            <?= $this->formElement($form->get('trackNumber')); ?>
+                            <?= $this->formElementErrors($form->get('trackNumber')); ?>                  
+                        </div>
+                    </div>
+                </div>        
+                <div class="row">
+                    <div class="col-xs-8">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('address')); ?>
+                            <?= $this->formElement($form->get('address')); ?>
+                            <?= $this->formElementErrors($form->get('address')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('phone2')); ?>
+                            <?= $this->formElement($form->get('phone2')); ?>
+                            <?= $this->formElementErrors($form->get('phone2')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('skiper')); ?>
+                            <?= $this->formElement($form->get('skiper')); ?>
+                            <?= $this->formElementErrors($form->get('skiper')); ?>                  
+                        </div>
+                    </div>    
+                </div>        
+                <div class="row">
+                    <div class="col-xs-12">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('infoShipping')); ?>
+                            <?= $this->formElement($form->get('infoShipping')); ?>
+                            <?= $this->formElementErrors($form->get('infoShipping')); ?>                  
+                        </div>
+                    </div>
+                </div>    
             </div>
-            <div class="col-xs-3">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('shipping')); ?>
-                    <?= $this->formElement($form->get('shipping')); ?>
-                    <?= $this->formElementErrors($form->get('shipping')); ?>                  
-                </div>
-            </div>
-            <div class="col-xs-1">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('shipmentDistance')); ?>
-                    <?= $this->formElement($form->get('shipmentDistance')); ?>
-                    <?= $this->formElementErrors($form->get('shipmentDistance')); ?>                  
-                </div>
-            </div>
-            <div class="col-xs-1">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('shipmentTotal')); ?>
-                    <?= $this->formElement($form->get('shipmentTotal')); ?>
-                    <?= $this->formElementErrors($form->get('shipmentTotal')); ?>                  
-                </div>
-            </div>
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('courier')); ?>
-                    <?= $this->formElement($form->get('courier')); ?>
-                    <?= $this->formElementErrors($form->get('courier')); ?>                  
-                </div>
-            </div>
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('trackNumber')); ?>
-                    <?= $this->formElement($form->get('trackNumber')); ?>
-                    <?= $this->formElementErrors($form->get('trackNumber')); ?>                  
-                </div>
-            </div>
-        </div>        
-        <div class="row">
-            <div class="col-xs-8">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('address')); ?>
-                    <?= $this->formElement($form->get('address')); ?>
-                    <?= $this->formElementErrors($form->get('address')); ?>                  
-                </div>
-            </div>
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('phone2')); ?>
-                    <?= $this->formElement($form->get('phone2')); ?>
-                    <?= $this->formElementErrors($form->get('phone2')); ?>                  
-                </div>
-            </div>    
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('skiper')); ?>
-                    <?= $this->formElement($form->get('skiper')); ?>
-                    <?= $this->formElementErrors($form->get('skiper')); ?>                  
-                </div>
-            </div>    
-        </div>        
-        <div class="row">
-            <div class="col-xs-12">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('infoShipping')); ?>
-                    <?= $this->formElement($form->get('infoShipping')); ?>
-                    <?= $this->formElementErrors($form->get('infoShipping')); ?>                  
-                </div>
-            </div>
-        </div>    
+        </div>
         <hr/>
         <div class="row legal">
             <div class="col-xs-3">                        
@@ -794,6 +800,8 @@ $form->prepare();
                     enablePost();
                     if (reload && data.id){
                         window.location.href = '/order/intro/'+data.id;
+                    } else {
+                        $table.bootstrapTable('refresh');
                     }
                 }
                 if (data.error){
