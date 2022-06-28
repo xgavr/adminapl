@@ -163,15 +163,13 @@ class StManager
                             break;
                         }
                     }    
-
-                    if ($write == 0){
-                        $take = StGood::TAKE_OK;
-                    }
-
-                        var_dump($take);
-                    $this->entityManager->getConnection()
-                            ->update('st_good', ['take' => $take], ['id' => $stGood->getId()]);
                 }    
+                if ($write == 0){
+                    $take = StGood::TAKE_OK;
+                }
+
+                $this->entityManager->getConnection()
+                        ->update('st_good', ['take' => $take], ['id' => $stGood->getId()]);
             }    
         }
         
