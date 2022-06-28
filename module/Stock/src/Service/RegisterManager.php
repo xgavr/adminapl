@@ -1,17 +1,6 @@
 <?php
 namespace Stock\Service;
 
-use Admin\Entity\Log;
-use Stock\Entity\Mutual;
-use Stock\Entity\Retail;
-use Stock\Entity\Revise;
-use Company\Entity\Legal;
-use Application\Entity\Phone;
-use Application\Entity\Contact;
-use Company\Entity\Contract;
-use Application\Entity\Supplier;
-use Company\Entity\Office;
-use User\Filter\PhoneFilter;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
 use Application\Entity\Order;

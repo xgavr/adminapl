@@ -159,6 +159,7 @@ class StManager
                         }                    
 
                         $write -= $quantity;
+                        var_dump($write);
                         if ($write <= 0){
                             break;
                         }
