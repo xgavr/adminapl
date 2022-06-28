@@ -1888,4 +1888,22 @@ class ProcessingController extends AbstractActionController
         );        
     }    
     
+    /**
+     * Обновить заказы поставщикам
+     * @return JsonModel
+     */
+    public function updateSupplierOrderAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['ptu'] == 1){
+
+            $this->aplDocService->unloadSuppliersOrder();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }    
+    
 }

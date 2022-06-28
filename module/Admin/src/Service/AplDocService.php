@@ -40,6 +40,7 @@ use Laminas\Validator\Date;
 use Stock\Entity\Revise;
 use Stock\Entity\PtuGood;
 use Stock\Entity\VtpGood;
+use Application\Entity\SupplierOrder;
 
 
 /**
@@ -127,10 +128,16 @@ class AplDocService {
      */
     private $orderManager;  
     
+    /**
+     * Supplier Order manager.
+     * @var \Application\Service\SupplierOrderManager
+     */
+    private $supplierOrderManager;  
+
     public function __construct($entityManager, $adminManager, $ptuManager, 
             $legalManager, $producerManager, $assemblyManager, $vtpManager, 
             $otManager, $stManager, $ptManager, $vtManager, $reviseManager,
-            $orderManager)
+            $orderManager, $supplierOrderManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
@@ -145,6 +152,7 @@ class AplDocService {
         $this->assemblyManager = $assemblyManager;
         $this->reviseManager = $reviseManager;
         $this->orderManager = $orderManager;
+        $this->supplierOrderManager = $supplierOrderManager;
     }
     
     protected function aplApi()
@@ -1720,6 +1728,83 @@ class AplDocService {
         return $result;        
     }
     
+    /**
+     * Обновить заказ поставщику
+     * 
+     * @param array $data
+     * @retrun SupplierOrder
+     */
+    private function updateSupplierOrder($data)
+    {
+//        var_dump($data); exit;
+        $supplierOrder = $this->entityManager->getRepository(SupplierOrder::class)
+                ->findOneByAplId($data['id']);
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->findOneByAplId($data['sf']);
+        $order = $this->entityManager->getRepository(Order::class)
+                ->findOneByAplId($data['comment']);
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneByAplId($data['name']);
+        if (!empty($good) && !empty($order) && !empty($supplier)){
+            $upd = [
+                'aplId' => $data['id'],
+                'good' => $good,
+                'order' => $order,
+                'supplier' => $supplier,
+                'quantity' => $data['sort'],
+                'statusOrder' => ($data['type'] == 50) ? SupplierOrder::STATUS_ORDER_ORDERED:SupplierOrder::STATUS_ORDER_NEW,
+                'status' => ($data['publish'] == 150) ? SupplierOrder::STATUS_DOC:SupplierOrder::STATUS_NEW,
+            ];
+//            var_dump($order->getId()); exit;
+            if (!$supplierOrder){
+                $this->supplierOrderManager->addSupplierOrder($upd);
+            } else {
+                $this->supplierOrderManager->updateSupplierOrder($supplierOrder, $upd);            
+            }
+        }
+       
+       return;
+    }
+        
+    /**
+     * Загрузить заказы поставщикам из Апл
+     * @return 
+     */
+    public function unloadSuppliersOrder()
+    {
+        $url = $this->aplApi().'unload-suppliers-order?api='.$this->aplApiKey();
+        
+        $post = [];
+
+        $client = new Client();
+        $client->setUri($url);
+        $client->setMethod('POST');
+        $client->setOptions(['timeout' => 30]);
+        $client->setParameterPost($post);
+
+        $response = $client->send();
+        $body = $response->getBody();
+
+//        var_dump($body); exit;
+        try{
+            $result = json_decode($body, true);
+        } catch (\Laminas\Json\Exception\RuntimeException $ex) {
+            var_dump($ex->getMessage());
+            var_dump($body);
+            exit;
+        }
+//        var_dump($result); exit;
+
+        if (is_array($result)){   
+            foreach ($result as $data){
+                $this->updateSupplierOrder($data);
+            }
+        } else {            
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Загрузить документ из Апл
      * @param int $start

@@ -40,14 +40,15 @@ class SupplierOrderManager
     public function addSupplierOrder($data)
     {
         $supplierOrder = new SupplierOrder();
+        $supplierOrder->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
         $supplierOrder->setComment(!empty($data['comment']) ? $data['comment'] : null);
         $supplierOrder->setDateCreated(date('Y-m-d H:i:s'));
-        $supplierOrder->setGood($data['good_id']);
-        $supplierOrder->setOrder($data['order_id']);
+        $supplierOrder->setGood($data['good']);
+        $supplierOrder->setOrder($data['order']);
         $supplierOrder->setQuantity(!empty($data['quantity']) ? $data['quantity'] : 0);
         $supplierOrder->setStatus(!empty($data['status']) ? $data['status'] :SupplierOrder::STATUS_NEW);
         $supplierOrder->setStatusOrder(!empty($data['statusOrder']) ? $data['statusOrder'] : SupplierOrder::STATUS_ORDER_NEW);
-        $supplierOrder->setSupplier($data['supplier_id']);
+        $supplierOrder->setSupplier($data['supplier']);
         
         $this->entityManager->persist($supplierOrder);
         $this->entityManager->flush($supplierOrder);
@@ -63,13 +64,14 @@ class SupplierOrderManager
      */
     public function updateSupplierOrder($supplierOrder, $data)
     {
+        $supplierOrder->setAplId(!empty($data['aplId']) ? $data['aplId'] : null);
         $supplierOrder->setComment(!empty($data['comment']) ? $data['comment'] : null);
-        $supplierOrder->setGood($data['good_id']);
-        $supplierOrder->setOrder($data['order_id']);
+        $supplierOrder->setGood($data['good']);
+        $supplierOrder->setOrder($data['order']);
         $supplierOrder->setQuantity(!empty($data['quantity']) ? $data['quantity'] : 0);
         $supplierOrder->setStatus(!empty($data['status']) ? $data['status'] :SupplierOrder::STATUS_NEW);
         $supplierOrder->setStatusOrder(!empty($data['statusOrder']) ? $data['statusOrder'] : SupplierOrder::STATUS_ORDER_NEW);
-        $supplierOrder->setSupplier($data['supplier_id']);
+        $supplierOrder->setSupplier($data['supplier']);
         
         $this->entityManager->persist($supplierOrder);
         $this->entityManager->flush($supplierOrder);

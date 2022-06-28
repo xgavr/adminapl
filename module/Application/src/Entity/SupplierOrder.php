@@ -36,6 +36,11 @@ class SupplierOrder {
     protected $id;
     
     /**
+     * @ORM\Column(name="apl_id")   
+     */
+    protected $aplId;    
+
+    /**
      * @ORM\Column(name="status")   
      */
     protected $status;    
@@ -89,6 +94,16 @@ class SupplierOrder {
         $this->id = $id;
     }     
     
+    public function getAplId() 
+    {
+        return $this->aplId;
+    }
+
+    public function setAplId($aplId) 
+    {
+        $this->aplId = $aplId;
+    }     
+    
     public function setComment($comment) 
     {
         $this->comment = $comment;
@@ -106,7 +121,7 @@ class SupplierOrder {
 
     public function setQuantity($quantity) 
     {
-        $this->quantity = $quantuty;
+        $this->quantity = $quantity;
     }     
     
     /**

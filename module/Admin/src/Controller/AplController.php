@@ -794,6 +794,15 @@ class AplController extends AbstractActionController
         ]);
     }    
     
+    public function unloadSuppliersOrderAction()
+    {                
+        $this->aplDocService->unloadSuppliersOrder();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+
     public function unloadCommentAction()
     {                
         $this->aplOrderService->unloadComment();

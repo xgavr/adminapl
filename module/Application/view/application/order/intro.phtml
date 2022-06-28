@@ -497,164 +497,170 @@ $form->prepare();
                 </div>    
             </div>
         </div>
-        <hr/>
-        <div class="row legal">
-            <div class="col-xs-3">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('legalInn')); ?>
-                    <span class="input-group">
-                        <?= $this->formElement($form->get('legalInn')); ?>
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-sm inn-fill" target-group="legal" data-toggle="tooltip" title="Заполнить по ИНН">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                            <button type="button" class="btn btn-default btn-sm inn-clear" target-group="legal" data-toggle="tooltip" title="Очистить">
-                                <span class="glyphicon glyphicon-remove-circle"></span>
-                            </button>
-                        </span>    
-                    </span>    
-                    <?= $this->formElementErrors($form->get('legalInn')); ?>                  
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Юридическое лицо</h3>
             </div>
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('legalKpp')); ?>
-                    <?= $this->formElement($form->get('legalKpp')); ?>
-                    <?= $this->formElementErrors($form->get('legalKpp')); ?>                  
-                </div>
-            </div>    
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('legalOgrn')); ?>
-                    <?= $this->formElement($form->get('legalOgrn')); ?>
-                    <?= $this->formElementErrors($form->get('legalOgrn')); ?>                  
-                </div>
-            </div>    
-            <div class="col-xs-5">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('legalName')); ?>
-                    <?= $this->formElement($form->get('legalName')); ?>
-                    <?= $this->formElementErrors($form->get('legalName')); ?>                  
-                </div>
-            </div>    
-        </div>            
-        <div class="row">
-            <div class="col-xs-12">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('legalAddress')); ?>
-                    <?= $this->formElement($form->get('legalAddress')); ?>
-                    <?= $this->formElementErrors($form->get('legalAddress')); ?>                  
-                </div>
-            </div>
-        </div>    
-        <div class="row">
-            <div class="col-xs-12">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('invoiceInfo')); ?>
-                    <?= $this->formElement($form->get('invoiceInfo')); ?>
-                    <?= $this->formElementErrors($form->get('invoiceInfo')); ?>                  
-                </div>
-            </div>
-        </div>    
-        <hr/>
-        <div class="row bank-account">
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('rs')); ?>
-                    <?= $this->formElement($form->get('rs')); ?>
-                    <?= $this->formElementErrors($form->get('rs')); ?>                  
-                </div>
-            </div>
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('bik')); ?>
-                    <div class="input-group">
-                        <?= $this->formElement($form->get('bik')); ?>
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-sm bik-fill" data-toggle="tooltip" target-name="bik" title="Заполнить из справочника БИК">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                            <button type="button" class="btn btn-default btn-sm bik-clear" data-toggle="tooltip" title="Очистить">
-                                <span class="glyphicon glyphicon-remove-circle"></span>
-                            </button>
-                        </span>    
+            <div class="panel-body">
+                <div class="row legal">
+                    <div class="col-xs-3">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('legalInn')); ?>
+                            <span class="input-group">
+                                <?= $this->formElement($form->get('legalInn')); ?>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default btn-sm inn-fill" target-group="legal" data-toggle="tooltip" title="Заполнить по ИНН">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-sm inn-clear" target-group="legal" data-toggle="tooltip" title="Очистить">
+                                        <span class="glyphicon glyphicon-remove-circle"></span>
+                                    </button>
+                                </span>    
+                            </span>    
+                            <?= $this->formElementErrors($form->get('legalInn')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('legalKpp')); ?>
+                            <?= $this->formElement($form->get('legalKpp')); ?>
+                            <?= $this->formElementErrors($form->get('legalKpp')); ?>                  
+                        </div>
                     </div>    
-                    <?= $this->formElementErrors($form->get('bik')); ?>                  
-                </div>
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('legalOgrn')); ?>
+                            <?= $this->formElement($form->get('legalOgrn')); ?>
+                            <?= $this->formElementErrors($form->get('legalOgrn')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-5">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('legalName')); ?>
+                            <?= $this->formElement($form->get('legalName')); ?>
+                            <?= $this->formElementErrors($form->get('legalName')); ?>                  
+                        </div>
+                    </div>    
+                </div>            
+                <div class="row">
+                    <div class="col-xs-12">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('legalAddress')); ?>
+                            <?= $this->formElement($form->get('legalAddress')); ?>
+                            <?= $this->formElementErrors($form->get('legalAddress')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-xs-12">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('invoiceInfo')); ?>
+                            <?= $this->formElement($form->get('invoiceInfo')); ?>
+                            <?= $this->formElementErrors($form->get('invoiceInfo')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+                <hr/>
+                <div class="row bank-account">
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('rs')); ?>
+                            <?= $this->formElement($form->get('rs')); ?>
+                            <?= $this->formElementErrors($form->get('rs')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('bik')); ?>
+                            <div class="input-group">
+                                <?= $this->formElement($form->get('bik')); ?>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default btn-sm bik-fill" data-toggle="tooltip" target-name="bik" title="Заполнить из справочника БИК">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-sm bik-clear" data-toggle="tooltip" title="Очистить">
+                                        <span class="glyphicon glyphicon-remove-circle"></span>
+                                    </button>
+                                </span>    
+                            </div>    
+                            <?= $this->formElementErrors($form->get('bik')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-4">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('bankName')); ?>
+                            <?= $this->formElement($form->get('bankName')); ?>
+                            <?= $this->formElementErrors($form->get('bankName')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('bankCity')); ?>
+                            <?= $this->formElement($form->get('bankCity')); ?>
+                            <?= $this->formElementErrors($form->get('bankCity')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('ks')); ?>
+                            <?= $this->formElement($form->get('ks')); ?>
+                            <?= $this->formElementErrors($form->get('ks')); ?>                  
+                        </div>
+                    </div>    
+                </div>          
+                <hr/>
+                <div class="row recipient">
+                    <div class="col-xs-3">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('recipientInn')); ?>
+                            <span class="input-group">
+                                <?= $this->formElement($form->get('recipientInn')); ?>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default btn-sm inn-fill" target-group="recipient" data-toggle="tooltip" title="Заполнить по ИНН">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-sm inn-clear" target-group="recipient" data-toggle="tooltip" title="Очистить">
+                                        <span class="glyphicon glyphicon-remove-circle"></span>
+                                    </button>
+                                </span>    
+                            </span>    
+                            <?= $this->formElementErrors($form->get('recipientInn')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('recipientKpp')); ?>
+                            <?= $this->formElement($form->get('recipientKpp')); ?>
+                            <?= $this->formElementErrors($form->get('recipientKpp')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('recipientOgrn')); ?>
+                            <?= $this->formElement($form->get('recipientOgrn')); ?>
+                            <?= $this->formElementErrors($form->get('recipientOgrn')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-5">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('recipientName')); ?>
+                            <?= $this->formElement($form->get('recipientName')); ?>
+                            <?= $this->formElementErrors($form->get('recipientName')); ?>                  
+                        </div>
+                    </div>    
+                </div>            
+                <div class="row">
+                    <div class="col-xs-12">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('recipientAddress')); ?>
+                            <?= $this->formElement($form->get('recipientAddress')); ?>
+                            <?= $this->formElementErrors($form->get('recipientAddress')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+                <?php echo $this->partial('/company/legal/bik-inn-partial', []); ?>
             </div>    
-            <div class="col-xs-4">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('bankName')); ?>
-                    <?= $this->formElement($form->get('bankName')); ?>
-                    <?= $this->formElementErrors($form->get('bankName')); ?>                  
-                </div>
-            </div>    
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('bankCity')); ?>
-                    <?= $this->formElement($form->get('bankCity')); ?>
-                    <?= $this->formElementErrors($form->get('bankCity')); ?>                  
-                </div>
-            </div>    
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('ks')); ?>
-                    <?= $this->formElement($form->get('ks')); ?>
-                    <?= $this->formElementErrors($form->get('ks')); ?>                  
-                </div>
-            </div>    
-        </div>          
-        <hr/>
-        <div class="row recipient">
-            <div class="col-xs-3">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('recipientInn')); ?>
-                    <span class="input-group">
-                        <?= $this->formElement($form->get('recipientInn')); ?>
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-sm inn-fill" target-group="recipient" data-toggle="tooltip" title="Заполнить по ИНН">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                            <button type="button" class="btn btn-default btn-sm inn-clear" target-group="recipient" data-toggle="tooltip" title="Очистить">
-                                <span class="glyphicon glyphicon-remove-circle"></span>
-                            </button>
-                        </span>    
-                    </span>    
-                    <?= $this->formElementErrors($form->get('recipientInn')); ?>                  
-                </div>
-            </div>
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('recipientKpp')); ?>
-                    <?= $this->formElement($form->get('recipientKpp')); ?>
-                    <?= $this->formElementErrors($form->get('recipientKpp')); ?>                  
-                </div>
-            </div>    
-            <div class="col-xs-2">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('recipientOgrn')); ?>
-                    <?= $this->formElement($form->get('recipientOgrn')); ?>
-                    <?= $this->formElementErrors($form->get('recipientOgrn')); ?>                  
-                </div>
-            </div>    
-            <div class="col-xs-5">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('recipientName')); ?>
-                    <?= $this->formElement($form->get('recipientName')); ?>
-                    <?= $this->formElementErrors($form->get('recipientName')); ?>                  
-                </div>
-            </div>    
-        </div>            
-        <div class="row">
-            <div class="col-xs-12">                        
-                <div class="form-group form-group-sm">
-                    <?//= $this->formLabel($form->get('recipientAddress')); ?>
-                    <?= $this->formElement($form->get('recipientAddress')); ?>
-                    <?= $this->formElementErrors($form->get('recipientAddress')); ?>                  
-                </div>
-            </div>
         </div>    
-        <?php echo $this->partial('/company/legal/bik-inn-partial', []); ?>
     </div>
     <div class="col-sm-1">
         <div class="list-group" data-spy="affix" data-offset-top="20">        
