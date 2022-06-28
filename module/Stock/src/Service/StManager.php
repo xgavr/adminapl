@@ -159,7 +159,6 @@ class StManager
                         }                    
 
                         $write -= $quantity;
-                        var_dump($write);
                         if ($write <= 0){
                             break;
                         }
@@ -169,6 +168,7 @@ class StManager
                         $take = StGood::TAKE_OK;
                     }
 
+                        var_dump($take);
                     $this->entityManager->getConnection()
                             ->update('st_good', ['take' => $take], ['id' => $stGood->getId()]);
                 }    
