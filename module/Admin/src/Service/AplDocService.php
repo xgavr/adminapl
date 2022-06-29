@@ -1927,7 +1927,7 @@ class AplDocService {
         }    
 
         while (true){
-            if ($this->sendVtp()) {
+            if ($this->sendPt()) {
                 usleep(100);
                 if (time() > $startTime + 840){
                     break;
