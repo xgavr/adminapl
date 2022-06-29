@@ -535,6 +535,7 @@ class AplOrderService {
             'shipping' => $this->findDelivery($office, $data),
             'skiper' => $skiperId,
             'user' => $userId,
+            'office' => $office->getId(),
         ];
         
         $order = $this->entityManager->getRepository(Order::class)

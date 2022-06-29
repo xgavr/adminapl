@@ -1095,6 +1095,11 @@ class OrderManager
             $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
             $order->setStatusEx(Order::STATUS_EX_NO);
 
+            if ($order->getOffice()->getId() != $data['office']){
+                $office = $this->entityManager->getRepository(Office::class)
+                        ->find($data['office']);
+                $order->setOffice($office);        
+            }
             $order->setContactCar($this->findContactCarByOrderData($order->getContact(), $data));
             
             $order->setCourier(null);
@@ -1234,6 +1239,12 @@ class OrderManager
                 'status_account' => Order::STATUS_ACCOUNT_NO,
                 'status_ex' => Order::STATUS_EX_NO,
             ];
+
+            if ($order->getOffice()->getId() != $data['office']){
+                $office = $this->entityManager->getRepository(Office::class)
+                        ->find($data['office']);
+                $upd['office_id'] = $data['office'];        
+            }
 
             $contactCar = $this->findContactCarByOrderData($order->getContact(), $data);
             $upd['contact_car_id'] = ($contactCar) ? $contactCar->getId():null;
