@@ -1490,7 +1490,7 @@ class AplDocService {
             }
             $post['tp'] = $so;
             
-            var_dump($post); exit;
+//            var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
@@ -1927,6 +1927,7 @@ class AplDocService {
         }    
 
         while (true){
+            var_dump(1111); exit;
             if ($this->sendPt()) {
                 usleep(100);
                 if (time() > $startTime + 840){
