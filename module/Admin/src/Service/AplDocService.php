@@ -1456,7 +1456,6 @@ class AplDocService {
         $pt = $this->entityManager->getRepository(Pt::class)
                 ->findForUpdateApl();        
         if ($pt){
-            var_dump(111); exit;
             $post = [
                 'parent' => $pt->getOffice()->getAplId(),
                 'type' =>   'Relocations',
@@ -1491,7 +1490,7 @@ class AplDocService {
             }
             $post['tp'] = $so;
             
-//            var_dump($post); exit;
+            var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
