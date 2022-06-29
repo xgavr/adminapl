@@ -1454,8 +1454,9 @@ class AplDocService {
         $result = false;
 
         $pt = $this->entityManager->getRepository(Pt::class)
-                ->findForUpdateApl();
+                ->findForUpdateApl();        
         if ($pt){
+            var_dump(111); exit;
             $post = [
                 'parent' => $pt->getOffice()->getAplId(),
                 'type' =>   'Relocations',
