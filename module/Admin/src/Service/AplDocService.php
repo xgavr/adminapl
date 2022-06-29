@@ -568,7 +568,9 @@ class AplDocService {
 
             if ($ok) {            
                 $ptu->setStatusEx(Ptu::STATUS_EX_APL);
-                $ptu->setAplId($aplId);
+                if ($aplId > 0){
+                    $ptu->setAplId($aplId);
+                }    
                 $this->entityManager->persist($ptu);
                 $this->entityManager->flush($ptu);
             }
@@ -758,7 +760,9 @@ class AplDocService {
 
             if ($ok) {            
                 $vtp->setStatusEx(Vtp::STATUS_EX_APL);
-                $vtp->setAplId($aplId);
+                if ($aplId > 0){
+                    $vtp->setAplId($aplId);
+                }    
                 $this->entityManager->persist($vtp);
                 $this->entityManager->flush($vtp);
             }
@@ -915,7 +919,9 @@ class AplDocService {
 
             if ($ok) {            
                 $vtp->setStatusEx(Vtp::STATUS_EX_APL);
-                $vtp->setAplId($aplId);
+                if ($aplId > 0){
+                    $vtp->setAplId($aplId);
+                }    
                 $this->entityManager->persist($vtp);
                 $this->entityManager->flush($vtp);
             }
@@ -1119,7 +1125,9 @@ class AplDocService {
 
             if ($ok) {            
                 $ot->setStatusEx(Ot::STATUS_EX_APL);
-                $ot->setAplId($aplId);
+                if ($aplId > 0){
+                    $ot->setAplId($aplId);
+                }    
                 $this->entityManager->persist($ot);
                 $this->entityManager->flush($ot);
             }
@@ -1337,7 +1345,9 @@ class AplDocService {
 
             if ($ok) {            
                 $st->setStatusEx(St::STATUS_EX_APL);
-                $st->setAplId($aplId);
+                if ($aplId > 0){
+                    $st->setAplId($aplId);
+                }    
                 $this->entityManager->persist($st);
                 $this->entityManager->flush($st);
             }
@@ -1485,6 +1495,7 @@ class AplDocService {
                     'comment' => $ptGood->getGood()->getMeanPrice(),                    
                     'art' => $ptGood->getGood()->getCode(),
                     'artid' => $ptGood->getGood()->getAplId(),
+                    'info' => $ptGood->getComment(),
                 ];                
                 $so[] = $tp;
             }
@@ -1500,7 +1511,7 @@ class AplDocService {
             $ok = $result = false;
             try{
                 $response = $client->send();
-                var_dump($response->getBody()); exit;
+//                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {                    
                     $aplId = (int) $response->getBody();
                     if ($aplId){
@@ -1512,8 +1523,10 @@ class AplDocService {
             }    
 
             if ($ok) {            
-                $st->setStatusEx(Pt::STATUS_EX_APL);
-                $st->setAplId($aplId);
+                $pt->setStatusEx(Pt::STATUS_EX_APL);
+                if ($aplId > 0){
+                    $pt->setAplId($aplId);
+                }    
                 $this->entityManager->persist($pt);
                 $this->entityManager->flush($pt);
             }
