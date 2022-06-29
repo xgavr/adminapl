@@ -74,25 +74,31 @@ class OfficeRepository extends EntityRepository{
         if (!$dateDoc){
             $dateDoc = date('Y-m-d');
         }
-        $entityManager = $this->getEntityManager();
-        $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('c')
-                ->from(Contract::class, 'c')
-                ->where('c.office = ?1')
-                ->setParameter('1', $office->getId())
-                ->andWhere('c.legal = ?2')
-                ->setParameter('2', $legal->getId())
-                ->andWhere('c.dateStart <= ?3')
-                ->setParameter('3', $dateDoc)
-                ->andWhere('c.pay = ?4')
-                ->setParameter('4', $pay)
-                ->orderBy('c.dateStart', 'DESC')
-                ->setMaxResults(1)
-                ;
+        $company = $this->findDefaultCompany($office, $dateDoc);
         
-        return $queryBuilder->getQuery()->getOneOrNullResult();
+        if ($company){
+            $entityManager = $this->getEntityManager();
+            $queryBuilder = $entityManager->createQueryBuilder();
+
+            $queryBuilder->select('c')
+                    ->from(Contract::class, 'c')
+                    ->where('c.company = ?1')
+                    ->setParameter('1', $company->getId())
+                    ->andWhere('c.legal = ?2')
+                    ->setParameter('2', $legal->getId())
+                    ->andWhere('c.dateStart <= ?3')
+                    ->setParameter('3', $dateDoc)
+                    ->andWhere('c.pay = ?4')
+                    ->setParameter('4', $pay)
+                    ->orderBy('c.dateStart', 'DESC')
+                    ->setMaxResults(1)
+                    ;
+
+            return $queryBuilder->getQuery()->getOneOrNullResult();
+        }
         
+        return;
     }
 
     /**
