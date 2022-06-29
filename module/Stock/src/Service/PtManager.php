@@ -563,7 +563,7 @@ class PtManager
                         ->findDefaultCompany($office2);
                 
                 $pt = $this->entityManager->getRepository(Pt::class)
-                        ->findOneBy(['office' => $office, 'office2' => $office2, 
+                        ->findOneBy(['office' => $office->getId(), 'office2' => $office2->getId(), 
                             'docDate' => $ptDate, 'docNo' => $this->autoPtDocNo]);
                 $upd = [
                     'apl_id' => 0,
