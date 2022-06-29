@@ -564,7 +564,7 @@ class PtManager
                 
                 $pt = $this->entityManager->getRepository(Pt::class)
                         ->findOneBy(['office' => $office, 'office2' => $office2, 
-                            'docDate' => $ptDate, 'docNo' => $autoDocNo]);
+                            'docDate' => $ptDate, 'docNo' => $this->autoPtDocNo]);
                 $upd = [
                     'apl_id' => 0,
                     'doc_date' => $ptDate,
@@ -575,11 +575,11 @@ class PtManager
                     'company' => $company,
                     'office2' => $office2,
                     'company2' => $company2,
-                    'docNo' => $autoDocNo,
+                    'docNo' => $this->autoPtDocNo,
                 ];
                 
                 if (!$pt){                    
-                    $pt = $this->addPt($data);
+                    $pt = $this->addPt($upd);
                 } else {
                     $pt = $this->updatePt($pt, $upd);
                 }
