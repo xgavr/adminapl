@@ -1927,7 +1927,7 @@ class AplDocService {
         }    
 
         while (true){
-            var_dump(1111); exit;
+//            var_dump(1111); exit;
             if ($this->sendPt()) {
                 usleep(100);
                 if (time() > $startTime + 840){
