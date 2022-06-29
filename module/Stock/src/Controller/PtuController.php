@@ -212,7 +212,7 @@ class PtuController extends AbstractActionController
         } else {
             if ($ptu){
                 $data = [
-                    'office_id' => $ptu->getContract()->getOffice()->getId(),
+                    'office_id' => $ptu->getOffice()->getId(),
                     'company' => $ptu->getContract()->getCompany()->getId(),
                     'supplier' => $ptu->getSupplier()->getId(),
                     'legal_id' => $ptu->getLegal()->getId(),  
