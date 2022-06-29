@@ -21,7 +21,7 @@ class PtManager
      *Номер для автоперемещений
      * @var string 
      */
-    private $autoPtDocNo = '!АГ';
+    private $autoPtDocNo = '@АГ';
     
     /**
      * Doctrine entity manager.
