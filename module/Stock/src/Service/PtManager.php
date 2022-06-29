@@ -11,6 +11,7 @@ use Stock\Entity\Comiss;
 use Company\Entity\Office;
 use Stock\Entity\Register;
 use Application\Entity\SupplierOrder;
+use Application\Entity\Goods;
 
 /**
  * This service is responsible for adding/editing pt.
@@ -582,9 +583,12 @@ class PtManager
                     $pt = $this->addPt($upd);
                 }
                 
+                $good = $this->entityManager->getRepository(Goods::class)
+                        ->find($supplierOrder['goodId']);
+                
                 $ptGood = [
                     'quantity' => $supplierOrder['quantity'],
-                    'amount' => 0,
+                    'amount' => $good->getMeanPrice()*$supplierOrder['quantity'],
                     'good_id' => $supplierOrder['goodId'],
                     'comment' => $supplierOrder['orderAplId'].' '.$supplierOrder['supplierName'],
                 ];
