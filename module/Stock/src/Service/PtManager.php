@@ -10,12 +10,19 @@ use Stock\Entity\Retail;
 use Stock\Entity\Comiss;
 use Company\Entity\Office;
 use Stock\Entity\Register;
+use Application\Entity\SupplierOrder;
 
 /**
  * This service is responsible for adding/editing pt.
  */
 class PtManager
 {
+    /**
+     *Номер для автоперемещений
+     * @var string 
+     */
+    private $autoPtDocNo = '!АГ';
+    
     /**
      * Doctrine entity manager.
      * @var \Doctrine\ORM\EntityManager
@@ -492,6 +499,104 @@ class PtManager
 
             $this->entityManager->getConnection()->delete('pt', ['id' => $pt->getId()]);
         }            
+        return;
+    }
+    
+    /**
+     * Удалить автоперемещения за дату
+     * @param date $ptDate
+     */
+    public function deleteAutoPt($ptDate)
+    {
+        $pts = $this->entityManager->getRepository(Pt::class)
+                ->findBy(['docDate' => $ptDate, 'docNo' => $this->autoPtDocNo]);
+        foreach ($pts as $pt){
+            
+            $this->removePtGood($pt);                    
+            $this->updatePtAmount($pt);
+            
+            $pt->setStatus(Pt::STATUS_RETIRED);
+            $pt->setStatusEx(Pt::STATUS_EX_NEW);
+            $pt->setStatusAccount(Pt::STATUS_ACCOUNT_NO);
+            $this->entityManager->persist($pt);
+            $this->entityManager->flush($pt);
+        }
+        return;
+    }
+    
+    /**
+     * Провести автоперемещения за дату
+     * @param date $ptDate
+     */
+    public function updateAutoPt($ptDate)
+    {
+        $pts = $this->entityManager->getRepository(Pt::class)
+                ->findBy(['docDate' => $ptDate, 'docNo' => $this->autoPtDocNo]);
+        foreach ($pts as $pt){            
+            $this->updatePtAmount($pt);            
+        }
+        return;
+    }
+    
+    /**
+     * Генерация перемещений между офисами
+     */
+    public function ptGenerator()
+    {
+        $ptDate = date('Y-m-d');
+        
+        $this->deleteAutoPt($ptDate);
+        
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy(['status' => Office::STATUS_ACTIVE]);
+                
+        foreach ($offices as $office2){
+            $supplierOrders = $this->entityManager->getRepository(SupplierOrder::class)
+                    ->findForPt($office2, $ptDate);
+            $i = 1;
+            foreach ($supplierOrders as $supplierOrder){
+                $office = $this->entityManager->getRepository(Office::class)
+                        ->find($supplierOrder['office']);
+                $company = $this->entityManager->getRepository(Office::class)
+                        ->findDefaultCompany($office);
+                $company2 = $this->entityManager->getRepository(Office::class)
+                        ->findDefaultCompany($office2);
+                
+                $pt = $this->entityManager->getRepository(Pt::class)
+                        ->findOneBy(['office' => $office, 'office2' => $office2, 
+                            'docDate' => $ptDate, 'docNo' => $autoDocNo]);
+                $upd = [
+                    'apl_id' => 0,
+                    'doc_date' => $ptDate,
+                    'comment' => 'Автоперемещение',
+                    'status_ex' => Pt::STATUS_EX_NEW,
+                    'status' => Pt::STATUS_ACTIVE,
+                    'office' => $office,
+                    'company' => $company,
+                    'office2' => $office2,
+                    'company2' => $company2,
+                    'docNo' => $autoDocNo,
+                ];
+                
+                if (!$pt){                    
+                    $pt = $this->addPt($data);
+                } else {
+                    $pt = $this->updatePt($pt, $upd);
+                }
+                
+                $ptGood = [
+                    'quantity' => $supplierOrder['quantity'],
+                    'amount' => 0,
+                    'good_id' => $supplierOrder['goodId'],
+                    'comment' => $supplierOrder['orderAplId'].' '.$supplierOrder['supplierName'],
+                ];
+                $this->addPtGood($pt->getId(), $ptGood, $i);
+                $i++;
+            }
+        }
+        
+        $this->updateAutoPt($ptDate);
+        
         return;
     }
 }

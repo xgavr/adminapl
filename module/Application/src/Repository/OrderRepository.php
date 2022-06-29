@@ -16,6 +16,9 @@ use Application\Entity\ContactCar;
 use Laminas\Filter\Digits;
 use Laminas\I18n\Filter\Alnum;
 use Application\Filter\ArticleCode;
+use Company\Entity\Office;
+use Application\Entity\SupplierOrder;
+use Application\Entity\SupplySetting;
 
 /**
  * Description of OrderRepository
@@ -319,5 +322,39 @@ class OrderRepository extends EntityRepository{
         }
         
         return;
+    }
+    
+    /**
+     * Найти товары для перемещения между офисами
+     * @param Office $office Куда перемещать
+     * @param date $ptDate
+     */
+    public function findForPt($office, $ptDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('identity(ss.office) as office, so.quantity, identity(so.good) as goodId, o.aplId as orderAplId, s.name as supplierName')
+            ->distinct()    
+            ->from(SupplierOrder::class, 'so')
+            ->join('so.order', 'o')
+            ->where('o.dateOper >= ?1')    
+            ->andWhere('o.dateOper <= ?2')    
+            ->setParameter('1', date('Y-m-d', strtotime($ptDate)))
+            ->setParameter('2', date('Y-m-d 23:59:59', strtotime($ptDate))) 
+            ->andWhere('o.office = ?3')
+            ->andWhere('o.status = ?4 or o.status = ?5')
+            ->setParameter('4', Order::STATUS_CONFIRMED)                
+            ->setParameter('5', Order::STATUS_DELIVERY)
+            ->join('so.supplier', 's')
+            ->join('s.supplySettings', 'ss')
+            ->andWhere('ss.status = ?6')
+            ->setParameter('6', SupplySetting::STATUS_ACTIVE)    
+            ->andWhere('ss.office != ?3')    
+            ->setParameter('3', $office->getId())
+            ;
+        
+        return $queryBuilder->getQuery()->getResult();        
     }
 }

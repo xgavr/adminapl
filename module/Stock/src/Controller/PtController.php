@@ -300,4 +300,13 @@ class PtController extends AbstractActionController
         );           
     }
         
+    public function ptGeneratorAction()
+    {
+        $this->ptManager->ptGenerator();
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }
+        
 }
