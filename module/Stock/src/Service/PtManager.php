@@ -575,7 +575,7 @@ class PtManager
                     'company' => $company,
                     'office2' => $office2,
                     'company2' => $company2,
-                    'docNo' => $this->autoPtDocNo,
+                    'doc_no' => $this->autoPtDocNo,
                 ];
                 
                 if (!$pt){                    
