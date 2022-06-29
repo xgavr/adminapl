@@ -1455,7 +1455,7 @@ class AplDocService {
 
         $pt = $this->entityManager->getRepository(Pt::class)
                 ->findForUpdateApl();
-        if ($st){
+        if ($pt){
             $post = [
                 'parent' => $pt->getOffice()->getAplId(),
                 'type' =>   'Relocations',
