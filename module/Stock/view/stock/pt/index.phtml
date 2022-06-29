@@ -127,6 +127,9 @@
     }    
     
     function idFormatter(value, row){
+        if (row.docNo){
+            return row.docNo;
+        }
         if (row.aplId){
             return row.aplId;
         }

@@ -21,7 +21,7 @@ class PtManager
      *Номер для автоперемещений
      * @var string 
      */
-    private $autoPtDocNo = '@АГ';
+    private $autoPtDocNo = '#АГ';
     
     /**
      * Doctrine entity manager.
@@ -376,7 +376,7 @@ class PtManager
             $this->entityManager->persist($pt);
             $this->entityManager->flush($pt);
 
-            return;
+            return $pt;
         }    
     }
     
@@ -580,8 +580,6 @@ class PtManager
                 
                 if (!$pt){                    
                     $pt = $this->addPt($upd);
-                } else {
-                    $pt = $this->updatePt($pt, $upd);
                 }
                 
                 $ptGood = [
@@ -590,6 +588,7 @@ class PtManager
                     'good_id' => $supplierOrder['goodId'],
                     'comment' => $supplierOrder['orderAplId'].' '.$supplierOrder['supplierName'],
                 ];
+                
                 $this->addPtGood($pt->getId(), $ptGood, $i);
                 $i++;
             }
