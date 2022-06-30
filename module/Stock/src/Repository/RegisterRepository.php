@@ -271,7 +271,7 @@ class RegisterRepository extends EntityRepository
                 ->andWhere('p.docDate <= ?2')
                 ->setParameter('1', $docDate)
                 ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate, '+10 days')))
-                ->join('ptuGoods', 'pg')
+                ->join('p.ptuGoods', 'pg')
                 ->andWhere('pg.good = ?3')
                 ->setParameter('3', $good->getId())
                 ->orderBy('p.docDate', 'ASC')
