@@ -19,6 +19,7 @@ use Stock\Entity\Ot;
 use Stock\Entity\St;
 use Stock\Entity\Vt;
 use Application\Entity\Order;
+use Application\Entity\Goods;
 
 
 /**
@@ -252,4 +253,68 @@ class RegisterRepository extends EntityRepository
             $this->stRegister($st);
         }
     }
+    
+    /**
+     * Найти ПТУ с ближайшей датой
+     * @param Goods $good
+     * @param date $docDate
+     * @retrun Ptu
+     */
+    public function findNearPtu($good, $docDate)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('p')
+                ->from(Ptu::class, 'p')
+                ->where('p.docDate > ?1')
+                ->andWhere('p.docDate <= ?2')
+                ->setParameter('1', $docDate)
+                ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate, '+10 days')))
+                ->join('ptuGood', 'pg')
+                ->andWhere('pg.good = ?3')
+                ->setParameter('3', $good->getId())
+                ->orderBy('p.docDate', 'ASC')
+                ->setMaxResults(1)
+                ;
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();        
+    }    
+    
+    /**
+     * Найти ПТУ с таким же артикулом
+     * @param Goods $good
+     * @param date $docDate
+     * @retrun Ptu
+     */
+    public function correctCodePtu($good, $docDate)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('pg')
+                ->from(PtuGood::class, 'pg')
+                ->join('pg.ptu', 'p')
+                ->where('p.docDate >= ?1')
+                ->andWhere('p.docDate <= ?2')
+                ->setParameter('1', date('Y-m-d 23:59:59', strtotime($docDate, '-10 days')))
+                ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate, '+10 days')))
+                ->join('pg.good', 'g')
+                ->andWhere('g.code = ?3')
+                ->setParameter('3', $good->getCode())
+                ->orderBy('p.docDate', 'ASC')
+                ->setMaxResults(1)
+                ;
+
+        $ptuGood = $queryBuilder->getQuery()->getOneOrNullResult();
+        if ($ptuGood){
+            $ptuGood->setGood($good);
+            $entityManager->persist($ptuGood);
+            $entityManager->flush($ptuGood);
+            return $ptuGood->getPtu();
+        }
+        
+        return;
+    }    
+    
 }

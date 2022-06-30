@@ -122,91 +122,92 @@ class RegisterManager
     }
     
     /**
-     * Добавить оприходование раньше 2013-12-15
-     * @param Order $order
+     * Добавить оприходование
+     * @param array $data
      * @return Ot
      */
-    private function oldOt($order)
+    private function oldOt($data)
     {
-        if ($order->getDateOper() <= $this->meDate || $order->getOffice()->getId() == 2){
-            $bids = $this->entityManager->getRepository(Bid::class)
-                    ->findBy(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
-            if (count($bids)){
-                $otData = [
-                    'apl_id' => 0,
-                    'doc_date' => date('Y-m-d', strtotime($order->getDateOper(), '-1 days')),
-                    'comment' => "Дооприходование для заказа {$order->getId()} раньше {$this->meDate}",
-                    'status_ex' => Ot::STATUS_EX_APL, 
-                    'status' => Ot::STATUS_INVENTORY,
-                    'office' => $order->getOffice(),
-                    'company' => $order->getCompany(),
-                ];
+        $otData = [
+            'apl_id' => 0,
+            'doc_date' => date('Y-m-d', strtotime($data['docDate'], '-1 days')),
+            'comment' => "Дооприходование для заказа {$data['docId']} раньше {$this->meDate}",
+            'status_ex' => Ot::STATUS_EX_APL, 
+            'status' => Ot::STATUS_INVENTORY,
+            'office' => $data['office'],
+            'company' => $data['company'],
+        ];
 
-                $ot = $this->otManager->addOt($otData);
-                
-                $i = 1;
-                foreach ($bids as $bid){
-                    $otgGoodData = [
-                        'quantity' => $bid->getNum(),
-                        'amount' => $bid->getNum()*$bid->getPrice(),
-                        'good_id' => $bid->getGood()->getId(),
-                    ];
+        $ot = $this->otManager->addOt($otData);
 
-                    $this->otManager->addOtGood($ot->getId(), $otgGoodData, $i);
-                    $i++;
-                }
-                
-                $this->otManager->updateOtAmount($ot);
-                
-                return $ot;
-            }                
+        $i = 1;
+        foreach ($data['rows'] as $row){
+            $otgGoodData = [
+                'quantity' => $row['quantity'],
+                'amount' => $row['amount'],
+                'good_id' => $row['goodId'],
+            ];
+
+            $this->otManager->addOtGood($ot->getId(), $otgGoodData, $i);
+            $i++;
         }
+
+        $this->otManager->updateOtAmount($ot);
         
+        $otRegister = $this->entityManager->getRepository(Register::class)
+                ->findOneBy(['docType' => Movement::DOC_OT, 'docId' => $ot->getId()]);
+        $this->docActualize($otRegister);
+
         return;
     }
     
     /**
-     * Добавить оприходование раньше 2013-12-15
-     * @param Pt $pt
-     * @return Ot
+     * Найти и поправить ПТУ с неверной датой прихода
+     * @param Goods $good
+     * @param date $docDate
+     * @return null
      */
-    private function oldOtPt($pt)
+    private function findNearPtu($good, $docDate)
     {
-        if ($pt->getDocDate() <= $this->meDate){
-            $ptGoods = $this->entityManager->getRepository(PtGood::class)
-                    ->findBy(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
-            if (count($ptGoods)){
-                $otData = [
-                    'apl_id' => 0,
-                    'doc_date' => date('Y-m-d', strtotime($pt->getDocDate(), '-1 days')),
-                    'comment' => "Дооприходование для перемещения {$pt->getId()} раньше {$this->meDate}",
-                    'status_ex' => Ot::STATUS_EX_APL, 
-                    'status' => Ot::STATUS_INVENTORY,
-                    'office' => $pt->getOffice(),
-                    'company' => $pt->getCompany(),
-                ];
-
-                $ot = $this->otManager->addOt($otData);
-                
-                $i = 1;
-                foreach ($ptGoods as $ptGood){
-                    $otgGoodData = [
-                        'quantity' => $ptGood->getQuantity(),
-                        'amount' => $ptGood->getAmount(),
-                        'good_id' => $ptGood->getGood()->getId(),
-                    ];
-
-                    $this->otManager->addOtGood($ot->getId(), $otgGoodData, $i);
-                    $i++;
-                }
-                
-                $this->otManager->updateOtAmount($ot);
-                
-                return $ot;
-            }                
+        $ptu = $this->entityManager->getRepository(Register::class)
+                ->findNearPtu($good, $docDate);
+        if ($ptu){
+            $ptu->setDocDate($docDate);
+            $this->entityManager->persist($ptu);
+            $this->entityManager->flush($ptu);
+            $this->ptuManager->repostPtu($ptu);
+            
+            $ptuRegister = $this->entityManager->getRepository(Register::class)
+                            ->findOneBy(['docType' => Movement::DOC_PTU, 'docId' => $ptu->getId()]);
+            $this->docActualize($ptuRegister);
+            return true;
         }
-        
-        return;
+        return false;
+    }
+    
+    /**
+     * Найти и поправить ПТУ с одинаковым артикулом
+     * @param Goods $good
+     * @param date $docDate
+     * @return null
+     */
+    private function correctCodePtu($good, $docDate)
+    {
+        $ptu = $this->entityManager->getRepository(Register::class)
+                ->correctCodePtu($good, $docDate);
+        if ($ptu){
+            $ptu->setDocDate($docDate);
+            $ptu->setComment('#Поправка даты и товара, старая дата: '.$ptu->getDocdate());
+            $this->entityManager->persist($ptu);
+            $this->entityManager->flush($ptu);
+            $this->ptuManager->repostPtu($ptu);
+            
+            $ptuRegister = $this->entityManager->getRepository(Register::class)
+                            ->findOneBy(['docType' => Movement::DOC_PTU, 'docId' => $ptu->getId()]);
+            $this->docActualize($ptuRegister);
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -227,14 +228,32 @@ class RegisterManager
                         $takeNo = $this->entityManager->getRepository(Bid::class)
                                 ->count(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
                         $flag = $takeNo == 0;
-                        if (!$flag){
-                            $ot = $this->oldOt($order);
-                            if ($ot){
-                                $otRegister = $this->entityManager->getRepository(Register::class)
-                                        ->findOneBy(['docType' => Movement::DOC_OT, 'docId' => $ot->getId()]);
-                                $this->docActualize($otRegister);
-                                $flag = $this->docActualize($register);
+                        if (!$flag && $order->getDateOper() <= $this->meDate){
+                            $bids = $this->entityManager->getRepository(Bid::class)
+                                    ->findBy(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
+                            $data = [
+                                'docDate' => $order->getDocDate(),
+                                'docId' => $order->getId(),
+                                'office' => $order->getOffice(),
+                                'company' => $order->getCompany(),
+                            ];
+                            $rows = [];
+                            foreach ($bids as $bid){
+                                if ($this->findNearPtu($bid->getGood(), $order->getDateOper())){
+                                    return $this->docActualize($register);
+                                } 
+                                if ($this->correctCodePtu($bid->getGood(), $order->getDateOper())){
+                                    return $this->docActualize($register);                                    
+                                } 
+                                $rows[] = [
+                                    'goodId' => $bid->getGoood()->getId(),
+                                    'quantity' => $bid->getNum(),
+                                    'amount' => $bid->getNum()*$bid->getPrice(),
+                                ];
                             }
+                            $data['rows'] = $rows;
+                            $this->oldOt($data);
+                            $flag = $this->docActualize($register);
                         }
                     }   
                 }
@@ -256,14 +275,18 @@ class RegisterManager
                         $takeNo = $this->entityManager->getRepository(PtGood::class)
                                 ->count(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
                         $flag = $takeNo == 0;
-                        if (!$flag){
-                            $ot = $this->oldOtPt($pt);
-                            if ($ot){
-                                $otRegister = $this->entityManager->getRepository(Register::class)
-                                        ->findOneBy(['docType' => Movement::DOC_OT, 'docId' => $ot->getId()]);
-                                $this->docActualize($otRegister);
-                                $flag = $this->docActualize($register);
+                        if (!$flag && $pt->getDocDate() <= $this->meDate){
+                            $ptGoods = $this->entityManager->getRepository(PtGood::class)
+                                    ->findBy(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
+                            foreach ($ptGoods as $ptGood){
+                                if ($this->findNearPtu($ptGood->getGood(), $pt->getDocDate())){
+                                    return $this->docActualize($register);
+                                } 
+                                if ($this->correctCodePtu($ptGood->getGood(), $pt->getDocDate())){
+                                    return $this->docActualize($register);                                    
+                                } 
                             }
+                            $flag = $this->docActualize($register);
                         }
                     }    
                 }
@@ -285,6 +308,19 @@ class RegisterManager
                         $takeNo = $this->entityManager->getRepository(StGood::class)
                                 ->count(['st' => $st->getId(), 'take' => StGood::TAKE_NO]);
                         $flag = $takeNo == 0;
+                        if (!$flag && $st->getDocDate() <= $this->meDate){
+                            $stGoods = $this->entityManager->getRepository(StGood::class)
+                                    ->findBy(['st' => $st->getId(), 'take' => StGood::TAKE_NO]);
+                            foreach ($stGoods as $stGood){
+                                if ($this->findNearPtu($stGood->getGood(), $st->getDocDate())){
+                                    return $this->docActualize($register);
+                                } 
+                                if ($this->correctCodePtu($stGood->getGood(), $st->getDocDate())){
+                                    return $this->docActualize($register);                                    
+                                } 
+                            }
+                            $flag = $this->docActualize($register);
+                        }
                     }    
                 }
                 break;

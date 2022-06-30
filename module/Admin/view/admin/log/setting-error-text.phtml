@@ -6,7 +6,8 @@
 </div>
 
 <?php
-    echo $this->text;
+    preg_match_all('/<pre>(.*?)<\/pre>/s', $this->text, $matches);
+    var_dump($matches[0]);
 ?>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
