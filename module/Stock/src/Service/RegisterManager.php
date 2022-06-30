@@ -172,7 +172,9 @@ class RegisterManager
         $ptu = $this->entityManager->getRepository(Register::class)
                 ->findNearPtu($good, $docDate);
         if ($ptu){
+            var_dump($good->getId()); exit;
             $ptu->setDocDate($docDate);
+            $ptu->setComment('#Поправка даты, старая дата: '.$ptu->getDocdate());
             $this->entityManager->persist($ptu);
             $this->entityManager->flush($ptu);
             $this->ptuManager->repostPtu($ptu);
