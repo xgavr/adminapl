@@ -240,9 +240,11 @@ class RegisterManager
                             $rows = [];
                             foreach ($bids as $bid){
                                 if ($this->findNearPtu($bid->getGood(), $order->getDateOper())){
+                                    var_dump(11); exit;
                                     return $this->docActualize($register);
                                 } 
                                 if ($this->correctCodePtu($bid->getGood(), $order->getDateOper())){
+                                    var_dump(12); exit;
                                     return $this->docActualize($register);                                    
                                 } 
                                 $rows[] = [
