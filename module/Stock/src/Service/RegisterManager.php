@@ -130,7 +130,7 @@ class RegisterManager
     {
         $otData = [
             'apl_id' => 0,
-            'doc_date' => date('Y-m-d', strtotime($data['docDate'], '-1 days')),
+            'doc_date' => date('Y-m-d', strtotime($data['docDate'])),
             'comment' => "Дооприходование для заказа {$data['docId']} раньше {$this->meDate}",
             'status_ex' => Ot::STATUS_EX_APL, 
             'status' => Ot::STATUS_INVENTORY,

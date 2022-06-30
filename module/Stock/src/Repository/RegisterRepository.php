@@ -265,13 +265,13 @@ class RegisterRepository extends EntityRepository
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
-        var_dump(date('Y-m-d 23:59:59', strtotime($docDate.' +10 days'))); exit;
+//        var_dump(date('Y-m-d 23:59:59', strtotime($docDate.' +10 days'))); exit;
         $queryBuilder->select('p')
                 ->from(Ptu::class, 'p')
                 ->where('p.docDate > ?1')
                 ->andWhere('p.docDate <= ?2')
                 ->setParameter('1', $docDate)
-                ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate, '+10 days')))
+                ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate.' +10 days')))
                 ->join('p.ptuGoods', 'pg')
                 ->andWhere('pg.good = ?3')
                 ->setParameter('3', $good->getId())
@@ -300,8 +300,8 @@ class RegisterRepository extends EntityRepository
                 ->join('pg.ptu', 'p')
                 ->where('p.docDate >= ?1')
                 ->andWhere('p.docDate <= ?2')
-                ->setParameter('1', date('Y-m-d 23:59:59', strtotime($docDate, '-10 days')))
-                ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate, '+10 days')))
+                ->setParameter('1', date('Y-m-d 23:59:59', strtotime($docDate.' -10 days')))
+                ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate.' +10 days')))
                 ->join('pg.good', 'g')
                 ->andWhere('g.code = ?3')
                 ->setParameter('3', $good->getCode())
