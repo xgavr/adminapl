@@ -246,7 +246,7 @@ class RegisterManager
                                     return $this->docActualize($register);                                    
                                 } 
                                 $rows[] = [
-                                    'goodId' => $bid->getGoood()->getId(),
+                                    'goodId' => $bid->getGood()->getId(),
                                     'quantity' => $bid->getNum(),
                                     'amount' => $bid->getNum()*$bid->getPrice(),
                                 ];
