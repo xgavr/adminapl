@@ -20,6 +20,7 @@ use Stock\Entity\St;
 use Stock\Entity\Vt;
 use Application\Entity\Order;
 use Application\Entity\Goods;
+use Stock\Entity\PtuGood;
 
 
 /**
