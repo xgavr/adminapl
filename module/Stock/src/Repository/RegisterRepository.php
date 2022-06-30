@@ -265,7 +265,7 @@ class RegisterRepository extends EntityRepository
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
-
+        var_dump($docDate); exit;
         $queryBuilder->select('p')
                 ->from(Ptu::class, 'p')
                 ->where('p.docDate > ?1')
