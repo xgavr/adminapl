@@ -275,6 +275,8 @@ class RegisterRepository extends EntityRepository
                 ->join('p.ptuGoods', 'pg')
                 ->andWhere('pg.good = ?3')
                 ->setParameter('3', $good->getId())
+                ->andWhere('p.status = ?4')
+                ->setParameter('4', Ptu::STATUS_ACTIVE)
                 ->orderBy('p.docDate', 'ASC')
                 ->setMaxResults(1)
                 ;
@@ -303,6 +305,8 @@ class RegisterRepository extends EntityRepository
                 ->join('pg.good', 'g')
                 ->andWhere('g.code = ?3')
                 ->setParameter('3', $good->getCode())
+                ->andWhere('p.status = ?4')
+                ->setParameter('4', Ptu::STATUS_ACTIVE)
                 ->orderBy('p.docDate', 'ASC')
                 ->setMaxResults(1)
                 ;
