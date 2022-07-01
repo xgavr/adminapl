@@ -116,30 +116,48 @@ class VtpManager
                 $bases = $this->entityManager->getRepository(Movement::class)
                         ->findBases($stGood->getGood()->getId(), $st->getDocDate(), $st->getOffice()->getId(), $vtp->getPtu()->getLogKey());
                 
-                $write = $stGood->getQuantity();
+                $write = $vtpGood->getQuantity();
                 
-                $take = StGood::TAKE_NO;
+                $take = VtpGood::TAKE_NO;
+                
+                foreach ($bases as $base){
+                    $movement = $this->entityManager->getRepository(Movement::class)
+                            ->findOneByBaseKey($base['baseKey']);
+                    
+                    $quantity = min($base['rest'], $write);
+                    $amount = $quantity*$vtpGood->getAmount()/$vtpGood->getQuantity();
+                    
+                    $data = [
+                        'doc_key' => $vtp->getLogKey(),
+                        'doc_type' => Movement::DOC_VTP,
+                        'doc_id' => $vtp->getId(),
+                        'base_type' => $movement->getBaseType(),
+                        'base_key' => $movement->getBaseKey(),
+                        'base_id' => $movement->getBaseId(),
+                        'doc_row_key' => $vtpGood->getDocRowKey(),
+                        'doc_row_no' => $vtpGood->getRowNo(),
+                        'date_oper' => date('Y-m-d 23:00:00', strtotime($vtp->getDocDate())),
+                        'status' => $vtp->getStatus(),
+                        'quantity' => -$quantity,
+                        'amount' => -$vtpGood->getAmount(),
+                        'good_id' => $vtpGood->getGood()->getId(),
+                        'office_id' => $vtp->getPtu()->getOffice()->getId(),
+                        'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
+                    ];
 
-                $data = [
-                    'doc_key' => $vtp->getLogKey(),
-                    'doc_type' => Movement::DOC_VTP,
-                    'doc_id' => $vtp->getId(),
-                    'base_key' => $vtp->getPtu()->getLogKey(),
-                    'base_type' => Movement::DOC_PTU,
-                    'base_id' => $vtp->getPtu()->getId(),
-                    'doc_row_key' => $vtpGood->getDocRowKey(),
-                    'doc_row_no' => $vtpGood->getRowNo(),
-                    'date_oper' => date('Y-m-d 23:00:00', strtotime($vtp->getDocDate())),
-                    'status' => $vtp->getStatus(),
-                    'quantity' => -$vtpGood->getQuantity(),
-                    'amount' => -$vtpGood->getAmount(),
-                    'good_id' => $vtpGood->getGood()->getId(),
-                    'office_id' => $vtp->getPtu()->getOffice()->getId(),
-                    'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
-                ];
-
-                $this->entityManager->getRepository(Movement::class)
-                        ->insertMovement($data);
+                    $this->entityManager->getRepository(Movement::class)
+                            ->insertMovement($data);
+                    
+                    $write -= $quantity;
+                    if ($write <= 0){
+                        break;
+                    }                    
+                }    
+                if ($write == 0){
+                    $take = VtpGood::TAKE_OK;
+                }
+                $this->entityManager->getConnection()
+                        ->update('vtp_good', ['take' => $take], ['id' => $vtpGood->getId()]);
             }
         }    
         

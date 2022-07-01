@@ -344,8 +344,7 @@ class RegisterManager
                 $vtp = $this->entityManager->getRepository(Vtp::class)
                     ->find($register->getDocId());
                 if ($vtp){
-                    $this->vtpManager->repostVtp($vtp);
-                    $flag = true;
+                    $flag = $this->vtpManager->repostVtp($vtp);
                 }
                 break;
             default: $flag = false;    
