@@ -66,8 +66,9 @@ class MovementRepository extends EntityRepository{
      * @param integer $goodId
      * @param date $dateOper
      * @param integer $officeId
+     * $param string $baseKey
      */
-    public function findBases($goodId, $dateOper, $officeId)
+    public function findBases($goodId, $dateOper, $officeId, $baseKey = null)
     {
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
@@ -85,6 +86,10 @@ class MovementRepository extends EntityRepository{
                 ->groupBy('m.baseKey')
                 ->having('rest > 0')
                 ;
+        if ($baseKey){
+            $qb->andWhere('m.baseKey = ?5')
+               ->setParameter('5', $baseKey);     
+        }
         
         return $qb->getQuery()->getResult();
     }

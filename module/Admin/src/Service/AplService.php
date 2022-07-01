@@ -585,12 +585,12 @@ class AplService {
                 'status' => ($row['publish'] == 1 ? 1:2),
                 'roles' => $user->getRolesAsArray(),
                 'aplId' => $row['id'],
-                'office' => $row['parent'],
+                'officeAplId' => $row['parent'],
             ];    
             if (!empty($desc['dob'])){
                $user_data['birthday'] = date_format(date_create($row['dob']), 'Y-m-d'); 
             }
-
+            
             $this->userManager->updateUser($user, $user_data);
 
         } else {

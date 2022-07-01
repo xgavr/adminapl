@@ -180,9 +180,17 @@ class UserManager
             $user->setBirthday($data['birthday']);
         }    
         
-        $office = $this->entityManager->getRepository(Office::class)
-                ->find($data['office']);
-        $user->setOffice($office);
+        $office = null;
+        if (!empty($data['office'])){
+            $office = $this->entityManager->getRepository(Office::class)
+                    ->find($data['office']);
+        } elseif (!empty($data['officeAplId'])){
+            $office = $this->entityManager->getRepository(Office::class)
+                    ->findOneByAplId($data['officeAplId']);
+        }    
+        if ($office){
+            $user->setOffice($office);
+        }    
 
         // Assign roles to user.
         $this->assignRoles($user, $data['roles']);

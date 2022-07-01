@@ -113,6 +113,13 @@ class VtpManager
             $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
                     ->findByVtp($vtp->getId());
             foreach ($vtpGoods as $vtpGood){
+                $bases = $this->entityManager->getRepository(Movement::class)
+                        ->findBases($stGood->getGood()->getId(), $st->getDocDate(), $st->getOffice()->getId(), $vtp->getPtu()->getLogKey());
+                
+                $write = $stGood->getQuantity();
+                
+                $take = StGood::TAKE_NO;
+
                 $data = [
                     'doc_key' => $vtp->getLogKey(),
                     'doc_type' => Movement::DOC_VTP,
@@ -302,6 +309,7 @@ class VtpManager
             'good_id' => $data['good_id'],
             'comment' => (isset($data['comment'])) ? $data['comment']:'',
 //            'info' => $data['info'],
+            'take' => VtpGood::TAKE_NO,
             'row_no' => $rowNo,
         ];
         

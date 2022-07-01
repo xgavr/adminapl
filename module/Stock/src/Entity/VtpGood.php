@@ -23,6 +23,9 @@ use Laminas\Json\Encoder;
  */
 class VtpGood {
         
+    const TAKE_OK  = 1;// учтено 
+    const TAKE_NO  = 2;// не учтено 
+    
      // Ptu status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
@@ -73,6 +76,11 @@ class VtpGood {
      * @ORM\Column(name="amount")  
      */
     protected $amount;
+
+    /**
+     * @ORM\Column(name="take")   
+     */
+    protected $take;
 
     /**
      * @ORM\ManyToOne(targetEntity="Stock\Entity\Vtp", inversedBy="vtpGoods") 
@@ -275,6 +283,49 @@ class VtpGood {
     {
         return round($this->amount, 2);
     }
+    
+    /**
+     * Returns take.
+     * @return int     
+     */
+    public function getTake() 
+    {
+        return $this->take;
+    }
+
+    /**
+     * Returns possible take as array.
+     * @return array
+     */
+    public static function getTakeList() 
+    {
+        return [
+            self::TAKE_OK => 'Проведено',
+            self::TAKE_NO => 'Не проведено',
+        ];
+    }    
+    
+    /**
+     * Returns take as string.
+     * @return string
+     */
+    public function getTakeAsString()
+    {
+        $list = self::getTakeList();
+        if (isset($list[$this->take]))
+            return $list[$this->take];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets take.
+     * @param int $take     
+     */
+    public function setTake($take) 
+    {
+        $this->take = $take;
+    }   
     
     /**
      * Returns the price of good.
