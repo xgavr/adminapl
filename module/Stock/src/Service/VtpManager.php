@@ -114,7 +114,7 @@ class VtpManager
                     ->findByVtp($vtp->getId());
             foreach ($vtpGoods as $vtpGood){
                 $bases = $this->entityManager->getRepository(Movement::class)
-                        ->findBases($vtpGood->getGood()->getId(), $vtp->getDocDate(), $vtp->getOffice()->getId(), $vtp->getPtu()->getLogKey());
+                        ->findBases($vtpGood->getGood()->getId(), $vtp->getDocDate(), $vtp->getPtu()->getOffice()->getId(), $vtp->getPtu()->getLogKey());
                 
                 $write = $vtpGood->getQuantity();
                 
