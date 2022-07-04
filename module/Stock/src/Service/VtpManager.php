@@ -139,7 +139,7 @@ class VtpManager
                         'date_oper' => date('Y-m-d 23:00:00', strtotime($vtp->getDocDate())),
                         'status' => Movement::getStatusFromVtp($vtp),
                         'quantity' => -$quantity,
-                        'amount' => -$vtpGood->getAmount(),
+                        'amount' => -$amount,
                         'good_id' => $vtpGood->getGood()->getId(),
                         'office_id' => $vtp->getPtu()->getOffice()->getId(),
                         'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
