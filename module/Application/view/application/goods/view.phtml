@@ -431,6 +431,9 @@
         $('select[name="office"]').change(function (){
             $('#movementTable').bootstrapTable('refresh');
         })
+        $('#monthSelect').change(function (){
+            $('#movementTable').bootstrapTable('refresh');
+        })
     });
 
     function tabQueryParams(tab, params) {
