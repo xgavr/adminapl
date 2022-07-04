@@ -760,6 +760,13 @@ class GoodsController extends AbstractActionController
         $office = $this->params()->fromQuery('office', $this->logManager->currentUser()->getOffice()->getId());
         $sort = $this->params()->fromQuery('sort', 'dateOper');
         $order = $this->params()->fromQuery('order', 'ASC');
+        $year_month = $this->params()->fromQuery('month');
+        
+        $year = $month = null;
+        if ($year_month){
+            $year = date('Y', strtotime($year_month));
+            $month = date('m', strtotime($year_month));
+        }        
         
         // Validate input parameter
         if ($goodsId<0) {
@@ -777,7 +784,8 @@ class GoodsController extends AbstractActionController
         
         $query = $this->entityManager->getRepository(Goods::class)
                         ->movements($goods, ['q' => $search, 'source' => $source, 
-                            'sort' => $sort, 'order' => $order, 'office' => $office]);
+                            'sort' => $sort, 'order' => $order, 'office' => $office,
+                            'month' => $month, 'year' => $year]);
 
         $total = count($query->getResult(2));
         

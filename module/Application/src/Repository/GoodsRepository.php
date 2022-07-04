@@ -1377,6 +1377,18 @@ class GoodsRepository extends EntityRepository
                         ->setParameter('2', $params['office']);
                 }    
             }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(m.dateOper) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(m.dateOper) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
         }
         
         return $queryBuilder->getQuery();            

@@ -184,6 +184,7 @@
                     data-query-params="oemQueryParams"
                     data-response-handler="responseHandler"
                     data-row-style="oeRowStyle"
+                    data-classes = "table table-bordered table-hover table-condensed"
                     >
                     <thead>
                         <tr>
@@ -206,12 +207,17 @@
                                 <option value="<?= $office->getId()?>" <?= ($office->getId() == $currentUser->getOffice()->getId()) ? 'selected':''?>><?= $office->getName()?></option>
                             <?php endforeach;?>
                         </select>                    
+                        <div class="form-group">
+                            <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
+                        </div>
                     </div>
                 </div>
                 <table id="movementTable" 
                     data-toggle="table" 
                     data-url="/goods/movements/<?= $goods->getId()?>"
                     data-side-pagination="server"
+                    data-cookie="true"
+                    data-cookie-id-table="goodSaveId"
                     data-pagination="true" 
                     data-page-list="[5, 10, 20, 50]"
                     data-toolbar="#movementToolbar"
@@ -221,6 +227,7 @@
                     data-sort-order="asc"            
                     data-query-params="movementsQueryParams"
                     data-response-handler="responseHandler"
+                    data-classes = "table table-bordered table-hover table-condensed"
                     >
                     <thead>
                         <tr>
@@ -246,6 +253,7 @@
                     data-show-toggle="true"
                     data-query-params="linkedQueryParams"
                     data-response-handler="responseHandler"
+                    data-classes = "table table-bordered table-hover table-condensed"
                     >
                     <thead>
                         <tr>
@@ -279,6 +287,7 @@
                     data-show-toggle="true"
                     data-query-params="priceQueryParams"
                     data-response-handler="responseHandler"
+                    data-classes = "table table-bordered table-hover table-condensed"
                     >
                     <thead>
                         <tr>
@@ -451,6 +460,7 @@
     
     function movementsQueryParams(params) {
         params.office = $('select[name="office"]').val();
+        params.month = $('#monthSelect').val();
         return tabQueryParams('#movements', params);
     }
     
