@@ -12,6 +12,7 @@ namespace Stock\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
+use Application\Entity\Goods;
 
 /**
  * Description of Ptu
@@ -334,6 +335,16 @@ class PtuGood {
         return $this->good;
     }
     
+    /**
+     * Установить товар
+     * @param Goods $good
+     */
+    public function setGood($good)
+    {
+        $this->good = $good;
+    }
+
+
     /**
      * Returns the ntd.
      * @return Ntd     

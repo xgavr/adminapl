@@ -247,7 +247,7 @@ class RegisterManager
                                     return $this->docActualize($register);
                                 } 
                                 if ($this->correctCodePtu($bid->getGood(), $order->getDateOper())){
-                                    var_dump(12); exit;
+                                    var_dump($order->getId()); exit;
                                     return $this->docActualize($register);                                    
                                 } 
                                 $rows[] = [
