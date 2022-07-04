@@ -591,7 +591,9 @@ class AplOrderService {
             }  
 
             $this->orderManager->updOrderTotal($order);
-            return true;            
+            if (round($order->getTotal()) == round($data['sort'])){
+                return true;            
+            }    
         }    
                 
         return false;

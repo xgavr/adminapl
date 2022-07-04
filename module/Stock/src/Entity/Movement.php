@@ -377,6 +377,19 @@ class Movement {
     }    
 
     /**
+     * Returns possible vtp status.
+     * @param Vtp $vtp
+     * @return integer
+     */
+    public static function getStatusFromVtp($vtp) 
+    {
+        switch ($vtp->getStatus()){
+            case Vtp::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+
+    /**
      * Sets status.
      * @param int $status     
      */

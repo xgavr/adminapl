@@ -137,7 +137,7 @@ class VtpManager
                         'doc_row_key' => $vtpGood->getDocRowKey(),
                         'doc_row_no' => $vtpGood->getRowNo(),
                         'date_oper' => date('Y-m-d 23:00:00', strtotime($vtp->getDocDate())),
-                        'status' => $vtp->getStatus(),
+                        'status' => Movement::getStatusFromVtp($vtp),
                         'quantity' => -$quantity,
                         'amount' => -$vtpGood->getAmount(),
                         'good_id' => $vtpGood->getGood()->getId(),

@@ -15,6 +15,7 @@ use Application\Entity\Bid;
 use Stock\Entity\PtGood;
 use Stock\Entity\StGood;
 use Stock\Entity\VtGood;
+use Stock\Entity\VtpGood;
 
 /**
  * This service register.
@@ -345,6 +346,11 @@ class RegisterManager
                     ->find($register->getDocId());
                 if ($vtp){
                     $flag = $this->vtpManager->repostVtp($vtp);
+                    if ($vtp->getStatus() == Vtp::STATUS_ACTIVE){
+                        $takeNo = $this->entityManager->getRepository(VtpGood::class)
+                                ->count(['vtp' => $vtp->getId(), 'take' => VtpGood::TAKE_NO]);
+                        $flag = $takeNo == 0;
+                    }   
                 }
                 break;
             default: $flag = false;    
