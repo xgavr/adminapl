@@ -172,9 +172,9 @@ class RegisterManager
     {
         $ptu = $this->entityManager->getRepository(Register::class)
                 ->findNearPtu($good, $docDate);
-        $oldDate = $ptu->getDocDate();
         if ($ptu){
-            var_dump($good->getId()); exit;
+            $oldDate = $ptu->getDocDate();
+//            var_dump($good->getId()); exit;
             $ptu->setDocDate($docDate);
             $ptu->setComment('#Поправка даты, старая дата: '.$oldDate);
             $this->entityManager->persist($ptu);
@@ -199,8 +199,8 @@ class RegisterManager
     {
         $ptu = $this->entityManager->getRepository(Register::class)
                 ->correctCodePtu($good, $docDate);
-        $oldDate = $ptu->getDocDate();
         if ($ptu){
+            $oldDate = $ptu->getDocDate();
             $ptu->setDocDate($docDate);
             $ptu->setComment('#Поправка даты и товара, старая дата: '.$oldDate);
             $this->entityManager->persist($ptu);
