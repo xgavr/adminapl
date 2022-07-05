@@ -630,7 +630,7 @@ class PtManager
      * @param array $data
      * @return PtSheduler
      */
-    public function addPtSheduler($ptSheduler, $data)
+    public function updatePtSheduler($ptSheduler, $data)
     {
         $ptSheduler->setGeneratorDay($data['generatorDay']);
         $ptSheduler->setGeneratorTime($data['generatorTime']);
