@@ -111,100 +111,100 @@ class PtManager
              
                     $movement = $this->entityManager->getRepository(Movement::class)
                             ->findOneByDocKey($base['baseKey']);
-                    
-                    $quantity = min($base['rest'], $write);
-                    $amount = $quantity*$ptGood->getAmount()/$ptGood->getQuantity();
-                    
-                    $data = [
-                        'doc_key' => $pt->getLogKey(),
-                        'doc_type' => Movement::DOC_PT,
-                        'doc_id' => $pt->getId(),
-                        'base_key' => $movement->getBaseKey(),
-                        'base_type' => $movement->getBaseType(),
-                        'base_id' => $movement->getBaseId(),
-                        'doc_row_key' => $ptGood->getDocRowKey(),
-                        'doc_row_no' => $ptGood->getRowNo(),
-                        'date_oper' => date('Y-m-d 12:00:00', strtotime($pt->getDocDate())),
-                        'status' => $movement->getStatus(),
-                        'quantity' => -$quantity,
-                        'amount' => -$amount,
-                        'good_id' => $ptGood->getGood()->getId(),
-                        'office_id' => $pt->getOffice()->getId(),
-                        'company_id' => $pt->getCompany()->getId(),
-                    ];
+                    if ($movement){
+                        $quantity = min($base['rest'], $write);
+                        $amount = $quantity*$ptGood->getAmount()/$ptGood->getQuantity();
 
-                    $this->entityManager->getRepository(Movement::class)
-                            ->insertMovement($data);            
-                    
-                    if ($movement->getStatus() == Movement::STATUS_COMMISSION){
-                        $comiss = $this->entityManager->getRepository(Comiss::class)
-                                ->findOneByDocKey($base['baseKey']);
                         $data = [
                             'doc_key' => $pt->getLogKey(),
                             'doc_type' => Movement::DOC_PT,
-                            'doc_id' => $vt->getId(),
-                            'doc_row_key' => $ptGood->getRowKey(),
+                            'doc_id' => $pt->getId(),
+                            'base_key' => $movement->getBaseKey(),
+                            'base_type' => $movement->getBaseType(),
+                            'base_id' => $movement->getBaseId(),
+                            'doc_row_key' => $ptGood->getDocRowKey(),
                             'doc_row_no' => $ptGood->getRowNo(),
-                            'date_oper' => $pt->getDateOper(),
+                            'date_oper' => date('Y-m-d 12:00:00', strtotime($pt->getDocDate())),
                             'status' => $movement->getStatus(),
                             'quantity' => -$quantity,
                             'amount' => -$amount,
                             'good_id' => $ptGood->getGood()->getId(),
                             'office_id' => $pt->getOffice()->getId(),
                             'company_id' => $pt->getCompany()->getId(),
-                            'contact_id' => $comiss->getContact()->getId(),
                         ];
-                        $this->entityManager->getRepository(Comiss::class)
-                                ->insertComiss($data);
-                    }    
 
-                    $data2 = [
-                        'doc_key' => $pt->getLogKey(),
-                        'doc_type' => Movement::DOC_PT,
-                        'doc_id' => $pt->getId(),
-                        'base_key' => $movement->getBaseKey(),
-                        'base_type' => $movement->getBaseType(),
-                        'base_id' => $movement->getBaseId(),
-                        'doc_row_key' => $ptGood->getDocRowKey(),
-                        'doc_row_no' => $ptGood->getRowNo(),
-                        'date_oper' => $pt->getDocDate(),
-                        'status' => $movement->getStatus(),
-                        'quantity' => $quantity,
-                        'amount' => $amount,
-                        'good_id' => $ptGood->getGood()->getId(),
-                        'office_id' => $pt->getOffice2()->getId(),
-                        'company_id' => $pt->getCompany2()->getId(),
-                    ];
+                        $this->entityManager->getRepository(Movement::class)
+                                ->insertMovement($data);            
 
-                    $this->entityManager->getRepository(Movement::class)
-                            ->insertMovement($data2);            
-                    
-                    if ($movement->getStatus() == Movement::STATUS_COMMISSION){
-                        $comiss = $this->entityManager->getRepository(Comiss::class)
-                                ->findOneByDocKey($base['docKey']);
-                        $data = [
+                        if ($movement->getStatus() == Movement::STATUS_COMMISSION){
+                            $comiss = $this->entityManager->getRepository(Comiss::class)
+                                    ->findOneByDocKey($base['baseKey']);
+                            $data = [
+                                'doc_key' => $pt->getLogKey(),
+                                'doc_type' => Movement::DOC_PT,
+                                'doc_id' => $vt->getId(),
+                                'doc_row_key' => $ptGood->getRowKey(),
+                                'doc_row_no' => $ptGood->getRowNo(),
+                                'date_oper' => $pt->getDateOper(),
+                                'status' => $movement->getStatus(),
+                                'quantity' => -$quantity,
+                                'amount' => -$amount,
+                                'good_id' => $ptGood->getGood()->getId(),
+                                'office_id' => $pt->getOffice()->getId(),
+                                'company_id' => $pt->getCompany()->getId(),
+                                'contact_id' => $comiss->getContact()->getId(),
+                            ];
+                            $this->entityManager->getRepository(Comiss::class)
+                                    ->insertComiss($data);
+                        }    
+
+                        $data2 = [
                             'doc_key' => $pt->getLogKey(),
                             'doc_type' => Movement::DOC_PT,
                             'doc_id' => $pt->getId(),
-                            'doc_row_key' => $ptGood->getRowKey(),
+                            'base_key' => $movement->getBaseKey(),
+                            'base_type' => $movement->getBaseType(),
+                            'base_id' => $movement->getBaseId(),
+                            'doc_row_key' => $ptGood->getDocRowKey(),
                             'doc_row_no' => $ptGood->getRowNo(),
-                            'date_oper' => $pt->getDateOper(),
+                            'date_oper' => $pt->getDocDate(),
                             'status' => $movement->getStatus(),
                             'quantity' => $quantity,
                             'amount' => $amount,
                             'good_id' => $ptGood->getGood()->getId(),
                             'office_id' => $pt->getOffice2()->getId(),
                             'company_id' => $pt->getCompany2()->getId(),
-                            'contact_id' => $comiss->getContact()->getId(),
                         ];
-                        $this->entityManager->getRepository(Comiss::class)
-                                ->insertComiss($data);
-                    }    
-                    
-                    $write -= $quantity;
-                    if ($write <= 0){
-                        break;
-                    }
+
+                        $this->entityManager->getRepository(Movement::class)
+                                ->insertMovement($data2);            
+
+                        if ($movement->getStatus() == Movement::STATUS_COMMISSION){
+                            $comiss = $this->entityManager->getRepository(Comiss::class)
+                                    ->findOneByDocKey($base['docKey']);
+                            $data = [
+                                'doc_key' => $pt->getLogKey(),
+                                'doc_type' => Movement::DOC_PT,
+                                'doc_id' => $pt->getId(),
+                                'doc_row_key' => $ptGood->getRowKey(),
+                                'doc_row_no' => $ptGood->getRowNo(),
+                                'date_oper' => $pt->getDateOper(),
+                                'status' => $movement->getStatus(),
+                                'quantity' => $quantity,
+                                'amount' => $amount,
+                                'good_id' => $ptGood->getGood()->getId(),
+                                'office_id' => $pt->getOffice2()->getId(),
+                                'company_id' => $pt->getCompany2()->getId(),
+                                'contact_id' => $comiss->getContact()->getId(),
+                            ];
+                            $this->entityManager->getRepository(Comiss::class)
+                                    ->insertComiss($data);
+                        }    
+                        $write -= $quantity;
+                        if ($write <= 0){
+                            break;
+                        }
+                    }                        
                 }    
                 
                 if ($write == 0){
