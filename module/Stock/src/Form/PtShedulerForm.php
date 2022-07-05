@@ -65,9 +65,8 @@ class PtShedulerForm extends Form implements ObjectManagerAwareInterface
         // Добавляем поле "office"
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'office_id',
+            'name' => 'office',
             'attributes' => [                
-                'id' => 'office',
                 'data-live-search'=> "true",
                 'class' => "selectpicker",
                 'value' => $this->office->getId(),
@@ -85,9 +84,8 @@ class PtShedulerForm extends Form implements ObjectManagerAwareInterface
         // Добавляем поле "office2"
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'office2_id',
+            'name' => 'office2',
             'attributes' => [                
-                'id' => 'office2',
                 'data-live-search'=> "true",
                 'class' => "selectpicker",
                 'value' => $this->office2->getId(),
@@ -103,7 +101,7 @@ class PtShedulerForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([
-            'type'  => 'numeric',
+            'type'  => 'number',
             'name' => 'generatorTime',
             'attributes' => [                
                 'step' => 0.1,
@@ -170,7 +168,7 @@ class PtShedulerForm extends Form implements ObjectManagerAwareInterface
         $this->setInputFilter($inputFilter);
         
         $inputFilter->add([
-                'name'     => 'office_id',
+                'name'     => 'office',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
@@ -187,7 +185,7 @@ class PtShedulerForm extends Form implements ObjectManagerAwareInterface
             ]);          
         
         $inputFilter->add([
-                'name'     => 'office2_id',
+                'name'     => 'office2',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

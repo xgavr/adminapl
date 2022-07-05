@@ -324,6 +324,58 @@ $legalContact = $office->getLegalContact();
         <div class="panel panel-default" id="section9">
             <div class="panel-body">
                 <div class="pull-left">
+                    <div class="panel-title">Автоперемещения</div>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-default cash-modal-show" type="button" modal-url="/pt/generator-edit-form">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> Добавить</span>
+                    </button>                
+                </div>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+
+                   <tr>
+                        <th>ID</th>
+                        <th>Отправитель</th>
+                        <th>Получатель</th>
+                        <th>Время перемещения</th>
+                        <th>День</th>
+                        <th></th>        
+                    </tr>
+
+                    <?php foreach ($office->getPtShedulers() as $ptSheduler): ?>
+
+                    <tr>
+                        <td><?= $this->escapeHtml($ptSheduler->getId()); ?></td>
+                        <td><?= $this->escapeHtml($ptSheduler->getOffice()->getName()); ?>
+                        </td>
+                        <td>
+                            <?= $this->escapeHtml($ptSheduler->getGeneratorTime()); ?>
+                        </td>
+                        <td>
+                            <?= $this->escapeHtml($ptSheduler->getGeneratorDayAsString()); ?>
+                        </td>
+                        <td>
+                            <nobr>
+                                <button class="btn btn-default btn-xs pt-sheduler-modal-show" type="button" modal-url="/pt/generator-edit-form/<?= $ptSheduler->getId()?>">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </button>                
+                                <button class="btn btn-default btn-xs" type="button">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </button>                
+                            </nobr>
+                        </td>    
+                    </tr>
+
+                    <?php endforeach; ?>   
+
+                </table>
+            </div>
+        </div>    
+        <div class="panel panel-default" id="section10">
+            <div class="panel-body">
+                <div class="pull-left">
                     <div class="panel-title">Комиссия (для ТОРГ2 и пр.)</div>
                 </div>
                 <div class="pull-right">
@@ -383,7 +435,8 @@ $legalContact = $office->getLegalContact();
             <li><a href="#section6">Юридические лица</a></li>
             <li><a href="#section7">Варианты доставок</a></li>
             <li><a href="#section8">Кассы</a></li>
-            <li><a href="#section9">Комиссия</a></li>
+            <li><a href="#section9">Автоперемещения</a></li>
+            <li><a href="#section10">Комиссия</a></li>
         </ul>
     </div>
 </div>

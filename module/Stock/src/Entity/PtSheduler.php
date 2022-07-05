@@ -36,12 +36,12 @@ class PtSheduler {
     protected $id;
     
     /** 
-     * @ORM\Column(name="generatorTime")  
+     * @ORM\Column(name="generator_time")  
      */
     protected $generatorTime;    
 
     /**
-     * @ORM\Column(name="generatorDay")   
+     * @ORM\Column(name="generator_day")   
      */
     protected $generatorDay;
 
