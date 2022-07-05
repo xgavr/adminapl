@@ -12,6 +12,7 @@ use Company\Entity\Office;
 use Stock\Entity\Register;
 use Application\Entity\SupplierOrder;
 use Application\Entity\Goods;
+use Stock\Entity\PtSheduler;
 
 /**
  * This service is responsible for adding/editing pt.
@@ -602,5 +603,57 @@ class PtManager
         
         return;
     }
+    
+    /**
+     * Добавить расписание генерации перемещения
+     * @param array $data
+     * @return PtSheduler
+     */
+    public function addPtSheduler($data)
+    {
+        $ptSheduler = new PtSheduler();
+        $ptSheduler->setGeneratorDay($data['generatorDay']);
+        $ptSheduler->setGeneratorTime($data['generatorTime']);
+        $ptSheduler->setOffice($data['office']);
+        $ptSheduler->setOffice2($data['office2']);
+        $ptSheduler->setStatus($data['status']);
+        
+        $this->entityManager->persist($ptSheduler);
+        $this->entityManager->flush($ptSheduler);
+        
+        return $ptSheduler;
+    }
+
+    /**
+     * Обновить расписание генерации перемещения
+     * @param PtSheduler $ptSheduler
+     * @param array $data
+     * @return PtSheduler
+     */
+    public function addPtSheduler($ptSheduler, $data)
+    {
+        $ptSheduler->setGeneratorDay($data['generatorDay']);
+        $ptSheduler->setGeneratorTime($data['generatorTime']);
+        $ptSheduler->setOffice($data['office']);
+        $ptSheduler->setOffice2($data['office2']);
+        $ptSheduler->setStatus($data['status']);
+        
+        $this->entityManager->persist($ptSheduler);
+        $this->entityManager->flush($ptSheduler);
+        
+        return $ptSheduler;
+    }
+    
+    /**
+     * Удалить расписание генерации перемещения
+     * @param PtSheduler $ptSheduler
+     */
+    public function removePtSheduler($ptSheduler)
+    {
+        $this->entityManager->remove($ptSheduler);
+        $this->entityManager->flush();
+        
+        return;
+    }    
 }
 
