@@ -78,6 +78,11 @@ class PtManager
         return $this->allowDate; 
     }
     
+    public function currentUser()
+    {
+        return $this->logManager->currentUser();
+    }
+    
     /**
      * Обновить движения документа
      * 

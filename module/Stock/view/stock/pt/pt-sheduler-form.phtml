@@ -1,0 +1,136 @@
+<?php
+use Stock\Entity\PtSheduler;
+
+$form = $this->form;
+
+$form->get('office')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('office2')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('generatorTime')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('generatorDay')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'pt-sheduler-submit']);
+
+$form->prepare();
+
+?>
+
+
+
+            
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="ptModalLabel">Перемещение товаров <?= $docName?></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('office')); ?>
+                <?= $this->formElement($form->get('office')); ?>
+                <?= $this->formElementErrors($form->get('office')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('office2')); ?>
+                <?= $this->formElement($form->get('office2')); ?>
+                <?= $this->formElementErrors($form->get('office2')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('generatorTime')); ?>
+                <?= $this->formElement($form->get('generatorTime')); ?>
+                <?= $this->formElementErrors($form->get('generatorTime')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('generatorDay')); ?>
+                <?= $this->formElement($form->get('generatorDay')); ?>
+                <?= $this->formElementErrors($form->get('generatorDay')); ?>                  
+            </div>
+        </div>    
+    </div>        
+
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="pt-sheduler-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    function submitForm(){
+        var data = serializeForm('#pt-sheduler-form');
+        $.ajax({
+            type: 'POST',
+            url: '/pt/pt-sheduler-form/<?= ($ptSheduler) ? $ptSheduler->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#ptShedulerModal').modal('hide');
+                } else {
+                    $('#ptShedulerModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+        
+    $( document ).ready(function() {        
+        var forms = $('#pt-sheduler-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('pt-sheduler-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });        
+    });        
+</script>

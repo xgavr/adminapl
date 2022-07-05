@@ -20,6 +20,7 @@ use User\Entity\User;
 use Company\Entity\Commission;
 use User\Filter\PhoneFilter;
 use Application\Entity\Messenger;
+use Stock\Entity\PtSheduler;
 
 /**
  * Description of Office
@@ -154,6 +155,17 @@ class Office {
    private $commission;    
 
    /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\PtSheduler", mappedBy="office")
+    * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
+   */
+   private $ptShedulers;    
+
+   /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\PtSheduler", mappedBy="office2")
+    * @ORM\JoinColumn(name="id", referencedColumnName="office2_id")
+   */
+   private $ptShedulers2;    
+   /**
      * Constructor.
      */
     public function __construct() 
@@ -165,6 +177,8 @@ class Office {
         $this->cashes = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->commission = new ArrayCollection();
+        $this->ptShedulers = new ArrayCollection();
+        $this->ptShedulers2 = new ArrayCollection();
     }
     
     public function getId() 
@@ -549,5 +563,40 @@ class Office {
     {
         $this->commission[] = $commisar;
     }         
+
+    /*
+     * Возвращает связанный ptSheduler.
+     * @return array
+     */    
+    public function getPtShedulers() 
+    {
+        return $this->ptShedulers;
+    }
+
+    /**
+     * Add ptSheduler
+     * @param PtSheduler $ptSheduler
+     */
+    public function addPtSheduler($ptSheduler) 
+    {
+        $this->ptShedulers[] = $ptSheduler;
+    }         
     
+    /*
+     * Возвращает связанный ptSheduler2.
+     * @return array
+     */    
+    public function getPtShedulers2() 
+    {
+        return $this->ptShedulers2;
+    }
+
+    /**
+     * Add ptSheduler
+     * @param PtSheduler $ptSheduler2
+     */
+    public function addPtSheduler2($ptSheduler2) 
+    {
+        $this->ptShedulers2[] = $ptSheduler2;
+    }                 
 }

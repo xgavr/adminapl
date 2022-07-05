@@ -25,6 +25,9 @@ class PtSheduler {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
    
+    const GENERATOR_DAY_TODAY = 1; // сегодня.
+    const GENERATOR_DAY_TOMORROW      = 2; // завтра.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -48,13 +51,13 @@ class PtSheduler {
     protected $status;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="pt") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="ptShedulers") 
      * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
      */
     private $office;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="pt") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="ptShedulers2") 
      * @ORM\JoinColumn(name="office2_id", referencedColumnName="id")
      */
     private $office2;
@@ -98,6 +101,31 @@ class PtSheduler {
     }     
 
     /**
+     * Returns possible generator day as array.
+     * @return array
+     */
+    public static function getGeneratorDayList() 
+    {
+        return [
+            self::GENERATOR_DAY_TODAY => 'Сегодня',
+            self::GENERATOR_DAY_TOMORROW => 'Завтра',
+        ];
+    }    
+    
+    /**
+     * Returns generator day as string.
+     * @return string
+     */
+    public function getGeneratorDayAsString()
+    {
+        $list = self::getGeneratorDayList();
+        if (isset($list[$this->generatorDay]))
+            return $list[$this->generatorDay];
+        
+        return 'Unknown';
+    }    
+    
+    /**
      * Returns status.
      * @return int     
      */
@@ -130,33 +158,7 @@ class PtSheduler {
         
         return 'Unknown';
     }    
-    
-    /**
-     * Returns possible apl statuses as array.
-     * @return array
-     */
-    public static function getAplStatusList() 
-    {
-        return [
-            self::STATUS_ACTIVE => 1,
-            self::STATUS_RETIRED => 0,
-        ];
-    }    
-    
-    
-    /**
-     * Returns apl status as string.
-     * @return string
-     */
-    public function getAplStatusAsString()
-    {
-        $list = self::getAplStatusList();
-        if (isset($list[$this->status]))
-            return $list[$this->status];
         
-        return 0;
-    }    
-    
     /**
      * Sets status.
      * @param int $status     
@@ -173,6 +175,7 @@ class PtSheduler {
     public function setOffice($office) 
     {
         $this->office = $office;
+        $office->addPtSheduler($this);
     }    
 
     /**
@@ -191,6 +194,7 @@ class PtSheduler {
     public function setOffice2($office2) 
     {
         $this->office2 = $office2;
+        $office2->addPtSheduler2($this);
     }    
 
     /**

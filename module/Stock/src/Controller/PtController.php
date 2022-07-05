@@ -17,6 +17,7 @@ use Application\Entity\Goods;
 use Company\Entity\Office;
 use Company\Entity\Legal;
 use Application\Entity\Contact;
+use Stock\Entity\PtSheduler;
 
 class PtController extends AbstractActionController
 {
@@ -309,4 +310,67 @@ class PtController extends AbstractActionController
         );           
     }
         
+    public function generatorEditFormAction()
+    {        
+        $ptShedulerId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($ptShedulerId > 0){
+            $ptSheduler = $this->entityManager->getRepository(PtSheduler::class)
+                    ->find($ptShedulerId);
+        }    
+        
+        if ($ptSheduler == null) {
+            $officeId = (int)$this->params()->fromQuery('office', $this->ptManager->currentUser()->getOffice()->getId());
+            $office = $this->entityManager->getRepository(Office::class)
+                    ->find($officeId);
+            $office2Id = (int)$this->params()->fromQuery('office2', $this->ptManager->currentUser()->getOffice()->getId());
+            $office2 = $this->entityManager->getRepository(Office::class)
+                    ->find($office2Id);
+        } else {
+            $office = $ptSheduler->getOffice();
+            $office2 = $ptSheduler->getOffice2();
+        }       
+        
+        if ($this->getRequest()->isPost()){
+            $data = $this->params()->fromPost();
+            $office = $this->entityManager->getRepository(Office::class)
+                    ->find($data['office']);
+            $office2 = $this->entityManager->getRepository(Office::class)
+                    ->find($data['office2']);
+        }
+                
+        $form = new PtShedulerForm($this->entityManager, $office, $office2);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                unset($data['csrf']);
+                $data['office'] = $office;
+                $data['office2'] = $office2;
+
+                if ($ptSheduler){
+                    $this->ptManager->updatePtSheduler($ptSheduler, $data);
+                } else {
+                    $ptSheduler = $this->ptManager->addPtSheduler($data);
+                }    
+                                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($pt){
+                $form->setData($ptSheduler->toLog());
+            }    
+        }
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'ptSheduler' => $ptSheduler,
+        ]);        
+    }
 }
