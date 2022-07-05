@@ -104,9 +104,9 @@ $form->prepare();
             .done(function (data) {
                 if (data == 'ok'){
                     $('#ptShedulerModal').modal('hide');
+                    window.location.reload();
                 } else {
-//                    $('#ptShedulerModal .modal-content').html(data);
-                    window.location.href = window.location.href;
+                    $('#ptShedulerModal .modal-content').html(data);
                 }    
             })
             .fail(function () {

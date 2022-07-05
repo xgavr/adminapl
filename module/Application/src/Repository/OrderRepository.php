@@ -326,10 +326,11 @@ class OrderRepository extends EntityRepository{
     
     /**
      * Найти товары для перемещения между офисами
-     * @param Office $office Куда перемещать
+     * @param Office $office Откуда перемещать
+     * @param Office $office2 Куда перемещать
      * @param date $ptDate
      */
-    public function findForPt($office, $ptDate)
+    public function findForPt($office, $office2, $ptDate)
     {
         $entityManager = $this->getEntityManager();
 
@@ -344,6 +345,7 @@ class OrderRepository extends EntityRepository{
             ->setParameter('1', date('Y-m-d', strtotime($ptDate)))
             ->setParameter('2', date('Y-m-d 23:59:59', strtotime($ptDate))) 
             ->andWhere('o.office = ?3')
+            ->setParameter('3', $office2->getId())
             ->andWhere('o.status = ?4 or o.status = ?5')
             ->setParameter('4', Order::STATUS_CONFIRMED)                
             ->setParameter('5', Order::STATUS_DELIVERY)
@@ -351,8 +353,8 @@ class OrderRepository extends EntityRepository{
             ->join('s.supplySettings', 'ss')
             ->andWhere('ss.status = ?6')
             ->setParameter('6', SupplySetting::STATUS_ACTIVE)    
-            ->andWhere('ss.office != ?3')    
-            ->setParameter('3', $office->getId())
+            ->andWhere('ss.office = ?7')    
+            ->setParameter('7', $office->getId())
             ;
         
         return $queryBuilder->getQuery()->getResult();        

@@ -311,6 +311,26 @@ class PtController extends AbstractActionController
         );           
     }
         
+    public function officePtGeneratorAction()
+    {
+        $ptShedulerId = $this->params()->fromRoute('id', -1);
+        
+        
+        $ptSheduler = $this->entityManager->getRepository(PtSheduler::class)
+                ->findOneById($ptShedulerId);        
+
+        if ($ptSheduler == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->ptManager->ptGenerator($ptSheduler);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }
+
     public function generatorEditFormAction()
     {        
         $ptShedulerId = (int)$this->params()->fromRoute('id', -1);

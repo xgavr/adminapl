@@ -82,12 +82,12 @@ class PtSheduler {
 
     public function getGeneratorTime() 
     {
-        return $this->generatorTime;
+        return date('H:i', $this->generatorTime);
     }
 
     public function setGeneratorTime($generatorTime) 
     {
-        $this->generatorTime = $generatorTime;
+        $this->generatorTime = strtotime($generatorTime);
     }     
 
     public function getGeneratorDay() 

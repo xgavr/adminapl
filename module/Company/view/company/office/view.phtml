@@ -363,7 +363,10 @@ $legalContact = $office->getLegalContact();
                                 <button class="btn btn-default btn-xs pt-sheduler-modal-show" type="button" modal-url="/pt/generator-edit-form/<?= $ptSheduler->getId()?>">
                                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                 </button>                
-                                <button class="btn btn-default btn-xs" type="button">
+                                <button class="btn btn-info btn-xs refresh-button" value="/pt/office-pt-generator/<?= $ptSheduler->getId()?>" type="button"  title='Генерация перемещения'>
+                                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                </button>                
+                                <button class="btn btn-danger btn-xs" type="button">
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                 </button>                
                             </nobr>

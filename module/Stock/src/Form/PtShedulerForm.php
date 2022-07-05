@@ -101,15 +101,17 @@ class PtShedulerForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([
-            'type'  => 'number',
+            'type'  => 'time',
             'name' => 'generatorTime',
             'attributes' => [                
-                'step' => 0.1,
-                'min' => 0,
-                'max' => 24,
+                'min'  => '00:00',
+                'max'  => '23:59',
+//                'step' => '30', 
+                'value' => '00:00'
             ],
             'options' => [
                 'label' => 'Время перемещений',
+                'format' => 'H:i'
             ],
         ]);
         
