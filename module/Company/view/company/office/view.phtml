@@ -327,7 +327,7 @@ $legalContact = $office->getLegalContact();
                     <div class="panel-title">Автоперемещения</div>
                 </div>
                 <div class="pull-right">
-                    <button class="btn btn-default cash-modal-show" type="button" modal-url="/pt/generator-edit-form">
+                    <button class="btn btn-default pt-sheduler-modal-show" type="button" modal-url="/pt/generator-edit-form">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"> Добавить</span>
                     </button>                
                 </div>
@@ -349,6 +349,8 @@ $legalContact = $office->getLegalContact();
                     <tr>
                         <td><?= $this->escapeHtml($ptSheduler->getId()); ?></td>
                         <td><?= $this->escapeHtml($ptSheduler->getOffice()->getName()); ?>
+                        </td>
+                        <td><?= $this->escapeHtml($ptSheduler->getOffice2()->getName()); ?>
                         </td>
                         <td>
                             <?= $this->escapeHtml($ptSheduler->getGeneratorTime()); ?>
@@ -456,6 +458,14 @@ $legalContact = $office->getLegalContact();
                 id: 'cashModal',
                 url: url,
                 width: '1440px'
+            });
+        });          
+        $(document).on('click', '.pt-sheduler-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'ptShedulerModal',
+                url: url,
+//                width: '1440px'
             });
         });          
     });            

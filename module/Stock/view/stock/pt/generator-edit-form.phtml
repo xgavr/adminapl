@@ -36,7 +36,7 @@ $form->prepare();
 <?= $this->form()->openTag($form); ?>
 
 <div class="modal-header">
-    <h5 class="modal-title" id="ptModalLabel">Перемещение товаров <?= $docName?></h5>
+    <h5 class="modal-title">Настройка автоперемещения</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -44,21 +44,21 @@ $form->prepare();
 
 <div class="modal-body">
     <div class="row">
-        <div class="col-xs-2">                        
+        <div class="col-xs-4">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('office')); ?>
                 <?= $this->formElement($form->get('office')); ?>
                 <?= $this->formElementErrors($form->get('office')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-2">                        
+        <div class="col-xs-4">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('office2')); ?>
                 <?= $this->formElement($form->get('office2')); ?>
                 <?= $this->formElementErrors($form->get('office2')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-2">                        
+        <div class="col-xs-4">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('status')); ?>
                 <?= $this->formElement($form->get('status')); ?>
@@ -67,14 +67,14 @@ $form->prepare();
         </div>
     </div>    
     <div class="row">
-        <div class="col-xs-2">                        
+        <div class="col-xs-6">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('generatorTime')); ?>
                 <?= $this->formElement($form->get('generatorTime')); ?>
                 <?= $this->formElementErrors($form->get('generatorTime')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-2">                        
+        <div class="col-xs-6">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('generatorDay')); ?>
                 <?= $this->formElement($form->get('generatorDay')); ?>
@@ -98,14 +98,15 @@ $form->prepare();
         var data = serializeForm('#pt-sheduler-form');
         $.ajax({
             type: 'POST',
-            url: '/pt/pt-sheduler-form/<?= ($ptSheduler) ? $ptSheduler->getId():"" ?>',
+            url: '/pt/generator-edit-form/<?= ($ptSheduler) ? $ptSheduler->getId():"" ?>',
             data: $.param(data)
         })
             .done(function (data) {
                 if (data == 'ok'){
                     $('#ptShedulerModal').modal('hide');
                 } else {
-                    $('#ptShedulerModal .modal-content').html(data);                    
+//                    $('#ptShedulerModal .modal-content').html(data);
+                    window.location.href = window.location.href;
                 }    
             })
             .fail(function () {

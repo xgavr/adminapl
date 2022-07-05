@@ -363,7 +363,7 @@ class PtController extends AbstractActionController
                 );           
             }
         } else {
-            if ($pt){
+            if ($ptSheduler){
                 $form->setData($ptSheduler->toLog());
             }    
         }
