@@ -122,7 +122,7 @@ class PtShedulerForm extends Form implements ObjectManagerAwareInterface
                 'value' => PtSheduler::GENERATOR_DAY_TODAY,
             ],
             'options' => [
-                'label' => 'День перемещения',
+                'label' => 'День отгрузки заказов',
                 'value_options' => PtSheduler::getGeneratorDayList(),
             ],
         ]);

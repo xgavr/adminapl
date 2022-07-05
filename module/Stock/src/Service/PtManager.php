@@ -511,12 +511,14 @@ class PtManager
     
     /**
      * Удалить автоперемещения за дату
+     * @param Office $office
+     * @param Office $office2
      * @param date $ptDate
      */
-    public function deleteAutoPt($ptDate)
+    public function deleteAutoPt($office, $office2, $ptDate)
     {
         $pts = $this->entityManager->getRepository(Pt::class)
-                ->findBy(['docDate' => $ptDate, 'docNo' => $this->autoPtDocNo]);
+                ->findBy(['office' => $office, 'office2' => $office2, 'docDate' => $ptDate, 'docNo' => $this->autoPtDocNo]);
         foreach ($pts as $pt){
             
             $this->removePtGood($pt);                    
@@ -553,14 +555,15 @@ class PtManager
     {
         $ptDate = date('Y-m-d');
         
-        $this->deleteAutoPt($ptDate);
+        $office = $ptSheduler->getOffice();
+        $office2 = $ptSheduler->getOffice2();
+
+        $this->deleteAutoPt($office, $office2, $ptDate);
         
         $soDate = $ptDate;
         if ($ptSheduler->getGeneratorDay() == PtSheduler::GENERATOR_DAY_TOMORROW){
             $soDate = date('Y-m-d', strtotime('tomorrow'));
         }
-        $office = $ptSheduler->getOffice();
-        $office2 = $ptSheduler->getOffice2();
 
         $supplierOrders = $this->entityManager->getRepository(SupplierOrder::class)
                 ->findForPt($office, $office2, $soDate);
