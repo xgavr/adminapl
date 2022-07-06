@@ -243,41 +243,41 @@ class RegisterRepository extends EntityRepository
             $this->ptuRegister($ptu);
         }
 
-        $ots = $this->getEntityManager()->getRepository(Ot::class)
-                ->findBy([]);
-        foreach ($ots as $ot){
-            $this->otRegister($ot);
-        }
-
-        $pts = $this->getEntityManager()->getRepository(Pt::class)
-                ->findBy([]);
-        foreach ($pts as $pt){
-            $this->ptRegister($pt);
-        }
-
-        $orders = $this->getEntityManager()->getRepository(Order::class)
-                ->findBy([]);
-        foreach ($orders as $order){
-            $this->orderRegister($order);
-        }
-
-        $vts = $this->getEntityManager()->getRepository(Vt::class)
-                ->findBy([]);
-        foreach ($vts as $vt){
-            $this->vtRegister($vt);
-        }
-
-        $vtps = $this->getEntityManager()->getRepository(Vtp::class)
-                ->findBy([]);
-        foreach ($vtps as $vtp){
-            $this->vtpRegister($vtp);
-        }
-
-        $sts = $this->getEntityManager()->getRepository(St::class)
-                ->findBy([]);
-        foreach ($sts as $st){
-            $this->stRegister($st);
-        }
+//        $ots = $this->getEntityManager()->getRepository(Ot::class)
+//                ->findBy([]);
+//        foreach ($ots as $ot){
+//            $this->otRegister($ot);
+//        }
+//
+//        $pts = $this->getEntityManager()->getRepository(Pt::class)
+//                ->findBy([]);
+//        foreach ($pts as $pt){
+//            $this->ptRegister($pt);
+//        }
+//
+//        $orders = $this->getEntityManager()->getRepository(Order::class)
+//                ->findBy([]);
+//        foreach ($orders as $order){
+//            $this->orderRegister($order);
+//        }
+//
+//        $vts = $this->getEntityManager()->getRepository(Vt::class)
+//                ->findBy([]);
+//        foreach ($vts as $vt){
+//            $this->vtRegister($vt);
+//        }
+//
+//        $vtps = $this->getEntityManager()->getRepository(Vtp::class)
+//                ->findBy([]);
+//        foreach ($vtps as $vtp){
+//            $this->vtpRegister($vtp);
+//        }
+//
+//        $sts = $this->getEntityManager()->getRepository(St::class)
+//                ->findBy([]);
+//        foreach ($sts as $st){
+//            $this->stRegister($st);
+//        }
     }
     
     /**
