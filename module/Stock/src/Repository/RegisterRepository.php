@@ -237,29 +237,29 @@ class RegisterRepository extends EntityRepository
         ini_set('memory_limit', '8192M');
         set_time_limit(0);
         
-        $ptus = $this->getEntityManager()->getRepository(Ptu::class)
+//        $ptus = $this->getEntityManager()->getRepository(Ptu::class)
+//                ->findBy([]);
+//        foreach ($ptus as $ptu){
+//            $this->ptuRegister($ptu);
+//        }
+
+        $ots = $this->getEntityManager()->getRepository(Ot::class)
                 ->findBy([]);
-        foreach ($ptus as $ptu){
-            $this->ptuRegister($ptu);
+        foreach ($ots as $ot){
+            $this->otRegister($ot);
         }
 
-//        $ots = $this->getEntityManager()->getRepository(Ot::class)
-//                ->findBy([]);
-//        foreach ($ots as $ot){
-//            $this->otRegister($ot);
-//        }
-//
-//        $pts = $this->getEntityManager()->getRepository(Pt::class)
-//                ->findBy([]);
-//        foreach ($pts as $pt){
-//            $this->ptRegister($pt);
-//        }
-//
-//        $orders = $this->getEntityManager()->getRepository(Order::class)
-//                ->findBy([]);
-//        foreach ($orders as $order){
-//            $this->orderRegister($order);
-//        }
+        $pts = $this->getEntityManager()->getRepository(Pt::class)
+                ->findBy([]);
+        foreach ($pts as $pt){
+            $this->ptRegister($pt);
+        }
+
+        $orders = $this->getEntityManager()->getRepository(Order::class)
+                ->findBy([]);
+        foreach ($orders as $order){
+            $this->orderRegister($order);
+        }
 //
 //        $vts = $this->getEntityManager()->getRepository(Vt::class)
 //                ->findBy([]);
