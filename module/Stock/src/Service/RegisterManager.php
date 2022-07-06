@@ -115,6 +115,7 @@ class RegisterManager
         $var->setDateVar($register->getDateOper());
         $var->setVarId($register->getDocId());
         $var->setVarType($register->getDocType());
+        $var->setVarStamp($register->getDocStamp());
         
         $this->entityManager->persist($var);
         $this->entityManager->flush($var);
@@ -364,7 +365,6 @@ class RegisterManager
         while (true){
             $register = $this->entityManager->getRepository(Register::class)
                     ->findForActualize();
-
             if ($register){
                 if ($this->docActualize($register)){
                     usleep(100);                    
@@ -375,7 +375,7 @@ class RegisterManager
                 break;
             }
             
-            if (time() > $startTime + 100){
+            if (time() > $startTime + 840){
                 break;
             }
         }    

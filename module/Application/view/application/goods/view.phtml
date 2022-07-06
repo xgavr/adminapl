@@ -223,7 +223,7 @@
                     data-toolbar="#movementToolbar"
                     data-show-refresh="true"
                     data-show-toggle="true"
-                    data-sort-name="dateOper"
+                    data-sort-name="docStamp"
                     data-sort-order="asc"            
                     data-query-params="movementsQueryParams"
                     data-response-handler="responseHandler"
@@ -540,7 +540,8 @@
           css: {
 //            color: 'blue'
           }
-        };   
+        }; 
+    }    
 
     function movementRowStyle(row, index) {
         if (row.status == <?= Movement::STATUS_RETIRED?>) {

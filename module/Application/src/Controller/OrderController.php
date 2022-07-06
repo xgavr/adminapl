@@ -232,9 +232,14 @@ class OrderController extends AbstractActionController
                 } else {
                     $order = $this->orderManager->addNewOrder($office, $contact, $data);
                 }    
-                if ($order && !empty($data['orderGood'])){
-                    $this->orderManager->updateBids($order, $data['orderGood']);
+                if ($order){
+                    if (!empty($data['orderGood'])){
+                        $this->orderManager->updateBids($order, $data['orderGood']);
+                    } else {
+                        $this->orderManager->updOrderTotal($order);
+                    }   
                 }
+                
                 $this->orderManager->updateSelectionsFromJson($order, $data['selections']);
                 if ($order && isset($data['comments'])){
                     foreach ($data['comments'] as $comment){
