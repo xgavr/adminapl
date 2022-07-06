@@ -45,6 +45,7 @@ class RegisterRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
         $var = $entityManager->getRepository(RegisterVariable::class)
                 ->findOneBy([]);
+        
         if (!$var){
             $var = new RegisterVariable();
             $var->setDateVar($dateVar);
@@ -55,7 +56,7 @@ class RegisterRepository extends EntityRepository
             $entityManager->flush($var);
         }
         
-        if ($var->getDateVar() > $dateVar){
+        if ($var->getVarStamp() > $varStamp){
             $var->setDateVar($dateVar);
             $var->setVarId($varId);
             $var->setVarType($varType);
@@ -97,9 +98,13 @@ class RegisterRepository extends EntityRepository
         $reg = $entityManager->getRepository(Register::class)
                 ->findOneBy(['docId' => $docId, 'docType' => $docType]);
 
-        $docStamp = $this->findMaxDocStamp($dateOper);
+        if ($reg){
+            $docStamp = $reg->getDocStamp();
+        }            
         
         if (!$reg){    
+            $docStamp = $this->findMaxDocStamp($dateOper);
+            
             $reg = new Register();
             $reg->setDocId($docId);
             $reg->setDocType($docType);            
@@ -110,6 +115,7 @@ class RegisterRepository extends EntityRepository
         }
         
         if ($reg->getDateOper() != $dateOper){
+            $docStamp = $this->findMaxDocStamp($dateOper);            
             $reg->setDateOper($dateOper);
             $reg->setDocStamp($docStamp);
             $entityManager->persist($reg);
@@ -243,41 +249,41 @@ class RegisterRepository extends EntityRepository
 //            $this->ptuRegister($ptu);
 //        }
 
-        $ots = $this->getEntityManager()->getRepository(Ot::class)
+//        $ots = $this->getEntityManager()->getRepository(Ot::class)
+//                ->findBy([]);
+//        foreach ($ots as $ot){
+//            $this->otRegister($ot);
+//        }
+//
+//        $pts = $this->getEntityManager()->getRepository(Pt::class)
+//                ->findBy([]);
+//        foreach ($pts as $pt){
+//            $this->ptRegister($pt);
+//        }
+//
+//        $orders = $this->getEntityManager()->getRepository(Order::class)
+//                ->findBy([]);
+//        foreach ($orders as $order){
+//            $this->orderRegister($order);
+//        }
+
+        $vts = $this->getEntityManager()->getRepository(Vt::class)
                 ->findBy([]);
-        foreach ($ots as $ot){
-            $this->otRegister($ot);
+        foreach ($vts as $vt){
+            $this->vtRegister($vt);
         }
 
-        $pts = $this->getEntityManager()->getRepository(Pt::class)
+        $vtps = $this->getEntityManager()->getRepository(Vtp::class)
                 ->findBy([]);
-        foreach ($pts as $pt){
-            $this->ptRegister($pt);
+        foreach ($vtps as $vtp){
+            $this->vtpRegister($vtp);
         }
 
-        $orders = $this->getEntityManager()->getRepository(Order::class)
+        $sts = $this->getEntityManager()->getRepository(St::class)
                 ->findBy([]);
-        foreach ($orders as $order){
-            $this->orderRegister($order);
+        foreach ($sts as $st){
+            $this->stRegister($st);
         }
-//
-//        $vts = $this->getEntityManager()->getRepository(Vt::class)
-//                ->findBy([]);
-//        foreach ($vts as $vt){
-//            $this->vtRegister($vt);
-//        }
-//
-//        $vtps = $this->getEntityManager()->getRepository(Vtp::class)
-//                ->findBy([]);
-//        foreach ($vtps as $vtp){
-//            $this->vtpRegister($vtp);
-//        }
-//
-//        $sts = $this->getEntityManager()->getRepository(St::class)
-//                ->findBy([]);
-//        foreach ($sts as $st){
-//            $this->stRegister($st);
-//        }
     }
     
     /**
