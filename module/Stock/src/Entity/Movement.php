@@ -65,6 +65,11 @@ class Movement {
     protected $docId;
     
     /**
+     * @ORM\Column(name="doc_stamp")   
+     */
+    protected $docStamp;
+    
+    /**
      * @ORM\Column(name="base_key")   
      */
     protected $baseKey;
@@ -168,6 +173,16 @@ class Movement {
     public function setDocId($docId) 
     {
         $this->docId = $docId;
+    }     
+
+    public function getDocStamp() 
+    {
+        return $this->docStamp;
+    }
+
+    public function setDocStamp($docStamp) 
+    {
+        $this->docStamp = $docStamp;
     }     
 
     public function getBaseKey() 

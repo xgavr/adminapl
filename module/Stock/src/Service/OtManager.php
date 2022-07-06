@@ -70,7 +70,7 @@ class OtManager
     public function updateOtMovement($ot)
     {
         
-        $this->entityManager->getRepository(Register::class)
+        $docStamp = $this->entityManager->getRepository(Register::class)
                 ->otRegister($ot);
 
         $this->entityManager->getRepository(Movement::class)
@@ -100,6 +100,7 @@ class OtManager
                     'good_id' => $otGood->getGood()->getId(),
                     'office_id' => $ot->getOffice()->getId(),
                     'company_id' => $ot->getCompany()->getId(),
+                    'doc_stamp' => $docStamp,
                 ];
 
                 $this->entityManager->getRepository(Movement::class)

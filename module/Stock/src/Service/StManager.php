@@ -68,7 +68,7 @@ class StManager
     public function updateStMovement($st)
     {
         
-        $this->entityManager->getRepository(Register::class)
+        $docStamp = $this->entityManager->getRepository(Register::class)
                 ->stRegister($st);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($st->getLogKey());
@@ -113,6 +113,7 @@ class StManager
                             'good_id' => $stGood->getGood()->getId(),
                             'office_id' => $st->getOffice()->getId(),
                             'company_id' => $st->getCompany()->getId(),
+                            'doc_stamp' => $docStamp,
                         ];
 
                         $this->entityManager->getRepository(Movement::class)

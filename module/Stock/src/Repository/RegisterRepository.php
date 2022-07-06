@@ -118,7 +118,7 @@ class RegisterRepository extends EntityRepository
         
         $this->updateVariable($dateOper, $docType, $docId, $docStamp);
         
-        return;        
+        return $docStamp;        
     }
     
     /**
@@ -152,84 +152,84 @@ class RegisterRepository extends EntityRepository
      * Регистриция Pt
      * 
      * @param Pt $pt
+     * @return float
      */
     public function ptRegister($pt)
     {
-        $dateOper = date('Y-m-d 12:00:00', strtotime($pt->getDocDate()));
-        $this->register($dateOper, Movement::DOC_PT, $pt->getId());
-        return;
+        $dateOper = date('Y-m-d 12:00:00', strtotime($pt->getDocDate()));        
+        return $this->register($dateOper, Movement::DOC_PT, $pt->getId());
     }
     
     /**
      * Регистриция Ptu
      * 
      * @param Ptu $ptu
+     * @return float
      */
     public function ptuRegister($ptu)
     {
         $dateOper = date('Y-m-d 00:01:00', strtotime($ptu->getDocDate()));
-        $this->register($dateOper, Movement::DOC_PTU, $ptu->getId());
-        return;
+        return $this->register($dateOper, Movement::DOC_PTU, $ptu->getId());
     }    
     
     /**
      * Регистриция Vtp
      * 
      * @param Vtp $vtp
+     * @return float
      */
     public function vtpRegister($vtp)
     {
         $dateOper = date('Y-m-d 23:01:00', strtotime($vtp->getDocDate()));
-        $this->register($dateOper, Movement::DOC_VTP, $vtp->getId());
-        return;
+        return $this->register($dateOper, Movement::DOC_VTP, $vtp->getId());
     }    
 
     /**
      * Регистриция Ot
      * 
      * @param Ot $ot
+     * @return float
      */
     public function otRegister($ot)
     {
         $dateOper = date('Y-m-d 00:01:00', strtotime($ot->getDocDate()));
-        $this->register($dateOper, Movement::DOC_OT, $ot->getId());
-        return;
+        return $this->register($dateOper, Movement::DOC_OT, $ot->getId());
     }    
 
     /**
      * Регистриция St
      * 
      * @param St $st
+     * @return float
      */
     public function stRegister($st)
     {
         $dateOper = date('Y-m-d 00:01:00', strtotime($st->getDocDate()));
-        $this->register($dateOper, Movement::DOC_ST, $st->getId());
-        return;
+        return $this->register($dateOper, Movement::DOC_ST, $st->getId());
     }    
 
     /**
      * Регистриция Vt
      * 
      * @param Vt $vt
+     * @return float
      */
     public function vtRegister($vt)
     {
         $dateOper = date('Y-m-d 22:01:00', strtotime($vt->getDocDate()));
-        $this->register($dateOper, Movement::DOC_VT, $vt->getId());
-        return;
+        return $this->register($dateOper, Movement::DOC_VT, $vt->getId());
     }    
 
     /**
      * Регистриция Order
      * 
      * @param Order $order
+     * @return float
      */
     public function orderRegister($order)
     {
         $dateOper = date('Y-m-d 21:01:00', strtotime($order->getDocDate()));
-        $this->register($dateOper, Movement::DOC_ORDER, $order->getId());
-        return;
+        return $this->register($dateOper, Movement::DOC_ORDER, $order->getId());
     } 
     
     public function allRegister()

@@ -146,7 +146,7 @@ class VtManager
     public function updateVtMovement($vt)
     {
         
-        $this->entityManager->getRepository(Register::class)
+        $docStamp = $this->entityManager->getRepository(Register::class)
                 ->vtRegister($vt);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($vt->getLogKey());
@@ -185,6 +185,7 @@ class VtManager
                         'good_id' => $vtGood->getGood()->getId(),
                         'office_id' => $vt->getOffice()->getId(),
                         'company_id' => $vt->getOrder()->getCompany()->getId(),
+                        'doc_stamp' => $docStamp,
                     ];
 
                     $this->entityManager->getRepository(Movement::class)

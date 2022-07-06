@@ -91,7 +91,7 @@ class PtManager
     public function updatePtMovement($pt)
     {
         
-        $this->entityManager->getRepository(Register::class)
+        $docStamp = $this->entityManager->getRepository(Register::class)
                 ->ptRegister($pt);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($pt->getLogKey());
@@ -136,6 +136,7 @@ class PtManager
                             'good_id' => $ptGood->getGood()->getId(),
                             'office_id' => $pt->getOffice()->getId(),
                             'company_id' => $pt->getCompany()->getId(),
+                            'doc_stamp' => $docStamp,
                         ];
 
                         $this->entityManager->getRepository(Movement::class)
@@ -179,6 +180,7 @@ class PtManager
                             'good_id' => $ptGood->getGood()->getId(),
                             'office_id' => $pt->getOffice2()->getId(),
                             'company_id' => $pt->getCompany2()->getId(),
+                            'doc_stamp' => $docStamp,
                         ];
 
                         $this->entityManager->getRepository(Movement::class)

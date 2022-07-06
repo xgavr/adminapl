@@ -19,6 +19,10 @@ final class Version20220706151608 extends AbstractMigration
 
         $table = $schema->getTable('register_variable');
         $table->addColumn('var_stamp', 'float', ['notnull' => true]);
+
+        $table = $schema->getTable('movement');
+        $table->addColumn('doc_stamp', 'float', ['notnull' => true, 'default' => 0]);
+        $table->addIndex(['doc_stamp'], 'doc_stamp_indx');
     }
 
     public function down(Schema $schema) : void
@@ -30,5 +34,9 @@ final class Version20220706151608 extends AbstractMigration
 
         $table = $schema->getTable('register_variable');
         $table->dropColumn('var_stamp');
+
+        $table = $schema->getTable('movement');
+        $table->dropIndex('doc_stamp_indx');
+        $table->dropColumn('doc_stamp');
     }
 }

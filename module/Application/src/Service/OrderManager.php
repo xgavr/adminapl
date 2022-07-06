@@ -232,8 +232,9 @@ class OrderManager
      * Обновить движения заказа
      * 
      * @param Order $order
+     * @param float $docStamp
      */
-    public function updateOrderMovement($order)
+    public function updateOrderMovement($order, $docStamp)
     {
                         
         $bids = $this->entityManager->getRepository(Bid::class)
@@ -272,6 +273,7 @@ class OrderManager
                         'good_id' => $bid->getGood()->getId(),
                         'office_id' => $order->getOffice()->getId(),
                         'company_id' => $order->getCompany()->getId(),
+                        'doc_stamp' => $docStamp,
                     ];
 
                     $this->entityManager->getRepository(Movement::class)
@@ -981,7 +983,7 @@ class OrderManager
     public function repostOrder($order)
     {
         
-        $this->entityManager->getRepository(Register::class)
+        $docStamp = $this->entityManager->getRepository(Register::class)
                 ->orderRegister($order);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($order->getLogKey());        
@@ -993,7 +995,7 @@ class OrderManager
                 ->removeDocMutuals($order->getLogKey());                
         
         if ($order->getStatus() == Order::STATUS_SHIPPED){
-            $this->updateOrderMovement($order);            
+            $this->updateOrderMovement($order, $docStamp);            
             $this->updateOrderRetails($order);
             if ($order->getLegal()){
                 $this->updateOrderMutuals($order);

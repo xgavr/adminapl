@@ -103,7 +103,7 @@ class PtuManager
      */
     public function updatePtuMovement($ptu)
     {
-        $this->entityManager->getRepository(Register::class)
+        $docStamp = $this->entityManager->getRepository(Register::class)
                 ->ptuRegister($ptu);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($ptu->getLogKey());
@@ -128,6 +128,7 @@ class PtuManager
                     'good_id' => $ptuGood->getGood()->getId(),
                     'office_id' => $ptu->getOffice()->getId(),
                     'company_id' => $ptu->getContract()->getCompany()->getId(),
+                    'doc_stamp' => $docStamp,
                 ];
 
                 $this->entityManager->getRepository(Movement::class)
