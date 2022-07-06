@@ -110,6 +110,7 @@ class OtManager
                     unset($data['base_key']);
                     unset($data['base_type']);
                     unset($data['base_id']);
+                    unset($data['doc_stamp']);
                     $data['contact_id'] = $ot->getComiss()->getId();                    
                     $this->entityManager->getRepository(Comiss::class)
                             ->insertComiss($data);

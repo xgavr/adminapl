@@ -141,10 +141,9 @@ class RegisterRepository extends EntityRepository
 
             $queryBuilder->select('r')
                     ->from(Register::class, 'r')
-                    ->where('r.dateOper >= ?1')
-                    ->setParameter('1', $var->getDateVar())
-                    ->orderBy('r.dateOper', 'ASC')
-                    ->orderBy('r.varId', 'ASC')
+                    ->where('r.docStamp > ?1')
+                    ->setParameter('1', $var->getDocStamp())
+                    ->orderBy('r.docStamp', 'ASC')
                     ->setMaxResults(1)
                     ;
 

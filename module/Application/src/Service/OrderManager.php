@@ -244,7 +244,7 @@ class OrderManager
             if ($order->getStatus() == Order::STATUS_SHIPPED){
             
                 $bases = $this->entityManager->getRepository(Movement::class)
-                        ->findBases($bid->getGood()->getId(), $order->getDateOper(), $order->getOffice()->getId());
+                        ->findBases($bid->getGood()->getId(), $docStamp, $order->getOffice()->getId());
                 
                 $write = $bid->getNum();
                 

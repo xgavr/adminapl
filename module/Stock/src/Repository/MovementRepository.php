@@ -64,12 +64,11 @@ class MovementRepository extends EntityRepository{
      * Найти документ для списания товара
      * 
      * @param integer $goodId
-     * @param date $dateOper
+     * @param float $docStamp
      * @param integer $officeId
-     * @param integer $registerId
      * $param string $baseKey
      */
-    public function findBases($goodId, $dateOper, $officeId, $baseKey = null)
+    public function findBases($goodId, $docStamp, $officeId, $baseKey = null)
     {
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
@@ -77,11 +76,11 @@ class MovementRepository extends EntityRepository{
         $qb->select('sum(m.quantity) as rest, m.baseKey')
                 ->from(Movement::class, 'm')
                 ->where('m.good = ?1')
-                ->andWhere('m.dateOper <= ?2')
+                ->andWhere('m.docStamp < ?2')
                 ->andWhere('m.office = ?3')
                 ->andWhere('m.status != ?4')
                 ->setParameter('1', $goodId)
-                ->setParameter('2', $dateOper)
+                ->setParameter('2', $docStamp)
                 ->setParameter('3', $officeId)
                 ->setParameter('4', Movement::STATUS_RETIRED)
                 ->groupBy('m.baseKey')

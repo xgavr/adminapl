@@ -155,9 +155,6 @@ class RegisterManager
 
         $this->otManager->updateOtAmount($ot);
         
-        $otRegister = $this->entityManager->getRepository(Register::class)
-                ->findOneBy(['docType' => Movement::DOC_OT, 'docId' => $ot->getId()]);
-
         return true;
     }
     
@@ -350,8 +347,6 @@ class RegisterManager
             default: $flag = false;    
         }
         
-        $this->updateVar($register);
-        
         return $flag;
     }
     
@@ -361,7 +356,7 @@ class RegisterManager
     public function actualize()
     {
         ini_set('memory_limit', '512M');
-        set_time_limit(900);
+        set_time_limit(300);
         $startTime = time();
         
         while (true){

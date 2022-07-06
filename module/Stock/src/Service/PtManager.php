@@ -106,7 +106,7 @@ class PtManager
             foreach ($ptGoods as $ptGood){
 
                 $bases = $this->entityManager->getRepository(Movement::class)
-                        ->findBases($ptGood->getGood()->getId(), $pt->getDocDate(), $pt->getOffice()->getId());
+                        ->findBases($ptGood->getGood()->getId(), $docStamp, $pt->getOffice()->getId());
 
                 $write = $ptGood->getQuantity();
 
