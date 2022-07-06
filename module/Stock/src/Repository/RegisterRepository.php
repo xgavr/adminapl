@@ -261,11 +261,11 @@ class RegisterRepository extends EntityRepository
 //            $this->ptRegister($pt);
 //        }
 //
-//        $orders = $this->getEntityManager()->getRepository(Order::class)
-//                ->findBy([]);
-//        foreach ($orders as $order){
-//            $this->orderRegister($order);
-//        }
+        $orders = $this->getEntityManager()->getRepository(Order::class)
+                ->findBy([]);
+        foreach ($orders as $order){
+            $this->orderRegister($order);
+        }
 
         $vts = $this->getEntityManager()->getRepository(Vt::class)
                 ->findBy([]);
