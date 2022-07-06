@@ -347,6 +347,8 @@ class RegisterManager
             default: $flag = false;    
         }
         
+        $this->updateVar($register);
+        
         return $flag;
     }
     
@@ -356,7 +358,7 @@ class RegisterManager
     public function actualize()
     {
         ini_set('memory_limit', '512M');
-        set_time_limit(300);
+        set_time_limit(900);
         $startTime = time();
         
         while (true){
@@ -373,7 +375,7 @@ class RegisterManager
                 break;
             }
             
-            if (time() > $startTime + 840){
+            if (time() > $startTime + 100){
                 break;
             }
         }    
