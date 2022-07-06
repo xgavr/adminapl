@@ -43,6 +43,11 @@ class RegisterVariable {
      */
     protected $varId;
         
+    /**
+     * @ORM\Column(name="var_stamp")   
+     */
+    protected $varStamp;
+        
     public function __construct() {
     }
    
@@ -69,6 +74,16 @@ class RegisterVariable {
     public function setVarId($varId) 
     {
         $this->varId = $varId;
+    }     
+
+    public function getVarStamp() 
+    {
+        return $this->varStamp;
+    }
+
+    public function setVarStamp($varStamp) 
+    {
+        $this->varStamp = $varStamp;
     }     
 
     /**

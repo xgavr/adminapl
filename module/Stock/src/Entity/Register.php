@@ -46,6 +46,11 @@ class Register {
      */
     protected $docId;
         
+    /**
+     * @ORM\Column(name="doc_stamp")   
+     */
+    protected $docStamp;
+
     public function __construct() {
     }
    
@@ -72,6 +77,16 @@ class Register {
     public function setDocId($docId) 
     {
         $this->docId = $docId;
+    }     
+
+    public function getDocStamp() 
+    {
+        return $this->docStamp;
+    }
+
+    public function setDocStamp($docStamp) 
+    {
+        $this->docStamp = $docStamp;
     }     
 
     /**

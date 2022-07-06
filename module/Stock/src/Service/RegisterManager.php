@@ -157,9 +157,8 @@ class RegisterManager
         
         $otRegister = $this->entityManager->getRepository(Register::class)
                 ->findOneBy(['docType' => Movement::DOC_OT, 'docId' => $ot->getId()]);
-        $this->docActualize($otRegister);
 
-        return;
+        return true;
     }
     
     /**
@@ -183,7 +182,6 @@ class RegisterManager
             
             $ptuRegister = $this->entityManager->getRepository(Register::class)
                             ->findOneBy(['docType' => Movement::DOC_PTU, 'docId' => $ptu->getId()]);
-            $this->docActualize($ptuRegister);
             return true;
         }
         return false;
@@ -209,7 +207,6 @@ class RegisterManager
             
             $ptuRegister = $this->entityManager->getRepository(Register::class)
                             ->findOneBy(['docType' => Movement::DOC_PTU, 'docId' => $ptu->getId()]);
-            $this->docActualize($ptuRegister);
             return true;
         }
         return false;
@@ -245,12 +242,10 @@ class RegisterManager
                             $rows = [];
                             foreach ($bids as $bid){
                                 if ($this->findNearPtu($bid->getGood(), $order->getDateOper())){
-                                    var_dump(11); exit;
-                                    return $this->docActualize($register);
+                                    return true;
                                 } 
                                 if ($this->correctCodePtu($bid->getGood(), $order->getDateOper())){
-                                    var_dump($order->getId()); exit;
-                                    return $this->docActualize($register);                                    
+                                    return true;
                                 } 
                                 $rows[] = [
                                     'goodId' => $bid->getGood()->getId(),
@@ -259,8 +254,7 @@ class RegisterManager
                                 ];
                             }
                             $data['rows'] = $rows;
-                            $this->oldOt($data);
-                            $flag = $this->docActualize($register);
+                            return $this->oldOt($data);                            
                         }
                     }   
                 }
@@ -287,13 +281,12 @@ class RegisterManager
                                     ->findBy(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
                             foreach ($ptGoods as $ptGood){
                                 if ($this->findNearPtu($ptGood->getGood(), $pt->getDocDate())){
-                                    return $this->docActualize($register);
+                                    return true;
                                 } 
                                 if ($this->correctCodePtu($ptGood->getGood(), $pt->getDocDate())){
-                                    return $this->docActualize($register);                                    
+                                    return true;
                                 } 
                             }
-                            $flag = $this->docActualize($register);
                         }
                     }    
                 }
@@ -320,13 +313,12 @@ class RegisterManager
                                     ->findBy(['st' => $st->getId(), 'take' => StGood::TAKE_NO]);
                             foreach ($stGoods as $stGood){
                                 if ($this->findNearPtu($stGood->getGood(), $st->getDocDate())){
-                                    return $this->docActualize($register);
+                                    return true;
                                 } 
                                 if ($this->correctCodePtu($stGood->getGood(), $st->getDocDate())){
-                                    return $this->docActualize($register);                                    
+                                    return true;                                    
                                 } 
-                            }
-                            $flag = $this->docActualize($register);
+                            }                           
                         }
                     }    
                 }
@@ -372,21 +364,24 @@ class RegisterManager
         set_time_limit(900);
         $startTime = time();
         
-        $registers = $this->entityManager->getRepository(Register::class)
-                ->findForActualize();
+        while (true){
+            $register = $this->entityManager->getRepository(Register::class)
+                    ->findForActualize();
 
-        if ($registers){
-            foreach ($registers as $register){
+            if ($register){
                 if ($this->docActualize($register)){
                     usleep(100);                    
                 } else {
                     throw new \Exception('Документ не проведен!');
                 }
-                if (time() > $startTime + 840){
-                    break;
-                }
+            } else{
+                break;
             }
-        }
+            
+            if (time() > $startTime + 840){
+                break;
+            }
+        }    
 
         return;                
     }

@@ -37,9 +37,10 @@ class RegisterRepository extends EntityRepository
      * @param date $dateVar
      * @param integer $varType
      * @param integer $varId
+     * @param float $varStamp
      * @return null
      */
-    private function updateVariable($dateVar, $varType, $varId)
+    private function updateVariable($dateVar, $varType, $varId, $varStamp)
     {
         $entityManager = $this->getEntityManager();
         $var = $entityManager->getRepository(RegisterVariable::class)
@@ -49,6 +50,7 @@ class RegisterRepository extends EntityRepository
             $var->setDateVar($dateVar);
             $var->setVarId($varId);
             $var->setVarType($varType);
+            $var->setVarStamp($varStamp);
             $entityManager->persist($var);
             $entityManager->flush($var);
         }
@@ -57,11 +59,29 @@ class RegisterRepository extends EntityRepository
             $var->setDateVar($dateVar);
             $var->setVarId($varId);
             $var->setVarType($varType);
+            $var->setVarStamp($varStamp);
             $entityManager->persist($var);
             $entityManager->flush($var);            
         }        
         
         return;
+    }
+    
+    /**
+     * Найти наибольшую метку
+     * @param date $dateOper
+     * @return float
+     */
+    private function findMaxDocStamp($dateOper)
+    {
+        $entityManager = $this->getEntityManager();
+        $reg = $entityManager->getRepository(Register::class)
+                ->findOneBy(['dateOper' => $dateOper], ['docStamp' => 'DESC']);
+        if ($reg){
+            return $reg->getDocStamp() + 0.001; 
+        }
+//        var_dump(strtotime($dateOper) + 0.001); exit;
+        return strtotime($dateOper) + 0.001;
     }
     
     /**
@@ -77,22 +97,26 @@ class RegisterRepository extends EntityRepository
         $reg = $entityManager->getRepository(Register::class)
                 ->findOneBy(['docId' => $docId, 'docType' => $docType]);
 
-        if (!$reg){
+        $docStamp = $this->findMaxDocStamp($dateOper);
+        
+        if (!$reg){    
             $reg = new Register();
             $reg->setDocId($docId);
             $reg->setDocType($docType);            
             $reg->setDateOper($dateOper);
+            $reg->setDocStamp($docStamp);
             $entityManager->persist($reg);
             $entityManager->flush($reg);
         }
         
         if ($reg->getDateOper() != $dateOper){
             $reg->setDateOper($dateOper);
+            $reg->setDocStamp($docStamp);
             $entityManager->persist($reg);
             $entityManager->flush($reg);            
         }
         
-        $this->updateVariable($dateOper, $docType, $docId);
+        $this->updateVariable($dateOper, $docType, $docId, $docStamp);
         
         return;        
     }
@@ -114,10 +138,11 @@ class RegisterRepository extends EntityRepository
                     ->where('r.dateOper >= ?1')
                     ->setParameter('1', $var->getDateVar())
                     ->orderBy('r.dateOper', 'ASC')
-                    ->setMaxResults(10000)
+                    ->orderBy('r.varId', 'ASC')
+                    ->setMaxResults(1)
                     ;
 
-            return $queryBuilder->getQuery()->getResult();        
+            return $queryBuilder->getQuery()->getOneOrNullResult();        
         }
         
         return;
@@ -212,29 +237,29 @@ class RegisterRepository extends EntityRepository
         ini_set('memory_limit', '8192M');
         set_time_limit(0);
         
-//        $ptus = $this->getEntityManager()->getRepository(Ptu::class)
-//                ->findBy([]);
-//        foreach ($ptus as $ptu){
-//            $this->ptuRegister($ptu);
-//        }
+        $ptus = $this->getEntityManager()->getRepository(Ptu::class)
+                ->findBy([]);
+        foreach ($ptus as $ptu){
+            $this->ptuRegister($ptu);
+        }
 
-//        $ots = $this->getEntityManager()->getRepository(Ot::class)
-//                ->findBy([]);
-//        foreach ($ots as $ot){
-//            $this->otRegister($ot);
-//        }
+        $ots = $this->getEntityManager()->getRepository(Ot::class)
+                ->findBy([]);
+        foreach ($ots as $ot){
+            $this->otRegister($ot);
+        }
 
-//        $pts = $this->getEntityManager()->getRepository(Pt::class)
-//                ->findBy([]);
-//        foreach ($pts as $pt){
-//            $this->ptRegister($pt);
-//        }
+        $pts = $this->getEntityManager()->getRepository(Pt::class)
+                ->findBy([]);
+        foreach ($pts as $pt){
+            $this->ptRegister($pt);
+        }
 
-//        $orders = $this->getEntityManager()->getRepository(Order::class)
-//                ->findBy([]);
-//        foreach ($orders as $order){
-//            $this->orderRegister($order);
-//        }
+        $orders = $this->getEntityManager()->getRepository(Order::class)
+                ->findBy([]);
+        foreach ($orders as $order){
+            $this->orderRegister($order);
+        }
 
         $vts = $this->getEntityManager()->getRepository(Vt::class)
                 ->findBy([]);

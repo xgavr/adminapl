@@ -227,6 +227,7 @@
                     data-sort-order="asc"            
                     data-query-params="movementsQueryParams"
                     data-response-handler="responseHandler"
+                    data-row-style="movementRowStyle"
                     data-classes = "table table-bordered table-hover table-condensed"
                     >
                     <thead>
@@ -533,6 +534,23 @@
         if (row.status == <?= Oem::STATUS_RETIRED?>) {
             return {               
                 classes: 'retired'
+            };   
+        }
+        return {
+          css: {
+//            color: 'blue'
+          }
+        };   
+
+    function movementRowStyle(row, index) {
+        if (row.status == <?= Movement::STATUS_RETIRED?>) {
+            return {               
+                classes: 'retired'
+            };   
+        }
+        if (row.status == <?= Movement::STATUS_COMMISSION?>) {
+            return {               
+                classes: 'warning'
             };   
         }
         return {

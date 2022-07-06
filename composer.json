@@ -57,7 +57,8 @@
         "hflabs/dadata": "^20.7",
         "bukashk0zzz/yml-generator": "dev-master",
         "alexmg86/laravel-goodsru": "^1.1",
-        "mpdf/mpdf": "^8.1"
+        "mpdf/mpdf": "^8.1",
+        "hutnikau/job-scheduler": "^0.6.1"
     },
     "autoload": {
         "psr-4": {
