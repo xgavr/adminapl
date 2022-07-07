@@ -341,14 +341,14 @@ class RegisterRepository extends EntityRepository
                 ;
         if ($before){
             $queryBuilder            
-                ->where('p.docDate >= ?1')
+                ->andWhere('p.docDate >= ?1')
                 ->andWhere('p.docDate <= ?2')
                 ->setParameter('1', date('Y-m-d 23:59:59', strtotime($docDate.' -10 days')))
                 ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate)))
                 ;
         } else {
             $queryBuilder            
-                ->where('p.docDate > ?1')
+                ->andWhere('p.docDate > ?1')
                 ->andWhere('p.docDate <= ?2')
                 ->setParameter('1', date('Y-m-d', strtotime($docDate)))
                 ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate.' +10 days')))
