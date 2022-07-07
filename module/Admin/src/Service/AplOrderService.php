@@ -695,8 +695,8 @@ class AplOrderService {
         
         while (true){
             if ($this->unloadOrder($start)) {
-                usleep(100);
-                if (time() > $startTime + 840){
+                //usleep(100);
+                if (time() > $startTime + 870){
                     break;
                 }
             } else {
