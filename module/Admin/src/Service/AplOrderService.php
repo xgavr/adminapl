@@ -571,7 +571,7 @@ class AplOrderService {
                         $good = $this->aplDocService->findGood($tp['good']);   
                     }    
                     if (empty($good)){
-        //                throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                        throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
 //            var_dump($tp); exit;
                         return false;
                     } else {
@@ -669,7 +669,6 @@ class AplOrderService {
 //            var_dump($body);
             return false;
         } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
-            var_dump($result); exit;
             return true;
         }    
 //        var_dump($result); exit;
