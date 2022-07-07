@@ -669,6 +669,7 @@ class AplOrderService {
 //            var_dump($body);
             return false;
         } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+            var_dump($result); exit;
             return true;
         }    
 //        var_dump($result); exit;
