@@ -430,7 +430,7 @@ class AplOrderService {
     {
         $client = $this->getClient($data);
         if (!$client){
-            return true;
+            return true; // позже загрузим
         }
 //        var_dump($data); exit;
         
