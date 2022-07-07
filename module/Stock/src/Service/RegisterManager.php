@@ -178,8 +178,6 @@ class RegisterManager
             $this->entityManager->flush($ptu);
             $this->ptuManager->repostPtu($ptu);
             
-            $ptuRegister = $this->entityManager->getRepository(Register::class)
-                            ->findOneBy(['docType' => Movement::DOC_PTU, 'docId' => $ptu->getId()]);
             return true;
         }
         return false;
@@ -203,8 +201,6 @@ class RegisterManager
             $this->entityManager->flush($ptu);
             $this->ptuManager->repostPtu($ptu);
             
-            $ptuRegister = $this->entityManager->getRepository(Register::class)
-                            ->findOneBy(['docType' => Movement::DOC_PTU, 'docId' => $ptu->getId()]);
             return true;
         }
         return false;
