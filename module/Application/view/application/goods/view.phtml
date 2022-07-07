@@ -422,6 +422,10 @@
         $('.editable').editable();
     });
 
+    function refreshTable(){
+        $('#movementTable').bootstrapTable('refresh');
+    }
+
     $(function () {
         $('#priceStatusSelect').change(function (){
             $('#priceTable').bootstrapTable('refresh');
