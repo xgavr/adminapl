@@ -300,7 +300,7 @@ class RegisterRepository extends EntityRepository
                 ->from(Ptu::class, 'p')
                 ->where('p.docDate > ?1')
                 ->andWhere('p.docDate <= ?2')
-                ->setParameter('1', $docDate)
+                ->setParameter('1', strtotime($docDate))
                 ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate.' +10 days')))
                 ->join('p.ptuGoods', 'pg')
                 ->andWhere('pg.good = ?3')
@@ -318,9 +318,10 @@ class RegisterRepository extends EntityRepository
      * Найти ПТУ с таким же артикулом
      * @param Goods $good
      * @param date $docDate
+     * @param bool $before
      * @retrun Ptu
      */
-    public function correctCodePtu($good, $docDate)
+    public function correctCodePtu($good, $docDate, $before = true)
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -328,18 +329,31 @@ class RegisterRepository extends EntityRepository
         $queryBuilder->select('pg')
                 ->from(PtuGood::class, 'pg')
                 ->join('pg.ptu', 'p')
-                ->where('p.docDate >= ?1')
-                ->andWhere('p.docDate <= ?2')
-                ->setParameter('1', date('Y-m-d 23:59:59', strtotime($docDate.' -10 days')))
-                ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate.' +10 days')))
                 ->join('pg.good', 'g')
                 ->andWhere('g.code = ?3')
+                ->andWhere('g.producer != ?4')
                 ->setParameter('3', $good->getCode())
-                ->andWhere('p.status = ?4')
-                ->setParameter('4', Ptu::STATUS_ACTIVE)
+                ->setParameter('4', $good->getProducer()->getId())
+                ->andWhere('p.status = ?5')
+                ->setParameter('5', Ptu::STATUS_ACTIVE)
                 ->orderBy('p.docDate', 'ASC')
                 ->setMaxResults(1)
                 ;
+        if ($before){
+            $queryBuilder            
+                ->where('p.docDate >= ?1')
+                ->andWhere('p.docDate <= ?2')
+                ->setParameter('1', date('Y-m-d 23:59:59', strtotime($docDate.' -10 days')))
+                ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate)))
+                ;
+        } else {
+            $queryBuilder            
+                ->where('p.docDate > ?1')
+                ->andWhere('p.docDate <= ?2')
+                ->setParameter('1', date('Y-m-d', strtotime($docDate)))
+                ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate.' +10 days')))
+                ;            
+        }
 
         $ptuGood = $queryBuilder->getQuery()->getOneOrNullResult();
         if ($ptuGood){

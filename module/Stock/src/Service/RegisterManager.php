@@ -192,11 +192,23 @@ class RegisterManager
     private function correctCodePtu($good, $docDate)
     {
         $ptu = $this->entityManager->getRepository(Register::class)
-                ->correctCodePtu($good, $docDate);
+                ->correctCodePtu($good, $docDate, true);
+        if ($ptu){
+            $ptu->setDocDate($docDate);
+            $ptu->setComment('#Поправка товара, дата не менялась');
+            $this->entityManager->persist($ptu);
+            $this->entityManager->flush($ptu);
+            $this->ptuManager->repostPtu($ptu);
+            
+            return true;
+        }
+
+        $ptu = $this->entityManager->getRepository(Register::class)
+                ->correctCodePtu($good, $docDate, false);
         if ($ptu){
             $oldDate = $ptu->getDocDate();
             $ptu->setDocDate($docDate);
-            $ptu->setComment('#Поправка даты и товара, старая дата: '.$oldDate);
+            $ptu->setComment('#Поправка товара и даты, старая дата: '.$oldDate);
             $this->entityManager->persist($ptu);
             $this->entityManager->flush($ptu);
             $this->ptuManager->repostPtu($ptu);
@@ -371,7 +383,7 @@ class RegisterManager
                 break;
             }
             
-            if (time() > $startTime + 840){
+            if (time() > $startTime + 100){
                 break;
             }
         }    

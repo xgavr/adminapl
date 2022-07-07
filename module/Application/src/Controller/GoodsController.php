@@ -758,7 +758,7 @@ class GoodsController extends AbstractActionController
         $search = $this->params()->fromQuery('search');
         $source = $this->params()->fromQuery('source');
         $office = $this->params()->fromQuery('office', $this->logManager->currentUser()->getOffice()->getId());
-        $sort = $this->params()->fromQuery('sort', 'dateOper');
+        $sort = $this->params()->fromQuery('sort', 'docStamp');
         $order = $this->params()->fromQuery('order', 'ASC');
         $year_month = $this->params()->fromQuery('month');
         
