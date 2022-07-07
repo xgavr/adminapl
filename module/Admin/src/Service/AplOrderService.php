@@ -430,7 +430,7 @@ class AplOrderService {
     {
         $client = $this->getClient($data);
         if (!$client){
-            return false;
+            return true;
         }
 //        var_dump($data); exit;
         
@@ -671,7 +671,7 @@ class AplOrderService {
         } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
             return true;
         }    
-        var_dump($result);
+//        var_dump($result);
 
         if (is_array($result)){
             if ($this->getOrder($result)){ 
