@@ -387,7 +387,7 @@ class RegisterManager
                 break;
             }
             
-            if (time() > $startTime + 100){
+            if (time() > $startTime + 840){
                 break;
             }
         }    
