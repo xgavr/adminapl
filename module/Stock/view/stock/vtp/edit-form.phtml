@@ -170,7 +170,7 @@ if ($vtp){
                             data-response-handler="vtpgoodResponseHandler"
                             data-unique-id = "rowNo"
                             data-classes = "table table-bordered table-hover table-condensed"
-                            data-row-style="takeStyle"
+                            data-row-style="vtpTakeStyle"
                             >
                             <thead>
                                 <tr>
@@ -362,6 +362,14 @@ if ($vtp){
         }    
         
         return params;
+    }
+    
+    function vtpTakeStyle(row){
+        var classes = 'default';
+        if (row.vtpg.take == '2'){
+            classes = 'warning';
+        }        
+        return {classes: classes};
     }
     
     function pgActiveFormatter(value, row){
