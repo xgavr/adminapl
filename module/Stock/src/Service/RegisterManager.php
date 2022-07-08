@@ -237,7 +237,7 @@ class RegisterManager
         foreach ($bases as $base){
             $movement = $this->entityManager->getRepository(Movement::class)
                             ->findOneByBaseKey($base['baseKey']);
-            var_dump($base['baseKey']);
+//            var_dump($base['baseKey']);
             if ($movement){
                 $ptu = $this->entityManager->getRepository(Ptu::class)
                         ->find($movement->getBaseId());
