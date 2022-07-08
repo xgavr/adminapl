@@ -21,6 +21,7 @@ use Stock\Entity\Vt;
 use Application\Entity\Order;
 use Application\Entity\Goods;
 use Stock\Entity\PtuGood;
+use Company\Entity\Office;
 
 
 /**
@@ -289,9 +290,10 @@ class RegisterRepository extends EntityRepository
      * Найти ПТУ с ближайшей датой
      * @param Goods $good
      * @param date $docDate
+     * @param Office $office
      * @retrun Ptu
      */
-    public function findNearPtu($good, $docDate)
+    public function findNearPtu($good, $docDate, $office)
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -307,6 +309,8 @@ class RegisterRepository extends EntityRepository
                 ->setParameter('3', $good->getId())
                 ->andWhere('p.status = ?4')
                 ->setParameter('4', Ptu::STATUS_ACTIVE)
+                ->andWhere('p.office = ?5')
+                ->setParameter('5', $office->getId())
                 ->orderBy('p.docDate', 'ASC')
                 ->setMaxResults(1)
                 ;
@@ -318,10 +322,11 @@ class RegisterRepository extends EntityRepository
      * Найти ПТУ с таким же артикулом
      * @param Goods $good
      * @param date $docDate
+     * @param Office $office
      * @param bool $before
      * @retrun Ptu
      */
-    public function correctCodePtu($good, $docDate, $before = true)
+    public function correctCodePtu($good, $docDate, $office, $before = true)
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -336,6 +341,8 @@ class RegisterRepository extends EntityRepository
                 ->setParameter('4', $good->getProducer()->getId())
                 ->andWhere('p.status = ?5')
                 ->setParameter('5', Ptu::STATUS_ACTIVE)
+                ->andWhere('p.office = ?6')
+                ->setParameter('6', $office->getId())
                 ->orderBy('p.docDate', 'ASC')
                 ->setMaxResults(1)
                 ;
