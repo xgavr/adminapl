@@ -73,7 +73,7 @@ class MovementRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
         $qb = $entityManager->createQueryBuilder();
-        $qb->select('sum(m.quantity) as rest, m.baseKey')
+        $qb->select('sum(m.quantity) as rest, m.baseKey, m.docStamp')
                 ->from(Movement::class, 'm')
                 ->where('m.good = ?1')
                 ->andWhere('m.docStamp < ?2')
@@ -86,6 +86,7 @@ class MovementRepository extends EntityRepository{
                 ->setParameter('4', Movement::STATUS_RETIRED)
                 ->groupBy('m.baseKey')
                 ->having('rest > 0')
+                ->orderBy('m.docStamp', 'ASC')
                 ;
         
         if ($baseKey){
