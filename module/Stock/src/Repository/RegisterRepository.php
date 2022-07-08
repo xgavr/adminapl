@@ -314,7 +314,7 @@ class RegisterRepository extends EntityRepository
                 ->orderBy('p.docDate', 'ASC')
                 ->setMaxResults(1)
                 ;
-
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getOneOrNullResult();        
     }    
     
