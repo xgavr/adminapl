@@ -315,7 +315,7 @@ class RegisterRepository extends EntityRepository
                 ->setMaxResults(1)
                 ;
         var_dump($queryBuilder->getQuery()->getSQL());
-        var_dump($queryBuilder->getParameters()); exit;
+        var_dump($queryBuilder->getParameters());
         return $queryBuilder->getQuery()->getOneOrNullResult();        
     }    
     
