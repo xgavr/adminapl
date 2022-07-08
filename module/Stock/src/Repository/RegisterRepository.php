@@ -302,7 +302,7 @@ class RegisterRepository extends EntityRepository
                 ->from(Ptu::class, 'p')
                 ->where('p.docDate > ?1')
                 ->andWhere('p.docDate <= ?2')
-                ->setParameter('1', strtotime($docDate))
+                ->setParameter('1', date('Y-m-d H:i:s', strtotime($docDate)))
                 ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate.' +10 days')))
                 ->join('p.ptuGoods', 'pg')
                 ->andWhere('pg.good = ?3')
@@ -314,8 +314,6 @@ class RegisterRepository extends EntityRepository
                 ->orderBy('p.docDate', 'ASC')
                 ->setMaxResults(1)
                 ;
-        var_dump($queryBuilder->getQuery()->getSQL());
-        var_dump($queryBuilder->getParameters());
         return $queryBuilder->getQuery()->getOneOrNullResult();        
     }    
     
@@ -358,7 +356,7 @@ class RegisterRepository extends EntityRepository
             $queryBuilder            
                 ->andWhere('p.docDate > ?1')
                 ->andWhere('p.docDate <= ?2')
-                ->setParameter('1', date('Y-m-d', strtotime($docDate)))
+                ->setParameter('1', date('Y-m-d H:i:s', strtotime($docDate)))
                 ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate.' +10 days')))
                 ;            
         }
