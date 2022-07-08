@@ -223,6 +223,39 @@ class RegisterManager
     }
     
     /**
+     * Поправить партию в возврате поставщику
+     * @param Vtp $vtp
+     * @param Goods $good
+     * @param float $docStamp
+     * @return null
+     */
+    private function correctVtpBase($vtp, $good, $docStamp)
+    {
+        $bases = $this->entityManager->getRepository(Movement::class)
+                ->findBases($good->getId(), $docStamp, $vtp->getPtu()->getOffice()->getId());
+        
+        foreach ($bases as $base){
+            $movement = $this->entityManager->getRepository(Movement::class)
+                            ->findOneByBaseKey($base['baseKey']);
+            if ($movement){
+                $ptu = $this->entityManager->getRepository(Ptu::class)
+                        ->find($movement->getBaseId());
+                if ($ptu->getLegal()->getId() == $vtp->getPtu()->getLegal()->getId()){
+                    $oldDocNum = $vtp->getPtu()->getId();
+                    $vtp->setPtu($ptu);
+                    $vtp->setComment('#Поправка партии, старое ПТУ id:'.$oldDocNum);
+                    $this->entityManager->persist($vtp);
+                    $this->entityManager->flush($vtp);
+                    $this->vtpManager->repostVtp($vtp);
+                    
+                    return true;
+                }    
+            }    
+        }                
+        return false;
+    }
+    
+    /**
      * Актализировать документ
      * @param Register $register
      * @return null
@@ -354,6 +387,15 @@ class RegisterManager
                         $takeNo = $this->entityManager->getRepository(VtpGood::class)
                                 ->count(['vtp' => $vtp->getId(), 'take' => VtpGood::TAKE_NO]);
                         $flag = $takeNo == 0;
+                        if (!$flag){
+                            $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
+                                    ->findBy(['vtp' => $vtp->getId(), 'take' => VtpGood::TAKE_NO]);
+                            foreach ($vtpGoods as $vtpGood){
+                                if ($this->correctVtpBase($vtp, $vtpGood->getGood(), $register->getDocStamp(), $pt->getLogKey())){
+                                    return true;
+                                } 
+                            }
+                        }    
                     }   
                 }
                 break;
