@@ -1364,7 +1364,7 @@ class GoodsRepository extends EntityRepository
             ->join('m.office', 'o')    
             ->where('m.good = ?1')
             ->setParameter('1', $good->getId())
-//            ->orderBy('m.dateOper','ASC')    
+            ->orderBy('m.docStamp','ASC')    
             ;
         
         if (is_array($params)){
