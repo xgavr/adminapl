@@ -1039,7 +1039,7 @@ class IndexController extends AbstractActionController
 
     public function varactAction()
     {       
-        $this->registerManager->actualize();
+        $this->registerManager->actualize(100);
 
         return new JsonModel(
             ['ok']

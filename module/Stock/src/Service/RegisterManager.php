@@ -366,8 +366,9 @@ class RegisterManager
     
     /**
      *  Восстановление последовательности
+     * @param integer $workTime
      */
-    public function actualize()
+    public function actualize($workTime = 840)
     {
         ini_set('memory_limit', '512M');
         set_time_limit(900);
@@ -387,7 +388,7 @@ class RegisterManager
                 break;
             }
             
-            if (time() > $startTime + 840){
+            if (time() > $startTime + $workTime){
                 break;
             }
         }    
