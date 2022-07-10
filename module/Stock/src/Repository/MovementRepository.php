@@ -232,6 +232,7 @@ class MovementRepository extends EntityRepository{
                     ->from(Movement::class, 'm')
                     ->where('m.good = ?1')
                     ->andWhere('m.docStamp <= ?2') 
+                    ->andWhere('m.docStamp > 0')
                     ->setParameter('1', $goodId)
                     ->setParameter('2', $register->getDocStamp())
                     ;
