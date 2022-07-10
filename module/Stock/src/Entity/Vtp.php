@@ -463,6 +463,11 @@ class Vtp {
     {
         $this->vtpGoods[] = $vtpGood;
     }    
+
+    public function getVtpGoods()
+    {
+        return $this->vtpGoods;
+    }
     
     /**
      * Лог
