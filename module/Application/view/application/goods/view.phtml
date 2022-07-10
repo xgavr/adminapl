@@ -204,11 +204,11 @@
                         <select id="officeSelect" style="width: 200px" class="form-control refresh-table" name="office">
                             <option>все</option>
                             <?php foreach ($offices as $office):?>
-                                <option value="<?= $office->getId()?>" <?= ($office->getId() == $currentUser->getOffice()->getId()) ? 'selected':''?>><?= $office->getName()?></option>
+                                <option value="<?= $office->getId()?>" <?//= ($office->getId() == $currentUser->getOffice()->getId()) ? 'selected':''?>><?= $office->getName()?></option>
                             <?php endforeach;?>
                         </select>                    
                         <div class="form-group">
-                            <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
+                            <input id="monthSelect" class="form-control" type="month" placeholder="Период">
                         </div>
                     </div>
                 </div>
