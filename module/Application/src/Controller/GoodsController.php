@@ -799,7 +799,7 @@ class GoodsController extends AbstractActionController
         $result = $query->getResult(2);
         foreach ($result as $key=>$value){
             $result[$key]['rest'] = $this->entityManager->getRepository(Movement::class)
-                ->goodRest($goodsId, $value['dateOper'], $office);
+                ->stampRest($goodsId, $value['docType'], $value['docId'], $office);
         }
         
         return new JsonModel([
