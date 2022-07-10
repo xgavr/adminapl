@@ -226,32 +226,34 @@ class MovementRepository extends EntityRepository{
         $register = $entityManager->getRepository(Register::class)
                 ->findOneBy(['docType' => $docType, 'docId' => $docId]);
                 
+        if ($register){
+            $qb = $entityManager->createQueryBuilder();
+            $qb->select('sum(m.quantity) as rSum')
+                    ->from(Movement::class, 'm')
+                    ->where('m.good = ?1')
+                    ->andWhere('m.docStamp <= ?2') 
+                    ->setParameter('1', $goodId)
+                    ->setParameter('2', $register->getDocStamp())
+                    ;
+            if (!empty($officeId)){
+                if (is_numeric($officeId)){
+                    $qb->andWhere('m.office = ?3');
+                    $qb->setParameter('3', $officeId);
+                }    
+            }
 
-        $qb = $entityManager->createQueryBuilder();
-        $qb->select('sum(m.quantity) as rSum')
-                ->from(Movement::class, 'm')
-                ->where('m.good = ?1')
-                ->andWhere('m.docStamp <= ?2') 
-                ->setParameter('1', $goodId)
-                ->setParameter('2', $register->getDocStamp())
-                ;
-        if (!empty($officeId)){
-            if (is_numeric($officeId)){
-                $qb->andWhere('m.office = ?3');
-                $qb->setParameter('3', $officeId);
-            }    
+            if (!empty($companyId)){
+                if (is_numeric($companyId)){
+                    $qb->andWhere('m.company = ?4');
+                    $qb->setParameter('4', $companyId);
+                }    
+            }
+
+            $result = $qb->getQuery()->getOneOrNullResult();
+
+            return $result['rSum'];
         }
-        
-        if (!empty($companyId)){
-            if (is_numeric($companyId)){
-                $qb->andWhere('m.company = ?4');
-                $qb->setParameter('4', $companyId);
-            }    
-        }
-        
-        $result = $qb->getQuery()->getOneOrNullResult();
-        
-        return $result['rSum'];
+        return;
     }            
 
 
