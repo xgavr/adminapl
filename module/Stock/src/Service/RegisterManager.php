@@ -383,7 +383,7 @@ class RegisterManager
                 $vtp = $this->entityManager->getRepository(Vtp::class)
                     ->find($register->getDocId());
                 if ($vtp){
-                    $flag = $this->vtpManager->repostVtp($vtp);
+                    $this->vtpManager->repostVtp($vtp);
                     if ($vtp->getStatus() == Vtp::STATUS_ACTIVE){
                         $takeNo = $this->entityManager->getRepository(VtpGood::class)
                                 ->count(['vtp' => $vtp->getId(), 'take' => VtpGood::TAKE_NO]);

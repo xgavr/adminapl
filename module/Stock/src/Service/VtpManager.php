@@ -175,7 +175,7 @@ class VtpManager
         $this->updateVtpMovement($vtp);
         $this->updateVtpMutuals($vtp);
         
-        return;
+        return true;
     }
 
     /**
