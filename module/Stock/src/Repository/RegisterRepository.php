@@ -210,7 +210,7 @@ class RegisterRepository extends EntityRepository
      */
     public function stRegister($st)
     {
-        $dateOper = date('Y-m-d 00:01:00', strtotime($st->getDocDate()));
+        $dateOper = date('Y-m-d 23:01:00', strtotime($st->getDocDate()));
         return $this->register($dateOper, Movement::DOC_ST, $st->getId());
     }    
 
