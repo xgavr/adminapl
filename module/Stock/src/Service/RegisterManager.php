@@ -392,6 +392,7 @@ class RegisterManager
                             $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
                                     ->findBy(['vtp' => $vtp->getId(), 'take' => VtpGood::TAKE_NO]);
                             if (count($vtpGoods) == $vtp->getVtpGoods()->count()){
+                                var_dump(111); exit;
                                 foreach ($vtpGoods as $vtpGood){
                                     if ($this->correctVtpBase($vtp, $vtpGood->getGood(), $register->getDocStamp())){
                                         return true;
