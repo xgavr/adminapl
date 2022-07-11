@@ -809,7 +809,9 @@ class AplService {
         if ($data){
             $data = (array) Json::decode($data);
         } else {
-            $data = [];
+            $data = [
+                'items' => [],
+            ];
         }
         
         $items = $data['items'];
