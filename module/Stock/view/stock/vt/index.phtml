@@ -61,11 +61,11 @@
             <thead>
                 <tr>
                      <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
-                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="80">Номер</th>
-                     <th data-field="docDate" data-sortable="true">Дата</th>
+                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="120">Номер</th>
+                     <th data-field="docDate" data-sortable="true" data-width="100">Дата</th>
                      <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
                      <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="amountFormatter">Сумма</th>
-                     <th data-field='order.aplId' data-sortable="false">Заказ</th>
+                     <th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>
                      <th data-field='office.name' data-sortable="false">Склад</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
                      <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
@@ -129,7 +129,7 @@
         }
         return [
             '<div class="pull-left">',
-            '<a href="/producer/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '<a href="/order/intro/' + row.id + '" target="_blank">' + value + '</a>',
             '</div>'
         ].join(''); 
     }    

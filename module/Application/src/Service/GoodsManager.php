@@ -172,10 +172,11 @@ class GoodsManager
                     ->findByGood($good->getId());
         
         foreach ($supplierOrders as $supplierOrder){
-            $this->entityManager->remove($supplierOrder);
+//            $this->entityManager->remove($supplierOrder);
+            $this->entityManager->getConnection()->delete('supplier_order', ['id' => $supplierOrder->getId()]);
         }
         
-        $this->entityManager->flush();
+//        $this->entityManager->flush();
         return;
     }
     
