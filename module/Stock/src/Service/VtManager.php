@@ -3,9 +3,6 @@ namespace Stock\Service;
 
 use Stock\Entity\Vt;
 use Application\Entity\Order;
-use Stock\Entity\Ntd;
-use Stock\Entity\Unit;
-use Company\Entity\Country;
 use Stock\Entity\VtGood;
 use Admin\Entity\Log;
 use Stock\Entity\Movement;
