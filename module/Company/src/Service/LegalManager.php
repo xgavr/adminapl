@@ -336,7 +336,7 @@ class LegalManager
         $contract->setLegal($legal);
             
         $this->entityManager->persist($contract);
-        $this->entityManager->flush();                
+        $this->entityManager->flush($contract);                
         
         return $contract;
     }
