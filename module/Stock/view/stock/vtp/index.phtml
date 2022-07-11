@@ -226,7 +226,7 @@
     var menu = new BootstrapMenu('.tablerow', {
         fetchElementData: function(rowElem) {
             var rowId = $(rowElem).attr('data-index');
-            return table.bootstrapTable('getData')[rowId];
+            return $table.bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
            ['statusActiv', 'statusRetired'],
