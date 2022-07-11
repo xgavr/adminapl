@@ -78,7 +78,7 @@ class RegisterManager
     private $orderManager;
     
     
-    private $meDate = '2016-05-31';
+    private $meDate = '2016-06-30';
 
     /**
      * Constructs the service.
