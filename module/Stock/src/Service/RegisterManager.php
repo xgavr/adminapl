@@ -241,15 +241,17 @@ class RegisterManager
             if ($movement){
                 $ptu = $this->entityManager->getRepository(Ptu::class)
                         ->find($movement->getBaseId());
-                if ($ptu->getLegal()->getId() == $vtp->getPtu()->getLegal()->getId()){
-                    $oldDocNum = $vtp->getPtu()->getId();
-                    $vtp->setPtu($ptu);
-                    $vtp->setComment('#Поправка партии, старое ПТУ id:'.$oldDocNum);
-                    $this->entityManager->persist($vtp);
-                    $this->entityManager->flush($vtp);
-                    $this->vtpManager->repostVtp($vtp);
-                    
-                    return true;
+                if ($ptu){
+                    if ($ptu->getLegal()->getId() == $vtp->getPtu()->getLegal()->getId()){
+                        $oldDocNum = $vtp->getPtu()->getId();
+                        $vtp->setPtu($ptu);
+                        $vtp->setComment('#Поправка партии, старое ПТУ id:'.$oldDocNum);
+                        $this->entityManager->persist($vtp);
+                        $this->entityManager->flush($vtp);
+                        $this->vtpManager->repostVtp($vtp);
+
+                        return true;
+                    }    
                 }    
             }    
         }                
