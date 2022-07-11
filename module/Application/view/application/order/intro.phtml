@@ -24,7 +24,7 @@ $form->get('user')->setAttributes([
 $form->get('aplId')->setAttributes([
     'class'=>'form-control', 
     'placeholder' => 'Номер АПЛ',
-    'style' => 'width:100px',
+    'style' => 'width:60px',
     ]);
 
 $form->get('skiper')->setAttributes([
@@ -671,7 +671,14 @@ $form->prepare();
         <div class="list-group" data-spy="affix" data-offset-top="20">        
             <div class="form-group form-group-sm">
                 <?//= $this->formLabel($form->get('aplId')); ?>
-                <?= $this->formElement($form->get('aplId')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('aplId')); ?>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-sm unload-order-from-apl" title="Обновить из Апл">
+                            <span class="glyphicon glyphicon-refresh"></span>
+                        </button>
+                    </span>    
+                </div>    
                 <?= $this->formElementErrors($form->get('aplId')); ?>                  
             </div>
             <button type="button" class="btn btn-primary btn-sm btn-block" id="order-submit">Сохранить</button>    
@@ -778,6 +785,18 @@ $form->prepare();
         });
     });  
         
+    $(document).on('click', '.unload-order-from-apl', function (e) {
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста, подождите, пока мы что-то делаем...</p>',
+            closeButton: false
+        });        
+        $.get('/apl/unload-order-id/'+<?= $orderId?>, function(data){
+            if (data.result = 'ok'){
+                window.location.reload();
+            }
+        });            
+    });
+    
     function submitForm(){
         window.onbeforeunload = false;
         $(".has-error").each(function( index ) {

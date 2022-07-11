@@ -785,6 +785,28 @@ class AplController extends AbstractActionController
         ]);
     }    
     
+    public function unloadOrderIdAction()
+    {                
+        $orderId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий заказ в базе данных.    
+        $order = $this->entityManager->getRepository(\Application\Entity\Order::class)
+                ->find($orderId);  
+        	
+        if ($order == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        if ($order->getAplId()){
+            $this->aplOrderService->unloadOrder(0, $order->getAplId());
+        }    
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+    
     public function unloadOrdersAction()
     {                
         $this->aplOrderService->uploadOrders();

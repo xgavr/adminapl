@@ -643,14 +643,16 @@ class AplOrderService {
     /**
      * Загрузить заказ из Апл
      * @param integer $start
+     * @param integer $aplId
      * @return 
      */
-    public function unloadOrder($start = 0)
+    public function unloadOrder($start = 0, $aplId = null)
     {
         $url = $this->aplApi().'unload-order?api='.$this->aplApiKey();
         
         $post = [
             'start' => $start,
+            'id' => $aplId,
         ];
 
         $client = new Client();
