@@ -163,7 +163,7 @@ class VtManager
                 $take = VtGood::TAKE_NO;
                 foreach ($movements as $movement){
 
-                    $quantity = min($vtGood->getQuantity(), -$movement->getQuantity());
+                    $quantity = min($posting, -$movement->getQuantity());
                     $amount = $quantity*$vtGood->getAmount()/$vtGood->getQuantity();
 
                     $data = [
