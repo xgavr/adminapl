@@ -210,7 +210,7 @@ class Vt {
         return [
             self::STATUS_ACTIVE => 'Активный',
             self::STATUS_RETIRED => 'Удален',
-            //self::STATUS_COMMISSION => 'На комиссии',
+            self::STATUS_COMMISSION => 'На комиссии',
         ];
     }    
     
