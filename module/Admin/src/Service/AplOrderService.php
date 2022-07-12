@@ -25,6 +25,7 @@ use User\Entity\User;
 use Application\Entity\Order;
 use Laminas\Validator\Date;
 use Laminas\Json\Dcoder;
+use Application\Entity\Bid;
 
 
 /**
@@ -728,7 +729,10 @@ class AplOrderService {
             $order = $this->entityManager->getRepository(Order::class)
                     ->findOneByStatusEx(Order::STATUS_EX_NO);
             if ($order->getAplId()){
-                if ($this->unloadOrder($start, $order->getAplId(), $order->getTotal())) {
+                $result = $this->entityManager->getRepository(Bid::class)
+                    ->getOrderNum($order);
+                
+                if ($this->unloadOrder($start, $order->getAplId(), $result[0]['total'])) {
                     $statusEx = Order::STATUS_EX_OK;
                     usleep(100);
                 } else {
