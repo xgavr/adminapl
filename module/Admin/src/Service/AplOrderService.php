@@ -552,18 +552,6 @@ class AplOrderService {
         }    
         
         if ($order){
-//            var_dump(222); exit;
-            if (isset($data['selections'])){
-                foreach ($data['selections'] as $selection){
-                    if (!empty($selection['q'])){
-                        $this->orderManager->insSelection($order, [
-                           'oem'  => $selection['q'],
-                           'comment'  => $selection['qc'],
-                        ]);
-                    }
-                }    
-            }
-
             if (isset($data['tp'])){
                 $rowNo = 1;
                 foreach ($data['tp'] as $tp){
@@ -589,6 +577,18 @@ class AplOrderService {
                     } 
                 }
             }  
+//            var_dump(222); exit;
+            if (isset($data['selections'])){
+                foreach ($data['selections'] as $selection){
+                    if (!empty($selection['q'])){
+                        $this->orderManager->insSelection($order, [
+                           'oem'  => $selection['q'],
+                           'comment'  => $selection['qc'],
+                        ]);
+                    }
+                }    
+            }
+
 
             $this->orderManager->updOrderTotal($order);
             if (round($order->getTotal()) == round($data['sort'])){
