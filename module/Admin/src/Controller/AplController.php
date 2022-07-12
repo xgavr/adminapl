@@ -785,6 +785,15 @@ class AplController extends AbstractActionController
         ]);
     }    
     
+    public function checkOrdersAction()
+    {                
+        $this->aplOrderService->checkOrders();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+    
     public function unloadOrderIdAction()
     {                
         $orderId = $this->params()->fromRoute('id', -1);

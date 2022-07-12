@@ -45,6 +45,7 @@ class Order {
     
     const STATUS_EX_OK  = 1;// обновлено 
     const STATUS_EX_NO  = 2;// не обновлено
+    const STATUS_EX_TOTAL_NO_MATH  = 9;// ошибка при обновлении, не совпадает сумма
         
     const STATUS_ACCOUNT_OK  = 1;// обновлено 
     const STATUS_ACCOUNT_NO  = 2;// не обновлено
@@ -683,6 +684,7 @@ class Order {
         return [
             self::STATUS_EX_OK => 'Обновлено',
             self::STATUS_EX_NO => 'Не обновлено',
+            self::STATUS_EX_TOTAL_NO_MATH => 'Не совпадает сумма',
         ];
     }    
     

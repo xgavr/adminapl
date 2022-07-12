@@ -646,7 +646,7 @@ class AplOrderService {
      * @param integer $aplId
      * @return 
      */
-    public function unloadOrder($start = 0, $aplId = null)
+    public function unloadOrder($start = 0, $aplId = null, $orderTotal = false)
     {
         $url = $this->aplApi().'unload-order?api='.$this->aplApiKey();
         
@@ -676,6 +676,11 @@ class AplOrderService {
 //        var_dump($result);
 
         if (is_array($result)){
+            if (is_numeric($orderTotal) && $aplId){
+                if ($orderTotal == $result['sort']){
+                    return true;
+                }
+            }
             if ($this->getOrder($result)){ 
                 $this->unloadedOrder($result['id']);
             }    
@@ -702,6 +707,38 @@ class AplOrderService {
                     break;
                 }
             } else {
+                break;
+            }
+            $start++;
+        }    
+        return;        
+    }
+    
+    /**
+     * Проверить заказы
+     */
+    public function checkOrders()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        $start = 0;
+                        
+        while (true){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->findOneByStatusEx(Order::STATUS_EX_NO);
+            if ($order->getAplId()){
+                if ($this->unloadOrder($start, $order->getAplId(), $order->getTotal())) {
+                    $statusEx = Order::STATUS_EX_OK;
+                    usleep(100);
+                } else {
+                    $statusEx = Order::STATUS_EX_TOTAL_NO_MATH;
+                }
+            }    
+            $this->entityManager->getConnection()
+                    ->update('orders', ['status_ex' => $statusEx], ['id' => $order->getId()]);
+                
+            if (time() > $startTime + 870){
                 break;
             }
             $start++;
