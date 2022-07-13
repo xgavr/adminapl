@@ -197,7 +197,7 @@ class OrderController extends AbstractActionController
                     ->find($orderId);
             $orderComments = $this->entityManager->getRepository(Comment::class)
                     ->findBy(['order' => $order->getId()], ['id' => 'DESC']);
-                    
+            $office= $order->getOffice();                    
         }    
         
         $form = new OrderForm($this->entityManager);
