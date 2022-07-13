@@ -102,7 +102,7 @@ class OrderRepository extends EntityRepository{
             ->orderBy('b.rowNo')
             ->setParameter('1', $order->getId())    
                 ;
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }        
       
