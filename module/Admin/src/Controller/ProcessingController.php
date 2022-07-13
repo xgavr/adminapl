@@ -1426,6 +1426,25 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Проверка выгрузки заказов из апл
+     * 
+     * @return JsonModel
+     */
+    public function checkAplOrderAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['order'] == 1){
+            $this->aplOrderService->checkOrders();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
      * Выгрузка комментариев из апл
      * 
      * @return JsonModel
