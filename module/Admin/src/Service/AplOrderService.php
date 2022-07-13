@@ -736,7 +736,7 @@ class AplOrderService {
                     $total += $result[0]['total'];
                 }
                 
-                var_dump($result); exit;
+//                var_dump($result); exit;
                 if ($this->unloadOrder($start, $order->getAplId(), $total)) {
                     $statusEx = Order::STATUS_EX_OK;
                     usleep(100);
