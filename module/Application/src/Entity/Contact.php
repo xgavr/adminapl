@@ -497,6 +497,10 @@ class Contact {
         $this->messengers[] = $messenger;
     }       
 
+    /**
+     * Юр лица
+     * @return ArrayCollection
+     */
     public function getLegals() 
     {
       return $this->legals;

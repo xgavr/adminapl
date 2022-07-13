@@ -96,10 +96,12 @@ class LegalManager
         }
         
         if ($legal){
-            $contact->removeLegalAssociation($legal);
-            $contact->addLegal($legal);
-            $this->entityManager->persist($contact);
-            $this->entityManager->flush();                
+//            $contact->removeLegalAssociation($legal);
+            if (!$contact->getLegals()->contains($legal)){
+                $contact->addLegal($legal);
+                $this->entityManager->persist($contact);
+                $this->entityManager->flush();                
+            }    
             $this->updateLegal($legal, $data);
         }
 
