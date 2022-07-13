@@ -731,7 +731,7 @@ class AplOrderService {
             if ($order->getAplId()){
                 $result = $this->entityManager->getRepository(Bid::class)
                     ->getOrderNum($order);
-                
+                var_dump($result); exit;
                 if ($this->unloadOrder($start, $order->getAplId(), $result[0]['total'])) {
                     $statusEx = Order::STATUS_EX_OK;
                     usleep(100);
