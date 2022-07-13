@@ -1,0 +1,122 @@
+<?php
+
+$form = $this->form;
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    'rows' => 6
+    ]);
+
+
+$form->prepare();
+
+?>
+
+            
+<?= $this->form()->openTag($form); ?>
+
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group form-group-md">
+                <?= $this->formElement($form->get('comment')); ?>
+                <?= $this->formElementErrors($form->get('comment')); ?>                  
+            </div>    
+        </div>        
+    </div>
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">самовывоз / доставка</div>
+                <ul class="list-group">
+                    <li class="list-group-item local-comment">сегодня</li>
+                    <li class="list-group-item local-comment">завтра</li>
+                    <li class="list-group-item local-comment">послезавтра</li>
+                    <li class="list-group-item local-comment">13-</li>
+                    <li class="list-group-item local-comment">15-</li>
+                    <li class="list-group-item local-comment">17-</li>
+                    <li class="list-group-item local-comment">18-</li>
+                    <li class="list-group-item local-comment">19-30</li>
+                    <li class="list-group-item local-comment">по приходу</li>
+                    <li class="list-group-item local-comment">заберет утром</li>
+                    <li class="list-group-item local-comment">доставка</li>
+                </ul>
+            </div>
+        </div>        
+        <div class="col-xs-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">информация по подборам</div>
+                <ul class="list-group">
+                    <li class="list-group-item local-comment">думает</li>
+                    <li class="list-group-item local-comment">жду VIN</li>
+                    <li class="list-group-item local-comment">подбирал сам</li>
+                    <li class="list-group-item local-comment">от проверки по VIN отказался</li>
+                    <li class="list-group-item local-comment">не алло</li>
+                    <li class="list-group-item local-comment">смс</li>
+                    <li class="list-group-item local-comment">смс - Готов к отгрузке</li>
+                    <li class="list-group-item local-comment">на почту</li>
+                    <li class="list-group-item local-comment">подходящего товара нет в наличии</li>
+                    <li class="list-group-item local-comment">отправил турбоссылку</li>
+                </ul>
+            </div>
+        </div>        
+        <div class="col-xs-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">ожидание оплаты / предоплаты</div>
+                <ul class="list-group">
+                    <li class="list-group-item local-comment">при подтверждении заказа взять предоплату ... р.</li>
+                    <li class="list-group-item local-comment">при подтверждении заказа взять 100% оплату</li>
+                    <li class="list-group-item local-comment">ждем предоплату на СБ</li>
+                    <li class="list-group-item local-comment">ждем предоплату на эквайринг</li>
+                    <li class="list-group-item local-comment">ждем полную оплату на СБ</li>
+                    <li class="list-group-item local-comment">ждем полную оплату на эквайринг</li>
+                    <li class="list-group-item local-comment">ждем оплату по безналу</li>
+                </ul>
+            </div>
+        </div>        
+        <div class="col-xs-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">отказы, для истории...</div>
+                <ul class="list-group">
+                    <li class="list-group-item local-comment">отменил заказ, подвезти/заказать товар не успели</li>
+                    <li class="list-group-item local-comment">отказался от заказа, заказ был готов к отгрузке!</li>
+                    <li class="list-group-item local-comment">На связь не вышел! Звонил клиенту много раз - не алло!</li>
+                    <li class="list-group-item local-comment">Вернул товар - не пригодился (неверная диагностика).</li>
+                    <li class="list-group-item local-comment">Вернул товар, типа не подходит...</li>
+                    <li class="list-group-item local-comment">только по предоплате!</li>
+                </ul>
+            </div>
+        </div>        
+    </div>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary clear-button">Очистить</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="comment-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    $( document ).ready(function() {
+        $('#comment').focus();
+    });
+    $('.local-comment').on('click', function() {
+        let str = $(this).html();
+        $('#comment').val($('#comment').val() + ' ' + str);
+    })
+    $('.clear-button').on('click', function() {
+        $('#comment').val('');
+    })
+
+    $('#comment-submit').on('click', function() {
+        if ($('#comment').val()){
+            $('#orderComments').prepend('<li><a href="#" data-type="textarea" class="new-manager-comment">'+$('#comment').val()+'</a></li>');
+            $('#comment').val('');
+        }    
+        $('.new-manager-comment').editable();
+        $('#orderCommentModal').modal('hide');
+    });    
+</script>

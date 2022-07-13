@@ -25,11 +25,9 @@ use Company\Entity\Contract;
 use Application\Entity\Producer;
 use Application\Entity\Article;
 use Application\Filter\ArticleCode;
-use Application\Entity\Rawprice;
 use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
-use MvlabsPHPExcel\Service;
 use Application\Entity\GoodSupplier;
 
 /**

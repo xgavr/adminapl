@@ -1,0 +1,242 @@
+<?php
+$this->headTitle($client->getName());
+
+$this->mainMenu()->setActiveItemId('client');
+
+$this->mainMenu()->setActiveItemId('client');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Покупатели'=>$this->url('client'),
+            $client->getName()=>$this->url('client', ['action'=>'view', 'id'=>$client->getId()]),
+            ]);
+
+$legalContact = $client->getLegalContact();
+
+?>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<h1>
+    <?= $this->escapeHtml($client->getName()); ?>    
+</h1>
+
+<div class="panel panel-success">
+    <div class="panel-heading">Контакты</div>
+    <div class="panel-body">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Телефон</h3>
+                    </div>                                
+                    <div class="pull-right">
+                        <?php if ($legalContact):?>
+                            <button value="/contact/phone-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>
+                        <?php endif; ?>
+                    </div>                                
+                    <div class="clearfix"></div>
+                </div>
+                <?php foreach ($client->getContacts() as $contact): ?>
+                    <?php foreach ($contact->getPhones() as $phone): ?>
+                        <div class="panel-body">
+                            <div class="pull-left"><?= $phone->getName()?> <span><?= $phone->getComment()?></span></div>
+                            <div class="pull-right">
+                                <button value="/contact/phone-form/<?= $contact->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                            
+                                <button value="/contact/delete-phone-form/<?= $phone->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                            
+                            </div>
+                        </div>
+                    <?php endforeach?>    
+                <?php endforeach;?>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Почта</h3>
+                    </div>                                
+                    <div class="pull-right">
+                        <?php if ($legalContact):?>
+                            <button value="/contact/email-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>                                        
+                        <?php endif; ?>
+                    </div>                                
+                    <div class="clearfix"></div>
+                </div>
+                <?php foreach ($client->getContacts() as $contact): ?>
+                    <?php foreach ($contact->getEmails() as $email): ?>
+                        <div class="panel-body">
+                            <div class="pull-left"><?= $email->getName()?></div>
+                            <div class="pull-right">
+                                <button value="/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                                            
+                                <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                            
+                            </div>
+                        </div>
+                    <?php endforeach?>    
+                <?php endforeach;?>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">AplId</h3>
+                    </div>                                
+                    <div class="pull-right">
+                    </div>                                
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div class="pull-left"><a href="https://autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank"><?= $client->getAplId()?></a></div>
+                    <div class="pull-right">
+                        <button value="/client/apl-union/<?= $client->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
+                                title="Объеденить по коду Апл">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="pull-left">Машины
+        </div>
+        <div class="pull-right">
+            <?php if ($legalContact):?>
+                <button value="/garage/edit-form/?contact=<?= $legalContact->getId()?>" class="btn btn-default btn-xs"
+                        data-toggle="modal" data-target="#modal-dialog" title="Добавить машину">
+                    <span class="glyphicon glyphicon-plus" ></span>
+                </button>                                        
+             <?php endif;?>
+        </div>
+        <div class="clearfix"></div>
+    </div>    
+    <div class="panel-body">
+        <?php foreach ($client->getContacts() as $contact):?> 
+            <?php if ($contact->getContactCars()->count()):?>
+                <table class="table table-striped">
+                    <?php foreach ($contact->getContactCars() as $contactCar):?>
+                        <tr>
+                            <td>
+                                <?php if ($contactCar->getCar()):?>
+                                    <?= $contactCar->getCar()->getName() ?>
+                                <?php else:?>
+                                    <?php if ($contactCar->getMake()):?>
+                                        <?= $contactCar->getMake()->getName() ?>
+                                    <?php endif;?>
+                                    <?php if ($contactCar->getModel()):?>
+                                        <?= $contactCar->getModel()->getName() ?>
+                                    <?php endif;?>
+                                <?php endif;?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getVin() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getVin2() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getYocm() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getWheelAsString() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getTmAsString() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getAcAsString() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getMd() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getEd() ?>
+                            </td>
+                            <td>
+                                <?= $contactCar->getEp() ?>
+                            </td>
+                            <td>
+                                <button value="/garage/edit-form/<?= $contactCar->getId()?>" class="btn btn-default btn-xs"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить машину">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                                        
+                                
+                            </td>
+                        </tr>
+                    <?php endforeach;?>
+                </table>    
+            <?php endif; ?>    
+        <?php endforeach;?>
+    </div>
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="pull-left">Заказы
+        </div>
+        <div class="pull-right">
+        </div>
+        <div class="clearfix"></div>
+    </div>    
+    <div class="panel-body">
+        <?php foreach ($client->getContacts() as $contact):?> 
+            <?php if ($contact->getOrder()->count()):?>
+                <table class="table table-striped">
+                    <tr>
+                         <th>Id</th>
+                         <th>AplId</th>
+                         <th>Дата</th>
+                         <th></th>
+                         <th>Сумма</th>
+                         <th>Действие</th>
+                     </tr>
+                    <?php foreach ($contact->getOrder() as $order): ?>
+                        <tr>
+                            <td>
+                                <?= $order->getIdLink(); ?>
+                            </td>
+                            <td>
+                                <?= $order->getAplIdLink(); ?>
+                            </td>
+                            <td>
+                                <?= $this->escapeHtml($order->getDateCreated()); ?>
+                            </td>
+                            <td>
+                                
+                            </td>
+                            <td>
+                                <?= $this->escapeHtml($order->getTotal()); ?>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>                        
+                    <?php endforeach; ?>        
+                </table>    
+            <?php endif; ?>    
+        <?php endforeach;?>
+    </div>
+</div>
+
+<script type="text/javascript">
+</script>
