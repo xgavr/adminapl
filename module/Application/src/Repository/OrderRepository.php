@@ -74,11 +74,10 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('r')
-            ->from(Bid::class, 'r')
-            ->select('SUM(r.num) as num, SUM(r.num*r.price) as total')
-            ->where('r.order = ?1')    
-            ->groupBy('r.order')
+        $queryBuilder->select('SUM(b.num) as num, SUM(b.num*b.price) as total')
+            ->from(Bid::class, 'b')
+            ->where('b.order = ?1')    
+            ->groupBy('b.order')
             ->setParameter('1', $order->getId())
                 ;
         return $queryBuilder->getQuery()->getResult();
@@ -103,7 +102,7 @@ class OrderRepository extends EntityRepository{
             ->orderBy('b.rowNo')
             ->setParameter('1', $order->getId())    
                 ;
-
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }        
       
