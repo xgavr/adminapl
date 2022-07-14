@@ -54,7 +54,13 @@ class ReportController extends AbstractActionController
         
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
-        $params = [];
+        $office = $this->params()->fromQuery('office');
+        $year = $this->params()->fromQuery('year');
+        $month = $this->params()->fromQuery('month');
+        $base = $this->params()->fromQuery('base');
+        
+        $params = ['office' => $office, 'year' => $year, 'month' => $month,
+            'base' => $base];
         
         $query = $this->entityManager->getRepository(Order::class)
                     ->revenueByYears($params);            

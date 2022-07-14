@@ -19,6 +19,7 @@ use Application\Filter\ArticleCode;
 use Company\Entity\Office;
 use Application\Entity\SupplierOrder;
 use Application\Entity\SupplySetting;
+use Stock\Entity\Retail;
 
 /**
  * Description of OrderRepository
@@ -361,8 +362,9 @@ class OrderRepository extends EntityRepository{
     
     /**
      * Выручка по годам
+     * @param array $params
      */
-    public function revenueByYears()
+    public function revenueByYears($params)
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -373,6 +375,45 @@ class OrderRepository extends EntityRepository{
                 ->setParameter('status', Order::STATUS_SHIPPED)
                 ->groupBy('year')
                 ;
+        if (!empty($params['base'])){
+            if ($params['base'] == 'bid'){
+                $queryBuilder->select('YEAR(o.dateOper) as year, sum(b.num*b.price) as total')
+                        ->from(Order::class, 'o')                
+                        ->join('o.bids', 'b');                
+            }
+            if ($params['base'] == 'retail'){
+                $queryBuilder->select('YEAR(o.dateOper) as year, sum(o.amount) as total')
+                        ->from(Retail::class, 'o')
+                        ->where('o.status = :status')
+                        ->setParameter('status', Retail::STATUS_ACTIVE)
+                        ;
+            }
+            if ($params['base'] == 'movement'){
+                $queryBuilder->select('YEAR(o.dateOper) as year, sum(o.amount) as total')
+                        ->from(Retail::class, 'o')
+                        ->where('o.status = :status')
+                        ->setParameter('status', Movement::STATUS_ACTIVE)
+                        ;
+            }
+        }
+        if (!empty($params['office'])){
+            $queryBuilder->andWhere('o.office = :office')
+                    ->setParameter('office', $params['office']);
+        }
+        if (!empty($params['year'])){
+            $queryBuilder->select('MONTH(o.dateOper) as month, sum(o.total) as total')
+                    ->andWhere('YEAR(o.dateOper) = :year')
+                    ->setParameter('year', $params['year'])
+                    ->groupBy('month');
+        }
+        if (!empty($params['month'])){
+            $queryBuilder->select('DAY(o.dateOper) as day, sum(o.total) as total')
+                    ->andWhere('DAY(o.dateOper) = :day')
+                    ->setParameter('day', $params['day']);
+        }
+        if (!empty($params['base'])){
+            
+        }
         
         return $queryBuilder->getQuery();
     }
