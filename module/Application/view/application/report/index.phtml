@@ -1,3 +1,124 @@
-<strong>Module:</strong>        Application &raquo;
-<strong>Controller:</strong>    Report &raquo;
-<strong>Action:</strong>        index
+<?php
+    $this->headTitle('Отчеты');
+
+    $this->mainMenu()->setActiveItemId('report');
+    $this->mainMenu()->setActiveUrl($this->url('report'));
+
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Отчеты'=>$this->url('report'),
+                ]);
+    
+    $this->headScript()
+                ->prependFile('//cdn.plot.ly/plotly-2.12.1.min.js')
+            ;
+
+?>
+<div class="row">
+    <div class="col-md-8">
+        <div id="tester"></div>
+    </div>
+    <div class="col-md-4">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <select id="officeSelect" style="width: 100px" class="form-control">
+                        <option selected>офис</option>
+                        <?php foreach ($offices as $office):?>
+                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                        <?php endforeach;?>
+                    </select>
+                    
+                </div>    
+                <div class="form-group">
+                    <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="">
+                </div>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/report/revenueByYears"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-sort-name="year"
+            data-sort-order="asc"            
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="year" data-align="right">Год</th>
+                     <th data-field='total' data-sortable="false" data-align="right">Выручка</th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+    var $table = $('#table').bootstrapTable({
+        onLoadSuccess: function(data){
+                var x = []; var y = [];
+                $.each(data.rows, function( index, value ) {
+                    x.push(value.year);
+                    y.push(value.total);
+                });
+                plotly(x, y);
+            }                    
+        }),
+        $ok = $('#ok');
+
+    function refreshTable(){
+        $table.bootstrapTable('refresh');
+    }
+    
+    function plotly(x, y){
+	TESTER = document.getElementById('tester');
+	Plotly.newPlot( TESTER, [{
+            x: x,
+            y: y,
+            type: 'bar'
+            }], 
+            {
+//                margin: { t: 0 },
+                title: 'Обороты по годам'
+            } 
+        );        
+    }
+    
+    $(function(){        
+        $(document).on('change', '#officeSelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#monthSelect', function (e) {
+            refreshTable();
+        });        
+    });
+
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        params.office = $('#officeSelect').val();
+        params.month = $('#monthSelect').val();
+        
+        return params;
+    }        
+
+    function responseHandler(res) {
+        return res;
+    }    
+</script>

@@ -358,4 +358,22 @@ class OrderRepository extends EntityRepository{
         
         return $queryBuilder->getQuery()->getResult();        
     }
+    
+    /**
+     * Выручка по годам
+     */
+    public function revenueByYears()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('YEAR(o.dateOper) as year, sum(o.total) as total')
+                ->from(Order::class, 'o')
+                ->where('o.status = :status')
+                ->setParameter('status', Order::STATUS_SHIPPED)
+                ->groupBy('year')
+                ;
+        
+        return $queryBuilder->getQuery();
+    }
 }

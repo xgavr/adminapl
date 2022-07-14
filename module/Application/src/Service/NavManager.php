@@ -113,7 +113,6 @@ class NavManager
                     'label' => 'Корректировка долга',
                     'link'  => $url('revise', ['action' => 'index'], ['query' => ['kind' => Revise::KIND_REVISE_CLIENT]]),
                 ];
-
                 
                 if (count($clientDropdownItems)!=0) {
                     $items[] = [
@@ -363,6 +362,25 @@ class NavManager
                 }
             }
             
+            //Отчеты
+            if ($this->rbacManager->isGranted(null, 'client.manage')) {
+                $reportDropdownItems = [];
+    
+                $reportDropdownItems[] = [
+                            'id' => 'report',
+                            'label' => 'Отчеты',
+                            'link' => $url('report')
+                        ];
+                                
+                if (count($reportDropdownItems)!=0) {
+                    $items[] = [
+                        'id' => 'report',
+                        'label' => 'Отчеты',
+                        'dropdown' => $reportDropdownItems
+                    ];
+                }
+            }
+
             // Determine which items must be displayed in Admin dropdown.
             $useradminDropdownItems = [];
             

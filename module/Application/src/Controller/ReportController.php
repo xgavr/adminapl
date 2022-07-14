@@ -13,6 +13,7 @@ use Laminas\View\Model\JsonModel;
 use Application\Entity\Comment;
 use Application\Entity\Order;
 use Application\Entity\Client;
+use Company\Entity\Office;
 
 
 class ReportController extends AbstractActionController
@@ -40,23 +41,25 @@ class ReportController extends AbstractActionController
     
     public function indexAction()
     {
-
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy([]);
+        
         return new ViewModel([
+            'offices' => $offices,
         ]);  
     }
     
-    public function contentAction()
+    public function revenueByYearsAction()
     {
         
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $params = [];
         
-        $query = $this->entityManager->getRepository(Comment::class)
-                    ->queryAllComments($params);            
+        $query = $this->entityManager->getRepository(Order::class)
+                    ->revenueByYears($params);            
         
-        $total = $this->entityManager->getRepository(Comment::class)
-                ->count([]);
+        $total = count($query->getResult());
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -65,7 +68,7 @@ class ReportController extends AbstractActionController
             $query->setMaxResults($limit);
         }
 
-        $result = $query->getResult(2);
+        $result = $query->getResult();
         
         return new JsonModel([
             'total' => $total,
