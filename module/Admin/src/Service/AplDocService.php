@@ -1811,8 +1811,18 @@ class AplDocService {
         }
 //        var_dump($result); exit;
 
-        if (is_array($result)){   
+        if (is_array($result)){  
+            $aplOrderId = null;
             foreach ($result as $data){
+                if ($aplOrderId != $data['comment']){
+                    $aplOrderId = $data['comment'];
+                    $order = $this->entityManager->getRepository(Order::class)
+                            ->findOneByAplId($aplOrderId);
+                    if ($order){
+                        $this->entityManager->getConnection()
+                                ->delete('supplier_order', ['id' => $order->getId()]);
+                    }
+                }
                 $this->updateSupplierOrder($data);
             }
         } else {            
