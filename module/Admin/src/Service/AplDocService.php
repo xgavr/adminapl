@@ -1820,7 +1820,7 @@ class AplDocService {
                             ->findOneByAplId($aplOrderId);
                     if ($order){
                         $this->entityManager->getConnection()
-                                ->delete('supplier_order', ['id' => $order->getId()]);
+                                ->delete('supplier_order', ['order_id' => $order->getId()]);
                     }
                 }
                 $this->updateSupplierOrder($data);
