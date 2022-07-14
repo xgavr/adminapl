@@ -688,6 +688,9 @@ class RawRepository extends EntityRepository
      */
     public function deleteRawRawprices($raw)
     {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(3600);
+        
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
