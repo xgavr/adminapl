@@ -469,6 +469,31 @@ class PostManager {
     }    
     
     /**
+     * Уточнение названия папки с удаленными
+     * @param array $params
+     */
+    private function trashBoxName($params)
+    {
+        $result = 'Trash';
+        $trashNames = ['Trash', 'Удаленные'];
+        $mbox = imap_open($params['server'], $params['user'], $params['password'], OP_HALFOPEN)
+            or die("не удалось подключиться: " . imap_last_error());
+        
+        $list = imap_list($mbox, $params['server'], "*");
+        if (is_array($list)) {
+            foreach ($list as $val) {
+                $name = mb_strtolower(imap_utf7_decode($val));
+            }
+        } else {
+            echo "вызов imap_list завершился с ошибкой: " . imap_last_error() . "\n";
+        }
+
+        imap_close($mbox);
+        
+        return $result;
+    }
+    
+    /**
      * Чтение почтового ящика
      * @param array $params
      * server str {imap.yandex.ru:993/imap/ssl}
