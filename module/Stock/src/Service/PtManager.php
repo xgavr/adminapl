@@ -564,10 +564,10 @@ class PtManager
         
         $soDate = $ptDate;
         if ($ptSheduler->getGeneratorDay() == PtSheduler::GENERATOR_DAY_TOMORROW){
-            $soDate = date('Y-m-d', strtotime('tomorrow'));
-            if (date('w', strtotime($soDate)) == 0){//если завтра воскресенье
-                $soDate = date('Y-m-d', strtotime('+2 days'));
-            }
+            $soDate = date('Y-m-d', strtotime($ptDate.' +1 day'));
+//            if (date('w', strtotime($soDate)) == 0){//если завтра воскресенье
+//                $soDate = date('Y-m-d', strtotime('+2 days'));
+//            }
         }
 
         $supplierOrders = $this->entityManager->getRepository(SupplierOrder::class)

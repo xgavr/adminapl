@@ -201,7 +201,7 @@ class LegalManager
     public function addBankAccount($legal, $data, $flushnow = false)
     {                
         $bankAccount = new BankAccount();            
-        $bankAccount->setName((empty($data['name'])) ? null:$data['name']);            
+        $bankAccount->setName((empty($data['name'])) ? 'Банк':$data['name']);            
         $bankAccount->setCity((empty($data['city'])) ? null:$data['city']);            
         $bankAccount->setBik((empty($data['bik'])) ? null:$data['bik']);            
         $bankAccount->setKs((empty($data['ks'])) ? null:$data['ks']);            
