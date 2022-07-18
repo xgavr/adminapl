@@ -472,7 +472,7 @@ class PostManager {
      * Уточнение названия папки с удаленными
      * @param array $params
      */
-    private function trashBoxName($params)
+    private function boxNames($params)
     {
         $result = 'Trash';
         $trashNames = ['Trash', 'Удаленные'];
