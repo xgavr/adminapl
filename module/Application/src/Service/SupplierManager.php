@@ -97,6 +97,7 @@ class SupplierManager
         $supplier->setPrepayStatus($data['prepayStatus']);
         $supplier->setPriceListStatus($data['priceListStatus']);
         $supplier->setParent($data['parent']);
+        $supplier->setOffice($data['office']);
         $supplier->setAmount(0);
         $supplier->setQuantity(0);
         
@@ -221,6 +222,7 @@ class SupplierManager
         $supplier->setPrepayStatus($data['prepayStatus']);
         $supplier->setPriceListStatus($data['priceListStatus']);
         $supplier->setParent($data['parent']);
+        $supplier->setOffice($data['office']);
 
         $this->entityManager->persist($supplier);
         // Применяем изменения к базе данных.

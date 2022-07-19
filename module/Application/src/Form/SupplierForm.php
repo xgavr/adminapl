@@ -93,6 +93,15 @@ class SupplierForm extends Form
             ],
         ]);
         
+        // Add "office" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'office',
+            'options' => [
+                'label' => 'Офис',
+            ],
+        ]);
+
         // Add "status" field
         $this->add([            
             'type'  => 'select',

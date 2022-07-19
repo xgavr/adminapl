@@ -37,6 +37,10 @@ $form->get('parent')->setAttributes([
     'class'=>'form-control'
     ]);
 
+$form->get('office')->setAttributes([
+    'class'=>'form-control'
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -65,11 +69,17 @@ $form->prepare();
         </div>
                                                         
         <div class="form-group">
+            <?= $this->formLabel($form->get('office')); ?>
+            <?= $this->formElement($form->get('office')); ?>
+            <?= $this->formElementErrors($form->get('office')); ?>                  
+        </div>
+                                                        
+        <div class="form-group">
             <?= $this->formLabel($form->get('parent')); ?>
             <?= $this->formElement($form->get('parent')); ?>
             <?= $this->formElementErrors($form->get('parent')); ?>                  
         </div>
-                                                        
+
         <div class="form-group">
             <?= $this->formLabel($form->get('prepayStatus')); ?>
             <?= $this->formElement($form->get('prepayStatus')); ?>

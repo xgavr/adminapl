@@ -38,8 +38,9 @@ class SupplierRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('s')
+        $queryBuilder->select('s, o')
             ->from(Supplier::class, 's')
+            ->join('s.office', 'o')    
             ->orderBy('s.status')
 //            ->addOrderBy('s.name')
                 ;

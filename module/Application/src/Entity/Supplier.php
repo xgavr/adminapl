@@ -15,6 +15,7 @@ use Application\Entity\Contact;
 use Application\Entity\Rate;
 use Doctrine\Common\Collections\Criteria;
 use Company\Entity\Region;
+use Company\Entity\Office;
 
 /**
  * Description of Customer
@@ -188,7 +189,13 @@ class Supplier {
      */
     private $parent;    
     
-   /**
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="suppliers") 
+     * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
+     */
+    private $office;
+
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\SupplierOrder", mappedBy="supplier")
     * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
    */
@@ -859,6 +866,25 @@ class Supplier {
         return;
     }    
     
+    /**
+     * Set office
+     * @param Office $office
+     */
+    public function setOffice($office)
+    {
+        $this->office = $office;
+        $office->addSupplier($this);
+    }
+
+    /**
+     * Get office
+     * @return Office
+     */
+    public function getOffice()
+    {
+        return $this->office;
+    }    
+
     /**
      * Returns the array of supplier orders assigned to this token.
      * @return array

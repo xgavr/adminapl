@@ -70,6 +70,13 @@ $this->pageBreadcrumbs()->setItems([
                     Статус: <?= $this->escapeHtml($supplier->getStatusAsString()) ?>,
                      <?= $this->escapeHtml($supplier->getPrepayStatusAsString()) ?>,
                      <?= $this->escapeHtml($supplier->getPriceListStatusAsString()) ?>
+                     <?php if ($supplier->getOffice()):?>
+                        <br/>
+                        Офис поступлений: 
+                        <b>                            
+                            <?= $this->escapeHtml($supplier->getOffice()->getName()) ?>                        
+                        </b>
+                     <?php endif;?>
                      <?php if ($supplier->getParent()):?>
                         <br/>
                         Главный поставщик: 

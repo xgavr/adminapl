@@ -29,6 +29,7 @@ use Application\Form\UploadForm;
 use Laminas\View\Model\JsonModel;
 use Application\Entity\SupplierApiSetting;
 use Application\Form\SupplierApiSettingForm;
+use Company\Entity\Office;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -130,9 +131,17 @@ class SupplierController extends AbstractActionController
         foreach ($suppliers as $value) {
             $supplierList[$value->getId()] = $value->getName();
         }
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy([]);
+        $officeList = [];
+        foreach ($offices as $office) {
+            $officeList[$office->getId()] = $office->getName();
+        }
+        
         // Создаем форму.
         $form = new SupplierForm($this->entityManager);
         $form->get('parent')->setValueOptions($supplierList);        
+        $form->get('office')->setValueOptions($officeList);        
         
         // Проверяем, является ли пост POST-запросом.
         if ($this->getRequest()->isPost()) {
@@ -151,6 +160,11 @@ class SupplierController extends AbstractActionController
                             ->find($data['parent']);
                 } else {
                     $data['parent'] = null;
+                }
+
+                if (is_numeric($data['office'])){
+                    $data['office'] = $this->entityManager->getRepository(Office::class)
+                            ->find($data['office']);
                 }
                 
                 // Используем менеджер supplier для добавления нового good в базу данных.                
@@ -245,9 +259,17 @@ class SupplierController extends AbstractActionController
             $supplierList[$value->getId()] = $value->getName();
         }
         
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy([]);
+        $officeList = [];
+        foreach ($offices as $office) {
+            $officeList[$office->getId()] = $office->getName();
+        }
+
         // Create form
         $form = new SupplierForm($this->entityManager);
         $form->get('parent')->setValueOptions($supplierList);        
+        $form->get('office')->setValueOptions($officeList);        
                 
         // Check if user has submitted the form
         if ($this->getRequest()->isPost()) {
@@ -269,6 +291,11 @@ class SupplierController extends AbstractActionController
                     $data['parent'] = null;
                 }
                 
+                if (is_numeric($data['office'])){
+                    $data['office'] = $this->entityManager->getRepository(Office::class)
+                            ->find($data['office']);
+                }
+
                 // Update permission.
                 $this->supplierManager->updateSupplier($supplier, $data);
                 
@@ -285,6 +312,7 @@ class SupplierController extends AbstractActionController
                         'prepayStatus' => $supplier->getPrepayStatus(),
                         'priceListStatus' => $supplier->getPriceListStatus(),
                         'parent' => $supplier->getParentId(),
+                        'office' => ($supplier->getOffice()) ? $supplier->getOffice()->getId():null,
                     ));
             }    
         }

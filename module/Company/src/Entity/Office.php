@@ -21,6 +21,7 @@ use Company\Entity\Commission;
 use User\Filter\PhoneFilter;
 use Application\Entity\Messenger;
 use Stock\Entity\PtSheduler;
+use Application\Entity\Supplier;
 
 /**
  * Description of Office
@@ -165,6 +166,13 @@ class Office {
     * @ORM\JoinColumn(name="id", referencedColumnName="office2_id")
    */
    private $ptShedulers2;    
+   
+   /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\Supplier", mappedBy="office")
+    * @ORM\JoinColumn(name="id", referencedColumnName="office_id")
+   */
+   private $suppliers;    
+   
    /**
      * Constructor.
      */
@@ -179,6 +187,7 @@ class Office {
         $this->commission = new ArrayCollection();
         $this->ptShedulers = new ArrayCollection();
         $this->ptShedulers2 = new ArrayCollection();
+        $this->suppliers = new ArrayCollection();
     }
     
     public function getId() 
@@ -598,5 +607,23 @@ class Office {
     public function addPtSheduler2($ptSheduler2) 
     {
         $this->ptShedulers2[] = $ptSheduler2;
+    }                 
+
+    /*
+     * Возвращает связанный suppliers.
+     * @return array
+     */    
+    public function getSuppliers() 
+    {
+        return $this->suppliers;
+    }
+
+    /**
+     * Add Supplier
+     * @param Supplier $supplier
+     */
+    public function addSupplier($supplier) 
+    {
+        $this->suppliers[] = $supplier;
     }                 
 }
