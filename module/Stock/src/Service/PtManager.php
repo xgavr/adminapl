@@ -556,8 +556,9 @@ class PtManager
      */
     public function ptGenerator($ptSheduler)
     {
-        $endTime = date('H:i', $ptSheduler->getGeneratorTime());
+        $endTime = $ptSheduler->getGeneratorTime();
         $nowTime = date('H:i');
+
         if ($nowTime > $endTime){
             return;
         }
@@ -569,6 +570,7 @@ class PtManager
         $maxDateOper = $this->entityManager->getRepository(Order::class)
                 ->findMaxDateOper($office2);
         
+//        var_dump($maxDateOper);
         while ($ptDate < $maxDateOper){
             
             $this->deleteAutoPt($office, $office2, $ptDate);
