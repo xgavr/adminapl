@@ -560,8 +560,8 @@ class AplOrderService {
                         $good = $this->aplDocService->findGood($tp['good']);   
                     }    
                     if (empty($good)){
+            var_dump($tp); exit;
                         throw new \Exception("Не удалось создать карточку товара для документа {$tp['good']['id']}");
-//            var_dump($tp); exit;
 //                        return false;
                     } else {
 
