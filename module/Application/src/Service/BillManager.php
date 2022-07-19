@@ -799,9 +799,7 @@ class BillManager
                 'status' => Ptu::STATUS_ACTIVE,
             ];
             
-            $defaultSupplySetting = $this->entityManager->getRepository(SupplySetting::class)
-                    ->findOneBy(['supplier' => $idoc->getSupplier()->getId()]);
-            $office = $defaultSupplySetting->getOffice();
+            $office = $idoc->getSupplier()->getOffice();
             if (!$office){
                 $office = $this->entityManager->getRepository(Office::class)
                         ->findDefaultOffice();

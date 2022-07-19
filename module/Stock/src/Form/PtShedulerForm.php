@@ -106,7 +106,7 @@ class PtShedulerForm extends Form implements ObjectManagerAwareInterface
             'attributes' => [                
                 'min'  => '00:00',
                 'max'  => '23:59',
-//                'step' => '30', 
+//                'step' => '5', 
                 'value' => '00:00'
             ],
             'options' => [

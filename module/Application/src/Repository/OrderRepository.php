@@ -336,7 +336,7 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('identity(ss.office) as office, so.quantity, identity(so.good) as goodId, o.aplId as orderAplId, s.name as supplierName')
+        $queryBuilder->select('identity(s.office) as office, so.quantity, identity(so.good) as goodId, o.aplId as orderAplId, s.name as supplierName')
             ->distinct()    
             ->from(SupplierOrder::class, 'so')
             ->join('so.order', 'o')
@@ -350,16 +350,40 @@ class OrderRepository extends EntityRepository{
             ->setParameter('4', Order::STATUS_CONFIRMED)                
             ->setParameter('5', Order::STATUS_DELIVERY)
             ->join('so.supplier', 's')
-            ->join('s.supplySettings', 'ss')
-            ->andWhere('ss.status = ?6')
-            ->setParameter('6', SupplySetting::STATUS_ACTIVE)    
-            ->andWhere('ss.office = ?7')    
+            ->andWhere('s.office = ?7')    
             ->setParameter('7', $office->getId())
             ;
         
         return $queryBuilder->getQuery()->getResult();        
     }
     
+    /**
+     * Найти максиальную дату для перемещения между офисами
+     * @param Office $office2 Куда перемещать
+     * @param date $ptDate
+     */
+    public function findMaxDateOper($office2)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('max(o.dateOper) as maxDateOper')
+            ->distinct()    
+            ->from(Order::class, 'o')
+            ->where('o.dateOper >= ?1')    
+            ->setParameter('1', date('Y-m-d'))
+            ->andWhere('o.office = ?3')
+            ->setParameter('3', $office2->getId())
+            ->andWhere('o.status = ?4 or o.status = ?5')
+            ->setParameter('4', Order::STATUS_CONFIRMED)                
+            ->setParameter('5', Order::STATUS_DELIVERY)
+            ->setMaxResults(1)    
+            ;
+        $row = $queryBuilder->getQuery()->getOneOrNullResult();
+        return $row['maxDateOper'];        
+    }
+
     /**
      * Выручка по годам
      * @param array $params

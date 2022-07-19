@@ -13,6 +13,7 @@ use Stock\Entity\Register;
 use Application\Entity\SupplierOrder;
 use Application\Entity\Goods;
 use Stock\Entity\PtSheduler;
+use Application\Entity\Order;
 
 /**
  * This service is responsible for adding/editing pt.
@@ -555,70 +556,80 @@ class PtManager
      */
     public function ptGenerator($ptSheduler)
     {
-        $ptDate = date('Y-m-d');
-        
+        $endTime = date('H:i', $ptSheduler->getGeneratorTime());
+        $nowTime = date('H:i');
+        if ($nowTime > $endTime){
+            return;
+        }
+
         $office = $ptSheduler->getOffice();
         $office2 = $ptSheduler->getOffice2();
-
-        $this->deleteAutoPt($office, $office2, $ptDate);
         
-        $soDate = $ptDate;
-        if ($ptSheduler->getGeneratorDay() == PtSheduler::GENERATOR_DAY_TOMORROW){
-            $soDate = date('Y-m-d', strtotime($ptDate.' +1 day'));
-//            if (date('w', strtotime($soDate)) == 0){//если завтра воскресенье
-//                $soDate = date('Y-m-d', strtotime('+2 days'));
-//            }
-        }
-
-        $supplierOrders = $this->entityManager->getRepository(SupplierOrder::class)
-                ->findForPt($office, $office2, $soDate);
+        $ptDate = date('Y-m-d');
+        $maxDateOper = $this->entityManager->getRepository(Order::class)
+                ->findMaxDateOper($office2);
         
-        $i = 1;
-        foreach ($supplierOrders as $supplierOrder){
-            $company = $this->entityManager->getRepository(Office::class)
-                    ->findDefaultCompany($office);
-            $company2 = $this->entityManager->getRepository(Office::class)
-                    ->findDefaultCompany($office2);
+        while ($ptDate < $maxDateOper){
+            
+            $this->deleteAutoPt($office, $office2, $ptDate);
 
-            $pt = $this->entityManager->getRepository(Pt::class)
-                    ->findOneBy(['office' => $office->getId(), 'office2' => $office2->getId(), 
-                        'docDate' => $ptDate, 'docNo' => $this->autoPtDocNo]);
-            $upd = [
-                'apl_id' => 0,
-                'doc_date' => $ptDate,
-                'comment' => 'Автоперемещение',
-                'status_ex' => Pt::STATUS_EX_NEW,
-                'status' => Pt::STATUS_ACTIVE,
-                'office' => $office,
-                'company' => $company,
-                'office2' => $office2,
-                'company2' => $company2,
-                'doc_no' => $this->autoPtDocNo,
-            ];
-
-            if (!$pt){                    
-                $pt = $this->addPt($upd);
-            } else {
-                $pt->setStatus(Pt::STATUS_ACTIVE);
-                $this->entityManager->persist($pt);
-                $this->entityManager->flush($pt);
+            $soDate = $ptDate;
+            if ($ptSheduler->getGeneratorDay() == PtSheduler::GENERATOR_DAY_TOMORROW){
+                $soDate = date('Y-m-d', strtotime($ptDate.' +1 day'));
             }
 
-            $good = $this->entityManager->getRepository(Goods::class)
-                    ->find($supplierOrder['goodId']);
+            $supplierOrders = $this->entityManager->getRepository(SupplierOrder::class)
+                    ->findForPt($office, $office2, $soDate);
 
-            $ptGood = [
-                'quantity' => $supplierOrder['quantity'],
-                'amount' => $good->getMeanPrice()*$supplierOrder['quantity'],
-                'good_id' => $supplierOrder['goodId'],
-                'comment' => $supplierOrder['orderAplId'].' '.$supplierOrder['supplierName'],
-            ];
+            $i = 1;
+            foreach ($supplierOrders as $supplierOrder){
+                $company = $this->entityManager->getRepository(Office::class)
+                        ->findDefaultCompany($office);
+                $company2 = $this->entityManager->getRepository(Office::class)
+                        ->findDefaultCompany($office2);
 
-            $this->addPtGood($pt->getId(), $ptGood, $i);
-            $i++;
-        }
-        
-        $this->updateAutoPt($ptDate);
+                $pt = $this->entityManager->getRepository(Pt::class)
+                        ->findOneBy(['office' => $office->getId(), 'office2' => $office2->getId(), 
+                            'docDate' => $ptDate, 'docNo' => $this->autoPtDocNo]);
+                $upd = [
+                    'apl_id' => 0,
+                    'doc_date' => $ptDate,
+                    'comment' => 'Автоперемещение',
+                    'status_ex' => Pt::STATUS_EX_NEW,
+                    'status' => Pt::STATUS_ACTIVE,
+                    'office' => $office,
+                    'company' => $company,
+                    'office2' => $office2,
+                    'company2' => $company2,
+                    'doc_no' => $this->autoPtDocNo,
+                ];
+
+                if (!$pt){                    
+                    $pt = $this->addPt($upd);
+                } else {
+                    $pt->setStatus(Pt::STATUS_ACTIVE);
+                    $this->entityManager->persist($pt);
+                    $this->entityManager->flush($pt);
+                }
+
+                $good = $this->entityManager->getRepository(Goods::class)
+                        ->find($supplierOrder['goodId']);
+
+                $ptGood = [
+                    'quantity' => $supplierOrder['quantity'],
+                    'amount' => $good->getMeanPrice()*$supplierOrder['quantity'],
+                    'good_id' => $supplierOrder['goodId'],
+                    'comment' => $supplierOrder['orderAplId'].' '.$supplierOrder['supplierName'],
+                ];
+
+                $this->addPtGood($pt->getId(), $ptGood, $i);
+                $i++;
+            }
+
+            $this->updateAutoPt($ptDate);
+            
+            $ptDate = date('Y-m-d', strtotime($ptDate.' +1 day'));
+        }    
         
         return;
     }
