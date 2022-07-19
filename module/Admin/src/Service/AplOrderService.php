@@ -561,7 +561,7 @@ class AplOrderService {
                     }    
                     if (empty($good)){
 //            var_dump($tp); exit;
-                        throw new \Exception("Не удалось создать карточку товара для документа ".\Laminas\Json\Encoder::encode($tp));
+                        throw new \Exception("Не удалось создать карточку товара для документа ".\Laminas\Json\Encoder::encode($tp['good']));
 //                        return false;
                     } else {
 
