@@ -79,12 +79,16 @@ class SupplierController extends AbstractActionController
         $absentRaws = $this->entityManager->getRepository(Supplier::class)
                 ->absentRaws();
         
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy([]);
+        
         // Визуализируем шаблон представления.
         return new ViewModel([
             'supplierManager' => $this->supplierManager,
             'statuses' => $statuses,
             'absentPriceDescriptions' => $absentPriceDescriptions,
             'absentRaws' => $absentRaws,
+            'offices' => $offices,
         ]);  
     }
     
@@ -97,6 +101,7 @@ class SupplierController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
         $status = $this->params()->fromQuery('status', Supplier::STATUS_ACTIVE);
+        $office = $this->params()->fromQuery('office');
         
         $query = $this->entityManager->getRepository(Supplier::class)
                         ->findAllSupplier([
@@ -104,6 +109,7 @@ class SupplierController extends AbstractActionController
                             'sort' => $sort, 
                             'order' => $order,
                             'status' => $status,
+                            'office' => $office,
                         ]);
         
         $total = count($query->getResult(2));

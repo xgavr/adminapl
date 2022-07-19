@@ -33,6 +33,12 @@
                         <option value="<?= $status['status']?>"><?= $status['name'],' ',$status['status_count']?></option>
                     <?php endforeach;?>
                 </select>
+                <select id="officeSelect" style="width: 200px" class="form-control">
+                    <option selected>--все--</option>
+                    <?php foreach ($offices as $office):?>
+                        <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                    <?php endforeach;?>
+                </select>
             </div>
         </div>
         <table id="table" 
@@ -111,7 +117,7 @@
         $('#table').bootstrapTable('refresh');
     }
 
-    var table = $('#table').bootstrapTable({
+    var $table = $('#table').bootstrapTable({
         onLoadSuccess: function(res){
             $("[data-toggle='tooltip']").tooltip();
             $('.editableCheckBox').change(function() {
@@ -131,10 +137,10 @@
 
     $(function () {
         ok.click(function () {
-            table.bootstrapTable('refresh');
+            $table.bootstrapTable('refresh');
         });
-        $('#statusSelect').change(function () {
-            table.bootstrapTable('refresh');
+        $('#officeSelect').change(function () {
+            $table.bootstrapTable('refresh');
         });
     });
     
@@ -152,6 +158,7 @@
         }    
 
         params.status = $('#statusSelect').val();        
+        params.office = $('#officeSelect').val();        
         return params;
     }
     
