@@ -571,7 +571,7 @@ class PtManager
                 ->findMaxDateOper($office2);
         
 //        var_dump($maxDateOper);
-        while ($ptDate < $maxDateOper){
+        while ($ptDate <= $maxDateOper){
             
             $this->deleteAutoPt($office, $office2, $ptDate);
 
@@ -632,6 +632,20 @@ class PtManager
             
             $ptDate = date('Y-m-d', strtotime($ptDate.' +1 day'));
         }    
+        
+        return;
+    }
+    
+    /**
+     * Генерация всех перемещений
+     */
+    public function ptGenerators()
+    {
+        $shedulers = $this->entityManager->getRepository(PtSheduler::class)
+                ->findBy(['status' => PtSheduler::STATUS_ACTIVE]);
+        foreach ($shedulers as $ptSheduler){
+            $this->ptGenerator($ptSheduler);
+        }
         
         return;
     }

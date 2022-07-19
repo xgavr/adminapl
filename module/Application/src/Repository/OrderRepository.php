@@ -381,7 +381,7 @@ class OrderRepository extends EntityRepository{
             ->setMaxResults(1)    
             ;
         $row = $queryBuilder->getQuery()->getOneOrNullResult();
-        return $row['maxDateOper'];        
+        return date('Y-m-d', strtotime($row['maxDateOper']));        
     }
 
     /**

@@ -182,13 +182,19 @@ class ProcessingController extends AbstractActionController
      */
     private $registerManager;    
 
+    /**
+     * Pt manager.
+     * @var \Stock\Service\PtManager
+     */
+    private $ptManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
-            $aplCashService, $billManager, $registerManager) 
+            $aplCashService, $billManager, $registerManager, $ptManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -217,6 +223,7 @@ class ProcessingController extends AbstractActionController
         $this->aplCashService = $aplCashService;
         $this->billManager = $billManager;
         $this->registerManager = $registerManager;
+        $this->ptManager = $ptManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -1918,6 +1925,24 @@ class ProcessingController extends AbstractActionController
         if ($settings['ptu'] == 1){
 
             $this->aplDocService->unloadSuppliersOrder();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }    
+    
+    /**
+     * Генерация перемещений между офисами
+     * @return JsonModel
+     */
+    public function ptGeneratorAction()
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['ptu'] == 1){
+
+            $this->ptManager->ptGenerators();            
         }    
                 
         return new JsonModel(
