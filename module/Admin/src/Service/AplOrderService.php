@@ -560,9 +560,9 @@ class AplOrderService {
                         $good = $this->aplDocService->findGood($tp['good']);   
                     }    
                     if (empty($good)){
-//                        throw new \Exception("Не удалось создать карточку товара для документа {$data['id']}");
+                        throw new \Exception("Не удалось создать карточку товара для документа {$tp['good']['id']}");
 //            var_dump($tp); exit;
-                        return false;
+//                        return false;
                     } else {
 
                         $this->orderManager->insBid($order, [
@@ -647,7 +647,7 @@ class AplOrderService {
      * @param integer $aplId
      * @return 
      */
-    public function unloadOrder($start = 0, $aplId = null, $orderTotal = false)
+    public function unloadOrder($start = 0, $aplId = null, $orderTotal = null)
     {
         $url = $this->aplApi().'unload-order?api='.$this->aplApiKey();
         
