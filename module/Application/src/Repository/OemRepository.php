@@ -609,7 +609,7 @@ class OemRepository  extends EntityRepository{
      */
     public function removeIntersectOem($good)
     {
-        $bidCount = $this->entityManager->getRepository(Bid::class)
+        $bidCount = $this->getEntityManager()->getRepository(Bid::class)
                 ->count(['good' => $good->getId()]);
         
         if (empty($bidCount)){
