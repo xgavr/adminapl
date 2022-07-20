@@ -11,7 +11,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Description of Bid
+ * Description of Comment
  * @ORM\Entity(repositoryClass="\Application\Repository\CommentRepository")
  * @ORM\Table(name="comment")
  * @author Daddy

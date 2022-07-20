@@ -529,24 +529,6 @@ class ContactCar {
         $this->car = $car;
     }         
  
-    /**
-     * Returns the array of bid assigned to this.
-     * @return array
-     */
-    public function getBid()
-    {
-        return $this->bid;
-    }
-        
-    /**
-     * Assigns.
-     * @param Application\Entity\Bid $bid
-     */
-    public function addBid($bid)
-    {
-        $this->bid[] = $bid;
-    }
-    
     public function formArray()
     {
         

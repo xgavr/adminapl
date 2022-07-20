@@ -157,9 +157,11 @@ class GoodsManager
         $movementsCount = $this->entityManager->getRepository(Movement::class)
                 ->count(['good' => $good->getId()]);
         $articleCount = $this->entityManager->getRepository(Article::class)
-            ->count(['good' => $good->getId()]);
-        
-        return $movementsCount == 0 && $articleCount == 0;
+            ->count(['good' => $good->getId()]);        
+        $bidCount = $this->entityManager->getRepository(Bid::class)
+                ->count(['good' => $good->getId()]);
+                
+        return $movementsCount == 0 && $articleCount == 0 && $bidCount == 0;
     }
     
     /**

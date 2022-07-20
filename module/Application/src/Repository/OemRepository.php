@@ -16,6 +16,7 @@ use Application\Entity\CrossList;
 use Application\Entity\Rawprice;
 use Application\Filter\ArticleCode;
 use Admin\Filter\TransferName;
+use Application\Entity\Bid;
 
 
 /**
@@ -574,23 +575,28 @@ class OemRepository  extends EntityRepository{
      */
     public function removeAllGoodOem($good)
     {
-        $oemsQuery = $this->getEntityManager()->getRepository(Goods::class)
-                ->findOems($good);
+        $bidCount = $this->entityManager->getRepository(Bid::class)
+                ->count(['good' => $good->getId()]);
         
-        $iterable = $oemsQuery->iterate();
+        if (empty($bidCount)){
+            $oemsQuery = $this->getEntityManager()->getRepository(Goods::class)
+                    ->findOems($good);
 
-        foreach($iterable as $item){
-            foreach ($item as $oe){
-                $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oe->getId()]);        
+            $iterable = $oemsQuery->iterate();
+
+            foreach($iterable as $item){
+                foreach ($item as $oe){
+                    $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oe->getId()]);        
+                }
+                unset($item);
             }
-            unset($item);
-        }
-        
-        $myCodes = $this->getEntityManager()->getRepository(Oem::class)
-                ->findBy(['good' => $good->getId()]);
-        foreach ($myCodes as $myCode){
-            $this->getEntityManager()->getConnection()->delete('oem', ['id' => $myCode->getId()]);                    
-        }
+
+            $myCodes = $this->getEntityManager()->getRepository(Oem::class)
+                    ->findBy(['good' => $good->getId()]);
+            foreach ($myCodes as $myCode){
+                $this->getEntityManager()->getConnection()->delete('oem', ['id' => $myCode->getId()]);                    
+            }
+        }    
         
         return;
     }
@@ -603,32 +609,37 @@ class OemRepository  extends EntityRepository{
      */
     public function removeIntersectOem($good)
     {
-        $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('o')
-            ->from(Oem::class, 'o')
-            ->where('o.intersectGoodId = ?1')    
-            ->setParameter('1', $good->getId())
-            ;
-                
-        $oemsQuery = $queryBuilder->getQuery();            
+        $bidCount = $this->entityManager->getRepository(Bid::class)
+                ->count(['good' => $good->getId()]);
         
-        $iterable = $oemsQuery->iterate();
+        if (empty($bidCount)){
+            $entityManager = $this->getEntityManager();
 
-        $k = 0;
-        foreach($iterable as $item){
-            foreach ($item as $oe){
-                $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oe->getId()]);
-                $entityManager->detach($oe);
-                $k++;
-            }
-        }        
-        if ($k){
-            if ($good->getStatusOemEx() != Goods::ATTR_EX_NEW){
-                $entityManager->getRepository(Goods::class)
-                        ->updateGoodId($good->getId(), ['status_oem_ex' => Goods::OEM_EX_NEW]);
-            }   
+            $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder->select('o')
+                ->from(Oem::class, 'o')
+                ->where('o.intersectGoodId = ?1')    
+                ->setParameter('1', $good->getId())
+                ;
+
+            $oemsQuery = $queryBuilder->getQuery();            
+
+            $iterable = $oemsQuery->iterate();
+
+            $k = 0;
+            foreach($iterable as $item){
+                foreach ($item as $oe){
+                    $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oe->getId()]);
+                    $entityManager->detach($oe);
+                    $k++;
+                }
+            }        
+            if ($k){
+                if ($good->getStatusOemEx() != Goods::ATTR_EX_NEW){
+                    $entityManager->getRepository(Goods::class)
+                            ->updateGoodId($good->getId(), ['status_oem_ex' => Goods::OEM_EX_NEW]);
+                }   
+            }    
         }    
         return;
     }

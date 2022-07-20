@@ -22,6 +22,7 @@ use Application\Entity\GenericGroup;
 use Application\Entity\GoodAttributeValue;
 use Application\Entity\Images;
 use Application\Filter\ZetasoftCarKey;
+use Application\Entity\Bid;
 
 /**
  * Description of ExternalManager

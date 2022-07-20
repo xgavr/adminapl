@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use ApiMarketPlace\Entity\MarketplaceUpdate;
 
 /**
- * Description of Bid
+ * Description of Marketplace
  * @ORM\Entity(repositoryClass="\ApiMarketPlace\Repository\MarketplaceRepository")
  * @ORM\Table(name="marketplace")
  * @author Daddy

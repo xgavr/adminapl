@@ -18,6 +18,7 @@ use Application\Entity\TokenGroup;
 use Stock\Entity\PtuGood;
 use Application\Filter\KeyboardTranslit;
 use Stock\Entity\Movement;
+use Application\Entity\Bid;
 
 
 /**
@@ -1508,9 +1509,13 @@ class GoodsRepository extends EntityRepository
      */
     public function removeGoodOem($good)
     {
-        $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_TD]);
-        $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_SUP]);
-        $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_CROSS]);
+        $bidCount = $this->entityManager->getRepository(Bid::class)
+                ->count(['good' => $good->getId()]);
+        if (empty($bidCount)){        
+            $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_TD]);
+            $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_SUP]);
+            $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_CROSS]);
+        }    
         return;        
     }
     
@@ -1523,7 +1528,11 @@ class GoodsRepository extends EntityRepository
      */
     public function removeGoodSourceOem($good, $source)
     {
-        $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => $source]);
+        $bidCount = $this->entityManager->getRepository(Bid::class)
+                ->count(['good' => $good->getId()]);
+        if (empty($bidCount)){
+            $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => $source]);
+        }    
         return;        
     }
 

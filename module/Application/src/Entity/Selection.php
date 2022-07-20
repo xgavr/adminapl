@@ -11,7 +11,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Description of Bid
+ * Description of Selection
  * @ORM\Entity(repositoryClass="\Application\Repository\OrderRepository")
  * @ORM\Table(name="selection")
  * @author Daddy

@@ -13,7 +13,7 @@ use ApiMarketPlace\Entity\Marketplace;
 use Application\Entity\Order;
 
 /**
- * Description of Bid
+ * Description of Marketplace update
  * @ORM\Entity(repositoryClass="\ApiMarketPlace\Repository\MarketplaceRepository")
  * @ORM\Table(name="marketplace_update")
  * @author Daddy
