@@ -337,7 +337,7 @@ class OrderRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('identity(s.office) as office, so.quantity, identity(so.good) as goodId, o.aplId as orderAplId, s.name as supplierName')
-            ->distinct()    
+//            ->distinct()    
             ->from(SupplierOrder::class, 'so')
             ->join('so.order', 'o')
             ->where('o.dateOper >= ?1')    
