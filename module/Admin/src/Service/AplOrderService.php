@@ -682,9 +682,9 @@ class AplOrderService {
                 if ($orderTotal == $result['sort']){
                     return true;
                 }
-                var_dump($aplId);
-                var_dump($orderTotal);
-                var_dump($result); exit;
+//                var_dump($aplId);
+//                var_dump($orderTotal);
+//                var_dump($result); exit;
             }
 
             if ($this->getOrder($result)){ 
