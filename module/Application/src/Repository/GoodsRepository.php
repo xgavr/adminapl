@@ -1509,7 +1509,7 @@ class GoodsRepository extends EntityRepository
      */
     public function removeGoodOem($good)
     {
-        $bidCount = $this->entityManager->getRepository(Bid::class)
+        $bidCount = $this->getEntityManager()->getRepository(Bid::class)
                 ->count(['good' => $good->getId()]);
         if (empty($bidCount)){        
             $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_TD]);
@@ -1528,7 +1528,7 @@ class GoodsRepository extends EntityRepository
      */
     public function removeGoodSourceOem($good, $source)
     {
-        $bidCount = $this->entityManager->getRepository(Bid::class)
+        $bidCount = $this->getEntityManager()->getRepository(Bid::class)
                 ->count(['good' => $good->getId()]);
         if (empty($bidCount)){
             $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => $source]);
