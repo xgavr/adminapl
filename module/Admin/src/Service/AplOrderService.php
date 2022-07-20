@@ -544,15 +544,17 @@ class AplOrderService {
         
         if ($order){
             $this->orderManager->updOrder($order, $orderData);
-            $this->entityManager->getConnection()
-                    ->delete('bid', ['order_id' => $order->getId()]);
-            $this->entityManager->getConnection()
-                    ->delete('selection', ['order_id' => $order->getId()]);
         } else {        
             $order = $this->orderManager->insOrder($office, $contact, $orderData);
         }    
         
         if ($order){
+
+            $this->entityManager->getConnection()
+                    ->delete('bid', ['order_id' => $order->getId()]);
+            $this->entityManager->getConnection()
+                    ->delete('selection', ['order_id' => $order->getId()]);
+
             if (isset($data['tp'])){
                 $rowNo = 1;
                 foreach ($data['tp'] as $tp){
