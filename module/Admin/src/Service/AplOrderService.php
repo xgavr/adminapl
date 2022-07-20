@@ -676,7 +676,9 @@ class AplOrderService {
         } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
             return true;
         }    
-//        var_dump($result);
+        var_dump($aplId);
+        var_dump($orderTotal);
+        var_dump($result); exit;
 
         if (is_array($result)){
             if (is_numeric($orderTotal) && $aplId){
@@ -738,7 +740,8 @@ class AplOrderService {
                     $total += $result[0]['total'];
                 }
                 
-//                var_dump($result); exit;
+//                var_dump($order->getAplId());
+//                var_dump($total);
                 if ($this->unloadOrder($start, $order->getAplId(), $total)) {
                     $statusEx = Order::STATUS_EX_OK;
                     usleep(100);
