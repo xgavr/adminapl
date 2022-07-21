@@ -469,25 +469,53 @@ class PostManager {
     }    
     
     /**
-     * Уточнение названия папки с удаленными
+     * Список папок ящика
      * @param array $params
      */
     private function boxNames($params)
     {
-        $result = 'Trash';
-        $trashNames = ['Trash', 'Удаленные'];
+        $result = [];
         $mbox = imap_open($params['server'], $params['user'], $params['password'], OP_HALFOPEN)
             or die("не удалось подключиться: " . imap_last_error());
         
         $list = imap_list($mbox, $params['server'], "*");
         if (is_array($list)) {
             foreach ($list as $val) {
-                $name = mb_strtolower(imap_utf7_decode($val));
+                $result[] = preg_replace('/\{.*?\}/', '', mb_convert_encoding($val, 'UTF-8', 'UTF7-IMAP'));
             }
         } else {
             echo "вызов imap_list завершился с ошибкой: " . imap_last_error() . "\n";
         }
-
+//                $mailboxes = imap_list($connection, $params['server'], '*');
+//                var_dump($mailboxes); exit;
+//                array(6) {
+//                  [0]=>
+//                  string(35) "{imap.yandex.ru:993/imap/ssl}Drafts"
+//                  [1]=>
+//                  string(34) "{imap.yandex.ru:993/imap/ssl}INBOX"
+//                  [2]=>
+//                  string(35) "{imap.yandex.ru:993/imap/ssl}Outbox"
+//                  [3]=>
+//                  string(33) "{imap.yandex.ru:993/imap/ssl}Sent"
+//                  [4]=>
+//                  string(33) "{imap.yandex.ru:993/imap/ssl}Spam"
+//                  [5]=>
+//                  string(34) "{imap.yandex.ru:993/imap/ssl}Trash"
+//                }                
+//                array(6) {
+//                  [0]=>
+//                  string(53) "{imap.yandex.ru:993/imap/ssl}Отправленные"
+//                  [1]=>
+//                  string(47) "{imap.yandex.ru:993/imap/ssl}Исходящие"
+//                  [2]=>
+//                  string(37) "{imap.yandex.ru:993/imap/ssl}Спам"
+//                  [3]=>
+//                  string(47) "{imap.yandex.ru:993/imap/ssl}Удаленные"
+//                  [4]=>
+//                  string(47) "{imap.yandex.ru:993/imap/ssl}Черновики"
+//                  [5]=>
+//                  string(34) "{imap.yandex.ru:993/imap/ssl}INBOX"
+//                }
         imap_close($mbox);
         
         return $result;
@@ -513,12 +541,19 @@ class PostManager {
         $imap_obj = $connection = null;
         
         if (!isset($params['folders'])){
-            $params['folders'] = ['INBOX', 'Spam'];
+            $params['folders'] = ['INBOX', 'Spam', 'Спам'];
         }            
-        if (!isset($params['trash'])) $params['trash'] = 'Trash';
+        if (!isset($params['trash'])) $params['trash'] = ['Trash', 'Удаленные'];
+        
+        $boxes = $this->boxNames($params);
+//        var_dump($boxes); exit;
         
         if (is_array($params['folders'])){
             foreach ($params['folders'] as $foldername){
+                
+                if (!in_array($foldername, $boxes)){
+                    continue;
+                }
 
                 $hostname = $params['server'].mb_convert_encoding($foldername, 'UTF7-IMAP', 'UTF-8');
                 $connection = imap_open(
@@ -527,32 +562,7 @@ class PostManager {
                         $params['password']
                 );
                 
-//                $mailboxes = imap_list($connection, $params['server'], '*');
-//                var_dump($mailboxes); exit;
-//                array(6) {
-//                  [0]=>
-//                  string(35) "{imap.yandex.ru:993/imap/ssl}Drafts"
-//                  [1]=>
-//                  string(34) "{imap.yandex.ru:993/imap/ssl}INBOX"
-//                  [2]=>
-//                  string(35) "{imap.yandex.ru:993/imap/ssl}Outbox"
-//                  [3]=>
-//                  string(33) "{imap.yandex.ru:993/imap/ssl}Sent"
-//                  [4]=>
-//                  string(33) "{imap.yandex.ru:993/imap/ssl}Spam"
-//                  [5]=>
-//                  string(34) "{imap.yandex.ru:993/imap/ssl}Trash"
-//                }                
                 if ($connection){
-                      //Просмотр названий папок
-    //                $list = imap_list($connection, '{imap.yandex.ru:993/imap/ssl}', '*');
-    //                foreach ($list as $value) {
-    //    
-    //                    var_dump($value);
-    //                    var_dump(mb_convert_encoding($value, 'UTF-8', 'UTF7-IMAP'));
-    //    
-    //                }            
-
                     
                     $imap_obj = imap_check($connection);
 
@@ -693,7 +703,13 @@ class PostManager {
                                 $this->addMessageToLog($result[$messageNumber]);
                             
                                 if (!$params['leave_message']){
-                                    $move = imap_mail_move($connection, (string) $messageNumber, mb_convert_encoding($params['trash'], 'UTF7-IMAP', 'UTF-8'));
+                                    $move = false;
+                                    foreach ($params['trash'] as $trash){      
+                                        if (!in_array($trash, $boxes)){
+                                            continue;
+                                        }                                        
+                                        $move = imap_mail_move($connection, (string) $messageNumber, mb_convert_encoding($trash, 'UTF7-IMAP', 'UTF-8'));
+                                    }    
                                     if (!$move){
                                         imap_delete($connection, $messageNumber);                                
                                     }    
