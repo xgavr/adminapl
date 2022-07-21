@@ -475,48 +475,49 @@ class PostManager {
     private function boxNames($params)
     {
         $result = [];
-        $mbox = imap_open($params['server'], $params['user'], $params['password'], OP_HALFOPEN)
-            or die("не удалось подключиться: " . imap_last_error());
-        
-        $list = imap_list($mbox, $params['server'], "*");
-        if (is_array($list)) {
-            foreach ($list as $val) {
-                $result[] = preg_replace('/\{.*?\}/', '', mb_convert_encoding($val, 'UTF-8', 'UTF7-IMAP'));
+        $mbox = imap_open($params['server'], $params['user'], $params['password'], OP_HALFOPEN);
+//            or die("не удалось подключиться: " . imap_last_error());
+        if ($mbox){
+            $list = imap_list($mbox, $params['server'], "*");
+            if (is_array($list)) {
+                foreach ($list as $val) {
+                    $result[] = preg_replace('/\{.*?\}/', '', mb_convert_encoding($val, 'UTF-8', 'UTF7-IMAP'));
+                }
+            } else {
+                echo "вызов imap_list завершился с ошибкой: " . imap_last_error() . "\n";
             }
-        } else {
-            echo "вызов imap_list завершился с ошибкой: " . imap_last_error() . "\n";
-        }
-//                $mailboxes = imap_list($connection, $params['server'], '*');
-//                var_dump($mailboxes); exit;
-//                array(6) {
-//                  [0]=>
-//                  string(35) "{imap.yandex.ru:993/imap/ssl}Drafts"
-//                  [1]=>
-//                  string(34) "{imap.yandex.ru:993/imap/ssl}INBOX"
-//                  [2]=>
-//                  string(35) "{imap.yandex.ru:993/imap/ssl}Outbox"
-//                  [3]=>
-//                  string(33) "{imap.yandex.ru:993/imap/ssl}Sent"
-//                  [4]=>
-//                  string(33) "{imap.yandex.ru:993/imap/ssl}Spam"
-//                  [5]=>
-//                  string(34) "{imap.yandex.ru:993/imap/ssl}Trash"
-//                }                
-//                array(6) {
-//                  [0]=>
-//                  string(53) "{imap.yandex.ru:993/imap/ssl}Отправленные"
-//                  [1]=>
-//                  string(47) "{imap.yandex.ru:993/imap/ssl}Исходящие"
-//                  [2]=>
-//                  string(37) "{imap.yandex.ru:993/imap/ssl}Спам"
-//                  [3]=>
-//                  string(47) "{imap.yandex.ru:993/imap/ssl}Удаленные"
-//                  [4]=>
-//                  string(47) "{imap.yandex.ru:993/imap/ssl}Черновики"
-//                  [5]=>
-//                  string(34) "{imap.yandex.ru:993/imap/ssl}INBOX"
-//                }
-        imap_close($mbox);
+    //                $mailboxes = imap_list($connection, $params['server'], '*');
+    //                var_dump($mailboxes); exit;
+    //                array(6) {
+    //                  [0]=>
+    //                  string(35) "{imap.yandex.ru:993/imap/ssl}Drafts"
+    //                  [1]=>
+    //                  string(34) "{imap.yandex.ru:993/imap/ssl}INBOX"
+    //                  [2]=>
+    //                  string(35) "{imap.yandex.ru:993/imap/ssl}Outbox"
+    //                  [3]=>
+    //                  string(33) "{imap.yandex.ru:993/imap/ssl}Sent"
+    //                  [4]=>
+    //                  string(33) "{imap.yandex.ru:993/imap/ssl}Spam"
+    //                  [5]=>
+    //                  string(34) "{imap.yandex.ru:993/imap/ssl}Trash"
+    //                }                
+    //                array(6) {
+    //                  [0]=>
+    //                  string(53) "{imap.yandex.ru:993/imap/ssl}Отправленные"
+    //                  [1]=>
+    //                  string(47) "{imap.yandex.ru:993/imap/ssl}Исходящие"
+    //                  [2]=>
+    //                  string(37) "{imap.yandex.ru:993/imap/ssl}Спам"
+    //                  [3]=>
+    //                  string(47) "{imap.yandex.ru:993/imap/ssl}Удаленные"
+    //                  [4]=>
+    //                  string(47) "{imap.yandex.ru:993/imap/ssl}Черновики"
+    //                  [5]=>
+    //                  string(34) "{imap.yandex.ru:993/imap/ssl}INBOX"
+    //                }
+            imap_close($mbox);
+        }    
         
         return $result;
     }
