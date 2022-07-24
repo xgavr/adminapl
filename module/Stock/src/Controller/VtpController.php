@@ -179,11 +179,11 @@ class VtpController extends AbstractActionController
         $notDisabled = true;
         if ($ptuId > 0){
             $ptu = $this->entityManager->getRepository(Ptu::class)
-                    ->findOneById($ptuId);
+                    ->find($ptuId);
         }    
         if ($vtpId > 0){
             $vtp = $this->entityManager->getRepository(Vtp::class)
-                    ->findOneById($vtpId);
+                    ->find($vtpId);
             $ptu = $vtp->getPtu();
         }    
         if ($ptu){
