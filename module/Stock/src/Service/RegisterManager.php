@@ -265,7 +265,7 @@ class RegisterManager
      */
     private function docActualize($register)
     {
-        $flag = true;
+        $flag = false;
         switch ($register->getDocType()){
             case Movement::DOC_ORDER:
                 $order = $this->entityManager->getRepository(Order::class)
