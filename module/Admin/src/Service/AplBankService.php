@@ -59,7 +59,7 @@ class AplBankService {
     public function convertStatementToAplFormat($statement)
     {
         $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                ->findOneByRs($statement->getAccount());
+                ->findOneBy(['rs' => $statement->getAccount()]);
         
         if (!$bankAccount) {
             return;
