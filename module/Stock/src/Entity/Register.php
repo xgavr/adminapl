@@ -127,9 +127,9 @@ class Register {
             case Movement::DOC_ST:
                 return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/{$docId}'>Списание №{$docId}</a>";
             case Movement::DOC_VT:
-                return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/{$docId}'>Взврат покупателя №{$docId}</a>";
+                return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/{$docId}'>Возврат покупателя №{$docId}</a>";
             case Movement::DOC_VTP:
-                return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/{$docId}'>Взврат поставщику №{$docId}</a>";
+                return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/{$docId}'>Возврат поставщику №{$docId}</a>";
         }
         return;
     }

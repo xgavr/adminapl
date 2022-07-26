@@ -733,6 +733,9 @@ class AplOrderService {
         while (true){
             $order = $this->entityManager->getRepository(Order::class)
                     ->findOneByStatusEx(Order::STATUS_EX_NO);
+            if (!$order){
+                break;
+            }
             if ($order->getAplId()){
                 $result = $this->entityManager->getRepository(Bid::class)
                     ->getOrderNum($order);
@@ -756,7 +759,6 @@ class AplOrderService {
             if (time() > $startTime + 870){
                 break;
             }
-            $start++;
         }    
         return;        
     }
