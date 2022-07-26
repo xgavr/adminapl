@@ -271,6 +271,7 @@ class RegisterManager
                 $order = $this->entityManager->getRepository(Order::class)
                     ->find($register->getDocId());
                 if ($order){
+                    $flag = true;
                     $this->orderManager->repostOrder($order);
                     if ($order->getStatus() == Order::STATUS_SHIPPED){
                         $takeNo = $this->entityManager->getRepository(Bid::class)
@@ -317,6 +318,7 @@ class RegisterManager
                 $pt = $this->entityManager->getRepository(Pt::class)
                     ->find($register->getDocId());
                 if ($pt){
+                    $flag = true;
                     $this->ptManager->repostPt($pt);
                     if ($pt->getStatus() == Pt::STATUS_ACTIVE){
                         $takeNo = $this->entityManager->getRepository(PtGood::class)
@@ -349,6 +351,7 @@ class RegisterManager
                 $st = $this->entityManager->getRepository(St::class)
                     ->find($register->getDocId());
                 if ($st){
+                    $flag = true;
                     $this->stManager->repostSt($st);
                     if ($st->getStatus() == St::STATUS_ACTIVE){
                         $takeNo = $this->entityManager->getRepository(StGood::class)
@@ -373,6 +376,7 @@ class RegisterManager
                 $vt = $this->entityManager->getRepository(Vt::class)
                     ->find($register->getDocId());
                 if ($vt){
+                    $flag = true;
                     $this->vtManager->repostVt($vt);
                     if ($vt->getStatus() == Vt::STATUS_ACTIVE){
                         $takeNo = $this->entityManager->getRepository(VtGood::class)
@@ -385,6 +389,7 @@ class RegisterManager
                 $vtp = $this->entityManager->getRepository(Vtp::class)
                     ->find($register->getDocId());
                 if ($vtp){
+                    $flag = true;
                     $this->vtpManager->repostVtp($vtp);
                     if ($vtp->getStatus() == Vtp::STATUS_ACTIVE){
                         $takeNo = $this->entityManager->getRepository(VtpGood::class)
