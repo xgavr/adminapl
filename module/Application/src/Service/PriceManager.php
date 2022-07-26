@@ -182,7 +182,9 @@ class PriceManager {
                                             $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
                                             $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
                                         }    
-                                        unlink($attachment['temp_file']);
+                                        if (file_exists($attachment['temp_file'])){
+                                            unlink($attachment['temp_file']);
+                                        }    
                                     }
                                 }    
                             }
