@@ -474,9 +474,14 @@ class PostManager {
      */
     private function boxNames($params)
     {
+        set_error_handler(function ($err_severity, $err_msg, $err_file, $err_line) {
+            $errMsg = $params['user'].PHP_EOL.$err_msg;
+            throw new \ErrorException ($errMsg, 0, $err_severity, $err_file, $err_line);
+        });
+
         $result = [];
-        $mbox = imap_open($params['server'], $params['user'], $params['password'], OP_HALFOPEN)
-            or die('Не удалось подключится к ящику '.$params['user']);    
+        
+        $mbox = imap_open($params['server'], $params['user'], $params['password'], OP_HALFOPEN);
         
         if ($mbox){
             $list = imap_list($mbox, $params['server'], "*");
