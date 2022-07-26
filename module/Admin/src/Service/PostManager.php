@@ -475,8 +475,8 @@ class PostManager {
     private function boxNames($params)
     {
         set_error_handler(function ($err_severity, $err_msg, $err_file, $err_line) {
-            $errMsg = $params['user'].PHP_EOL.$err_msg;
-            throw new \ErrorException ($errMsg, 0, $err_severity, $err_file, $err_line);
+//            $errMsg = $params['user'].PHP_EOL.$err_msg;
+            throw new \ErrorException ($err_msg, 0, $err_severity, $err_file, $err_line);
         });
 
         $result = [];

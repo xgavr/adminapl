@@ -71,12 +71,13 @@ class LogController extends AbstractActionController
     
     public function settingAction()
     {
-//        $variable = $this->entityManager->getRepository(RegisterVariable::class)
-//                ->findOneBy([]);
         $variable = $this->entityManager->getRepository(RegisterVariable::class)
+                ->findOneBy([]);
+        $register = $this->entityManager->getRepository(RegisterVariable::class)
                 ->findForActualize();
         // Визуализируем шаблон представления.
         return new ViewModel([
+            'register' => $register,
             'variable' => $variable,
          ]);          
     }
