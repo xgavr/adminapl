@@ -408,7 +408,9 @@ class RegisterManager
             default: $flag = false;    
         }
         
-        $this->updateVar($register);
+        if ($flag){
+            $this->updateVar($register);
+        }    
         
         return $flag;
     }
