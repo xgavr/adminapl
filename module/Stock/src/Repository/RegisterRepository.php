@@ -136,20 +136,22 @@ class RegisterRepository extends EntityRepository
         $var = $this->getEntityManager()->getRepository(RegisterVariable::class)
                 ->findOneBy([]);
         
-        if ($var){
-            $entityManager = $this->getEntityManager();
-            $queryBuilder = $entityManager->createQueryBuilder();
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
 
-            $queryBuilder->select('r')
-                    ->from(Register::class, 'r')
-                    ->where('r.docStamp > ?1')
-                    ->setParameter('1', $var->getVarStamp())
-                    ->orderBy('r.docStamp', 'ASC')
-                    ->setMaxResults(1)
+        $queryBuilder->select('r')
+                ->from(Register::class, 'r')
+                ->orderBy('r.docStamp', 'ASC')
+                ->setMaxResults(1)
+                ;
+        
+        if ($var){
+            $queryBuilder->where('r.docStamp > ?1')
+                ->setParameter('1', $var->getVarStamp())
                     ;
 
-            return $queryBuilder->getQuery()->getOneOrNullResult();        
         }
+        return $queryBuilder->getQuery()->getOneOrNullResult();        
         
         return;
     }
