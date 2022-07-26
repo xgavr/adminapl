@@ -133,7 +133,7 @@ class AplBankService {
                 if ($response->isOk()){
                     $statement->setSwap1(Statement::SWAP1_TRANSFERED);
                     $this->entityManager->persist($statement);
-                    $this->entityManager->flush($statement);
+                    $this->entityManager->flush();
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $ex){
                 
