@@ -185,7 +185,7 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function errTextFormatter(value, row){
-        if (row.errorText && row.status == <?= Setting::STATUS_ERROR?>){
+        if (row.errorText){
             return [
                 '<button class="btn btn-default btn-xs error-modal-show"',
                 ' title="Описание ошибки" modal-url="/log/setting-error-text/'+row.id+'">',
