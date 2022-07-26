@@ -475,8 +475,9 @@ class PostManager {
     private function boxNames($params)
     {
         $result = [];
-        $mbox = imap_open($params['server'], $params['user'], $params['password'], OP_HALFOPEN);
-//            or die("не удалось подключиться: " . imap_last_error());
+        $mbox = imap_open($params['server'], $params['user'], $params['password'], OP_HALFOPEN)
+            or die('Не удалось подключится к ящику '.$params['user']);    
+        
         if ($mbox){
             $list = imap_list($mbox, $params['server'], "*");
             if (is_array($list)) {
