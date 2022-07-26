@@ -99,6 +99,15 @@ class Register {
     }
     
     /**
+     * Returns the date of oper.
+     * @return string     
+     */
+    public function getDateVar() 
+    {
+        return $this->dateOper;
+    }
+    
+    /**
      * Sets the date when oper.
      * @param date $dateOper     
      */
