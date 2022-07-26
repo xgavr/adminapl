@@ -91,7 +91,7 @@ class BillManager
         $idoc->setSupplier($supplier);
         
         $this->entityManager->persist($idoc);
-        $this->entityManager->flush($idoc);
+        $this->entityManager->flush();
         
         return $idoc;
     }
