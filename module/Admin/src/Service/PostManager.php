@@ -371,7 +371,7 @@ class PostManager {
             }
 
             $this->entityManager->persist($postLog);
-            $this->entityManager->flush($postLog);
+            $this->entityManager->flush();
         }   
         
         return;
