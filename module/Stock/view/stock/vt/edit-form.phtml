@@ -179,9 +179,9 @@ if ($vt){
                     }
                     var row = {
                         good: good,
-                        amount: row.amount,
-                        quantity: row.quantity,
-                        price: Math.round(row.amount*100/row.quantity)/100,
+                        amount: row.price*row.num,
+                        quantity: row.num,
+                        price: row.price,
                         rowNo: index+1
                     };
 

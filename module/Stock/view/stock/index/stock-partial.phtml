@@ -136,12 +136,22 @@
             });
         });  
         
+        $(document).on('click', '.vt-index-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'vtIndexModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+
         $(document).on('click', '.vt-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
                 id: 'vtModal',
                 url: url,
-                width: '1440px'
+                width: '1440px',
+                zIndex: 9990
             });
         });  
 

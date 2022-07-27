@@ -167,6 +167,9 @@ class VtController extends AbstractActionController
         if ($orderId > 0){
             $order = $this->entityManager->getRepository(Order::class)
                     ->find($orderId);
+            $office = $order->getOffice();
+            $company = $order->getCompany();
+            $legal = $order->getLegal();            
         }    
         if ($vtId > 0){
             $vt = $this->entityManager->getRepository(Vt::class)
@@ -206,7 +209,7 @@ class VtController extends AbstractActionController
                     $this->vtManager->updateVt($vt, $data);
                     $this->entityManager->refresh($vt);
                 } else {
-                    $vt = $this->vtManager->addVt($order, $data);
+                    $vt = $this->vtManager->addVt($office, $order, $data);
                 }    
                 
                 $this->vtManager->updateVtGoods($vt, $vtGood);

@@ -683,6 +683,9 @@ $form->prepare();
             </div>
             <button type="button" class="btn btn-primary btn-sm btn-block" id="order-submit">Сохранить</button>    
             <!--<button type="button" class="btn btn-secondary btn-sm btn-block" id="order-reset">Закрыть</button>-->
+            <?php if ($orderId):?>
+                <button type="button" class="btn btn-default btn-sm btn-block vt-index-modal-show" modal-url="/vt/order-form/<?= $orderId?>">Возврат</button>    
+            <?php endif; ?>    
             <div class="dropdown">
                 <button type="button" data-toggle="dropdown" class="btn btn-default btn-sm btn-block" ria-haspopup="true" aria-expanded="false">
                     Печать
@@ -719,8 +722,11 @@ $form->prepare();
 <?//= $this->formElement($form->get('csrf')); ?>            
 <?= $this->form()->closeTag(); ?>
             
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
+
 <script>
     var $table = $('#ordergoodtable');
+    var $ok = $('#ok');
     
     set_onbeforeunload = function(){
             return true;
@@ -770,7 +776,7 @@ $form->prepare();
         },
         changeInputOnSelect: true,
     });
-    
+        
     $(document).on('click', '.order-good-modal-show', function (e) {
         var url = $(e.currentTarget).attr('modal-url');
         var uniqueId = $(e.currentTarget).attr('unique-id');

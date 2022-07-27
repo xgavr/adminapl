@@ -1,7 +1,8 @@
 <?php
+use Stock\Entity\Vt;
 
 if ($order){
-    $docName = '№ '.$ptu->getDocNo().' от  '.date('d.m.Y', strtotime($order->getDocDate()));
+    $docName = '№ '.$order->getDocNo().' от  '.date('d.m.Y', strtotime($order->getDocDate()));
 }
 
 ?>
@@ -16,7 +17,7 @@ if ($order){
     <div class="col-xs-12">
         <div id="vttoolbar">
             <div class="form-inline" role="form">
-                <button class="btn btn-default vt-modal-show" type="button" modal-url="/vt/edit-form?ptu=<?= $ptu->getId()?>">
+                <button class="btn btn-default vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>                
             </div>
@@ -34,22 +35,19 @@ if ($order){
             data-sort-name="id"
             data-sort-order="desc"            
             data-response-handler="vtResponseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-row-style="rowStyle"
             >
             <thead>
                 <tr>
-                     <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
-                     <th data-field="docDate" data-sortable="true">Дата</th>
-                     <th data-field="id" data-sortable="false">Номер</th>
-                     <th data-field="aplId" data-type="numeric"data-align="right">AplId</th>
-                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
-                     <th data-field='ptu.legal.name' data-sortable="false">Покупатель</th>
-                     <th data-field='ptu.contract.name' data-sortable="false">Договор</th>
-                     <th data-field='ptu.office.name' data-sortable="false">Склад</th>
+                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="120">Номер</th>
+                     <th data-field="docDate" data-sortable="true" data-width="100">Дата</th>
+                     <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
+                     <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                     <th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>
+                     <th data-field='office.name' data-sortable="false">Склад</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
-                     <th data-field='status' data-sortable="false">П</th>
-                     <th data-field='statusDoc' data-sortable="false">Т</th>
-                     <th data-field='statusEx' data-sortable="false">О</th>
-                     <th data-field="" data-formatter="vtActiveFormatter"></th>
+                     <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
                  </tr>                
             </thead>
         </table>
@@ -69,6 +67,18 @@ if ($order){
     function vtRefreshTable(){
         $('#vttable').bootstrapTable('refresh');
     }
+    
+    function rowStyle(row){
+        var retired = 'tablerow';
+        if (row.status == '<?= Vt::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }
+        if (row.status == '<?= Vt::STATUS_COMMISSION?>'){
+           retired += ' warning';
+        }
+        
+        return {classes: retired};
+    }
 
     function vtQueryParams(params) {
         $('#vttoolbar').find('input[name]').each(function () {
@@ -86,7 +96,30 @@ if ($order){
         return params;
     }
 
-    function vtActiveFormatter(value, row){
+    function idFormatter(value, row){
+        if (row.aplId > 0){
+            return value + ' ('+row.aplId+')';
+        }
+        
+        return value;
+    }    
+    
+    function linkFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<div class="pull-left">',
+            '<a href="/order/intro/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function amountFormatter(value){
+        return (Math.round(value*100)/100).toFixed(2);
+    }    
+    
+    function activeFormatter(value, row){
         var url = '/vt/edit-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
@@ -98,7 +131,6 @@ if ($order){
 
         return btn;
     }    
-    
     function vtResponseHandler(res) {
         return res;
     }     
