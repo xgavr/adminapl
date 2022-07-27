@@ -286,7 +286,7 @@ class BankManager
     public function findAcquiringIntersect()
     {
         $acquirings = $this->entityManager->getRepository(Acquiring::class)
-                ->findByStatus(Acquiring::STATUS_NO_MATCH);
+                ->findBy(['status' => Acquiring::STATUS_NO_MATCH]);
         
         foreach($acquirings as $acquiring){
             $aplPayment = $this->entityManager->getRepository(Acquiring::class)
@@ -312,7 +312,7 @@ class BankManager
     public function findAcquiringIntersectSum()
     {
         $acquirings = $this->entityManager->getRepository(Acquiring::class)
-                ->findByStatus(Acquiring::STATUS_NO_MATCH);
+                ->findBy(['status' => Acquiring::STATUS_NO_MATCH]);
         
         foreach($acquirings as $acquiring){
             $aplPaymentTypeIds = $this->entityManager->getRepository(Acquiring::class)
