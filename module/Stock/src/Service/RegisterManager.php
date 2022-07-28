@@ -277,7 +277,7 @@ class RegisterManager
                         $takeNo = $this->entityManager->getRepository(Bid::class)
                                 ->count(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
                         $flag = $takeNo == 0;
-                        if (!$flag && $order->getDateOper() <= $this->meDate){
+                        if (!$flag){
                             $bids = $this->entityManager->getRepository(Bid::class)
                                     ->findBy(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
                             $data = [
@@ -301,7 +301,9 @@ class RegisterManager
                                 ];
                             }
                             $data['rows'] = $rows;
-                            return $this->oldOt($data);                            
+                            if ($order->getDateOper() <= $this->meDate){
+                                return $this->oldOt($data);
+                            }    
                         }
                     }   
                 }
@@ -324,7 +326,7 @@ class RegisterManager
                         $takeNo = $this->entityManager->getRepository(PtGood::class)
                                 ->count(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
                         $flag = $takeNo == 0;
-                        if (!$flag && $pt->getDocDate() <= $this->meDate){
+                        if (!$flag){
                             $ptGoods = $this->entityManager->getRepository(PtGood::class)
                                     ->findBy(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
                             foreach ($ptGoods as $ptGood){
@@ -357,7 +359,7 @@ class RegisterManager
                         $takeNo = $this->entityManager->getRepository(StGood::class)
                                 ->count(['st' => $st->getId(), 'take' => StGood::TAKE_NO]);
                         $flag = $takeNo == 0;
-                        if (!$flag && $st->getDocDate() <= $this->meDate){
+                        if (!$flag){
                             $stGoods = $this->entityManager->getRepository(StGood::class)
                                     ->findBy(['st' => $st->getId(), 'take' => StGood::TAKE_NO]);
                             foreach ($stGoods as $stGood){
