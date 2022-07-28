@@ -99,5 +99,10 @@
     },
     "require-dev": {
         "laminas/laminas-developer-tools": "^1.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "laminas/laminas-component-installer": true
+        }
     }
 }
