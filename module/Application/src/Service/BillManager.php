@@ -441,12 +441,14 @@ class BillManager
             $content = file_get_contents($filepath);
             return $this->_html2array($supplier, $filename, $content);
         }       
-        if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
-            return $this->_xls2array($supplier, $filename, $filepath);            
+        if (!empty($pathinfo['extension'])){
+            if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
+                return $this->_xls2array($supplier, $filename, $filepath);            
+            }
+            if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
+                return $this->_csv2array($supplier, $filename, $filepath);            
+            }        
         }
-        if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
-            return $this->_csv2array($supplier, $filename, $filepath);            
-        }        
         return $result;
     }    
     
