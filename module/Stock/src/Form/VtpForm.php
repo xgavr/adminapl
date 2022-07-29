@@ -270,6 +270,17 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'ptu',
+            'attributes' => [                
+                'required' => 'required',                
+            ],
+            'options' => [
+                'label' => 'ПТУ',
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
