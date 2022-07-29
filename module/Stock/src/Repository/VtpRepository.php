@@ -14,6 +14,7 @@ use Stock\Entity\VtpGood;
 use Application\Entity\Supplier;
 use Company\Entity\Office;
 use Application\Filter\ArticleCode;
+use Stock\Entity\Ptu;
 
 /**
  * Description of VtpRepository
@@ -321,4 +322,32 @@ class VtpRepository extends EntityRepository{
         return;                
         
     }        
+    
+    /**
+     * Доступные пту
+     * @param Vtp $vtp
+     */
+    public function avialableBase($vtp)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('p')
+            ->from(Ptu::class, 'p')
+            ->where('p.contract = ?1')
+            ->setParameter('1', $vtp->getPtu()->getContract()->getId())    
+            ->andWhere('p.legal = ?2')
+            ->setParameter('2', $vtp->getPtu()->getLegal()->getId())    
+            ->andWhere('p.office = ?3')
+            ->setParameter('3', $vtp->getPtu()->getOffice()->getId())    
+            ->andWhere('p.status = ?4')
+            ->setParameter('4', Ptu::STATUS_ACTIVE)    
+            ->andWhere('p.docDate <= ?5')
+            ->setParameter('5', $vtp->getDocDate())
+            ->orderBy('p.docDate', 'desc')   
+            ->setMaxResults(10)    
+                ;        
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

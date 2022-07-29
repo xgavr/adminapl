@@ -17,12 +17,7 @@ use Application\Entity\Goods;
 use Stock\Form\VtpForm;
 use Stock\Form\VtpGoodForm;
 use Company\Entity\Office;
-use Stock\Entity\Unit;
-use Stock\Entity\Ntd;
-use Company\Entity\Country;
 use Application\Entity\Supplier;
-use Company\Entity\Legal;
-use Company\Entity\Contract;
 
 class VtpController extends AbstractActionController
 {
@@ -122,15 +117,15 @@ class VtpController extends AbstractActionController
         	        
         $vtpId = $this->params()->fromRoute('id', -1);
         $q = $this->params()->fromQuery('search');
-        $offset = $this->params()->fromQuery('offset');
-        $limit = $this->params()->fromQuery('limit');
+//        $offset = $this->params()->fromQuery('offset');
+//        $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
         
         $query = $this->entityManager->getRepository(Vtp::class)
                         ->findVtpGoods($vtpId, ['q' => $q, 'sort' => $sort, 'order' => $order]);
         
-        $total = count($query->getResult(2));
+//        $total = count($query->getResult(2));
         
         $result = $query->getResult(2);
         
@@ -176,15 +171,21 @@ class VtpController extends AbstractActionController
         $ptuId = (int)$this->params()->fromQuery('ptu', -1);
         
         $ptu = $vtp = $supplier = $legal = $company = null;
-        $notDisabled = true;
+        $notDisabled = true; $ptuList = [];
         if ($ptuId > 0){
             $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->find($ptuId);
+            $ptuList = [$ptu->getId() => $ptu->getDocPresent()];
         }    
         if ($vtpId > 0){
             $vtp = $this->entityManager->getRepository(Vtp::class)
                     ->find($vtpId);
             $ptu = $vtp->getPtu();
+            $ptus = $this->entityManager->getRpository(Vtp::class)
+                    ->availableBase($vtp);
+            foreach ($ptus as $ptu) {
+                $ptuList[$ptu->getId()] = $ptu->getDocPresent();
+            }
         }    
         if ($ptu){
             $supplier = $ptu->getSupplier();
@@ -198,7 +199,9 @@ class VtpController extends AbstractActionController
             $data = $this->params()->fromPost();
         }
                 
-        $form = new VtpForm($this->entityManager, $office, $supplier, $company, $legal);
+        $form = new VtpForm($this->entityManager, $office, $supplier, $company, $legal);        
+        $form->get('ptu')->setValueOptions($ptuList);
+
 
         if ($this->getRequest()->isPost()) {
             
