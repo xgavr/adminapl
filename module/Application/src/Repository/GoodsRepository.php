@@ -14,11 +14,10 @@ use Application\Entity\Rawprice;
 use Application\Entity\OemRaw;
 use Application\Filter\ArticleCode;
 use Application\Entity\ArticleTitle;
-use Application\Entity\TokenGroup;
-use Stock\Entity\PtuGood;
-use Application\Filter\KeyboardTranslit;
 use Stock\Entity\Movement;
 use Application\Entity\Bid;
+use Application\Entity\Oem;
+use Application\Entity\Selection;
 
 
 /**
@@ -1312,11 +1311,11 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('o')
-            ->from(\Application\Entity\Oem::class, 'o')
+            ->from(Oem::class, 'o')
             ->where('o.good = ?1')
             ->andWhere('o.source != ?2')    
             ->setParameter('1', $good->getId())
-            ->setParameter('2', \Application\Entity\Oem::SOURCE_MY_CODE)    
+            ->setParameter('2', Oem::SOURCE_MY_CODE)    
             ;
         
         if (is_array($params)){
@@ -1502,6 +1501,27 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Удаление ое по возможности
+     * @param integer $goodId
+     * @param integer $source
+     */
+    private function deleteGoodOem($goodId, $source = null)
+    {
+        $query = ['good' => $goodId];
+        if ($source){
+            $query['source'] = $source;
+        }
+        $oems = $this->getEntityManager()->getRepository(Oem::class)
+                ->findBy($query);
+        foreach ($oems as $oem){
+            if ($this->getEntityManager()->getRepository(Oem::class)->allowDeleteOem($oem)){
+                $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oem->getId()]);
+            }   
+        }
+        return;
+    }
+    
+    /**
      * Удаления oem товара
      * 
      * @param Goods $good
@@ -1509,13 +1529,10 @@ class GoodsRepository extends EntityRepository
      */
     public function removeGoodOem($good)
     {
-        $bidCount = $this->getEntityManager()->getRepository(Bid::class)
-                ->count(['good' => $good->getId()]);
-        if (empty($bidCount)){        
-            $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_TD]);
-            $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_SUP]);
-            $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => \Application\Entity\Oem::SOURCE_CROSS]);
-        }    
+        $this->deleteGoodOem($good->getId(), Oem::SOURCE_TD);
+        $this->deleteGoodOem($good->getId(), Oem::SOURCE_SUP);
+        $this->deleteGoodOem($good->getId(), Oem::SOURCE_CROSS);
+        
         return;        
     }
     
@@ -1528,11 +1545,7 @@ class GoodsRepository extends EntityRepository
      */
     public function removeGoodSourceOem($good, $source)
     {
-        $bidCount = $this->getEntityManager()->getRepository(Bid::class)
-                ->count(['good' => $good->getId()]);
-        if (empty($bidCount)){
-            $this->getEntityManager()->getConnection()->delete('oem', ['good_id' => $good->getId(), 'source' => $source]);
-        }    
+        $this->deleteGoodOem($good->getId(), $source);
         return;        
     }
 
