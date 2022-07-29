@@ -327,7 +327,7 @@ class VtpRepository extends EntityRepository{
      * Доступные пту
      * @param Vtp $vtp
      */
-    public function avialableBase($vtp)
+    public function availableBase($vtp)
     {
         $entityManager = $this->getEntityManager();
 
