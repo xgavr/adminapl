@@ -25,6 +25,8 @@ use Stock\Entity\Movement;
 use Application\Entity\Bid;
 use Application\Entity\GoodSupplier;
 use Application\Entity\SupplierOrder;
+use Stock\Entity\PtuGood;
+use Stock\Entity\OtGood;
 
 /**
  * Description of GoodsService
@@ -154,14 +156,33 @@ class GoodsManager
      */
     public function allowRemove($good)
     {
-        $movementsCount = $this->entityManager->getRepository(Movement::class)
-                ->count(['good' => $good->getId()]);
         $articleCount = $this->entityManager->getRepository(Article::class)
             ->count(['good' => $good->getId()]);        
+        if ($articleCount){
+            return false;
+        }
+        $movementsCount = $this->entityManager->getRepository(Movement::class)
+                ->count(['good' => $good->getId()]);
+        if ($movementsCount){
+            return false;
+        }
         $bidCount = $this->entityManager->getRepository(Bid::class)
                 ->count(['good' => $good->getId()]);
+        if ($bidCount){
+            return false;
+        }
+        $ptuCount = $this->entityManager->getRepository(PtuGood::class)
+                ->count(['good' => $good->getId()]);
+        if ($ptuCount){
+            return false;
+        }
+        $otCount = $this->entityManager->getRepository(OtGood::class)
+                ->count(['good' => $good->getId()]);
+        if ($otCount){
+            return false;
+        }
                 
-        return $movementsCount == 0 && $articleCount == 0 && $bidCount == 0;
+        return $true;
     }
     
     /**

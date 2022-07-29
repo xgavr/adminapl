@@ -9,35 +9,9 @@
 ?>
 
 <div class="row">
-    <div class="col-md-12">
-        <h3><?= $goods->getCode()?> <?= $goods->getProducer()->getName()?></h3>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <h3>
-<!--                    <button class="btn btn-default btn-xs" id="enable-name-editable"
-                    title="Изменить наименование">
-                <span class="glyphicon glyphicon-edit" ></span>
-            </button> -->
-            <a href="#" id="good-name-editable" class="editable" 
-               data-type="text" 
-               data-pk="<?= $goods->getId()?>" 
-               data-name="name" 
-               data-disabled="true" 
-               data-url="/goods/name-edit">
-                    <?php if ($goods->getName()): ?>
-                        <?= $this->escapeHtml($goods->getName()); ?>
-                    <?php endif;?>
-            </a>
-        </h3>
-        <?php if ($goods->getDescription()): ?>
-            <?= $this->escapeHtml($goods->getDescription()); ?>
-        <?php endif;?>                    
-    </div>
-</div>
-<div class="row">
     <div class="col-md-3">
+        <h3><?= $goods->getCode()?> <?= $goods->getProducer()->getName()?></h3>
+        
 <!--                <div class="thumbnail">
             <div class="caption panel-body small">
                 <button value="/goods/upload-image-form/<?= $goods->getId() ?>" class="btn btn-info btn-xs"
@@ -88,6 +62,26 @@
         <?php endforeach;?>
     </div>
     <div class="col-md-9">
+        <h3>
+<!--                    <button class="btn btn-default btn-xs" id="enable-name-editable"
+                    title="Изменить наименование">
+                <span class="glyphicon glyphicon-edit" ></span>
+            </button> -->
+            <a href="#" id="good-name-editable" class="editable" 
+               data-type="text" 
+               data-pk="<?= $goods->getId()?>" 
+               data-name="name" 
+               data-disabled="true" 
+               data-url="/goods/name-edit">
+                    <?php if ($goods->getName()): ?>
+                        <?= $this->escapeHtml($goods->getName()); ?>
+                    <?php endif;?>
+            </a>
+        </h3>
+        <?php if ($goods->getDescription()): ?>
+            <?= $this->escapeHtml($goods->getDescription()); ?>
+        <?php endif;?>                    
+        
         <ul class="nav nav-tabs" id="featureTab" role="tablist">
             <li role="presentation"><a href="#movements" role="tab" id="home-tab" data-toggle="tab" aria-controls="movements" aria-expanded="true">Движения <span id="movementBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#price" role="tab" id="price-tab" data-toggle="tab" aria-controls="price" aria-expanded="true">Прайсы <span id="priceBadge" class="badge">0</span></a></li>

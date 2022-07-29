@@ -1938,10 +1938,12 @@ class GoodsRepository extends EntityRepository
             if (isset($params['search'])){
                 //$ktFilter = new KeyboardTranslit();
                 //$search = $ktFilter->filter($params['search']);
+                $codeFilter = new ArticleCode();
+                $search = $codeFilter->filter($params['search']);
 //                var_dump($search);
                 $queryBuilder
                     ->where('g.code like ?1')                           
-                    ->setParameter('1', $params['search'].'%')
+                    ->setParameter('1', $search.'%')
                     ->setMaxResults(8)    
                         ;
             }            
