@@ -175,16 +175,17 @@ class VtpController extends AbstractActionController
         if ($ptuId > 0){
             $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->find($ptuId);
+            $ptuList[$ptu->getId()] = $ptu->getDocIdPresent();
         }    
         if ($vtpId > 0){
             $vtp = $this->entityManager->getRepository(Vtp::class)
                     ->find($vtpId);
             $ptu = $vtp->getPtu();
-//            $ptus = $this->entityManager->getRepository(Vtp::class)
-//                    ->availableBase($vtp);
-//            foreach ($ptus as $ptu) {
-//                $ptuList[$ptu->getId()] = $ptu->getDocIdPresent();
-//            }
+            $ptus = $this->entityManager->getRepository(Vtp::class)
+                    ->availableBase($vtp);
+            foreach ($ptus as $aptu) {
+                $ptuList[$aptu->getId()] = $aptu->getDocIdPresent();
+            }
         }    
         if ($ptu){
             $supplier = $ptu->getSupplier();
@@ -192,7 +193,6 @@ class VtpController extends AbstractActionController
             $contract = $ptu->getContract();
             $company = $contract->getCompany();
             $legal = $ptu->getLegal();            
-            $ptuList[$ptu->getId()] = $ptu->getDocIdPresent();
         }    
         
         if ($this->getRequest()->isPost()){
