@@ -153,19 +153,19 @@ if ($vtp){
                 </div>        
                 <div class="row">
                     <div class="col-xs-4">
+                        <div class="form-group">
+                            <?php// $this->formLabel($form->get('ptu')); ?>
+                            <?= $this->formElement($form->get('ptu')); ?>
+                            <?= $this->formElementErrors($form->get('ptu')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-4">
                         <div id="vtpgoodtoolbar">
                             <div class="form-inline" role="form">
                                 <button type="button" class="btn btn-default" onclick="vtpFill()">
                                     <span aria-hidden="true">Заполнить из ПТУ</span>
                                 </button>
                             </div>
-                        </div>
-                    </div>    
-                    <div class="col-xs-4">
-                        <div class="form-group">
-                            <?php// $this->formLabel($form->get('ptu')); ?>
-                            <?= $this->formElement($form->get('ptu')); ?>
-                            <?= $this->formElementErrors($form->get('ptu')); ?>                  
                         </div>
                     </div>    
                 </div>    

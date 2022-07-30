@@ -175,7 +175,6 @@ class VtpController extends AbstractActionController
         if ($ptuId > 0){
             $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->find($ptuId);
-            $ptuList = [$ptu->getId() => $ptu->getDocIdPresent()];
         }    
         if ($vtpId > 0){
             $vtp = $this->entityManager->getRepository(Vtp::class)
@@ -193,6 +192,7 @@ class VtpController extends AbstractActionController
             $contract = $ptu->getContract();
             $company = $contract->getCompany();
             $legal = $ptu->getLegal();            
+            $ptuList[$ptu->getId()] = $ptu->getDocIdPresent();
         }    
         
         if ($this->getRequest()->isPost()){
