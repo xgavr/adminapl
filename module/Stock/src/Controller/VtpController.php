@@ -242,7 +242,8 @@ class VtpController extends AbstractActionController
                 'company' => $company->getId(),
                 'supplier' => $supplier->getId(),
                 'legal_id' => $legal->getId(),  
-                'contract_id' => $contract->getId(),  
+                'contract_id' => $contract->getId(),
+                'ptu' => $ptu->getId(),
             ];
             if ($vtp){
                 $data['doc_date'] = $vtp->getDocDate();
