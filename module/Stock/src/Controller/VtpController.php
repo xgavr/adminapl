@@ -221,6 +221,10 @@ class VtpController extends AbstractActionController
                 $data['apl_id'] = 0;
                 
                 if ($vtp){
+                    if ($data['ptu'] != $ptu->getId()){
+                        $data['ptuId'] = $data['ptu'];
+                   }
+                
                     $data['apl_id'] = $vtp->getAplId();
                     $this->vtpManager->updateVtp($vtp, $data);
                     $this->entityManager->refresh($vtp);

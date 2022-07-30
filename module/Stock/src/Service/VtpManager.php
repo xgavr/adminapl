@@ -252,6 +252,14 @@ class VtpManager
             $vtp->setStatusEx($data['status_ex']);
             $vtp->setStatus($data['status']);
             $vtp->setStatusDoc($data['statusDoc']);
+            
+            if (!empty($data['ptuId'])){
+                $ptu = $this->entityManager->getRepository(Ptu::class)
+                        ->find($data['ptuId']);
+                if ($ptu){
+                    $vtp->setPtu($ptu);
+                }    
+            }
 
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);
