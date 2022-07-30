@@ -353,7 +353,7 @@ class VtpRepository extends EntityRepository{
                 ;        
         $orX = $queryBuilder->expr()->orX();
         foreach ($vtp->getVtpGoods() as $vtpGood){
-            $orX->add($queryBuilder->expr()->eq('pg.good', $vtp->getGood()->getId()));            
+            $orX->add($queryBuilder->expr()->eq('pg.good', $vtpGood->getGood()->getId()));            
         }
         $queryBuilder->andWhere($orX);
         
