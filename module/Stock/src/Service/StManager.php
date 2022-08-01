@@ -128,7 +128,7 @@ class StManager
                                 'doc_id' => $st->getId(),
                                 'doc_row_key' => $stGood->getDocRowKey(),
                                 'doc_row_no' => $stGood->getRowNo(),
-                                'date_oper' => $st->getDateOper(),
+                                'date_oper' => $st->getDocDate(),
                                 'status' => Movement::getStatusFromSt($st),
                                 'quantity' => -$quantity,
                                 'amount' => -$amount,
