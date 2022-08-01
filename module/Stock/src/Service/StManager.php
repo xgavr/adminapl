@@ -125,7 +125,7 @@ class StManager
                             $data = [
                                 'doc_key' => $st->getLogKey(),
                                 'doc_type' => Movement::DOC_ST,
-                                'doc_id' => $vt->getId(),
+                                'doc_id' => $st->getId(),
                                 'doc_row_key' => $stGood->getRowKey(),
                                 'doc_row_no' => $stGood->getRowNo(),
                                 'date_oper' => $st->getDateOper(),
