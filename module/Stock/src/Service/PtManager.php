@@ -190,23 +190,25 @@ class PtManager
                         if ($movement->getStatus() == Movement::STATUS_COMMISSION){
                             $comiss = $this->entityManager->getRepository(Comiss::class)
                                     ->findOneByDocKey($base['docKey']);
-                            $data = [
-                                'doc_key' => $pt->getLogKey(),
-                                'doc_type' => Movement::DOC_PT,
-                                'doc_id' => $pt->getId(),
-                                'doc_row_key' => $ptGood->getDocRowKey(),
-                                'doc_row_no' => $ptGood->getRowNo(),
-                                'date_oper' => $pt->getDocDate(),
-                                'status' => $movement->getStatus(),
-                                'quantity' => $quantity,
-                                'amount' => $amount,
-                                'good_id' => $ptGood->getGood()->getId(),
-                                'office_id' => $pt->getOffice2()->getId(),
-                                'company_id' => $pt->getCompany2()->getId(),
-                                'contact_id' => $comiss->getContact()->getId(),
-                            ];
-                            $this->entityManager->getRepository(Comiss::class)
-                                    ->insertComiss($data);
+                            if ($comiss){
+                                $data = [
+                                    'doc_key' => $pt->getLogKey(),
+                                    'doc_type' => Movement::DOC_PT,
+                                    'doc_id' => $pt->getId(),
+                                    'doc_row_key' => $ptGood->getDocRowKey(),
+                                    'doc_row_no' => $ptGood->getRowNo(),
+                                    'date_oper' => $pt->getDocDate(),
+                                    'status' => $movement->getStatus(),
+                                    'quantity' => $quantity,
+                                    'amount' => $amount,
+                                    'good_id' => $ptGood->getGood()->getId(),
+                                    'office_id' => $pt->getOffice2()->getId(),
+                                    'company_id' => $pt->getCompany2()->getId(),
+                                    'contact_id' => $comiss->getContact()->getId(),
+                                ];
+                                $this->entityManager->getRepository(Comiss::class)
+                                        ->insertComiss($data);
+                            }    
                         }    
                         $write -= $quantity;
                         if ($write <= 0){
