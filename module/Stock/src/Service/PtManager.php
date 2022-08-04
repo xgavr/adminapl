@@ -150,7 +150,7 @@ class PtManager
                                 'doc_key' => $pt->getLogKey(),
                                 'doc_type' => Movement::DOC_PT,
                                 'doc_id' => $pt->getId(),
-                                'doc_row_key' => $ptGood->getRowKey(),
+                                'doc_row_key' => $ptGood->getDocRowKey(),
                                 'doc_row_no' => $ptGood->getRowNo(),
                                 'date_oper' => $pt->getDateOper(),
                                 'status' => $movement->getStatus(),
