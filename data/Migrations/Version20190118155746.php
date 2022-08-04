@@ -16,7 +16,7 @@ final class Version20190118155746 extends AbstractMigration
         $table = $schema->getTable('token_group');
         $table->dropIndex('ids_indx');
         $table->changeColumn('ids', ['length' => 128]);
-        $table->addUniqueIndex(['ids'], 'ids_uindx');
+        //$table->addUniqueIndex(['ids'], 'ids_uindx');
 
     }
 

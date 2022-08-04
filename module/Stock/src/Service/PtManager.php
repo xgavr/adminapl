@@ -149,7 +149,7 @@ class PtManager
                             $data = [
                                 'doc_key' => $pt->getLogKey(),
                                 'doc_type' => Movement::DOC_PT,
-                                'doc_id' => $vt->getId(),
+                                'doc_id' => $pt->getId(),
                                 'doc_row_key' => $ptGood->getRowKey(),
                                 'doc_row_no' => $ptGood->getRowNo(),
                                 'date_oper' => $pt->getDateOper(),

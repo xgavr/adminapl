@@ -63,7 +63,7 @@ class AuthController extends AbstractActionController
 
         // Check if we do not have users in database at all. If so, create
         // the 'Admin' user.
-        //$this->userManager->createAdminUserIfNotExists();
+//        $this->userManager->createAdminUserIfNotExists();
 
         // Create login form
         $form = new LoginForm();

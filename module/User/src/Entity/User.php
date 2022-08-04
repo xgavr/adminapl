@@ -462,7 +462,9 @@ class User
     public function setOffice($office) 
     {
         $this->office = $office;
-        $office->addUser($this);
+        if ($office){
+            $office->addUser($this);
+        }    
     }        
 }
 
