@@ -152,7 +152,7 @@ class PtManager
                                 'doc_id' => $pt->getId(),
                                 'doc_row_key' => $ptGood->getDocRowKey(),
                                 'doc_row_no' => $ptGood->getRowNo(),
-                                'date_oper' => $pt->getDateOper(),
+                                'date_oper' => $pt->getDocDate(),
                                 'status' => $movement->getStatus(),
                                 'quantity' => -$quantity,
                                 'amount' => -$amount,
