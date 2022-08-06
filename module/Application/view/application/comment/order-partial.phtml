@@ -6,7 +6,7 @@
                 <h6>
                     <small><?= $comment->getDateCreatedShort()?></small>
                     <small><?= ($comment->getUser()) ? $comment->getUser()->getFullName():'NaN'?></small>                                                                                
-                    <?= $comment->getComment()?>
+                    <?= $this->escapeHtml($comment->getComment())?>
                 </h6>                                        
             </li>
         <?php endforeach;?>
