@@ -249,7 +249,7 @@ class BankManager
 
         foreach ($data as $row){
             $forDelete = $this->entityManager->getRepository(Acquiring::class)
-                    ->findByRrn($row['rrn']);
+                    ->findBy(['rrn' => $row['rrn']]);
             foreach ($forDelete as $acquiring){
                 $this->updateAcquiringStatus($acquiring, Acquiring::STATUS_MATCH);
             }
