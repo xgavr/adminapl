@@ -87,7 +87,7 @@ class MovementRepository extends EntityRepository{
                 ->setParameter('4', Movement::STATUS_RETIRED)
                 ->groupBy('m.baseKey')
                 ->having('rest > 0')
-                ->orderBy('m.docStamp', 'ASC')
+                ->orderBy('m.docStamp', 'DESC')
                 ;
         
         if ($baseKey){
