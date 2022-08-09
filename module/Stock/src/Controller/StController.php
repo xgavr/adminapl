@@ -209,7 +209,9 @@ class StController extends AbstractActionController
                 ];
                 if ($st->getUser()){
                     $data['user'] = $st->getUser()->getId();
-                    $data['userSearch'] = $st->getUser()->getLegalContact()->getPhone()->getName(\User\Filter\PhoneFilter::PHONE_FORMAT_DB);
+                    if ($st->getUser()->getLegalContact()->getPhone()){
+                        $data['userSearch'] = $st->getUser()->getLegalContact()->getPhone()->getName(\User\Filter\PhoneFilter::PHONE_FORMAT_DB);
+                    }    
                     $contactName = $st->getUser()->getFullName();
                 }
                 if ($st->getCost()){
