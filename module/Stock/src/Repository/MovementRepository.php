@@ -68,9 +68,14 @@ class MovementRepository extends EntityRepository{
      * @param float $docStamp
      * @param integer $officeId
      * $param string $baseKey
+     * 
      */
     public function findBases($goodId, $docStamp, $officeId, $baseKey = null)
     {
+        $method = 'ASC';
+        if ($docStamp > 1567285260){
+            $method = 'DESC';
+        }
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
         $qb = $entityManager->createQueryBuilder();
@@ -87,7 +92,7 @@ class MovementRepository extends EntityRepository{
                 ->setParameter('4', Movement::STATUS_RETIRED)
                 ->groupBy('m.baseKey')
                 ->having('rest > 0')
-                ->orderBy('m.docStamp', 'DESC')
+                ->orderBy('m.docStamp', $method)
                 ;
         
         if ($baseKey){
