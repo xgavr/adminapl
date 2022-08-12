@@ -121,7 +121,7 @@ class StManager
 
                         if ($movement->getStatus() == Movement::STATUS_COMMISSION){
                             $comiss = $this->entityManager->getRepository(Comiss::class)
-                                    ->findOneByDocKey($base['docKey']);
+                                    ->findOneByDocKey($base['baseKey']);
                             if ($comiss){
                                 $data = [
                                     'doc_key' => $st->getLogKey(),

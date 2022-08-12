@@ -69,172 +69,167 @@ if ($vtp){
 }
 
 ?>
+<?= $this->form()->openTag($form); ?>
 
+<div class="modal-header">
+    <h5 class="modal-title" id="vtpModalLabel">Возврат товаров поставщику <?= $docName?> по ПТУ <?= $ptuDocName?></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 
-
-            
-            <?= $this->form()->openTag($form); ?>
-            
-            <div class="modal-header">
-                <h5 class="modal-title" id="vtpModalLabel">Возврат товаров поставщику <?= $docName?> по ПТУ <?= $ptuDocName?></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('office_id')); ?>
+                <?= $this->formElement($form->get('office_id')); ?>
+                <?= $this->formElementErrors($form->get('office_id')); ?>                  
             </div>
-            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('office_id')); ?>
-                            <?= $this->formElement($form->get('office_id')); ?>
-                            <?= $this->formElementErrors($form->get('office_id')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('supplier')); ?>
-                            <?= $this->formElement($form->get('supplier')); ?>
-                            <?= $this->formElementErrors($form->get('supplier')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('statusDoc')); ?>
-                            <?= $this->formElement($form->get('statusDoc')); ?>
-                            <?= $this->formElementErrors($form->get('statusDoc')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('status')); ?>
-                            <?= $this->formElement($form->get('status')); ?>
-                            <?= $this->formElementErrors($form->get('status')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-2 text-right">
-                        <h1 class="display-4" id="vtpQuantity"></h1>
-                    </div>    
-                    <div class="col-xs-1 text-right">
-                        <h1 class="display-4" id="vtpAmount"><?= ($vtp) ? round($vtp->getAmount(), 2):"" ?></h1>                        
-                    </div>    
-                </div>    
-                <div class="row">
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('doc_date')); ?>
-                            <?= $this->formElement($form->get('doc_date')); ?>
-                            <?= $this->formElementErrors($form->get('doc_date')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('company')); ?>
-                            <?= $this->formElement($form->get('company')); ?>
-                            <?= $this->formElementErrors($form->get('company')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('legal_id')); ?>
-                            <?= $this->formElement($form->get('legal_id')); ?>
-                            <?= $this->formElementErrors($form->get('legal_id')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('contract_id')); ?>
-                            <?= $this->formElement($form->get('contract_id')); ?>
-                            <?= $this->formElementErrors($form->get('contract_id')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-4 text-right">
-                    </div>    
-                </div>        
-                <div class="row">
-                    <div class="col-xs-4">
-                        <div class="form-group">
-                            <?php// $this->formLabel($form->get('ptu')); ?>
-                            <?= $this->formElement($form->get('ptu')); ?>
-                            <?= $this->formElementErrors($form->get('ptu')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-4">
-                        <div id="vtpgoodtoolbar">
-                            <div class="form-inline" role="form">
-                                <button type="button" class="btn btn-default" onclick="vtpFill()">
-                                    <span aria-hidden="true">Заполнить из ПТУ</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>    
-                </div>    
-                <div class="row">
-                    <div class="col-xs-12">
-                        <table id="vtpgoodtable" 
-                            data-toggle="vtpgoodtable" 
-                            data-url="/vtp/good-content/<?= ($vtp) ? $vtp->getId():"" ?>"
-                            data-side-pagination="client"
-                            data-pagination="true"
-                            data-page-size = "5"
-                            data-page-list="[5, 10, 20, 50]"
-                            data-toolbar="vtpgoodtoolbar"
-                            data-show-refresh="true"
-                            data-show-toggle="true"
-                            data-query-params="vtpgoodQueryParams"
-                            data-response-handler="vtpgoodResponseHandler"
-                            data-unique-id = "rowNo"
-                            data-classes = "table table-bordered table-hover table-condensed"
-                            data-row-style="vtpTakeStyle"
-                            >
-                            <thead>
-                                <tr>
-                                     <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                                     <th data-field="vtpg.good.code" data-formatter="goodFormatter">Артикул</th>
-                                     <th data-field="vtpg.good.producer.name">Производитель</th>
-                                     <th data-field="vtpg.good.name">Наименование</th>
-                                     <th data-field='price' data-type="numeric" data-always-use-formatter="true" data-editable="true" data-formatter="pgPriceFormatter" data-align="right">Цена</th>
-                                     <th data-field='quantity' data-type="numeric" data-editable="true" data-always-use-formatter="true" data-align="right">Количество</th>
-                                     <th data-field='amount' data-type="numeric" data-always-use-formatter="true" data-formatter="pgAmountFormatter" data-align="right">Сумма</th>
-                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
-                                 </tr>                
-                            </thead>
-                        </table>
-                    </div>
-                </div>    
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('comment')); ?>
-                            <?= $this->formElement($form->get('comment')); ?>
-                            <?= $this->formElementErrors($form->get('comment')); ?>                  
-                        </div>                        
-                    </div>                                            
-                </div>        
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('info')); ?>
-                            <?= $this->formElement($form->get('info')); ?>
-                            <?= $this->formElementErrors($form->get('info')); ?>                  
-                        </div>                        
-                    </div>                                            
-                </div>        
-
-
-
-
-                        <?= $this->formElement($form->get('csrf')); ?>
-                    </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('supplier')); ?>
+                <?= $this->formElement($form->get('supplier')); ?>
+                <?= $this->formElementErrors($form->get('supplier')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('statusDoc')); ?>
+                <?= $this->formElement($form->get('statusDoc')); ?>
+                <?= $this->formElementErrors($form->get('statusDoc')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2 text-right">
+            <h1 class="display-4" id="vtpQuantity"></h1>
+        </div>    
+        <div class="col-xs-1 text-right">
+            <h1 class="display-4" id="vtpAmount"><?= ($vtp) ? round($vtp->getAmount(), 2):"" ?></h1>                        
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('doc_date')); ?>
+                <?= $this->formElement($form->get('doc_date')); ?>
+                <?= $this->formElementErrors($form->get('doc_date')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('company')); ?>
+                <?= $this->formElement($form->get('company')); ?>
+                <?= $this->formElementErrors($form->get('company')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('legal_id')); ?>
+                <?= $this->formElement($form->get('legal_id')); ?>
+                <?= $this->formElementErrors($form->get('legal_id')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('contract_id')); ?>
+                <?= $this->formElement($form->get('contract_id')); ?>
+                <?= $this->formElementErrors($form->get('contract_id')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-4 text-right">
+        </div>    
+    </div>        
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="form-group">
+                <?= $this->formElement($form->get('ptu')); ?>
+                <?= $this->formElementErrors($form->get('ptu')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-4">
+            <div id="vtpgoodtoolbar">
+                <div class="form-inline" role="form">
+                    <button type="button" class="btn btn-default" onclick="vtpFill()">
+                        <span aria-hidden="true">Заполнить из ПТУ</span>
+                    </button>
                 </div>
-            </div>    
-                
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="vtp-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
             </div>
-            
-            <?= $this->form()->closeTag(); ?>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">
+            <table id="vtpgoodtable" 
+                data-toggle="vtpgoodtable" 
+                data-url="/vtp/good-content/<?= ($vtp) ? $vtp->getId():"" ?>"
+                data-side-pagination="client"
+                data-pagination="true"
+                data-page-size = "5"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="vtpgoodtoolbar"
+                data-show-refresh="true"
+                data-show-toggle="true"
+                data-query-params="vtpgoodQueryParams"
+                data-response-handler="vtpgoodResponseHandler"
+                data-unique-id = "rowNo"
+                data-classes = "table table-bordered table-hover table-condensed"
+                data-row-style="vtpTakeStyle"
+                >
+                <thead>
+                    <tr>
+                         <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                         <th data-field="vtpg.good.code" data-formatter="goodFormatter">Артикул</th>
+                         <th data-field="vtpg.good.producer.name">Производитель</th>
+                         <th data-field="vtpg.good.name">Наименование</th>
+                         <th data-field='price' data-type="numeric" data-always-use-formatter="true" data-editable="true" data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                         <th data-field='quantity' data-type="numeric" data-editable="true" data-always-use-formatter="true" data-align="right">Количество</th>
+                         <th data-field='amount' data-type="numeric" data-always-use-formatter="true" data-formatter="pgAmountFormatter" data-align="right">Сумма</th>
+                         <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('comment')); ?>
+                <?= $this->formElement($form->get('comment')); ?>
+                <?= $this->formElementErrors($form->get('comment')); ?>                  
+            </div>                        
+        </div>                                            
+    </div>        
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('info')); ?>
+                <?= $this->formElement($form->get('info')); ?>
+                <?= $this->formElementErrors($form->get('info')); ?>                  
+            </div>                        
+        </div>                                            
+    </div>        
+
+
+
+
+            <?= $this->formElement($form->get('csrf')); ?>
+        </div>
+    </div>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="vtp-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
             
 <script>
     function vtpUpdateTotal(){
