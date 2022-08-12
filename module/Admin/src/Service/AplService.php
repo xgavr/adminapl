@@ -1734,6 +1734,7 @@ class AplService {
             unset($post);
             unset($oems);
         }    
+        var_dump($result);
         return $result;
     }
     
