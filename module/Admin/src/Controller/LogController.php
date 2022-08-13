@@ -86,8 +86,13 @@ class LogController extends AbstractActionController
     {
         $variable = $this->entityManager->getRepository(RegisterVariable::class)
                 ->findOneBy([]);
+        $register = $this->entityManager->getRepository(RegisterVariable::class)
+                ->findForActualize();
         return new JsonModel([
-            'variable' => $variable,
+            'varDate' => $variable->getDateVar(),
+            'varDoc' => $variable->getDoc(),
+            'actDate' => $register->getDateVar(),
+            'actDoc' => $register->getDoc(),
          ]);          
     }
 
