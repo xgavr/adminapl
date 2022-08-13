@@ -16,7 +16,7 @@ $this->pageBreadcrumbs()->setItems([
 <div class="row">
     <div class="col-md-11">
         <div class="panel panel-default">
-          <div class="panel-body">
+          <div class="panel-body var-info">
               Метка последовательности: <?= ($variable) ? $variable->getDateVar():'' ?> <?= ($variable) ? $variable->getDoc():''?>; следующий <?= ($register) ? $register->getDateVar():'' ?> <?= ($register) ? $register->getDoc():''?>
           </div>
         </div>
@@ -89,7 +89,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function updateVariable(){
         $.get( "/log/variable", function( data ) {
-            console.log(data);
+            $('.var-info').html('Метка последовательности: '+data.varDate+' '+data.varDoc+'; следующий '+data.actDate+' '+data.actDoc);
         });
     }
     
