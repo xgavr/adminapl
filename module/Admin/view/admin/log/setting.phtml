@@ -87,8 +87,15 @@ $this->pageBreadcrumbs()->setItems([
         $('#table').bootstrapTable('refresh');
     }
     
+    function updateVariable(){
+        $.get( "/log/variable", function( data ) {
+            console.log(data);
+        });
+    }
+    
     var table = $('#table').bootstrapTable({
         onLoadSuccess: function(res){
+            updateVariable();
             $('.editable').editable();
             $('.status').editable({
                 source: [

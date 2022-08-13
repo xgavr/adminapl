@@ -82,6 +82,15 @@ class LogController extends AbstractActionController
          ]);          
     }
 
+    public function variableAction()
+    {
+        $variable = $this->entityManager->getRepository(RegisterVariable::class)
+                ->findOneBy([]);
+        return new JsonModel([
+            'variable' => $variable,
+         ]);          
+    }
+
     public function settingContentAction()
     {
         $offset = $this->params()->fromQuery('offset');
