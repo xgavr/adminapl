@@ -441,7 +441,7 @@ class RegisterManager
                     ->findForActualize();
             if ($register){
                 if ($this->docActualize($register)){
-                    var_dump($register->getId());
+//                    var_dump($register->getId());
                     usleep(100);                    
                 } else {
                     throw new \Exception('Документ не проведен!');
