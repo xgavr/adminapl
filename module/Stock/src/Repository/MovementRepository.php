@@ -73,7 +73,7 @@ class MovementRepository extends EntityRepository{
     public function findBases($goodId, $docStamp, $officeId, $baseKey = null)
     {
         $method = 'ASC';
-        if ($docStamp > 1567285260){
+        if ($docStamp > 1567285260 && $docStamp < 1641060060){
             $method = 'DESC';
         }
         $entityManager = $this->getEntityManager();

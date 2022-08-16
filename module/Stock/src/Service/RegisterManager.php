@@ -170,19 +170,21 @@ class RegisterManager
      */
     private function findNearPtu($good, $docDate, $office, $docKey)
     {
-        $ptu = $this->entityManager->getRepository(Register::class)
-                ->findNearPtu($good, $docDate, $office);
-        if ($ptu){
-            $oldDate = $ptu->getDocDate();
-//            var_dump($good->getId()); exit;
-            $ptu->setDocDate($docDate);
-            $ptu->setComment('#Поправка даты, старая дата: '.$oldDate.' '.$docKey);
-            $this->entityManager->persist($ptu);
-            $this->entityManager->flush($ptu);
-            $this->ptuManager->repostPtu($ptu);
-            
-            return true;
-        }
+        if ($docDate < '2022-01-01'){
+            $ptu = $this->entityManager->getRepository(Register::class)
+                    ->findNearPtu($good, $docDate, $office);
+            if ($ptu){
+                $oldDate = $ptu->getDocDate();
+    //            var_dump($good->getId()); exit;
+                $ptu->setDocDate($docDate);
+                $ptu->setComment('#Поправка даты, старая дата: '.$oldDate.' '.$docKey);
+                $this->entityManager->persist($ptu);
+                $this->entityManager->flush($ptu);
+                $this->ptuManager->repostPtu($ptu);
+
+                return true;
+            }
+        }    
         return false;
     }
     
@@ -207,18 +209,20 @@ class RegisterManager
             return true;
         }
 
-        $ptu = $this->entityManager->getRepository(Register::class)
-                ->correctCodePtu($good, $docDate, $office, false);
-        if ($ptu){
-            $oldDate = $ptu->getDocDate();
-            $ptu->setDocDate($docDate);
-            $ptu->setComment('#Поправка товара и даты, старая дата: '.$oldDate);
-            $this->entityManager->persist($ptu);
-            $this->entityManager->flush($ptu);
-            $this->ptuManager->repostPtu($ptu);
-            
-            return true;
-        }
+        if ($docDate < '2022-01-01'){
+            $ptu = $this->entityManager->getRepository(Register::class)
+                    ->correctCodePtu($good, $docDate, $office, false);
+            if ($ptu){
+                $oldDate = $ptu->getDocDate();
+                $ptu->setDocDate($docDate);
+                $ptu->setComment('#Поправка товара и даты, старая дата: '.$oldDate);
+                $this->entityManager->persist($ptu);
+                $this->entityManager->flush($ptu);
+                $this->ptuManager->repostPtu($ptu);
+
+                return true;
+            }
+        }    
         return false;
     }
     
