@@ -208,7 +208,7 @@ class RegisterManager
         $ptu = $this->entityManager->getRepository(Register::class)
                 ->correctCodePtu($good, $docDate, $office, true);
         if ($ptu){
-            $ptu->setDocDate($docDate);
+            //$ptu->setDocDate($docDate);
             $ptu->setComment('#Поправка товара, дата не менялась');
             $this->entityManager->persist($ptu);
             $this->entityManager->flush($ptu);
