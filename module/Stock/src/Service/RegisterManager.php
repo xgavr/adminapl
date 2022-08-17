@@ -166,14 +166,15 @@ class RegisterManager
      * @param date $docDate
      * @param Office $office
      * @param string $docKey
+     * @param Object $doc
      * @return null
      */
-    private function findNearPtu($good, $docDate, $office, $docKey)
+    private function findNearPtu($good, $docDate, $office, $docKey, $doc)
     {
-        if ($docDate < '2022-01-01'){
-            $ptu = $this->entityManager->getRepository(Register::class)
-                    ->findNearPtu($good, $docDate, $office);
-            if ($ptu){
+        $ptu = $this->entityManager->getRepository(Register::class)
+                ->findNearPtu($good, $docDate, $office);
+        if ($ptu){
+            if ($docDate < '2022-01-01'){
                 $oldDate = $ptu->getDocDate();
     //            var_dump($good->getId()); exit;
                 $ptu->setDocDate($docDate);
@@ -183,8 +184,15 @@ class RegisterManager
                 $this->ptuManager->repostPtu($ptu);
 
                 return true;
+            } else {
+                $oldDate = $doc->getDocDate();
+                $doc->setDocDate($ptu->getDocDate());
+                $doc->setComment('#Поправка даты, старая дата: '.$oldDate.' '.$docKey);
+                $this->entityManager->persist($doc);
+                $this->entityManager->flush($doc);
+                return true;
             }
-        }    
+        }
         return false;
     }
     
@@ -292,7 +300,7 @@ class RegisterManager
                             ];
                             $rows = [];
                             foreach ($bids as $bid){
-                                if ($this->findNearPtu($bid->getGood(), $order->getDateOper(), $order->getOffice(), $order->getLogKey())){
+                                if ($this->findNearPtu($bid->getGood(), $order->getDateOper(), $order->getOffice(), $order->getLogKey(), $order)){
                                     return true;
                                 } 
                                 if ($this->correctCodePtu($bid->getGood(), $order->getDateOper(), $order->getOffice())){
@@ -334,7 +342,7 @@ class RegisterManager
                             $ptGoods = $this->entityManager->getRepository(PtGood::class)
                                     ->findBy(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
                             foreach ($ptGoods as $ptGood){
-                                if ($this->findNearPtu($ptGood->getGood(), $pt->getDocDate(), $pt->getOffice(), $pt->getLogKey())){
+                                if ($this->findNearPtu($ptGood->getGood(), $pt->getDocDate(), $pt->getOffice(), $pt->getLogKey(), $pt)){
                                     return true;
                                 } 
                                 if ($this->correctCodePtu($ptGood->getGood(), $pt->getDocDate(), $pt->getOffice())){
@@ -369,7 +377,7 @@ class RegisterManager
                             $stCount = $st->getStGoods()->count();
                             if (count($stGoods) ==  $stCount && $stCount == 1){
                                 foreach ($stGoods as $stGood){
-                                    if ($this->findNearPtu($stGood->getGood(), $st->getDocDate(), $st->getOffice(), $st->getLogKey())){
+                                    if ($this->findNearPtu($stGood->getGood(), $st->getDocDate(), $st->getOffice(), $st->getLogKey(), $st)){
                                         return true;
                                     } 
                                     if ($this->correctCodePtu($stGood->getGood(), $st->getDocDate(), $st->getOffice())){

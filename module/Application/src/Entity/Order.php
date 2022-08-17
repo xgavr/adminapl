@@ -515,6 +515,11 @@ class Order {
         $this->dateOper = $dateOper;
     }     
 
+    public function setDocDate($dateOper) 
+    {
+        $this->dateOper = $dateOper;
+    }     
+
     public function getDateShipment() 
     {
         return $this->dateShipment;
@@ -893,10 +898,19 @@ class Order {
     }
 
     /**
-     * Задает комментарий к лоставке
+     * Задает комментарий к доставке
      * @param string $infoShipping
      */    
     public function setInfoShipping($infoShipping) 
+    {
+        $this->infoShipping = $infoShipping;
+    }         
+ 
+    /**
+     * Задает комментарий к доставке
+     * @param string $infoShipping
+     */    
+    public function setComment($infoShipping) 
     {
         $this->infoShipping = $infoShipping;
     }         
