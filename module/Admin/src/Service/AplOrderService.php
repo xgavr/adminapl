@@ -647,9 +647,10 @@ class AplOrderService {
      * Загрузить заказ из Апл
      * @param integer $start
      * @param integer $aplId
+     * @param bool $debug
      * @return 
      */
-    public function unloadOrder($start = 0, $aplId = null, $orderTotal = null)
+    public function unloadOrder($start = 0, $aplId = null, $orderTotal = null, $debug = false)
     {
         $url = $this->aplApi().'unload-order?api='.$this->aplApiKey();
         
@@ -666,12 +667,18 @@ class AplOrderService {
         $response = $client->send();
         $body = $response->getBody();
 
-//        var_dump($body); exit;
+//            var_dump($body); exit;
+            
         try{
             $result = json_decode($body, true);
+            if ($debug){
+                var_dump($result);
+            }
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
-//            var_dump($ex->getMessage());
-            var_dump($body);
+            if ($debug){
+                var_dump($ex->getMessage());
+                var_dump($body);
+            }    
             return false;
         } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
             return true;
