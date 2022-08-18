@@ -319,7 +319,7 @@ class PtuController extends AbstractActionController
     public function autocompleteGoodAction()
     {
         $result = [];
-        $q = $this->params()->fromQuery('q');
+        $q = trim($this->params()->fromQuery('q'));
         
         if ($q){
             $query = $this->entityManager->getRepository(Goods::class)
