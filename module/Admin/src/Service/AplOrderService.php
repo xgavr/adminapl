@@ -440,7 +440,7 @@ class AplOrderService {
         if (!$contact){
             if ($debug){
                 echo 'no client!';
-                var_dum($data);
+                var_dump($data);
             }
             return false;
         }
@@ -604,14 +604,14 @@ class AplOrderService {
             } else {
                 if ($debug){
                     echo 'no sum match!';
-                    var_dum($data);
+                    var_dump($data);
                 }                
             }   
         }    
                 
         if ($debug){
             echo 'no order!';
-            var_dum($data);
+            var_dump($data);
         }
         return false;
     }
