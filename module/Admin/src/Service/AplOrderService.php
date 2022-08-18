@@ -698,9 +698,9 @@ class AplOrderService {
 
         if (is_array($result)){
             if (is_numeric($orderTotal) && $aplId){
-//                if ($orderTotal == $result['sort']){
-//                    return true;
-//                }
+                if ($orderTotal == $result['sort']){
+                    return true;
+                }
 //                var_dump($aplId);
 //                var_dump($orderTotal);
 //                var_dump($result); exit;
