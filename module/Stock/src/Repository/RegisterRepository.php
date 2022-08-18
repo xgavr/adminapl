@@ -320,6 +320,37 @@ class RegisterRepository extends EntityRepository
     }    
     
     /**
+     * Найти ПТ с ближайшей датой
+     * @param Goods $good
+     * @param date $docDate
+     * @param Office $office
+     * @retrun Ptu
+     */
+    public function findNearPt($good, $docDate, $office)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+//        var_dump(date('Y-m-d 23:59:59', strtotime($docDate.' +10 days'))); exit;
+        $queryBuilder->select('p')
+                ->from(Pt::class, 'p')
+                ->where('p.docDate > ?1')
+                ->andWhere('p.docDate <= ?2')
+                ->setParameter('1', date('Y-m-d H:i:s', strtotime($docDate)))
+                ->setParameter('2', date('Y-m-d 23:59:59', strtotime($docDate.' +10 days')))
+                ->join('p.ptGoods', 'pg')
+                ->andWhere('pg.good = ?3')
+                ->setParameter('3', $good->getId())
+                ->andWhere('p.status = ?4')
+                ->setParameter('4', Pt::STATUS_ACTIVE)
+                ->andWhere('p.office2 = ?5')
+                ->setParameter('5', $office->getId())
+                ->orderBy('p.docDate', 'ASC')
+                ->setMaxResults(1)
+                ;
+        return $queryBuilder->getQuery()->getOneOrNullResult();        
+    }    
+
+    /**
      * Найти ПТУ с таким же артикулом
      * @param Goods $good
      * @param date $docDate
