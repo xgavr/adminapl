@@ -517,6 +517,7 @@ class Order {
 
     public function setDocDate($dateOper) 
     {
+        $this->dateShipment = $dateOper;
         $this->dateOper = $dateOper;
     }     
 
