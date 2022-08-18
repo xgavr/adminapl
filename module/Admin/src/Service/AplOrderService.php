@@ -707,8 +707,9 @@ class AplOrderService {
     
     /**
      * Получить заказы
+     * @param bool $debug
      */
-    public function uploadOrders()
+    public function uploadOrders($debug = false)
     {
         ini_set('memory_limit', '512M');
         set_time_limit(900);
@@ -716,7 +717,7 @@ class AplOrderService {
         $start = 0;
         
         while (true){
-            if ($this->unloadOrder($start)) {
+            if ($this->unloadOrder($start, null, null, $debug)) {
                 usleep(100);
                 if (time() > $startTime + 870){
                     break;
