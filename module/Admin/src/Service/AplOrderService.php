@@ -426,8 +426,9 @@ class AplOrderService {
      * Загрузить заказ
      * 
      * @param array $data
+     * @para bool $debug
      */
-    public function getOrder($data)
+    public function getOrder($data, $debug = false)
     {
         $client = $this->getClient($data);
         if (!$client){
@@ -437,6 +438,10 @@ class AplOrderService {
         
         $contact = $client->getLegalContact();
         if (!$contact){
+            if ($debug){
+                echo 'no client!';
+                var_dum($data);
+            }
             return false;
         }
 //        var_dump($data); exit;
@@ -596,9 +601,18 @@ class AplOrderService {
             $this->orderManager->updOrderTotal($order);
             if (round($order->getTotal()) == round($data['sort'])){
                 return true;            
-            }    
+            } else {
+                if ($debug){
+                    echo 'no sum match!';
+                    var_dum($data);
+                }                
+            }   
         }    
                 
+        if ($debug){
+            echo 'no order!';
+            var_dum($data);
+        }
         return false;
     }
     
