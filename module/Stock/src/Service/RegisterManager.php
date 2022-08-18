@@ -195,10 +195,10 @@ class RegisterManager
         }
         
         $pt = $this->entityManager->getRepository(Register::class)
-                ->findNearPtu($good, $docDate, $office);
+                ->findNearPt($good, $docDate, $office);
         if ($pt){
             if ($docDate < '2022-01-01'){
-                return true;
+                
             } else {
                 $oldDate = $doc->getDocDate();
                 $doc->setDocDate($pt->getDocDate());
