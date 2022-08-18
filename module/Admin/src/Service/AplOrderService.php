@@ -689,6 +689,8 @@ class AplOrderService {
 
             if ($this->getOrder($result)){ 
                 $this->unloadedOrder($result['id']);
+            } else {
+                return false;
             }    
         } else {
             return false;
