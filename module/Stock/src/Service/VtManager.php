@@ -156,7 +156,7 @@ class VtManager
         foreach ($vtGoods as $vtGood){
             if ($vt->getStatus() != Vt::STATUS_RETIRED){
                 $movements = $this->entityManager->getRepository(Movement::class)
-                        ->findBy(['docKey' => $vt->getOrder()->getLogKey(), 'good' => $vtGood->getGood()->getId()], ['quantity' => 'ASC', 'docStamp' => 'ASC']);
+                        ->findBy(['docKey' => $vt->getOrder()->getLogKey(), 'good' => $vtGood->getGood()->getId()], ['quantity' => 'ASC', 'docStamp' => 'DESC']);
                 
                 $posting = $vtGood->getQuantity();
                 
