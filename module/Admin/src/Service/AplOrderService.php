@@ -685,9 +685,6 @@ class AplOrderService {
             
         try{
             $result = json_decode($body, true);
-            if ($debug){
-                var_dump($result);
-            }
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
             if ($debug){
                 var_dump($ex->getMessage());
