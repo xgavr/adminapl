@@ -708,7 +708,7 @@ class AplOrderService {
 //                var_dump($result); exit;
             }
 
-            if ($this->getOrder($result)){ 
+            if ($this->getOrder($result, $debug)){ 
                 $this->unloadedOrder($result['id']);
             } else {
                 return false;
