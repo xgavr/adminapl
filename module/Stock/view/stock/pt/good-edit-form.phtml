@@ -153,6 +153,9 @@ $docName = 'Новый';
     });    
     
     $( document ).ready(function() {
+        $('#code').on('input', function(){
+            $('#code').val($.trim($('#code').val()));
+        });
         $('#code').typeahead({
             source: function(query, process) {
                 return $.get("/ptu/autocomplete-good?q="+query, function (data) {
