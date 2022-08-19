@@ -282,10 +282,12 @@
         });                                                
     }
 
-    $('buuton').on('click', function(){
-        $('button').removeClass('marked');
-        $(this).addClass('marked');
-    });
+    $(document).ready(function(){
+        $('buuton').on('click', function(){
+            $('button').removeClass('marked');
+            $(this).addClass('marked');
+        });
+    });    
 
     $('#modal-dialog').on('show.bs.modal', function (e) {        
         var url = e.relatedTarget.value;
