@@ -467,7 +467,9 @@ class RegisterManager
                     ->findForActualize();
             if ($register){
                 if ($this->docActualize($register)){
-//                    var_dump($register->getId());
+                    if ($workTime < 840){
+                        var_dump($register->getId());                        
+                    }
                     usleep(100);                    
                 } else {
                     throw new \Exception('Документ не проведен!');
