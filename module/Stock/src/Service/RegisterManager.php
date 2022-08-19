@@ -427,19 +427,18 @@ class RegisterManager
                         $takeNo = $this->entityManager->getRepository(VtpGood::class)
                                 ->count(['vtp' => $vtp->getId(), 'take' => VtpGood::TAKE_NO]);
                         $flag = $takeNo == 0;
-                        if (!$flag){
-                            $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
-                                    ->findBy(['vtp' => $vtp->getId(), 'take' => VtpGood::TAKE_NO]);
-                            $vtpCount = $vtp->getVtpGoods()->count();
-                            if (count($vtpGoods) ==  $vtpCount && $vtpCount == 1){
-//                                var_dump(111); exit;
-                                foreach ($vtpGoods as $vtpGood){
-                                    if ($this->correctVtpBase($vtp, $vtpGood->getGood(), $register->getDocStamp())){
-                                        return true;
-                                    } 
-                                }
-                            }    
-                        }    
+//                        if (!$flag){                            
+//                            $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
+//                                    ->findBy(['vtp' => $vtp->getId(), 'take' => VtpGood::TAKE_NO]);
+//                            $vtpCount = $vtp->getVtpGoods()->count();
+//                            if (count($vtpGoods) ==  $vtpCount && $vtpCount == 1){
+//                                foreach ($vtpGoods as $vtpGood){
+//                                    if ($this->correctVtpBase($vtp, $vtpGood->getGood(), $register->getDocStamp())){
+//                                        return true;
+//                                    } 
+//                                }
+//                            }    
+//                        }    
                     }   
                 }
                 break;
