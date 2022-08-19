@@ -174,7 +174,7 @@ class RegisterManager
         $ptu = $this->entityManager->getRepository(Register::class)
                 ->findNearPtu($good, $docDate, $office);
         if ($ptu){
-            if ($docDate < '2022-01-01'){
+            if ($docDate < '2020-01-01'){
                 $oldDate = $ptu->getDocDate();
     //            var_dump($good->getId()); exit;
                 $ptu->setDocDate($docDate);
