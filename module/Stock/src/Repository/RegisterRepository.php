@@ -313,6 +313,7 @@ class RegisterRepository extends EntityRepository
                 ->setParameter('4', Ptu::STATUS_ACTIVE)
                 ->andWhere('p.office = ?5')
                 ->setParameter('5', $office->getId())
+                ->andWhere('p.comment not like "#Поправка%"')
                 ->orderBy('p.docDate', 'ASC')
                 ->setMaxResults(1)
                 ;
@@ -344,6 +345,7 @@ class RegisterRepository extends EntityRepository
                 ->setParameter('4', Pt::STATUS_ACTIVE)
                 ->andWhere('p.office2 = ?5')
                 ->setParameter('5', $office->getId())
+                ->andWhere('p.comment not like "#Поправка%"')
                 ->orderBy('p.docDate', 'ASC')
                 ->setMaxResults(1)
                 ;
@@ -375,6 +377,7 @@ class RegisterRepository extends EntityRepository
                 ->setParameter('5', Ptu::STATUS_ACTIVE)
                 ->andWhere('p.office = ?6')
                 ->setParameter('6', $office->getId())
+                ->andWhere('p.comment not like "#Поправка%"')
                 ->orderBy('p.docDate', 'ASC')
                 ->setMaxResults(1)
                 ;
