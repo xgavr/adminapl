@@ -140,3 +140,10 @@ body {
 .bootbox.modal > .modal-dialog {
   z-index: 1050 !important;
 }
+
+/*
+* Выделение кликнутой строки
+*/
+table tr.marked{
+    background-color: tomato;
+}
