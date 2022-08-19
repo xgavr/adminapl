@@ -468,7 +468,7 @@ class RegisterManager
             if ($register){
                 if ($this->docActualize($register)){
                     if ($workTime < 840){
-                        var_dump($register->getId());                        
+                        var_dump($register->getDocStamp());                        
                     }
                     usleep(100);                    
                 } else {
