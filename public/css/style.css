@@ -144,6 +144,6 @@ body {
 /*
 * Выделение кликнутой строки
 */
-table tr.marked{
+button.marked{
     background-color: tomato;
 }
