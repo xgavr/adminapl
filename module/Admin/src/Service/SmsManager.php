@@ -259,6 +259,7 @@ class SmsManager {
             $chat->setMsgText($row['msg_text']);
             $chat->setPhone($row['phone']);
             $chat->setTipMsg($row['tip_msg']);
+            $chat->setState($row['state']);
             
             $this->entityManager->persist($chat);
             $this->entityManager->flush();

@@ -75,6 +75,11 @@ class Wammchat {
     protected $dateUpd;        
 
     /**
+     * @ORM\Column(name="state")  
+     */
+    protected $state;        
+
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status;        
@@ -183,6 +188,16 @@ class Wammchat {
     public function setDateUpd($dateUpd) 
     {
         $this->dateUpd = $dateUpd;
+    }     
+
+    public function getState() 
+    {
+        return $this->state;
+    }
+
+    public function setState($state) 
+    {
+        $this->state = $state;
     }     
 
     public function getStatus() 
