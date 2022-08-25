@@ -97,7 +97,7 @@ class SmsManager {
         $settings = $this->adminManager->getSettings();
         $result = $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
-            $response = file_get_contents($settings['wamm_url'].'/check_phone/'.$settings['wamm_api_id'].'/?phone='.$options['phone']);
+            $response = file_get_contents(self::WAMM_API.'/check_phone/'.$settings['wamm_api_id'].'/?phone='.$options['phone']);
         } 
         if ($response){
             $result = Json::decode($response, Json::TYPE_ARRAY);
@@ -116,7 +116,7 @@ class SmsManager {
         $settings = $this->adminManager->getSettings();
         $result = $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
-            $response = file_get_contents($settings['wamm_url'].'/msg_state/'.$settings['wamm_api_id'].'/?msg_id='.$options['msg_id']);
+            $response = file_get_contents(self::WAMM_API.'/msg_state/'.$settings['wamm_api_id'].'/?msg_id='.$options['msg_id']);
         } 
         if ($response){
             $result = Json::decode($response, Json::TYPE_ARRAY);
@@ -135,7 +135,7 @@ class SmsManager {
         $settings = $this->adminManager->getSettings();
         $result = $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
-            $response = file_get_contents($settings['wamm_url'].'/msg_get_last/'.$settings['wamm_api_id'].'/?col='.$col);
+            $response = file_get_contents(self::WAMM_API.'/msg_get_last/'.$settings['wamm_api_id'].'/?col='.$col);
         } 
         if ($response){
             $result = Json::decode($response, Json::TYPE_ARRAY);
@@ -155,7 +155,7 @@ class SmsManager {
         $settings = $this->adminManager->getSettings();
         $result = $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
-            $response = file_get_contents($settings['wamm_url'].'/msg_get/'.$settings['wamm_api_id'].'/?phone='.$phone.'&col='.$col);
+            $response = file_get_contents(self::WAMM_API.'/msg_get/'.$settings['wamm_api_id'].'/?phone='.$phone.'&col='.$col);
         } 
         if ($response){
             $result = Json::decode($response, Json::TYPE_ARRAY);
@@ -173,7 +173,7 @@ class SmsManager {
         $settings = $this->adminManager->getSettings();
         $result = $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
-            $response = file_get_contents($settings['wamm_url'].'/msg_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&text='. urlencode($options['text']));
+            $response = file_get_contents(self::WAMM_API.'/msg_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&text='. urlencode($options['text']));
         } 
         if ($response){
             $result = Json::decode($response, Json::TYPE_ARRAY);
@@ -191,7 +191,7 @@ class SmsManager {
         $settings = $this->adminManager->getSettings();
         $result = $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
-            $response = file_get_contents($settings['wamm_url'].'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url='. urlencode($options['url']));
+            $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url='. urlencode($options['url']));
         } 
         if ($response){
             $result = Json::decode($response, Json::TYPE_ARRAY);
@@ -209,7 +209,7 @@ class SmsManager {
         $settings = $this->adminManager->getSettings();
         $result = $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
-            $response = file_get_contents($settings['wamm_url'].'/contact_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&name='. urlencode($options['name']));
+            $response = file_get_contents(self::WAMM_API.'/contact_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&name='. urlencode($options['name']));
         } 
         if ($response){
             $result = Json::decode($response, Json::TYPE_ARRAY);
@@ -227,7 +227,7 @@ class SmsManager {
         $settings = $this->adminManager->getSettings();
         $result = $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
-            $response = file_get_contents($settings['wamm_url'].'/contact_delete/'.$settings['wamm_api_id'].'/?phone='.$options['phone']);
+            $response = file_get_contents(self::WAMM_API.'/contact_delete/'.$settings['wamm_api_id'].'/?phone='.$options['phone']);
         } 
         if ($response){
             $result = Json::decode($response, Json::TYPE_ARRAY);
