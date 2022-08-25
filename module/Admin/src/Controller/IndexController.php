@@ -943,6 +943,15 @@ class IndexController extends AbstractActionController
         ]);        
     }
 
+    public function testGetAndUpdateWammAction()
+    {
+        $this->smsManager->getAndUpdateWammchat(10);
+        
+        return new JsonModel([
+            'ok'
+        ]);        
+    }
+
     public function testTelegramAction()
     {
         $settings = $this->adminManager->getTelegramSettings();

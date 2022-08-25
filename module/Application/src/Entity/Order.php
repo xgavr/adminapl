@@ -16,6 +16,7 @@ use Application\Entity\Courier;
 use Application\Entity\Shipping;
 use ApiMarketPlace\Entity\MarketplaceUpdate;
 use Stock\Entity\Vt;
+use Admin\Entity\Wammchat;
 use Admin\Filter\ClickFilter;
 use Laminas\Json\Encoder;
 
@@ -282,6 +283,12 @@ class Order {
    */
    private $supplierOrders;
     
+    /**
+    * @ORM\OneToMany(targetEntity="Admin\Entity\Wammchat", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
+     */
+    private $wammchats;
+
     private $ciphering = "AES-128-CTR"; //Метод шифрования
     
     private $iv = "1234567891011121"; // Non-NULL Initialization Vector for encryption
@@ -296,6 +303,7 @@ class Order {
         $this->comments = new ArrayCollection();
         $this->marketplaceUpdates = new ArrayCollection();
         $this->vt = new ArrayCollection();
+        $this->wammchats = new ArrayCollection();
     }
     
     protected function _encrypt($unencryptedText, $passphrase)
@@ -1265,6 +1273,24 @@ class Order {
         $this->vt[] = $vt;
     }
                 
+    /**
+     * Returns the array of wammchat assigned to this.
+     * @return array
+     */
+    public function getWammchats()
+    {
+        return $this->wammchats;
+    }
+        
+    /**
+     * Assigns.
+     * @param Wammchat $wammchat
+     */
+    public function addWammchat($wammchat)
+    {
+        $this->wammchats[] = $wammchat;
+    }
+
     /**
      * Returns the array of marketplaceUpdates assigned to this.
      * @return array

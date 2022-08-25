@@ -8,6 +8,9 @@
 
 namespace Admin\Service;
 
+use Laminas\Json\Json;
+use Admin\Entity\Wammchat;
+
 /**
  * Description of SmsManager
  * send sms from sms.ru
@@ -17,10 +20,11 @@ class SmsManager {
     
     const API_ID = ''; //не используется
     const SMS_API = ''; // не используется
+    const WAMM_API = 'https://wamm.chat/api2'; 
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
@@ -83,4 +87,203 @@ class SmsManager {
         return $result;
     }
     
+    /**
+     * Проверить наличие WhatsApp по номеру телефона
+     * @param array $options
+     * @return array
+     */
+    public function wammCheckPhone($options)
+    {
+        $settings = $this->adminManager->getSettings();
+        $result = $response = false;
+        if (self::WAMM_API && $settings['wamm_api_id']){
+            $response = file_get_contents($settings['wamm_url'].'/check_phone/'.$settings['wamm_api_id'].'/?phone='.$options['phone']);
+        } 
+        if ($response){
+            $result = Json::decode($response, Json::TYPE_ARRAY);
+        }
+        
+        return $result;        
+    }
+
+    /**
+     * Получение статуса сообщения
+     * @param array $options
+     * @return array
+     */
+    public function wammMsgState($options)
+    {
+        $settings = $this->adminManager->getSettings();
+        $result = $response = false;
+        if (self::WAMM_API && $settings['wamm_api_id']){
+            $response = file_get_contents($settings['wamm_url'].'/msg_state/'.$settings['wamm_api_id'].'/?msg_id='.$options['msg_id']);
+        } 
+        if ($response){
+            $result = Json::decode($response, Json::TYPE_ARRAY);
+        }
+        
+        return $result;        
+    }
+
+    /**
+     * Получение сообщений
+     * @param int $col
+     * @return array
+     */
+    public function wammMsgGetLast($col = 100)
+    {
+        $settings = $this->adminManager->getSettings();
+        $result = $response = false;
+        if (self::WAMM_API && $settings['wamm_api_id']){
+            $response = file_get_contents($settings['wamm_url'].'/msg_get_last/'.$settings['wamm_api_id'].'/?col='.$col);
+        } 
+        if ($response){
+            $result = Json::decode($response, Json::TYPE_ARRAY);
+        }
+        
+        return $result;        
+    }
+
+    /**
+     *  Получение сообщений по номеру телефона
+     * @param string $phone
+     * @param int $col
+     * @return array
+     */
+    public function wammMsgGet($phone, $col = 100)
+    {
+        $settings = $this->adminManager->getSettings();
+        $result = $response = false;
+        if (self::WAMM_API && $settings['wamm_api_id']){
+            $response = file_get_contents($settings['wamm_url'].'/msg_get/'.$settings['wamm_api_id'].'/?phone='.$phone.'&col='.$col);
+        } 
+        if ($response){
+            $result = Json::decode($response, Json::TYPE_ARRAY);
+        }
+        
+        return $result;        
+    }
+
+    /**
+     * Отправка сообщений
+     * @param array $options
+     */
+    public function wammMsgTo($options)
+    {
+        $settings = $this->adminManager->getSettings();
+        $result = $response = false;
+        if (self::WAMM_API && $settings['wamm_api_id']){
+            $response = file_get_contents($settings['wamm_url'].'/msg_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&text='. urlencode($options['text']));
+        } 
+        if ($response){
+            $result = Json::decode($response, Json::TYPE_ARRAY);
+        }
+        
+        return $result;        
+    }
+    
+    /**
+     * Отправка файлов
+     * @param array $options
+     */
+    public function wammFileTo($options)
+    {
+        $settings = $this->adminManager->getSettings();
+        $result = $response = false;
+        if (self::WAMM_API && $settings['wamm_api_id']){
+            $response = file_get_contents($settings['wamm_url'].'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url='. urlencode($options['url']));
+        } 
+        if ($response){
+            $result = Json::decode($response, Json::TYPE_ARRAY);
+        }
+        
+        return $result;        
+    }
+    
+    /**
+     * Добавление и обновление контактов
+     * @param array $options
+     */
+    public function wammContactTo($options)
+    {
+        $settings = $this->adminManager->getSettings();
+        $result = $response = false;
+        if (self::WAMM_API && $settings['wamm_api_id']){
+            $response = file_get_contents($settings['wamm_url'].'/contact_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&name='. urlencode($options['name']));
+        } 
+        if ($response){
+            $result = Json::decode($response, Json::TYPE_ARRAY);
+        }
+        
+        return $result;        
+    }
+    
+    /**
+     * Удаление контактов
+     * @param array $options
+     */
+    public function wammContactDelete($options)
+    {
+        $settings = $this->adminManager->getSettings();
+        $result = $response = false;
+        if (self::WAMM_API && $settings['wamm_api_id']){
+            $response = file_get_contents($settings['wamm_url'].'/contact_delete/'.$settings['wamm_api_id'].'/?phone='.$options['phone']);
+        } 
+        if ($response){
+            $result = Json::decode($response, Json::TYPE_ARRAY);
+        }
+        
+        return $result;        
+    }
+    
+    /**
+     * Обновить/добавить записи чата
+     * @param array $data
+     */
+    public function updateWammchat($data)
+    {
+        foreach ($data as $row){
+            $chat = $this->entityManager->getRepository(Wammchat::class)
+                    ->findOneBy(['msgId' => $row['msg_id']]);
+            if (!$chat){
+                $chat = new Wammchat();
+                $chat->setMsgId($row['msg_id']);
+                $chat->setStatus(Wammchat::STATUS_ACTIVE);
+            }
+
+            $chat->setChatName($row['chat_name']);
+            $chat->setDateIns($row['date_ins']);
+            $chat->setDateUpd($row['date_upd']);
+            $chat->setFromMe($row['from_me']);
+            $chat->setMsgLink($row['msg_link']);
+            $chat->setMsgText($row['msg_text']);
+            $chat->setPhone($row['phone']);
+            $chat->setTipMsg($row['tip_msg']);
+            
+            $this->entityManager->persist($chat);
+            $this->entityManager->flush();
+        }
+        
+        return;
+    }
+    
+    /**
+     * Получить и обновить чат
+     * @param integer $col
+     * @return type
+     */
+    public function getAndUpdateWammchat($col = 100)
+    {
+//        ini_set('memory_limit', '4096M');
+        set_time_limit(300);
+        
+        $result = $this->wammMsgGetLast($col);
+        if (is_array($result)){
+            if (!empty($result['msg_data'])){
+                $this->updateWammchat($result['msg_data']);
+            }
+        }
+        
+        return;
+    }
 }
