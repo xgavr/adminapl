@@ -119,7 +119,7 @@ class PtManager
                             ->findOneByDocKey($base['baseKey']);
                     if ($movement){
                         $quantity = min($base['rest'], $write);
-                        $amount = $quantity*$ptGood->getAmount()/$ptGood->getQuantity();
+                        $amount = $base['price']*$ptGood->getQuantity();
 
                         $data = [
                             'doc_key' => $pt->getLogKey(),
