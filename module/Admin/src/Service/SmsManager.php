@@ -10,6 +10,7 @@ namespace Admin\Service;
 
 use Laminas\Json\Json;
 use Admin\Entity\Wammchat;
+use Application\Entity\Order;
 
 /**
  * Description of SmsManager
@@ -260,6 +261,12 @@ class SmsManager {
             $chat->setPhone($row['phone']);
             $chat->setTipMsg($row['tip_msg']);
             $chat->setState($row['state']);
+            
+            if (is_numeric($row['chat_name'])){
+                $order = $this->entityManager->getRepository(Order::class)
+                        ->findOneBy(['aplId' => $row['chat_name']]);
+                $chat->setOrder($order);
+            }
             
             $this->entityManager->persist($chat);
             $this->entityManager->flush();
