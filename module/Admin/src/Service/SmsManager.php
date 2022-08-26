@@ -201,8 +201,8 @@ class SmsManager {
                     }    
                 }
                 if ($url){
-                    var_dump('https://adminapl.ru/doc/'.$url);
-                    $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url=https://adminapl.ru'.urlencode($url));
+                    var_dump('https://adminapl.ru/doc/'.urlencode($url));
+                    $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url=https://adminapl.ru/doc/'.urlencode($url));
                 }    
             }
         } 
