@@ -41,12 +41,18 @@ class SmsManager {
      */
     private $logManager;
 
+    /**
+     * Print manager
+     * @var \Application\Service\PrintManager
+     */
+    private $printManager;
 
-    public function __construct($entityManager, $adminManager, $logManager)
+    public function __construct($entityManager, $adminManager, $logManager, $printManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->logManager = $logManager;
+        $this->printManager = $printManager;
     }
     
     public function currentUser()
@@ -70,24 +76,7 @@ class SmsManager {
         
         return $result;
     }
-    
-    /*
-     * @var $options array
-     * phone string
-     * text string
-     */
-    public function wamm($options)
-    {
-        $settings = $this->adminManager->getSettings();
-        $result = false;
-        if ($settings['wamm_url'] && $settings['wamm_api_id']){
-//            var_dump($settings['wamm_url'].'/'.$settings['wamm_api_id'].'/'.$options['phone'].'/?text='. urlencode($options['text'])); exit;
-            $result=file_get_contents($settings['wamm_url'].'/'.$settings['wamm_api_id'].'/'.$options['phone'].'/?text='. urlencode($options['text']));
-        }    
         
-        return $result;
-    }
-    
     /**
      * Проверить наличие WhatsApp по номеру телефона
      * @param array $options
@@ -96,15 +85,18 @@ class SmsManager {
     public function wammCheckPhone($options)
     {
         $settings = $this->adminManager->getSettings();
-        $result = $response = false;
+        $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
             $response = file_get_contents(self::WAMM_API.'/check_phone/'.$settings['wamm_api_id'].'/?phone='.$options['phone']);
         } 
         if ($response){
-            $result = Json::decode($response, Json::TYPE_ARRAY);
+            $data = Json::decode($response, Json::TYPE_ARRAY);
+            if (!empty($data['err'])){
+                return $data['err'] == 0 && $data['result']== 'exists';
+            }
         }
         
-        return $result;        
+        return false;        
     }
 
     /**
@@ -115,15 +107,20 @@ class SmsManager {
     public function wammMsgState($options)
     {
         $settings = $this->adminManager->getSettings();
-        $result = $response = false;
+        $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
             $response = file_get_contents(self::WAMM_API.'/msg_state/'.$settings['wamm_api_id'].'/?msg_id='.$options['msg_id']);
         } 
         if ($response){
-            $result = Json::decode($response, Json::TYPE_ARRAY);
+            $data = Json::decode($response, Json::TYPE_ARRAY);
+            if (!empty($data['err'])){
+                if ($data['err'] == 0){
+                    return $data['state'];
+                }    
+            }
         }
         
-        return $result;        
+        return false;        
     }
 
     /**
@@ -172,15 +169,18 @@ class SmsManager {
     public function wammMsgTo($options)
     {
         $settings = $this->adminManager->getSettings();
-        $result = $response = false;
+        $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
             $response = file_get_contents(self::WAMM_API.'/msg_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&text='. urlencode($options['text']));
         } 
         if ($response){
-            $result = Json::decode($response, Json::TYPE_ARRAY);
+            $data = Json::decode($response, Json::TYPE_ARRAY);
+            if (!empty($data['err'])){
+                return $data['err'] == 0;
+            }
         }
         
-        return $result;        
+        return false;        
     }
     
     /**
@@ -190,15 +190,25 @@ class SmsManager {
     public function wammFileTo($options)
     {
         $settings = $this->adminManager->getSettings();
-        $result = $response = false;
-        if (self::WAMM_API && $settings['wamm_api_id']){
-            $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url='. urlencode($options['url']));
+        $response = $url = false;
+        if (self::WAMM_API && $settings['wamm_api_id'] && $options['attachment'] == 'preorder'){
+            if (!empty($options['attachment'])){
+                if ($options['attachment'] == 'preorder'){
+                    $url = $this->printManager->preorder($options['orderId'], 'Pdf', false, true);                    
+                }
+                if ($url){
+                    $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url='. urlencode('https://adminapl.ru'.$url));
+                }    
+            }
         } 
         if ($response){
-            $result = Json::decode($response, Json::TYPE_ARRAY);
+            $data = Json::decode($response, Json::TYPE_ARRAY);
+            if (!empty($data['err'])){
+                return $data['err'] == 0;
+            }
         }
         
-        return $result;        
+        return false;        
     }
     
     /**
@@ -208,15 +218,18 @@ class SmsManager {
     public function wammContactTo($options)
     {
         $settings = $this->adminManager->getSettings();
-        $result = $response = false;
+        $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
             $response = file_get_contents(self::WAMM_API.'/contact_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&name='. urlencode($options['name']));
         } 
         if ($response){
-            $result = Json::decode($response, Json::TYPE_ARRAY);
+            $data = Json::decode($response, Json::TYPE_ARRAY);
+            if (!empty($data['err'])){
+                return $data['err'] == 0;
+            }
         }
         
-        return $result;        
+        return false;        
     }
     
     /**
@@ -226,17 +239,31 @@ class SmsManager {
     public function wammContactDelete($options)
     {
         $settings = $this->adminManager->getSettings();
-        $result = $response = false;
+        $response = false;
         if (self::WAMM_API && $settings['wamm_api_id']){
             $response = file_get_contents(self::WAMM_API.'/contact_delete/'.$settings['wamm_api_id'].'/?phone='.$options['phone']);
         } 
         if ($response){
-            $result = Json::decode($response, Json::TYPE_ARRAY);
+            $data = Json::decode($response, Json::TYPE_ARRAY);
+            if (!empty($data['err'])){
+                return $data['err'] == 0;
+            }
         }
         
-        return $result;        
+        return false;        
     }
     
+    /*
+     * Отправить сообщение wammchat
+     * @var $options array
+     * phone string
+     * text string
+     */
+    public function wamm($options)
+    {
+        return $this->wammContactTo($options) || $this->wammMsgTo($options) || $this->wammFileTo($options);
+    }
+
     /**
      * Обновить/добавить записи чата
      * @param array $data

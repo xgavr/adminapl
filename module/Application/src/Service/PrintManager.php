@@ -44,6 +44,7 @@ use Application\Entity\Shipping;
 class PrintManager {
     
     const TEMPLATE_FOLDER       = './data/template'; // папка с шаблонами
+    const PUBLIC_DOC_FOLDER       = '/public/doc'; // папка с документами
      
 
     /**
@@ -761,13 +762,13 @@ class PrintManager {
         switch ($writerType){
             case 'Pdf':
                 $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
-                $outFilename = $order->getPrintName($writerType, 'Счет');
+                $outFilename = $order->getPrintName($writerType, 'Накладная');
                 $writer->save($outFilename);
                 break;
             case 'Xls':
             case 'Xlsx':
                 $writer = IOFactory::createWriter($spreadsheet, $writerType);
-                $outFilename = $order->getPrintName($writerType, 'Счет');
+                $outFilename = $order->getPrintName($writerType, 'Накладная');
 //                $writer->writeAllSheets();
                 $writer->save($outFilename);
                 break;
@@ -821,13 +822,13 @@ class PrintManager {
         switch ($writerType){
             case 'Pdf':
                 $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
-                $outFilename = $order->getPrintName($writerType, 'Счет');
+                $outFilename = $order->getPrintName($writerType, 'Акт');
                 $writer->save($outFilename);
                 break;
             case 'Xls':
             case 'Xlsx':
                 $writer = IOFactory::createWriter($spreadsheet, $writerType);
-                $outFilename = $order->getPrintName($writerType, 'Счет');
+                $outFilename = $order->getPrintName($writerType, 'Акт');
 //                $writer->writeAllSheets();
                 $writer->save($outFilename);
                 break;
@@ -844,9 +845,10 @@ class PrintManager {
      * @param Order $order
      * @param string $writerType
      * @param bool $code
+     * @param bool $public
      * @return string 
      */
-    public function preorder($order, $writerType = 'Pdf', $code = false)
+    public function preorder($order, $writerType = 'Pdf', $code = false, $public = false)
     {
         ini_set("pcre.backtrack_limit", "5000000");
         setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
@@ -914,13 +916,13 @@ class PrintManager {
         switch ($writerType){
             case 'Pdf':
                 $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
-                $outFilename = $order->getPrintName($writerType, 'Счет');
+                $outFilename = $order->getPrintName($writerType, 'Предварительный заказ');
                 $writer->save($outFilename);
                 break;
             case 'Xls':
             case 'Xlsx':
                 $writer = IOFactory::createWriter($spreadsheet, $writerType);
-                $outFilename = $order->getPrintName($writerType, 'Счет');
+                $outFilename = $order->getPrintName($writerType, 'Предварительный заказ');
 //                $writer->writeAllSheets();
                 $writer->save($outFilename);
                 break;
@@ -928,6 +930,13 @@ class PrintManager {
                 $outFilename = null;
         } 
         
+        if ($public && $outFilename){
+            $publicFilename = self::PUBLIC_DOC_FOLDER.'/'. basename($outFilename);
+            if (copy($outFilename, $publicFilename)){
+                return $publicFilename;
+            }
+            return false;
+        }
         
         return $outFilename;
     }    
@@ -1038,13 +1047,13 @@ class PrintManager {
         switch ($writerType){
             case 'Pdf':
                 $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
-                $outFilename = $order->getPrintName($writerType, 'Счет');
+                $outFilename = $order->getPrintName($writerType, 'Коммерческое предложение');
                 $writer->save($outFilename);
                 break;
             case 'Xls':
             case 'Xlsx':
                 $writer = IOFactory::createWriter($spreadsheet, $writerType);
-                $outFilename = $order->getPrintName($writerType, 'Счет');
+                $outFilename = $order->getPrintName($writerType, 'Коммерческое предложение');
 //                $writer->writeAllSheets();
                 $writer->save($outFilename);
                 break;

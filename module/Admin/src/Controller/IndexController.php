@@ -914,7 +914,7 @@ class IndexController extends AbstractActionController
                     $result = $this->smsManager->send(['phone' => $phone, 'text' => $data['message']]);
                 }    
                 if ($data['mode'] == 2){
-                    $result = $this->smsManager->wamm(['phone' => $phone, 'text' => $data['message']]);
+                    $result = $this->smsManager->wamm(['phone' => $phone, 'text' => $data['message'], 'name' => $data['orderId'], 'attachment' => $data['attachment']]);
                 }    
             }    
 

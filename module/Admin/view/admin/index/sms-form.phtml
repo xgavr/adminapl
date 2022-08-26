@@ -16,6 +16,15 @@ $form->get('mode')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('orderId')->setAttributes([
+    'class'=>'form-control',
+    'value' => $order->getAplId(),
+    ]);
+
+$form->get('attachment')->setAttributes([
+    'class'=>'form-control',
+    ]);
+
 $form->prepare();
 
 ?>
@@ -47,6 +56,10 @@ $form->prepare();
             </div>    
         </div>        
     </div>
+    
+    <?= $this->formElement($form->get('orderId')); ?>
+    <?= $this->formElement($form->get('attachment')); ?>
+    
     <div class="row">
         <div class="col-xs-3">
             <div class="panel panel-default">
@@ -94,6 +107,11 @@ $form->prepare();
                     <li class="list-group-item local-comment">турбоссылка
                         <div class="text-hide">
                             Ссылка для просмотра заказа №<?= $order->getAplId()?> - <?= $turbo?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment" attachment="preorder">Предзаказ PDF<b>WhatsApp</b>
+                        <div class="text-hide">
+                            Предварительный заказ №<?= $order->getAplId()?> для подтверждения звоните <?= $order->getOffice()->getLegalContactPhone()?>
                         </div>
                     </li>
                 </ul>
@@ -246,7 +264,10 @@ $form->prepare();
         let str = $(this).children('.text-hide').html();
         $('#message').val($.trim(str));
         updateMode($(this).children('b').length);
-    })
+        
+        let attachment = $(this).attr('attachemnt');
+        $('input[name=attachment]').val(attachment);
+    });
     
     $('.local-comment-sb-prepay').on('click', function() {
         let prepay = prompt("Сумма предоплаты", "<?= $order->getPrepay()?>");
@@ -257,24 +278,24 @@ $form->prepare();
                     $('#message').val($.trim(str)+' '+prepay+' р. Для оплаты пройдите по ссылке ' + data.prepayLink);
                     updateMode($(this).children('b').length);
                 }    
-            })
+            });
         }            
-    })    
+    });    
     
     $('.clear-button').on('click', function() {
         $('#message').val('');
-    })
+    });
 
     $('#sms-submit').on('click', function() {
         $.post( "/admin/sms", $('#sms-form').serialize())
           .done(function( data ) {
             $('#smsMessageModal').modal('hide');
-            alert(data.result)
+            alert(data.result);
 //            console.log(data);
           })
         .fail(function(data) {
             alert( "Не ушло!" );
             console.log(data);
-        })      
+        });      
     });    
 </script>

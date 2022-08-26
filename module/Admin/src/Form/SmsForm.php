@@ -77,6 +77,24 @@ class SmsForm extends Form
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'orderId',
+            'attributes' => [
+            ],
+            'options' => [
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'attachment',
+            'attributes' => [
+            ],
+            'options' => [
+            ],
+        ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
