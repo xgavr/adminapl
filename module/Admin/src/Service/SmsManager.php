@@ -195,7 +195,7 @@ class SmsManager {
             if (!empty($options['attachment'])){
                 if ($options['attachment'] == 'preorder'){
                     $order = $this->entityManager->getRepository(Order::class)
-                            ->find($options['name']);
+                            ->findOneBy(['aplId' => $options['name']]);
                     if ($order){
                         $url = $this->printManager->preorder($order, 'Pdf', false, true);
                     }    
