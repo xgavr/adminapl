@@ -44,7 +44,7 @@ use Application\Entity\Shipping;
 class PrintManager {
     
     const TEMPLATE_FOLDER       = './data/template'; // папка с шаблонами
-    const PUBLIC_DOC_FOLDER       = '/public/doc'; // папка с документами
+    const PUBLIC_DOC_FOLDER       = './public/doc'; // папка с документами
      
 
     /**
