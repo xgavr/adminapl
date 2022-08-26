@@ -189,14 +189,13 @@ class SmsManager {
      */
     public function wammFileTo($options)
     {
-        var_dump($options); exit;
         $settings = $this->adminManager->getSettings();
         $response = $url = false;
         if (self::WAMM_API && $settings['wamm_api_id'] && $options['attachment'] == 'preorder'){
             if (!empty($options['attachment'])){
                 if ($options['attachment'] == 'preorder'){
                     $order = $this->entityManager->getRepository(Order::class)
-                            ->find($options['orderId']);
+                            ->find($options['name']);
                     if ($order){
                         $url = $this->printManager->preorder($order, 'Pdf', false, true);
                     }    
