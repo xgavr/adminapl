@@ -109,7 +109,7 @@ $form->prepare();
                             Ссылка для просмотра заказа №<?= $order->getAplId()?> - <?= $turbo?>
                         </div>
                     </li>
-                    <li class="list-group-item local-comment" attachment="preorder">Предзаказ PDF<b>WhatsApp</b>
+                    <li class="list-group-item local-comment" attachment="preorder">Предзаказ PDF <b>WhatsApp</b>
                         <div class="text-hide">
                             Предварительный заказ №<?= $order->getAplId()?> для подтверждения звоните <?= $order->getOffice()->getLegalContactPhone()?>
                         </div>
@@ -265,8 +265,7 @@ $form->prepare();
         $('#message').val($.trim(str));
         updateMode($(this).children('b').length);
         
-        let attachment = $(this).attr('attachemnt');
-        $('input[name=attachment]').val(attachment);
+        $('input[name="attachment"]').val($(this).attr('attachemnt'));
     });
     
     $('.local-comment-sb-prepay').on('click', function() {
