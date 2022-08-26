@@ -194,7 +194,11 @@ class SmsManager {
         if (self::WAMM_API && $settings['wamm_api_id'] && $options['attachment'] == 'preorder'){
             if (!empty($options['attachment'])){
                 if ($options['attachment'] == 'preorder'){
-                    $url = $this->printManager->preorder($options['orderId'], 'Pdf', false, true);                    
+                    $order = $this->entityManager->getRepository(Order::class)
+                            ->find($options['orderId']);
+                    if ($order){
+                        $url = $this->printManager->preorder($order, 'Pdf', false, true);
+                    }    
                 }
                 if ($url){
                     $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url='. urlencode('https://adminapl.ru'.$url));
