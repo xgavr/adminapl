@@ -931,8 +931,8 @@ class PrintManager {
         } 
         
         if ($public && $outFilename){
-            $publicFilename = self::PUBLIC_DOC_FOLDER.'/'. basename($outFilename);
-            if (copy($outFilename, $publicFilename)){
+            $publicFilename = realpath(self::PUBLIC_DOC_FOLDER).'/'. basename($outFilename);
+            if (copy(realpath($outFilename), $publicFilename)){
                 return $publicFilename;
             }
             return false;
