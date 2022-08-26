@@ -266,6 +266,7 @@ $form->prepare();
         updateMode($(this).children('b').length);
         
         $('input[name="attachment"]').val($(this).attr('attachemnt'));
+        console.log($(this).attr('attachemnt'));
     });
     
     $('.local-comment-sb-prepay').on('click', function() {
