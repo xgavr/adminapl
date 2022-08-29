@@ -114,6 +114,11 @@ class Movement {
      */
     protected $amount;
 
+    /** 
+     * @ORM\Column(name="base_amount")  
+     */
+    protected $baseAmount;
+
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="movements") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
@@ -269,6 +274,24 @@ class Movement {
     public function getAmount() 
     {
         return $this->amount;
+    }
+    
+    /**
+     * Sets  baseAmount.
+     * @param float $baseAmount     
+     */
+    public function setBaseAmount($baseAmount) 
+    {
+        $this->baseAmount = $baseAmount;
+    }    
+    
+    /**
+     * Returns the baseAmount of doc.
+     * @return float     
+     */
+    public function getBaseAmount() 
+    {
+        return $this->baseAmount;
     }
     
     /**

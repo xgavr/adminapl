@@ -156,7 +156,7 @@ class VtManager
         foreach ($vtGoods as $vtGood){
             if ($vt->getStatus() != Vt::STATUS_RETIRED){
                 $movements = $this->entityManager->getRepository(Movement::class)
-                        ->findBy(['docKey' => $vt->getOrder()->getLogKey(), 'good' => $vtGood->getGood()->getId()], ['docStamp' => 'ASC']);
+                        ->findBy(['docKey' => $vt->getOrder()->getLogKey(), 'good' => $vtGood->getGood()->getId()], []);
                 
                 $posting = $vtGood->getQuantity();
                 
@@ -165,6 +165,7 @@ class VtManager
 
                     $quantity = min($posting, -$movement->getQuantity());
                     $amount = $quantity*$vtGood->getAmount()/$vtGood->getQuantity();
+                    $basePrice = abs($movement->getBaseAmount()/$movement->getQuantity());
 
                     $data = [
                         'doc_key' => $vt->getLogKey(),
@@ -179,6 +180,7 @@ class VtManager
                         'status' => Movement::getStatusFromVt($vt),
                         'quantity' => $quantity,
                         'amount' => $amount,
+                        'baseAmount' => ($vt->getStatus() == Vt::STATUS_COMMISSION) ? $amount:$basePrice*$movement->getQuantity(),
                         'good_id' => $vtGood->getGood()->getId(),
                         'office_id' => $vt->getOffice()->getId(),
                         'company_id' => $vt->getOrder()->getCompany()->getId(),

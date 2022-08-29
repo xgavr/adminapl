@@ -95,7 +95,7 @@ class StManager
                     
                     if ($movement){
                         $quantity = min($base['rest'], $write);
-                        $amount = $quantity*$stGood->getAmount()/$stGood->getQuantity();
+                        $amount = $base['price']*$quantity;
 
                         $data = [
                             'doc_key' => $st->getLogKey(),
@@ -110,6 +110,7 @@ class StManager
                             'status' => Movement::getStatusFromSt($st),
                             'quantity' => -$quantity,
                             'amount' => -$amount,
+                            'baseAmount' => -$amount,
                             'good_id' => $stGood->getGood()->getId(),
                             'office_id' => $st->getOffice()->getId(),
                             'company_id' => $st->getCompany()->getId(),

@@ -126,6 +126,7 @@ class VtpManager
                     
                     $quantity = min($base['rest'], $write);
                     $amount = $quantity*$vtpGood->getAmount()/$vtpGood->getQuantity();
+                    $baseAmount = $base['price']*$quantity;
                     
                     $data = [
                         'doc_key' => $vtp->getLogKey(),
@@ -140,6 +141,7 @@ class VtpManager
                         'status' => Movement::getStatusFromVtp($vtp),
                         'quantity' => -$quantity,
                         'amount' => -$amount,
+                        'baseAmount' => $baseAmount,
                         'good_id' => $vtpGood->getGood()->getId(),
                         'office_id' => $vtp->getPtu()->getOffice()->getId(),
                         'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
