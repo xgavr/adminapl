@@ -44,7 +44,7 @@ use Application\Entity\Shipping;
 class PrintManager {
     
     const TEMPLATE_FOLDER       = './data/template'; // папка с шаблонами
-    const PUBLIC_DOC_FOLDER       = '/public/doc'; // папка с документами
+    const PUBLIC_DOC_FOLDER       = './public/doc'; // папка с документами
      
 
     /**
@@ -931,9 +931,11 @@ class PrintManager {
         } 
         
         if ($public && $outFilename){
-            $publicFilename = self::PUBLIC_DOC_FOLDER.'/'. basename($outFilename);
-            if (copy($outFilename, $publicFilename)){
-                return $publicFilename;
+            $publicFilename = realpath(self::PUBLIC_DOC_FOLDER).'/'. basename($outFilename);
+//            var_dump(realpath($outFilename));
+//            var_dump($publicFilename);
+            if (copy(realpath($outFilename), $publicFilename)){
+                return basename($outFilename);
             }
             return false;
         }
