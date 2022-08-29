@@ -162,6 +162,7 @@ return [
             Service\AutoruManager::class => Service\Factory\AutoruManagerFactory::class,
             Service\FtpManager::class => Service\Factory\FtpManagerFactory::class,
             Service\HelloManager::class => Service\Factory\HelloManagerFactory::class,
+            Service\JobManager::class => Service\Factory\JobManagerFactory::class,
             Service\LogManager::class => Service\Factory\LogManagerFactory::class,
             Service\PostManager::class => Service\Factory\PostManagerFactory::class,
             Service\SettingManager::class => Service\Factory\SettingManagerFactory::class,

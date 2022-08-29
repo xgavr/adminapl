@@ -88,7 +88,7 @@ class AdminManager {
         
         $config->admin->sms_ru_url = $data['sms_ru_url'];
         $config->admin->sms_ru_api_id = $data['sms_ru_api_id'];
-        $config->admin->wamm_url = $data['wamm_url'];
+//        $config->admin->wamm_url = $data['wamm_url'];
         $config->admin->wamm_api_id = $data['wamm_api_id'];
                 
         $config->admin->dadata_api_key = $data['dadata_api_key'];
@@ -115,6 +115,8 @@ class AdminManager {
         
         $config->admin->mail_token = $data['mail_token'];
         $config->admin->turbo_passphrase = $data['turbo_passphrase'];
+        
+        $config->admin->job = $data['job'];
         
         $writer = new PhpArray();
         

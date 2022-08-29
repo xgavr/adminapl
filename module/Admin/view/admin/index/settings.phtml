@@ -26,9 +26,9 @@ $form->get('wamm_api_id')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('wamm_url')->setAttributes([
-    'class'=>'form-control', 
-    ]);
+//$form->get('wamm_url')->setAttributes([
+//    'class'=>'form-control', 
+//    ]);
 
 $form->get('dadata_api_key')->setAttributes([
     'class'=>'form-control', 
@@ -107,6 +107,10 @@ $form->get('turbo_passphrase')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('job')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -148,12 +152,6 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('sms_ru_api_id')); ?>                  
         </div>
                 
-        <div class="form-group">
-            <?= $this->formLabel($form->get('wamm_url')); ?>
-            <?= $this->formElement($form->get('wamm_url')); ?>
-            <?= $this->formElementErrors($form->get('wamm_url')); ?>                  
-        </div>
-
         <div class="form-group">
             <?= $this->formLabel($form->get('wamm_api_id')); ?>
             <?= $this->formElement($form->get('wamm_api_id')); ?>
@@ -261,6 +259,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('allow_date')); ?>
             <?= $this->formElement($form->get('allow_date')); ?>
             <?= $this->formElementErrors($form->get('allow_date')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('job')); ?>
+            <?= $this->formElement($form->get('job')); ?>
+            <?= $this->formElementErrors($form->get('job')); ?>                  
         </div>
 
         <div class="form-group">

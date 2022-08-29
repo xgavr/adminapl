@@ -37,6 +37,7 @@ use Admin\Service\AplCashService;
 use Application\Service\BillManager;
 use Stock\Service\RegisterManager;
 use Stock\Service\PtManager;
+use Admin\Service\JobManager;
 
 
 /**
@@ -77,6 +78,7 @@ class ProcessingControllerFactory implements FactoryInterface {
         $billManager = $container->get(BillManager::class);
         $registerManager = $container->get(RegisterManager::class);
         $ptManager = $container->get(PtManager::class);
+        $jobManager = $container->get(JobManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new ProcessingController($entityManager, $postManager, $autoruManager, 
@@ -85,6 +87,6 @@ class ProcessingControllerFactory implements FactoryInterface {
                 $articleManager, $oemManager, $nameManager, $assemblyManager, $goodsManager,
                 $settingManager, $aplDocService, $marketManager, $carManager, $helloManager,
                 $aplOrderService, $aplCashService, $billManager, $registerManager,
-                $ptManager);
+                $ptManager, $jobManager);
     }
 }

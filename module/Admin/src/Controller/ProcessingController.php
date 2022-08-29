@@ -188,13 +188,19 @@ class ProcessingController extends AbstractActionController
      */
     private $ptManager;    
 
+    /**
+     * Job manager.
+     * @var \Admin\Service\JobManager
+     */
+    private $jobManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
-            $aplCashService, $billManager, $registerManager, $ptManager) 
+            $aplCashService, $billManager, $registerManager, $ptManager, $jobManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -224,6 +230,7 @@ class ProcessingController extends AbstractActionController
         $this->billManager = $billManager;
         $this->registerManager = $registerManager;
         $this->ptManager = $ptManager;
+        $this->jobManager = $jobManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -1943,6 +1950,24 @@ class ProcessingController extends AbstractActionController
         if ($settings['ptu'] == 1){
 
             $this->ptManager->ptGenerators();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }    
+    
+    /**
+     * Выполнение заданий
+     * @return JsonModel
+     */
+    public function jobRunAction()
+    {
+        $settings = $this->adminManager->getSettings();
+
+        if ($settings['job'] == 1){
+
+//            $this->jobManager->run();            
         }    
                 
         return new JsonModel(

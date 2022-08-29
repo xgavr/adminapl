@@ -64,16 +64,16 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
-        $this->add([           
-            'type'  => 'text',
-            'name' => 'wamm_url',
-            'attributes' => [
-                'id' => 'wamm_url'
-            ],
-            'options' => [
-                'label' => 'WAMM url',
-            ],
-        ]);
+//        $this->add([           
+//            'type'  => 'text',
+//            'name' => 'wamm_url',
+//            'attributes' => [
+//                'id' => 'wamm_url'
+//            ],
+//            'options' => [
+//                'label' => 'WAMM url',
+//            ],
+//        ]);
 
         $this->add([           
             'type'  => 'text',
@@ -289,6 +289,18 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'job',
+            'options' => [
+                'label' => 'Задания',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -364,25 +376,25 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
                 ],
             ]);          
         
-        $inputFilter->add([
-                'name'     => 'wamm_url',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
-                ],                
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 1024
-                        ],
-                    ],
-                ],
-            ]);          
-        
+//        $inputFilter->add([
+//                'name'     => 'wamm_url',
+//                'required' => false,
+//                'filters'  => [
+//                    ['name' => 'StringTrim'],
+//                    ['name' => 'StripTags'],
+//                    ['name' => 'StripNewlines'],
+//                ],                
+//                'validators' => [
+//                    [
+//                        'name'    => 'StringLength',
+//                        'options' => [
+//                            'min' => 1,
+//                            'max' => 1024
+//                        ],
+//                    ],
+//                ],
+//            ]);          
+//        
         $inputFilter->add([
                 'name'     => 'dadata_api_key',
                 'required' => false,
@@ -687,6 +699,17 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
                 ],
             ]); 
         
+        $inputFilter->add([
+                'name'     => 'job',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+
     }    
     
     public function setObjectManager(ObjectManager $objectManager)
