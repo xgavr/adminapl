@@ -179,7 +179,7 @@ class PtManager
                             'status' => $movement->getStatus(),
                             'quantity' => $quantity,
                             'amount' => $amount,
-                            'baseAmount' => $amount,
+                            'base_amount' => $amount,
                             'good_id' => $ptGood->getGood()->getId(),
                             'office_id' => $pt->getOffice2()->getId(),
                             'company_id' => $pt->getCompany2()->getId(),
