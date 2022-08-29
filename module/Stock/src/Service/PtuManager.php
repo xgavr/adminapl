@@ -125,7 +125,7 @@ class PtuManager
                     'status' => $ptu->getStatus(),
                     'quantity' => $ptuGood->getQuantity(),
                     'amount' => $ptuGood->getAmount(),
-                    'baseAmount' => $ptuGood->getAmount(),
+                    'base_amount' => $ptuGood->getAmount(),
                     'good_id' => $ptuGood->getGood()->getId(),
                     'office_id' => $ptu->getOffice()->getId(),
                     'company_id' => $ptu->getContract()->getCompany()->getId(),

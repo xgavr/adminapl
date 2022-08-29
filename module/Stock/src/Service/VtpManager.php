@@ -141,7 +141,7 @@ class VtpManager
                         'status' => Movement::getStatusFromVtp($vtp),
                         'quantity' => -$quantity,
                         'amount' => -$amount,
-                        'baseAmount' => $baseAmount,
+                        'base_amount' => $baseAmount,
                         'good_id' => $vtpGood->getGood()->getId(),
                         'office_id' => $vtp->getPtu()->getOffice()->getId(),
                         'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),

@@ -180,7 +180,7 @@ class VtManager
                         'status' => Movement::getStatusFromVt($vt),
                         'quantity' => $quantity,
                         'amount' => $amount,
-                        'baseAmount' => ($vt->getStatus() == Vt::STATUS_COMMISSION) ? $amount:$basePrice*$movement->getQuantity(),
+                        'base_amount' => ($vt->getStatus() == Vt::STATUS_COMMISSION) ? $amount:$basePrice*$movement->getQuantity(),
                         'good_id' => $vtGood->getGood()->getId(),
                         'office_id' => $vt->getOffice()->getId(),
                         'company_id' => $vt->getOrder()->getCompany()->getId(),

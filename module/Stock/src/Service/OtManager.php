@@ -97,7 +97,7 @@ class OtManager
                     'status' => Movement::getStatusFromOt($ot),
                     'quantity' => $otGood->getQuantity(),
                     'amount' => $otGood->getAmount(),
-                    'baseAmount' => $otGood->getAmount(),
+                    'base_amount' => $otGood->getAmount(),
                     'good_id' => $otGood->getGood()->getId(),
                     'office_id' => $ot->getOffice()->getId(),
                     'company_id' => $ot->getCompany()->getId(),

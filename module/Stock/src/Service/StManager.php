@@ -110,7 +110,7 @@ class StManager
                             'status' => Movement::getStatusFromSt($st),
                             'quantity' => -$quantity,
                             'amount' => -$amount,
-                            'baseAmount' => -$amount,
+                            'base_amount' => -$amount,
                             'good_id' => $stGood->getGood()->getId(),
                             'office_id' => $st->getOffice()->getId(),
                             'company_id' => $st->getCompany()->getId(),
