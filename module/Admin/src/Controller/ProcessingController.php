@@ -1967,7 +1967,7 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['job'] == 1){
 
-//            $this->jobManager->run();            
+            $this->jobManager->run();            
         }    
                 
         return new JsonModel(
