@@ -1067,7 +1067,7 @@ class IndexController extends AbstractActionController
      * Выполнение заданий
      * @return JsonModel
      */
-    public function jobRunAction()
+    public function jobrunAction()
     {
 
         $this->jobManager->run();            
