@@ -1524,7 +1524,7 @@ class AplDocService {
 
             if ($ok) {            
                 $pt->setStatusEx(Pt::STATUS_EX_APL);
-                if ($aplId > 0){
+                if ($aplId != 0){
                     $pt->setAplId($aplId);
                 }    
                 $this->entityManager->persist($pt);
