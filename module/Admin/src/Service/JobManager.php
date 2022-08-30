@@ -22,7 +22,7 @@ use Cron\Resolver\ArrayResolver;
  */
 class JobManager 
 {
-    const WGET_URL = 'wget -O - -q -t 1 https://adminapl.ru/proc/';
+    const WGET_URL = 'wget -O https://adminapl.ru/proc/';
     
     const CRON_EVERY_DAY = '01 01 * * *';
     const CRON_EVERY_HOUR = '02 * * * *';
