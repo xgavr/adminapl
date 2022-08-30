@@ -1528,7 +1528,7 @@ class AplDocService {
                     $pt->setAplId($aplId);
                 }    
                 $this->entityManager->persist($pt);
-                $this->entityManager->flush();
+                $this->entityManager->flush($pt);
             }
 
             $this->entityManager->detach($pt);
