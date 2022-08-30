@@ -71,11 +71,11 @@ class JobManager
     public function run()
     {
         $load = sys_getloadavg();
-        if ($load[0] > 10){
+        if ($load[0] < 10){
             $processCount = $this->entityManager->getRepository(Setting::class)
                     ->count(['status' => Setting::STATUS_ACTIVE]);
             
-            if ($processCount > 10){
+            if ($processCount < 11){
                 
                 $resolver = new ArrayResolver();
                 
