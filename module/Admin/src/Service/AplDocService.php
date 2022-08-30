@@ -1511,7 +1511,7 @@ class AplDocService {
             $ok = $result = false;
             try{
                 $response = $client->send();
-                var_dump($response->getBody()); exit;
+//                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {                    
                     $aplId = (int) $response->getBody();
                     if ($aplId){
@@ -1528,7 +1528,7 @@ class AplDocService {
                     $pt->setAplId($aplId);
                 }    
                 $this->entityManager->persist($pt);
-                $this->entityManager->flush($pt);
+                $this->entityManager->flush();
             }
 
             $this->entityManager->detach($pt);
