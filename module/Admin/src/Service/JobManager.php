@@ -82,9 +82,9 @@ class JobManager
                     
                     $newJob = new ShellJob();
                     $newJob->setCommand(self::WGET_URL.$job['command']);
-                    var_dump(self::WGET_URL.$job['command']);
+//                    var_dump(self::WGET_URL.$job['command']);
                     $newJob->setSchedule(new CrontabSchedule($job['shedule']));
-                    var_dump($job['shedule']);
+//                    var_dump($job['shedule']);
                     
                     $resolver->addJob($newJob);
                 }
