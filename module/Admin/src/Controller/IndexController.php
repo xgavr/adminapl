@@ -77,10 +77,17 @@ class IndexController extends AbstractActionController
      */
     private $registerManager;    
     
+    /**
+     * Job manager.
+     * @var \Admin\Service\JobManager
+     */
+    private $jobManager;    
+    
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $telegramManager, $adminManager, 
-            $smsManager, $tamtamManager, $annManager, $autoruManager, $registerManager) 
+            $smsManager, $tamtamManager, $annManager, $autoruManager, $registerManager, 
+            $jobManager) 
     {
         $this->entityManager = $entityManager;
         $this->telegramManager = $telegramManager;        
@@ -90,6 +97,7 @@ class IndexController extends AbstractActionController
         $this->annManager = $annManager;        
         $this->autoruManager = $autoruManager;
         $this->registerManager = $registerManager;
+        $this->jobManager = $jobManager;
     }   
     
     public function indexAction()
@@ -1054,5 +1062,19 @@ class IndexController extends AbstractActionController
             ['ok']
         );        
     }
+    
+    /**
+     * Выполнение заданий
+     * @return JsonModel
+     */
+    public function jobRunAction()
+    {
+
+        $this->jobManager->run();            
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }        
     
 }

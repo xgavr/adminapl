@@ -17,6 +17,7 @@ use Admin\Service\TamTamManager;
 use Admin\Service\AnnManager;
 use Admin\Service\AutoruManager;
 use Stock\Service\RegisterManager;
+use Admin\Service\JobManager;
 
 
 /**
@@ -37,9 +38,10 @@ class IndexControllerFactory implements FactoryInterface {
         $annManager = $container->get(AnnManager::class);
         $autoruManager = $container->get(AutoruManager::class);
         $registerManager = $container->get(RegisterManager::class);
+        $jobManager = $container->get(JobManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new IndexController($entityManager, $telegrammManager, $adminManager, $smsManager, 
-                $tamtamManager, $annManager, $autoruManager, $registerManager);
+                $tamtamManager, $annManager, $autoruManager, $registerManager, $jobManager);
     }
 }
