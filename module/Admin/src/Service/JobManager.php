@@ -15,6 +15,7 @@ use Cron\Resolver\ArrayResolver;
 use Cron\Job\ShellJob;
 use Cron\Executor\Executor;
 use Admin\Entity\Setting;
+use Cron\Schedule\CrontabSchedule;
 
 /**
  * Description of JobManager
@@ -83,7 +84,7 @@ class JobManager
                     
                     $newJob = new ShellJob();
                     $newJob->setCommand(self::WGET_URL.$job['command']);
-                    $newJob->setSchedule($job['shedule']);
+                    $newJob->setSchedule(new CrontabSchedule($job['shedule']));
                     
                     $resolver->addJob($newJob);
                 }
