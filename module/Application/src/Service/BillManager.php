@@ -649,6 +649,11 @@ class BillManager
         $articleFilter = new ArticleCode();
         $code = $articleFilter->filter($article);
         if ($code){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
+            if ($good){
+                return $good;
+            }
             return $this->assemblyManager->addNewGood($code, $producer, NULL, 0, mb_substr($name, 0, 255));        
         }
         
