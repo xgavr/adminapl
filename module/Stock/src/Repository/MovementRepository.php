@@ -92,9 +92,12 @@ class MovementRepository extends EntityRepository{
                 ->setParameter('4', Movement::STATUS_RETIRED)
                 ->groupBy('m.baseKey')
                 ->having('rest > 0')
-                ->orderBy('price', 'ASC')
-                ->addOrderBy('m.docStamp', $method)
                 ;
+        
+        if ($docStamp > 1641060060){
+            $qb->addOrderBy('price', 'ASC');
+        }
+        $qb->addOrderBy('m.docStamp', $method);
         
         if ($baseKey){
             $qb->andWhere('m.baseKey = ?5')
