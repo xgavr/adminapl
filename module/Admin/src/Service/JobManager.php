@@ -13,6 +13,7 @@ use Cron\Job\ShellJob;
 use Cron\Executor\Executor;
 use Admin\Entity\Setting;
 use Cron\Schedule\CrontabSchedule;
+use Cron\Resolver\ArrayResolver;
 
 /**
  * Description of JobManager
@@ -74,7 +75,7 @@ class JobManager
             
             if ($processCount < 11){
                 
-                $resolver = new \Cron\Resolver\ArrayResolver();
+                $resolver = new ArrayResolver();
                 
                 $jobs = $this->postJobList();
                 foreach ($jobs as $job){
