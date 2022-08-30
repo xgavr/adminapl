@@ -8,8 +8,6 @@
 
 namespace Admin\Service;
 
-use Laminas\Http\Client;
-use Laminas\Json\Json;
 use Cron\Cron;
 use Cron\Resolver\ArrayResolver;
 use Cron\Job\ShellJob;
