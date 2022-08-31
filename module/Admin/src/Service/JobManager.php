@@ -107,6 +107,7 @@ class JobManager
           209 => ['command' => 'token-from-rawprice',               'shedule' => self::CRON_EVERY_MIN_3,    'description' => 'Обновление токенов из прайса'],
           210 => ['command' => 'token-group-from-rawprice',         'shedule' => self::CRON_EVERY_MIN_3,    'description' => 'Группы наименований из прайса'],
           211 => ['command' => 'update-description',                'shedule' => self::CRON_EVERY_MIN_15,    'description' => 'Обновление описаний товаров'],
+          212 => ['command' => 'update-best-name',                  'shedule' => self::CRON_EVERY_MIN_15,    'description' => 'Обновление наименований товаров'],
         ];
     }
     
@@ -142,6 +143,42 @@ class JobManager
     }
     
     /**
+     * Обработка документов
+     * @return array
+     */
+    private function docJobList()
+    {
+        return [
+          401 => ['command' => 'idocs',         'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Загрузка электронных жокументов'],
+          402 => ['command' => 'pt-generator',  'shedule' => '20,50 * * * *',           'description' => 'Генерация перемещений между офисами'],
+          403 => ['command' => 'varact',        'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Восстановление последовательности'],
+        ];
+    }
+
+    /**
+     * Обработка данных
+     * @return array
+     */
+    private function updateJobList()
+    {
+        return [
+          501 => ['command' => 'fill-token-group-token',            'shedule' => '13 12 * * *', 'description' => 'Заполнение токенов групп наименований'],
+          502 => ['command' => 'fill-token-group-bigram',           'shedule' => '13 13 * * *', 'description' => 'Заполнение биграм групп наименований'],
+          503 => ['command' => 'producer-best-name',                'shedule' => '13 14 * * *', 'description' => 'Обновление наименований производителей'],
+          504 => ['command' => 'support-title-tokens',              'shedule' => '13 15 * * *', 'description' => 'Поддержка токенов описаний'],
+          505 => ['command' => 'support-title-bigrams',             'shedule' => '13 16 * * *', 'description' => 'Поддержка биграм описаний'],
+          506 => ['command' => 'unknown-producer-intersect',        'shedule' => '13 17 * * *', 'description' => 'Обновление пересечение производителей'],
+          507 => ['command' => 'unknown-producer-rawprice-count',   'shedule' => '13 18 * * *', 'description' => 'Обновление количества товаров у неизвестных производителей'],
+          508 => ['command' => 'unknown-producer-supplier-count',   'shedule' => '13 19 * * *', 'description' => 'Обновление количества поставщиков у неизвестных производителей'],
+          509 => ['command' => 'update-car-status',                 'shedule' => '13 20 * * *', 'description' => 'Обновление статусов машин'],
+          510 => ['command' => 'update-fill-volumes',               'shedule' => '13 21 * * *', 'description' => 'Обновление автонорм машин'],
+          511 => ['command' => 'update-group-good-count',           'shedule' => '13 22 * * *', 'description' => 'Обновление количества товаров в группах'],
+          512 => ['command' => 'update-producers-good-count',       'shedule' => '13 23 * * *', 'description' => 'Обновление количества товаров у поставщиков'],
+          513 => ['command' => 'update-supplier-amount',            'shedule' => '23 0 * * *',  'description' => 'Обновление сумм поставок поставщиков'],
+        ];
+    }
+
+    /**
      * Запустить работу
      */
     public function run()
@@ -155,7 +192,9 @@ class JobManager
                 
                 $resolver = new ArrayResolver();
                 
-                $jobs = array_merge($this->postJobList(), $this->clearJobList(), $this->priceJobList(), $this->aplExJobList());
+                $jobs = array_merge($this->postJobList(), $this->clearJobList(), 
+                        $this->priceJobList(), $this->aplExJobList(), 
+                        $this->docJobList(), $this->updateJobList());
                 foreach ($jobs as $job){
                     
                     $newJob = new ShellJob();
