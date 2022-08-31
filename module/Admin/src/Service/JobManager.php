@@ -53,6 +53,10 @@ class JobManager
         $this->adminManager = $adminManager;
     }
     
+    /**
+     * Получение сообщений
+     * @return array
+     */
     private function postJobList()
     {
         return [
@@ -60,6 +64,25 @@ class JobManager
           2 => ['command' => 'hello',               'shedule' => self::CRON_EVERY_MIN_5,    'description' => 'Проверка ящика hello и входящих накладных'],
           3 => ['command' => 'prices-by-mail',      'shedule' => self::CRON_EVERY_MIN_5,    'description' => 'Получение писем с прайсами'],
           4 => ['command' => 'prices-by-link',      'shedule' => '17 20 * * *',             'description' => 'Скачивание прайсов по ссылке'],
+          5 => ['command' => 'statement-from-post', 'shedule' => self::CRON_EVERY_MIN_5,    'description' => 'Получение писем с выписками банка'],
+        ];
+    }
+
+    /**
+     * Очистка данных
+     * @return array
+     */
+    private function clearJobList()
+    {
+        return [
+          101 => ['command' => 'delete-old-prices',         'shedule' => '02 * * * *',  'description' => 'Удаление старых прайсов'],
+          102 => ['command' => 'delete-article',            'shedule' => '11 22 * * *', 'description' => 'Удаление пустых артикулов производителей'],
+          103 => ['command' => 'delete-unknown-producer',   'shedule' => '41 22 * * *', 'description' => 'Удаление пустых неизвестных производителей'],
+          104 => ['command' => 'delete-token',              'shedule' => '11 23 * * *', 'description' => 'Удаление пустых токенов'],
+          105 => ['command' => 'delete-bigram',             'shedule' => '41 23 * * *', 'description' => 'Удаление пустых биграм'],
+          106 => ['command' => 'delete-goods',              'shedule' => '11 0 * * *',  'description' => 'Удаление пустых карточек товаров'],
+          107 => ['command' => 'delete-producer',           'shedule' => '41 0 * * *',  'description' => 'Удаление пустых производителей'],
+          108 => ['command' => 'delete-token-group',        'shedule' => '11 01 * * *', 'description' => 'Удаление пустых групп наименований с пересчетом товаров в группе'],
         ];
     }
     
@@ -69,7 +92,7 @@ class JobManager
     public function run()
     {
         $load = sys_getloadavg();
-        if ($load[0] < 10){
+        if ($load[0] < 7){
             $processCount = $this->entityManager->getRepository(Setting::class)
                     ->count(['status' => Setting::STATUS_ACTIVE]);
             
@@ -77,7 +100,7 @@ class JobManager
                 
                 $resolver = new ArrayResolver();
                 
-                $jobs = $this->postJobList();
+                $jobs = array_merge($this->postJobList(), $this->clearJobList());
                 foreach ($jobs as $job){
                     
                     $newJob = new ShellJob();
