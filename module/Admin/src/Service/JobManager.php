@@ -68,6 +68,7 @@ class JobManager
           4 => ['command' => 'prices-by-link',      'shedule' => '17 20 * * *',             'description' => 'Скачивание прайсов по ссылке'],
           5 => ['command' => 'statement-from-post', 'shedule' => self::CRON_EVERY_MIN_5,    'description' => 'Получение писем с выписками банка'],
           6 => ['command' => 'statement-update',    'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление выписки банка'],
+          7 => ['command' => 'update-mail-tokens',  'shedule' => '23 * * * *',              'description' => 'Обработка токенов писем'],
         ];
     }
 
@@ -139,6 +140,10 @@ class JobManager
           319 => ['command' => 'update-rawprices',              'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление строк прайсов в АПЛ'],
           320 => ['command' => 'update-supplier-order',         'shedule' => self::CRON_EVERY_MIN_30,   'description' => 'Обновить заказы поставщикам'],
           321 => ['command' => 'update-apl-ptu',                'shedule' => '25,55 * * * *',           'description' => 'Обновление поступлений из АПЛ'],
+          322 => ['command' => 'update-good-attribute',         'shedule' => '17 * * * *',              'description' => 'Обновление атрибутов товаров'],
+          323 => ['command' => 'update-good-car',               'shedule' => '27 * * * *',              'description' => 'Обновление машин товаров'],
+          324 => ['command' => 'update-good-img',               'shedule' => '37 * * * *',              'description' => 'Обновление картинок товаров'],
+          325 => ['command' => 'update-good-oem',               'shedule' => '18,48 * * * *',           'description' => 'Обновление номеров товаров'],
         ];
     }
     
@@ -149,9 +154,10 @@ class JobManager
     private function docJobList()
     {
         return [
-          401 => ['command' => 'idocs',         'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Загрузка электронных жокументов'],
-          402 => ['command' => 'pt-generator',  'shedule' => '20,50 * * * *',           'description' => 'Генерация перемещений между офисами'],
-          403 => ['command' => 'varact',        'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Восстановление последовательности'],
+          401 => ['command' => 'idocs',                 'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Загрузка электронных жокументов'],
+          402 => ['command' => 'pt-generator',          'shedule' => '20,50 * * * *',           'description' => 'Генерация перемещений между офисами'],
+          403 => ['command' => 'varact',                'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Восстановление последовательности'],
+          404 => ['command' => 'unload-market-prices ', 'shedule' => '*/10 9-11 * * *',         'description' => 'Генерация прайс листов для ТП'],
         ];
     }
 
@@ -175,6 +181,22 @@ class JobManager
           511 => ['command' => 'update-group-good-count',           'shedule' => '13 22 * * *', 'description' => 'Обновление количества товаров в группах'],
           512 => ['command' => 'update-producers-good-count',       'shedule' => '13 23 * * *', 'description' => 'Обновление количества товаров у поставщиков'],
           513 => ['command' => 'update-supplier-amount',            'shedule' => '23 0 * * *',  'description' => 'Обновление сумм поставок поставщиков'],
+          514 => ['command' => 'update-good-car-count',             'shedule' => '23 2 * * *',  'description' => 'Обновление количества машин у товаров'],
+        ];
+    }
+
+    /**
+     * Tecdoc
+     * @return array
+     */
+    private function tdJobList()
+    {
+        return [
+          601 => ['command' => 'td-update-attribute',   'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление описаний из текдока'],
+          602 => ['command' => 'td-update-cars',        'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление машин товаров из текдока'],
+          603 => ['command' => 'td-update-group',       'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление групп из текдока'],
+          604 => ['command' => 'td-update-images',      'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление картинок из текдока'],
+          605 => ['command' => 'td-update-oem',         'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление оригинальных номеров'],
         ];
     }
 
@@ -188,13 +210,14 @@ class JobManager
             $processCount = $this->entityManager->getRepository(Setting::class)
                     ->count(['status' => Setting::STATUS_ACTIVE]);
             
-            if ($processCount < 20){
+            if ($processCount < 15){
                 
                 $resolver = new ArrayResolver();
                 
                 $jobs = array_merge($this->postJobList(), $this->clearJobList(), 
                         $this->priceJobList(), $this->aplExJobList(), 
-                        $this->docJobList(), $this->updateJobList());
+                        $this->docJobList(), $this->updateJobList(),
+                        $this->tdJobList());
                 foreach ($jobs as $job){
                     
                     $newJob = new ShellJob();
