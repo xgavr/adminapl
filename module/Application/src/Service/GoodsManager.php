@@ -215,6 +215,11 @@ class GoodsManager
             return false;
         }
         
+        if (!$this->entityManager->getRepository(\Application\Entity\Oem::class)
+                ->removeAllGoodOem($good)){
+            return false;
+        }
+
         $this->entityManager->getRepository(Goods::class)
                 ->removeGoodCars($good);        
         
@@ -230,8 +235,6 @@ class GoodsManager
         $this->entityManager->getRepository(Goods::class)
                 ->removeGoodTitles($good);
         
-        $this->entityManager->getRepository(\Application\Entity\Oem::class)
-                ->removeAllGoodOem($good);
                 
         $this->entityManager->getRepository(\Application\Entity\Oem::class)
                 ->removeIntersectOem($good);

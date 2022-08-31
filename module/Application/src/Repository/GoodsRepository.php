@@ -1505,7 +1505,7 @@ class GoodsRepository extends EntityRepository
      * @param integer $goodId
      * @param integer $source
      */
-    private function deleteGoodOem($goodId, $source = null)
+    public function deleteGoodOem($goodId, $source = null)
     {
         $query = ['good' => $goodId];
         if ($source){
@@ -1513,12 +1513,15 @@ class GoodsRepository extends EntityRepository
         }
         $oems = $this->getEntityManager()->getRepository(Oem::class)
                 ->findBy($query);
+        $result = true;
         foreach ($oems as $oem){
             if ($this->getEntityManager()->getRepository(Oem::class)->allowDeleteOem($oem)){
                 $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oem->getId()]);
-            }   
+            } else {
+                $result = false;
+            }  
         }
-        return;
+        return $result;
     }
     
     /**
