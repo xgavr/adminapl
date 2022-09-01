@@ -58,7 +58,6 @@
         "bukashk0zzz/yml-generator": "dev-master",
         "alexmg86/laravel-goodsru": "^1.1",
         "mpdf/mpdf": "^8.1",
-        "hutnikau/job-scheduler": "^0.6.1",
         "cron/cron": "^1.6"
     },
     "autoload": {

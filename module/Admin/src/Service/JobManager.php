@@ -210,7 +210,7 @@ class JobManager
             $processCount = $this->entityManager->getRepository(Setting::class)
                     ->count(['status' => Setting::STATUS_ACTIVE]);
             
-            if ($processCount < 15){
+            if ($processCount < 12){
                 
                 $resolver = new ArrayResolver();
                 
