@@ -108,6 +108,7 @@ $this->pageBreadcrumbs()->setItems([
     var table = $('#table').bootstrapTable({
         onLoadSuccess: function(res){
             updateVariable();
+            updateSyslog();
             $('.editable').editable();
             $('.status').editable({
                 source: [
