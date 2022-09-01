@@ -14,10 +14,16 @@ $this->pageBreadcrumbs()->setItems([
 ?>
 
 <div class="row">
-    <div class="col-md-11">
+    <div class="col-md-19">
         <div class="panel panel-default">
           <div class="panel-body var-info">
               Метка последовательности: <?= ($variable) ? $variable->getDateVar():'' ?> <?= ($variable) ? $variable->getDoc():''?>; следующий <?= ($register) ? $register->getDateVar():'' ?> <?= ($register) ? $register->getDoc():''?>
+          </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="panel panel-default">
+          <div class="panel-body syslog-info">
           </div>
         </div>
     </div>
@@ -90,6 +96,12 @@ $this->pageBreadcrumbs()->setItems([
     function updateVariable(){
         $.get( "/log/variable", function( data ) {
             $('.var-info').html('Метка последовательности: '+data.varDate+' '+data.varDoc+'; следующий '+data.actDate+' '+data.actDoc);
+        });
+    }
+    
+    function updateSyslog(){
+        $.get( "/admin/syslog", function( data ) {
+            $('.syslog-info').html('Нагрузка: '+data[0]+' '+data[1]+' '+data[2]);
         });
     }
     

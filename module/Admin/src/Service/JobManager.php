@@ -107,8 +107,8 @@ class JobManager
           208 => ['command' => 'update-good-price-raw',             'shedule' => self::CRON_EVERY_MIN_3,    'description' => 'Обновление цен товаров'],
           209 => ['command' => 'token-from-rawprice',               'shedule' => self::CRON_EVERY_MIN_3,    'description' => 'Обновление токенов из прайса'],
           210 => ['command' => 'token-group-from-rawprice',         'shedule' => self::CRON_EVERY_MIN_3,    'description' => 'Группы наименований из прайса'],
-          211 => ['command' => 'update-description',                'shedule' => self::CRON_EVERY_MIN_15,    'description' => 'Обновление описаний товаров'],
-          212 => ['command' => 'update-best-name',                  'shedule' => self::CRON_EVERY_MIN_15,    'description' => 'Обновление наименований товаров'],
+          211 => ['command' => 'update-description',                'shedule' => self::CRON_EVERY_MIN_3,    'description' => 'Обновление описаний товаров'],
+          212 => ['command' => 'update-best-name',                  'shedule' => self::CRON_EVERY_MIN_3,    'description' => 'Обновление наименований товаров'],
         ];
     }
     

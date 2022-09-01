@@ -1077,4 +1077,12 @@ class IndexController extends AbstractActionController
         );        
     }        
     
+    public function syslogAction()
+    {
+        return new JsonModel(
+            sys_getloadavg()
+        );        
+        
+    }
+    
 }
