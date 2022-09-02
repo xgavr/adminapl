@@ -1947,7 +1947,7 @@ class GoodsRepository extends EntityRepository
                 $queryBuilder
                     ->where('g.code like ?1')                           
                     ->setParameter('1', $search.'%')
-                    ->setMaxResults(8)    
+                    ->setMaxResults(20)    
                         ;
             }            
         }
