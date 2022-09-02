@@ -65,7 +65,7 @@ class JobManager
           1 => ['command' => 'telegram-postpone',   'shedule' => self::CRON_EVERY_MIN,      'description' => 'Отправка отложенных сообщений'],
           2 => ['command' => 'hello',               'shedule' => self::CRON_EVERY_MIN_5,    'description' => 'Проверка ящика hello и входящих накладных'],
           3 => ['command' => 'prices-by-mail',      'shedule' => self::CRON_EVERY_MIN_6,    'description' => 'Получение писем с прайсами'],
-          4 => ['command' => 'prices-by-link',      'shedule' => '17 20 * * *',             'description' => 'Скачивание прайсов по ссылке'],
+          4 => ['command' => 'prices-by-link',      'shedule' => '17 20,8 * * *',             'description' => 'Скачивание прайсов по ссылке'],
           5 => ['command' => 'statement-from-post', 'shedule' => self::CRON_EVERY_MIN_10,    'description' => 'Получение писем с выписками банка'],
           6 => ['command' => 'statement-update',    'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление выписки банка'],
           7 => ['command' => 'update-mail-tokens',  'shedule' => '23 * * * *',              'description' => 'Обработка токенов писем'],
