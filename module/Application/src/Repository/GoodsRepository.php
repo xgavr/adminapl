@@ -1440,7 +1440,8 @@ class GoodsRepository extends EntityRepository
             ->join('g.movements', 'm')    
             ->join('m.office', 'o')    
 //            ->orderBy('m.docStamp','DESC') 
-            ->groupBy('g.id')    
+            ->groupBy('g.id')   
+            ->having('rest != 0')    
             ;
         
         if (is_array($params)){
