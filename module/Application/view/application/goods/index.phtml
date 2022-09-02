@@ -52,10 +52,13 @@ $this->pageBreadcrumbs()->setItems([
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
-                     <th data-field="aplId" data-type="numeric" data-formatter="aplFormatter" data-sortable="true">AplId</th>
-                     <th data-field="code" data-formatter="linkFormatter" data-sortable="true">Артикул</th>
+                     <!--<th data-field="id" data-type="numeric" data-sortable="true" data-width="100">ID</th>-->
+                     <th data-field="aplId" data-type="numeric" data-formatter="aplFormatter" data-sortable="true" data-width="100">AplId</th>
+                     <th data-field="code" data-formatter="linkFormatter" data-sortable="true" data-width="100">Артикул</th>
                      <th data-field="producerName" data-formatter="producerFormatter">Производитель</th>             
+                     <th data-field="name" >Наименование</th>             
+                     <th data-field="rest" data-width="100" data-align="right">Остаток</th>             
+                     <th data-field="officeName" >Офис</th>             
                      <!--<th data-field="" data-formatter="activeFormatter"></th>-->
                      <th data-field="statusRawpriceEx" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle"></th>
                  </tr>                
@@ -134,7 +137,7 @@ $this->pageBreadcrumbs()->setItems([
     function producerFormatter(value, row){
         return [
             '<div class="pull-left">',
-            '<a href="/producer/view/' + value.producerId + '" target="_blank">' + value.producerName + '</a>',
+            '<a href="/producer/view/' + row.producerId + '" target="_blank">' + value + '</a>',
             '</div>'
         ].join(''); 
     }    
