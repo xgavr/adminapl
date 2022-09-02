@@ -1,0 +1,428 @@
+<?php
+$this->headTitle('Товары');
+
+$this->mainMenu()->setActiveItemId('rb');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Товары'=>$this->url('goods')
+            ]);
+
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <button class="btn btn-default good-modal-show" type="button" 
+                            modal-url="/goods/edit-form" 
+                            data-toggle='tooltip' data-original-title="Добавить товар">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>    
+                <div class="form-group">
+                    <div class="btn-group">
+                        <input type="checkbox" class="checkbox" name="accurate" value=""
+                               data-toggle='tooltip' data-original-title="Точный поиск"
+                               onchange="value = (this.checked) ? 1:0"/>
+                        <input id="searchinput" name="search" style="width: 400px" class="form-control" type="text" placeholder="Артикул">
+                        <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                    </div>
+                    <button id="ok" type="submit" class="btn btn-default" title="Поиск">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/goods/content"
+            data-cookie="true"
+            data-cookie-id-table="goodsSaveId"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
+                     <th data-field="aplId" data-type="numeric" data-formatter="aplFormatter" data-sortable="true">AplId</th>
+                     <th data-field="code" data-formatter="linkFormatter" data-sortable="true">Артикул</th>
+                     <th data-field="producer" data-formatter="producerFormatter">Производитель</th>             
+                     <th data-field="" data-formatter="activeFormatter"></th>
+                     <th data-field="statusRawpriceEx" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+    <div class="col-md-4" id="side-nav">
+        <div class="nav nav-stacked nav-list affix">
+            <div class="col-xs-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Всего наименований
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            <span id="total" class="badge">0</span>
+                        </div>
+                        <div class="pull-right">
+                            <button value="/goods/assembly-queue/" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Генерация товаров">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button> 
+                            <button value="/goods/delete-empty/" class="btn btn-danger btn-xs refresh-table-button"
+                                    title="Удаление пустых">
+                                <span class="glyphicon glyphicon-remove" ></span>
+                            </button> 
+                        </div>
+                    </div>
+                </div>    
+            </div>
+            <div class="col-xs-6">
+                <div class="panel-group">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                           Обновления из Текдок
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Группы <span id="totalGroup" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/goods/td-group/" class="btn btn-info btn-xs refresh-button"
+                                        title="Обновление Групп">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                                <button value="/goods/reset-td-group/" class="btn btn-warning btn-xs refresh-button"
+                                        title="Сбросить метку обновлений">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Описания <span id="totalDesc" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/goods/td-description/" class="btn btn-info btn-xs refresh-button"
+                                        title="Обновление описаний">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                                <button value="/goods/reset-td-description/" class="btn btn-warning btn-xs refresh-button"
+                                        title="Сбросить метку обновлений">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Номера <span id="totalOem" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/goods/td-oem/" class="btn btn-info btn-xs refresh-button"
+                                        title="Обновление OEM">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                                <button value="/goods/reset-td-oem/" class="btn btn-warning btn-xs refresh-button"
+                                        title="Сбросить метку обновлений">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Mашины <span id="totalCar" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/goods/update-cars/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление машин">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button> 
+                                <button value="/goods/reset-td-car/" class="btn btn-warning btn-xs refresh-button"
+                                        title="Сбросить метку обновлений">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Картинки <span id="totalImage" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <a href="/image" class="btn btn-info btn-xs" target='_blank'
+                                        title="Картинки поставщиков">
+                                    <span class="glyphicon glyphicon-picture" ></span>
+                                </a> 
+                                <button value="/goods/td-image/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление картинок">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button> 
+                                <button value="/goods/reset-td-image/" class="btn btn-warning btn-xs refresh-button"
+                                        title="Сбросить метку обновлений">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </div>
+                        </div>
+                    </div>                    
+                </div>    
+            </div>    
+            <div class="col-xs-6">
+                <div class="panel-group">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Обмен с АПЛ
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                AplId <span id="aplIds" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/apl/update-good-apl-id/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление AplId">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button> 
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                Группы <span id="aplGroups" class="badge">0</span>/<span id="statusGroupEx" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/apl/update-group-apl-id/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление групп Apl">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button> 
+                                <button value="/apl/update-good-group/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление групп в АПЛ">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button> 
+                            </div>
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Номера <span id="totalOemEx" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/apl/update-good-oem/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление номеров">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button> 
+                            </div>
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Картинки <span id="totalImgEx" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/apl/update-good-img/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление картинок">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button> 
+                            </div>
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Mашины <span id="totalCarEx" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/apl/update-good-car/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление машин">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button> 
+                            </div>
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Описания <span id="totalAttrEx" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/apl/update-attribute-apl-id/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление атрибутов">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button> 
+                                <button value="/apl/update-attribute-value-apl-id/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление значений атрибутов">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button> 
+                                <button value="/apl/update-good-attribute/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление атрибутов товаров">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button> 
+                            </div>
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Строки прайсов <span id="totalRawpriceEx" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+<!--                                <button value="/goods/compare-good-rawprice/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Сравнение строк прайсов">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button> -->
+                                <button value="/apl/update-rawprices/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление строк прайсов">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button> 
+<!--                                <button value="/apl/update-good-rawprice/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление статуса товаров">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button> -->
+                            </div>
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Наименования <span id="totalNameEx" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/apl/update-good-names/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление наименований">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button> 
+                            </div>
+                        </div>
+                        <div class="panel-body">                        
+                            <div class="pull-left">
+                                Цены <span id="totalPriceEx" class="badge">0</span>
+                            </div>
+                            <div class="pull-right">
+                                <button value="/apl/update-good-prices/" class="btn btn-info btn-xs refresh-table-button"
+                                        title="Обновление цен">
+                                    <span class="glyphicon glyphicon-export" ></span>
+                                </button> 
+                            </div>
+                        </div>
+                    </div>                    
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>    
+
+<script type="text/javascript">
+    $(function () {
+        $("[data-toggle='tooltip']").tooltip();
+    });
+
+    function totalFeatures(){
+        $(".badge").each(function( index ) {
+            var node = $(this).attr('id');
+            $.getJSON('/goods/total-feature/?feature=' + node, function(data){
+                $('#'+node).text(data['total']);
+            });
+        });        
+    }
+
+    $(window).on('load', function() {
+        totalFeatures();
+    });
+    
+    $(document).on('click', '.good-modal-show', function (e) {
+        var url = $(e.currentTarget).attr('modal-url');
+        showFormDialog({
+            id: 'goodModal',
+            url: url,
+//            width: '500px'
+        });
+    });  
+    
+    function refreshTable(){
+        $('#table').bootstrapTable('refresh');
+    }
+
+    var table = $('#table'),
+        ok = $('#ok');
+
+    $(function () {
+        ok.click(function () {
+            refreshTable();
+        });
+        $(".inputclear").click(function(){
+            $("#searchinput").val('');
+            refreshTable();
+        });
+    });
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function linkFormatter(value, row){
+        return [
+            '<div class="pull-left">',
+            '<a href="/goods/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function aplFormatter(value, row){
+        if (value != '0'){
+            return [
+                '<div class="pull-left">',
+                '<a href="https://autopartslist.ru/goods/view/id/' + value + '" target="_blank">' + value + '</a>',
+                '</div>'
+            ].join(''); 
+        } else {
+            return '-';
+        }    
+    }    
+    
+    function producerFormatter(value, row){
+        return [
+            '<div class="pull-left">',
+            '<a href="/producer/view/' + value.id + '" target="_blank">' + value.name + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function activeFormatter(value, row){
+        var url = '/goods/delete-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function statusExFormatter(value, row) {
+        return '<span></span>' ;
+    }  
+    
+    function cellStatusExStyle(value, row, index) {
+        var classes = [
+          'light',
+          'success',
+          'warning'
+        ]
+        return {
+          classes: classes[value-1]
+        }
+    }        
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>

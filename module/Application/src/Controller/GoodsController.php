@@ -315,6 +315,15 @@ class GoodsController extends AbstractActionController
          ]);  
     }
     
+    public function invAction()
+    {
+        
+        // Визуализируем шаблон представления.
+        return new ViewModel([
+            'goodsManager' => $this->goodsManager,
+         ]);  
+    }
+    
     public function totalFeatureAction()
     {
         $feature = $this->params()->fromQuery('feature');
