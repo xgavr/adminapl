@@ -1434,17 +1434,45 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, p.id as prodicerId, p.name as producerName, o.name as officeName, sum(m.quantity) as rest')
+        $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, p.id as prodicerId, p.name as producerName, of.name as officeName, sum(m.quantity) as rest')
             ->from(Goods::class, 'g')
             ->join('g.producer', 'p')    
-            ->join('g.movements', 'm')    
-            ->join('m.office', 'o')    
+            ->leftJoin('g.movements', 'm')    
+            ->join('m.office', 'of')    
 //            ->orderBy('m.docStamp','DESC') 
-            ->groupBy('g.id')   
+            ->groupBy('of.id')
+            ->addGroupBy('g.id')    
             ->having('rest != 0')    
             ;
         
         if (is_array($params)){
+            if (isset($params['q'])){
+                $codeFilter = new ArticleCode();
+                $q = $codeFilter->filter($params['q']);
+                if ($q){
+                    $queryBuilder->resetDQLPart('having');
+                    $accurate = false;
+                    if (isset($params['accurate'])){
+                        $accurate = boolval($params['accurate']);                        
+                    }
+//                    var_dump($accurate);
+//                    var_dump($params['accurate']);
+                    if ($accurate){
+                        $queryBuilder
+                            ->andWhere('g.code = :code')                           
+                            ->setParameter('code', $q)    
+                            ;
+                    } else {
+                        $orX = $queryBuilder->expr()->orX(
+                                $queryBuilder->expr()->eq('o.oe', '?4')    
+                            );
+                        $queryBuilder->join('g.oems', 'o')
+                            ->andWhere($orX) 
+                            ->setParameter('4', $q)    
+                            ;
+                    }    
+                }   
+            }
             if (!empty($params['sort'])){
 //                $queryBuilder->addOrderBy('m.'.$params['sort'], $params['order']);
             }
