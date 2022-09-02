@@ -189,7 +189,6 @@ class MovementRepository extends EntityRepository{
     public function goodRest($goodId, $dateOper, $officeId = null, $companyId = null)
     {
         $entityManager = $this->getEntityManager();
-        $connection = $entityManager->getConnection();
 
         $qb = $entityManager->createQueryBuilder();
         $qb->select('sum(m.quantity) as rSum')

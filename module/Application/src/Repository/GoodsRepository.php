@@ -1424,6 +1424,35 @@ class GoodsRepository extends EntityRepository
     }    
     
     /**
+     * Наличие товара
+     * 
+     * @param array $params
+     * @return Query
+     */
+    public function presence($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g.id, g.aplId, g.code, p.id as prodicerId, p.name as producerName, o.name as officeName, sum(m.quantity) as rest')
+            ->from(Goods::class, 'g')
+            ->join('g.producer', 'p')    
+            ->leftJoin('g.movements', 'm')    
+            ->join('m.office', 'o')    
+//            ->orderBy('m.docStamp','DESC') 
+            ->groupBy('g.id')    
+            ;
+        
+        if (is_array($params)){
+            if (!empty($params['sort'])){
+//                $queryBuilder->addOrderBy('m.'.$params['sort'], $params['order']);
+            }
+        }
+        
+        return $queryBuilder->getQuery();            
+    }    
+
+    /**
      * Найти прайсы товара
      * 
      * @param Goods $good
