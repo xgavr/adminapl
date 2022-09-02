@@ -1434,13 +1434,13 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, p.id as prodicerId, p.name as producerName, of.name as officeName, sum(m.quantity) as rest')
+        $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, p.id as prodicerId, p.name as producerName, off.name as officeName, sum(m.quantity) as rest')
             ->from(Goods::class, 'g')
             ->join('g.producer', 'p')    
             ->leftJoin('g.movements', 'm')    
-            ->join('m.office', 'of')    
+            ->join('m.office', 'off')    
 //            ->orderBy('m.docStamp','DESC') 
-            ->groupBy('of.id')
+            ->groupBy('off.id')
             ->addGroupBy('g.id')    
             ->having('rest != 0')    
             ;
