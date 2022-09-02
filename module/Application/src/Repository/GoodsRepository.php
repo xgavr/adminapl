@@ -1450,7 +1450,7 @@ class GoodsRepository extends EntityRepository
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
                 if ($q){
-                    $queryBuilder->resetDQLPart('having');
+//                    $queryBuilder->resetDQLPart('having');
                     $accurate = false;
                     if (isset($params['accurate'])){
                         $accurate = boolval($params['accurate']);                        
