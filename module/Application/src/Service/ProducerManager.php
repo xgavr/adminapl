@@ -635,7 +635,7 @@ class ProducerManager
     /**
      * Лучшее наименование
      * 
-     * @param \Application\Entity\Producer $producer
+     * @param Producer $producer
      */
     public function bestName($producer)
     {
@@ -667,6 +667,16 @@ class ProducerManager
         }
         
         return;
+    }
+    
+    /**
+     * Объеденить производителей
+     * @param Producer $producerDest
+     * @param Producer $producerSource
+     */
+    public function unite($producerDest, $producerSource)
+    {
+        
     }
         
 }
