@@ -17,6 +17,7 @@ use Stock\Entity\StGood;
 use Stock\Entity\VtGood;
 use Stock\Entity\VtpGood;
 use Company\Entity\Office;
+use Application\Entity\Goods;
 
 /**
  * This service register.
@@ -486,6 +487,21 @@ class RegisterManager
         }    
 
         return;                
+    }
+    
+    /**
+     * Заменить товар
+     * @param Goods $oldGood
+     * @param Goods $newGood
+     */    
+    public function changeGood($oldGood, $newGood) 
+    {
+        $this->otManager->changeGood($oldGood, $newGood);
+        $this->ptuManager->changeGood($oldGood, $newGood);
+        $this->ptManager->changeGood($oldGood, $newGood);
+        $this->orderManager->changeGood($oldGood, $newGood);
+        $this->vtManager->changeGood($oldGood, $newGood);
+        $this->vtpManager->changeGood($oldGood, $newGood);
     }
 }
 

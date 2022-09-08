@@ -13,6 +13,8 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\GoodsManager;
 use Application\Service\ExternalManager;
 use Application\Service\MlManager;
+use Stock\Service\RegisterManager;
+
 /**
  * Description of GoodsManagerFactory
  *
@@ -27,8 +29,9 @@ class GoodsManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $externalManager = $container->get(ExternalManager::class);
         $mlmanager = $container->get(MlManager::class);
+        $registerManager = $container->get(RegisterManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new GoodsManager($entityManager, $externalManager, $mlmanager);
+        return new GoodsManager($entityManager, $externalManager, $mlmanager, $registerManager);
     }
 }

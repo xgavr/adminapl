@@ -412,5 +412,24 @@ class StManager
         }    
         return;
     }
+    
+    /**
+     * Заменить товар
+     * @param Goods $oldGood
+     * @param Goods $newGood
+     */
+    public function changeGood($oldGood, $newGood)
+    {
+        $rows = $this->entityManager->getRepository(StGood::class)
+                ->findBy(['good' => $oldGood->getId()]);
+        foreach ($rows as $row){
+            $row->setGood($newGood);
+            $this->entityManager->persist($row);
+            $this->entityManager->flush();
+            $this->updateStMovement($row->getSt());
+        }
+        
+        return;
+    }    
 }
 

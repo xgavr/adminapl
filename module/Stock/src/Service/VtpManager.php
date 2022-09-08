@@ -443,5 +443,24 @@ class VtpManager
         
         return;
     }
+    
+    /**
+     * Заменить товар
+     * @param Goods $oldGood
+     * @param Goods $newGood
+     */
+    public function changeGood($oldGood, $newGood)
+    {
+        $rows = $this->entityManager->getRepository(VtpGood::class)
+                ->findBy(['good' => $oldGood->getId()]);
+        foreach ($rows as $row){
+            $row->setGood($newGood);
+            $this->entityManager->persist($row);
+            $this->entityManager->flush();
+            $this->updateVtpMovement($row->getVtp());
+        }
+        
+        return;
+    }            
 }
 

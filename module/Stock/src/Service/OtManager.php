@@ -9,6 +9,7 @@ use Admin\Entity\Log;
 use Stock\Entity\Movement;
 use Stock\Entity\Comiss;
 use Stock\Entity\Register;
+use Application\Entity\Goods;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -323,8 +324,7 @@ class OtManager
         
         $this->updateOtAmount($ot);
         return;
-    }   
-    
+    }       
     
     /**
      * Удаление ОТ
@@ -343,6 +343,25 @@ class OtManager
 
             $this->entityManager->getConnection()->delete('ot', ['id' => $ot->getId()]);
         }    
+        
+        return;
+    }
+    
+    /**
+     * Заменить товар
+     * @param Goods $oldGood
+     * @param Goods $newGood
+     */
+    public function changeGood($oldGood, $newGood)
+    {
+        $rows = $this->entityManager->getRepository(OtGood::class)
+                ->findBy(['good' => $oldGood->getId()]);
+        foreach ($rows as $row){
+            $row->setGood($newGood);
+            $this->entityManager->persist($row);
+            $this->entityManager->flush();
+            $this->updateOtMovement($row->getOt());
+        }
         
         return;
     }

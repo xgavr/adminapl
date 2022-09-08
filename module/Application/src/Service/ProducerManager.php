@@ -13,6 +13,7 @@ use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Filter\ProducerName;
 use Stock\Entity\Movement;
+use Application\Entity\Goods;
 
 /**
  * Description of RbService
@@ -30,7 +31,7 @@ class ProducerManager
   
     /**
      * Goods manager.
-     * @var \Application\Entity\GoodsManager
+     * @var \Application\Service\GoodsManager
      */
     private $goodsManager;
   
@@ -91,7 +92,7 @@ class ProducerManager
      */
     public function removeProducer($producer) 
     {   
-        $goodCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $goodCount = $this->entityManager->getRepository(Goods::class)
                 ->count(['producer' => $producer->getId()]);
         if ($goodCount > 0){
             return false;
@@ -119,7 +120,7 @@ class ProducerManager
      */
     public function updateProducerGoodCount($producer)
     {
-        $goodCount = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+        $goodCount = $this->entityManager->getRepository(Goods::class)
                 ->count(['producer' => $producer->getId()]);
         
         $this->entityManager->getConnection()->update('producer', ['good_count' => $goodCount], ['id' => $producer->getId()]);
@@ -676,7 +677,13 @@ class ProducerManager
      */
     public function unite($producerDest, $producerSource)
     {
+        $oldGoods = $this->entityManager->getRepository(Goods::class)
+                ->findBy(['producer' => $producerSource->getId()]);
+        foreach ($oldGoods as $oldGood){
+            $this->goodsManager->changeProducer($oldGood, $producerDest);
+        }
         
+        return;
     }
         
 }

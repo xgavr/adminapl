@@ -470,5 +470,24 @@ class VtManager
         
         return;
     }
+    
+    /**
+     * Заменить товар
+     * @param Goods $oldGood
+     * @param Goods $newGood
+     */
+    public function changeGood($oldGood, $newGood)
+    {
+        $rows = $this->entityManager->getRepository(VtGood::class)
+                ->findBy(['good' => $oldGood->getId()]);
+        foreach ($rows as $row){
+            $row->setGood($newGood);
+            $this->entityManager->persist($row);
+            $this->entityManager->flush();
+            $this->updateVtMovement($row->getVt());
+        }
+        
+        return;
+    }        
 }
 
