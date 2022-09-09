@@ -61,15 +61,15 @@ class GoodsManager
      * Register manager.
      * @var \Stock\Service\RegisterManager
      */
-    private $registerManager;
+//    private $registerManager;
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $externalManager, $mlManager, $registerManager)
+    public function __construct($entityManager, $externalManager, $mlManager)
     {
         $this->entityManager = $entityManager;
         $this->externalManager = $externalManager;
         $this->mlManager = $mlManager;
-        $this->registerManager = $registerManager;
+//        $this->registerManager = $registerManager;
     }
         
     public function addNewGoods($data, $flushnow=true) 
@@ -1018,7 +1018,7 @@ class GoodsManager
             $this->entityManager->flush();
         }
         
-        $this->registerManager->changeGood($good, $newGood);
+//        $this->registerManager->changeGood($good, $newGood);
         
         return;
     }
