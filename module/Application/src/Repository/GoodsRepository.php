@@ -347,8 +347,9 @@ class GoodsRepository extends EntityRepository
                 ->from(Goods::class, 'g')
                 ->andWhere('g.aplId > 0')
                 ->andWhere('g.dateEx < ?1')
-                ->setParameter('1', date('Y-m-d H:i:s', strtotime("-8 hours")))
-                ->orderBy('g.dateEx', 'ASC')
+                ->setParameter('1', date('Y-m-d H:i:s', strtotime("-12 hours")))
+                ->orderBy('g.retailCount', 'DESC')
+                ->addOrderBy('g.dateEx', 'ASC')
                 ->setMaxResults(50000)
                 ;
 //        var_dump(date('Y-m-d H:i:s', strtotime("-8 hours"))); exit;
