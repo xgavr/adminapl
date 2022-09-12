@@ -219,7 +219,7 @@ class UserManager
             $email->setMailPassword(empty($data['mailPassword']) ? null:$data['mailPassword'], $settings['turbo_passphrase']);
         } else {
             $email = new Email();
-            $email->setDateCreated($dateCreated);
+            $email->setDateCreated(date('Y-m-d H:i:s'));
             $email->setMailPassword(empty($data['mailPassword']) ? null:$data['mailPassword'], $settings['turbo_passphrase']);
             $email->setName($data['email']);
             $email->setContact($legalContact);

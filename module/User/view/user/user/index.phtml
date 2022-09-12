@@ -49,9 +49,11 @@ $this->pageBreadcrumbs()->setItems([
             <?= $this->escapeHtml($user->getRolesAsString()); ?> 
         </td>
         <td>
-            <a href="<?= $this->url('offices', ['action'=>'view', 'id'=>$user->getOffice()->getId()]); ?>">
-                <?= $this->escapeHtml($user->getOffice()->getName()); ?>
-            </a> 
+            <?php if ($user->getOffice()):?>
+                <a href="<?= $this->url('offices', ['action'=>'view', 'id'=>$user->getOffice()->getId()]); ?>">
+                    <?= $this->escapeHtml($user->getOffice()->getName()); ?>
+                </a> 
+            <?php endif;?>
         </td>
         <td><nobr><?= $this->escapeHtml($user->getDateCreated()); ?></nobr></td>        
         <td><?= $this->escapeHtml($user->getStatusAsString()); ?></td>

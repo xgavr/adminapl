@@ -229,7 +229,7 @@ class UserController extends AbstractActionController
                     'mailPassword' => $this->userManager->userMailPassword($user),
                     'status'=>$user->getStatus(), 
                     'roles' => $userRoleIds,
-                    'office' => $user->getOffice()->getId(),
+                    'office' => ($user->getOffice()) ? $user->getOffice()->getId():null,
                 ));
         }
         
