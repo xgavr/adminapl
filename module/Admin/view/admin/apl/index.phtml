@@ -464,4 +464,18 @@ $this->pageBreadcrumbs()->setItems([
         </div>
     </div>    -->
 
-</div>
+<script type="text/javascript">
+    function totalFeatures(){
+        $(".badge").each(function( index ) {
+            var node = $(this).attr('id');
+            $.getJSON('/goods/total-feature/?feature=' + node, function(data){
+                $('#'+node).text(data['total']);
+            });
+        });        
+    }
+
+    $(window).on('load', function() {
+        totalFeatures();
+    });
+    
+</script>

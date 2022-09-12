@@ -200,6 +200,20 @@ $form->prepare();
     function offSelect(flag){
         $("select").each(function(){
             $(this).val(flag);
-        })
-    }            
+        });
+    }       
+    
+    function totalFeatures(){
+        $(".badge").each(function( index ) {
+            var node = $(this).attr('id');
+            $.getJSON('/goods/total-feature/?feature=' + node, function(data){
+                $('#'+node).text(data['total']);
+            });
+        });        
+    }
+
+    $(window).on('load', function() {
+        totalFeatures();
+    });
+    
 </script>
