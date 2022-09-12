@@ -50,7 +50,7 @@ $form->prepare();
 
 <?= $this->form()->openTag($form); ?>
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-4">
         
         <div class="form-group">
             <?= $this->formLabel($form->get('update_oe')); ?>
@@ -83,8 +83,97 @@ $form->prepare();
         </div>
                         
     </div>   
-    <div class="col-md-5">
+    <div class="col-md-4">
+        <div class="panel-group">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                   Обновления из Текдок
+                </div>
+                <div class="panel-body">                        
+                    <div class="pull-left">
+                        Группы <span id="totalGroup" class="badge">0</span>
+                    </div>
+                    <div class="pull-right">
+                        <button value="/goods/td-group/" class="btn btn-info btn-xs refresh-button"
+                                title="Обновление Групп">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button>                             
+                        <button value="/goods/reset-td-group/" class="btn btn-warning btn-xs refresh-button"
+                                title="Сбросить метку обновлений">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button>                             
+                    </div>
+                </div>
+                <div class="panel-body">                        
+                    <div class="pull-left">
+                        Описания <span id="totalDesc" class="badge">0</span>
+                    </div>
+                    <div class="pull-right">
+                        <button value="/goods/td-description/" class="btn btn-info btn-xs refresh-button"
+                                title="Обновление описаний">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button>                             
+                        <button value="/goods/reset-td-description/" class="btn btn-warning btn-xs refresh-button"
+                                title="Сбросить метку обновлений">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button>                             
+                    </div>
+                </div>
+                <div class="panel-body">                        
+                    <div class="pull-left">
+                        Номера <span id="totalOem" class="badge">0</span>
+                    </div>
+                    <div class="pull-right">
+                        <button value="/goods/td-oem/" class="btn btn-info btn-xs refresh-button"
+                                title="Обновление OEM">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button>                             
+                        <button value="/goods/reset-td-oem/" class="btn btn-warning btn-xs refresh-button"
+                                title="Сбросить метку обновлений">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button>                             
+                    </div>
+                </div>
+                <div class="panel-body">                        
+                    <div class="pull-left">
+                        Mашины <span id="totalCar" class="badge">0</span>
+                    </div>
+                    <div class="pull-right">
+                        <button value="/goods/update-cars/" class="btn btn-info btn-xs refresh-table-button"
+                                title="Обновление машин">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button> 
+                        <button value="/goods/reset-td-car/" class="btn btn-warning btn-xs refresh-button"
+                                title="Сбросить метку обновлений">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button>                             
+                    </div>
+                </div>
+                <div class="panel-body">                        
+                    <div class="pull-left">
+                        Картинки <span id="totalImage" class="badge">0</span>
+                    </div>
+                    <div class="pull-right">
+                        <a href="/image" class="btn btn-info btn-xs" target='_blank'
+                                title="Картинки поставщиков">
+                            <span class="glyphicon glyphicon-picture" ></span>
+                        </a> 
+                        <button value="/goods/td-image/" class="btn btn-info btn-xs refresh-table-button"
+                                title="Обновление картинок">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button> 
+                        <button value="/goods/reset-td-image/" class="btn btn-warning btn-xs refresh-button"
+                                title="Сбросить метку обновлений">
+                            <span class="glyphicon glyphicon-refresh" ></span>
+                        </button>                             
+                    </div>
+                </div>
+            </div>                    
+        </div>    
     </div>
+<!--    <div class="col-md-2">
+        
+    </div>-->
     <div class="col-md-2" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">
             <li class="active">
