@@ -680,7 +680,7 @@ class ProducerManager
         $oldGoods = $this->entityManager->getRepository(Goods::class)
                 ->findBy(['producer' => $producerSource->getId()]);
         foreach ($oldGoods as $oldGood){
-//            $this->goodsManager->changeProducer($oldGood, $producerDest);
+            $this->goodsManager->changeProducer($oldGood, $producerDest);
         }
         
         return;
