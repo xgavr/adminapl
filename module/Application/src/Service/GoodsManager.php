@@ -985,35 +985,5 @@ class GoodsManager
         }
             
         return;
-    }
-    
-    /**
-     * Заменить производителя
-     * 
-     * @param Goods $good
-     * @param Producer $newProducer
-     */
-    public function changeProducer($good, $newProducer)
-    {
-        $newGood = $this->entityManager->getRepository(Goods::class)
-                ->findOneBy(['code' => $good->getCode(), 'producer' => $newProducer->getId()]);
-        if (!$newGood){
-            $good->setProducer($newProducer);
-            $this->entityManager->persist($good);
-            $this->entityManager->flush();
-            return;
-        }
-        
-        $articles = $this->entityManager->getRepository(Article::class)
-                ->findBy(['good' => $good->getId()]);
-        foreach ($articles as $article){
-            $article->setGood($newGood);
-            $this->entityManager->persist($article);
-            $this->entityManager->flush();
-        }
-        
-        $this->registerManager->changeGood($good, $newGood);
-        
-        return;
-    }
+    }    
 }

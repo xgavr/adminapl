@@ -26,6 +26,7 @@ class ProducerManagerFactory  implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $goodsManager = $container->get(GoodsManager::class);
+
         // Инстанцируем сервис и внедряем зависимости.
         return new ProducerManager($entityManager, $goodsManager);
     }

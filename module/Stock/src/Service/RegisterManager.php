@@ -18,6 +18,9 @@ use Stock\Entity\VtGood;
 use Stock\Entity\VtpGood;
 use Company\Entity\Office;
 use Application\Entity\Goods;
+use Application\Entity\Article;
+use Application\Entity\Producer;
+use Application\Entity\Oem;
 
 /**
  * This service register.
@@ -502,6 +505,61 @@ class RegisterManager
         $this->orderManager->changeGood($oldGood, $newGood);
         $this->vtManager->changeGood($oldGood, $newGood);
         $this->vtpManager->changeGood($oldGood, $newGood);
+    }
+    
+    /**
+     * Заменить производителя
+     * 
+     * @param Goods $good
+     * @param Producer $newProducer
+     */
+    public function changeProducer($good, $newProducer)
+    {
+        $newGood = $this->entityManager->getRepository(Goods::class)
+                ->findOneBy(['code' => $good->getCode(), 'producer' => $newProducer->getId()]);
+        if (!$newGood){
+            $good->setProducer($newProducer);
+            $this->entityManager->persist($good);
+            $this->entityManager->flush();
+            return;
+        }
+        
+        $articles = $this->entityManager->getRepository(Article::class)
+                ->findBy(['good' => $good->getId()]);
+        foreach ($articles as $article){
+            $article->setGood($newGood);
+            $this->entityManager->persist($article);
+            $this->entityManager->flush();
+        }
+        
+        $this->changeGood($good, $newGood);
+        
+        $oes = $this->entityManager->getRepository(Oem::class)
+                ->findBy(['good' => $good->getId()]);
+        foreach ($oes as $oe){
+            $oe->setGood($newGood);
+            $this->entityManager->persist($oe);
+            $this->entityManager->flush();
+        }
+        
+        $this->changeGood($good, $newGood);
+        return;
+    }
+    
+    /**
+     * Объеденить производителей
+     * @param Producer $producerDest
+     * @param Producer $producerSource
+     */
+    public function uniteProducer($producerDest, $producerSource)
+    {
+        $oldGoods = $this->entityManager->getRepository(Goods::class)
+                ->findBy(['producer' => $producerSource->getId()]);
+        foreach ($oldGoods as $oldGood){
+            $this->changeProducer($oldGood, $producerDest);
+        }
+        
+        return;
     }
 }
 

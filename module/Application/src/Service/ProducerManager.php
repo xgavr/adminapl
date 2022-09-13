@@ -87,7 +87,7 @@ class ProducerManager
     /**
      * Удаление производителя
      * 
-     * @param \Application\Entity\Producer $producer
+     * @param Producer $producer
      * @return boolean
      */
     public function removeProducer($producer) 
@@ -668,22 +668,5 @@ class ProducerManager
         }
         
         return;
-    }
-    
-    /**
-     * Объеденить производителей
-     * @param Producer $producerDest
-     * @param Producer $producerSource
-     */
-    public function unite($producerDest, $producerSource)
-    {
-        $oldGoods = $this->entityManager->getRepository(Goods::class)
-                ->findBy(['producer' => $producerSource->getId()]);
-        foreach ($oldGoods as $oldGood){
-            $this->goodsManager->changeProducer($oldGood, $producerDest);
-        }
-        
-        return;
-    }
-        
+    }        
 }
