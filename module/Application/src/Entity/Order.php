@@ -50,6 +50,7 @@ class Order {
         
     const STATUS_ACCOUNT_OK  = 1;// обновлено 
     const STATUS_ACCOUNT_NO  = 2;// не обновлено
+    const STATUS_TAKE_NO  = 3;// не проведено
 
     const PRINT_FOLDER         = './data/template/order'; 
     const TEMPLATE_TORG12      = './data/template/torg12.xls';
@@ -741,7 +742,8 @@ class Order {
     {
         return [
             self::STATUS_ACCOUNT_OK => 'Обновлено',
-            self::STATUS_ACCOUNT_NO=> 'Не обновлено',
+            self::STATUS_ACCOUNT_NO => 'Не обновлено',
+            self::STATUS_TAKE_NO => 'Не проведено',
         ];
     }    
     

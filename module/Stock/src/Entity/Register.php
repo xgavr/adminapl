@@ -9,11 +9,6 @@
 namespace Stock\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Company\Entity\Legal;
-use Company\Entity\Office;
-use Application\Entity\Contact;
-use User\Entity\User;
-use Laminas\Json\Encoder;
 
 
 /**

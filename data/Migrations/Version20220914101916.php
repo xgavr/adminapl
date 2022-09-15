@@ -19,10 +19,11 @@ final class Version20220914101916 extends AbstractMigration
         $table->addColumn('office_id', 'integer', ['notnull' => true]);
         $table->addColumn('company_id', 'integer', ['notnull' => true]);
         $table->addColumn('user_id', 'integer', ['notnull' => false]);
-        $table->addColumn('base_id', 'integer', ['notnull' => false]);
+        $table->addColumn('base_stamp', 'float', ['notnull' => false]);
         $table->addColumn('rest', 'float', ['notnull' => true, 'default' => 0]);
         $table->addColumn('reserve', 'float', ['notnull' => true, 'default' => 0]);
         $table->addColumn('delivery', 'float', ['notnull' => true, 'default' => 0]);
+        $table->addColumn('vozvrat', 'float', ['notnull' => true, 'default' => 0]);
         $table->addColumn('price', 'float', ['notnull' => true, 'default' => 0]);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['good_id', 'office_id'], 'good_office_indx');
@@ -34,8 +35,8 @@ final class Version20220914101916 extends AbstractMigration
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'gd_company_id_legal_id_fk');
         $table->addForeignKeyConstraint('user', ['user_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'gd_user_id_user_id_fk');
-        $table->addForeignKeyConstraint('register', ['base_id'], ['id'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'gd_base_id_register_id_fk');
+        $table->addForeignKeyConstraint('register', ['base_stamp'], ['doc_stamp'], 
+                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'gd_base_stamp_register_doc_stamp_fk');
         $table->addOption('engine' , 'InnoDB');        
 
     }

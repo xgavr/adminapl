@@ -11,7 +11,6 @@ use Laminas\ServiceManager\ServiceManager;
 use Application\Entity\Bid;
 use Application\Entity\Order;
 use Application\Entity\Goods;
-use Application\Entity\Cart;
 use User\Entity\User;
 use Application\Entity\Client;
 use Application\Entity\Contact;
@@ -228,6 +227,119 @@ class OrderManager
         return;
     }    
     
+    
+    
+    /**
+     * Добавить движения
+     * @param Order $order
+     * @param float $docStamp
+     * @param Bid $bid
+     * @return integer
+     */
+    
+    private function insertMovement($order, $docStamp, $bid)
+    {
+        if ($order->getStatus() == Order::STATUS_SHIPPED){
+            
+            $bases = $this->entityManager->getRepository(Movement::class)
+                    ->findBases($bid->getGood()->getId(), $docStamp, $order->getOffice()->getId());
+
+            $write = $bid->getNum();
+
+            $take = Bid::TAKE_NO;
+            $takeNoCount = 0;
+
+            foreach ($bases as $base){
+                $movement = $this->entityManager->getRepository(Movement::class)
+                        ->findOneByBaseKey($base['baseKey']);
+
+                $quantity = min($base['rest'], $write);
+                $amount = $quantity*$bid->getPrice();
+
+                $data = [
+                    'doc_key' => $order->getLogKey(),
+                    'doc_type' => Movement::DOC_ORDER,
+                    'doc_id' => $order->getId(),
+                    'base_type' => $movement->getBaseType(),
+                    'base_key' => $movement->getBaseKey(),
+                    'base_id' => $movement->getBaseId(),
+                    'doc_row_key' => $bid->getRowKey(),
+                    'doc_row_no' => $bid->getRowNo(),
+                    'date_oper' => date('Y-m-d 22:00:00', strtotime($order->getDocDate())),
+                    'status' => Movement::getStatusFromOrder($order),
+                    'quantity' => -$quantity,
+                    'amount' => -$amount,
+                    'base_amount' => -$base['price']*$quantity,
+                    'good_id' => $bid->getGood()->getId(),
+                    'office_id' => $order->getOffice()->getId(),
+                    'company_id' => $order->getCompany()->getId(),
+                    'doc_stamp' => $docStamp,
+                ];
+
+                $this->entityManager->getRepository(Movement::class)
+                        ->insertMovement($data);
+
+                if ($movement->getStatus() == Movement::STATUS_COMMISSION){
+                    $comiss = $this->entityManager->getRepository(Comiss::class)
+                            ->findOneByDocKey($base['baseKey']);
+                    $data = [
+                        'doc_key' => $order->getLogKey(),
+                        'doc_type' => Movement::DOC_ORDER,
+                        'doc_id' => $order->getId(),
+                        'doc_row_key' => $bid->getRowKey(),
+                        'doc_row_no' => $bid->getRowNo(),
+                        'date_oper' => $order->getDateOper(),
+                        'status' => Movement::getStatusFromOrder($order),
+                        'quantity' => -$quantity,
+                        'amount' => -$amount,
+                        'good_id' => $bid->getGood()->getId(),
+                        'office_id' => $order->getOffice()->getId(),
+                        'company_id' => $order->getCompany()->getId(),
+                        'contact_id' => $comiss->getContact()->getId(),
+                    ];
+                    $this->entityManager->getRepository(Comiss::class)
+                            ->insertComiss($data);
+
+                    $data = [
+                        'doc_key' => $order->getLogKey(),
+                        'doc_type' => Movement::DOC_ORDER,
+                        'doc_id' => $order->getId(),
+                        'date_oper' => $order->getDateOper(),
+                        'status' => Retail::getStatusFromOrder($order),
+                        'revise' => Retail::REVISE_NOT,
+                        'amount' => -$amount,
+                        'contact_id' => $comiss->getContact()->getId(),
+                        'office_id' => $order->getOffice()->getId(),
+                        'company_id' => $order->getCompany()->getId(),
+                    ];
+
+                    $this->entityManager->getRepository(Retail::class)
+                            ->insertRetail($data);                                
+                }  
+
+                $write -= $quantity;
+                if ($write <= 0){
+                    break;
+                }                    
+            }
+
+            $takeNoCount += $write;
+            if ($write == 0){
+                $take = Bid::TAKE_OK;
+            } 
+            $this->entityManager->getConnection()
+                    ->update('bid', ['take' => $take], ['id' => $bid->getId()]);
+        }    
+        
+        //обновить количество продаж товара
+        $rCount = $this->entityManager->getRepository(Movement::class)
+                ->goodMovementRetail($bid->getGood()->getId());
+        $this->entityManager->getConnection()
+                ->update('goods', ['retail_count' => -$rCount], ['id' => $bid->getGood()->getId()]);        
+        
+        return $takeNoCount;
+    }
+    
     /**
      * Обновить движения заказа
      * 
@@ -239,103 +351,18 @@ class OrderManager
                         
         $bids = $this->entityManager->getRepository(Bid::class)
                 ->findByOrder($order->getId());
+        
+        $orderTake = Order::STATUS_ACCOUNT_NO;
+        
         foreach ($bids as $bid){
-
-            if ($order->getStatus() == Order::STATUS_SHIPPED){
+            if ($this->insertMovement($order, $docStamp, $bid) > 0){
+                $orderTake = Order::STATUS_TAKE_NO; //не проведено
+            }
             
-                $bases = $this->entityManager->getRepository(Movement::class)
-                        ->findBases($bid->getGood()->getId(), $docStamp, $order->getOffice()->getId());
-                
-                $write = $bid->getNum();
-                
-                $take = Bid::TAKE_NO;
-            
-                foreach ($bases as $base){
-                    $movement = $this->entityManager->getRepository(Movement::class)
-                            ->findOneByBaseKey($base['baseKey']);
-                    
-                    $quantity = min($base['rest'], $write);
-                    $amount = $quantity*$bid->getPrice();
-                    
-                    $data = [
-                        'doc_key' => $order->getLogKey(),
-                        'doc_type' => Movement::DOC_ORDER,
-                        'doc_id' => $order->getId(),
-                        'base_type' => $movement->getBaseType(),
-                        'base_key' => $movement->getBaseKey(),
-                        'base_id' => $movement->getBaseId(),
-                        'doc_row_key' => $bid->getRowKey(),
-                        'doc_row_no' => $bid->getRowNo(),
-                        'date_oper' => date('Y-m-d 22:00:00', strtotime($order->getDocDate())),
-                        'status' => Movement::getStatusFromOrder($order),
-                        'quantity' => -$quantity,
-                        'amount' => -$amount,
-                        'base_amount' => -$base['price']*$quantity,
-                        'good_id' => $bid->getGood()->getId(),
-                        'office_id' => $order->getOffice()->getId(),
-                        'company_id' => $order->getCompany()->getId(),
-                        'doc_stamp' => $docStamp,
-                    ];
-
-                    $this->entityManager->getRepository(Movement::class)
-                            ->insertMovement($data);
-
-                    if ($movement->getStatus() == Movement::STATUS_COMMISSION){
-                        $comiss = $this->entityManager->getRepository(Comiss::class)
-                                ->findOneByDocKey($base['baseKey']);
-                        $data = [
-                            'doc_key' => $order->getLogKey(),
-                            'doc_type' => Movement::DOC_ORDER,
-                            'doc_id' => $order->getId(),
-                            'doc_row_key' => $bid->getRowKey(),
-                            'doc_row_no' => $bid->getRowNo(),
-                            'date_oper' => $order->getDateOper(),
-                            'status' => Movement::getStatusFromOrder($order),
-                            'quantity' => -$quantity,
-                            'amount' => -$amount,
-                            'good_id' => $bid->getGood()->getId(),
-                            'office_id' => $order->getOffice()->getId(),
-                            'company_id' => $order->getCompany()->getId(),
-                            'contact_id' => $comiss->getContact()->getId(),
-                        ];
-                        $this->entityManager->getRepository(Comiss::class)
-                                ->insertComiss($data);
-
-                        $data = [
-                            'doc_key' => $order->getLogKey(),
-                            'doc_type' => Movement::DOC_ORDER,
-                            'doc_id' => $order->getId(),
-                            'date_oper' => $order->getDateOper(),
-                            'status' => Retail::getStatusFromOrder($order),
-                            'revise' => Retail::REVISE_NOT,
-                            'amount' => -$amount,
-                            'contact_id' => $comiss->getContact()->getId(),
-                            'office_id' => $order->getOffice()->getId(),
-                            'company_id' => $order->getCompany()->getId(),
-                        ];
-
-                        $this->entityManager->getRepository(Retail::class)
-                                ->insertRetail($data);                                
-                    }  
-                    
-                    $write -= $quantity;
-                    if ($write <= 0){
-                        break;
-                    }                    
-                }
-                
-                if ($write == 0){
-                    $take = Bid::TAKE_OK;
-                }
-                $this->entityManager->getConnection()
-                        ->update('bid', ['take' => $take], ['id' => $bid->getId()]);
-            }    
-                //обновить количество продаж товара
-            $rCount = $this->entityManager->getRepository(Movement::class)
-                    ->goodMovementRetail($bid->getGood()->getId());
-            $this->entityManager->getConnection()
-                    ->update('goods', ['retail_count' => -$rCount], ['id' => $bid->getGood()->getId()]);
         }
+        
+        $this->entityManager->getConnection()
+                ->update('order', ['status_account' => $orderTake], ['id' => $order->getId()]);        
         
         return;
     }    

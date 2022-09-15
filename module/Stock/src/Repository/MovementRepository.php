@@ -181,17 +181,18 @@ class MovementRepository extends EntityRepository{
     /**
     * Остаток товара
     * @param integer $goodId
-     *@param date $dateOper 
-     *@param integer $officeId 
-     * @param integer $companyId
+    * @param date $dateOper 
+    * @param integer $officeId 
+    * @param integer $companyId
+    * @param integer $baseId
     * @return integer
     */
-    public function goodRest($goodId, $dateOper, $officeId = null, $companyId = null)
+    public function goodRest($goodId, $dateOper, $officeId = null, $companyId = null, $baseId = null)
     {
         $entityManager = $this->getEntityManager();
 
         $qb = $entityManager->createQueryBuilder();
-        $qb->select('sum(m.quantity) as rSum')
+        $qb->select('sum(m.quantity) as rSum, sum(m.baseAmount) as rAmount')
                 ->from(Movement::class, 'm')
                 ->where('m.good = ?1')
                 ->andWhere('m.dateOper <= ?2') 
@@ -209,6 +210,13 @@ class MovementRepository extends EntityRepository{
             if (is_numeric($companyId)){
                 $qb->andWhere('m.company = ?4');
                 $qb->setParameter('4', $companyId);
+            }    
+        }
+        
+        if (!empty($baseId)){
+            if (is_numeric($baseId)){
+                $qb->andWhere('m.baseId = ?5');
+                $qb->setParameter('5', $baseId);
             }    
         }
         

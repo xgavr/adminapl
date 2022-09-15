@@ -22,6 +22,8 @@ use Application\Entity\Order;
 use Application\Entity\Goods;
 use Stock\Entity\PtuGood;
 use Company\Entity\Office;
+use Company\Entity\Legal;
+use User\Entity\User;
 
 
 /**
@@ -411,4 +413,8 @@ class RegisterRepository extends EntityRepository
         return;
     }    
         
+    
+    public function updateGoodBalance($good, $office, $company, $user = null, $baseStamp = null) {
+        
+    }
 }

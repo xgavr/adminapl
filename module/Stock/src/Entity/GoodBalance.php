@@ -46,6 +46,11 @@ class Mutual {
      */
     protected $delivery;
 
+    /**
+     * @ORM\Column(name="vozvrat")   
+     */
+    protected $vozvrat;
+
     /** 
      * @ORM\Column(name="price")  
      */
@@ -130,6 +135,24 @@ class Mutual {
     public function setDelivery($delivery) 
     {
         $this->delivery = $delivery;
+    }    
+                
+    /**
+     * Returns the vozvrat.
+     * @return float     
+     */
+    public function getVozvrat() 
+    {
+        return $this->vozvrat;
+    }
+    
+    /**
+     * Sets vozvrat.
+     * @param float $vozvrat     
+     */
+    public function setVozvrat($vozvrat) 
+    {
+        $this->vozvrat = $vozvrat;
     }    
                 
     /**
