@@ -277,8 +277,7 @@ class OrderManager
                 ];
 
                 $this->entityManager->getRepository(Movement::class)
-                        ->insertMovement($data);
-
+                        ->insertMovement($data);                
                 if ($movement->getStatus() == Movement::STATUS_COMMISSION){
                     $comiss = $this->entityManager->getRepository(Comiss::class)
                             ->findOneByDocKey($base['baseKey']);
@@ -358,7 +357,8 @@ class OrderManager
             if ($this->insertMovement($order, $docStamp, $bid) > 0){
                 $orderTake = Order::STATUS_TAKE_NO; //не проведено
             }
-            
+            $this->entityManager->getRepository(Movement::class)
+                    ->updateGoodBalance($bid->getGood()->getId(), $order->getOffice()->getId(), $order->getCompany()->getId());
         }
         
         $this->entityManager->getConnection()

@@ -411,10 +411,5 @@ class RegisterRepository extends EntityRepository
         }
         
         return;
-    }    
-        
-    
-    public function updateGoodBalance($good, $office, $company, $user = null, $baseStamp = null) {
-        
-    }
+    }            
 }

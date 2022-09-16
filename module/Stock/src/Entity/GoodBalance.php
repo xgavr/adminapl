@@ -22,7 +22,7 @@ use Stock\Entity\Register;
  * @ORM\Table(name="good_balance")
  * @author Daddy
  */
-class Mutual {
+class GoodBalance {
     
     /**
      * @ORM\Id

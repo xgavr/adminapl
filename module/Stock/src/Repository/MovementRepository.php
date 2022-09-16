@@ -16,6 +16,7 @@ use Application\Entity\Producer;
 use Application\Entity\GenericGroup;
 use Application\Entity\TokenGroup;
 use Stock\Entity\Register;
+use Stock\Entity\GoodBalance;
 
 /**
  * Description of MovementRepository
@@ -281,7 +282,6 @@ class MovementRepository extends EntityRepository{
     public function goodMovementRetail($goodId)
     {
         $entityManager = $this->getEntityManager();
-        $connection = $entityManager->getConnection();
 
         $qb = $entityManager->createQueryBuilder();
         $qb->select('sum(m.quantity) as rSum')
@@ -299,5 +299,65 @@ class MovementRepository extends EntityRepository{
         //$connection->update('goods', ['movement' => -$result['rSum']],['id' => $good->getId()]);
         
         return intval($result['rSum']);
-    }            
+    }      
+    
+    /**
+     * Получить актуальный остаток
+     * @param integer $goodId
+     * @param integer $officeId
+     * @param integer $companyId
+     * @return array
+     */
+    private function goodBaseRest($goodId, $officeId, $companyId)
+    {
+        
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('sum(m.quantity) as rest, sum(m.amount) as amount')
+                ->from(Movement::class, 'm')
+                ->where('m.good = ?1')
+                ->andWhere('m.office = ?2') 
+                ->andWhere('m.company = ?3') 
+                ->setParametr('1', $goodId)
+                ->setParameter('2', $officeId)
+                ->setParameter('3', $companyId)
+                ;
+            
+        return $qb->getQuery()->getResult();            
+    }
+        
+    /**
+     * Обновить актуальные остатки
+     * @param integer $goodId
+     * @param integer $officeId
+     * @param integer $companyId
+     * @param float $baseStamp
+     * @return null
+     */
+    public function updateGoodBalance($goodId, $officeId, $companyId) 
+    {
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $rest = $this->goodBaseRest($goodId,$officeId, $companyId);
+        $upd = [
+            'rest' => $rest['rest'],
+            'price' => ($rest['rest'] != 0) ? $rest['amount']/$rest['rest']:0,
+        ];
+        
+        $crit = array_filter([
+            'good' => $goodId,
+            'office' => $officeId,
+            'company' => $companyId,
+        ]);
+        
+        $goodBalance = $entityManager->getRepository(GoodBalance::class)
+                ->findOneBy($crit);
+        if ($goodBalance){
+            $connection->update('good_balance', $upd, ['id' => $goodBalance->getId()]);
+        } else {
+            $connection->insert('good_balance', $upd + ['good_id' => $goodId, 'office_id' => $officeId, 'company_id' => $companyId]);
+        }
+                        
+        return;
+    }
 }
