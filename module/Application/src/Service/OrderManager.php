@@ -239,6 +239,7 @@ class OrderManager
     
     private function insertMovement($order, $docStamp, $bid)
     {
+        $takeNoCount = 0;
         if ($order->getStatus() == Order::STATUS_SHIPPED){
             
             $bases = $this->entityManager->getRepository(Movement::class)
@@ -247,7 +248,6 @@ class OrderManager
             $write = $bid->getNum();
 
             $take = Bid::TAKE_NO;
-            $takeNoCount = 0;
 
             foreach ($bases as $base){
                 $movement = $this->entityManager->getRepository(Movement::class)
