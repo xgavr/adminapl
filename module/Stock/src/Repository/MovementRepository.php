@@ -321,6 +321,7 @@ class MovementRepository extends EntityRepository{
                 ->setParameter('1', $goodId)
                 ->setParameter('2', $officeId)
                 ->setParameter('3', $companyId)
+                ->setMaxResults(1)
                 ;
             
         return $qb->getQuery()->getResult();            
