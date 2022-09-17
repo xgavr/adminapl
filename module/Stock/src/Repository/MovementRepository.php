@@ -361,7 +361,13 @@ class MovementRepository extends EntityRepository{
         if ($goodBalance){
             $connection->update('good_balance', $upd, ['id' => $goodBalance->getId()]);
         } else {
-            $connection->insert('good_balance', $upd + ['good_id' => $goodId, 'office_id' => $officeId, 'company_id' => $companyId]);
+            $connection->insert('good_balance', [
+                'good_id' => $goodId, 
+                'office_id' => $officeId, 
+                'company_id' => $companyId,
+                'rest' => $rest,
+                'price' => $price,
+            ]);
         }
                         
         return;
