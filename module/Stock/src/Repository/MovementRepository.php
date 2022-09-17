@@ -339,10 +339,15 @@ class MovementRepository extends EntityRepository{
     {
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
-        $rest = $this->goodBaseRest($goodId,$officeId, $companyId);
+        $rests = $this->goodBaseRest($goodId,$officeId, $companyId);
+        $rest = $price = 0;
+        if (is_array($rests)){
+            $rest = $rests['rest'];
+            $price = $rests['amount']/$rests['rest'];
+        }
         $upd = [
-            'rest' => $rest['rest'],
-            'price' => ($rest['rest'] != 0) ? $rest['amount']/$rest['rest']:0,
+            'rest' => $rest,
+            'price' => $price,
         ];
         
         $crit = array_filter([
