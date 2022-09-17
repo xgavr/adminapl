@@ -76,7 +76,7 @@ class GoodBalance {
     
     /**
      * @ORM\ManyToOne(targetEntity="Stock\Entity\Register", inversedBy="goodBalances") 
-     * @ORM\JoinColumn(name="base_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="base_stamp", referencedColumnName="id")
      */
     private $base;
 
