@@ -341,10 +341,11 @@ class MovementRepository extends EntityRepository{
         $connection = $entityManager->getConnection();
         $rests = $this->goodBaseRest($goodId,$officeId, $companyId);
         $rest = $price = 0;
-        var_dump($rests); exit;
         if (is_array($rests)){
             $rest = $rests['rest'];
-            $price = $rests['amount']/$rests['rest'];
+            if ($rest){
+                $price = abs($rests['amount']/$rests['rest']);
+            }    
         }
         $upd = [
             'rest' => $rest,
