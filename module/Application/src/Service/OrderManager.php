@@ -362,7 +362,7 @@ class OrderManager
         }
         
         $this->entityManager->getConnection()
-                ->update('order', ['status_account' => $orderTake], ['id' => $order->getId()]);        
+                ->update('orders', ['status_account' => $orderTake], ['id' => $order->getId()]);        
         
         return;
     }    
