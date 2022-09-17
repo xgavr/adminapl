@@ -313,7 +313,7 @@ class MovementRepository extends EntityRepository{
         
         $entityManager = $this->getEntityManager();
         $qb = $entityManager->createQueryBuilder();
-        $qb->select('sum(m.quantity) as rest, sum(m.amount) as amount')
+        $qb->select('sum(m.quantity) as rest, sum(m.base_amount) as amount')
                 ->from(Movement::class, 'm')
                 ->where('m.good = ?1')
                 ->andWhere('m.office = ?2') 
