@@ -342,8 +342,8 @@ class MovementRepository extends EntityRepository{
         $rests = $this->goodBaseRest($goodId,$officeId, $companyId);
         $rest = $price = 0;
         if (is_array($rests)){
-            $rest = $rests['rest'];
-            if ($rest){
+            if (!empty($rests['rest'])){
+                $rest = $rests['rest'];
                 $price = abs($rests['amount']/$rests['rest']);
             }    
         }
