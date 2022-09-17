@@ -75,12 +75,6 @@ class GoodBalance {
     private $company;
     
     /**
-     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="goodBalances") 
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    private $user;
-    
-    /**
      * @ORM\ManyToOne(targetEntity="Stock\Entity\Register", inversedBy="goodBalances") 
      * @ORM\JoinColumn(name="base_id", referencedColumnName="id")
      */
@@ -198,15 +192,6 @@ class GoodBalance {
     public function getCompany() 
     {
         return $this->company;
-    }
-
-    /**
-     * Returns the user.
-     * @return User     
-     */
-    public function getUser() 
-    {
-        return $this->user;
     }
 
     /**
