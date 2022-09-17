@@ -318,7 +318,7 @@ class MovementRepository extends EntityRepository{
                 ->where('m.good = ?1')
                 ->andWhere('m.office = ?2') 
                 ->andWhere('m.company = ?3') 
-                ->setParametr('1', $goodId)
+                ->setParameter('1', $goodId)
                 ->setParameter('2', $officeId)
                 ->setParameter('3', $companyId)
                 ;
