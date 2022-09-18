@@ -242,6 +242,8 @@ class GoodsManager
         
         $this->entityManager->getConnection()->delete('good_supplier', ['good_id' => $good->getId()]);
         
+        $this->entityManager->getConnection()->delete('good_balance', ['good_id' => $good->getId()]);
+
         $this->removeSupplierOrders($good);
                 
         $this->entityManager->remove($good);

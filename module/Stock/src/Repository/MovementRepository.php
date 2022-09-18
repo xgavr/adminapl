@@ -43,7 +43,13 @@ class MovementRepository extends EntityRepository{
         $movements = $qb->getQuery()->getResult();
         
         foreach ($movements as $movement){
+            $goodId = $movement->getGood()->getId();
+            $officeId = $movement->getOffice()->getId();
+            $companyId = $movement->getCompany()->getId();
+            
             $connection->delete('movement', ['id' => $movement->getId()]);
+            
+            $this->updateGoodBalance($goodId, $officeId, $companyId);
         }
         
         return;
