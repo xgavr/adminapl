@@ -135,7 +135,7 @@ class PtuManager
                 $this->entityManager->getRepository(Movement::class)
                         ->insertMovement($data);
                 $this->entityManager->getRepository(Movement::class)
-                        ->updateGoodBalance($ptuGood->getGood()->getId(), $ptu->getOffice()->getId(), $ptu->getCompany()->getId());
+                        ->updateGoodBalance($ptuGood->getGood()->getId(), $ptu->getOffice()->getId(), $ptu->getContract()->getCompany()->getId());
             }
         }    
         
