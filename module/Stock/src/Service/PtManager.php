@@ -99,6 +99,8 @@ class PtManager
         $this->entityManager->getRepository(Comiss::class)
                 ->removeDocComiss($pt->getLogKey());
                 
+        $ptTake = Pt::STATUS_ACCOUNT_NO;
+        
         if ($pt->getStatus() == Pt::STATUS_ACTIVE){
             
             $ptGoods = $this->entityManager->getRepository(PtGood::class)
@@ -221,12 +223,22 @@ class PtManager
                 
                 if ($write == 0){
                     $take = PtGood::TAKE_OK;
+                } else {
+                    $ptTake = Pt::STATUS_TAKE_NO;
                 }
                 
                 $this->entityManager->getConnection()
                         ->update('pt_good', ['take' => $take], ['id' => $ptGood->getId()]);
+
+                $this->entityManager->getRepository(Movement::class)
+                        ->updateGoodBalance($ptGood->getGood()->getId(), $pt->getOffice()->getId(), $pt->getCompany()->getId());
+                $this->entityManager->getRepository(Movement::class)
+                        ->updateGoodBalance($ptGood->getGood()->getId(), $pt->getOffice2()->getId(), $pt->getCompany2()->getId());
             }    
         }
+
+        $this->entityManager->getConnection()
+                ->update('pt', ['status_account' => $ptTake], ['id' => $pt->getId()]);        
         
         return;
     }    

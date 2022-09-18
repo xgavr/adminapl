@@ -76,7 +76,7 @@ class StManager
                 ->removeDocComiss($st->getLogKey());
         $this->entityManager->getRepository(Retail::class)
                 ->removeOrderRetails($st->getLogKey());
-        
+        $stTake = St::STATUS_ACCOUNT_NO;
         if ($st->getStatus() == St::STATUS_ACTIVE){
             $stGoods = $this->entityManager->getRepository(StGood::class)
                     ->findBySt($st->getId());
@@ -165,6 +165,8 @@ class StManager
                         $write -= $quantity;
                         if ($write <= 0){
                             break;
+                        } else {
+                            $stTake = St::STATUS_TAKE_NO;
                         }
                     }    
                 }    
@@ -174,8 +176,13 @@ class StManager
 
                 $this->entityManager->getConnection()
                         ->update('st_good', ['take' => $take], ['id' => $stGood->getId()]);
+                $this->entityManager->getRepository(Movement::class)
+                        ->updateGoodBalance($stGood->getGood()->getId(), $st->getOffice()->getId(), $st->getCompany()->getId());
             }    
         }
+
+        $this->entityManager->getConnection()
+                ->update('st', ['status_account' => $stTake], ['id' => $st->getId()]);        
         
         return;
     }    

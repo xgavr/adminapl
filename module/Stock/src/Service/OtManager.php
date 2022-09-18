@@ -118,9 +118,12 @@ class OtManager
                     $this->entityManager->getRepository(Comiss::class)
                             ->insertComiss($data);
                 }
+                
+                $this->entityManager->getRepository(Movement::class)
+                        ->updateGoodBalance($otGood->getGood()->getId(), $ot->getOffice()->getId(), $ot->getCompany()->getId());
             }
         }    
-        
+
         return;
     }    
     

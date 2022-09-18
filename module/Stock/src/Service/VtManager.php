@@ -153,6 +153,7 @@ class VtManager
         $vtGoods = $this->entityManager->getRepository(VtGood::class)
                 ->findByVt($vt->getId());
         
+        $vtTake = Vt::STATUS_ACCOUNT_NO;
         foreach ($vtGoods as $vtGood){
             if ($vt->getStatus() != Vt::STATUS_RETIRED){
                 $movements = $this->entityManager->getRepository(Movement::class)
@@ -234,6 +235,8 @@ class VtManager
                 }    
                 if ($posting == 0){
                     $take = VtGood::TAKE_OK;
+                } else {
+                    $vtTake = Vt::STATUS_TAKE_NO;
                 }
                 $this->entityManager->getConnection()
                         ->update('vt_good', ['take' => $take], ['id' => $vtGood->getId()]);
@@ -244,7 +247,12 @@ class VtManager
 
             $this->entityManager->getConnection()
                     ->update('goods', ['retail_count' => -$rCount], ['id' => $vtGood->getGood()->getId()]);
+            $this->entityManager->getRepository(Movement::class)
+                    ->updateGoodBalance($vtGood->getGood()->getId(), $vt->getOffice()->getId(), $vt->getOrder()->getCompany()->getId());
         }
+
+        $this->entityManager->getConnection()
+                ->update('vt', ['status_account' => $vtTake], ['id' => $vt->getId()]);        
         
         return;
     }    

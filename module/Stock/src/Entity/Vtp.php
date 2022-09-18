@@ -14,7 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Company\Entity\Legal;
 use Stock\Entity\Ptu;
-use Company\Entity\Contract;
 use Company\Entity\Office;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
@@ -46,6 +45,9 @@ class Vtp {
     const TEMPLATE_TORG2        = './data/template/torg-2.xls';
     const TEMPLATE_UPD        = './data/template/upd3.xls';
 
+    const STATUS_ACCOUNT_OK  = 1;// обновлено 
+    const STATUS_ACCOUNT_NO  = 2;// не обновлено
+    const STATUS_TAKE_NO  = 3;// не проведено    
 
     /**
      * @ORM\Id

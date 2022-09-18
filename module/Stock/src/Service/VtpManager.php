@@ -161,6 +161,8 @@ class VtpManager
                 }
                 $this->entityManager->getConnection()
                         ->update('vtp_good', ['take' => $take], ['id' => $vtpGood->getId()]);
+                $this->entityManager->getRepository(Movement::class)
+                        ->updateGoodBalance($vtpGood->getGood()->getId(), $vtp->getPtu()->getOffice()->getId(), $vtp->getPtu()->getCompany()->getId());
             }
         }    
         
