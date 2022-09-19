@@ -108,8 +108,11 @@
     
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status == '<?= St::STATUS_RETIRED?>'){
+        if (row.status === '<?= St::STATUS_RETIRED?>'){
            retired += ' retired';
+        }
+        if (row.statusAccount === '<?= St::STATUS_TAKE_NO?>'){
+           retired += ' warning';
         }
         return {classes: retired};
     }

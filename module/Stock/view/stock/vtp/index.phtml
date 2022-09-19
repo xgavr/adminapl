@@ -140,7 +140,7 @@
     
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status == '<?= Vtp::STATUS_RETIRED?>'){
+        if (row.status === '<?= Vtp::STATUS_RETIRED?>'){
            retired += ' retired';
         }
         switch(row.statusDoc){
@@ -229,7 +229,7 @@
             return $table.bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
-           ['statusActiv', 'statusRetired'],
+           ['statusActiv', 'statusRetired']
         ],      
         actions: {
             statusDocNew: {
@@ -238,7 +238,7 @@
                     changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NEW?>);
                 },
                 isShown: function(row) {
-                  return row.statusDoc != '<?= Vtp::STATUS_DOC_NEW?>';
+                  return row.statusDoc !== '<?= Vtp::STATUS_DOC_NEW?>';
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';
@@ -251,7 +251,7 @@
                     changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_RECD?>);
                 },
                 isShown: function(row) {
-                  return row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>';
+                  return row.statusDoc !== '<?= Vtp::STATUS_DOC_RECD?>';
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';
@@ -265,7 +265,7 @@
                     changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NOT_RECD?>);
                 },
                 isShown: function(row) {
-                  return row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>';
+                  return row.statusDoc !== '<?= Vtp::STATUS_DOC_NOT_RECD?>';
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';
@@ -278,7 +278,7 @@
                     changeStatus(row.id, <?= Vtp::STATUS_ACTIVE?>);
                 },
                 isShown: function(row) {
-                  return row.status == <?= Vtp::STATUS_RETIRED?>;
+                  return row.status === <?= Vtp::STATUS_RETIRED?>;
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';
@@ -292,7 +292,7 @@
                     changeStatus(row.id, <?= Vtp::STATUS_RETIRED?>);
                 },
                 isShown: function(row) {
-                  return row.status == <?= Vtp::STATUS_ACTIVE?>;
+                  return row.status === <?= Vtp::STATUS_ACTIVE?>;
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';

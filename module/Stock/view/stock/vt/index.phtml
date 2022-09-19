@@ -83,10 +83,13 @@
     
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status == '<?= Vt::STATUS_RETIRED?>'){
+        if (row.status === '<?= Vt::STATUS_RETIRED?>'){
            retired += ' retired';
         }
-        if (row.status == '<?= Vt::STATUS_COMMISSION?>'){
+        if (row.status === '<?= Vt::STATUS_COMMISSION?>'){
+           retired += ' info';
+        }
+        if (row.statusAccount === '<?= Vt::STATUS_TAKE_NO?>'){
            retired += ' warning';
         }
         

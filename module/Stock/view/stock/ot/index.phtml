@@ -90,11 +90,11 @@
 
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status == '<?= Ot::STATUS_RETIRED?>'){
+        if (row.status === '<?= Ot::STATUS_RETIRED?>'){
            retired += ' retired';
         }
-        if (row.status == '<?= Ot::STATUS_COMMISSION?>'){
-           retired += ' warning';
+        if (row.status === '<?= Ot::STATUS_COMMISSION?>'){
+           retired += ' info';
         }
         
         return {classes: retired};
