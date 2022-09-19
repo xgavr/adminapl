@@ -108,7 +108,7 @@ class VtpManager
                 ->vtpRegister($vtp);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($vtp->getLogKey());
-        
+        $vtpTake = Vtp::STATUS_ACCOUNT_NO;
         if ($vtp->getStatus() == Vtp::STATUS_ACTIVE){
             $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
                     ->findByVtp($vtp->getId());
@@ -154,7 +154,9 @@ class VtpManager
                     $write -= $quantity;
                     if ($write <= 0){
                         break;
-                    }                    
+                    } else {
+                        $vtpTake = Vtp::STATUS_TAKE_NO;
+                    }                   
                 }    
                 if ($write == 0){
                     $take = VtpGood::TAKE_OK;
@@ -165,6 +167,9 @@ class VtpManager
                         ->updateGoodBalance($vtpGood->getGood()->getId(), $vtp->getPtu()->getOffice()->getId(), $vtp->getPtu()->getContract()->getCompany()->getId());
             }
         }    
+
+        $this->entityManager->getConnection()
+                ->update('vtp', ['status_account' => $vtpTake], ['id' => $vtp->getId()]);        
         
         return;
     }    
@@ -224,6 +229,7 @@ class VtpManager
             $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
             $vtp->setInfo(empty($data['info']) ? null:$data['info']);
             $vtp->setStatusEx($data['status_ex']);
+            $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
             $vtp->setStatus($data['status']);
             $vtp->setStatusDoc($data['statusDoc']);
             $vtp->setAmount(0);
@@ -254,6 +260,7 @@ class VtpManager
             $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
             $vtp->setInfo(empty($data['info']) ? null:$data['info']);
             $vtp->setStatusEx($data['status_ex']);
+            $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
             $vtp->setStatus($data['status']);
             $vtp->setStatusDoc($data['statusDoc']);
             

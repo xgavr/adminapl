@@ -92,6 +92,11 @@ class Vtp {
     protected $statusEx;
 
     /** 
+     * @ORM\Column(name="status_account")  
+     */
+    protected $statusAccount;
+
+    /** 
      * @ORM\Column(name="doc_no")  
      */
     protected $docNo;
@@ -367,6 +372,50 @@ class Vtp {
         $this->statusEx = $statusEx;
     }   
 
+    /**
+     * Returns statusAccount.
+     * @return int     
+     */
+    public function getStatusAccount() 
+    {
+        return $this->statusAccount;
+    }
+
+    /**
+     * Returns possible statusAccount as array.
+     * @return array
+     */
+    public static function getStatusAccountList() 
+    {
+        return [
+            self::STATUS_ACCOUNT_OK => 'Обновлено',
+            self::STATUS_ACCOUNT_NO=> 'Не обновлено',
+            self::STATUS_TAKE_NO=> 'Не проведено',
+        ];
+    }    
+    
+    /**
+     * Returns statusAccount as string.
+     * @return string
+     */
+    public function getStatusAccountAsString()
+    {
+        $list = self::getStatusAccountList();
+        if (isset($list[$this->statusAccount]))
+            return $list[$this->statusAccount];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets statusAccount.
+     * @param int $statusAccount     
+     */
+    public function setStatusAccount($statusAccount) 
+    {
+        $this->statusAccount = $statusAccount;
+    }   
+    
     /**
      * Returns the date of user creation.
      * @return string     
