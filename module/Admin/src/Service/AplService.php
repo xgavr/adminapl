@@ -981,6 +981,7 @@ class AplService {
      */
     public function updateGoodAplId()
     {
+        ini_set('memory_limit', '512M');
         set_time_limit(1800);
         $startTime = time();
         
