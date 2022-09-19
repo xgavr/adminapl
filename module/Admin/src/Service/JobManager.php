@@ -113,7 +113,7 @@ class JobManager
         return [
           307 => ['command' => 'update-attribute-value-apl-id', 'shedule' => '13 * * * *',              'description' => 'Обновление значений атрибутов'],
           308 => ['command' => 'update-car-apl-id',             'shedule' => '23 * * * *',              'description' => 'Обновление aplId машин'],
-          309 => ['command' => 'update-good-apl-id',            'shedule' => '3,18,33,48 * * * *',      'description' => 'Обновление AplId товара'],
+          309 => ['command' => 'update-good-apl-id',            'shedule' => '14,29,44,59 * * * *',      'description' => 'Обновление AplId товара'],
           310 => ['command' => 'update-good-group',             'shedule' => '43 * * * *',              'description' => 'Обновление групп в АПЛ'],
           311 => ['command' => 'update-group-apl-id',           'shedule' => '53 * * * *',              'description' => 'Получить апл группы товаров'],
           312 => ['command' => 'check-apl-order',               'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Проверка выгрузки заказов из АПЛ'],
@@ -154,34 +154,34 @@ class JobManager
     private function updateJobList()
     {
         return [
-          501 => ['command' => 'fill-token-group-token',            'shedule' => '13 12 * * *', 'description' => 'Заполнение токенов групп наименований'],
-          502 => ['command' => 'fill-token-group-bigram',           'shedule' => '13 13 * * *', 'description' => 'Заполнение биграм групп наименований'],
-          503 => ['command' => 'producer-best-name',                'shedule' => '13 14 * * *', 'description' => 'Обновление наименований производителей'],
-          504 => ['command' => 'support-title-tokens',              'shedule' => '13 15 * * *', 'description' => 'Поддержка токенов описаний'],
-          505 => ['command' => 'support-title-bigrams',             'shedule' => '13 16 * * *', 'description' => 'Поддержка биграм описаний'],
-          506 => ['command' => 'unknown-producer-intersect',        'shedule' => '13 17 * * *', 'description' => 'Обновление пересечение производителей'],
-          507 => ['command' => 'unknown-producer-rawprice-count',   'shedule' => '13 18 * * *', 'description' => 'Обновление количества товаров у неизвестных производителей'],
-          508 => ['command' => 'unknown-producer-supplier-count',   'shedule' => '13 19 * * *', 'description' => 'Обновление количества поставщиков у неизвестных производителей'],
-          509 => ['command' => 'update-car-status',                 'shedule' => '13 20 * * *', 'description' => 'Обновление статусов машин'],
-          510 => ['command' => 'update-fill-volumes',               'shedule' => '13 21 * * *', 'description' => 'Обновление автонорм машин'],
-          511 => ['command' => 'update-group-good-count',           'shedule' => '13 22 * * *', 'description' => 'Обновление количества товаров в группах'],
-          512 => ['command' => 'update-producers-good-count',       'shedule' => '13 23 * * *', 'description' => 'Обновление количества товаров у поставщиков'],
-          513 => ['command' => 'update-supplier-amount',            'shedule' => '13 0 * * *',  'description' => 'Обновление сумм поставок поставщиков'],
-          514 => ['command' => 'update-good-car-count',             'shedule' => '13 1 * * *',  'description' => 'Обновление количества машин у товаров'],
-          515 => ['command' => 'delete-producer',                   'shedule' => '13 2 * * *',  'description' => 'Удаление пустых производителей'],
-          516 => ['command' => 'delete-article',                    'shedule' => '13 3 * * *',  'description' => 'Удаление пустых артикулов производителей'],
-          517 => ['command' => 'delete-unknown-producer',           'shedule' => '13 4 * * *',  'description' => 'Удаление пустых неизвестных производителей'],
-          518 => ['command' => 'delete-token',                      'shedule' => '13 5 * * *',  'description' => 'Удаление пустых токенов'],
-          519 => ['command' => 'delete-bigram',                     'shedule' => '13 6 * * *',  'description' => 'Удаление пустых биграм'],
-          520 => ['command' => 'delete-goods',                      'shedule' => '13 7 * * *',  'description' => 'Удаление пустых карточек товаров'],
-          521 => ['command' => 'prices-by-link',                    'shedule' => '13 8 * * *',  'description' => 'Скачивание прайсов по ссылке'],
-          522 => ['command' => 'delete-token-group',                'shedule' => '13 9 * * *',  'description' => 'Удаление пустых групп наименований с пересчетом товаров в группе'],
-          523 => ['command' => 'update-apl-acquiring',              'shedule' => '13 10 * * *', 'description' => 'Загрузить эквайринг с АПЛ'],
-          524 => ['command' => 'update-attribute-apl-id',           'shedule' => '13 11 * * *', 'description' => 'Обновление атрибутов товаров'],
-          525 => ['command' => 'update-generic-group-apl-id',       'shedule' => '43 12 * * *', 'description' => 'Обновление группы Apl общих групп'],
-          526 => ['command' => 'update-make-apl-id',                'shedule' => '43 13 * * *', 'description' => 'Обновление aqplId брендов машин'],
-          527 => ['command' => 'update-model-apl-id',               'shedule' => '43 14 * * *', 'description' => 'Обновление aplId моделей машин'],
-          528 => ['command' => 'update-producer-apl-id',            'shedule' => '43 15 * * *', 'description' => 'Обновление производителей APL ID'],
+          501 => ['command' => 'fill-token-group-token',            'shedule' => '14 12 * * *', 'description' => 'Заполнение токенов групп наименований'],
+          502 => ['command' => 'fill-token-group-bigram',           'shedule' => '14 13 * * *', 'description' => 'Заполнение биграм групп наименований'],
+          503 => ['command' => 'producer-best-name',                'shedule' => '14 14 * * *', 'description' => 'Обновление наименований производителей'],
+          504 => ['command' => 'support-title-tokens',              'shedule' => '14 15 * * *', 'description' => 'Поддержка токенов описаний'],
+          505 => ['command' => 'support-title-bigrams',             'shedule' => '14 16 * * *', 'description' => 'Поддержка биграм описаний'],
+          506 => ['command' => 'unknown-producer-intersect',        'shedule' => '14 17 * * *', 'description' => 'Обновление пересечение производителей'],
+          507 => ['command' => 'unknown-producer-rawprice-count',   'shedule' => '14 18 * * *', 'description' => 'Обновление количества товаров у неизвестных производителей'],
+          508 => ['command' => 'unknown-producer-supplier-count',   'shedule' => '14 19 * * *', 'description' => 'Обновление количества поставщиков у неизвестных производителей'],
+          509 => ['command' => 'update-car-status',                 'shedule' => '14 20 * * *', 'description' => 'Обновление статусов машин'],
+          510 => ['command' => 'update-fill-volumes',               'shedule' => '14 21 * * *', 'description' => 'Обновление автонорм машин'],
+          511 => ['command' => 'update-group-good-count',           'shedule' => '14 22 * * *', 'description' => 'Обновление количества товаров в группах'],
+          512 => ['command' => 'update-producers-good-count',       'shedule' => '14 23 * * *', 'description' => 'Обновление количества товаров у поставщиков'],
+          513 => ['command' => 'update-supplier-amount',            'shedule' => '14 0 * * *',  'description' => 'Обновление сумм поставок поставщиков'],
+          514 => ['command' => 'update-good-car-count',             'shedule' => '14 1 * * *',  'description' => 'Обновление количества машин у товаров'],
+          515 => ['command' => 'delete-producer',                   'shedule' => '14 2 * * *',  'description' => 'Удаление пустых производителей'],
+          516 => ['command' => 'delete-article',                    'shedule' => '14 3 * * *',  'description' => 'Удаление пустых артикулов производителей'],
+          517 => ['command' => 'delete-unknown-producer',           'shedule' => '14 4 * * *',  'description' => 'Удаление пустых неизвестных производителей'],
+          518 => ['command' => 'delete-token',                      'shedule' => '14 5 * * *',  'description' => 'Удаление пустых токенов'],
+          519 => ['command' => 'delete-bigram',                     'shedule' => '14 6 * * *',  'description' => 'Удаление пустых биграм'],
+          520 => ['command' => 'delete-goods',                      'shedule' => '14 7 * * *',  'description' => 'Удаление пустых карточек товаров'],
+          521 => ['command' => 'prices-by-link',                    'shedule' => '14 8 * * *',  'description' => 'Скачивание прайсов по ссылке'],
+          522 => ['command' => 'delete-token-group',                'shedule' => '14 9 * * *',  'description' => 'Удаление пустых групп наименований с пересчетом товаров в группе'],
+          523 => ['command' => 'update-apl-acquiring',              'shedule' => '14 10 * * *', 'description' => 'Загрузить эквайринг с АПЛ'],
+          524 => ['command' => 'update-attribute-apl-id',           'shedule' => '14 11 * * *', 'description' => 'Обновление атрибутов товаров'],
+          525 => ['command' => 'update-generic-group-apl-id',       'shedule' => '44 12 * * *', 'description' => 'Обновление группы Apl общих групп'],
+          526 => ['command' => 'update-make-apl-id',                'shedule' => '44 13 * * *', 'description' => 'Обновление aqplId брендов машин'],
+          527 => ['command' => 'update-model-apl-id',               'shedule' => '44 14 * * *', 'description' => 'Обновление aplId моделей машин'],
+          528 => ['command' => 'update-producer-apl-id',            'shedule' => '44 15 * * *', 'description' => 'Обновление производителей APL ID'],
         ];
     }
 
@@ -208,7 +208,7 @@ class JobManager
         $jobs = $this->updateJobList();
         
         $load = sys_getloadavg();
-        if ($load[0] < 6){
+        if ($load[0] < 7){
             $processCount = $this->entityManager->getRepository(Setting::class)
                     ->count(['status' => Setting::STATUS_ACTIVE]);
             
