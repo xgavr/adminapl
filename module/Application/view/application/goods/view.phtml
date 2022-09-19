@@ -1,11 +1,11 @@
 <?php
     use Application\Entity\Oem;
     use Stock\Entity\Movement;
-    use Application\Entity\Order;
+    use Application\Entity\Goods;
     
     $priceCols = $goodsManager->priceCols($goods);
     
-    $this->headTitle($goods->getName());
+    $this->headTitle($goods->getNameShort());
 ?>
 
 <div class="row">
@@ -63,20 +63,7 @@
     </div>
     <div class="col-md-9">
         <h3>
-<!--                    <button class="btn btn-default btn-xs" id="enable-name-editable"
-                    title="Изменить наименование">
-                <span class="glyphicon glyphicon-edit" ></span>
-            </button> -->
-            <a href="#" id="good-name-editable" class="editable" 
-               data-type="text" 
-               data-pk="<?= $goods->getId()?>" 
-               data-name="name" 
-               data-disabled="true" 
-               data-url="/goods/name-edit">
-                    <?php if ($goods->getName()): ?>
-                        <?= $this->escapeHtml($goods->getName()); ?>
-                    <?php endif;?>
-            </a>
+            <?= $goods->getNameShort() ?>
         </h3>
         <?php if ($goods->getDescription()): ?>
         
@@ -94,41 +81,62 @@
         <div class="tab-content" id="featureTabContent">
             <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
                 <table class="table table-bordered">
-                    <p>
-                        <?php foreach ($goods->getAttributeValues() as $attributeValue):?>
-                            <tr style="text-decoration: <?= $attributeValue->getAttribute()->getStatusDecorationAsString()?>">
-                                <td align='right'>
-                                    <a href="#" 
-                                       class="editable" data-type="text" 
-                                       data-pk="<?= $attributeValue->getAttribute()->getId()?>" 
-                                       data-name="name" 
-                                       data-disabled="true"
-                                       data-url="/goods/attribute-edit">
-                                        <?= $attributeValue->getAttribute()->getName()?>
-                                    </a>
-                                </td>
+                    <?php foreach ($goods->getAttributeValues() as $attributeValue):?>
+                        <tr style="text-decoration: <?= $attributeValue->getAttribute()->getStatusDecorationAsString()?>">
+                            <td align='right'>
+                                <a href="#" 
+                                   class="editable" data-type="text" 
+                                   data-pk="<?= $attributeValue->getAttribute()->getId()?>" 
+                                   data-name="name" 
+                                   data-disabled="true"
+                                   data-url="/goods/attribute-edit">
+                                    <?= $attributeValue->getAttribute()->getName()?>
+                                </a>
+                            </td>
 <!--                                        <td width="5">
-                                    <input type="checkbox" class="similarGoodCheckbox checkbox" 
-                                           data-toggle='tooltip' data-original-title="Использовать в аналогичных товарах"
-                                           value="<?= $attributeValue->getAttribute()->getId()?>" <?= $attributeValue->getAttribute()->getSimilarGoodAsHtml()?>/>
-                                </td>
-                                <td width="5">
-                                    <input type="checkbox" class="toBestNameCheckbox checkbox" 
-                                           data-toggle='tooltip' data-original-title="Использовать в наименовании"
-                                           value="<?= $attributeValue->getAttribute()->getId()?>" <?= $attributeValue->getAttribute()->getToBestNameAsHtml()?>/>
-                                </td>-->
-                                <td>
-                                    <?= $attributeValue->getAttributeValue()->getValue();?>
-                                </td>
-                                <td width="10">
-                                    <button value="/goods/delete-attribute/<?= $attributeValue->getAttribute()->getId()?>" type="button"
-                                            class="btn btn-default btn-xs this-delete" title="Не показывать">
-                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                    </button>
-                                </td>
-                            </tr>                                              
-                        <?php endforeach;?>
-                    </p>
+                                <input type="checkbox" class="similarGoodCheckbox checkbox" 
+                                       data-toggle='tooltip' data-original-title="Использовать в аналогичных товарах"
+                                       value="<?= $attributeValue->getAttribute()->getId()?>" <?= $attributeValue->getAttribute()->getSimilarGoodAsHtml()?>/>
+                            </td>
+                            <td width="5">
+                                <input type="checkbox" class="toBestNameCheckbox checkbox" 
+                                       data-toggle='tooltip' data-original-title="Использовать в наименовании"
+                                       value="<?= $attributeValue->getAttribute()->getId()?>" <?= $attributeValue->getAttribute()->getToBestNameAsHtml()?>/>
+                            </td>-->
+                            <td>
+                                <?= $attributeValue->getAttributeValue()->getValue();?>
+                            </td>
+                            <td width="10">
+                                <button value="/goods/delete-attribute/<?= $attributeValue->getAttribute()->getId()?>" type="button"
+                                        class="btn btn-default btn-xs this-delete" title="Не показывать">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>                                              
+                    <?php endforeach;?>
+                        <tr>
+                            <td>
+                                <!--                    
+                                    <button class="btn btn-default btn-xs" id="enable-name-editable"
+                                        title="Изменить наименование">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button> -->
+                                <a href="#" id="good-name-editable" class="editable" 
+                                   data-type="text" 
+                                   data-pk="<?= $goods->getId()?>" 
+                                   data-name="name" 
+                                   data-disabled="true" 
+                                   data-url="/goods/name-edit">
+                                        <?php if ($goods->getName()): ?>
+                                            <?= $this->escapeHtml($goods->getName()); ?>
+                                        <?php endif;?>
+                                </a>
+                            </td> 
+                            <td></td>
+                            <td>
+                                <?= $goods->getAplId(); ?>
+                            </td>
+                        </tr>    
                 </table>                    
                 <table class="table table-bordered">
                     <p>
