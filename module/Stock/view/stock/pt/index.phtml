@@ -86,6 +86,9 @@
         if (row.status == '<?= Pt::STATUS_RETIRED?>'){
            retired += ' retired';
         }
+        if (row.status == '<?= Pt::STATUS_TAKE_NO?>'){
+           retired += ' warning';
+        }
         return {classes: retired};
     }
 
