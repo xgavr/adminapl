@@ -165,14 +165,14 @@ class StManager
                         $write -= $quantity;
                         if ($write <= 0){
                             break;
-                        } else {
-                            $stTake = St::STATUS_TAKE_NO;
                         }
                     }    
                 }    
                 if ($write == 0){
                     $take = StGood::TAKE_OK;
-                }
+                } else {
+                    $stTake = St::STATUS_TAKE_NO;
+                }    
 
                 $this->entityManager->getConnection()
                         ->update('st_good', ['take' => $take], ['id' => $stGood->getId()]);
