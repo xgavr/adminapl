@@ -154,12 +154,12 @@ class VtpManager
                     $write -= $quantity;
                     if ($write <= 0){
                         break;
-                    } else {
-                        $vtpTake = Vtp::STATUS_TAKE_NO;
                     }                   
                 }    
                 if ($write == 0){
                     $take = VtpGood::TAKE_OK;
+                } else {
+                    $vtpTake = Vtp::STATUS_TAKE_NO;
                 }
                 $this->entityManager->getConnection()
                         ->update('vtp_good', ['take' => $take], ['id' => $vtpGood->getId()]);

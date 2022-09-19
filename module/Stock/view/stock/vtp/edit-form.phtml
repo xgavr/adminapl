@@ -1,4 +1,6 @@
 <?php
+use Stock\Entity\VtpGood;
+
 $form = $this->form;
 
 $form->get('legal_id')->setAttributes([
@@ -376,7 +378,7 @@ if ($vtp){
     
     function vtpTakeStyle(row){
         var classes = 'default';
-        if (row.vtpg.take == '2'){
+        if (row.vtpg.take === <?= VtpGood::TAKE_NO?>){
             classes = 'warning';
         }        
         return {classes: classes};

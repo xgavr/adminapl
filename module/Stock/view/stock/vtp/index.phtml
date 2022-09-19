@@ -143,11 +143,14 @@
         if (row.status === '<?= Vtp::STATUS_RETIRED?>'){
            retired += ' retired';
         }
+        if (row.statusAccount === '<?= Vtp::STATUS_TAKE_NO?>'){
+           retired += ' warning';
+        }
         switch(row.statusDoc){
             case '<?= Vtp::STATUS_DOC_NOT_RECD?>': 
-                        return {classes: 'success '+retired}; break;
+                        return {classes: retired}; break;
             case '<?= Vtp::STATUS_DOC_RECD?>': 
-                        return {classes: 'warning '+retired}; break;
+                        return {classes: 'info '+retired}; break;
                 default:break;     
         }
         
@@ -246,7 +249,7 @@
             }, 
             statusDocRect: {
                 name: 'Отправлен',
-                classNames: 'bg-warning',
+                classNames: 'bg-info',
                 onClick: function(row) {
                     changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_RECD?>);
                 },
@@ -260,7 +263,7 @@
             statusDocNotRect: {
                 name: 'Принят',
 //                iconClass: 'glyphicon glyphicon-ok',
-                classNames: 'bg-success',
+//                classNames: 'bg-success',
                 onClick: function(row) {
                     changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NOT_RECD?>);
                 },
