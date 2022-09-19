@@ -113,7 +113,7 @@ class JobManager
         return [
           307 => ['command' => 'update-attribute-value-apl-id', 'shedule' => '13 * * * *',              'description' => 'Обновление значений атрибутов'],
           308 => ['command' => 'update-car-apl-id',             'shedule' => '23 * * * *',              'description' => 'Обновление aplId машин'],
-          309 => ['command' => 'update-good-apl-id',            'shedule' => '33 * * * *',              'description' => 'Обновление AplId товара'],
+          309 => ['command' => 'update-good-apl-id',            'shedule' => '3,18,33,48 * * * *',      'description' => 'Обновление AplId товара'],
           310 => ['command' => 'update-good-group',             'shedule' => '43 * * * *',              'description' => 'Обновление групп в АПЛ'],
           311 => ['command' => 'update-group-apl-id',           'shedule' => '53 * * * *',              'description' => 'Получить апл группы товаров'],
           312 => ['command' => 'check-apl-order',               'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Проверка выгрузки заказов из АПЛ'],
