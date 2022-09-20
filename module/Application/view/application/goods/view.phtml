@@ -116,11 +116,6 @@
                     <?php endforeach;?>
                         <tr>
                             <td>
-                                <!--                    
-                                    <button class="btn btn-default btn-xs" id="enable-name-editable"
-                                        title="Изменить наименование">
-                                    <span class="glyphicon glyphicon-edit" ></span>
-                                </button> -->
                                 <a href="#" id="good-name-editable" class="editable" 
                                    data-type="text" 
                                    data-pk="<?= $goods->getId()?>" 
@@ -132,9 +127,13 @@
                                         <?php endif;?>
                                 </a>
                             </td> 
-                            <td></td>
+                            <td><?= $goods->getAplId(); ?></td>
                             <td>
-                                <?= $goods->getAplId(); ?>
+                                <!--                    
+                                    <button class="btn btn-default btn-xs" id="enable-name-editable"
+                                        title="Изменить наименование">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button> -->                                
                             </td>
                         </tr>    
                 </table>                    

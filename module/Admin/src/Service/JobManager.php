@@ -125,7 +125,6 @@ class JobManager
           318 => ['command' => 'update-good-prices',            'shedule' => '29,44 * * * *',           'description' => 'Обновление цен товаров в Апл'],
           319 => ['command' => 'update-rawprices',              'shedule' => '14,29,44,59 * * * *',        'description' => 'Обновление строк прайсов в АПЛ'],
           320 => ['command' => 'update-supplier-order',         'shedule' => self::CRON_EVERY_MIN_30,   'description' => 'Обновить заказы поставщикам'],
-          321 => ['command' => 'update-apl-ptu',                'shedule' => '25,55 * * * *',           'description' => 'Обновление поступлений из АПЛ'],
           322 => ['command' => 'update-good-attribute',         'shedule' => '17 * * * *',              'description' => 'Обновление атрибутов товаров'],
           323 => ['command' => 'update-good-car',               'shedule' => '27 * * * *',              'description' => 'Обновление машин товаров'],
           324 => ['command' => 'update-good-img',               'shedule' => '37 * * * *',              'description' => 'Обновление картинок товаров'],
@@ -141,7 +140,6 @@ class JobManager
     {
         return [
           401 => ['command' => 'idocs',                 'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Загрузка электронных жокументов'],
-          402 => ['command' => 'pt-generator',          'shedule' => '20,50 * * * *',           'description' => 'Генерация перемещений между офисами'],
           403 => ['command' => 'varact',                'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Восстановление последовательности'],
           404 => ['command' => 'unload-market-prices ', 'shedule' => '*/10 9-11 * * *',         'description' => 'Генерация прайс листов для ТП'],
         ];
@@ -154,6 +152,8 @@ class JobManager
     private function updateJobList()
     {
         return [
+          321 => ['command' => 'update-apl-ptu',                    'shedule' => '25,55 * * * *',           'description' => 'Обновление поступлений из АПЛ'],
+          402 => ['command' => 'pt-generator',                      'shedule' => '20,50 * * * *',           'description' => 'Генерация перемещений между офисами'],
           501 => ['command' => 'fill-token-group-token',            'shedule' => '14 12 * * *', 'description' => 'Заполнение токенов групп наименований'],
           502 => ['command' => 'fill-token-group-bigram',           'shedule' => '14 13 * * *', 'description' => 'Заполнение биграм групп наименований'],
           503 => ['command' => 'producer-best-name',                'shedule' => '14 14 * * *', 'description' => 'Обновление наименований производителей'],
