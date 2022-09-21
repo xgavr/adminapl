@@ -17,6 +17,10 @@ use Application\Entity\GenericGroup;
 use Application\Entity\TokenGroup;
 use Stock\Entity\Register;
 use Stock\Entity\GoodBalance;
+use Application\Entity\Bid;
+use Application\Entity\Order;
+use Stock\Entity\VtpGood;
+use Stock\Entity\Vtp;
 
 /**
  * Description of MovementRepository
@@ -308,6 +312,67 @@ class MovementRepository extends EntityRepository{
     }      
     
     /**
+     * Получить остаток на возврате
+     * @param integer $goodId
+     * @param integer $officeId
+     * @param integer $companyId
+     * @return array
+     */
+    private function vozvratRest($goodId, $officeId, $companyId)
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('sum(vg.quantity) as reserve')
+                ->from(VtpGood::class, 'vg')
+                ->join('vg.vtp', 'v')
+                ->join('v.ptu', 'p')
+                ->join('p.contract', 'c')
+                ->where('vg.good = ?1')
+                ->andWhere('p.office = ?2') 
+                ->andWhere('c.company = ?3') 
+                ->andWhere('v.status = ?4') 
+                ->andWhere('v.statusDoc != ?5') 
+                ->setParameter('1', $goodId)
+                ->setParameter('2', $officeId)
+                ->setParameter('3', $companyId)
+                ->setParameter('4', Vtp::STATUS_ACTIVE)
+                ->setParameter('5', Vtp::STATUS_DOC_NOT_RECD)
+                ->setMaxResults(1)
+                ;
+            
+        return $qb->getQuery()->getOneOrNullResult();                
+    }
+
+    /**
+     * Получить резерв
+     * @param integer $goodId
+     * @param integer $officeId
+     * @param integer $companyId
+     * @param integer $status
+     * @return array
+     */
+    private function reserveRest($goodId, $officeId, $companyId, $status)
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('sum(b.num) as reserve')
+                ->from(Bid::class, 'b')
+                ->join('b.order', 'o')
+                ->where('b.good = ?1')
+                ->andWhere('o.office = ?2') 
+                ->andWhere('o.company = ?3') 
+                ->andWhere('o.status = ?4')
+                ->setParameter('1', $goodId)
+                ->setParameter('2', $officeId)
+                ->setParameter('3', $companyId)
+                ->setParameter('4', $status)
+                ->setMaxResults(1)
+                ;
+            
+        return $qb->getQuery()->getOneOrNullResult();                
+    }
+    
+    /**
      * Получить актуальный остаток
      * @param integer $goodId
      * @param integer $officeId
@@ -346,16 +411,37 @@ class MovementRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
         $rests = $this->goodBaseRest($goodId,$officeId, $companyId);
-        $rest = $price = 0;
+        $reserveRest = $this->reserveRest($goodId, $officeId, $companyId, Order::STATUS_CONFIRMED);
+        $deliveryRest = $this->reserveRest($goodId, $officeId, $companyId, Order::STATUS_DELIVERY);
+        $vozvratRest = $this->vozvratRest($goodId, $officeId, $companyId);
+        $rest = $price = $reserve = $delivery = $vozvrat = 0;
         if (is_array($rests)){
             if (!empty($rests['rest'])){
                 $rest = $rests['rest'];
                 $price = abs($rests['amount']/$rests['rest']);
             }    
         }
+        if (is_array($reserveRest)){
+            if (!empty($reserveRest['reserve'])){
+                $reserve = $reserveRest['reserve'];
+            }    
+        }
+        if (is_array($deliveryRest)){
+            if (!empty($deliveryRest['reserve'])){
+                $delivery = $deliveryRest['reserve'];
+            }    
+        }
+        if (is_array($vozvratRest)){
+            if (!empty($vozvratRest['reserve'])){
+                $vozvrat = $vozvratRest['reserve'];
+            }    
+        }
         $upd = [
             'rest' => $rest,
             'price' => $price,
+            'reserve' => $reserve,
+            'delivery' => $delivery,
+            'vozvrat' => $vozvrat,
         ];
         
         $crit = array_filter([
@@ -375,6 +461,9 @@ class MovementRepository extends EntityRepository{
                 'company_id' => $companyId,
                 'rest' => $rest,
                 'price' => $price,
+                'reserve' => $reserve,
+                'delivery' => $delivery,
+                'vozvrat' => $vozvrat,
             ]);
         }
                         
