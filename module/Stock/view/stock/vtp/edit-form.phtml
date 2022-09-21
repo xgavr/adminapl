@@ -378,7 +378,7 @@ if ($vtp){
     
     function vtpTakeStyle(row){
         var classes = 'default';
-        if (row.vtpg.take === <?= VtpGood::TAKE_NO?>){
+        if (row.vtpg.take == <?= VtpGood::TAKE_NO?>){
             classes = 'warning';
         }        
         return {classes: classes};
