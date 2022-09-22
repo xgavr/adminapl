@@ -353,7 +353,7 @@ class MovementRepository extends EntityRepository{
         } 
         
         $entityManager = $this->getEntityManager();
-        $entityManager->getConnection()->insert(['reserve'], [
+        $entityManager->getConnection()->insert('reserve', [
             'doc_key' => $docKey,
             'good_id' => $goodId,
             'office_id' => $officeId,

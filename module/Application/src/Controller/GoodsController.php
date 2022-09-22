@@ -24,6 +24,7 @@ use Application\Entity\UnknownProducer;
 use Application\Filter\ArticleCode;
 use Stock\Entity\Movement;
 use Company\Entity\Office;
+use Stock\Entity\GoodBalance;
 
 class GoodsController extends AbstractActionController
 {
@@ -692,8 +693,8 @@ class GoodsController extends AbstractActionController
         $titleFeatures = $this->entityManager->getRepository(TitleToken::class)
                 ->goodTitleFeatures($goods);
         
-        $rest = $this->entityManager->getRepository(Movement::class)
-                ->goodRest($goods->getId(), date('Y-m-d 23:59:59'));
+        $rests = $this->entityManager->getRepository(GoodBalance::class)
+                ->findBy(['good' => $goods->getId()]);
 
         // Render the view template.
         return new ViewModel([
@@ -707,7 +708,7 @@ class GoodsController extends AbstractActionController
             'rate' => $rate,
             'titleFeatures' => $titleFeatures,
             'offices' => $offices,
-            'rest' => $rest,
+            'rests' => $rests,
             'currentUser' => $this->logManager->currentUser(),
         ]);
     }      
@@ -1033,6 +1034,27 @@ class GoodsController extends AbstractActionController
         
     }
 
+    public function updateRestAction()
+    {
+        $goodsId = $this->params()->fromRoute('id', -1);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->find($goodsId); 
+        
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);           
+        
+    }
+
+    
     public function goodCarsAction()
     {
         $goodsId = $this->params()->fromRoute('id', -1);

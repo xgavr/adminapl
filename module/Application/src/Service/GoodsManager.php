@@ -27,6 +27,7 @@ use Application\Entity\GoodSupplier;
 use Application\Entity\SupplierOrder;
 use Stock\Entity\PtuGood;
 use Stock\Entity\OtGood;
+use Stock\Entity\GoodBalance;
 
 /**
  * Description of GoodsService
@@ -988,4 +989,20 @@ class GoodsManager
             
         return;
     }    
+    
+    /**
+     * Обновить остатки
+     * @param Good $good
+     */
+    public function updateBalance($good)
+    {
+        $balances = $this->entityManager->getRepository(GoodBalance::class)
+                ->findBy(['good' => $good->getId()]);
+        foreach ($balances as $balance){
+            $this->entityManager->getRepository(GoodBalance::class)
+                    ->updateGoodBalance($good->getId(), $balance->getOffice()->getId, $balance->getCompany()->getId());
+        }
+        
+        return;
+    }
 }

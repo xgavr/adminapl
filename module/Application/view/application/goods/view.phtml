@@ -136,6 +136,18 @@
                                 </button> -->                                
                             </td>
                         </tr>    
+                    <?php foreach ($rests as $rest):?>
+                        <tr>
+                            <td><?= $rest->getOffice()->getName()?> (<?= $rest->getCompany()->getName()?>)</td>
+                            <td><?= $rest->getRest() ?></td>
+                            <td>                                                 
+                                <button value="/goods/update-rest/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обновить">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>                             
+                            </td>
+                        </tr>
+                    <?php endforeach;?>                        
                 </table>                    
                 <table class="table table-bordered">
                     <p>
