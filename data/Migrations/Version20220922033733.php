@@ -20,7 +20,7 @@ final class Version20220922033733 extends AbstractMigration
         $table->addColumn('good_id', 'integer', ['notnull'=>true]);
         $table->addColumn('office_id', 'integer', ['notnull' => true]);
         $table->addColumn('company_id', 'integer', ['notnull' => true]);
-        $table->addColumn('user_id', 'integer', ['notnull' => true]);
+        $table->addColumn('user_id', 'integer', ['notnull' => false]);
         $table->addColumn('doc_key', 'string', ['notnull' => true]);
         $table->addColumn('rest', 'float', ['notnull' => true, 'default' => 0]);
         $table->addColumn('status', 'integer', ['notnull' => true, 'default' => Reserve::STATUS_RESERVE]);

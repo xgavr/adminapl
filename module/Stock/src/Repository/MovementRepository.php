@@ -383,11 +383,13 @@ class MovementRepository extends EntityRepository{
             }
         }
         if ($doc instanceof Vtp){
-            $vtpGoods = $entityManager->getRepository(VtpGood::class)
-                    ->findBy(['vtp' => $doc->getId()]);
-            foreach ($vtpGoods as $vtpGood){
-                $this->insertReserve($doc, $vtpGood->getGood()->getId(), $vtpGood->getQuantity());
-            }
+            if ($doc->getStatusDoc() != Vtp::STATUS_DOC_NOT_RECD && $doc->getStatus() = Vtp::STATUS_ACTIVE){
+                $vtpGoods = $entityManager->getRepository(VtpGood::class)
+                        ->findBy(['vtp' => $doc->getId()]);
+                foreach ($vtpGoods as $vtpGood){
+                    $this->insertReserve($doc, $vtpGood->getGood()->getId(), $vtpGood->getQuantity());
+                }
+            }    
         }
         
         return;
