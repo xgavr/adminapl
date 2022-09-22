@@ -376,11 +376,13 @@ class MovementRepository extends EntityRepository{
         
         $entityManager = $this->getEntityManager();
         if ($doc instanceof Order){
-            $bids = $entityManager->getRepository(Bid::class)
-                    ->findBy(['order' => $doc->getId()]);
-            foreach ($bids as $bid){
-                $this->insertReserve($doc, $bid->getGood()->getId(), $bid->getNum());
-            }
+            if ($doc->getStatus() == Order::STATUS_CONFIRMED || $doc->getStatus() == Order::STATUS_DELIVERY){
+                $bids = $entityManager->getRepository(Bid::class)
+                        ->findBy(['order' => $doc->getId()]);
+                foreach ($bids as $bid){
+                    $this->insertReserve($doc, $bid->getGood()->getId(), $bid->getNum());
+                }
+            }    
         }
         if ($doc instanceof Vtp){
             if ($doc->getStatusDoc() != Vtp::STATUS_DOC_NOT_RECD && $doc->getStatus() == Vtp::STATUS_ACTIVE){
