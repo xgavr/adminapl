@@ -756,6 +756,10 @@ class AplOrderService {
             $order = $this->entityManager->getRepository(Order::class)
                     ->findOneByStatusEx(Order::STATUS_EX_NO);
             if (!$order){
+                $order = $this->entityManager->getRepository(Order::class)
+                        ->findOneByStatusEx(Order::STATUS_EX_TOTAL_NO_MATH);
+            }
+            if (!$order){
                 break;
             }
             if ($order->getAplId()){

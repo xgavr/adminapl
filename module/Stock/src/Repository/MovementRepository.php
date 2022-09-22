@@ -507,7 +507,7 @@ class MovementRepository extends EntityRepository{
                 'good_id' => $goodId, 
                 'office_id' => $officeId, 
                 'company_id' => $companyId,
-                'rest' => $rest,
+                'rest' => $goodRest,
                 'price' => $price,
                 'reserve' => $reserveRest,
                 'delivery' => $deliveryRest,

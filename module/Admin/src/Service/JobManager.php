@@ -152,6 +152,7 @@ class JobManager
     private function updateJobList()
     {
         return [
+          315 => ['command' => 'update-apl-order',                  'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление заказов из АПЛ'],
           321 => ['command' => 'update-apl-ptu',                    'shedule' => '25,55 * * * *',           'description' => 'Обновление поступлений из АПЛ'],
           402 => ['command' => 'pt-generator',                      'shedule' => '20,50 * * * *',           'description' => 'Генерация перемещений между офисами'],
           501 => ['command' => 'fill-token-group-token',            'shedule' => '14 12 * * *', 'description' => 'Заполнение токенов групп наименований'],
