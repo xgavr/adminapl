@@ -427,7 +427,7 @@ class RegisterManager
                 if ($vtp){
                     $flag = true;
                     $this->vtpManager->repostVtp($vtp);
-                    if ($vtp->getStatus() == Vtp::STATUS_ACTIVE){
+                    if ($vtp->getStatus() == Vtp::STATUS_ACTIVE && $vtp->getStatusDoc() == Vtp::STATUS_DOC_NOT_RECD){
                         $takeNo = $this->entityManager->getRepository(VtpGood::class)
                                 ->count(['vtp' => $vtp->getId(), 'take' => VtpGood::TAKE_NO]);
                         $flag = $takeNo == 0;
