@@ -475,9 +475,9 @@ class MovementRepository extends EntityRepository{
         if (is_array($reserves)){
             foreach ($reserves as $reserve){
                 switch ($reserve['status']){
-                    case Reserve::STATUS_RESERVE: $reserveRest = $reserve['rest']; break;
-                    case Reserve::STATUS_DELIVERY: $deliveryRest = $reserve['rest']; break;
-                    case Reserve::STATUS_VOZVRAT: $vozvratRest = $reserve['rest']; break;
+                    case Reserve::STATUS_RESERVE: $reserveRest = $reserve['reserve']; break;
+                    case Reserve::STATUS_DELIVERY: $deliveryRest = $reserve['reserve']; break;
+                    case Reserve::STATUS_VOZVRAT: $vozvratRest = $reserve['reserve']; break;
                 }
             }
         }    
