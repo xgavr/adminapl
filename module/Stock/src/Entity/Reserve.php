@@ -13,19 +13,19 @@ use Company\Entity\Legal;
 use Company\Entity\Office;
 use Application\Entity\Goods;
 use User\Entity\User;
-use Stock\Entity\Register;
 
 
 /**
  * Description of Mutual
  * @ORM\Entity(repositoryClass="\Stock\Repository\MovementRepository")
- * @ORM\Table(name="good_balance")
+ * @ORM\Table(name="reserve")
  * @author Daddy
  */
-class GoodBalance {
+class Reserve {
     
-    const STATUS_ACTIVE       = 1; // Active.
-    const STATUS_RETIRED      = 2; // Retired.
+    const STATUS_RESERVE      = 1; // резерв.
+    const STATUS_DELIVERY     = 2; // доставка.
+    const STATUS_VOZVRAT      = 3; // возврат.
     
     /**
      * @ORM\Id
@@ -40,53 +40,33 @@ class GoodBalance {
     protected $rest;
     
     /**
-     * @ORM\Column(name="reserve")   
-     */
-    protected $reserve;
-    
-    /**
-     * @ORM\Column(name="delivery")   
-     */
-    protected $delivery;
-
-    /**
-     * @ORM\Column(name="vozvrat")   
-     */
-    protected $vozvrat;
-
-    /** 
-     * @ORM\Column(name="price")  
-     */
-    protected $price;
-    
-    /** 
-     * @ORM\Column(name="status")  
+     * @ORM\Column(name="status")   
      */
     protected $status;
-
+        
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="goodBalances") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="reserves") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
     private $good;
             
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="goodBalances") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="reserves") 
      * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
      */
     private $office;    
     
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="goodBalances") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="reserves") 
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
      */
     private $company;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Stock\Entity\Register", inversedBy="goodBalances") 
-     * @ORM\JoinColumn(name="base_stamp", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Register", inversedBy="reserves") 
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $base;
+    private $user;
 
     public function __construct() {
     }
@@ -111,70 +91,6 @@ class GoodBalance {
         $this->rest = $rest;
     }     
 
-    public function getReserve() 
-    {
-        return $this->reserve;
-    }
-
-    public function setReserve($reserve) 
-    {
-        $this->reserve = $reserve;
-    }     
-    
-    /**
-     * Returns the delivery.
-     * @return float     
-     */
-    public function getDelivery() 
-    {
-        return $this->delivery;
-    }
-    
-    /**
-     * Sets delivery.
-     * @param float $delivery     
-     */
-    public function setDelivery($delivery) 
-    {
-        $this->delivery = $delivery;
-    }    
-                
-    /**
-     * Returns the vozvrat.
-     * @return float     
-     */
-    public function getVozvrat() 
-    {
-        return $this->vozvrat;
-    }
-    
-    /**
-     * Sets vozvrat.
-     * @param float $vozvrat     
-     */
-    public function setVozvrat($vozvrat) 
-    {
-        $this->vozvrat = $vozvrat;
-    }    
-                
-    /**
-     * Sets price.
-     * @param float $price     
-     */
-    public function setPrice($price) 
-    {
-        $this->price = $price;
-    }    
-    
-    /**
-     * Returns the price.
-     * @return float     
-     */
-    public function getPrice() 
-    {
-        return $this->price;
-    }    
-        
     /**
      * Returns status.
      * @return int     
@@ -183,7 +99,7 @@ class GoodBalance {
     {
         return $this->status;
     }
-
+    
     /**
      * Returns possible statuses as array.
      * @return array
@@ -191,8 +107,9 @@ class GoodBalance {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Активный',
-            self::STATUS_RETIRED => 'Оставить',
+            self::STATUS_RESERVE => 'Резерв',
+            self::STATUS_DELIVERY => 'Доставка',
+            self::STATUS_VOZVRAT => 'Возврат',
         ];
     }    
     
@@ -217,7 +134,7 @@ class GoodBalance {
     {
         $this->status = $status;
     }   
-    
+
     /**
      * Returns the good.
      * @return Goods     
@@ -246,12 +163,12 @@ class GoodBalance {
     }
 
     /**
-     * Returns the base.
-     * @return Register     
+     * Returns the user.
+     * @return User     
      */
-    public function getBase() 
+    public function getUser() 
     {
-        return $this->base;
+        return $this->user;
     }
 
 }

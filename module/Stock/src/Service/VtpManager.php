@@ -3,14 +3,12 @@ namespace Stock\Service;
 
 use Stock\Entity\Vtp;
 use Stock\Entity\Ptu;
-use Stock\Entity\Ntd;
-use Stock\Entity\Unit;
-use Company\Entity\Country;
 use Stock\Entity\VtpGood;
 use Admin\Entity\Log;
 use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
 use Stock\Entity\Register;
+use Stock\Entity\Reserve;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -181,6 +179,8 @@ class VtpManager
      */
     public function repostVtp($vtp)
     {
+        $this->entityManager->getRepository(Reserve::class)
+            ->updateReserve($vtp);
         $this->updateVtpMovement($vtp);
         $this->updateVtpMutuals($vtp);
         

@@ -36,6 +36,7 @@ use Application\Entity\SupplierOrder;
 use Laminas\Json\Decoder;
 use Stock\Entity\Comiss;
 use Stock\Entity\Register;
+use Stock\Entity\Reserve;
 
 /**
  * Description of OrderService
@@ -1021,7 +1022,8 @@ class OrderManager
                 ->removeOrderRetails($order->getLogKey());
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($order->getLogKey());                
-        
+        $this->entityManager->getRepository(Reserve::class)
+                ->updateReserve($order);
         $this->updateOrderMovement($order, $docStamp);            
 
         if ($order->getStatus() == Order::STATUS_SHIPPED){
