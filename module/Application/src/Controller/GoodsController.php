@@ -696,7 +696,7 @@ class GoodsController extends AbstractActionController
                 ->findBy(['good' => $goods->getId()]);
         
         $goodSuppliers = $this->entityManager->getRepository(Goods::class)
-                ->goodSuppliersForSelect($goods);
+                ->findGoodSuppliers($goods);
 
         // Render the view template.
         return new ViewModel([

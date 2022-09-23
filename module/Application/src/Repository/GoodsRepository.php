@@ -1885,7 +1885,7 @@ class GoodsRepository extends EntityRepository
      * @param Goods $good
      * @return array
      */
-    private function findGoodSuppliers($good)
+    public function findGoodSuppliers($good)
     {
         $entityManager = $this->getEntityManager();
 
