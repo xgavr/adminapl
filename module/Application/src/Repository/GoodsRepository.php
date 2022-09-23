@@ -1518,9 +1518,11 @@ class GoodsRepository extends EntityRepository
         
         if (is_array($params)){
             if ($params['status']){
-                $queryBuilder->andWhere('r.status = ?2')
-                        ->setParameter('2', $params['status'])
-                        ;
+                if (is_numeric($params['status'])){
+                    $queryBuilder->andWhere('r.status = ?2')
+                            ->setParameter('2', $params['status'])
+                            ;
+                }    
             }
             if ($params['supplier']){
                 if (is_numeric($params['supplier'])){

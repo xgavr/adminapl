@@ -706,7 +706,7 @@ class GoodsController extends AbstractActionController
             'images' => $images,
             'oemStatuses' => \Application\Entity\Oem::getStatusList(),
             'oemSources' => \Application\Entity\Oem::getSourceList(),
-            'priceStatuses' => Rawprice::getStatusList(),
+            'priceStatuses' => [Rawprice::STATUS_PARSED => Rawprice::getStatusList()[Rawprice::STATUS_PARSED]],
             'rate' => $rate,
             'titleFeatures' => $titleFeatures,
             'offices' => $offices,
@@ -872,7 +872,7 @@ class GoodsController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $search = $this->params()->fromQuery('search');
-        $status = $this->params()->fromQuery('status', Rawprice::STATUS_PARSED);
+        $status = $this->params()->fromQuery('status');
         $supplier = $this->params()->fromQuery('supplier');
         $unknownProducer = $this->params()->fromQuery('unknownProducer');
         
