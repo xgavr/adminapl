@@ -497,6 +497,7 @@
     
     function priceQueryParams(params) {
         params.status = $('#priceStatusSelect').val();
+        params.supplier = $('#supplierSelect').val();
         return tabQueryParams('#price', params);
     }
     
