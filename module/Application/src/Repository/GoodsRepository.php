@@ -1440,7 +1440,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, p.id as prodicerId, p.name as producerName, off.name as officeName, gb.rest, gb.reserve, gb.delivery, gb.vozvrat, tg.name');
         
         $queryBuilder->from(GoodBalance::class, 'gb')
-                ->join(Goods::class, 'g')
+                ->join('g.good', 'g')
                 ->where('gb.rest != 0')    
                 ;
         
