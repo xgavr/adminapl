@@ -694,6 +694,9 @@ class GoodsController extends AbstractActionController
         
         $rests = $this->entityManager->getRepository(GoodBalance::class)
                 ->findBy(['good' => $goods->getId()]);
+        
+        $goodSuppliers = $this->entityManager->getRepository(Goods::class)
+                ->goodSuppliersForSelect($goods);
 
         // Render the view template.
         return new ViewModel([
@@ -709,6 +712,7 @@ class GoodsController extends AbstractActionController
             'offices' => $offices,
             'rests' => $rests,
             'currentUser' => $this->logManager->currentUser(),
+            'goodSuppliers' => $goodSuppliers,
         ]);
     }      
 
@@ -869,6 +873,7 @@ class GoodsController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $search = $this->params()->fromQuery('search');
         $status = $this->params()->fromQuery('status', Rawprice::STATUS_PARSED);
+        $supplier = $this->params()->fromQuery('supplier');
         $unknownProducer = $this->params()->fromQuery('unknownProducer');
         
         
@@ -887,7 +892,7 @@ class GoodsController extends AbstractActionController
         }        
         
         $query = $this->entityManager->getRepository(Goods::class)
-                        ->findPrice($goods, ['status' => $status]);
+                        ->findPrice($goods, ['status' => $status, 'supplier' => $supplier]);
 
         $total = count($query->getResult(2));
         

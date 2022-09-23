@@ -1512,6 +1512,7 @@ class GoodsRepository extends EntityRepository
             ->join('rr.supplier', 's')    
             ->where('g.id = ?1')    
             ->setParameter('1', $good->getId())
+            ->orderBy('rr.dateCreated', 'DESC')    
             ;
         
         if (is_array($params)){
@@ -1519,6 +1520,13 @@ class GoodsRepository extends EntityRepository
                 $queryBuilder->andWhere('r.status = ?2')
                         ->setParameter('2', $params['status'])
                         ;
+            }
+            if ($params['supplier']){
+                if (is_numeric($params['supplier'])){
+                    $queryBuilder->andWhere('rr.supplier = ?3')
+                            ->setParameter('3', $params['supplier'])
+                            ;
+                }    
             }
         }
         
@@ -1874,43 +1882,39 @@ class GoodsRepository extends EntityRepository
      * Найти поставщиков товара
      * 
      * @param Goods $good
-     * @return integer
+     * @return array
      */
-    public function findGoodSuppliers($good)
+    private function findGoodSuppliers($good)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('s.id, s.aplId')
+        $queryBuilder->select('s.id, s.name')
                 ->distinct()
-                ->from(Goods::class, 'g')
-                ->join('g.articles', 'a')
-                ->join('a.rawprice', 'r')
-                ->join('r.raw', 'raw')
-                ->join('raw.supplier', 's')
-                ->where('g.id = ?1')
+                ->from(GoodsSupplier::class, 'gs')
+                ->join('gs.supplier', 's')
+                ->where('gs.good = ?1')
                 ->setParameter('1', $good->getId())
-                ->andWhere('r.status = ?2')
-                ->setParameter('2', Rawprice::STATUS_PARSED)
                 ;
         
         return $queryBuilder->getQuery()->getResult();
     } 
-    
+
     /**
-     * Получить апл коды поставщиков товара
+     * Найти поставщиков товара
      * 
      * @param Goods $good
      * @return array
      */
-    public function findGoodAplIdSuppliers($good)
+    public function goodSuppliersForSelect($good)
     {
         $result = [];
         $data = $this->findGoodSuppliers($good);
         foreach ($data as $row){
-            $result[] = $row['aplId'];
+            $result[row['id']] = $row['name'];
         }
+        
         return $result;
     }
     
