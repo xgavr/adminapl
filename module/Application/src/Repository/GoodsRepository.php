@@ -1897,6 +1897,7 @@ class GoodsRepository extends EntityRepository
                 ->join('gs.supplier', 's')
                 ->where('gs.good = ?1')
                 ->setParameter('1', $good->getId())
+                ->orderBy('s.name', 'ASC')
                 ;
         
         return $queryBuilder->getQuery()->getResult();
