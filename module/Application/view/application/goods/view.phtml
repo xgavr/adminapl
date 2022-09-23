@@ -246,7 +246,7 @@
                 </table>
                 <table class="table table-bordered">
                     <tr>
-                        <th colspan="5">
+                        <th>
                             <button value="/goods/update-rest/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
                                     title="Обновить">
                                 <span class="glyphicon glyphicon-refresh" ></span>
@@ -262,11 +262,11 @@
                     <?php foreach ($rests as $rest):?>
                         <tr>
                             <td><?= $rest->getOffice()->getName()?> (<?= $rest->getCompany()->getName()?>)</td>
-                            <td><?= $rest->getRest() ?></td>
-                            <td><?= $rest->getReserve() ?></td>
-                            <td><?= $rest->getDelivery() ?></td>
-                            <td><?= $rest->getVozvrat() ?></td>
-                            <td><?= $rest->getAvailable() ?></td>
+                            <td width="20"><?= $rest->getRest() ?></td>
+                            <td width="20"><?= $rest->getReserve() ?></td>
+                            <td width="20"><?= $rest->getDelivery() ?></td>
+                            <td width="20"><?= $rest->getVozvrat() ?></td>
+                            <td width="20"><?= $rest->getAvailable() ?></td>
                         </tr>
                     <?php endforeach;?>                        
                     
