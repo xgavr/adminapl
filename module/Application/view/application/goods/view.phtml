@@ -262,11 +262,11 @@
                     <?php foreach ($rests as $rest):?>
                         <tr>
                             <td><?= $rest->getOffice()->getName()?> (<?= $rest->getCompany()->getName()?>)</td>
-                            <td width="20"><?= $rest->getRest() ?></td>
-                            <td width="20"><?= $rest->getReserve() ?></td>
-                            <td width="20"><?= $rest->getDelivery() ?></td>
-                            <td width="20"><?= $rest->getVozvrat() ?></td>
-                            <td width="20"><?= $rest->getAvailable() ?></td>
+                            <td width="20" align="right"><?= $rest->getRest() ?></td>
+                            <td width="20" align="right"><?= $rest->getReserve() ?></td>
+                            <td width="20" align="right"><?= $rest->getDelivery() ?></td>
+                            <td width="20" align="right"><?= $rest->getVozvrat() ?></td>
+                            <td width="20" align="right"><?= $rest->getAvailable() ?></td>
                         </tr>
                     <?php endforeach;?>                        
                     
