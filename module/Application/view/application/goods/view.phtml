@@ -246,15 +246,18 @@
                 </table>
                 <table class="table table-bordered">
                     <tr>
-                        <td colspan="5">
-                            Остатки
-                        </td>
-                        <td width="10">
+                        <th colspan="5">
                             <button value="/goods/update-rest/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
                                     title="Обновить">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                                                         
-                        </td>
+                            Остатки
+                        </th>
+                        <th>Наличие</th>
+                        <th>Резерв</th>
+                        <th>Доставка</th>
+                        <th>Возврат</th>
+                        <th>Доступно</th>
                     </tr>
                     <?php foreach ($rests as $rest):?>
                         <tr>
