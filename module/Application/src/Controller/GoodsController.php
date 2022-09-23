@@ -706,7 +706,7 @@ class GoodsController extends AbstractActionController
             'images' => $images,
             'oemStatuses' => \Application\Entity\Oem::getStatusList(),
             'oemSources' => \Application\Entity\Oem::getSourceList(),
-            'priceStatuses' => [Rawprice::STATUS_PARSED => Rawprice::getStatusList()[Rawprice::STATUS_PARSED]],
+            'priceStatuses' => [Rawprice::STATUS_PARSED => 'Последние'],
             'rate' => $rate,
             'titleFeatures' => $titleFeatures,
             'offices' => $offices,
