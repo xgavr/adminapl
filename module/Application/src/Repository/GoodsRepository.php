@@ -18,6 +18,7 @@ use Stock\Entity\Movement;
 use Application\Entity\Bid;
 use Application\Entity\Oem;
 use Application\Entity\Selection;
+use Stock\Entity\GoodBalance;
 
 
 /**
@@ -1435,15 +1436,12 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, p.id as prodicerId, p.name as producerName, off.name as officeName, sum(m.quantity) as rest')
-            ->from(Goods::class, 'g')
+        $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, p.id as prodicerId, p.name as producerName, off.name as officeName, gb.rest, gb.reserve, gb.delivery, gb.vozvrat')
+            ->from(GoodBalance::class, 'gb')
+            ->join('gb.good', 'g')    
             ->join('g.producer', 'p')    
-            ->leftJoin('g.movements', 'm')    
-            ->join('m.office', 'off')    
-//            ->orderBy('m.docStamp','DESC') 
-            ->groupBy('off.id')
-            ->addGroupBy('g.id')    
-            ->having('rest != 0')    
+            ->join('gb.office', 'off')    
+            ->where('gb.rest != 0')    
             ;
         
         if (is_array($params)){

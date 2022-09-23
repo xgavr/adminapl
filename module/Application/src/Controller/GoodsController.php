@@ -440,11 +440,10 @@ class GoodsController extends AbstractActionController
                             'order' => $order, 
                             'producerId' => $producer,
                             'groupId' => $group,
-                            'groupId' => $group,
                             'accurate' => $accurate,
                             ]);
         
-        //$total = count($query->getResult(2));
+        $total = count($query->getResult(2));
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -456,8 +455,8 @@ class GoodsController extends AbstractActionController
         $result = $query->getResult(2);
 
         return new JsonModel([
-//            'total' => $total,
-            'total' => 10000,
+            'total' => $total,
+//            'total' => 10000,
             'rows' => $result,
         ]);          
     }    
