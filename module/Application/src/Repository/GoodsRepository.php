@@ -1479,7 +1479,7 @@ class GoodsRepository extends EntityRepository
             }
             
             $queryBuilder->join('g.producer', 'p')    
-                    ->join('gb.office', 'off') 
+                    ->leftJoin('gb.office', 'off') 
                     ->leftJoin('g.tokenGroup', 'tg')
                  ;   
             
