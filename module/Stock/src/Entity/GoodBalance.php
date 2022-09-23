@@ -106,6 +106,11 @@ class GoodBalance {
         return $this->rest;
     }
 
+    public function getAvailable() 
+    {
+        return $this->rest - $this->reserve - $this->delivery - $this->vozvrat;
+    }
+
     public function setRest($rest) 
     {
         $this->rest = $rest;
