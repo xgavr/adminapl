@@ -19,6 +19,7 @@ use Application\Entity\Bid;
 use Application\Entity\Oem;
 use Application\Entity\Selection;
 use Stock\Entity\GoodBalance;
+use Application\Entity\GoodSupplier;
 
 
 /**
@@ -1892,7 +1893,7 @@ class GoodsRepository extends EntityRepository
         
         $queryBuilder->select('s.id, s.name')
                 ->distinct()
-                ->from(GoodsSupplier::class, 'gs')
+                ->from(GoodSupplier::class, 'gs')
                 ->join('gs.supplier', 's')
                 ->where('gs.good = ?1')
                 ->setParameter('1', $good->getId())
