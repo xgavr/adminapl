@@ -320,6 +320,12 @@ class Goods {
    private $movements;
 
    /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\GoodBalance", mappedBy="good")
+    * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
+   */
+   private $goodBalances;
+
+   /**
      * Конструктор.
      */
     public function __construct() 
@@ -1086,6 +1092,15 @@ class Goods {
      */
     public function getMovements()
     {
-        return $this->movemets;
+        return $this->movements;
+    }                
+
+    /**
+     * Returns the array of mvements assigned to this good.
+     * @return array
+     */
+    public function getBalances()
+    {
+        return $this->goodBalances;
     }                
 }

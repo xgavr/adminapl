@@ -1436,26 +1436,31 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, p.id as prodicerId, p.name as producerName, off.name as officeName, gb.rest, gb.reserve, gb.delivery, gb.vozvrat')
-            ->from(GoodBalance::class, 'gb')
-            ->join('gb.good', 'g')    
-            ->join('g.producer', 'p')    
-            ->join('gb.office', 'off')    
-            ->where('gb.rest != 0')    
-            ;
+        
+        $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, p.id as prodicerId, p.name as producerName, off.name as officeName, gb.rest, gb.reserve, gb.delivery, gb.vozvrat, tg.name');
+        
+        $queryBuilder->from(GoodBalance::class, 'gb')
+                ->join(Goods::class, 'g')
+                ->where('gb.rest != 0')    
+                ;
         
         if (is_array($params)){
-            if (isset($params['q'])){
+            if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
                 if ($q){
-//                    $queryBuilder->resetDQLPart('having');
+                    
+                    $queryBuilder->resetDQLPart('from')
+                            ->resetDQLPart('join')
+                            ->resetDQLPart('where')
+                            ->from(Goods::class, 'g')
+                            ->leftJoin('g.goodBalances', 'gb')
+                            ;
+                
                     $accurate = false;
                     if (isset($params['accurate'])){
                         $accurate = boolval($params['accurate']);                        
                     }
-//                    var_dump($accurate);
-//                    var_dump($params['accurate']);
                     if ($accurate){
                         $queryBuilder
                             ->andWhere('g.code = :code')                           
@@ -1472,8 +1477,15 @@ class GoodsRepository extends EntityRepository
                     }    
                 }   
             }
+            
+            $queryBuilder->join('g.producer', 'p')    
+                    ->join('gb.office', 'off') 
+                    ->join('g.tokenGroup', 'tg')
+                 ;   
+            
+            
             if (!empty($params['sort'])){
-//                $queryBuilder->addOrderBy('m.'.$params['sort'], $params['order']);
+                $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);
             }
         }
         
