@@ -1438,7 +1438,11 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, p.id as prodicerId, p.name as producerName, off.name as officeName, gb.rest, gb.reserve, gb.delivery, gb.vozvrat, tg.name');
+        $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name')
+                ->addSelect('p.id as prodicerId, p.name as producerName')
+                ->addSelect('off.name as officeName')        
+                ->addSelect('gb.rest, gb.reserve, gb.delivery, gb.vozvrat, gb.rest-gb.reserve-gb.delivery-gb.vozvrat as available')        
+                ->addSelect('tg.name');        
         
         $queryBuilder->from(GoodBalance::class, 'gb')
                 ->join('gb.good', 'g')
@@ -1484,6 +1488,13 @@ class GoodsRepository extends EntityRepository
                     ->leftJoin('g.tokenGroup', 'tg')
                  ;   
             
+            if (!empty($params['office'])){
+                if (is_numeric($params['office'])){
+                    $queryBuilder->andWhere('gb.office = :office')
+                            ->setParameter('office', $params['office'])    
+                            ;
+                }    
+            }
             
             if (!empty($params['sort'])){
                 $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);
@@ -1505,7 +1516,7 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r.id, s.name as supplier, s.id as supplierId, rr.dateCreated, r.article, c.code, c.id as codeId, r.producer, identity(r.unknownProducer) as producerId, r.goodname, r.rest, r.price, r.statusEx')
+        $queryBuilder->select('r.id, s.name as supplier, s.id as supplierId, rr.dateCreated, r.article, c.code, c.id as codeId, r.producer, identity(r.unknownProducer) as producerId, r.goodname, r.rest, r,reserve, r.delivery, r.vozvrat, r.price, r.statusEx')
             ->from(Goods::class, 'g')
             ->join('g.articles', 'c') 
             ->join('c.rawprice', 'r') 

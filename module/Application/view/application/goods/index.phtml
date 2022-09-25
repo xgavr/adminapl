@@ -23,15 +23,21 @@ $this->pageBreadcrumbs()->setItems([
                 </div>    
                 <div class="form-group">
                     <div class="btn-group">
-                        <input type="checkbox" class="checkbox" name="accurate" value=""
+                        <input type="checkbox" class="checkbox good-toolbar" name="accurate" value=""
                                data-toggle='tooltip' data-original-title="Точный поиск"
                                onchange="value = (this.checked) ? 1:0"/>
-                        <input id="searchinput" name="search" style="width: 400px" class="form-control" type="text" placeholder="Артикул">
+                        <input id="searchinput" name="search" style="width: 400px" class="form-control good-toolbar" type="text" placeholder="Артикул">
                         <span class="glyphicon glyphicon-remove-circle inputclear"></span>
                     </div>
                     <button id="ok" type="submit" class="btn btn-default" title="Поиск">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
+                    <select style="width: 200px" class="form-control refresh-table good-toolbar" name="office">
+                        <option>все офисы</option>
+                        <?php foreach ($offices as $office):?>
+                            <option value="<?= $office->getId()?>" <?//= ($office->getId() == $currentUser->getOffice()->getId()) ? 'selected':''?>><?= $office->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
                 </div>
             </div>
         </div>
@@ -54,13 +60,17 @@ $this->pageBreadcrumbs()->setItems([
                 <tr>
                      <!--<th data-field="id" data-type="numeric" data-sortable="true" data-width="100">ID</th>-->
                      <th data-field="aplId" data-type="numeric" data-formatter="aplFormatter" data-sortable="true" data-width="100">AplId</th>
+                     <th data-field="producerName" data-formatter="producerFormatter"data-width="100">Производитель</th>             
                      <th data-field="code" data-formatter="linkFormatter" data-sortable="true" data-width="100">Артикул</th>
-                     <th data-field="producerName" data-formatter="producerFormatter">Производитель</th>             
                      <th data-field="name" >Наименование</th>             
-                     <th data-field="rest" data-width="100" data-align="right">Остаток</th>             
-                     <th data-field="officeName" >Офис</th>             
+                     <th data-field="rest" data-width="50" data-align="right">Остаток</th>             
+                     <th data-field="reserve" data-width="50" data-align="right">Резерв</th>             
+                     <th data-field="delivery" data-width="50" data-align="right">Доставка</th>             
+                     <th data-field="vozvrat" data-width="50" data-align="right">Возврат</th>             
+                     <th data-field="available" data-width="50" data-align="right" data-formatter="availableFormatter">Доступно</th>             
+                     <th data-field="officeName" data-width="100">Офис</th>             
                      <!--<th data-field="" data-formatter="activeFormatter"></th>-->
-                     <th data-field="statusRawpriceEx" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle"></th>
+                     <th data-field="statusRawpriceEx" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle" data-width="5"></th>
                  </tr>                
             </thead>
         </table>
@@ -96,10 +106,13 @@ $this->pageBreadcrumbs()->setItems([
             $("#searchinput").val('');
             refreshTable();
         });
+        $(".refresh-table").change(function(){
+            refreshTable();
+        });
     });
     
     function queryParams(params) {
-        $('#toolbar').find('input[name]').each(function () {
+        $('.good-toolbar').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         limit = $('.page-size').html();
@@ -109,7 +122,7 @@ $this->pageBreadcrumbs()->setItems([
         offset = $('li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
-        }    
+        }            
         
         return params;
     }
@@ -157,6 +170,10 @@ $this->pageBreadcrumbs()->setItems([
     
     function statusExFormatter(value, row) {
         return '<span></span>' ;
+    }  
+    
+    function ayailableFormatter(value) {
+        return  (value > 0) ? value:0;
     }  
     
     function cellStatusExStyle(value, row, index) {

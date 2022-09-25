@@ -310,9 +310,13 @@ class GoodsController extends AbstractActionController
     public function indexAction()
     {
         
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy([]);
+        
         // Визуализируем шаблон представления.
         return new ViewModel([
             'goodsManager' => $this->goodsManager,
+            'offices' => $offices,
          ]);  
     }
     
@@ -431,6 +435,7 @@ class GoodsController extends AbstractActionController
         $producer = $this->params()->fromQuery('producer');
         $group = $this->params()->fromQuery('group');
         $accurate = $this->params()->fromQuery('accurate');
+        $office = $this->params()->fromQuery('office');
         $opts = $this->params()->fromQuery('opts', false);
         
         $query = $this->entityManager->getRepository(Goods::class)
@@ -440,6 +445,7 @@ class GoodsController extends AbstractActionController
                             'order' => $order, 
                             'producerId' => $producer,
                             'groupId' => $group,
+                            'office' => $office,
                             'accurate' => $accurate,
                             ]);
         
