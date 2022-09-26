@@ -110,7 +110,14 @@ $form->prepare();
 
                         <div class="form-group">
                             <?= $this->formLabel($form->get('emailPassword')); ?>
-                            <?= $this->formElement($form->get('emailPassword')); ?>
+                            <div class="input-group">
+                                <?= $this->formElement($form->get('emailPassword')); ?>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default password-generator" type="button" data-toggle="tooltip" data-placement="top" title="Генератор пароля">
+                                        <span class="glyphicon glyphicon-qrcode"></span>
+                                    </button>
+                                </span>                                                            
+                            </div>
                             <?= $this->formElementErrors($form->get('emailPassword')); ?>                  
                         </div>
 
@@ -204,5 +211,22 @@ $form->prepare();
                 alert("Ошибка при открытии формы.");
 
             });
-    })    
+    });    
+    
+    $('.password-generator').on('click', function() {
+        $.ajax({
+            type: 'GET',
+            url: '/admin/password-generator/'
+        })
+            .done(function (data) {
+                if (data){
+                    $('input[name=emailPassword]').val(data['password']);
+                }
+            })
+            .fail(function (e) {
+                console.log(e);
+            });    
+        }        
+    });    
+    
 </script>

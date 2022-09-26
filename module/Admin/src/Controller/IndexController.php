@@ -21,6 +21,7 @@ use Admin\Form\SmsForm;
 use Application\Entity\Order;
 use User\Filter\PhoneFilter;
 use Stock\Entity\Register;
+use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -1085,4 +1086,21 @@ class IndexController extends AbstractActionController
         
     }
     
+    public function passwordGenerator()
+    {
+        $generator = new ComputerPasswordGenerator();
+
+        $generator
+          ->setUppercase()
+          ->setLowercase()
+          ->setNumbers()
+          ->setSymbols(false)
+          ->setLength(8);
+
+        $password = $generator->generatePassword();
+        
+        return new JsonModel([
+            'password' => $password,
+        ]);                
+    }
 }
