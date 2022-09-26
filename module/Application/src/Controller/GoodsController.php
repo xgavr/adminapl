@@ -870,6 +870,43 @@ class GoodsController extends AbstractActionController
         ]);                  
     }
 
+    public function balanceAction()
+    {
+        
+        $goodsId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($goodsId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->find($goodsId);
+
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $rests = $this->entityManager->getRepository(GoodBalance::class)
+                ->findBy(['good' => $goods->getId()])
+                ->toArray();
+
+        $total = count($rests);
+        
+//        $result = $query->getResult(2);
+//        foreach ($result as $key=>$value){
+//            $result[$key]['rest'] = $this->entityManager->getRepository(Movement::class)
+//                ->stampRest($goodsId, $value['docType'], $value['docId'], $office);
+//        }
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $rests,
+        ]);                  
+    }
+
     public function priceContentAction()
     {
         

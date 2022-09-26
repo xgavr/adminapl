@@ -356,7 +356,10 @@ class Goods {
 
     public function getAplIdLinkCode() 
     {
-        return "<a href='https://autopartslist.ru/catalog/view/id/{$this->aplId}' target=_blank>{$this->code}</a>";
+        if ($this->aplId){
+            return "<a href='https://autopartslist.ru/catalog/view/id/{$this->aplId}' target=_blank>{$this->code}</a>";
+        }
+        return;
     }
     
     public function setAplId($aplId) 

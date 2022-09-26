@@ -128,7 +128,13 @@
                                         <?php endif;?>
                                 </a>
                             </td> 
-                            <td><?= $goods->getAplId(); ?></td>
+                            <td>
+                                <?= $goods->getAplIdLinkCode(); ?>
+                                <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обновить АПЛ Ид">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>
+                            </td>
                             <td>
                                 <!--                    
                                     <button class="btn btn-default btn-xs" id="enable-name-editable"
@@ -241,6 +247,37 @@
                              <th data-field="docKey" data-formatter="movementFormatter">Документ</th>
                              <th data-field="baseKey" data-formatter="baseFormatter">Партия</th>
                              <th data-field="office.name" data-width="50">Офис</th>
+                         </tr>                
+                    </thead>
+                </table>
+                <div id="balanceToolbar">
+                    <div class="form-inline" role="form">
+                    </div>
+                </div>
+                <table id="balanceTable" 
+                    data-toggle="table" 
+                    data-url="/goods/balance/<?= $goods->getId()?>"
+                    data-side-pagination="server"
+                    data-cookie="false"
+                    data-cookie-id-table="goodSaveId"
+                    data-pagination="false" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#balanceToolbar"
+                    data-show-refresh="true"
+                    data-show-toggle="false"
+                    data-query-params="balanceQueryParams"
+                    data-response-handler="responseHandler"
+                    data-row-style="movementRowStyle"
+                    data-classes = "table table-bordered table-hover table-condensed"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="office.name">Офис</th>
+                             <th data-field="rest"      data-type="numeric" data-width="20" data-align="right">Наличие</th>
+                             <th data-field="reserve"   data-type="numeric" data-width="20" data-align="right">Резерв</th>
+                             <th data-field="delivery"  data-type="numeric" data-width="20" data-align="right">Доставка</th>
+                             <th data-field="vozvrat"   data-type="numeric" data-width="20" data-align="right">Возврат</th>
+                             <th data-field="avialable" data-type="numeric" data-width="20" data-align="right">Доступно</th>
                          </tr>                
                     </thead>
                 </table>
@@ -512,6 +549,10 @@
         return tabQueryParams('#movements', params);
     }
     
+    function movementsQueryParams(params) {
+        return tabQueryParams('#balance', params);
+    }
+
     function priceQueryParams(params) {
         params.status = $('#priceStatusSelect').val();
         params.supplier = $('#supplierSelect').val();
