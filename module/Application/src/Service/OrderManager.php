@@ -1276,7 +1276,9 @@ class OrderManager
             if ($order->getOffice()->getId() != $data['office']){
                 $office = $this->entityManager->getRepository(Office::class)
                         ->find($data['office']);
-                $upd['office_id'] = $data['office'];        
+                if ($office){
+                    $upd['office_id'] = $office->getId();        
+                }    
             }
 
             $contactCar = $this->findContactCarByOrderData($order->getContact(), $data);
