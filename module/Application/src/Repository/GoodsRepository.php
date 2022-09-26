@@ -1440,7 +1440,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name')
-                ->addSelect('p.id as prodicerId, p.name as producerName')
+                ->addSelect('p.id as producerId, p.name as producerName')
                 ->addSelect('off.name as officeName')        
                 ->addSelect('gb.rest, gb.reserve, gb.delivery, gb.vozvrat, gb.rest-gb.reserve-gb.delivery-gb.vozvrat as available')        
                 ->addSelect('tg.name');        
