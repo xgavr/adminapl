@@ -237,12 +237,13 @@
                         <tr>
                              <!--<th data-field="docStamp" data-width="150">Дата</th>-->
                              <th data-field="dateOper" data-width="150">Дата</th>
-                             <th data-field="quantity" data-type="numeric" data-align="right" data-width="50">Движение</th>
-                             <th data-field="rest" data-type="numeric" data-align="right" data-width="50">Остаток</th>
+                             <th data-field="quantity" data-type="numeric" data-align="right" data-width="30" data-formatter="inFormatter">Приход</th>
+                             <th data-field="quantity" data-type="numeric" data-align="right" data-width="30" data-formatter="outFormatter">Расход</th>
+                             <th data-field="rest" data-type="numeric" data-align="right" data-width="30">Остаток</th>
                              <th data-field="docKey" data-formatter="movementFormatter">Документ</th>
                              <th data-field="baseKey" data-formatter="baseFormatter">Партия</th>
                              <th data-field="office.name" data-width="50">Офис</th>
-                             <th data-field="company.name">>ЮЛ</th>
+                             <th data-field="company.name" data-width="150">ЮЛ</th>
                          </tr>                
                     </thead>
                 </table>
@@ -637,6 +638,20 @@
         
     function movementFormatter(value, row){
         return docFormatter(row.docType, row.docId, value);
+    }
+    
+    function inFormatter(value){
+        if (value > 0){
+            return value
+        }
+        return 0;
+    }
+    
+    function outFormatter(value){
+        if (value < 0){
+            return -value
+        }
+        return 0;
     }
     
     function baseFormatter(value, row){
