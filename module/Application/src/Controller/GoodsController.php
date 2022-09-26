@@ -891,14 +891,20 @@ class GoodsController extends AbstractActionController
         
         $rests = $this->entityManager->getRepository(GoodBalance::class)
                 ->findBy(['good' => $goods->getId()]);
-
-        $total = count($rests);
         
-//        $result = $query->getResult(2);
-//        foreach ($result as $key=>$value){
-//            $result[$key]['rest'] = $this->entityManager->getRepository(Movement::class)
-//                ->stampRest($goodsId, $value['docType'], $value['docId'], $office);
-//        }
+        $result = [];
+        foreach ($rests as $rest){
+            $result[] = [
+                'offise' => $rest->getOffice()->getName().'('.$rest->getCompany()->getName().')',
+                'rest' => $rest->getRest(),
+                'reserve' => $rest->getReserve(),
+                'delivery' => $rest->getDelivery(),
+                'vozvrat' => $rest->getVozvrat(),
+                'available' => $rest->getAvailable(),                    
+            ];
+        }
+        
+        $total = count($result);
         
         return new JsonModel([
             'total' => $total,
