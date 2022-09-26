@@ -134,12 +134,21 @@ class LegalManager
         return $legal;
     }
     
-    public function removeLegalAssociation($legal)
+    /**
+     * Удалить ЮЛ контакта
+     * @param Legal $legal
+     * @param Contact $contact
+     */
+    public function removeLegalAssociation($legal, $contact = null)
     {
-        $contacts = $legal->getContacts();
-        foreach ($contacts as $contact){
+        if ($contact){
             $contact->removeLegalAssociation($legal);
-        }        
+        } else {
+            $contacts = $legal->getContacts();
+            foreach ($contacts as $contact){
+                $contact->removeLegalAssociation($legal);                
+            }
+        }    
         
         $this->entityManager->flush();
     }

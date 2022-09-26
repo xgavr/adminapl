@@ -359,7 +359,7 @@ class LegalController extends AbstractActionController
             return;                        
         }        
         
-        $this->legalManager->removeLegalAssociation($legal);
+        $this->legalManager->removeLegalAssociation($legal, $contact);
         
         // Перенаправляем пользователя на страницу "legal".
         return $this->redirect()->toRoute('legals', ['action' => 'legal', 'id' => $contact->getId()]);
@@ -368,16 +368,33 @@ class LegalController extends AbstractActionController
     public function deleteAssociationFormAction()
     {
         $legalId = $this->params()->fromRoute('id', -1);
-        
+
         $legal = $this->entityManager->getRepository(Legal::class)
-                ->findOneById($legalId);
-        
+                ->find($legalId);
+
         if ($legal == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $this->legalManager->removeLegalAssociation($legal);
+        $contactId = (int)$this->params()->fromQuery('contact', -1);
+        
+        // Validate input parameter
+        if ($contactId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $contact = $this->entityManager->getRepository(Contact::class)
+                ->find($contactId);
+        
+        if ($contact == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        
+        $this->legalManager->removeLegalAssociation($legal, $contact);
         
         return new JsonModel(
            ['ok']
