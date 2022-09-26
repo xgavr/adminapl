@@ -1362,9 +1362,10 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m, o')
+        $queryBuilder->select('m, o, c')
             ->from(Movement::class, 'm')
             ->join('m.office', 'o')    
+            ->join('m.company', 'c')    
             ->where('m.good = ?1')
             ->setParameter('1', $good->getId())
             ->orderBy('m.docStamp','ASC')    

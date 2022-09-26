@@ -385,6 +385,16 @@ class Goods {
         return $this->getName();
     }
 
+    public function getTitleShort() 
+    {
+        if ($this->tokenGroup){
+            if (!empty($this->tokenGroup->getName())){
+                return $this->getCode().' '.$this->tokenGroup->getName();
+            }    
+        }
+        return $this->getCode().' '.$this->getName();
+    }
+
     public function getInputName() 
     {
         return $this->code.';'.$this->producer->getName().';'.$this->getNameShort();

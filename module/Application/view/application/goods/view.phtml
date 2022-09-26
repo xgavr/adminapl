@@ -6,7 +6,7 @@
     
     $priceCols = $goodsManager->priceCols($goods);
     
-    $this->headTitle($goods->getNameShort());
+    $this->headTitle($goods->getTitleShort());
 ?>
 
 <div class="row">
@@ -225,7 +225,7 @@
                     data-page-list="[5, 10, 20, 50]"
                     data-toolbar="#movementToolbar"
                     data-show-refresh="true"
-                    data-show-toggle="true"
+                    data-show-toggle="false"
                     data-sort-name="docStamp"
                     data-sort-order="asc"            
                     data-query-params="movementsQueryParams"
@@ -242,6 +242,7 @@
                              <th data-field="docKey" data-formatter="movementFormatter">Документ</th>
                              <th data-field="baseKey" data-formatter="baseFormatter">Партия</th>
                              <th data-field="office.name" data-width="50">Офис</th>
+                             <th data-field="company.name" data-width="50">>ЮЛ</th>
                          </tr>                
                     </thead>
                 </table>
