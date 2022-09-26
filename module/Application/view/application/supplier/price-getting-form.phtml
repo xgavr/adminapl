@@ -62,134 +62,134 @@ $form->prepare();
 
 
             
-            <?= $this->form()->openTag($form); ?>
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Настройка загрузки прауса поставщика</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
             
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Настройка загрузки прауса поставщика</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
             </div>
-            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('name')); ?>
-                            <?= $this->formElement($form->get('name')); ?>
-                            <?= $this->formElementErrors($form->get('name')); ?>                  
-                        </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('email')); ?>
-                            <?= $this->formElement($form->get('email')); ?>
-                            <?= $this->formElementErrors($form->get('email')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('email')); ?>
+                <?= $this->formElement($form->get('email')); ?>
+                <?= $this->formElementErrors($form->get('email')); ?>                  
+            </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('ftp')); ?>
-                            <?= $this->formElement($form->get('ftp')); ?>
-                            <?= $this->formElementErrors($form->get('ftp')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('ftp')); ?>
+                <?= $this->formElement($form->get('ftp')); ?>
+                <?= $this->formElementErrors($form->get('ftp')); ?>                  
+            </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('ftpDir')); ?>
-                            <?= $this->formElement($form->get('ftpDir')); ?>
-                            <?= $this->formElementErrors($form->get('ftpDir')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('ftpDir')); ?>
+                <?= $this->formElement($form->get('ftpDir')); ?>
+                <?= $this->formElementErrors($form->get('ftpDir')); ?>                  
+            </div>
 
-                    </div>        
-                    <div class="col-md-6">
+        </div>        
+        <div class="col-md-6">
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('status')); ?>
-                            <?= $this->formElement($form->get('status')); ?>
-                            <?= $this->formElementErrors($form->get('status')); ?>                  
-                        </div>                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>                        
 
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('emailPassword')); ?>
-                            <div class="input-group">
-                                <?= $this->formElement($form->get('emailPassword')); ?>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default password-generator" type="button" data-toggle="tooltip" data-placement="top" title="Генератор пароля">
-                                        <span class="glyphicon glyphicon-qrcode"></span>
-                                    </button>
-                                </span>                                                            
-                            </div>
-                            <?= $this->formElementErrors($form->get('emailPassword')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('ftpLogin')); ?>
-                            <?= $this->formElement($form->get('ftpLogin')); ?>
-                            <?= $this->formElementErrors($form->get('ftpLogin')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('ftpPassword')); ?>
-                            <?= $this->formElement($form->get('ftpPassword')); ?>
-                            <?= $this->formElementErrors($form->get('ftpPassword')); ?>                  
-                        </div>
-                        
-                        <?= $this->formElement($form->get('csrf')); ?>
-                    </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('emailPassword')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('emailPassword')); ?>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default password-generator" type="button" data-toggle="tooltip" data-placement="top" title="Генератор пароля">
+                            <span class="glyphicon glyphicon-qrcode"></span>
+                        </button>
+                    </span>                                                            
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('link')); ?>
-                            <?= $this->formElement($form->get('link')); ?>
-                            <?= $this->formElementErrors($form->get('link')); ?>                  
-                        </div>
+                <?= $this->formElementErrors($form->get('emailPassword')); ?>                  
+            </div>
 
-                    </div>
-                </div>    
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('priceSupplier')); ?>
-                            <?= $this->formElement($form->get('priceSupplier')); ?>
-                            <?= $this->formElementErrors($form->get('priceSupplier')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('ftpLogin')); ?>
+                <?= $this->formElement($form->get('ftpLogin')); ?>
+                <?= $this->formElementErrors($form->get('ftpLogin')); ?>                  
+            </div>
 
-                    </div>
-                </div>    
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('statusFilename')); ?>
-                            <?= $this->formElement($form->get('statusFilename')); ?>
-                            <?= $this->formElementErrors($form->get('statusFilename')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('filename')); ?>
-                            <?= $this->formElement($form->get('filename')); ?>
-                            <?= $this->formElementErrors($form->get('filename')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('ftpPassword')); ?>
+                <?= $this->formElement($form->get('ftpPassword')); ?>
+                <?= $this->formElementErrors($form->get('ftpPassword')); ?>                  
+            </div>
 
-                    </div>
-                </div>    
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('orderToApl')); ?>
-                            <?= $this->formElement($form->get('orderToApl')); ?>
-                            <?= $this->formElementErrors($form->get('orderToApl')); ?>                  
-                        </div>                        
-                    </div>
-                </div>
-            </div>    
+            <?= $this->formElement($form->get('csrf')); ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('link')); ?>
+                <?= $this->formElement($form->get('link')); ?>
+                <?= $this->formElementErrors($form->get('link')); ?>                  
+            </div>
+
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('priceSupplier')); ?>
+                <?= $this->formElement($form->get('priceSupplier')); ?>
+                <?= $this->formElementErrors($form->get('priceSupplier')); ?>                  
+            </div>
+
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('statusFilename')); ?>
+                <?= $this->formElement($form->get('statusFilename')); ?>
+                <?= $this->formElementErrors($form->get('statusFilename')); ?>                  
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('filename')); ?>
+                <?= $this->formElement($form->get('filename')); ?>
+                <?= $this->formElementErrors($form->get('filename')); ?>                  
+            </div>
+
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('orderToApl')); ?>
+                <?= $this->formElement($form->get('orderToApl')); ?>
+                <?= $this->formElementErrors($form->get('orderToApl')); ?>                  
+            </div>                        
+        </div>
+    </div>
+</div>    
                 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary" id="price-getting-submit">Сохранить</button>
-            </div>
-            
-            <?= $this->form()->closeTag(); ?>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="price-getting-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
             
 <script>
     $('#price-getting-submit').on('click', function() {
@@ -226,7 +226,6 @@ $form->prepare();
             .fail(function (e) {
                 console.log(e);
             });    
-        }        
     });    
     
 </script>

@@ -1086,14 +1086,14 @@ class IndexController extends AbstractActionController
         
     }
     
-    public function passwordGenerator()
+    public function passwordGeneratorAction()
     {
         $generator = new ComputerPasswordGenerator();
 
         $generator
           ->setUppercase()
           ->setLowercase()
-          ->setNumbers()
+          ->setNumbers(true)
           ->setSymbols(false)
           ->setLength(8);
 
