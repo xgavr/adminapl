@@ -890,8 +890,7 @@ class GoodsController extends AbstractActionController
         }        
         
         $rests = $this->entityManager->getRepository(GoodBalance::class)
-                ->findBy(['good' => $goods->getId()])
-                ->toArray();
+                ->findBy(['good' => $goods->getId()]);
 
         $total = count($rests);
         
