@@ -908,7 +908,7 @@ class GoodsController extends AbstractActionController
         
         return new JsonModel([
             'total' => $total,
-            'rows' => $rests,
+            'rows' => $result,
         ]);                  
     }
 
