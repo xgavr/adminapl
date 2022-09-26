@@ -895,7 +895,7 @@ class GoodsController extends AbstractActionController
         $result = [];
         foreach ($rests as $rest){
             $result[] = [
-                'offise' => $rest->getOffice()->getName().'('.$rest->getCompany()->getName().')',
+                'office' => $rest->getOffice()->getName().'('.$rest->getCompany()->getName().')',
                 'rest' => $rest->getRest(),
                 'reserve' => $rest->getReserve(),
                 'delivery' => $rest->getDelivery(),

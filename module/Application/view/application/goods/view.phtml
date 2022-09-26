@@ -130,17 +130,12 @@
                             </td> 
                             <td>
                                 <?= $goods->getAplIdLinkCode(); ?>
-                                <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                        title="Обновить АПЛ Ид">
-                                    <span class="glyphicon glyphicon-refresh" ></span>
-                                </button>
                             </td>
                             <td>
-                                <!--                    
-                                    <button class="btn btn-default btn-xs" id="enable-name-editable"
-                                        title="Изменить наименование">
-                                    <span class="glyphicon glyphicon-edit" ></span>
-                                </button> -->                                
+                                <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обновить АПЛ Id">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>
                             </td>
                         </tr>    
                 </table>                    
@@ -277,7 +272,7 @@
                              <th data-field="reserve"   data-type="numeric" data-width="20" data-align="right">Резерв</th>
                              <th data-field="delivery"  data-type="numeric" data-width="20" data-align="right">Доставка</th>
                              <th data-field="vozvrat"   data-type="numeric" data-width="20" data-align="right">Возврат</th>
-                             <th data-field="avialable" data-type="numeric" data-width="20" data-align="right">Доступно</th>
+                             <th data-field="available" data-type="numeric" data-width="20" data-align="right">Доступно</th>
                          </tr>                
                     </thead>
                 </table>
