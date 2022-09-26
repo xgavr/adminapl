@@ -148,11 +148,12 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function producerFormatter(value, row){
-        return [
-            '<div class="pull-left">',
-            '<a href="/producer/view/' + row.producerId + '" target="_blank">' + value + '</a>',
-            '</div>'
-        ].join(''); 
+//        return [
+//            '<div class="pull-left">',
+//            '<a href="/producer/view/' + row.producerId + '" target="_blank">' + value + '</a>',
+//            '</div>'
+//        ].join(''); 
+        return value;
     }    
     
     function activeFormatter(value, row){
