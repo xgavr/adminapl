@@ -11,7 +11,7 @@ $this->pageBreadcrumbs()->setItems([
 ?>
 
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-9">
         
         <div id="toolbar">
             <div class="form-inline" role="form">
@@ -57,7 +57,7 @@ $this->pageBreadcrumbs()->setItems([
             </thead>
         </table>
     </div>
-    <div class="col-md-2" id="side-nav" >
+    <div class="col-md-3" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
             <div class="panel-group">
                 <div class="panel panel-info">
@@ -216,7 +216,7 @@ $this->pageBreadcrumbs()->setItems([
                 default: stage =  '<br/> Неизвестно';                  
             }
         }    
-        return status+stage;
+        return (stage) ? stage:status;
     }
     
     function statusExStageFormatter(value, row) {
