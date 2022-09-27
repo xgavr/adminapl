@@ -1,7 +1,6 @@
 <?php
     use Application\Entity\Oem;
     use Stock\Entity\Movement;
-    use Application\Entity\Goods;
     use Application\Entity\Rawprice;
     
     $priceCols = $goodsManager->priceCols($goods);
@@ -465,10 +464,6 @@
         $('.editable').editable();
     });
 
-    function refreshTable(){
-        $('#movementTable').bootstrapTable('refresh');
-    }
-
     $(function () {
         $('#priceStatusSelect').change(function (){
             $('#priceTable').bootstrapTable('refresh');
@@ -552,7 +547,8 @@
     
     var movementTable = $('#movementTable').bootstrapTable({
         onLoadSuccess: function(res){
-            $('#movementBadge').html($('#movementTable').bootstrapTable('getOptions').totalRows)
+            $('#movementBadge').html($('#movementTable').bootstrapTable('getOptions').totalRows);
+            $('#balanceTable').bootstrapTable('refresh');
         }
     });
 
