@@ -12,6 +12,12 @@
 <div class="row">
     <div class="col-md-3">
         <h3><?= $goods->getCode()?> <?= $goods->getProducer()->getName()?></h3>
+        <h3>
+            <?= $goods->getNameShort() ?>
+        </h3>
+        <?php if ($goods->getDescription()): ?>
+        
+        <?php endif;?>                    
         
 <!--                <div class="thumbnail">
             <div class="caption panel-body small">
@@ -62,14 +68,7 @@
             <?php endif; ?>    
         <?php endforeach;?>
     </div>
-    <div class="col-md-9">
-        <h3>
-            <?= $goods->getNameShort() ?>
-        </h3>
-        <?php if ($goods->getDescription()): ?>
-        
-        <?php endif;?>                    
-        
+    <div class="col-md-9">        
         <ul class="nav nav-tabs" id="featureTab" role="tablist">
             <li role="presentation"><a href="#movements" role="tab" id="home-tab" data-toggle="tab" aria-controls="movements" aria-expanded="true">Движения <span id="movementBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#price" role="tab" id="price-tab" data-toggle="tab" aria-controls="price" aria-expanded="true">Прайсы <span id="priceBadge" class="badge">0</span></a></li>
