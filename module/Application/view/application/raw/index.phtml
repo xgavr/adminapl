@@ -201,19 +201,19 @@ $this->pageBreadcrumbs()->setItems([
         var stage = '';
         if (value == '3'){
             switch (row.parseStage){
-                case '1': stage = '<br/> Производители не разобраны'; break;
-                case '2': stage =  '<br/> Производители разобраны'; break;
-                case '3': stage =  '<br/> Артикулы разобраны'; break;
-                case '4': stage =  '<br/> Номера разобраны'; break;
-                case '5': stage =  '<br/> Наименования разобраны'; break;
-                case '6': stage =  '<br/> Производители собраны'; break;
-                case '7': stage =  '<br/> Товары собраны'; break;
-                case '8': stage =  '<br/> Цены пересчитаны'; break;
-                case '9': stage =  '<br/> Токены товаров разобраны'; break;
-                case '10': stage =  '<br/> Группы наименований разобраны'; break;
-                case '11': stage =  '<br/> Описания обновлены'; break;
-                case '12': stage =  '<br/> Наименования обновлены'; break;
-                default: stage =  '<br/> Неизвестно';                  
+                case '1': stage = 'Производители не разобраны'; break;
+                case '2': stage =  'Производители разобраны'; break;
+                case '3': stage =  'Артикулы разобраны'; break;
+                case '4': stage =  'Номера разобраны'; break;
+                case '5': stage =  'Наименования разобраны'; break;
+                case '6': stage =  'Производители собраны'; break;
+                case '7': stage =  'Товары собраны'; break;
+                case '8': stage =  'Цены пересчитаны'; break;
+                case '9': stage =  'Токены товаров разобраны'; break;
+                case '10': stage =  'Группы наименований разобраны'; break;
+                case '11': stage =  'Описания обновлены'; break;
+                case '12': stage =  'Наименования обновлены'; break;
+                default: stage =  'Неизвестно';                  
             }
         }    
         return (stage) ? stage:status;
