@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Company\Entity\Office;
 use Stock\Entity\Pt;
 use Stock\Entity\PtGood;
+use Company\Entity\Legal;
 use Application\Filter\ArticleCode;
 
 /**
@@ -79,6 +80,14 @@ class PtRepository extends EntityRepository{
                 if ($office){
                     $queryBuilder->andWhere('p.office = ?2 or p.office2 = ?2')
                             ->setParameter('2', $office->getId());
+                }
+            }
+            if (!empty($params['companyId'])){
+                $company = $entityManager->getRepository(Legal::class)
+                        ->findOneById($params['companyId']);
+                if ($company){
+                    $queryBuilder->andWhere('p.company = :company or p.company2 = :company')
+                            ->setParameter('company', $company->getId());
                 }
             }
             if (!empty($params['year'])){

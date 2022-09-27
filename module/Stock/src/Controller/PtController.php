@@ -45,8 +45,11 @@ class PtController extends AbstractActionController
     {
         $offices = $this->entityManager->getRepository(Office::class)
                 ->findAll();
+        $companies = $this->entityManager->getRepository(Office::class)
+                ->findAllCompanies();
         return new ViewModel([
             'offices' => $offices,
+            'companies' => $companies,
             'years' => array_combine(range(date("Y"), 2014), range(date("Y"), 2014)),
             'monthes' => array_combine(range(1, 12), range(1, 12)),
         ]);  
@@ -61,6 +64,7 @@ class PtController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
         $officeId = $this->params()->fromQuery('office');
+        $companyId = $this->params()->fromQuery('company');
         $year_month = $this->params()->fromQuery('month');
         
         $year = $month = null;
@@ -72,6 +76,7 @@ class PtController extends AbstractActionController
         $params = [
             'q' => $q, 'sort' => $sort, 'order' => $order, 
             'officeId' => $officeId,
+            'companyId' => $companyId,
             'year' => $year, 'month' => $month,
         ];
         $query = $this->entityManager->getRepository(Pt::class)

@@ -113,4 +113,23 @@ class OfficeRepository extends EntityRepository{
                 ->find(1);
         return $defaultOffice;        
     }
+    
+    /**
+     * Все ЮЛ офисов
+     * @return array
+     */
+    public function findAllCompanies()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('l')
+                ->distinct()
+                ->from(Legal::class, 'l')
+                ->join('l.contacts', 'c')
+                ->join('c.office', 'o')
+                ;
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

@@ -32,13 +32,20 @@
                     </button>
                 </div>    
                 <div class="form-group">
-                    <select id="officeSelect" style="width: 100px" class="form-control">
-                        <option selected>офис</option>
+                    <select style="width: 200px" class="form-control" name="office">
+                        <option selected>--все офисы--</option>
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
                         <?php endforeach;?>
-                    </select>
-                    
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select style="width: 200px" class="form-control" name="company">
+                        <option selected>--все юл--</option>
+                        <?php foreach ($companies as $company):?>
+                            <option value="<?= $company->getId()?>"><?= $company->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
                 </div>    
                 <div class="form-group">
                     <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
@@ -50,6 +57,7 @@
             data-url="/pt/content"
             data-cookie="true"
             data-cookie-id-table="ptSaveId"
+            data-cookie-expire="1m"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -69,7 +77,9 @@
                      <th data-field="id" data-sortable="false" data-type="numeric"data-align="right" data-formatter="idFormatter" data-width="80">Номер</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
                      <th data-field='office.name' data-sortable="false">Отправитель</th>
+                     <th data-field='company.name' data-sortable="false">Отправитель ЮЛ</th>
                      <th data-field='office2.name' data-sortable="false">Получатель</th>
+                     <th data-field='company2.name' data-sortable="false">Получатель ЮЛ</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
                      <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
                  </tr>                
@@ -93,14 +103,25 @@
     }
 
     var $table = $('#table'),
-        $ok = $('#ok');
+            $ok = $('#ok');
     
     function refreshTable(){
         $table.bootstrapTable('refresh');
     }
+
+    $(function () {
+        $('select').change(function (){
+            refreshTable();
+        });
+    });
+
+    
     
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         limit = $('#table .page-size').html();
@@ -111,8 +132,6 @@
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
-        params.office = $('#officeSelect').val();
-        params.year = $('#yearSelect').val();
         params.month = $('#monthSelect').val();
         
         return params;

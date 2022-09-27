@@ -64,7 +64,7 @@ class LegalManager
         $currentDate = date('Y-m-d H:i:s');
         $legal->setDateStart($currentDate);
         if (isset($data['dateStart'])){
-            $legal->setDateStart($data['dateStart']);
+            $legal->setDateStart(date('Y-m-d', strtotime($data['dateStart'])));
         }
 
         $this->entityManager->persist($legal);        
@@ -123,7 +123,7 @@ class LegalManager
             
             $legal->setDateStart($currentDate);
             if (isset($data['dateStart'])){
-                $legal->setDateStart($data['dateStart']);
+                $legal->setDateStart(date('Y-m-d', strtotime($data['dateStart'])));
             }
             
             $legal->addContact($contact);
