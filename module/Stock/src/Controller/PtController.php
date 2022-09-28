@@ -289,6 +289,72 @@ class PtController extends AbstractActionController
         ]);        
     }
     
+    public function combinedFormAction()
+    {
+        $officeId = (int)$this->params()->fromQuery('office');
+        $office = $this->entityManager->getRepository(Office::class)
+                ->findOneById($officeId);
+        $office2Id = (int)$this->params()->fromQuery('office2');
+        $office2 = $this->entityManager->getRepository(Office::class)
+                ->findOneById($office2Id);
+        
+        if ($this->getRequest()->isPost()){
+            $data = $this->params()->fromPost();
+            $office = $this->entityManager->getRepository(Office::class)
+                    ->findOneById($data['office_id']);
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->findOneById($data['company']);
+            $office2 = $this->entityManager->getRepository(Office::class)
+                    ->findOneById($data['office2_id']);
+            $company2 = $this->entityManager->getRepository(Legal::class)
+                    ->findOneById($data['company2']);
+        }
+                
+        $form = new PtForm($this->entityManager, $office, $company, $office2, $company2);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                unset($data['csrf']);
+                $ptGood = $data['ptGood'];
+                unset($data['ptGood']);
+                $data['status_ex'] = Pt::STATUS_EX_NEW;
+                $data['office'] = $office;
+                $data['company'] = $company;
+                $data['office2'] = $office2;
+                $data['company2'] = $company2;
+                $data['apl_id'] = 0;
+
+                if ($pt){
+                    $data['apl_id'] = $pt->getAplId();
+                    $this->ptManager->updatePt($pt, $data);
+                    $this->entityManager->refresh($pt);
+                } else {
+                    $pt = $this->ptManager->addPt($data);
+                }    
+                
+                $this->ptManager->updatePtGoods($pt, $ptGood);
+                
+                $this->ptManager->repostPt($pt);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        }
+
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'disabled' => !$notDisabled,
+            'allowDate' => $this->ptManager->getAllowDate(),
+        ]);        
+    }    
+
     public function deletePtAction()
     {
         $ptId = $this->params()->fromRoute('id', -1);
