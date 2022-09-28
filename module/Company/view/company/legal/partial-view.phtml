@@ -100,7 +100,7 @@
                      <?php foreach ($legal->getOrderContracts() as $contract): ?>
                         <div class="panel-body">
                             <div class="pull-left">
-                                Наименование: <?= $contract->getName() ?><br/>  
+                                Наименование: <?= $contract->getId() ?> <?= $contract->getName() ?><br/>  
                                 Офис: <?= $contract->getOffice()->getName() ?><br/>  
                                 № <?= $contract->getAct() ?> от <?= date('d.m.Y', strtotime($contract->getDateStart())) ?>
                             </div>

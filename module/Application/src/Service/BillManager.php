@@ -640,7 +640,7 @@ class BillManager
     private function _newGood($article, $producer = null, $name = null)
     {
         if (!$name){
-            $name = $code;
+            $name = $article;
         }
         if (!$producer){
             $producer = $this->entityManager->getRepository(Producer::class)
