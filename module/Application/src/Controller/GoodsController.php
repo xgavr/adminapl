@@ -155,7 +155,7 @@ class GoodsController extends AbstractActionController
 
             if ($form->isValid()) {
                 $producer = $this->assemblyManager->addProducer($data['producer']);
-                var_dump($producer); exit;
+//                var_dump($producer); exit;
                 if ($producer){
                     $codeFilter = new ArticleCode();
                     $codeFiltered = $codeFilter->filter($data['code']);
