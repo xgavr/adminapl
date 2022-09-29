@@ -129,7 +129,7 @@ class StManager
                             'base_amount' => -$amount,
                             'good_id' => $stGood->getGood()->getId(),
                             'office_id' => $st->getOffice()->getId(),
-                            'company_id' => $st->getCompany()->getId(),
+                            'company_id' => $movement->getCompany()->getId(), //компания базы
                             'doc_stamp' => $docStamp,
                         ];
 
