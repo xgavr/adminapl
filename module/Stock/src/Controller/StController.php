@@ -303,9 +303,12 @@ class StController extends AbstractActionController
         $notDisabled = true;        
 
         $goodId = $this->params()->fromRoute('id', -1);
-        $officeId = (int)$this->params()->fromQuery('office', $this->stManager->currentUser()->getOffice()->getId());
+        $officeId = (int) $this->params()->fromQuery('office');
         $office = $this->entityManager->getRepository(Office::class)
-                ->findOneById($officeId);
+                ->find($officeId);
+        if (!$office){
+            $office = $this->stManager->currentUser()->getOffice();
+        }
 
         if ($this->getRequest()->isPost()){
             $data = $this->params()->fromPost();
@@ -389,6 +392,7 @@ class StController extends AbstractActionController
             'disabled' => false,
             'contactName' => $contactName,
             'good' => $good,
+            'office' => $office,
         ]);        
     }    
     

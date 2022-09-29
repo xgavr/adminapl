@@ -138,7 +138,7 @@ $form->prepare();
         var data = serializeForm('#st-form');
         $.ajax({
             type: 'POST',
-            url: '/st/combined-form/<?= $good->getId()?>',
+            url: '/st/combined-form/<?= $good->getId()?>?office=<?= $office->getId()?>',
             data: $.param(data)
         })
             .done(function (data) {
