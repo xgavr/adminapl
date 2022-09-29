@@ -1449,8 +1449,6 @@ class GoodsRepository extends EntityRepository
         
         $queryBuilder->from(GoodBalance::class, 'gb')
                 ->join('gb.good', 'g')
-                ->leftJoin('g.goodSuppliers', 'gs', 'WITH', 'gs.good=g.id and gs.supplier=7 and gs.update = :update')
-                ->setParameter('update', date('Y-m-d'))
                 ->where('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0')    
                 ;
         
@@ -1491,6 +1489,8 @@ class GoodsRepository extends EntityRepository
             $queryBuilder->join('g.producer', 'p')    
                     ->leftJoin('gb.office', 'off') 
                     ->leftJoin('g.tokenGroup', 'tg')
+                    ->leftJoin('g.goodSuppliers', 'gs', 'WITH', 'gs.good=g.id and gs.supplier=7 and gs.update = :update')
+                    ->setParameter('update', date('Y-m-d'))
                  ;   
             
             if (!empty($params['office'])){

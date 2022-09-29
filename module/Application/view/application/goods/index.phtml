@@ -71,7 +71,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="available" data-width="50" data-align="right" data-formatter="availableFormatter">Доступно</th>             
                      <th data-field="officeName" data-width="100">Офис</th>             
                      <!--<th data-field="" data-formatter="activeFormatter"></th>-->
-                     <th data-field="statusRawpriceEx" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle" data-width="5"></th>
+                     <th data-field="aplRest" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle" data-width="5">Апл</th>
                  </tr>                
             </thead>
         </table>
@@ -171,7 +171,7 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function statusExFormatter(value, row) {
-        return '<span></span>' ;
+        return value ;
     }  
     
     function availableFormatter(value) {
@@ -179,14 +179,13 @@ $this->pageBreadcrumbs()->setItems([
     }  
     
     function cellStatusExStyle(value, row, index) {
-        var classes = [
-          'light',
-          'success',
-          'warning'
-        ]
-        return {
-          classes: classes[value-1]
+        var result = 'default';
+        if (value){
+            result = 'success';
         }
+        return {
+          classes: result
+        };
     }        
     
     function responseHandler(res) {
