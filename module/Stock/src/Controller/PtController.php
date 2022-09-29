@@ -359,7 +359,7 @@ class PtController extends AbstractActionController
                 $rowNo = $pt->getPtGoods()->count() + 1;
                 $this->ptManager->addPtGood($pt->getId(), $ptGood, $rowNo);
                 
-                $this->ptManager->repostPt($pt);
+                $this->ptManager->updatePtAmount($pt);
                 
                 return new JsonModel(
                    ['ok']

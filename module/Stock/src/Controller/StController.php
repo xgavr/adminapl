@@ -375,7 +375,7 @@ class StController extends AbstractActionController
                 $rowNo = $st->getStGoods()->count() + 1;
                 $this->stManager->addStGood($st->getId(), $stGood, $rowNo);
                 
-                $this->stManager->repostSt($st);
+                $this->stManager->updateStAmount($st);
                 
                 return new JsonModel(
                    ['ok']
