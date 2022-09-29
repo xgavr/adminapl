@@ -733,6 +733,9 @@
     function supplierFormatter(value, row) {
         var priceDate = new Date(row.dateCreated);
         var priceDateStr = priceDate.getDate()+'-'+ (priceDate.getMonth()+1) + ' ' + priceDate.getHours() + ':' + priceDate.getMinutes();
+        if (row.supplierId === 7){//APL
+            $('#priceBadge').addClass('badge-success');
+        }
         return value + '<br/>' + priceDateStr ;
     }    
 
