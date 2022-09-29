@@ -431,7 +431,7 @@ class StForm extends Form implements ObjectManagerAwareInterface
 
         $inputFilter->add([
                 'name'     => 'quantity',
-                'required' => true,
+                'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
                     ['name' => 'StripTags'],
