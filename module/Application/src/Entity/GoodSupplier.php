@@ -48,13 +48,13 @@ class GoodSupplier {
     protected $update;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="suppliers") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="goodSuppliers") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
     protected $good;        
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="goods") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="goodSuppliers") 
      * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
      */
     protected $supplier;       
