@@ -211,9 +211,9 @@
                         <div class="form-group">
                             <input id="monthSelect" class="form-control" type="month" placeholder="Период">
                         </div>
-                        <a type="button" href="#" class="btn btn-default pt-combined-modal-show" title="Переместить" modal>
-                            <span class="glyphicon glyphicon-transfer"></span>
-                        </a>
+                        <button class="btn btn-default pt-combined-modal-show" type="button" modal-url="/pt/combined-form/<?= $goods->getId()?>">
+                            <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
+                        </button>                
                     </div>
                 </div>
                 <table id="movementTable" 

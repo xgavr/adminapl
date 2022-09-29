@@ -27,6 +27,12 @@ class PtManager
     private $autoPtDocNo = '#АГ';
     
     /**
+     *Номер для перемещений руками
+     * @var string 
+     */
+    private $handPtDocNo = '#РГ';
+
+    /**
      * Doctrine entity manager.
      * @var \Doctrine\ORM\EntityManager
      */
@@ -82,6 +88,11 @@ class PtManager
     public function currentUser()
     {
         return $this->logManager->currentUser();
+    }
+    
+    public function handPtDocNo()
+    {
+        return $this->handPtDocNo;
     }
     
     /**

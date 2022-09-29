@@ -211,7 +211,7 @@ class PtForm extends Form implements ObjectManagerAwareInterface
             'name' => 'status',
             'value' => Pt::STATUS_ACTIVE,
             'attributes' => [                
-                'required' => 'required',
+//                'required' => 'required',
                 'id' => 'status',
             ],
             'options' => [
@@ -220,6 +220,19 @@ class PtForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
         
+        //количество для комбинированной формы
+        $this->add([
+            'type'  => 'number',
+            'name' => 'quantity',
+            'attributes' => [                
+                'id' => 'quantity',
+                'value' => 1,
+                'min' => 1
+            ],
+            'options' => [
+                'label' => 'Количество',
+            ],
+       ]);
         
         // Добавляем кнопку отправки формы
         $this->add([
@@ -378,7 +391,7 @@ class PtForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'status',
-                'required' => true,
+                'required' => false,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
                 ],                
@@ -387,6 +400,32 @@ class PtForm extends Form implements ObjectManagerAwareInterface
                 ],
             ]); 
 
+        $inputFilter->add([
+                'name'     => 'quantity',
+                'required' => true,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                    [    
+                        'name'    => 'GreaterThan',
+                        'options' => [
+                            'min' => 0,
+                            'inclusive' => false
+                        ],
+                    ],
+                ],
+            ]);
+        
     }    
     
     public function setObjectManager(ObjectManager $objectManager)

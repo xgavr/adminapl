@@ -34,7 +34,7 @@ $form->get('comment')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('status')->setAttributes([
+$form->get('quantity')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -43,16 +43,11 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'С�
 
 $form->prepare();
 
-$docName = 'Новый';
-if ($pt){
-    $docName = '№ '.$pt->getDocNo().' от  '.date('d.m.Y', strtotime($pt->getDocDate()));
-}
-
 ?>
 <?= $this->form()->openTag($form); ?>
 
 <div class="modal-header">
-    <h5 class="modal-title" id="ptModalLabel">Перемещение товаров <?= $docName?></h5>
+    <h5 class="modal-title" id="ptModalLabel">Перемещение <b><?= $good->getCode()?> <?= $good->getProducer()->getName() ?> <?= $good->getNameShort() ?></b></h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -60,51 +55,51 @@ if ($pt){
 
 <div class="modal-body">
     <div class="row">
-        <div class="col-xs-2">                        
+        <div class="col-xs-6">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('doc_date')); ?>
+                <?= $this->formElement($form->get('doc_date')); ?>
+                <?= $this->formElementErrors($form->get('doc_date')); ?>                  
+            </div>
+        </div>   
+        <div class="col-xs-6">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('quantity')); ?>
+                <?= $this->formElement($form->get('quantity')); ?>
+                <?= $this->formElementErrors($form->get('quantity')); ?>                  
+            </div>
+        </div>   
+    </div>    
+    <div class="row">
+        <div class="col-xs-6">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('office_id')); ?>
                 <?= $this->formElement($form->get('office_id')); ?>
                 <?= $this->formElementErrors($form->get('office_id')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-2">                        
+        <div class="col-xs-6">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('office2_id')); ?>
                 <?= $this->formElement($form->get('office2_id')); ?>
                 <?= $this->formElementErrors($form->get('office2_id')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-2">                        
-            <div class="form-group">
-                <?= $this->formLabel($form->get('status')); ?>
-                <?= $this->formElement($form->get('status')); ?>
-                <?= $this->formElementErrors($form->get('status')); ?>                  
-            </div>
-        </div>
     </div>    
     <div class="row">
-        <div class="col-xs-2">                        
-            <div class="form-group">
-                <?= $this->formLabel($form->get('doc_date')); ?>
-                <?= $this->formElement($form->get('doc_date')); ?>
-                <?= $this->formElementErrors($form->get('doc_date')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-2">                        
+        <div class="col-xs-6">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('company')); ?>
                 <?= $this->formElement($form->get('company')); ?>
                 <?= $this->formElementErrors($form->get('company')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-2">                        
+        <div class="col-xs-6">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('company2')); ?>
                 <?= $this->formElement($form->get('company2')); ?>
                 <?= $this->formElementErrors($form->get('company2')); ?>                  
             </div>
-        </div>    
-        <div class="col-xs-6 text-right">
         </div>    
     </div>        
     <?= $this->formElement($form->get('csrf')); ?>
@@ -120,18 +115,16 @@ if ($pt){
 <script>
     function submitForm(){
         var data = serializeForm('#pt-form');
-        data.ptGood = getFormatedPtGood();
         $.ajax({
             type: 'POST',
-            url: '/pt/edit-form/<?= ($pt) ? $pt->getId():"" ?>',
+            url: '/pt/combined-form/<?= $good->getId()?>',
             data: $.param(data)
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#ptModal').modal('hide');
-                    $('#table').bootstrapTable('refresh');
+                    $('#ptCombinedModal').modal('hide');
                 } else {
-                    $('#ptModal .modal-content').html(data);                    
+                    $('#ptCombinedModal .modal-content').html(data);                    
                 }    
             })
             .fail(function () {
@@ -139,21 +132,6 @@ if ($pt){
 
             });    
     };
-    
-    function getFormatedPtGood(){
-        var data = $('#ptgoodtable').bootstrapTable('getData');
-        var result = [];
-        $.each( data, function( index, row ) {
-            var newRow = {
-                good_id: row.good.id,
-                quantity: row.quantity,
-                amount: row.amount,
-            };
-            result.push(newRow);
-        });   
-        return result;
-    }
-    
     
     $('#office').on('change', function(){
         $.getJSON( '/offices/legals/'+$('#office').val(), function( data ) {
@@ -173,31 +151,8 @@ if ($pt){
         });    
     });
         
-    function ptUpdateTotal(){
-        var data = $('#ptgoodtable').bootstrapTable('getData');
-        var amount = 0; var quantity = 0;
-        $.each(data, function( index, value ) {
-            amount += Math.round(value.amount*100)/100;
-            quantity += Math.round(value.quantity*100)/100; 
-        });
-        $('#ptAmount').html(Math.round(amount*100)/100);
-        $('#ptQuantity').html(Math.round(quantity*100)/100);
-    }
-    
-    //удаление строки из таблицы
-    function removeTableRowByUniqueId(index){
-        $('#ptgoodtable').bootstrapTable('removeByUniqueId', index);
-        ptUpdateTotal();
-    }
-    
     $( document ).ready(function() {
-        
-        $('#ptgoodtable').bootstrapTable({
-            onLoadSuccess: function(res){
-                ptUpdateTotal();
-            }            
-        }); 
-        
+                
         var forms = $('#pt-form');
         
         forms.submit(function() {
@@ -215,65 +170,5 @@ if ($pt){
                 submitForm();
             }, false);    
         });        
-    });    
-    
-    function ptGoodRefreshTable(){
-        $('#ptgoodtable').bootstrapTable('refresh');
-    }
-    
-    function ptgoodQueryParams(params) {
-        $('#ptgoodtoolbar').find('input[name]').each(function () {
-            params[$(this).attr('name')] = $(this).val();
-        });
-        limit = $('#ptgoodtable .page-size').html();
-        if (limit){
-            params.limit = limit;
-        }    
-        offset = $('#ptgoodtable li.page-number.active a').html();
-        if (offset){
-            params.offset = params.limit * (offset - 1);
-        }    
-        
-        return params;
-    }
-    
-    function goodFormatter(value, row){
-        var url = '/goods/view/'+row.good.id;
-        btn = '<nobr><a';
-        btn += ' href="'+url+'"';
-        btn += ' class="btn btn-link btn-xs" target="_blank">';
-        btn += '<span class="glyphicon glyphicon-link"></span>';
-        btn += '</a>'+value+'</nobr>';
-        return btn;
-    }    
-    
-    function pgActiveFormatter(value, row){
-        var url = '/pt/good-edit-form/';
-        btn = '<button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs pt-good-modal-show"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' unique-id="'+value+'"';
-        btn += ' modal-url="'+url+'">';
-        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-        btn += '</button>';
-
-        btn += ' <button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs table-row-remove"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' title="Удалить"'; 
-        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-        btn += '</button>';
-        return btn;
-    }    
-    
-    function pgPriceFormatter(value, row){
-        return Math.round(value*100/row.quantity)/100;
-    }        
-    
-    function ptgoodResponseHandler(res) {
-        return res;
-    }     
+    });        
 </script>

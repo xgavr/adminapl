@@ -556,6 +556,11 @@ class Pt {
         $this->ptGoods[] = $ptGood;
     }    
     
+    public function getPtGoods()
+    {
+        return $this->ptGoods;
+    }    
+    
     /**
      * Лог
      * @return array

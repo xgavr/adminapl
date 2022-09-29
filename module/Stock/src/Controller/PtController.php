@@ -291,13 +291,19 @@ class PtController extends AbstractActionController
     
     public function combinedFormAction()
     {
-        $officeId = (int)$this->params()->fromQuery('office');
+        $goodId = $this->params()->fromRoute('id', -1);
+        $officeId = (int)$this->params()->fromQuery('office', $this->ptManager->currentUser()->getOffice()->getId());
         $office = $this->entityManager->getRepository(Office::class)
                 ->findOneById($officeId);
-        $office2Id = (int)$this->params()->fromQuery('office2');
+        $office2Id = (int)$this->params()->fromQuery('office2', $this->ptManager->currentUser()->getOffice()->getId());
         $office2 = $this->entityManager->getRepository(Office::class)
                 ->findOneById($office2Id);
         
+        $good = null;
+        if ($goodId > 0){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+        }
         if ($this->getRequest()->isPost()){
             $data = $this->params()->fromPost();
             $office = $this->entityManager->getRepository(Office::class)
@@ -319,15 +325,29 @@ class PtController extends AbstractActionController
 
             if ($form->isValid()) {
                 unset($data['csrf']);
-                $ptGood = $data['ptGood'];
-                unset($data['ptGood']);
+                $ptGood = ['good_id' => $good->getId(), 'quantity' => $data['quantity'], 'amount' => $good->getMeanPrice() * $data['quantity']];
+                unset($data['good']);
+                unset($data['quantity']);
                 $data['status_ex'] = Pt::STATUS_EX_NEW;
+                $data['status'] = Pt::STATUS_ACTIVE;                
+                $data['doc_no'] = $this->ptManager->handPtDocNo();                
                 $data['office'] = $office;
                 $data['company'] = $company;
                 $data['office2'] = $office2;
                 $data['company2'] = $company2;
                 $data['apl_id'] = 0;
 
+                $pt = $this->entityManager->getRepository(Pt::class)
+                        ->findOneBy([
+                            'docDate' => $data['doc_date'],
+                            'office' => $office->getId(), 
+                            'company' => $company->getId(),
+                            'office2' => $office2->getId(), 
+                            'company2' => $company2->getId(),
+                            'docNo' => $this->ptManager->handPtDocNo(),
+                            'status' => Pt::STATUS_ACTIVE,
+                        ]);
+                
                 if ($pt){
                     $data['apl_id'] = $pt->getAplId();
                     $this->ptManager->updatePt($pt, $data);
@@ -336,7 +356,8 @@ class PtController extends AbstractActionController
                     $pt = $this->ptManager->addPt($data);
                 }    
                 
-                $this->ptManager->updatePtGoods($pt, $ptGood);
+                $rowNo = $pt->getPtGoods()->count() + 1;
+                $this->ptManager->addPtGood($pt->getId(), $ptGood, $rowNo);
                 
                 $this->ptManager->repostPt($pt);
                 
@@ -350,8 +371,9 @@ class PtController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'disabled' => !$notDisabled,
+            'disabled' => false,
             'allowDate' => $this->ptManager->getAllowDate(),
+            'good' => $good,
         ]);        
     }    
 
