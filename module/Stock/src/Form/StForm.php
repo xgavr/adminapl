@@ -217,7 +217,7 @@ class StForm extends Form implements ObjectManagerAwareInterface
             'name' => 'status',
             'value' => St::STATUS_ACTIVE,
             'attributes' => [                
-                'required' => 'required',
+//                'required' => 'required',
                 'id' => 'status',
             ],
             'options' => [
@@ -409,7 +409,7 @@ class StForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'status',
-                'required' => true,
+                'required' => false,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
                 ],                

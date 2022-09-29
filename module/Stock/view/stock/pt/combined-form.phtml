@@ -113,6 +113,10 @@ $form->prepare();
 <?= $this->form()->closeTag(); ?>
             
 <script>
+    function refreshTable(){
+        return;
+    }
+
     function submitForm(){
         var data = serializeForm('#pt-form');
         $.ajax({

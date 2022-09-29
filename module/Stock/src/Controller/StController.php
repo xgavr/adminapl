@@ -375,6 +375,8 @@ class StController extends AbstractActionController
                 return new JsonModel(
                    ['ok']
                 );           
+            } else {
+                var_dump($form->getMessages());
             }
         }
         $this->layout()->setTemplate('layout/terminal');
