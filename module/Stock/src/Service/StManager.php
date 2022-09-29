@@ -250,7 +250,7 @@ class StManager
             $st = new St();        
             $st->setAplId($data['apl_id']);
             $st->setDocDate($data['doc_date']);
-            $st->setComment($data['comment']);
+            $st->setComment(empty($data['comment']) ? null:$data['comment']);
             $st->setStatusEx($data['status_ex']);
             $st->setStatus($data['status']);
             $st->setStatusDoc(St::STATUS_DOC_NOT_RECD);
@@ -289,7 +289,7 @@ class StManager
         if ($data['doc_date'] > $this->allowDate){
             $st->setAplId($data['apl_id']);
             $st->setDocDate($data['doc_date']);
-            $st->setComment($data['comment']);
+            $st->setComment(empty($data['comment']) ? null:$data['comment']);
             $st->setStatus($data['status']);
             $st->setStatusEx(St::STATUS_EX_NEW);
             $st->setWriteOff($data['writeOff']);
