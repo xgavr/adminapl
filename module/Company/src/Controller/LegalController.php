@@ -585,20 +585,21 @@ class LegalController extends AbstractActionController
             return;                        
         }        
 
+        $officeId = (int)$this->params()->fromQuery('office', 1);
+        $office = $this->entityManager->getRepository(Office::class)
+                ->find($officeId);
+
         $contractId = (int)$this->params()->fromQuery('contract', -1);
         
         // Validate input parameter
         if ($contractId>0) {
             $contract = $this->entityManager->getRepository(Contract::class)
                     ->find($contractId);
+            $office = $contract->getOffice();
         } else {
             $contract = null;
         }
-        
-        $officeId = (int)$this->params()->fromQuery('office', 1);
-        $office = $this->entityManager->getRepository(Office::class)
-                ->find($officeId);
-        
+                
         $form = new ContractForm($this->entityManager, $office);
 
         if ($this->getRequest()->isPost()) {
