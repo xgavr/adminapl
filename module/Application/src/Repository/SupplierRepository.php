@@ -407,4 +407,16 @@ class SupplierRepository extends EntityRepository{
         
         return $queryBuilder->getQuery()->getResult();                
     }
+    
+    /**
+     * Наличие
+     * @param Goods $good
+     */
+    public function isApl($good)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        return $entityManager->getRepository(GoodSupplier::class)
+                ->count(['good' => $good->getId(), 'supplier' => 7, 'upDate' => date('Y-m-d')]);
+    }
 }

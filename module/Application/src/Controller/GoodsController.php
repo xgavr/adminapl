@@ -25,6 +25,7 @@ use Application\Filter\ArticleCode;
 use Stock\Entity\Movement;
 use Company\Entity\Office;
 use Stock\Entity\GoodBalance;
+use Application\Entity\GoodSupplier;
 
 class GoodsController extends AbstractActionController
 {
@@ -704,6 +705,10 @@ class GoodsController extends AbstractActionController
         
         $goodSuppliers = $this->entityManager->getRepository(Goods::class)
                 ->findGoodSuppliers($goods);
+        
+        $isApl = $this->entityManager->getRepository(GoodSupplier::class)
+                    ->isApl($goods);
+                
 
         // Render the view template.
         return new ViewModel([
@@ -720,6 +725,7 @@ class GoodsController extends AbstractActionController
             'rests' => $rests,
             'currentUser' => $this->logManager->currentUser(),
             'goodSuppliers' => $goodSuppliers,
+            'isApl' => $isApl
         ]);
     }      
 
