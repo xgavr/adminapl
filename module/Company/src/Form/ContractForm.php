@@ -133,7 +133,7 @@ class ContractForm extends Form
                 'id' => 'contract_office',
                 'data-live-search'=> "true",
                 'class' => "selectpicker",
-                'disabled' => 'disabled',
+//                'disabled' => 'disabled',
                 'value' => $this->office->getId(),
             ],
             'options' => [

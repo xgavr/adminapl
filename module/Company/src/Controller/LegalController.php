@@ -590,14 +590,14 @@ class LegalController extends AbstractActionController
         // Validate input parameter
         if ($contractId>0) {
             $contract = $this->entityManager->getRepository(Contract::class)
-                    ->findOneById($contractId);
+                    ->find($contractId);
         } else {
             $contract = null;
         }
         
         $officeId = (int)$this->params()->fromQuery('office', 1);
         $office = $this->entityManager->getRepository(Office::class)
-                ->findOneById($officeId);
+                ->find($officeId);
         
         $form = new ContractForm($this->entityManager, $office);
 
