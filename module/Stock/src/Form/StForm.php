@@ -240,7 +240,19 @@ class StForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
         
-        
+        $this->add([
+            'type'  => 'number',
+            'name' => 'quantity',
+            'attributes' => [                
+                'id' => 'quantity',
+                'value' => 1,
+                'min' => 1
+            ],
+            'options' => [
+                'label' => 'Количество',
+            ],
+       ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -417,6 +429,31 @@ class StForm extends Form implements ObjectManagerAwareInterface
                 ],
             ]); 
 
+        $inputFilter->add([
+                'name'     => 'quantity',
+                'required' => true,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                    [    
+                        'name'    => 'GreaterThan',
+                        'options' => [
+                            'min' => 0,
+                            'inclusive' => false
+                        ],
+                    ],
+                ],
+            ]);
     }    
     
     public function setObjectManager(ObjectManager $objectManager)

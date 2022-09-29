@@ -190,7 +190,7 @@ class StController extends AbstractActionController
                 
                 $this->stManager->updateStGoods($st, $stGood);
                 
-                $this->stManager->repostSt($st);
+//                $this->stManager->repostSt($st);
                 
                 return new JsonModel(
                    ['ok']
@@ -294,6 +294,99 @@ class StController extends AbstractActionController
             'good' => $good,
         ]);        
     }
+    
+    public function combinedFormAction()
+    {
+        $st = $company = $user = $cost = $contactName = null;
+        $notDisabled = true;        
+
+        $goodId = $this->params()->fromRoute('id', -1);
+        $officeId = (int)$this->params()->fromQuery('office', $this->stManager->currentUser()->getOffice()->getId());
+        $office = $this->entityManager->getRepository(Office::class)
+                ->findOneById($officeId);
+
+        if ($this->getRequest()->isPost()){
+            $data = $this->params()->fromPost();
+            $office = $this->entityManager->getRepository(Office::class)
+                    ->findOneById($data['office_id']);
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->findOneById($data['company']);
+            $user = $this->entityManager->getRepository(User::class)
+                    ->findOneById($data['user']);
+            $cost = $this->entityManager->getRepository(Cost::class)
+                    ->findOneById($data['cost']);
+        }
+                
+        $form = new StForm($this->entityManager, $office, $company, $user, $cost);
+
+        $good = null;
+        if ($goodId > 0){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+        }
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                unset($data['csrf']);
+                $stGood = ['good_id' => $good->getId(), 'quantity' => $data['quantity'], 'amount' => $good->getMeanPrice() * $data['quantity']];
+                unset($data['stGood']);
+                $data['status_ex'] = St::STATUS_EX_NEW;
+                $data['status'] = St::STATUS_ACTIVE;
+                $data['office'] = $office;
+                $data['company'] = $company;
+                $data['user'] = $user;
+                $data['cost'] = $cost;
+                if ($data['writeOff'] != St::WRITE_COST){
+                    $data['cost'] = null;
+                }
+                if ($data['writeOff'] != St::WRITE_PAY){
+                    $data['user'] = null;
+                }
+                $data['apl_id'] = 0;
+                
+                $st = $this->entityManager->getRepository(St::class)
+                        ->findOneBy([
+                            'docDate' => $data['doc_date'],
+                            'office' => $office->getId(), 
+                            'company' => $company->getId(),
+                            'docNo' => $this->stManager->handStDocNo(),
+                            'status' => St::STATUS_ACTIVE,
+                            'writeOff' => $data['writeOff'],
+                            'user' => $user,
+                            'cost' => $cost,
+                        ]);
+
+                if ($st){
+                    $data['apl_id'] = $st->getAplId();
+                    $this->stManager->updateSt($st, $data);
+                    $this->entityManager->refresh($st);
+                } else {
+                    $st = $this->stManager->addSt($data);
+                }    
+                
+                $rowNo = $st->getStGoods()->count() + 1;
+                $this->stManager->addStGood($st->getId(), $stGood, $rowNo);
+                
+                $this->stManager->repostSt($st);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        }
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'allowDate' => $this->stManager->getAllowDate(),
+            'disabled' => false,
+            'contactName' => $contactName,
+            'good' => $good,
+        ]);        
+    }    
     
     public function deleteStAction()
     {

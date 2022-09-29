@@ -1,0 +1,219 @@
+<?php
+use Stock\Entity\St;
+use Stock\Entity\StGood;
+
+$form = $this->form;
+
+$form->get('office_id')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('company')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('userSearch')->setAttributes([
+    'class'=>'form-control', 
+    'data-provide' => "typeahead",
+    'autocomplete' => 'off',
+    'placeholder' => 'Телефон'
+    ]);
+
+$form->get('cost')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('doc_date')->setAttributes([
+    'class'=>'form-control', 
+    'min' => date('Y-m-d', strtotime($allowDate.' + 1 day')),
+    'disabled' => $disabled,
+    ]);
+
+$form->get('doc_no')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('writeOff')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('quantity')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'st-submit']);
+
+$form->prepare();
+
+?>
+
+<?= $this->form()->openTag($form); ?>
+            
+<div class="modal-header">
+    <h5 class="modal-title" id="stModalLabel">Списание <b><?= $good->getCode()?> <?= $good->getProducer()->getName() ?> <?= $good->getNameShort() ?></b></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('doc_date')); ?>
+                <?= $this->formElement($form->get('doc_date')); ?>
+                <?= $this->formElementErrors($form->get('doc_date')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('quantity')); ?>
+                <?= $this->formElement($form->get('quantity')); ?>
+                <?= $this->formElementErrors($form->get('quantity')); ?>                  
+            </div>
+        </div>   
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('office_id')); ?>
+                <?= $this->formElement($form->get('office_id')); ?>
+                <?= $this->formElementErrors($form->get('office_id')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('writeOff')); ?>
+                <?= $this->formElement($form->get('writeOff')); ?>
+                <?= $this->formElementErrors($form->get('writeOff')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-4">                        
+            <div class="form-group" id="userGroup">
+                <?= $this->formLabel($form->get('userSearch')); ?>
+                <em id="userName"><?= $contactName?></em>
+                <?= $this->formElement($form->get('userSearch')); ?>
+                <?= $this->formElementErrors($form->get('userSearch')); ?>                  
+            </div>
+            <div class="form-group" id="costGroup">
+                <?= $this->formLabel($form->get('cost')); ?>
+                <?= $this->formElement($form->get('cost')); ?>
+                <?= $this->formElementErrors($form->get('cost')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('company')); ?>
+                <?= $this->formElement($form->get('company')); ?>
+                <?= $this->formElementErrors($form->get('company')); ?>                  
+            </div>
+        </div>    
+    </div>        
+
+    <?= $this->formElement($form->get('user')); ?>
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="st-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    function submitForm(){
+        var data = serializeForm('#st-form');
+        $.ajax({
+            type: 'POST',
+            url: '/st/combined-form/<?= $good->getId()?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#stCombinedModal').modal('hide');
+                } else {
+                    $('#stCombinedModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+        
+    $('#office').on('change', function(){
+        $.getJSON( '/offices/legals/'+$('#office').val(), function( data ) {
+            $('#company').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#company').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    });
+            
+    function hideUserGroup()
+    {
+        $('#userGroup').hide();
+        $('#user').attr('required', false);
+        if ($("#writeOff").val() == <?= St::WRITE_PAY?>){
+            $('#userGroup').show();
+            $('#userSearch').attr('required', true);
+        }
+        
+        $('#costGroup').hide();
+        $('#cost').attr('required', false);
+        if ($("#writeOff").val() == <?= St::WRITE_COST?>){
+            $('#costGroup').show();
+            $('#cost').attr('required', true);
+        }
+    }
+    
+    $( document ).ready(function() {
+        
+        hideUserGroup();
+        
+        $('#userSearch').typeahead({
+            source: function(query, process) {
+                return $.post("/users/live-search",{search: query, limit: 8} ,function (data) {
+                    return process(data.rows);
+                });
+            },
+            changeInputOnSelect: false,
+            afterSelect: function(data) {
+                $('#user').val(data.id);
+                $('#userSearch').val(data.phone);
+                $('#userName').html(data.fullName);
+            }
+        });
+        
+        var forms = $('#st-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('st-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+        
+        $('#writeOff').on('change', function(){
+            hideUserGroup();
+        });
+    });        
+</script>

@@ -145,6 +145,15 @@
             });
         });  
         
+        $(document).on('click', '.st-combined-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'stCombinedModal',
+                url: url
+//                width: '1440px'
+            });
+        });  
+
         $(document).on('click', '.vt-index-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({

@@ -150,7 +150,7 @@ class St {
      */
     public function __construct() 
     {
-       $this->otGoods = new ArrayCollection();
+       $this->stGoods = new ArrayCollection();
     }
     
     
@@ -620,6 +620,15 @@ class St {
         $this->stGoods[] = $stGood;
     }    
     
+    /**
+     * Returns the stGoods.
+     * @return array     
+     */
+    public function getStGoods() 
+    {
+        return $this->stGoods;
+    }
+
     /**
      * Лог
      * @return array

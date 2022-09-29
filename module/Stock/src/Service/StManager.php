@@ -39,6 +39,12 @@ class StManager
     private $allowDate;
 
     /**
+     *Номер для перемещений руками
+     * @var string 
+     */
+    private $handStDocNo = '#РГ';
+    
+    /**
      * Constructs the service.
      */
     public function __construct($entityManager, $logManager, $adminManager) 
@@ -60,6 +66,16 @@ class StManager
         return $this->allowDate; 
     }
 
+    public function currentUser()
+    {
+        return $this->logManager->currentUser();
+    }
+
+    public function handStDocNo()
+    {
+        return $this->handStDocNo;
+    }
+    
     /**
      * Обновить движения документа
      * 
