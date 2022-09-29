@@ -1447,7 +1447,7 @@ class GoodsRepository extends EntityRepository
         
         $queryBuilder->from(GoodBalance::class, 'gb')
                 ->join('gb.good', 'g')
-                ->where('gb.rest != 0 && gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0')    
+                ->where('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0')    
                 ;
         
         if (is_array($params)){
