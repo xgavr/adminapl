@@ -190,7 +190,7 @@ class StController extends AbstractActionController
                 
                 $this->stManager->updateStGoods($st, $stGood);
                 
-//                $this->stManager->repostSt($st);
+                $this->stManager->repostSt($st);
                 
                 return new JsonModel(
                    ['ok']
