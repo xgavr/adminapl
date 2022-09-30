@@ -201,7 +201,9 @@ class OtController extends AbstractActionController
                 ];
                 if ($ot->getComiss()){
                     $data['comiss'] = $ot->getComiss()->getId();
-                    $data['comissSearch'] = $ot->getComiss()->getPhone()->getName(\User\Filter\PhoneFilter::PHONE_FORMAT_DB);
+                    if ($ot->getComiss()->getPhone()){
+                        $data['comissSearch'] = $ot->getComiss()->getPhone()->getName(\User\Filter\PhoneFilter::PHONE_FORMAT_DB);
+                    }    
                     $contactName = $ot->getComiss()->getName();
                 }
                 $form->setData($data);
