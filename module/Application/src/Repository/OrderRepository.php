@@ -124,7 +124,8 @@ class OrderRepository extends EntityRepository{
             ->leftJoin('o.contact', 'c')
             ->leftJoin('o.user', 'u')
 //            ->orderBy('o.dateCreated', 'DESC')                 
-//            ->addOrderBy('o.dateOper', 'DESC')                 
+//            ->addOrderBy('o.dateOper', 'DESC') 
+            ->setMaxResults(1000)    
                 ;
         
         if (is_array($params)){

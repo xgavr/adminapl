@@ -103,8 +103,9 @@ class OrderController extends AbstractActionController
         $query = $this->entityManager->getRepository(Order::class)
                         ->findAllOrder($params);
         
-        $total = $this->entityManager->getRepository(Order::class)
-                        ->findAllOrderTotal($params);
+//        $total = $this->entityManager->getRepository(Order::class)
+//                        ->findAllOrderTotal($params);
+        $total = 1000;
                 
         if ($offset) {
             $query->setFirstResult($offset);
