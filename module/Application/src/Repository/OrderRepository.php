@@ -193,7 +193,7 @@ class OrderRepository extends EntityRepository{
                     $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
                 }
                 
-                if (count($orX)){
+                if ($orX->count()){
                     $queryBuilder->andWhere($orX);
                     $result = $queryBuilder->getQuery()->getResult();
                 }    
@@ -296,7 +296,7 @@ class OrderRepository extends EntityRepository{
                     ->setParameter('3', $params['status'])
                         ;
             }            
-            if (isset($params['search'])){
+            if (!empty($params['search'])){
                 return self::MAX_ORDER_SEARCH_RESULT;
             }
         }
