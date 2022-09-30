@@ -242,7 +242,7 @@ class OrderRepository extends EntityRepository{
                 $queryBuilder->addOrderBy('o.'.$params['sort'], $params['order']);
             }        
             
-            if (isset($params['search'])){
+            if (!empty($params['search'])){
                 $orX = $queryBuilder->expr()->orX();
                 $orX->add($queryBuilder->expr()->eq('o.id', 0));
                 
