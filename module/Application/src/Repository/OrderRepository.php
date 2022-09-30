@@ -183,7 +183,6 @@ class OrderRepository extends EntityRepository{
                     $orX->add($queryBuilder->expr()->like('p.name', ':digits'));
                     $queryBuilder->setParameter('digits', '%' . $digits . '%');
 
-                    $queryBuilder->andWhere($orX);
 
                 }    
                 if ($alnum){
@@ -192,11 +191,12 @@ class OrderRepository extends EntityRepository{
                     $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
                     $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
                     $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
-
-                    $queryBuilder->andWhere($orX);
                 }
                 
-                $result = $queryBuilder->getQuery()->getResult();
+                if (count($orX)){
+                    $queryBuilder->andWhere($orX);
+                    $result = $queryBuilder->getQuery()->getResult();
+                }    
             }    
         }    
         return $result;
