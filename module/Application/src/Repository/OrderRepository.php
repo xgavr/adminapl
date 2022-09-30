@@ -242,7 +242,7 @@ class OrderRepository extends EntityRepository{
             
             if (isset($params['search'])){
                 $orX = $queryBuilder->expr()->orX();
-                $orX->add($queryBuilder->expr()->eq('o.id', 0));
+//                $orX->add($queryBuilder->expr()->eq('o.id', 0));
                 
                 $contacts = $this->searchContacts($params['search']);                
                 foreach ($contacts as $contact){
@@ -252,6 +252,7 @@ class OrderRepository extends EntityRepository{
                 foreach ($orders as $order){
                     $orX->add($queryBuilder->expr()->eq('o.id', $order['orderId']));                    
                 }
+                $queryBuilder->andWhere($orX);
             }
         }
 //var_dump($queryBuilder->getParameters('alnum')); exit;
