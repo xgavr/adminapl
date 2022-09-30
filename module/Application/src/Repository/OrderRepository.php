@@ -130,11 +130,11 @@ class OrderRepository extends EntityRepository{
             
                 $queryBuilder
                     ->join('b.good', 'g')
-                    ->leftJoin('g.oems', 'oe')
+//                    ->leftJoin('g.oems', 'oe')
                         ;
                 
                 $orX = $queryBuilder->expr()->orX();
-                $orX->add($queryBuilder->expr()->like('oe.oe', ':alnum'));
+                $orX->add($queryBuilder->expr()->like('g.code', ':alnum'));
                 $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
                 
                 $queryBuilder->andWhere($orX);
