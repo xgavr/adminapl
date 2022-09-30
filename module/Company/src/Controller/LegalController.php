@@ -605,7 +605,10 @@ class LegalController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
-            $data['office'] = $office->getId();
+            
+            if (empty($data['office'])){
+                $data['office'] = $office->getId();
+            }    
             if (empty($data['company'])){
                 $company = $this->entityManager->getRepository(Office::class)
                         ->findDefaultCompany($office);
