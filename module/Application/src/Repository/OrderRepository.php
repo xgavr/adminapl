@@ -28,6 +28,8 @@ use Stock\Entity\Retail;
  */
 class OrderRepository extends EntityRepository{
 
+    const MAX_ORDER_SEARCH_RESULT = 50; // максимальный для поиска
+    
     /**
      * Запрос на все заказаы
      * @return Query
@@ -242,7 +244,7 @@ class OrderRepository extends EntityRepository{
             
             if (isset($params['search'])){
                 $orX = $queryBuilder->expr()->orX();
-//                $orX->add($queryBuilder->expr()->eq('o.id', 0));
+                $orX->add($queryBuilder->expr()->eq('o.id', 0));
                 
                 $contacts = $this->searchContacts($params['search']);                
                 foreach ($contacts as $contact){
@@ -253,6 +255,7 @@ class OrderRepository extends EntityRepository{
                     $orX->add($queryBuilder->expr()->eq('o.id', $order['orderId']));                    
                 }
                 $queryBuilder->andWhere($orX);
+                $queryBuilder->setMaxResults(self::MAX_ORDER_SEARCH_RESULT);
             }
         }
 //var_dump($queryBuilder->getParameters('alnum')); exit;
@@ -294,15 +297,7 @@ class OrderRepository extends EntityRepository{
                         ;
             }            
             if (isset($params['search'])){
-                $orX = $queryBuilder->expr()->orX();
-                $contacts = $this->searchContacts($params['search']);                
-                foreach ($contacts as $contact){
-                    $orX->add($queryBuilder->expr()->eq('c.id', $contact['id']));                    
-                }
-                $orders = $this->searchOe($params['search']);                
-                foreach ($orders as $order){
-                    $orX->add($queryBuilder->expr()->eq('o.id', $order['orderId']));                    
-                }
+                return self::MAX_ORDER_SEARCH_RESULT;
             }
         }
         
