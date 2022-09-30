@@ -109,50 +109,95 @@ class OrderRepository extends EntityRepository{
       
     /**
      * 
-     * @param string $search
+     * @param string $searchStr
+     * @return array
      */
-    private function searchContacts($search)
+    private function searchOe($searchStr) 
     {
+        $result = [];
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $search = trim($search);
-        if ($search){
-            $queryBuilder->select('c')
-                    ->from(Contact::class, c)
+        $search = trim($searchStr);
+        if (strlen($search) > 2){
+            $alnumFilter = new Alnum();
+            $alnum = $alnumFilter->filter($search);
+            if ($alnum){
+                $queryBuilder->select('identity(b.order) as orderId')
+                    ->distinct()    
+                    ->from(Bid::class, 'b')
                     ;
             
-            $queryBuilder->leftJoin('c.emails', 'e');
-
-            $orX = $queryBuilder->expr()->orX();
-            $orX->add($queryBuilder->expr()->like('e.name', ':search'));
-            $queryBuilder->setParameter('search', '%' . $search . '%');
-
-            $digitsFilter = new Digits();
-            $alnumFilter = new Alnum();
-            $digits = $digitsFilter->filter($search);
-            $alnum = $alnumFilter->filter($search);
-            if ($digits){
-                $queryBuilder->join('c.phones', 'p');
-                $orX->add($queryBuilder->expr()->like('p.name', ':digits'));
-                $queryBuilder->setParameter('digits', '%' . $digits . '%');
-            }    
-            if ($alnum){
                 $queryBuilder
-                    ->join('o.bids', 'b')
                     ->join('b.good', 'g')
                     ->leftJoin('g.oems', 'oe')
-                    ->leftJoin('o.contactCar', 'cc')
                         ;
-
+                
+                $orX = $queryBuilder->expr()->orX();
                 $orX->add($queryBuilder->expr()->like('oe.oe', ':alnum'));
-                $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
-                $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
                 $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
+                
+                $queryBuilder->andWhere($orX);
+                
+                $result = $queryBuilder->getQuery()->getResult();
             }    
-            $queryBuilder->andWhere($orX);
         }    
-        return;
+        return $result;        
+    }
+    
+    /**
+     * 
+     * @param string $searchStr
+     */
+    private function searchContacts($searchStr)
+    {
+        $result = [];
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $search = trim($searchStr);
+        if (strlen($search) > 2){
+            $digitsFilter = new Digits();
+            $digits = $digitsFilter->filter($search);
+
+            $alnumFilter = new Alnum();
+            $alnum = $alnumFilter->filter($search);
+
+            if ($digits || $alnum){
+                $queryBuilder->select('c.id')
+                        ->distinct()
+                        ->from(Contact::class, 'c')
+                        ;
+                $orX = $queryBuilder->expr()->orX();
+
+                if ($digits){
+
+                    $queryBuilder->leftJoin('c.emails', 'e');
+
+                    $orX->add($queryBuilder->expr()->like('e.name', ':search'));
+                    $queryBuilder->setParameter('search', '%' . $search . '%');
+
+                    $queryBuilder->leftJoin('c.phones', 'p');
+                    $orX->add($queryBuilder->expr()->like('p.name', ':digits'));
+                    $queryBuilder->setParameter('digits', '%' . $digits . '%');
+
+                    $queryBuilder->andWhere($orX);
+
+                }    
+                if ($alnum){
+                    $queryBuilder->leftJoin('c.contactCars', 'cc');
+
+                    $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
+                    $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
+                    $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
+
+                    $queryBuilder->andWhere($orX);
+                }
+                
+                $result = $queryBuilder->getQuery()->getResult();
+            }    
+        }    
+        return $result;
     }
     
     /**
@@ -196,38 +241,15 @@ class OrderRepository extends EntityRepository{
             }        
             
             if (isset($params['search'])){
-                $search = trim($params['search']);
-                if ($search){
-                    $queryBuilder->leftJoin('c.emails', 'e');
-
-                    $orX = $queryBuilder->expr()->orX();
-                    $orX->add($queryBuilder->expr()->like('e.name', ':search'));
-                    $queryBuilder->setParameter('search', '%' . $search . '%');
-
-                    $digitsFilter = new Digits();
-                    $alnumFilter = new Alnum();
-                    $digits = $digitsFilter->filter($search);
-                    $alnum = $alnumFilter->filter($search);
-                    if ($digits){
-                        $queryBuilder->join('c.phones', 'p');
-                        $orX->add($queryBuilder->expr()->like('p.name', ':digits'));
-                        $queryBuilder->setParameter('digits', '%' . $digits . '%');
-                    }    
-                    if ($alnum){
-                        $queryBuilder
-                            ->join('o.bids', 'b')
-                            ->join('b.good', 'g')
-                            ->leftJoin('g.oems', 'oe')
-                            ->leftJoin('o.contactCar', 'cc')
-                                ;
-
-                        $orX->add($queryBuilder->expr()->like('oe.oe', ':alnum'));
-                        $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
-                        $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
-                        $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
-                    }    
-                    $queryBuilder->andWhere($orX);
-                }    
+                $orX = $queryBuilder->expr()->orX();
+                $contacts = $this->searchContacts($params['search']);                
+                foreach ($contacts as $contact){
+                    $orX->add($queryBuilder->expr()->eq('c.id', $contact['id']));                    
+                }
+                $orders = $this->searchOe($params['search']);                
+                foreach ($orders as $order){
+                    $orX->add($queryBuilder->expr()->eq('o.id', $order['orderId']));                    
+                }
             }
         }
 //var_dump($queryBuilder->getParameters('alnum')); exit;
@@ -269,38 +291,15 @@ class OrderRepository extends EntityRepository{
                         ;
             }            
             if (isset($params['search'])){
-                $search = trim($params['search']);
-                if ($search){
-                    $queryBuilder->join('c.emails', 'e');
-
-                    $orX = $queryBuilder->expr()->orX();
-                    $orX->add($queryBuilder->expr()->like('e.name', ':search'));
-                    $queryBuilder->setParameter('search', '%' . $search . '%');
-
-                    $digitsFilter = new Digits();
-                    $alnumFilter = new Alnum();
-                    $digits = $digitsFilter->filter($search);
-                    $alnum = $alnumFilter->filter($search);
-                    if ($digits){
-                        $queryBuilder->join('c.phones', 'p');
-                        $orX->add($queryBuilder->expr()->like('p.name', ':digits'));
-                        $queryBuilder->setParameter('digits', '%' . $digits . '%');
-                    }    
-                    if ($alnum){
-                        $queryBuilder
-                            ->join('o.bids', 'b')
-                            ->join('b.good', 'g')
-                            ->leftJoin('g.oems', 'oe')
-                            ->leftJoin('o.contactCar', 'cc')
-                                ;
-
-                        $orX->add($queryBuilder->expr()->like('oe.oe', ':alnum'));
-                        $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
-                        $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
-                        $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
-                    }    
-                    $queryBuilder->andWhere($orX);
-                }    
+                $orX = $queryBuilder->expr()->orX();
+                $contacts = $this->searchContacts($params['search']);                
+                foreach ($contacts as $contact){
+                    $orX->add($queryBuilder->expr()->eq('c.id', $contact['id']));                    
+                }
+                $orders = $this->searchOe($params['search']);                
+                foreach ($orders as $order){
+                    $orX->add($queryBuilder->expr()->eq('o.id', $order['orderId']));                    
+                }
             }
         }
         

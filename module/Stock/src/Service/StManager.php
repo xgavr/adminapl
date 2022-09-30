@@ -291,7 +291,7 @@ class StManager
             $st->setDocDate($data['doc_date']);
             $st->setComment(empty($data['comment']) ? null:$data['comment']);
             $st->setStatus($data['status']);
-            $st->setStatusEx(St::STATUS_EX_NEW);
+            $st->setStatusEx($data['status_ex']);
             $st->setWriteOff($data['writeOff']);
             $st->setOffice($data['office']);
             $st->setCompany($data['company']);
