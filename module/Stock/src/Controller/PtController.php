@@ -299,7 +299,7 @@ class PtController extends AbstractActionController
         $office2 = $this->entityManager->getRepository(Office::class)
                 ->findOneById($office2Id);
         
-        $good = null;
+        $good = $company = $company2 = null;
         if ($goodId > 0){
             $good = $this->entityManager->getRepository(Goods::class)
                     ->find($goodId);

@@ -363,7 +363,7 @@ class PtManager
             $pt = new Pt();        
             $pt->setAplId($data['apl_id']);
             $pt->setDocDate($data['doc_date']);
-            $pt->setComment($data['comment']);
+            $pt->setComment(empty($data['comment']) ? '':$data['comment']);
             $pt->setStatusEx($data['status_ex']);
             $pt->setStatus($data['status']);
             $pt->setStatusDoc(Pt::STATUS_DOC_NOT_RECD);
@@ -398,7 +398,7 @@ class PtManager
         if ($data['doc_date'] > $this->allowDate){
             $pt->setAplId($data['apl_id']);
             $pt->setDocDate($data['doc_date']);
-            $pt->setComment($data['comment']);
+            $pt->setComment(empty($data['comment']) ? '':$data['comment']);
             $pt->setStatusEx($data['status_ex']);
             $pt->setStatus($data['status']);
             $pt->setOffice($data['office']);

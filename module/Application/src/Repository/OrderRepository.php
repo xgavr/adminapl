@@ -108,6 +108,54 @@ class OrderRepository extends EntityRepository{
     }        
       
     /**
+     * 
+     * @param string $search
+     */
+    private function searchContacts($search)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $search = trim($search);
+        if ($search){
+            $queryBuilder->select('c')
+                    ->from(Contact::class, c)
+                    ;
+            
+            $queryBuilder->leftJoin('c.emails', 'e');
+
+            $orX = $queryBuilder->expr()->orX();
+            $orX->add($queryBuilder->expr()->like('e.name', ':search'));
+            $queryBuilder->setParameter('search', '%' . $search . '%');
+
+            $digitsFilter = new Digits();
+            $alnumFilter = new Alnum();
+            $digits = $digitsFilter->filter($search);
+            $alnum = $alnumFilter->filter($search);
+            if ($digits){
+                $queryBuilder->join('c.phones', 'p');
+                $orX->add($queryBuilder->expr()->like('p.name', ':digits'));
+                $queryBuilder->setParameter('digits', '%' . $digits . '%');
+            }    
+            if ($alnum){
+                $queryBuilder
+                    ->join('o.bids', 'b')
+                    ->join('b.good', 'g')
+                    ->leftJoin('g.oems', 'oe')
+                    ->leftJoin('o.contactCar', 'cc')
+                        ;
+
+                $orX->add($queryBuilder->expr()->like('oe.oe', ':alnum'));
+                $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
+                $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
+                $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
+            }    
+            $queryBuilder->andWhere($orX);
+        }    
+        return;
+    }
+    
+    /**
      * Запрос по заказам
      * 
      * @param array $params
@@ -125,7 +173,6 @@ class OrderRepository extends EntityRepository{
             ->leftJoin('o.user', 'u')
 //            ->orderBy('o.dateCreated', 'DESC')                 
 //            ->addOrderBy('o.dateOper', 'DESC') 
-            ->setMaxResults(1000)    
                 ;
         
         if (is_array($params)){
@@ -146,11 +193,12 @@ class OrderRepository extends EntityRepository{
             }            
             if (isset($params['sort'])){
                 $queryBuilder->addOrderBy('o.'.$params['sort'], $params['order']);
-            }            
+            }        
+            
             if (isset($params['search'])){
                 $search = trim($params['search']);
                 if ($search){
-                    $queryBuilder->join('c.emails', 'e');
+                    $queryBuilder->leftJoin('c.emails', 'e');
 
                     $orX = $queryBuilder->expr()->orX();
                     $orX->add($queryBuilder->expr()->like('e.name', ':search'));
