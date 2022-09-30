@@ -242,6 +242,8 @@ class OrderRepository extends EntityRepository{
             
             if (isset($params['search'])){
                 $orX = $queryBuilder->expr()->orX();
+                $orX->add($queryBuilder->expr()->eq('o.id', 0));
+                
                 $contacts = $this->searchContacts($params['search']);                
                 foreach ($contacts as $contact){
                     $orX->add($queryBuilder->expr()->eq('c.id', $contact['id']));                    
