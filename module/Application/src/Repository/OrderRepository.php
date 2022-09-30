@@ -159,6 +159,18 @@ class OrderRepository extends EntityRepository{
 
         $search = trim($searchStr);
         if (strlen($search) > 2){
+            
+            $queryBuilder->select('c.id')
+                    ->distinct()
+                    ->from(Contact::class, 'c')
+                    ;
+            
+            $orX = $queryBuilder->expr()->orX();
+            $queryBuilder->leftJoin('c.emails', 'e');
+
+            $orX->add($queryBuilder->expr()->like('e.name', ':search'));
+            $queryBuilder->setParameter('search', '%' . $search . '%');
+
             $digitsFilter = new Digits();
             $digits = $digitsFilter->filter($search);
 
@@ -166,18 +178,7 @@ class OrderRepository extends EntityRepository{
             $alnum = $alnumFilter->filter($search);
 
             if ($digits || $alnum){
-                $queryBuilder->select('c.id')
-                        ->distinct()
-                        ->from(Contact::class, 'c')
-                        ;
-                $orX = $queryBuilder->expr()->orX();
-
                 if ($digits){
-
-                    $queryBuilder->leftJoin('c.emails', 'e');
-
-                    $orX->add($queryBuilder->expr()->like('e.name', ':search'));
-                    $queryBuilder->setParameter('search', '%' . $search . '%');
 
                     $queryBuilder->leftJoin('c.phones', 'p');
                     $orX->add($queryBuilder->expr()->like('p.name', ':digits'));
@@ -187,16 +188,15 @@ class OrderRepository extends EntityRepository{
                 }    
                 if ($alnum){
                     $queryBuilder->leftJoin('c.contactCars', 'cc');
-
                     $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
                     $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
                     $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
-                }
-                
-                if ($orX->count()){
-                    $queryBuilder->andWhere($orX);
-                    $result = $queryBuilder->getQuery()->getResult();
-                }    
+                }                
+            }    
+            
+            if ($orX->count()){
+                $queryBuilder->andWhere($orX);
+                $result = $queryBuilder->getQuery()->getResult();
             }    
         }    
         return $result;
