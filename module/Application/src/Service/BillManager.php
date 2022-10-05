@@ -816,6 +816,7 @@ class BillManager
             $contract = $this->entityManager->getRepository(Office::class)
                     ->findDefaultContract($office, $legal, $idocData['doc_date'], $this->_idocContractPay($idocData));
             
+            $dataPtu['supplier'] = $idoc->getSupplier();            
             $dataPtu['office'] = $office;
             $dataPtu['legal'] = $legal;
             $dataPtu['contract'] = $contract; 

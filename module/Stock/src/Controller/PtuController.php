@@ -150,7 +150,7 @@ class PtuController extends AbstractActionController
         }    
         
         if ($ptu == null) {
-            $officeId = (int)$this->params()->fromQuery('office', 1);
+            $officeId = (int)$this->params()->fromQuery('office', $this->ptuManager->currentUser()->getOffice()->getId());
             $office = $this->entityManager->getRepository(Office::class)
                     ->findOneById($officeId);
         } else {
@@ -181,13 +181,13 @@ class PtuController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
-                unset($data['supplier']);
                 unset($data['company']);
                 unset($data['csrf']);
                 $ptuGood = $data['ptuGood'];
                 unset($data['ptuGood']);
                 $data['status_ex'] = Ptu::STATUS_EX_NEW;
                 $data['contract'] = $contract;
+                $data['supplier'] = $supplier;
                 $data['legal'] = $legal;
                 $data['office'] = $office;
                 $data['apl_id'] = 0;
@@ -417,6 +417,13 @@ class PtuController extends AbstractActionController
             'id' => $ptuId,
             'vtpCount' => $vtpCount,
         ]);          
+    }
+    
+    public function correctSupplierAction()
+    {
+        $this->ptuManager->correctSupplier();
+        echo 'ok';
+        exit;
     }
     
 }

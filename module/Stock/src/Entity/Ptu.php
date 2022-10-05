@@ -18,6 +18,7 @@ use Company\Entity\Office;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
 use Application\Entity\Idoc;
+use Application\Entity\Supplier;
 
 /**
  * Description of Ptu
@@ -108,6 +109,12 @@ class Ptu {
      */
     protected $amount;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="ptu") 
+     * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
+     */
+    private $supplier;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="ptu") 
      * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
@@ -511,6 +518,24 @@ class Ptu {
     }
     
     /**
+     * Returns the supplier.
+     * @return Idoc     
+     */
+    public function getSupplier() 
+    {
+        return $this->supplier;
+    }
+
+    /**
+     * Add supplier
+     * @param Supplier $supplier
+     */
+    public function setSupplier($supplier)
+    {
+        $this->supplier = $supplier;
+    }
+    
+    /**
      * 
      * @param Legal $legal
      */
@@ -532,7 +557,7 @@ class Ptu {
      * Returns the supplier.
      * @return Supplier     
      */
-    public function getSupplier() 
+    public function getContactSupplier() 
     {
         $legal = $this->legal;
         $contacts = $legal->getContacts();

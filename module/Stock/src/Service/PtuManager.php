@@ -64,6 +64,15 @@ class PtuManager
     }
         
     /**
+     * Текущий пользователь
+     * @return User
+     */
+    public function currentUser()
+    {
+        return $this->logManager->currentUser();
+    }
+    
+    /**
      * Обновить взаиморасчеты документа
      * 
      * @param Ptu $ptu
@@ -198,6 +207,7 @@ class PtuManager
             $ptu->setStatusAccount(Ptu::STATUS_ACCOUNT_NO);
             $ptu->setStatus($data['status']);
             $ptu->setOffice($data['office']);
+            $ptu->setSupplier($data['supplier']);
             $ptu->setLegal($data['legal']);
             $ptu->setContract($data['contract']); 
             $ptu->setStatusDoc(Ptu::STATUS_DOC_NOT_RECD);
@@ -230,6 +240,7 @@ class PtuManager
             $ptu->setStatusAccount(Ptu::STATUS_ACCOUNT_NO);
             $ptu->setStatus($data['status']);
             $ptu->setOffice($data['office']);
+            $ptu->setSupplier($data['supplier']);
             $ptu->setLegal($data['legal']);
             $ptu->setContract($data['contract']);
 
@@ -519,5 +530,24 @@ class PtuManager
         return;
     }    
     
+    /**
+     * Исправить поставщика
+     */
+    public function correctSupplier()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+        
+        $ptus = $this->entityManager->getRepository(Ptu::class)
+                ->findAll();
+        foreach ($ptus as $ptu){
+            $supplier = $ptu->getContactSupplier();
+            $ptu->setSupplier($supplier);
+            $this->entityManager->persist($ptu);
+        }
+        
+        $this->entityManager->flush();
+        return;
+    }    
 }
 

@@ -432,10 +432,13 @@ class AplDocService {
             $dataPtu['info'] = Encoder::encode($data['desc']);
         }
         
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->findOneBy(['aplId' => $data['name']]);
         $office = $this->officeFromAplId($data['parent']);
         $legal = $this->legalFromSupplierAplId($data['name'], $data['ds'], $data['supplier']);        
         $contract = $this->findDefaultContract($office, $legal, $data['ds'], $data['ns'], $this->getCashContract($data));
         
+        $dataPtu['supplier'] = $supplier;
         $dataPtu['office'] = $office;
         $dataPtu['legal'] = $legal;
         $dataPtu['contract'] = $contract; 
