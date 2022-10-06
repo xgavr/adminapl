@@ -67,6 +67,7 @@ class PtuRepository extends EntityRepository{
             ->join('p.legal', 'l')
             ->join('p.office', 'o')    
             ->join('p.contract', 'c')    
+            ->join('p.supplier', 's')    
                 ;
         
         if (is_array($params)){
@@ -75,7 +76,7 @@ class PtuRepository extends EntityRepository{
             }            
             if (!empty($params['officeId'])){
                 $office = $entityManager->getRepository(Office::class)
-                        ->findOneById($params['officeId']);
+                        ->find($params['officeId']);
                 if ($office){
                     $queryBuilder->andWhere('p.office = ?1')
                             ->setParameter('1', $office->getId());
@@ -83,14 +84,11 @@ class PtuRepository extends EntityRepository{
             }
             if (!empty($params['supplierId'])){
                 $supplier = $entityManager->getRepository(Supplier::class)
-                        ->findOneById($params['supplierId']);
+                        ->find($params['supplierId']);
                 if ($supplier){
-                    $orX = $queryBuilder->expr()->orX();
-                    foreach ($supplier->getLegalContact()->getLegals() as $legal){
-                        $orX->add($queryBuilder->expr()->eq('p.legal', $legal->getId()));
-                    }    
-                    $queryBuilder->andWhere($orX);
-                }    
+                    $queryBuilder->andWhere('p.supplier = :supplier')
+                            ->setParameter('supplier', $supplier->getId());
+                }
             }            
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
@@ -145,15 +143,12 @@ class PtuRepository extends EntityRepository{
             }
             if (!empty($params['supplierId'])){
                 $supplier = $entityManager->getRepository(Supplier::class)
-                        ->findOneById($params['supplierId']);
+                        ->find($params['supplierId']);
                 if ($supplier){
-                    $orX = $queryBuilder->expr()->orX();
-                    foreach ($supplier->getLegalContact()->getLegals() as $legal){
-                        $orX->add($queryBuilder->expr()->eq('p.legal', $legal->getId()));
-                    }    
-                    $queryBuilder->andWhere($orX);
-                }    
-            }
+                    $queryBuilder->andWhere('p.supplier = :supplier')
+                            ->setParameter('supplier', $supplier->getId());
+                }
+            }            
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
                     $queryBuilder->andWhere('YEAR(p.docDate) = :year')
