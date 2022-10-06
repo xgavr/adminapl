@@ -535,7 +535,7 @@ class PtuManager
      */
     public function correctSupplier()
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(0);
         
         $ptus = $this->entityManager->getRepository(Ptu::class)
