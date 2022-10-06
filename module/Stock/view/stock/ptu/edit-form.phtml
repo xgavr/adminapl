@@ -247,7 +247,7 @@ if ($ptu){
     
     function contractList(){
         //alert(11);
-        $.getJSON( '/contracts/select/?company='+$('#company').val()+'&legal='+$('#legal').val(), function( data ) {
+        $.getJSON( '/contracts/select/?company='+$('#company').val()+'&legal='+$('#legal').val()+'&office='+$('#office').val(), function( data ) {
             $('#contract').empty();
             $.each( data.rows, function( key, value ) {
                 $('#contract').append('<option value="' + key + '">' + value.name + '</option>');
