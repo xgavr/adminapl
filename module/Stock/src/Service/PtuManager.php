@@ -542,8 +542,10 @@ class PtuManager
                 ->findAll();
         foreach ($ptus as $ptu){
             $supplier = $ptu->getContactSupplier();
-            $ptu->setSupplier($supplier);
-            $this->entityManager->persist($ptu);
+            if ($supplier){
+                $ptu->setSupplier($supplier);
+                $this->entityManager->persist($ptu);
+            }    
         }
         
         $this->entityManager->flush();
