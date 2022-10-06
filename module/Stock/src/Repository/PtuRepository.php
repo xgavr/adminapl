@@ -62,7 +62,7 @@ class PtuRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('p, l, o, c')
+        $queryBuilder->select('p, l, o, c, s')
             ->from(Ptu::class, 'p')
             ->join('p.legal', 'l')
             ->join('p.office', 'o')    
