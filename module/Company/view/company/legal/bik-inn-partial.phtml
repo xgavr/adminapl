@@ -34,6 +34,7 @@
         $('input[name="bik"]').val('');
         $('input[name="rs"]').val('');
         $('input[name="bankAccount"]').val('');
+        $('.bank-info').html('');
     }
 
     function clearLegalFromData(targetGroup = ''){
@@ -93,9 +94,7 @@
         clearLegalFromData(targetGroup);
     })
 
-    $('.bik-fill').on('click', function() {
-        var targetName = $(this).attr('target-name');
-        var bik = $('input[name="'+targetName+'"]').val();
+    function bikInfo(bik){
         if (bik){
             $.ajax({
                 type: 'GET',
@@ -106,12 +105,19 @@
                         $('input[name="bankName"]').val($('<div/>').html(data.name).text());
                         $('input[name="bankCity"]').val('г. '+data.city);
                         $('input[name="ks"]').val(data.ks);
+                        $('.bank-info').html(data.name + ' г. ' + data.city + ' к/с '+data.ks);
                     }
                 })
                 .fail(function (e) {
                     console.log(e);
                 });    
             }        
+    }
+
+    $('.bik-fill').on('click', function() {
+        var targetName = $(this).attr('target-name');
+        var bik = $('input[name="'+targetName+'"]').val();
+        bikInfo(bik);
     });    
 
     $('.bik-clear').on('click', function() {  

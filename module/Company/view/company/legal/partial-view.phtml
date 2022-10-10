@@ -57,7 +57,7 @@
                         <div class="pull-left">
                              Банк: <?= $bankAccount->getNameWithCity() ?><br/>
                              БИК: <?= $bankAccount->getBik()?><br/>
-                             Расчетный счет: <?= $bankAccount->getRs()?>
+                             Счет: <?= $bankAccount->getRs()?> <?= $bankAccount->getAccountTypeAsString()?>
                              <?php if ($legal->isOfficeLegal() && $bankAccount->getStatement() == $bankAccount::STATEMENT_ACTIVE):?>
                                 <a href="/bank/statement?account=<?= $this->escapeHtml($bankAccount->getRs());?>"
                                     title="Выписка по счету" target="_blank">

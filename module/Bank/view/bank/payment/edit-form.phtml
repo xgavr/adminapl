@@ -1,0 +1,418 @@
+<?php
+use Bank\Entity\Payment;
+
+$form = $this->form;
+
+$form->get('bankAccount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('supplier')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('counterpartyAccountNumber')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('counterpartyBankBik')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('counterpartyInn')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('counterpartyKpp')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('counterpartyName')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('amount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('paymentDate')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('purpose')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('nds')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('taxInfoDocumentDate')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('taxInfoDocumentNumber')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('taxInfoKbk')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('taxInfoOkato')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('taxInfoPeriod')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('taxInfoReasonCode')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('taxInfoStatus')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('paymentType')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'payment-submit']);
+
+$form->prepare();
+
+?>
+
+<?= $this->form()->openTag($form); ?>
+            
+<div class="modal-header">
+    <h5 class="modal-title" id="ptModalLabel">Платежное поручение</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('bankAccount')); ?>
+                <?= $this->formElement($form->get('bankAccount')); ?>
+                <?= $this->formElementErrors($form->get('bankAccount')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('paymentDate')); ?>
+                <?= $this->formElement($form->get('paymentDate')); ?>
+                <?= $this->formElementErrors($form->get('paymentDate')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('amount')); ?>
+                <?= $this->formElement($form->get('amount')); ?>
+                <?= $this->formElementErrors($form->get('amount')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('paymentType')); ?>
+                <?= $this->formElement($form->get('paymentType')); ?>
+                <?= $this->formElementErrors($form->get('paymentType')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('supplier')); ?>
+                <?= $this->formElement($form->get('supplier')); ?>
+                <?= $this->formElementErrors($form->get('supplier')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('counterpartyInn')); ?>
+                <span class="input-group">
+                    <?= $this->formElement($form->get('counterpartyInn')); ?>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default inn-fill" target-group="counterparty" data-toggle="tooltip" title="Заполнить по ИНН">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                        <button type="button" class="btn btn-default inn-clear" target-group="counterparty" data-toggle="tooltip" title="Очистить">
+                            <span class="glyphicon glyphicon-remove-circle"></span>
+                        </button>
+                    </span>    
+                </span>    
+                <?= $this->formElementErrors($form->get('counterpartyInn')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('counterpartyKpp')); ?>
+                <?= $this->formElement($form->get('counterpartyKpp')); ?>
+                <?= $this->formElementErrors($form->get('counterpartyKpp')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('counterpartyName')); ?>
+                <?= $this->formElement($form->get('counterpartyName')); ?>
+                <?= $this->formElementErrors($form->get('counterpartyName')); ?>                  
+            </div>
+        </div>    
+    </div>        
+    <div class="row">
+        <div class="col-xs-2">
+        </div>
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('counterpartyAccountNumber')); ?>
+                <?= $this->formElement($form->get('counterpartyAccountNumber')); ?>
+                <?= $this->formElementErrors($form->get('counterpartyAccountNumber')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('counterpartyBankBik')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('counterpartyBankBik')); ?>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default bik-fill" data-toggle="tooltip" target-name="counterpartyBankBik" title="Заполнить из справочника БИК">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+<!--                        <button type="button" class="btn btn-default bik-clear" data-toggle="tooltip" title="Очистить">
+                            <span class="glyphicon glyphicon-remove-circle"></span>
+                        </button>-->
+                    </span>    
+                </div>    
+                <?= $this->formElementErrors($form->get('counterpartyBankBik')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-4 align-text-bottom">
+            <span class="bank-info"></span>
+        </div>
+    </div>        
+    <div class="row">
+        <div class="col-xs-10">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('purpose')); ?>
+                <?= $this->formElement($form->get('purpose')); ?>
+                <?= $this->formElementErrors($form->get('purpose')); ?>                  
+            </div>                        
+        </div>                                            
+        <div class="col-xs-2">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('nds')); ?>
+                <?= $this->formElement($form->get('nds')); ?>
+                <?= $this->formElementErrors($form->get('nds')); ?>                  
+            </div>                        
+        </div>                                            
+    </div>        
+    <div class="row">
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('taxInfoDocumentDate')); ?>
+                <?= $this->formElement($form->get('taxInfoDocumentDate')); ?>
+                <?= $this->formElementErrors($form->get('taxInfoDocumentDate')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('taxInfoDocumentNumber')); ?>
+                <?= $this->formElement($form->get('taxInfoDocumentNumber')); ?>
+                <?= $this->formElementErrors($form->get('taxInfoDocumentNumber')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('taxInfoKbk')); ?>
+                <?= $this->formElement($form->get('taxInfoKbk')); ?>
+                <?= $this->formElementErrors($form->get('taxInfoKbk')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('taxInfoOkato')); ?>
+                <?= $this->formElement($form->get('taxInfoOkato')); ?>
+                <?= $this->formElementErrors($form->get('taxInfoOkato')); ?>                  
+            </div>
+        </div>    
+    </div>        
+    <div class="row">
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('taxInfoPeriod')); ?>
+                <?= $this->formElement($form->get('taxInfoPeriod')); ?>
+                <?= $this->formElementErrors($form->get('taxInfoPeriod')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('taxInfoReasonCode')); ?>
+                <?= $this->formElement($form->get('taxInfoReasonCode')); ?>
+                <?= $this->formElementErrors($form->get('taxInfoReasonCode')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('taxInfoStatus')); ?>
+                <?= $this->formElement($form->get('taxInfoStatus')); ?>
+                <?= $this->formElementErrors($form->get('taxInfoStatus')); ?>                  
+            </div>
+        </div>    
+    </div>        
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="payment-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+
+<?php echo $this->partial('/company/legal/bik-inn-partial', []); ?>
+            
+<script>
+    function submitForm(){
+        var data = serializeForm('#payment-form');
+        $.ajax({
+            type: 'POST',
+            url: '/payment/edit-form/<?= ($payment) ? $payment->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    refreshTable();
+                    $('#paymentModal').modal('hide');                    
+                } else {
+                    $('#paymentModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    function clearDetails(){
+        $('input[name="counterpartyInn"]').val('');
+        $('input[name="counterpartyKpp"]').val('');
+        $('input[name="counterpartyName"]').val('');
+        $('input[name="counterpartyAccountNumber"]').val('');
+        $('input[name="counterpartyBankBik"]').val('');
+        $('.bank-info').html('');    
+    }
+        
+    function changeNds(){
+        let amount = $('input[name="amount"]').val();
+        var purpose = $('input[name="purpose"]').val();
+        let ndsStr1 = 'в т.ч. НДС';
+        let ndsStr0 = 'без НДС';
+        var beg = Math.max(purpose.indexOf(ndsStr1), purpose.indexOf(ndsStr0));
+        if (beg>0){
+            purpose = purpose.substring(0, beg).trim();
+        }    
+        var ndsStr = '';
+        if (amount){            
+            switch ($('select[name="nds"]').val()){
+                case '<?= Payment::NDS_20?>': 
+                    var nds = Math.round(amount*20*100/120)/100; 
+                    ndsStr = ndsStr1 + ' 20% ' + nds;
+                    break
+                case '<?= Payment::NDS_10?>': 
+                    var nds = Math.round(amount*10*100/110)/100; 
+                    ndsStr = ndsStr1 + ' 10% ' + nds;
+                    break
+                case '<?= Payment::NDS_NO?>': 
+                    ndsStr = ndsStr0;
+                    break
+                default: return;            
+            }
+            
+            if (ndsStr){
+                if (purpose){
+                    $('input[name="purpose"]').val(purpose + ' ' + ndsStr);
+                }                
+            }
+        }    
+    }
+    
+    function changeBankAccount()
+    {
+        $('select[name="supplier"]').empty();
+        $('select[name="supplier"]').append('<option>нет</option>');
+        $.getJSON( '/payment/account-available-suppliers/'+$('select[name="bankAccount"]').val(), function( data ) {
+            $.each( data, function( key, value ) {
+                $('select[name="supplier"]').append('<option value="' + value.id + '">' + value.name + '</option>');
+            });
+        });            
+    }
+    
+    $('select[name="bankAccount"]').on('change', function(){
+        clearDetails();
+        changeBankAccount();
+    });
+
+    $('select[name="nds"]').on('change', function(){
+        changeNds();
+    });
+
+    $('input[name="amount"]').on('input', function(){
+        changeNds();
+    });
+
+    $('select[name="supplier"]').on('change', function(){
+        $.getJSON( '/payment/supplier-current-details/'+$(this).val()+'?account='+$('select[name="bankAccount"]').val(), function( data ) {
+            clearDetails();
+            $('input[name="counterpartyInn"]').val(data['inn']);
+            $('input[name="counterpartyKpp"]').val(data['kpp']);
+            $('input[name="counterpartyName"]').val(data['name']);
+            $('input[name="counterpartyAccountNumber"]').val(data['rs']);
+            $('input[name="counterpartyBankBik"]').val(data['bik']);
+            $('input[name="purpose"]').val(data['purpose']);
+            changeNds();
+            bikInfo(data['bik']); // company/legal/bik-inn-partial.phtml
+        });    
+    });
+        
+    $( document ).ready(function() {
+        <?php if (!$payment):?>
+            changeBankAccount();    
+        <?php endif;?>        
+        
+        var forms = $('#payment-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('payment-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });        
+    });    
+        
+</script>

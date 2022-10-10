@@ -53,7 +53,7 @@ class Payment {
      *   tax_info_reason_code           Основание платежа	2, русские буквы
      *   tax_info_status                Статус плательщика	2, цифры
      * 
-     * @return string|Exception
+     * @return array|Exception
      */
     public function payment($data_payment)
     {
@@ -76,8 +76,7 @@ class Payment {
         $response = $client->send();
         
         if ($response->isOk()){
-            $result = Decoder::decode($response->getBody()); 
-            return $result->request_id;
+            return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
         }
         
         return $this->auth->exception($response);
@@ -88,7 +87,7 @@ class Payment {
      * Возвращает статус платежного поручения в банке
      * 
      * @param string $request_id
-     * @return string|Exception
+     * @return array|Exception
      */
     public function paymentStatus($request_id)
     {
@@ -110,8 +109,7 @@ class Payment {
         $response = $client->send();
         
         if ($response->isOk()){
-            $result = Decoder::decode($response->getBody()); 
-            return $result->status;
+            return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
         }
         
         return $this->auth->exception($response);

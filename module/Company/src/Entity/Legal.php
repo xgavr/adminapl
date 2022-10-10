@@ -16,6 +16,7 @@ use Laminas\Filter\Digits;
 use Stock\Entity\Ptu;
 use Application\Entity\Order;
 use Company\Entity\BankAccount;
+use Application\Entity\Supplier;
 
 /**
  * Description of Legal
@@ -442,6 +443,22 @@ class Legal {
     {
         return $this->contacts;
     }
+
+    /*
+     * Возвращает связанный supplier.
+     * @return array
+     */
+    
+    public function getSupplier() 
+    {
+        foreach ($this->contacts as $contact){
+            if ($contact->getSupplier()){
+                return $contact->getSupplier();
+            }
+        }
+        return;
+    }
+
 
     /**
      * Задает связанный contact.

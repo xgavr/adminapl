@@ -216,6 +216,7 @@ class LegalManager
         $bankAccount->setKs((empty($data['ks'])) ? null:$data['ks']);            
         $bankAccount->setRs((empty($data['rs'])) ? null:$data['rs']);            
         $bankAccount->setStatus((empty($data['status'])) ? BankAccount::STATEMENT_ACTIVE:$data['status']);            
+        $bankAccount->setAccountType((empty($data['accountType'])) ? BankAccount::ACСOUNT_CHECKING:$data['accountType']);            
         $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
         $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
 
@@ -248,6 +249,7 @@ class LegalManager
         $bankAccount->setKs((empty($data['ks'])) ? null:$data['ks']);            
         $bankAccount->setRs((empty($data['rs'])) ? null:$data['rs']);            
         $bankAccount->setStatus((empty($data['status'])) ? BankAccount::STATEMENT_ACTIVE:$data['status']);            
+        $bankAccount->setAccountType((empty($data['accountType'])) ? BankAccount::ACСOUNT_CHECKING:$data['accountType']);            
         $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
         $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
 

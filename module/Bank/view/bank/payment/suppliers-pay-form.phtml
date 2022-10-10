@@ -1,0 +1,182 @@
+<?php
+use Bank\Entity\Payment;
+
+$form = $this->form;
+
+$form->get('bankAccount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('paymentDate')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'suppliers-pay-submit']);
+
+$form->prepare();
+
+?>
+
+<?= $this->form()->openTag($form); ?>
+            
+<div class="modal-header">
+    <h5 class="modal-title" id="ptModalLabel">Оплаты поставщикам</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('bankAccount')); ?>
+                <?= $this->formElement($form->get('bankAccount')); ?>
+                <?= $this->formElementErrors($form->get('bankAccount')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('paymentDate')); ?>
+                <?= $this->formElement($form->get('paymentDate')); ?>
+                <?= $this->formElementErrors($form->get('paymentDate')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="supplierapaytoolbar">
+                <div class="form-inline" role="form">
+                </div>
+            </div>
+            <table id="supplierspaytable" 
+                data-toggle="supplierspaytable" 
+                data-url="/payment/suppliers-pay-content/"
+                data-side-pagination="client"
+                data-pagination="true"
+                data-page-size = "20"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#supplierapaytoolbar"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-query-params="supplierspayQueryParams"
+                data-response-handler="supplierspayResponseHandler"
+                data-classes = "table table-bordered table-hover table-condensed"
+                >
+                <thead>
+                    <tr>
+                         <th data-field="name">Производитель</th>
+                         <th data-field='amount' data-align="right" data-formatter="pgAmountFormatter">Сумма</th>
+                     </tr>                
+                </thead>
+            </table>            
+        </div>
+    </div>        
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="suppliers-pay-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+
+<script>
+    function submitForm(){
+        var data = serializeForm('#suppliers-pay-form');
+        $.ajax({
+            type: 'POST',
+            url: '/payment/suppliers-pay-form/',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    refreshTable();
+                    $('#suppliersPayModal').modal('hide');                    
+                } else {
+                    $('#suppliersPayModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    function clearDetails(){
+        $('input[name="counterpartyInn"]').val('');
+        $('input[name="counterpartyKpp"]').val('');
+        $('input[name="counterpartyName"]').val('');
+        $('input[name="counterpartyAccountNumber"]').val('');
+        $('input[name="counterpartyBankBik"]').val('');
+        $('.bank-info').html('');    
+    }
+        
+    
+    function changeBankAccount(){
+        suppliersPayRefreshTable();
+    }
+    
+    $('select[name="bankAccount"]').on('change', function(){
+        clearDetails();
+        changeBankAccount();
+    });
+
+
+    $('input[name="amount"]').on('input', function(){
+    });
+
+    $( document ).ready(function() {
+        
+        changeBankAccount();
+        
+        $('#otgoodtable').bootstrapTable({
+            onLoadSuccess: function(res){
+                alert(111);
+            }            
+        });                    
+        
+        var forms = $('#suppliers-pay-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('suppliers-pay-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });        
+    });    
+        
+    function suppliersPayRefreshTable(){
+        $('#supplierspaytable').bootstrapTable('refresh', {url: '/payment/suppliers-pay-content/'+$('select[name="bankAccount"]').val()});
+    }
+        
+    function supplierspayQueryParams(params) {
+        $('#supplierapaytoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#supplierspaytable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#supplierspaytable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+        
+    function supplierspayResponseHandler(res) {
+        return res;
+    }             
+</script>

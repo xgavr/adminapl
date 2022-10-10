@@ -414,7 +414,7 @@ class LegalController extends AbstractActionController
         }
         
         $legal = $this->entityManager->getRepository(Legal::class)
-                ->findOneById($legalId);
+                ->find($legalId);
         
         if ($legal == null) {
             $this->getResponse()->setStatusCode(404);
@@ -426,7 +426,7 @@ class LegalController extends AbstractActionController
         // Validate input parameter
         if ($bankAccountId>0) {
             $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                    ->findOneById($bankAccountId);
+                    ->find($bankAccountId);
         } else {
             $bankAccount = null;
         }
@@ -450,6 +450,8 @@ class LegalController extends AbstractActionController
                 return new JsonModel(
                    ['ok']
                 );           
+            } else {
+                var_dump($form->getMessages());
             }
         } else {
             if ($bankAccount){
@@ -459,7 +461,8 @@ class LegalController extends AbstractActionController
                     'bik' => $bankAccount->getBik(),  
                     'rs' => $bankAccount->getRs(),  
                     'ks' => $bankAccount->getKs(),  
-                    'status' => $bankAccount->getStatus(),  
+                    'status' => $bankAccount->getStatus(),
+                    'accountType' => $bankAccount->getAccountType(),
                     'api' => $bankAccount->getApi(),  
                     'statement' => $bankAccount->getStatement(),  
                 ];

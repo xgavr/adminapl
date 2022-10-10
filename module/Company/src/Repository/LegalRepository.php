@@ -12,6 +12,8 @@ use Doctrine\ORM\EntityRepository;
 use Company\Entity\Legal;
 use Application\Entity\Contact;
 use Company\Entity\Contract;
+use Company\Entity\BankAccount;
+
 /**
  * Description of SupplierRepository
  *
@@ -189,5 +191,27 @@ class LegalRepository extends EntityRepository
         return $queryBuilder->getQuery()->getOneOrNullResult();        
     }
     
-    
+    /**
+     * Получить актуальный банковский счет
+     * @param Legal $legal
+     * @return BankAccount
+     */
+    public function findDefaultBankAccount($legal)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('ba')
+            ->from(BankAccount::class, 'ba')
+            ->where('ba.legal = ?1')    
+            ->setParameter('1', $legal->getId())
+            ->andWhere('ba.status = ?2')     
+            ->setParameter('2', BankAccount::STATUS_ACTIVE)
+            ->orderBy('ba.id', 'DESC')    
+            ->setMaxResults(1)    
+                ;
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();        
+        
+    }
 }

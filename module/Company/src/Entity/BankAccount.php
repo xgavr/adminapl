@@ -30,6 +30,9 @@ class BankAccount {
     const API_TOCHKA      = 1; // есть api банка точка.
     const API_NO      = 2; // нет api.
     
+    const ACСOUNT_CHECKING = 1; // расчетный.
+    const ACCOUNT_SAVINGS  = 2; // накопительный.
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -41,6 +44,11 @@ class BankAccount {
      * @ORM\Column(name="status")  
      */
     protected $status;
+
+    /** 
+     * @ORM\Column(name="account_type")  
+     */
+    protected $accountType = self::ACСOUNT_CHECKING;
 
     /** 
      * @ORM\Column(name="api")  
@@ -209,13 +217,56 @@ class BankAccount {
     }    
     
     /**
-     * Sets status.
+     * Sets account type.
      * @param int $status     
      */
     public function setStatus($status) 
     {
         $this->status = $status;
     }   
+
+    /**
+     * Sets account type.
+     * @param int $accountType     
+     */
+    public function setAccountType($accountType) 
+    {
+        $this->accountType = $accountType;
+    }   
+    
+    /**
+     * Returns account type.
+     * @return int     
+     */
+    public function getAccountType() 
+    {
+        return $this->accountType;
+    }
+
+    /**
+     * Returns possible account types as array.
+     * @return array
+     */
+    public static function getAccountTypeList() 
+    {
+        return [
+            self::ACСOUNT_CHECKING => 'Расчетный',
+            self::ACCOUNT_SAVINGS => 'Накопительный'
+        ];
+    }    
+    
+    /**
+     * Returns account type as string.
+     * @return string
+     */
+    public function getAccountTypeAsString()
+    {
+        $list = self::getAccountTypeList();
+        if (isset($list[$this->accountType]))
+            return $list[$this->accountType];
+        
+        return 'Unknown';
+    }    
     
     /**
      * Return api.

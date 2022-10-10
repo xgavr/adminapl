@@ -3,6 +3,7 @@ namespace Company\Form;
 
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
+use Company\Entity\BankAccount;
 
 /**
  * The form for collecting information about Role.
@@ -98,6 +99,16 @@ class BankAccountForm extends Form
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'accountType',
+            'value' => BankAccount::ACСOUNT_CHECKING,
+            'options' => [
+                'label' => 'Тип счета',
+                'value_options' => BankAccount::getAccountTypeList(),
+            ],
+        ]);
+
         $this->add([            
             'type'  => 'select',
             'name' => 'api',
@@ -275,6 +286,16 @@ class BankAccountForm extends Form
                 ],
             ]); 
         
+        $inputFilter->add([
+                'name'     => 'accountType',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(BankAccount::getAccountTypeList())]]
+                ],
+            ]); 
         
     }           
 }

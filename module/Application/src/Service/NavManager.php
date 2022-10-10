@@ -342,6 +342,12 @@ class NavManager
                         ];
                 
                 $companyDropdownItems[] = [
+                            'id' => 'payment',
+                            'label' => 'Платежи',
+                            'link' => $url('payment', ['action' => 'index'])
+                        ];
+                
+                $companyDropdownItems[] = [
                             'id' => 'cash',
                             'label' => 'Касса',
                             'link' => $url('till')
