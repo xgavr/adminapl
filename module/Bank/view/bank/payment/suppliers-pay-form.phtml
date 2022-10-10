@@ -48,6 +48,11 @@ $form->prepare();
         <div class="col-xs-12">
             <div id="supplierapaytoolbar">
                 <div class="form-inline" role="form">
+                            <div class="form-inline" role="form">
+                                <button type="button" class="btn btn-default ot-good-modal-show" modal-url="/ot/good-edit-form">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </div>
                 </div>
             </div>
             <table id="supplierspaytable" 
@@ -67,7 +72,7 @@ $form->prepare();
                 <thead>
                     <tr>
                          <th data-field="name">Производитель</th>
-                         <th data-field='amount' data-align="right" data-formatter="pgAmountFormatter">Сумма</th>
+                         <th data-field='' data-align="right">Сумма</th>
                      </tr>                
                 </thead>
             </table>            
@@ -103,23 +108,12 @@ $form->prepare();
 
             });    
     };
-    
-    function clearDetails(){
-        $('input[name="counterpartyInn"]').val('');
-        $('input[name="counterpartyKpp"]').val('');
-        $('input[name="counterpartyName"]').val('');
-        $('input[name="counterpartyAccountNumber"]').val('');
-        $('input[name="counterpartyBankBik"]').val('');
-        $('.bank-info').html('');    
-    }
         
-    
     function changeBankAccount(){
         suppliersPayRefreshTable();
     }
     
     $('select[name="bankAccount"]').on('change', function(){
-        clearDetails();
         changeBankAccount();
     });
 
@@ -128,14 +122,9 @@ $form->prepare();
     });
 
     $( document ).ready(function() {
+        $('#supplierspaytable').bootstrapTable('refresh');
         
         changeBankAccount();
-        
-        $('#otgoodtable').bootstrapTable({
-            onLoadSuccess: function(res){
-                alert(111);
-            }            
-        });                    
         
         var forms = $('#suppliers-pay-form');
         
