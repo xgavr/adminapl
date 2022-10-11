@@ -252,10 +252,10 @@ class PaymentManager
         
         $result = $this->tochkaPayment->payment($data);
         
-        var_dump($result);
+//        var_dump($result);
         
-        $payment->getRequestId(empty($result['request_id']) ? null:$result['request_id']);
-        $payment->getStatusMessage($result['message']);
+        $payment->setRequestId(empty($result['request_id']) ? null:$result['request_id']);
+        $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
         $this->entityManager->persist($payment);
         $this->entityManager->flush();
         
@@ -271,8 +271,8 @@ class PaymentManager
         if ($payment->getRequestId()){
             $result = $this->tochkaPayment->paymentStatus($payment->getRequestId());
 
-            $payment->getRequestId(empty($result['request_id']) ? null:$result['request_id']);
-            $payment->getStatusMessage($result['message']);
+            $payment->setRequestId(empty($result['request_id']) ? null:$result['request_id']);
+            $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
             $this->entityManager->persist($payment);
             $this->entityManager->flush();
         }    
