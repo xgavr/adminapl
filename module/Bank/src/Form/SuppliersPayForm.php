@@ -33,7 +33,7 @@ class SuppliersPayForm extends Form implements ObjectManagerAwareInterface
     public function __construct($entityManager)
     {
         // Определяем имя формы.
-        parent::__construct('suppliers-form');
+        parent::__construct('suppliers-pay-form');
      
         $this->entityManager = $entityManager;
         

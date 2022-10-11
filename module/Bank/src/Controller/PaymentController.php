@@ -189,26 +189,7 @@ class PaymentController extends AbstractActionController
             if ($bankAccount){
                 $company = $bankAccount->getLegal();
                 if ($supplier && $company){
-                    $legal = $this->entityManager->getRepository(Supplier::class)
-                            ->findDefaultSupplierLegal($supplier, date('Y-m-d'));
-                    if ($legal){
-                        $data['inn'] = $legal->getInn();
-                        $data['kpp'] = $legal->getKpp();
-                        $data['name'] = $legal->getName();
-
-                        $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                                ->findDefaultBankAccount($legal);
-                        if ($bankAccount){
-                            $data['rs'] = $bankAccount->getRs();
-                            $data['bik'] = $bankAccount->getBik();
-                        }
-
-                        $contract = $this->entityManager->getRepository(Office::class)
-                                ->findCurrentContract($company, $legal, date('Y-m-d'), Contract::PAY_CASHLESS);
-                        if ($contract){
-                            $data['purpose'] = 'Оплата по '.$contract->getContractPresent('договору');
-                        }
-                    }
+                    $data = $this->paymentManager->supplierDetail($supplier, $company);
                 }
             }    
         }
@@ -265,7 +246,7 @@ class PaymentController extends AbstractActionController
                 foreach ($supplierAccounts as $supplierAccount){
                     $supplier = $supplierAccount->getLegal()->getSupplier();
                     if ($supplier){
-                        $data[] = ['id' => $supplier->getId(), 'name' => $supplier->getName()];
+                        $data[] = ['id' => $supplier->getId(), 'name' => $supplier->getName(), 'amount' => null];
                     }    
                 }
             }    
@@ -274,7 +255,22 @@ class PaymentController extends AbstractActionController
         return new JsonModel([
             'rows' => $data,
         ]);          
-    }        
+    }    
+
+    public function deleteAction()
+    {
+        $paymentId = $this->params()->fromRoute('id', -1);
+        if ($paymentId > 0){
+            $payment = $this->entityManager->getRepository(Payment::class)
+                    ->find($paymentId);
+            if ($payment){
+                $this->paymentManager->removePayment($payment);
+            }
+        }
+        return new JsonModel(
+           ['ok']
+        );                   
+    }
     
     public function suppliersPayFormAction()
     {
@@ -298,17 +294,7 @@ class PaymentController extends AbstractActionController
                         ->find($data['bankAccount']);
                 $data['bankAccount'] = $bankAccount;
                 
-                if (is_numeric($data['supplier'])){
-                    $supplier = $this->entityManager->getRepository(Supplier::class)
-                            ->find($data['supplier']);
-                    $data['supplier'] = $supplier;                    
-                }
-                
-                if ($payment){
-                    $this->paymentManager->updatePayment($payment, $data);
-                } else {
-                    $payment = $this->paymentManager->addPayment($data);
-                }    
+                $this->paymentManager->suppliersPayment($data);
                 
                 return new JsonModel(
                    ['ok']

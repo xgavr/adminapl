@@ -43,40 +43,34 @@ $form->prepare();
                 <?= $this->formElementErrors($form->get('paymentDate')); ?>                  
             </div>
         </div>    
-    </div>    
-    <div class="row">
-        <div class="col-xs-12">
-            <div id="supplierapaytoolbar">
-                <div class="form-inline" role="form">
-                            <div class="form-inline" role="form">
-                                <button type="button" class="btn btn-default ot-good-modal-show" modal-url="/ot/good-edit-form">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                </div>
-            </div>
+        <div class="col-xs-6">
             <table id="supplierspaytable" 
                 data-toggle="supplierspaytable" 
-                data-url="/payment/suppliers-pay-content/"
                 data-side-pagination="client"
-                data-pagination="true"
+                data-pagination="false"
                 data-page-size = "20"
                 data-page-list="[5, 10, 20, 50]"
                 data-toolbar="#supplierapaytoolbar"
-                data-show-refresh="true"
+                data-show-refresh="false"
                 data-show-toggle="false"
                 data-query-params="supplierspayQueryParams"
                 data-response-handler="supplierspayResponseHandler"
                 data-classes = "table table-bordered table-hover table-condensed"
+                data-undefined-text=""
                 >
                 <thead>
                     <tr>
-                         <th data-field="name">Производитель</th>
-                         <th data-field='' data-align="right">Сумма</th>
-                     </tr>                
+                        <th data-field="name">Поставщик</th>
+                        <th data-field="amount" data-align="right" data-editable="true" data-formatter="amountFormatter">Сумма</th>
+                    </tr>                
                 </thead>
             </table>            
         </div>
+        <div class="col-xs-2">
+            <label id="paymentTotal"></label>
+        </div>
+    </div>    
+    <div class="row">
     </div>        
 </div>    
 
@@ -90,6 +84,7 @@ $form->prepare();
 <script>
     function submitForm(){
         var data = serializeForm('#suppliers-pay-form');
+        data.amount = getFormatedAmount();
         $.ajax({
             type: 'POST',
             url: '/payment/suppliers-pay-form/',
@@ -108,6 +103,35 @@ $form->prepare();
 
             });    
     };
+    
+    function getFormatedAmount(){
+        var data = $('#supplierspaytable').bootstrapTable('getData');
+        var result = [];
+        $.each( data, function( index, row ) {
+            let amount = row.amount.toString().replace(' ', '').replace(',', '.').replace(/[^.\d]/g, '');
+            var newRow = {
+                supplier: row.id,
+                amount: amount
+            };
+            result.push(newRow);
+        });   
+        return result;
+    }
+    
+    
+    function paymentTotal(){
+        var data = $('#supplierspaytable').bootstrapTable('getData');
+        var amount = 0;
+        $.each(data, function( index, value ) {
+            if (value.amount){
+                let result = value.amount.toString().replace(' ', '').replace(',', '.').replace(/[^.\d]/g, '');
+                if (result){
+                    amount += Math.round(result*100)/100;
+                }    
+            }    
+        });
+        $('#paymentTotal').html((Math.round(amount*100)/100).toFixed(2));
+    }    
         
     function changeBankAccount(){
         suppliersPayRefreshTable();
@@ -121,9 +145,22 @@ $form->prepare();
     $('input[name="amount"]').on('input', function(){
     });
 
-    $( document ).ready(function() {
-        $('#supplierspaytable').bootstrapTable('refresh');
+    $(document).on('editable-save.bs.table', '#supplierspaytable', function (e, field, row, old, $el) {
+        paymentTotal();
+    }); 
+    
+    $(document).on('editable-shown.bs.table', '#supplierspaytable', function (e, field, row, $el) {
         
+    }); 
+    
+    $( document ).ready(function() {        
+        
+        $('#supplierspaytable').bootstrapTable({
+            onLoadSuccess: function(res){
+                paymentTotal();
+            }            
+        }); 
+
         changeBankAccount();
         
         var forms = $('#suppliers-pay-form');
@@ -164,6 +201,15 @@ $form->prepare();
         
         return params;
     }
+        
+    function amountFormatter(value, row){
+        if (value){
+            let result = value.toString().replace(' ', '').replace(',', '.').replace(/[^.\d]/g, '');
+            return (Math.round(result*100)/100).toFixed(2);
+        }
+        
+        return value;
+    }        
         
     function supplierspayResponseHandler(res) {
         return res;

@@ -10,6 +10,11 @@ namespace Bank\Service;
 
 use User\Entity\User;
 use Bank\Entity\Payment;
+use Application\Entity\Supplier;
+use Company\Entity\BankAccount;
+use Company\Entity\Office;
+use Company\Entity\Contract;
+use Company\Entity\Legal;
 
 
 /**
@@ -71,18 +76,18 @@ class PaymentManager
         $payment->setDateCreated(date('Y-m-d H:i:s'));
         $payment->setPaymentDate($data['paymentDate']);
         $payment->setPaymentPriority(5);
-        $payment->setPaymentType($data['paymentType']);
+        $payment->setPaymentType(empty($data['paymentType']) ? Payment::PAYMENT_TYPE_NORMAL:$data['paymentType']);
         $payment->setPurpose($data['purpose']);
-        $payment->setPurposeCode($data['purposeCode']);
+        $payment->setPurposeCode(empty($data['purposeCode']) ? '':$data['purposeCode']);
         $payment->setStatus(Payment::STATUS_ACTIVE);
-        $payment->setSupplierBillId($data['supplierBillId']);
-        $payment->setTaxInfoDocumentDate($data['taxInfoDocumentDate']);
-        $payment->setTaxInfoDocumentNumber($data['taxInfoDocumentNumber']);
-        $payment->setTaxInfoKbk($data['taxInfoKbk']);
-        $payment->setTaxInfoOkato($data['taxInfoOkato']);
-        $payment->setTaxInfoPeriod($data['taxInfoPeriod']);
-        $payment->setTaxInfoReasonCode($data['taxInfoReasonCode']);
-        $payment->setTaxInfoStatus($data['taxInfoStatus']);
+        $payment->setSupplierBillId(empty($data['supplierBillId']) ? 0:$data['supplierBillId']);
+        $payment->setTaxInfoDocumentDate(empty($data['taxInfoDocumentDate']) ? null:$data['taxInfoDocumentDate']);
+        $payment->setTaxInfoDocumentNumber(empty($data['taxInfoDocumentNumber']) ? null:$data['taxInfoDocumentNumber']);
+        $payment->setTaxInfoKbk(empty($data['taxInfoKbk']) ? null:$data['taxInfoKbk']);
+        $payment->setTaxInfoOkato(empty($data['taxInfoOkato']) ? null:$data['taxInfoOkato']);
+        $payment->setTaxInfoPeriod(empty($data['taxInfoPeriod']) ? null:$data['taxInfoPeriod']);
+        $payment->setTaxInfoReasonCode(empty($data['taxInfoReasonCode']) ? null:$data['taxInfoReasonCode']);
+        $payment->setTaxInfoStatus(empty($data['taxInfoStatus']) ? null:$data['taxInfoStatus']);
         $payment->setUser($this->currentUser());
         $payment->setNds($data['nds']);
         $payment->setBankAccount($data['bankAccount']);
@@ -111,17 +116,17 @@ class PaymentManager
         $payment->setCounterpartyName($data['counterpartyName']);
         $payment->setPaymentDate($data['paymentDate']);
         $payment->setPaymentPriority(5);
-        $payment->setPaymentType($data['paymentType']);
+        $payment->setPaymentType(empty($data['paymentType']) ? Payment::PAYMENT_TYPE_NORMAL:$data['paymentType']);
         $payment->setPurpose($data['purpose']);
-        $payment->setPurposeCode($data['purposeCode']);
-        $payment->setSupplierBillId($data['supplierBillId']);
-        $payment->setTaxInfoDocumentDate($data['taxInfoDocumentDate']);
-        $payment->setTaxInfoDocumentNumber($data['taxInfoDocumentNumber']);
-        $payment->setTaxInfoKbk($data['taxInfoKbk']);
-        $payment->setTaxInfoOkato($data['taxInfoOkato']);
-        $payment->setTaxInfoPeriod($data['taxInfoPeriod']);
-        $payment->setTaxInfoReasonCode($data['taxInfoReasonCode']);
-        $payment->setTaxInfoStatus($data['taxInfoStatus']);
+        $payment->setPurposeCode(empty($data['purposeCode']) ? '':$data['purposeCode']);
+        $payment->setSupplierBillId(empty($data['supplierBillId']) ? 0:$data['supplierBillId']);
+        $payment->setTaxInfoDocumentDate(empty($data['taxInfoDocumentDate']) ? null:$data['taxInfoDocumentDate']);
+        $payment->setTaxInfoDocumentNumber(empty($data['taxInfoDocumentNumber']) ? null:$data['taxInfoDocumentNumber']);
+        $payment->setTaxInfoKbk(empty($data['taxInfoKbk']) ? null:$data['taxInfoKbk']);
+        $payment->setTaxInfoOkato(empty($data['taxInfoOkato']) ? null:$data['taxInfoOkato']);
+        $payment->setTaxInfoPeriod(empty($data['taxInfoPeriod']) ? null:$data['taxInfoPeriod']);
+        $payment->setTaxInfoReasonCode(empty($data['taxInfoReasonCode']) ? null:$data['taxInfoReasonCode']);
+        $payment->setTaxInfoStatus(empty($data['taxInfoStatus']) ? null:$data['taxInfoStatus']);
         $payment->setNds($data['nds']);
         $payment->setBankAccount($data['bankAccount']);
         $payment->setSupplier($data['supplier']);
@@ -130,6 +135,89 @@ class PaymentManager
         $this->entityManager->flush();
         
         return $payment;
+    }
+    
+    /**
+     * Удалить платежку
+     * @param Payment $payment
+     */
+    public function removePayment($payment)
+    {
+        $this->entityManager->remove($payment);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
+     * Реквизиты поставщика
+     * @param Supplier $supplier
+     * @param Legal $company
+     * @return array
+     */
+    public function supplierDetail($supplier, $company)
+    {
+        $data = [];
+        $legal = $this->entityManager->getRepository(Supplier::class)
+                ->findDefaultSupplierLegal($supplier, date('Y-m-d'));
+        
+        if ($legal){
+            $data['inn'] = $legal->getInn();
+            $data['kpp'] = $legal->getKpp();
+            $data['name'] = $legal->getName();
+
+            $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                    ->findDefaultBankAccount($legal);
+            if ($bankAccount){
+                $data['rs'] = $bankAccount->getRs();
+                $data['bik'] = $bankAccount->getBik();
+            }
+
+            $contract = $this->entityManager->getRepository(Office::class)
+                    ->findCurrentContract($company, $legal, date('Y-m-d'), Contract::PAY_CASHLESS);
+            if ($contract){
+                $data['purpose'] = 'Оплата по '.$contract->getContractPresent('договору');
+            }
+        } 
+        
+        return $data;
+    }
+    
+    /**
+     * Оплата постащикам
+     * @param array $data
+     */
+    public function suppliersPayment($data)
+    {
+        if (!empty($data['amount'])){
+            $bankAccount = $data['bankAccount'];
+            $company = $bankAccount->getLegal();
+            foreach ($data['amount'] as $row){
+                $supplier = $this->entityManager->getRepository(Supplier::class)
+                        ->find($row['supplier']);
+                if ($supplier && !empty($row['amount'])){
+                    $detail = $this->supplierDetail($supplier, $company);
+                    if (!empty($detail['rs']) && !empty($detail['bik']) && !empty($detail['inn']) && !empty($detail['name']) && !empty($detail['purpose'])){
+                        $payment = [
+                            'amount' => $row['amount'],
+                            'counterpartyAccountNumber' => $detail['rs'],
+                            'counterpartyBankBik' => $detail['bik'],
+                            'counterpartyInn' => $detail['inn'],
+                            'counterpartyKpp' => $detail['kpp'],
+                            'counterpartyName' => $detail['name'],
+                            'paymentDate' => $data['paymentDate'],
+                            'nds' => Payment::NDS_20,
+                            'purpose' => $detail['purpose'].' '.Payment::getNdsList()[Payment::NDS_20].' '.Payment::nds($row['amount'], Payment::NDS_20),
+                            'bankAccount' => $bankAccount,
+                            'supplier' => $supplier,
+                        ];
+                        $this->addPayment($payment);
+                    }    
+                }
+            }
+        }
+        
+        return;
     }
     
     /**

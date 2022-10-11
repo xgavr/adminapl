@@ -684,12 +684,31 @@ class Payment {
     public static function getNdsList() 
     {
         return [
-            self::NDS_NO => 'Без НДС',
-            self::NDS_10 => 'НДС 10%',
-            self::NDS_20 => 'НДС 20%',
+            self::NDS_NO => 'без НДС',
+            self::NDS_10 => 'в т.ч. НДС 10%',
+            self::NDS_20 => 'в т.ч. НДС 20%',
         ];
     }    
     
+    /**
+     * Расчитать ндс
+     * @param float $amount
+     * @param integer $nds
+     */
+    public static function nds($amount, $nds) 
+    {
+        switch ($nds){
+            case Payment::NDS_10:
+                return round($amount*10/110, 2);
+            case Payment::NDS_20:
+                return round($amount*20/120, 2);
+            default: return 0;    
+        }
+        
+        return;
+    }
+
+
     /**
      * Returns nds as string.
      * @return string
