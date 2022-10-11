@@ -272,10 +272,10 @@ class PaymentManager
         if ($payment->getRequestId()){
             $result = $this->tochkaPayment->paymentStatus($payment->getRequestId());
 
-            $payment->setRequestId(empty($result['request_id']) ? null:$result['request_id']);
-            $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
-            $this->entityManager->persist($payment);
-            $this->entityManager->flush();
+////            $payment->setRequestId(empty($result['request_id']) ? null:$result['request_id']);
+//            $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
+//            $this->entityManager->persist($payment);
+//            $this->entityManager->flush();
         }    
         return $result;
     }
