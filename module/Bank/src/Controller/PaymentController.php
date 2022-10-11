@@ -213,22 +213,7 @@ class PaymentController extends AbstractActionController
            ['ok']
         );           
     }
-    
-    public function statusAction()
-    {
-        $paymentId = $this->params()->fromRoute('id', -1);
-        if ($paymentId > 0){
-            $payment = $this->entityManager->getRepository(Payment::class)
-                    ->find($paymentId);
-            if ($payment){
-                $result = $this->paymentManager->statusPayment($payment);
-            }
-        }
-        return new JsonModel(
-           ['ok']
-        );           
-    }
-
+        
     public function statusAction()
     {
         $paymentId = $this->params()->fromRoute('id', -1);
