@@ -134,6 +134,21 @@
         });            
     });  
     
+    $(document).on('click', '.status-payment', function (e) {
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: false
+        });
+        var url = $(e.currentTarget).attr('modal-url');
+        $.getJSON( url, function( data ) {
+            dialog.modal('hide');
+            bootbox.dialog({
+                message: (data.message) ? data.message:data.status,
+                closeButton: true
+            });
+        });            
+    });  
+
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
@@ -159,40 +174,56 @@
     }    
     
     function editFormatter(value, row){
-        var url = '/payment/edit-form/'+row.id;
-        btn = '<button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs payment-modal-show"';
-        btn += ' aria-label="Left Align" title="Изменить"'; 
-        btn += ' modal-url="'+url+'">';
-        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-        btn += '</button>';
-        return btn;
+        if (!row.requestId){
+            var url = '/payment/edit-form/'+row.id;
+            btn = '<button';
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs payment-modal-show"';
+            btn += ' aria-label="Left Align" title="Изменить"'; 
+            btn += ' modal-url="'+url+'">';
+            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+            btn += '</button>';
+            return btn;
+        }    
     }    
     
     function sendFormatter(value, row){
-        var url = '/payment/send/'+row.id;
-        btn = '<button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs send-payment"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' modal-url="'+url+'" title="Отправить в банк">';
-        btn += '<span class="glyphicon glyphicon-send" aria-hidden="true"></span>';
-        btn += '</button>';
-        return btn;
+        if (!row.requestId){
+            var url = '/payment/send/'+row.id;
+            btn = '<button';
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs send-payment"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' modal-url="'+url+'" title="Отправить в банк">';
+            btn += '<span class="glyphicon glyphicon-send" aria-hidden="true"></span>';
+            btn += '</button>';
+            return btn;
+        } else {
+            var url = '/payment/status/'+row.id;
+            btn = '<button';
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs status-payment"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' modal-url="'+url+'" title="Проверить статус платежа">';
+            btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
+            btn += '</button>';
+            return btn;
+        }    
     }    
 
     function removeFormatter(value, row){
-        var url = '/payment/delete/'+row.id;
-        btn = ' <button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs this-delete"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' title="Удалить"'; 
-        btn += ' onclick="tableRowDelete(\''+url+'\')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-        btn += '</button>';
-        return btn;
+        if (!row.requestId){
+            var url = '/payment/delete/'+row.id;
+            btn = ' <button';
+            btn += ' type="button"';
+            btn += ' class="btn btn-danger btn-xs this-delete"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' title="Удалить"'; 
+            btn += ' onclick="tableRowDelete(\''+url+'\')">';
+            btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+            btn += '</button>';
+            return btn;
+        }    
     }    
 
     function responseHandler(res) {

@@ -268,6 +268,7 @@ class PaymentManager
      */
     public function statusPayment($payment)
     {
+        $result = [];
         if ($payment->getRequestId()){
             $result = $this->tochkaPayment->paymentStatus($payment->getRequestId());
 
@@ -276,6 +277,6 @@ class PaymentManager
             $this->entityManager->persist($payment);
             $this->entityManager->flush();
         }    
-        return;
+        return $result;
     }
 }
