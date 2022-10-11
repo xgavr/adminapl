@@ -252,6 +252,8 @@ class PaymentManager
         
         $result = $this->tochkaPayment->payment($data);
         
+        var_dump($result);
+        
         $payment->getRequestId(empty($result['request_id']) ? null:$result['request_id']);
         $payment->getStatusMessage($result['message']);
         $this->entityManager->persist($payment);
