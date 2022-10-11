@@ -320,6 +320,15 @@ class Payment {
     }
 
     /**
+     * Возвращает paymentDate в формате банка.
+     * @return date
+     */
+    public function getFormatPaymentDate() 
+    {
+        return date('d.m.Y', strtotime($this->paymentDate));
+    }
+
+    /**
      * Устанавливает paymentDate
      * @param date $paymentDate
      */

@@ -235,7 +235,7 @@ class PaymentManager
             "counterparty_kpp" => $payment->getСounterpartyKpp(),
             "counterparty_name" => $payment->getСounterpartyName(),
             "payment_amount" => $payment->getAmount(),
-            "payment_date" => $payment->getPaymentDate(),
+            "payment_date" => $payment->getFormatPaymentDate(),
             "payment_number" => $payment->getId(),
             "payment_priority" => $payment->getPaymentPriority(),
             "payment_purpose" => $payment->getPaymentPurpose(),
