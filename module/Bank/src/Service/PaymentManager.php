@@ -233,7 +233,7 @@ class PaymentManager
             "counterparty_bank_bic" => $payment->getCounterpartyBankBik(),
             "counterparty_inn" => $payment->getСounterpartyInn(),
             "counterparty_kpp" => $payment->getСounterpartyKpp(),
-            "counterparty_name" => $payment->getСounterpartyName(),
+            "counterparty_name" => $payment->getCounterpartyName(),
             "payment_amount" => $payment->getAmount(),
             "payment_date" => $payment->getFormatPaymentDate(),
             "payment_number" => $payment->getId(),
