@@ -106,7 +106,7 @@ class PaymentController extends AbstractActionController
         $supplierList = ['нет'];
         if ($payment){
             $supplierAccounts = $this->entityManager->getRepository(Payment::class)
-                    ->supplierAccounts($payment->getBankAccount());
+                    ->supplierAccounts($payment->getBankAccount()->getLegal());
             foreach ($supplierAccounts as $supplierAccount){
                 $supplier = $supplierAccount->getLegal()->getSupplier();
                 if ($supplier){
