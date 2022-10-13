@@ -1,6 +1,7 @@
 <?php
     use Company\Entity\BankAccount;
     use Company\Entity\Contract;
+    use Company\Entity\Legal;
 ?>
 
 <div class="panel-heading">
@@ -21,16 +22,12 @@
         <div class="panel panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div class="pull-left">
-                        <?= $legal->getName() ?><br/>
-                        ИНН/КПП: <?= $legal->getInn() ?>/<?= $legal->getKpp() ?><br/>
-                        ОГРН: <?= $legal->getOgrn() ?><br/>
-                        ОКПО: <?= $legal->getOkpo() ?><br/>
+                    <div class="pull-left <?= ($legal->getStatus() == Legal::STATUS_RETIRED) ? 'retired':''?>">
+                        <b><?= $legal->getName() ?></b><br/>
+                        ИНН/КПП: <?= $legal->getInn() ?>/<?= $legal->getKpp() ?> ОГРН: <?= $legal->getOgrn() ?> ОКПО: <?= $legal->getOkpo() ?><br/>
                         Местонахождение: <?= $legal->getAddress() ?><br/>
-                        Руководитель: <?= $legal->getHead() ?><br/>
-                        Главный бухгалтер: <?= $legal->getChiefAccount() ?><br/>
+                        Руководитель: <?= $legal->getHead() ?> Главный бухгалтер: <?= $legal->getChiefAccount() ?><br/>
                         Дата начала деятельности: <?= date('d.m.Y', strtotime($legal->getDateStart())); ?><br/>
-                        Статус: <?= $legal->getStatusAsString() ?><br/>
                         Дополнительная информация: <?= $legal->getInfo() ?><br/>                            
                     </div>
                     <div class="pull-right">
@@ -131,7 +128,7 @@
                             <th colspan="3"></th>
                         </tr>
                         <?php foreach ($legal->getOrderContracts() as $contract): ?>
-                            <tr class="<?= ($contract->getStatus() == BankAccount::STATUS_RETIRED) ? 'retired':''?>">
+                        <tr class="<?= ($contract->getStatus() == Contract::STATUS_RETIRED) ? 'retired':''?>">
                                 <td>
                                     <?= $contract->getOffice()->getName() ?>
                                 </td>

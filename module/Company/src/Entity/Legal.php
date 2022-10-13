@@ -13,10 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Laminas\Filter\Digits;
-use Stock\Entity\Ptu;
-use Application\Entity\Order;
 use Company\Entity\BankAccount;
-use Application\Entity\Supplier;
 
 /**
  * Description of Legal
@@ -100,12 +97,14 @@ class Legal {
     /**
     * @ORM\OneToMany(targetEntity="Company\Entity\BankAccount", mappedBy="legal")
     * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
+     * @ORM\OrderBy({"status" = "ASC", "id" = "DESC"})
      */
     private $bankAccounts;
     
     /**
     * @ORM\OneToMany(targetEntity="Company\Entity\Contract", mappedBy="legal")
     * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
+     * @ORM\OrderBy({"status" = "ASC", "dateStart" = "DESC", "id" = "DESC"})
      */
     private $contracts;
     

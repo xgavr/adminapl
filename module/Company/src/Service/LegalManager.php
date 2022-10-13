@@ -8,6 +8,8 @@ use Company\Entity\Office;
 use Laminas\Json\Json;
 use Application\Entity\Contact;
 use Stock\Entity\Mutual;
+use Bank\Entity\Statement;
+use Stock\Entity\Retail;
 
 /**
  * This service legal.
@@ -264,14 +266,21 @@ class LegalManager
     /**
      * Удалить банковский счет
      * 
-     * @param \Company\Entity\BankAccount $bankAccount
+     * @param BankAccount $bankAccount
      */
     public function removeBankAccount($bankAccount)
     {
-        $this->entityManager->remove($bankAccount);
-
-        $this->entityManager->flush();
+        $statementCount = $this->entityManager->getRepository(Statement::class)
+                ->count(['account' => $bankAccount->getRs()]);
         
+        if ($statementCount > 0){
+            $bankAccount->setStatus(BankAccount::STATUS_RETIRED);
+            $this->entityManager->persist($bankAccount);
+        } else {
+            $this->entityManager->remove($bankAccount);            
+        }
+        
+        $this->entityManager->flush();        
     }
     
     /*
@@ -395,8 +404,12 @@ class LegalManager
     {
         $contractCount = $this->entityManager->getRepository(Mutual::class)
                 ->count(['contract' => $contract->getId()]);
+        if (empty($contractCount)){
+            $contractCount = $this->entityManager->getRepository(Retail::class)
+                    ->count(['contract' => $contract->getId()]);            
+        }
         
-        return $contractCount == 0;
+        return empty($contractCount);
     }
     
     /**
@@ -408,9 +421,12 @@ class LegalManager
     {
         if ($this->allowRemoveContract($contract)){
             $this->entityManager->remove($contract);
-
-            $this->entityManager->flush();
+        } else {
+            $contract->setStatus(Contract::STATUS_RETIRED);
+            $this->entityManager->persist($contract);
         }
+
+        $this->entityManager->flush();
         return;
     }
     
