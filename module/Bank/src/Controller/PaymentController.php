@@ -53,10 +53,16 @@ class PaymentController extends AbstractActionController
         $rs = $this->params()->fromQuery('rs');
         $date = $this->params()->fromQuery('date');        
         $offset = $this->params()->fromQuery('offset');
+        $order = $this->params()->fromQuery('order', 'id');
+        $sort = $this->params()->fromQuery('sort', 'DESC');
         $limit = $this->params()->fromQuery('limit');
         
         $query = $this->entityManager->getRepository(Payment::class)
-                        ->findPayments($q, $rs, ['date' => $date]);
+                        ->findPayments($q, $rs, [
+                            'date' => $date,
+                            'order' => $order,
+                            'sort' => $sort,
+                        ]);
         
 //        $total = count($query->getResult());
         $total = $this->entityManager->getRepository(Payment::class)

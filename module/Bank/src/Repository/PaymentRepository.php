@@ -78,6 +78,11 @@ class PaymentRepository extends EntityRepository
                 ->join('p.user', 'u')
                 ->leftJoin('p.supplier', 's')
                 ;
+        if (is_array($params)){
+            if (!empty($params['sort'])){
+                $queryBuilder->addOrderBy('p.'.$params['sort'], $params['order']);
+            }
+        }
                 
         return $queryBuilder->getQuery();
         
