@@ -250,7 +250,7 @@ class PaymentManager
             "tax_info_status" => $payment->getTaxInfoStatus(),        
         ];
         
-        var_dump($data); exit;
+//        var_dump($data); exit;
         $result = $this->tochkaPayment->payment($data);
         
 //        var_dump($result);
