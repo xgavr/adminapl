@@ -189,6 +189,15 @@ class Legal {
         return $this->ogrn;
     }
 
+    public function getOgrnPresent() 
+    {
+        if ($this->ogrn){
+            return 'ОГРН: '.$this->ogrn;
+        }
+        
+        return;
+    }
+
     public function setOgrn($ogrn) 
     {
         $this->ogrn = $ogrn;
@@ -197,6 +206,15 @@ class Legal {
     public function getOkpo() 
     {
         return $this->okpo;
+    }
+
+    public function getOkpoPresent() 
+    {
+        if ($this->okpo){
+            return 'ОКПО: '.$this->okpo;
+        }
+        
+        return;
     }
 
     public function setOkpo($okpo) 
@@ -217,6 +235,15 @@ class Legal {
     public function getChiefAccount() 
     {
         return $this->chiefAccount;
+    }
+
+    public function getChiefAccountPresent() 
+    {
+        if ($this->chiefAccount){
+            return 'Главный бухгалтер: '.$this->chiefAccount;
+        }
+        
+        return;
     }
 
     public function setChiefAccount($chiefAccount) 

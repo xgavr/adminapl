@@ -271,7 +271,7 @@ class LegalManager
     public function removeBankAccount($bankAccount)
     {
         $statementCount = $this->entityManager->getRepository(Statement::class)
-                ->count(['account' => $bankAccount->getRs()]);
+                ->count(['counterpartyAccountNumber' => $bankAccount->getRs()]);
         
         if ($statementCount > 0){
             $bankAccount->setStatus(BankAccount::STATUS_RETIRED);

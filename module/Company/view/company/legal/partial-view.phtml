@@ -24,11 +24,11 @@
                 <div class="panel-body">
                     <div class="pull-left <?= ($legal->getStatus() == Legal::STATUS_RETIRED) ? 'retired':''?>">
                         <b><?= $legal->getName() ?></b><br/>
-                        ИНН/КПП: <?= $legal->getInn() ?>/<?= $legal->getKpp() ?> ОГРН: <?= $legal->getOgrn() ?> ОКПО: <?= $legal->getOkpo() ?><br/>
+                        ИНН/КПП: <?= $legal->getInnKpp()?> <?= $legal->getOgrnPresent() ?> <?= $legal->getOkpoPresent() ?><br/>
                         Местонахождение: <?= $legal->getAddress() ?><br/>
-                        Руководитель: <?= $legal->getHead() ?> Главный бухгалтер: <?= $legal->getChiefAccount() ?><br/>
+                        Руководитель: <?= $legal->getHead() ?> <?= $legal->getChiefAccountPresent() ?><br/>
                         Дата начала деятельности: <?= date('d.m.Y', strtotime($legal->getDateStart())); ?><br/>
-                        Дополнительная информация: <?= $legal->getInfo() ?><br/>                            
+                        <?= $legal->getInfo() ?>                           
                     </div>
                     <div class="pull-right">
                         <button value="/legals/form/<?= $legalContact->getId() ?>?legal=<?= $legal->getId() ?>" class="btn btn-default btn-xs"
