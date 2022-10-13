@@ -234,7 +234,7 @@ class PaymentManager
             "counterparty_inn" => $payment->getСounterpartyInn(),
             "counterparty_kpp" => $payment->getСounterpartyKpp(),
             "counterparty_name" => $payment->getCounterpartyName(),
-            "payment_amount" => $payment->getAmount(),
+            "payment_amount" => $payment->getFormatAmount(),
             "payment_date" => $payment->getFormatPaymentDate(),
             "payment_number" => $payment->getId(),
             "payment_priority" => $payment->getPaymentPriority(),
@@ -250,6 +250,7 @@ class PaymentManager
             "tax_info_status" => $payment->getTaxInfoStatus(),        
         ];
         
+        var_dump($data); exit;
         $result = $this->tochkaPayment->payment($data);
         
 //        var_dump($result);

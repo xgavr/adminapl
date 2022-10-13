@@ -262,7 +262,7 @@ class Payment {
      */
     public function getСounterpartyKpp() 
     {
-        return $this->counterpartyKpp;
+        return ($this->counterpartyKpp) ? $this->counterpartyKpp:'';
     }
 
     /**
@@ -299,6 +299,15 @@ class Payment {
     public function getAmount() 
     {
         return $this->amount;
+    }
+
+    /**
+     * Возвращает сумму.
+     * @return float
+     */
+    public function getFormatAmount() 
+    {
+        return number_format($this->amount, 2, ',', '');
     }
 
     /**
@@ -397,7 +406,7 @@ class Payment {
      */
     public function getSupplierBillId() 
     {
-        return $this->supplierBillId;
+        return ($this->supplierBillId) ? $this->supplierBillId:0;
     }
 
     /**
@@ -415,7 +424,7 @@ class Payment {
      */
     public function getTaxInfoDocumentDate() 
     {
-        return $this->taxInfoDocumentDate;
+        return ($this->taxInfoDocumentDate) ? $this->taxInfoDocumentDate:0;
     }
 
     /**
@@ -433,7 +442,7 @@ class Payment {
      */
     public function getTaxInfoDocumentNumber() 
     {
-        return $this->taxInfoDocumentDate;
+        return ($this->taxInfoDocumentDate) ? $this->taxInfoDocumentDate:0;
     }
 
     /**
@@ -451,7 +460,7 @@ class Payment {
      */
     public function getTaxInfoKbk() 
     {
-        return $this->taxInfoKbk;
+        return ($this->taxInfoKbk) ? $this->taxInfoKbk:'';
     }
 
     /**
@@ -469,7 +478,7 @@ class Payment {
      */
     public function getTaxInfoOkato() 
     {
-        return $this->taxInfoOkato;
+        return ($this->taxInfoOkato) ? $this->taxInfoOkato:'';
     }
 
     /**
@@ -487,7 +496,7 @@ class Payment {
      */
     public function getTaxInfoPeriod() 
     {
-        return $this->taxInfoPeriod;
+        return ($this->taxInfoPeriod) ? $this->taxInfoPeriod:'';
     }
 
     /**
@@ -505,7 +514,7 @@ class Payment {
      */
     public function getTaxInfoReasonCode() 
     {
-        return $this->taxInfoReasonCode;
+        return ($this->taxInfoReasonCode) ? $this->taxInfoReasonCode:'';
     }
 
     /**
@@ -523,7 +532,7 @@ class Payment {
      */
     public function getTaxInfoStatus() 
     {
-        return $this->taxInfoStatus;
+        return ($this->taxInfoStatus) ? $this->taxInfoStatus:'';
     }
 
     /**
