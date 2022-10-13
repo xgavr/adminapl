@@ -165,7 +165,7 @@ class PaymentController extends AbstractActionController
                 foreach ($supplierAccounts as $supplierAccount){
                     $supplier = $supplierAccount->getLegal()->getSupplier();
                     if ($supplier){
-                        $data[] = ['id' => $supplier->getId(), 'name' => $supplier->getName()];
+                        $data[$supplier->getId()] = ['id' => $supplier->getId(), 'name' => $supplier->getName()];
                     }    
                 }
             }
