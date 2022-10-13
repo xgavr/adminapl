@@ -174,17 +174,19 @@
     }    
     
     function editFormatter(value, row){
-        if (!row.requestId){
-            var url = '/payment/edit-form/'+row.id;
-            btn = '<button';
-            btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs payment-modal-show"';
-            btn += ' aria-label="Left Align" title="Изменить"'; 
-            btn += ' modal-url="'+url+'">';
-            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-            btn += '</button>';
-            return btn;
-        }    
+        var disabled = '';
+        if (row.requestId){
+            disabled = 'disabled = "true"';
+        }
+        var url = '/payment/edit-form/'+row.id;
+        btn = '<button ' + disabled;
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs payment-modal-show"';
+        btn += ' aria-label="Left Align" title="Изменить"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
     }    
     
     function sendFormatter(value, row){
@@ -212,18 +214,20 @@
     }    
 
     function removeFormatter(value, row){
-        if (!row.requestId){
-            var url = '/payment/delete/'+row.id;
-            btn = ' <button';
-            btn += ' type="button"';
-            btn += ' class="btn btn-danger btn-xs this-delete"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' title="Удалить"'; 
-            btn += ' onclick="tableRowDelete(\''+url+'\')">';
-            btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-            btn += '</button>';
-            return btn;
-        }    
+        var disabled = '';
+        if (row.requestId){
+            disabled = 'disabled = "true"';
+        }
+        var url = '/payment/delete/'+row.id;
+        btn = ' <button '+disabled;
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
     }    
 
     function responseHandler(res) {
