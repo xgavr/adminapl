@@ -259,7 +259,7 @@ class PaymentController extends AbstractActionController
         }    
         
         return new JsonModel([
-            'rows' => $data,
+            'rows' => array_values($data),
         ]);          
     }    
 
