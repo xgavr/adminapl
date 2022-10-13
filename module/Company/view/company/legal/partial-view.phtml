@@ -1,3 +1,8 @@
+<?php
+    use Company\Entity\BankAccount;
+    use Company\Entity\Contract;
+?>
+
 <div class="panel-heading">
     <div class="pull-left">
         <div class="panel-title"><a class="anchor" id="sectionLegal">Юридические лица</a></div>
@@ -43,7 +48,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="pull-left">
-                        Банковские счета <?= $legal->getName() ?>
+                        <i>Банковские счета <?= $legal->getName() ?></i>
                     </div>                                
                     <div class="pull-right">
                         <button value="/legals/bank-account-form/<?= $legal->getId() ?>" class="btn btn-default btn-xs"
@@ -52,43 +57,61 @@
                         </button>                                                        
                     </div>                                
                 </div>
-                 <?php foreach ($legal->getOrderBankAccounts() as $bankAccount): ?>
-                    <div class="panel-body">
-                        <div class="pull-left">
-                             Банк: <?= $bankAccount->getNameWithCity() ?><br/>
-                             БИК: <?= $bankAccount->getBik()?><br/>
-                             Счет: <?= $bankAccount->getRs()?> <?= $bankAccount->getAccountTypeAsString()?>
-                             <?php if ($legal->isOfficeLegal() && $bankAccount->getStatement() == $bankAccount::STATEMENT_ACTIVE):?>
-                                <a href="/bank/statement?account=<?= $this->escapeHtml($bankAccount->getRs());?>"
-                                    title="Выписка по счету" target="_blank">
-                                    <span class="glyphicon glyphicon-rub" ></span>
-                                </a>
-                             <?php endif;?>   
-                             <br/>
-                             Корр. счет: <?= $bankAccount->getKs()?><br/>
-                             <?php if ($legal->isOfficeLegal()):?>
-                                Api: <?= $bankAccount->getApiAsString()?><br/>
-                             <?php endif;?>   
-                             Статус: <?= $bankAccount->getStatusAsString()?><br/>                               
-                        </div>
-                         <div class="pull-right">
-                             <button value="/legals/bank-account-form/<?= $legal->getId() ?>?bankAccount=<?= $bankAccount->getId() ?>" class="btn btn-default btn-xs"
-                                     data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                                 <span class="glyphicon glyphicon-edit" ></span>
-                             </button>                    
-                            <button value="/legals/delete-bank-account-form/<?= $bankAccount->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                    title="Удалить">
-                                <span class="glyphicon glyphicon-remove" ></span>
-                            </button>                                                           
-                         </div>
-                    </div>    
-                 <?php endforeach; ?>
+                <table class="table table-hover table-condensed">
+                    <tr>
+                        <th>Банк</th>
+                        <th>БИК</th>
+                        <th>Счет</th>
+                        <th>Корр. счет</th>
+                        <?php if ($legal->isOfficeLegal()):?>
+                            <th>Api</th>
+                        <?php endif;?>   
+                        <th colspan="2"></th>
+                    </tr>
+                    <?php foreach ($legal->getOrderBankAccounts() as $bankAccount): ?>
+                        <tr class="<?= ($bankAccount->getStatus() == BankAccount::STATUS_RETIRED) ? 'retired':''?>">
+                           <td>
+                               <?= $bankAccount->getNameWithCity() ?>
+                           </td>
+                           <td>
+                               <?= $bankAccount->getBik()?>
+                           </td>
+                           <td>
+                               <?= $bankAccount->getRs()?> <?= $bankAccount->getAccountTypeAsString()?>
+                                <?php if ($legal->isOfficeLegal() && $bankAccount->getStatement() == $bankAccount::STATEMENT_ACTIVE):?>
+                                   <a href="/bank/statement?account=<?= $this->escapeHtml($bankAccount->getRs());?>"
+                                       title="Выписка по счету" target="_blank">
+                                       <span class="glyphicon glyphicon-rub" ></span>
+                                   </a>
+                                <?php endif;?>   
+                           </td>
+                           <td>
+                               <?= $bankAccount->getKs()?>
+                           </td>
+                            <?php if ($legal->isOfficeLegal()):?>
+                                <td><?= $bankAccount->getApiAsString()?></td>
+                            <?php endif;?>
+                            <td width='2'>
+                                <button value="/legals/bank-account-form/<?= $legal->getId() ?>?bankAccount=<?= $bankAccount->getId() ?>" class="btn btn-default btn-xs"
+                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                    <span class="glyphicon glyphicon-edit" ></span>
+                                </button>                    
+                            </td>
+                            <td width='2'>
+                                <button value="/legals/delete-bank-account-form/<?= $bankAccount->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                        title="Удалить">
+                                    <span class="glyphicon glyphicon-remove" ></span>
+                                </button>                                                           
+                            </td>    
+                       </tr>
+                    <?php endforeach; ?>
+                </table>
             </div>
             <?php if (!$this->notContract):?>
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="pull-left">
-                            Договоры
+                            <i>Договоры</i>
                         </div>                                
                         <div class="pull-right">
                             <button value="/legals/contract-form/<?= $legal->getId() ?>" class="btn btn-default btn-xs"
@@ -97,31 +120,59 @@
                             </button>                    
                         </div>                                
                     </div>
-                     <?php foreach ($legal->getOrderContracts() as $contract): ?>
-                        <div class="panel-body">
-                            <div class="pull-left">
-                                Наименование: <?= $contract->getId() ?> <?= $contract->getName() ?><br/>  
-                                Офис: <?= $contract->getOffice()->getName() ?><br/>  
-                                № <?= $contract->getAct() ?> от <?= date('d.m.Y', strtotime($contract->getDateStart())) ?>
-                            </div>
-                             <div class="pull-right">
-                                <button value="/legals/contract-form/<?= $legal->getId() ?>?contract=<?= $contract->getId() ?>" class="btn btn-default btn-xs"
-                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                                    <span class="glyphicon glyphicon-edit" ></span>
-                                </button>                    
-                                <button value="/legals/delete-contract-form/<?= $contract->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                        title="Удалить">
-                                    <span class="glyphicon glyphicon-remove" ></span>
-                                </button> 
-                                <?php if ($this->supplier):?>
-                                    <button value="/apl/update-supplier-legal/<?= $this->supplier->getId()?>?contract=<?= $contract->getId()?>" class="btn btn-info btn-xs refresh-button"
-                                            title="Обновить юр.лицо в Апл">
-                                        <span class="glyphicon glyphicon-export" ></span>
-                                    </button>
-                                <?php endif;?> 
-                             </div>
-                        </div>    
-                     <?php endforeach; ?>
+                    <table class="table table-hover table-condensed">
+                        <tr>
+                            <th>Офис</th>
+                            <th>Компания</th>
+                            <th>№,дата</th>
+                            <th>Наименование</th>
+                            <th>Тип</th>
+                            <th>Оплата</th>
+                            <th colspan="3"></th>
+                        </tr>
+                        <?php foreach ($legal->getOrderContracts() as $contract): ?>
+                            <tr class="<?= ($contract->getStatus() == BankAccount::STATUS_RETIRED) ? 'retired':''?>">
+                                <td>
+                                    <?= $contract->getOffice()->getName() ?>
+                                </td>
+                                <td>
+                                    <?= $contract->getCompany()->getName() ?>
+                                </td>
+                                <td>
+                                    <?= $contract->getAct() ?> от <?= date('d.m.Y', strtotime($contract->getDateStart())) ?>
+                                </td>
+                                <td>
+                                    <?= $contract->getName() ?>
+                                </td>
+                                <td>
+                                    <?= $contract->getKindAsString() ?>
+                                </td>
+                                <td>
+                                    <?= $contract->getPayAsString() ?>
+                                </td>
+                                <td width="2">
+                                   <button value="/legals/contract-form/<?= $legal->getId() ?>?contract=<?= $contract->getId() ?>" class="btn btn-default btn-xs"
+                                           data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                       <span class="glyphicon glyphicon-edit" ></span>
+                                   </button>                                                        
+                                </td>
+                                <td width="2">
+                                   <button value="/legals/delete-contract-form/<?= $contract->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                           title="Удалить">
+                                       <span class="glyphicon glyphicon-remove" ></span>
+                                   </button>                                     
+                                </td>
+                                <td width="2">
+                                    <?php if ($this->supplier):?>
+                                       <button value="/apl/update-supplier-legal/<?= $this->supplier->getId()?>?contract=<?= $contract->getId()?>" class="btn btn-info btn-xs refresh-button"
+                                               title="Обновить юр.лицо в Апл">
+                                           <span class="glyphicon glyphicon-export" ></span>
+                                       </button>
+                                    <?php endif;?> 
+                                </td>    
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
                 </div>
             <?php endif; ?>
         </div>
