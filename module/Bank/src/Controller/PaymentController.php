@@ -253,7 +253,7 @@ class PaymentController extends AbstractActionController
         
     public function sendAllAction()
     {
-        $this->paymentManager->sendAll();
+//        $this->paymentManager->sendAll();
         return new JsonModel(
            ['ok']
         );           
