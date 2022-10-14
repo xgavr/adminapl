@@ -292,7 +292,7 @@ class PaymentManager
         $this->entityManager->flush();
         $this->entityManager->refresh($payment);
         
-        $this->sendPayment($payment);
+        $this->statusPayment($payment);
         
         return $result;
     }
