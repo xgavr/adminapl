@@ -96,7 +96,7 @@ class PaymentRepository extends EntityRepository
             }
             if (!empty($params['supplier'])){
                 $supplier = $entityManager->getRepository(Supplier::class)
-                        ->findOneById($params['supplierId']);
+                        ->findOneById($params['supplier']);
                 if ($supplier){
                     $queryBuilder->andWhere('p.supplier = :supplier')
                             ->setParameter('supplier', $supplier->getId());
@@ -165,7 +165,7 @@ class PaymentRepository extends EntityRepository
             }
             if (!empty($params['supplier'])){
                 $supplier = $entityManager->getRepository(Supplier::class)
-                        ->findOneById($params['supplierId']);
+                        ->findOneById($params['supplier']);
                 if ($supplier){
                     $queryBuilder->andWhere('p.supplier = :supplier')
                             ->setParameter('supplier', $supplier->getId());
