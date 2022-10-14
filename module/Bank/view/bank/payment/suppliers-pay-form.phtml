@@ -108,12 +108,14 @@ $form->prepare();
         var data = $('#supplierspaytable').bootstrapTable('getData');
         var result = [];
         $.each( data, function( index, row ) {
-            let amount = row.amount.toString().replace(' ', '').replace(',', '.').replace(/[^.\d]/g, '');
-            var newRow = {
-                supplier: row.id,
-                amount: amount
-            };
-            result.push(newRow);
+            if (row.amount){
+                let amount = row.amount.toString().replace(' ', '').replace(',', '.').replace(/[^.\d]/g, '');
+                var newRow = {
+                    supplier: row.id,
+                    amount: amount
+                };
+                result.push(newRow);
+            }    
         });   
         return result;
     }
