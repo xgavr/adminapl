@@ -14,8 +14,6 @@ use Bank\Entity\Payment;
 use Bank\Form\PaymentForm;
 use Company\Entity\BankAccount;
 use Application\Entity\Supplier;
-use Company\Entity\Office;
-use Company\Entity\Contract;
 use Bank\Form\SuppliersPayForm;
 
 class PaymentController extends AbstractActionController
@@ -106,6 +104,7 @@ class PaymentController extends AbstractActionController
     public function editFormAction()
     {
         $paymentId = (int)$this->params()->fromRoute('id', -1);
+        $copy = $this->params()->fromQuery('copy');
         
         $payment = null;
         if ($paymentId > 0){
@@ -168,13 +167,16 @@ class PaymentController extends AbstractActionController
         } else {
             if ($payment){
                 $form->setData($payment->toLog());
+                if ($copy){
+                    $form->get('paymentDate')->setValue(date('Y-m-d'));
+                }
             }    
         }
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'payment' => $payment,
+            'payment' => ($copy) ? null:$payment,
         ]);        
     }        
     

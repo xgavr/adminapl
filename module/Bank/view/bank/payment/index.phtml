@@ -93,12 +93,10 @@
                      <th data-field="paymentDate" data-sortable="true" data-width="100">Дата</th>
                      <th data-field="id" data-sortable="true" data-type="numeric" data-align="right" data-width="50">Номер</th>
                      <th data-field='amount' data-sortable="true" data-align="right" data-formatter="amountFormatter">Сумма</th>
-                     <th data-field='bankAccount.name' data-sortable="false">Банк</th>
-                     <th data-field='counterpartyInn' data-sortable="false">Получатель ИНН</th>
-                     <th data-field='counterpartyKpp' data-sortable="false">Получатель КПП</th>
-                     <th data-field='counterpartyName' data-sortable="false">Получатель</th>
-                     <th data-field='supplier.name' data-sortable="false">Поставщик</th>
-                     <th data-field='purpose' data-sortable="false">назначение</th>
+                     <th data-field='bankAccount.name' data-sortable="false">Банк списания</th>
+                     <th data-field='counterpartyBankBik' data-sortable="false" data-formatter="formatAccount">Получатель БИК/счет</th>
+                     <th data-field='counterpartyName' data-sortable="false" data-formatter="formatCounterparty">Получатель</th>
+                     <th data-field='purpose' data-sortable="false">Назначение</th>
                      <th data-field='user.fullName' data-sortable="false">Автор</th>
                      <th data-field="" data-formatter="editFormatter" data-width="10"></th>
                      <th data-field="" data-formatter="sendFormatter" data-width="10"></th>
@@ -242,10 +240,37 @@
         return (Math.round(value*100)/100).toFixed(2);
     }    
     
+    function formatAccount(value, row){
+        var result = value;
+        if (row.counterpartyAccountNumber){
+            result += '<br/>' + row.counterpartyAccountNumber;
+        }
+        return result;
+    }
+
+function formatCounterparty(value, row){
+        var result = value;
+        if (row.counterpartyInn){
+            result += '<br/>' + row.counterpartyInn;
+        }
+        if (row.counterpartyKpp){
+            result += '<br/>' + row.counterpartyKpp;
+        }
+        return result;
+    }
+    
     function editFormatter(value, row){
         var disabled = '';
         if (row.requestId){
-            disabled = 'disabled = "true"';
+            var url = '/payment/edit-form/'+row.id+'?copy=1';
+            btn = '<button ' + disabled;
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs payment-modal-show"';
+            btn += ' aria-label="Left Align" title="Копировать"'; 
+            btn += ' modal-url="'+url+'">';
+            btn += '<span class="glyphicon glyphicon-copy" aria-hidden="true"></span>';
+            btn += '</button>';
+            return btn;
         }
         var url = '/payment/edit-form/'+row.id;
         btn = '<button ' + disabled;
@@ -259,9 +284,13 @@
     }    
     
     function sendFormatter(value, row){
+        var disabled = '';
+        if (row.status === '<?= Payment::STATUS_RETIRED?>'){
+            disabled = 'disabled = "true"';
+        }
         if (!row.requestId){
             var url = '/payment/send/'+row.id;
-            btn = '<button';
+            btn = '<button ' + disabled;
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs send-payment"';
             btn += ' aria-label="Left Align"'; 
@@ -271,7 +300,7 @@
             return btn;
         } else {
             var url = '/payment/status/'+row.id;
-            btn = '<button';
+            btn = '<button ' + disabled;
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs status-payment"';
             btn += ' aria-label="Left Align"'; 

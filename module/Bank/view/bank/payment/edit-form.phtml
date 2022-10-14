@@ -93,7 +93,7 @@ $form->prepare();
 <?= $this->form()->openTag($form); ?>
             
 <div class="modal-header">
-    <h5 class="modal-title" id="ptModalLabel">Платежное поручение</h5>
+    <h5 class="modal-title" id="ptModalLabel">Платежное поручение <?= ($payment) ? $payment->getId():'новое'?></h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>

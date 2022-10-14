@@ -118,6 +118,7 @@ class PaymentManager
         $payment->setPaymentPriority(5);
         $payment->setPaymentType(empty($data['paymentType']) ? Payment::PAYMENT_TYPE_NORMAL:$data['paymentType']);
         $payment->setPurpose($data['purpose']);
+        $payment->setStatus($data['status']);
         $payment->setPurposeCode(empty($data['purposeCode']) ? '':$data['purposeCode']);
         $payment->setSupplierBillId(empty($data['supplierBillId']) ? 0:$data['supplierBillId']);
         $payment->setTaxInfoDocumentDate(empty($data['taxInfoDocumentDate']) ? null:$data['taxInfoDocumentDate']);
