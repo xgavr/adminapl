@@ -91,7 +91,7 @@ class Payment {
      */
     public function paymentStatus($request_id)
     {
-        var_dump($request_id); exit; 
+//        var_dump($request_id); exit; 
         $this->auth->isAuth();
         $client = new Client();
         $client->setUri($this->auth->getUri().'/payment/status/'.$request_id);
