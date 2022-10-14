@@ -41,8 +41,10 @@ class PaymentController extends AbstractActionController
 
     public function indexAction()
     {
-                
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findForPtu();                
         return new ViewModel([
+            'suppliers' => $suppliers,
         ]);
     }
     
@@ -51,22 +53,40 @@ class PaymentController extends AbstractActionController
         	        
         $q = $this->params()->fromQuery('search');
         $rs = $this->params()->fromQuery('rs');
-        $date = $this->params()->fromQuery('date');        
+        $year_month = $this->params()->fromQuery('month');
+        $supplier = $this->params()->fromQuery('supplier');
+        $status = $this->params()->fromQuery('status');
+        $paymentType = $this->params()->fromQuery('paymentType');
         $offset = $this->params()->fromQuery('offset');
         $order = $this->params()->fromQuery('order', 'id');
         $sort = $this->params()->fromQuery('sort', 'DESC');
         $limit = $this->params()->fromQuery('limit');
+
+        $year = $month = null;
+        if ($year_month){
+            $year = date('Y', strtotime($year_month));
+            $month = date('m', strtotime($year_month));
+        }        
         
         $query = $this->entityManager->getRepository(Payment::class)
-                        ->findPayments($q, $rs, [
-                            'date' => $date,
+                        ->findPayments(trim($q), $rs, [
                             'order' => $order,
                             'sort' => $sort,
-                        ]);
+                            'year' => $year, 'month' => $month,
+                            'supplier' => $supplier,
+                            'status' => $status,
+                            'paymentType' => $paymentType,
+                    ]);
         
 //        $total = count($query->getResult());
         $total = $this->entityManager->getRepository(Payment::class)
-                        ->findTotalPayments($q, $rs, ['date' => $date, 'count' => true]);
+                        ->findTotalPayments(trim($q), $rs, [
+                            'year' => $year, 'month' => $month,
+                            'supplier' => $supplier,
+                            'status' => $status,
+                            'paymentType' => $paymentType,
+                            'count' => true,
+                        ]);
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -205,6 +225,15 @@ class PaymentController extends AbstractActionController
         );           
     }    
     
+    public function statusTotalAction()
+    {
+        $total = $this->entityManager->getRepository(Payment::class)
+                ->statusTotal();
+        return new JsonModel(
+           ['total' => $total]
+        );           
+    }
+
     public function sendAction()
     {
         $paymentId = $this->params()->fromRoute('id', -1);
@@ -220,6 +249,14 @@ class PaymentController extends AbstractActionController
         );           
     }
         
+    public function sendAllAction()
+    {
+        $this->paymentManager->sendAll();
+        return new JsonModel(
+           ['ok']
+        );           
+    }
+
     public function statusAction()
     {
         $paymentId = $this->params()->fromRoute('id', -1);

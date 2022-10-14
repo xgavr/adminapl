@@ -25,9 +25,12 @@
                 <button class="btn btn-default suppliers-pay-modal-show" type="button" modal-url="/payment/suppliers-pay-form" title="Оплата поставщикам">
                     <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                 </button>                
+                <button class="btn btn-default payment-send-all" type="button" modal-url="/payment/send-all" title="Отправить все платежи">
+                    <span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+                </button>                
                 <div class="form-group">
                     <div class="btn-group">
-                        <input id="searchinput" name="search" style="width: 150px" class="form-control" type="text" placeholder="Поиск">
+                        <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
                         <span class="glyphicon glyphicon-remove-circle inputclear"></span>
                     </div>
                     <button id="ok" type="submit" class="btn btn-default" title="Поиск">
@@ -35,7 +38,34 @@
                     </button>
                 </div>    
                 <div class="form-group">
-                    <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
+                    <input name="month" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
+                </div>
+                <div class="form-group">
+                    <select name="supplier" style="width: 250px" class="form-control">
+                        <option selected>поставщик</option>
+                        <?php foreach ($suppliers as $supplier):?>
+                            <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select name="status" style="width: 250px" class="form-control">
+                        <option selected>статус</option>
+                        <?php foreach (Payment::getStatusList() as $key => $value):?>
+                            <option value="<?= $key?>"><?= $value?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select name="paymentType" style="width: 250px" class="form-control">
+                        <option selected>тип платежа</option>
+                        <?php foreach (Payment::getPaymentTypeList() as $key => $value):?>
+                            <option value="<?= $key?>"><?= $value?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <input class="form-control status-total" style='width: 100px; direction: rtl' disabled value="0">
                 </div>
             </div>
         </div>
@@ -50,9 +80,9 @@
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
             data-query-params="queryParams"
-            data-sort-name="paymentDate"
+            data-sort-name="id"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
@@ -61,8 +91,8 @@
             <thead>
                 <tr>
                      <th data-field="paymentDate" data-sortable="true" data-width="100">Дата</th>
-                     <th data-field="id" data-sortable="false" data-type="numeric" data-align="right" data-width="50">Номер</th>
-                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                     <th data-field="id" data-sortable="true" data-type="numeric" data-align="right" data-width="50">Номер</th>
+                     <th data-field='amount' data-sortable="true" data-align="right" data-formatter="amountFormatter">Сумма</th>
                      <th data-field='bankAccount.name' data-sortable="false">Банк</th>
                      <th data-field='counterpartyInn' data-sortable="false">Получатель ИНН</th>
                      <th data-field='counterpartyKpp' data-sortable="false">Получатель КПП</th>
@@ -85,8 +115,14 @@
         if (row.status === '<?= Payment::STATUS_RETIRED?>'){
            retired += ' retired';
         }
-        if (row.statusAccount === '<?= Payment::STATUS_ACTIVE?>'){
+        if (row.status === '<?= Payment::STATUS_ERROR?>'){
            retired += ' warning';
+        }
+        if (row.status === '<?= Payment::STATUS_TRANSFER?>'){
+           retired += ' info';
+        }
+        if (row.status === '<?= Payment::STATUS_SUCCESS?>'){
+           retired += ' success';
         }
         return {classes: retired};
     }
@@ -94,12 +130,34 @@
     var $table = $('#table'),
             $ok = $('#ok');
     
+    $table.bootstrapTable({
+        onLoadSuccess: function(res){
+            updateTotal();
+        }            
+    }); 
+    
     function refreshTable(){
         $table.bootstrapTable('refresh');
     }
+    
+    function updateTotal(){
+        $.getJSON('/payment/status-total', function( data ) {
+            $('.status-total').val(data['total']);
+        });                    
+    }    
 
     $(function () {
+        $('input[name="month"]').change(function (){
+            refreshTable();
+        });
         $('select').change(function (){
+            refreshTable();
+        });
+        $ok.click(function (){
+            refreshTable();
+        });
+        $(".inputclear").click(function(){
+            $('input[name="search"]').val('');
             refreshTable();
         });
     });
@@ -123,6 +181,18 @@
     });  
 
     $(document).on('click', '.send-payment', function (e) {
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: false
+        });
+        var url = $(e.currentTarget).attr('modal-url');
+        $.getJSON( url, function( data ) {
+            refreshTable();
+            dialog.modal('hide');
+        });            
+    });  
+
+    $(document).on('click', '.payment-send-all', function (e) {
         var dialog = bootbox.dialog({
             message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
             closeButton: false
@@ -164,7 +234,6 @@
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
-        params.month = $('#monthSelect').val();
         
         return params;
     }

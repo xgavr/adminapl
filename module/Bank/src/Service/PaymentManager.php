@@ -221,6 +221,32 @@ class PaymentManager
     }
     
     /**
+     * Получить статус платежа
+     * @param Payment $payment
+     */
+    public function statusPayment($payment)
+    {
+        $result = [];
+        if ($payment->getRequestId()){
+            $result = $this->tochkaPayment->paymentStatus($payment->getRequestId());
+            if (!empty($result['message'])){
+                $payment->setStatusMessage($result['message']);                
+            }
+            if (!empty($result['status'])){
+                if ($result['status'] == 'success'){
+                    $payment->setStatus(Payment::STATUS_SUCCESS);
+                }
+                if ($result['status'] == 'error'){
+                    $payment->setStatus(Payment::STATUS_ERROR);
+                }
+            }
+            $this->entityManager->persist($payment);
+            $this->entityManager->flush();
+        }    
+        return $result;
+    }
+
+    /**
      * Отправить платеж в банк
      * @param Payment $payment
      */
@@ -254,30 +280,35 @@ class PaymentManager
         $result = $this->tochkaPayment->payment($data);
         
 //        var_dump($result);
-        
-        $payment->setRequestId(empty($result['request_id']) ? null:$result['request_id']);
         $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
+
+        if (!empty($result['request_id'])){
+            $payment->setRequestId(empty($result['request_id']) ? null:$result['request_id']);
+            $payment->setStatus(Payment::STATUS_TRANSFER);            
+        }    
+        
         $this->entityManager->persist($payment);
         $this->entityManager->flush();
+        $this->entityManager->refresh($payment);
         
-        return;
+        $this->sendPayment($payment);
+        
+        return $result;
     }
 
     /**
-     * Получить статус платежа
-     * @param Payment $payment
+     * Отправить все платежи
+     * @return null
      */
-    public function statusPayment($payment)
+    public function sendAll()
     {
-        $result = [];
-        if ($payment->getRequestId()){
-            $result = $this->tochkaPayment->paymentStatus($payment->getRequestId());
-
-////            $payment->setRequestId(empty($result['request_id']) ? null:$result['request_id']);
-//            $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
-//            $this->entityManager->persist($payment);
-//            $this->entityManager->flush();
-        }    
-        return $result;
+        $payments = $this->entityManager->getRepository(Payment::class)
+                ->findBy(['status' => Payment::STATUS_ACTIVE, 'requestId' => null]);
+        
+        foreach ($payments as $payment){
+            $this->sendPayment($payment);
+        }
+        
+        return;
     }
 }

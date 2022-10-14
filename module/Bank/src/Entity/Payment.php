@@ -29,6 +29,7 @@ class Payment {
     const STATUS_TRANSFER = 2; //данные переданы
     const STATUS_SUCCESS = 3; //данные получены
     const STATUS_RETIRED = 4; //данные удалены
+    const STATUS_ERROR = 5; //ошибка в данных
     
     const PAYMENT_TYPE_NORMAL = 1; //обычный платеж
     const PAYMENT_TYPE_TAX = 2; // налог
@@ -617,7 +618,8 @@ class Payment {
             self::STATUS_ACTIVE => 'Новый',
             self::STATUS_TRANSFER => 'Отправлен в банк',
             self::STATUS_SUCCESS => 'Проведен',
-            self::STATUS_RETIRED => 'Отменен'
+            self::STATUS_RETIRED => 'Отменен',
+            self::STATUS_ERROR => 'Ошибка',
         ];
     }    
     

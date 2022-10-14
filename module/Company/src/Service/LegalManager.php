@@ -272,8 +272,10 @@ class LegalManager
     {
         $statementCount = $this->entityManager->getRepository(Statement::class)
                 ->count(['counterpartyAccountNumber' => $bankAccount->getRs()]);
+        $statementCount1 = $this->entityManager->getRepository(Statement::class)
+                ->count(['account' => $bankAccount->getRs()]);
         
-        if ($statementCount > 0){
+        if ($statementCount > 0 || $statementCount1 > 0){
             $bankAccount->setStatus(BankAccount::STATUS_RETIRED);
             $this->entityManager->persist($bankAccount);
         } else {
