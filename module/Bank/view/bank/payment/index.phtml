@@ -212,6 +212,7 @@
             url: url,
             dataType: 'json',
             success: function( data ) {
+                console.log(data);
                 dialog.modal('hide');
                 bootbox.dialog({
                     message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>'+(data.message) ? data.message:data.status+'</p>',
