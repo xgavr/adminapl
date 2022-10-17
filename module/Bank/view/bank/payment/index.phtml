@@ -212,10 +212,18 @@
             url: url,
             dataType: 'json',
             success: function( data ) {
-                console.log(data);
+                var message = 'Ошибка создания платежа!';
+                if (data.message){
+                    message += '<br/>'+data.message;
+                }
+                if (data.errors){
+                    $.each(data.errors, function( index, value ) {
+                        message += '<br/>'+value.message;                        
+                    });                    
+                }
                 dialog.modal('hide');
                 bootbox.dialog({
-                    message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>'+(data.message) ? data.message:data.status+'</p>',
+                    message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>'+message+'</p>',
                     closeButton: true
                 });
             },
