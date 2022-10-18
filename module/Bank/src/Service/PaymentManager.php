@@ -242,8 +242,8 @@ class PaymentManager
                     $payment->setStatus(Payment::STATUS_ERROR);
                     if (!empty($result['errors'])){
                         $message = '';
-                        foreach ($result['errors'] as $key => $value){
-                            $message .= "($key) $value;";
+                        foreach ($result['errors'] as $error){
+                            $message .= "() {$error['message']};";
                         }
                         $payment->setStatusMessage($message);
                     }
