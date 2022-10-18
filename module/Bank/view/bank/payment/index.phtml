@@ -96,7 +96,7 @@
                      <th data-field='bankAccount.name' data-sortable="false">Банк списания</th>
                      <th data-field='counterpartyBankBik' data-sortable="false" data-formatter="formatAccount">Получатель БИК/счет</th>
                      <th data-field='counterpartyName' data-sortable="false" data-formatter="formatCounterparty">Получатель</th>
-                     <th data-field='purpose' data-sortable="false">Назначение</th>
+                     <th data-field='purpose' data-sortable="false" data-formatter="purposeFormatter">Назначение</th>
                      <th data-field='user.fullName' data-sortable="false">Автор</th>
                      <th data-field="" data-formatter="editFormatter" data-width="10"></th>
                      <th data-field="" data-formatter="sendFormatter" data-width="10"></th>
@@ -277,6 +277,13 @@
             result += '<br/>' + row.counterpartyKpp;
         }
         return result;
+    }
+    
+    function purposeFormatter(value, row){
+        if (row.statusMessage){
+            return value + '<div class="alert alert-danger" role="alert">'+row.statusMessage+'</div>';
+        }
+        return value;
     }
     
     function editFormatter(value, row){

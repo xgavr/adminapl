@@ -240,6 +240,13 @@ class PaymentManager
                 }
                 if ($result['status'] == 'error'){
                     $payment->setStatus(Payment::STATUS_ERROR);
+                    if (!empty($result['errors'])){
+                        $message = '';
+                        foreach ($result['errors'] as $key => $value){
+                            $message .= "($key) $value;";
+                        }
+                        $payment->setStatusMessage($message);
+                    }
                 }
             }
             $this->entityManager->persist($payment);
@@ -310,6 +317,9 @@ class PaymentManager
         
         foreach ($payments as $payment){
             $this->sendPayment($payment);
+            if ($payment->getStatus() !== Payment::STATUS_SUCCESS){
+                break;
+            }
         }
         
         return;
