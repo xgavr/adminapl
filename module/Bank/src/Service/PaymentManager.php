@@ -241,11 +241,11 @@ class PaymentManager
                 if ($result['status'] == 'error'){
                     $payment->setStatus(Payment::STATUS_ERROR);
                     if (!empty($result['errors'])){
-                        $message = '';
+                        $message = [];
                         foreach ($result['errors'] as $error){
-                            $message .= "() {$error['message']};";
+                            $message[] = "({$error['code']}) {$error['message']}";
                         }
-                        $payment->setStatusMessage($message);
+                        $payment->setStatusMessage(implode(';', $message));
                     }
                 }
             }
