@@ -133,6 +133,14 @@ class BankAccountForm extends Form
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'cash',
+            'options' => [
+                'label' => 'Связанная касса',
+            ],
+        ]);
+        
         // Add the Submit button
         $this->add([
             'type'  => 'submit',
@@ -297,5 +305,14 @@ class BankAccountForm extends Form
                 ],
             ]); 
         
+        $inputFilter->add([
+                'name'     => 'cash',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                ],
+            ]); 
     }           
 }

@@ -5,7 +5,7 @@ namespace Company\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Company\Entity\Legal;
 use Company\Entity\Office;
-use Stock\Entity\Ptu;
+use Bank\Entity\Payment;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -34,6 +34,11 @@ class Contract {
      // Contract pay constants.
     const PAY_CASH       = 1; // Оплата нал.
     const PAY_CASHLESS   = 2; // Оплата безнал.
+
+     // Nds constants.
+    const NDS_NO   = Payment::NDS_NO; // без НДС.
+    const NDS_10   = Payment::NDS_10; // Оплата безнал.
+    const NDS_20   = Payment::NDS_20; // Оплата безнал.
 
     /**
      * @ORM\Id
@@ -77,6 +82,11 @@ class Contract {
      */
     protected $pay;    
 
+    /** 
+     * @ORM\Column(name="nds")  
+     */
+    protected $nds;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="contracts") 
      * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
@@ -302,6 +312,79 @@ class Contract {
     {
         $this->pay = $pay;
     }   
+    
+    /**
+     * Returns НДС.
+     * @return int     
+     */
+    public function getNds() 
+    {
+        return $this->nds;
+    }
+
+    /**
+     * Returns possible nds as array.
+     * @return array
+     */
+    public static function getNdsList() 
+    {
+        return Payment::getNdsList();
+    }    
+    
+    /**
+     * Returns possible nds percent as array.
+     * @return array
+     */
+    public static function getNdsPercentList() 
+    {
+        return Payment::getNdsPercentList();
+    }    
+
+    /**
+     * Расчитать ндс
+     * @param float $amount
+     * @param integer $nds
+     */
+    public static function nds($amount, $nds) 
+    {
+        return Payment::nds($amount, $nds);
+    }
+
+
+    /**
+     * Returns nds as string.
+     * @return string
+     */
+    public function getNdsAsString()
+    {
+        $list = self::getNdsList();
+        if (isset($list[$this->nds]))
+            return $list[$this->nds];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Returns nds percent as string.
+     * @return string
+     */
+    public function getNdsPercentAsString()
+    {
+        $list = self::getNdsPercentList();
+        if (isset($list[$this->nds]))
+            return $list[$this->nds];
+        
+        return 'Unknown';
+    }    
+
+    /**
+     * Sets nds.
+     * @param int $nds     
+     */
+    public function setNds($nds) 
+    {
+        $this->nds = $nds;
+    }       
 
     /**
      * Returns the date of contract creation.

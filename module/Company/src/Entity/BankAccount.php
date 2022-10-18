@@ -10,7 +10,8 @@ namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Laminas\Filter\Digits;
-use Application\Entity\Order;
+use Cash\Entity\Cash;
+use Company\Entity\Legal;
 
 /**
  * Description of BankAccount
@@ -95,6 +96,12 @@ class BankAccount {
      * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
      */
     private $legal;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Cash\Entity\Cash", inversedBy="bank_account") 
+     * @ORM\JoinColumn(name="cash_id", referencedColumnName="id")
+     */
+    private $cash;
     
     /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Order", mappedBy="bankAccount")
@@ -376,21 +383,39 @@ class BankAccount {
             
         
     /*
-     * @return \Company\Entity\Legal
-     */
-    
+     * @return Legal
+     */    
     public function getLegal() 
     {
         return $this->legal;
     }
 
     /**
-     * @param \Company\Entity\Legal $legal
+     * @param Legal $legal
      */    
     public function setLegal($legal) 
     {
         $this->legal = $legal;
         $legal->addBankAccount($this);
+    }     
+
+    /*
+     * @return Cash
+     */    
+    public function getCash() 
+    {
+        return $this->cash;
+    }
+
+    /**
+     * @param Cash $cash
+     */    
+    public function setCash($cash) 
+    {
+        $this->cash = $cash;
+        if ($cash){
+            $cash->addBankAccount($this);
+        }    
     }     
 
     /*

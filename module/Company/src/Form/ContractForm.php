@@ -108,7 +108,9 @@ class ContractForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'kind',
-            'value' => Contract::KIND_SUPPLIER,
+            'attributes' => [                
+                'value' => Contract::KIND_SUPPLIER,
+            ],    
             'options' => [
                 'label' => 'Тип',
                 'value_options' => Contract::getKindList(),
@@ -118,10 +120,24 @@ class ContractForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'pay',
-            'value' => Contract::PAY_CASH,
+            'attributes' => [                
+                'value' => Contract::PAY_CASH,
+            ],    
             'options' => [
                 'label' => 'Оплата',
                 'value_options' => Contract::getPayList(),
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'nds',
+            'attributes' => [                
+                'value' => Contract::NDS_20,
+            ],    
+            'options' => [
+                'label' => 'НДС',
+                'value_options' => Contract::getNdsPercentList(),
             ],
         ]);
         
@@ -258,7 +274,7 @@ class ContractForm extends Form
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                    ['name'=>'InArray', 'options'=>['haystack'=>array_keys(Contract::getStatusList())]]
                 ],
             ]); 
 
@@ -269,7 +285,7 @@ class ContractForm extends Form
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3]]]
+                    ['name'=>'InArray', 'options'=>['haystack'=>array_keys(Contract::getKindList())]]
                 ],
             ]); 
 
@@ -280,7 +296,18 @@ class ContractForm extends Form
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2, 3]]]
+                    ['name'=>'InArray', 'options'=>['haystack'=>array_keys(Contract::getPayList())]]
+                ],
+            ]); 
+
+        $inputFilter->add([
+                'name'     => 'nds',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(Contract::getNdsPercentList())]]
                 ],
             ]); 
 

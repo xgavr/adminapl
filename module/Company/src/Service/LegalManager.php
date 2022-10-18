@@ -221,6 +221,7 @@ class LegalManager
         $bankAccount->setAccountType((empty($data['accountType'])) ? BankAccount::ACСOUNT_CHECKING:$data['accountType']);            
         $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
         $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
+        $bankAccount->setCash((empty($data['cash'])) ? null:$data['cash']);            
 
         $currentDate = date('Y-m-d H:i:s');
         $bankAccount->setDateCreated($currentDate);
@@ -254,6 +255,7 @@ class LegalManager
         $bankAccount->setAccountType((empty($data['accountType'])) ? BankAccount::ACСOUNT_CHECKING:$data['accountType']);            
         $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
         $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
+        $bankAccount->setCash((empty($data['cash'])) ? null:$data['cash']);            
 
         $this->entityManager->persist($bankAccount);
 
@@ -342,6 +344,7 @@ class LegalManager
         $contract->setStatus($data['status']);
         $contract->setKind($data['kind']);
         $contract->setPay($data['pay']);
+        $contract->setNds($data['nds']);
         
         $office = $this->entityManager->getRepository(Office::class)
                 ->findOneById($data['office']);
@@ -380,6 +383,7 @@ class LegalManager
         $contract->setStatus($data['status']); 
         $contract->setKind($data['kind']);
         $contract->setPay($data['pay']);
+        $contract->setNds($data['nds']);
 
         $office = $this->entityManager->getRepository(Office::class)
                 ->findOneById($data['office']);

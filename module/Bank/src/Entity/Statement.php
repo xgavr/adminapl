@@ -9,6 +9,7 @@
 namespace Bank\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Cash\Entity\CashDoc;
 
 /**
  * Description of Bank
@@ -21,6 +22,9 @@ class Statement {
 
     const SWAP1_TRANSFERED = 1; //данные переданы
     const SWAP1_TO_TRANSFER = 2; //данные не перданы
+    
+    const PAY_NEW = 1; //новый
+    const PAY_CHECK = 2; //проверен
     
     
     /**
@@ -154,6 +158,17 @@ class Statement {
      * @ORM\Column(name="swap1")  
      */
     protected $swap1 = self::SWAP1_TO_TRANSFER;
+    
+    /** 
+     * @ORM\Column(name="pay")  
+     */
+    protected $pay = self::PAY_NEW;
+
+    /**
+    * @ORM\OneToOne(targetEntity="Cash\Entity\CashDoc", inversedBy="statement")
+    * @ORM\JoinColumn(name="cash_doc_id", referencedColumnName="id")
+     */
+    private $cashDoc;
     
     /**
      * Возвращает Id
@@ -660,7 +675,7 @@ class Statement {
     }
 
     /**
-     * Устанавливает флаг обмена 1
+     * Устанавливает флаг обмена
      * @param int $swap1
      */
     public function setSwap1($swap1) 
@@ -668,4 +683,63 @@ class Statement {
         $this->swap1 = $swap1;
     }     
     
+    /**
+     * Возвращает флаг pay.
+     * @return int
+     */
+    public function getPay() 
+    {
+        return $this->pay;
+    }
+
+    /**
+     * Returns possible pay as array.
+     * @return array
+     */
+    public static function getPayList() 
+    {
+        return [
+            self::PAY_NEW => 'Новый',
+            self::PAY_CHECK => 'Проверен'
+        ];
+    }    
+    
+    /**
+     * Returns pay as string.
+     * @return string
+     */
+    public function getPayAsString()
+    {
+        $list = self::getPayList();
+        if (isset($list[$this->pay]))
+            return $list[$this->pay];
+        
+        return 'Unknown';
+    }    
+
+    /**
+     * Устанавливает флаг pay
+     * @param int $pay
+     */
+    public function setPay($pay) 
+    {
+        $this->pay = $pay;
+    }     
+    
+    /**
+     * 
+     * @return CashDoc
+     */
+    public function getCashDoc() 
+    {
+        return $this->cashDoc;
+    }
+    
+    /**
+     * @param CashDoc $cashDoc
+     */
+    public function setCashDoc($cashDoc)
+    {
+        $this->cashDoc = $cashDoc;
+    }
 }

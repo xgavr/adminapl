@@ -19,6 +19,7 @@ use Company\Entity\Cost;
 use Cash\Entity\CashTransaction;
 use User\Entity\User;
 use Company\Entity\Contract;
+use Bank\Entity\Statement;
 
 /**
  * Description of CashOut
@@ -187,7 +188,12 @@ class CashDoc {
    */
    private $userTransactions;    
     
-    /**
+   /**
+    * @ORM\OneToOne(targetEntity="Bank\Entity\Statement", mappedBy="cashDoc")
+   */
+   private $statement;    
+
+   /**
      * Constructor.
      */
     public function __construct() 
@@ -898,6 +904,15 @@ class CashDoc {
     public function addUserTransaction($userTransaction)
     {
         $this->userTransactions[] = $userTransaction;
+    }
+    
+    /**
+     * 
+     * @return Statement
+     */
+    public function getStatement()
+    {
+        return $this->statement;
     }
     
     /**

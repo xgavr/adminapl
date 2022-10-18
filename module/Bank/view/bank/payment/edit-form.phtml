@@ -386,6 +386,7 @@ $form->prepare();
             $('input[name="counterpartyAccountNumber"]').val(data['rs']);
             $('input[name="counterpartyBankBik"]').val(data['bik']);
             $('input[name="purpose"]').val(data['purpose']);
+            $('select[name="nds"]').val(data['nds']);
             changeNds();
             bikInfo(data['bik']); // company/legal/bik-inn-partial.phtml
         });    

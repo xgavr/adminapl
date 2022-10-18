@@ -178,6 +178,7 @@ class PaymentManager
                     ->findCurrentContract($company, $legal, date('Y-m-d'), Contract::PAY_CASHLESS);
             if ($contract){
                 $data['purpose'] = 'Оплата по '.$contract->getContractPresent('договору');
+                $data['nds'] = $contract->getNds();
             }
         } 
         
@@ -207,8 +208,8 @@ class PaymentManager
                             'counterpartyKpp' => $detail['kpp'],
                             'counterpartyName' => $detail['name'],
                             'paymentDate' => $data['paymentDate'],
-                            'nds' => Payment::NDS_20,
-                            'purpose' => $detail['purpose'].' '.Payment::getNdsList()[Payment::NDS_20].' '.Payment::nds($row['amount'], Payment::NDS_20),
+                            'nds' => $detail['nds'],
+                            'purpose' => $detail['purpose'].' '.Payment::getNdsList()[$detail['nds']].' '.Payment::nds($row['amount'], $detail['nds']),
                             'bankAccount' => $bankAccount,
                             'supplier' => $supplier,
                         ];

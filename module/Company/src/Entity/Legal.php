@@ -428,7 +428,6 @@ class Legal {
     {
         $this->bankAccounts[] = $bankAccount;
     }    
-
     
     /**
      * @return array
@@ -511,6 +510,21 @@ class Legal {
         return false;
     }
     
+    /**
+     * Получить офисы
+     */
+    public function getOffices()
+    {
+        $result = [];
+        foreach ($this->contacts as $contact){
+            if ($contact->getOffice()){
+                $result[] = $contact->getOffice();
+            }
+        }
+        
+        return $result;
+    }
+
     /**
      * Представдение компании
      * @param Office $office

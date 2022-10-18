@@ -111,11 +111,18 @@ class Cash {
     private $office;
     
     /**
+    * @ORM\OneToMany(targetEntity="Company\Entity\BankAccount", mappedBy="cash")
+    * @ORM\JoinColumn(name="id", referencedColumnName="cash_id")
+     * @ORM\OrderBy({"status" = "ASC", "id" = "DESC"})
+     */
+    private $bankAccounts;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
-        
+        $this->bankAccounts = new ArrayCollection();        
     }    
     
     public function getId() 
@@ -492,6 +499,14 @@ class Cash {
         $office->addCash($this);
     }
 
+    /**
+     * Assigns.
+     */
+    public function addBankAccount($bankAccount)
+    {
+        $this->bankAccounts[] = $bankAccount;
+    }    
+    
     /**
      * Массив для формы
      * @return array 

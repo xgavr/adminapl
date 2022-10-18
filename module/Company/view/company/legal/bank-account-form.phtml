@@ -30,6 +30,10 @@ $form->get('accountType')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('cash')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 if ($legal->isOfficeLegal()){
     $form->get('api')->setAttributes([
         'class'=>'form-control', 
@@ -45,96 +49,99 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'С�
 $form->prepare();
 
 ?>
+<?= $this->form()->openTag($form); ?>
 
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Банковский счет</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 
-            
-            <?= $this->form()->openTag($form); ?>
-            
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Банковский счет</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('rs')); ?>
+                <?= $this->formElement($form->get('rs')); ?>
+                <?= $this->formElementErrors($form->get('rs')); ?>                  
             </div>
-            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('rs')); ?>
-                            <?= $this->formElement($form->get('rs')); ?>
-                            <?= $this->formElementErrors($form->get('rs')); ?>                  
-                        </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('bik')); ?>
-                            <div class="input-group">
-                                <?= $this->formElement($form->get('bik')); ?>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" id="bik-info" type="button" data-toggle="tooltip" data-placement="top" title="Заполнить из справочника БИК">БИК</button>
-                                </span>                                                            
-                            </div>
-                            <?= $this->formElementErrors($form->get('bik')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('name')); ?>
-                            <?= $this->formElement($form->get('name')); ?>
-                            <?= $this->formElementErrors($form->get('name')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('city')); ?>
-                            <?= $this->formElement($form->get('city')); ?>
-                            <?= $this->formElementErrors($form->get('city')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('ks')); ?>
-                            <?= $this->formElement($form->get('ks')); ?>
-                            <?= $this->formElementErrors($form->get('ks')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('status')); ?>
-                            <?= $this->formElement($form->get('status')); ?>
-                            <?= $this->formElementErrors($form->get('status')); ?>                  
-                        </div>
-                    </div>    
-
-                        <?php if ($legal->isOfficeLegal()):?>
-                        
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <?= $this->formLabel($form->get('accountType')); ?>
-                                    <?= $this->formElement($form->get('accountType')); ?>
-                                    <?= $this->formElementErrors($form->get('accountType')); ?>                  
-                                </div>
-
-                                <div class="form-group">
-                                    <?= $this->formLabel($form->get('statement')); ?>
-                                    <?= $this->formElement($form->get('statement')); ?>
-                                    <?= $this->formElementErrors($form->get('statement')); ?>                  
-                                </div>
-
-                                <div class="form-group">
-                                    <?= $this->formLabel($form->get('api')); ?>
-                                    <?= $this->formElement($form->get('api')); ?>
-                                    <?= $this->formElementErrors($form->get('api')); ?>                  
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?= $this->formElement($form->get('csrf')); ?>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('bik')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('bik')); ?>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" id="bik-info" type="button" data-toggle="tooltip" data-placement="top" title="Заполнить из справочника БИК">БИК</button>
+                    </span>                                                            
                 </div>
-            </div>    
-                
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary" id="bank-account-submit">Сохранить</button>
+                <?= $this->formElementErrors($form->get('bik')); ?>                  
             </div>
-            
-            <?= $this->form()->closeTag(); ?>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('city')); ?>
+                <?= $this->formElement($form->get('city')); ?>
+                <?= $this->formElementErrors($form->get('city')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('ks')); ?>
+                <?= $this->formElement($form->get('ks')); ?>
+                <?= $this->formElementErrors($form->get('ks')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>    
+
+            <?php if ($legal->isOfficeLegal()):?>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('accountType')); ?>
+                        <?= $this->formElement($form->get('accountType')); ?>
+                        <?= $this->formElementErrors($form->get('accountType')); ?>                  
+                    </div>
+
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('statement')); ?>
+                        <?= $this->formElement($form->get('statement')); ?>
+                        <?= $this->formElementErrors($form->get('statement')); ?>                  
+                    </div>
+
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('cash')); ?>
+                        <?= $this->formElement($form->get('cash')); ?>
+                        <?= $this->formElementErrors($form->get('cash')); ?>                  
+                    </div>
+
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('api')); ?>
+                        <?= $this->formElement($form->get('api')); ?>
+                        <?= $this->formElementErrors($form->get('api')); ?>                  
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?= $this->formElement($form->get('csrf')); ?>
+    </div>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="bank-account-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
             
 <script>
     $('#bank-account-submit').on('click', function() {

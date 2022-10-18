@@ -128,7 +128,9 @@ class BankManager
         if ($statement){
             $data['swap1'] = $statement->getSwap1();
         } else {
-            $statement = new Statement();            
+            $statement = new Statement(); 
+            $statement->setPay(Statement::PAY_NEW);
+            $statement->setCashDoc(null);
         }
         
         $filter = new \Laminas\Filter\Word\SeparatorToCamelCase('_');

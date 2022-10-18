@@ -18,6 +18,7 @@ use Company\Form\BankAccountForm;
 use Company\Form\ContractForm;
 use Application\Entity\Contact;
 use Laminas\View\Model\JsonModel;
+use Cash\Entity\Cash;
 
 class LegalController extends AbstractActionController
 {
@@ -430,16 +431,33 @@ class LegalController extends AbstractActionController
         } else {
             $bankAccount = null;
         }
-        
-        
+                
         $form = new BankAccountForm();
 
+        $cashList = [0 => 'нет'];
+        $form->get('cash')->setAttribute('disabled', 'true');
+        if ($legal->isOfficeLegal()){
+            $offices = $legal->getOffices();
+            foreach ($offices as $office){
+                foreach ($office->getCashes() as $cash){
+                    $cashList[$cash->getId()] = '('.$office->getName().') '.$cash->getName();
+                }
+            }    
+            $form->get('cash')->removeAttribute('disabled');
+        }
+        
+        $form->get('cash')->setValueOptions($cashList);
+        
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
             $form->setData($data);
 
             if ($form->isValid()) {
+                if (!empty($data['cash'])){
+                    $data['cash'] = $this->entityManager->getRepository(Cash::class)
+                            ->find($data['cash']);
+                }
 
                 if ($bankAccount){
                     $this->legalManager->updateBankAccount($bankAccount, $data, true);                    
@@ -464,7 +482,8 @@ class LegalController extends AbstractActionController
                     'status' => $bankAccount->getStatus(),
                     'accountType' => $bankAccount->getAccountType(),
                     'api' => $bankAccount->getApi(),  
-                    'statement' => $bankAccount->getStatement(),  
+                    'statement' => $bankAccount->getStatement(),
+                    'cash' => ($bankAccount->getCash()) ? $bankAccount->getCash()->getId():null,
                 ];
                 $form->setData($data);
             }    
@@ -644,6 +663,7 @@ class LegalController extends AbstractActionController
                     'company' => $contract->getCompany(),
                     'kind' =>$contract->getKind(),
                     'pay' => $contract->getPay(),
+                    'nds' => $contract->getNds(),
                 ];
                 $form->setData($data);
             }    

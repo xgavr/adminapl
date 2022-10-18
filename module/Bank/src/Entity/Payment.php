@@ -711,6 +711,19 @@ class Payment {
     }    
     
     /**
+     * Returns possible nds percent as array.
+     * @return array
+     */
+    public static function getNdsPercentList() 
+    {
+        return [
+            self::NDS_NO => 'без НДС',
+            self::NDS_10 => '10%',
+            self::NDS_20 => '20%',
+        ];
+    }    
+
+    /**
      * Расчитать ндс
      * @param float $amount
      * @param integer $nds
@@ -742,6 +755,19 @@ class Payment {
         return 'Unknown';
     }    
     
+    /**
+     * Returns nds percent as string.
+     * @return string
+     */
+    public function getNdsPercentAsString()
+    {
+        $list = self::getNdsPercentList();
+        if (isset($list[$this->nds]))
+            return $list[$this->nds];
+        
+        return 'Unknown';
+    }    
+
     /**
      * Sets nds.
      * @param int $nds     

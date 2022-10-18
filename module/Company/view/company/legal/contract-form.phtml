@@ -10,6 +10,10 @@ $form->get('pay')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('nds')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('name')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -76,6 +80,12 @@ $form->prepare();
                             <?= $this->formLabel($form->get('pay')); ?>
                             <?= $this->formElement($form->get('pay')); ?>
                             <?= $this->formElementErrors($form->get('pay')); ?>                  
+                        </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('nds')); ?>
+                            <?= $this->formElement($form->get('nds')); ?>
+                            <?= $this->formElementErrors($form->get('nds')); ?>                  
                         </div>
 
                         <div class="form-group">

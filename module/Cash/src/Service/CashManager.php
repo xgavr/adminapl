@@ -29,6 +29,7 @@ use Cash\Form\CashOutForm;
 use Application\Entity\Phone;
 use User\Filter\PhoneFilter;
 use Application\Entity\Contact;
+use Bank\Entity\Statement;
 
 /**
  * Description of CashManager
@@ -671,4 +672,13 @@ class CashManager {
         $form->get('company')->setValueOptions($companyList);
     }    
     
+    /**
+     * Создать платеж из выписки
+     * @param Statement $statement
+     * @return CashDoc
+     */
+    public function cashDocFromStatement($statement)
+    {
+        
+    }
 }
