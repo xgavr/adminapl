@@ -138,8 +138,8 @@ class VtpRepository extends EntityRepository{
 //                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
                 
                 $or = $queryBuilder->expr()->orX();
-                if (is_numeric($q)){
-                    $or->add($queryBuilder->expr()->eq('FLOOR(v.amount)', floor($q)));
+                if (is_numeric($params['q'])){
+                    $or->add($queryBuilder->expr()->eq('FLOOR(v.amount)', floor($params['q'])));
                 }    
 
                 $or->add($queryBuilder->expr()->like('g.code', '\''.$articleCodeFilter->filter($params['q']).'%\''));
@@ -147,7 +147,7 @@ class VtpRepository extends EntityRepository{
                 $queryBuilder->andWhere($or);        
             }
         }
-        var_dump($queryBuilder->getQuery()->getSQL());
+//        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }    
     
