@@ -68,11 +68,11 @@ class AplBankService {
         $result['valueDate']         = $statement->getChargeDate();     //ДатаСписано ДатаПоступило
         $result['docNum']            = $statement->getPaymentNumber();  //Номер
         $result['docDate']           = $statement->getPaymentDate();    //Дата
-        $result['docSum']            = number_format(abs($statement->getАmount()), 2, '.', ''); //Сумма
+        $result['docSum']            = number_format(abs($statement->getAmount()), 2, '.', ''); //Сумма
         $result['purpose']           = $statement->getPaymentPurpose(); //НазначениеПлатежа
         $result['bankSistemId']      = $statement->getBankSystemId(); //уникальный номер в банке
         
-        if ($statement->getАmount() > 0){ //Поступление на счет
+        if ($statement->getAmount() > 0){ //Поступление на счет
             
             $result['dc'] = 0;
             $result['payerAcc']          = $statement->getCounterpartyAccountNumber(); //ПлательщикРасчСчет
