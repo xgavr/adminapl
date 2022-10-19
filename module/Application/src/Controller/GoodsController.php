@@ -1770,8 +1770,8 @@ class GoodsController extends AbstractActionController
         }
         
         e:        
-        return new JsonModel([
-            'data' => $result,
-        ]);          
+        return new JsonModel(
+            $result
+        );          
     }    
 }
