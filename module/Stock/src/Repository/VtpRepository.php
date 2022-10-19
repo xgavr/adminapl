@@ -142,7 +142,7 @@ class VtpRepository extends EntityRepository{
                     $or->add($queryBuilder->expr()->eq('FLOOR(v.amount)', floor($q)));
                 }    
 
-                $or->add($queryBuilder->expr()->like('g.code', $articleCodeFilter->filter($params['q']).'%'));
+                $or->add($queryBuilder->expr()->like('g.code', '"'.$articleCodeFilter->filter($params['q']).'%"'));
                 
                 $queryBuilder->andWhere($or);        
             }
@@ -290,7 +290,7 @@ class VtpRepository extends EntityRepository{
                     $or->add($queryBuilder->expr()->eq('FLOOR(v.amount)', floor($q)));
                 }    
 
-                $or->add($queryBuilder->expr()->like('g.code', $articleCodeFilter->filter($params['q']).'%'));
+                $or->add($queryBuilder->expr()->like('g.code', '"'.$articleCodeFilter->filter($params['q']).'%"'));
                 
                 
                 $queryBuilder->andWhere($or);        
