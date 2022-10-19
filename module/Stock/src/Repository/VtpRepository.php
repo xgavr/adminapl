@@ -126,11 +126,25 @@ class VtpRepository extends EntityRepository{
             }
             if (!empty($params['q'])){     
                 $articleCodeFilter = new ArticleCode(); 
+//                $queryBuilder->distinct()
+//                        ->join('v.vtpGoods', 'vg')
+//                        ->join('vg.good', 'g')
+//                        ->andWhere('g.code like :q')
+//                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
+                
+                $or = $queryBuilder->expr()->orX();
+                if (is_numeric($q)){
+                    $or->add($queryBuilder->expr()->eq('FLOOR(v.amount)', floor($q)));
+                }    
+
+                $or->add($queryBuilder->expr()->like('g.code', $articleCodeFilter->filter($params['q']).'%'));
+                
+                
                 $queryBuilder->distinct()
                         ->join('v.vtpGoods', 'vg')
                         ->join('vg.good', 'g')
-                        ->andWhere('g.code like :q')
-                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
+                        ;
+                $queryBuilder->andWhere($or);        
             }
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
@@ -258,12 +272,27 @@ class VtpRepository extends EntityRepository{
                             ->setParameter('status', $params['status']);
                 }    
             }
-            if (!empty($params['q'])){                
+            if (!empty($params['q'])){        
+                $articleCodeFilter = new ArticleCode(); 
+//                $queryBuilder->distinct()
+//                        ->join('v.vtpGoods', 'vg')
+//                        ->join('vg.good', 'g')
+//                        ->andWhere('g.code like :q')
+//                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
+                
+                $or = $queryBuilder->expr()->orX();
+                if (is_numeric($q)){
+                    $or->add($queryBuilder->expr()->eq('FLOOR(v.amount)', floor($q)));
+                }    
+
+                $or->add($queryBuilder->expr()->like('g.code', $articleCodeFilter->filter($params['q']).'%'));
+                
+                
                 $queryBuilder->distinct()
                         ->join('v.vtpGoods', 'vg')
                         ->join('vg.good', 'g')
-                        ->andWhere('g.code like :q')
-                        ->setParameter('q', $params['q'].'%');
+                        ;
+                $queryBuilder->andWhere($or);        
             }
         }
         
