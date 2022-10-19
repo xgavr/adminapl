@@ -773,7 +773,7 @@ class CashManager {
         ];
         
         $companyAccount = $this->entityManager->getRepository(BankAccount::class)
-                ->findOneBy(['account' => $statement->getAccount()]);
+                ->findOneBy(['rs' => $statement->getAccount()]);
         $cash = $companyAccount->getCash();
         if ($cash){
             $data['cash'] = $cash;
