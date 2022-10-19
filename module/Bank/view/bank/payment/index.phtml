@@ -213,6 +213,9 @@
             dataType: 'json',
             success: function( data ) {
                 var message = 'Ошибка создания платежа!';
+                if (data.status){
+                    message = 'Платеж принят банком!';
+                }
                 if (data.message){
                     message += '<br/>'+data.message;
                 }
@@ -226,6 +229,7 @@
                     message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>'+message+'</p>',
                     closeButton: true
                 });
+                refreshTable();
             },
             error: function( data ) {
                 dialog.modal('hide');
