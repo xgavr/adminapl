@@ -363,7 +363,7 @@ class Statement {
      * Возвращает сумму.
      * @return float
      */
-    public function getАmount() 
+    public function getAmount() 
     {
         return $this->amount;
     }

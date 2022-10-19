@@ -64,6 +64,7 @@ $this->headScript()
                              <th data-field='counterpartyBankBik' data-sortable="false" data-formatter="formatAccount">БИК/счет</th>
                              <th data-field="counterpartyName" data-formatter="formatCounterparty">Контрагент</th>
                              <th data-field="paymentDate" data-formatter="formatDateNumber">Дата/Номер ПП</th>
+                             <th data-field="pay" data-formatter="payFormatter"></th>             
         <!--                     <th data-field="bik">Счет</th>
                              <th data-field="account">Счет</th>-->
                          </tr>                
@@ -405,6 +406,31 @@ $this->headScript()
         
         return '';
     }
+
+    function payFormatter(value, row){
+        var disabled = '';
+        if (!row.requestId){
+            var url = '/payment/send/'+row.id;
+            btn = '<button ' + disabled;
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs send-payment"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' modal-url="'+url+'" title="Отправить в банк">';
+            btn += '<span class="glyphicon glyphicon-send" aria-hidden="true"></span>';
+            btn += '</button>';
+            return btn;
+        } else {
+            var url = '/payment/status/'+row.id;
+            btn = '<button ' + disabled;
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs status-payment"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' modal-url="'+url+'" title="Проверить статус платежа">';
+            btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
+            btn += '</button>';
+            return btn;
+        }    
+    }    
 
     function aplFormatter(value, row){
         var result = '';

@@ -30,6 +30,7 @@ use Application\Entity\Phone;
 use User\Filter\PhoneFilter;
 use Application\Entity\Contact;
 use Bank\Entity\Statement;
+use Company\Entity\BankAccount;
 
 /**
  * Description of CashManager
@@ -445,7 +446,7 @@ class CashManager {
         
         $cashDoc = new CashDoc();
         $cashDoc->setAmount($data['amount']);
-        $cashDoc->setAplId($data['aplId'] ?: 0);
+        $cashDoc->setAplId(empty($data['aplId']) ?: 0);
         $cashDoc->setCash(empty($data['cash']) ? null:$data['cash']);
         $cashDoc->setCashRefill(empty($data['cashRefill']) ? null:$data['cashRefill']);
         $cashDoc->setCheckStatus($data['checkStatus'] ?: CashDoc::CHECK_RETIRED);
@@ -494,7 +495,7 @@ class CashManager {
         $data = $this->prepareData($data);
 
         $cashDoc->setAmount($data['amount']);
-        $cashDoc->setAplId($data['aplId'] ?: 0);
+        $cashDoc->setAplId(empty($data['aplId']) ?: 0);
         $cashDoc->setCash(empty($data['cash']) ? null:$data['cash']);
         $cashDoc->setCashRefill(empty($data['cashRefill']) ? null:$data['cashRefill']);
         $cashDoc->setCheckStatus($data['checkStatus'] ?: CashDoc::CHECK_RETIRED);
@@ -673,12 +674,130 @@ class CashManager {
     }    
     
     /**
+     * Оплата/возврат от поставщика
+     * @param Statement $statement
+     * @param array $data
+     * 
+     * @return CashDoc
+     */
+    private function supplierCashDocFromStatement($statement, $data)
+    {
+        $cashDoc = $statement->getCashDoc();
+
+        if ($statement->getAmount() > 0){
+            $data['kind'] = CashDoc::KIND_IN_RETURN_SUPPLIER;
+        } else {
+            $data['kind'] = CashDoc::KIND_OUT_SUPPLIER;
+        }
+
+        if ($cashDoc){
+            $this->updateCashDoc($cashDoc, $data);
+        } else {
+            $cashDoc = $this->addCashDoc($data);
+        }
+        
+        $statement->setPay(Statement::PAY_CHECK);
+        $statement->setCashDoc($cashDoc);
+        $this->entityManager->persist($statement);
+        $this->entityManager->flush();
+        
+        return $cashDoc;
+    }
+    
+    /**
+     * Оплата/возврат от покупателея
+     * @param Statement $statement
+     * @param array $data
+     * 
+     * @return CashDoc
+     */
+    private function clientCashDocFromStatement($statement, $data)
+    {
+        $cashDoc = $statement->getCashDoc();
+        $legal = null;
+        $legalAccount = $this->entityManager->getRepository(BankAccount::class)
+                ->findBy(['rs' => $statement->getCounterpartyAccountNumber()]);
+        if ($legalAccount){
+            $legal = $legalAccount->getLegal()->getId();
+        }
+        if (!$legal){
+            $legal = $this->entityManager->getRepository(Legal::class)
+                    ->findOneBy(['inn' => $statement->getСounterpartyInn(), 'kpp' => $statement->setCounterpartyKpp()]);
+        }
+        if (!$legal){
+            $legal = $this->entityManager->getRepository(Legal::class)
+                    ->findOneBy(['inn' => $statement->getСounterpartyInn()]);
+        }
+        if ($legal){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->findBy(['legal' => $legal->getId(), ['id' => 'DESC']]);
+            if ($order){
+                $data['order'] = $order;
+                $data['contact'] = $order->getContact();
+                if ($statement->getAmount() > 0){
+                    $data['kind'] = CashDoc::KIND_IN_PAYMENT_CLIENT;
+                } else {
+                    $data['kind'] = CashDoc::KIND_OUT_RETURN_CLIENT;
+                }
+
+                if ($cashDoc){
+                    $this->updateCashDoc($cashDoc, $data);
+                } else {
+                    $cashDoc = $this->addCashDoc($data);
+                }                
+            }            
+        }
+
+        $statement->setPay(Statement::PAY_CHECK);
+        $statement->setCashDoc($cashDoc);
+        $this->entityManager->persist($statement);
+        $this->entityManager->flush();
+        
+        return $cashDoc;
+    }
+    
+    /**
      * Создать платеж из выписки
+     * оплата/возврат поставщику
+     * поступление/возврат от покупателя
+     * 
      * @param Statement $statement
      * @return CashDoc
      */
     public function cashDocFromStatement($statement)
     {
+        $cashDoc = $statement->getCashDoc();
+        $data = [
+            'amount' => abs($statement->getAmount()),
+            'status' => CashDoc::STATUS_ACTIVE,
+        ];
         
+        $companyAccount = $this->entityManager->getRepository(BankAccount::class)
+                ->findOneBy(['account' => $statement->getAccount()]);
+        $cash = $companyAccount->getCash();
+        if ($cash){
+            $data['cash'] = $cash;
+            $data['checkStatus'] = $cash->getCheckStatus();
+            $data['comment'] = $statement->getPaymentPurpose();
+            $data['company'] = $companyAccount->getLegal();
+            $data['dateOper'] = $statement->getPaymentDate();
+            $legalAccount = $this->entityManager->getRepository(BankAccount::class)
+                    ->findOneBy(['rs' => $statement->getCounterpartyAccountNumber()]);
+            if ($legalAccount){
+                $data['legal'] = $legalAccount->getLegal();
+                $supplier = $legalAccount->getLegal()->getSupplier();
+                if ($supplier){  
+                    return; $this->supplierCashDocFromStatement($statement, $data);
+                }                  
+            }              
+            return $this->clientCashDocFromStatement($statement, $data);
+        }
+
+        $statement->setPay(Statement::PAY_CHECK);
+        $statement->setCashDoc($cashDoc);
+        $this->entityManager->persist($statement);
+        $this->entityManager->flush();
+        
+        return $cashDoc;
     }
 }

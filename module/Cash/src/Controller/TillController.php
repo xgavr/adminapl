@@ -12,17 +12,14 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Cash\Entity\Cash;
 use Cash\Entity\CashDoc;
-use Cash\Form\CashForm;
 use Cash\Form\CashInForm;
 use Cash\Form\CashOutForm;
 use Company\Entity\Office;
-use Application\Entity\Supplier;
-use Company\Entity\Cost;
-use User\Entity\User;
 use Company\Entity\Legal;
 use Application\Entity\Phone;
 use User\Filter\PhoneFilter;
 use Application\Entity\Order;
+use Bank\Entity\Statement;
 
 
 class TillController extends AbstractActionController
@@ -389,5 +386,20 @@ class TillController extends AbstractActionController
             'form' => $form,
             'cashDoc' => $cashDoc,
         ]);        
-    }        
+    }     
+    
+    public function statementToCashDocAction()
+    {
+        $statementId = $this->params()->fromRoute('id', -1);
+        if ($statementId > 0){
+            $statement = $this->entityManager->getRepository(Statement::class)
+                    ->find($statementId);
+            if ($statement){
+                $this->cashManager->cashDocFromStatement($statement);
+            }
+        }
+        return new JsonModel(
+           ['ok']
+        );                   
+    }
 }
