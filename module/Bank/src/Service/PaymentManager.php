@@ -318,7 +318,7 @@ class PaymentManager
         foreach ($payments as $payment){
             $this->sendPayment($payment);
             $this->entityManager->refresh($payment);
-            if ($payment->getStatus() !== Payment::STATUS_SUCCESS){
+            if ($payment->getStatus() != Payment::STATUS_SUCCESS){
                 break;
             }
         }
