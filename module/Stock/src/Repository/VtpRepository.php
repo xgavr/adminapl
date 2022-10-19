@@ -125,6 +125,11 @@ class VtpRepository extends EntityRepository{
                 }    
             }
             if (!empty($params['q'])){     
+                $queryBuilder->distinct()
+                        ->join('v.vtpGoods', 'vg')
+                        ->join('vg.good', 'g')
+                        ;
+
                 $articleCodeFilter = new ArticleCode(); 
 //                $queryBuilder->distinct()
 //                        ->join('v.vtpGoods', 'vg')
@@ -139,11 +144,6 @@ class VtpRepository extends EntityRepository{
 
                 $or->add($queryBuilder->expr()->like('g.code', $articleCodeFilter->filter($params['q']).'%'));
                 
-                
-                $queryBuilder->distinct()
-                        ->join('v.vtpGoods', 'vg')
-                        ->join('vg.good', 'g')
-                        ;
                 $queryBuilder->andWhere($or);        
             }
         }
@@ -273,6 +273,11 @@ class VtpRepository extends EntityRepository{
                 }    
             }
             if (!empty($params['q'])){        
+                $queryBuilder->distinct()
+                        ->join('v.vtpGoods', 'vg')
+                        ->join('vg.good', 'g')
+                        ;
+
                 $articleCodeFilter = new ArticleCode(); 
 //                $queryBuilder->distinct()
 //                        ->join('v.vtpGoods', 'vg')
@@ -288,10 +293,6 @@ class VtpRepository extends EntityRepository{
                 $or->add($queryBuilder->expr()->like('g.code', $articleCodeFilter->filter($params['q']).'%'));
                 
                 
-                $queryBuilder->distinct()
-                        ->join('v.vtpGoods', 'vg')
-                        ->join('vg.good', 'g')
-                        ;
                 $queryBuilder->andWhere($or);        
             }
         }
