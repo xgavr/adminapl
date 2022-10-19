@@ -118,6 +118,12 @@ class VtpRepository extends EntityRepository{
                             ->setParameter('statusDoc', $params['statusDoc']);
                 }    
             }
+            if (!empty($params['status'])){
+                if (is_numeric($params['status'])){
+                    $queryBuilder->andWhere('v.status = :status')
+                            ->setParameter('status', $params['status']);
+                }    
+            }
             if (!empty($params['q'])){     
                 $articleCodeFilter = new ArticleCode(); 
                 $queryBuilder->distinct()
@@ -244,6 +250,12 @@ class VtpRepository extends EntityRepository{
                 if (is_numeric($params['statusDoc'])){
                     $queryBuilder->andWhere('v.statusDoc = :statusDoc')
                             ->setParameter('statusDoc', $params['statusDoc']);
+                }    
+            }
+            if (!empty($params['status'])){
+                if (is_numeric($params['status'])){
+                    $queryBuilder->andWhere('v.status = :status')
+                            ->setParameter('status', $params['status']);
                 }    
             }
             if (!empty($params['q'])){                

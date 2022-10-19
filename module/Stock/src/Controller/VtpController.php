@@ -74,6 +74,7 @@ class VtpController extends AbstractActionController
         $officeId = $this->params()->fromQuery('office');
         $year_month = $this->params()->fromQuery('month');
         $statusDoc = $this->params()->fromQuery('statusDoc');
+        $status = $this->params()->fromQuery('status');
         
         $year = $month = null;
         if ($year_month){
@@ -84,6 +85,7 @@ class VtpController extends AbstractActionController
             'q' => trim($q), 'sort' => $sort, 'order' => $order, 
             'supplierId' => $supplierId, 'officeId' => $officeId,
             'year' => $year, 'month' => $month, 'statusDoc' => $statusDoc,
+            'status' => $status,
         ];
         
         if ($ptu){
