@@ -293,6 +293,18 @@ $this->headScript()
         });
     });
     
+    $(document).on('click', '.statement-to-cash-doc', function (e) {
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: false
+        });
+        var url = $(e.currentTarget).attr('modal-url');
+        $.getJSON( url, function( data ) {
+            refreshTable();
+            dialog.modal('hide');
+        });            
+    });      
+    
     $('#updateStatement').on('click', function(e) {
         bootbox.prompt({
             title: "Обновить выписку за дату:",
@@ -408,28 +420,15 @@ $this->headScript()
     }
 
     function payFormatter(value, row){
-        var disabled = '';
-        if (!row.requestId){
-            var url = '/payment/send/'+row.id;
-            btn = '<button ' + disabled;
-            btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs send-payment"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'" title="Отправить в банк">';
-            btn += '<span class="glyphicon glyphicon-send" aria-hidden="true"></span>';
-            btn += '</button>';
-            return btn;
-        } else {
-            var url = '/payment/status/'+row.id;
-            btn = '<button ' + disabled;
-            btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs status-payment"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'" title="Проверить статус платежа">';
-            btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
-            btn += '</button>';
-            return btn;
-        }    
+        var url = '/till/statement-to-cash-doc/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs statement-to-cash-doc"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'" title="">';
+        btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
     }    
 
     function aplFormatter(value, row){
