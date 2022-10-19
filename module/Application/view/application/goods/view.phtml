@@ -2,6 +2,7 @@
     use Application\Entity\Oem;
     use Stock\Entity\Movement;
     use Application\Entity\Rawprice;
+    use Stock\Entity\Reserve;
     
     $priceCols = $goodsManager->priceCols($goods);
     
@@ -277,7 +278,7 @@
                         <tr>
                              <th data-field="office">Офис</th>
                              <th data-field="rest"      data-type="numeric" data-width="20" data-align="right">Наличие</th>
-                             <th data-field="reserve"   data-type="numeric" data-width="20" data-align="right">Резерв</th>
+                             <th data-field="reserve"   data-type="numeric" data-width="20" data-align="right" data-formatter="reserveFormatter">Резерв</th>
                              <th data-field="delivery"  data-type="numeric" data-width="20" data-align="right">Доставка</th>
                              <th data-field="vozvrat"   data-type="numeric" data-width="20" data-align="right">Возврат</th>
                              <th data-field="available" data-type="numeric" data-width="20" data-align="right">Доступно</th>
@@ -472,6 +473,17 @@
         $('.editable').editable();
     });
 
+    $(document).on('click', '.reserve-show', function (e) {
+        var url = $(e.currentTarget).attr('modal-url');
+        $.getJSON( url, function( data ) {
+            console.log(data);
+//            var dialog = bootbox.dialog({
+//                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+//                closeButton: false
+//            });
+        });            
+    });  
+
     $(function () {
         $('#priceStatusSelect').change(function (){
             $('#priceTable').bootstrapTable('refresh');
@@ -656,6 +668,10 @@
             return -value
         }
         return '';
+    }
+    
+    function reserveFormatter(value, row){
+        return "<a href='#' class='reserve-show' modal-url='/goods/reserve-show/<?= $goods->getId()?>?status=<?= Reserve::STATUS_RESERVE?>'>"+value+"</a>";
     }
     
     function baseFormatter(value, row){

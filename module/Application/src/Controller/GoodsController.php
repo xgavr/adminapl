@@ -26,6 +26,7 @@ use Stock\Entity\Movement;
 use Company\Entity\Office;
 use Stock\Entity\GoodBalance;
 use Application\Entity\GoodSupplier;
+use Stock\Entity\Reserve;
 
 class GoodsController extends AbstractActionController
 {
@@ -1743,6 +1744,34 @@ class GoodsController extends AbstractActionController
         return new JsonModel([
             'id' => $goodId,
             'rest' => $rest,
+        ]);          
+    }    
+
+    public function reserveShowAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        $status = (int)$this->params()->fromQuery('status', Reserve::STATUS_RESERVE);
+
+        $result = [];
+        
+        if ($goodId<0) {
+            goto e;
+        }
+        
+        $reserves = $this->entityManager->getRepository(Reserve::class)
+                ->findBy(['good' => $goodId, 'status' => $status]);
+        foreach ($reserves as $reserve){
+            $doc = $this->entityManager->getRepository(Movement::class)
+                    ->docFromLogKey($reserve->getDocKey());
+            $result[] = [
+                'rest' => $reserve->getRest(),
+                'link' => $doc->getOpenLink(),
+            ];
+        }
+        
+        e:        
+        return new JsonModel([
+            'data' => $result,
         ]);          
     }    
 }

@@ -45,6 +45,11 @@ class Reserve {
     protected $status;
         
     /**
+     * @ORM\Column(name="doc_key")   
+     */
+    protected $docKey;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="reserves") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
@@ -89,6 +94,16 @@ class Reserve {
     public function setRest($rest) 
     {
         $this->rest = $rest;
+    }     
+
+    public function getDockey() 
+    {
+        return $this->docKey;
+    }
+
+    public function setDocKey($dockey) 
+    {
+        $this->docKey = $dockey;
     }     
 
     /**

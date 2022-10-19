@@ -9,11 +9,8 @@
 namespace Stock\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Stock\Entity\Ptu;
-use Stock\Entity\PtuGood;
 use Stock\Entity\Movement;
 use Application\Entity\Producer;
-use Application\Entity\GenericGroup;
 use Application\Entity\TokenGroup;
 use Stock\Entity\Register;
 use Stock\Entity\GoodBalance;
@@ -22,6 +19,10 @@ use Application\Entity\Order;
 use Stock\Entity\VtpGood;
 use Stock\Entity\Vtp;
 use Stock\Entity\Reserve;
+use Stock\Entity\Ptu;
+use Stock\Entity\Pt;
+use Stock\Entity\Vt;
+use Stock\Entity\St;
 
 /**
  * Description of MovementRepository
@@ -515,6 +516,31 @@ class MovementRepository extends EntityRepository{
             ]);
         }
                         
+        return;
+    }
+    
+    /**
+     * Получить ссылку на документ
+     * @param string $logkey
+     */
+    public function docFromLogKey($logkey)
+    {
+        list($docType, $id) = \explode(':', $logkey);
+        switch ($docType){
+            case 'ord': return $this->getEntityManager()->getRepository(Order::class)
+                    ->find($id);
+            case 'pt': return $this->getEntityManager()->getRepository(Pt::class)
+                    ->find($id);
+            case 'ptu': return $this->getEntityManager()->getRepository(Ptu::class)
+                    ->find($id);
+            case 'vtp': return $this->getEntityManager()->getRepository(Vtp::class)
+                    ->find($id);
+            case 'vt': return $this->getEntityManager()->getRepository(Vt::class)
+                    ->find($id);
+            case 'st': return $this->getEntityManager()->getRepository(Vt::class)
+                    ->find($id);
+        }
+        
         return;
     }
 }

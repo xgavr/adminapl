@@ -337,16 +337,25 @@ class Order {
     /**
      * Ссылка на интро
      * @param integer $orderId
+     * @param integer $aplId
      * @return string
      */
-    public static function getIntroLink($orderId)
+    public static function getIntroLink($orderId, $aplId = null)
     {
-        return "<a href='/order/intro/{$orderId}' target='_blank'>{$orderId}</a>";        
+        if (!$aplId){
+            $aplId = $orderId;
+        }
+        return "<a href='/order/intro/{$orderId}' target='_blank'>{$aplId}</a>";        
     }
     
     public function getIdLink() 
     {
         return $this->getIntroLink($this->id);
+    }
+
+    public function getOpenLink() 
+    {
+        return $this->getIntroLink($this->id, $this->aplId);
     }
 
     /**
