@@ -36,8 +36,9 @@ class BankRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $outCount = false;
-        $queryBuilder->select('s, identity(s.cashDoc) as cashDocId')
+        $queryBuilder->select('s, c')
             ->from(Statement::class, 's')
+            ->leftJoin('s.cashDoc', 'c')    
             ->orderBy('s.chargeDate', 'DESC')
             ->addOrderBy('s.id', 'DESC')    
                 ;
