@@ -741,7 +741,7 @@ class CashManager {
         }
         if ($legal){
             $order = $this->entityManager->getRepository(Order::class)
-                    ->findBy(['legal' => $legal->getId(), ['id' => 'DESC']]);
+                    ->findOneBy(['legal' => $legal->getId(), ['id' => 'DESC']]);
             if ($order){
                 $data['order'] = $order;
                 $data['contact'] = $order->getContact();
