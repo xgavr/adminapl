@@ -452,7 +452,7 @@ $this->headScript()
             cashDocId = row.cashDoc.id;
         }
         if (row.amount>0){
-            var url = '/till/edit-cash-in/'+cashDocId;
+            var url = '/till/edit-cash-in/'+cashDocId+'?statement='+row.id;
             btn += '<button';
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
@@ -462,7 +462,7 @@ $this->headScript()
             btn += '</button>';
         }    
         if (row.amount<0){
-            var url = '/till/edit-cash-out/'+cashDocId;
+            var url = '/till/edit-cash-out/'+cashDocId+'?statement='+row.id;
             btn += '<button';
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs cash-out-modal-show"';

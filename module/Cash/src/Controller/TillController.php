@@ -296,6 +296,7 @@ class TillController extends AbstractActionController
     {
         $cashDocId = (int)$this->params()->fromRoute('id', -1);
         $cashId = (int)$this->params()->fromQuery('cash', -1);
+        $statementId = (int)$this->params()->fromQuery('statement', -1);
         
         $cashDoc = null;
         
@@ -305,7 +306,7 @@ class TillController extends AbstractActionController
         }    
         
         $form = new CashInForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form, $cashDoc, $cashId);
+        $this->cashManager->cashFormOptions($form, $cashDoc, $cashId, $statementId);
         
         if ($this->getRequest()->isPost()) {
             

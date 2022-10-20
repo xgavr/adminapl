@@ -584,8 +584,9 @@ class CashManager {
      * @param CashForm $form
      * @param CashDoc $cashDoc
      * @param integer $cashId
+     * @param integer $statementId
      */
-    public function cashFormOptions($form, $cashDoc = null, $cashId = null)
+    public function cashFormOptions($form, $cashDoc = null, $cashId = null, $statementId = null)
     {
         $user = $this->logManager->currentUser();
         if ($form->has('cash')){
@@ -601,6 +602,13 @@ class CashManager {
                 }    
                 if ($cash){
                     $form->get('cash')->setValue($cash->getId());
+                }
+                if ($statementId > 0){
+                    $statement = $this->entityManager->getRepository(Statement::class)
+                            ->find($statementId);
+                    if ($statement){
+                        $form->get('amount')->setValue(abs($statement->getAmount()));
+                    }
                 }
             }           
 
