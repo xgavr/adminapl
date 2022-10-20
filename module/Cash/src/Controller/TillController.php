@@ -345,6 +345,7 @@ class TillController extends AbstractActionController
     public function editCashOutAction()
     {
         $cashDocId = (int)$this->params()->fromRoute('id', -1);
+        $statementId = (int)$this->params()->fromQuery('statement', -1);
         
         $cashDoc = null;
         
@@ -354,7 +355,7 @@ class TillController extends AbstractActionController
         }    
         
         $form = new CashOutForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form, $cashDoc);
+        $this->cashManager->cashFormOptions($form, $cashDoc, null, $statementId);
         
         if ($this->getRequest()->isPost()) {
             

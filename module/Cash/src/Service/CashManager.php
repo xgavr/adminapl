@@ -603,11 +603,14 @@ class CashManager {
                 if ($cash){
                     $form->get('cash')->setValue($cash->getId());
                 }
-                if ($statementId > 0){
+                if ($statementId > 0){ //из выписки
                     $statement = $this->entityManager->getRepository(Statement::class)
                             ->find($statementId);
                     if ($statement){
                         $form->get('amount')->setValue(abs($statement->getAmount()));
+                        if ($statement->getAmount() < 0){
+                            $form->get('kind')->setValue(CashDoc::KIND_OUT_SUPPLIER);
+                        }
                     }
                 }
             }           
@@ -724,9 +727,9 @@ class CashManager {
         $cashDoc = $statement->getCashDoc();
         $legal = null;
         $legalAccount = $this->entityManager->getRepository(BankAccount::class)
-                ->findBy(['rs' => $statement->getCounterpartyAccountNumber()]);
+                ->findOneBy(['rs' => $statement->getCounterpartyAccountNumber()]);
         if ($legalAccount){
-            $legal = $legalAccount->getLegal()->getId();
+            $legal = $legalAccount->getLegal();                
         }
         if (!$legal){
             $legal = $this->entityManager->getRepository(Legal::class)
