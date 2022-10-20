@@ -433,7 +433,7 @@
     function payFormatter(value, row){
         var url = '/till/statement-to-cash-doc/'+row.id;
         var checkClass = 'btn-info';
-        if (row.pay === <?= Statement::PAY_NEW?>){
+        if (row.pay === '<?= Statement::PAY_NEW?>'){
             checkClass = 'btn-default';
         }
         var btnClass = 'btn-default';
