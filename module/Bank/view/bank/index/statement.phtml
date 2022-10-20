@@ -1,4 +1,6 @@
 <?php
+    use Bank\Entity\Statement;
+
     $this->headTitle('Банк');
     $this->mainMenu()->setActiveItemId('company');
     $this->pageBreadcrumbs()->setItems([
@@ -6,16 +8,6 @@
                 'Предприятие'=>$this->url('company'),
                 'Банк'=>$this->url('bank', ['action' => 'statement']),
             ]);
-    
-$this->headLink()
-//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
-        ;
-
-$this->headScript()
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-            ;    
     
 ?>    
 <div class="row">
@@ -440,9 +432,17 @@ $this->headScript()
 
     function payFormatter(value, row){
         var url = '/till/statement-to-cash-doc/'+row.id;
+        var checkClass = 'btn-info';
+        if (row.pay === <?= Statement::PAY_NEW?>){
+            checkClass = 'btn-default';
+        }
+        var btnClass = 'btn-default';
+        if (row.cashDoc){
+            btnClass = 'btn-info';
+        }
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs statement-to-cash-doc"';
+        btn += ' class="btn '+checkClass+' btn-xs statement-to-cash-doc"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'" title="Связать с кассой">';
         btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
@@ -455,7 +455,7 @@ $this->headScript()
             var url = '/till/edit-cash-in/'+cashDocId+'?statement='+row.id;
             btn += '<button';
             btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
+            btn += ' class="btn '+btnClass+' btn-xs cash-in-modal-show"';
             btn += ' aria-label="Left Align"'; 
             btn += ' modal-url="'+url+'">';
             btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
@@ -465,7 +465,7 @@ $this->headScript()
             var url = '/till/edit-cash-out/'+cashDocId+'?statement='+row.id;
             btn += '<button';
             btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs cash-out-modal-show"';
+            btn += ' class="btn '+btnClass+' btn-xs cash-out-modal-show"';
             btn += ' aria-label="Left Align"'; 
             btn += ' modal-url="'+url+'">';
             btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';

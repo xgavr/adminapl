@@ -176,6 +176,7 @@ class CashManager {
                         'status' => Contract::STATUS_ACTIVE,
                         'kind' => $kind,
                         'pay' => $pay,
+                        'nds' => Contract::NDS_NO,
                     ]);
         }
         
@@ -777,6 +778,7 @@ class CashManager {
      */
     public function cashDocFromStatement($statement)
     {
+        $legal = $legalInn = $cash = $company = null;
         $cashDoc = $statement->getCashDoc();
         $data = [
             'amount' => abs($statement->getAmount()),
@@ -785,23 +787,38 @@ class CashManager {
         
         $companyAccount = $this->entityManager->getRepository(BankAccount::class)
                 ->findOneBy(['rs' => $statement->getAccount()]);
-        $cash = $companyAccount->getCash();
-        if ($cash){
-            $data['cash'] = $cash;
-            $data['checkStatus'] = $cash->getCheckStatus();
-            $data['comment'] = $statement->getPaymentPurpose();
-            $data['company'] = $companyAccount->getLegal();
-            $data['dateOper'] = $statement->getPaymentDate();
-            $legalAccount = $this->entityManager->getRepository(BankAccount::class)
-                    ->findOneBy(['rs' => $statement->getCounterpartyAccountNumber()]);
-            if ($legalAccount){
-                $data['legal'] = $legalAccount->getLegal();
-                $supplier = $legalAccount->getLegal()->getSupplier();
-                if ($supplier){  
-                    return; $this->supplierCashDocFromStatement($statement, $data);
-                }                  
-            }              
-            return $this->clientCashDocFromStatement($statement, $data);
+        $legalAccount = $this->entityManager->getRepository(BankAccount::class)
+                ->findOneBy(['rs' => $statement->getCounterpartyAccountNumber()]);
+        
+        if ($legalAccount){
+            $legal = $legalAccount->getLegal();
+            if ($legal){
+                $legalInn = $legal->getInn();
+            }
+        }
+        
+        if ($companyAccount){
+            $cash = $companyAccount->getCash();
+            $company = $companyAccount->getLegal();
+        }    
+        if ($cash && $company){
+            if ($company->getInn() != $legalInn){ 
+                $data['cash'] = $cash;
+                $data['checkStatus'] = $cash->getCheckStatus();
+                $data['comment'] = $statement->getPaymentPurpose();
+                $data['company'] = $company;
+                $data['dateOper'] = $statement->getPaymentDate();
+                $legalAccount = $this->entityManager->getRepository(BankAccount::class)
+                        ->findOneBy(['rs' => $statement->getCounterpartyAccountNumber()]);
+                if ($legalAccount){
+                    $data['legal'] = $legalAccount->getLegal();
+                    $supplier = $legalAccount->getLegal()->getSupplier();
+                    if ($supplier){  
+                        return; $this->supplierCashDocFromStatement($statement, $data);
+                    }                  
+                }              
+                return $this->clientCashDocFromStatement($statement, $data);
+            }    
         }
 
         $statement->setPay(Statement::PAY_CHECK);
