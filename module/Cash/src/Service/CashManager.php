@@ -722,7 +722,7 @@ class CashManager {
         }
         if (!$legal){
             $legal = $this->entityManager->getRepository(Legal::class)
-                    ->findOneBy(['inn' => $statement->getСounterpartyInn(), 'kpp' => $statement->setCounterpartyKpp()]);
+                    ->findOneBy(['inn' => $statement->getСounterpartyInn(), 'kpp' => $statement->getСounterpartyKpp()]);
         }
         if (!$legal){
             $legal = $this->entityManager->getRepository(Legal::class)
