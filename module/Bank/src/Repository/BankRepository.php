@@ -36,7 +36,7 @@ class BankRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $outCount = false;
-        $queryBuilder->select('s')
+        $queryBuilder->select('s, identity(s.cashDoc) as cashDocId')
             ->from(Statement::class, 's')
             ->orderBy('s.chargeDate', 'DESC')
             ->addOrderBy('s.id', 'DESC')    
@@ -59,16 +59,7 @@ class BankRepository extends EntityRepository
 
             if (is_numeric($q)){
                 $or->add($queryBuilder->expr()->eq('FLOOR(s.amount)', floor($q)));
-                $or->add($queryBuilder->expr()->eq('FLOOR(s.amount)', -floor($q)));
-                
-//                $i = -1;
-//                while ($i > -10){
-//                    if (round($q, $i)){
-//                        $or->add($queryBuilder->expr()->eq('ROUND(s.amount, '.$i.')', round($q, $i)));                        
-//                        $or->add($queryBuilder->expr()->eq('ROUND(s.amount, '.$i.')', -round($q, $i)));                        
-//                    }
-//                    $i--;
-//                }
+                $or->add($queryBuilder->expr()->eq('FLOOR(s.amount)', -floor($q)));                
             }
             $queryBuilder->andWhere($or);
         }

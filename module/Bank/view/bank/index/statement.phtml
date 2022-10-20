@@ -292,6 +292,25 @@ $this->headScript()
             $('#table_apl').bootstrapTable('refresh');
         });
     });
+
+    $(document).on('click', '.cash-in-modal-show', function (e) {
+        var url = $(e.currentTarget).attr('modal-url');
+        var urlQuery = '?cash='+$('#cashSelect').val();
+        showFormDialog({
+            id: 'cashInModal',
+            url: url+urlQuery,
+            width: '1440px'
+        });
+    });  
+    
+    $(document).on('click', '.cash-out-modal-show', function (e) {
+        var url = $(e.currentTarget).attr('modal-url');
+        showFormDialog({
+            id: 'cashOutModal',
+            url: url,
+            width: '1440px'
+        });
+    });  
     
     $(document).on('click', '.statement-to-cash-doc', function (e) {
         var dialog = bootbox.dialog({
@@ -428,6 +447,26 @@ $this->headScript()
         btn += ' modal-url="'+url+'" title="Связать с кассой">';
         btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
         btn += '</button>';
+        if (row.amount>0){
+            var url = '/till/edit-cash-in/'+row.cashDoc.id;
+            btn += '<button';
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' modal-url="'+url+'">';
+            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+            btn += '</button>';
+        }    
+        if (row.amount<0){
+            var url = '/till/edit-cash-out/'+row.cashDocid;
+            btn += '<button';
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs cash-out-modal-show"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' modal-url="'+url+'">';
+            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+            btn += '</button>';
+        }    
         return btn;
     }    
 
