@@ -447,8 +447,12 @@ $this->headScript()
         btn += ' modal-url="'+url+'" title="Связать с кассой">';
         btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
         btn += '</button>';
+        var cashDocId = '';
+        if (row.cashDoc){
+            cashDocId = row.cashDoc.id;
+        }
         if (row.amount>0){
-            var url = '/till/edit-cash-in/'+row.cashDoc.id;
+            var url = '/till/edit-cash-in/'+cashDocId;
             btn += '<button';
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
@@ -458,7 +462,7 @@ $this->headScript()
             btn += '</button>';
         }    
         if (row.amount<0){
-            var url = '/till/edit-cash-out/'+row.cashDocid;
+            var url = '/till/edit-cash-out/'+cashDocId;
             btn += '<button';
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs cash-out-modal-show"';
