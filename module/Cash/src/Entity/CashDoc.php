@@ -519,6 +519,32 @@ class CashDoc {
             default : return Contract::KIND_OTHER;    
         }
     }
+    
+    public function getAplType()
+    {
+        switch ($this->kind){
+            case $this::KIND_IN_PAYMENT_CLIENT:
+            case $this::KIND_OUT_RETURN_CLIENT:
+                return 'Users';
+            case $this::KIND_IN_RETURN_SUPPLIER:
+            case $this::KIND_OUT_SUPPLIER:                
+                return 'Suppliers';
+            default : return '';    
+        }
+    }    
+
+    public function getAplParent()
+    {
+        switch ($this->kind){
+            case $this::KIND_IN_PAYMENT_CLIENT:
+            case $this::KIND_OUT_RETURN_CLIENT:
+                return ($this->contact->getClient()) ? $this->contact->getClient()->getAplId():null;
+            case $this::KIND_IN_RETURN_SUPPLIER:
+            case $this::KIND_OUT_SUPPLIER:                
+                return ($this->legal->getSupplier()) ? $this->legal->getSupplier()->getAplId():null;
+            default : return '';    
+        }
+    }    
 
     public function isMutual()
     {

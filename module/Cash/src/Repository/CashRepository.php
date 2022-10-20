@@ -301,6 +301,8 @@ class CashRepository extends EntityRepository
             $orX = $queryBuilder->expr()->orX();
             $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_IN_PAYMENT_CLIENT));
             $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_OUT_RETURN_CLIENT));
+            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_IN_RETURN_SUPPLIER));
+            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_OUT_SUPPLIER));
             $queryBuilder->andWhere($orX);
         
         return $queryBuilder->getQuery()->getOneOrNullResult();                

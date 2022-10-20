@@ -380,6 +380,7 @@ class AplService {
                                     'act' => $row['contract'],
                                     'dateStart' => trim($row['contractdate'], ' T'),
                                     'status' => $supplier->getStatus(),
+                                    'nds' => Contract::NDS_NO,
                                 ];
                             }
                             if (is_array($contract_data)){

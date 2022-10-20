@@ -172,6 +172,7 @@ class AplCashService {
                         'status' => Contract::STATUS_ACTIVE,
                         'kind' => Contract::KIND_SUPPLIER,
                         'pay' => $pay,
+                        'nds' => Contract::NDS_NO,
                     ]);
         }
         
@@ -487,62 +488,64 @@ class AplCashService {
         $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                 ->findForUpdateApl();
         if ($cashDoc){
-            $desc = [
-                'kind' => $cashDoc->getKindAsApl(),
-                'ds' => $cashDoc->getDateOper(),
-                'comment' => $cashDoc->getComment(),
-                'info' => $cashDoc->getInfo(),
-            ];
-        
-            $post = [
-                'parent' => $cashDoc->getContact()->getClient()->getAplId(),
-                'type' =>   'Users',
-                'sort' =>   $cashDoc->getKindAmount(),
-                'publish' => $cashDoc->getStatusAsApl(),
-                'name' =>   ($cashDoc->getOrder()) ? $cashDoc->getOrder()->getAplId():0,
-                'comment' => ($cashDoc->getOrder()) ? 'Orders':'',
-                'desc' =>   Encoder::encode($desc),
-                'user' =>   $cashDoc->getUserCreator()->getAplId(),
-                'sf' =>     $cashDoc->getAplSf(),
-                'bo' =>     $cashDoc->getAplBo(),
-                'link' =>   0,
-                //'check' =>  $cashDoc->getCheckStatusAsApl(),
-                'created' => $cashDoc->getDateOper(),
-                'aa' =>     1
-            ];
+            if ($cashDoc->getAplParent()){
+                $desc = [
+                    'kind' => $cashDoc->getKindAsApl(),
+                    'ds' => $cashDoc->getDateOper(),
+                    'comment' => $cashDoc->getComment(),
+                    'info' => $cashDoc->getInfo(),
+                ];
 
-            if ($cashDoc->getAplId()){
-                $post['id'] = $cashDoc->getAplId();
-            }
-//        var_dump($post); exit;
-            $client = new Client();
-            $client->setUri($url);
-            $client->setMethod('POST');
-            $client->setOptions(['timeout' => 60]);
-            $client->setParameterPost($post);            
+                $post = [
+                    'parent' => $cashDoc->getAplParent(),
+                    'type' =>   $cashDoc->getAplType(),
+                    'sort' =>   $cashDoc->getKindAmount(),
+                    'publish' => $cashDoc->getStatusAsApl(),
+                    'name' =>   ($cashDoc->getOrder()) ? $cashDoc->getOrder()->getAplId():0,
+                    'comment' => ($cashDoc->getOrder()) ? 'Orders':'',
+                    'desc' =>   Encoder::encode($desc),
+                    'user' =>   $cashDoc->getUserCreator()->getAplId(),
+                    'sf' =>     $cashDoc->getAplSf(),
+                    'bo' =>     $cashDoc->getAplBo(),
+                    'link' =>   0,
+                    //'check' =>  $cashDoc->getCheckStatusAsApl(),
+                    'created' => $cashDoc->getDateOper(),
+                    'aa' =>     1
+                ];
 
-            $ok = $result = false;
-            try{
-                $response = $client->send();
-//                var_dump($response->getBody()); exit;
-                if ($response->isOk()) {                    
-                    $aplId = (int) $response->getBody();
-                    if ($aplId){
-                        $ok = $result = true;
-                    }
+                if ($cashDoc->getAplId()){
+                    $post['id'] = $cashDoc->getAplId();
                 }
-            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
-                $ok = true;
+    //        var_dump($post); exit;
+                $client = new Client();
+                $client->setUri($url);
+                $client->setMethod('POST');
+                $client->setOptions(['timeout' => 60]);
+                $client->setParameterPost($post);            
+
+                $ok = $result = false;
+                try{
+                    $response = $client->send();
+    //                var_dump($response->getBody()); exit;
+                    if ($response->isOk()) {                    
+                        $aplId = (int) $response->getBody();
+                        if ($aplId){
+                            $ok = $result = true;
+                        }
+                    }
+                } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                    $ok = true;
+                }    
+
+                if ($ok) {            
+                    $cashDoc->setStatusEx(CashDoc::STATUS_EX_APL);
+                    $cashDoc->setAplId($aplId);
+                    $this->entityManager->persist($cashDoc);
+                    $this->entityManager->flush($cashDoc);
+                }
+
+                $this->entityManager->detach($cashDoc);
             }    
-
-            if ($ok) {            
-                $cashDoc->setStatusEx(CashDoc::STATUS_EX_APL);
-                $cashDoc->setAplId($aplId);
-                $this->entityManager->persist($cashDoc);
-                $this->entityManager->flush($cashDoc);
-            }
-
-            $this->entityManager->detach($cashDoc);
         }
         
         return $result;

@@ -263,6 +263,7 @@ class AplDocService {
                         'status' => Contract::STATUS_ACTIVE,
                         'kind' => Contract::KIND_SUPPLIER,
                         'pay' => $pay,
+                        'nds' => Contract::NDS_NO,
                     ]);
         }
         

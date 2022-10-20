@@ -194,6 +194,7 @@ class OrderManager
                         'status' => Contract::STATUS_ACTIVE,
                         'kind' => Contract::KIND_CUSTOMER,
                         'pay' => $pay,
+                        'nds' => Contract::NDS_NO,
                     ]);
         }
         
