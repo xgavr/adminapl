@@ -432,9 +432,9 @@
 
     function payFormatter(value, row){
         var url = '/till/statement-to-cash-doc/'+row.id;
-        var checkClass = 'btn-info';
+        var checkClass = 'btn-default';
         if (row.pay === '<?= Statement::PAY_NEW?>'){
-            checkClass = 'btn-default';
+            checkClass = 'btn-info';
         }
         var btnClass = 'btn-default';
         if (row.cashDoc){
