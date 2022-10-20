@@ -686,7 +686,7 @@
     
     function reserveFormatter(value, row){
         if (value){
-            return "<a href='#' class='reserve-show' data-toggle='popover' data-content="!!!" modal-url='/goods/reserve-show/<?= $goods->getId()?>?status=<?= Reserve::STATUS_RESERVE?>'>"+value+"</a>";
+            return "<a href='#' class='reserve-show' data-toggle='popover' data-content='!!!' modal-url='/goods/reserve-show/<?= $goods->getId()?>?status=<?= Reserve::STATUS_RESERVE?>'>"+value+"</a>";
         }
         return value;
     }
