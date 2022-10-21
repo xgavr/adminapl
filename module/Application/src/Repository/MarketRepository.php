@@ -128,7 +128,6 @@ class MarketRepository extends EntityRepository{
                     ;
                 $orX = $queryBuilder->expr()->orX();
                 $andX = $queryBuilder->expr()->andX();
-                $andX->add($queryBuilder->expr()->like('tg.lemms', '\'ABRACADABRA\''));
                 
                 foreach ($phrases as $phrase){
                     $lemms = $lemmaFilter->filter($tokenFilter->filter($phrase));
@@ -147,7 +146,7 @@ class MarketRepository extends EntityRepository{
                 }    
                 if ($orX->count()){
                     $queryBuilder->andWhere($orX);
-                            var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//                            var_dump($queryBuilder->getQuery()->getSQL()); exit;
                     $data = $queryBuilder->getQuery()->getResult();
                     foreach ($data as $row){
                         $result[] = $row['id'];
