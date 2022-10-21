@@ -140,10 +140,10 @@ class MarketRepository extends EntityRepository{
                             }
                         }    
                     }    
+                    if ($andX->count()){
+                        $orX->add($andX);
+                    }    
                 }
-                if ($andX->count()){
-                    $orX->add($andX);
-                }    
                 if ($orX->count()){
                     $queryBuilder->andWhere($orX);
                             var_dump($queryBuilder->getQuery()->getSQL()); exit;
