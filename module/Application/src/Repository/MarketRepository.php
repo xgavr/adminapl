@@ -130,7 +130,6 @@ class MarketRepository extends EntityRepository{
                 
                 foreach ($phrases as $phrase){
                     $lemms = $lemmaFilter->filter($tokenFilter->filter($phrase));
-                    var_dump($lemms); exit;
                     if (count($lemms)){                        
                         
                         $andX = $queryBuilder->expr()->andX();
@@ -149,7 +148,7 @@ class MarketRepository extends EntityRepository{
                 }
                 if ($orX->count()){
                     $queryBuilder->andWhere($orX);
-//                            var_dump($queryBuilder->getQuery()->getSQL()); exit;
+                            var_dump($queryBuilder->getQuery()->getSQL()); exit;
                     $data = $queryBuilder->getQuery()->getResult();
                     foreach ($data as $row){
                         $result[] = $row['id'];
