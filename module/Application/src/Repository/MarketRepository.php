@@ -130,6 +130,7 @@ class MarketRepository extends EntityRepository{
                 
                 foreach ($phrases as $phrase){
                     $lemms = $lemmaFilter->filter($tokenFilter->filter($phrase));
+                    var_dump($lemms); exit;
                     if (count($lemms)){                        
                         
                         $andX = $queryBuilder->expr()->andX();
