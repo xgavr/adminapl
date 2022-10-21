@@ -344,7 +344,7 @@ class LegalManager
         $contract->setStatus($data['status']);
         $contract->setKind($data['kind']);
         $contract->setPay($data['pay']);
-        $contract->setNds($data['nds']);
+        $contract->setNds(($data['nds']));
         
         $office = $this->entityManager->getRepository(Office::class)
                 ->findOneById($data['office']);

@@ -116,6 +116,15 @@ $form->get('supplier')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('tokenFilter')->setAttributes([
+    'class'=>'form-control',
+    'rows' => 6,
+    ]);
+
+$form->get('minusTokenFilter')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('shipping')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -327,6 +336,15 @@ if ($market && !$copy){
                         <?= $this->formLabel($form->get('info')); ?>
                         <?= $this->formElement($form->get('info')); ?>
                         <?= $this->formElementErrors($form->get('info')); ?>                  
+                    </div>                        
+                </div>                                            
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('tokenFilter')); ?>
+                        <?= $this->formElement($form->get('tokenFilter')); ?>
+                        <?= $this->formElementErrors($form->get('tokenFilter')); ?>                  
                     </div>                        
                 </div>                                            
             </div>

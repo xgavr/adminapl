@@ -29,6 +29,10 @@ class Cash {
     const TILL_ACTIVE       = 1; // доступно в кассе.
     const TILL_RETIRED      = 2; // не доступно .
     
+    const PAYMENT_CASH       = 1; // наличные.
+    const PAYMENT_CARD       = 2; // карта.
+    const PAYMENT_CASHLESS   = 3; // безнал.
+
     const ORDER_ACTIVE       = 1; // доступно в заказе.
     const ORDER_RETIRED      = 2; // не доступно.
 
@@ -98,6 +102,11 @@ class Cash {
      * @ORM\Column(name="check_status")   
      */
     protected $checkStatus;
+
+    /**
+     * @ORM\Column(name="payment")   
+     */
+    protected $payment;
 
     /** 
      * @ORM\Column(name="date_created")  
@@ -313,6 +322,50 @@ class Cash {
     }   
     
     /**
+     * Returns payment status.
+     * @return int     
+     */
+    public function getPayment() 
+    {
+        return $this->payment;
+    }
+
+    /**
+     * Returns possible payment as array.
+     * @return array
+     */
+    public static function getPaymentList() 
+    {
+        return [
+            self::PAYMENT_CASH => 'Наличные',
+            self::PAYMENT_CARD => 'Карта',
+            self::PAYMENT_CASHLESS => 'Безнал'
+        ];
+    }    
+    
+    /**
+     * Returns payment as string.
+     * @return string
+     */
+    public function getPaymentAsString()
+    {
+        $list = self::getPaymentList();
+        if (isset($list[$this->payment]))
+            return $list[$this->payment];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets payment.
+     * @param int $payment     
+     */
+    public function setPayment($payment) 
+    {
+        $this->payment = $payment;
+    }   
+
+    /**
      * Returns order status.
      * @return int     
      */
@@ -524,6 +577,7 @@ class Cash {
             'tillStatus' => $this->getTillStatus(),
             'refillStatus' => $this->getRefillStatus(),
             'supplierStatus' => $this->getSupplierStatus(),
+            'payment' => $this->getPayment(),
         ];
         
         return $result;

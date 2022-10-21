@@ -41,6 +41,10 @@ $form->get('checkStatus')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('payment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'cash-submit']);
 
 $form->prepare();
@@ -131,6 +135,13 @@ $form->prepare();
                         <?= $this->formLabel($form->get('supplierStatus')); ?>
                         <?= $this->formElement($form->get('supplierStatus')); ?>
                         <?= $this->formElementErrors($form->get('supplierStatus')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('payment')); ?>
+                        <?= $this->formElement($form->get('payment')); ?>
+                        <?= $this->formElementErrors($form->get('payment')); ?>                  
                     </div>
                 </div>    
             </div>    

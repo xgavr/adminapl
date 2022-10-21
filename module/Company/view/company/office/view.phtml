@@ -290,6 +290,7 @@ $legalContact = $office->getLegalContact();
                         <th>ID</th>
                         <th>Апл Id</th>
                         <th>Наименование</th>
+                        <th>Оплата</th>
                         <th>Остаток</th>
                         <th>Статус</th>
                         <th>Действие</th>        
@@ -303,6 +304,9 @@ $legalContact = $office->getLegalContact();
                         </td>
                         <td>
                             <?= $this->escapeHtml($cash->getName()); ?>
+                        </td>
+                        <td>
+                            <?= $this->escapeHtml($cash->getPaymentAsString()); ?>
                         </td>
                         <td></td>
                         <td><?= $this->escapeHtml($cash->getStatusAsString()); ?> 

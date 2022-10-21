@@ -94,7 +94,7 @@ class MarketForm extends Form
         ]);
                 
         // Добавляем поле "info"
-        $this->add([           
+        $this->add([         
             'type'  => 'text',
             'name' => 'info',
             'attributes' => [
@@ -105,6 +105,28 @@ class MarketForm extends Form
             ],
         ]);
         
+        $this->add([         
+            'type'  => 'textarea',
+            'name' => 'tokenFilter',
+            'attributes' => [
+                'id' => 'tokenFilter'
+            ],
+            'options' => [
+                'label' => 'Наименование товара содержит сочетание слов',
+            ],
+        ]);
+
+        $this->add([         
+            'type'  => 'text',
+            'name' => 'minusTokenFilter',
+            'attributes' => [
+                'id' => 'minusTokenFilter'
+            ],
+            'options' => [
+                'label' => 'Исключить товары которые содержат слова',
+            ],
+        ]);
+
         $this->add([           
             'type'  => 'text',
             'name' => 'name',
@@ -482,6 +504,44 @@ class MarketForm extends Form
         $inputFilter->add([
                 'name'     => 'filename',
                 'required' => true,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                ],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'tokenFilter',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                ],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'minusTokenFilter',
+                'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
                     ['name' => 'StripTags'],

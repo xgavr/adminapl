@@ -259,6 +259,7 @@ class MarketManager
         $market->setDescriptionFormat($data['descriptionFormat']);
         $market->setDescriptionSet($data['descriptionSet']);
         $market->setShipping($data['shipping']);
+        $market->setTokenFilter($data['tokenFilter']);
         
         $this->assignRates($market, $data['rates']);        
         $this->entityManager->persist($market);        
@@ -303,6 +304,7 @@ class MarketManager
         $market->setDescriptionFormat($data['descriptionFormat']);
         $market->setDescriptionSet($data['descriptionSet']);
         $market->setShipping($data['shipping']);
+        $market->setTokenFilter($data['tokenFilter']);
         
         $this->assignRates($market, $data['rates']);
         $this->entityManager->persist($market);

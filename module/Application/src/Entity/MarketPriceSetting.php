@@ -225,6 +225,18 @@ class MarketPriceSetting {
     protected $movementLimit;
     
     /**
+     * Фильтр токенов
+     * @ORM\Column(name="token_filter")   
+     */
+    protected $tokenFilter;
+
+    /**
+     * Фильтр токенов минусов
+     * @ORM\Column(name="minus_token_filter")   
+     */
+    protected $minusTokenFilter;
+
+    /**
      * Описание настройки
      * @ORM\Column(name="info")   
      */
@@ -586,6 +598,26 @@ class MarketPriceSetting {
     public function setInfo($info) 
     {
         $this->info = $info;
+    }     
+
+    public function getTokenFilter() 
+    {
+        return $this->tokenFilter;
+    }
+
+    public function setTokenFilter($tokenFilter) 
+    {
+        $this->tokenFilter = $tokenFilter;
+    }     
+
+    public function getMinusTokenFilter() 
+    {
+        return $this->minusTokenFilter;
+    }
+
+    public function setMinusTokenFilter($minusTokenFilter) 
+    {
+        $this->minusTokenFilter = $minusTokenFilter;
     }     
 
     public function getDateUnload() 
@@ -1252,6 +1284,8 @@ class MarketPriceSetting {
             'descriptionFormat' => $this->getDescriptionFormat(),
             'descriptionSet' => $this->getDescriptionSet(),
             'movementLimit' => $this->getMovementLimit(),
+            'tokenFilter' => $this->getTokenFilter(),
+            'minusTokenFilter' => $this->getMinusTokenFilter(),
         ];
         
         return $result;

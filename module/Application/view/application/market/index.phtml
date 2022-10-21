@@ -106,6 +106,7 @@ $this->pageBreadcrumbs()->setItems([
                     Фильтр движений:  <?= $this->escapeHtml($market->getMovementLimit());?>;
                     Формат описания: <?= $this->escapeHtml($market->getDescriptionFormatAsString());?>;
                     Состав описания: <?= $this->escapeHtml($market->getDescriptionSetAsString());?>;
+                    Фильтр слов: <i><?= $this->escapeHtml($market->getTokenFilter());?></i>;
                     Коментарий: <?= $this->escapeHtml($market->getInfo());?>
                 </small>
             </td>

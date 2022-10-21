@@ -94,6 +94,7 @@ class CashManager {
         $cash->setOrderStatus($data['orderStatus']);
         $cash->setRefillStatus($data['refillStatus']);
         $cash->setSupplierStatus($data['supplierStatus']);
+        $cash->setPayment($data['payment']);
         
         $cash->setOffice($office);
         $this->entityManager->persist($cash);
@@ -121,6 +122,7 @@ class CashManager {
         $cash->setOrderStatus($data['orderStatus']);
         $cash->setRefillStatus($data['refillStatus']);
         $cash->setSupplierStatus($data['supplierStatus']);
+        $cash->setPayment($data['payment']);
         
         $this->entityManager->persist($cash);
         $this->entityManager->flush();

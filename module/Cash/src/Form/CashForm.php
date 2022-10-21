@@ -170,6 +170,19 @@ class CashForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'payment',
+            'attributes' => [
+                'id' => 'payment',
+                'value' => Cash::PAYMENT_CASH,
+            ],
+            'options' => [
+                'label' => 'Оплата',
+                'value_options' => Cash::getPaymentList(),
+            ],
+        ]);
+
         $this->add([
             'type'  => 'submit',
             'name' => 'submit',

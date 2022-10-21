@@ -13,6 +13,9 @@ use Application\Entity\MarketPriceSetting;
 use Application\Entity\Goods;
 use Application\Entity\Images;
 use Application\Entity\Rawprice;
+use Application\Filter\Lemma;
+use Application\Filter\Tokenizer;
+use Application\Entity\TokenGroup;
 
 /**
  * Description of MarketRepository
@@ -98,6 +101,67 @@ class MarketRepository extends EntityRepository{
     }
     
     /**
+     * Найди товары токенов
+     * 
+     * @param MarketPriceSetting $market
+     * 
+     * @return Goods|null
+     */
+    public function findTokenGroupByTokens($market)
+    {
+        $result = [];
+        $tokenFilterStr = $market->getTokenFilter();
+        if (!empty($tokenFilterStr)){
+            
+            $phrases = array_filter(explode(PHP_EOL, $tokenFilterStr));
+            
+            if (count($phrases)){
+                $entityManager = $this->getEntityManager();
+                $lemmaFilter = new Lemma($entityManager);
+                $tokenFilter = new Tokenizer();
+
+                $queryBuilder = $entityManager->createQueryBuilder();
+                $queryBuilder->select('tg.id, tg.name')
+                    ->distinct()    
+                    ->from(TokenGroup::class, 'tg')    
+//                    ->join('tg.tokens', 't') 
+                    ;
+                $orX = $queryBuilder->expr()->orX();
+                
+                foreach ($phrases as $phrase){
+                    $lemms = $lemmaFilter->filter($tokenFilter->filter($phrase));
+                    if (count($lemms)){                        
+                        
+                        $andX = $queryBuilder->expr()->andX();
+
+                        foreach ($lemms as $k => $words){
+                            foreach ($words as $key => $word){
+                                if ($word){
+                                    $andX->add($queryBuilder->expr()->like('tg.name', '\'%'.$word.'%\''));
+                                }    
+                            }
+                        }    
+                        if ($andX->count()){
+                            $orX->add($andX);
+                        }    
+                    }    
+                }
+                if ($orX->count()){
+                    $queryBuilder->andWhere($orX);
+//                            var_dump($queryBuilder->getQuery()->getSQL()); exit;
+                    $data = $queryBuilder->getQuery()->getResult();
+                    foreach ($data as $row){
+                        $result[] = $row['id'];
+                    }                                
+                }
+            }    
+        }
+        
+        return $result;
+    }
+
+    
+    /**
      * Запрос товаров по параметрам
      * @param MarketPriceSetting $market
      * @param integer $offset
@@ -172,6 +236,14 @@ class MarketRepository extends EntityRepository{
                             ->setParameter('8', $market->getMovementLimit())
                     ;
         }
+        if ($market->getTokenFilter()){
+            $tg = $this->findTokenGroupByTokens($market);
+            if (count($tg)){
+                $inX = $queryBuilder->expr()->in('g.tokenGroup', $tg);
+                $queryBuilder
+                        ->andWhere($inX);                
+            }        
+        }
         
         
         if ($market->getMinPrice()){
@@ -190,7 +262,7 @@ class MarketRepository extends EntityRepository{
             $queryBuilder->setFirstResult($offset);
         }
         
-//        var_dump($queryBuilder->getQuery()->getSQL());
+        var_dump($queryBuilder->getQuery()->getSQL());
         $query = $queryBuilder->getQuery();
         
         return $query;

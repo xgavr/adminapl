@@ -440,7 +440,9 @@ class LegalController extends AbstractActionController
             $offices = $legal->getOffices();
             foreach ($offices as $office){
                 foreach ($office->getCashes() as $cash){
-                    $cashList[$cash->getId()] = '('.$office->getName().') '.$cash->getName();
+                    if ($cash->getPayment() == Cash::PAYMENT_CASHLESS){
+                        $cashList[$cash->getId()] = '('.$office->getName().') '.$cash->getName();
+                    }    
                 }
             }    
             $form->get('cash')->removeAttribute('disabled');
