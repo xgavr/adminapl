@@ -127,9 +127,9 @@ class MarketRepository extends EntityRepository{
 //                    ->join('tg.tokens', 't') 
                     ;
                 $orX = $queryBuilder->expr()->orX();
-                $andX = $queryBuilder->expr()->andX();
                 
                 foreach ($phrases as $phrase){
+                    $andX = $queryBuilder->expr()->andX();
                     $lemms = $lemmaFilter->filter($tokenFilter->filter($phrase));
                     if (count($lemms)){                                                
                         foreach ($lemms as $k => $words){
