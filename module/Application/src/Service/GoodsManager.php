@@ -367,11 +367,11 @@ class GoodsManager
             }
         }
         
-        if ($i == 0){
-            $this->entityManager->getRepository(Goods::class)
-                    ->resetUpdateOemTd();
-            return;
-        }
+//        if ($i == 0){
+//            $this->entityManager->getRepository(Goods::class)
+//                    ->resetUpdateOemTd();
+//            return;
+//        }
         
         return;
     }
@@ -404,10 +404,10 @@ class GoodsManager
             }
         }
         
-        if ($i == 0){
-            $this->entityManager->getRepository(Goods::class)
-                    ->resetUpdateGroupTd();
-        }
+//        if ($i == 0){
+//            $this->entityManager->getRepository(Goods::class)
+//                    ->resetUpdateGroupTd();
+//        }
                 
         return;
     }
@@ -439,10 +439,10 @@ class GoodsManager
             }
         }
 
-        if ($i == 0){
-            $this->entityManager->getRepository(Goods::class)
-                    ->resetUpdateAttributeTd();
-        }
+//        if ($i == 0){
+//            $this->entityManager->getRepository(Goods::class)
+//                    ->resetUpdateAttributeTd();
+//        }
         
         return;
     }
@@ -530,10 +530,10 @@ class GoodsManager
             }
         }    
 
-        if ($i == 0){
-            $this->entityManager->getRepository(Goods::class)
-                    ->resetUpdateImageTd();
-        }        
+//        if ($i == 0){
+//            $this->entityManager->getRepository(Goods::class)
+//                    ->resetUpdateImageTd();
+//        }        
         
         return;
     }
@@ -564,10 +564,10 @@ class GoodsManager
             }
         }
 
-        if ($i == 0){
-            $this->entityManager->getRepository(Goods::class)
-                    ->resetUpdateCarTd();
-        }        
+//        if ($i == 0){
+//            $this->entityManager->getRepository(Goods::class)
+//                    ->resetUpdateCarTd();
+//        }        
         
         
         return;
@@ -829,6 +829,11 @@ class GoodsManager
                         'price' => $price,
                         'status_price_ex' => Goods::PRICE_EX_NEW,
                         'date_price' => date('Y-m-d H:i:s'),
+                        'status_image' => Goods::IMAGE_FOR_UPDATE,
+                        'status_car' => Goods::CAR_FOR_UPDATE,
+                        'status_description' => Goods::DESCRIPTION_FOR_UPDATE,
+                        'status_group' => Goods::GROUP_FOR_UPDATE,
+                        'status_oem' => Goods::OEM_FOR_UPDATE,
                             ]);
         } else {
             $this->entityManager->getRepository(Goods::class)

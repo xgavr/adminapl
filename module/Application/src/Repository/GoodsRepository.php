@@ -15,9 +15,7 @@ use Application\Entity\OemRaw;
 use Application\Filter\ArticleCode;
 use Application\Entity\ArticleTitle;
 use Stock\Entity\Movement;
-use Application\Entity\Bid;
 use Application\Entity\Oem;
-use Application\Entity\Selection;
 use Stock\Entity\GoodBalance;
 use Application\Entity\GoodSupplier;
 
@@ -1113,6 +1111,7 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * NOT USE
      * Сброс метки обновления номеров
      * 
      * @return integer
@@ -1125,6 +1124,7 @@ class GoodsRepository extends EntityRepository
     }
 
     /**
+     * NOT USE
      * Сброс метки обновления групп
      * 
      * @return integer
@@ -1137,6 +1137,7 @@ class GoodsRepository extends EntityRepository
     }
 
     /**
+     * NOT USE
      * Сброс метки обновления описаний
      * 
      * @return integer
@@ -1149,6 +1150,7 @@ class GoodsRepository extends EntityRepository
     }
 
     /**
+     * NOT USE
      * Сброс метки обновления машин
      * 
      * @return integer
@@ -1162,6 +1164,7 @@ class GoodsRepository extends EntityRepository
     }
 
     /**
+     * НЕ ИСПОЛЬЗОВАТЬ
      * Сброс метки обновления картинок
      * 
      * @return integer
@@ -1173,7 +1176,8 @@ class GoodsRepository extends EntityRepository
     }
 
     /**
-     * Очистить группу товаров связанных с группой нименований
+     * 
+     * Очистить группу товаров связанных с группой наменований
      * 
      * @param \Application\Entity\GenericGroup $genericGroup
      * @param \Application\Entity\TokenGroup $tokenGroup

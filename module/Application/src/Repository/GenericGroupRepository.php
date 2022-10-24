@@ -89,6 +89,10 @@ class GenericGroupRepository extends EntityRepository{
     }   
     
 
+    /**
+     * 
+     * @return null
+     */
     public function updateZeroGroup()
     {
         $zeroGroup = $this->getEntityManager()->getRepository(GenericGroup::class)

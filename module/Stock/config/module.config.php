@@ -121,6 +121,25 @@ return [
                     // route defined above here.
                 ],
             ],    
+            'soap' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/soap[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\SoapController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    // You can place additional routes that match under the
+                    // route defined above here.
+                ],
+            ],    
             'vtp' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -181,6 +200,9 @@ return [
             Controller\StController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
+            Controller\SoapController::class => [
+                ['actions' => '*', 'allow' => '*'],
+            ],
             Controller\VtpController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
@@ -196,6 +218,7 @@ return [
             Controller\PtController::class => Controller\Factory\PtControllerFactory::class,
             Controller\PtuController::class => Controller\Factory\PtuControllerFactory::class,
             Controller\ReviseController::class => Controller\Factory\ReviseControllerFactory::class,
+            Controller\SoapController::class => Controller\Factory\SoapControllerFactory::class,
             Controller\StController::class => Controller\Factory\StControllerFactory::class,
             Controller\VtController::class => Controller\Factory\VtControllerFactory::class,
             Controller\VtpController::class => Controller\Factory\VtpControllerFactory::class,
