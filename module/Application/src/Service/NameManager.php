@@ -1350,7 +1350,15 @@ class NameManager
 
         if ($updGroupId != $oldTokenGroupId){
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($goodId, ['token_group_id' => $updGroupId, 'group_token_update_flag' => 0]); 
+                    ->updateGoodId($goodId, [
+                        'token_group_id' => $updGroupId, 
+                        'group_token_update_flag' => 0,
+                        'status_image' => Goods::IMAGE_FOR_UPDATE,
+                        'status_car' => Goods::CAR_FOR_UPDATE,
+                        'status_description' => Goods::DESCRIPTION_FOR_UPDATE,
+                        'status_group' => Goods::GROUP_FOR_UPDATE,
+                        'status_oem' => Goods::OEM_FOR_UPDATE,                        
+                        ]); 
         }    
         $this->entityManager->getRepository(Goods::class)
                 ->updateTokenGroupGoodArticleTitle($goodId, $updGroupId);
