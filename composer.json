@@ -61,7 +61,9 @@
         "cron/cron": "^1.6",
         "hackzilla/password-generator": "^1.6",
         "gam6itko/ozon-seller": "^0.8.19",
-        "php-http/guzzle6-adapter": "^2.0"
+        "php-http/guzzle6-adapter": "^2.0",
+        "symfony/http-client": "^4.4",
+        "nyholm/psr7": "^1.5"
     },
     "autoload": {
         "psr-4": {
