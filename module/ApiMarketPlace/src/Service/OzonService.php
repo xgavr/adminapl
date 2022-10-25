@@ -52,7 +52,7 @@ class OzonService {
      */
     private $updateManager;
     
-    private $ozon_host = 'http://cb-api.ozonru.me/'; //sandbox
+//    private $ozon_host = 'http://cb-api.ozonru.me/'; //sandbox
     
     public function __construct($entityManager, $adminManager, $request, $updateManager)
     {
@@ -69,7 +69,7 @@ class OzonService {
         $config = [
             'clientId' => $settings['ozon_client_id'],
             'apiKey' => $settings['ozon_api_key'],
-            'host' => $this->ozon_host,
+//            'host' => $this->ozon_host,
         ];
         
         $adapter = new GuzzleAdapter(new GuzzleClient());
