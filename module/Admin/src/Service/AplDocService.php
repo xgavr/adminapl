@@ -1334,6 +1334,7 @@ class AplDocService {
             $client->setParameterPost($post);            
 
             $ok = $result = false;
+            $aplId = 0;
             try{
                 $response = $client->send();
 //                var_dump($response->getBody()); exit;

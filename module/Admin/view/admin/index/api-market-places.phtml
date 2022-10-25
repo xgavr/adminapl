@@ -21,6 +21,14 @@ $form->get('market_unload')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('ozon_client_id')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ozon_api_key')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -40,6 +48,16 @@ $form->prepare();
             <?= $this->formLabel($form->get('market_unload')); ?>
             <?= $this->formElement($form->get('market_unload')); ?>
             <?= $this->formElementErrors($form->get('market_unload')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('ozon_client_id')); ?>
+            <?= $this->formElement($form->get('ozon_client_id')); ?>
+            <?= $this->formElementErrors($form->get('ozon_client_id')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('ozon_api_key')); ?>
+            <?= $this->formElement($form->get('ozon_api_key')); ?>
+            <?= $this->formElementErrors($form->get('ozon_api_key')); ?>                  
         </div>
                         
     </div>   

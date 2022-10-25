@@ -52,6 +52,22 @@ class ApiMarketPlaces extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'ozon_api_key',
+            'options' => [
+                'label' => 'ОЗОН АПИ ключ',
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'ozon_client_id',
+            'options' => [
+                'label' => 'ОЗОН ид клиента',
+            ],
+        ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',

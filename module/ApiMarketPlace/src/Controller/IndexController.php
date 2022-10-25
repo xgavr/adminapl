@@ -30,19 +30,26 @@ class IndexController extends AbstractActionController
     private $sbermarketManager;
         
     /**
-     * Request manager.
+     * Market place manager.
      * @var \ApiMarketPlace\Service\MarketplaceService
      */
     private $marketplaceService;
         
     /**
+     * Ozon manager.
+     * @var \ApiMarketPlace\Service\OzonService
+     */
+    private $ozonService;
+        
+    /**
      * Constructor. Its purpose is to inject dependencies into the controller.
      */
-    public function __construct($entityManager, $sbermarketManager, $marketplaceService) 
+    public function __construct($entityManager, $sbermarketManager, $marketplaceService, $ozonService) 
     {
        $this->entityManager = $entityManager;
        $this->sbermarketManager = $sbermarketManager;
        $this->marketplaceService = $marketplaceService;
+       $this->ozonService = $ozonService;
     }
 
     
@@ -136,5 +143,9 @@ class IndexController extends AbstractActionController
         ]);
     }
     
-    
+    public function ozonCategoryTreeAction()
+    {
+        $result = $this->ozonService->updateCategoryTree();
+        return new JsonModel($result);
+    }
 }

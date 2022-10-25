@@ -618,6 +618,8 @@ class AdminManager {
         }
         
         $config->api_market_places->market_unload = $data['market_unload'];
+        $config->api_market_places->ozon_client_id = $data['ozon_client_id'];
+        $config->api_market_places->ozon_api_key = $data['ozon_api_key'];
         
         $writer = new PhpArray();
         
