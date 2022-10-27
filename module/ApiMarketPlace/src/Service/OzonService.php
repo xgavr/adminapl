@@ -8,9 +8,11 @@
 
 namespace ApiMarketPlace\Service;
 
-use Gam6itko\OzonSeller\Service\V1\CategoriesService;
+use Gam6itko\OzonSeller\Service\V2\CategoryService as CategoryServiceV2;
+use Gam6itko\OzonSeller\Service\V3\CategoryService as CategoryServiceV3;
 use GuzzleHttp\Client as GuzzleClient;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
+use Symfony\Component\HttpClient\Psr18Client;
 
 
 /**
@@ -62,7 +64,7 @@ class OzonService {
         $this->updateManager = $updateManager;
     }
     
-    public function updateCategoryTree()
+    public function сategoryTree()
     {
         $settings = $this->adminManager->getApiMarketPlaces();
         
@@ -72,10 +74,12 @@ class OzonService {
 //            'host' => $this->ozon_host,
         ];
         
-        $adapter = new GuzzleAdapter(new GuzzleClient());
-        $svc = new CategoriesService($config, $adapter);
+        $client = new Psr18Client();
+        $svc = new CategoryServiceV2($config, $client);
         
         $categoryTree = $svc->tree();
+//        $attributes = $svc->attribute(17038826);
+        var_dump($categoryTree); exit;
         
         return $categoryTree;
     }

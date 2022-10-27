@@ -145,7 +145,7 @@ class IndexController extends AbstractActionController
     
     public function ozonCategoryTreeAction()
     {
-        $result = $this->ozonService->updateCategoryTree();
+        $result = $this->ozonService->сategoryTree();
         return new JsonModel($result);
     }
 }
