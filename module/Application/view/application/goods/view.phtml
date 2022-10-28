@@ -485,11 +485,9 @@
                     message += '</tr>';
                 });                    
                 message += '</table>';                                
-                $(e.currentTarget).popover({
-                    html: 'true',
-                    placement: 'top',
-                    content: message,
-                    selector: e.currentTarget
+               bootbox.alert({
+                    message: message,
+                    size: 'small'
                 });
             }
         });
