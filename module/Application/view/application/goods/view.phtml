@@ -465,9 +465,7 @@
 
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
-<script type="text/javascript">
-    var $ok = $('#ok');
-    
+<script type="text/javascript">    
     $(window).on('load', function() {
         $('.nav-tabs a:first').tab('show');
         $('.editable').editable();
@@ -488,7 +486,7 @@
                 });                    
                 message += '</table>';                                
                 $(e.currentTarget).popover({
-                    html: 'true'
+                    html: 'true',
                     placement: 'top',
                     content: message
                 });
