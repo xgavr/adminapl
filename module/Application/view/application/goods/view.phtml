@@ -577,7 +577,7 @@
     var movementTable = $('#movementTable').bootstrapTable({
         onLoadSuccess: function(res){
             $('#movementBadge').html($('#movementTable').bootstrapTable('getOptions').totalRows);
-            $('#balanceTable').bootstrapTable('url', "/goods/balance/<?= $goods->getId()?>");
+            $('#balanceTable').bootstrapTable('refreshOptions', {url: "/goods/balance/<?= $goods->getId()?>"});
         }
     });
 
