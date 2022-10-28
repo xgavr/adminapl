@@ -183,6 +183,7 @@ class VtpController extends AbstractActionController
             $vtp = $this->entityManager->getRepository(Vtp::class)
                     ->find($vtpId);
             $ptu = $vtp->getPtu();
+            $ptuList[$ptu->getId()] = $ptu->getDocIdPresent();
             $ptus = $this->entityManager->getRepository(Vtp::class)
                     ->availableBase($vtp);
             foreach ($ptus as $aptu) {
