@@ -260,10 +260,9 @@
                 </div>
                 <table id="balanceTable" 
                     data-toggle="table" 
-                    data-url="/goods/balance/<?= $goods->getId()?>"
                     data-side-pagination="server"
                     data-cookie="false"
-                    data-cookie-id-table="goodSaveId"
+                    data-cookie-id-table="balanceSaveId"
                     data-pagination="false" 
                     data-page-list="[5, 10, 20, 50]"
                     data-toolbar="#balanceToolbar"
@@ -578,7 +577,7 @@
     var movementTable = $('#movementTable').bootstrapTable({
         onLoadSuccess: function(res){
             $('#movementBadge').html($('#movementTable').bootstrapTable('getOptions').totalRows);
-            $('#balanceTable').bootstrapTable('refresh');
+            $('#balanceTable').bootstrapTable('url', "/goods/balance/<?= $goods->getId()?>");
         }
     });
 
