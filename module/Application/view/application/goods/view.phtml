@@ -279,7 +279,7 @@
                              <th data-field="office">Офис</th>
                              <th data-field="rest"      data-type="numeric" data-width="20" data-align="right">Наличие</th>
                              <th data-field="reserve"   data-type="numeric" data-width="20" data-align="right" data-formatter="reserveFormatter">Резерв</th>
-                             <th data-field="delivery"  data-type="numeric" data-width="20" data-align="right">Доставка</th>
+                             <th data-field="delivery"  data-type="numeric" data-width="20" data-align="right" data-formatter="deliveryFormatter">Доставка</th>
                              <th data-field="vozvrat"   data-type="numeric" data-width="20" data-align="right">Возврат</th>
                              <th data-field="available" data-type="numeric" data-width="20" data-align="right">Доступно</th>
                          </tr>                
@@ -680,12 +680,19 @@
     }
     
     function reserveFormatter(value, row){
-        if (value){
+        if (value > '0'){
             return "<a href='#' class='reserve-show' data-toggle='popover' data-content='!!!' modal-url='/goods/reserve-show/<?= $goods->getId()?>?status=<?= Reserve::STATUS_RESERVE?>'>"+value+"</a>";
         }
         return value;
     }
     
+    function reserveFormatter(value, row){
+        if (value > '0'){
+            return "<a href='#' class='reserve-show' data-toggle='popover' data-content='!!!' modal-url='/goods/reserve-show/<?= $goods->getId()?>?status=<?= Reserve::STATUS_DELIVERY?>'>"+value+"</a>";
+        }
+        return value;
+    }
+
     function baseFormatter(value, row){
         return docFormatter(row.baseType, row.baseId, value);
     }
