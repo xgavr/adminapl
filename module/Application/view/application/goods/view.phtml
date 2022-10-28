@@ -485,10 +485,11 @@
                     message += '</tr>';
                 });                    
                 message += '</table>';                                
-                $(e.currentTarget).popover({
+                $('body').popover({
                     html: 'true',
                     placement: 'top',
-                    content: message
+                    content: message,
+                    selector: e.currentTarget
                 });
             }
         });
