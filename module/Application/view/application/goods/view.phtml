@@ -478,14 +478,14 @@
             success: function (data) {
                 var message = '<table width="100%"><tr><th>Документ</th><th>Резерв</th></tr>';
                 $.each(data, function( index, value ) {
-                    console.log(value);
+//                    console.log(value);
                     message += '<tr>';
                     message += '<td>'+value.link+'</td>';                        
                     message += '<td>'+value.rest+'</td>';                        
                     message += '</tr>';
                 });                    
                 message += '</table>';                                
-                $('body').popover({
+                $(e.currentTarget).popover({
                     html: 'true',
                     placement: 'top',
                     content: message,
