@@ -121,10 +121,10 @@ return [
                     // route defined above here.
                 ],
             ],    
-            'soap' => [
+            'soapstock' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/soap[/:action[/:id]]',
+                    'route'    => '/soapstock[/:action[/:id]]',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]*',

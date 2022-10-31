@@ -93,6 +93,20 @@ return [
                     ],
                 ],
             ],
+            'soap' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/soap[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\SoapController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
             'telegramm' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -133,6 +147,10 @@ return [
                 // Allow access to all users.
                 ['actions' => '*', 'allow' => '*']
             ],
+            Controller\SoapController::class => [
+                // Allow access to all users.
+                ['actions' => '*', 'allow' => '*']
+            ],
             Controller\TelegrammController::class => [
                 // Allow access to authenticated users.
                 ['actions' => ['index', 'set', 'unset', 'checkProxy'], 'allow' => '+admin.manage'],
@@ -147,6 +165,7 @@ return [
             Controller\LogController::class => Controller\Factory\LogControllerFactory::class,
             Controller\PostController::class => Controller\Factory\PostControllerFactory::class,
             Controller\ProcessingController::class => Controller\Factory\ProcessingControllerFactory::class,
+            Controller\SoapController::class => Controller\Factory\SoapControllerFactory::class,
             Controller\TelegrammController::class => Controller\Factory\TelegrammControllerFactory::class,
         ],
     ],
@@ -167,6 +186,7 @@ return [
             Service\PostManager::class => Service\Factory\PostManagerFactory::class,
             Service\SettingManager::class => Service\Factory\SettingManagerFactory::class,
             Service\SmsManager::class => Service\Factory\SmsManagerFactory::class,
+            Service\SoapManager::class => Service\Factory\SoapManagerFactory::class,
             Service\TamTamManager::class => Service\Factory\TamTamManagerFactory::class,
             Service\TelefonistkaManager::class => Service\Factory\TelefonistkaManagerFactory::class,
             Service\TelegrammManager::class => Service\Factory\TelegrammManagerFactory::class,
