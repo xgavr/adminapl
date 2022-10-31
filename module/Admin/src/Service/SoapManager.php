@@ -63,14 +63,15 @@ class SoapManager {
             try{
                 $response = $client->send();
                 $result = $response->getBody();
+//                var_dump($response->getHeaders()); exit;
             } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
                 $ok = true;
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
             }    
             
-            if ($ok){
-            }
+//            if ($ok){
+//            }
         }    
         return $result;        
     }

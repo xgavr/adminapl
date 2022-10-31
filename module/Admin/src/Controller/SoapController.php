@@ -34,6 +34,7 @@ class SoapController extends AbstractActionController
         $result = $this->soapManager->transapl('index', $post);            
 
         $this->layout()->setTemplate('layout/terminal');
+        header("Content-Type: text/xml");
         return new ViewModel([
             'xml' => $result,
         ]);        
@@ -47,6 +48,7 @@ class SoapController extends AbstractActionController
         }
         $result = $this->soapManager->transapl('wsdl', $post);            
         $this->layout()->setTemplate('layout/terminal');
+        header("Content-Type: text/xml");
         return new ViewModel([
             'xml' => $result,
         ]);        
