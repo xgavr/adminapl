@@ -27,30 +27,33 @@ class SoapController extends AbstractActionController
     
     public function indexAction()
     {
-        $post = [];
-        if ($this->getRequest()->isPost()) {            
-            $post = $this->params()->fromPost();
-        }    
-        $result = $this->soapManager->transapl('index', $post);            
-
         $this->layout()->setTemplate('layout/terminal');
-        header("Content-Type: text/xml");
-        return new ViewModel([
-            'xml' => $result,
-        ]);        
+        $view = new ViewModel([
+        ]);
+        $view->setTerminal(true);
+
+        $server = new \Laminas\Soap\Server(null, [
+            'uri' => 'https://autopartslist.ru/soap/index/',
+        ]);
+        $server->setClass('App_Soap_Manager');
+        
+        $server->handle(); 
     }    
 
     public function wsdlAction()
     {
-        $post = [];
-        if ($this->getRequest()->isPost()) {            
-            $post = $this->params()->fromPost();
-        }
-        $result = $this->soapManager->transapl('wsdl', $post);            
-        $this->layout()->setTemplate('layout/terminal');
-        header("Content-Type: text/xml");
-        return new ViewModel([
-            'xml' => $result,
-        ]);        
+//        $this->layout()->setTemplate('layout/terminal');
+//        $view = new ViewModel([
+//        ]);        
+//        $view->setTerminal(true);
+        
+        $autodiscover = new \Laminas\Soap\AutoDiscover();
+//        $autodiscover->setOperationBodyStyle(['use' => 'literal']);
+        $autodiscover->setClass('App_Soap_Manager');
+        $autodiscover->setUri('https://autopartslist.ru/soap/index/');
+        
+        header('Content-Type: application/wsdl+xml');
+        echo $autodiscover->toXml();
+        exit;        
     }    
 }

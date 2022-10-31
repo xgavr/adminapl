@@ -63,7 +63,8 @@
         "gam6itko/ozon-seller": "^0.8.19",
         "php-http/guzzle6-adapter": "^2.0",
         "symfony/http-client": "^4.4",
-        "nyholm/psr7": "^1.5"
+        "nyholm/psr7": "^1.5",
+        "laminas/laminas-soap": "^2.8"
     },
     "autoload": {
         "psr-4": {
