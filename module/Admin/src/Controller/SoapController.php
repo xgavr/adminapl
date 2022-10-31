@@ -27,24 +27,23 @@ class SoapController extends AbstractActionController
     
     public function indexAction()
     {
-        $result = 'ok index';
-        if ($this->getRequest()->isPost()) {
-            
+        $post = [];
+        if ($this->getRequest()->isPost()) {            
             $post = $this->params()->fromPost();
-            $result = $this->soapManager->transapl('index', $post);            
-        }
+        }    
+        $result = $this->soapManager->transapl('index', $post);            
+
         echo $result;
         exit;
     }    
 
     public function wsdlAction()
     {
-        $result = 'ok wsdl';
-        if ($this->getRequest()->isPost()) {
-            
+        $post = [];
+        if ($this->getRequest()->isPost()) {            
             $post = $this->params()->fromPost();
-            $result = $this->soapManager->transapl('wsdl', $post);            
         }
+        $result = $this->soapManager->transapl('wsdl', $post);            
         echo $result;
         exit;
     }    
