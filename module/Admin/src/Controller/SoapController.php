@@ -8,7 +8,7 @@
 namespace Admin\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 
 class SoapController extends AbstractActionController
 {
@@ -33,8 +33,10 @@ class SoapController extends AbstractActionController
         }    
         $result = $this->soapManager->transapl('index', $post);            
 
-        echo $result;
-        exit;
+        $this->layout()->setTemplate('layout/terminal');
+        return new ViewModel([
+            'xml' => $result,
+        ]);        
     }    
 
     public function wsdlAction()
@@ -44,7 +46,9 @@ class SoapController extends AbstractActionController
             $post = $this->params()->fromPost();
         }
         $result = $this->soapManager->transapl('wsdl', $post);            
-        echo $result;
-        exit;
+        $this->layout()->setTemplate('layout/terminal');
+        return new ViewModel([
+            'xml' => $result,
+        ]);        
     }    
 }
