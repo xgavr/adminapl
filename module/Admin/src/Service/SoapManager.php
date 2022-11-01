@@ -54,11 +54,12 @@ class SoapManager {
         $url = $uri;
         $client = new Client();
         $client->setUri($url);
-        $client->setMethod('GET');
 
-        if (is_array($post)){     
+        if ($post){     
             $client->setMethod('POST');
             $client->setParameterPost($post);            
+        } else {
+            $client->setMethod('GET');            
         }
 
         try{
