@@ -63,7 +63,7 @@ class SoapManager {
 
         try{
             $response = $client->send();
-            $result = $response->getBody();
+            $result = str_replace('https://autopartslist.ru/soap/index', 'http://adminapl.ru/soap/index', $response->getBody());
 //                var_dump($response->getHeaders()); exit;
         } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
             $ok = true;
