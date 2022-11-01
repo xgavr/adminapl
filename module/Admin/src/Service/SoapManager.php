@@ -69,7 +69,10 @@ class SoapManager {
 
         $logger->info($url);
         $logger->info(file_get_contents('php://input'));
-        if (is_array($post)){     
+        if (is_array($post)){    
+            foreach ($post as $key => $value){
+                $logger->info($key.'=>'.$value);                
+            }
             $client->setMethod('POST');
             $client->setParameterPost($post);
         } else {
