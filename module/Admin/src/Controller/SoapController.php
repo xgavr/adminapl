@@ -27,33 +27,25 @@ class SoapController extends AbstractActionController
     
     public function indexAction()
     {
-        $this->layout()->setTemplate('layout/terminal');
-        $view = new ViewModel([
-        ]);
-        $view->setTerminal(true);
-
-        $server = new \Laminas\Soap\Server(null, [
-            'uri' => 'https://autopartslist.ru/soap/index/',
-        ]);
-        $server->setClass('App_Soap_Manager');
-        
-        $server->handle(); 
+        $post = null;
+        if ($this->getRequest()->isPost()) {
+            $post = $this->params()->fromPost();
+        }    
+        $data = $this->soapManager->transapl('https://autopartslist.ru/soap/index/', $post);
+        header('Content-Type: application/wsdl+xml');
+        echo $data;
+        exit;
     }    
 
     public function wsdlAction()
     {
-//        $this->layout()->setTemplate('layout/terminal');
-//        $view = new ViewModel([
-//        ]);        
-//        $view->setTerminal(true);
-        
-        $autodiscover = new \Laminas\Soap\AutoDiscover();
-//        $autodiscover->setOperationBodyStyle(['use' => 'literal']);
-        $autodiscover->setClass('App_Soap_Manager');
-        $autodiscover->setUri('https://autopartslist.ru/soap/index/');
-        
+        $post = null;
+        if ($this->getRequest()->isPost()) {
+            $post = $this->params()->fromPost();
+        }    
+        $data = $this->soapManager->transapl('https://autopartslist.ru/soap/wsdl/', $post);
         header('Content-Type: application/wsdl+xml');
-        echo $autodiscover->toXml();
-        exit;        
+        echo $data;
+        exit;
     }    
 }

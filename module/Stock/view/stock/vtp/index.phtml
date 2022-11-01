@@ -90,6 +90,7 @@
                 <tr>
                      <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
                      <th data-field="docDate" data-sortable="true">Дата</th>
+                     <th data-field="ptu.docDate" data-sortable="false">Дата поступления</th>
                      <th data-field="id" data-sortable="false" data-formatter="docNumFormatter">Номер</th>
                      <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
                      <th data-field='amount' data-sortable="true" data-align="right" data-formatter="amountFormatter">Сумма</th>
@@ -154,15 +155,23 @@
         var retired = 'tablerow';
         if (row.status === '<?= Vtp::STATUS_RETIRED?>'){
            retired += ' retired';
+           return {classes: retired};
         }
         if (row.statusAccount === '<?= Vtp::STATUS_TAKE_NO?>'){
            retired += ' warning';
+           return {classes: retired};
+        }
+        if (row.statusAccount === '<?= Vtp::STATUS_TAKE_NO?>'){
+           retired += ' warning';
+           return {classes: retired};
         }
         switch(row.statusDoc){
             case '<?= Vtp::STATUS_DOC_NOT_RECD?>': 
                         return {classes: retired}; break;
             case '<?= Vtp::STATUS_DOC_RECD?>': 
                         return {classes: 'info '+retired}; break;
+            case '<?= Vtp::STATUS_DOC_NOT_RECD?>': 
+                        return {classes: 'success '+retired}; break;
                 default:break;     
         }
         
@@ -274,8 +283,8 @@
             }, 
             statusDocNotRect: {
                 name: 'Принят',
-//                iconClass: 'glyphicon glyphicon-ok',
-//                classNames: 'bg-success',
+                iconClass: 'glyphicon glyphicon-ok',
+                classNames: 'bg-success',
                 onClick: function(row) {
                     changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NOT_RECD?>);
                 },

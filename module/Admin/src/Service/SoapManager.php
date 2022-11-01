@@ -51,28 +51,25 @@ class SoapManager {
      */
     public function transapl($uri, $post)
     {
-        $result = null;
-                
-        if (is_array($post)){     
-            $url = $this->api().$uri;
-            $client = new Client();
-            $client->setUri($url);
-            $client->setMethod('POST');
-            $client->setParameterPost($post);
+        $url = $uri;
+        $client = new Client();
+        $client->setUri($url);
 
-            try{
-                $response = $client->send();
-                $result = $response->getBody();
+        if (is_array($post)){     
+            $client->setMethod('POST');
+            $client->setParameterPost($post);            
+        }
+
+        try{
+            $response = $client->send();
+            $result = $response->getBody();
 //                var_dump($response->getHeaders()); exit;
-            } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
-                $ok = true;
-            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
-                $ok = true;
-            }    
-            
-//            if ($ok){
-//            }
+        } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
+            $ok = true;
+        } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+            $ok = true;
         }    
+            
         return $result;        
     }
 }
