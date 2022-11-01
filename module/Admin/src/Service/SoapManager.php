@@ -54,10 +54,9 @@ class SoapManager {
      * Транслятор с апл
      * 
      * @param string $uri
-     * @param array $post
      * @return array
      */
-    public function transapl($uri, $post)
+    public function transapl($uri)
     {
         $writer = new Stream($this->logFilename);
         $logger = new Logger();
@@ -67,14 +66,12 @@ class SoapManager {
         $client = new Client();
         $client->setUri($url);
 
-        $logger->info($url);
-        $logger->info(file_get_contents('php://input'));
-        if (is_array($post)){    
-            foreach ($post as $key => $value){
-                $logger->info($key.'=>'.$value);                
-            }
+//        $logger->info($url);
+        $post = file_get_contents('php://input');
+        if (!empty($post)){    
             $client->setMethod('POST');
-            $client->setParameterPost($post);
+            $client->setRawBody(str_replace( 'http://adminapl.ru/soap/index', 'https://autopartslist.ru/soap/index', $post));
+            $client->setEncType('text/xml');
         } else {
             $client->setMethod('GET');            
         }

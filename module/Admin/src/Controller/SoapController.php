@@ -8,7 +8,6 @@
 namespace Admin\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\View\Model\ViewModel;
 
 class SoapController extends AbstractActionController
 {
@@ -27,11 +26,7 @@ class SoapController extends AbstractActionController
     
     public function indexAction()
     {
-        $post = null;
-        if ($this->getRequest()->isPost()) {
-            $post = $this->params()->fromPost();
-        }    
-        $data = $this->soapManager->transapl('https://autopartslist.ru/soap/index/', $post);
+        $data = $this->soapManager->transapl('https://autopartslist.ru/soap/index/');
         header('Content-Type: text/xml');
         echo $data;
         exit;
@@ -39,11 +34,7 @@ class SoapController extends AbstractActionController
 
     public function wsdlAction()
     {
-        $post = null;
-        if ($this->getRequest()->isPost()) {
-            $post = $this->params()->fromPost();
-        }    
-        $data = $this->soapManager->transapl('https://autopartslist.ru/soap/wsdl/', $post);
+        $data = $this->soapManager->transapl('https://autopartslist.ru/soap/wsdl/');
         header('Content-Type: text/xml');
         echo $data;
         exit;
