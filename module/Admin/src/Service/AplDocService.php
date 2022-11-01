@@ -1955,6 +1955,17 @@ class AplDocService {
         }    
 
         while (true){
+            if ($this->sendVtp()) {
+                usleep(100);
+                if (time() > $startTime + 840){
+                    break;
+                }
+            } else {
+                break;
+            }    
+        }    
+
+        while (true){
 //            var_dump(1111); exit;
             if ($this->sendPt()) {
                 usleep(100);
