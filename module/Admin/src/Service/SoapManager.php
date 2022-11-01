@@ -10,6 +10,8 @@ namespace Admin\Service;
 
 use Laminas\Http\Client;
 use Laminas\Json\Json;
+use Laminas\Log\Writer\Stream;
+use Laminas\Log\Logger;
 
 /**
  * Description of SoapManager
@@ -17,6 +19,8 @@ use Laminas\Json\Json;
  * @author Daddy
  */
 class SoapManager {
+    
+    const LOG_FOLDER = './data/log/'; //папка логов
     
     /**
      * Doctrine entity manager.
@@ -29,11 +33,15 @@ class SoapManager {
      * @var \Admin\Service\Adminmanager
      */
     private $adminManager;
+    
+    private $logFilename;
 
     public function __construct($entityManager, $adminManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
+
+        $this->logFilename = $this::LOG_FOLDER.'soap_'.date('Ymd').'.log';
     }
     
     protected function api()
@@ -51,13 +59,19 @@ class SoapManager {
      */
     public function transapl($uri, $post)
     {
+        $writer = new Stream($this->logFilename);
+        $logger = new Logger();
+        $logger->addWriter($writer);
+        
         $url = $uri;
         $client = new Client();
         $client->setUri($url);
 
-        if ($post){     
+        $logger->info($url);
+        $logger->info(file_get_contents('php://input'));
+        if (is_array($post)){     
             $client->setMethod('POST');
-            $client->setParameterPost($post);            
+            $client->setParameterPost($post);
         } else {
             $client->setMethod('GET');            
         }
@@ -72,6 +86,7 @@ class SoapManager {
             $ok = true;
         }    
             
+        unset($logger);
         return $result;        
     }
 }
