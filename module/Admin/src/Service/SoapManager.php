@@ -54,6 +54,7 @@ class SoapManager {
         $url = $uri;
         $client = new Client();
         $client->setUri($url);
+        $client->setMethod('GET');
 
         if (is_array($post)){     
             $client->setMethod('POST');

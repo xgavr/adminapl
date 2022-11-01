@@ -32,7 +32,7 @@ class SoapController extends AbstractActionController
             $post = $this->params()->fromPost();
         }    
         $data = $this->soapManager->transapl('https://autopartslist.ru/soap/index/', $post);
-        header('Content-Type: application/wsdl+xml');
+        header('Content-Type: text/xml');
         echo $data;
         exit;
     }    
@@ -44,7 +44,7 @@ class SoapController extends AbstractActionController
             $post = $this->params()->fromPost();
         }    
         $data = $this->soapManager->transapl('https://autopartslist.ru/soap/wsdl/', $post);
-        header('Content-Type: application/wsdl+xml');
+        header('Content-Type: text/xml');
         echo $data;
         exit;
     }    
