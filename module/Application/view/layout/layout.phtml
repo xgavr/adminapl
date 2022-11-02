@@ -286,7 +286,7 @@
     }
 
     $(document).ready(function(){
-        $('buuton').on('click', function(){
+        $('button').on('click', function(){
             $('button').removeClass('marked');
             $(this).addClass('marked');
         });
@@ -435,7 +435,11 @@
                     bootbox.alert("Произошла ошибка при выполнении операции.");
                 });        
         }        
-    });    
+    }); 
+    
+    $('.disable-on-click').on('click', function(e){
+        $('.disable-on-click').prop('disabled', true);
+    });
 
     //форматирование числа
     numberFormat = function(value){
