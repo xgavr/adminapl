@@ -1372,12 +1372,16 @@ class GoodsRepository extends EntityRepository
             ->join('m.company', 'c')    
             ->where('m.good = ?1')
             ->setParameter('1', $good->getId())
-            ->orderBy('m.docStamp','ASC')    
+//            ->orderBy('m.docStamp','ASC')    
             ;
         
         if (is_array($params)){
             if (!empty($params['sort'])){
-                $queryBuilder->addOrderBy('m.'.$params['sort'], $params['order']);
+                $sort = $params['sort'];
+                if ($sort == 'dateOper'){
+                    $sort = 'docStamp';
+                }
+                $queryBuilder->addOrderBy('m.'.$sort, $params['order']);
             }
             if (!empty($params['office'])){
                 if (is_numeric($params['office'])){

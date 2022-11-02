@@ -285,6 +285,17 @@ class Vtp {
     }    
     
     /**
+     * @retrun integer
+     */
+    public function getAplStatus()
+    {
+        if ($this->status == self::STATUS_ACTIVE && $this->statusDoc == self::STATUS_DOC_NOT_RECD){
+            return 1;
+        }
+        return 0;
+    }
+    
+    /**
      * Returns status.
      * @return int     
      */

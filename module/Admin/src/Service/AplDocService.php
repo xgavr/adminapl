@@ -709,7 +709,7 @@ class AplDocService {
                 'parent' => $vtp->getPtu()->getOffice()->getAplId(),
                 'type' =>   'Resup',
                 'sort' =>   $vtp->getAmount(),
-                'publish' => $vtp->getAplStatusAsString(),
+                'publish' => $vtp->getAplStatus(),
                 'name' =>   $vtp->getPtu()->getSupplier()->getAplId(),
                 'comment' => 'Suppliers',
                 'info' => $vtp->getComment(),
@@ -731,7 +731,7 @@ class AplDocService {
             foreach ($vtpGoods as $vtpGood){
                 $tp = [
                     'sort' => $vtpGood->getQuantity(),
-                    'publish' => $vtp->getAplStatusAsString(),
+                    'publish' => $vtp->getAplStatus(),
                     'name' => $vtpGood->getGood()->getAplId(),
                     'comment' => $vtpGood->getPrice(),                    
                     'art' => $vtpGood->getGood()->getCode(),
