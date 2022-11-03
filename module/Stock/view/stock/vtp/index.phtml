@@ -237,9 +237,16 @@
     }    
     
     function ptuDateFormatter(value, row){
-        if (row.statusDoc === '<?= Vtp::STATUS_DOC_NEW?>'){
+        if (row.statusDoc === '<?= Vtp::STATUS_DOC_NEW?>' && row.status === '<?= Vtp::STATUS_ACTIVE?>'){
             var diff = dateDiff(value);
-            return value + ' <span class="badge">'+diff+'</span>';
+            var badgeClass = 'badge';
+            if (diff > 9){
+                badgeClass = 'badge badge-warning';
+            }
+            if (diff > 11){
+                badgeClass = 'badge badge-danger';
+            }
+            return value + ' <span class="'+badgeClass+'">'+diff+'</span>';
         }
         return value;
     }
