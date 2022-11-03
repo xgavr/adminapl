@@ -18,6 +18,7 @@ use Stock\Entity\Movement;
 use Application\Entity\Oem;
 use Stock\Entity\GoodBalance;
 use Application\Entity\GoodSupplier;
+use Stock\Entity\Ptu;
 
 
 /**
@@ -1366,10 +1367,12 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m, o, c')
+        $queryBuilder->select('m, o, c, s')
             ->from(Movement::class, 'm')
             ->join('m.office', 'o')    
-            ->join('m.company', 'c')    
+            ->join('m.company', 'c')
+            ->leftJoin(Ptu::class, 'p', 'WITH', 'p.id = m.baseId') 
+            ->leftJoin('p.supplier', 's')    
             ->where('m.good = ?1')
             ->setParameter('1', $good->getId())
 //            ->orderBy('m.docStamp','ASC')    
