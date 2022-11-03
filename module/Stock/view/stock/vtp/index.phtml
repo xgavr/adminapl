@@ -90,7 +90,7 @@
                 <tr>
                      <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
                      <th data-field="docDate" data-sortable="true" data-width="120">Дата</th>
-                     <th data-field="ptu.docDate" data-sortable="false" data-width="120">Дата поступления</th>
+                     <th data-field="ptu.docDate" data-sortable="false" data-width="120" data-formatter="ptuDateFormatter">Дата поступления</th>
                      <th data-field="id" data-sortable="false" data-formatter="docNumFormatter">Номер</th>
                      <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
                      <th data-field='amount' data-sortable="true" data-align="right" data-formatter="amountFormatter">Сумма</th>
@@ -149,6 +149,17 @@
         params.status = $('#statusSelect').val();
         
         return params;
+    }
+    
+    /**
+     * Разность дат
+     * @returns bool
+     */
+    function dateDiff(ptuDate){
+        var today = Date.now();
+        var parseDate = Date.parse(ptuDate);
+        var oneDay=1000*60*60*24;
+        return Math.floor((today-parseDate)/oneDay);
     }
     
     function rowStyle(row){
@@ -224,6 +235,14 @@
         btn += ' <a href="'+url+'" target="_blank">xls</a>';
         return btn;
     }    
+    
+    function ptuDateFormatter(value, row){
+        if (row.statusDoc === '<?= Vtp::STATUS_DOC_NEW?>'){
+            var diff = dateDiff(value);
+            return value + ' <span class="badge">'+diff+'</span>';
+        }
+        return value;
+    }
     
     function responseHandler(res) {
         return res;

@@ -293,6 +293,7 @@ if ($vtp){
             data: $.param(data)
         })
             .done(function (data) {
+                $('#vtp-submit').prop('disabled', false);
                 if (data == 'ok'){
                     $('#vtpModal').modal('hide');
                     $('#vtptable').bootstrapTable('refresh');
