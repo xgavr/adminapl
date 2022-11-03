@@ -64,10 +64,10 @@ class VtpRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('v, p, l, o, c')
+        $queryBuilder->select('v, p, s, o, c')
             ->from(Vtp::class, 'v')
             ->join('v.ptu', 'p')
-            ->join('p.legal', 'l')
+            ->join('p.supplier', 's')
             ->join('p.office', 'o')    
             ->join('p.contract', 'c')    
                 ;
