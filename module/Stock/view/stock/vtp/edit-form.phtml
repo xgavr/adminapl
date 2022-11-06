@@ -170,7 +170,7 @@ if ($vtp){
         <div class="col-xs-12">
             <div id="vtpgoodtoolbar">
                 <div class="form-inline" role="form">
-                    <button class="btn btn-default" type="button" title="Удалить выделенное">
+                    <button id="remove-selected-button" class="btn btn-default" type="button" title="Удалить выделенное">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </button>                
                 </div>    
@@ -194,7 +194,7 @@ if ($vtp){
                 >
                 <thead>
                     <tr>
-                        <th data-field="rowNo" data-checkbox="false"></th>
+                        <th data-field="rowNo" data-checkbox="true"></th>
                         <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
                         <th data-field="vtpg.good.code" data-formatter="goodFormatter">Артикул</th>
                         <th data-field="vtpg.good.producer.name">Производитель</th>
