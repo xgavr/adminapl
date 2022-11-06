@@ -195,6 +195,11 @@ class NavManager
             $stockDropdownItems = [];
             if ($this->rbacManager->isGranted(null, 'stock.manage')) {
                 $stockDropdownItems[] = [
+                    'id' => 'goods',
+                    'label' => 'Товары',
+                    'link'  => $url('goods')
+                ];
+                $stockDropdownItems[] = [
                     'id' => 'st',
                     'label' => 'Списания',
                     'link'  => $url('st')

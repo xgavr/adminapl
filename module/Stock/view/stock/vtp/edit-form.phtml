@@ -166,6 +166,9 @@ if ($vtp){
             </div>
         </div>    
     </div>    
+    <div id="vtpgoodtoolbar">
+        <button id="remove-selected-button" class="btn btn-default">Удалить</button>
+    </div>
     <div class="row">
         <div class="col-xs-12">
             <table id="vtpgoodtable" 
@@ -183,17 +186,19 @@ if ($vtp){
                 data-unique-id = "rowNo"
                 data-classes = "table table-bordered table-hover table-condensed"
                 data-row-style="vtpTakeStyle"
+                data-click-to-select="true"
                 >
                 <thead>
                     <tr>
-                         <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                         <th data-field="vtpg.good.code" data-formatter="goodFormatter">Артикул</th>
-                         <th data-field="vtpg.good.producer.name">Производитель</th>
-                         <th data-field="vtpg.good.name">Наименование</th>
-                         <th data-field='price' data-type="numeric" data-always-use-formatter="true" data-editable="true" data-formatter="pgPriceFormatter" data-align="right">Цена</th>
-                         <th data-field='quantity' data-type="numeric" data-editable="true" data-always-use-formatter="true" data-align="right">Количество</th>
-                         <th data-field='amount' data-type="numeric" data-always-use-formatter="true" data-formatter="pgAmountFormatter" data-align="right">Сумма</th>
-                         <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
+                        <th data-field="rowNo" data-checkbox="true"></th>
+                        <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                        <th data-field="vtpg.good.code" data-formatter="goodFormatter">Артикул</th>
+                        <th data-field="vtpg.good.producer.name">Производитель</th>
+                        <th data-field="vtpg.good.name">Наименование</th>
+                        <th data-field='price' data-type="numeric" data-always-use-formatter="true" data-editable="true" data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                        <th data-field='quantity' data-type="numeric" data-editable="true" data-always-use-formatter="true" data-align="right">Количество</th>
+                        <th data-field='amount' data-type="numeric" data-always-use-formatter="true" data-formatter="pgAmountFormatter" data-align="right">Сумма</th>
+                        <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
                      </tr>                
                 </thead>
             </table>
@@ -329,6 +334,16 @@ if ($vtp){
     }
     
     $( document ).ready(function() {
+        
+        $('#remove-selected-button').click(function () {
+            var ids = $.map($('#vtpgoodtable').bootstrapTable('getSelections'), function (row) {
+              return row.rowNo;
+            });
+            $('#vtpgoodtable').bootstrapTable('remove', {
+              field: 'rowNo',
+              values: ids
+            });
+        });        
         
         $('#vtpgoodtable').bootstrapTable({
             onLoadSuccess: function(res){
