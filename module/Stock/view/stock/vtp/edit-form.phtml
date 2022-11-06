@@ -263,10 +263,10 @@ if ($vtp){
                         code: row.good.code,
                         name: row.good.name,
                         producer: {name: row.good.producer.name}
-                    }
+                    };
                     var vtpg = {
-                        good: good,
-                    }
+                        good: good
+                    };
                     var row = {
                         rowNo: index+1,
                         vtpg: vtpg,
@@ -341,6 +341,7 @@ if ($vtp){
               field: 'rowNo',
               values: ids
             });
+            vtpUpdateTotal();
         });        
         
         $('#vtpgoodtable').bootstrapTable({
