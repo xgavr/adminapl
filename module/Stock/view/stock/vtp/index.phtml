@@ -254,8 +254,7 @@
     
     function vtpDetail(vtpId){
         $('#detail'+vtpId).bootstrapTable({
-            columns: [{field: 'vtpg.good.code', title: 'Артикул'}, {field: 'quantity', title: 'Количество'}],
-            url: '/vtp/vtp-good-content/'+vtpId            
+            columns: [{field: 'vtpg.good.code', title: 'Артикул'}, {field: 'quantity', title: 'Количество'}]
         });
 //        $.getJSON( '/vtp/good-content/'+vtpId, function( data ) {
 ////            console.log(data);
@@ -266,7 +265,7 @@
     
     function detailFormatter(index, row) {
         var html = []
-        html.push('<table id="detail'+row.id+'"></table>');
+        html.push('<table id="detail'+row.id+'" data-url="/vtp/vtp-good-content/"'+row.id+'></table>');
         vtpDetail(row.id);
         return html.join('');
     }    
