@@ -120,7 +120,13 @@
     function refreshTable(){
         $table.bootstrapTable('refresh');
     }
-
+    
+    $table.bootstrapTable({
+        onExpandRow: function (index, row, $detail) {
+            console.log(row);
+            $detail.html('Loading request...');
+        }
+    });
     
     $(function () {
         $(document).on('change', '#statusDocSelect', function (e) {
@@ -264,9 +270,8 @@
     }
     
     function detailFormatter(index, row) {
-        var html = []
+        var html = [];
         html.push('<table id="detail'+row.id+'" data-url="/vtp/vtp-good-content/"'+row.id+'></table>');
-        vtpDetail(row.id);
         return html.join('');
     }    
     
