@@ -124,25 +124,34 @@
     $table.bootstrapTable({
         onExpandRow: function (index, row, $detail) {
             console.log(row);
-            $detail.html('Loading request...');
+            $detail.html('Идет загрузка...');
             $.ajax({
                 type: "GET",
                 url: "/vtp/good-content/"+row.id,
                 success: function (result) {
-                    console.log(result);
                     $detail.html('<table></table>').find('table').bootstrapTable({
+                    classes: 'table table-bordered table-hover table-condensed',    
                     columns: [{
                         field: 'vtpg.good.code',
                         title: 'Артикул'
                     }, {
+                        field: 'vtpg.good.producer.name',
+                        title: 'Производитель'
+                    }, {
                         field: 'quantity',
-                        title: 'Количество'
+                        title: 'Количество',
+                        width: 200,
+                        align: 'right'
                     }, {
                         field: 'price',
                         title: 'Цена'
+                        width: 200,
+                        align: 'right'
                     }, {
                         field: 'amount',
                         title: 'Сумма'
+                        width: 200,
+                        align: 'right'
                     }],
                     data: result,
                   });
