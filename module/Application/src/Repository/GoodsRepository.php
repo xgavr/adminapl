@@ -1371,7 +1371,7 @@ class GoodsRepository extends EntityRepository
             ->from(Movement::class, 'm')
             ->join('m.office', 'o')    
             ->join('m.company', 'c')
-            ->leftJoin('m.ptu', 'p') 
+            ->leftJoin('m.ptu', 'p', 'WITH', 'm.baseType = '.Movement::DOC_PTU) 
             ->leftJoin('p.supplier', 's')    
             ->where('m.good = ?1')
             ->setParameter('1', $good->getId())
