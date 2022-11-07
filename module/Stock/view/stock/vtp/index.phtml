@@ -253,11 +253,15 @@
     }
     
     function vtpDetail(vtpId){
-        $.getJSON( '/vtp/good-content/'+vtpId, function( data ) {
-            console.log(data);
-            $.each( data, function( key, value ) {
-            });
-        });    
+        $('#detail'+vtpId).bootstrapTable({
+            columns: [{field: vtpg.good.code, title: 'Артикул'}, {field: quantity, title: 'Количество'}],
+            url: '/vtp/good-content/'+vtpId            
+        });
+//        $.getJSON( '/vtp/good-content/'+vtpId, function( data ) {
+////            console.log(data);
+//            $.each( data, function( key, value ) {
+//            });
+//        });    
     }
     
     function detailFormatter(index, row) {
