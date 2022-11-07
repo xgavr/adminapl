@@ -137,6 +137,12 @@ class Movement {
      */
     private $company;    
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Ptu", inversedBy="movements") 
+     * @ORM\JoinColumn(name="base_id", referencedColumnName="id")
+     */
+    private $ptu;    
+
     public function __construct() {
     }
    
@@ -468,5 +474,21 @@ class Movement {
     public function setCompany($company) 
     {
         $this->company = $company;
+    }                         
+
+    /*
+     * @return Ptu
+     */    
+    public function getPtu() 
+    {
+        return $this->ptu;
+    }
+
+    /**
+     * @param Ptu $ptu
+     */    
+    public function setPtu($ptu) 
+    {
+        $this->ptu = $ptu;
     }                         
 }

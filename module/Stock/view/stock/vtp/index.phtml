@@ -123,7 +123,6 @@
     
     $table.bootstrapTable({
         onExpandRow: function (index, row, $detail) {
-            console.log(row);
             $detail.html('Идет загрузка...');
             $.ajax({
                 type: "GET",

@@ -1367,11 +1367,11 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m, o, c, s')
+        $queryBuilder->select('m, o, c, p, s')
             ->from(Movement::class, 'm')
             ->join('m.office', 'o')    
             ->join('m.company', 'c')
-            ->leftJoin(Ptu::class, 'p', 'WITH', 'm.baseId = p.id') 
+            ->leftJoin('m.ptu', 'p') 
             ->leftJoin('p.supplier', 's')    
             ->where('m.good = ?1')
             ->setParameter('1', $good->getId())
@@ -1405,7 +1405,7 @@ class GoodsRepository extends EntityRepository
                 }    
             }
         }
-        
+//        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();            
     }
     
