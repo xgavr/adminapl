@@ -186,4 +186,19 @@ class LogController extends AbstractActionController
         ]);
     }
     
+    public function historyAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        $docType = $this->params()->fromQuery('docType');
+        
+        $logs = $this->entityManager->getRepository(Log::class)
+                ->findByDocType($docType, ['id' => $id, 'limit' => 5]);
+//        var_dump($ident);
+        $this->layout()->setTemplate('layout/terminal');
+        return new ViewModel([
+            'ident' => $docType,
+            'identId' => $id,
+            'logs' => $logs
+        ]);        
+    }
 }

@@ -129,7 +129,8 @@
                 url: "/vtp/good-content/"+row.id,
                 success: function (result) {
                     $detail.html('<table></table>').find('table').bootstrapTable({
-                    classes: 'table table-bordered table-hover table-condensed',    
+                    classes: 'table table-bordered table-hover table-condensed', 
+                    rowStyle: rowStyle,
                     columns: [{
                         field: 'vtpg.good.code',
                         title: 'Артикул',
@@ -321,7 +322,7 @@
             return $table.bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
-           ['statusActiv', 'statusRetired']
+           ['statusActiv', 'statusRetired'], ['history']
         ],      
         actions: {
             statusDocNew: {
@@ -389,6 +390,23 @@
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';
                 }                
+            },
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.id+"?docType=vtp",
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
+                }
             }
         }
     });    

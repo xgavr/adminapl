@@ -15,6 +15,7 @@ use Application\Entity\Producer;
 use Application\Entity\GenericGroup;
 use Application\Entity\TokenGroup;
 use Company\Entity\Office;
+use Stock\Entity\Vtp;
 //use User\Entity\User;
 
 
@@ -80,7 +81,14 @@ class LogRepository extends EntityRepository{
                 }
                 $result = trim("$name $change");
                 return $result;
-                break;
+                
+            case 'vtp':
+//                var_dump(Vtp::getStatusList()[$message['statusDoc']]);
+                if ($message['status'] == Vtp::STATUS_RETIRED){
+                    return 'Удален';
+                }
+                return Vtp::getStatusDocList()[$message['statusDoc']];
+                
             default: break;
         }
         
