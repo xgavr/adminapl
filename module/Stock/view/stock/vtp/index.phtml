@@ -252,11 +252,17 @@
         return value;
     }
     
+    function vtpDetail(vtpId){
+        $.getJSON( '/vtp/good-content/'+vtpId, function( data ) {
+            console.log(data);
+            $.each( data, function( key, value ) {
+            });
+        });    
+    }
+    
     function detailFormatter(index, row) {
         var html = []
-        $.each(row, function (key, value) {
-            html.push('<p><b>' + key + ':</b> ' + value + '</p>')
-        });
+        html.push('<table id="detail'+row.id+'"></table>');
       return html.join('');
     }    
     
