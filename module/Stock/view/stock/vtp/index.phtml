@@ -136,8 +136,14 @@
                     }, {
                         field: 'quantity',
                         title: 'Количество'
+                    }, {
+                        field: 'price',
+                        title: 'Цена'
+                    }, {
+                        field: 'amount',
+                        title: 'Сумма'
                     }],
-                    data: JSON.parse(result),
+                    data: JSON.parse(result.rows),
                   });
                 }
             });
