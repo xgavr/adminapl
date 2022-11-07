@@ -127,8 +127,9 @@
             $detail.html('Loading request...');
             $.ajax({
                 type: "GET",
-                url: "/vtp/vtp-good-content/"+row.id,
+                url: "/vtp/good-content/"+row.id,
                 success: function (result) {
+                    console.log(result);
                     $detail.html('<table></table>').find('table').bootstrapTable({
                     columns: [{
                         field: 'vtpg.good.code',
@@ -143,7 +144,7 @@
                         field: 'amount',
                         title: 'Сумма'
                     }],
-                    data: JSON.parse(result.rows),
+                    data: JSON.parse(result),
                   });
                 }
             });
