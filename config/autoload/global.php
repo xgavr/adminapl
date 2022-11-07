@@ -24,10 +24,10 @@ return [
         Laminas\Session\Container::class,
     ],    
     'session_config' => [
-        // Срок действия cookie сессии истечет через 1 час.
-        'cookie_lifetime' => 60*60*1,     
-        // Данные сессии будут храниться на сервере 1 час.
-        'gc_maxlifetime'     => 60*60*1,
+        // Срок действия cookie сессии истечет через неделю.
+        'cookie_lifetime' => 60*60*24*7,     
+        // Данные сессии будут храниться на сервере месяц.
+        'gc_maxlifetime'     => 60*60*24*30,
         'savePath' => './data/session_09'
     ],
     // Настройка менеджера сессий.

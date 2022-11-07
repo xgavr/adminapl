@@ -200,7 +200,7 @@
 
     function docNumFormatter(value, row){
         if (row.aplId > 0){
-            return value+' ('+row.aplId+')';
+            return '<nobr>'+value+' ('+row.aplId+')</nobr>';
         }
         return value;
     }    

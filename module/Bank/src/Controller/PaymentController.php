@@ -169,6 +169,7 @@ class PaymentController extends AbstractActionController
                 $form->setData($payment->toLog());
                 if ($copy){
                     $form->get('paymentDate')->setValue(date('Y-m-d'));
+                    $form->set('status')->setValue(Payment::STATUS_ACTIVE);
                 }
             }    
         }
