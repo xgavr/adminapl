@@ -134,7 +134,7 @@
                     columns: [{
                         field: 'vtpg.good.code',
                         title: 'Артикул',
-                        formatter: 'activeFormatter'
+                        formatter: 'goodFormatter'
                     }, {
                         field: 'vtpg.good.producer.name',
                         title: 'Производитель'
@@ -291,23 +291,15 @@
         return value;
     }
     
-    function vtpDetail(vtpId){
-        $('#detail'+vtpId).bootstrapTable({
-            columns: [{field: 'vtpg.good.code', title: 'Артикул'}, {field: 'quantity', title: 'Количество'}]
-        });
-//        $.getJSON( '/vtp/good-content/'+vtpId, function( data ) {
-////            console.log(data);
-//            $.each( data, function( key, value ) {
-//            });
-//        });    
-    }
-    
-    function detailFormatter(index, row) {
-        var html = [];
-        html.push('<table id="detail'+row.id+'" data-url="/vtp/vtp-good-content/"'+row.id+'></table>');
-        return html.join('');
+    function goodFormatter(value, row){
+        var url = '/goods/view/'+vtpg.good.id;
+        btn = '<nobr><a';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-link btn-xs" target="_blank">';
+        btn += '<span class="glyphicon glyphicon-link"></span>';
+        btn += '</a>'+value+'</nobr>';
+        return btn;
     }    
-    
     function responseHandler(res) {
         return res;
     }    
