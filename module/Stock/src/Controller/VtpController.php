@@ -134,6 +134,28 @@ class VtpController extends AbstractActionController
         return new JsonModel($result);          
     }        
     
+    public function vtpGoodContentAction()
+    {
+        	        
+        $vtpId = $this->params()->fromRoute('id', -1);
+        $q = $this->params()->fromQuery('search');
+//        $offset = $this->params()->fromQuery('offset');
+//        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        $query = $this->entityManager->getRepository(Vtp::class)
+                        ->findVtpGoods($vtpId, ['q' => $q, 'sort' => $sort, 'order' => $order]);
+        
+//        $total = count($query->getResult(2));
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);          
+    }        
+    
     public function repostAllVtpAction()
     {                
         $this->vtpManager->repostAllVtp();
