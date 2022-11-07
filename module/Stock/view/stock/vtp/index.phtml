@@ -1,5 +1,6 @@
 <?php
     use Stock\Entity\Vtp;
+    use Stock\Entity\VtpGood;
     
     $this->headTitle('Возврат товаров поставщику');
 
@@ -130,7 +131,7 @@
                 success: function (result) {
                     $detail.html('<table></table>').find('table').bootstrapTable({
                     classes: 'table table-bordered table-hover table-condensed', 
-                    rowStyle: rowStyle,
+                    rowStyle: vtpIndexTakeStyle,
                     columns: [{
                         field: 'vtpg.good.code',
                         title: 'Артикул',
@@ -222,6 +223,14 @@
         
         return {classes: retired};
     }
+    
+    function vtpIndexTakeStyle(row){
+        var classes = 'default';
+        if (row.vtpg.take === "<?= VtpGood::TAKE_NO?>"){
+            classes = 'warning';
+        }        
+        return {classes: classes};
+    }    
         
     function linkFormatter(value, row){
         if (!value){
