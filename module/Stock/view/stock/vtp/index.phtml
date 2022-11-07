@@ -254,7 +254,7 @@
     
     function vtpDetail(vtpId){
         $('#detail'+vtpId).bootstrapTable({
-            columns: [{field: vtpg.good.code, title: 'Артикул'}, {field: quantity, title: 'Количество'}],
+            columns: [{field: 'vtpg.good.code', title: 'Артикул'}, {field: 'quantity', title: 'Количество'}],
             url: '/vtp/vtp-good-content/'+vtpId            
         });
 //        $.getJSON( '/vtp/good-content/'+vtpId, function( data ) {
