@@ -698,7 +698,11 @@
     }
     
     function baseSupplierFormatter(value){
-        return '<nobr>'+value+'</nobr>';
+        if (value){
+            return value.substr(0, 30);
+        }
+        
+        return value;
     }
 
     function oemActiveFormatter(value, row){
