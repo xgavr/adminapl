@@ -221,18 +221,18 @@
     function printFormatter(value, row){
 
         var url = '/print/vtp-torg2/'+value;
-        btn = '<a href="'+url+'" target="_blank">pdf</a>';
+        btn = '<nobr><a href="'+url+'" target="_blank">pdf</a>';
         url = '/print/vtp-torg2/'+value+'?ext=Xls';
-        btn += ' <a href="'+url+'" target="_blank">xls</a>';
+        btn += ' <a href="'+url+'" target="_blank">xls</a></nobr>';
         return btn;
     }    
     
     function updFormatter(value, row){
 
         var url = '/print/vtp-upd/'+value;
-        btn = '<a href="'+url+'" target="_blank">pdf</a>';
+        btn = '<nobr><a href="'+url+'" target="_blank">pdf</a>';
         url = '/print/vtp-upd/'+value+'?ext=Xls';
-        btn += ' <a href="'+url+'" target="_blank">xls</a>';
+        btn += ' <a href="'+url+'" target="_blank">xls</a></nobr>';
         return btn;
     }    
     
