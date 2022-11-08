@@ -452,7 +452,7 @@ class CashManager {
         $cashDoc->setAplId(empty($data['aplId']) ?: 0);
         $cashDoc->setCash(empty($data['cash']) ? null:$data['cash']);
         $cashDoc->setCashRefill(empty($data['cashRefill']) ? null:$data['cashRefill']);
-        $cashDoc->setCheckStatus($data['checkStatus'] ?: CashDoc::CHECK_RETIRED);
+        $cashDoc->setCheckStatus(empty($data['checkStatus']) ? CashDoc::CHECK_RETIRED:$data['checkStatus']);
         $cashDoc->setComment(empty($data['comment']) ? null:$data['comment']);
         $cashDoc->setCompany($data['company']);
         $cashDoc->setContact(empty($data['contact']) ? null:$data['contact']);
@@ -501,7 +501,7 @@ class CashManager {
         $cashDoc->setAplId(empty($data['aplId']) ?: 0);
         $cashDoc->setCash(empty($data['cash']) ? null:$data['cash']);
         $cashDoc->setCashRefill(empty($data['cashRefill']) ? null:$data['cashRefill']);
-        $cashDoc->setCheckStatus($data['checkStatus'] ?: CashDoc::CHECK_RETIRED);
+        $cashDoc->setCheckStatus(empty($data['checkStatus']) ? CashDoc::CHECK_RETIRED : $data['checkStatus']);
         $cashDoc->setComment(empty($data['comment']) ? null:$data['comment']);
         $cashDoc->setCompany($data['company']);
         $cashDoc->setContact(empty($data['contact']) ? null:$data['contact']);
