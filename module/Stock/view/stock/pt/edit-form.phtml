@@ -200,7 +200,12 @@ if ($pt){
             .done(function (data) {
                 if (data == 'ok'){
                     $('#ptModal').modal('hide');
-                    $('#table').bootstrapTable('refresh');
+                    if ($('#table').length){
+                        $('#table').bootstrapTable('refresh');
+                    }    
+                    if ($('#movementTable').length){
+                        $('#movementTable').bootstrapTable('refresh');
+                    }    
                 } else {
                     $('#ptModal .modal-content').html(data);                    
                 }    

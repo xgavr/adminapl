@@ -19,6 +19,7 @@ use Company\Entity\Legal;
 use Application\Entity\Contact;
 use Stock\Entity\PtSheduler;
 use Stock\Form\PtShedulerForm;
+use Stock\Entity\GoodBalance;
 
 class PtController extends AbstractActionController
 {
@@ -299,11 +300,21 @@ class PtController extends AbstractActionController
         $office2 = $this->entityManager->getRepository(Office::class)
                 ->findOneById($office2Id);
         
-        $good = $company = $company2 = null;
+        $good = $company = $company2 = $balance = null;
         if ($goodId > 0){
             $good = $this->entityManager->getRepository(Goods::class)
                     ->find($goodId);
         }
+        
+        if ($good){
+            $balance = $this->entityManager->getRepository(GoodBalance::class)
+                    ->goodBalance($good);
+            if ($balance){
+                $office = $balance->getOffice();
+                $company = $balance->getCompany();
+            }
+        }    
+                
         if ($this->getRequest()->isPost()){
             $data = $this->params()->fromPost();
             $office = $this->entityManager->getRepository(Office::class)
@@ -315,9 +326,15 @@ class PtController extends AbstractActionController
             $company2 = $this->entityManager->getRepository(Legal::class)
                     ->findOneById($data['company2']);
         }
-                
+        
         $form = new PtForm($this->entityManager, $office, $company, $office2, $company2);
 
+        if ($balance){
+            $form->get('office_id')->setValue($office->getId());
+            $form->get('company')->setValue($company->getId());
+            $form->get('quantity')->setValue(min($balance->getRest(), 2));
+        }
+        
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();

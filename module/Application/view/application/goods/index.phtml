@@ -70,13 +70,15 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="vozvrat" data-width="50" data-align="right">Возврат</th>             
                      <th data-field="available" data-width="50" data-align="right" data-formatter="availableFormatter">Доступно</th>             
                      <th data-field="officeName" data-width="100">Офис</th>             
-                     <!--<th data-field="" data-formatter="activeFormatter"></th>-->
+                     <th data-field="id" data-width="10" data-formatter="activeFormatter"></th>
                      <th data-field="aplRest"  data-width="5" data-align="right" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle">А</th>
                  </tr>                
             </thead>
         </table>
     </div>
 </div>    
+
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
     $(function () {
@@ -158,14 +160,18 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function activeFormatter(value, row){
-        var url = '/goods/delete-form/'+row.id;
+        var disabled = 'disabled="diasbled"';
+        if (row.rest > 0){
+            disabled='';
+        }
+        var url = '/pt/combined-form/'+value;
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' class="btn btn-xs btn-default pt-combined-modal-show"';
         btn += ' aria-label="Left Align"'; 
-        btn += ' title="Удалить"'; 
-        btn += ' onclick="tableRowDelete(\''+url+'\')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += ' title="Оформить перемещение" ' + disabled; 
+        btn += ' modal-url="'+url+'">'; 
+        btn += '<span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
     }    

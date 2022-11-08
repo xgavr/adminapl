@@ -18,6 +18,7 @@ use Company\Entity\Office;
 use Company\Entity\Legal;
 use User\Entity\User;
 use Company\Entity\Cost;
+use Stock\Entity\GoodBalance;
 
 class StController extends AbstractActionController
 {
@@ -310,6 +311,20 @@ class StController extends AbstractActionController
             $office = $this->stManager->currentUser()->getOffice();
         }
 
+        $good = $balance = null;
+        if ($goodId > 0){ 
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+            if ($good){
+                $balance = $this->entityManager->getRepository(GoodBalance::class)
+                        ->goodBalance($good);
+                if ($balance){
+                    $office = $balance->getOffice();
+                    $company = $balance->getCompany();
+                }
+            }    
+        }
+
         if ($this->getRequest()->isPost()){
             $data = $this->params()->fromPost();
             $office = $this->entityManager->getRepository(Office::class)
@@ -324,11 +339,6 @@ class StController extends AbstractActionController
                 
         $form = new StForm($this->entityManager, $office, $company, $user, $cost);
 
-        $good = null;
-        if ($goodId > 0){
-            $good = $this->entityManager->getRepository(Goods::class)
-                    ->find($goodId);
-        }
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();

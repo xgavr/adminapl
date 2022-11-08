@@ -79,7 +79,11 @@ class VtpRepository extends EntityRepository{
                         ;
             }            
             if (isset($params['sort'])){
-                $queryBuilder->orderBy('v.'.$params['sort'], $params['order']);
+                if ($params['sort'] == 'ptu.docDate'){
+                    $queryBuilder->orderBy('p.docDate', $params['order']);                    
+                } else {
+                    $queryBuilder->orderBy('v.'.$params['sort'], $params['order']);
+                }    
             }            
             if (!empty($params['officeId'])){
                 $office = $entityManager->getRepository(Office::class)

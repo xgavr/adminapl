@@ -313,7 +313,7 @@ class PrintManager {
                 ->setTitle($vtp->getDocPresent('УПД'))
                 ;
         $sheet = $spreadsheet->setActiveSheetIndex(0)
-                ->setCellValue('D6', 1)
+                ->setCellValue('D6', 2)
                 ->setCellValue('L2', $vtp->getDocNo())
                 ->setCellValue('T2', date('d.m.Y', strtotime($vtp->getDocDate())))
                 ->setCellValue('O5', $vtp->getPtu()->getContract()->getCompany()->getName())

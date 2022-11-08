@@ -520,6 +520,26 @@ class MovementRepository extends EntityRepository{
     }
     
     /**
+     * Получить остаток товара текущий
+     * @param Goods $good
+     * @param array $params
+     */
+    public function goodBalance($good, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('gb')
+                ->from(GoodBalance::class, 'gb')
+                ->where('gb.good = ?1')
+                ->andWhere('gb.rest > 0') 
+                ->setParameter('1', $good->getId())
+                ->setMaxResults(1)
+                ;
+            
+        return $qb->getQuery()->getOneOrNullResult();                    
+    }
+    
+    /**
      * Получить ссылку на документ
      * @param string $logkey
      */

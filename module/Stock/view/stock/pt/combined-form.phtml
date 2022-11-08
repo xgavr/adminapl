@@ -127,6 +127,12 @@ $form->prepare();
             .done(function (data) {
                 if (data == 'ok'){
                     $('#ptCombinedModal').modal('hide');
+                    if ($('#table').length){
+                        $('#table').bootstrapTable('refresh');
+                    }    
+                    if ($('#movementTable').length){
+                        $('#movementTable').bootstrapTable('refresh');
+                    }    
                 } else {
                     $('#ptCombinedModal .modal-content').html(data);                    
                 }    

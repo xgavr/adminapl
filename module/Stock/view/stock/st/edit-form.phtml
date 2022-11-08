@@ -211,7 +211,12 @@ if ($st){
             .done(function (data) {
                 if (data == 'ok'){
                     $('#stModal').modal('hide');
-                    $('#table').bootstrapTable('refresh');
+                    if ($('#table').length){
+                        $('#table').bootstrapTable('refresh');
+                    }    
+                    if ($('#movementTable').length){
+                        $('#movementTable').bootstrapTable('refresh');
+                    }    
                 } else {
                     $('#stModal .modal-content').html(data);                    
                 }    

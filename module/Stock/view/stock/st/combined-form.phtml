@@ -144,6 +144,12 @@ $form->prepare();
             .done(function (data) {
                 if (data == 'ok'){
                     $('#stCombinedModal').modal('hide');
+                    if ($('#table').length){
+                        $('#table').bootstrapTable('refresh');
+                    }    
+                    if ($('#movementTable').length){
+                        $('#movementTable').bootstrapTable('refresh');
+                    }    
                 } else {
                     $('#stCombinedModal .modal-content').html(data);                    
                 }    
