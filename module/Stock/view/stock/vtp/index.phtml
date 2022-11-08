@@ -103,8 +103,9 @@
 <!--                     <th data-field='status' data-sortable="false">П</th>
                      <th data-field='statusDoc' data-sortable="false">Т</th>
                      <th data-field='statusEx' data-sortable="false">О</th>-->
-                     <th data-field="id" data-formatter="printFormatter">Торг2</th>
-                     <th data-field="id" data-formatter="updFormatter">УПД</th>
+                     <th data-field="id" data-formatter="printFormatter" data-width="15">Торг2</th>
+                     <th data-field="id" data-formatter="torg12Formatter" data-width="15">Торг12</th>
+                     <th data-field="id" data-formatter="updFormatter" data-width="15">УПД</th>
                      <th data-field="id" data-formatter="activeFormatter" data-align="center"></th>
                  </tr>                
             </thead>
@@ -285,6 +286,15 @@
         return btn;
     }    
     
+    function torg12Formatter(value, row){
+
+        var url = '/print/vtp-torg12/'+value;
+        btn = '<nobr><a href="'+url+'" target="_blank">pdf</a>';
+        url = '/print/vtp-torg12/'+value+'?ext=Xls';
+        btn += ' <a href="'+url+'" target="_blank">xls</a></nobr>';
+        return btn;
+    }    
+
     function ptuDateFormatter(value, row){
         if (row.statusDoc === '<?= Vtp::STATUS_DOC_NEW?>' && row.status === '<?= Vtp::STATUS_ACTIVE?>'){
             var diff = dateDiff(value);

@@ -529,6 +529,128 @@ class PrintManager {
     }    
 
     /**
+     * Торг12 возврат
+     * @param Vtp $vtp
+     * @param string $writerType
+     * @param bool $code
+     * @return string 
+     */
+    public function vtpTorg12($vtp, $writerType = 'Pdf', $code = true)
+    {
+        ini_set("pcre.backtrack_limit", "5000000");
+        setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
+//        echo strftime("%B %d, %Y", time()); exit;
+
+        $folder_name = Vtp::PRINT_FOLDER;
+        if (!is_dir($folder_name)){
+            mkdir($folder_name);
+        }        
+        
+        $rubToStrFilter = new NumToStr();
+        $numToStrFilter = new NumToStr(['format' => NumToStr::FORMAT_NUM]);
+        
+        $inputFileType = 'Xls';
+        $reader = IOFactory::createReader($inputFileType);
+        $spreadsheet = $reader->load(Vtp::TEMPLATE_TORG12);
+        $spreadsheet->getProperties()
+                ->setTitle($vtp->getDocPresent('Накладная'))
+                ;
+        
+        $recipient = $vtp->getPtu()->getLegal();
+        $company = $vtp->getPtu()->getContract()->getCompany();
+        
+        $sheet = $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('B3', $company->getCompanyBankAccountPresent($vtp->getPtu()->getOffice()))
+                ->setCellValue('AL4', $company->getOkpo())
+                ->setCellValue('D8', ($recipient) ? $recipient->getLegalBankAccountPresent():'')
+                ->setCellValue('AL9', $company->getOkpo())
+                ->setCellValue('D10', $company->getCompanyBankAccountPresent($vtp->getPtu()->getOffice()))
+                ->setCellValue('D12', ($recipient) ? $recipient->getLegalBankAccountPresent():'')
+//                ->setCellValue('D14', ($order->getContract()) ? $order->getContract()->getContractPresent():'')
+                ->setCellValue('K17', $vtp->getDocNo())
+                ->setCellValue('O17', date('d.m.Y', strtotime($vtp->getDocDate())))
+                ->setCellValue('Z25', number_format($vtp->getTotal(), 2, ',', ' '))
+                ->setCellValue('AK25', number_format($vtp->getTotal(), 2, ',', ' '))
+                
+                ->setCellValue('F27', $numToStrFilter->filter($vtp->getVtpGoods()->count()))
+                ->setCellValue('B37', $rubToStrFilter->filter($vtp->getTotal()))                
+                ->setCellValue('J39', $company->getHead())
+                ->setCellValue('J41', $company->getChiefAccount())
+
+                ->setCellValue('F46', '"'.date('d', strtotime($vtp->getDocDate())).'"')
+                ->setCellValue('G46', date('m', strtotime($vtp->getDocDate())))
+                ->setCellValue('I46', date('Y', strtotime($vtp->getDocDate())).' года')                
+                ;
+        
+        
+        $bids = $this->entityManager->getRepository(VtpGood::class)
+                ->findBy(['vtp' => $vtp->getId()]);
+        if ($bids){
+            $i = 1;
+            $row = 23;
+            $totalNum = $pageNum = $pageTotal = 0;
+            $bidsCount = count($bids);
+            $srcRow = $row + $bidsCount - 1;
+            if ($bidsCount > 1){
+                $sheet->insertNewRowBefore($row, $bidsCount - 1);            
+            }
+            foreach ($bids as $bid){
+                if ($bidsCount > 1){
+                    $this->_copyRows($sheet, "A$srcRow:AN$srcRow", "A$row");
+                } 
+                $sheet->setCellValue("B$row", $i);       
+                $sheet->setCellValue("C$row", $bid->getGood()->getNameShort());                
+                if ($code){
+                    $sheet->setCellValue("G$row", $bid->getGood()->getCode());                
+                } else {
+                    $sheet->setCellValue("G$row", $bid->getGood()->getId());                                    
+                }    
+                $sheet->setCellValue("V$row", number_format($bid->getQuantity(), 0, ',', ' '));                
+                $sheet->setCellValue("X$row", number_format($bid->getPrice(), 2, ',', ' '));                              
+                $sheet->setCellValue("Z$row", number_format($bid->getTotal(), 2, ',', ' '));                
+                $sheet->setCellValue("AK$row", number_format($bid->getTotal(), 2, ',', ' '));                
+                $i++;
+                $row++;
+                $totalNum += $bid->getQuantity();
+                $pageNum += $bid->getQuantity();
+                $pageTotal += $bid->getTotal();
+            }
+            $sheet->setCellValue('V'.(24+$bidsCount-1), $pageNum);
+            $sheet->setCellValue('V'.(25+$bidsCount-1), $totalNum);
+            $sheet->setCellValue('Z'.(24+$bidsCount-1), number_format($pageTotal, 2, ',', ' '));
+            $sheet->setCellValue('AK'.(24+$bidsCount-1), number_format($pageTotal, 2, ',', ' '));
+        }
+        
+        $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        $sheet->getPageMargins()
+            ->setLeft(0.5)
+            ->setRight(0.5)
+            ->setTop(0.2)
+            ->setBottom(0.2)
+            ->setHeader(0);
+        
+        switch ($writerType){
+            case 'Pdf':
+                $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
+                $outFilename = $vtp->getPrintName($writerType, 'Накладная');
+                $writer->save($outFilename);
+                break;
+            case 'Xls':
+            case 'Xlsx':
+                $writer = IOFactory::createWriter($spreadsheet, $writerType);
+                $outFilename = $order->getPrintName($writerType, 'Накладная');
+//                $writer->writeAllSheets();
+                $writer->save($outFilename);
+                break;
+            default: 
+                $outFilename = null;
+        } 
+        
+        
+        return $outFilename;
+    }        
+    
+    /**
      * Счет на оплату
      * @param Order $order
      * @param string $writerType

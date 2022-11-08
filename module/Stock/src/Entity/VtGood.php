@@ -285,6 +285,15 @@ class VtGood {
     }
     
     /**
+     * Returns the amount of doc.
+     * @return float     
+     */
+    public function getTotal() 
+    {
+        return $this->amount;
+    }
+
+    /**
      * Returns take.
      * @return int     
      */
@@ -345,6 +354,15 @@ class VtGood {
         return $this->good;
     }
         
+    /**
+     * Returns the good short name.
+     * @return string     
+     */
+    public function getDisplayName() 
+    {
+        return $this->good->getNameShort();
+    }
+
     /**
      * Лог
      * @return array

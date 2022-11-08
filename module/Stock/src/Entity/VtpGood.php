@@ -285,6 +285,15 @@ class VtpGood {
     }
     
     /**
+     * Returns the amount of good.
+     * @return float     
+     */
+    public function getTotal() 
+    {
+        return round($this->amount, 2);
+    }
+
+    /**
      * Returns take.
      * @return int     
      */

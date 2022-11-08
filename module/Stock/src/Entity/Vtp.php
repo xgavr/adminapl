@@ -43,6 +43,7 @@ class Vtp {
     
     const PRINT_FOLDER          = './data/template/vtp'; 
     const TEMPLATE_TORG2        = './data/template/torg-2.xls';
+    const TEMPLATE_TORG12        = './data/template/torg12.xls';
     const TEMPLATE_UPD        = './data/template/upd3.xls';
 
     const STATUS_ACCOUNT_OK  = 1;// обновлено 
@@ -502,6 +503,15 @@ class Vtp {
         return $this->amount;
     }
     
+    /**
+     * Returns the total of doc.
+     * @return float     
+     */
+    public function getTotal() 
+    {
+        return $this->amount;
+    }
+
     /**
      * Sets  ptu.
      * @param Ptu $ptu     
