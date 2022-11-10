@@ -282,7 +282,7 @@ class VtpController extends AbstractActionController
         $good = $rowNo = $result = null;        
         if (isset($params['good'])){
             $good = $this->entityManager->getRepository(Goods::class)
-                    ->findOneById($params['good']['id']);            
+                    ->find($params['good']['id']);            
         }
         if (isset($params['rowNo'])){
             $rowNo = $params['rowNo'];
@@ -336,7 +336,7 @@ class VtpController extends AbstractActionController
     {
         $vtpId = $this->params()->fromRoute('id', -1);
         $vtp = $this->entityManager->getRepository(Vtp::class)
-                ->findOneById($vtpId);        
+                ->find($vtpId);        
 
         if ($vtp == null) {
             $this->getResponse()->setStatusCode(404);
@@ -355,7 +355,7 @@ class VtpController extends AbstractActionController
         $vtpId = $this->params()->fromRoute('id', -1);
         $status = $this->params()->fromQuery('status', Vtp::STATUS_ACTIVE);
         $vtp = $this->entityManager->getRepository(Vtp::class)
-                ->findOneById($vtpId);        
+                ->find($vtpId);        
 
         if ($vtp == null) {
             $this->getResponse()->setStatusCode(404);
@@ -374,7 +374,7 @@ class VtpController extends AbstractActionController
         $vtpId = $this->params()->fromRoute('id', -1);
         $statusDoc = $this->params()->fromQuery('status', Vtp::STATUS_DOC_NEW);
         $vtp = $this->entityManager->getRepository(Vtp::class)
-                ->findOneById($vtpId);        
+                ->find($vtpId);        
 
         if ($vtp == null) {
             $this->getResponse()->setStatusCode(404);
@@ -382,6 +382,25 @@ class VtpController extends AbstractActionController
         }        
         
         $this->vtpManager->updateVtpDocStatus($vtp, $statusDoc);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }        
+    
+    public function commentAction()
+    {
+        $vtpId = $this->params()->fromRoute('id', -1);
+        $comment = $this->params()->fromQuery('comment');
+        $vtp = $this->entityManager->getRepository(Vtp::class)
+                ->find($vtpId);        
+
+        if ($vtp == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->vtpManager->updateVtpComment($vtp, $comment);
         
         return new JsonModel(
            ['ok']

@@ -1429,7 +1429,7 @@ class SupplierController extends AbstractActionController
         $supplierId = $this->params()->fromRoute('id', -1);
         
         $supplier = $this->entityManager->getRepository(Supplier::class)
-                ->findOneById($supplierId);
+                ->find($supplierId);
         
         if ($supplier == null) {
             $this->getResponse()->setStatusCode(404);
@@ -1451,4 +1451,26 @@ class SupplierController extends AbstractActionController
         return $this->redirect()->toRoute('supplier');
     }    
     
+    public function siteAction()
+    {
+        $supplierId = $this->params()->fromRoute('id', -1);
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->find($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }   
+        $result = null;
+        $requestSetting = $this->entityManager->getRepository(RequestSetting::class)
+                ->findOneBy(['supplier' => $supplier->getId(), 'status' => RequestSetting::STATUS_ACTIVE, 'mode' => RequestSetting::MODE_MANUALLY]);
+        if ($requestSetting){
+            $result = $requestSetting->getSiteNormalize();
+        }
+        return new JsonModel([
+            'url' => $result,
+        ]);                  
+        
+    }
 }

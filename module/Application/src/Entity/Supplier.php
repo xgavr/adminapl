@@ -690,17 +690,42 @@ class Supplier {
         return $this->requestSettings;
     }
     
+    /**
+     * Получить первый способ заказа вручную
+     * @return array
+     */
     public function getActiveManualRequestSetting()
     {
-        $criteria = Criteria::create()
-                ->andWhere(Criteria::expr()->eq('status', RequestSetting::STATUS_ACTIVE))
-                ->andWhere(Criteria::expr()->eq('mode', RequestSetting::MODE_MANUALLY))
-                ->orderBy(['id' => Criteria::ASC])
-                ;
+        if ($this->requestSettings->count()){
+            $criteria = Criteria::create()
+                    ->andWhere(Criteria::expr()->eq('status', RequestSetting::STATUS_ACTIVE))
+                    ->andWhere(Criteria::expr()->eq('mode', RequestSetting::MODE_MANUALLY))
+                    ->orderBy(['id' => Criteria::ASC])
+                    ;
+
+            return $this->requestSettings->matching($criteria);                
+        }
         
-        return $this->requestSettings->matching($criteria);                
+        return;
     }
     
+    /**
+     * Получить сайт поставщика
+     * @return string
+     */
+    public function getActiveManualRequestSettingUrl()
+    {
+        $requestSettings = $this->getActiveManualRequestSetting();
+        if ($requestSettings){
+            foreach ($requestSettings as $requestSetting){
+                if ($requestSetting->getSite()){
+                    return $requestSetting->getSiteNormalize();
+                }    
+            }    
+        }
+        return;                
+    }
+
     /**
      * Assigns.
      */

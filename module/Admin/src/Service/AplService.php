@@ -202,11 +202,13 @@ class AplService {
 
             $manualDesc = $manualSite = $manualLogin = $manualPassword = null;            
             $requestSettings = $supplier->getActiveManualRequestSetting();
-            foreach ($requestSettings as $requestSetting){
-                $manualDesc .= $requestSetting->getDescription().PHP_EOL;
-                $manualSite = $requestSetting->getSite();
-                $manualLogin = $requestSetting->getLogin();
-                $manualPassword = $requestSetting->getPassword();
+            if ($requestSettings){
+                foreach ($requestSettings as $requestSetting){
+                    $manualDesc .= $requestSetting->getDescription().PHP_EOL;
+                    $manualSite = $requestSetting->getSite();
+                    $manualLogin = $requestSetting->getLogin();
+                    $manualPassword = $requestSetting->getPassword();
+                }    
             }
             
             $manualManager = $manualPhone = $manualEmail = null;

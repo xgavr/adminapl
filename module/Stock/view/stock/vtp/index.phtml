@@ -96,10 +96,10 @@
                      <th data-field="id" data-sortable="false" data-formatter="docNumFormatter">Номер</th>
                      <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
                      <th data-field='amount' data-sortable="true" data-align="right" data-formatter="amountFormatter">Сумма</th>
-                     <th data-field='ptu.supplier.name' data-sortable="true">Поставщик</th>
+                     <th data-field='ptu.supplier.name' data-sortable="true" data-formatter="linkFormatter">Поставщик</th>
                      <!--<th data-field='ptu.contract.name' data-sortable="false">Договор</th>-->
                      <th data-field='ptu.office.name' data-sortable="false">Склад</th>
-                     <th data-field='comment' data-sortable="false">Примечание</th>
+                     <th data-field='comment' data-sortable="false" data-editable="true" data-editable-type="textarea">Примечание</th>
 <!--                     <th data-field='status' data-sortable="false">П</th>
                      <th data-field='statusDoc' data-sortable="false">Т</th>
                      <th data-field='statusEx' data-sortable="false">О</th>-->
@@ -170,6 +170,19 @@
         $(document).on('change', '#statusSelect', function (e) {
             refreshTable();
         });
+        $(document).on('editable-save.bs.table', '#vtptable', function (e, field, row, old, $el) {
+            if (field == 'comment'){
+                changeComment(row.id, row.comment);
+            }
+        });        
+        $(document).on('click', '.supplier-link', function (e) {
+            let id = $(e.currentTarget).attr('supplier-id');
+            $.get( "/supplier/site/"+id, function(data){
+                if (data.url){
+                    window.open(data.url, '_blank');
+                }    
+            });        
+        });        
     });
     
     function queryParams(params) {
@@ -208,7 +221,7 @@
         var retired = 'tablerow';
         if (row.status === '<?= Vtp::STATUS_RETIRED?>'){
            retired += ' retired';
-           return {classes: retired};
+//           return {classes: retired};
         }
         if (row.statusAccount === '<?= Vtp::STATUS_TAKE_NO?>'){
            retired += ' warning';
@@ -310,6 +323,16 @@
         return value;
     }
     
+    function linkFormatter(value, row){
+        return [
+            '<nobr>',
+            '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.ptu.supplier.id+'" title="Перейти на сайт поставщика">',
+            '<span class="glyphicon glyphicon-link"></span></a>',
+            '<a href="/supplier/view/' + row.ptu.supplier.id + '" target="_blank">' + value + '</a>',
+            '</nobr>'
+        ].join(''); 
+    }        
+    
     function goodFormatter(value, row){
         var url = '/goods/view/'+row.vtpg.good.id;
         btn = '<nobr><a';
@@ -335,6 +358,12 @@
         });        
     }
     
+    function changeComment(vtpId, comment){
+        $.get( "/vtp/comment/"+vtpId+'?comment='+comment, function(data){
+            
+        });        
+    }
+
     var menu = new BootstrapMenu('.tablerow', {
         fetchElementData: function(rowElem) {
             var rowId = $(rowElem).attr('data-index');
@@ -349,11 +378,11 @@
                 onClick: function(row) {
                     changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NEW?>);
                 },
-                isShown: function(row) {
-                  return row.statusDoc !== '<?= Vtp::STATUS_DOC_NEW?>';
-                },
+//                isShown: function(row) {
+//                  return row.statusDoc !== '<?= Vtp::STATUS_DOC_NEW?>';
+//                },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>';
+                    return row.docDate > '<?= $allowDate?>' && row.statusDoc !== '<?= Vtp::STATUS_DOC_NEW?>';
                 }                
             }, 
             statusDocRect: {
@@ -362,11 +391,11 @@
                 onClick: function(row) {
                     changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_RECD?>);
                 },
-                isShown: function(row) {
-                  return row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>';
-                },
+//                isShown: function(row) {
+//                  return row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>';
+//                },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>';
+                    return row.docDate > '<?= $allowDate?>' && row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>';
                 }                
             }, 
             statusDocNotRect: {
@@ -376,11 +405,11 @@
                 onClick: function(row) {
                     changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NOT_RECD?>);
                 },
-                isShown: function(row) {
-                  return row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>';
-                },
+//                isShown: function(row) {
+//                  return row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>';
+//                },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>';
+                    return row.docDate > '<?= $allowDate?>' && row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>';
                 }                
             }, 
             statusActiv: {

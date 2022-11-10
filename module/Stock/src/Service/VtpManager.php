@@ -328,6 +328,27 @@ class VtpManager
     }
 
     /**
+     * Update vtp comment.
+     * @param Vtp $vtp
+     * @param string $comment
+     * @return integer
+     */
+    public function updateVtpComment($vtp, $comment)            
+    {
+
+        if ($vtp->getDocDate() > $this->allowDate){
+            $vtp->setComment($comment);
+
+            $this->entityManager->persist($vtp);
+            $this->entityManager->flush($vtp);
+
+            $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
+        }    
+        
+        return;
+    }
+
+    /**
      * Adds a new vtp-good.
      * @param integer $vtpId
      * @param array $data
