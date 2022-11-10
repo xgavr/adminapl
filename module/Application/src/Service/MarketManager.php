@@ -251,6 +251,7 @@ class MarketManager
         $market->setSupplier($data['supplier']);
         $market->setPricecol($data['pricecol']);
         $market->setMovementLimit($data['movementLimit']);
+        $market->setRetailLimit($data['retailLimit']);
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
         $market->setTdSetting($data['tdSetting']);
@@ -296,6 +297,7 @@ class MarketManager
         $market->setTokenGroupSetting($data['tokenGroupSetting']);
         $market->setPricecol($data['pricecol']);
         $market->setMovementLimit($data['movementLimit']);
+        $market->setRetailLimit($data['retailLimit']);
         $market->setNameSetting($data['nameSetting']);
         $market->setRestSetting($data['restSetting']);
         $market->setTdSetting($data['tdSetting']);
@@ -543,6 +545,7 @@ class MarketManager
         }    
         $sheet->setCellValue("F1", 'Наличие');
         $sheet->setCellValue("G1", 'Цена');
+        $sheet->setCellValue("H1", 'Id');
         $k = 2;
         $rows = $outRows = 0;
         
@@ -577,6 +580,7 @@ class MarketManager
             $sheet->setCellValue("F$k", ltrim($rawprices['realrest'], '='));
             $sheet->setCellValue("G$k", $market->getExtraPrice($opts));
     //                $sheet->setCellValue("G$k", $rawprice->getRealPrice());
+            $sheet->setCellValue("H$k", $good['aplId']);
 
             //$this->entityManager->detach($good);
             $k++;

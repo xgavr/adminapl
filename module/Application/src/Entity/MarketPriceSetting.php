@@ -225,6 +225,12 @@ class MarketPriceSetting {
     protected $movementLimit;
     
     /**
+     * Фильтр количества продаж
+     * @ORM\Column(name="retail_filter")   
+     */
+    protected $retailLimit;
+    
+    /**
      * Фильтр токенов
      * @ORM\Column(name="token_filter")   
      */
@@ -588,6 +594,16 @@ class MarketPriceSetting {
     public function setMovementLimit($movementLimit) 
     {
         $this->movementLimit = $movementLimit;
+    }     
+
+    public function getRetailLimit() 
+    {
+        return $this->retailLimit;
+    }
+
+    public function setRetailLimit($retailLimit) 
+    {
+        $this->retailLimit = $retailLimit;
     }     
 
     public function getInfo() 
@@ -1284,6 +1300,7 @@ class MarketPriceSetting {
             'descriptionFormat' => $this->getDescriptionFormat(),
             'descriptionSet' => $this->getDescriptionSet(),
             'movementLimit' => $this->getMovementLimit(),
+            'retailLimit' => $this->getRetailLimit(),
             'tokenFilter' => $this->getTokenFilter(),
             'minusTokenFilter' => $this->getMinusTokenFilter(),
         ];

@@ -79,6 +79,10 @@ $form->get('movementLimit')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('retailLimit')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('nameSetting')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -347,6 +351,13 @@ if ($market && !$copy){
                         <?= $this->formElementErrors($form->get('tokenFilter')); ?>                  
                     </div>                        
                 </div>                                            
+                <div class="col-xs-2">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('retailLimit')); ?>
+                        <?= $this->formElement($form->get('retailLimit')); ?>
+                        <?= $this->formElementErrors($form->get('retailLimit')); ?>                  
+                    </div>
+                </div>    
             </div>
         </div>
         <div class="col-lg-3">

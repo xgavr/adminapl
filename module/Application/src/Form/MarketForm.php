@@ -372,6 +372,19 @@ class MarketForm extends Form
             ],
         ]);
                                         
+        $this->add([            
+            'type'  => 'number',
+            'name' => 'retailLimit',
+            'attributes' => [
+                'value' => 0,
+                'min' => 0,
+                'step' => 10,
+            ],    
+            'options' => [
+                'label' => 'Фильтр продаж',
+            ],
+        ]);
+
         $this->add([           
             'type'  => 'number',
             'name' => 'minPrice',

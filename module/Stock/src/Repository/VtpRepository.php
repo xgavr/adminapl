@@ -81,7 +81,7 @@ class VtpRepository extends EntityRepository{
             if (isset($params['sort'])){
                 if ($params['sort'] == 'ptu.docDate'){
                     $queryBuilder
-                            ->addOrderBy('v.status', 'ASC')
+//                            ->addOrderBy('v.status', 'ASC')
                             ->addOrderBy('p.docDate', $params['order'])
                             ;                    
                 } else {
