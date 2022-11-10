@@ -87,7 +87,9 @@ class LogRepository extends EntityRepository{
                 if ($message['status'] == Vtp::STATUS_RETIRED){
                     return 'Удален';
                 }
-                return Vtp::getStatusDocList()[$message['statusDoc']];
+                $messages[] = Vtp::getStatusDocList()[$message['statusDoc']];
+                $messages[] = $message['comment'];
+                return implode(' ', $messages);
                 
             default: break;
         }
