@@ -198,7 +198,7 @@ $form->prepare();
             $('#kpp').val(row.data.kpp);
             $('#ogrn').val(row.data.ogrn);
             $('#okpo').val(row.data.okpo);
-            $('#address').val(row.data.address.unrestricted_value);
+            $('#address').val(row.data.address.data.source);
             if (row.data.management){
                 $('#head').val(row.data.management.name);
             } else {
@@ -224,7 +224,7 @@ $form->prepare();
                         message += '<tr>';
                         message += '<td>'+row.data.inn+'<br/>'+row.data.kpp+'</td>';
                         message += ' <td>'+row.data.name.short_with_opf+'</td>';
-                        message += ' <td>'+row.data.address.unrestricted_value+'</td>';
+                        message += ' <td>'+row.data.address.data.source+'</td>';
                         message += ' <td><button onclick="fillFromData('+i+')">Выбрать</button></td>';
                         message += '</tr>';
                     }
