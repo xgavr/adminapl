@@ -89,7 +89,7 @@ class LogRepository extends EntityRepository{
                 }
                 $messages[] = Vtp::getStatusDocList()[$message['statusDoc']];
                 $messages[] = $message['comment'];
-                return implode(' ', $messages);
+                return implode('; ', $messages);
                 
             default: break;
         }

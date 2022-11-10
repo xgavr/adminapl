@@ -227,6 +227,19 @@ class Legal {
         return $this->head;
     }
 
+    public function getHeadFio() 
+    {
+        if ($this->head){
+            list($lastName, $firstName, $secondName) = explode(' ', $this->head);
+            $result[] = $lastName;
+            $result[] = ($firstName) ? ucfirst(mb_substr(trim($firstName, '.'), 0, 1)).'.': null;
+            $result[] = ($secondName) ? ucfirst(mb_substr(trim($secondName, '.'), 0, 1)).'.': null;
+            return implode(' ', array_filter($result));
+        }
+        
+        return;
+    }
+
     public function setHead($head) 
     {
         $this->head = $head;

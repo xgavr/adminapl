@@ -105,7 +105,7 @@ class PrintManager {
                 ->setCellValue('CI7', $vtp->getPtu()->getContract()->getCompany()->getOkpo())
                 ->setCellValue('AY17', $vtp->getDocNo())
                 ->setCellValue('BK17', date('d.m.y', strtotime($vtp->getDocDate())))
-                ->setCellValue('CK18', $vtp->getPtu()->getContract()->getCompany()->getHead())
+                ->setCellValue('CK18', $vtp->getPtu()->getContract()->getCompany()->getHeadFio())
                 ->setCellValue('CD20', date('d', strtotime($vtp->getDocDate())))
                 ->setCellValue('CI20', date('m', strtotime($vtp->getDocDate())))
                 ->setCellValue('CS20', date('Y', strtotime($vtp->getDocDate())))
