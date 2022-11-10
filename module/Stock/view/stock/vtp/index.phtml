@@ -180,7 +180,9 @@
             $.get( "/supplier/site/"+id, function(data){
                 if (data.url){
                     window.open(data.url, '_blank');
-                }    
+                } else {
+                    bootbox.alert('Сайт не указан в карточке поставщика!');
+                }
             });        
         });        
     });
