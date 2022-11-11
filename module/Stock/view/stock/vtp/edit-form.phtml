@@ -43,7 +43,7 @@ $form->get('comment')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('info')->setAttributes([
+$form->get('cause')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -214,9 +214,9 @@ if ($vtp){
     <div class="row">
         <div class="col-xs-12">
             <div class="form-group">
-                <?= $this->formLabel($form->get('info')); ?>
-                <?= $this->formElement($form->get('info')); ?>
-                <?= $this->formElementErrors($form->get('info')); ?>                  
+                <?= $this->formLabel($form->get('cause')); ?>
+                <?= $this->formElement($form->get('cause')); ?>
+                <?= $this->formElementErrors($form->get('cause')); ?>                  
             </div>                        
         </div>                                            
     </div>        

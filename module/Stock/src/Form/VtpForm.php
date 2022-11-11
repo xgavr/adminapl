@@ -235,9 +235,9 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
         
         $this->add([
             'type'  => 'text',
-            'name' => 'info',
+            'name' => 'cause',
             'attributes' => [                
-                'id' => 'info'
+                'id' => 'cause'
             ],
             'options' => [
                 'label' => 'Причина возврата',
@@ -453,7 +453,7 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
             ]);
         
         $inputFilter->add([
-                'name'     => 'info',
+                'name'     => 'cause',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

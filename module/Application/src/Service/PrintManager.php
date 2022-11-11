@@ -160,7 +160,7 @@ class PrintManager {
         }
         
         $sheet4 = $spreadsheet->setActiveSheetIndex(3);
-        $sheet4->setCellValue("A21", $vtp->getInfo());
+        $sheet4->setCellValue("A21", $vtp->getCause());
         $commission = $vtp->getPtu()->getOffice()->getCommission();
         $memberRow = 37;
         foreach ($commission as $commissar){

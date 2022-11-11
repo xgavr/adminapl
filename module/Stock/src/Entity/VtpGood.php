@@ -377,6 +377,7 @@ class VtpGood {
             'amount' => $this->getAmount(),
             'comment' => $this->getComment(),
             'good' => $this->getGood()->getId(),
+            'code' => $this->getGood()->getCode(),
             'info' => $this->getInfo(),
             'quantity' => $this->getQuantity(),
             'rowNo' => $this->getRowNo(),

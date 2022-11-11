@@ -33,6 +33,7 @@ use Application\Filter\ParseRawpriceApl;
 use Application\Entity\Article;
 use Application\Entity\CarFillVolume;
 use Laminas\Filter\Digits;
+use Application\Entity\RequestSetting;
 
 /**
  * Description of AplService
@@ -201,7 +202,8 @@ class AplService {
             $url = $this->aplApi().'add-supplier?api='.$this->aplApiKey();
 
             $manualDesc = $manualSite = $manualLogin = $manualPassword = null;            
-            $requestSettings = $supplier->getActiveManualRequestSetting();
+            $requestSettings = $this->entityManager->getRepository(Supplier::class)
+                    ->findBy(['supplier' => $supplier->getId(), 'status' => RequestSetting::STATUS_ACTIVE, 'mode' => RequestSetting::MODE_MANUALLY]);
             if ($requestSettings){
                 foreach ($requestSettings as $requestSetting){
                     $manualDesc .= $requestSetting->getDescription().PHP_EOL;

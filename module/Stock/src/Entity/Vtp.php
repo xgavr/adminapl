@@ -68,6 +68,11 @@ class Vtp {
     protected $comment;
 
     /**
+     * @ORM\Column(name="cause")   
+     */
+    protected $cause;
+
+    /**
      * @ORM\Column(name="info")   
      */
     protected $info;
@@ -188,6 +193,16 @@ class Vtp {
     public function setComment($comment) 
     {
         $this->comment = $comment;
+    }     
+
+    public function getCause() 
+    {
+        return $this->cause;
+    }
+
+    public function setCause($cause) 
+    {
+        $this->cause = $cause;
     }     
 
     public function getInfo() 
@@ -551,6 +566,7 @@ class Vtp {
             'amount' => $this->getAmount(),
             'aplId' => $this->getAplId(),
             'comment' => $this->getComment(),
+            'cause' => $this->getCause(),
             'contract' => $this->getPtu()->getContract()->getId(),
             'docDate' => (string) $this->getDocDate(),
             'docNo' => $this->getDocNo(),

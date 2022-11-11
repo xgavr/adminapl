@@ -256,6 +256,7 @@ class VtpController extends AbstractActionController
                 $data['doc_date'] = $vtp->getDocDate();
                 $data['doc_no'] = $vtp->getDocNo();
                 $data['comment'] = $vtp->getComment();
+                $data['cause'] = $vtp->getCause();
                 $data['info'] = $vtp->getInfo();
                 $data['status'] = $vtp->getStatus();
                 $data['statusDoc'] = $vtp->getStatusDoc();
@@ -407,4 +408,13 @@ class VtpController extends AbstractActionController
         );           
     }        
     
+    
+    public function updateAllInfoAction()
+    {
+        $this->vtpManager->updateAllInfo();
+
+        return new JsonModel(
+           ['ok']
+        );           
+    }
 }

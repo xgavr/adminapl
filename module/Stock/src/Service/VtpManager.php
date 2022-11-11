@@ -9,6 +9,7 @@ use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
 use Stock\Entity\Register;
 use Stock\Entity\Reserve;
+use Laminas\Json\Json;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -227,6 +228,7 @@ class VtpManager
             //$vtp->setDocNo($data['doc_no']);
             $vtp->setDocDate($data['doc_date']);
             $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
+            $vtp->setCause(empty($data['cause']) ? null:$data['cause']);
             $vtp->setInfo(empty($data['info']) ? null:$data['info']);
             $vtp->setStatusEx($data['status_ex']);
             $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
@@ -258,6 +260,7 @@ class VtpManager
             $vtp->setDocNo(empty($data['doc_no']) ? null:$data['doc_no']);
             $vtp->setDocDate($data['doc_date']);
             $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
+            $vtp->setCause(empty($data['cause']) ? null:$data['cause']);
             $vtp->setInfo(empty($data['info']) ? null:$data['info']);
             $vtp->setStatusEx($data['status_ex']);
             $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
@@ -374,7 +377,7 @@ class VtpManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->insert('vtp_good', $vtpGood);
-        return;
+        return $vtpGood;
     }
     
     /**
@@ -406,7 +409,9 @@ class VtpManager
 
             $vtpAmountTotal = $this->entityManager->getRepository(Vtp::class)
                     ->vtpAmountTotal($vtp);
-    //        $this->entityManager->getConnection()->update('ptu', ['amount' => $ptuAmountTotal], ['id' => $ptu->getId()]);
+
+            $vtp->setInfo(Json::encode($this->vtpInfo($vtp)));
+            
             $vtp->setAmount($vtpAmountTotal);
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);
@@ -443,7 +448,7 @@ class VtpManager
 
             $rowNo = 1;
             foreach ($data as $row){
-                $this->addVtpGood($vtp->getId(), $row, $rowNo);
+                $this->addVtpGood($vtp->getId(), $row, $rowNo);                
                 $rowNo++;
             }
 
@@ -452,6 +457,50 @@ class VtpManager
         return;
     }   
     
+    /**
+     * Получить инфо возврата
+     * @param Vtp $vtp
+     */
+    private function vtpInfo($vtp)
+    {
+        $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
+                ->findBy(['vtp' => $vtp->getId()]);
+        $info = [];
+        foreach ($vtpGoods as $vtpGood){
+            $info[$vtpGood->getRowNo()] = $vtpGood->toLog();
+        }
+        return $info;
+    }
+    
+    /**
+     * Обновить инфо возврата
+     * @param Vtp $vtp
+     */
+    private function updateVtpInfo($vtp)
+    {        
+        $this->entityManager->getConnection()
+                ->update('vtp', ['info' => Json::encode($this->vtpInfo($vtp))], ['id' => $vtp->getId()]);
+        
+        return;
+    }
+    
+    /**
+     * Обновить все инфо
+     */
+    public function updateAllInfo()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(0);
+        
+        $vtps = $this->entityManager->getRepository(Vtp::class)
+                ->findAll();
+        foreach ($vtps as $vtp){
+            $this->updateVtpInfo($vtp);
+            $this->entityManager->detach($vtp);
+        }
+        
+        return;
+    }
     
     /**
      * Ужаление ВТП
