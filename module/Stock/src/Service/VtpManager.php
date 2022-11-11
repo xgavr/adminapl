@@ -322,9 +322,12 @@ class VtpManager
 
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);
+            $this->entityManager->refresh($vtp);
 
             $this->repostVtp($vtp);
             $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
+            
+            return $vtp->toLog();
         }    
         
         return;

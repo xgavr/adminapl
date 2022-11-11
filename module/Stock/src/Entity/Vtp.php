@@ -576,6 +576,7 @@ class Vtp {
             'status' => $this->getStatus(),
             'statusDoc' => $this->getStatusDoc(),
             'statusEx' => $this->getStatusEx(),
+            'statusAccount' => $this->getStatusAccount(),
             'goods' => [],
         ];
     }

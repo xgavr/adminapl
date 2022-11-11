@@ -382,10 +382,10 @@ class VtpController extends AbstractActionController
             return;                        
         }        
         
-        $this->vtpManager->updateVtpDocStatus($vtp, $statusDoc);
+        $result = $this->vtpManager->updateVtpDocStatus($vtp, $statusDoc);
         
         return new JsonModel(
-           ['ok']
+           $result
         );           
     }        
     

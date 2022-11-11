@@ -100,7 +100,7 @@
                      <th data-field="docDate" data-sortable="true" data-width="120">Дата</th>
                      <th data-field="ptu.docDate" data-sortable="true" data-width="120" data-formatter="ptuDateFormatter">Дата поступления</th>
                      <th data-field="id" data-sortable="false" data-formatter="docNumFormatter">Номер</th>
-                     <th data-field="info" data-sortable="false" data-formatter="infoFormatter">Артикул</th>
+                     <th data-field="info" data-sortable="false" data-width="120" data-formatter="infoFormatter">Артикул</th>
                      <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
                      <th data-field='amount' data-sortable="true" data-align="right" data-width="20" data-formatter="amountFormatter">Сумма</th>
                      <th data-field='ptu.supplier.name' data-sortable="true" data-formatter="linkFormatter">Поставщик</th>
@@ -113,7 +113,7 @@
                      <th data-field="id" data-formatter="printFormatter" data-width="15">Торг2</th>
                      <th data-field="id" data-formatter="torg12Formatter" data-width="15">Торг12</th>
                      <th data-field="id" data-formatter="updFormatter" data-width="15">УПД</th>
-                     <th data-field="id" data-formatter="activeFormatter" data-align="center"></th>
+                     <th data-field="id" data-formatter="activeFormatter" data-width="5" data-align="center"></th>
                  </tr>                
             </thead>
         </table>
@@ -124,12 +124,17 @@
 
 <script type="text/javascript">
 
-    var $table = $('#vtptable').bootstrapTable({
-            onLoadSuccess: function(res){
-            }
-        });
-        
+    var $table = $('#vtptable');        
     var $ok = $('#ok');
+    var curentRowIndex = -1;
+    
+    function setCurrentIndex(index){
+        curentRowIndex = index;
+    }
+    
+    function getCurrentIndex(){
+        return curentRowIndex;
+    }
 
     function refreshTable(){
         $table.bootstrapTable('refresh');
@@ -222,6 +227,7 @@
     
     /**
      * Разность дат
+     * @param {string} ptuDate 
      * @returns bool
      */
     function dateDiff(ptuDate){
@@ -377,8 +383,14 @@
         });        
     }
 
-    function changeStatusDoc(vtpId, statusDoc){
-        $.get( "/vtp/status-doc/"+vtpId+'?status='+statusDoc, function(data){
+    function changeStatusDoc(row, statusDoc){
+        $.get( "/vtp/status-doc/"+row.id+'?status='+statusDoc, function(data){
+//            console.log(data);
+//            $table.bootstrapTable('updateCell', {index: getCurrentIndex(), field: 'statusDoc', value: statusDoc});
+//            var $currentRow = $table.find("[data-index='"+getCurrentIndex()+"']");
+//            $currentRow.removeClass();
+//            var classes = rowStyle(data);
+//            $currentRow.addClass(classes.classes);
             refreshTable();
         });        
     }
@@ -388,11 +400,11 @@
             
         });        
     }
-
+    
     var menu = new BootstrapMenu('.tablerow', {
         fetchElementData: function(rowElem) {
-            var rowId = $(rowElem).attr('data-index');
-            return $table.bootstrapTable('getData')[rowId];
+            setCurrentIndex($(rowElem).attr('data-index'));
+            return $table.bootstrapTable('getData')[getCurrentIndex()];
         },
         actionsGroups: [
            ['statusActiv', 'statusRetired'], ['history']
@@ -401,11 +413,8 @@
             statusDocNew: {
                 name: 'Новый',
                 onClick: function(row) {
-                    changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NEW?>);
+                    changeStatusDoc(row, <?= Vtp::STATUS_DOC_NEW?>);
                 },
-//                isShown: function(row) {
-//                  return row.statusDoc !== '<?= Vtp::STATUS_DOC_NEW?>';
-//                },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>' && row.statusDoc !== '<?= Vtp::STATUS_DOC_NEW?>';
                 }                
@@ -414,11 +423,8 @@
                 name: 'Отправлен',
                 classNames: 'bg-info',
                 onClick: function(row) {
-                    changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_RECD?>);
+                    changeStatusDoc(row, <?= Vtp::STATUS_DOC_RECD?>);
                 },
-//                isShown: function(row) {
-//                  return row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>';
-//                },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>' && row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>';
                 }                
@@ -428,11 +434,8 @@
                 iconClass: 'glyphicon glyphicon-ok',
                 classNames: 'bg-success',
                 onClick: function(row) {
-                    changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NOT_RECD?>);
+                    changeStatusDoc(row, <?= Vtp::STATUS_DOC_NOT_RECD?>);
                 },
-//                isShown: function(row) {
-//                  return row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>';
-//                },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>' && row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>';
                 }                
