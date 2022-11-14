@@ -423,7 +423,9 @@ class VtpRepository extends EntityRepository{
             ->from(Ptu::class, 'p')
             ->distinct()
             ->join(Supplier::class, 's', 'WITH', 's.id=p.supplier')    
-            ->orderBy('s.name', 'ASC')    
+            ->orderBy('s.name', 'ASC')
+            ->andWhere('p.docDate > ?1')
+            ->setParameter('1', date('Y-m-d', strtotime('-1 year')))                    
                 ;        
         
         return $queryBuilder->getQuery()->getResult();
