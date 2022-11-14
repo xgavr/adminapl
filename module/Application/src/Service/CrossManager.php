@@ -26,6 +26,7 @@ use Application\Filter\Basename;
 use Application\Filter\ProducerName;
 use Application\Filter\ArticleCode;
 use Application\Validator\IsRU;
+use Application\Entity\Goods;
 
 
 /**
@@ -851,6 +852,8 @@ class CrossManager {
                         $data['article_id'] = $article->getId();
                         if ($article->getGood()){
                             $data['code_id'] = $article->getGood()->getId();
+                            $this->entityManager->getConnection()
+                                    ->update('goods', ['status_oem' => Goods::OEM_FOR_UPDATE], ['id' => $article->getGood()->getId()]);
                             break;
                         }    
                     }
