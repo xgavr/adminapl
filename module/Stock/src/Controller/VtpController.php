@@ -42,8 +42,8 @@ class VtpController extends AbstractActionController
 
     public function indexAction()
     {
-        $suppliers = $this->entityManager->getRepository(Supplier::class)
-                ->findForPtu();
+        $suppliers = $this->entityManager->getRepository(Vtp::class)
+                ->activeSuppliers();
         $offices = $this->entityManager->getRepository(Office::class)
                 ->findAll();
         return new ViewModel([

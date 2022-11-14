@@ -408,4 +408,26 @@ class VtpRepository extends EntityRepository{
         
         return $queryBuilder->getQuery()->getResult();
     }
+    
+    /**
+     * Поставщики с приходами
+     * @return array
+     */
+    public function activeSuppliers()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('s')
+            ->from(Ptu::class, 'p')
+            ->distinct()
+            ->join(Supplier::class, 's', 'WITH', 's.id=p.supplier')    
+            ->orderBy('s.name', 'ASC')    
+                ;        
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+        
+    }
 }
