@@ -289,7 +289,7 @@
     }    
     
     function activeFormatter(value, row){
-        var url = '/vtp/edit-form/'+value;
+        var url = '/vtp/edit-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs vtp-modal-show"';
@@ -303,27 +303,27 @@
     
     function printFormatter(value, row){
 
-        var url = '/print/vtp-torg2/'+value;
+        var url = '/print/vtp-torg2/'+row.id;
         btn = '<nobr><a href="'+url+'" target="_blank">pdf</a>';
-        url = '/print/vtp-torg2/'+value+'?ext=Xls';
+        url = '/print/vtp-torg2/'+row.id+'?ext=Xls';
         btn += ' <a href="'+url+'" target="_blank">xls</a></nobr>';
         return btn;
     }    
     
     function updFormatter(value, row){
 
-        var url = '/print/vtp-upd/'+value;
+        var url = '/print/vtp-upd/'+row.id;
         btn = '<nobr><a href="'+url+'" target="_blank">pdf</a>';
-        url = '/print/vtp-upd/'+value+'?ext=Xls';
+        url = '/print/vtp-upd/'+row.id+'?ext=Xls';
         btn += ' <a href="'+url+'" target="_blank">xls</a></nobr>';
         return btn;
     }    
     
     function torg12Formatter(value, row){
 
-        var url = '/print/vtp-torg12/'+value;
+        var url = '/print/vtp-torg12/'+row.id;
         btn = '<nobr><a href="'+url+'" target="_blank">pdf</a>';
-        url = '/print/vtp-torg12/'+value+'?ext=Xls';
+        url = '/print/vtp-torg12/'+row.id+'?ext=Xls';
         btn += ' <a href="'+url+'" target="_blank">xls</a></nobr>';
         return btn;
     }    
