@@ -149,8 +149,7 @@ $this->pageBreadcrumbs()->setItems([
         });
     });
     
-    function queryParams() {
-        var params = {offset: 0, limit: 10};
+    function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
