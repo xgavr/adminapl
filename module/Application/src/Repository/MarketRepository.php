@@ -267,7 +267,8 @@ class MarketRepository extends EntityRepository{
             $queryBuilder->setFirstResult($offset);
         }
         
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getParameters()->toArray());
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         $query = $queryBuilder->getQuery();
         
         return $query;
