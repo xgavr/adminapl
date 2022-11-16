@@ -50,6 +50,9 @@ class Vtp {
     const STATUS_ACCOUNT_NO  = 2;// не обновлено
     const STATUS_TAKE_NO  = 3;// не проведено    
 
+    const TYPE_NO_NEED  = 1;// не понадобилось 
+    const TYPE_DEFECT  = 2;// брак
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -101,6 +104,11 @@ class Vtp {
      * @ORM\Column(name="status_account")  
      */
     protected $statusAccount;
+
+    /** 
+     * @ORM\Column(name="vtp_type")  
+     */
+    protected $vtpType;
 
     /** 
      * @ORM\Column(name="doc_no")  
@@ -444,6 +452,49 @@ class Vtp {
     }   
     
     /**
+     * Returns vtp type.
+     * @return int     
+     */
+    public function getVtpType() 
+    {
+        return $this->vtpType;
+    }
+
+    /**
+     * Returns possible vtp types as array.
+     * @return array
+     */
+    public static function getVtpTypeList() 
+    {
+        return [
+            self::TYPE_NO_NEED => 'Не понадобилось',
+            self::TYPE_DEFECT => 'Брак',
+        ];
+    }    
+    
+    /**
+     * Returns user vtp type as string.
+     * @return string
+     */
+    public function getVtpTypeAsString()
+    {
+        $list = self::getVtpTypeList();
+        if (isset($list[$this->vtpType]))
+            return $list[$this->vtpType];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets vtp type.
+     * @param int $vtpType     
+     */
+    public function setVtpType($vtpType) 
+    {
+        $this->vtpType = $vtpType;
+    }   
+    
+    /**
      * Returns the date of user creation.
      * @return string     
      */
@@ -577,6 +628,7 @@ class Vtp {
             'statusDoc' => $this->getStatusDoc(),
             'statusEx' => $this->getStatusEx(),
             'statusAccount' => $this->getStatusAccount(),
+            'vtpType' => $this->getVtpType(),
             'goods' => [],
         ];
     }

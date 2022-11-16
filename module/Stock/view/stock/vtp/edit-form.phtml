@@ -55,6 +55,10 @@ $form->get('statusDoc')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('vtpType')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('ptu')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -91,9 +95,9 @@ if ($vtp){
         </div>    
         <div class="col-xs-2">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('supplier')); ?>
-                <?= $this->formElement($form->get('supplier')); ?>
-                <?= $this->formElementErrors($form->get('supplier')); ?>                  
+                <?= $this->formLabel($form->get('company')); ?>
+                <?= $this->formElement($form->get('company')); ?>
+                <?= $this->formElementErrors($form->get('company')); ?>                  
             </div>
         </div>    
         <div class="col-xs-2">                        
@@ -110,7 +114,14 @@ if ($vtp){
                 <?= $this->formElementErrors($form->get('status')); ?>                  
             </div>
         </div>
-        <div class="col-xs-2 text-right">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('vtpType')); ?>
+                <?= $this->formElement($form->get('vtpType')); ?>
+                <?= $this->formElementErrors($form->get('vtpType')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-1 text-right">
             <h1 class="display-4" id="vtpQuantity"></h1>
         </div>    
         <div class="col-xs-1 text-right">
@@ -127,9 +138,9 @@ if ($vtp){
         </div>    
         <div class="col-xs-2">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('company')); ?>
-                <?= $this->formElement($form->get('company')); ?>
-                <?= $this->formElementErrors($form->get('company')); ?>                  
+                <?= $this->formLabel($form->get('supplier')); ?>
+                <?= $this->formElement($form->get('supplier')); ?>
+                <?= $this->formElementErrors($form->get('supplier')); ?>                  
             </div>
         </div>    
         <div class="col-xs-2">                        

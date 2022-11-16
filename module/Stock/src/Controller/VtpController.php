@@ -75,6 +75,7 @@ class VtpController extends AbstractActionController
         $year_month = $this->params()->fromQuery('month');
         $statusDoc = $this->params()->fromQuery('statusDoc');
         $status = $this->params()->fromQuery('status');
+        $vtpType = $this->params()->fromQuery('vtpType');
         
         $year = $month = null;
         if ($year_month){
@@ -85,7 +86,7 @@ class VtpController extends AbstractActionController
             'q' => trim($q), 'sort' => $sort, 'order' => $order, 
             'supplierId' => $supplierId, 'officeId' => $officeId,
             'year' => $year, 'month' => $month, 'statusDoc' => $statusDoc,
-            'status' => $status,
+            'status' => $status, 'vtpType' => $vtpType,
         ];
         
         if ($ptu){
@@ -260,6 +261,7 @@ class VtpController extends AbstractActionController
                 $data['info'] = $vtp->getInfo();
                 $data['status'] = $vtp->getStatus();
                 $data['statusDoc'] = $vtp->getStatusDoc();
+                $data['vtpType'] = $vtp->getVtpType();
                 $notDisabled = $vtp->getDocDate() > $this->vtpManager->getAllowDate();
             }    
             $form->setData($data);
@@ -408,6 +410,24 @@ class VtpController extends AbstractActionController
         );           
     }        
     
+    public function vtpTypeAction()
+    {
+        $vtpId = $this->params()->fromRoute('id', -1);
+        $vtpType = $this->params()->fromQuery('vtpType');
+        $vtp = $this->entityManager->getRepository(Vtp::class)
+                ->find($vtpId);        
+
+        if ($vtp == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->vtpManager->updateVtpType($vtp, $vtpType);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }        
     
     public function updateAllInfoAction()
     {

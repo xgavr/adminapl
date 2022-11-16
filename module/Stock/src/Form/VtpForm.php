@@ -272,6 +272,19 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
                 
         $this->add([            
             'type'  => 'select',
+            'name' => 'vtpType',
+            'attributes' => [                
+                'required' => 'required',                
+                'value' => Vtp::TYPE_NO_NEED,
+            ],
+            'options' => [
+                'label' => 'Тип возврата',
+                'value_options' => Vtp::getVtpTypeList(),
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'select',
             'name' => 'ptu',
             'attributes' => [                
                 'required' => 'required',                
@@ -493,6 +506,16 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
                 ],
             ]); 
 
+        $inputFilter->add([
+                'name'     => 'vtpType',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(Vtp::getVtpTypeList())]]
+                ],
+            ]); 
     }    
     
     public function setObjectManager(ObjectManager $objectManager)

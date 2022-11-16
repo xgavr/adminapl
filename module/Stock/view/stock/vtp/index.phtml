@@ -66,6 +66,14 @@
                         <?php endforeach;?>
                     </select>                    
                 </div>    
+                <div class="form-group">
+                    <select id="vtpTypeSelect" style="width: 200px" class="form-control">
+                        <option selected>тип возврата</option>
+                        <?php foreach (Vtp::getVtpTypeList() as $key=>$value):?>
+                            <option value="<?= $key?>"><?= $value?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
             </div>
         </div>
         <table id="vtptable" 
@@ -187,6 +195,9 @@
         $(document).on('change', '#statusSelect', function (e) {
             refreshTable();
         });
+        $(document).on('change', '#vtpTypeSelect', function (e) {
+            refreshTable();
+        });
         $(document).on('editable-save.bs.table', '#vtptable', function (e, field, row, old, $el) {
             if (field == 'comment'){
                 changeComment(row.id, row.comment);
@@ -221,6 +232,7 @@
         params.month = $('#monthSelect').val();
         params.statusDoc = $('#statusDocSelect').val();
         params.status = $('#statusSelect').val();
+        params.vtpType = $('#vtpTypeSelect').val();
         
         return params;
     }

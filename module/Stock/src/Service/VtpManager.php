@@ -234,6 +234,7 @@ class VtpManager
             $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
             $vtp->setStatus($data['status']);
             $vtp->setStatusDoc($data['statusDoc']);
+            $vtp->setVtpType(empty($data['vtpType']) ? Vtp::TYPE_NO_NEED:$data['vtpType']);
             $vtp->setAmount(0);
             $vtp->setDateCreated(date('Y-m-d H:i:s'));
 
@@ -266,6 +267,7 @@ class VtpManager
             $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
             $vtp->setStatus($data['status']);
             $vtp->setStatusDoc($data['statusDoc']);
+            $vtp->setVtpType(empty($data['vtpType']) ? Vtp::TYPE_NO_NEED:$data['vtpType']);
             
             if (!empty($data['ptuId'])){
                 $ptu = $this->entityManager->getRepository(Ptu::class)
@@ -344,6 +346,27 @@ class VtpManager
 
         if ($vtp->getDocDate() > $this->allowDate){
             $vtp->setComment($comment);
+
+            $this->entityManager->persist($vtp);
+            $this->entityManager->flush($vtp);
+
+            $this->logManager->infoVtp($vtp, Log::STATUS_UPDATE);
+        }    
+        
+        return;
+    }
+
+    /**
+     * Update vtp type.
+     * @param Vtp $vtp
+     * @param integer $vtpType
+     * @return integer
+     */
+    public function updateVtpType($vtp, $vtpType)            
+    {
+
+        if ($vtp->getDocDate() > $this->allowDate){
+            $vtp->setVtpType($vtpType);
 
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);
