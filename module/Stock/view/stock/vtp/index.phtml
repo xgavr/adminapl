@@ -150,7 +150,6 @@
     function setCookies(cookieKey){
         let expires = 30;
         $('.cookie-control').each(function () {
-            console.log($(this).attr('id'));
             Cookies.set(cookieKey+'_'+$(this).attr('id'), $(this).val(), { expires: expires});        
         });        
     }
@@ -158,7 +157,6 @@
     function getCookies(cookieKey){
         $('.cookie-control').each(function () {
             var cookieVal = Cookies.get(cookieKey+'_'+$(this).attr('id'));
-            console.log(cookieVal);
             if (cookieVal !== undefined){
                 $(this).val(cookieVal);                
             }
