@@ -211,7 +211,6 @@ class VtpManager
         return;
     }
 
-
     /**
      * Adds a new vtp.
      * @param Ptu $ptu
@@ -230,7 +229,7 @@ class VtpManager
             $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
             $vtp->setCause(empty($data['cause']) ? null:$data['cause']);
             $vtp->setInfo(empty($data['info']) ? null:$data['info']);
-            $vtp->setStatusEx($data['status_ex']);
+            $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
             $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
             $vtp->setStatus($data['status']);
             $vtp->setStatusDoc($data['statusDoc']);
@@ -263,7 +262,7 @@ class VtpManager
             $vtp->setComment(empty($data['comment']) ? null:$data['comment']);
             $vtp->setCause(empty($data['cause']) ? null:$data['cause']);
             $vtp->setInfo(empty($data['info']) ? null:$data['info']);
-            $vtp->setStatusEx($data['status_ex']);
+            $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
             $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
             $vtp->setStatus($data['status']);
             $vtp->setStatusDoc($data['statusDoc']);
@@ -321,6 +320,7 @@ class VtpManager
 
         if ($vtp->getDocDate() > $this->allowDate){
             $vtp->setStatusDoc($statusDoc);
+            $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
 
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);
@@ -346,6 +346,7 @@ class VtpManager
 
         if ($vtp->getDocDate() > $this->allowDate){
             $vtp->setComment($comment);
+            $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
 
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);
@@ -367,6 +368,7 @@ class VtpManager
 
         if ($vtp->getDocDate() > $this->allowDate){
             $vtp->setVtpType($vtpType);
+            $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
 
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);
@@ -439,6 +441,7 @@ class VtpManager
             $vtp->setInfo(Json::encode($this->vtpInfo($vtp)));
             
             $vtp->setAmount($vtpAmountTotal);
+            $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);
 
