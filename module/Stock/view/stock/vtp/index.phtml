@@ -30,7 +30,7 @@
                     </button>
                 </div>
                 <div class="form-group">
-                    <select id="supplierSelect" style="width: 250px" class="form-control">
+                    <select id="supplierSelect" style="width: 250px" class="form-control cookie-control">
                         <option selected>поставщик</option>
                         <?php foreach ($suppliers as $supplier):?>
                             <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
@@ -39,7 +39,7 @@
                     
                 </div>    
                 <div class="form-group">
-                    <select id="officeSelect" style="width: 100px" class="form-control">
+                    <select id="officeSelect" style="width: 100px" class="form-control cookie-control">
                         <option selected>офис</option>
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
@@ -48,10 +48,10 @@
                     
                 </div>    
                 <div class="form-group">
-                    <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
+                    <input id="monthSelect" class="form-control cookie-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
                 </div>
                 <div class="form-group">
-                    <select id="statusDocSelect" style="width: 200px" class="form-control">
+                    <select id="statusDocSelect" style="width: 200px" class="form-control cookie-control">
                         <option selected>статус возврата</option>
                         <?php foreach (Vtp::getStatusDocList() as $key=>$value):?>
                             <option value="<?= $key?>"><?= $value?></option>
@@ -59,7 +59,7 @@
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="statusSelect" style="width: 200px" class="form-control">
+                    <select id="statusSelect" style="width: 200px" class="form-control cookie-control">
                         <option selected>статус документа</option>
                         <?php foreach (Vtp::getStatusList() as $key=>$value):?>
                             <option value="<?= $key?>"><?= $value?></option>
@@ -67,7 +67,7 @@
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="vtpTypeSelect" style="width: 200px" class="form-control">
+                    <select id="vtpTypeSelect" style="width: 200px" class="form-control cookie-control">
                         <option selected>тип возврата</option>
                         <?php foreach (Vtp::getVtpTypeList() as $key=>$value):?>
                             <option value="<?= $key?>"><?= $value?></option>
@@ -78,7 +78,6 @@
         </div>
         <table id="vtptable" 
             data-toggle="table" 
-            data-url="/vtp/content"
             data-cookie="true"
             data-cookie-id-table="vtpSaveId"
             data-cookie-expire="1m"
@@ -148,7 +147,31 @@
         $table.bootstrapTable('refresh');
     }
     
+    function setCookies(cookieKey){
+        let expires = 30;
+        $('.cookie-control').each(function () {
+            console.log($(this).attr('id'));
+            Cookies.set(cookieKey+'_'+$(this).attr('id'), $(this).val(), { expires: expires});        
+        });        
+    }
+    
+    function getCookies(cookieKey){
+        $('.cookie-control').each(function () {
+            var cookieVal = Cookies.get(cookieKey+'_'+$(this).attr('id'));
+            console.log(cookieVal);
+            if (cookieVal !== undefined){
+                $(this).val(cookieVal);                
+            }
+        });                        
+        $table.bootstrapTable('refresh', {
+            url: '/vtp/content'
+        });
+    }
+    
     $table.bootstrapTable({
+        onLoadSuccess: function (data){
+            setCookies('vtpSaveId');
+        },
         onExpandRow: function (index, row, $detail) {
             $detail.html('Идет загрузка...');
             $.ajax({
@@ -181,7 +204,7 @@
                         width: 200,
                         align: 'right'
                     }],
-                    data: result,
+                    data: result
                   });
                 }
             });
@@ -189,6 +212,8 @@
     });
     
     $(function () {
+        getCookies('vtpSaveId');
+        
         $(document).on('change', '#statusDocSelect', function (e) {
             refreshTable();
         });
