@@ -187,6 +187,21 @@ class VtpManager
         
         return true;
     }
+    
+    /**
+     * Перепровести и обновить
+     * @param Vtp $vtp
+     */
+    public function repostEx($vtp)
+    {
+        $this->repostVtp($vtp);
+        
+        $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
+        $this->entityManager->persist($vtp);
+        $this->entityManager->flush();
+        
+        return;
+    }
 
     /**
      * Перепроведение всех ВТП

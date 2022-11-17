@@ -429,6 +429,24 @@ class VtpController extends AbstractActionController
         );           
     }        
     
+    public function repostExAction()
+    {
+        $vtpId = $this->params()->fromRoute('id', -1);
+        $vtp = $this->entityManager->getRepository(Vtp::class)
+                ->find($vtpId);        
+
+        if ($vtp == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->vtpManager->repostEx($vtp);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }        
+    
     public function updateAllInfoAction()
     {
         $this->vtpManager->updateAllInfo();
