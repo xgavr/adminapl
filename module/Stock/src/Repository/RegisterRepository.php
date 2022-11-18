@@ -79,8 +79,16 @@ class RegisterRepository extends EntityRepository
     private function findMaxDocStamp($dateOper)
     {
         $entityManager = $this->getEntityManager();
-        $reg = $entityManager->getRepository(Register::class)
-                ->findOneBy(['dateOper' => $dateOper], ['docStamp' => 'DESC']);
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r')
+                ->from(Register::class, 'r')
+                ->where('FLOOR(r.docStamp) = ?1')
+                ->setParameter('1', strtotime($dateOper))
+                ->orderBy('r.docStamp', 'DESC')
+                ->setMaxResults(1)
+                ;
+        $reg = $queryBuilder->getQuery()->getOneOrNullResult();        
         if ($reg){
             return $reg->getDocStamp() + 0.001; 
         }
