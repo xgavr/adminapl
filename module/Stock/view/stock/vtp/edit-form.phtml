@@ -121,12 +121,6 @@ if ($vtp){
                 <?= $this->formElementErrors($form->get('vtpType')); ?>                  
             </div>
         </div>
-        <div class="col-xs-1 text-right">
-            <h1 class="display-4" id="vtpQuantity"></h1>
-        </div>    
-        <div class="col-xs-1 text-right">
-            <h1 class="display-4" id="vtpAmount"><?= ($vtp) ? round($vtp->getAmount(), 2):"" ?></h1>                        
-        </div>    
     </div>    
     <div class="row">
         <div class="col-xs-2">                        
@@ -157,7 +151,11 @@ if ($vtp){
                 <?= $this->formElementErrors($form->get('contract_id')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-4 text-right">
+        <div class="col-xs-2 text-right">
+            <h1 class="display-4" id="vtpQuantity"></h1>
+        </div>    
+        <div class="col-xs-2 text-right">
+            <h1 class="display-4" id="vtpAmount"><?= ($vtp) ? round($vtp->getAmount(), 2):"" ?></h1>                        
         </div>    
     </div>        
     <div class="row">
