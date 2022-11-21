@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\Goods;
+
 $this->headTitle('Товары');
 
 $this->mainMenu()->setActiveItemId('rb');
@@ -22,17 +24,19 @@ $this->pageBreadcrumbs()->setItems([
                     </button>
                 </div>    
                 <div class="form-group">
+                    <select style="width: 200px" class="form-control good-toolbar cookie-control" name="accurate">
+                        <?php foreach(Goods::getSearchList() as $key=>$value):?>
+                            <option value="<?= $key?>"><?= $value?></option>
+                        <?php endforeach;?>
+                    </select>                    
                     <div class="btn-group">
-                        <input type="checkbox" class="checkbox good-toolbar refresh-table" name="accurate" value=""
-                               data-toggle='tooltip' data-original-title="Точный поиск"
-                               onchange="value = (this.checked) ? 1:0"/>
                         <input id="searchinput" name="search" style="width: 400px" class="form-control good-toolbar" type="text" placeholder="Артикул">
                         <span class="glyphicon glyphicon-remove-circle inputclear"></span>
                     </div>
                     <button id="ok" type="submit" class="btn btn-default" title="Поиск">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
-                    <select style="width: 200px" class="form-control refresh-table good-toolbar" name="office">
+                    <select style="width: 200px" class="form-control refresh-table good-toolbar cookie-control" name="office">
                         <option>все офисы</option>
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>" <?//= ($office->getId() == $currentUser->getOffice()->getId()) ? 'selected':''?>><?= $office->getName()?></option>
@@ -43,7 +47,6 @@ $this->pageBreadcrumbs()->setItems([
         </div>
         <table id="table" 
             data-toggle="table" 
-            data-url="/goods/presence"
             data-cookie="true"
             data-cookie-id-table="goodsSaveId"
             data-cookie-expire="1m"
@@ -81,9 +84,6 @@ $this->pageBreadcrumbs()->setItems([
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
-    $(function () {
-        $("[data-toggle='tooltip']").tooltip();
-    });
 
     $(document).on('click', '.good-modal-show', function (e) {
         var url = $(e.currentTarget).attr('modal-url');
@@ -94,15 +94,44 @@ $this->pageBreadcrumbs()->setItems([
         });
     });  
     
+    var $table = $('#table'),
+        $ok = $('#ok');
+
     function refreshTable(){
-        $('#table').bootstrapTable('refresh');
+        $table.bootstrapTable('refresh');
     }
 
-    var table = $('#table'),
-        ok = $('#ok');
+    function setCookies(cookieKey){
+        let expires = 30;
+        $('.cookie-control').each(function () {
+            Cookies.set(cookieKey+'_'+$(this).attr('name'), $(this).val(), { expires: expires});        
+        });        
+    }    
+    
+    function getCookies(cookieKey){
+        $('.cookie-control').each(function () {
+            var cookieVal = Cookies.get(cookieKey+'_'+$(this).attr('name'));
+            if (cookieVal !== undefined){
+                $(this).val(cookieVal);                
+            }
+        });                        
+        $table.bootstrapTable('refresh', {
+            url: '/goods/presence'
+        });
+    }
 
+    $table.bootstrapTable({
+        onLoadSuccess: function (data){
+            setCookies('goodsSaveId');
+        }
+    });
+    
     $(function () {
-        ok.click(function () {
+        getCookies('goodsSaveId');
+        
+        $("[data-toggle='tooltip']").tooltip();
+        
+        $ok.click(function () {
             refreshTable();
         });
         $(".inputclear").click(function(){
@@ -111,6 +140,11 @@ $this->pageBreadcrumbs()->setItems([
         });
         $(".refresh-table").change(function(){
             refreshTable();
+        });
+        $('select[name="accurate"]').change(function(){
+            if ($('#searchinput').val()){
+                refreshTable();
+            }    
         });
     });
     

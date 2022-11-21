@@ -218,27 +218,33 @@ class GoodsRepository extends EntityRepository
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
                 if ($q){
-                    $accurate = false;
+                    $searchOpt= Goods::SEARCH_CODE;
                     if (isset($params['accurate'])){
-                        $accurate = boolval($params['accurate']);                        
+                        $searchOpt= $params['accurate'];
                     }
-//                    var_dump($accurate);
-//                    var_dump($params['accurate']);
-                    if ($accurate){
-                        $queryBuilder
-                            ->andWhere('g.code = :code')                           
-                            ->setParameter('code', $q)    
-                            ;
-                    } else {
-                        $orX = $queryBuilder->expr()->orX(
-    //                            $queryBuilder->expr()->eq('c.code', '?4'),
-                                $queryBuilder->expr()->eq('o.oe', '?4')    
-                            );
-                        $queryBuilder->join('g.oems', 'o')
-                            ->andWhere($orX) 
-                            ->setParameter('4', $q)    
-                            ;
-                    }    
+                    switch ($searchOpt){
+                        case Goods::SEARCH_APLID:
+                            $queryBuilder
+                                ->andWhere('g.aplId = :aplId')                           
+                                ->setParameter('aplId', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_OE:
+                            $orX = $queryBuilder->expr()->orX(
+                                    $queryBuilder->expr()->eq('o.oe', '?4')    
+                                );
+                            $queryBuilder->join('g.oems', 'o')
+                                ->andWhere($orX) 
+                                ->setParameter('4', $q)    
+                                ;
+                            break;    
+                        default:
+                            $queryBuilder
+                                ->andWhere('g.code = :code')                           
+                                ->setParameter('code', $q)    
+                                ;
+                            break;    
+                    }
                 } else {
                     $lastGood = $this->findLastGoodId($params);   
                     $queryBuilder
@@ -1476,24 +1482,33 @@ class GoodsRepository extends EntityRepository
                             ->leftJoin('g.goodBalances', 'gb')
                             ;
                 
-                    $accurate = false;
+                    $searchOpt= Goods::SEARCH_CODE;
                     if (isset($params['accurate'])){
-                        $accurate = boolval($params['accurate']);                        
+                        $searchOpt= $params['accurate'];
                     }
-                    if ($accurate){
-                        $queryBuilder
-                            ->andWhere('g.code = :code')                           
-                            ->setParameter('code', $q)    
-                            ;
-                    } else {
-                        $orX = $queryBuilder->expr()->orX(
-                                $queryBuilder->expr()->eq('o.oe', '?4')    
-                            );
-                        $queryBuilder->join('g.oems', 'o')
-                            ->andWhere($orX) 
-                            ->setParameter('4', $q)    
-                            ;
-                    }    
+                    switch ($searchOpt){
+                        case Goods::SEARCH_APLID:
+                            $queryBuilder
+                                ->andWhere('g.aplId = :aplId')                           
+                                ->setParameter('aplId', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_OE:
+                            $orX = $queryBuilder->expr()->orX(
+                                    $queryBuilder->expr()->eq('o.oe', '?4')    
+                                );
+                            $queryBuilder->join('g.oems', 'o')
+                                ->andWhere($orX) 
+                                ->setParameter('4', $q)    
+                                ;
+                            break;    
+                        default:
+                            $queryBuilder
+                                ->andWhere('g.code = :code')                           
+                                ->setParameter('code', $q)    
+                                ;
+                            break;    
+                    }
                 }   
             }
             

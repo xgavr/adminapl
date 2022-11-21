@@ -74,6 +74,10 @@ class Goods {
     
     const GROUP_TOKEN_UPDATE_FLAG = 2; // месяц обновления наименования товара
     
+    const SEARCH_CODE = 1; //поиск по артикулу
+    const SEARCH_APLID = 2; //поиск по aplId
+    const SEARCH_OE = 3; //поиск по ое
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -955,6 +959,19 @@ class Goods {
         $this->statusRawpriceEx = $statusRawpriceEx;
     }    
     
+    /**
+     * Опции поиска
+     * @return array
+     */
+    public static function getSearchList()
+    {
+        return [
+            self::SEARCH_CODE => 'Поиск по артикулу',
+            self::SEARCH_APLID => 'Поиск по aplId',
+            self::SEARCH_OE => 'Поиск по ОЕ',
+        ];
+    }
+
     public function getStatusOemEx()
     {
         $this->statusOemEx;
