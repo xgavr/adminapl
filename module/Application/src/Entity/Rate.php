@@ -144,7 +144,7 @@ class Rate
 
     public function getLink() 
     {
-        return "<a href='/rate/view/id/{$this->id}' target=_blank>{$this->name}</a>";
+        return "<a href='/rate/view/{$this->id}' target=_blank>{$this->name}</a>";
     }
     
     public function setName($name) 
