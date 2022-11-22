@@ -357,11 +357,11 @@
             <div class="tab-pane fade" role="tabpanel" id="prices" aria-labelledby="prices-tab">
                 <div id="optsToolbar">
                     <div class="form-inline" role="form">
-                        <button value="/goods/update-prices/<?= $goods->getId()?>" class="btn refresh-table-button"
+                        <button value="/goods/update-prices/<?= $goods->getId()?>" data-table="optsTable" class="btn btn-default refresh-table-button" type="button"
                                 title="Пересчитать">Пересчитать
                             <span class="glyphicon glyphicon-rub" ></span>
                         </button>                                 
-                        <button value="/market-place/ozon-update-price/<?= $goods->getId()?>" class="btn refresh-table-button"
+                        <button value="/market-place/ozon-update-price/<?= $goods->getId()?>" data-table="optsTable" class="btn btn-default refresh-table-button" type="button"
                                 title="Обновить цену в OZON">OZON
                             <span class="glyphicon glyphicon-refresh"></span>
                         </button>                                                                 
@@ -377,13 +377,14 @@
                     data-show-refresh="true"
                     data-show-toggle="false"
                     data-response-handler="responseHandler"
+                    data-show-header="false"
                     data-classes = "table table-bordered table-hover"
                     >
                     <thead>
                         <tr>
-                             <th data-field="name" data-width="30"></th>
-                             <th data-field="percent" data-width="5"></th>
-                             <th data-field="value" data-width="30" data-align="right"></th>
+                             <th data-field="name" data-width="30">Наименование</th>
+                             <th data-field="percent" data-width="5">Процент</th>
+                             <th data-field="value" data-width="30" data-align="right">Цена</th>
                          </tr>                
                     </thead>
                 </table>
@@ -508,6 +509,12 @@
         onLoadSuccess: function(res){
             $('#movementBadge').html($('#movementTable').bootstrapTable('getOptions').totalRows);
             $('#balanceTable').bootstrapTable('refreshOptions', {url: "/goods/balance/<?= $goods->getId()?>"});
+        }
+    });
+
+    var optsTable = $('#optsTable').bootstrapTable({
+        onLoadSuccess: function(res){
+            $('.editable').editable();
         }
     });
 

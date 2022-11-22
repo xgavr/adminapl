@@ -1000,12 +1000,12 @@ class GoodsController extends AbstractActionController
         $result[] = [
             'name' =>  'Фиксированная цена',
             'percent' => '',
-            'value' => $good->getFixPrice(),
+            'value' =>  '<a href="#" class="editable" data-type="text" data-pk="'.$good->getId().'" data-name="fixPrice" data-url="/goods/update-fix-price">'.$good->getFixPrice().'</a>',
         ];
         $result[] = [
             'name' =>  'Расценка',
             'percent' => '',
-            'value' => ($rate) ? $rate->getName():'нет',
+            'value' => ($rate) ? $rate->getLink():'нет',
         ];
         $result[] = [
             'name' =>  'Розница',
@@ -1542,14 +1542,14 @@ class GoodsController extends AbstractActionController
             'meanPrice' => $good->getMeanPrice(), 
             'price' => $good->getPrice(), 
             'fixPrice' => $good->getFixPrice(), 
-            'tokenGroupId' => $good->getTokenGroup()->getId(), 
-            'genericGroupId' => $good->getGenericGroup()->getId(), 
+            'tokenGroupId' => ($good->getTokenGroup()) ? $good->getTokenGroup()->getId():null, 
+            'genericGroupId' => ($good->getGenericGroup()) ? $good->getGenericGroup()->getId():null, 
             'producerId' => $good->getProducer()->getId(),
         ]);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([
-            'result' => 'ok-reload',
+            'result' => 'ok',
         ]);           
                 
     }
