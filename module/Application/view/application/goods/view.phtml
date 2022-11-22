@@ -438,7 +438,7 @@
                 .done(function (obj) {
                     dialog.modal('hide');
                     var message = 'Обновлено!';
-                    $.each(obj, function (product) {
+                    $.each(obj, function (key, product) {
                         if (product.updated == false){
                             message = 'Не обновлено<br/>';
                             $.each(product.errors, function (index, value) {
