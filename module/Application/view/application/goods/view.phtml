@@ -438,12 +438,14 @@
                 .done(function (obj) {
                     dialog.modal('hide');
                     var message = 'Обновлено!';
-                    if (obj.updated == false){
-                        message = 'Не обновлено<br/>';
-                        $.each(obj.errors, function (index, value) {
-                            message += value.message + '<br/>';
-                        });
-                    }    
+                    $.each(obj, function (product) {
+                        if (product.updated == false){
+                            message = 'Не обновлено<br/>';
+                            $.each(product.errors, function (index, value) {
+                                message += value.message + '<br/>';
+                            });
+                        }    
+                    });    
                     dialog = bootbox.dialog({
                         message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>'+message+'</p>',
                         closeButton: true
