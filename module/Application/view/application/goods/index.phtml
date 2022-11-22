@@ -24,7 +24,7 @@ $this->pageBreadcrumbs()->setItems([
                     </button>
                 </div>    
                 <div class="form-group">
-                    <select style="width: 200px" class="form-control good-toolbar cookie-control" name="accurate">
+                    <select class="form-control good-toolbar cookie-control" name="accurate">
                         <?php foreach(Goods::getSearchList() as $key=>$value):?>
                             <option value="<?= $key?>"><?= $value?></option>
                         <?php endforeach;?>

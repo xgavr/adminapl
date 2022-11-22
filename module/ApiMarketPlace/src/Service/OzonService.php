@@ -10,9 +10,12 @@ namespace ApiMarketPlace\Service;
 
 use Gam6itko\OzonSeller\Service\V2\CategoryService as CategoryServiceV2;
 use Gam6itko\OzonSeller\Service\V3\CategoryService as CategoryServiceV3;
+use Gam6itko\OzonSeller\Service\V1\ProductService;
 use GuzzleHttp\Client as GuzzleClient;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use Symfony\Component\HttpClient\Psr18Client;
+use Application\Entity\Goods;
+use Application\Entity\ScaleTreshold;
 
 
 /**
@@ -82,5 +85,44 @@ class OzonService {
         var_dump($categoryTree); exit;
         
         return $categoryTree;
+    }
+    
+    /**
+     * Обновить цену товара
+     * @param Goods $good
+     */
+    public function updatePrice($good)
+    {
+        if (!$good->getAplId()){
+            return;
+        }
+        
+        $settings = $this->adminManager->getApiMarketPlaces();
+        
+        $config = [
+            'clientId' => $settings['ozon_client_id'],
+            'apiKey' => $settings['ozon_api_key'],
+//            'host' => $this->ozon_host,
+        ];
+
+        $adapter = new GuzzleAdapter(new GuzzleClient());
+        $svcProduct = new ProductService($config, $adapter);
+        
+        $opts = $good->getOpts();
+        
+        $input = [
+            'auto_action_enabled' => 'UNKNOWN',
+            'currency_code' => 'RUB',
+            'min_price' => $opts[ScaleTreshold::PRICE_COL_COUNT],
+            'offer_id' => $good->getId(),
+            'old_price' => 0,
+            'price' => $good->getPrice(),
+            'product_id' => $good->getAplId(),
+        ];
+        
+        $result = $svcProduct->importPrices($input);
+        
+        return $result;
+        
     }
 }

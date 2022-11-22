@@ -963,6 +963,87 @@ class GoodsController extends AbstractActionController
         ]);                  
     }
 
+    public function optsAction()
+    {
+        
+        $goodId = (int)$this->params()->fromRoute('id', -1);        
+        
+        // Validate input parameter
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId);
+
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $rate = $this->entityManager->getRepository(Rate::class)
+                ->findGoodRate($good);
+        
+        $priceCols = $this->goodsManager->priceCols($good);
+        
+        $result[] = [
+            'name' =>  'Минимальная закупка',
+            'percent' => '',
+            'value' => $good->getFormatMinPrice(),
+        ];
+        $result[] = [
+            'name' =>  'Средняя закупка',
+            'percent' => '',
+            'value' => $good->getFormatMeanPrice(),
+        ];
+        $result[] = [
+            'name' =>  'Фиксированная цена',
+            'percent' => '',
+            'value' => $good->getFixPrice(),
+        ];
+        $result[] = [
+            'name' =>  'Расценка',
+            'percent' => '',
+            'value' => ($rate) ? $rate->getName():'нет',
+        ];
+        $result[] = [
+            'name' =>  'Розница',
+            'percent' => round($priceCols[0]['percent']).'%',
+            'value' => $good->getPrice(),
+        ];
+        $result[] = [
+            'name' =>  'VIP',
+            'percent' => round($priceCols[1]['percent']).'%',
+            'value' => $priceCols[1]['price'],
+        ];
+        $result[] = [
+            'name' =>  'ОПТ2',
+            'percent' => round($priceCols[2]['percent']).'%',
+            'value' => $priceCols[2]['price'],
+        ];
+        $result[] = [
+            'name' =>  'ОПТ3',
+            'percent' => round($priceCols[3]['percent']).'%',
+            'value' => $priceCols[3]['price'],
+        ];
+        $result[] = [
+            'name' =>  'ОПТ4',
+            'percent' => round($priceCols[4]['percent']).'%',
+            'value' => $priceCols[4]['price'],
+        ];
+        $result[] = [
+            'name' =>  'ОПТ5',
+            'percent' => round($priceCols[5]['percent']).'%',
+            'value' => $priceCols[5]['price'],
+        ];
+        
+        return new JsonModel([
+            'total' => count($result),
+            'rows' => $result,
+        ]);                  
+    }
+
     public function bestNameAction()
     {
         $goodId = (int)$this->params()->fromRoute('id', -1);

@@ -12,6 +12,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use ApiMarketPlace\Entity\Marketplace;
 use ApiMarketPlace\Form\MarketplaceSetting;
+use Application\Entity\Goods;
 
 
 class IndexController extends AbstractActionController
@@ -146,6 +147,24 @@ class IndexController extends AbstractActionController
     public function ozonCategoryTreeAction()
     {
         $result = $this->ozonService->сategoryTree();
+        return new JsonModel($result);
+    }
+    
+    public function ozonUpdatePriceAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        
+        $good = null;
+        $result = [];
+        if ($goodId > 0){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+        }    
+        
+        if ($good){
+            $result = $this->ozonService->updatePrice($good);
+        }
+
         return new JsonModel($result);
     }
 }

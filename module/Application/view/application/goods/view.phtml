@@ -355,109 +355,38 @@
                 </table>
             </div>
             <div class="tab-pane fade" role="tabpanel" id="prices" aria-labelledby="prices-tab">
-                <p>
-                    <div class="row">
-                        <div class="col-md-10">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <td width='30%'>
-                                        Минимальная закупка
-                                    </td>
-                                    <td width="5"></td>
-                                    <td align='right'>
-                                        <?= $goods->getFormatMinPrice()?>
-                                    </td>
-                                </tr>                                              
-                                <tr>
-                                    <td>
-                                        Средняя закупка
-                                    </td>
-                                    <td></td>
-                                    <td align='right'>
-                                        <?= $goods->getFormatMeanPrice()?>
-                                    </td>
-                                </tr>                                              
-                                <tr>
-                                    <td>
-                                        Фиксированная продажа
-                                    </td>
-                                    <td></td>
-                                    <td align='right'>
-                                        <a href="#" 
-                                           class="editable" data-type="text" 
-                                           data-pk="<?= $goods->getId()?>" 
-                                           data-name="fixPrice" 
-                                           data-disabled="false"
-                                           data-url="/goods/update-fix-price">
-                                            <?= $goods->getFixPrice()?>
-                                        </a>
-                                    </td>
-                                </tr> 
-                                <?php if ($rate):?>
-                                    <tr>
-                                        <td>Расценка</td>
-                                        <td></td>
-                                        <td><?= $rate->getName()?></td>
-                                    </tr>
-                                <?php endif; ?>    
-                                <tr>
-                                    <td>
-                                        Розница продажа
-                                    </td>
-                                    <td><?= round($priceCols[0]['percent'])?>%</td>
-                                    <td align='right'>
-                                        <?= $goods->getPrice()?>
-                                    </td>
-                                </tr>                                              
-                                <tr>
-                                    <td>
-                                        VIP продажа
-                                    </td>
-                                    <td><?= round($priceCols[1]['percent'])?>%</td>
-                                    <td align='right'>
-                                        <?= $priceCols[1]['price']?>
-                                    </td>
-                                </tr>                                              
-                                <tr>
-                                    <td>
-                                        ОПТ2 продажа
-                                    </td>
-                                    <td><?= round($priceCols[2]['percent'])?>%</td>
-                                    <td align='right'>
-                                        <?= $priceCols[2]['price']?>
-                                    </td>
-                                </tr>                                              
-                                <tr>
-                                    <td>
-                                        ОПТ3 продажа
-                                    </td>
-                                    <td><?= round($priceCols[3]['percent'])?>%</td>
-                                    <td align='right'>
-                                        <?= $priceCols[3]['price']?>
-                                    </td>
-                                </tr>                                              
-                                <tr>
-                                    <td>
-                                        ОПТ4 продажа
-                                    </td>
-                                    <td><?= round($priceCols[4]['percent'])?>%</td>
-                                    <td align='right'>
-                                        <?= $priceCols[4]['price']?>
-                                    </td>
-                                </tr>                                              
-                                <tr>
-                                    <td>
-                                        ОПТ5 продажа
-                                    </td>
-                                    <td><?= round($priceCols[5]['percent'])?>%</td>
-                                    <td align='right'>
-                                        <?= $priceCols[5]['price']?>
-                                    </td>
-                                </tr>                                              
-                            </table>                                                    
-                        </div>
-                    </div>                            
-                </p>
+                <div id="optsToolbar">
+                    <div class="form-inline" role="form">
+                        <button value="/goods/update-prices/<?= $goods->getId()?>" class="btn refresh-table-button"
+                                title="Пересчитать">Пересчитать
+                            <span class="glyphicon glyphicon-rub" ></span>
+                        </button>                                 
+                        <button value="/market-place/ozon-update-price/<?= $goods->getId()?>" class="btn refresh-table-button"
+                                title="Обновить цену в OZON">OZON
+                            <span class="glyphicon glyphicon-refresh"></span>
+                        </button>                                                                 
+                    </div>
+                </div>
+                <table id="optsTable" 
+                    data-toggle="table" 
+                    data-url="/goods/opts/<?= $goods->getId()?>"
+                    data-side-pagination="server"
+                    data-pagination="false" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#optsToolbar"
+                    data-show-refresh="true"
+                    data-show-toggle="false"
+                    data-response-handler="responseHandler"
+                    data-classes = "table table-bordered table-hover"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="name" data-width="30"></th>
+                             <th data-field="percent" data-width="5"></th>
+                             <th data-field="value" data-width="30" data-align="right"></th>
+                         </tr>                
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
