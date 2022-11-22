@@ -115,10 +115,10 @@ class OzonService {
             'auto_action_enabled' => 'UNKNOWN',
             'currency_code' => 'RUB',
             'min_price' => $opts[ScaleTreshold::PRICE_COL_COUNT],
-            'offer_id' => $good->getId(),
+            'offer_id' => $good->getAplId(),
             'old_price' => 0,
             'price' => $good->getPrice(),
-            'product_id' => $good->getAplId(),
+            'product_id' => $good->getId(),
         ];
         
         $result = $svcProduct->importPrices($input);
