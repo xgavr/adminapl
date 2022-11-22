@@ -361,8 +361,8 @@
                                 title="Пересчитать">Пересчитать
                             <span class="glyphicon glyphicon-rub" ></span>
                         </button>                                 
-                        <button value="/market-place/ozon-update-price/<?= $goods->getId()?>" data-table="optsTable" class="btn btn-default refresh-table-button" type="button"
-                                title="Обновить цену в OZON">OZON
+                        <button value="/market-place/ozon-update-price/<?= $goods->getId()?>" class="btn btn-default refresh-ozon" type="button"
+                                title="Обновить цену в OZON" <?= ($goods->getPrice()) ? '':'disabled'?>>OZON
                             <span class="glyphicon glyphicon-refresh"></span>
                         </button>                                                                 
                     </div>
@@ -422,6 +422,39 @@
             }
         });
     });  
+
+    $('.refresh-ozon').on('click', function(e) {
+        var url = e.currentTarget.value;
+        if (url){
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: false
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (obj) {
+                    dialog.modal('hide');
+                    var message = 'Обновлено!';
+                    if (obj.updated == false){
+                        message = 'Не обновлено<br/>';
+                        $.each(obj.errors, function (index, value) {
+                            message += value.message + '<br/>';
+                        });
+                    }    
+                    dialog = bootbox.dialog({
+                        message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>'+message+'</p>',
+                        closeButton: true
+                    });
+                })
+                .fail(function () {
+                    dialog.modal('hide');
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    }); 
 
     $(function () {
         $('#priceStatusSelect').change(function (){

@@ -105,7 +105,6 @@ class OzonService {
 //            'host' => $this->ozon_host,
         ];
 
-        $adapter = new GuzzleAdapter(new GuzzleClient());
         $client = new Psr18Client();
         $svcProduct = new ProductService($config, $client);
         
