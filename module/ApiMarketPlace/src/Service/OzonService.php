@@ -106,7 +106,8 @@ class OzonService {
         ];
 
         $adapter = new GuzzleAdapter(new GuzzleClient());
-        $svcProduct = new ProductService($config, $adapter);
+        $client = new Psr18Client();
+        $svcProduct = new ProductService($config, $client);
         
         $opts = $good->getOpts();
         
