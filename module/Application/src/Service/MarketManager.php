@@ -416,7 +416,7 @@ class MarketManager
      * @param MarketPriceSetting $market
      * @param float $goodPrice
      */
-    private function restShipping($goodId, $market, $goodPrice)
+    public function restShipping($goodId, $market, $goodPrice)
     {
         $rp = [
             'realrest' => 0,

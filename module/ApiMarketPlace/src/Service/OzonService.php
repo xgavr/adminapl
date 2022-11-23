@@ -60,14 +60,22 @@ class OzonService {
      */
     private $updateManager;
     
+    /**
+     * Market manager.
+     * @var \Application\Service\MarketManager
+     */
+    private $marketManager;
+
 //    private $ozon_host = 'http://cb-api.ozonru.me/'; //sandbox
     
-    public function __construct($entityManager, $adminManager, $request, $updateManager)
+    public function __construct($entityManager, $adminManager, $request, $updateManager,
+            $marketManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->request = $request;
         $this->updateManager = $updateManager;
+        $this->marketManager = $marketManager;
     }
     
     public function сategoryTree()
@@ -159,7 +167,7 @@ class OzonService {
         $prices = [];
         foreach ($data as $good){
 
-            $rawprices = $this->restShipping($good['id'], $market, $good['price']);
+            $rawprices = $this->marketManager->restShipping($good['id'], $market, $good['price']);
             $lot = $rawprices['lot'];
             
             if ($rawprices['realrest'] == 0){

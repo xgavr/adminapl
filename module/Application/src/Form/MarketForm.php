@@ -390,7 +390,7 @@ class MarketForm extends Form
             'attributes' => [
                 'value' => 0,
                 'min' => 0,
-                'step' => 10,
+                'step' => 1,
             ],    
             'options' => [
                 'label' => 'Фильтр продаж',
