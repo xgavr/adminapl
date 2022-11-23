@@ -194,7 +194,7 @@ class MarketRepository extends EntityRepository{
             $queryBuilder->select('g, p, gg')
                 ->from(Goods::class, 'g')
                 ->andWhere('g.price > 0')    
-                ->andWhere('g.retailCount > :retailCount')    
+                ->andWhere('g.retailCount >= :retailCount')    
                 ->setParameter('retailCount', (int) $market->getRetailLimit())    
                 ->join('g.genericGroup', 'gg') 
                     ;

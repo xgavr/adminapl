@@ -784,7 +784,7 @@ class MarketManager
             }
             if ($market->getFormat() == MarketPriceSetting::FORMAT_YML || $market->getFormat() == MarketPriceSetting::FORMAT_YML_PP){
                 $result = $this->marketYML($market, $offset, $blocks);
-                var_dump($result);
+//                var_dump($result);
             }
             $outRows += $result['outRows'];
             if (!$market->getBlockRowCount() && $result['outRows'] < $maxRowCount){
