@@ -108,6 +108,7 @@ $this->pageBreadcrumbs()->setItems([
                     Формат описания: <?= $this->escapeHtml($market->getDescriptionFormatAsString());?>;
                     Состав описания: <?= $this->escapeHtml($market->getDescriptionSetAsString());?>;
                     Фильтр слов: <i><?= $this->escapeHtml($market->getTokenFilter());?></i>;
+                    Ozon: <?= $this->escapeHtml($market->getOzonUpdateAsString());?>;
                     Коментарий: <?= $this->escapeHtml($market->getInfo());?>
                 </small>
             </td>
@@ -131,6 +132,12 @@ $this->pageBreadcrumbs()->setItems([
                             title="Сформировать">
                         <span class="glyphicon glyphicon-play" ></span>
                     </button> 
+                    <?php if ($market->getOzonUpdate() == MarketPriceSetting::OZON_UPDATE):?>
+                        <button value="/market-place/ozon-update-market/<?= $market->getId()?>" class="btn btn-default btn-xs refresh-ozon"
+                                title="Обновить цены в Озоне">OZON
+                            <span class="glyphicon glyphicon-play" ></span>
+                        </button> 
+                    <?php endif; ?>
                 </nobr>    
             </td>    
         </tr>
@@ -186,6 +193,42 @@ $this->pageBreadcrumbs()->setItems([
             }); 
         });    
     }
+    
+    $('.refresh-ozon').on('click', function(e) {
+        var url = e.currentTarget.value;
+        if (url){
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: false
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (obj) {
+                    dialog.modal('hide');
+                    var message = 'Обновлено!';
+                    $.each(obj, function (key, product) {
+                        if (product.updated == false){
+                            message = product.offer_id + ' не обновлено - ';
+                            $.each(product.errors, function (index, value) {
+                                message += value.message + ';';
+                            });
+                            message += '<br/>';
+                        }    
+                    });    
+                    dialog = bootbox.dialog({
+                        message: '<div class="pre-scrollable"><i class="fa fa-spin fa-spinner"></i>'+message+'</div>',
+                        closeButton: true
+                    });
+                })
+                .fail(function () {
+                    dialog.modal('hide');
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    });     
     
     $('.rate-select').on('click', function(e) {
         var url = e.currentTarget.value;

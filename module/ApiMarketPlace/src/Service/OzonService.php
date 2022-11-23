@@ -16,6 +16,7 @@ use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use Symfony\Component\HttpClient\Psr18Client;
 use Application\Entity\Goods;
 use Application\Entity\ScaleTreshold;
+use Application\Entity\MarketPriceSetting;
 
 
 /**
@@ -25,6 +26,8 @@ use Application\Entity\ScaleTreshold;
  */
 class OzonService {
     
+    const OZON_MAX_PACKAGE = 1000; //макс пакет для обновления в озоне
+
     /**
      * Raw request data (json) for webhook methods
      *
@@ -87,42 +90,105 @@ class OzonService {
         return $categoryTree;
     }
     
+    
     /**
      * Обновить цену товара
-     * @param Goods $good
+     * @param array $input
      */
-    public function updatePrice($good)
+    private function updatePrice($input)
     {
-        if (!$good->getAplId()){
-            return;
-        }
-        
         $settings = $this->adminManager->getApiMarketPlaces();
-        
+
         $config = [
             'clientId' => $settings['ozon_client_id'],
             'apiKey' => $settings['ozon_api_key'],
 //            'host' => $this->ozon_host,
         ];
-
+        
         $client = new Psr18Client();
         $svcProduct = new ProductService($config, $client);
+
+        $result = $svcProduct->importPrices($input);
+
+        return $result;        
+    }
+    
+    /**
+     * Обновить цену товара
+     * @param Goods $good
+     */
+    public function updateGoodPrice($good)
+    {
+        if (!$good->getAplId()){
+            return;
+        }
         
         $opts = $good->getOpts();
+        
+        $price = $good->getPrice();
+        $minPrice = $opts[ScaleTreshold::PRICE_COL_COUNT];
         
         $input = [
             'auto_action_enabled' => 'UNKNOWN',
             'currency_code' => 'RUB',
-            'min_price' => $opts[ScaleTreshold::PRICE_COL_COUNT],
+            'min_price' => $minPrice,
             'offer_id' => $good->getAplId(),
             'old_price' => 0,
-            'price' => $good->getPrice(),
+            'price' => $price,
             'product_id' => $good->getId(),
         ];
         
-        $result = $svcProduct->importPrices($input);
+        $result = $this->updatePrice($input);
+        
+        return $result;        
+    }
+    
+    /**
+     * Обновление цен из прайса
+     * @param MarketPriceSetting $market
+     * @param integer $offset
+     * @param integer $block
+     * @return array
+     */
+    public function marketUpdate($market, $offset = 0, $block = 0)
+    {
+        
+        $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
+                ->marketQuery($market, $offset);
+        $data = $goodsQuery->getResult(2);
+        $prices = [];
+        foreach ($data as $good){
+
+            $rawprices = $this->restShipping($good['id'], $market, $good['price']);
+            $lot = $rawprices['lot'];
+            
+            if ($rawprices['realrest'] == 0){
+                continue;
+            }
+
+            $opts = Goods::optPrices($good['price'], $good['meanPrice']);
+            
+            $prices[] = [
+                'auto_action_enabled' => 'UNKNOWN',
+                'currency_code' => 'RUB',
+                'min_price' => $market->getExtraMinPrice($opts, $lot),
+                'offer_id' => $good['aplId'],
+                'old_price' => 0,
+                'price' => $market->getExtraPrice($opts, $lot),
+                'product_id' => $good['id'],                
+            ];
+            
+            if (count($prices) == self::OZON_MAX_PACKAGE){
+                $result = $this->updatePrice(['prices' => $prices]);
+                $prices = [];
+            }
+        }    
+
+        if (count($prices)){
+            $result = $this->updatePrice(['prices' => $prices]);
+        }
         
         return $result;
-        
     }
+    
 }

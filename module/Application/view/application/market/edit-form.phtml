@@ -111,6 +111,10 @@ $form->get('descriptionSet')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('ozonUpdate')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('rates')->setAttributes([
     'class'=>'form-control',
     'style' => 'height: 256px',
@@ -356,6 +360,13 @@ if ($market && !$copy){
                         <?= $this->formLabel($form->get('retailLimit')); ?>
                         <?= $this->formElement($form->get('retailLimit')); ?>
                         <?= $this->formElementErrors($form->get('retailLimit')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-2">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('ozonUpdate')); ?>
+                        <?= $this->formElement($form->get('ozonUpdate')); ?>
+                        <?= $this->formElementErrors($form->get('ozonUpdate')); ?>                  
                     </div>
                 </div>    
             </div>

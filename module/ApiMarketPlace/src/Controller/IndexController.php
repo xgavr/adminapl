@@ -13,6 +13,7 @@ use Laminas\View\Model\JsonModel;
 use ApiMarketPlace\Entity\Marketplace;
 use ApiMarketPlace\Form\MarketplaceSetting;
 use Application\Entity\Goods;
+use Application\Entity\MarketPriceSetting;
 
 
 class IndexController extends AbstractActionController
@@ -162,7 +163,25 @@ class IndexController extends AbstractActionController
         }    
         
         if ($good){
-            $result = $this->ozonService->updatePrice($good);
+            $result = $this->ozonService->updateGoodPrice($good);
+        }
+
+        return new JsonModel($result);
+    }
+
+    public function ozonUpdateMarketAction()
+    {
+        $marketId = (int)$this->params()->fromRoute('id', -1);
+        
+        $market = null;
+        $result = [];
+        if ($marketId > 0){
+            $market = $this->entityManager->getRepository(MarketPriceSetting::class)
+                    ->find($marketId);
+        }    
+        
+        if ($market){
+            $result = $this->ozonService->marketUpdate($market);
         }
 
         return new JsonModel($result);

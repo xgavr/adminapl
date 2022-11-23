@@ -349,6 +349,18 @@ class MarketForm extends Form
                                 
         $this->add([            
             'type'  => 'select',
+            'name' => 'ozonUpdate',
+            'attributes' => [
+                'value' => MarketPriceSetting::OZON_IGNORE,
+            ],    
+            'options' => [
+                'label' => 'OZON',
+                'value_options' => MarketPriceSetting::getOzonUpdateList(),
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'select',
             'name' => 'pricecol',
             'attributes' => [
                 'value' => 0,

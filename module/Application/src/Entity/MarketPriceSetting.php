@@ -60,6 +60,9 @@ class MarketPriceSetting {
     const TD_IGNORE   = 1; // Товары все.
     const TD_MATH      = 2; // Товары с ТД.
     
+    const OZON_IGNORE   = 1; // не обновлять цены в озоне.
+    const OZON_UPDATE   = 2; // обновлять цены в озоне.
+    
     const RATE_IGNORE   = 1; // Расценки все.
     const RATE_INCLUDE  = 2; // Расценки включить.
     const RATE_EXCLUDE  = 3; // Расценки исключить.
@@ -188,6 +191,12 @@ class MarketPriceSetting {
      */
     protected $descriptionSet;
     
+    /**
+     * Обновление в озоне
+     * @ORM\Column(name="ozon_update")   
+     */
+    protected $ozonUpdate;
+
     /**
      * Минимальная цена в прайсе
      * @ORM\Column(name="min_price")   
@@ -368,6 +377,25 @@ class MarketPriceSetting {
     public function getExtraPrice($opts, $lot = 1)
     {
         $result = $opts[$this->pricecol];
+        if ($this->extraMargin){
+            $result += round($result*$this->extraMargin/100, -1);
+        }
+        
+        if ($this->considerSet == $this::CONSIDER_SET){
+            $result *= $lot;
+        }
+        return $result;
+    }
+
+    /**
+     * Получить минимальную цену с дополнительной наценкой
+     * @param array $opts Колонки цен
+     * @param integer $lot минимальное количество
+     * @return float
+     */
+    public function getExtraMinPrice($opts, $lot = 1)
+    {
+        $result = $opts[ScaleTreshold::PRICE_COL_COUNT];
         if ($this->extraMargin){
             $result += round($result*$this->extraMargin/100, -1);
         }
@@ -1165,6 +1193,49 @@ class MarketPriceSetting {
         $this->descriptionSet = $descriptionSet;
     }   
 
+    /**
+     * Returns ozon update.
+     * @return int     
+     */
+    public function getOzonUpdate() 
+    {
+        return $this->ozonUpdate;
+    }
+    
+    /**
+     * Returns possible ozon update as array.
+     * @return array
+     */
+    public static function getOzonUpdateList() 
+    {
+        return [
+            self::OZON_IGNORE => 'не обновлять',
+            self::OZON_UPDATE => 'обновлять цены'
+        ];
+    }    
+    
+    /**
+     * Returns ozon update as string.
+     * @return string
+     */
+    public function getOzonUpdateAsString()
+    {
+        $list = self::getOzonUpdateList();
+        if (isset($list[$this->ozonUpdate]))
+            return $list[$this->ozonUpdate];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets ozon update.
+     * @param int $ozonUpdate     
+     */
+    public function setOzonUpdate($ozonUpdate) 
+    {
+        $this->ozonUpdate = $ozonUpdate;
+    }   
+
     public function getRegion() 
     {
         return $this->region;
@@ -1299,6 +1370,7 @@ class MarketPriceSetting {
             'considerSet' => $this->getConsiderSet(),
             'descriptionFormat' => $this->getDescriptionFormat(),
             'descriptionSet' => $this->getDescriptionSet(),
+            'ozonUpdate' => $this->getOzonUpdate(),
             'movementLimit' => $this->getMovementLimit(),
             'retailLimit' => $this->getRetailLimit(),
             'tokenFilter' => $this->getTokenFilter(),

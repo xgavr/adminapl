@@ -259,6 +259,7 @@ class MarketManager
         $market->setConsiderSet($data['considerSet']);
         $market->setDescriptionFormat($data['descriptionFormat']);
         $market->setDescriptionSet($data['descriptionSet']);
+        $market->setOzonUpdate($data['ozonUpdate']);
         $market->setShipping($data['shipping']);
         $market->setTokenFilter($data['tokenFilter']);
         
@@ -305,6 +306,7 @@ class MarketManager
         $market->setConsiderSet($data['considerSet']);
         $market->setDescriptionFormat($data['descriptionFormat']);
         $market->setDescriptionSet($data['descriptionSet']);
+        $market->setOzonUpdate($data['ozonUpdate']);
         $market->setShipping($data['shipping']);
         $market->setTokenFilter($data['tokenFilter']);
         
@@ -565,6 +567,7 @@ class MarketManager
 
     //                $rawprices = $this->rawprices($good, $market);
             $rawprices = $this->restShipping($good['id'], $market, $good['price']);
+            $lot = $rawprices['lot'];
             if ($rawprices['realrest'] == 0){
                 continue;
             }
@@ -578,7 +581,7 @@ class MarketManager
                 $sheet->setCellValue("E$k", implode(';', $images));
             }
             $sheet->setCellValue("F$k", ltrim($rawprices['realrest'], '='));
-            $sheet->setCellValue("G$k", $market->getExtraPrice($opts));
+            $sheet->setCellValue("G$k", $market->getExtraPrice($opts, $lot));
     //                $sheet->setCellValue("G$k", $rawprice->getRealPrice());
             $sheet->setCellValue("H$k", $good['aplId']);
 
@@ -642,7 +645,7 @@ class MarketManager
 
         // Creating offers array (https://yandex.ru/support/webmaster/goods-prices/technical-requirements.xml#offers)
         $offers = [];
-        $rows = $outRows = 0;
+        $rows = $outRows = $imageSkip = $restSkip = 0;
         $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->marketQuery($market, $offset);
         $data = $goodsQuery->getResult(2);
@@ -651,11 +654,13 @@ class MarketManager
             $rows++;
             $images = $this->images($good, $market);
             if ($images === false){
+                $imageSkip++;
                 continue;
             }
 //                $rawprices = $this->rawprices($good, $market);
             $rawprices = $this->restShipping($good['id'], $market, $good['price']);
             if ($rawprices['realrest'] == 0){
+                $restSkip++;
                 continue;
             }
 
@@ -752,7 +757,7 @@ class MarketManager
         
         $this->fileUnload($market, $block);
         
-        return ['rows' => $rows, 'outRows' => $outRows];
+        return ['rows' => $rows, 'outRows' => $outRows, 'imageSkip' => $imageSkip, 'restSkip' => $restSkip];
     }
 
     /**
@@ -779,6 +784,7 @@ class MarketManager
             }
             if ($market->getFormat() == MarketPriceSetting::FORMAT_YML || $market->getFormat() == MarketPriceSetting::FORMAT_YML_PP){
                 $result = $this->marketYML($market, $offset, $blocks);
+                var_dump($result);
             }
             $outRows += $result['outRows'];
             if (!$market->getBlockRowCount() && $result['outRows'] < $maxRowCount){
