@@ -165,6 +165,7 @@ class IndexController extends AbstractActionController
         if ($good){
             $result = $this->ozonService->updateGoodPrice($good);
             $result += $this->ozonService->updateGoodStock($good);
+            var_dump($result);
         }
 
         return new JsonModel($result);
