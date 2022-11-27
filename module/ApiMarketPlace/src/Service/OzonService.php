@@ -26,7 +26,9 @@ use Application\Entity\MarketPriceSetting;
  */
 class OzonService {
     
-    const OZON_MAX_PACKAGE = 1000; //макс пакет для обновления в озоне
+    const OZON_MAX_PRICE_UPDATE = 1000; //макс пакет для обновления цен в озоне
+
+    const OZON_MAX_STOCK_UPDATE = 100; //макс пакет для обновления остатков в озоне
 
     /**
      * Raw request data (json) for webhook methods
@@ -122,6 +124,28 @@ class OzonService {
     }
     
     /**
+     * Обновить остаток товара
+     * @param array $input
+     */
+    private function updateStock($input)
+    {
+        $settings = $this->adminManager->getApiMarketPlaces();
+
+        $config = [
+            'clientId' => $settings['ozon_client_id'],
+            'apiKey' => $settings['ozon_api_key'],
+//            'host' => $this->ozon_host,
+        ];
+        
+        $client = new Psr18Client();
+        $svcProduct = new ProductService($config, $client);
+
+        $result = $svcProduct->importStocks($input);
+
+        return $result;        
+    }
+
+    /**
      * Обновить цену товара
      * @param Goods $good
      */
@@ -152,6 +176,36 @@ class OzonService {
     }
     
     /**
+     * Обновить остаток товара
+     * @param Goods $good
+     */
+    public function updateGoodStock($good)
+    {
+        if (!$good->getAplId()){
+            return;
+        }
+        
+        $stock = 0;
+        $goodSuppliers = $this->entityManager->getRepository(GoodSupplier::class)
+                ->goodSuppliers($good->getId());
+        foreach ($goodSuppliers as $goodSupplier){            
+            if ($good->getPrice() > $goodSupplier['price']){
+                $stock += $goodSupplier['rest'];
+            }    
+        }        
+        
+        $input = [
+            'offer_id' => $good->getAplId(),
+            'product_id' => $good->getId(),
+            'stock' => $stock,
+        ];
+        
+        $result = $this->updateStock($input);
+        
+        return $result;        
+    }
+
+    /**
      * Обновление цен из прайса
      * @param MarketPriceSetting $market
      * @param integer $offset
@@ -164,14 +218,15 @@ class OzonService {
         $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->marketQuery($market, $offset);
         $data = $goodsQuery->getResult(2);
-        $prices = [];
+        $prices = []; 
+        $stocks = [];
         foreach ($data as $good){
 
             $rawprices = $this->marketManager->restShipping($good['id'], $market, $good['price']);
             $lot = $rawprices['lot'];
             
             if ($rawprices['realrest'] == 0){
-                continue;
+                //continue;
             }
 
             $opts = Goods::optPrices($good['price'], $good['meanPrice']);
@@ -186,14 +241,28 @@ class OzonService {
                 'product_id' => $good['id'],                
             ];
             
-            if (count($prices) == self::OZON_MAX_PACKAGE){
+            $stocks[] = [
+                'offer_id' => $good['aplId'],
+                'product_id' => $good['id'],
+                'stock' => $rawprices['realrest'],
+            ];
+            
+            if (count($prices) == self::OZON_MAX_PRICE_UPDATE){
                 $result = $this->updatePrice(['prices' => $prices]);
                 $prices = [];
+            }
+
+            if (count($prices) == self::OZON_MAX_STOCK_UPDATE){
+                $result = $this->updateStock(['stocks' => $stocks]);
+                $stocks = [];
             }
         }    
 
         if (count($prices)){
             $result = $this->updatePrice(['prices' => $prices]);
+        }
+        if (count($stocks)){
+            $result = $this->updateStock(['stocks' => $stocks]);
         }
         
         return $result;
