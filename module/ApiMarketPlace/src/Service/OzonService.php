@@ -17,6 +17,7 @@ use Symfony\Component\HttpClient\Psr18Client;
 use Application\Entity\Goods;
 use Application\Entity\ScaleTreshold;
 use Application\Entity\MarketPriceSetting;
+use Application\Entity\GoodSupplier;
 
 
 /**
