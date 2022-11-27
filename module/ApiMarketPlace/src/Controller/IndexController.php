@@ -156,19 +156,21 @@ class IndexController extends AbstractActionController
         $goodId = (int)$this->params()->fromRoute('id', -1);
         
         $good = null;
-        $result = [];
+        $resultPrice = []; $resultStock = [];
         if ($goodId > 0){
             $good = $this->entityManager->getRepository(Goods::class)
                     ->find($goodId);
         }    
         
         if ($good){
-            $result = $this->ozonService->updateGoodPrice($good);
-            $result += $this->ozonService->updateGoodStock($good);
-            var_dump($result);
+            $resultPrice = $this->ozonService->updateGoodPrice($good);
+            $resultStock = $this->ozonService->updateGoodStock($good);
         }
 
-        return new JsonModel($result);
+        return new JsonModel([
+            'price' => $resultPrice,
+            'stock' => $resultStock,
+        ]);
     }
 
     public function ozonUpdateMarketAction()

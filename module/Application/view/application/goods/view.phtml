@@ -437,17 +437,26 @@
             })
                 .done(function (obj) {
                     dialog.modal('hide');
-                    var message = 'Обновлено!';
-                    $.each(obj, function (key, product) {
+                    var messagePrice = 'Цена обновлена!';
+                    var messageStock = 'Остаток обновлен!';
+                    $.each(obj.price, function (key, product) {
                         if (product.updated == false){
-                            message = 'Не обновлено<br/>';
+                            messagePrice = 'Цена не обновлена<br/>';
                             $.each(product.errors, function (index, value) {
-                                message += value.message + '<br/>';
+                                messagePrice += value.message + '<br/>';
+                            });
+                        }    
+                    });    
+                    $.each(obj.stock, function (key, product) {
+                        if (product.updated == false){
+                            messageStock = 'Остаток не обновлен<br/>';
+                            $.each(product.errors, function (index, value) {
+                                messageStock += value.message + '<br/>';
                             });
                         }    
                     });    
                     dialog = bootbox.dialog({
-                        message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>'+message+'</p>',
+                        message: '<p><i class="fa fa-spin fa-spinner"></i>'+messagePrice+'</p><p><i class="fa fa-spin fa-spinner"></i>'+messageStock+'</p>',
                         closeButton: true
                     });
                 })
