@@ -493,7 +493,7 @@ class AplController extends AbstractActionController
     
         // Находим существующий пост в базе данных.    
         $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
-                ->findOneById($goodId);  
+                ->find($goodId);  
         	
         if ($good == null) {
             $this->getResponse()->setStatusCode(401);

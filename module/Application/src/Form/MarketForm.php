@@ -377,7 +377,7 @@ class MarketForm extends Form
             'attributes' => [
                 'value' => MarketPriceSetting::MOVEMENT_LIMIT,
                 'min' => 0,
-                'step' => 100,
+                'step' => 10,
             ],    
             'options' => [
                 'label' => 'Фильтр движений',
@@ -403,7 +403,7 @@ class MarketForm extends Form
             'attributes' => [
                 'id' => 'minPrice',
                 'value' => 300,
-                'step' => 50,
+                'step' => 10,
                 'min' => 0,
             ],
             'options' => [
@@ -433,7 +433,7 @@ class MarketForm extends Form
                 'value' => MarketPriceSetting::MAX_BLOCK_ROW_COUNT,
                 'min' => 0,
                 'max' => MarketPriceSetting::MAX_BLOCK_ROW_COUNT,
-                'step' => 100,
+                'step' => 10,
             ],
             'options' => [
                 'label' => 'Строк в блоке',
