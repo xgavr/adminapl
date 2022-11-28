@@ -19,7 +19,6 @@ use Application\Entity\ScaleTreshold;
 use Application\Entity\MarketPriceSetting;
 use Application\Entity\GoodSupplier;
 
-
 /**
  * Description of OzonService
  * 
@@ -207,6 +206,29 @@ class OzonService {
     }
 
     /**
+     * Добавить лог обновления
+     * @param MarketPriceSetting $market
+     * @param array $result
+     * @param string $logName
+     */
+    private function addToUpdateLog($market, $result, $logName = '')
+    {
+        $filename = $market->getOzonLog($logName);
+        $path = $this->marketManager->folder($market).'/'.$filename;
+        
+        $handle = fopen($path, "a");
+        foreach ($result['result'] as $value){
+            if (count($value['errors'])){
+                $value[] = implode(';', $value['errors']);
+            }
+            fputcsv($handle, $value);
+        }    
+        fclose($handle);
+        
+        return;
+    }
+    
+    /**
      * Обновление цен из прайса
      * @param MarketPriceSetting $market
      * @param integer $offset
@@ -250,23 +272,27 @@ class OzonService {
             
             if (count($prices) == self::OZON_MAX_PRICE_UPDATE){
                 $result = $this->updatePrice(['prices' => $prices]);
+                $this->addToUpdateLog($market, $result, 'price');
                 $prices = [];
             }
 
             if (count($prices) == self::OZON_MAX_STOCK_UPDATE){
                 $result = $this->updateStock(['stocks' => $stocks]);
+                $this->addToUpdateLog($market, $result, 'stock');
                 $stocks = [];
             }
         }    
 
         if (count($prices)){
             $result = $this->updatePrice(['prices' => $prices]);
+            $this->addToUpdateLog($market, $result, 'price');
         }
         if (count($stocks)){
             $result = $this->updateStock(['stocks' => $stocks]);
+            $this->addToUpdateLog($market, $result, 'stock');
         }
         
-        return $result;
+        return;
     }
     
 }

@@ -801,6 +801,18 @@ class MarketPriceSetting {
     }
     
     /**
+     * Returns ozon log.
+     * 
+     * @param string $prefix
+     * @return string     
+     * 
+     */
+    public function getOzonLog($prefix = 'log') 
+    {
+        return "ozon_update_".$prefix.'_'.$this->id.'.csv';
+    }
+
+    /**
      * Returns format zip.
      * @param integer $offset
      * @return string     

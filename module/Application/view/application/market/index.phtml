@@ -134,7 +134,7 @@ $this->pageBreadcrumbs()->setItems([
                     </button> 
                     <?php if ($market->getOzonUpdate() == MarketPriceSetting::OZON_UPDATE):?>
                         <button value="/market-place/ozon-update-market/<?= $market->getId()?>" class="btn btn-default btn-xs refresh-ozon"
-                                title="Обновить цены в Озоне">OZON
+                                title="Обновить цены и остатки в Озоне">OZON
                             <span class="glyphicon glyphicon-play" ></span>
                         </button> 
                     <?php endif; ?>
@@ -209,15 +209,6 @@ $this->pageBreadcrumbs()->setItems([
                 .done(function (obj) {
                     dialog.modal('hide');
                     var message = 'Обновлено!';
-                    $.each(obj, function (key, product) {
-                        if (product.updated == false){
-                            message = product.offer_id + ' не обновлено - ';
-                            $.each(product.errors, function (index, value) {
-                                message += value.message + ';';
-                            });
-                            message += '<br/>';
-                        }    
-                    });    
                     dialog = bootbox.dialog({
                         message: '<p><div class="pre-scrollable"><i class="fa fa-spin fa-spinner"></i>'+message+'</div></p>',
                         closeButton: true
