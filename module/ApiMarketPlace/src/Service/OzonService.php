@@ -217,9 +217,13 @@ class OzonService {
         $path = $this->marketManager->folder($market).'/'.$filename;
         
         $handle = fopen($path, "a");
-        foreach ($result['result'] as $value){
+        foreach ($result as $value){
             if (count($value['errors'])){
-                $value[] = implode(';', $value['errors']);
+                $errorMsg = [];
+                foreach ($value['errors'] as $error){
+                    $errorMsg[] = $error['message'];
+                }    
+                $value[] = implode(';', $errorMsg);
             }
             fputcsv($handle, $value);
         }    
@@ -243,6 +247,7 @@ class OzonService {
         $data = $goodsQuery->getResult(2);
         $prices = []; 
         $stocks = [];
+        $outRows = 0;
         foreach ($data as $good){
 
             $rawprices = $this->marketManager->restShipping($good['id'], $market, $good['price']);
@@ -281,16 +286,24 @@ class OzonService {
                 $this->addToUpdateLog($market, $result, 'stocks');
                 $stocks = [];
             }
+
+            $outRows++;
+            if ($outRows >= $market->getMaxRowCount() * $market->getBlockRowCount()){
+                break;
+            }
+            if ($outRows >= MarketPriceSetting::MAX_BLOCK_ROW_COUNT * $market->getBlockRowCount()){
+                break;
+            }        
         }    
 
         if (count($prices)){
             $result = $this->updatePrice(['prices' => $prices]);
-            var_dump($result);
+//            var_dump($result);
             $this->addToUpdateLog($market, $result, 'prices');
         }
         if (count($stocks)){
             $result = $this->updateStock(['stocks' => $stocks]);
-            var_dump($result);
+//            var_dump($result);
             $this->addToUpdateLog($market, $result, 'stocks');
         }
         
