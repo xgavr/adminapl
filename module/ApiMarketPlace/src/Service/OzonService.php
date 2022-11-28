@@ -272,8 +272,7 @@ class OzonService {
             
             if (count($prices) == self::OZON_MAX_PRICE_UPDATE){
                 $result = $this->updatePrice(['prices' => $prices]);
-                var_dump($result);
-//                $this->addToUpdateLog($market, $result, 'prices');
+                $this->addToUpdateLog($market, $result, 'prices');
                 $prices = [];
             }
 
@@ -286,10 +285,12 @@ class OzonService {
 
         if (count($prices)){
             $result = $this->updatePrice(['prices' => $prices]);
+            var_dump($result);
             $this->addToUpdateLog($market, $result, 'prices');
         }
         if (count($stocks)){
             $result = $this->updateStock(['stocks' => $stocks]);
+            var_dump($result);
             $this->addToUpdateLog($market, $result, 'stocks');
         }
         
