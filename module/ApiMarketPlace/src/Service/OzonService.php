@@ -277,7 +277,7 @@ class OzonService {
                 $prices = [];
             }
 
-            if (count($prices) == self::OZON_MAX_STOCK_UPDATE){
+            if (count($stocks) == self::OZON_MAX_STOCK_UPDATE){
                 $result = $this->updateStock(['stocks' => $stocks]);
                 $this->addToUpdateLog($market, $result, 'stocks');
                 $stocks = [];
