@@ -249,7 +249,7 @@ class OzonService {
             $lot = $rawprices['lot'];
             
             if ($rawprices['realrest'] == 0){
-                //continue;
+                continue;
             }
 
             $opts = Goods::optPrices($good['price'], $good['meanPrice']);
@@ -272,24 +272,25 @@ class OzonService {
             
             if (count($prices) == self::OZON_MAX_PRICE_UPDATE){
                 $result = $this->updatePrice(['prices' => $prices]);
-                $this->addToUpdateLog($market, $result, 'price');
+                var_dump($result);
+//                $this->addToUpdateLog($market, $result, 'prices');
                 $prices = [];
             }
 
             if (count($prices) == self::OZON_MAX_STOCK_UPDATE){
                 $result = $this->updateStock(['stocks' => $stocks]);
-                $this->addToUpdateLog($market, $result, 'stock');
+                $this->addToUpdateLog($market, $result, 'stocks');
                 $stocks = [];
             }
         }    
 
         if (count($prices)){
             $result = $this->updatePrice(['prices' => $prices]);
-            $this->addToUpdateLog($market, $result, 'price');
+            $this->addToUpdateLog($market, $result, 'prices');
         }
         if (count($stocks)){
             $result = $this->updateStock(['stocks' => $stocks]);
-            $this->addToUpdateLog($market, $result, 'stock');
+            $this->addToUpdateLog($market, $result, 'stocks');
         }
         
         return;
