@@ -187,7 +187,7 @@ class MarketRepository extends EntityRepository{
                 ->andWhere('raw.supplier = ?2')
                 ->setParameter('2', $market->getSupplier())    
                 ->andWhere('g.price > 0')
-                ->andWhere('g.retailCount > :retailCount')    
+                ->andWhere('g.retailCount >= :retailCount')    
                 ->setParameter('retailCount', $market->getRetailLimit())    
                     ;            
         } else {

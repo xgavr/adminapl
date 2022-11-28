@@ -206,6 +206,40 @@ class OzonService {
     }
 
     /**
+     * Запись лога преобразовать в строку
+     * @param array $log
+     * @return array
+     */
+    private function updateLogBody($log)
+    {
+        $result = [
+            $log['offer_id'],
+            $log['product_id'],
+            $log['updated'],
+        ];
+        $errors = [];
+        foreach ($log['errors'] as $key => $value){
+            $errors[] = $value;
+        }
+        $result[] = implode(';', $errors);
+        return $result;
+    }
+    
+    /**
+     * Заголовки таблицы логов
+     * @return array
+     */
+    private function updateLogHeader()
+    {
+        return [
+            'offer_id',
+            'product_id',
+            'updated',
+            'errors',
+        ];
+    }
+
+    /**
      * Добавить лог обновления
      * @param MarketPriceSetting $market
      * @param array $result
@@ -216,16 +250,15 @@ class OzonService {
         $filename = $market->getOzonLog($logName);
         $path = $this->marketManager->folder($market).'/'.$filename;
         
+        if (!file_exists($path)){
+            $handle = fopen($path, "a");
+            fputcsv($handle, $this->updateLogHeader());
+            fclose($handle);            
+        }
+        
         $handle = fopen($path, "a");
         foreach ($result as $value){
-            if (count($value['errors'])){
-                $errorMsg = [];
-                foreach ($value['errors'] as $error){
-                    $errorMsg[] = $error['message'];
-                }    
-                $value[] = implode(';', $errorMsg);
-            }
-            fputcsv($handle, $value);
+            fputcsv($handle, $this->updateLogBody($value));
         }    
         fclose($handle);
         
