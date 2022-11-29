@@ -194,13 +194,19 @@ class ProcessingController extends AbstractActionController
      */
     private $jobManager;    
 
+    /**
+     * Ozon manager.
+     * @var \ApiMarketPlace\Service\OzonService
+     */
+    private $ozonManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
-            $aplCashService, $billManager, $registerManager, $ptManager, $jobManager) 
+            $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, $ozonService) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -231,6 +237,7 @@ class ProcessingController extends AbstractActionController
         $this->registerManager = $registerManager;
         $this->ptManager = $ptManager;
         $this->jobManager = $jobManager;
+        $this->ozonManager = $ozonService;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -1913,7 +1920,8 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['market_unload'] == 1){
 
-            $this->marketManager->unloadNext();            
+            $markets = $this->marketManager->unloadNext(); 
+            $this->ozonManager->updateMarkets($markets);
         }    
                 
         return new JsonModel(

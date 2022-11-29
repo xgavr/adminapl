@@ -320,7 +320,7 @@ class OzonService {
             $lot = $rawprices['lot'];
             
             if ($rawprices['realrest'] == 0){
-                continue;
+//                continue;
             }
 
             $opts = Goods::optPrices($good['price'], $good['meanPrice']);
@@ -374,4 +374,20 @@ class OzonService {
         return $out;
     }
     
+    /**
+     * Обновление массива прайсов
+     * @param array $markets
+     */
+    public function updateMarkets($markets)
+    {
+        ini_set('memory_limit', '4096M');
+        set_time_limit(0);
+        foreach ($markets as $market){
+            if ($market->getOzonUpdate() == MarketPriceSetting::OZON_UPDATE){
+                $this->marketUpdate($market);
+            }    
+        }
+        
+        return;
+    }
 }

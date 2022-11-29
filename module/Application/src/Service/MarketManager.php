@@ -870,7 +870,8 @@ class MarketManager
     
     /**
      * Запуск выгрузки очередного прайса
-     * @return null
+     * @return array
+     * 
      */
     public function unloadNext()
     {
@@ -878,9 +879,8 @@ class MarketManager
                 ->findNext();
         foreach ($markets as $market){
             $this->unload($market);
-        }
-        
-        return;
+        }        
+        return $markets;
     }
     
     /**
