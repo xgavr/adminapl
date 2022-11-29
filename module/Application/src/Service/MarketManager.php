@@ -884,6 +884,18 @@ class MarketManager
     }
     
     /**
+     * Получить файл лога
+     * @param MarketPriceSetting $market
+     * @param string $logName
+     * @return string
+     */
+    public function ozonLogFile($market, $logName = '')
+    {
+        $filename = $market->getOzonLog($logName);
+        return $this->folder($market).'/'.$filename;        
+    }
+    
+    /**
      * Ссылки для скачивания
      * @param Market $market
      * @return aaray
@@ -900,6 +912,16 @@ class MarketManager
             $blocks++;
             $result[] = 'https://adminapl.ru/market/download-yml/'.$market->getId().'?b='.$blocks;
         }    
+        
+        $ozonUpdatePricesLog = $this->ozonLogFile($market, 'prices');
+        if (file_exists($ozonUpdatePricesLog)){
+            $result[] = $market->getOzonLogDownloadLink('prices', 'Скачать лог обновления цен');
+        }
+        $ozonUpdateStocksLog = $this->ozonLogFile($market, 'stocks');
+        if (file_exists($ozonUpdateStocksLog)){
+            $result[] = $market->getOzonLogDownloadLink('stocks', 'Скачать лог обновления остатков');
+        }
+        
         return $result;
     }
 }

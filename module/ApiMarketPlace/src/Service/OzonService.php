@@ -214,8 +214,7 @@ class OzonService {
      */
     public function logFile($market, $logName = '')
     {
-        $filename = $market->getOzonLog($logName);
-        return $this->marketManager->folder($market).'/'.$filename;        
+        return $this->marketManager->ozonLogFile($market, $logName);        
     }
     
     /**
@@ -304,8 +303,10 @@ class OzonService {
         $this->clearLog($market, 'stocks');
         
         $out = [
-            'prices' => '<a href="/market-place/download-log/'.$market->getId().'?log=prices">Скачать лог обновления цен</a>',
-            'stocks' => '<a href="/market-place/download-log/'.$market->getId().'?log=stocks">Скачать лог обновления остатков</a>',
+//            'prices' => '<a href="/market-place/download-log/'.$market->getId().'?log=prices">Скачать лог обновления цен</a>',
+//            'stocks' => '<a href="/market-place/download-log/'.$market->getId().'?log=stocks">Скачать лог обновления остатков</a>',
+            'prices' => $market->getOzonLogDownloadLink('prices', 'Скачать лог обновления цен'),
+            'stocks' => $market->getOzonLogDownloadLink('stocks', 'Скачать лог обновления остатков'),
         ];
         
         $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)

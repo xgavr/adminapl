@@ -309,6 +309,17 @@ class MarketPriceSetting {
         return $this->id;
     }
 
+    /**
+     * Ссылка на скачивание лога обновления в озоне
+     * @param string $logName
+     * @param string $title
+     * @return string
+     */
+    public function getOzonLogDownloadLink($logName = '', $title = '') 
+    {
+        return '<a href="/market-place/download-log/'.$this->id.'?log='.$logName.'">'.$title.'</a>';
+    }
+
     public function setId($id) 
     {
         $this->id = $id;
