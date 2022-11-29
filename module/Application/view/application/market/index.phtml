@@ -178,7 +178,9 @@ $this->pageBreadcrumbs()->setItems([
             var result = '';
             $.each( data.links, function( key, value ) {
                 result += '<p><span id=link'+key+'>'+value+'</span>';
-                result += '  <button class="btn btn-default btn-xs" onclick="copyToClipbpard(\''+value+'\')" title="Копировать в буфер"><span class="glyphicon glyphicon-copy"></span></button></p>';
+                if (value.includes('http')){
+                    result += '  <button class="btn btn-default btn-xs" onclick="copyToClipbpard(\''+value+'\')" title="Копировать в буфер"><span class="glyphicon glyphicon-copy"></span></button></p>';
+                }    
             });                    
             result += '';
             bootbox.dialog({
