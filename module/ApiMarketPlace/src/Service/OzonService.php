@@ -248,7 +248,7 @@ class OzonService {
             'offer_id',
             'product_id',
             'updated',
-            'errors',
+            date('d.m.Y H:i:s'),
         ];
     }
 
