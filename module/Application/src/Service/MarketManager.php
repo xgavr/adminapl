@@ -915,11 +915,11 @@ class MarketManager
         
         $ozonUpdatePricesLog = $this->ozonLogFile($market, 'prices');
         if (file_exists($ozonUpdatePricesLog)){
-            $result[] = $market->getOzonLogDownloadLink('prices', 'Скачать лог обновления цен');
+            $result[] = $market->getOzonLogDownloadLink('prices', 'Скачать лог обновления цен в озоне');
         }
         $ozonUpdateStocksLog = $this->ozonLogFile($market, 'stocks');
         if (file_exists($ozonUpdateStocksLog)){
-            $result[] = $market->getOzonLogDownloadLink('stocks', 'Скачать лог обновления остатков');
+            $result[] = $market->getOzonLogDownloadLink('stocks', 'Скачать лог обновления остатков в озоне');
         }
         
         return $result;
