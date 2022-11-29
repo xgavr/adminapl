@@ -205,6 +205,19 @@ class OzonService {
         return $result;        
     }
 
+    
+    /**
+     * Получить файл лога
+     * @param MarketPriceSetting $market
+     * @param string $logName
+     * @return string
+     */
+    public function logFile($market, $logName = '')
+    {
+        $filename = $market->getOzonLog($logName);
+        return $this->marketManager->folder($market).'/'.$filename;        
+    }
+    
     /**
      * Запись лога преобразовать в строку
      * @param array $log
@@ -247,8 +260,7 @@ class OzonService {
      */
     private function addToUpdateLog($market, $result, $logName = '')
     {
-        $filename = $market->getOzonLog($logName);
-        $path = $this->marketManager->folder($market).'/'.$filename;
+        $path = $this->logFile($market, $logName);
         
         if (!file_exists($path)){
             $handle = fopen($path, "a");
@@ -266,21 +278,42 @@ class OzonService {
     }
     
     /**
+     * Удалить логи
+     * @param type $market
+     * @param type $logName
+     * @return null
+     */
+    private function clearLog($market, $logName = '')
+    {
+        $path = $this->logFile($market, $logName);
+        if (file_exists($path)){
+            unlink($path);
+        }
+        
+        return;
+    }
+    
+    /**
      * Обновление цен из прайса
      * @param MarketPriceSetting $market
-     * @param integer $offset
-     * @param integer $block
      * @return array
      */
-    public function marketUpdate($market, $offset = 0, $block = 0)
+    public function marketUpdate($market)
     {
+        $this->clearLog($market, 'prices');
+        $this->clearLog($market, 'stocks');
+        
+        $result = [
+            'prices' => '<a href="/market-place/download-log/'.$market->getId().'?log=prices">Скачать лог обновления цен</a>',
+            'stocks' => '<a href="/market-place/download-log/'.$market->getId().'?log=stocks">Скачать лог обновления остатков</a>',
+        ];
         
         $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->marketQuery($market, $offset);
         $data = $goodsQuery->getResult(2);
         $prices = []; 
         $stocks = [];
-        $outRows = 0;
+//        $outRows = 0;
         foreach ($data as $good){
 
             $rawprices = $this->marketManager->restShipping($good['id'], $market, $good['price']);
@@ -320,27 +353,25 @@ class OzonService {
                 $stocks = [];
             }
 
-            $outRows++;
-            if ($outRows >= $market->getMaxRowCount() * $market->getBlockRowCount()){
-                break;
-            }
-            if ($outRows >= MarketPriceSetting::MAX_BLOCK_ROW_COUNT * $market->getBlockRowCount()){
-                break;
-            }        
+//            $outRows++;
+//            if ($outRows >= $market->getMaxRowCount() * $market->getBlockRowCount()){
+//                break;
+//            }
+//            if ($outRows >= MarketPriceSetting::MAX_BLOCK_ROW_COUNT * $market->getBlockRowCount()){
+//                break;
+//            }        
         }    
 
         if (count($prices)){
             $result = $this->updatePrice(['prices' => $prices]);
-//            var_dump($result);
             $this->addToUpdateLog($market, $result, 'prices');
         }
         if (count($stocks)){
             $result = $this->updateStock(['stocks' => $stocks]);
-//            var_dump($result);
             $this->addToUpdateLog($market, $result, 'stocks');
         }
         
-        return;
+        return $result;
     }
     
 }
