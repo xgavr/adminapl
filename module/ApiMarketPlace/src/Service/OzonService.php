@@ -264,13 +264,13 @@ class OzonService {
         
         if (!file_exists($path)){
             $handle = fopen($path, "a");
-            fputcsv($handle, $this->updateLogHeader());
+            fputcsv($handle, $this->updateLogHeader(), ';');
             fclose($handle);            
         }
         
         $handle = fopen($path, "a");
         foreach ($result as $value){
-            fputcsv($handle, $this->updateLogBody($value));
+            fputcsv($handle, $this->updateLogBody($value), ';');
         }    
         fclose($handle);
         
