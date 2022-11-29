@@ -231,8 +231,8 @@ class OzonService {
             $log['updated'],
         ];
         $errors = [];
-        foreach ($log['errors'] as $key => $value){
-            $errors[] = $value;
+        foreach ($log['errors'] as $error){
+            $errors[] = $error['message'];
         }
         $result[] = implode(';', $errors);
         return $result;
@@ -303,7 +303,7 @@ class OzonService {
         $this->clearLog($market, 'prices');
         $this->clearLog($market, 'stocks');
         
-        $result = [
+        $out = [
             'prices' => '<a href="/market-place/download-log/'.$market->getId().'?log=prices">Скачать лог обновления цен</a>',
             'stocks' => '<a href="/market-place/download-log/'.$market->getId().'?log=stocks">Скачать лог обновления остатков</a>',
         ];
@@ -371,7 +371,7 @@ class OzonService {
             $this->addToUpdateLog($market, $result, 'stocks');
         }
         
-        return $result;
+        return $out;
     }
     
 }
