@@ -310,7 +310,7 @@ class OzonService {
         ];
         
         $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
-                ->marketQuery($market);
+                ->marketQuery($market, 0, ['retailLimit' => 0]);
         $data = $goodsQuery->getResult(2);
         $prices = []; 
         $stocks = [];

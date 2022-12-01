@@ -166,9 +166,17 @@ class MarketRepository extends EntityRepository{
      * Запрос товаров по параметрам
      * @param MarketPriceSetting $market
      * @param integer $offset
+     * @param erray $options
      */
-    public function marketQuery($market, $offset = 0)
+    public function marketQuery($market, $offset = 0, $options = null)
     {
+        $retailLimit = $market->getRetailLimit();
+        if (is_array($options)){
+            if (isset($options['retailLimit'])){
+                $retailLimit = $options['retailLimit'];
+            }
+        }
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -188,14 +196,14 @@ class MarketRepository extends EntityRepository{
                 ->setParameter('2', $market->getSupplier())    
                 ->andWhere('g.price > 0')
                 ->andWhere('g.retailCount >= :retailCount')    
-                ->setParameter('retailCount', $market->getRetailLimit())    
+                ->setParameter('retailCount', $retailLimit)    
                     ;            
         } else {
             $queryBuilder->select('g, p, gg')
                 ->from(Goods::class, 'g')
                 ->andWhere('g.price > 0')    
                 ->andWhere('g.retailCount >= :retailCount')    
-                ->setParameter('retailCount', (int) $market->getRetailLimit())    
+                ->setParameter('retailCount', $retailLimit)    
                 ->join('g.genericGroup', 'gg') 
                     ;
         }    
