@@ -310,7 +310,7 @@ class OzonService {
         ];
         
         $goodsQuery = $this->entityManager->getRepository(MarketPriceSetting::class)
-                ->marketQuery($market, $offset);
+                ->marketQuery($market);
         $data = $goodsQuery->getResult(2);
         $prices = []; 
         $stocks = [];
@@ -322,6 +322,10 @@ class OzonService {
             
             if ($rawprices['realrest'] == 0){
 //                continue;
+            }
+            $realrest = $rawprices['realrest'];
+            if ($market->getOzonUpdate() == MarketPriceSetting::OZON_ZEROING){
+                $realrest = 0;
             }
 
             $opts = Goods::optPrices($good['price'], $good['meanPrice']);
@@ -339,7 +343,7 @@ class OzonService {
             $stocks[] = [
                 'offer_id' => $good['aplId'],
                 'product_id' => $good['id'],
-                'stock' => $rawprices['realrest'],
+                'stock' => $realrest,
             ];
             
             if (count($prices) == self::OZON_MAX_PRICE_UPDATE){

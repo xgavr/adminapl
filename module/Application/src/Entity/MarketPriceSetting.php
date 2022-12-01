@@ -62,6 +62,7 @@ class MarketPriceSetting {
     
     const OZON_IGNORE   = 1; // не обновлять цены в озоне.
     const OZON_UPDATE   = 2; // обновлять цены в озоне.
+    const OZON_ZEROING   = 3; // обнулить количество в озоне.
     
     const RATE_IGNORE   = 1; // Расценки все.
     const RATE_INCLUDE  = 2; // Расценки включить.
@@ -1233,7 +1234,8 @@ class MarketPriceSetting {
     {
         return [
             self::OZON_IGNORE => 'не обновлять',
-            self::OZON_UPDATE => 'обновлять цены'
+            self::OZON_UPDATE => 'обновлять цены и количество',
+            self::OZON_ZEROING => 'обнулить количество',
         ];
     }    
     

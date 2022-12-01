@@ -132,7 +132,7 @@ $this->pageBreadcrumbs()->setItems([
                             title="Сформировать">
                         <span class="glyphicon glyphicon-play" ></span>
                     </button> 
-                    <?php if ($market->getOzonUpdate() == MarketPriceSetting::OZON_UPDATE):?>
+                    <?php if ($market->getOzonUpdate() != MarketPriceSetting::OZON_IGNORE):?>
                         <button value="/market-place/ozon-update-market/<?= $market->getId()?>" class="btn btn-default btn-xs refresh-ozon"
                                 title="Обновить цены и остатки в Озоне">OZON
                             <span class="glyphicon glyphicon-play" ></span>
