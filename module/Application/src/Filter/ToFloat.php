@@ -38,7 +38,7 @@ class ToFloat extends AbstractFilter
             return;
         }
         
-        var_dump($valie);
+        var_dump($value);
         $value = str_replace([' ', ' ', '&nbsp;'], "", htmlentities($value)); //  
 
         if(strstr($value, ",")) { 
