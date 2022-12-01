@@ -38,8 +38,8 @@ class ToFloat extends AbstractFilter
             return;
         }
         
-        var_dump($value);
-        $value = str_replace([' ', ' ', '&nbsp;'], "", htmlentities($value)); //  
+        $value = htmlentities($value);
+        $value = str_replace([' ', '&nbsp;'], "", $value); //  
 
         if(strstr($value, ",")) { 
             $value = str_replace(".", "", $value); // replace dots (thousand seps) with blancs 
