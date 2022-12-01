@@ -16,6 +16,7 @@ use Company\Entity\Office;
 use Application\Filter\ArticleCode;
 use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
+use Application\Filter\ToFloat;
 
 /**
  * Description of VtpRepository
@@ -152,7 +153,9 @@ class VtpRepository extends EntityRepository{
                 
                 $or = $queryBuilder->expr()->orX();
                 $q = $articleCodeFilter->filter($params['q']);
-                if (is_numeric($q)){
+                $toFloat = new ToFloat();
+                $qf = $toFloat->filter($params['q']);
+                if ($qf){
                     $or->add($queryBuilder->expr()->eq('FLOOR(v.amount)', floor($q)));
                 }    
 
