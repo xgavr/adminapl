@@ -34,3 +34,4 @@ phpunit.xml
 /data/template/order/
 /data/template/.~lock.torg12.xls#
 /config/autoload/bankapi.local._server.php
+/data/reports/
