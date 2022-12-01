@@ -156,7 +156,7 @@ class VtpRepository extends EntityRepository{
                 $toFloat = new ToFloat();
                 $qf = $toFloat->filter($params['q']);
                 if ($qf){
-                    $or->add($queryBuilder->expr()->eq('FLOOR(v.amount)', floor($q)));
+                    $or->add($queryBuilder->expr()->eq('FLOOR(v.amount)', floor($qf)));
                 }    
 
                 $or->add($queryBuilder->expr()->like('g.code', '\''.$q.'%\''));
