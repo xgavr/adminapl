@@ -299,6 +299,9 @@ class OzonService {
      */
     public function marketUpdate($market)
     {
+        ini_set('memory_limit', '4096M');
+        set_time_limit(0);
+
         $this->clearLog($market, 'prices');
         $this->clearLog($market, 'stocks');
         
@@ -385,8 +388,6 @@ class OzonService {
      */
     public function updateMarkets($markets)
     {
-        ini_set('memory_limit', '4096M');
-        set_time_limit(0);
         foreach ($markets as $market){
             if ($market->getOzonUpdate() == MarketPriceSetting::OZON_UPDATE){
                 $this->marketUpdate($market);
