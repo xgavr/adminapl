@@ -1921,7 +1921,7 @@ class ProcessingController extends AbstractActionController
         if ($settings['market_unload'] == 1){
 
             $markets = $this->marketManager->unloadNext(); 
-            $this->ozonManager->updateMarkets($markets);
+//            $this->ozonManager->updateMarkets($markets);
         }    
                 
         return new JsonModel(
