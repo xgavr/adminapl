@@ -19,22 +19,21 @@
         
         <?php endif;?>                    
         
-        <div class="panel-body">
-            <div>
-                <button value="/goods/upload-image-form/<?= $goods->getId() ?>" class="btn btn-default btn-xs"
-                        data-toggle="modal" data-target="#modal-dialog" title="Добавить картинку">
-                    <span class="glyphicon glyphicon-plus" ></span>
-                </button>                            
-                <button value="/apl/ex-img/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-button"
-                        title="Обновить в apl">
-                    <span class="glyphicon glyphicon-export" ></span>
-                </button>
+        <div class="thumbnail">
+            <button value="/goods/upload-image-form/<?= $goods->getId() ?>" class="btn btn-default btn-xs"
+                    data-toggle="modal" data-target="#modal-dialog" title="Добавить картинку">
+                <span class="glyphicon glyphicon-plus" ></span>
+            </button>                            
+            <button value="/apl/ex-img/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-button"
+                    title="Обновить в apl">
+                <span class="glyphicon glyphicon-export" ></span>
+            </button>            
+        </div>
 <!--                <button value="/goods/external-api-image/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
                         title="Обновить картинку из TecDoc">
                     <span class="glyphicon glyphicon-refresh" ></span>
                 </button>                             -->
-            </div>
-        </div>
+        
         <?php if(!count($images)):?>
             <img src="/img/no_img.jpg" class="img-thumbnail">
         <?php endif ?>
