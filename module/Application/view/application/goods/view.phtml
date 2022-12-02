@@ -20,7 +20,9 @@
         <?php endif;?>                    
                 
         <?php if(!count($images)):?>
-            <img src="/img/no_img.jpg" class="img-thumbnail">
+            <div class="thumbnail">
+                <img src="/img/no_img.jpg" class="img-thumbnail">
+            </div>    
         <?php endif ?>
         <?php foreach($images as $image):?>
             <?php if ($image->getPublicPath()):?>
