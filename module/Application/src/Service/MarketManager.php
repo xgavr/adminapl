@@ -877,7 +877,7 @@ class MarketManager
     {
         $markets = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->findNext();
-        $markets->$this->entityManager->getRepository(MarketPriceSetting::class)
+        $markets = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->findBy(['id' => 25]);
         foreach ($markets as $market){
             $this->unload($market);
