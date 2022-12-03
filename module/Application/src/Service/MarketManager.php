@@ -781,6 +781,7 @@ class MarketManager
             $blocks++;
             if ($market->getFormat() == MarketPriceSetting::FORMAT_XLSX){
                 $result = $this->marketXLSX($market, $offset, $blocks);
+                var_dump($result);
             }
             if ($market->getFormat() == MarketPriceSetting::FORMAT_YML || $market->getFormat() == MarketPriceSetting::FORMAT_YML_PP){
                 $result = $this->marketYML($market, $offset, $blocks);
@@ -880,7 +881,6 @@ class MarketManager
         $markets = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->findBy(['id' => 25]);
         foreach ($markets as $market){
-            var_dump($market->getId()); exit;
             $this->unload($market);
         }        
         return $markets;
