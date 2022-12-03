@@ -556,7 +556,7 @@ class MarketManager
         $data = $goodsQuery->getResult(2);
         
         foreach ($data as $good){
-            var_dump($good); exit;
+//            var_dump($good); exit;
             $rows++;
             if (!empty($market->getImageCount())){
                 $images = $this->images($good, $market);
@@ -880,6 +880,7 @@ class MarketManager
         $markets = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->findBy(['id' => 25]);
         foreach ($markets as $market){
+            var_dump($market->getId()); exit;
             $this->unload($market);
         }        
         return $markets;
