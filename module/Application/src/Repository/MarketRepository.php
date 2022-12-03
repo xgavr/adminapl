@@ -298,6 +298,7 @@ class MarketRepository extends EntityRepository{
                 ->setParameter('1', date('Y-m-d'))
                 ->setParameter('2', MarketPriceSetting::STATUS_ACTIVE)
                 ->setMaxResults(1)
+                ->orderBy('rand()')
                 ;
         return $queryBuilder->getQuery()->getResult();
     }

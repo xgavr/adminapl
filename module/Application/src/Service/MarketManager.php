@@ -781,7 +781,7 @@ class MarketManager
             $blocks++;
             if ($market->getFormat() == MarketPriceSetting::FORMAT_XLSX){
                 $result = $this->marketXLSX($market, $offset, $blocks);
-                var_dump($result);
+//                var_dump($result);
             }
             if ($market->getFormat() == MarketPriceSetting::FORMAT_YML || $market->getFormat() == MarketPriceSetting::FORMAT_YML_PP){
                 $result = $this->marketYML($market, $offset, $blocks);
@@ -810,8 +810,10 @@ class MarketManager
         ]);
         $filter->filter($this->folder($market));
 
-        $this->entityManager->getConnection()
-                ->update('market_price_setting', ['row_unload' => $outRows, 'date_unload' => date('Y-m-d H:i:s')],['id' => $market->getId()]);
+        if ($outRows){
+            $this->entityManager->getConnection()
+                    ->update('market_price_setting', ['row_unload' => $outRows, 'date_unload' => date('Y-m-d H:i:s')],['id' => $market->getId()]);
+        }    
 
         return;
     }
@@ -878,8 +880,6 @@ class MarketManager
     {
         $markets = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->findNext();
-        $markets = $this->entityManager->getRepository(MarketPriceSetting::class)
-                ->findBy(['id' => 25]);
         foreach ($markets as $market){
             $this->unload($market);
         }        
