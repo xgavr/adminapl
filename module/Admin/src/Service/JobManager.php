@@ -141,7 +141,7 @@ class JobManager
         return [
           401 => ['command' => 'idocs',                 'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Загрузка электронных жокументов'],
           403 => ['command' => 'varact',                'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Восстановление последовательности'],
-          404 => ['command' => 'unload-market-prices ', 'shedule' => '*/10 4-16 * * *',         'description' => 'Генерация прайс листов для ТП'],
+          404 => ['command' => 'unload-market-prices ', 'shedule' => '*/10 4-9 * * *',         'description' => 'Генерация прайс листов для ТП'],
         ];
     }
 

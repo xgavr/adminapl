@@ -30,7 +30,7 @@ $this->pageBreadcrumbs()->setItems([
                         <?php endforeach;?>
                     </select>                    
                     <div class="btn-group">
-                        <input id="searchinput" name="search" style="width: 400px" class="form-control good-toolbar" type="text" placeholder="Артикул">
+                        <input id="searchinput" name="search" style="width: 400px" class="form-control good-toolbar enter-search" type="text" placeholder="Артикул">
                         <span class="glyphicon glyphicon-remove-circle inputclear"></span>
                     </div>
                     <button id="ok" type="submit" class="btn btn-default" title="Поиск">
@@ -145,7 +145,7 @@ $this->pageBreadcrumbs()->setItems([
             if ($('#searchinput').val()){
                 refreshTable();
             }    
-        });
+        });        
     });
     
     function queryParams(params) {
