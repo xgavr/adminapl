@@ -260,7 +260,7 @@ class MarketRepository extends EntityRepository{
         
         
         if ($market->getMinPrice()){
-            $queryBuilder->andWhere('g.price > ?9')
+            $queryBuilder->andWhere('g.price >= ?9')
                         ->setParameter('9', $market->getMinPrice())
                     ;
         }
