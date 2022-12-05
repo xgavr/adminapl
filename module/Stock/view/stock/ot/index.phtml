@@ -55,9 +55,9 @@
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
             data-query-params="queryParams"
-            data-sort-name="id"
+            data-sort-name="docDate"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
@@ -66,8 +66,8 @@
             <thead>
                 <tr>
                      <th data-field="docDate" data-sortable="true" data-width="100">Дата</th>
-                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="80">Id</th>
-                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="200">Номер</th>
+                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter" data-width="100">Сумма</th>
                      <th data-field='office.name' data-sortable="false">Склад</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
                      <th data-field='comiss.name' data-sortable="false">Комитент</th>
