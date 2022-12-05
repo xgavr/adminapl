@@ -753,7 +753,7 @@ class AplDocService {
             $ok = $result = false;
             try{
                 $response = $client->send();
-//                var_dump($response->getBody()); exit;
+                var_dump($response->getBody());
                 if ($response->isOk()) {                    
                     $aplId = (int) $response->getBody();
                     if ($aplId){
