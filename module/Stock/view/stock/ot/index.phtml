@@ -66,7 +66,7 @@
             <thead>
                 <tr>
                      <th data-field="docDate" data-sortable="true" data-width="100">Дата</th>
-                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="200">Номер</th>
+                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="100">Номер</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter" data-width="100">Сумма</th>
                      <th data-field='office.name' data-sortable="false">Склад</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
@@ -124,7 +124,7 @@
     
     function idFormatter(value, row){
         if (row.aplId > 0){
-            return value+' ('+row.aplId+')';
+            return '<nobr>'+value+' ('+row.aplId+')</nobr>';
         }
         
         return value;
