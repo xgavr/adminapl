@@ -1990,16 +1990,16 @@ class AplDocService {
                 break;
             }    
         }    
-//        while (true){
-//            if ($this->sendSt()) {
-//                usleep(100);
-//                if (time() > $startTime + 840){
-//                    break;
-//                }
-//            } else {
-//                break;
-//            }    
-//        }    
+        while (true){
+            if ($this->sendSt()) {
+                usleep(100);
+                if (time() > $startTime + 840){
+                    break;
+                }
+            } else {
+                break;
+            }    
+        }    
         return;
     }    
 }
