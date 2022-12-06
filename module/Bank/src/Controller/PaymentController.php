@@ -349,15 +349,13 @@ class PaymentController extends AbstractActionController
                 var_dump($form->getMessages()); exit;
             }
         } else {
-            if ($payment){
-                $form->setData($payment->toLog());
-            }    
+
         }
+
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'payment' => $payment,
         ]);                
     }
 }

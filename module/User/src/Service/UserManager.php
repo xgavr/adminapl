@@ -488,5 +488,89 @@ class UserManager
         $result = file_get_contents($ipApiUrl.$currentIp.'?lang=ru');
         return \Laminas\Json\Decoder::decode($result, \Laminas\Json\Json::TYPE_ARRAY);
     }
+    
+    public function ddReport()
+    {
+        $params = $this->_params;
+        $this->view->params = $params;
+        if (!$params['report']){
+                if ($this->_user->role == 'administrator'){
+                        $params['report'] = 'dd'.date('Ym');
+                } else {
+                        $params['report'] = 'rl'.$this->_user->id.date('Ym');
+                }	
+        }
+        $rdir = Zend_Registry::get('config')->common->rootpath."/../data/reports/";
+        $reportfilename = $rdir.$params['report'].'.html';
+        if (file_exists($reportfilename)){
+                $report = file_get_contents($reportfilename);
+
+                $p = substr($params['report'], 0, 2);
+                $m = substr($params['report'], -2);
+                $y = substr($params['report'], -6, 4);
+                $g = substr($params['report'], 2);
+
+                $uid = substr(substr($params['report'], 0, -6), 2);
+                if (!$uid) $uid = '';
+
+                $prevmonth = strtotime("$y-$m-01 -1 month");
+                $nextmonth = strtotime("$y-$m-01 +1 month");
+                $currmonth = strtotime("$y-$m-01");
+
+                $datefilter = new App_Filter_DateRu(array('dateformat' => 'month'));
+
+                $prev = $p.$uid.date('Ym', $prevmonth);			
+                if (file_exists($rdir.$prev.'.html')){
+                        $this->view->prevlabel = $datefilter->filter(date('Y-m-d', $prevmonth));
+                        $this->view->prevhref = "/admin/buh/dd-reports/report/$prev";
+                }
+
+                $next = $p.$uid.date('Ym', $nextmonth);
+                if (file_exists($rdir.$next.'.html')){
+                        $this->view->nextlabel = $datefilter->filter(date('Y-m-d', $nextmonth));
+                        $this->view->nexthref = "/admin/buh/dd-reports/report/$next";
+                }
+
+                if ($p == 'dd'){
+                        $zp = 'zp';
+                        if (file_exists($rdir.$zp.$g.'.html')){
+                                $str = "Оплата&nbsp;труда";
+                                $zphref = '<a href="/admin/buh/dd-reports/report/'.$zp.$g.'">'.$str.'</a>';
+                                $report = str_replace($str, $zphref, $report);
+                        }	
+                }	
+                if ($p == 'zp'){
+                        $dd = 'dd';
+                        if (file_exists($rdir.$dd.$g.'.html')){
+                                $this->view->returnlabel = $datefilter->filter(date('Y-m-d', $currmonth));
+                                $this->view->returnhref = "/admin/buh/dd-reports/report/$dd$g";
+                        }	
+                        $rl = 'rl';
+                        $model = $this->_getModel('Users');
+                        $staffs = $model->staffs();
+                        foreach ($staffs as $staff){	
+                                if (file_exists($rdir.$rl.$staff['id'].date('Ym', $currmonth).'.html')){
+                                        $str = $rl.$staff['id'].date('Ym', $currmonth);
+                                        $zphref = '<a href="/admin/buh/dd-reports/report/'.$rl.$staff['id'].date('Ym', $currmonth).'">'.$str.'</a>';
+                                        $report = str_replace($str, $zphref, $report);
+                                }	
+                        }	
+                }	
+                if ($this->_user->role == 'administrator'){
+                        if ($p == 'rl'){
+                                $dd = 'zp';
+                                if (file_exists($rdir.$dd.$y.$m.'.html')){
+                                        $this->view->returnlabel = $datefilter->filter(date('Y-m-d', $currmonth));
+                                        $this->view->returnhref = "/admin/buh/dd-reports/report/$dd$y$m";
+                                }	
+                        }
+                }
+        } else {
+                $report = 'Отчета за этот месяц еще нет';
+                Zend_Debug::dump($reportfilename);
+        }	
+
+        $this->view->report = $report;	
+    }
 }
 
