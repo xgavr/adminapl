@@ -1,10 +1,28 @@
 <?php
 $this->headTitle('Расчетный листок');
-var_dump($result);
+//var_dump($result);
 ?>
-
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-1">
+        <?php if (isset($result['prevhref'])):?>
+            <a href="<?= $result['prevhref']?>"><?= $result['prevlabel']?></a>
+        <?php endif; ?>    
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-1">
+        <?php if (isset($result['returnhref'])):?>
+            <a href="<?= $result['returnhref']?>"><?= $result['returnlabel']?></a>
+        <?php endif; ?>    
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-1">
+        <?php if (isset($result['nexthref'])):?>
+            <a href="<?= $result['nexthref']?>"><?= $result['nextlabel']?></a>
+        <?php endif; ?>    
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-7">
         <?= $result['report']?>
     </div>
 </div>

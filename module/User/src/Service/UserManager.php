@@ -516,7 +516,7 @@ class UserManager
         }
         
         if (!$period){
-            if ($this->rbacManager->isGranted(null, 'founder')){
+            if ($this->rbacManager->isGranted($currentUser, 'founder')){
                 $period = 'dd'.date('Ym');
             } else {
                 $period = 'rl'.$currentUser->getAplId().date('Ym');
