@@ -66,13 +66,15 @@
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
             data-query-params="queryParams"
             data-sort-name="docDate"
             data-sort-order="desc"            
             data-classes = "table table-bordered table-hover table-condensed"
             data-response-handler="responseHandler"
             data-row-style="rowStyle"
+            data-show-columns="true"
+            data-minimum-count-columns="3"
             >
             <thead>
                 <tr>
@@ -140,9 +142,8 @@
     
     function idFormatter(value, row){
         if (row.aplId > 0){
-            return row.aplId;
+            return '<nobr>'+value+' ('+row.aplId+')</nobr>';
         }
-        
         return value;
     }    
     
