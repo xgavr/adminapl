@@ -503,7 +503,7 @@ class UserManager
      */
     public function ddReport($period = null)
     {
-        setlocale( LC_TIME, 'ru_RU', 'russian' );
+        setlocale( LC_ALL, 'ru_RU', 'russian' );
         
         $currentUser = $this->smsManager->currentUser();
         $rdir = './data/reports/'; 
