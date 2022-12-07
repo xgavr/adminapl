@@ -503,6 +503,8 @@ class UserManager
      */
     public function ddReport($period = null)
     {
+        setlocale( LC_TIME, 'ru_RU', 'russian' );
+        
         $currentUser = $this->smsManager->currentUser();
         $rdir = './data/reports/'; 
         $report = 'Отчета за этот месяц еще нет';
@@ -570,12 +572,12 @@ class UserManager
                     $result['returnhref'] = "/users/dd-report?report=$dd$g";
                 }	
                 $rl = 'rl';
-                $model = $this->_getModel('Users');
-                $staffs = $model->staffs();
-                foreach ($staffs as $staff){	
-                    if (file_exists($rdir.$rl.$staff['id'].date('Ym', $currmonth).'.html')){
-                        $str = $rl.$staff['id'].date('Ym', $currmonth);
-                        $zphref = '<a href="/users/dd-report?report='.$rl.$staff['id'].date('Ym', $currmonth).'">'.$str.'</a>';
+                $users = $this->entityManager->getRepository(User::class)
+                        ->findAll();
+                foreach ($users as $user){	
+                    if (file_exists($rdir.$rl.$user->getAplId().date('Ym', $currmonth).'.html')){
+                        $str = $rl.$user->getAplId().date('Ym', $currmonth);
+                        $zphref = '<a href="/users/dd-report?report='.$rl.$user->getAplId().date('Ym', $currmonth).'">'.$str.'</a>';
                         $report = str_replace($str, $zphref, $report);
                     }	
                 }	
