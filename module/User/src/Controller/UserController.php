@@ -495,6 +495,15 @@ class UserController extends AbstractActionController
         ]);          
     }    
     
+    public function ddReportAction()
+    {
+        $period = $this->params()->fromQuery('report');
+        
+        return new ViewModel([                    
+            'result' => $this->userManager->ddReport($period),
+        ]);        
+    }
+    
 }
 
 

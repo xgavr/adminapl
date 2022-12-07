@@ -565,6 +565,11 @@ class NavManager
                 'dropdown' => [
                     [
                         'id' => 'settings',
+                        'label' => 'Расчетный листок',
+                        'link' => $url('users', ['action'=>'dd-report'])
+                    ],
+                    [
+                        'id' => 'settings',
                         'label' => 'Настройки',
                         'link' => $url('application', ['action'=>'settings'])
                     ],

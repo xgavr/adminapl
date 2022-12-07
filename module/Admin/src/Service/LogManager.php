@@ -70,9 +70,10 @@ class LogManager {
      */
     public function currentUser($useCachedUser = true)
     {
-        if ($useCachedUser && $this->user!==null)
+        if ($useCachedUser && $this->user !== null) {
             return $this->user;
-        
+        }
+
         if ($this->authService->hasIdentity()) {
             
             $this->user = $this->entityManager->getRepository(User::class)
