@@ -529,7 +529,7 @@ class UserManager
         
         $reportfilename = $rdir.$period.'.html';
         if (file_exists($reportfilename)){
-            $report = file_get_contents($reportfilename);
+            $report = preg_replace('~<h1(.*?)</h1>~Usi', "", file_get_contents($reportfilename));
 
             $p = substr($period, 0, 2);
             $m = substr($period, -2);
@@ -553,8 +553,8 @@ class UserManager
 
             $next = $p.$uid.date('Ym', $nextmonth);
             if (file_exists($rdir.$next.'.html')){
-                $period['nextlabel'] = date('F Y', $nextmonth);
-                $period['nexthref'] = "/users/dd-report?report=$next";
+                $result['nextlabel'] = date('F Y', $nextmonth);
+                $result['nexthref'] = "/users/dd-report?report=$next";
             }
 
             if ($p == 'dd'){
