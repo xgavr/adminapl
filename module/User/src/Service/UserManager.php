@@ -529,7 +529,7 @@ class UserManager
         
         $reportfilename = $rdir.$period.'.html';
         if (file_exists($reportfilename)){
-            $report = preg_replace('~<HEAD(.*?)</HEAD>~Usi', "", file_get_contents($reportfilename));
+            $report = strip_tags(file_get_contents($reportfilename), '<table><col><tr><td><span><div>');
 
             $p = substr($period, 0, 2);
             $m = substr($period, -2);
