@@ -9,13 +9,13 @@ $this->headTitle('Расчетный листок');
         <?php endif; ?>    
     </div>
     <!--<div class="col-md-2"></div>-->
-    <div class="col-md-1">
+    <div class="col-md-1 text-center">
         <?php if (isset($result['returnhref'])):?>
             <a href="<?= $result['returnhref']?>"><?= $result['returnlabel']?></a>
         <?php endif; ?>    
     </div>
     <!--<div class="col-md-2"></div>-->
-    <div class="col-md-1">
+    <div class="col-md-1 text-right">
         <?php if (isset($result['nexthref'])):?>
             <a href="<?= $result['nexthref']?>"><?= $result['nextlabel']?></a>
         <?php endif; ?>    
