@@ -8,13 +8,13 @@ $this->headTitle('Расчетный листок');
             <a href="<?= $result['prevhref']?>"><?= $result['prevlabel']?></a>
         <?php endif; ?>    
     </div>
-    <div class="col-md-2"></div>
+    <!--<div class="col-md-2"></div>-->
     <div class="col-md-1">
         <?php if (isset($result['returnhref'])):?>
             <a href="<?= $result['returnhref']?>"><?= $result['returnlabel']?></a>
         <?php endif; ?>    
     </div>
-    <div class="col-md-2"></div>
+    <!--<div class="col-md-2"></div>-->
     <div class="col-md-1">
         <?php if (isset($result['nexthref'])):?>
             <a href="<?= $result['nexthref']?>"><?= $result['nextlabel']?></a>
@@ -22,7 +22,7 @@ $this->headTitle('Расчетный листок');
     </div>
 </div>
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-3">
         <?= $result['report']?>
     </div>
 </div>

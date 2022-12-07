@@ -547,13 +547,13 @@ class UserManager
 
             $prev = $p.$uid.date('Ym', $prevmonth);			
             if (file_exists($rdir.$prev.'.html')){
-                $result['prevlabel'] = date('F Y', strtotime($prevmonth));
+                $result['prevlabel'] = date('F Y', $prevmonth);
                 $result['prevhref'] = "/users/dd-report?report=$prev";
             }
 
             $next = $p.$uid.date('Ym', $nextmonth);
             if (file_exists($rdir.$next.'.html')){
-                $period['nextlabel'] = date('F Y', strtotime($nextmonth));
+                $period['nextlabel'] = date('F Y', $nextmonth);
                 $period['nexthref'] = "/users/dd-report?report=$next";
             }
 
@@ -568,7 +568,7 @@ class UserManager
             if ($p == 'zp'){
                 $dd = 'dd';
                 if (file_exists($rdir.$dd.$g.'.html')){
-                    $result['returnlabel'] = date('F Y', strtotime($currmonth));
+                    $result['returnlabel'] = date('F Y', $currmonth);
                     $result['returnhref'] = "/users/dd-report?report=$dd$g";
                 }	
                 $rl = 'rl';
@@ -586,7 +586,7 @@ class UserManager
                 if ($p == 'rl'){
                     $dd = 'zp';
                     if (file_exists($rdir.$dd.$y.$m.'.html')){
-                        $result['returnlabel'] = date('F Y', strtotime($currmonth));
+                        $result['returnlabel'] = date('F Y', $currmonth);
                         $result['returnhref'] = "/users/dd-report?report=$dd$y$m";
                     }	
                 }
