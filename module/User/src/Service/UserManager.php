@@ -504,7 +504,7 @@ class UserManager
     public function ddReport($period = null)
     {
         $currentUser = $this->smsManager->currentUser();
-        $rdir = './data/reports'; 
+        $rdir = './data/reports/'; 
         $report = 'Отчета за этот месяц еще нет';
         $result['report'] = $report;	
         

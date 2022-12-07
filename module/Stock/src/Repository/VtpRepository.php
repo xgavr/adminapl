@@ -87,7 +87,10 @@ class VtpRepository extends EntityRepository{
                 if ($params['sort'] == 'ptu.supplier.name'){
                     $sort = 's.name';
                 }    
-                $queryBuilder->orderBy($sort, $params['order']);
+                $queryBuilder->orderBy($sort, $params['order'])
+                        ->addOrderBy('v.id', 'DESC')
+                        ;
+                
             }            
             if (!empty($params['officeId'])){
                 $office = $entityManager->getRepository(Office::class)
