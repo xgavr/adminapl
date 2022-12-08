@@ -18,14 +18,14 @@ $this->headTitle('Расчетный листок');
             <li>
                 <?php if (isset($result['nexthref'])):?>
                     <a class="btn btn-default" href="<?= $result['nexthref']?>">
-                        <span class="glyphicon glyphicon-arrow-left"></span> <?= $result['nextlabel']?>
+                        <?= $result['nextlabel']?> <span class="glyphicon glyphicon-arrow-right"></span>
                     </a>
                 <?php endif; ?>                            
             </li>
             <li>
                 <?php if (isset($result['prevhref'])):?>
                     <a class="btn btn-default" href="<?= $result['prevhref']?>">
-                        <span class="glyphicon glyphicon-arrow-right"></span> <?= $result['prevlabel']?>
+                        <span class="glyphicon glyphicon-arrow-left"></span> <?= $result['prevlabel']?>
                     </a>
                 <?php endif; ?>                    
             </li>
