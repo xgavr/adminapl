@@ -3,52 +3,114 @@ namespace User\Filter;
 
 use Laminas\Filter\AbstractFilter;
 
-// Локализация даты.
-class Rudate extends AbstractFilter 
+// Этот класс фильтра предназначен для преобразования произвольного номера телефона в 
+// локальный или международный формат.
+class PhoneFilter extends AbstractFilter 
 {    
-       
+  // Константы форматов номера.
+  const PHONE_FORMAT_LOCAL = 'local'; // Local phone format 
+  const PHONE_FORMAT_INTL  = 'intl';  // International phone format 
+  const PHONE_FORMAT_DB  = 'db';  // формат для записи в бд 
+  const PHONE_FORMAT_RU  = 'ru';  // формат рф 
+    
+  // Доступные опции фильтра.
+  protected $options = [
+    'format' => self::PHONE_FORMAT_DB
+  ];
+    
   // Конструктор.
   public function __construct($options = null) 
   {     
     // Задает опции фильтра (если они предоставлены).
+    if(is_array($options)) {
             
+      if(isset($options['format']))
+        $this->setFormat($options['format']);
+    }
   }
     
-    /**
-     * Отличительной чертой именно этой функции является высокая скорость работы, по сравнению с аналогами.
-     * @param string $format - The format of the outputted date string.
-     * F Полное наименование месяца, например Января или Марта от Января до Декабря
-     * M Сокращенное наименование месяца, 3 символа От Янв до Дек
-     * l (строчная 'L') Полное наименование дня недели От Воскресенье до Суббота
-     * D Сокращенное наименование дня недели, 2 символа от Вс до Сб
-     * остальные варианты форматирования см. функцию date() в мануале.
-     * @param mixed $timestamp is optional and defaults to the value of time()
-     * если в $timestamp не цифра, то функция пытается получить $timestamp при помощи strtotime($timestamp)
-     * @param bool $nominative_month - Полное наименование месяца (F) в именительном падеже, влияет только если в $format присутствует 'F'
-     * если $nominative_month истина, то: F Полное наименование месяца, например Январь или Март от Январь до Декабрь 
-     * если $nominative_month ложь, то: F Полное наименование месяца, например Января или Марта от Января до Декабря
-     * @return a string formatted according to the given format string using the given integer/string timestamp or the current time if no timestamp is given.
-     */
-    private function rudate($format, $timestamp = 0, $nominative_month = false)
-    {
-        if(!$timestamp) $timestamp = time();
-        elseif(!preg_match("/^[0-9]+$/", $timestamp)) $timestamp = strtotime($timestamp);
+  // Задает формат номера.
+  public function setFormat($format) 
+  {        
+    // Проверяет входной аргумент.
+    if( $format!=self::PHONE_FORMAT_LOCAL &&
+       $format!=self::PHONE_FORMAT_DB &&     
+       $format!=self::PHONE_FORMAT_RU &&     
+       $format!=self::PHONE_FORMAT_INTL ) {            
+      throw new \Exception('Invalid format argument passed.');
+    }
+        
+    $this->options['format'] = $format;
+  }
 
-        $F = $nominative_month ? array(1=>"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь") : array(1=>"Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря");
-        $M = array(1=>"Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек");
-        $l = array("Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
-        $D = array("Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб");
+  // Возвращает формат номера.
+  public function getFormat() 
+  {
+    return $this->format;
+  }  
+	
+  // Фильтрует телефонный номер.
+  public function filter($value) 
+  {                
+    if(!is_scalar($value)) {
+      // Возвращаем нескалярное значение неотфильтрованным.
+      return $value;
+    }
+            
+    $value = (string)$value;
+        
+    if(strlen($value)==0) {
+      // Возвращаем пустое значение неотфильтрованным.
+      return $value;
+    }
+        
+    // Сперва удаляем все нецифровые символы.
+    $digits = preg_replace('#[^0-9]#', '', $value);
+        
+    if(strlen($digits)<5) {
+      // Возвращаем пустое значение.
+      return;
+    }
 
-        $format = str_replace("F", $F[date("n", $timestamp)], $format);
-        $format = str_replace("M", $M[date("n", $timestamp)], $format);
-        $format = str_replace("l", $l[date("w", $timestamp)], $format);
-        $format = str_replace("D", $D[date("w", $timestamp)], $format);
+    $format = $this->options['format'];
+        
+    if($format == self::PHONE_FORMAT_INTL) {            
+      // Дополняем нулями, если число цифр некорректно.
+      $digits = str_pad($digits, 11, "0", STR_PAD_LEFT);
 
-        return date($format, $timestamp);
-    }	
+      // Добавляем скобки, пробелы и тире.
+      $phoneNumber = substr($digits, 0, 1) . ' (' . 
+                     substr($digits, 1, 3) . ') ' .
+                     substr($digits, 4, 3) . '-' . 
+                     substr($digits, 7, 4);
+    } elseif ($format == self::PHONE_FORMAT_DB) { 
+        
+      $digits = substr($digits, -10);  
+      // Дополняем нулями, если число цифр некорректно.
+      $digits = str_pad($digits, 10, "0", STR_PAD_LEFT);
 
-    public function filter($format, $timestamp = 0, $nominative_month = false) 
-    {                
-        return $this->rudate($format, $timestamp, $nominative_month);
-    }    
+      $phoneNumber = $digits;
+      
+    } elseif ($format == self::PHONE_FORMAT_RU) { 
+        
+      $digits = substr($digits, -10);  
+      // Дополняем нулями, если число цифр некорректно.
+      $digits = str_pad($digits, 10, "0", STR_PAD_LEFT);
+
+      // Добавляем скобки, пробелы и тире.
+      $phoneNumber = '8 (' . 
+                     substr($digits, 0, 3) . ') ' .
+                     substr($digits, 3, 3) . '-' . 
+                     substr($digits, 6, 4);
+      
+    } else { // self::PHONE_FORMAT_LOCAL
+      // Дополняем нулями, если число цифр некорректно
+      $digits = str_pad($digits, 7, "0", STR_PAD_LEFT);
+
+      // Добавляем тире.
+      $phoneNumber = substr($digits, 0, 3) . '-'. substr($digits, 3, 4);
+    }
+        
+    return $phoneNumber;                
+  }    
 }
