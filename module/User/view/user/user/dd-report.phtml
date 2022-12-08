@@ -3,30 +3,32 @@ $this->headTitle('Расчетный листок');
 //var_dump($result);
 ?>
 <div class="row">
-    <div class="col-md-1">
-        <?php if (isset($result['prevhref'])):?>
-            <a href="<?= $result['prevhref']?>"><?= $result['prevlabel']?></a>
-        <?php endif; ?>    
-    </div>
-    <!--<div class="col-md-2"></div>-->
-    <div class="col-md-1">
-        <span class="text-center">
-            <?php if (isset($result['returnhref'])):?>
-                <a href="<?= $result['returnhref']?>"><?= $result['returnlabel']?></a>
-            <?php endif; ?>                
-        </span>
-    </div>
-    <!--<div class="col-md-2"></div>-->
-    <div class="col-md-1 text-right">
-        <span class="text-right">
-            <?php if (isset($result['nexthref'])):?>
-                <a href="<?= $result['nexthref']?>"><?= $result['nextlabel']?></a>
-            <?php endif; ?>            
-        </span>
-    </div>
-</div>
-<div class="row">
     <div class="col-md-3">
         <?= $result['report']?>
+    </div>
+    <div class="col-md-3" id="side-nav" >
+        <ul class="nav nav-stacked nav-pills affix">
+            <li>
+                <?php if (isset($result['returnhref'])):?>
+                    <a class="btn btn-default" href="<?= $result['returnhref']?>">
+                        <span class="glyphicon glyphicon-arrow-up"></span> <?= $result['returnlabel']?>
+                    </a>
+                <?php endif; ?>                                
+            </li>
+            <li>
+                <?php if (isset($result['nexthref'])):?>
+                    <a class="btn btn-default" href="<?= $result['nexthref']?>">
+                        <span class="glyphicon glyphicon-arrow-left"></span> <?= $result['nextlabel']?>
+                    </a>
+                <?php endif; ?>                            
+            </li>
+            <li>
+                <?php if (isset($result['prevhref'])):?>
+                    <a class="btn btn-default" href="<?= $result['prevhref']?>">
+                        <span class="glyphicon glyphicon-arrow-right"></span> <?= $result['prevlabel']?>
+                    </a>
+                <?php endif; ?>                    
+            </li>
+        </ul>
     </div>
 </div>
