@@ -9,6 +9,7 @@ use Laminas\Math\Rand;
 use Application\Entity\Email;
 use User\Validator\TokenNoExistsValidator;
 use Company\Entity\Office;
+use User\Filter\Rudate;
 
 /**
  * This service is responsible for adding/editing users
@@ -503,7 +504,7 @@ class UserManager
      */
     public function ddReport($period = null)
     {
-        setlocale( LC_ALL, 'ru_RU.utf8', 'russian' );
+        $rudateFilter = new Rudate();
         
         $currentUser = $this->smsManager->currentUser();
         $rdir = './data/reports/'; 
@@ -547,13 +548,13 @@ class UserManager
 
             $prev = $p.$uid.date('Ym', $prevmonth);			
             if (file_exists($rdir.$prev.'.html')){
-                $result['prevlabel'] = date('F Y', $prevmonth);
+                $result['prevlabel'] = $rudateFilter->filter('F Y', $prevmonth);
                 $result['prevhref'] = "/users/dd-report?report=$prev";
             }
 
             $next = $p.$uid.date('Ym', $nextmonth);
             if (file_exists($rdir.$next.'.html')){
-                $result['nextlabel'] = date('F Y', $nextmonth);
+                $result['nextlabel'] = $rudateFilter->filter('F Y', $nextmonth);
                 $result['nexthref'] = "/users/dd-report?report=$next";
             }
 
@@ -568,7 +569,7 @@ class UserManager
             if ($p == 'zp'){
                 $dd = 'dd';
                 if (file_exists($rdir.$dd.$g.'.html')){
-                    $result['returnlabel'] = date('F Y', $currmonth);
+                    $result['returnlabel'] = $rudateFilter->filter('F Y', $currmonth);
                     $result['returnhref'] = "/users/dd-report?report=$dd$g";
                 }	
                 $rl = 'rl';
