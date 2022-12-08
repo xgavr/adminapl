@@ -47,7 +47,7 @@ class Rudate extends AbstractFilter
         return date($format, $timestamp);
     }	
 
-    public function filter($format, $timestamp = 0, $nominative_month = false) 
+    public function filter($format, $timestamp = 0, $nominative_month = true) 
     {                
         return $this->rudate($format, $timestamp, $nominative_month);
     }    
