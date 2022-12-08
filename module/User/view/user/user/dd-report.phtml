@@ -1,6 +1,8 @@
 <?php
-$this->headTitle('Расчетный листок');
-//var_dump($result);
+    $this->headTitle('Расчетный листок');
+    $this->mainMenu()->setActiveItemId('logout');
+    $this->mainMenu()->setActiveUrl('users', ['action' => 'dd-report']);
+    //var_dump($result);
 ?>
 <div class="row">
     <div class="col-md-3">

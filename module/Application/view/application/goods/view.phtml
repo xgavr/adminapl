@@ -7,6 +7,8 @@
     $priceCols = $goodsManager->priceCols($goods);
     
     $this->headTitle($goods->getTitleShort());
+    $this->mainMenu()->setActiveItemId('stock');
+    $this->mainMenu()->setActiveUrl('goods');
 ?>
 
 <div class="row">
