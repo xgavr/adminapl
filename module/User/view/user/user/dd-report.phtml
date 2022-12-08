@@ -12,11 +12,11 @@
     <div class="col-md-3" id="side-nav" >
         <ul class="nav nav-stacked nav-pills affix">
             <li>
-                <?php if (isset($result['returnhref'])):?>
-                    <a class="btn btn-default" href="<?= $result['returnhref']?>">
-                        <span class="glyphicon glyphicon-arrow-up"></span> <?= $result['returnlabel']?>
+                <?php if (isset($result['prevhref'])):?>
+                    <a class="btn btn-default" href="<?= $result['prevhref']?>">
+                        <span class="glyphicon glyphicon-arrow-left"></span> <?= $result['prevlabel']?>
                     </a>
-                <?php endif; ?>                                
+                <?php endif; ?>                    
             </li>
             <li>
                 <?php if (isset($result['nexthref'])):?>
@@ -26,11 +26,11 @@
                 <?php endif; ?>                            
             </li>
             <li>
-                <?php if (isset($result['prevhref'])):?>
-                    <a class="btn btn-default" href="<?= $result['prevhref']?>">
-                        <span class="glyphicon glyphicon-arrow-left"></span> <?= $result['prevlabel']?>
+                <?php if (isset($result['returnhref'])):?>
+                    <a class="btn btn-default" href="<?= $result['returnhref']?>">
+                        <span class="glyphicon glyphicon-arrow-up"></span> <?= $result['returnlabel']?>
                     </a>
-                <?php endif; ?>                    
+                <?php endif; ?>                                
             </li>
         </ul>
     </div>
