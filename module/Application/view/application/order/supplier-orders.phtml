@@ -20,7 +20,12 @@
                 <?= $supplierOrder->getQuantity() ?>                
             </td>
             <td>
-                <?= $supplierOrder->getSupplier()->getName() ?>
+                <nobr>
+                    <a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="<?= $supplierOrder->getSupplier()->getId()?>" title="Перейти на сайт поставщика">
+                        <span class="glyphicon glyphicon-link"></span>
+                    </a>
+                    <a href="/supplier/view/<?= $supplierOrder->getSupplier()->getId()?>" target="_blank"><?= $supplierOrder->getSupplier()->getName() ?></a>
+                </nobr>
             </td>
             <td class="text-muted small">
                 <?= $supplierOrder->getStatusOrderAsString() ?>
