@@ -226,16 +226,6 @@
                 changeComment(row.id, row.comment);
             }
         });        
-        $(document).on('click', '.supplier-link', function (e) {
-            let id = $(e.currentTarget).attr('supplier-id');
-            $.get( "/supplier/site/"+id, function(data){
-                if (data.url){
-                    window.open(data.url, '_blank');
-                } else {
-                    bootbox.alert('Сайт не указан в карточке поставщика!');
-                }
-            });        
-        });        
     });
     
     function queryParams(params) {
