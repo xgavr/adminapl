@@ -255,7 +255,7 @@
                     <thead>
                         <tr>
                              <!--<th data-field="docStamp" data-width="150">Дата</th>-->
-                             <th data-field="dateOper" data-width="150" data-sortable="true">Дата</th>
+                             <th data-field="dateOper" data-width="100" data-sortable="true" data-formatter="dateFormatter">Дата</th>
                              <th data-field="quantity" data-type="numeric" data-align="right" data-width="30" data-formatter="inFormatter">Приход</th>
                              <th data-field="quantity" data-type="numeric" data-align="right" data-width="30" data-formatter="outFormatter">Расход</th>
                              <th data-field="rest" data-type="numeric" data-align="right" data-width="30">Остаток</th>
@@ -689,12 +689,24 @@
         return docFormatter(row.baseType, row.baseId, value);
     }
     
-    function baseSupplierFormatter(value){
+    function baseSupplierFormatter(value, row){
         if (value){
-            return value.substr(0, 25);
+//            return value.substr(0, 25);
+            return [
+                '<nobr>',
+                '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.ptu.supplier.id+'" title="Перейти на сайт поставщика">',
+                '<span class="glyphicon glyphicon-link"></span></a>',
+                '<a href="/supplier/view/' + row.ptu.supplier.id + '" target="_blank">' + value.substr(0, 25) + '</a>',
+                '</nobr>'
+            ].join(''); 
         }
         
         return value;
+    }
+    
+    function dateFormatter(value){
+        var date = new Date(value);
+        return $.format.date(value, "dd-MM-yyyy");
     }
 
     function oemActiveFormatter(value, row){

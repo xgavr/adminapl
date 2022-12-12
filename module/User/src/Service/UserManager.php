@@ -587,7 +587,7 @@ class UserManager
                 if ($p == 'rl'){
                     $dd = 'zp';
                     if (file_exists($rdir.$dd.$y.$m.'.html')){
-                        $result['returnlabel'] = date('F Y', $currmonth);
+                        $result['returnlabel'] = $rudateFilter->filter('F Y', $currmonth);
                         $result['returnhref'] = "/users/dd-report?report=$dd$y$m";
                     }	
                 }
