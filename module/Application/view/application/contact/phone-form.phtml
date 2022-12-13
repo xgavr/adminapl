@@ -60,12 +60,14 @@ $form->prepare();
     $('#phone_name').mask('8 (000) 000-0000', {selectOnFocus: false});
     
     $('#phone-submit').on('click', function() {
+        $('#phone-submit').attr('disabled', true);
         $.ajax({
             type: 'POST',
             url: '/contact/phone-form/<?= $contact->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>',
             data: $('#phone-form').serialize()
-        })
+        })         
             .done(function (data) {
+                $('#phone-submit').attr('disabled', false);
                 if (data == 'ok'){
                     $('#modal-dialog').modal('hide');
                     window.location.reload();

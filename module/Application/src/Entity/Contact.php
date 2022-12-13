@@ -308,16 +308,16 @@ class Contact {
      */
     public function isParentTypeDifferent($contact)
     {
-        if ($this->client && $contact->getClient()){
+        if (!empty($this->client) && !empty($contact->getClient())){
             return false;
         }
-        if ($this->user && $contact->getUser()){
+        if (!empty($this->user) && !empty($contact->getUser())){
             return false;
         }
-        if ($this->supplier && $contact->getSupplier()){
+        if (!empty($this->supplier) && !empty($contact->getSupplier())){
             return false;
         }
-        if ($this->office && $contact->getOffice()){
+        if (!empty($this->office) && !empty($contact->getOffice())){
             return false;
         }
         return true;
