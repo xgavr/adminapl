@@ -75,8 +75,8 @@ class PhoneExistsValidator extends AbstractValidator
         $flag = false;
         if ($phone){
             if ($contact){
-                $flag = $contact->isParentTypeDifferent($phone->getContact());
-                var_dump($flag);
+                $flag = !$contact->isParentTypeDifferent($phone->getContact());
+//                var_dump($flag);
             } else {
                 $flag = true;
             }
