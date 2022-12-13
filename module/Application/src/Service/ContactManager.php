@@ -542,6 +542,11 @@ class ContactManager
         } elseif ($contact2->getOffice() && empty($contact1->getOffice())){
             $contact1->setOffice($contact2->getOffice());            
         }
+        
+        $this->entityManager->persist($contact1);
+        $this->entityManager->persist($contact2);
+        $this->entityManager->flush();
+        
         return;
     }
 }
