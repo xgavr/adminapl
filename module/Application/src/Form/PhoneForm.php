@@ -109,13 +109,13 @@ class PhoneForm extends Form
                         'options' => [
                         ],
                     ],
-                    [
-                        'name' => PhoneExistsValidator::class,
-                        'options' => [
-                            'entityManager' => $this->entityManager,
-                            'phone' => $this->phone
-                        ],
-                    ],
+//                    [
+//                        'name' => PhoneExistsValidator::class,
+//                        'options' => [
+//                            'entityManager' => $this->entityManager,
+//                            'phone' => $this->phone
+//                        ],
+//                    ],
                 ],
             ]);        
         

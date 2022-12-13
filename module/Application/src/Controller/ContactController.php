@@ -300,7 +300,7 @@ class ContactController extends AbstractActionController
         // Validate input parameter
         if ($phoneId>0) {
             $phone = $this->entityManager->getRepository(Phone::class)
-                    ->findOneById($phoneId);
+                    ->find($phoneId);
         } else {
             $phone = null;
         }        
@@ -312,9 +312,13 @@ class ContactController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
-
-                if ($phone){
-                    $this->contactManager->updatePhone($phone, ['phone' => $data['phone'], 'comment' => $data['comment']]);                    
+                
+                if ($phone){                                        
+                    $this->contactManager->updatePhone($phone, ['phone' => $data['phone'], 'comment' => $data['comment']]);
+                    $phoneContact = $phone->getContact();
+                    if ($phoneContact->getId() != $contact->getId()){
+                        $this->contactManager->unite($contact, $phoneContact);
+                    }
                 } else {
                     $this->contactManager->addPhone($contact, ['phone' => $data['phone'], 'comment' => $data['comment']], true);
                 }    

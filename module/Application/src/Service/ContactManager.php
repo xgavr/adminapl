@@ -512,5 +512,36 @@ class ContactManager
         $this->entityManager->flush();
     }    
     
-    
+    /**
+     * Объеденить контакты
+     * @param Contact $contact1
+     * @param Contact $contact2
+     */
+    public function unite($contact1, $contact2)
+    {
+        if ($contact1->getUser() && empty($contact2->getUser())){
+            $contact2->setUser($contact1->getUser());
+        } elseif ($contact2->getUser() && empty($contact1->getUser())){
+            $contact1->setUser($contact2->getUser());            
+        }
+        
+        if ($contact1->getClient() && empty($contact2->getClient())){
+            $contact2->setClient($contact1->getClient());
+        } elseif ($contact2->getClient() && empty($contact1->getClient())){
+            $contact1->setClient($contact2->getClient());            
+        }
+        
+        if ($contact1->getSupplier() && empty($contact2->getSupplier())){
+            $contact2->setSupplier($contact1->getSupplier());
+        } elseif ($contact2->getSupplier() && empty($contact1->getSupplier())){
+            $contact1->setSupplier($contact2->getSupplier());            
+        }
+
+        if ($contact1->getOffice() && empty($contact2->getOffice())){
+            $contact2->setOffice($contact1->getOffice());
+        } elseif ($contact2->getOffice() && empty($contact1->getOffice())){
+            $contact1->setOffice($contact2->getOffice());            
+        }
+        return;
+    }
 }
