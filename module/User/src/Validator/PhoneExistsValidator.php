@@ -72,23 +72,25 @@ class PhoneExistsValidator extends AbstractValidator
         $phone = $entityManager->getRepository(Phone::class)
                 ->findOneByName($phoneValue);
         
-        $flag = false;
+        $flag = true;
         if ($phone){
             if ($contact){
-                $flag = !$contact->isParentTypeDifferent($phone->getContact());
-                var_dump($flag);
+                $flag = $contact->isParentTypeDifferent($phone->getContact());
+//                var_dump($flag);
             } else {
-                $flag = true;
+                $flag = false;
             }
         }
         
         if($this->options['phone']==null) {
-            $isValid = ($phone==null);
+//            $isValid = ($phone==null);
+            $isValid = $flag;
         } else {
-            if($this->options['phone']->getName(PhoneFilter::PHONE_FORMAT_DB) != $phoneValue && $flag) 
+            if ($this->options['phone']->getName(PhoneFilter::PHONE_FORMAT_DB) != $phoneValue && !$flag) {
                 $isValid = false;
-            else 
+            } else {
                 $isValid = true;
+            }
         }
         
         // If there were an error, set error message.
