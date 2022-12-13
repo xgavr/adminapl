@@ -305,7 +305,7 @@ class ContactController extends AbstractActionController
         } else {
             $phone = null;
         }        
-        $form = new PhoneForm($this->entityManager, $phone);
+        $form = new PhoneForm($this->entityManager, $phone, $contact);
 
         if ($this->getRequest()->isPost()) {
             
