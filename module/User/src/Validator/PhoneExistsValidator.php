@@ -16,7 +16,8 @@ class PhoneExistsValidator extends AbstractValidator
      */
     protected $options = array(
         'entityManager' => null,
-        'phone' => null
+        'phone' => null,
+        'contact' => null,
     );
     
     // Validation failure message IDs.
@@ -43,6 +44,8 @@ class PhoneExistsValidator extends AbstractValidator
                 $this->options['entityManager'] = $options['entityManager'];
             if(isset($options['phone']))
                 $this->options['phone'] = $options['phone'];
+            if(isset($options['contact']))
+                $this->options['contact'] = $options['contact'];
         }
         
         // Call the parent class constructor
@@ -61,15 +64,27 @@ class PhoneExistsValidator extends AbstractValidator
         
         // Get Doctrine entity manager.
         $entityManager = $this->options['entityManager'];
+        $contact = $this->options['contact'];
         
         $phoneFilter = new PhoneFilter();
+        $phoneValue = $phoneFilter->filter($value);
+        
         $phone = $entityManager->getRepository(Phone::class)
-                ->findOneByName($phoneFilter->filter($value));
+                ->findOneByName($phoneValue);
+        
+        $flag = false;
+        if ($phone){
+            if ($contact){
+                $flag = !$contact->isParentTypeDifferent($phone->getContact());
+            } else {
+                $flag = true;
+            }
+        }
         
         if($this->options['phone']==null) {
             $isValid = ($phone==null);
         } else {
-            if($this->options['phone']->getName($format = PhoneFilter::PHONE_FORMAT_DB)!=$phoneFilter->filter($value) && $phone!=null) 
+            if($this->options['phone']->getName(PhoneFilter::PHONE_FORMAT_DB) != $phoneValue && $flag) 
                 $isValid = false;
             else 
                 $isValid = true;

@@ -26,6 +26,7 @@ use Application\Form\AddressForm;
 use Application\Form\MessengerForm;
 use Company\Form\LegalForm;
 use Laminas\View\Model\JsonModel;
+use User\Filter\PhoneFilter;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -313,21 +314,27 @@ class ContactController extends AbstractActionController
 
             if ($form->isValid()) {
                 
-                if ($phone){                                        
-                    $this->contactManager->updatePhone($phone, ['phone' => $data['phone'], 'comment' => $data['comment']]);
-                    $phoneContact = $phone->getContact();
-                    if ($phoneContact->getId() != $contact->getId()){
-                        $this->contactManager->unite($contact, $phoneContact);
+                $phoneFilter = new PhoneFilter();
+                $namePhone = $phoneFilter->filter($data['phone']);
+        
+                $dataPhone = $this->entityManager->getRepository(Phone::class)
+                        ->findOneByName($namePhone);
+                
+                if ($dataPhone){                                        
+                    $this->contactManager->updatePhone($dataPhone, ['phone' => $data['phone'], 'comment' => $data['comment']]);
+                    $contactPhone = $dataPhone->getContact();
+                    if ($contactPhone->getId() != $contact->getId()){
+                        $this->contactManager->unite($contact, $contactPhone);
                     }
                 } else {
-                    $this->contactManager->addPhone($contact, ['phone' => $data['phone'], 'comment' => $data['comment']], true);
+                    $phone = $this->contactManager->addPhone($contact, ['phone' => $data['phone'], 'comment' => $data['comment']], true);
                 }    
                 
                 return new JsonModel(
                    ['ok']
                 );           
             } else {
-                var_dump($form->getMessages());
+               // var_dump($form->getMessages());
             }
         } else {
             if ($phone){

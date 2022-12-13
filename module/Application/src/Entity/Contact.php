@@ -302,6 +302,27 @@ class Contact {
         $this->dateCreated = $dateCreated;
     }    
             
+    /**
+     * Сравнить контакты
+     * @param Contact $contact
+     */
+    public function isParentTypeDifferent($contact)
+    {
+        if ($this->client && $contact->getClient()){
+            return false;
+        }
+        if ($this->user && $contact->getUser()){
+            return false;
+        }
+        if ($this->supplier && $contact->getSupplier()){
+            return false;
+        }
+        if ($this->office && $contact->getOffice()){
+            return false;
+        }
+        return true;
+    }
+    
     /*
      * Возвращает связанный supplier.
      * @return \Application\Entity\Supplier

@@ -23,14 +23,17 @@ class PhoneForm extends Form
     
     private $phone;
     
+    private $contact;
+
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager = null, $phone = null)
+    public function __construct($entityManager = null, $phone = null, $contact = null)
     {
         
         $this->entityManager = $entityManager;
         $this->phone = $phone;
+        $this->contact = $contact;
         
         // Определяем имя формы.
         parent::__construct('phone-form');
@@ -109,13 +112,14 @@ class PhoneForm extends Form
                         'options' => [
                         ],
                     ],
-//                    [
-//                        'name' => PhoneExistsValidator::class,
-//                        'options' => [
-//                            'entityManager' => $this->entityManager,
-//                            'phone' => $this->phone
-//                        ],
-//                    ],
+                    [
+                        'name' => PhoneExistsValidator::class,
+                        'options' => [
+                            'entityManager' => $this->entityManager,
+                            'phone' => $this->phone,
+                            'contact' => $this->contact,
+                        ],
+                    ],
                 ],
             ]);        
         
