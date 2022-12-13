@@ -326,6 +326,8 @@ class ContactController extends AbstractActionController
                 return new JsonModel(
                    ['ok']
                 );           
+            } else {
+                var_dump($form->getMessages());
             }
         } else {
             if ($phone){

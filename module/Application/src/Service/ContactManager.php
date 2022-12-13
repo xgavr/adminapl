@@ -519,7 +519,6 @@ class ContactManager
      */
     public function unite($contact1, $contact2)
     {
-        var_dump(1); exit;
         if ($contact1->getUser() && empty($contact2->getUser())){
             $contact2->setUser($contact1->getUser());
         } elseif ($contact2->getUser() && empty($contact1->getUser())){
