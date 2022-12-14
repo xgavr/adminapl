@@ -115,6 +115,11 @@ class User
     {
         return $this->id;
     }
+    
+    public function getLink()
+    {
+        return "<a href='/users/view/{$this->id}' target='_blank'>{$this->fullName}</a>";                
+    }
 
     /**
      * Sets user ID. 

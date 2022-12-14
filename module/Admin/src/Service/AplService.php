@@ -647,7 +647,7 @@ class AplService {
 //                    var_dump($desc['icq']);
             if ($contact){
                 $this->contactManager->updateSignature($contact, ['signature' => $row['signature']]);
-                $this->contactManager->updateUserOffice($contact, ['office' => $this->getOffice($row['parent'])]);
+                //$this->contactManager->updateUserOffice($contact, ['office' => $this->getOffice($row['parent'])]);
             }
 
             $this->getStaffPhone($contact);

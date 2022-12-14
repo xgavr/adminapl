@@ -228,6 +228,11 @@ class Supplier {
         return $this->id;
     }
 
+    public function getLink()
+    {
+        return "<a href='/supplier/view/{$this->id}' target='_blank'>{$this->name}</a>";                
+    }
+    
     public function setId($id) 
     {
         $this->id = $id;

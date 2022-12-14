@@ -195,6 +195,11 @@ class Office {
         return $this->id;
     }
 
+    public function getLink()
+    {
+        return "<a href='/offices/view/{$this->id}' target='_blank'>{$this->name}</a>";                
+    }
+    
     public function setId($id) 
     {
         $this->id = $id;

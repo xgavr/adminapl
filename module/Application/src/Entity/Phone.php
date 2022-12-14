@@ -11,6 +11,10 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Application\Entity\Contact;
 use User\Filter\PhoneFilter;
+use User\Entity\User;
+use Application\Entity\Client;
+use Application\Entity\Supplier;
+use Company\Entity\Office;
 
 /**
  * Description of Phone
@@ -111,6 +115,25 @@ class Phone {
     public function getContact() 
     {
         return $this->contact;
+    }
+    
+    public function getContactLink()
+    {
+        $result = [];
+        if ($this->contact->getUser()){
+            $result[] = $this->contact->getUser()->getLink();
+        }
+        if ($this->contact->getClient()){
+            $result[] = $this->contact->getClient()->getLink();
+        }
+        if ($this->contact->getSupplier()){
+            $result[] = $this->contact->getSupplier()->getLink();
+        }
+        if ($this->contact->getOffice()){
+            $result[] = $this->contact->getOffice()->getLink();
+        }
+        
+        return implode(';', $result);
     }
 
     /**

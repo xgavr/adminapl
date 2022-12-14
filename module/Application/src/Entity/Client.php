@@ -117,6 +117,11 @@ class Client {
     {
         return $this->id;
     }
+    
+    public function getLink()
+    {
+        return "<a href='/client/view/{$this->id}' target='_blank'>{$this->name}</a>";                
+    }    
 
     public function setId($id) 
     {

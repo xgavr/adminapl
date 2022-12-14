@@ -255,15 +255,21 @@ class ContactManager
         $this->entityManager->flush();
     }    
     
+    /**
+     * Обновить офис сотрудника
+     * @param Contact $contact
+     * @param array $data
+     */
     public function updateUserOffice($contact, $data) 
     {
         $office = $this->entityManager->getRepository(Office::class)
-                ->findOneById($data['office']);
+                ->find($data['office']);
+        $user = $contact->getUser();
         
-        if ($office){
-            $contact->setOffice($office);
+        if ($office && $user){
+            $user->setOffice($office);
                 
-            $this->entityManager->persist($contact);
+            $this->entityManager->persist($user);
             // Применяем изменения к базе данных.
             $this->entityManager->flush();
         }    

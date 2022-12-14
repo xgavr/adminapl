@@ -30,7 +30,7 @@ class PhoneExistsValidator extends AbstractValidator
      */
     protected $messageTemplates = array(
         self::NOT_DIGIT  => "Телефонный номер должен содержать только цифры",
-        self::PHONE_EXISTS  => "Такой номер уже используется"        
+        self::PHONE_EXISTS  => "Такой номер уже используется %value%"        
     );
     
     /**
@@ -94,8 +94,8 @@ class PhoneExistsValidator extends AbstractValidator
         }
         
         // If there were an error, set error message.
-        if(!$isValid) {            
-            $this->error(self::PHONE_EXISTS);            
+        if(!$isValid) {    
+            $this->error(self::PHONE_EXISTS, $phone->getContactLink());            
         }
         
         // Return validation result.
