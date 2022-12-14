@@ -74,7 +74,7 @@ class OrderController extends AbstractActionController
         $offices = $this->entityManager->getRepository(Office::class)
                 ->findBy([]);
         $users = $this->entityManager->getRepository(User::class)
-                ->findBy(['status' => User::STATUS_ACTIVE, 'office' => $currentUser->getOffice()->getId()]);
+                ->managers();
         return new ViewModel([
             'users' =>  $users,
             'offices' =>  $offices,

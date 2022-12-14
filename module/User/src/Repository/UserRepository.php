@@ -117,6 +117,24 @@ class UserRepository  extends EntityRepository
     }    
     
     /**
+     * Продажники
+     */
+    public function managers()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('u')
+                ->from(User::class, 'u')
+                ->where('u.orderCount > 0')
+                ->orderBy('u.orderCount', 'DESC')
+                ;
+        return $queryBuilder->getQuery()->getResult();        
+    }
+            
+    
+    /**
      * Обновить количество заказов
      * @param User $user
      */
