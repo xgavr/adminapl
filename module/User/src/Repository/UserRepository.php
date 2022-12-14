@@ -129,7 +129,7 @@ class UserRepository  extends EntityRepository
                 ->from(User::class, 'u')
                 ->where('u.orderCount > 0')
                 ->orderBy('u.status', 'ASC')
-                ->andOrderBy('u.orderCount', 'DESC')
+                ->addOrderBy('u.orderCount', 'DESC')
                 ;
         return $queryBuilder->getQuery()->getResult();        
     }
