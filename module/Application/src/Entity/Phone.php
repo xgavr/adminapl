@@ -119,21 +119,7 @@ class Phone {
     
     public function getContactLink()
     {
-        $result = [];
-        if ($this->contact->getUser()){
-            $result[] = $this->contact->getUser()->getLink();
-        }
-        if ($this->contact->getClient()){
-            $result[] = $this->contact->getClient()->getLink();
-        }
-        if ($this->contact->getSupplier()){
-            $result[] = $this->contact->getSupplier()->getLink();
-        }
-        if ($this->contact->getOffice()){
-            $result[] = $this->contact->getOffice()->getLink();
-        }
-        
-        return implode(';', $result);
+        return $this->contact->getParetnLink();
     }
 
     /**

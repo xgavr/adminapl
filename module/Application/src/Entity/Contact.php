@@ -323,6 +323,29 @@ class Contact {
         return true;
     }
     
+    /**
+     * Ссылки на контакты
+     * @return string
+     */
+    public function getParetnLink()
+    {
+        $result = [];
+        if ($this->user){
+            $result[] = $this->user->getLink();
+        }
+        if ($this->client){
+            $result[] = $this->client->getLink();
+        }
+        if ($this->supplier){
+            $result[] = $this->supplier->getLink();
+        }
+        if ($this->office){
+            $result[] = $this->office->getLink();
+        }
+        
+        return implode(';', array_filter($result));
+    }
+    
     /*
      * Возвращает связанный supplier.
      * @return \Application\Entity\Supplier

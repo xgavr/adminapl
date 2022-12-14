@@ -151,6 +151,11 @@ class Client {
         return $this->name;
     }
 
+    public function getNameOrNan() 
+    {
+        return ($this->name) ? $this->name:'Nan';
+    }
+
     public function setName($name) 
     {
         $this->name = $name;
