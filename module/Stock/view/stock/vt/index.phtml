@@ -90,7 +90,7 @@
            retired += ' info';
         }
         if (row.statusAccount === '<?= Vt::STATUS_TAKE_NO?>'){
-           retired += ' warning';
+           retired = ' warning';
         }
         
         return {classes: retired};
