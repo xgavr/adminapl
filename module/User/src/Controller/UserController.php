@@ -504,6 +504,28 @@ class UserController extends AbstractActionController
         ]);        
     }
     
+    public function updateOrderCountAction()
+    {
+        $id = (int)$this->params()->fromRoute('id', -1);
+        if ($id<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $user = $this->entityManager->getRepository(User::class)
+                ->find($id);
+        
+        if ($user == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $this->userManager->updateOrderCount($user);
+        
+        return new JsonModel([
+            'ok'
+        ]);          
+    }    
 }
 
 

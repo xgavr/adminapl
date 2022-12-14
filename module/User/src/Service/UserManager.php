@@ -10,6 +10,7 @@ use Application\Entity\Email;
 use User\Validator\TokenNoExistsValidator;
 use Company\Entity\Office;
 use User\Filter\Rudate;
+use Application\Entity\Order;
 
 /**
  * This service is responsible for adding/editing users
@@ -100,6 +101,7 @@ class UserManager
         $user->setStatus($data['status']);
         $user->setAplId($data['aplId']);
         $user->setBirthday(null);
+        $user->setOrderCount(0);
         if (!empty($data['birthday'])){
             $user->setBirthday($data['birthday']);
         }    
@@ -235,7 +237,7 @@ class UserManager
         $this->entityManager->persist($email);
         
         // Apply changes to database.
-        $this->entityManager->flush();
+        $this->entityManager->flush();                
         
         return $flag;
     }
@@ -484,6 +486,30 @@ class UserManager
 
         return true;
     } 
+    
+    /**
+     * Обновить количество заказов
+     * @param User $user
+     */
+    public function updateOrderCount($user)
+    {
+        $this->entityManager->getRepository(User::class)
+                ->updateOrderCount($user);
+        
+        return;
+    }
+    
+    /**
+     * Обновить количество заказов
+     * 
+     */
+    public function updateOrderCounts()
+    {
+        $this->entityManager->getRepository(User::class)
+                ->updateOrderCounts();
+        
+        return;
+    }
     
     /**
      * 

@@ -183,6 +183,7 @@ class JobManager
           526 => ['command' => 'update-make-apl-id',                'shedule' => '44 13 * * *', 'description' => 'Обновление aqplId брендов машин'],
           527 => ['command' => 'update-model-apl-id',               'shedule' => '44 14 * * *', 'description' => 'Обновление aplId моделей машин'],
           528 => ['command' => 'update-producer-apl-id',            'shedule' => '44 15 * * *', 'description' => 'Обновление производителей APL ID'],
+          529 => ['command' => 'update-user',                       'shedule' => '44 16 * * *', 'description' => 'Обновление сотрудников'],
         ];
     }
 

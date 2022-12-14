@@ -39,7 +39,7 @@ use Stock\Service\RegisterManager;
 use Stock\Service\PtManager;
 use Admin\Service\JobManager;
 use ApiMarketPlace\Service\OzonService;
-
+use User\Service\UserManager;
 
 /**
  * Description of ClientControllerFactory
@@ -81,6 +81,7 @@ class ProcessingControllerFactory implements FactoryInterface {
         $ptManager = $container->get(PtManager::class);
         $jobManager = $container->get(JobManager::class);
         $ozonService = $container->get(OzonService::class);
+        $userManager = $container->get(UserManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new ProcessingController($entityManager, $postManager, $autoruManager, 
@@ -89,6 +90,6 @@ class ProcessingControllerFactory implements FactoryInterface {
                 $articleManager, $oemManager, $nameManager, $assemblyManager, $goodsManager,
                 $settingManager, $aplDocService, $marketManager, $carManager, $helloManager,
                 $aplOrderService, $aplCashService, $billManager, $registerManager,
-                $ptManager, $jobManager, $ozonService);
+                $ptManager, $jobManager, $ozonService, $userManager);
     }
 }

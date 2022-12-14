@@ -61,6 +61,11 @@ class User
     protected $birthday;
         
     /**
+     * @ORM\Column(name="order_count")  
+     */
+    protected $orderCount;
+
+    /**
      * @ORM\Column(name="pwd_reset_token")  
      */
     protected $passwordResetToken;
@@ -290,6 +295,24 @@ class User
         $this->birthday = ($birthday) ? $birthday:date('Y-m-d');
     }    
     
+    /**
+     * Returns the order count.
+     * @return integer     
+     */
+    public function getOrderCount() 
+    {
+        return $this->orderCount;
+    }
+    
+    /**
+     * Sets the order count.
+     * @param integer $orderCount     
+     */
+    public function setOrderCount($orderCount) 
+    {
+        $this->orderCount = $orderCount;
+    }    
+
     /**
      * Returns password reset token.
      * @return string

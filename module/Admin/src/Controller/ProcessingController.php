@@ -200,13 +200,20 @@ class ProcessingController extends AbstractActionController
      */
     private $ozonManager;    
 
+    /**
+     * User manager.
+     * @var \User\Service\UserManager
+     */
+    private $userManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
             $parseManager, $bankManager, $aplBankService, $producerManager, $articleManager,
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
-            $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, $ozonService) 
+            $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
+            $ozonService, $userManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -238,6 +245,7 @@ class ProcessingController extends AbstractActionController
         $this->ptManager = $ptManager;
         $this->jobManager = $jobManager;
         $this->ozonManager = $ozonService;
+        $this->userManager = $userManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -1965,6 +1973,24 @@ class ProcessingController extends AbstractActionController
         );        
     }    
     
+    /**
+     * Обновление user
+     * @return JsonModel
+     */
+    public function updateUserAction()
+    {
+        $settings = $this->adminManager->getSettings();
+
+        if ($settings['job'] == 1){
+
+            $this->userManager->updateOrderCounts();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }    
+
     /**
      * Выполнение заданий
      * @return JsonModel

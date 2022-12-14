@@ -21,7 +21,7 @@ $this->pageBreadcrumbs()->setItems([
                 </a>                
                 <div class="form-group">
                     <div class="btn-group">
-                        <input id="searchinput" name="search" style="width: 350px" class="form-control" type="text" placeholder="Артикул, VIN, телефон, email">
+                        <input id="searchinput" name="search" style="width: 350px" class="form-control enter-search" type="text" placeholder="Артикул, VIN, телефон, email">
                         <span class="glyphicon glyphicon-remove-circle inputclear"></span>
                     </div>
                     <button id="ok" type="submit" class="btn btn-default" title="Поиск">
@@ -29,7 +29,7 @@ $this->pageBreadcrumbs()->setItems([
                     </button>
                 </div>    
                 <div class="form-group">
-                    <select id="officeSelect" style="width: 100px" class="form-control refresh-table" name="officeId">
+                    <select id="officeSelect" style="width: 100px" class="form-control refresh-table cookie-control" name="officeId">
                         <option>все</option>
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
@@ -37,7 +37,7 @@ $this->pageBreadcrumbs()->setItems([
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="userSelect" style="width: 200px" class="form-control refresh-table" name="userId">
+                    <select id="userSelect" style="width: 200px" class="form-control refresh-table cookie-control" name="userId">
                         <option>все</option>
                         <?php foreach ($users as $user):?>
                             <option value="<?= $user->getId()?>"><?= $user->getName()?></option>
@@ -45,7 +45,7 @@ $this->pageBreadcrumbs()->setItems([
                     </select>
                 </div>    
                 <div class="form-group">
-                    <select id="statusSelect" style="width: 200px" class="form-control refresh-table" name="status">
+                    <select id="statusSelect" style="width: 200px" class="form-control refresh-table cookie-control" name="status">
                         <option>все</option>
                         <?php foreach (Order::getStatusList() as $key=>$value):?>
                             <option value="<?= $key?>"><?= $value?></option>
@@ -59,7 +59,6 @@ $this->pageBreadcrumbs()->setItems([
         </div>
         <table id="table" 
             data-toggle="table" 
-            data-url="/order/content"
             data-cookie="true"
             data-cookie-id-table="orderSaveId"
             data-cookie-expire="1m"
@@ -68,7 +67,8 @@ $this->pageBreadcrumbs()->setItems([
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
+            data-show-columns="true"
             data-query-params="queryParams"
             data-sort-name="dateOper"
             data-sort-order="desc"            
@@ -95,8 +95,28 @@ $this->pageBreadcrumbs()->setItems([
 <script type="text/javascript">
     var $table = $('#table').bootstrapTable({
         onLoadSuccess: function() {
+            setCookies('orderSaveId');
         } 
     });
+    
+    function setCookies(cookieKey){
+        let expires = 30;
+        $('.cookie-control').each(function () {
+            Cookies.set(cookieKey+'_'+$(this).attr('id'), $(this).val(), { expires: expires});        
+        });        
+    }
+    
+    function getCookies(cookieKey){
+        $('.cookie-control').each(function () {
+            var cookieVal = Cookies.get(cookieKey+'_'+$(this).attr('id'));
+            if (cookieVal !== undefined){
+                $(this).val(cookieVal);                
+            }
+        });                        
+        $table.bootstrapTable('refresh', {
+            url: '/order/content'
+        });
+    }
     
     function refreshTable(){
         $table.bootstrapTable('refresh');
@@ -112,8 +132,8 @@ $this->pageBreadcrumbs()->setItems([
 //        });    
     }
 
-    $(function () {        
-        $('#officeSelect').val("<?= $currentUser->getOffice()->getId()?>");
+    $(function () {       
+        getCookies('orderSaveId');
         
         $(".inputclear").click(function(){
             $("#searchinput").val('');

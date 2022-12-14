@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use User\Entity\User;
 use User\Entity\Role;
 use User\Filter\PhoneFilter;
+use Application\Entity\Order;
 
 class UserRepository  extends EntityRepository
 {
@@ -113,5 +114,36 @@ class UserRepository  extends EntityRepository
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
+    }    
+    
+    /**
+     * Обновить количество заказов
+     * @param User $user
+     */
+    public function updateOrderCount($user)
+    {
+        $entityManager = $this->getEntityManager();
+        $orderCount = $entityManager->getRepository(Order::class)
+                ->count(['user' => $user->getId()]);
+        $entityManager->getConnection()->update('user', ['order_count' => $orderCount], ['id' => $user->getId()]);
+        
+        return;
+    }
+    
+    /**
+     * Обновить количество заказов
+     * 
+     */
+    public function updateOrderCounts()
+    {
+        $entityManager = $this->getEntityManager();
+        $users = $entityManager->getRepository(User::class)
+                ->findAll();
+        
+        foreach ($users as $user){
+            $this->updateOrderCount($user);
+        }
+        
+        return;
     }    
 }
