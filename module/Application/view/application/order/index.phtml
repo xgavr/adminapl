@@ -240,13 +240,14 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function carFormatter(value, row){
+        var result = [];
+        result.push(value);
         if (row.contactCar){
-            return [
-                row.contactCar.make.name,
-                value
-            ].join(' ');
+            if (row.contactCar.make){
+                result.push(row.contactCar.make.name);
+            }
         }
-        return value;
+        return result.join(' ');
     }
 
     function shippingFormatter(value, row){
