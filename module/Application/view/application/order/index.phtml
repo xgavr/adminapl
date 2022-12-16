@@ -240,7 +240,7 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function carFormatter(value, row){
-        if (row.contactCar.make){
+        if (row.contactCar){
             return [
                 row.contactCar.make.name,
                 value
