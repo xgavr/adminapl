@@ -227,7 +227,7 @@ $this->pageBreadcrumbs()->setItems([
         $.each(row.contact.emails, function( index, email ) {
             emails.push(email.name);
         });
-        if (phones.length or emails.length){
+        if (phones.length || emails.length){
             result.push('<br/');
             result.push(phones.join(';'));
             result.push(emails.join(';'));
