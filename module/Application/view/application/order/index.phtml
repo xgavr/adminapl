@@ -83,9 +83,9 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="id" data-sortable="false" data-width="50">Id</th>
                      <th data-field="aplId" data-sortable="false" data-width="50">Apl</th>
                      <th data-field="office.name" data-sortable="false" data-width="50">Офис</th>
-                     <th data-field="contact.name" data-sortable="false" data-formatter="clientFormatter" data-width="50">Покупатель</th>
-                     <th data-field="contact.phones" data-sortable="false" data-formatter="phoneFormatter" data-width="50">Телефон</th>
-                     <th data-field="contact.emails" data-sortable="false" data-formatter="emailFormatter" data-width="50">Почта</th>
+                     <th data-field="contact.name" data-sortable="false" data-formatter="clientFormatter">Покупатель</th>
+<!--                     <th data-field="contact.phones" data-sortable="false" data-formatter="phoneFormatter" data-width="50">Телефон</th>
+                     <th data-field="contact.emails" data-sortable="false" data-formatter="emailFormatter" data-width="50">Почта</th>-->
                      <th data-field="info" data-sortable="false" data-formatter="infoFormatter">Что нужно</th>
                      <th data-field="contactCar.vin" data-sortable="false" data-formatter="carFormatter">Машина</th>
                      <th data-field="address" data-sortable="false" data-formatter="shippingFormatter">Доставка</th>
@@ -214,10 +214,23 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function clientFormatter(value, row){
+        var result = [];
         var name = (value) ? value:'Nan';
-        return [
-            '<a style="text-transform:capitalize" href="/contact/view/' + row.contact.id + '" target="_blank">' + name + '</a>'
-        ].join(''); 
+        result.push('<a style="text-transform:capitalize" href="/contact/view/' + row.contact.id + '" target="_blank">' + name + '</a>');
+        
+        var phones = [];
+        $.each(row.contact.phones, function( index, phone ) {
+            phones.push(phone.name);
+        });
+        result.push(phones.join(';'));
+        
+        var emails = [];
+        $.each(row.contact.emails, function( index, email ) {
+            emails.push(email.name);
+        });
+        result.push(emails.join(';'));
+
+        return result.join(' '); 
     }
 
     function phoneFormatter(value){ 
