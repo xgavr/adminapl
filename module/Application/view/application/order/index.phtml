@@ -215,7 +215,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function clientFormatter(value, row){
         return [
-            '<a href="/contact/view/' + row.contact.id + '" target="_blank">' + value + '</a>'
+            '<a href="/contact/view/' + row.contact.id + '" target="_blank">' + (value) ? value:'Nan' + '</a>'
         ].join(''); 
     }
 
