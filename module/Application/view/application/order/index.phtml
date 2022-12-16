@@ -210,7 +210,7 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function dataFormatter(value){
-        return '<nobr>'+$.format.date(value, "dd.MM.yy HH:mm")+'</nobr>';        
+        return '<nobr>'+$.format.date(value, "dd.MM.yy")+'</nobr>';        
     }
     
     function clientFormatter(value, row){
@@ -222,14 +222,16 @@ $this->pageBreadcrumbs()->setItems([
         $.each(row.contact.phones, function( index, phone ) {
             phones.push(phone.name);
         });
-        result.push(phones.join(';'));
         
         var emails = [];
         $.each(row.contact.emails, function( index, email ) {
             emails.push(email.name);
         });
-        result.push(emails.join(';'));
-
+        if (phones.length or emails.length){
+            result.push('<br/');
+            result.push(phones.join(';'));
+            result.push(emails.join(';'));
+        }    
         return result.join(' '); 
     }
 
