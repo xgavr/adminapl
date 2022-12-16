@@ -842,7 +842,7 @@ class OrderManager
             // Применяем изменения к базе данных.
             $this->entityManager->flush();
             
-            $this->checkoutOrder($order);
+//            $this->checkoutOrder($order);
 
             return $order;
         }

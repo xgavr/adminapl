@@ -229,10 +229,20 @@ class ContactController extends AbstractActionController
             return;                        
         }        
         
-        // Render the view template.
-        return new ViewModel([
-            'contact' => $contact,
-        ]);
+        if ($contact->getClient()){
+            return $this->redirect()->toRoute('client', ['action' => 'view', 'id' => $contact->getClient()->getId()]);
+        }        
+        if ($contact->getUser()){
+            return $this->redirect()->toRoute('users', ['action' => 'view', 'id' => $contact->getUser()->getId()]);
+        }        
+        if ($contact->getSupplier()){
+            return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $contact->getSupplier()->getId()]);
+        }        
+        if ($contact->getOffice()){
+            return $this->redirect()->toRoute('office', ['action' => 'view', 'id' => $contact->getOffice()->getId()]);
+        }        
+        $this->getResponse()->setStatusCode(404);
+        return;                        
     }    
     
     public function phoneAction()

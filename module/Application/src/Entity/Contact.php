@@ -325,16 +325,16 @@ class Contact {
     
     /**
      * Ссылки на контакты
-     * @return string
+     * @return array
      */
-    public function getParetnLink()
+    public function getParetnLinks()
     {
         $result = [];
-        if ($this->user){
-            $result[] = $this->user->getLink();
-        }
         if ($this->client){
             $result[] = $this->client->getLink();
+        }
+        if ($this->user){
+            $result[] = $this->user->getLink();
         }
         if ($this->supplier){
             $result[] = $this->supplier->getLink();
@@ -343,9 +343,18 @@ class Contact {
             $result[] = $this->office->getLink();
         }
         
-        return implode(';', array_filter($result));
+        return array_filter($result);
     }
     
+    /**
+     * Ссылки на контакты
+     * @return string
+     */
+    public function getParetnLink()
+    {        
+        return implode(';', $this->getParetnLinks());
+    }
+
     /*
      * Возвращает связанный supplier.
      * @return \Application\Entity\Supplier
