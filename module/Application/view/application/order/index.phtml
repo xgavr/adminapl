@@ -1,6 +1,6 @@
 <?php
-
 use Application\Entity\Order;
+use Application\Entity\Bid;
 
 $this->headTitle('Заказы');
 $this->mainMenu()->setActiveItemId('client');
@@ -75,6 +75,8 @@ $this->pageBreadcrumbs()->setItems([
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
             data-row-style="rowStyle"
+            data-detail-view="true"
+            data-detail-formatter="detailFormatter"
             >
             <thead>
                 <tr>
@@ -103,7 +105,50 @@ $this->pageBreadcrumbs()->setItems([
     var $table = $('#table').bootstrapTable({
         onLoadSuccess: function() {
             setCookies('orderSaveId');
-        } 
+        }, 
+        onExpandRow: function (index, row, $detail) {
+            $detail.html('Идет загрузка...');
+            $.ajax({
+                type: "GET",
+                url: "/order/good-content/"+row.id,
+                success: function (result) {
+                    $detail.html('<table></table>').find('table').bootstrapTable({
+                    classes: 'table table-bordered table-hover table-condensed', 
+                    rowStyle: bidTakeStyle,
+                    columns: [{
+                        field: 'rowNo',
+                        title: '№'
+                    },{
+                        field: 'good.code',
+                        title: 'Артикул',
+                        formatter: 'goodFormatter'                        
+                    }, {
+                        field: 'good.producer.name',
+                        title: 'Производитель'
+                    }, {
+                        field: 'displayName',
+                        title: 'Наименование'
+                    }, {
+                        field: 'num',
+                        title: 'Количество',
+                        width: 200,
+                        align: 'right'
+                    }, {
+                        field: 'price',
+                        title: 'Цена',
+                        width: 200,
+                        align: 'right'
+                    }, {
+                        field: 'amount',
+                        title: 'Сумма',
+                        width: 200,
+                        align: 'right'
+                    }],
+                    data: result
+                  });
+                }
+            });
+        }
     });
     
     function setCookies(cookieKey){
@@ -208,6 +253,14 @@ $this->pageBreadcrumbs()->setItems([
         
         return {classes: retired};
     }
+    
+    function bidTakeStyle(row){
+        var classes = 'default';
+        if (row.take === "<?= Bid::TAKE_NO?>"){
+            classes = 'warning';
+        }        
+        return {classes: classes};
+    }    
     
     function dataFormatter(value){
         return '<nobr>'+$.format.date(value, "dd.MM.yy")+'</nobr>';        
