@@ -142,7 +142,8 @@ $this->pageBreadcrumbs()->setItems([
                         field: 'amount',
                         title: 'Сумма',
                         width: 200,
-                        align: 'right'
+                        align: 'right',
+                        formatter: 'geAmountFormatter'
                     }],
                     data: result
                   });
@@ -262,6 +263,20 @@ $this->pageBreadcrumbs()->setItems([
         return {classes: classes};
     }    
     
+    function goodFormatter(value, row){
+        var url = '/goods/view/'+row.good.id;
+        btn = '<nobr><a';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-link btn-xs" target="_blank">';
+        btn += '<span class="glyphicon glyphicon-link"></span>';
+        btn += '</a>'+value + '</nobr>';
+        return btn;
+    }    
+
+    function geAmountFormatter(value, row){
+        return (Math.round(row.price*row.num*100)/100).toFixed(0);
+    }        
+    
     function dataFormatter(value){
         return '<nobr>'+$.format.date(value, "dd.MM.yy")+'</nobr>';        
     }
@@ -274,11 +289,15 @@ $this->pageBreadcrumbs()->setItems([
         var phones = [];
         $.each(row.contact.phones, function( index, phone ) {
             phones.push(phone.name);
+            if (phones.length > 1){
+                return;
+            }
         });
         
         var emails = [];
         $.each(row.contact.emails, function( index, email ) {
             emails.push(email.name);
+            return;
         });
         if (phones.length || emails.length){
             result.push('<br/>');
