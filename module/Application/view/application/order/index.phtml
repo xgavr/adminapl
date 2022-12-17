@@ -127,7 +127,8 @@ $this->pageBreadcrumbs()->setItems([
                         title: 'Производитель'
                     }, {
                         field: 'displayName',
-                        title: 'Наименование'
+                        title: 'Наименование',
+                        formatter: 'geNameFormatter'
                     }, {
                         field: 'num',
                         title: 'Количество',
@@ -271,6 +272,16 @@ $this->pageBreadcrumbs()->setItems([
         btn += '<span class="glyphicon glyphicon-link"></span>';
         btn += '</a>'+value + '</nobr>';
         return btn;
+    }    
+
+    function geNameFormatter(value, row){
+        if (value) return value;
+        if (row.good.tokenGroup){
+            if (row.good.tokenGroup.name) return row.good.tokenGroup.name;        
+        }    
+        if (row.good.name) return row.good.name; 
+        if (row.good.description)return row.good.description;
+        return 'Нет названия';
     }    
 
     function geAmountFormatter(value, row){
