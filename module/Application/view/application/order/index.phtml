@@ -16,7 +16,7 @@ $this->pageBreadcrumbs()->setItems([
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
-                <a class="btn btn-default" type="button" href="<?= $this->url('order', ['action' => 'intro'])?>">
+                <a class="btn btn-default" type="button" href="<?= $this->url('order', ['action' => 'intro'])?>" tarhet="_blank">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </a>                
                 <div class="form-group">
@@ -290,37 +290,21 @@ $this->pageBreadcrumbs()->setItems([
         $.each(row.contact.phones, function( index, phone ) {
             phones.push(phone.name);
             if (phones.length > 1){
-                return;
+                return false;
             }
         });
         
         var emails = [];
         $.each(row.contact.emails, function( index, email ) {
             emails.push(email.name);
-            return;
+            return false;
         });
         if (phones.length || emails.length){
             result.push('<br/>');
             result.push(phones.join(';'));
-            result.push(emails.join(';'));
+            result.push('<nobr>'+emails.join(';')+'</nobr>');
         }    
         return result.join(' '); 
-    }
-
-    function phoneFormatter(value){ 
-        var phones = [];
-        $.each(value, function( index, phone ) {
-            phones.push(phone.name);
-        });
-        return phones.join(';');
-    }
-
-    function emailFormatter(value){
-        var emails = [];
-        $.each(value, function( index, email ) {
-            emails.push(email.name);
-        });
-        return emails.join(';');
     }
 
     function infoFormatter(value, row){
