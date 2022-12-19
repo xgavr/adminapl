@@ -76,7 +76,6 @@ $this->pageBreadcrumbs()->setItems([
             data-classes = "table table-bordered table-hover table-condensed"
             data-row-style="rowStyle"
             data-detail-view="true"
-            data-detail-formatter="detailFormatter"
             >
             <thead>
                 <tr>
@@ -101,6 +100,7 @@ $this->pageBreadcrumbs()->setItems([
     </div>
 </div>  
 
+<?php echo $this->partial('/application/order/bid-partial', []); ?>
 <script type="text/javascript">
     var $table = $('#table').bootstrapTable({
         onLoadSuccess: function() {
@@ -108,50 +108,14 @@ $this->pageBreadcrumbs()->setItems([
         }, 
         onExpandRow: function (index, row, $detail) {
             $detail.html('Идет загрузка...');
-            $.ajax({
-                type: "GET",
-                url: "/order/good-content/"+row.id,
-                success: function (result) {
-                    $detail.html('<table></table>').find('table').bootstrapTable({
-                    classes: 'table table-bordered table-hover table-condensed', 
-                    rowStyle: bidTakeStyle,
-                    columns: [{
-                        field: 'rowNo',
-                        title: '№'
-                    },{
-                        field: 'good.code',
-                        title: 'Артикул',
-                        formatter: 'goodFormatter'                        
-                    }, {
-                        field: 'good.producer.name',
-                        title: 'Производитель'
-                    }, {
-                        field: 'displayName',
-                        title: 'Наименование',
-                        formatter: 'geNameFormatter'
-                    }, {
-                        field: 'num',
-                        title: 'Количество',
-                        width: 200,
-                        align: 'right'
-                    }, {
-                        field: 'price',
-                        title: 'Цена',
-                        width: 200,
-                        align: 'right'
-                    }, {
-                        field: 'amount',
-                        title: 'Сумма',
-                        width: 200,
-                        align: 'right',
-                        formatter: 'geAmountFormatter'
-                    }],
-                    data: result
-                  });
-                }
-            });
+            orderDetail(index, row, $detail);
         }
     });
+    
+//    $('.bid-expand').on('editable-save.bs.table', function (e, field, row, old, $el) {
+//        alert(field);
+//    });        
+
     
     function setCookies(cookieKey){
         let expires = 30;
@@ -287,6 +251,16 @@ $this->pageBreadcrumbs()->setItems([
     function geAmountFormatter(value, row){
         return (Math.round(row.price*row.num*100)/100).toFixed(0);
     }        
+    
+    function grActiveFormatter(value, row){
+        return [
+            '<button type="button" title="Удалить"',
+            'class="btn btn-default btn-xs table-row-remove"',
+            '>',
+            '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>',
+            '</button>'
+        ].join(' ');
+    }    
     
     function dataFormatter(value){
         return '<nobr>'+$.format.date(value, "dd.MM.yy")+'</nobr>';        

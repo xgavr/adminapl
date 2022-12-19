@@ -93,7 +93,7 @@
             data-classes = "table table-bordered table-hover table-condensed"
             data-row-style="rowStyle"
             data-detail-view="true"
-            data-detail-formatter="detailFormatter"
+            data-unique-id="id"
             data-undefined-text=''
             data-editable-emptytext='    '
             data-editable-emptyclass='text-muted'
@@ -176,35 +176,51 @@
                 type: "GET",
                 url: "/vtp/good-content/"+row.id,
                 success: function (result) {
-                    $detail.html('<table></table>').find('table').bootstrapTable({
-                    classes: 'table table-bordered table-hover table-condensed', 
-                    rowStyle: vtpIndexTakeStyle,
-                    columns: [{
-                        field: 'vtpg.good.code',
-                        title: 'Артикул',
-                        formatter: 'goodFormatter'
-                    }, {
-                        field: 'vtpg.good.producer.name',
-                        title: 'Производитель'
-                    }, {
-                        field: 'quantity',
-                        title: 'Количество',
-                        width: 200,
-                        align: 'right'
-                    }, {
-                        field: 'price',
-                        title: 'Цена',
-                        width: 200,
-                        align: 'right'
-                    }, {
-                        field: 'amount',
-                        title: 'Сумма',
-                        width: 200,
-                        align: 'right'
-                    }],
-                    data: result
-                  });
-                }
+                    $detail.html('<table id="detail'+index+'"></table>').find('table').bootstrapTable({
+                        classes: 'table table-bordered table-hover table-condensed', 
+                        rowStyle: vtpIndexTakeStyle,
+                        editableUrl: "/vtp/vtp-good-editable/",
+                        idField: "vtpId",
+                        columns: [{
+                            field: 'vtpg.good.code',
+                            title: 'Артикул',
+                            formatter: 'goodFormatter'
+                        }, {
+                            field: 'vtpg.good.producer.name',
+                            title: 'Производитель'
+                        }, {
+                            field: 'quantity',
+                            title: 'Количество',
+                            width: 200,
+                            align: 'right',
+                            editable: true
+                        }, {
+                            field: 'price',
+                            title: 'Цена',
+                            width: 200,
+                            align: 'right',
+                            editable: true,
+                        }, {
+                            field: 'amount',
+                            title: 'Сумма',
+                            width: 200,
+                            align: 'right',
+                            formatter: "pgAmountFormatter"
+                        }],
+                        data: result,
+                        onEditableSave: function(field, geRow, oldValue, $el){
+                            $.ajax({
+                                type: "GET",
+                                url: "/vtp/info/"+row.id,
+                                success: function(info){
+//                                    $table.bootstrapTable('updateCell', {index: index, field: 'amount', value: info.amount, reinit: true});
+//                                    $table.bootstrapTable('collapseRowByUniqueId', index);
+//                                    $table.bootstrapTable('expandRowByUniqueId', index);
+                                }
+                            });
+                        }                        
+                    });
+                }    
             });
         }
     });
@@ -305,6 +321,16 @@
     function amountFormatter(value){
         return (Math.round(value*100)/100).toFixed(2);
     }    
+    
+    function pgAmountFormatter(value, row){
+        var result = 0;
+        if (row.price){
+            result = row.price.toString().replace(',', '.');
+        }    
+        var total = (Math.round(result*row.quantity*100)/100).toFixed(2);
+        return total;
+    }        
+
 
     function docNumFormatter(value, row){
         if (row.aplId > 0){

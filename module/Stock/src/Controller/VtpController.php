@@ -135,6 +135,34 @@ class VtpController extends AbstractActionController
         return new JsonModel($result);          
     }        
     
+    public function vtpGoodEditableAction()
+    {
+        if ($this->getRequest()->isPost()){
+            $data = $this->params()->fromPost();
+            if (!empty($data['name'] && !empty($data['pk']))){
+                $vtpGood = $this->entityManager->getRepository(VtpGood::class)
+                        ->find($data['pk']);
+                if ($vtpGood){
+                    $upd[$data['name']] = $data['value'];
+                    if ($data['name'] == 'quantity'){
+                        $value = (empty($data['value'])) ? 0:$data['value'];
+                        $upd['amount'] = $value*$vtpGood->getPrice();
+                    }
+                    if ($data['name'] == 'price'){
+                        unset($upd['price']);
+                        $value = (empty($data['value'])) ? 0:$data['value'];
+                        $upd['amount'] = $value*$vtpGood->getQuantity();
+                    }
+                    $this->vtpManager->updateVtpGood($vtpGood, $upd);
+                }    
+            }
+            
+        }
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }
+    
     public function repostAllVtpAction()
     {                
         $this->vtpManager->repostAllVtp();
@@ -447,6 +475,22 @@ class VtpController extends AbstractActionController
         );           
     }        
     
+    public function infoAction()
+    {
+        $vtpId = $this->params()->fromRoute('id', -1);
+        $vtp = $this->entityManager->getRepository(Vtp::class)
+                ->find($vtpId);        
+
+        if ($vtp == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        return new JsonModel(
+           $vtp->toLog()
+        );           
+    }
+
     public function updateAllInfoAction()
     {
         $this->vtpManager->updateAllInfo();

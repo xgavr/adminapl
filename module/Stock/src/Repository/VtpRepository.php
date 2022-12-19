@@ -342,7 +342,7 @@ class VtpRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('vg as vtpg, g, p, vg.amount/vg.quantity as price, vg.rowNo, vg.quantity, vg.amount')
+        $queryBuilder->select('vg as vtpg, g, p, vg.id as vtpId, vg.amount/vg.quantity as price, vg.rowNo, vg.quantity, vg.amount')
             ->from(VtpGood::class, 'vg')
             ->join('vg.good', 'g')    
             ->join('g.producer', 'p')    

@@ -250,7 +250,10 @@ if ($vtp){
         var data = $('#vtpgoodtable').bootstrapTable('getData');
         var amount = 0; var quantity = 0;
         $.each(data, function( index, value ) {
-            let result = value.price.toString().replace(',', '.');
+            var result = 0;
+            if (value.price){
+                result = value.price.toString().replace(',', '.');
+            }   
             amount += Math.round(result*value.quantity*100)/100;
             quantity += Math.round(value.quantity*100)/100; 
         });
@@ -323,7 +326,10 @@ if ($vtp){
         var data = $('#vtpgoodtable').bootstrapTable('getData');
         var result = [];
         $.each( data, function( index, row ) {
-            let rowPrice = row.price.toString().replace(',', '.');
+            var rowPrice = 0;
+            if (row.price){
+                rowPrice = row.price.toString().replace(',', '.');
+            }
             var newRow = {
                 good_id: row.vtpg.good.id,
                 quantity: row.quantity,
@@ -442,13 +448,18 @@ if ($vtp){
     }    
     
     function pgPriceFormatter(value, row){
-//        console.log(value);
-        let result = value.toString().replace(',', '.');
+        var result = 0;
+        if (value){
+            result = value.toString().replace(',', '.');
+        }    
         return (Math.round(result*100)/100).toFixed(2);
     }        
         
     function pgAmountFormatter(value, row){
-        let result = row.price.toString().replace(',', '.');
+        var result = 0;
+        if (row.price){
+            result = row.price.toString().replace(',', '.');
+        }    
         return (Math.round(result*row.quantity*100)/100).toFixed(2);
     }        
 

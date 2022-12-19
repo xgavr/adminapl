@@ -1,0 +1,130 @@
+<?php
+    use Application\Entity\Bid;
+?>
+<script>
+    function supplierOrders(orderId){
+        if (orderId){
+            $.get( '/order/supplier-orders/'+orderId, function( data ) {
+                bootbox.dialog({
+                    title: 'Заказано у поставщиков',
+                    message: data,
+                    size: 'large',
+                    buttons: {
+                        ok: {
+                            label: "OK",
+                            className: 'btn-info'
+                        }                    
+                    }
+                }); 
+            });    
+        }    
+    }
+    
+    $(document).on('click', '.supplier-order-show', function (e) {
+        var orderId = $(this).attr('order-id');
+        suppliersOrders(orderId);
+    });
+        
+    function orderDetail (index, row, $detail) {
+        $.ajax({
+            type: "GET",
+            url: "/order/good-content/"+row.id,
+            success: function (result) {
+                $detail.html('<table id="detail'+index+'"></table>').find('table').bootstrapTable({
+                    classes: 'table table-bordered table-hover table-condensed', 
+                    rowStyle: takeStyle,
+                    editableUrl: "/order/bid-editable/",
+                    idField: "id",
+                    columns: [{
+                        field: 'good.code',
+                        title: 'Артикул',
+                        formatter: 'goodFormatter'
+                    }, {
+                        field: 'good.producer.name',
+                        title: 'Производитель'
+                    }, {
+                        field: 'displayName',
+                        title: 'Наименование',
+                        formatter: "geNameFormatter",
+                        editable: true
+                    }, {
+                        field: 'num',
+                        title: 'Количество',
+                        width: 50,
+                        align: 'right',
+                        editable: true
+                    }, {
+                        field: 'price',
+                        title: 'Цена',
+                        width: 50,
+                        align: 'right',
+                        editable: true,
+                        formatter: 'gePriceFormatter'
+                    }, {
+                        field: 'amount',
+                        title: 'Сумма',
+                        width: 50,
+                        align: 'right',
+                        formatter: "geAmountFormatter"
+                    }],
+                    data: result,
+                    onEditableSave: function(field, geRow, oldValue, $el){
+                        $.ajax({
+                            type: "GET",
+                            url: "/order/info/"+row.id,
+                            success: function(info){
+//                                    $table.bootstrapTable('updateCell', {index: index, field: 'amount', value: info.amount, reinit: true});
+//                                    $table.bootstrapTable('collapseRowByUniqueId', index);
+//                                    $table.bootstrapTable('expandRowByUniqueId', index);
+                            }
+                        });
+                    }                        
+                });
+            }    
+        });
+    }
+        
+    function geNameFormatter(value, row){
+        if (value) return value;
+        if (row.good.tokenGroup){
+            if (row.good.tokenGroup.name) return row.good.tokenGroup.name;        
+        }    
+        if (row.good.name) return row.good.name; 
+        if (row.good.description)return row.good.description;
+        return 'Нет названия';
+    }    
+    
+    function geActiveFormatter(value, row){
+        var url = '/order/good-edit-form/';
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs order-good-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' unique-id="'+value+'"';
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        return btn;
+    }    
+    
+    function grActiveFormatter(value, row){
+        let btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs table-row-remove"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function gePriceFormatter(value){
+        return (Math.round(value)).toFixed(0);
+    }        
+
+    function geAmountFormatter(value, row){
+        return (Math.round(row.price*row.num*100)/100).toFixed(0);
+    }            
+</script>

@@ -434,6 +434,7 @@ class VtpManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->update('vtp_good', $data, ['id' => $vtpGood->getId()]);
+        $this->updateVtpAmount($vtpGood->getVtp());
         return;
     }
     

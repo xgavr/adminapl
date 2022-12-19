@@ -621,4 +621,46 @@ class OrderController extends AbstractActionController
         );           
     }        
     
+    public function bidEditableAction()
+    {
+        if ($this->getRequest()->isPost()){
+            $data = $this->params()->fromPost();
+            if (!empty($data['name'] && !empty($data['pk']))){
+                $bid = $this->entityManager->getRepository(Bid::class)
+                        ->find($data['pk']);
+                if ($bid){
+                    $upd[$data['name']] = $data['value'];
+                    if ($data['name'] == 'num'){
+                        $value = (empty($data['value'])) ? 0:$data['value'];
+                        $upd['num'] = $value;
+                    }
+                    if ($data['name'] == 'price'){
+                        $value = (empty($data['value'])) ? 0:$data['value'];
+                        $upd['price'] = $value;
+                    }
+                    $this->orderManager->updateBid($bid, $upd);
+                }    
+            }
+            
+        }
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+    
+    public function infoAction()
+    {
+        $orderId = $this->params()->fromRoute('id', -1);
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);        
+
+        if ($order == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        return new JsonModel(
+           $order->toLog()
+        );           
+    }    
 }

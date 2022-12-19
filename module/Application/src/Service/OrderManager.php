@@ -592,6 +592,22 @@ class OrderManager
         return;
     }
     
+    
+    /**
+     * Update bid.
+     * @param Bid $bid
+     * @param array $data
+     * @return null
+     */
+    public function updateBid($bid, $data)            
+    {
+        
+        $connection = $this->entityManager->getConnection(); 
+        $connection->update('bid', $data, ['id' => $bid->getId()]);
+        $this->updateOrderTotal($bid->getOrder());
+        return;
+    }
+    
     /**
      * Добавить строки заказа
      * @param Order $order

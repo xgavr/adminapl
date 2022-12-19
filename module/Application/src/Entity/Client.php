@@ -148,7 +148,7 @@ class Client {
 
     public function getName() 
     {
-        return $this->name;
+        return ($this->name) ? $this->name:'Nan';
     }
 
     public function getNameOrNan() 
