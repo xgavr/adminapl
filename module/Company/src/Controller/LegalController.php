@@ -599,8 +599,10 @@ class LegalController extends AbstractActionController
             $legal = $this->entityManager->getRepository(Legal::class)
                     ->findOneBy(['inn' => $inn]);
             if ($legal){
-                $contact = $legal->getContact();
-                return $this->redirect()->toRoute('contact', ['action' => 'view', 'id' => $contact->getId()]);                
+                $contacts = $legal->getContacts();
+                foreach ($contacts as $contact){
+                    return $this->redirect()->toRoute('contact', ['action' => 'view', 'id' => $contact->getId()]);                
+                }    
             }
         }
         
