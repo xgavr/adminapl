@@ -568,7 +568,7 @@
     }
 
     function formatCounterparty(value, row){
-        var result = value;
+        var result = '<a href="/legal/contact-by-inn?inn='+row.counterpartyInn+'" target="_blank">'+value+'</a>';
         if (row.counterpartyInn){
             result += '<br/>' + row.counterpartyInn;
         }

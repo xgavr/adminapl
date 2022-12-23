@@ -591,6 +591,23 @@ class LegalController extends AbstractActionController
         );           
     }
     
+    public function contactByInnAction()
+    {
+        $inn = $this->params()->fromQuery('inn', '');
+        
+        if ($inn){
+            $legal = $this->entityManager->getRepository(Legal::class)
+                    ->findOneBy(['inn' => $inn]);
+            if ($legal){
+                $contact = $legal->getContact();
+                return $this->redirect()->toRoute('contact', ['action' => 'view', 'id' => $contact->getId()]);                
+            }
+        }
+        
+        $this->getResponse()->setStatusCode(404);
+        return;                        
+    }
+
     public function contractFormAction()
     {
         $legalId = (int)$this->params()->fromRoute('id', -1);
