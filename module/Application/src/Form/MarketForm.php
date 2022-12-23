@@ -558,7 +558,7 @@ class MarketForm extends Form
                         'name'    => 'StringLength',
                         'options' => [
                             'min' => 1,
-                            'max' => 128
+//                            'max' => 128
                         ],
                     ],
                 ],
@@ -577,7 +577,7 @@ class MarketForm extends Form
                         'name'    => 'StringLength',
                         'options' => [
                             'min' => 1,
-                            'max' => 128
+//                            'max' => 128
                         ],
                     ],
                 ],

@@ -638,6 +638,10 @@ class OrderController extends AbstractActionController
                         $value = (empty($data['value'])) ? 0:$data['value'];
                         $upd['price'] = $value;
                     }
+                    if ($data['name'] == 'displayName'){
+                        unset($upd[$data['name']]);
+                        $upd['display_name'] = $data['value'];
+                    }
                     $this->orderManager->updateBid($bid, $upd);
                 }    
             }

@@ -73,6 +73,7 @@ class PtuRepository extends EntityRepository{
         if (is_array($params)){
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('p.'.$params['sort'], $params['order']);
+                $queryBuilder->addOrderBy('p.id', $params['order']);
             }            
             if (!empty($params['officeId'])){
                 $office = $entityManager->getRepository(Office::class)
