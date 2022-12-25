@@ -224,6 +224,7 @@ class UserController extends AbstractActionController
             $form->setData(array(
                     'aplId' => $user->getAplId(),
                     'full_name'=>$user->getFullName(),
+                    'birthday' => $user->getBirthday(),
                     'email'=>$user->getEmail(),
                     'sign' => $user->getSign(),
                     'mailPassword' => $this->userManager->userMailPassword($user),

@@ -40,7 +40,8 @@ $form->get('status')->setAttributes([
     ]);
 
 $form->get('roles')->setAttributes([
-    'class'=>'form-control'
+    'class'=>'form-control',
+    'rows' => 20,
     ]);
 
 $form->get('office')->setAttributes([
@@ -106,8 +107,15 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('email')); ?>                  
 
             <?= $this->formLabel($form->get('mailPassword')); ?>
-            <?= $this->formElement($form->get('mailPassword')); ?>
             <?= $this->formElementErrors($form->get('mailPassword')); ?>                  
+            <div class="input-group">
+                <?= $this->formElement($form->get('mailPassword')); ?>
+                <span class="input-group-btn">
+                    <button class="btn btn-default password-generator" type="button" data-toggle="tooltip" data-placement="top" title="Генератор пароля">
+                        <span class="glyphicon glyphicon-qrcode"></span>
+                    </button>
+                </span>                                                            
+            </div>
         </div>
         
         <div class="form-group">
@@ -128,4 +136,20 @@ $form->prepare();
         });
         
     });
+    
+    $('.password-generator').on('click', function() {
+        $.ajax({
+            type: 'GET',
+            url: '/admin/password-generator/'
+        })
+            .done(function (data) {
+                if (data){
+                    $('input[name=mailPassword]').val(data['password']);
+                }
+            })
+            .fail(function (e) {
+                console.log(e);
+            });    
+    });    
+    
 </script>
