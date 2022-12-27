@@ -103,20 +103,68 @@ $form->prepare();
     $( document ).ready(function() {
         $('#comment').focus();
     });
+    
     $('.local-comment').on('click', function() {
         let str = $(this).html();
         $('#comment').val($('#comment').val() + ' ' + str);
-    })
+    });
+    
     $('.clear-button').on('click', function() {
         $('#comment').val('');
-    })
+    });
+    
+    function updateCommentCell(comments){
+        if ($table){
+            <?php if ($order):?>
+                $table.bootstrapTable('updateCellByUniqueId', {id: <?= $order->getId() ?>, field: 'comments', value: comments});
+            <?php endif; ?>            
+        }
+    }
+    
+    function addOrderComment(commentId, comments){
+        $('#orderComments').prepend('<li><a href="#" data-pk='+commentId+' class="new-manager-comment">'+$('#comment').val()+'</a></li>');
+        $('#comment').val('');
 
-    $('#comment-submit').on('click', function() {
-        if ($('#comment').val()){
-            $('#orderComments').prepend('<li><a href="#" data-type="textarea" class="new-manager-comment">'+$('#comment').val()+'</a></li>');
-            $('#comment').val('');
-        }    
-        $('.new-manager-comment').editable();
+        $('.new-manager-comment').editable({
+            type: 'textarea',
+            placement: 'bottom',
+            url: '/comments/update/',
+            name: 'comment',
+            success: function(response, newValue){
+                updateCommentCell(response.comments);
+            }
+        });                    
+        
+        updateCommentCell(comments);
+        
         $('#orderCommentModal').modal('hide');
+    }
+    
+    function submitOrderComment(){
+        $('#comment-submit').prop('disabled', true);
+        var data = {comment: $('#comment').val()};
+        $.ajax({
+            type: 'POST',
+            url: '/comments/add-order-comment/<?= ($order) ? $order->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                $('#comment-submit').prop('disabled', false);
+                addOrderComment(data.commentId, data.comments);
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+                $('#comment-submit').prop('disabled', false);
+            });   
+    }    
+
+    $('#comment-submit').on('click', function() {    
+        if ($('#comment').val()){
+            <?php if ($order):?>
+               submitOrderComment();     
+            <?php else:?>
+                addOrderComment();
+            <?php endif;?>
+        }        
     });    
 </script>

@@ -13,31 +13,3 @@
         </ul>
     <?php endif; ?>
 </div>
-
-<script>
-$(document).on('click', '.order-comment-modal-show', function (e) {
-    var url = $(e.currentTarget).attr('modal-url');
-    showFormDialog({
-        id: 'orderCommentModal',
-        url: url,
-        zIndex: 9999,
-        width: $(window).width()-150
-    });
-});  
-
-$(function(){
-    $('#managerCommentBtn').on('click', function(){
-        if ($('#note').val()){
-            $('#orderComments').prepend('<li><a href="#" data-type="textarea" class="new-manager-comment">'+$('#note').val()+'</a></li>');
-            $('#note').val('');
-        }    
-        $('.new-manager-comment').editable();
-    });
-    
-    $('#newComment').editable({
-        emptytext: "Добавить комментарий",
-        success: function(response, newValue) {
-        }
-    });
-});
-</script>

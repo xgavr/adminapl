@@ -141,6 +141,12 @@ class CommentController extends AbstractActionController
 
     public function editLocalFormAction()
     {        
+        $orderId = (int)$this->params()->fromRoute('id', -1);        
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }    
+        
         $form = new CommentForm();
 
         if ($this->getRequest()->isPost()) {
@@ -159,10 +165,38 @@ class CommentController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
+            'order' => $order,
             'currentUser' => $this->commentManager->currentUser(),
         ]);                
         
     }
+    
+    public function orderFormAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($orderId <= 0){
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }    
+        
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);
+        
+        if ($order == null){
+            $this->getResponse()->setStatusCode(404);
+            return;            
+        }
+        $comments = $this->entityManager->getRepository(Comment::class)
+                ->findBy(['order' => $order->getId()], ['id' => 'DESC']);
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+            'order' => $order,
+            'comments' => $comments,
+        ]);                
+    }    
 
     public function viewAction() 
     {       
@@ -186,4 +220,64 @@ class CommentController extends AbstractActionController
         ]);
     }      
     
+    public function addOrderCommentAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($orderId <= 0){
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }    
+        
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);
+        
+        if ($order == null){
+            $this->getResponse()->setStatusCode(404);
+            return;            
+        }
+        $comments = [];
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            if ($order){
+                $comment = $this->commentManager->addOrderComment($order, $data);
+                $commentsQuery = $this->entityManager->getRepository(Comment::class)
+                        ->orderComments($order);
+            }
+        }    
+        
+        return new JsonModel([
+            'commentId' => $comment->getId(),
+            'comments' => $commentsQuery->getResult(2),
+        ]);                   
+    }
+    
+    public function updateAction()
+    {
+        $commentId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($commentId > 0){
+            $comment = $this->entityManager->getRepository(Comment::class)
+                    ->find($commentId);
+        }    
+                
+        if ($this->getRequest()->isPost()) {            
+            $data = $this->params()->fromPost();
+            if (!$comment && !empty($data['pk'])){
+                $comment = $this->entityManager->getRepository(Comment::class)
+                        ->find($data['pk']);                
+            }
+            $upd['comment'] = $data['value'];
+            if ($comment){
+                $comment = $this->commentManager->updateComment($comment, $upd);
+                $commentsQuery = $this->entityManager->getRepository(Comment::class)
+                        ->orderComments($comment->getOrder());
+            }
+        }    
+        
+        return new JsonModel([
+            'comments' => $commentsQuery->getResult(2),
+        ]);                   
+    }    
 }

@@ -9,6 +9,8 @@
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Comment;
+use Application\Entity\Order;
+
 /**
  * Description of CommentRepository
  *
@@ -34,6 +36,28 @@ class CommentRepository  extends EntityRepository{
             ->leftJoin('c.client', 'client')
             ->leftJoin('c.order', 'o')    
             ->addOrderBy('c.id', 'DESC')    
+                ;
+        
+        return $queryBuilder->getQuery();
+    }       
+    
+    /**
+     * Комментарии заказа запрос
+     * @param Order $order
+     * @return Query
+     * 
+     */
+    public function orderComments($order)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+            ->from(Comment::class, 'c')
+            ->where('c.order = :orderId')
+            ->setParameter('orderId', $order->getId())    
+            ->addOrderBy('c.id', 'ASC')    
                 ;
         
         return $queryBuilder->getQuery();

@@ -1,13 +1,13 @@
 
 <script>
     $(document).on('click', '.sms-message-modal-show', function (e) {
-        let orderId = $(this).attr('order-id');
-        let phone = $(this).attr('phone');
+        var orderId = $(this).attr('order-id');
+        var phone = $(this).attr('phone');
         <?php if ($idNode):?>
-            let orderId = $('#<?= $idNode ?>').val();
+            orderId = $('#<?= $idNode ?>').val();
         <?php endif; ?>    
         <?php if ($phoneNode):?>
-            let phone = $('#<?= $phoneNode ?>').val();
+            phone = $('#<?= $phoneNode ?>').val();
         <?php endif; ?>    
         if (orderId){
             var url = $(e.currentTarget).attr('modal-url');

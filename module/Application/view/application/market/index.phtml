@@ -16,6 +16,10 @@ $this->pageBreadcrumbs()->setItems([
     <button class="btn btn-default market-modal-show" type="button" modal-url="/market/edit-form">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"> Добавить</span>
     </button>                
+    <button value="/ozon-zeroing" class="btn btn-default zeroing-ozon"
+            title="Обновить остатки в Озоне">
+        <span class="glyphicon glyphicon-remove-circle"> Обнулить OZON</span>
+    </button> 
 </p>
 
 <table class="table table-striped">
@@ -197,7 +201,7 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     $('.refresh-ozon').on('click', function(e) {
-        var url = e.currentTarget.value;
+        var url = $(this).attr('value');
         if (url){
             var dialog = bootbox.dialog({
                 message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
@@ -223,6 +227,30 @@ $this->pageBreadcrumbs()->setItems([
         }        
     });     
     
+    $('.zeroing-ozon').on('click', function(e) {
+        var url = $(this).attr('value');
+        if (url){
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: false
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (obj) {
+                    dialog.modal('hide');
+                    var message = 'Обновлено!';
+                    dialog = bootbox.alert('<p><div><i class="fa fa-spin fa-spinner"></i>'+message+'</div></p>');
+                })
+                .fail(function () {
+                    dialog.modal('hide');
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    });     
+
     $('.rate-select').on('click', function(e) {
         var url = e.currentTarget.value;
         bootbox.prompt({

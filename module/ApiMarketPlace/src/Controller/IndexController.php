@@ -151,6 +151,12 @@ class IndexController extends AbstractActionController
         return new JsonModel($result);
     }
     
+    public function ozonZeroingAction()
+    {
+        $result = $this->ozonService->zeroing();
+        return new JsonModel(['ok']);
+    }
+
     public function ozonUpdatePriceAction()
     {
         $goodId = (int)$this->params()->fromRoute('id', -1);

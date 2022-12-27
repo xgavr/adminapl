@@ -10,6 +10,7 @@ namespace ApiMarketPlace\Service;
 
 use Gam6itko\OzonSeller\Service\V2\CategoryService as CategoryServiceV2;
 use Gam6itko\OzonSeller\Service\V3\CategoryService as CategoryServiceV3;
+use Gam6itko\OzonSeller\Service\V2\ProductService as ProductService2;
 use Gam6itko\OzonSeller\Service\V1\ProductService;
 use GuzzleHttp\Client as GuzzleClient;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
@@ -144,6 +145,29 @@ class OzonService {
 
         return $result;        
     }
+    
+    /**
+     * Товар на складах
+     * @param string $last_id
+     * @param integer $limit
+     */
+    private function stocks($last_id = '', $limit = 1000)
+    {
+        $settings = $this->adminManager->getApiMarketPlaces();
+
+        $config = [
+            'clientId' => $settings['ozon_client_id'],
+            'apiKey' => $settings['ozon_api_key'],
+        ];
+        
+        $client = new Psr18Client();
+        $svcProduct = new ProductService2($config, $client);
+
+        $result = $svcProduct->list(['last_id' => $last_id, 'limit' => $limit]);
+
+        return $result;        
+    }
+    
 
     /**
      * Обновить цену товара
@@ -205,6 +229,46 @@ class OzonService {
         return $result;        
     }
 
+    /**
+     * Обнулить остатки
+     */
+    public function zeroing()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+
+        $last_id = '';
+        $result = [];
+        $stocks = [];
+        while (true){
+            $list = $this->stocks($last_id);
+            $last_id = $list['last_id'];
+            $items = $list['items'];
+            if (count($items)){
+                foreach ($items as $item){
+                    
+                    $stocks[] = [
+                        'offer_id' => $item['offer_id'],
+                        'product_id' => $item['product_id'],
+                        'stock' => 0,
+                    ];
+                    
+                    if (count($stocks) == self::OZON_MAX_STOCK_UPDATE){
+                        $result = $this->updateStock(['stocks' => $stocks]);
+                        $stocks = [];
+                    }
+                }
+            } else {
+                return $result;
+            }
+        }    
+        
+        if (count($stocks)){
+            $result = $this->updateStock(['stocks' => $stocks]);
+        }
+        
+        return $result;
+    }
     
     /**
      * Получить файл лога

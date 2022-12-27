@@ -23,6 +23,16 @@ return [
                     ],
                 ],
             ],
+            'ozon-zeroing' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/ozon-zeroing',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'ozonZeroing',
+                    ],
+                ],
+            ],
             'sbermarket-order-new' => [
                 'type' => Literal::class,
                 'options' => [
