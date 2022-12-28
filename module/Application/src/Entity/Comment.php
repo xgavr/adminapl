@@ -208,4 +208,19 @@ class Comment {
         //$oem->addComment($this);
     }     
         
+    /**
+     * Лог
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'aplId' => $this->getAplId(),
+            'client' => $this->getClient()->getId(),
+            'comment' => $this->getComment(),
+            'order' => $this->getOrder()->getId(),
+            'user' => $this->getUser()->getId(),
+            'userName' => $this->getUserName(),
+        ];
+    }        
 }

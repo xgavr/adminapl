@@ -28,6 +28,7 @@ use Application\Entity\Bid;
 use Stock\Entity\Vt;
 use Stock\Entity\VtGood;
 use Cash\Entity\CashDoc;
+use Application\Entity\Comment;
 
 /**
  * Description of LogManager
@@ -322,6 +323,34 @@ class LogManager {
         return;
     }           
     
+    /**
+     * Добавить запись в лог order
+     * @param Comment $comment
+     * @param integer $status 
+     */
+    public function infoComment($comment, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            
+            $commentLog = ['comment' => $comment->toLog()];
+            
+            $data = [
+                'log_key' => $comment->getOrder()->getLogKey(),
+                'message' => Json::encode($commentLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;
+    }           
+
     /**
      * Добавить запись в лог vt
      * @param Vt $vt

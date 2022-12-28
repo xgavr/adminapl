@@ -11,6 +11,7 @@ use Application\Entity\Comment;
 use Application\Entity\Order;
 use Application\Entity\Client;
 use User\Entity\User;
+use Admin\Entity\Log;
 
 /**
  * Description of CommentManager
@@ -65,6 +66,8 @@ class CommentManager
         $this->entityManager->persist($comment);
         $this->entityManager->flush($comment);
         
+        $this->logManager->infoComment($comment, Log::STATUS_NEW);
+        
         return $comment;
     }
     
@@ -104,6 +107,8 @@ class CommentManager
         
         $this->entityManager->persist($comment);
         $this->entityManager->flush($comment);
+        
+        $this->logManager->infoComment($comment, Log::STATUS_UPDATE);
         
         return $comment;
     }

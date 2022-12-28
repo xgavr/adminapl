@@ -2,16 +2,16 @@
 ?>
 <div class="row">
     <div class="col-xs-2">
-        <nobr><?= $this->dateCreated ?></nobr>
-    </div>
-    <div class="col-xs-1">
-        <?= $this->user ?>
+        <nobr><small><?= date('d.m.y', strtotime($this->dateCreated)) ?> <sup><?= date('H:i', strtotime($this->dateCreated)) ?></sup> <?= $this->user ?></small></nobr>
     </div>
     <div class="col-xs-2">
         <?= $this->status ?>
     </div>
     <div class="col-xs-6">
         <?= $this->message ?>
+    </div>
+    <div class="col-xs-1">
+        
     </div>
     <div class="col-xs-1">
         

@@ -39,6 +39,7 @@ class LogRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $ident = $log->getIdentFromLogKey();
         $message = $log->getMessageAsArray();
+        $messages = [];
         switch ($ident){
             case 'rate':
                 $name = "<a href='/rate/view/{$log->getIdFromLogKey()}'>{$message['name']}</a>";
@@ -92,6 +93,13 @@ class LogRepository extends EntityRepository{
                 $messages[] = $message['comment'];
                 return implode('; ', $messages);
                 
+            case 'ord':
+                if (!empty($message['comment'])){
+                    $messages[] = 'Комментарий: '.$message['comment']['comment'];
+                }
+//                $messages[] = $message['comment'];
+                return implode('; ', $messages);
+
             default: break;
         }
         

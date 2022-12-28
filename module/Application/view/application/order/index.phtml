@@ -328,7 +328,7 @@ $this->pageBreadcrumbs()->setItems([
 
     function commentFormatter(value, row){
         var result = '';
-        var commentLength = '+';
+        var commentLength = '0';
         if (value.length){
             commentLength = value.length;
             $.each(value, function( index, comment ) {
@@ -337,7 +337,8 @@ $this->pageBreadcrumbs()->setItems([
         }    
         
         return [
-            '<a href="#" class="comments-modal-show" modal-url="/comments/order-form/" order-id="'+row.id+'">('+commentLength+')</a>',
+//            '<a href="#" class="order-comment-modal-show" modal-url="/comments/edit-local-form/" order-id="'+row.id+'" title="Добавить комментарий">(+)</a>',
+            '<a href="#" class="comments-modal-show" modal-url="/comments/order-form/" order-id="'+row.id+'" title="Комментарии">('+commentLength+')</a>',
             //'(' + value.length + ')',
             result
         ].join(' ');
@@ -401,9 +402,9 @@ $this->pageBreadcrumbs()->setItems([
             var rowId = $(rowElem).attr('data-index');
             return $table.bootstrapTable('getData')[rowId];
         },
-//        actionsGroups: [
-//           ['statusActiv', 'statusRetired'],
-//        ],      
+        actionsGroups: [
+           ['addComment', 'comments', 'history']
+        ],      
         actions: {
             statusNew: {
                 name: 'Новый',
@@ -482,6 +483,48 @@ $this->pageBreadcrumbs()->setItems([
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
                 }                
+            },
+            addComment: {
+                name: 'Добавить комментарий',
+                iconClass: 'glyphicon glyphicon-plus',
+                onClick: function (row){
+                    var url = '/comments/edit-local-form/'+row.id;
+                    showFormDialog({
+                        id: 'orderCommentModal',
+                        url: url,
+                        zIndex: 9999,
+                        width: $(window).width()-150
+                    });
+                }
+            },    
+            comments: {
+                name: 'Комментарии',
+                iconClass: 'glyphicon glyphicon-list-alt',
+                onClick: function (row){
+                    var url = '/comments/order-form/'+row.id;
+                    showFormDialog({
+                        id: 'orderCommentsModal',
+                        url: url,
+                        zIndex: 8888
+                    });
+                }
+            },    
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.id+"?docType=ord",
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
+                }
             }
         }
     });    
