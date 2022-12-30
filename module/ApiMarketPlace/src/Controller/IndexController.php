@@ -157,6 +157,13 @@ class IndexController extends AbstractActionController
         return new JsonModel(['ok']);
     }
 
+    public function ozonPostingListAction()
+    {
+        $result = $this->ozonService->postingList();
+        var_dump($result); exit;
+        return new JsonModel($result);
+    }
+
     public function ozonUpdatePriceAction()
     {
         $goodId = (int)$this->params()->fromRoute('id', -1);

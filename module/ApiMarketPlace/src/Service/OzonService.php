@@ -10,6 +10,7 @@ namespace ApiMarketPlace\Service;
 
 use Gam6itko\OzonSeller\Service\V2\CategoryService as CategoryServiceV2;
 use Gam6itko\OzonSeller\Service\V3\CategoryService as CategoryServiceV3;
+use Gam6itko\OzonSeller\Service\V3\Posting\FbsService;
 use Gam6itko\OzonSeller\Service\V2\ProductService as ProductService2;
 use Gam6itko\OzonSeller\Service\V1\ProductService;
 use GuzzleHttp\Client as GuzzleClient;
@@ -168,6 +169,34 @@ class OzonService {
         return $result;        
     }
     
+    /**
+     * Список отправлений
+     * @param integer $limit
+     */
+    public function postingList($limit = 1000)
+    {
+        $settings = $this->adminManager->getApiMarketPlaces();
+
+        $config = [
+            'clientId' => $settings['ozon_client_id'],
+            'apiKey' => $settings['ozon_api_key'],
+        ];
+        
+        $client = new Psr18Client();
+        $svcProduct = new FbsService($config, $client);
+
+        $result = $svcProduct->list(['dir' => 'ASC', 'limit' => $limit, 'offset' => 0, 
+            'filter' => [
+                'since' => (new \DateTime('now - 90 days'))->format(DATE_W3C),
+                'to' => (new \DateTime('now'))->format(DATE_W3C),
+            ],
+            'with' => [
+                'financial_data' => true,
+            ],
+        ]);
+
+        return $result;        
+    }
 
     /**
      * Обновить цену товара
