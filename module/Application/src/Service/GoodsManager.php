@@ -151,6 +151,19 @@ class GoodsManager
     }
     
     /**
+     * Обновить цену для торговых площадок
+     * 
+     * @param Goods $good
+     * @param float $marketPlacePrice
+     */
+    public function updateMarketPlacePrice($good, $marketPlacePrice)
+    {
+        $good->setMarketPlacePrice($marketPlacePrice);
+        $this->entityManager->persist($good);
+        $this->entityManager->flush($good);        
+    }
+
+    /**
      * Проверка возможности удаления товара
      * 
      * @param Goods $good

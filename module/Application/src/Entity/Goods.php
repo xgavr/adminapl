@@ -195,6 +195,11 @@ class Goods {
     protected $fixPrice = 0.0;
 
     /**
+     * @ORM\Column(name="market_place_price")   
+     */
+    protected $marketPlacePrice = 0.0;
+
+    /**
      * @ORM\Column(name="markup")   
      */
     protected $markup = 0.0;
@@ -529,6 +534,16 @@ class Goods {
     public function setFixPrice($fixPrice)
     {
         $this->fixPrice = $fixPrice;
+    }
+
+    public function getMarketPlacePrice()
+    {
+        return $this->marketPlacePrice;
+    }
+    
+    public function setMarketPlacePrice($marketPlacePrice)
+    {
+        $this->marketPlacePrice = $marketPlacePrice;
     }
 
     public function getMarkup()

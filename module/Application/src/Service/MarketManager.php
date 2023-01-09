@@ -581,7 +581,7 @@ class MarketManager
                 $sheet->setCellValue("E$k", implode(';', $images));
             }
             $sheet->setCellValue("F$k", ltrim($rawprices['realrest'], '='));
-            $sheet->setCellValue("G$k", $market->getExtraPrice($opts, $lot));
+            $sheet->setCellValue("G$k", $market->getExtraPrice($opts, $lot, $good['marketPlacePrice']));
     //                $sheet->setCellValue("G$k", $rawprice->getRealPrice());
             $sheet->setCellValue("H$k", $good['aplId']);
 
@@ -680,7 +680,7 @@ class MarketManager
             $offer->setId($good['aplId'])
                 ->setAvailable(true)
                 ->setUrl(self::APL_BASE_URL.'/catalog/view/id/'.$good['aplId'].'?utm_source='.$market->getId().'&utm_term='.$good['aplId'])
-                ->setPrice($market->getExtraPrice($opts, $lot))
+                ->setPrice($market->getExtraPrice($opts, $lot, $good['marketPlacePrice']))
                 ->setCurrencyId('RUR')
                 ->setCategoryId($categoryId)
                 ->setDelivery(true)

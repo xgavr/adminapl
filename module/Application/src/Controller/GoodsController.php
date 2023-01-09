@@ -1003,6 +1003,11 @@ class GoodsController extends AbstractActionController
             'value' =>  '<a href="#" class="editable" data-type="text" data-pk="'.$good->getId().'" data-name="fixPrice" data-url="/goods/update-fix-price">'.$good->getFixPrice().'</a>',
         ];
         $result[] = [
+            'name' =>  'Цена для торговых площадок',
+            'percent' => '',
+            'value' =>  '<a href="#" class="editable" data-type="text" data-pk="'.$good->getId().'" data-name="marketPlacePrice" data-url="/goods/update-market-place-price">'.$good->getMarketPlacePrice().'</a>',
+        ];
+        $result[] = [
             'name' =>  'Расценка',
             'percent' => '',
             'value' => ($rate) ? $rate->getLink():'нет',
@@ -1796,7 +1801,7 @@ class GoodsController extends AbstractActionController
             $data = $this->params()->fromPost();
             $goodId = $data['pk'];
             $good = $this->entityManager->getRepository(Goods::class)
-                    ->findOneById($goodId);
+                    ->find($goodId);
                     
             if ($good){
                 $this->rateManager->updateFixPrice($good, (float) $data['value']);                    
@@ -1806,6 +1811,23 @@ class GoodsController extends AbstractActionController
         exit;
     }
     
+    public function updateMarketPlacePriceAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $goodId = $data['pk'];
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+                    
+            if ($good){
+                $this->goodsManager->updateMarketPlacePrice($good, (float) $data['value']);                    
+            }    
+        }
+        
+        return new JsonModel(['ok']);          
+    }
+
     public function restAction()
     {
         $goodId = (int)$this->params()->fromRoute('id', -1);

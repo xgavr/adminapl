@@ -384,13 +384,18 @@ class MarketPriceSetting {
      * Получить цену с дополнительной наценкой
      * @param array $opts Колонки цен
      * @param integer $lot минимальное количество
+     * @param float $marketPlacePrice цена для торговых площадок
      * @return float
      */
-    public function getExtraPrice($opts, $lot = 1)
+    public function getExtraPrice($opts, $lot = 1, $marketPlacePrice = 0)
     {
         $result = $opts[$this->pricecol];
         if ($this->extraMargin){
             $result += round($result*$this->extraMargin/100, -1);
+        }
+        
+        if (!empty($marketPlacePrice)){
+            $result = $marketPlacePrice;
         }
         
         if ($this->considerSet == $this::CONSIDER_SET){
