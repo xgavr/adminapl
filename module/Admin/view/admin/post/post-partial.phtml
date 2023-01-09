@@ -2,10 +2,10 @@
     $(document).on('click', '.post-message-modal-show', function (e) {
         var orderId = $(this).attr('order-id');
         var email = $(this).attr('email');
-        <?php if ($idNode):?>
+        <?php if (!empty($idNode)):?>
             orderId = $('#<?= $idNode ?>').val();
         <?php endif; ?>    
-        <?php if ($emailNode):?>
+        <?php if (!empty($emailNode)):?>
             email = $('#<?= $emailNode ?>').val();
         <?php endif; ?>    
         if (orderId){

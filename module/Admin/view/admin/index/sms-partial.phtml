@@ -3,10 +3,10 @@
     $(document).on('click', '.sms-message-modal-show', function (e) {
         var orderId = $(this).attr('order-id');
         var phone = $(this).attr('phone');
-        <?php if ($idNode):?>
+        <?php if (!empty($idNode)):?>
             orderId = $('#<?= $idNode ?>').val();
         <?php endif; ?>    
-        <?php if ($phoneNode):?>
+        <?php if (!empty($phoneNode)):?>
             phone = $('#<?= $phoneNode ?>').val();
         <?php endif; ?>    
         if (orderId){
