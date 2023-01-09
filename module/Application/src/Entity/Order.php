@@ -19,6 +19,7 @@ use Stock\Entity\Vt;
 use Admin\Entity\Wammchat;
 use Admin\Filter\ClickFilter;
 use Laminas\Json\Encoder;
+use Laminas\Json\Decoder;
 
 
 /**
@@ -180,6 +181,11 @@ class Order {
      * @ORM\Column(name="status_account")  
      */
     protected $statusAccount;    
+
+    /**
+     * @ORM\Column(name="depend_info")  
+     */
+    protected $dependInfo;    
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\ContactCar", inversedBy="orders") 
@@ -596,6 +602,29 @@ class Order {
     {
         $this->total = $total;
     }     
+    
+    public function getDependInfo()
+    {
+        return $this->dependInfo;
+    }
+    
+    public function getDependInfoAsArray()
+    {
+        if ($this->dependInfo){
+            return Decoder::decode($this->dependInfo, \Laminas\Json\Json::TYPE_ARRAY);
+        }
+        
+        return [];
+    }
+    
+    /**
+     * Записать зависимые записи
+     * @param array $dependInfo
+     */
+    public function setDependInfo($dependInfo)
+    {
+        $this->dependInfo = Encoder::encode($dependInfo);
+    }
     
     /**
      * Returns status.
@@ -1420,6 +1449,7 @@ class Order {
             'bankCity' => ($this->getBankAccount()) ? $this->getBankAccount()->getCity():null,
             'goods' => [],
             'selections' => $this->getSelectionsAsString(),
+            'dependInfo' => $this->getDependInfoAsArray(),
         ];
     }    
 
@@ -1439,6 +1469,7 @@ class Order {
             'info' => $this->getInfo(),
             'office' => $this->getOffice()->getId(),
             'status' => $this->getStatus(),
+            'dependInfo' => $this->getDependInfoAsArray(),
             'goods' => [],
         ];
     }        

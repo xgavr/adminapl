@@ -213,4 +213,16 @@ class Email {
         return 'Unknown';
     }    
 
+    /**
+     * 
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'name' => $this->getName(),
+            'id' => $this->getId(),
+            'contact' => $this->getContact()->getId(),
+        ];
+    }
 }

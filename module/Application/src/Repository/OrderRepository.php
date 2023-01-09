@@ -214,14 +214,14 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('o, c, u, off, p, e, cc, m, sk, com')
+        $queryBuilder->select('o, c, u, off, cc, m, sk')
             ->from(Order::class, 'o')
             ->leftJoin('o.contact', 'c')
-            ->leftJoin('o.comments', 'com')
+//            ->leftJoin('o.comments', 'com')
             ->leftJoin('o.contactCar', 'cc')
             ->leftJoin('cc.make', 'm')    
-            ->leftJoin('c.phones', 'p')
-            ->leftJoin('c.emails', 'e')    
+//            ->leftJoin('c.phones', 'p')
+//            ->leftJoin('c.emails', 'e')    
             ->leftJoin('o.user', 'u')
             ->leftJoin('o.skiper', 'sk')
             ->leftJoin('o.office', 'off')

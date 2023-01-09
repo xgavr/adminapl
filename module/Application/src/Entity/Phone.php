@@ -131,5 +131,18 @@ class Phone {
         $this->contact = $contact;
         $contact->addPhone($this);
     }     
-        
+    
+    /**
+     * 
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'name' => $this->getName(),
+            'comment' => $this->getComment(),
+            'id' => $this->getId(),
+            'contact' => $this->getContact()->getId(),
+        ];
+    }        
 }

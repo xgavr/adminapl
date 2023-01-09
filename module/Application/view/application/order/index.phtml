@@ -274,9 +274,11 @@ $this->pageBreadcrumbs()->setItems([
         var result = [];
         var name = (value) ? value:'Nan';
         result.push('<a style="text-transform:capitalize" href="/contact/view/' + row.contact.id + '" target="_blank">' + name + '</a>');
-        
+
+        var depend = $.parseJSON(row.dependInfo);
         var phones = [];
-        $.each(row.contact.phones, function( index, phone ) {
+        
+        $.each(depend.phones, function( index, phone ) {
             phones.push('<a href="#" class="sms-message-modal-show" modal-url="/admin/sms-form/" phone="'+phone.name+'" order-id="'+row.id+'">'+phone.name.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2-$3')+'</a>');
             if (phones.length > 1){
                 return false;
@@ -284,7 +286,7 @@ $this->pageBreadcrumbs()->setItems([
         });
         
         var emails = [];
-        $.each(row.contact.emails, function( index, email ) {
+        $.each(depend.emails, function( index, email ) {
             emails.push('<a href="#" class="post-message-modal-show" modal-url="/post/post-form/" email="'+email.name+'" order-id="'+row.id+'">'+email.name+'</a>');
             return false;
         });
@@ -329,9 +331,11 @@ $this->pageBreadcrumbs()->setItems([
     function commentFormatter(value, row){
         var result = '';
         var commentLength = '0';
-        if (value.length){
-            commentLength = value.length;
-            $.each(value, function( index, comment ) {
+        var depend = $.parseJSON(row.dependInfo);
+        var comments = depend.comments;
+        if (comments.length){
+            commentLength = comments.length;
+            $.each(comments, function( index, comment ) {
                 result = comment.comment;
             });
         }    

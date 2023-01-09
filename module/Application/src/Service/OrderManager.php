@@ -37,6 +37,7 @@ use Laminas\Json\Decoder;
 use Stock\Entity\Comiss;
 use Stock\Entity\Register;
 use Stock\Entity\Reserve;
+use Laminas\Json\Encoder;
 
 /**
  * Description of OrderService
@@ -1053,6 +1054,51 @@ class OrderManager
         return;
     }
     
+    /**
+     * Подготовить зависимые данные
+     * @param Order $order
+     * @return array
+     */
+    private function dependInfo($order)
+    {
+        $result = [
+            'comments' => [],
+            'phones' => [],
+            'emails' => [],
+        ];
+        
+        foreach ($order->getComments() as $comment){
+            $result['comments'][] = $comment->toLog();
+        }
+        
+        foreach ($order->getContact()->getPhones() as $phone){
+            $result['phones'][] = $phone->toLog();
+        }
+
+        foreach ($order->getContact()->getEmails() as $email){
+            $result['emails'][] = $email->toLog();
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Обновить зависимые записи
+     * @param Order $order
+     * @param bool $flush
+     */
+    public function updateDependInfo($order, $flush = false)
+    {
+
+        $order->setDependInfo($this->dependInfo($order));
+        
+        if ($flush){
+            $this->entityManager->persist($order);
+            $this->entityManager->flush($order);
+        }
+        
+        return;
+    }
     
     /**
      * Обновить итог по заказу
@@ -1076,7 +1122,8 @@ class OrderManager
         
         $order->setTotal($total + $order->getShipmentTotal());
 
-
+        $this->updateDependInfo($order);
+        
         $this->entityManager->persist($order);
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
@@ -1105,8 +1152,11 @@ class OrderManager
         if (count($result)){
             $total = $result[0]['total'];
         }
+        
+        $dependInfo = $this->dependInfo($order);
+        
         $this->entityManager->getConnection()
-                ->update('orders', ['total' => $total + $order->getShipmentTotal()], ['id' => $order->getId()]);
+                ->update('orders', ['total' => $total + $order->getShipmentTotal(), 'depend_info' => Encoder::encode($dependInfo)], ['id' => $order->getId()]);
         
         $this->entityManager->refresh($order);
         $this->repostOrder($order);

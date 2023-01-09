@@ -236,20 +236,21 @@ class OrderController extends AbstractActionController
                     $order = $this->orderManager->addNewOrder($office, $contact, $data);
                 }    
                 if ($order){
+                    $this->orderManager->updateSelectionsFromJson($order, $data['selections']);
+                    if ($order && isset($data['comments'])){
+                        foreach ($data['comments'] as $comment){
+                            $this->commentManager->addOrderComment($order, $comment);
+                        }    
+                    }
+
                     if (!empty($data['orderGood'])){
                         $this->orderManager->updateBids($order, $data['orderGood']);
                     } else {
                         $this->orderManager->updOrderTotal($order);
                     }   
+                    
                 }
-                
-                $this->orderManager->updateSelectionsFromJson($order, $data['selections']);
-                if ($order && isset($data['comments'])){
-                    foreach ($data['comments'] as $comment){
-                        $this->commentManager->addOrderComment($order, $comment);
-                    }    
-                }
-                
+                                
                 return new JsonModel(
                    [
                        'aplId' => $order->getAplId(), 
@@ -667,4 +668,23 @@ class OrderController extends AbstractActionController
            $order->toLog()
         );           
     }    
+    
+    public function dependAction()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+        
+        $orders = $this->entityManager->getRepository(Order::class)
+                ->findAll();
+        
+        foreach ($orders as $order){
+            $this->orderManager->updateDependInfo($order, true);
+            $this->entityManager->detach($order);
+        }
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+    }
 }
