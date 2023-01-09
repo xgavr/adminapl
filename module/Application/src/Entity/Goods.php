@@ -541,6 +541,11 @@ class Goods {
         return $this->marketPlacePrice;
     }
     
+    public function getMarketPlacePriceOrPrice()
+    {
+        return ($this->marketPlacePrice) ? $this->marketPlacePrice:$this->price;
+    }
+
     public function setMarketPlacePrice($marketPlacePrice)
     {
         $this->marketPlacePrice = $marketPlacePrice;

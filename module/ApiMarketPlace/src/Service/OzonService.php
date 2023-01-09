@@ -210,7 +210,7 @@ class OzonService {
         
         $opts = $good->getOpts();
         
-        $price = $good->getPrice();
+        $price = $good->();
         $minPrice = $opts[ScaleTreshold::PRICE_COL_COUNT];
         
         $input = [
