@@ -91,7 +91,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="info" data-sortable="false" data-formatter="infoFormatter">Что нужно</th>
                      <th data-field="contactCar.vin" data-sortable="false" data-formatter="carFormatter">Машина</th>
                      <th data-field="address" data-sortable="false" data-formatter="shippingFormatter">Доставка</th>
-                     <th data-field="comments" data-sortable="false" data-formatter="commentFormatter">Комментарий</th>
+                     <th data-field="dependInfo" data-sortable="false" data-formatter="commentFormatter">Комментарий</th>
                      <th data-field='total' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Сумма</th>
                      <th data-field='user.fullName' data-sortable="false" data-width="50">Отв.</th>
                     <th data-field="id" data-formatter="activeFormatter" data-width="10"></th>
@@ -331,7 +331,7 @@ $this->pageBreadcrumbs()->setItems([
     function commentFormatter(value, row){
         var result = '';
         var commentLength = '0';
-        var depend = $.parseJSON(row.dependInfo);
+        var depend = $.parseJSON(value);
         var comments = depend.comments;
         if (comments.length){
             commentLength = comments.length;

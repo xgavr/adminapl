@@ -11,6 +11,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\CommentController;
 use Application\Service\CommentManager;
+use Application\Service\OrderManager;
 
 /**
  * Description of CommentControllerFactory
@@ -24,8 +25,9 @@ class CommentControllerFactory implements FactoryInterface {
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $commentManager = $container->get(CommentManager::class);
+        $orderManager = $container->get(OrderManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new CommentController($entityManager, $commentManager);
+        return new CommentController($entityManager, $commentManager, $orderManager);
     }
 }

@@ -1090,14 +1090,15 @@ class OrderManager
     public function updateDependInfo($order, $flush = false)
     {
 
-        $order->setDependInfo($this->dependInfo($order));
+        $dependInfo = $this->dependInfo($order);
+        $order->setDependInfo($dependInfo);
         
         if ($flush){
             $this->entityManager->persist($order);
             $this->entityManager->flush($order);
         }
         
-        return;
+        return Encoder::encode($dependInfo);
     }
     
     /**

@@ -116,7 +116,7 @@ $form->prepare();
     function updateCommentCell(comments){
         if ($table){
             <?php if ($order):?>
-                $table.bootstrapTable('updateCellByUniqueId', {id: <?= $order->getId() ?>, field: 'comments', value: comments});
+                $table.bootstrapTable('updateCellByUniqueId', {id: <?= $order->getId() ?>, field: 'dependInfo', value: comments});
             <?php endif; ?>            
         }
     }
@@ -131,7 +131,7 @@ $form->prepare();
             url: '/comments/update/',
             name: 'comment',
             success: function(response, newValue){
-                updateCommentCell(response.comments);
+                updateCommentCell(response.dependInfo);
             }
         });                    
         
@@ -150,7 +150,7 @@ $form->prepare();
         })
             .done(function (data) {
                 $('#comment-submit').prop('disabled', false);
-                addOrderComment(data.commentId, data.comments);
+                addOrderComment(data.commentId, data.dependInfo);
             })
             .fail(function () {
                 alert("Ошибка при открытии формы.");

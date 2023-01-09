@@ -31,12 +31,18 @@ class CommentController extends AbstractActionController
      */
     private $commentManager;    
     
+    /**
+     * Менеджер.
+     * @var \Application\Service\OrderManager 
+     */
+    private $orderManager;    
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $commentManager) 
+    public function __construct($entityManager, $commentManager, $orderManager) 
     {
         $this->entityManager = $entityManager;
         $this->commentManager = $commentManager;
+        $this->orderManager = $orderManager;
     }    
     
     public function indexAction()
@@ -236,12 +242,13 @@ class CommentController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;            
         }
-        $comments = [];
+
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
             if ($order){
                 $comment = $this->commentManager->addOrderComment($order, $data);
+                $dependInfo = $this->orderManager->updateDependInfo($order, true);
                 $commentsQuery = $this->entityManager->getRepository(Comment::class)
                         ->orderComments($order);
             }
@@ -250,6 +257,7 @@ class CommentController extends AbstractActionController
         return new JsonModel([
             'commentId' => $comment->getId(),
             'comments' => $commentsQuery->getResult(2),
+            'dependInfo' => $dependInfo,
         ]);                   
     }
     
@@ -271,6 +279,7 @@ class CommentController extends AbstractActionController
             $upd['comment'] = $data['value'];
             if ($comment){
                 $comment = $this->commentManager->updateComment($comment, $upd);
+                $dependInfo = $this->orderManager->updateDependInfo($comment->getOrder(), true);
                 $commentsQuery = $this->entityManager->getRepository(Comment::class)
                         ->orderComments($comment->getOrder());
             }
@@ -278,6 +287,7 @@ class CommentController extends AbstractActionController
         
         return new JsonModel([
             'comments' => $commentsQuery->getResult(2),
+            'dependInfo' => $dependInfo,
         ]);                   
     }    
 }
