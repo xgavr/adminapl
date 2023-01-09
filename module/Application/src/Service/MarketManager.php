@@ -556,7 +556,7 @@ class MarketManager
         $data = $goodsQuery->getResult(2);
         
         foreach ($data as $good){
-            var_dump($good); exit;
+//            var_dump($good); exit;
             $rows++;
             if (!empty($market->getImageCount())){
                 $images = $this->images($good, $market);
