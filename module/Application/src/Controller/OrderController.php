@@ -675,7 +675,7 @@ class OrderController extends AbstractActionController
         set_time_limit(0);
         
         $orders = $this->entityManager->getRepository(Order::class)
-                ->findAll();
+                ->findBy(['dependInfo' => null]);
         
         foreach ($orders as $order){
             $this->orderManager->updateDependInfo($order, true);
