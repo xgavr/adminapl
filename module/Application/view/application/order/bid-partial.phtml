@@ -73,9 +73,9 @@
                             type: "GET",
                             url: "/order/info/"+row.id,
                             success: function(info){
-//                                    $table.bootstrapTable('updateCell', {index: index, field: 'amount', value: info.amount, reinit: true});
-//                                    $table.bootstrapTable('collapseRowByUniqueId', index);
-//                                    $table.bootstrapTable('expandRowByUniqueId', index);
+                                $table.bootstrapTable('collapseRowByUniqueId', row.id);
+                                $table.bootstrapTable('updateCellByUniqueId', {id: row.id, field: 'total', value: info.amount});
+                                $table.bootstrapTable('expandRowByUniqueId', row.id);
                             }
                         });
                     }                        

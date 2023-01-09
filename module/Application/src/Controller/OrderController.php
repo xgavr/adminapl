@@ -617,8 +617,12 @@ class OrderController extends AbstractActionController
         
         $this->orderManager->updateOrderStatus($order, $status);
         
+        $query = $this->entityManager->getRepository(Order::class)
+                ->findAllOrder(['orderId' => $order->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
         return new JsonModel(
-           ['ok']
+           $result
         );           
     }        
     

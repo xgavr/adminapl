@@ -401,7 +401,8 @@ $this->pageBreadcrumbs()->setItems([
     
     function changeOrderStatus(orderId, status){
         $.get( "/order/status/"+orderId+'?status='+status, function(data){
-            refreshTable();
+//            refreshTable();
+            $table.bootstrapTable('updateByUniqueId', {id: orderId, row: data});
         });        
     }
 
