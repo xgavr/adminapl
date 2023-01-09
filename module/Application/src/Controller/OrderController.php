@@ -671,7 +671,7 @@ class OrderController extends AbstractActionController
     
     public function dependAction()
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '4096M');
         set_time_limit(0);
         
         $orders = $this->entityManager->getRepository(Order::class)
