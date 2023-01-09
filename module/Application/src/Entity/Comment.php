@@ -219,7 +219,7 @@ class Comment {
             'client' => $this->getClient()->getId(),
             'comment' => $this->getComment(),
             'order' => $this->getOrder()->getId(),
-            'user' => $this->getUser()->getId(),
+            'user' => ($this->getUser()) ? $this->getUser()->getId():'',
             'userName' => $this->getUserName(),
         ];
     }        
