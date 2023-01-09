@@ -230,17 +230,17 @@ class OrderRepository extends EntityRepository{
                 ;
         
         if (is_array($params)){
-            if (is_numeric($params['officeId'])){
+            if (!empty($params['officeId'])){
                 $queryBuilder->andWhere('o.office = ?1')
                     ->setParameter('1', $params['officeId'])
                         ;
             }            
-            if (is_numeric($params['userId'])){
+            if (!empty($params['userId'])){
                 $queryBuilder->andWhere('o.user = ?2')
                     ->setParameter('2', $params['userId'])
                         ;
             }            
-            if (is_numeric($params['status'])){
+            if (!empty($params['status'])){
                 $queryBuilder->andWhere('o.status = ?3')
                     ->setParameter('3', $params['status'])
                         ;
@@ -249,7 +249,7 @@ class OrderRepository extends EntityRepository{
                 $queryBuilder->addOrderBy('o.'.$params['sort'], $params['order']);
             }        
             
-            if (isset($params['orderId'])){
+            if (!empty($params['orderId'])){
                 $queryBuilder->andWhere('o.id = :orderId')
                         ->setParameter('orderId', $params['orderId']);
             }
