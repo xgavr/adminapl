@@ -260,7 +260,7 @@ if ($vtp){
         $('#vtpAmount').html(Math.round(amount*100)/100);
         $('#vtpQuantity').html(Math.round(quantity*100)/100);
     }
-    
+        
     function vtpFill(){
         $.ajax({
             type: 'GET',
@@ -347,7 +347,7 @@ if ($vtp){
     }
     
     $( document ).ready(function() {
-        
+                
         $('#remove-selected-button').click(function () {
             var ids = $.map($('#vtpgoodtable').bootstrapTable('getSelections'), function (row) {
               return row.rowNo;
@@ -361,6 +361,28 @@ if ($vtp){
         
         $('#vtpgoodtable').bootstrapTable({
             onLoadSuccess: function(res){
+                <?php if ($good && $base):?>
+                    var rows = [];
+                    var good = {
+                        id: <?= $good->getId() ?>,
+                        code: '<?= $good->getCode() ?>',
+                        name: '<?= $good->getNameShort() ?>',
+                        producer: {name: '<?= $good->getProducer()->getName()?>'}
+                    };
+                    var vtpg = {
+                        good: good
+                    };
+                    var row = {
+                        rowNo: 1,
+                        vtpg: vtpg,
+                        amount: <?= $base['amount'] ?>,
+                        quantity: <?= $base['rest'] ?>,
+                        price: Math.round(<?= $base['amount'] ?>*100/<?= $base['rest'] ?>)/100
+                    };
+
+                    rows.push(row);
+                    $('#vtpgoodtable').bootstrapTable('append', rows);                        
+                <?php endif ?>
                 vtpUpdateTotal();
             }            
         }); 

@@ -199,7 +199,7 @@ $this->pageBreadcrumbs()->setItems([
             disabled='';
         }
         var url = '/pt/combined-form/'+value;
-        btn = '<button';
+        btn = '<nobr><button';
         btn += ' type="button"';
         btn += ' class="btn btn-xs btn-default pt-combined-modal-show"';
         btn += ' aria-label="Left Align"'; 
@@ -207,6 +207,17 @@ $this->pageBreadcrumbs()->setItems([
         btn += ' modal-url="'+url+'">'; 
         btn += '<span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>';
         btn += '</button>';
+
+        var url = '/vtp/edit-form?good='+value;
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-xs btn-default vtp-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Оформить возврат" ' + disabled; 
+        btn += ' modal-url="'+url+'">'; 
+        btn += '<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>';
+        btn += '</button></nobr>';
+        
         return btn;
     }    
     

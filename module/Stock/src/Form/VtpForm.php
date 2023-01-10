@@ -294,6 +294,47 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([
+            'type'  => 'number',
+            'name' => 'quantity',
+            'attributes' => [                
+                'id' => 'quantity',
+                'value' => 1,
+                'min' => 1
+            ],
+            'options' => [
+                'label' => 'Количество',
+            ],
+       ]);
+        
+        $this->add([
+            'type'  => 'number',
+            'name' => 'price',
+            'attributes' => [                
+                'id' => 'price',
+                'value' => 0,
+                'min' => 0,
+                'step' => 0.01,
+            ],
+            'options' => [
+                'label' => 'Цена',
+            ],
+       ]);
+
+        $this->add([
+            'type'  => 'number',
+            'name' => 'amount',
+            'attributes' => [                
+                'id' => 'amount',
+                'value' => 0,
+                'min' => 0,
+                'step' => 0.01,
+            ],
+            'options' => [
+                'label' => 'Сумма',
+            ],
+       ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -516,6 +557,84 @@ class VtpForm extends Form implements ObjectManagerAwareInterface
                     ['name'=>'InArray', 'options'=>['haystack'=> array_keys(Vtp::getVtpTypeList())]]
                 ],
             ]); 
+        
+        $inputFilter->add([
+                'name'     => 'quantity',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                    [    
+                        'name'    => 'GreaterThan',
+                        'options' => [
+                            'min' => 0,
+                            'inclusive' => false
+                        ],
+                    ],
+                ],
+            ]);
+
+        $inputFilter->add([
+                'name'     => 'price',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                    [    
+                        'name'    => 'GreaterThan',
+                        'options' => [
+                            'min' => 0,
+                            'inclusive' => false
+                        ],
+                    ],
+                ],
+            ]);
+
+        $inputFilter->add([
+                'name'     => 'amount',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                    [    
+                        'name'    => 'GreaterThan',
+                        'options' => [
+                            'min' => 0,
+                            'inclusive' => false
+                        ],
+                    ],
+                ],
+            ]);
     }    
     
     public function setObjectManager(ObjectManager $objectManager)

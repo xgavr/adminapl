@@ -430,19 +430,15 @@
     
     function changeStatus(vtpId, status){
         $.get( "/vtp/status/"+vtpId+'?status='+status, function(data){
-            refreshTable();
+            $table.bootstrapTable('updateByUniqueId', {id: vtpId, row: data});
+//            refreshTable();
         });        
     }
 
     function changeStatusDoc(row, statusDoc){
         $.get( "/vtp/status-doc/"+row.id+'?status='+statusDoc, function(data){
-//            console.log(data);
-//            $table.bootstrapTable('updateCell', {index: getCurrentIndex(), field: 'statusDoc', value: statusDoc});
-//            var $currentRow = $table.find("[data-index='"+getCurrentIndex()+"']");
-//            $currentRow.removeClass();
-//            var classes = rowStyle(data);
-//            $currentRow.addClass(classes.classes);
-            refreshTable();
+            $table.bootstrapTable('updateByUniqueId', {id: row.id, row: data});
+//            refreshTable();
         });        
     }
     

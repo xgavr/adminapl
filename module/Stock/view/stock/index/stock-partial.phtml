@@ -108,6 +108,15 @@
             });
         });  
 
+        $(document).on('click', '.vtp-combined-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'vtpCombinedModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+
         $(document).on('click', '.vtp-good-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             var uniqueId = $(e.currentTarget).attr('unique-id');

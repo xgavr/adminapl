@@ -119,7 +119,33 @@ class MovementRepository extends EntityRepository{
         return $qb->getQuery()->getResult();
     }
     
-   /**
+    /**
+     * Найти партии с остатком
+     * 
+     * @param integer $goodId
+     * @return array
+     */
+    public function availableBasePtu($goodId)
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('m.baseId, sum(m.quantity) as rest, sum(m.baseAmount) as amount')
+                ->from(Movement::class, 'm')
+                ->where('m.good = ?1')
+                ->andWhere('m.baseType = ?2')
+                ->andWhere('m.status != ?4')
+                ->setParameter('1', $goodId)
+                ->setParameter('2', Movement::DOC_PTU)
+                ->setParameter('4', Movement::STATUS_RETIRED)
+                ->groupBy('m.baseKey')
+                ->having('rest > 0')
+                ->setMaxResults(1)
+                ;
+                
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
     * Количество движения у производителя
     * @param Producer $producer
     * @return integer

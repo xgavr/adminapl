@@ -1,0 +1,253 @@
+<?php
+use Stock\Entity\VtpGood;
+
+$form = $this->form;
+
+$form->get('legal_id')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('office_id')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('company')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('supplier')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('contract_id')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('doc_date')->setAttributes([
+    'class'=>'form-control', 
+    'min' => date('Y-m-d', strtotime($allowDate.' + 1 day')),
+    'disabled' => $disabled,
+    ]);
+
+$form->get('doc_no')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => 'true',
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('cause')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('statusDoc')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('vtpType')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ptu')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('quantity')->setAttributes([
+    'class'=>'form-control', 
+    'value' => $base['rest'],
+    ]);
+
+$form->get('amount')->setAttributes([
+    'class'=>'form-control', 
+    'value' => $base['amount'],
+    ]);
+
+$form->get('price')->setAttributes([
+    'class'=>'form-control', 
+    'value' => round($base['amount']/$base['rest'], 2),
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'vtp-submit']);
+
+$form->prepare();
+
+$ptuDocName = '№ '.$ptu->getDocNo().' от  '.date('d.m.Y', strtotime($ptu->getDocDate()));
+
+?>
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="vtpModalLabel">Возврат товаров поставщику <?= $docName?> по ПТУ <?= $ptuDocName?></h5>
+    <h5 class="modal-title"><b><?= $good->getCode()?> <?= $good->getProducer()->getName() ?> <?= $good->getNameShort() ?></b></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('office_id')); ?>
+                <?= $this->formElement($form->get('office_id')); ?>
+                <?= $this->formElementErrors($form->get('office_id')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('company')); ?>
+                <?= $this->formElement($form->get('company')); ?>
+                <?= $this->formElementErrors($form->get('company')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('statusDoc')); ?>
+                <?= $this->formElement($form->get('statusDoc')); ?>
+                <?= $this->formElementErrors($form->get('statusDoc')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('vtpType')); ?>
+                <?= $this->formElement($form->get('vtpType')); ?>
+                <?= $this->formElementErrors($form->get('vtpType')); ?>                  
+            </div>
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('doc_date')); ?>
+                <?= $this->formElement($form->get('doc_date')); ?>
+                <?= $this->formElementErrors($form->get('doc_date')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('supplier')); ?>
+                <?= $this->formElement($form->get('supplier')); ?>
+                <?= $this->formElementErrors($form->get('supplier')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('legal_id')); ?>
+                <?= $this->formElement($form->get('legal_id')); ?>
+                <?= $this->formElementErrors($form->get('legal_id')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('contract_id')); ?>
+                <?= $this->formElement($form->get('contract_id')); ?>
+                <?= $this->formElementErrors($form->get('contract_id')); ?>                  
+            </div>
+        </div>    
+    </div>        
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="form-group">
+                <?= $this->formElement($form->get('ptu')); ?>
+                <?= $this->formElementErrors($form->get('ptu')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('comment')); ?>
+                <?= $this->formElement($form->get('comment')); ?>
+                <?= $this->formElementErrors($form->get('comment')); ?>                  
+            </div>                        
+        </div>                                            
+    </div>        
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('cause')); ?>
+                <?= $this->formElement($form->get('cause')); ?>
+                <?= $this->formElementErrors($form->get('cause')); ?>                  
+            </div>                        
+        </div>                                            
+    </div>        
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="vtp-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    
+    function submitForm(){
+        $('#vtp-submit').prop('disabled', true);
+        var data = serializeForm('#vtp-form');
+        $.ajax({
+            type: 'POST',
+            url: '/vtp/combined-form/<?= ($good) ? $good->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                $('#vtp-submit').prop('disabled', false);
+                if (data == 'ok'){
+                    $('#vtpCombinedModal').modal('hide');
+                    if ($('#table').length){
+                        $('#table').bootstrapTable('refresh');
+                    }    
+                    if ($('#movementTable').length){
+                        $('#movementTable').bootstrapTable('refresh');
+                    }    
+                } else {
+                    $('#vtpCombinedModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+                $('#vtp-submit').prop('disabled', false);
+            });    
+    };
+    
+    $( document ).ready(function() {
+        
+        var forms = $('#vtp-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('vtp-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });    
+    
+</script>

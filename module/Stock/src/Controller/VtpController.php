@@ -18,6 +18,7 @@ use Stock\Form\VtpForm;
 use Stock\Form\VtpGoodForm;
 use Company\Entity\Office;
 use Application\Entity\Supplier;
+use Stock\Entity\Movement;
 
 class VtpController extends AbstractActionController
 {
@@ -200,9 +201,23 @@ class VtpController extends AbstractActionController
     {
         $vtpId = (int)$this->params()->fromRoute('id', -1);
         $ptuId = (int)$this->params()->fromQuery('ptu', -1);
+        $goodId = (int)$this->params()->fromQuery('good', -1);
         
-        $ptu = $vtp = $supplier = $legal = $company = null;
+        $ptu = $vtp = $supplier = $legal = $company = $good = $base = null;
         $notDisabled = true; $ptuList = [];
+        
+        if ($goodId > 0){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+            if ($good){
+                $base = $this->entityManager->getRepository(Movement::class)
+                        ->availableBasePtu($good->getId());
+                if ($base){
+                    $ptuId = $base['baseId'];
+                }
+            }
+        }    
+
         if ($ptuId > 0){
             $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->find($ptuId);
@@ -303,9 +318,104 @@ class VtpController extends AbstractActionController
             'ptu' => $ptu,
             'allowDate' => max($this->vtpManager->getAllowDate(), date('Y-m-d', strtotime($ptu->getDocDate().' - 1 day'))),
             'disabled' => !$notDisabled,
+            'good' => $good,
+            'base' => $base,
         ]);        
     }    
         
+    public function combinedFormAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);        
+        
+        $ptu = $vtp = $supplier = $legal = $company = $base = null;
+        $notDisabled = true; $ptuList = [];
+        if ($goodId > 0){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+            if ($good){
+                $base = $this->entityManager->getRepository(Movement::class)
+                        ->availableBasePtu($good->getId());
+                if ($base){
+                    $ptu = $this->entityManager->getRepository(Ptu::class)
+                            ->find($base['baseId']);
+                }
+            }
+        }    
+        if ($ptu){
+            $ptuList[$ptu->getId()] = $ptu->getDocIdPresent();
+            $supplier = $ptu->getSupplier();
+            $office = $ptu->getOffice();
+            $contract = $ptu->getContract();
+            $company = $contract->getCompany();
+            $legal = $ptu->getLegal();            
+        }    
+
+        if ($this->getRequest()->isPost()){
+            $data = $this->params()->fromPost();
+        }
+                
+        $form = new VtpForm($this->entityManager, $office, $supplier, $company, $legal);        
+        $form->get('ptu')->setValueOptions($ptuList);
+
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                unset($data['supplier']);
+                unset($data['company']);
+                unset($data['csrf']);
+                $vtpGood = ['good_id' => $goodId, 'quantity' => $data['quantity'], 'amount' => $data['amount']];
+                unset($data['vtpGood']);
+                $data['status_ex'] = Vtp::STATUS_EX_NEW;
+                $data['contract'] = $contract;
+                $data['legal'] = $legal;
+                $data['office'] = $office;
+                $data['apl_id'] = 0;
+                
+                $vtp = $this->entityManager->getRepository(Vtp::class)
+                        ->findBy(['ptu' => $ptu->getId(), 'statusDoc' => Vtp::STATUS_DOC_NEW, 'status' => Vtp::STATUS_ACTIVE]);
+                
+                if ($vtp){                
+                    $data['apl_id'] = $vtp->getAplId();
+                    if ($vtp->getComment()){
+                        $data['comment'] = $vtp->getComment();
+                    }    
+                    $this->vtpManager->updateVtp($vtp, $data);
+                    $this->entityManager->refresh($vtp);
+                } else {
+                    $vtp = $this->vtpManager->addVtp($ptu, $data);
+                }    
+                
+                $rowNo = $vtp->getVtpGoods()->count() + 1;
+
+                $this->vtpManager->addVtpGood($vtp->getId(), $vtpGood, $rowNo);
+                
+                $this->vtpManager->updateVtpAmount($vtp);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+                var_dump($form->getMessages());
+            }
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'vtp' => $vtp,
+            'ptu' => $ptu,
+            'allowDate' => max($this->vtpManager->getAllowDate(), date('Y-m-d', strtotime($ptu->getDocDate().' - 1 day'))),
+            'disabled' => !$notDisabled,
+            'good' => $good,
+            'base' => $base,
+        ]);        
+    }    
+
     public function goodEditFormAction()
     {        
         $params = $this->params()->fromQuery();
@@ -394,9 +504,12 @@ class VtpController extends AbstractActionController
         }        
         
         $this->vtpManager->updateVtpStatus($vtp, $status);
+        $query = $this->entityManager->getRepository(Vtp::class)
+                ->findAllVtp(['vtpId' => $vtp->getId()]);
+        $result = $query->getOneOrNullResult(2);
         
         return new JsonModel(
-           ['ok']
+           $result
         );           
     }        
     
@@ -412,7 +525,11 @@ class VtpController extends AbstractActionController
             return;                        
         }        
         
-        $result = $this->vtpManager->updateVtpDocStatus($vtp, $statusDoc);
+        $this->vtpManager->updateVtpDocStatus($vtp, $statusDoc);
+        
+        $query = $this->entityManager->getRepository(Vtp::class)
+                ->findAllVtp(['vtpId' => $vtp->getId()]);
+        $result = $query->getOneOrNullResult(2);
         
         return new JsonModel(
            $result

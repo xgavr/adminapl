@@ -141,6 +141,12 @@ class VtpRepository extends EntityRepository{
                             ->setParameter('vtpType', $params['vtpType']);
                 }    
             }
+            if (!empty($params['vtpId'])){
+                if (is_numeric($params['vtpId'])){
+                    $queryBuilder->andWhere('v.id = :vtpId')
+                            ->setParameter('vtpId', $params['vtpId']);
+                }    
+            }
             if (!empty($params['q'])){     
                 $queryBuilder->distinct()
                         ->join('v.vtpGoods', 'vg')
