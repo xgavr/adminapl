@@ -50,6 +50,13 @@ if ($vt){
     <div class="row">
         <div class="col-xs-2">                        
             <div class="form-group">
+                <?= $this->formLabel($form->get('doc_date')); ?>
+                <?= $this->formElement($form->get('doc_date')); ?>
+                <?= $this->formElementErrors($form->get('doc_date')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
                 <?= $this->formLabel($form->get('doc_no')); ?>
                 <?= $this->formElement($form->get('doc_no')); ?>
                 <?= $this->formElementErrors($form->get('doc_no')); ?>                  
@@ -77,51 +84,45 @@ if ($vt){
         </div>    
     </div>    
     <div class="row">
-        <div class="col-xs-2">                        
-            <div class="form-group">
-                <?= $this->formLabel($form->get('doc_date')); ?>
-                <?= $this->formElement($form->get('doc_date')); ?>
-                <?= $this->formElementErrors($form->get('doc_date')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-4 text-right">
-        </div>    
-    </div>        
-    <div class="row">
         <div class="col-xs-12">
             <div id="vtgoodtoolbar">
                 <div class="form-inline" role="form">
                     <button type="button" class="btn btn-default" onclick="vtFill()">
                         <span aria-hidden="true">Заполнить из заказа</span>
                     </button>
+                    <button id="remove-selected-button" class="btn btn-default" type="button" title="Удалить выделенное">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>                
                 </div>
-            </div>
+            </div>    
             <table id="vtgoodtable" 
                 data-toggle="vtgoodtable" 
                 data-url="/vt/good-content/<?= ($vt) ? $vt->getId():"" ?>"
                 data-side-pagination="client"
                 data-pagination="true"
-                data-page-size = "5"
+                data-page-size = "50"
                 data-page-list="[5, 10, 20, 50]"
-                data-toolbar="vtgoodtoolbar"
+                data-toolbar="#vtgoodtoolbar"
                 data-show-refresh="true"
-                data-show-toggle="true"
+                data-show-toggle="false"
                 data-query-params="vtgoodQueryParams"
                 data-response-handler="vtgoodResponseHandler"
                 data-unique-id = "rowNo"
                 data-row-style="takeStyle"
+                data-click-to-select="true"
                 >
                 <thead>
                     <tr>
-                         <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                         <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
-                         <th data-field="good.producer.name" data-type="numeric">Производитель</th>
-                         <th data-field="good.name" data-type="numeric">Наименование</th>
-                         <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
-                         <th data-field='quantity' data-align="right">Количество</th>
-                         <th data-field='amount' data-align="right">Сумма</th>
-                         <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
-                     </tr>                
+                        <th data-checkbox="true"></th>
+                        <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                        <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
+                        <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                        <th data-field="good.name" data-type="numeric">Наименование</th>
+                        <th data-field='price' data-type="numeric" data-formatter="pgPriceFormatter" data-align="right" data-editable="true">Цена</th>
+                        <th data-field='quantity' data-type="numeric" data-align="right" data-editable="true">Количество</th>
+                        <th data-field='amount' data-type="numeric" data-formatter="pgAmountFormatter" data-align="right">Сумма</th>
+                        <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
+                    </tr>                
                 </thead>
             </table>
         </div>
@@ -177,7 +178,7 @@ if ($vt){
                         code: row.good.code,
                         name: row.good.name,
                         producer: {name: row.good.producer.name}
-                    }
+                    };
                     var row = {
                         good: good,
                         amount: row.price*row.num,
@@ -226,7 +227,7 @@ if ($vt){
             var newRow = {
                 good_id: row.good.id,
                 quantity: row.quantity,
-                amount: row.amount,
+                amount: row.amount
             };
             result.push(newRow);
         });   
@@ -241,6 +242,17 @@ if ($vt){
     
     $( document ).ready(function() {
         
+        $('#remove-selected-button').click(function () {
+            var ids = $.map($('#vtgoodtable').bootstrapTable('getSelections'), function (row) {
+              return row.rowNo;
+            });
+            $('#vtgoodtable').bootstrapTable('remove', {
+              field: 'rowNo',
+              values: ids
+            });
+            vtUpdateTotal();
+        });        
+
         $('#vtgoodtable').bootstrapTable({
             onLoadSuccess: function(res){
                 vtUpdateTotal();
@@ -266,6 +278,19 @@ if ($vt){
         });
     });    
     
+    $(document).on('editable-save.bs.table', '#vtgoodtable', function (e, field, row, rowIndex, old, $el) { 
+        var amount = row.amount;
+        if (field == 'price'){
+            amount = row.price*row.quantity;
+        }
+        if (field == 'quantity'){
+            var price = row.amount/old;
+            amount = price*row.quantity;
+        }
+        $('#vtgoodtable').bootstrapTable('updateCellByUniqueId', {id: row.rowNo, field: 'amount', value: amount});            
+        vtUpdateTotal();
+    });        
+
     function vtGoodRefreshTable(){
         $('#vtgoodtable').bootstrapTable('refresh');
     }
@@ -297,19 +322,19 @@ if ($vt){
     }    
     
     function pgActiveFormatter(value, row){
-        var url = '/vt/good-edit-form/';
+//        var url = '/vt/good-edit-form/';
+//        btn = '<button';
+//        btn += ' type="button"';
+//        btn += ' class="btn btn-default btn-xs vt-good-modal-show"';
+//        btn += ' aria-label="Left Align"'; 
+//        btn += ' unique-id="'+value+'"';
+//        btn += ' modal-url="'+url+'">';
+//        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+//        btn += '</button>';
+
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs vt-good-modal-show"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' unique-id="'+value+'"';
-        btn += ' modal-url="'+url+'">';
-        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-        btn += '</button>';
-
-        btn += ' <button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs table-row-remove"';
+        btn += ' class="btn btn-default btn-xs table-row-remove"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
         btn += ' onclick="removeTableRowByUniqueId('+value+')">';
@@ -319,7 +344,20 @@ if ($vt){
     }    
     
     function pgPriceFormatter(value, row){
-        return Math.round(value*100/row.quantity)/100;
+        var result = Math.round(row.amount*100/row.quantity)/100;
+        if (value){
+            result = value.toString().replace(',', '.');
+        }    
+        return (Math.round(result*100)/100).toFixed(0);
+    }        
+    
+    function pgAmountFormatter(value, row){
+        var result = value;
+        if (row.price){
+            var price = row.price.toString().replace(',', '.');
+            result = (Math.round(price*row.quantity*100)/100).toFixed(0);
+        }    
+        return result;
     }        
     
     function vtgoodResponseHandler(res) {

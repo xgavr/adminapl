@@ -30,7 +30,6 @@ if ($order){
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#vttoolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
             data-query-params="vtQueryParams"
             data-sort-name="id"
             data-sort-order="desc"            
@@ -40,12 +39,13 @@ if ($order){
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="120">Номер</th>
-                     <th data-field="docDate" data-sortable="true" data-width="100">Дата</th>
+                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="100">Номер</th>
+                     <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="100">Дата</th>
                      <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
                      <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="amountFormatter">Сумма</th>
                      <th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>
                      <th data-field='office.name' data-sortable="false">Склад</th>
+                     <th data-field='status' data-sortable="false" data-formatter="statusFormatter">Статус</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
                      <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
                  </tr>                
@@ -55,8 +55,7 @@ if ($order){
 </div>    
 
 <script>
-    $( document ).ready(function() {
-        
+    $( document ).ready(function() {        
         $('#vttable').bootstrapTable({
             onLoadSuccess: function(res){
                 
@@ -70,11 +69,14 @@ if ($order){
     
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status == '<?= Vt::STATUS_RETIRED?>'){
+        if (row.status == '<?= Vt::STATUS_RETIRED ?>'){
            retired += ' retired';
         }
-        if (row.status == '<?= Vt::STATUS_COMMISSION?>'){
-           retired += ' warning';
+        if (row.status == '<?= Vt::STATUS_COMMISSION ?>'){
+           retired += ' info';
+        }
+        if (row.status == '<?= Vt::STATUS_DEFECT ?>'){
+           retired += ' info';
         }
         
         return {classes: retired};
@@ -104,6 +106,11 @@ if ($order){
         return value;
     }    
     
+    function dateFormatter(value){
+        var date = new Date(value);
+        return $.format.date(date, "dd.MM.yyyy");
+    }
+    
     function linkFormatter(value, row){
         if (!value){
             value = '---';
@@ -119,6 +126,16 @@ if ($order){
         return (Math.round(value*100)/100).toFixed(2);
     }    
     
+    function statusFormatter(value){
+        if (value == '<?= Vt::STATUS_COMMISSION?>'){
+            return 'Коммисия';
+        }
+        if (value == '<?= Vt::STATUS_DEFECT?>'){
+            return 'Брак';
+        }
+        return '';
+    }
+
     function activeFormatter(value, row){
         var url = '/vt/edit-form/'+row.id;
         btn = '<button';

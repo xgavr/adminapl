@@ -30,7 +30,8 @@ class Vt {
      // Ptu status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
-    const STATUS_COMMISSION    = 3; // commission.
+    const STATUS_COMMISSION   = 3; // commission.
+    const STATUS_DEFECT       = 4; // брак.
    
      // Ptu status doc constants.
     const STATUS_DOC_RECD       = 1; // Получено.
@@ -212,6 +213,7 @@ class Vt {
             self::STATUS_ACTIVE => 'Активный',
             self::STATUS_RETIRED => 'Удален',
             self::STATUS_COMMISSION => 'На комиссии',
+            self::STATUS_DEFECT => 'Брак',
         ];
     }    
     

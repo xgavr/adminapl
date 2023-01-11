@@ -450,7 +450,7 @@
     
     function repostEx(vtpId){
         $.get( "/vtp/repost-ex/"+vtpId, function(data){
-            refreshTable();
+            $table.bootstrapTable('updateByUniqueId', {id: vtpId, row: data});
         });        
     }
     

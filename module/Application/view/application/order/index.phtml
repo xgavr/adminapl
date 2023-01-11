@@ -105,6 +105,7 @@ $this->pageBreadcrumbs()->setItems([
 <?php echo $this->partial('/admin/index/sms-partial', []); ?>
 <?php echo $this->partial('/admin/post/post-partial', []); ?>
 <?php echo $this->partial('/application/order/comment-partial', []); ?>
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
 <script type="text/javascript">
     var $table = $('#table').bootstrapTable({
         onLoadSuccess: function() {
@@ -412,7 +413,8 @@ $this->pageBreadcrumbs()->setItems([
             return $table.bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
-           ['addComment', 'comments', 'history']
+           ['addComment', 'comments', 'history'],
+           ['vt', 'cash']
         ],      
         actions: {
             statusNew: {
@@ -533,6 +535,34 @@ $this->pageBreadcrumbs()->setItems([
                             });
                         }
                     });                    
+                }
+            },
+            vt: {
+                name: 'Возврат',
+                iconClass: 'glyphicon glyphicon-repeat',
+                onClick: function (row){
+                    var url = '/vt/order-form/'+row.id;
+                    showFormDialog({
+                        id: 'vtIndexModal',
+                        url: url,
+                        zIndex: 8888,
+                        width: '1440px'
+                    });
+                },
+                isEnabled: function(row) {
+                    return row.status == <?= Order::STATUS_SHIPPED?>;
+                }                
+            },
+            cash: {
+                name: 'Оплата',
+                iconClass: 'glyphicon glyphicon-rub',
+                onClick: function (row){
+                    var url = '/comments/order-form/'+row.id;
+                    showFormDialog({
+                        id: 'orderCommentsModal',
+                        url: url,
+                        zIndex: 8888
+                    });
                 }
             }
         }
