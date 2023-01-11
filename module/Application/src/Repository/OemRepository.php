@@ -576,9 +576,8 @@ class OemRepository  extends EntityRepository{
      */
     public function removeAllGoodOem($good)
     {
-        $this->getEntityManager()->getRepository(Goods::class)
+        return $this->getEntityManager()->getRepository(Goods::class)
                 ->deleteGoodOem($good->getId());        
-        return;
     }
 
     /**
