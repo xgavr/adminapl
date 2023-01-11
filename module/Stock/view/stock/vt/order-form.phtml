@@ -1,10 +1,12 @@
 <?php
 use Stock\Entity\Vt;
+use Application\Entity\Order;
 
 if ($order){
     $docName = '№ '.$order->getDocNo().' от  '.date('d.m.Y', strtotime($order->getDocDate()));
 }
 
+$disabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
 ?>
 
 <div class="modal-header">
@@ -17,7 +19,7 @@ if ($order){
     <div class="col-xs-12">
         <div id="vttoolbar">
             <div class="form-inline" role="form">
-                <button class="btn btn-default vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
+                <button <?= $disabled?> class="btn btn-default vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>                
             </div>
