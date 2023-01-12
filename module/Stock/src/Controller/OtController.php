@@ -221,6 +221,74 @@ class OtController extends AbstractActionController
         ]);        
     }    
         
+    public function combinedFormAction()
+    {
+        $ot = $office = $company = $comiss = $contactName= null;
+        $notDisabled = true;   
+        
+        $goodId = $this->params()->fromRoute('id', -1);
+        $officeId = (int) $this->params()->fromQuery('office');
+        
+        if ($officeId > 0){
+            $office = $this->entityManager->getRepository(Office::class)
+                    ->find($officeId);
+            if (!$office){
+                $office = $this->stManager->currentUser()->getOffice();
+            }
+        }    
+
+        if ($this->getRequest()->isPost()){
+            $data = $this->params()->fromPost();
+            $office = $this->entityManager->getRepository(Office::class)
+                    ->find($data['office_id']);
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($data['company']);
+            $comiss = $this->entityManager->getRepository(Contact::class)
+                    ->find($data['comiss']);
+        }
+                
+        $form = new OtForm($this->entityManager, $office, $company, $comiss);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                unset($data['csrf']);
+                $otGood = ['good_id' => $good->getId(), 'quantity' => $data['quantity'], 'amount' => $data['amount']];
+                unset($data['otGood']);
+                $data['status_ex'] = Ot::STATUS_EX_NEW;
+                $data['office'] = $office;
+                $data['company'] = $company;
+                $data['comiss'] = $comiss;
+                if ($data['status'] != Ot::STATUS_COMMISSION){
+                    $data['comiss'] = null;
+                }
+                $data['apl_id'] = 0;
+
+                $ot = $this->otManager->addOt($data);
+                
+                $this->otManager->addOtGood($ot, $otGood, 1);
+                
+                $this->otManager->updateOtAmount($ot);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        }
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'ot' => $ot,
+            'allowDate' => $this->otManager->getAllowDate(),
+            'disabled' => !$notDisabled,
+            'contactName' => $contactName,
+        ]);        
+    }    
+
     public function goodEditFormAction()
     {        
         $params = $this->params()->fromQuery();

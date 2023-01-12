@@ -34,6 +34,15 @@
             });
         });  
         
+        $(document).on('click', '.ot-combined-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'otCombinedModal',
+                url: url
+//                width: '1440px'
+            });
+        });  
+        
         $(document).on('click', '.pt-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
