@@ -154,11 +154,6 @@ class VtpRepository extends EntityRepository{
                         ;
 
                 $articleCodeFilter = new ArticleCode(); 
-//                $queryBuilder->distinct()
-//                        ->join('v.vtpGoods', 'vg')
-//                        ->join('vg.good', 'g')
-//                        ->andWhere('g.code like :q')
-//                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
                 
                 $or = $queryBuilder->expr()->orX();
                 $q = $articleCodeFilter->filter($params['q']);
@@ -305,26 +300,24 @@ class VtpRepository extends EntityRepository{
                             ->setParameter('vtpType', $params['vtpType']);
                 }    
             }
-            if (!empty($params['q'])){        
+            if (!empty($params['q'])){     
                 $queryBuilder->distinct()
                         ->join('v.vtpGoods', 'vg')
                         ->join('vg.good', 'g')
                         ;
 
                 $articleCodeFilter = new ArticleCode(); 
-//                $queryBuilder->distinct()
-//                        ->join('v.vtpGoods', 'vg')
-//                        ->join('vg.good', 'g')
-//                        ->andWhere('g.code like :q')
-//                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
                 
                 $or = $queryBuilder->expr()->orX();
-                if (is_numeric($params['q'])){
-                    $or->add($queryBuilder->expr()->eq('FLOOR(v.amount)', floor($params['q'])));
+                $q = $articleCodeFilter->filter($params['q']);
+                $toFloat = new ToFloat();
+                $qf = $toFloat->filter($params['q']);
+//                var_dump($qf);
+                if ($qf){
+                    $or->add($queryBuilder->expr()->eq('FLOOR(v.amount)', floor(abs($qf))));
                 }    
 
-                $or->add($queryBuilder->expr()->like('g.code', '\''.$articleCodeFilter->filter($params['q']).'%\''));
-                
+                $or->add($queryBuilder->expr()->like('g.code', '\''.$q.'%\''));
                 
                 $queryBuilder->andWhere($or);        
             }

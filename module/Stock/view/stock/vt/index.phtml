@@ -128,11 +128,11 @@
     
     function linkFormatter(value, row){
         if (!value){
-            value = '---';
+            value = row.order.id;
         }
         return [
             '<div class="pull-left">',
-            '<a href="/order/intro/' + row.id + '" target="_blank">' + value + '</a>',
+            '<a href="/order/intro/' + row.order.id + '" target="_blank">' + value + '</a>',
             '</div>'
         ].join(''); 
     }    

@@ -321,6 +321,13 @@ if ($vt){
         return btn;
     }    
     
+    function nameFormatter(value, row){
+        if (row.good.tokenGroup.name){
+            return row.good.tokenGroup.name;
+        }        
+        return value;
+    }    
+
     function pgActiveFormatter(value, row){
 //        var url = '/vt/good-edit-form/';
 //        btn = '<button';

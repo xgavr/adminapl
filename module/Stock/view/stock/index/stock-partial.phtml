@@ -196,6 +196,16 @@
             });
         });  
         
+        $(document).on('click', '.order-view-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'orderViewModal',
+                url: url,
+                width: '1440px',
+                zIndex: 8888
+            });
+        });  
+
         $(document).on('change', '#supplierSelect', function (e) {
             refreshTable();
         });        

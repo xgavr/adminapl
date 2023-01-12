@@ -1,63 +1,264 @@
 <?php
-$this->headTitle('Заказ №'. $order->getId());
-
-$this->mainMenu()->setActiveItemId('order');
-
-$this->pageBreadcrumbs()->setItems([
-                'Главная'=>$this->url('home'),
-                'Продажи'=>$this->url('order'),
-                'Заказ №'. $order->getId() => $this->url('order', ['action' => 'view', 'id' => $order->getId()]),
-                ]);
-  
+use Application\Entity\Order;  
+use Stock\Entity\Vt;
 ?>
 
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-body">
-            <?= 'Заказ №'.$order->getId().'('.$order->getAplIdLink().') от '. date('d-m-Y H:i:s', strtotime($order->getDateCreated())); ?>    
+            <?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDateCreated())); ?>    
           </div>
         </div>        
     </div>    
 </div>
-<h1>
-    <?= $this->escapeHtml($order->getContact()->getName()); ?>
-    <br/>
-</h1>
+<div class="row">
+    <div class="col-md-12">
+        <h3>
+            <?= $this->escapeHtml($order->getContact()->getName()); ?>
+        </h3>
+    </div>    
+</div>    
 
-<table class="table table-striped">
+<div class="row">
+    <div class="col-md-12">
+        <table id="ordergoodtable" 
+            data-toggle="ordergoodtable" 
+            data-url="/order/good-content/<?= $order->getId()?>"
+            data-side-pagination="client"
+            data-pagination="true"
+            data-icon-size="sm"
+            data-page-size = "100"
+            data-page-list="[100, 200]"
+            data-toolbar="#ordergoodtoolbar"
+            data-toolbar-align="right"
+            data-query-params="ordergoodQueryParams"
+            data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-unique-id = "rowNo"                
+            data-click-to-select="true"
+            >
+            <thead>
+                <tr>
+                     <th data-field="rowNo" data-type="numeric" data-align="right" data-width="10">N</th>
+                     <th data-field="good.code" data-width="150" data-formatter="goodFormatter">Артикул</th>
+                     <th data-field="good.producer.name" data-type="numeric" data-width="150">Производитель</th>
+                     <th data-field="displayName" data-formatter="geNameFormatter" data-editable="true">Наименование</th>
+                     <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-align="right" data-width="100">Цена</th>
+                     <th data-field='num' data-align="right" data-editable="true" data-type="numeric" data-width="50">Кол-во</th>
+                     <th data-field='amount' data-align="right" data-formatter="geAmountFormatter" data-type="numeric" data-width="100">Сумма</th>
+                     <th data-field="rowNo" data-formatter="grActiveFormatter" data-width="10"></th>
+                 </tr>                
+            </thead>
+        </table>        
+    </div>
+</div>
 
-   <tr>
-        <th>ID</th>
-        <th>Товар</th>
-        <th>Количество</th>
-        <th>Цена</th>
-        <th>Сумма</th>
-        <th>Действие</th>
-    </tr>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="vttoolbar">
+            <div class="form-inline" role="form">
+                <button <?= $disabled?> class="btn btn-default vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>                
+            </div>
+        </div>
+        <table id="vttable" 
+            data-toggle="vttable" 
+            data-url="/vt/content/<?= ($order) ? $order->getId():"" ?>"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#vttoolbar"
+            data-show-refresh="true"
+            data-query-params="vtQueryParams"
+            data-sort-name="id"
+            data-sort-order="desc"            
+            data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-row-style="rowStyle"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="100">Номер</th>
+                     <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="100">Дата</th>
+                     <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
+                     <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                     <th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>
+                     <th data-field='office.name' data-sortable="false">Склад</th>
+                     <th data-field='status' data-sortable="false" data-formatter="statusFormatter">Статус</th>
+                     <th data-field='comment' data-sortable="false">Примечание</th>
+                     <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<script>
+    var $table = $('#ordergoodtable');
+    var $ok = $('#ok');
     
-    <?php foreach ($bids as $row): ?>
+    function orderUpdateTotal(){
+        var amount = 0; var num = 0;
+        let shipmentTotal = Number($('#shipmentTotal').val());
+        var data = $('#ordergoodtable').bootstrapTable('getData');
+        $.each(data, function( index, value ) {
+            amount += Math.round(value.price*value.num*100)/100;
+            num += Math.round(value.num*100)/100; 
+        });
+        $('#orderAmount').html((Math.round((amount + shipmentTotal)*100)/100).toFixed(0));
+        $('#orderQuantity').html((Math.round(num*100)/100).toFixed(0));
+    }
     
-        <tr>
-            <td>
-                <?= $this->escapeHtml($row->getId()); ?>
-            </td>
-            <td>
-                <?= $this->escapeHtml($row->getGood()->getName()); ?>
-            </td>
-            <td>
-                <?= $this->escapeHtml($row->getNum()); ?>
-            </td>
-            <td>
-                <?= $this->escapeHtml($row->getPrice()); ?>
-            </td>
-            <td>
-                <?= $this->escapeHtml(round($row->getNum()*$row->getPrice(), 2)); ?>
-            </td>
-            <td>
-            </td>    
-        </tr>
+    //удаление строки из таблицы
+    function removeTableRowByUniqueId(index){
+        $('#ordergoodtable').bootstrapTable('removeByUniqueId', index);
+        orderUpdateTotal();
+    }
+    
+    $( document ).ready(function() {        
+        $table.bootstrapTable({
+            onLoadSuccess: function(res){
+                $('#shippingTotal').html($('#shipmentTotal').val());    
+//                bidTotal();
+//                orderUpdateTotal();
+            }            
+        }); 
         
-    <?php endforeach; ?>   
+        $('#vttable').bootstrapTable({
+            onLoadSuccess: function(res){
+                
+            }            
+        });         
+        
+    });    
+
+    function ordergoodQueryParams(params) {
+        $('#ordergoodtoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#ordergoodtable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#ordergoodtable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
     
-</table>
+    function vtQueryParams(params) {
+        $('#vttoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#vttable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#vttable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    
+    function goodFormatter(value, row){
+        var url = '/goods/view/'+row.good.id;
+        btn = '<nobr><a';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-link btn-xs" target="_blank">';
+        btn += '<span class="glyphicon glyphicon-link"></span>';
+        btn += '</a>'+value + '</nobr>';
+        return btn;
+    }    
+
+    function geNameFormatter(value, row){
+        if (value) return value;
+        if (row.good.tokenGroup){
+            if (row.good.tokenGroup.name) return row.good.tokenGroup.name;        
+        }    
+        if (row.good.name) return row.good.name; 
+        if (row.good.description)return row.good.description;
+        return 'Нет названия';
+    }    
+        
+    function grActiveFormatter(value, row){
+        let btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs table-row-remove"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function gePriceFormatter(value){
+        return (Math.round(value)).toFixed(0);
+    }        
+
+    function geAmountFormatter(value, row){
+        return (Math.round(row.price*row.num*100)/100).toFixed(0);
+    }        
+    
+    function idFormatter(value, row){
+        if (row.aplId > 0){
+            return value + ' ('+row.aplId+')';
+        }
+        
+        return value;
+    }    
+    
+    function dateFormatter(value){
+        var date = new Date(value);
+        return $.format.date(date, "dd.MM.yyyy");
+    }
+    
+    function linkFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<div class="pull-left">',
+            '<a href="/order/intro/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function amountFormatter(value){
+        return (Math.round(value*100)/100).toFixed(2);
+    }    
+    
+    function statusFormatter(value){
+        if (value == '<?= Vt::STATUS_COMMISSION?>'){
+            return 'Коммисия';
+        }
+        if (value == '<?= Vt::STATUS_DEFECT?>'){
+            return 'Брак';
+        }
+        return '';
+    }
+
+    function activeFormatter(value, row){
+        var url = '/vt/edit-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs vt-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        return btn;
+    }    
+    
+    function responseHandler(res) {
+        return res;
+    }         
+</script>

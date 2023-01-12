@@ -489,13 +489,10 @@ class OrderController extends AbstractActionController
             return;                        
         }        
       
-        $bids = $this->entityManager->getRepository(Order::class)
-                    ->findBidOrder($order)->getResult();
-        
+        $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
         return new ViewModel([
             'order' => $order,
-            'bids' => $bids,
         ]);
     } 
     
