@@ -432,7 +432,7 @@ class OzonService {
                 'min_price' => $market->getExtraMinPrice($opts, $lot),
                 'offer_id' => $good['aplId'],
                 'old_price' => 0,
-                'price' => $market->getExtraPrice($opts, $lot),
+                'price' => $market->getExtraPrice($opts, $lot, $good['marketPlacePrice']),
                 'product_id' => $good['id'],                
             ];
             
