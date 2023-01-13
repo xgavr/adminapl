@@ -2,23 +2,15 @@
 use Application\Entity\Order;  
 use Stock\Entity\Vt;
 ?>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDateCreated())); ?>    
-          </div>
-        </div>        
-    </div>    
+<div class="modal-header">
+    <h5 class="modal-title" id="otModalLabel">
+        <div><?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDateCreated())); ?></div>
+        <div><?= $this->escapeHtml($order->getContact()->getName()); ?></div>
+    </h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <h3>
-            <?= $this->escapeHtml($order->getContact()->getName()); ?>
-        </h3>
-    </div>    
-</div>    
 
 <div class="row">
     <div class="col-md-12">
@@ -94,6 +86,10 @@ use Stock\Entity\Vt;
         </table>
     </div>
 </div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+</div>
 
 <script>
     var $table = $('#ordergoodtable');
