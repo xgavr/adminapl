@@ -32,14 +32,15 @@ use Stock\Entity\Vt;
             >
             <thead>
                 <tr>
-                     <th data-field="rowNo" data-type="numeric" data-align="right" data-width="10">N</th>
-                     <th data-field="good.code" data-width="150" data-formatter="goodFormatter">Артикул</th>
-                     <th data-field="good.producer.name" data-type="numeric" data-width="150">Производитель</th>
-                     <th data-field="displayName" data-formatter="geNameFormatter" data-editable="true">Наименование</th>
-                     <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-align="right" data-width="100">Цена</th>
-                     <th data-field='num' data-align="right" data-editable="true" data-type="numeric" data-width="50">Кол-во</th>
-                     <th data-field='amount' data-align="right" data-formatter="geAmountFormatter" data-type="numeric" data-width="100">Сумма</th>
-                     <th data-field="rowNo" data-formatter="grActiveFormatter" data-width="10"></th>
+                    <th data-checkbox="true"></th>
+                    <th data-field="rowNo" data-type="numeric" data-align="right" data-width="10">N</th>
+                    <th data-field="good.code" data-width="150" data-formatter="goodFormatter">Артикул</th>
+                    <th data-field="good.producer.name" data-type="numeric" data-width="150">Производитель</th>
+                    <th data-field="displayName" data-formatter="geNameFormatter" data-editable="true">Наименование</th>
+                    <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-align="right" data-width="100">Цена</th>
+                    <th data-field='num' data-align="right" data-editable="true" data-type="numeric" data-width="50">Кол-во</th>
+                    <th data-field='amount' data-align="right" data-formatter="geAmountFormatter" data-type="numeric" data-width="100">Сумма</th>
+                    <th data-field="rowNo" data-formatter="grActiveFormatter" data-width="10"></th>
                  </tr>                
             </thead>
         </table>        
@@ -50,8 +51,8 @@ use Stock\Entity\Vt;
     <div class="col-xs-12">
         <div id="vttoolbar">
             <div class="form-inline" role="form">
-                <button <?= $disabled?> class="btn btn-default vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                <button <?= $disabled?> class="btn btn-default btn-sm vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить возврат
                 </button>                
             </div>
         </div>
@@ -62,6 +63,7 @@ use Stock\Entity\Vt;
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#vttoolbar"
+            data-icon-size="sm"
             data-show-refresh="true"
             data-query-params="vtQueryParams"
             data-sort-name="id"

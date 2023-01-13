@@ -195,6 +195,7 @@ class VtManager
                         unset($data['base_key']);
                         unset($data['base_type']);
                         unset($data['base_id']);
+                        unset($data['base_amount']);
                         unset($data['doc_stamp']);
                         $data['contact_id'] = $vt->getOrder()->getContact()->getId();
                         $this->entityManager->getRepository(Comiss::class)
