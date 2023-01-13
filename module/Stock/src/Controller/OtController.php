@@ -125,18 +125,22 @@ class OtController extends AbstractActionController
     public function editFormAction()
     {
         $otId = (int)$this->params()->fromRoute('id', -1);
+        $goodId = (int)$this->params()->fromQuery('good', -1);
         
-        $ot = $office = $company = $comiss = $contactName= null;
+        $ot = $office = $company = $comiss = $contactName = $good = null;
         $notDisabled = true;        
         if ($otId > 0){
             $ot = $this->entityManager->getRepository(Ot::class)
-                    ->findOneById($otId);
+                    ->find($otId);
+        }    
+
+        if ($goodId > 0){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
         }    
         
         if ($ot == null) {
-            $officeId = (int)$this->params()->fromQuery('office', 1);
-            $office = $this->entityManager->getRepository(Office::class)
-                    ->findOneById($officeId);
+            $office = $this->otManager->currentUser()->getOffice();
         } else {
             $office = $ot->getOffice();
             $company = $ot->getCompany();
@@ -218,25 +222,23 @@ class OtController extends AbstractActionController
             'allowDate' => $this->otManager->getAllowDate(),
             'disabled' => !$notDisabled,
             'contactName' => $contactName,
+            'good' => $good,
         ]);        
     }    
         
     public function combinedFormAction()
     {
         $ot = $office = $company = $comiss = $contactName= null;
-        $notDisabled = true;   
         
         $goodId = $this->params()->fromRoute('id', -1);
-        $officeId = (int) $this->params()->fromQuery('office');
-        
-        if ($officeId > 0){
-            $office = $this->entityManager->getRepository(Office::class)
-                    ->find($officeId);
-            if (!$office){
-                $office = $this->stManager->currentUser()->getOffice();
-            }
-        }    
+        $office = $this->otManager->currentUser()->getOffice();
 
+        $good = null;
+        if ($goodId > 0){ 
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+        }
+        
         if ($this->getRequest()->isPost()){
             $data = $this->params()->fromPost();
             $office = $this->entityManager->getRepository(Office::class)
@@ -284,8 +286,8 @@ class OtController extends AbstractActionController
             'form' => $form,
             'ot' => $ot,
             'allowDate' => $this->otManager->getAllowDate(),
-            'disabled' => !$notDisabled,
             'contactName' => $contactName,
+            'good' => $good,
         ]);        
     }    
 

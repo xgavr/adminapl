@@ -252,6 +252,25 @@ if ($ot){
         
         $('#otgoodtable').bootstrapTable({
             onLoadSuccess: function(res){
+                <?php if ($good):?>
+                    var rows = [];
+                    var good = {
+                        id: '<?= $good->getId()?>',
+                        code: '<?= $good->getCode()?>',
+                        name: '<?= $good->getNameShort()?>',
+                        producer: {name: '<?= $good->getProducer()->getName()?>'}
+                    };
+                    var row = {
+                        good: good,
+                        amount: <?= $good->getMeanPrice()?>,
+                        quantity: 1,
+                        price: <?= $good->getMeanPrice()?>,
+                        rowNo: 1
+                    };
+
+                    rows.push(row);
+                    $('#otgoodtable').bootstrapTable('append', rows);                        
+                <?php endif ?>
                 otUpdateTotal();
             }            
         }); 
