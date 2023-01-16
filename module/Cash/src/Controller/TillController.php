@@ -303,7 +303,12 @@ class TillController extends AbstractActionController
         if ($cashDocId > 0){
             $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                     ->find($cashDocId);
-        }    
+        }
+        
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();
+            $cashId = $data['cash'];
+        }
         
         $form = new CashInForm($this->entityManager);
         $this->cashManager->cashFormOptions($form, $cashDoc, $cashId, $statementId);
