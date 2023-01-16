@@ -63,6 +63,11 @@ class Bid {
      */
     protected $baseKey;
     
+    /** 
+     * @ORM\Column(name="oe")  
+     */
+    protected $oe;
+
     /**
      * @ORM\Column(name="date_created")  
      */
@@ -180,6 +185,24 @@ class Bid {
         return $this->baseKey;
     }
     
+    /**
+     * Sets oe.
+     * @param string $oe     
+     */
+    public function setOe($oe) 
+    {
+        $this->oe = $oe;
+    }    
+    
+    /**
+     * Returns the oe.
+     * @return string     
+     */
+    public function getOe() 
+    {
+        return $this->oe;
+    }
+
     /**
      * Returns possible take as array.
      * @return array

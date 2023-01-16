@@ -29,6 +29,10 @@ class Selection {
      */
     protected $comment;
 
+    /** 
+     * @ORM\Column(name="oe")  
+     */
+    protected $oe;
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Oem", inversedBy="selections") 
@@ -63,6 +67,24 @@ class Selection {
         $this->comment = $comment;
     }     
 
+    /**
+     * Sets oe.
+     * @param string $oe     
+     */
+    public function setOe($oe) 
+    {
+        $this->oe = $oe;
+    }    
+    
+    /**
+     * Returns the oe.
+     * @return string     
+     */
+    public function getOe() 
+    {
+        return $this->oe;
+    }
+    
     /*
      * Возвращает связанный order.
      * @return \Application\Entity\Order

@@ -511,23 +511,17 @@ class OrderManager
             $bid->setOpts($good->getOptsJson());
         }    
         
-        $bid->setOem(null);
+        $bid->setOe(null);
         
         if (!empty($data['oem'])){
             $filter = new ArticleCode();
             $oe = $filter->filter($data['oem']);
             if ($oe){
-                $oem = $this->entityManager->getRepository(Oem::class)
-                        ->findOneByOe($oe);
-                $bid->setOem($oem);
+                $bid->setOe($oe);
             }    
         }
         
-        $currentUser = $this->entityManager->getRepository(User::class)
-                ->findOneByEmail($this->authService->getIdentity());
-        if ($currentUser){
-            $bid->setUser($currentUser);  
-        }    
+        $bid->setUser($this->currentUser());  
         
         $bid->setOrder($order);
         
@@ -554,7 +548,7 @@ class OrderManager
             'price' => $row['price'],
             'display_name' => (empty($row['displayName'])) ? null:$row['displayName'],
             'date_created' => date('Y-m-d H:i:s'),
-            'oem_id' => null,
+            'oe' => null,
             'order_id' => $order->getId(),
             'take' => Bid::TAKE_NO,
             'base_key' => (empty($row['baseKey'])) ? null:$row['baseKey'],
@@ -572,11 +566,7 @@ class OrderManager
             $filter = new ArticleCode();
             $oe = $filter->filter($row['oem']);
             if ($oe){
-                $oem = $this->entityManager->getRepository(Oem::class)
-                        ->findOneByOe($oe);
-                if ($oem){
-                    $upd['oem_id'] = $oem->getId();
-                }
+                $upd['oe'] = $oe;
             }    
         }
         
@@ -639,21 +629,17 @@ class OrderManager
             $filter = new ArticleCode();
             $oe = $filter->filter($data['oem']);
             if ($oe){
-                $oem = $this->entityManager->getRepository(Oem::class)
-                        ->findOneByOe($oe);
-                if ($oem){
-                    $selection = new Selection();
-                    $selection->setComment((empty($data['comment'])) ? null:$data['comment']);
-                    $selection->setOem($oem);
+                $selection = new Selection();
+                $selection->setComment((empty($data['comment'])) ? null:$data['comment']);
+                $selection->setOe($oe);
 
-                    $selection->setOrder($order);
+                $selection->setOrder($order);
 
-                    // Добавляем сущность в менеджер сущностей.
-                    $this->entityManager->persist($selection);
+                // Добавляем сущность в менеджер сущностей.
+                $this->entityManager->persist($selection);
 
-                    // Применяем изменения к базе данных.
-                    $this->entityManager->flush($selection); 
-                }    
+                // Применяем изменения к базе данных.
+                $this->entityManager->flush($selection); 
             }    
         }
         return;
@@ -672,18 +658,14 @@ class OrderManager
             $filter = new ArticleCode();
             $oe = $filter->filter($data['oem']);
             if ($oe){
-                $oem = $this->entityManager->getRepository(Oem::class)
-                        ->findOneByOe($oe);
-                if ($oem){
-                    $upd = [
-                        'comment' => (empty($data['comment'])) ? null:$data['comment'],
-                        'oem_id' => $oem->getId(),
-                        'order_id' => $order->getId(),
-                    ];
-                    
-                    $this->entityManager->getConnection()
-                            ->insert('selection', $upd);
-                }    
+                $upd = [
+                    'comment' => (empty($data['comment'])) ? null:$data['comment'],
+                    'oe' => $oe,
+                    'order_id' => $order->getId(),
+                ];
+
+                $this->entityManager->getConnection()
+                        ->insert('selection', $upd);
             }    
         }
         return;
