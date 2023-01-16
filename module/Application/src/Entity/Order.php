@@ -1262,7 +1262,7 @@ class Order {
     {
         $result = [];
         foreach ($this->selections as $selection){
-            $result[] = $selection->getOem()->getOe();
+            $result[] = $selection->getOe();
         } 
         
         return Encoder::encode($result);
