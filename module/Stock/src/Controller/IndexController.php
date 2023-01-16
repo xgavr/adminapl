@@ -36,5 +36,5 @@ class IndexController extends AbstractActionController
     {
         return [];
     }
-        
+    
 }

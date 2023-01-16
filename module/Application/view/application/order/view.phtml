@@ -1,6 +1,8 @@
 <?php
 use Application\Entity\Order;  
 use Stock\Entity\Vt;
+
+$vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
 ?>
 <div class="modal-header">
     <h5 class="modal-title" id="otModalLabel">
@@ -19,16 +21,22 @@ use Stock\Entity\Vt;
             data-url="/order/good-content/<?= $order->getId()?>"
             data-side-pagination="client"
             data-pagination="true"
+            data-cookie="true"
+            data-cookie-id-table="orderViewSaveId"
+            data-cookie-expire="1m"
             data-icon-size="sm"
             data-page-size = "100"
             data-page-list="[100, 200]"
             data-toolbar="#ordergoodtoolbar"
             data-toolbar-align="right"
+            data-show-columns="true"
             data-query-params="ordergoodQueryParams"
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
             data-unique-id = "rowNo"                
             data-click-to-select="true"
+            data-id-field = "id"
+            data-editable-url = "/order/bid-editable/"
             >
             <thead>
                 <tr>
@@ -40,7 +48,8 @@ use Stock\Entity\Vt;
                     <th data-field='price' data-formatter="gePriceFormatter" data-editable="true" data-type="numeric" data-align="right" data-width="100">Цена</th>
                     <th data-field='num' data-align="right" data-editable="true" data-type="numeric" data-width="50">Кол-во</th>
                     <th data-field='amount' data-align="right" data-formatter="geAmountFormatter" data-type="numeric" data-width="100">Сумма</th>
-                    <th data-field="rowNo" data-formatter="grActiveFormatter" data-width="10"></th>
+                    <th data-field="baseKey" data-visible="false" data-editable="true" data-editable-type="select" data-editable-source="/order/find-base/<?= $order->getId()?>" data-width="10">Партия</th>
+                    <th data-field="active1" data-formatter="grActiveFormatter" data-width="10">Д</th>
                  </tr>                
             </thead>
         </table>        
@@ -51,7 +60,7 @@ use Stock\Entity\Vt;
     <div class="col-xs-12">
         <div id="vttoolbar">
             <div class="form-inline" role="form">
-                <button <?= $disabled?> class="btn btn-default btn-sm vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
+                <button <?= $vtDisabled?> class="btn btn-default btn-sm vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить возврат
                 </button>                
             </div>
@@ -207,7 +216,7 @@ use Stock\Entity\Vt;
     
     function idFormatter(value, row){
         if (row.aplId > 0){
-            return value + ' ('+row.aplId+')';
+            return '<nobr>' + value + ' ('+row.aplId+')</nobr>';
         }
         
         return value;

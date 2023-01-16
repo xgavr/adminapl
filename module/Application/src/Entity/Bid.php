@@ -58,6 +58,11 @@ class Bid {
      */
     protected $take;
 
+    /** 
+     * @ORM\Column(name="base_key")  
+     */
+    protected $baseKey;
+    
     /**
      * @ORM\Column(name="date_created")  
      */
@@ -157,6 +162,24 @@ class Bid {
         return $this->take;
     }
 
+    /**
+     * Sets base key.
+     * @param string $baseKey     
+     */
+    public function setBaseKey($baseKey) 
+    {
+        $this->baseKey = $baseKey;
+    }    
+    
+    /**
+     * Returns the base key.
+     * @return string     
+     */
+    public function getBaseKey() 
+    {
+        return $this->baseKey;
+    }
+    
     /**
      * Returns possible take as array.
      * @return array

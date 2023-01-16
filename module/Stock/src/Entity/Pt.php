@@ -103,6 +103,11 @@ class Pt {
      */
     protected $amount;
     
+    /** 
+     * @ORM\Column(name="base_key")  
+     */
+    protected $baseKey;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="pt") 
      * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
@@ -477,6 +482,24 @@ class Pt {
     public function getAmount() 
     {
         return $this->amount;
+    }
+    
+    /**
+     * Sets base key.
+     * @param string $baseKey     
+     */
+    public function setBaseKey($baseKey) 
+    {
+        $this->baseKey = $baseKey;
+    }    
+    
+    /**
+     * Returns the base key.
+     * @return string     
+     */
+    public function getBaseKey() 
+    {
+        return $this->baseKey;
     }
     
     /**

@@ -24,6 +24,8 @@ use Application\Entity\Selection;
 use Application\Form\SelectionForm;
 use Application\Entity\Oem;
 use Application\Entity\SupplierOrder;
+use Stock\Entity\Movement;
+use Stock\Entity\Register;
 
 class OrderController extends AbstractActionController
 {
@@ -493,6 +495,7 @@ class OrderController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'order' => $order,
+            'disabled' => $order->getStatus() == Order::STATUS_SHIPPED,
         ]);
     } 
     
@@ -644,6 +647,13 @@ class OrderController extends AbstractActionController
                         unset($upd[$data['name']]);
                         $upd['display_name'] = $data['value'];
                     }
+                    if ($data['name'] == 'baseKey'){
+                        unset($upd[$data['name']]);
+                        if ($data['value'] == 'авто'){
+                            unset($data['value']);                            
+                        }
+                        $upd['base_key'] = empty($data['value']) ? null:$data['value'];
+                    }
                     $this->orderManager->updateBid($bid, $upd);
                 }    
             }
@@ -685,7 +695,38 @@ class OrderController extends AbstractActionController
         
         return new JsonModel(
            ['ok']
-        );           
+        );                   
+    }
+    
+    public function findBaseAction()
+    {
+        $orderId = $this->params()->fromRoute('id', -1);
         
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);        
+
+        if ($order == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->orderRegister($order);        
+        $bids = $order->getBids();
+        $result = [0 => 'авто'];
+        foreach ($bids as $bid){
+            $bases = $this->entityManager->getRepository(Movement::class)
+                    ->findBases($bid->getGood()->getId(), $docStamp, $order->getOffice()->getId());
+            foreach ($bases as $base){
+                $result[] = [
+                    'value' => $base['baseKey'],
+                    'text' => $base['baseKey'],
+                ];
+            }    
+        }    
+        
+        return new JsonModel(
+           $result
+        );                   
     }
 }

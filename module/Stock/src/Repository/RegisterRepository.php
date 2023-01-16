@@ -198,7 +198,7 @@ class RegisterRepository extends EntityRepository
      */
     public function vtpRegister($vtp)
     {
-        $dateOper = date('Y-m-d 23:01:00', strtotime($vtp->getDocDate()));
+        $dateOper = date('Y-m-d 22:01:00', strtotime($vtp->getDocDate()));
         return $this->register($dateOper, Movement::DOC_VTP, $vtp->getId());
     }    
 
@@ -234,7 +234,7 @@ class RegisterRepository extends EntityRepository
      */
     public function vtRegister($vt)
     {
-        $dateOper = date('Y-m-d 22:01:00', strtotime($vt->getDocDate()));
+        $dateOper = date('Y-m-d 16:00:00', strtotime($vt->getDocDate()));
         return $this->register($dateOper, Movement::DOC_VT, $vt->getId());
     }    
 
@@ -246,7 +246,7 @@ class RegisterRepository extends EntityRepository
      */
     public function orderRegister($order)
     {
-        $dateOper = date('Y-m-d 21:01:00', strtotime($order->getDocDate()));
+        $dateOper = date('Y-m-d 15:00:00', strtotime($order->getDocDate()));
         return $this->register($dateOper, Movement::DOC_ORDER, $order->getId());
     } 
     

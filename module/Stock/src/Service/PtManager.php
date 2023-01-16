@@ -196,7 +196,7 @@ class PtManager
                             'good_id' => $ptGood->getGood()->getId(),
                             'office_id' => $pt->getOffice2()->getId(),
                             'company_id' => $pt->getCompany2()->getId(),
-                            'doc_stamp' => $docStamp,
+                            'doc_stamp' => $docStamp - 60*60*6, //-6 часов,
                         ];
 
                         $this->entityManager->getRepository(Movement::class)

@@ -229,24 +229,21 @@ class OrderManager
         
         return;
     }    
-    
-    
-    
+        
     /**
      * Добавить движения
      * @param Order $order
      * @param float $docStamp
      * @param Bid $bid
      * @return integer
-     */
-    
+     */    
     private function insertMovement($order, $docStamp, $bid)
     {
         $takeNoCount = 0;
         if ($order->getStatus() == Order::STATUS_SHIPPED){
             
             $bases = $this->entityManager->getRepository(Movement::class)
-                    ->findBases($bid->getGood()->getId(), $docStamp, $order->getOffice()->getId());
+                    ->findBases($bid->getGood()->getId(), $docStamp, $order->getOffice()->getId(), $bid->getBaseKey());
 
             $write = $bid->getNum();
 
@@ -502,6 +499,7 @@ class OrderManager
         $bid->setDisplayName((empty($data['displayName'])) ? null:$data['displayName']);
         $currentDate = date('Y-m-d H:i:s');        
         $bid->setDateCreated($currentDate);
+        $bid->setBaseKey((empty($data['baseKey'])) ? null:$data['baseKey']);
         
         if ($data['good'] instanceof Goods){
             $bid->setGood($data['good']);            
@@ -559,6 +557,7 @@ class OrderManager
             'oem_id' => null,
             'order_id' => $order->getId(),
             'take' => Bid::TAKE_NO,
+            'base_key' => (empty($row['baseKey'])) ? null:$row['baseKey'],
         ];
 
         if ($row['good'] instanceof Goods){

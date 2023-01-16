@@ -185,7 +185,7 @@ class VtManager
                         'good_id' => $vtGood->getGood()->getId(),
                         'office_id' => $vt->getOffice()->getId(),
                         'company_id' => $vt->getOrder()->getCompany()->getId(),
-                        'doc_stamp' => $docStamp,
+                        'doc_stamp' => $docStamp - 60*60*12, //-12 часов
                     ];
 
                     $this->entityManager->getRepository(Movement::class)

@@ -213,7 +213,7 @@
         switch(value){
             case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
             case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
-                        var orderId = (row.cashDoc.order) ? "<a href='/order/view/"+row.cashDoc.order.id+"' target=_blank>"+row.cashDoc.order.aplId+"</a>":'Пополнение ЛЦ';
+                        var orderId = (row.cashDoc.order) ? "<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+row.cashDoc.order.aplId+"</a>":'Пополнение ЛЦ';
                         var contactName = (row.cashDoc.contact.client) ? "<a href='/client/view/"+row.cashDoc.contact.client.id+"' target=_blank>"+row.cashDoc.contact.client.name+"</a>":'NaN';
                         return contactName+' '+orderId;
             case '<?= CashDoc::KIND_IN_REFILL ?>': 
