@@ -108,7 +108,7 @@ class Producer {
 
     public function getName() 
     {
-        return $this->name;
+        return ($this->name) ? $this->name:'Нет названия';
     }
 
     public function setName($name) 

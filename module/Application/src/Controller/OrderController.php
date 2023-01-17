@@ -536,6 +536,25 @@ class OrderController extends AbstractActionController
         return new JsonModel($good->getOptsJsonEditableFormat());
     } 
 
+    public function repostAction()
+    {
+        $orderId = $this->params()->fromRoute('id', -1);
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);        
+
+        if ($order == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->orderManager->repostOrder($order);
+        $this->entityManager->refresh($order);
+        
+        return new JsonModel(
+           $order->toLog()
+        );           
+    }        
+    
     public function repostAllOrderAction()
     {                
         $this->orderManager->repostAllOrder();

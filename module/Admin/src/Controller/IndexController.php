@@ -21,6 +21,8 @@ use Admin\Form\SmsForm;
 use Application\Entity\Order;
 use User\Filter\PhoneFilter;
 use Stock\Entity\Register;
+use Application\Entity\Producer;
+use Admin\Form\ProducerUnionForm;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -1102,5 +1104,51 @@ class IndexController extends AbstractActionController
         return new JsonModel([
             'password' => $password,
         ]);                
+    }
+    
+    public function producerUnionFormAction()
+    {
+        $producerId = (int)$this->params()->fromRoute('id', -1);
+        
+        $producer = null;
+        if ($producerId > 0){
+            $producer = $this->entityManager->getRepository(Producer::class)
+                    ->find($producerId);
+        }    
+        
+        $form = new ProducerUnionForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                $producer = $this->entityManager->getRepository(Producer::class)
+                        ->findOneBy(['name' => $data['producer']]);
+                $newProducer = $this->entityManager->getRepository(Producer::class)
+                        ->findOneBy(['name' => $data['newProducer']]);
+                if ($producer && $newProducer){
+                    $this->registerManager->uniteProducer($newProducer, $producer);
+                }
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($producer){
+                $data = [
+                    'producer' => $producer->getName(),
+                ];
+                $form->setData($data);
+            }    
+        }
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'producer' => $producer,
+        ]);        
     }
 }

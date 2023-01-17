@@ -22,10 +22,16 @@ if (isset($unknownProducerQuery)){
         <div class="row">
             <div class="col-md-12">
                 <h1>
-                    <button value="/producer/best-name/<?= $producer->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                    <button value="/producer/best-name/<?= $producer->getId()?>" class="btn btn-default btn-xs refresh-table-button"
                             title="Обновить наименование">
                         <span class="glyphicon glyphicon-refresh" ></span>
                     </button> 
+                    <button class="btn btn-default btn-xs producer-union-modal-show" type="button" 
+                            modal-url="/admin/producer-union-form/<?= $producer->getId()?>" 
+                            data-toggle='tooltip' data-original-title="Объеденить">
+                        <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
+                    </button>
+                    
                     <span><?= $this->escapeHtml($producer->getName()); ?></span>
                     <sup style="font-size: xx-small">
                         <?php foreach($producer->getUnknownProducer() as $unknownProducer):?>    
@@ -138,7 +144,7 @@ if (isset($unknownProducerQuery)){
                         </div>
                     </div>
                 </div>
-                <?php if ($this->access('rate.manage')):?>
+                <?php if ($this->access('rate.manage') && $rate):?>
                     <div class="panel panel-info">
                         <div class="panel-heading">
                             Расценка
@@ -185,6 +191,15 @@ if (isset($unknownProducerQuery)){
 </div>
 
 <script type="text/javascript">
+    $(document).on('click', '.producer-union-modal-show', function (e) {
+        var url = $(this).attr('modal-url');
+        showFormDialog({
+            id: 'producerUnionModal',
+            url: url,
+//            width: '500px'
+        });
+    });  
+
     $(window).on('load', function() {
         $('#editableCheckBox').change(function() {
             $.ajax({

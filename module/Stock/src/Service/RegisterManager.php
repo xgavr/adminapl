@@ -505,6 +505,7 @@ class RegisterManager
         $this->orderManager->changeGood($oldGood, $newGood);
         $this->vtManager->changeGood($oldGood, $newGood);
         $this->vtpManager->changeGood($oldGood, $newGood);
+        $this->stManager->changeGood($oldGood, $newGood);
     }
     
     /**
@@ -532,24 +533,27 @@ class RegisterManager
             $this->entityManager->flush();
         }
         
-        $this->changeGood($good, $newGood);
-        
         $oes = $this->entityManager->getRepository(Oem::class)
                 ->findBy(['good' => $good->getId()]);
         foreach ($oes as $oe){
-            $oe->setGood($newGood);
-            $this->entityManager->persist($oe);
-            $this->entityManager->flush();
+            $oem = $this->entityManager->getRepository(Oem::class)
+                    ->findOneBy(['good' => $newGood->getId(), 'oe' => $oe->getOe()]);
+            if (empty($oem)){
+                $oe->setGood($newGood);
+                $this->entityManager->persist($oe);
+                $this->entityManager->flush();
+            }    
         }
         
         $this->changeGood($good, $newGood);
+        
         return;
     }
     
     /**
      * Объеденить производителей
-     * @param Producer $producerDest
-     * @param Producer $producerSource
+     * @param Producer $producerDest Новый
+     * @param Producer $producerSource Старый
      */
     public function uniteProducer($producerDest, $producerSource)
     {

@@ -16,6 +16,13 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
 
 <div class="row">
     <div class="col-md-12">
+        <div id="ordergoodtoolbar">
+            <div class="form-inline" role="form">
+                <button class="btn btn-default btn-sm order-repost" type="button" title="Перепровести">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                </button>                
+            </div>
+        </div>
         <table id="ordergoodtable" 
             data-toggle="ordergoodtable" 
             data-url="/order/good-content/<?= $order->getId()?>"
@@ -24,11 +31,12 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             data-cookie="true"
             data-cookie-id-table="orderViewSaveId"
             data-cookie-expire="1m"
+            data-show-refresh="true"
             data-icon-size="sm"
             data-page-size = "100"
             data-page-list="[100, 200]"
             data-toolbar="#ordergoodtoolbar"
-            data-toolbar-align="right"
+            data-toolbar-align="left"
             data-show-columns="true"
             data-query-params="ordergoodQueryParams"
             data-response-handler="responseHandler"
@@ -79,7 +87,6 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             data-sort-order="desc"            
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
-            data-row-style="rowStyle"
             >
             <thead>
                 <tr>
@@ -124,6 +131,12 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
         orderUpdateTotal();
     }
     
+    function repostOrder(orderId){
+        $.get( "/order/repost/"+orderId, function(data){
+            $table.bootstrapTable('refresh');
+        });        
+    }
+    
     $( document ).ready(function() {        
         $table.bootstrapTable({
             onLoadSuccess: function(res){
@@ -138,6 +151,10 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                 
             }            
         });         
+
+        $(document).on('click', '.order-repost', function (e) {
+            repostOrder(<?= $order->getId()?>);
+        });        
         
     });    
 

@@ -346,6 +346,15 @@ class VtGood {
     }
     
     /**
+     * Sets  good.
+     * @param Goods $good     
+     */
+    public function setGood($good) 
+    {
+        $this->good = $good;
+    }    
+    
+    /**
      * Returns the good.
      * @return Goods     
      */
