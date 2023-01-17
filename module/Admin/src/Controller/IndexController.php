@@ -22,6 +22,7 @@ use Application\Entity\Order;
 use User\Filter\PhoneFilter;
 use Stock\Entity\Register;
 use Application\Entity\Producer;
+use Application\Entity\UnknownProducer;
 use Admin\Form\ProducerUnionForm;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 
@@ -1124,12 +1125,12 @@ class IndexController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
-                $producer = $this->entityManager->getRepository(Producer::class)
+                $producer = $this->entityManager->getRepository(UnknownProducer::class)
                         ->findOneBy(['name' => $data['producer']]);
-                $newProducer = $this->entityManager->getRepository(Producer::class)
+                $newProducer = $this->entityManager->getRepository(UnknownProducer::class)
                         ->findOneBy(['name' => $data['newProducer']]);
-                if ($producer && $newProducer){
-                    $this->registerManager->uniteProducer($newProducer, $producer);
+                if ($producer->getProducer() && $newProducer->getProducer()){
+                    $this->registerManager->uniteProducer($newProducer->getProducer(), $producer->getProducer());
                 }
                 
                 return new JsonModel(
