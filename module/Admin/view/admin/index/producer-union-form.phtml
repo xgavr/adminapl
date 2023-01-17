@@ -6,6 +6,7 @@ $form->get('producer')->setAttributes([
     'class'=>'form-control producer', 
     'data-provide' => "typeahead",
     'autocomplete' => 'off',
+    'readonly' => true,
     ]);
 
 $form->get('newProducer')->setAttributes([
@@ -66,7 +67,7 @@ $form->prepare();
         var data = serializeForm('#producer-union-form');
         $.ajax({
             type: 'POST',
-            url: '/admin/producer-union-form/',
+            url: '/admin/producer-union-form/<?= $producer->getId()?>',
             data: $.param(data)
         })
             .done(function (data) {
@@ -90,7 +91,7 @@ $form->prepare();
                     return process(data);
                 });
             },
-            changeInputOnSelect: true,
+            changeInputOnSelect: true
         });
 
         var forms = $('#producer-union-form');

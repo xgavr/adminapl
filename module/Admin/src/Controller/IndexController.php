@@ -1125,12 +1125,12 @@ class IndexController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
-                $producer = $this->entityManager->getRepository(UnknownProducer::class)
-                        ->findOneBy(['name' => $data['producer']]);
-                $newProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                $newUnknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                         ->findOneBy(['name' => $data['newProducer']]);
-                if ($producer->getProducer() && $newProducer->getProducer()){
-                    $this->registerManager->uniteProducer($newProducer->getProducer(), $producer->getProducer());
+                if ($producer && $newUnknownProducer){
+                    if ($newUnknownProducer->getProducer()){
+                        $this->registerManager->uniteProducer($newUnknownProducer->getProducer(), $producer);
+                    }    
                 }
                 
                 return new JsonModel(
