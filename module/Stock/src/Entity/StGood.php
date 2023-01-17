@@ -82,6 +82,11 @@ class StGood {
      */
     protected $amount;
 
+    /** 
+     * @ORM\Column(name="base_key")  
+     */
+    protected $baseKey;
+
     /**
      * @ORM\ManyToOne(targetEntity="Stock\Entity\St", inversedBy="stGoods") 
      * @ORM\JoinColumn(name="st_id", referencedColumnName="id")
@@ -326,6 +331,24 @@ class StGood {
         return $this->amount;
     }
     
+    /**
+     * Sets base key.
+     * @param string $baseKey     
+     */
+    public function setBaseKey($baseKey) 
+    {
+        $this->baseKey = $baseKey;
+    }    
+    
+    /**
+     * Returns the base key.
+     * @return string     
+     */
+    public function getBaseKey() 
+    {
+        return $this->baseKey;
+    }
+        
     /**
      * Returns the st.
      * @return St     
