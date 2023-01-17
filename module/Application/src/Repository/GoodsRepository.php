@@ -1637,11 +1637,7 @@ class GoodsRepository extends EntityRepository
                 ->findBy($query);
         $result = true;
         foreach ($oems as $oem){
-            if ($this->getEntityManager()->getRepository(Oem::class)->allowDeleteOem($oem)){
-                $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oem->getId()]);
-            } else {
-                $result = false;
-            }  
+            $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oem->getId()]);
         }
         return $result;
     }

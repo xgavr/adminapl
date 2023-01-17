@@ -35,12 +35,6 @@ class Selection {
     protected $oe;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Oem", inversedBy="selections") 
-     * @ORM\JoinColumn(name="oem_id", referencedColumnName="id")
-     */
-    private $oem;
-    
-    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Order", inversedBy="selections") 
      * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
      */
@@ -113,16 +107,5 @@ class Selection {
     public function getOem() 
     {
         return $this->oem;
-    }
-
-    /**
-     * Задает связанный oem.
-     * @param \Application\Entity\Oem $oem
-     */    
-    public function setOem($oem) 
-    {
-        $this->oem = $oem;
-//        $oem->addSelection($this);
-    }     
-        
+    }        
 }

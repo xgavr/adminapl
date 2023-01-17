@@ -581,6 +581,7 @@ class OemRepository  extends EntityRepository{
     }
 
     /**
+     * УСТАРЕЛО
      * Можно удалить номер
      * @param Oem $oem
      * @return bool

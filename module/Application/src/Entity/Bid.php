@@ -90,14 +90,7 @@ class Bid {
      * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
      */
     private $order;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Oem", inversedBy="bids") 
-     * @ORM\JoinColumn(name="oem_id", referencedColumnName="id")
-     */
-    private $oem;
-    
-    
+        
     public function getId() 
     {
         return $this->id;
@@ -345,20 +338,6 @@ class Bid {
      * @return \Application\Entity\Oem
      */
     
-    public function getOem() 
-    {
-        return $this->oem;
-    }
-
-    /**
-     * Задает связанный oem.
-     * @param \Application\Entity\Oem $oem
-     */    
-    public function setOem($oem) 
-    {
-        $this->oem = $oem;
-    }     
-        
     /**
      * Лог
      * @return array

@@ -72,18 +72,6 @@ class Oem {
     protected $good;    
     
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Selection", mappedBy="oem")
-    * @ORM\JoinColumn(name="id", referencedColumnName="oem_id")
-     */
-    private $selections;    
-        
-    /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\Bid", mappedBy="oem")
-    * @ORM\JoinColumn(name="id", referencedColumnName="oem_id")
-     */
-    private $bids;    
-        
-    /**
      * @ORM\Column(name="intersect_good_id")  
      */
     protected $intersectGoodId;        
