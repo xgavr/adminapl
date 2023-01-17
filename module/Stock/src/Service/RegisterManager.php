@@ -20,6 +20,7 @@ use Company\Entity\Office;
 use Application\Entity\Goods;
 use Application\Entity\Article;
 use Application\Entity\Producer;
+use Application\Entity\UnknownProducer;
 use Application\Entity\Oem;
 
 /**
@@ -557,6 +558,17 @@ class RegisterManager
      */
     public function uniteProducer($producerDest, $producerSource)
     {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+        
+        $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findBy(['producer' => $producerSource->getId()]);
+        foreach ($unknownProducers as $unknownProducer){
+            $unknownProducer->setProducer($producerDest);
+            $this->entityManager->persist($unknownProducer);
+            $this->entityManager->flush();            
+        }
+
         $oldGoods = $this->entityManager->getRepository(Goods::class)
                 ->findBy(['producer' => $producerSource->getId()]);
         foreach ($oldGoods as $oldGood){
