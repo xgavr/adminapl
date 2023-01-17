@@ -355,7 +355,7 @@
     *Удаление в bootstrap таблице
     *str url - ссылка на удаление строки таблицы
     */
-    function tableRowDelete(url, table = 'table') {
+    function tableRowDelete(url, table = '$table') {
         if (url){
             if (confirm('Удалить запись?')){
                 var table = $('#'+table);

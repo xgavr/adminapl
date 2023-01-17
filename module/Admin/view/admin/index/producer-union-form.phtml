@@ -64,6 +64,11 @@ $form->prepare();
     * очистить поле
      */
     function submitForm(){
+        $('#producerUnionModal').modal('hide');
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: false
+        });
         var data = serializeForm('#producer-union-form');
         $.ajax({
             type: 'POST',
@@ -72,14 +77,12 @@ $form->prepare();
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#producerUnionModal').modal('hide');
-                } else {
-                    $('#producerUnionModal .modal-content').html(data);                    
+                    dialog.modal('hide');
                 }    
             })
             .fail(function () {
-                alert("Ошибка при открытии формы.");
-
+                dialog.modal('hide');
+                bootbox.alert("Произошла ошибка при выполнении операции.");
             });    
     };
 
