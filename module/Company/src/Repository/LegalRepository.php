@@ -194,10 +194,15 @@ class LegalRepository extends EntityRepository
     /**
      * Получить актуальный банковский счет
      * @param Legal $legal
+     * @param date $dateStart
      * @return BankAccount
      */
-    public function findDefaultBankAccount($legal)
+    public function findDefaultBankAccount($legal, $dateStart = null)
     {
+        if (empty($dateStart)){
+            $dateStart = date('Y-m-d'); 
+        }
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -207,7 +212,10 @@ class LegalRepository extends EntityRepository
             ->setParameter('1', $legal->getId())
             ->andWhere('ba.status = ?2')     
             ->setParameter('2', BankAccount::STATUS_ACTIVE)
-            ->orderBy('ba.id', 'DESC')    
+            ->andWhere('ba.dateStart <= :dateStart')     
+            ->setParameter('dateStart', $dateStart)
+            ->orderBy('ba.dateStart', 'DESC')    
+            ->addOrderBy('ba.id', 'DESC')    
             ->setMaxResults(1)    
                 ;
 

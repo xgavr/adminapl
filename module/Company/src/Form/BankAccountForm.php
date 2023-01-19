@@ -141,6 +141,18 @@ class BankAccountForm extends Form
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'date',
+            'name' => 'dateStart',
+            'attributes' => [
+                'id' => 'dateStart',
+                'value' => date('Y-m-d'),
+            ],
+            'options' => [
+                'label' => 'Дата начала использования',
+            ],
+        ]);
+        
         // Add the Submit button
         $this->add([
             'type'  => 'submit',
@@ -314,5 +326,20 @@ class BankAccountForm extends Form
                 'validators' => [
                 ],
             ]); 
+        
+        $inputFilter->add([
+                'name'     => 'dateStart',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'Date',
+                    ],
+                ],
+            ]);                          
+        
+        
     }           
 }

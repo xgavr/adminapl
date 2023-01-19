@@ -91,6 +91,11 @@ class BankAccount {
      */
     protected $rs;
     
+    /** 
+     * @ORM\Column(name="date_start")  
+     */
+    protected $dateStart;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="bank_account") 
      * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
@@ -189,6 +194,24 @@ class BankAccount {
         $this->rs = $filter->filter($rs);
     }     
 
+    /**
+     * Returns the date of start.
+     * @return string     
+     */
+    public function getDateStart() 
+    {
+        return $this->dateStart;
+    }
+    
+    /**
+     * Sets the date when start.
+     * @param string $dateStart     
+     */
+    public function setDateStart($dateStart) 
+    {
+        $this->dateStart = $dateStart;
+    }    
+    
     /**
      * Returns status.
      * @return int     

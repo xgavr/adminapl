@@ -650,6 +650,8 @@ class OemRepository  extends EntityRepository{
      */
     public function cars($goodId, $splice = 5)
     {
+        $result = [];
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -671,10 +673,10 @@ class OemRepository  extends EntityRepository{
             $result[] = $transferFilter->filter($row['brandName']);
         }        
         
-        $result = array_filter($result);
-        if (count($result)){
-            array_splice($result, $splice);
-            return implode(' ', $result);
+        $out = array_filter($result);
+        if (count($out)){
+            array_splice($out, $splice);
+            return implode(' ', $out);
         }
         
         return;

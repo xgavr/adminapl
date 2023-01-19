@@ -221,7 +221,8 @@ class LegalManager
         $bankAccount->setAccountType((empty($data['accountType'])) ? BankAccount::ACСOUNT_CHECKING:$data['accountType']);            
         $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
         $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
-        $bankAccount->setCash((empty($data['cash'])) ? null:$data['cash']);            
+        $bankAccount->setCash((empty($data['cash'])) ? null:$data['cash']); 
+        $bankAccount->setDateStart((empty($data['dateStart'])) ? date('Y-m-d'):$data['dateStart']);                    
 
         $currentDate = date('Y-m-d H:i:s');
         $bankAccount->setDateCreated($currentDate);
@@ -256,6 +257,7 @@ class LegalManager
         $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
         $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
         $bankAccount->setCash((empty($data['cash'])) ? null:$data['cash']);            
+        $bankAccount->setDateStart((empty($data['dateStart'])) ? date('Y-m-d'):$data['dateStart']);                    
 
         $this->entityManager->persist($bankAccount);
 

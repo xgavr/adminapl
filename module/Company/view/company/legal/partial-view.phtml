@@ -60,6 +60,7 @@
                         <th>БИК</th>
                         <th>Счет</th>
                         <th>Корр. счет</th>
+                        <th>Дата</th>
                         <?php if ($legal->isOfficeLegal()):?>
                             <th>Api</th>
                             <th>Касса</th>
@@ -85,6 +86,9 @@
                            </td>
                            <td>
                                <?= $bankAccount->getKs()?>
+                           </td>
+                           <td>
+                               <?= date('d.m.Y', strtotime($bankAccount->getDateStart()))?>
                            </td>
                             <?php if ($legal->isOfficeLegal()):?>
                                 <td><?= $bankAccount->getApiAsString()?></td>
