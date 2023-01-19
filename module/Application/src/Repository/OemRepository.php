@@ -589,12 +589,12 @@ class OemRepository  extends EntityRepository{
     public function allowDeleteOem($oem)
     {
         $bidCount = $this->getEntityManager()->getRepository(Bid::class)
-                ->count(['oem' => $oem->getId()]);
+                ->count(['oe' => $oem->getOe()]);
         if ($bidCount){
             return false;
         }
         $selectionCount = $this->getEntityManager()->getRepository(Selection::class)
-                ->count(['oem' => $oem->getId()]);
+                ->count(['oe' => $oem->getOe()]);
         if ($selectionCount){
             return false;
         }
@@ -650,8 +650,6 @@ class OemRepository  extends EntityRepository{
      */
     public function cars($goodId, $splice = 5)
     {
-        $result = [];
-        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();

@@ -867,36 +867,37 @@ class AplDocService {
                 ->findForUpdateApl();
         if ($vt){
             $post = [
-                'parent' => $vtp->getPtu()->getOffice()->getAplId(),
-                'type' =>   'Resup',
-                'sort' =>   $vtp->getAmount(),
-                'publish' => $vtp->getAplStatusAsString(),
-                'name' =>   $vtp->getPtu()->getSupplier()->getAplId(),
-                'comment' => 'Suppliers',
-                'info' => $vtp->getComment(),
-                'info2' => $vtp->getInfo(),
-//                'user' =>   $ptu->getUserCreator()->getAplId(),
+                'parent' => $vt->getOffice()->getAplId(),
+                'type' =>   'Returns',
+                'sort' =>   $vt->getAmount(),
+                'publish' => $vt->getAplStatusAsString(),
+                'name' =>   $vt->getOrder()->getAplId(),
+                'comment' => 'Orders',
+                'info' => $vt->getComment(),
+                'comiss' => $vt->getComissStatusAsString(),
+                'comissioner' => $vt->getComissPhone(),
                 'sf' =>     0,
-                'ns' =>     $vtp->getPtu()->getAplId(),
-                'ds' =>     $vtp->getDocDate(),
+                'ns' =>     $vt->getId(),
+                'ds' =>     $vt->getDocDate(),
                 'aa' =>     1,
             ];
 
-            if ($vtp->getAplId()){
-                $post['id'] = $vtp->getAplId();
+            if ($vt->getAplId()){
+                $post['id'] = $vt->getAplId();
             }
             
             $so = [];
-            $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
-                    ->findBy(['vtp' => $vtp->getId()]);
-            foreach ($vtpGoods as $vtpGood){
+            $vtGoods = $this->entityManager->getRepository(VtGood::class)
+                    ->findBy(['vt' => $vt->getId()]);
+            foreach ($vtGoods as $vtGood){
                 $tp = [
-                    'sort' => $vtpGood->getQuantity(),
-                    'publish' => $vtp->getAplStatusAsString(),
-                    'name' => $vtpGood->getGood()->getAplId(),
-                    'comment' => $vtpGood->getPrice(),                    
-                    'art' => $vtpGood->getGood()->getCode(),
-                    'artid' => $vtpGood->getGood()->getAplId(),
+                    'sort' => $vtGood->getQuantity(),
+                    'publish' => $vt->getAplStatusAsString(),
+                    'name' => $vtGood->getGood()->getAplId(),
+                    'comment' => $vtGood->getPrice(),                    
+                    'art' => $vtGood->getGood()->getCode(),
+                    'artid' => $vtGood->getGood()->getAplId(),
+                    'artname' => $vtGood->getGood()->getNameShort(),
                 ];                
                 $so[] = $tp;
             }
@@ -924,15 +925,15 @@ class AplDocService {
             }    
 
             if ($ok) {            
-                $vtp->setStatusEx(Vtp::STATUS_EX_APL);
+                $vt->setStatusEx(Vt::STATUS_EX_APL);
                 if ($aplId > 0){
-                    $vtp->setAplId($aplId);
+                    $vt->setAplId($aplId);
                 }    
-                $this->entityManager->persist($vtp);
-                $this->entityManager->flush($vtp);
+                $this->entityManager->persist($vt);
+                $this->entityManager->flush($vt);
             }
 
-            $this->entityManager->detach($vtp);
+            $this->entityManager->detach($vt);
         }
         
         return $result;
@@ -1080,7 +1081,6 @@ class AplDocService {
                 'comment' => 'Stores',
                 'info' => $ot->getComment(),
                 'comiss' => $ot->getComissStatusAsString(),
-                'comissioner' => $ot->getComissPhone(),
 //                'user' =>   $ptu->getUserCreator()->getAplId(),
                 'sf' =>     0,
                 'ns' =>     $ot->getDocNo(),

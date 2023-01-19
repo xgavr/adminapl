@@ -234,12 +234,41 @@ class Vt {
      * Returns possible apl statuses as array.
      * @return array
      */
+    public static function getComissStatusList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 0,
+            self::STATUS_RETIRED => 0,
+            self::STATUS_COMMISSION => 1,
+            self::STATUS_DEFECT => 1,
+        ];
+    }    
+    
+    
+    /**
+     * Returns apl status as string.
+     * @return string
+     */
+    public function getComissStatusAsString()
+    {
+        $list = self::getComissStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 0;
+    }    
+    
+    /**
+     * Returns possible apl statuses as array.
+     * @return array
+     */
     public static function getAplStatusList() 
     {
         return [
             self::STATUS_ACTIVE => 1,
             self::STATUS_RETIRED => 0,
             self::STATUS_COMMISSION => 1,
+            self::STATUS_DEFECT => 1,
         ];
     }    
     
