@@ -1,6 +1,7 @@
 <?php
 use Application\Entity\Order;  
 use Stock\Entity\Vt;
+use Application\Entity\Bid;
 
 $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
 ?>
@@ -51,6 +52,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             data-click-to-select="true"
             data-id-field = "id"
             data-editable-url = "/order/bid-editable/"
+            data-row-style="bidTakeStyle"
             >
             <thead>
                 <tr>
@@ -93,7 +95,6 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             data-sort-order="desc"            
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
-            data-row-style="takeStyle"
             >
             <thead>
                 <tr>
@@ -194,7 +195,14 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
         return params;
     }
     
-    
+    function bidTakeStyle(row){
+        var classes = 'default';
+        if (row.take === "<?= Bid::TAKE_NO?>"){
+            classes = 'warning';
+        }        
+        return {classes: classes};
+    }
+
     function goodFormatter(value, row){
         var url = '/goods/view/'+row.good.id;
         btn = '<nobr><a';
