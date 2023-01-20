@@ -157,6 +157,7 @@ $this->pageBreadcrumbs()->setItems([
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
+        params.month = $('#monthSelect').val();
         return params;
     }
 

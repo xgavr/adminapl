@@ -1156,6 +1156,7 @@ class IndexController extends AbstractActionController
     public function transactionsAction()
     {
         return new ViewModel([
+            'allowDate' => $this->registerManager->getAllowDate(),
         ]);        
     }
     
@@ -1201,7 +1202,6 @@ class IndexController extends AbstractActionController
         return new JsonModel([
             'total' => $total,
             'rows' => $result,
-            'allowDate' => $this->registerManager->getAllowDate(),
         ]);          
     }            
 }
