@@ -584,7 +584,7 @@ class RegisterManager
                 ->findBy(['producer' => $producerSource->getId()]);
         foreach ($oldGoods as $oldGood){
             $this->changeProducer($oldGood, $producerDest);
-            if (time() > $startTime + 30){
+            if (time() > $startTime + 1760){
                 break;
             }
         }       

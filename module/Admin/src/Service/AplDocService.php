@@ -1999,6 +1999,16 @@ class AplDocService {
                 break;
             }    
         }    
+        while (true){
+            if ($this->sendVt()) {
+                usleep(100);
+                if (time() > $startTime + 840){
+                    break;
+                }
+            } else {
+                break;
+            }    
+        }    
         return;
     }    
 }
