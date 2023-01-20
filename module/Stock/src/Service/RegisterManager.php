@@ -11,6 +11,7 @@ use Stock\Entity\Ptu;
 use Stock\Entity\St;
 use Stock\Entity\Vt;
 use Stock\Entity\Vtp;
+use Stock\Entity\Revise;
 use Application\Entity\Bid;
 use Stock\Entity\PtGood;
 use Stock\Entity\StGood;
@@ -582,6 +583,75 @@ class RegisterManager
                 ->findBy(['producer' => $producerSource->getId()]);
         foreach ($oldGoods as $oldGood){
             $this->changeProducer($oldGood, $producerDest);
+        }
+        
+        return;
+    }
+    
+    /**
+     * Перепровести 
+     * @param Register $register
+     */
+    public function repostDoc($register)
+    {
+        switch ($register->getDocType()){
+            case Movement::DOC_ORDER: 
+                $order = $this->entityManager->getRepository(Order::class)
+                    ->find($register->getDocId());
+                if ($order){
+                    $this->orderManager->repostOrder($order);
+                }
+                break;
+            case Movement::DOC_OT: 
+                $ot = $this->entityManager->getRepository(Ot::class)
+                    ->find($register->getDocId());
+                if ($ot){
+                    $this->otManager->repostOt($ot);
+                }
+                break;
+            case Movement::DOC_PT: 
+                $pt = $this->entityManager->getRepository(Pt::class)
+                    ->find($register->getDocId());
+                if ($pt){
+                    $this->ptManager->repostPt($pt);
+                }
+                break;
+            case Movement::DOC_PTU: 
+                $ptu = $this->entityManager->getRepository(Ptu::class)
+                    ->find($register->getDocId());
+                if ($ptu){
+                    $this->ptuManager->repostPtu($ptu);
+                }
+                break;
+            case Movement::DOC_REVISE: 
+                $revise = $this->entityManager->getRepository(Revise::class)
+                    ->find($register->getDocId());
+                if ($revise){
+                    //
+                }
+                break;
+            case Movement::DOC_ST: 
+                $st = $this->entityManager->getRepository(St::class)
+                    ->find($register->getDocId());
+                if ($st){
+                    $this->stManager->repostSt($st);
+                }
+                break;
+            case Movement::DOC_VT: 
+                $vt = $this->entityManager->getRepository(Vt::class)
+                    ->find($register->getDocId());
+                if ($vt){
+                    $this->vtManager->repostVt($vt);
+                }
+                break;
+            case Movement::DOC_VTP: 
+                $vtp = $this->entityManager->getRepository(Vtp::class)
+                    ->find($register->getDocId());
+                if ($vtp){
+                    $this->vtpManager->repostVtp($vtp);
+                }
+                break;
+            default: break;    
         }
         
         return;

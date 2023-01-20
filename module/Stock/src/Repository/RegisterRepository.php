@@ -489,6 +489,14 @@ class RegisterRepository extends EntityRepository
                             ->setParameter('doc', $params['doc']);
                 }    
             }
+            if (!empty($params['registerId'])){
+                if (is_numeric($params['registerId'])){
+                    $queryBuilder->andWhere('r.id = :registerId')
+                            ->setParameter('registerId', $params['registerId'])
+                            ->setMaxResults(1)
+                            ;
+                }    
+            }
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
                     $queryBuilder->andWhere('YEAR(r.dateOper) = :year')

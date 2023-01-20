@@ -306,125 +306,21 @@ $this->pageBreadcrumbs()->setItems([
         return res;
     }    
     
-    function changeOrderStatus(orderId, status){
-        $.get( "/order/status/"+orderId+'?status='+status, function(data){
-            $table.bootstrapTable('updateByUniqueId', {id: orderId, row: data});
+    function repostDoc(registerId){
+        $.get( "/admin/repost-doc/"+registerId, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: registerId, row: data});
         });        
     }
-
+    
     var menu = new BootstrapMenu('.tablerow', {
         fetchElementData: function(rowElem) {
             var rowId = $(rowElem).attr('data-index');
             return $table.bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
-           ['addComment', 'comments', 'history'],
-           ['vt', 'cash']
+            ['repost']
         ],      
         actions: {
-            statusNew: {
-                name: 'Новый',
-                onClick: function(row) {
-                    changeOrderStatus(row.id, <?= Order::STATUS_NEW?>);
-                },
-                isShown: function(row) {
-                  return row.status != '<?= Order::STATUS_NEW?>';
-                },
-                isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
-                }                
-            }, 
-            statusProcessed: {
-                name: 'Обработан',
-                classNames: 'bg-default',
-                onClick: function(row) {
-                    changeOrderStatus(row.id, <?= Order::STATUS_PROCESSED?>);
-                },
-                isShown: function(row) {
-                  return row.status != '<?= Order::STATUS_PROCESSED?>';
-                },
-                isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
-                }                
-            }, 
-            statusConfirmed: {
-                name: 'Подтвержден',
-                classNames: 'bg-warning',
-                onClick: function(row) {
-                    changeOrderStatus(row.id, <?= Order::STATUS_CONFIRMED?>);
-                },
-                isShown: function(row) {
-                  return row.status != '<?= Order::STATUS_CONFIRMED?>';
-                },
-                isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
-                }                
-            }, 
-            statusDelivery: {
-                name: 'На доставке',
-//                iconClass: 'glyphicon glyphicon-ok',
-                classNames: 'bg-info',
-                onClick: function(row) {
-                    changeOrderStatus(row.id, <?= Order::STATUS_DELIVERY?>);
-                },
-                isShown: function(row) {
-                  return row.status != <?= Order::STATUS_DELIVERY?>;
-                },
-                isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
-                }                
-            }, 
-            statusShipped: {
-                name: 'Отгружен',
-                classNames: 'bg-success',
-                onClick: function(row) {
-                    changeOrderStatus(row.id, <?= Order::STATUS_SHIPPED?>);
-                },
-                isShown: function(row) {
-                  return row.status != <?= Order::STATUS_SHIPPED?>;
-                },
-                isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
-                }                
-            },
-            statusCanceled: {
-                name: 'Отменен',
-                classNames: 'bg-default',
-                onClick: function(row) {
-                    changeOrderStatus(row.id, <?= Order::STATUS_CANCELED?>);
-                },
-                isShown: function(row) {
-                  return row.status != <?= Order::STATUS_CANCELED?>;
-                },
-                isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
-                }                
-            },
-            addComment: {
-                name: 'Добавить комментарий',
-                iconClass: 'glyphicon glyphicon-plus',
-                onClick: function (row){
-                    var url = '/comments/edit-local-form/'+row.id;
-                    showFormDialog({
-                        id: 'orderCommentModal',
-                        url: url,
-                        zIndex: 9999,
-                        width: $(window).width()-150
-                    });
-                }
-            },    
-            comments: {
-                name: 'Комментарии',
-                iconClass: 'glyphicon glyphicon-list-alt',
-                onClick: function (row){
-                    var url = '/comments/order-form/'+row.id;
-                    showFormDialog({
-                        id: 'orderCommentsModal',
-                        url: url,
-                        zIndex: 8888
-                    });
-                }
-            },    
             history: {
                 name: 'История',
                 iconClass: 'glyphicon glyphicon-list-alt',
@@ -432,7 +328,7 @@ $this->pageBreadcrumbs()->setItems([
                 onClick: function(row) {
                     $.ajax({
                         type: "GET",
-                        url: "/log/history/"+row.id+"?docType=ord",
+                        url: "/log/history/"+row.docId+"?docType="+row.docType,
                         success: function (result) {
                             bootbox.alert({
                                 size: "large",
@@ -442,33 +338,27 @@ $this->pageBreadcrumbs()->setItems([
                     });                    
                 }
             },
-            vt: {
-                name: 'Возврат',
-                iconClass: 'glyphicon glyphicon-repeat',
+            repost: {
+                name: 'Обновить',
+                iconClass: 'glyphicon glyphicon-refresh',
                 onClick: function (row){
-                    var url = '/vt/order-form/'+row.id;
-                    showFormDialog({
-                        id: 'vtIndexModal',
-                        url: url,
-                        zIndex: 8888,
-                        width: '1440px'
-                    });
+                    repostDoc(row.id);
                 },
                 isEnabled: function(row) {
-                    return row.status == <?= Order::STATUS_SHIPPED?>;
+                    switch(row.docType){
+                        case '<?= Movement::DOC_ORDER?>': 
+                                return row.order.status == <?= Order::STATUS_SHIPPED?>;
+                        case '<?= Movement::DOC_VT?>': 
+                                return row.vt.status == <?= Vt::STATUS_ACTIVE?>;
+                        case '<?= Movement::DOC_PT?>': 
+                                return row.pt.status == <?= Pt::STATUS_ACTIVE?>;
+                        case '<?= Movement::DOC_ST?>': 
+                                return row.st.status == <?= St::STATUS_ACTIVE?>;
+                        case '<?= Movement::DOC_VTP?>': 
+                                return row.vtp.status == <?= Vtp::STATUS_ACTIVE?> && row.vtp.statusDoc == <?= Vtp::STATUS_DOC_NOT_RECD?>;
+                        default: return false;            
+                    }
                 }                
-            },
-            cash: {
-                name: 'Оплата',
-                iconClass: 'glyphicon glyphicon-rub',
-                onClick: function (row){
-                    var url = '/comments/order-form/'+row.id;
-                    showFormDialog({
-                        id: 'orderCommentsModal',
-                        url: url,
-                        zIndex: 8888
-                    });
-                }
             }
         }
     });    

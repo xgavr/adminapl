@@ -138,6 +138,24 @@ class Movement {
     }        
 
     /**
+     * Returns possible doc as array.
+     * @return array
+     */
+    public static function getKeyDocList() 
+    {
+        return [
+            self::DOC_ORDER => 'ord',
+            self::DOC_VTP => 'vtp',
+            self::DOC_ST => 'st',
+            self::DOC_VT => 'vt',
+            self::DOC_OT => 'ot',
+            self::DOC_PT => 'pt',
+            self::DOC_PTU => 'ptu',
+            self::DOC_REVISE => 'rvs',
+        ];
+    }        
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="movements") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
@@ -407,6 +425,7 @@ class Movement {
         switch ($vt->getStatus()){
             case Vt::STATUS_RETIRED: return self::STATUS_RETIRED;
             case Vt::STATUS_COMMISSION: return self::STATUS_COMMISSION;    
+            case Vt::STATUS_DEFECT: return self::STATUS_COMMISSION;    
             default: return self::STATUS_ACTIVE;    
         }
     }    

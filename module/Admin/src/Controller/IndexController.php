@@ -1203,5 +1203,27 @@ class IndexController extends AbstractActionController
             'total' => $total,
             'rows' => $result,
         ]);          
+    }         
+    
+    public function repostDocAction()
+    {
+        $registerId = $this->params()->fromRoute('id', -1);
+        
+        $register = $this->entityManager->getRepository(Register::class)
+                ->find($registerId);
+        
+        if ($register == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->registerManager->repostDoc($register);
+        $query = $this->entityManager->getRepository(Register::class)
+                ->transactions(['registerId' => $register->getId()]);
+        $result = $query->getOneOrNullResult(2);
+
+        return new JsonModel(
+           $result
+        );           
     }            
 }

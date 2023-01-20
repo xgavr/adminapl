@@ -13,6 +13,7 @@ use Laminas\View\Model\ViewModel;
 use Admin\Entity\Log;
 use Admin\Entity\Setting;
 use Stock\Entity\RegisterVariable;
+use Stock\Entity\Movement;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -190,6 +191,10 @@ class LogController extends AbstractActionController
     {
         $id = $this->params()->fromRoute('id');
         $docType = $this->params()->fromQuery('docType');
+        
+        if (is_numeric($docType)){
+            $docType = Movement::getKeyDocList()[$docType];
+        }
         
         $logs = $this->entityManager->getRepository(Log::class)
                 ->findByDocType($docType, ['id' => $id, 'limit' => 5]);
