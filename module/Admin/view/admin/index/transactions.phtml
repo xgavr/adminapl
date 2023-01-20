@@ -323,26 +323,9 @@ $this->pageBreadcrumbs()->setItems([
             return $table.bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
-            ['repost']
+            ['history']
         ],      
         actions: {
-            history: {
-                name: 'История',
-                iconClass: 'glyphicon glyphicon-list-alt',
-//                classNames: 'bg-danger',
-                onClick: function(row) {
-                    $.ajax({
-                        type: "GET",
-                        url: "/log/history/"+row.docId+"?docType="+row.docType,
-                        success: function (result) {
-                            bootbox.alert({
-                                size: "large",
-                                message: result
-                            });
-                        }
-                    });                    
-                }
-            },
             repost: {
                 name: 'Обновить',
                 iconClass: 'glyphicon glyphicon-refresh',
@@ -364,6 +347,23 @@ $this->pageBreadcrumbs()->setItems([
                         default: return false;            
                     }
                 }                
+            },
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.docId+"?docType="+row.docType,
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
+                }
             }
         }
     });    
