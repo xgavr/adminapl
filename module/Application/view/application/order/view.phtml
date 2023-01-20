@@ -7,7 +7,9 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
 ?>
 <div class="modal-header">
     <h5 class="modal-title" id="otModalLabel">
-        <div><?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDateCreated())); ?></div>
+        <div><?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDateCreated())); ?> 
+            <b><?= $order->getOffice()->getName()?></b>
+        </div>
         <div><?= $this->escapeHtml($order->getContact()->getName()); ?></div>
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
