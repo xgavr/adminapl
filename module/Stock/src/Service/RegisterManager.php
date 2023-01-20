@@ -569,7 +569,7 @@ class RegisterManager
     public function uniteProducer($producerDest, $producerSource)
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(900);
+        set_time_limit(0);
         
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findBy(['producer' => $producerSource->getId()]);
