@@ -210,7 +210,7 @@ $this->pageBreadcrumbs()->setItems([
     function rowStyle(row){
         var retired = 'tablerow';
         if (row.statusAccount == <?= Order::STATUS_TAKE_NO?>){
-            return {classes: 'warning '+retired}; break;
+            return {classes: 'warning '+retired};
         }
         switch(row.status){
             case '<?= Order::STATUS_SHIPPED?>': 
