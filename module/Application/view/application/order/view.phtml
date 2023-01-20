@@ -116,9 +116,6 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
 </div>
 
 <script>
-    var $table = $('#ordergoodtable');
-    var $ok = $('#ok');
-    
     function orderUpdateTotal(){
         var amount = 0; var num = 0;
         let shipmentTotal = Number($('#shipmentTotal').val());
@@ -139,12 +136,12 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
     
     function repostOrder(orderId){
         $.get( "/order/repost/"+orderId, function(data){
-            $table.bootstrapTable('refresh');
+            $('#ordergoodtable').bootstrapTable('refresh');
         });        
     }
     
     $( document ).ready(function() {        
-        $table.bootstrapTable({
+        $('#ordergoodtable').bootstrapTable({
             onLoadSuccess: function(res){
                 $('#shippingTotal').html($('#shipmentTotal').val());    
 //                bidTotal();
