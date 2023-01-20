@@ -122,10 +122,11 @@ class RegisterRepository extends EntityRepository
                     ->findOneBy(['docId' => $docId, 'docType' => $docType]);
         }
         
-        if (date('Y-m-d', strtotime($reg->getDateOper())) != date('Y-m-d', strtotime($dateOper))){            
+        if ($reg->getDateOper() != $dateOper){            
             $docStamp = $this->findMaxDocStamp($dateOper);            
             $entityManager->getConnection()
-                    ->update('register', ['date_oper' => $dateOper, 'doc_stamp' => $docStamp], ['id' => $reg->getId()]);            
+                    ->update('register', ['date_oper' => $dateOper, 'doc_stamp' => $docStamp], ['id' => $reg->getId()]);  
+            $entityManager->refresh($reg);
         }
         
         $this->updateVariable($dateOper, $docType, $docId, $docStamp);
