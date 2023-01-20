@@ -122,7 +122,7 @@ class OrderRepository extends EntityRepository{
 
         $search = trim($searchStr);
         if (strlen($search) > 2){
-            $alnumFilter = new Alnum();
+            $alnumFilter = new ArticleCode();
             $alnum = $alnumFilter->filter($search);
             if ($alnum){
                 $queryBuilder->select('identity(b.order) as orderId')

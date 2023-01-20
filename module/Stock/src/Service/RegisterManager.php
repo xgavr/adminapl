@@ -569,7 +569,8 @@ class RegisterManager
     public function uniteProducer($producerDest, $producerSource)
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(0);
+        set_time_limit(1800);
+        $startTime = time();
         
         $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                 ->findBy(['producer' => $producerSource->getId()]);
@@ -583,8 +584,10 @@ class RegisterManager
                 ->findBy(['producer' => $producerSource->getId()]);
         foreach ($oldGoods as $oldGood){
             $this->changeProducer($oldGood, $producerDest);
-        }
-        
+            if (time() > $startTime + 30){
+                break;
+            }
+        }       
         return;
     }
     
