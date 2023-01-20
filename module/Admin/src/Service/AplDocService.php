@@ -875,7 +875,6 @@ class AplDocService {
                 'comment' => 'Orders',
                 'info' => $vt->getComment(),
                 'comiss' => $vt->getComissStatusAsString(),
-                'comissioner' => $vt->getComissPhone(),
                 'sf' =>     0,
                 'ns' =>     $vt->getId(),
                 'ds' =>     $vt->getDocDate(),
