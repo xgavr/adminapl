@@ -307,8 +307,13 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function repostDoc(registerId){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: false
+        });
         $.get( "/admin/repost-doc/"+registerId, function(data){
             $table.bootstrapTable('updateByUniqueId', {id: registerId, row: data});
+            dialog.modal('hide');
         });        
     }
     
