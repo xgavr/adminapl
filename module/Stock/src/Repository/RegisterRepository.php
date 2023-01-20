@@ -24,6 +24,7 @@ use Stock\Entity\PtuGood;
 use Company\Entity\Office;
 use Company\Entity\Legal;
 use User\Entity\User;
+use Stock\Entity\Revise;
 
 
 /**
@@ -420,4 +421,181 @@ class RegisterRepository extends EntityRepository
         
         return;
     }            
+    
+    /**
+     * Запрос на журнал операция
+     * @param type $params
+     */
+    public function transactions($params)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('r, p, o, pt, v, ord, s, vtp, rev')
+            ->from(Register::class, 'r')
+            ->leftJoin('r.ptu', 'p', 'WITH', 'r.docId = p.id and r.docType = 1')
+            ->leftJoin('r.ot', 'o', 'WITH', 'r.docId = o.id and r.docType = 2')
+            ->leftJoin('r.pt', 'pt', 'WITH', 'r.docId = pt.id and r.docType = 3')
+            ->leftJoin('r.vt', 'v', 'WITH', 'r.docId = v.id and r.docType = 4')
+            ->leftJoin('r.order', 'ord', 'WITH', 'r.docId = ord.id and r.docType = 5')
+            ->leftJoin('r.st', 's', 'WITH', 'r.docId = s.id and r.docType = 6')
+            ->leftJoin('r.vtp', 'vtp', 'WITH', 'r.docId = vtp.id and r.docType = 7')
+            ->leftJoin('r.revise', 'rev', 'WITH', 'r.docId = rev.id and r.docType = 8')
+            ; 
+
+        if (is_array($params)){
+            if (isset($params['sort'])){
+                $queryBuilder->addOrderBy('r.'.$params['sort'], $params['order']);
+            }        
+            if (!empty($params['status'])){
+                if (is_numeric($params['status'])){
+                    $orX = $queryBuilder->expr()->orX();
+                    switch ($params['status']){
+                        case Register::STATUS_ACTIVE:
+                            $orX->add($queryBuilder->expr()->eq('p.status', Ptu::STATUS_ACTIVE));
+                            $orX->add($queryBuilder->expr()->eq('o.status', Ot::STATUS_ACTIVE));
+                            $orX->add($queryBuilder->expr()->eq('pt.status', Pt::STATUS_ACTIVE));
+                            $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_ACTIVE));
+                            $orX->add($queryBuilder->expr()->eq('ord.status', Order::STATUS_SHIPPED));
+                            $orX->add($queryBuilder->expr()->eq('s.status', St::STATUS_ACTIVE));
+                            $orX->add($queryBuilder->expr()->eq('vtp.status', Vtp::STATUS_ACTIVE));
+                            break;
+                        case Register::STATUS_RETIRED:
+                            $orX->add($queryBuilder->expr()->eq('p.status', Ptu::STATUS_RETIRED));
+                            $orX->add($queryBuilder->expr()->eq('o.status', Ot::STATUS_RETIRED));
+                            $orX->add($queryBuilder->expr()->eq('pt.status', Pt::STATUS_RETIRED));
+                            $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_RETIRED));
+                            $orX->add($queryBuilder->expr()->eq('ord.status', Order::STATUS_CANCELED));
+                            $orX->add($queryBuilder->expr()->eq('s.status', St::STATUS_RETIRED));
+                            $orX->add($queryBuilder->expr()->eq('vtp.status', Vtp::STATUS_RETIRED));
+                            break;
+                        case Register::STATUS_COMMISSION:
+                            $orX->add($queryBuilder->expr()->eq('o.status', Ot::STATUS_COMMISSION));
+                            $orX->add($queryBuilder->expr()->eq('vtp.status', Vtp::STATUS_COMMISSION));
+                            $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_COMMISSION));
+                            $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_DEFECT));
+                            break;
+                        case Register::STATUS_TAKE_NO:
+                            $orX->add($queryBuilder->expr()->eq('pt.statusAccount', Pt::STATUS_TAKE_NO));
+                            $orX->add($queryBuilder->expr()->eq('v.statusAccount', Vt::STATUS_TAKE_NO));
+                            $orX->add($queryBuilder->expr()->eq('ord.statusAccount', Order::STATUS_TAKE_NO));
+                            $orX->add($queryBuilder->expr()->eq('s.statusAccount', St::STATUS_TAKE_NO));
+                            $orX->add($queryBuilder->expr()->eq('vtp.statusAccount', Vtp::STATUS_TAKE_NO));
+                            break;
+                    }
+                    if ($orX->count()){
+                        $queryBuilder->andWhere($orX);
+                    }    
+                }    
+            }            
+            if (!empty($params['doc'])){
+                if (is_numeric($params['doc'])){
+                    $queryBuilder->andWhere('r.docType = :doc')
+                            ->setParameter('doc', $params['doc']);
+                }    
+            }
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(r.dateOper) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(r.dateOper) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
+        }    
+//                var_dump($queryBuilder->getQuery()->getSQL());
+
+        return $queryBuilder->getQuery();
+    }
+    
+    /**
+     * Запрос на журнал операция
+     * @param type $params
+     */
+    public function transactionsTotal($params)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('count(r.id) as countRegister')
+            ->from(Register::class, 'r')
+            ->leftJoin('r.ptu', 'p', 'WITH', 'r.docId = p.id and r.docType = 1')
+            ->leftJoin('r.ot', 'o', 'WITH', 'r.docId = o.id and r.docType = 2')
+            ->leftJoin('r.pt', 'pt', 'WITH', 'r.docId = pt.id and r.docType = 3')
+            ->leftJoin('r.vt', 'v', 'WITH', 'r.docId = v.id and r.docType = 4')
+            ->leftJoin('r.order', 'ord', 'WITH', 'r.docId = ord.id and r.docType = 5')
+            ->leftJoin('r.st', 's', 'WITH', 'r.docId = s.id and r.docType = 6')
+            ->leftJoin('r.vtp', 'vtp', 'WITH', 'r.docId = vtp.id and r.docType = 7')
+            ->leftJoin('r.revise', 'rev', 'WITH', 'r.docId = rev.id and r.docType = 8')
+            ; 
+
+        if (is_array($params)){
+            if (!empty($params['status'])){
+                if (is_numeric($params['status'])){
+                    $orX = $queryBuilder->expr()->orX();
+                    switch ($params['status']){
+                        case Register::STATUS_ACTIVE:
+                            $orX->add($queryBuilder->expr()->eq('p.status', Ptu::STATUS_ACTIVE));
+                            $orX->add($queryBuilder->expr()->eq('o.status', Ot::STATUS_ACTIVE));
+                            $orX->add($queryBuilder->expr()->eq('pt.status', Pt::STATUS_ACTIVE));
+                            $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_ACTIVE));
+                            $orX->add($queryBuilder->expr()->eq('ord.status', Order::STATUS_SHIPPED));
+                            $orX->add($queryBuilder->expr()->eq('s.status', St::STATUS_ACTIVE));
+                            $orX->add($queryBuilder->expr()->eq('vtp.status', Vtp::STATUS_ACTIVE));
+                            break;
+                        case Register::STATUS_RETIRED:
+                            $orX->add($queryBuilder->expr()->eq('p.status', Ptu::STATUS_RETIRED));
+                            $orX->add($queryBuilder->expr()->eq('o.status', Ot::STATUS_RETIRED));
+                            $orX->add($queryBuilder->expr()->eq('pt.status', Pt::STATUS_RETIRED));
+                            $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_RETIRED));
+                            $orX->add($queryBuilder->expr()->eq('ord.status', Order::STATUS_CANCELED));
+                            $orX->add($queryBuilder->expr()->eq('s.status', St::STATUS_RETIRED));
+                            $orX->add($queryBuilder->expr()->eq('vtp.status', Vtp::STATUS_RETIRED));
+                            break;
+                        case Register::STATUS_COMMISSION:
+                            $orX->add($queryBuilder->expr()->eq('o.status', Ot::STATUS_COMMISSION));
+                            $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_COMMISSION));
+                            $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_DEFECT));
+                            break;
+                        case Register::STATUS_TAKE_NO:
+                            $orX->add($queryBuilder->expr()->eq('pt.statusAccount', Pt::STATUS_TAKE_NO));
+                            $orX->add($queryBuilder->expr()->eq('v.statusAccount', Vt::STATUS_TAKE_NO));
+                            $orX->add($queryBuilder->expr()->eq('ord.statusAccount', Order::STATUS_TAKE_NO));
+                            $orX->add($queryBuilder->expr()->eq('s.statusAccount', St::STATUS_TAKE_NO));
+                            $orX->add($queryBuilder->expr()->eq('vtp.statusAccount', Vtp::STATUS_TAKE_NO));
+                            break;
+                    }
+                    if ($orX->count()){
+                        $queryBuilder->andWhere($orX);
+                    }    
+                }    
+            }            
+            if (!empty($params['doc'])){
+                if (is_numeric($params['doc'])){
+                    $queryBuilder->andWhere('r.docType = :doc')
+                            ->setParameter('doc', $params['doc']);
+                }    
+            }
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(r.dateOper) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(r.dateOper) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
+        }    
+        
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result['countRegister'];
+    }
 }

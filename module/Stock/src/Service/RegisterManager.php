@@ -108,6 +108,15 @@ class RegisterManager
     }
     
     /**
+     * Получить дату запрета
+     * @return date
+     */
+    public function getAllowDate() 
+    {
+        return $this->vtpManager->getAllowDate();
+    }
+    
+    /**
      * Обновить метку последовательности
      * 
      * @param Register $register

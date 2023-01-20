@@ -9,6 +9,15 @@
 namespace Stock\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Stock\Entity\Movement;
+use Stock\Entity\Ot;
+use Stock\Entity\Ptu;
+use Stock\Entity\Pt;
+use Stock\Entity\Vt;
+use Application\Entity\Order;
+use Stock\Entity\St;
+use Stock\Entity\Vtp;
+use Stock\Entity\Revise;
 
 
 /**
@@ -18,6 +27,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Daddy
  */
 class Register {
+    
+    const STATUS_ACTIVE       = 1; // Active.
+    const STATUS_RETIRED      = 2; // Retired.
+    const STATUS_COMMISSION   = 3; // commission.
+    const STATUS_TAKE_NO      = 4; // не проведено.
     
     /**
      * @ORM\Id
@@ -45,6 +59,54 @@ class Register {
      * @ORM\Column(name="doc_stamp")   
      */
     protected $docStamp;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Stock\Entity\Ptu") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $ptu;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Stock\Entity\Ot") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $ot;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Stock\Entity\Pt") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $pt;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Stock\Entity\Vt") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $vt;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Application\Entity\Order") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $order;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Stock\Entity\St") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $st;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Stock\Entity\Vtp") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $vtp;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Stock\Entity\Revise") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $revise;
 
     public function __construct() {
     }
@@ -111,6 +173,116 @@ class Register {
         $this->dateOper = $dateOper;
     }         
     
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 'Активный',
+            self::STATUS_RETIRED => 'Удален',
+            self::STATUS_COMMISSION => 'На комиссии',
+            self::STATUS_TAKE_NO => 'Не проведено',
+        ];
+    }    
+    
+    /**
+     * return Ot
+     */
+    public function getOt()
+    {
+        if ($this->docType == Movement::DOC_OT){
+            return $this->ot;
+        }
+        
+        return;
+    }
+    
+    /**
+     * return Ptu
+     */
+    public function getPtu()
+    {
+        if ($this->docType == Movement::DOC_PTU){
+            return $this->ptu;
+        }
+        
+        return;
+    }
+
+    /**
+     * return Pt
+     */
+    public function getPt()
+    {
+        if ($this->docType == Movement::DOC_PT){
+            return $this->pt;
+        }
+        
+        return;
+    }
+
+    /**
+     * return Order
+     */
+    public function getOrder()
+    {
+        if ($this->docType == Movement::DOC_ORDER){
+            return $this->order;
+        }
+        
+        return;
+    }
+
+    /**
+     * return Vt
+     */
+    public function getVt()
+    {
+        if ($this->docType == Movement::DOC_VT){
+            return $this->vt;
+        }
+        
+        return;
+    }
+
+    /**
+     * return St
+     */
+    public function getSt()
+    {
+        if ($this->docType == Movement::DOC_ST){
+            return $this->st;
+        }
+        
+        return;
+    }
+
+    /**
+     * return Vtp
+     */
+    public function getVtp()
+    {
+        if ($this->docType == Movement::DOC_VTP){
+            return $this->vtp;
+        }
+        
+        return;
+    }
+
+    /**
+     * return Revise
+     */
+    public function getRevise()
+    {
+        if ($this->docType == Movement::DOC_REVISE){
+            return $this->revise;
+        }
+        
+        return;
+    }
+
     /**
      * Представление документа
      * @param integer $docType

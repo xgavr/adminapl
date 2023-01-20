@@ -118,6 +118,24 @@ class Movement {
      * @ORM\Column(name="base_amount")  
      */
     protected $baseAmount;
+    
+    /**
+     * Returns possible doc as array.
+     * @return array
+     */
+    public static function getDocList() 
+    {
+        return [
+            self::DOC_ORDER => 'Заказы',
+            self::DOC_VTP => 'Возвраты поставщикам',
+            self::DOC_ST => 'Списания',
+            self::DOC_VT => 'Возвраты покупателей',
+            self::DOC_OT => 'Оприходования',
+            self::DOC_PT => 'Перемещения',
+            self::DOC_PTU => 'Поступления',
+            self::DOC_REVISE => 'Корректировки',
+        ];
+    }        
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="movements") 

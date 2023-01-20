@@ -214,6 +214,11 @@ class NavManager
                     'label' => 'Перемещения',
                     'link'  => $url('pt')
                 ];
+                $stockDropdownItems[] = [
+                    'id' => 'transaction',
+                    'label' => 'Журнал операций',
+                    'link' => $url('admin', ['action'=>'transactions'])
+                ];
             }    
             if (count($stockDropdownItems)!=0) {
                 $items[] = [

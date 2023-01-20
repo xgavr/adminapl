@@ -729,8 +729,15 @@ class OrderController extends AbstractActionController
             return;                        
         }        
         
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->orderRegister($order);        
+        $reg = $this->entityManager->getRepository(Register::class)
+                ->findOneBy(['docId' => $order->getId(), 'docType' => Movement::DOC_ORDER]);
+        
+        if ($reg){
+            $docStamp = $reg->getDocStamp();
+        } else {
+            $docStamp = $this->entityManager->getRepository(Register::class)
+                    ->orderRegister($order);        
+        }    
         $bids = $order->getBids();
         $result = [0 => 'авто'];
         foreach ($bids as $bid){

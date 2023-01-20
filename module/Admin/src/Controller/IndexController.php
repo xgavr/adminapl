@@ -1152,4 +1152,56 @@ class IndexController extends AbstractActionController
             'producer' => $producer,
         ]);        
     }
+    
+    public function transactionsAction()
+    {
+        return new ViewModel([
+        ]);        
+    }
+    
+    public function transactionsContentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort', 'docDate');
+        $order = $this->params()->fromQuery('order', 'DESC');
+        $year_month = $this->params()->fromQuery('month');
+        $statusDoc = $this->params()->fromQuery('statusDoc');
+        $status = $this->params()->fromQuery('status');
+        $doc = $this->params()->fromQuery('doc');
+        
+        $year = $month = null;
+        if ($year_month){
+            $year = date('Y', strtotime($year_month));
+            $month = date('m', strtotime($year_month));
+        }        
+        $params = [
+            'q' => trim($q), 'sort' => $sort, 'order' => $order,             
+            'year' => $year, 'month' => $month, 'statusDoc' => $statusDoc,
+            'status' => $status, 'doc' => $doc,
+        ];
+        
+        $query = $this->entityManager->getRepository(Register::class)
+                        ->transactions($params);
+        
+        $total = $this->entityManager->getRepository(Register::class)
+                        ->transactionsTotal($params);
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+            'allowDate' => $this->registerManager->getAllowDate(),
+        ]);          
+    }            
 }
