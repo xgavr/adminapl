@@ -109,7 +109,7 @@ class RegisterRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
         $reg = $entityManager->getRepository(Register::class)
                 ->findOneBy(['docId' => $docId, 'docType' => $docType]);
-
+var_dump($docId); exit;
         if ($reg){
             $docStamp = $reg->getDocStamp();
         }            
