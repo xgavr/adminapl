@@ -120,24 +120,20 @@ $this->pageBreadcrumbs()->setItems([
         });
     }
     
-    function refreshTable(){
-        $table.bootstrapTable('refresh');
-    }
-
     $(function () {       
         getCookies('transactionSaveId');
         
         $(".inputclear").click(function(){
             $("#searchinput").val('');
-            refreshTable();
+            $table.bootstrapTable('refresh');
         });
 
         $('#ok').click(function () {
-            refreshTable();
+            $table.bootstrapTable('refresh');
         });
         
         $(document).on('change', '.refresh-table', function (e) {
-            refreshTable();
+            $table.bootstrapTable('refresh');
         });
         
     });
@@ -313,7 +309,6 @@ $this->pageBreadcrumbs()->setItems([
     
     function changeOrderStatus(orderId, status){
         $.get( "/order/status/"+orderId+'?status='+status, function(data){
-//            refreshTable();
             $table.bootstrapTable('updateByUniqueId', {id: orderId, row: data});
         });        
     }
