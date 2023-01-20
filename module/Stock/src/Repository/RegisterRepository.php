@@ -114,9 +114,9 @@ class RegisterRepository extends EntityRepository
             $docStamp = $reg->getDocStamp();
             
             if ($reg->getDateOper() != $dateOper){
-                $docStamp = $this->findMaxDocStamp($dateOper);            
+                $docStamp = $this->findMaxDocStamp($dateOper);
                 $entityManager->getConnection()
-                        ->update('register', ['date_oper' => $dateOper, 'doc_stamp' => $docStamp], ['id' => $reg->getId()]);            
+                        ->update('register', ['date_oper' => $dateOper, 'doc_stamp' => $docStamp], ['id' => $reg->getId()]);
             }
         }            
         
