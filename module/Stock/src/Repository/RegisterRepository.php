@@ -112,22 +112,21 @@ class RegisterRepository extends EntityRepository
 
         if ($reg){
             $docStamp = $reg->getDocStamp();
-            
-            if ($reg->getDateOper() != $dateOper){
-                $newDocStamp = $this->findMaxDocStamp($dateOper);
-                if ($newDocStamp != $docStamp){
-                    $entityManager->getConnection()
-                            ->update('register', ['date_oper' => $dateOper, 'doc_stamp' => $newDocStamp], ['id' => $reg->getId()]);
-                }    
-            }
         }            
         
         if (!$reg){    
             $docStamp = $this->findMaxDocStamp($dateOper);
             $entityManager->getConnection()
                     ->insert('register', ['doc_id' => $docId, 'doc_type' => $docType, 'date_oper' => $dateOper, 'doc_stamp' => $docStamp]);            
+            $reg = $entityManager->getRepository(Register::class)
+                    ->findOneBy(['docId' => $docId, 'docType' => $docType]);
         }
         
+        if ($reg->getDateOper() != $dateOper){
+            $docStamp = $this->findMaxDocStamp($dateOper);            
+            $entityManager->getConnection()
+                    ->update('register', ['date_oper' => $dateOper, 'doc_stamp' => $docStamp], ['id' => $reg->getId()]);            
+        }
         
         $this->updateVariable($dateOper, $docType, $docId, $docStamp);
         
