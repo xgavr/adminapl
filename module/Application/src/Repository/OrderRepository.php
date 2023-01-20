@@ -178,7 +178,7 @@ class OrderRepository extends EntityRepository{
             $alnum = $alnumFilter->filter($search);
 
             if ($digits || $alnum){
-                if ($digits){
+                if ($digits && strlen($digits) > 7){
 
                     $queryBuilder->leftJoin('c.phones', 'p');
                     $orX->add($queryBuilder->expr()->like('p.name', ':digits'));
@@ -186,7 +186,7 @@ class OrderRepository extends EntityRepository{
 
 
                 }    
-                if ($alnum){
+                if ($alnum && strlen($alnum) > 7){
                     $queryBuilder->leftJoin('c.contactCars', 'cc');
                     $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
                     $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
