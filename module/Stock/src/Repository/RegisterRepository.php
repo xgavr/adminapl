@@ -123,7 +123,7 @@ class RegisterRepository extends EntityRepository
             $reg->setDateOper($dateOper);
             $reg->setDocStamp($docStamp);
             $entityManager->persist($reg);
-            $entityManager->flush($reg);
+            $entityManager->flush();
         }
         
         if ($reg->getDateOper() != $dateOper){
@@ -131,7 +131,7 @@ class RegisterRepository extends EntityRepository
             $reg->setDateOper($dateOper);
             $reg->setDocStamp($docStamp);
             $entityManager->persist($reg);
-            $entityManager->flush($reg);            
+            $entityManager->flush();            
         }
         
         $this->updateVariable($dateOper, $docType, $docId, $docStamp);
