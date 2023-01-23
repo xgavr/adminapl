@@ -244,6 +244,13 @@ class OrderRepository extends EntityRepository{
                             ;
                 }    
             }            
+            if (!empty($params['clientId'])){
+                if (is_numeric($params['clientId'])){
+                    $queryBuilder->andWhere('c.client = :client')
+                        ->setParameter('client', $params['clientId'])
+                            ;
+                }    
+            }            
             if (!empty($params['status'])){
                 if (is_numeric($params['status'])){
                     $queryBuilder->andWhere('o.status = ?3')
@@ -311,6 +318,13 @@ class OrderRepository extends EntityRepository{
                     ->setParameter('2', $params['userId'])
                         ;
             }            
+            if (!empty($params['clientId'])){
+                if (is_numeric($params['clientId'])){
+                    $queryBuilder->andWhere('c.client = :client')
+                        ->setParameter('client', $params['clientId'])
+                            ;
+                }    
+            }            
             if (is_numeric($params['status'])){
                 $queryBuilder->andWhere('o.status = ?3')
                     ->setParameter('3', $params['status'])
@@ -325,6 +339,40 @@ class OrderRepository extends EntityRepository{
 
         return $result['orderCount'];
     }    
+    
+    /**
+     * Запрос на все машины
+     * @param array $params
+     * @return Query
+     * 
+     */
+    public function queryAllContactCar($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('cc, c, mk, md, car')
+            ->from(ContactCar::class, 'cc') 
+            ->leftJoin('cc.contact', 'c')    
+            ->leftJoin('cc.make', 'mk')    
+            ->leftJoin('cc.model', 'md')    
+            ->leftJoin('cc.car', 'car')    
+            ->addOrderBy('c.id', 'DESC')    
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['clientId'])){
+                if (is_numeric($params['clientId'])){
+                    $queryBuilder->andWhere('c.client = :client')
+                        ->setParameter('client', $params['clientId'])
+                            ;
+                }    
+            }            
+        }
+        
+        return $queryBuilder->getQuery();
+    }       
     
     /**
      * Найти машину клиента

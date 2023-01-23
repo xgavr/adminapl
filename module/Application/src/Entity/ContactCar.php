@@ -407,8 +407,8 @@ class ContactCar {
     public static function getAcList() 
     {
         return [
-            self::AC_YES => 'С кондиционером',
-            self::AC_NO => 'Без кондиционера',
+            self::AC_YES => 'есть',
+            self::AC_NO => 'нет',
             self::AC_UNKNOWN => 'Неизвестно',
         ];
     }    

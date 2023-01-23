@@ -6,17 +6,25 @@ use Application\Entity\Bid;
 $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
 ?>
 <div class="modal-header">
-    <h5 class="modal-title" id="otModalLabel">
-        <div><?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDateCreated())); ?> 
-            <?= $order->getOffice()->getName()?>
+    <div class="row">
+        <div class="col-md-11">
+            <h5>
+                <div><?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDateCreated())); ?> 
+                    <?= $order->getOffice()->getName()?>
+                </div>
+                <div><?= $this->escapeHtml($order->getContact()->getName()); ?></div>
+            </h5>
         </div>
-        <div><?= $this->escapeHtml($order->getContact()->getName()); ?></div>
-    </h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
+        <div class="col-md-1">
+            <h4>
+                <?= $order->getTotal()?>                
+            </h4>
+        </div>    
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 </div>
-
 <div class="row">
     <div class="col-md-12">
         <div id="ordergoodtoolbar">
@@ -24,7 +32,9 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                 <a href="/order/intro/<?= $order->getId()?>" class="btn btn-default btn-sm" type="button" title="Редактировать" target="_blank">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> <?= $order->getId()?>
                 </a>                
-                <a href="https://autopartslist.ru/admin/orders/view/id/<?= $order->getAplId()?>" class="btn btn-default btn-sm" type="button" title="АПЛ ссылка" target="_blank">
+                <a href="https://autopartslist.ru/admin/orders/view/id/<?= $order->getAplId()?>" 
+                   class="btn btn-default btn-sm" type="button" title="АПЛ ссылка" target="_blank"
+                   <?= ($order->getAplId()) ? '':'disabled' ?>>
                     <span class="glyphicon glyphicon-link" aria-hidden="true"></span> <?= $order->getAplId()?>
                 </a>                
                 <button class="btn btn-default btn-sm order-repost" type="button" title="Перепровести">

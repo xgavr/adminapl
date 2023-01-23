@@ -38,6 +38,16 @@ class CommentRepository  extends EntityRepository{
             ->addOrderBy('c.id', 'DESC')    
                 ;
         
+        if (is_array($params)){
+            if (!empty($params['clientId'])){
+                if (is_numeric($params['clientId'])){
+                    $queryBuilder->andWhere('c.client = :client')
+                        ->setParameter('client', $params['clientId'])
+                            ;
+                }    
+            }            
+        }
+        
         return $queryBuilder->getQuery();
     }       
     

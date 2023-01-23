@@ -1,9 +1,14 @@
 <?php
+use Application\Entity\Order;
+use Application\Entity\ContactCar;
+use Laminas\Json\Encoder;
+use Stock\Entity\Vt;
+
 $this->headTitle($client->getName());
 
 $this->mainMenu()->setActiveItemId('client');
 
-$this->mainMenu()->setActiveItemId('client');
+$this->mainMenu()->setActiveUrl('client');
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
@@ -23,276 +28,703 @@ $legalContact = $client->getLegalContact();
     <?= $this->escapeHtml($client->getName()); ?>    
 </h1>
 
-<div class="panel panel-info">
-    <div class="panel-heading">Контакты</div>
-    <div class="panel-body">
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="pull-left">
-                        <h3 class="panel-title">Телефон</h3>
-                    </div>                                
-                    <div class="pull-right">
-                        <?php if ($legalContact):?>
-                            <button value="/contact/phone-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
-                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
-                                <span class="glyphicon glyphicon-plus" ></span>
-                            </button>
-                        <?php endif; ?>
-                    </div>                                
-                    <div class="clearfix"></div>
-                </div>
-                <?php foreach ($client->getContacts() as $contact): ?>
-                    <?php foreach ($contact->getPhones() as $phone): ?>
-                        <div class="panel-body">
-                            <div class="pull-left"><?= $phone->getName()?> <span><?= $phone->getComment()?></span></div>
-                            <div class="pull-right">
-                                <button value="/contact/phone-form/<?= $contact->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
-                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                                    <span class="glyphicon glyphicon-edit" ></span>
-                                </button>                                                            
-                                <button value="/contact/delete-phone-form/<?= $phone->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                        title="Удалить">
-                                    <span class="glyphicon glyphicon-remove" ></span>
-                                </button>                                                            
-                            </div>
-                        </div>
-                    <?php endforeach?>    
-                <?php endforeach;?>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="pull-left">
-                        <h3 class="panel-title">Почта</h3>
-                    </div>                                
-                    <div class="pull-right">
-                        <?php if ($legalContact):?>
-                            <button value="/contact/email-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
-                                    data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
-                                <span class="glyphicon glyphicon-plus" ></span>
-                            </button>                                        
-                        <?php endif; ?>
-                    </div>                                
-                    <div class="clearfix"></div>
-                </div>
-                <?php foreach ($client->getContacts() as $contact): ?>
-                    <?php foreach ($contact->getEmails() as $email): ?>
-                        <div class="panel-body">
-                            <div class="pull-left"><?= $email->getName()?></div>
-                            <div class="pull-right">
-                                <button value="/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
-                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                                    <span class="glyphicon glyphicon-edit" ></span>
-                                </button>                                                            
-                                <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                        title="Удалить">
-                                    <span class="glyphicon glyphicon-remove" ></span>
-                                </button>                                                            
-                            </div>
-                        </div>
-                    <?php endforeach?>    
-                <?php endforeach;?>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="pull-left">
-                        <h3 class="panel-title">AplId</h3>
-                    </div>                                
-                    <div class="pull-right">
-                    </div>                                
-                    <div class="clearfix"></div>
-                </div>
-                <div class="panel-body">
-                    <div class="pull-left"><a href="https://autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank"><?= $client->getAplId()?></a></div>
-                    <div class="pull-right">
-                        <button value="/client/apl-union/<?= $client->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
-                                title="Объеденить по коду Апл">
-                            <span class="glyphicon glyphicon-refresh" ></span>
-                        </button> 
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" id="featureTab" role="tablist">
+            <li role="presentation"><a href="#contacts" role="tab" id="contact-tab" data-toggle="tab" aria-controls="contacts" aria-expanded="true">Контакты <span id="contactBadge" class="badge"></span></a></li>
+            <li role="presentation"><a href="#orders" role="tab" id="order-tab" data-toggle="tab" aria-controls="orders" aria-expanded="true">Заказы <span id="orderBadge" class="badge"></span></a></li>
+            <li role="presentation"><a href="#payments" role="tab" id="payment-tab" data-toggle="tab" aria-controls="payment" aria-expanded="true">Оплаты <span id="paymentBadge" class="badge"></span></a></li>
+            <li role="presentation"><a href="#vt" role="tab" id="vt-tab" data-toggle="tab" aria-controls="vt" aria-expanded="true">Возвраты <span id="vtBadge" class="badge"></span></a></li>
+            <li role="presentation"><a href="#cars" role="tab" id="car-tab" data-toggle="tab" aria-controls="cars" aria-expanded="true">Машины <span id="carBadge" class="badge"></span></a></li>
+            <li role="presentation"><a href="#comments" role="tab" id="comment-tab" data-toggle="tab" aria-controls="comment" aria-expanded="true">Комментарии <span id="commentBadge" class="badge"></span></a></li>
+        </ul>        
     </div>
-</div>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <div class="pull-left">Машины
-        </div>
-        <div class="pull-right">
-            <?php if ($legalContact):?>
-                <button value="/garage/edit-form/?contact=<?= $legalContact->getId()?>" class="btn btn-default btn-xs"
-                        data-toggle="modal" data-target="#modal-dialog" title="Добавить машину">
-                    <span class="glyphicon glyphicon-plus" ></span>
-                </button>                                        
-             <?php endif;?>
-        </div>
-        <div class="clearfix"></div>
-    </div>    
-    <div class="panel-body">
-        <?php foreach ($client->getContacts() as $contact):?> 
-            <?php if ($contact->getContactCars()->count()):?>
-                <table class="table table-striped">
-                    <?php foreach ($contact->getContactCars() as $contactCar):?>
+    <div class="tab-content" id="featureTabContent">
+        <div class="tab-pane fade" role="tabpanel" id="contacts" aria-labelledby="contact-tab">
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table table-bordered table-hover table-condensed">
                         <tr>
                             <td>
-                                <?php if ($contactCar->getCar()):?>
-                                    <?= $contactCar->getCar()->getName() ?>
-                                <?php else:?>
-                                    <?php if ($contactCar->getMake()):?>
-                                        <?= $contactCar->getMake()->getName() ?>
-                                    <?php endif;?>
-                                    <?php if ($contactCar->getModel()):?>
-                                        <?= $contactCar->getModel()->getName() ?>
-                                    <?php endif;?>
-                                <?php endif;?>
-                            </td>
-                            <td>
-                                <?= $contactCar->getVin() ?>
-                            </td>
-                            <td>
-                                <?= $contactCar->getVin2() ?>
-                            </td>
-                            <td>
-                                <?= $contactCar->getYocm() ?>
-                            </td>
-                            <td>
-                                <?= $contactCar->getWheelAsString() ?>
-                            </td>
-                            <td>
-                                <?= $contactCar->getTmAsString() ?>
-                            </td>
-                            <td>
-                                <?= $contactCar->getAcAsString() ?>
-                            </td>
-                            <td>
-                                <?= $contactCar->getMd() ?>
-                            </td>
-                            <td>
-                                <?= $contactCar->getEd() ?>
-                            </td>
-                            <td>
-                                <?= $contactCar->getEp() ?>
-                            </td>
-                            <td>
-                                <button value="/garage/edit-form/<?= $contactCar->getId()?>" class="btn btn-default btn-xs"
-                                        data-toggle="modal" data-target="#modal-dialog" title="Изменить машину">
-                                    <span class="glyphicon glyphicon-edit" ></span>
-                                </button>                                        
-                                
+                                <?php if ($legalContact):?>
+                                    <button value="/contact/phone-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                            data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
+                                        <span class="glyphicon glyphicon-phone-alt"></span> <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                <?php endif; ?>                        
                             </td>
                         </tr>
-                    <?php endforeach;?>
-                </table>    
-            <?php endif; ?>    
-        <?php endforeach;?>
-    </div>
-</div>    
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <div class="pull-left">Заказы
-        </div>
-        <div class="pull-right">
-        </div>
-        <div class="clearfix"></div>
-    </div>    
-    <div class="panel-body">
-        <?php foreach ($client->getContacts() as $contact):?> 
-            <?php if ($contact->getOrder()->count()):?>
-                <table class="table table-striped">
-                    <tr>
-                         <th>Id</th>
-                         <th>AplId</th>
-                         <th>Дата</th>
-                         <th></th>
-                         <th>Сумма</th>
-                         <th>Действие</th>
-                     </tr>
-                    <?php foreach ($contact->getOrder() as $order): ?>
+                        <?php foreach ($client->getContacts() as $contact): ?>
+                            <?php foreach ($contact->getPhones() as $phone): ?>
+                                <tr>
+                                    <td width="100">
+                                        <button value="/contact/phone-form/<?= $contact->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                        </button>                                                            
+                                        <button value="/contact/delete-phone-form/<?= $phone->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                title="Удалить">
+                                            <span class="glyphicon glyphicon-remove" ></span>
+                                        </button>                                                            
+                                        <?= $phone->getName()?> <span><?= $phone->getComment()?></span>
+                                    </td>
+                                </div>
+                            <?php endforeach?>    
+                        <?php endforeach;?>   
                         <tr>
                             <td>
-                                <?= $order->getIdLink(); ?>
+                                <?php if ($legalContact):?>
+                                    <button value="/contact/email-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                            data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
+                                        <span class="glyphicon glyphicon-envelope"></span> <span class="glyphicon glyphicon-plus" ></span>
+                                    </button>                                        
+                                <?php endif; ?>                        
                             </td>
+                        </tr>
+                        <?php foreach ($client->getContacts() as $contact): ?>
+                            <?php foreach ($contact->getEmails() as $email): ?>
+                                <tr>
+                                    <td>
+                                        <button value="/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                            <span class="glyphicon glyphicon-edit" ></span>
+                                        </button>                                                            
+                                        <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                title="Удалить">
+                                            <span class="glyphicon glyphicon-remove" ></span>
+                                        </button>                                                            
+                                        <?= $email->getName()?>
+                                    </td>
+                                </div>
+                            <?php endforeach?>    
+                        <?php endforeach;?>
+                        <tr>
                             <td>
-                                <?= $order->getAplIdLink(); ?>
+                                <button value="/client/apl-union/<?= $client->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
+                                        title="Объеденить по коду Апл">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button> 
+                                <a href="https://autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank"><?= $client->getAplId()?></a>
                             </td>
-                            <td>
-                                <?= $this->escapeHtml($order->getDateCreated()); ?>
-                            </td>
-                            <td>
-                                
-                            </td>
-                            <td>
-                                <?= $this->escapeHtml($order->getTotal()); ?>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>                        
-                    <?php endforeach; ?>        
-                </table>    
-            <?php endif; ?>    
-        <?php endforeach;?>
+                        </tr>
+                    </table>                    
+                </div>
+            </div>
+        </div>    
+        <div class="tab-pane fade" role="tabpanel" id="orders" aria-labelledby="order-tab">
+            <table id="table" 
+                data-toggle="table" 
+                data-side-pagination="server"
+                data-pagination="true" 
+                data-url="/order/content"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#ordertoolbar"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-show-columns="false"
+                data-query-params="orderQueryParams"
+                data-sort-name="dateOper"
+                data-sort-order="desc"            
+                data-response-handler="responseHandler"
+                data-classes = "table table-bordered table-hover table-condensed"
+                data-row-style="rowStyle"
+                data-unique-id="id"
+                data-icon-size="sm"
+                >
+                <thead>
+                    <tr>
+                        <th data-field="dateOper" data-sortable="true" data-width="50" data-formatter="dateFormatter">Дата</th>
+                        <th data-field="id" data-sortable="false" data-formatter="docFormatter" data-width="50">Id</th>
+                        <th data-field="office.name" data-sortable="false" data-width="50">Офис</th>
+                        <th data-field="contact.name" data-sortable="false" data-formatter="clientFormatter">Покупатель</th>
+                        <th data-field="info" data-sortable="false" data-formatter="infoFormatter">Что нужно</th>
+                        <th data-field="contactCar.vin" data-sortable="false" data-formatter="carFormatter">Машина</th>
+                        <th data-field="address" data-sortable="false" data-formatter="shippingFormatter">Доставка</th>
+                        <th data-field="dependInfo" data-sortable="false" data-formatter="commentFormatter">Комментарий</th>
+                        <th data-field='total' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Сумма</th>
+                        <th data-field='user.fullName' data-sortable="false" data-width="50">Отв.</th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>    
+        <div class="tab-pane fade" role="tabpanel" id="comments" aria-labelledby="comment-tab">
+            <table id="commenttable" 
+                data-toggle="table" 
+                data-side-pagination="server"
+                data-pagination="true" 
+                data-url="/comments/content"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#commenttoolbar"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-show-columns="false"
+                data-query-params="commentQueryParams"
+                data-sort-name="id"
+                data-sort-order="desc"            
+                data-response-handler="responseHandler"
+                data-classes = "table table-bordered table-hover table-condensed"
+                data-unique-id="id"
+                data-icon-size="sm"
+                >
+                <thead>
+                    <tr>
+                     <th data-field="id" data-type="numeric" data-width="75">ID</th>
+                     <th data-field="dateCreated" data-width="100" data-formatter="dateFormatter">Дата</th>
+                     <th data-field="order.id" data-formatter="docFormatter" data-width="100">Заказ</th>
+                     <th data-field="comment" data-sortable="true">Комментарий</th>
+                     <th data-field="user.fullName" data-width="100">Автор</th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>    
+        <div class="tab-pane fade" role="tabpanel" id="cars" aria-labelledby="car-tab">
+            <div id="cartoolbar">
+                <div class="form-inline" role="form">
+                    <button value="/garage/edit-form/?contact=<?= $legalContact->getId()?>" class="btn btn-default btn-sm"
+                            data-toggle="modal" data-target="#modal-dialog" <?= ($legalContact) ? '':'disabled'?> title="Добавить машину">
+                        <span class="glyphicon glyphicon-plus" ></span>
+                    </button>                                        
+                </div>
+            </div>
+            <table id="cartable" 
+                data-toggle="table" 
+                data-side-pagination="server"
+                data-pagination="true" 
+                data-url="/garage/content"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#cartoolbar"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-show-columns="false"
+                data-query-params="carQueryParams"
+                data-sort-name="id"
+                data-sort-order="desc"            
+                data-response-handler="responseHandler"
+                data-classes = "table table-bordered table-hover table-condensed"
+                data-unique-id="id"
+                data-icon-size="sm"
+                >
+                <thead>
+                    <tr>
+                     <th data-field="id" data-type="numeric" data-width="5">ID</th>
+                     <th data-field="vin" data-width="250" data-formatter="vinFormatter">VIN</th>
+                     <th data-field="make" data-width="200" data-formatter="carFormatter">Машина</th>
+                     <th data-field="yocm" data-width="10">Год</th>
+                     <th data-field="wheel" data-width="10" data-formatter="wheelFormatter">Руль</th>
+                     <th data-field="tm" data-width="10" data-formatter="tmFormatter">Коробка</th>
+                     <th data-field="ac" data-width="10" data-formatter="acFormatter">Кондиционер</th>
+                     <th data-field="md" data-width="10">Двигатель</th>
+                     <th data-field="ed" data-width="10">Объем</th>
+                     <th data-field="ep" data-width="10">Мощность</th>
+                     <th data-field="comment">Комментарий</th>
+                     <th data-field="id" data-formatter="carEditFormatter" data-width="5"></th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>    
+        <div class="tab-pane fade" role="tabpanel" id="vt" aria-labelledby="vt-tab">
+            <table id="vttable" 
+                data-toggle="table" 
+                data-url="/vt/content"
+                data-side-pagination="server"
+                data-pagination="true" 
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#vttoolbar"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-query-params="vtQueryParams"
+                data-sort-name="docDate"
+                data-sort-order="desc"            
+                data-response-handler="responseHandler"
+                data-classes = "table table-bordered table-hover table-condensed"
+                data-row-style="rowStyle"
+            >
+                <thead>
+                    <tr>
+                         <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="120">Номер</th>
+                         <th data-field="docDate" data-sortable="true" data-width="100" data-formatter="vtDateFormatter">Дата</th>
+                         <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="inFormatter">Сумма</th>
+                         <th data-field='order.aplId' data-sortable="false" data-formatter="docFormatter">Заказ</th>
+                         <th data-field='office.name' data-sortable="false">Склад</th>
+                         <th data-field='comment' data-sortable="false">Примечание</th>
+                         <th data-field="" data-formatter="vtActiveFormatter" data-width="10"></th>
+                     </tr>                
+                </thead>
+            </table>    
+        </div>    
     </div>
 </div>
 
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <div class="pull-left">Комментарии
-        </div>
-        <div class="pull-right">
-            <button value="/comments/edit-form/?client=<?= $client->getId()?>" class="btn btn-default btn-xs"
-                    data-toggle="modal" data-target="#modal-dialog" title="Добавить комментарий">
-                <span class="glyphicon glyphicon-plus" ></span>
-            </button>                                        
-        </div>
-        <div class="clearfix"></div>
-    </div>    
-    <div class="panel-body">
-        <table class="table table-striped">
-            <tr>
-                 <th>Id</th>
-                 <th>AplId</th>
-                 <th>Дата</th>
-                 <th>Заказ</th>
-                 <th>Комментарий</th>
-                 <th>Автор</th>
-                 <th></th>
-             </tr>
-            <?php foreach ($client->getComments() as $comment): ?>
-                <tr>
-                    <td width="50" valign="top">
-                        <?= $comment->getId(); ?>
-                    </td>
-                    <td width="50" valign="top">
-                        <?= $comment->getAplId(); ?>
-                    </td>
-                    <td width="150" valign="top">
-                        <?= $this->escapeHtml($comment->getDateCreated()); ?>
-                    </td>
-                    <td width="100" valign="top">
-                        <?= $comment->getOrderLink(); ?>
-                    </td>
-                    <td>
-                        <?= $this->escapeHtml($comment->getComment()); ?>
-                    </td>
-                    <td width="100" valign="top">
-                        <?= $comment->getUserName(); ?>
-                    </td>
-                    <td width="50" valign="top">
-                        <button value="/comments/edit-form/<?= $comment->getId()?>?client=<?= $client->getId()?>&order=<?= ($comment->getOrder()) ? $comment->getOrder()->getId():''?>" class="btn btn-default btn-xs"
-                                data-toggle="modal" data-target="#modal-dialog" title="Изменить комментарий">
-                            <span class="glyphicon glyphicon-edit" ></span>
-                        </button>                                        
-                    </td>
-                </tr>                        
-            <?php endforeach; ?>        
-        </table>    
-    </div>
-</div>
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
+    function setCookies(cookieKey){
+        let expires = 30;
+        $('.cookie-control').each(function () {
+            Cookies.set(cookieKey+'_'+$(this).attr('id'), $(this).val(), { expires: expires});        
+        });        
+    }
+    
+    function getCookies(cookieKey){
+        $('.cookie-control').each(function () {
+            var cookieVal = Cookies.get(cookieKey+'_'+$(this).attr('id'));
+            if (cookieVal !== undefined){
+                $(this).val(cookieVal);                
+            }
+        });     
+        var activeTab = Cookies.get('clientSaveId_tab');
+        console.log(activeTab);
+        if (activeTab !== undefined){
+            $('.nav-tabs #'+activeTab).tab('show');
+        } else {
+            $('.nav-tabs a:first').tab('show');
+        }    
+    }    
+
+    $(window).on('load', function() {
+        getCookies('clientSaveId');
+        
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            Cookies.set('clientSaveId_tab', $(this).attr('id'), { expires: 30});
+        });        
+    });
+
+    var $table = $('#table').bootstrapTable();
+    
+    function orderQueryParams(params) {
+        $('#ordertoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        params.client = <?= $client->getId()?>;
+        return params;
+    }    
+
+    function commentQueryParams(params) {
+        $('#commenttoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#commettable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#commenttable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        params.client = <?= $client->getId()?>;
+        return params;
+    }    
+
+    function carQueryParams(params) {
+        $('#cartoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#cartable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#cartable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        params.client = <?= $client->getId()?>;
+        return params;
+    }    
+
+    function vtQueryParams(params) {
+        $('#vttoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#vttable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#vttable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        params.client = <?= $client->getId()?>;
+        return params;
+    }    
+
+    function rowStyle(row){
+        var retired = 'tablerow';
+        switch(row.status){
+            case '<?= Order::STATUS_TAKE_NO?>': 
+            case '<?= Vt::STATUS_TAKE_NO?>': 
+                return {classes: 'warning '+retired};
+            default: break;            
+        }                
+        switch(row.status){
+            case '<?= Order::STATUS_SHIPPED?>': 
+                        return {classes: 'success '+retired}; break;
+            case '<?= Order::STATUS_DELIVERY?>': 
+            case '<?= Vt::STATUS_COMMISSION?>': 
+            case '<?= Vt::STATUS_DEFECT?>': 
+                        return {classes: 'info '+retired}; break;
+            case '<?= Order::STATUS_CONFIRMED?>': 
+                        return {classes: 'default '+retired}; break;
+            case '<?= Order::STATUS_CANCELED?>': 
+            case '<?= Vt::STATUS_RETIRED?>': 
+                        return {classes: 'retired '+retired}; break;
+            default:break;     
+        }
+        
+        return {classes: retired};
+    }
+    
+    function idFormatter(value, row){
+        if (row.aplId > 0){
+            return value + ' ('+row.aplId+')';
+        }        
+        return value;
+    }    
+    
+    function dateFormatter(value){
+        return '<nobr>'+$.format.date(value, "dd.MM.yy")+'</nobr>';        
+    }
+        
+    function vtDateFormatter(value){
+        return dateFormatter(value + ' 00:00:00');        
+    }
+
+    function docFormatter(value, row){
+        var orderId = value;
+        if (row.aplId){
+            orderId += '('+row.aplId+')';
+        }
+        return "<a href='#' class='order-view-show' modal-url='/order/view/"+value+"'>"+orderId+"</a>";
+    }
+        
+    function clientFormatter(value, row){
+        var result = [];
+        var name = (value) ? value:'Nan';
+        result.push(name);
+
+        if (row.dependInfo){
+            var depend = $.parseJSON(row.dependInfo);
+            var phones = [];
+
+            $.each(depend.phones, function( index, phone ) {
+                phones.push('<a href="#" class="sms-message-modal-show" modal-url="/admin/sms-form/" phone="'+phone.name+'" order-id="'+row.id+'">'+phone.name.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2-$3')+'</a>');
+                if (phones.length > 1){
+                    return false;
+                }
+            });
+
+            var emails = [];
+            $.each(depend.emails, function( index, email ) {
+                emails.push('<a href="#" class="post-message-modal-show" modal-url="/post/post-form/" email="'+email.name+'" order-id="'+row.id+'">'+email.name+'</a>');
+                return false;
+            });
+            if (phones.length || emails.length){
+                result.push('<br/>');
+                result.push(phones.join('; '));
+                result.push('<nobr>'+emails.join('; ')+'</nobr>');
+            }    
+        }    
+        return result.join(' '); 
+    }
+
+    function infoFormatter(value, row){
+        return value;
+    }
+        
+    function carFormatter(value, row){
+        var result = [];
+        var contactCar = row;
+        if (row.contactCar){
+            contactCar = row.contactCar;
+        }
+        if (contactCar){
+            if (contactCar.car){
+                result.push(contactCar.car.fullname);
+            } else {    
+                if (contactCar.make){
+                    result.push(contactCar.make.name);
+                }
+                if (contactCar.model){
+                    result.push(contactCar.model.name);
+                }
+            }    
+        }
+        return result.join(' ');
+    }
+
+    function shippingFormatter(value, row){
+        var result = [];
+        result.push(value);
+        if (row.infoShipping){
+            result.push(row.infoShipping);
+        }
+        if (row.shipmentTotal > 0){
+            result.push(row.shipmentTotal);
+        }
+        if (row.skiper){
+            result.push(row.skiper.fullName);
+        }
+        return result.join(' ');
+    }
+
+    function commentFormatter(value, row){
+        var result = '';
+        var commentLength = '0';
+        if (value){
+            var depend = $.parseJSON(value);
+            var comments = depend.comments;
+            if (comments.length){
+                commentLength = comments.length;
+                $.each(comments, function( index, comment ) {
+                    result = comment.comment;
+                });
+            }    
+        }    
+        
+        return [
+//            '<a href="#" class="order-comment-modal-show" modal-url="/comments/edit-local-form/" order-id="'+row.id+'" title="Добавить комментарий">(+)</a>',
+            '<a href="#" class="comments-modal-show" modal-url="/comments/order-form/" order-id="'+row.id+'" title="Комментарии">('+commentLength+')</a>',
+            //'(' + value.length + ')',
+            result
+        ].join(' ');
+    }
+
+    function inFormatter(value){
+        if (value>0){
+            return Math.round(value*100)/100;
+        }
+        return;
+    }    
+    
+    function vinFormatter(value, row){
+        var result = value;
+        if (row.vin2){
+            result += ' (' + row.vin2 + ')';
+        }
+        return result.trim();
+    }    
+    
+    function wheelFormatter(value){
+        var result = <?= Encoder::encode(ContactCar::getWheelList())?>;
+        return result[value];
+    }
+
+    function tmFormatter(value){
+        var result = <?= Encoder::encode(ContactCar::getTmList())?>;
+        return result[value];
+    }
+
+    function acFormatter(value){
+        var result = <?= Encoder::encode(ContactCar::getAcList())?>;
+        return result[value];
+    }
+
+    function carEditFormatter(value, row){
+        var url = '/garage/edit-form/'+value;
+        btn = '<button';
+        btn += ' value="'+url+'"';
+        btn += ' class="btn btn-default btn-xs"';
+        btn += ' data-toggle="modal" data-target="#modal-dialog"'; 
+        btn += ' title="Изменить">'; 
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }        
+    
+    function vtActiveFormatter(value, row){
+        var url = '/vt/edit-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs vt-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        return btn;
+    }        
+    
+    function responseHandler(res) {
+        return res;
+    }    
+
+    function changeOrderStatus(orderId, status){
+        $.get( "/order/status/"+orderId+'?status='+status, function(data){
+//            refreshTable();
+            $table.bootstrapTable('updateByUniqueId', {id: orderId, row: data});
+        });        
+    }
+
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            var rowId = $(rowElem).attr('data-index');
+            return $table.bootstrapTable('getData')[rowId];
+        },
+        actionsGroups: [
+           ['addComment', 'comments', 'history'],
+           ['vt', 'cash']
+        ],      
+        actions: {
+            statusNew: {
+                name: 'Новый',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_NEW?>);
+                },
+                isShown: function(row) {
+                  return row.status != '<?= Order::STATUS_NEW?>';
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            }, 
+            statusProcessed: {
+                name: 'Обработан',
+                classNames: 'bg-default',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_PROCESSED?>);
+                },
+                isShown: function(row) {
+                  return row.status != '<?= Order::STATUS_PROCESSED?>';
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            }, 
+            statusConfirmed: {
+                name: 'Подтвержден',
+                classNames: 'bg-warning',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_CONFIRMED?>);
+                },
+                isShown: function(row) {
+                  return row.status != '<?= Order::STATUS_CONFIRMED?>';
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            }, 
+            statusDelivery: {
+                name: 'На доставке',
+//                iconClass: 'glyphicon glyphicon-ok',
+                classNames: 'bg-info',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_DELIVERY?>);
+                },
+                isShown: function(row) {
+                  return row.status != <?= Order::STATUS_DELIVERY?>;
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            }, 
+            statusShipped: {
+                name: 'Отгружен',
+                classNames: 'bg-success',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_SHIPPED?>);
+                },
+                isShown: function(row) {
+                  return row.status != <?= Order::STATUS_SHIPPED?>;
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            },
+            statusCanceled: {
+                name: 'Отменен',
+                classNames: 'bg-default',
+                onClick: function(row) {
+                    changeOrderStatus(row.id, <?= Order::STATUS_CANCELED?>);
+                },
+                isShown: function(row) {
+                  return row.status != <?= Order::STATUS_CANCELED?>;
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            },
+            addComment: {
+                name: 'Добавить комментарий',
+                iconClass: 'glyphicon glyphicon-plus',
+                onClick: function (row){
+                    var url = '/comments/edit-local-form/'+row.id;
+                    showFormDialog({
+                        id: 'orderCommentModal',
+                        url: url,
+                        zIndex: 9999,
+                        width: $(window).width()-150
+                    });
+                }
+            },    
+            comments: {
+                name: 'Комментарии',
+                iconClass: 'glyphicon glyphicon-list-alt',
+                onClick: function (row){
+                    var url = '/comments/order-form/'+row.id;
+                    showFormDialog({
+                        id: 'orderCommentsModal',
+                        url: url,
+                        zIndex: 8888
+                    });
+                }
+            },    
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.id+"?docType=ord",
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
+                }
+            },
+            vt: {
+                name: 'Возврат',
+                iconClass: 'glyphicon glyphicon-repeat',
+                onClick: function (row){
+                    var url = '/vt/order-form/'+row.id;
+                    showFormDialog({
+                        id: 'vtIndexModal',
+                        url: url,
+                        zIndex: 8888,
+                        width: '1440px'
+                    });
+                },
+                isEnabled: function(row) {
+                    return row.status == <?= Order::STATUS_SHIPPED?>;
+                }                
+            },
+            cash: {
+                name: 'Оплата',
+                iconClass: 'glyphicon glyphicon-rub',
+                onClick: function (row){
+                    var url = '/comments/order-form/'+row.id;
+                    showFormDialog({
+                        id: 'orderCommentsModal',
+                        url: url,
+                        zIndex: 8888
+                    });
+                }
+            }
+        }
+    });    
+
 </script>

@@ -79,6 +79,12 @@ class VtRepository extends EntityRepository{
                 $queryBuilder->andWhere('v.office = ?2')
                         ->setParameter('2', $params['officeId']);
             }
+            if (is_numeric($params['clientId'])){
+                $queryBuilder
+                        ->leftJoin('p.contact', 'c')
+                        ->andWhere('c.client = :client')
+                        ->setParameter('client', $params['clientId']);
+            }
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
                     $queryBuilder->andWhere('YEAR(v.docDate) = :year')
@@ -168,6 +174,13 @@ class VtRepository extends EntityRepository{
             if (is_numeric($params['officeId'])){
                 $queryBuilder->andWhere('v.office = ?2')
                         ->setParameter('2', $params['officeId']);
+            }
+            if (is_numeric($params['clientId'])){
+                $queryBuilder
+                        ->join('v.order', 'p')
+                        ->leftJoin('p.contact', 'c')
+                        ->andWhere('c.client = :client')
+                        ->setParameter('client', $params['clientId']);
             }
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){

@@ -93,6 +93,7 @@ class OrderController extends AbstractActionController
         $order = $this->params()->fromQuery('order', 'DESC');
         $officeId = $this->params()->fromQuery('office');
         $userId = $this->params()->fromQuery('user');
+        $clientId = $this->params()->fromQuery('client');
         $status = $this->params()->fromQuery('status');
         $dateOper = $this->params()->fromQuery('dateOper');
         $search = $this->params()->fromQuery('search');
@@ -100,6 +101,7 @@ class OrderController extends AbstractActionController
         $params = [
             'sort' => $sort, 'order' => $order, 'officeId' => $officeId,
             'userId' => $userId, 'status' => $status, 'search' => $search,
+            'clientId' => $clientId,
         ];
         
         $query = $this->entityManager->getRepository(Order::class)

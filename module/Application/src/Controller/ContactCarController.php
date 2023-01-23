@@ -61,6 +61,32 @@ class ContactCarController extends AbstractActionController
         ]);  
     }
     
+    public function contentAction()
+    {
+        
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $clientId = $this->params()->fromQuery('client');
+        $params = ['clientId' => $clientId];
+        
+        $query = $this->entityManager->getRepository(ContactCar::class)
+                    ->queryAllContactCar($params);            
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => count($result),
+            'rows' => $result,
+        ]);         
+    }    
+    
     public function addAction() 
     {     
         // Создаем форму.

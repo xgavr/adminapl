@@ -89,6 +89,9 @@
         if (row.status === '<?= Vt::STATUS_COMMISSION?>'){
            retired += ' info';
         }
+        if (row.status === '<?= Vt::STATUS_DEFECT?>'){
+           retired += ' info';
+        }
         if (row.statusAccount === '<?= Vt::STATUS_TAKE_NO?>'){
            retired = ' warning';
         }

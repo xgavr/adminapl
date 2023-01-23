@@ -141,10 +141,11 @@ class ContactCarForm extends Form
 
         // Добавляем поле "comment"
         $this->add([           
-            'type'  => 'text',
+            'type'  => 'textarea',
             'name' => 'comment',
             'attributes' => [
-                'id' => 'comment'
+                'id' => 'comment',
+                'rows' => 5
             ],
             'options' => [
                 'label' => 'Описание',

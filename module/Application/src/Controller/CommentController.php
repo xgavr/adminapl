@@ -58,13 +58,11 @@ class CommentController extends AbstractActionController
         
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
-        $params = [];
+        $clientId = $this->params()->fromQuery('client');
+        $params = ['clientId' => $clientId];
         
         $query = $this->entityManager->getRepository(Comment::class)
                     ->queryAllComments($params);            
-        
-        $total = $this->entityManager->getRepository(Comment::class)
-                ->count([]);
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -76,7 +74,7 @@ class CommentController extends AbstractActionController
         $result = $query->getResult(2);
         
         return new JsonModel([
-            'total' => $total,
+            'total' => count($result),
             'rows' => $result,
         ]);         
     }

@@ -66,6 +66,7 @@ class VtController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
         $officeId = $this->params()->fromQuery('office');
+        $clientId = $this->params()->fromQuery('client');
         $year_month = $this->params()->fromQuery('month');
         
         $year = $month = null;
@@ -76,7 +77,7 @@ class VtController extends AbstractActionController
         
         $params = [
             'q' => $q, 'sort' => $sort, 'order' => $order, 
-            'officeId' => $officeId,
+            'officeId' => $officeId, 'clientId' => $clientId,
             'year' => $year, 'month' => $month,
         ];
         
