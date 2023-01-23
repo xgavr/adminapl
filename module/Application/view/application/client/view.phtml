@@ -411,7 +411,7 @@ $legalContact = $client->getLegalContact();
                 orderId += ' ('+row.order.aplId+')';
             }
         }
-        return "<a href='#' class='order-view-show' modal-url='/order/view/"+value+"'>"+orderId+"</a>";
+        return "<nobr><a href='#' class='order-view-show' modal-url='/order/view/"+value+"'>"+orderId+"</a></nobr>";
     }
         
     function clientFormatter(value, row){
