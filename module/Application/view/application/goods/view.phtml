@@ -367,7 +367,7 @@
                         <tr>
                              <!--<th data-field="id" data-type="numeric">ID</th>-->
                              <th data-field="dateCreated">Дата</th>
-                             <th data-field="supplier">Поставщик</th>
+                             <th data-field="supplier" data-formatter="baseSupplierFormatter">Поставщик</th>
                              <th data-field="goodname" >Описание</th>
                              <th data-field="rest" data-align='right'>Наличие</th>
                              <th data-field="price" data-formatter="priceFormatter" data-align='right'>Цена</th>
@@ -702,13 +702,20 @@
     }
     
     function baseSupplierFormatter(value, row){
-        if (value){
+        var supplierId = 0;
+        if (row.supplierId){
+            supplierId = row.supplierId;
+        }
+        if (row.ptu){
+            supplierId = row.ptu.supplier.id;
+        }
+        if (value && supplierId){
 //            return value.substr(0, 25);
             return [
                 '<nobr>',
-                '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.ptu.supplier.id+'" title="Перейти на сайт поставщика">',
+                '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+supplierId+'" title="Перейти на сайт поставщика">',
                 '<span class="glyphicon glyphicon-link"></span></a>',
-                '<a href="/supplier/view/' + row.ptu.supplier.id + '" target="_blank">' + value.substr(0, 25) + '</a>',
+                '<a href="/supplier/view/' + supplierId + '" target="_blank">' + value.substr(0, 25) + '</a>',
                 '</nobr>'
             ].join(''); 
         }
