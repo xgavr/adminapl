@@ -36,9 +36,27 @@ class AdminManager {
      */
     private $entityManager;
     
+    /**
+     * Дата запрета
+     * @var string
+     */
+    private $allowDate;    
+    
     public function __construct($entityManager)
     {
         $this->entityManager = $entityManager;
+
+        $setting = $this->getSettings();
+        $this->allowDate = $setting['allow_date'];
+    }
+    
+    /**
+     * Получить дату запрета
+     * @return date
+     */
+    public function getAllowDate()
+    {
+        return $this->allowDate; 
     }
     
     /**

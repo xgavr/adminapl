@@ -49,15 +49,22 @@ class ClientController extends AbstractActionController
      */
     private $rbacManager;    
     
+    /**
+     * Admin manager.
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $clientManager, $contactManager, $sessionContainer, $rbacManger) 
+    public function __construct($entityManager, $clientManager, $contactManager, 
+            $sessionContainer, $rbacManger, $adminManager) 
     {
         $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
         $this->contactManager = $contactManager; 
         $this->sessionContainer = $sessionContainer;
         $this->rbacManager = $rbacManger;
-        
+        $this->adminManager = $adminManager;
     }   
     
     public function setCurrentClientAction()
@@ -263,6 +270,7 @@ class ClientController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'client' => $client,
+            'allowDate' => $this->adminManager->getAllowDate(),
         ]);
     }      
     

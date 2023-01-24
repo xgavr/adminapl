@@ -13,6 +13,7 @@ use Application\Controller\ClientController;
 use Application\Service\ClientManager;
 use Application\Service\ContactManager;
 use User\Service\RbacManager;
+use Admin\Service\AdminManager;
 
 
 /**
@@ -30,8 +31,10 @@ class ClientControllerFactory implements FactoryInterface {
         $contactManager = $container->get(ContactManager::class);
         $sessionContainer = $container->get('ContainerNamespace');
         $rbacManager = $container->get(RbacManager::class);
+        $adminManager = $contactManager->get(AdminManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new ClientController($entityManager, $clientManager, $contactManager, $sessionContainer, $rbacManager);
+        return new ClientController($entityManager, $clientManager, $contactManager, 
+                $sessionContainer, $rbacManager, $adminManager);
     }
 }
