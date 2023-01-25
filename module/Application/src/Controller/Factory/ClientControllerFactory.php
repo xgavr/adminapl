@@ -31,7 +31,7 @@ class ClientControllerFactory implements FactoryInterface {
         $contactManager = $container->get(ContactManager::class);
         $sessionContainer = $container->get('ContainerNamespace');
         $rbacManager = $container->get(RbacManager::class);
-        $adminManager = $contactManager->get(AdminManager::class);
+        $adminManager = $container->get(AdminManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new ClientController($entityManager, $clientManager, $contactManager, 

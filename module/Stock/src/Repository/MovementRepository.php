@@ -93,6 +93,7 @@ class MovementRepository extends EntityRepository{
         $qb = $entityManager->createQueryBuilder();
         $qb->select('sum(m.quantity) as rest, m.baseKey, m.docStamp, sum(m.amount)/sum(m.quantity) as price')
                 ->from(Movement::class, 'm')
+                ->distinct()
                 ->where('m.good = ?1')
                 ->andWhere('m.docStamp < ?2')
                 ->andWhere('m.docStamp > 0')

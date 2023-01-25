@@ -50,143 +50,141 @@ if ($pt){
 
 ?>
 
-
-
+<?= $this->form()->openTag($form); ?>
             
-            <?= $this->form()->openTag($form); ?>
+<div class="modal-header">
+    <h5 class="modal-title" id="ptModalLabel">Перемещение товаров <?= $docName?></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
             
-            <div class="modal-header">
-                <h5 class="modal-title" id="ptModalLabel">Перемещение товаров <?= $docName?></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('doc_no')); ?>
+                <?= $this->formElement($form->get('doc_no')); ?>
+                <?= $this->formElementErrors($form->get('doc_no')); ?>                  
             </div>
-            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('doc_no')); ?>
-                            <?= $this->formElement($form->get('doc_no')); ?>
-                            <?= $this->formElementErrors($form->get('doc_no')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('office_id')); ?>
-                            <?= $this->formElement($form->get('office_id')); ?>
-                            <?= $this->formElementErrors($form->get('office_id')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('office2_id')); ?>
-                            <?= $this->formElement($form->get('office2_id')); ?>
-                            <?= $this->formElementErrors($form->get('office2_id')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('status')); ?>
-                            <?= $this->formElement($form->get('status')); ?>
-                            <?= $this->formElementErrors($form->get('status')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-2 text-right">
-                        <h1 class="display-4" id="ptQuantity"></h1>
-                    </div>    
-                    <div class="col-xs-1 text-right">
-                        <h1 class="display-4" id="ptAmount"><?= ($pt) ? round($pt->getAmount(), 2):"" ?></h1>                        
-                    </div>    
-                </div>    
-                <div class="row">
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('doc_date')); ?>
-                            <?= $this->formElement($form->get('doc_date')); ?>
-                            <?= $this->formElementErrors($form->get('doc_date')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('company')); ?>
-                            <?= $this->formElement($form->get('company')); ?>
-                            <?= $this->formElementErrors($form->get('company')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('company2')); ?>
-                            <?= $this->formElement($form->get('company2')); ?>
-                            <?= $this->formElementErrors($form->get('company2')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-6 text-right">
-                    </div>    
-                </div>        
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div id="ptgoodtoolbar">
-                            <div class="form-inline" role="form">
-                                <button type="button" class="btn btn-default pt-good-modal-show" modal-url="/pt/good-edit-form">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                        </div>
-                        <table id="ptgoodtable" 
-                            data-toggle="ptgoodtable" 
-                            data-url="/pt/good-content/<?= ($pt) ? $pt->getId():"" ?>"
-                            data-side-pagination="client"
-                            data-pagination="true"
-                            data-page-size = "5"
-                            data-page-list="[5, 10, 20, 50]"
-                            data-toolbar="#ptgoodtoolbar"
-                            data-show-refresh="true"
-                            data-show-toggle="true"
-                            data-query-params="ptgoodQueryParams"
-                            data-response-handler="ptgoodResponseHandler"
-                            data-unique-id = "rowNo"
-                            data-row-style="takeStyle"
-                            >
-                            <thead>
-                                <tr>
-                                     <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                                     <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
-                                     <th data-field="good.producer.name" data-type="numeric">Производитель</th>
-                                     <th data-field="good.name" data-type="numeric">Наименование</th>
-                                     <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
-                                     <th data-field='quantity' data-align="right">Количество</th>
-                                     <th data-field='amount' data-align="right">Сумма</th>
-                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
-                                 </tr>                
-                            </thead>
-                        </table>
-                    </div>
-                </div>    
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('comment')); ?>
-                            <?= $this->formElement($form->get('comment')); ?>
-                            <?= $this->formElementErrors($form->get('comment')); ?>                  
-                        </div>                        
-                    </div>                                            
-                </div>        
-
-
-
-
-                        <?= $this->formElement($form->get('csrf')); ?>
-                    </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('office_id')); ?>
+                <?= $this->formElement($form->get('office_id')); ?>
+                <?= $this->formElementErrors($form->get('office_id')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('office2_id')); ?>
+                <?= $this->formElement($form->get('office2_id')); ?>
+                <?= $this->formElementErrors($form->get('office2_id')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2 text-right">
+            <h1 class="display-4" id="ptQuantity"></h1>
+        </div>    
+        <div class="col-xs-1 text-right">
+            <h1 class="display-4" id="ptAmount"><?= ($pt) ? round($pt->getAmount(), 2):"" ?></h1>                        
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('doc_date')); ?>
+                <?= $this->formElement($form->get('doc_date')); ?>
+                <?= $this->formElementErrors($form->get('doc_date')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('company')); ?>
+                <?= $this->formElement($form->get('company')); ?>
+                <?= $this->formElementErrors($form->get('company')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('company2')); ?>
+                <?= $this->formElement($form->get('company2')); ?>
+                <?= $this->formElementErrors($form->get('company2')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-6 text-right">
+        </div>    
+    </div>        
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="ptgoodtoolbar">
+                <div class="form-inline" role="form">
+                    <button type="button" class="btn btn-default btn-sm pt-good-modal-show" modal-url="/pt/good-edit-form">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
                 </div>
-            </div>    
-                
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="pt-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
             </div>
-            
-            <?= $this->form()->closeTag(); ?>
+            <table id="ptgoodtable" 
+                data-toggle="ptgoodtable" 
+                data-url="/pt/good-content/<?= ($pt) ? $pt->getId():"" ?>"
+                data-side-pagination="client"
+                data-pagination="true"
+                data-cookie="true"
+                data-cookie-id-table="ptGoodSaveId"
+                data-cookie-expire="1m"
+                data-page-size = "5"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#ptgoodtoolbar"
+                data-icon-size="sm"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-show-columns="true"
+                data-query-params="ptgoodQueryParams"
+                data-response-handler="ptgoodResponseHandler"
+                data-unique-id = "rowNo"
+                data-row-style="takeStyle"
+                >
+                <thead>
+                    <tr>
+                        <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                        <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
+                        <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                        <th data-field="good.name" data-type="numeric">Наименование</th>
+                        <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                        <th data-field='quantity' data-align="right">Количество</th>
+                        <th data-field='amount' data-align="right">Сумма</th>
+                        <th data-field="baseKey" data-visible="false" data-editable="true" data-editable-type="select" data-editable-source="/pt/find-base/<?= ($pt) ? $pt->getId():''?>" data-width="10">Партия</th>
+                        <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('comment')); ?>
+                <?= $this->formElement($form->get('comment')); ?>
+                <?= $this->formElementErrors($form->get('comment')); ?>                  
+            </div>                        
+        </div>                                            
+    </div>        
+
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>
+                
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="pt-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
             
 <script>
     function submitForm(){
@@ -224,6 +222,7 @@ if ($pt){
                 good_id: row.good.id,
                 quantity: row.quantity,
                 amount: row.amount,
+                baseKey: row.baseKey
             };
             result.push(newRow);
         });   

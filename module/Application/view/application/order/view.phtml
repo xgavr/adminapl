@@ -2,6 +2,7 @@
 use Application\Entity\Order;  
 use Stock\Entity\Vt;
 use Application\Entity\Bid;
+use Laminas\Json\Encoder;
 
 $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
 ?>
@@ -284,13 +285,8 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
     }    
     
     function statusFormatter(value){
-        if (value == '<?= Vt::STATUS_COMMISSION?>'){
-            return 'Коммисия';
-        }
-        if (value == '<?= Vt::STATUS_DEFECT?>'){
-            return 'Брак';
-        }
-        return '';
+        var result = <?= Encoder::encode(Vt::getStatusList())?>;
+        return result[value];
     }
 
     function activeFormatter(value, row){

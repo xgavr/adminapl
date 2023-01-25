@@ -754,7 +754,7 @@ class OrderController extends AbstractActionController
         }    
         
         return new JsonModel(
-           $result
+            $result
         );                   
     }
 }

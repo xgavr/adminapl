@@ -20,6 +20,9 @@ use Application\Entity\Contact;
 use Stock\Entity\PtSheduler;
 use Stock\Form\PtShedulerForm;
 use Stock\Entity\GoodBalance;
+use Stock\Entity\Register;
+use Stock\Entity\Movement;
+use Stock\Entity\PtGood;
 
 class PtController extends AbstractActionController
 {
@@ -393,7 +396,7 @@ class PtController extends AbstractActionController
             'good' => $good,
         ]);        
     }    
-
+    
     public function deletePtAction()
     {
         $ptId = $this->params()->fromRoute('id', -1);
@@ -504,4 +507,43 @@ class PtController extends AbstractActionController
             'ptSheduler' => $ptSheduler,
         ]);        
     }
+    
+    public function findBaseAction()
+    {
+        $ptId = $this->params()->fromRoute('id', -1);
+        
+        $pt = $this->entityManager->getRepository(Pt::class)
+                ->find($ptId);        
+
+        if ($pt == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $reg = $this->entityManager->getRepository(Register::class)
+                ->findOneBy(['docId' => $pt->getId(), 'docType' => Movement::DOC_PT]);
+        
+        if ($reg){
+            $docStamp = $reg->getDocStamp();
+        } else {
+            $docStamp = $this->entityManager->getRepository(Register::class)
+                    ->ptRegister($pt);        
+        }    
+        $ptGoods = $pt->getPtGoods();
+        $result = [0 => PtGood::BASE_KEY_AUTO];
+        foreach ($ptGoods as $ptGood){
+            $bases = $this->entityManager->getRepository(Movement::class)
+                    ->findBases($ptGood->getGood()->getId(), $docStamp, $pt->getOffice()->getId());
+            foreach ($bases as $base){
+                $result[] = [
+                    'value' => $base['baseKey'],
+                    'text' => $base['baseKey'],
+                ];
+            }    
+        }    
+        
+        return new JsonModel(
+            $result
+        );                   
+    }    
 }

@@ -33,6 +33,8 @@ class PtGood {
 
     const TAKE_OK  = 1;// учтено 
     const TAKE_NO  = 2;// не учтено 
+    
+    const BASE_KEY_AUTO = 'авто';
 
     /**
      * @ORM\Id
@@ -345,7 +347,11 @@ class PtGood {
      */
     public function getBaseKey() 
     {
-        return $this->baseKey;
+        if ($this->baseKey != self::BASE_KEY_AUTO){
+            return $this->baseKey;
+        }
+        
+        return;
     }
         
     /**

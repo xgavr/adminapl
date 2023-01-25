@@ -120,7 +120,7 @@ class PtManager
             foreach ($ptGoods as $ptGood){
 
                 $bases = $this->entityManager->getRepository(Movement::class)
-                        ->findBases($ptGood->getGood()->getId(), $docStamp, $pt->getOffice()->getId());
+                        ->findBases($ptGood->getGood()->getId(), $docStamp, $pt->getOffice()->getId(), $ptGood->getBaseKey());
 
                 $write = $ptGood->getQuantity();
 
@@ -436,6 +436,7 @@ class PtManager
             'amount' => $data['amount'],
             'good_id' => $data['good_id'],
             'comment' => (isset($data['comment'])) ? $data['comment']:'',
+            'base_key' => (isset($data['baseKey'])) ? $data['baseKey']:null,
 //            'info' => $data['info'],
             'row_no' => $rowNo,
             'take' => PtGood::TAKE_NO,
@@ -509,6 +510,11 @@ class PtManager
         $rowNo = 1;
         if ($data){
             foreach ($data as $row){
+                if (isset($row['baseKey'])){
+                    if ($row['baseKey'] == PtGood::BASE_KEY_AUTO){
+                        unset($row['baseKey']);
+                    }
+                }
                 $this->addPtGood($pt->getId(), $row, $rowNo);
                 $rowNo++;
             }
