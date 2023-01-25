@@ -63,7 +63,8 @@
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
+            data-show-columns="true"
             data-query-params="queryParams"
             data-sort-name="docDate"
             data-sort-order="desc"            
@@ -74,7 +75,8 @@
             <thead>
                 <tr>
                      <th data-field="docDate" data-sortable="true" data-width="100">Дата</th>
-                     <th data-field="id" data-sortable="false" data-type="numeric"data-align="right" data-formatter="idFormatter" data-width="80">Номер</th>
+                     <th data-field="id" data-sortable="false" data-type="numeric" data-formatter="idFormatter" data-width="80">Id</th>
+                     <th data-field="docNo" data-sortable="false" data-width="5">Номер</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
                      <th data-field='office.name' data-sortable="false">Отправитель</th>
                      <th data-field='company.name' data-sortable="false">Отправитель ЮЛ</th>
@@ -149,11 +151,8 @@
     }    
     
     function idFormatter(value, row){
-        if (row.docNo){
-            return row.docNo;
-        }
         if (row.aplId){
-            return row.aplId;
+            return '<nobr>' + value + ' (' + row.aplId + ')</nobr>';
         }
         return value;
     }    
