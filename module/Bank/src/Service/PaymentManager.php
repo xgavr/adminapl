@@ -312,6 +312,10 @@ class PaymentManager
      */
     public function sendAll()
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        
         $payments = $this->entityManager->getRepository(Payment::class)
                 ->findBy(['status' => Payment::STATUS_ACTIVE, 'requestId' => null]);
         
@@ -319,6 +323,9 @@ class PaymentManager
             $this->sendPayment($payment);
             $this->entityManager->refresh($payment);
             if ($payment->getStatus() != Payment::STATUS_SUCCESS){
+                break;
+            }
+            if (time() > $startTime + 840){
                 break;
             }
         }

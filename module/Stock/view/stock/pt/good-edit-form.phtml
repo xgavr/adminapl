@@ -167,6 +167,8 @@ $docName = 'Новый';
                 $('#good').val(data.id);
                 $('#code').val(data.code);
                 $('#goodInputName').val(data.name);
+                $('#price').val(data.price);
+                $('#amount').val(data.price * $('#quantity').val());
             }
         });
         
