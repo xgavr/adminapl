@@ -531,14 +531,18 @@ class PtController extends AbstractActionController
         }    
         $ptGoods = $pt->getPtGoods();
         $result = [0 => PtGood::BASE_KEY_AUTO];
+        $keys = [];
         foreach ($ptGoods as $ptGood){
             $bases = $this->entityManager->getRepository(Movement::class)
                     ->findBases($ptGood->getGood()->getId(), $docStamp, $pt->getOffice()->getId());
             foreach ($bases as $base){
-                $result[] = [
-                    'value' => $base['baseKey'],
-                    'text' => $base['baseKey'],
-                ];
+                if (!array_key_exists($base['baseKey'], $keys)){
+                    $keys[$base['baseKey']] = $base['baseKey'];
+                    $result[] = [
+                        'value' => $base['baseKey'],
+                        'text' => $base['baseKey'],
+                    ];
+                }
             }    
         }    
         
