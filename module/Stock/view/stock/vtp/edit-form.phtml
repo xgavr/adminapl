@@ -375,9 +375,9 @@ if ($vtp){
                     var row = {
                         rowNo: 1,
                         vtpg: vtpg,
-                        amount: <?= $base['amount'] ?>,
+                        amount: <?= abs($base['amount']) ?>,
                         quantity: <?= $base['rest'] ?>,
-                        price: Math.round(<?= $base['amount'] ?>*100/<?= $base['rest'] ?>)/100
+                        price: Math.round(<?= abs($base['amount']) ?>*100/<?= $base['rest'] ?>)/100
                     };
 
                     rows.push(row);

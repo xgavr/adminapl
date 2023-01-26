@@ -41,6 +41,9 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                 <button class="btn btn-default btn-sm order-repost" type="button" title="Перепровести">
                     <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                 </button>                
+                <button class="btn btn-default btn-sm bid-row-copy" type="button" title="Копировать выделенные строки">
+                    <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+                </button>                
             </div>
         </div>
         <table id="ordergoodtable" 
@@ -61,7 +64,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             data-query-params="ordergoodQueryParams"
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
-            data-unique-id = "rowNo"                
+            data-unique-id = "id"                
             data-click-to-select="true"
             data-id-field = "id"
             data-editable-url = "/order/bid-editable/"
@@ -143,6 +146,38 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
         $('#orderQuantity').html((Math.round(num*100)/100).toFixed(0));
     }
     
+    function getBids(){
+        var data = $('#ordergoodtable').bootstrapTable('getData');
+        console.log(data);
+        var result = [];
+        $.each( data, function( index, row ) {
+            var newRow = {
+                good: row.good.id,
+                displayName: row.displayName,
+                num: row.num,
+                price: row.price,
+                oem: row.oem,
+                baseKey: row.baseKey
+            };
+            result.push(newRow);
+        });   
+        return result;
+    }
+    
+    function updateBids(orderId){
+        $.ajax({
+            type: 'POST',
+            url: '/order/update-bids/'+orderId,
+            data: getBids()
+        })
+            .done(function (data) {
+                $('#ordergoodtable').bootstrapTable('refresh');
+            })
+            .fail(function (message) {
+                alert(message);
+            });        
+    }
+    
     //удаление строки из таблицы
     function removeTableRowByUniqueId(index){
         $('#ordergoodtable').bootstrapTable('removeByUniqueId', index);
@@ -174,6 +209,23 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             repostOrder(<?= $order->getId()?>);
         });        
         
+        $(document).on('click', '.bid-row-copy', function (e) {
+            var selections = $('#ordergoodtable').bootstrapTable('getSelections');
+            $.each( selections, function( index, row ) {
+                $('#ordergoodtable').bootstrapTable('insertRow', {index: 1, row: row});
+            });  
+            if (selections.length){
+                updateBids(<?= $order->getId()?>);
+            }    
+        });      
+        
+        $(document).on('click', '.bid-row-delete', function (e) {
+            var id = $(this).attr('value');
+            if (id && confirm('Удалить строку?')){
+                $('#ordergoodtable').bootstrapTable('removeByUniqueId', id);
+            }
+//            updateBids(<?= $order->getId()?>);
+        });        
     });    
 
     function ordergoodQueryParams(params) {
@@ -239,10 +291,10 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
     function grActiveFormatter(value, row){
         let btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs table-row-remove"';
+        btn += ' class="btn btn-default btn-xs bid-row-delete"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
-        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
+        btn += ' value="'+row.id+'">';
         btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;

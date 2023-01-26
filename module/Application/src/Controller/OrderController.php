@@ -647,6 +647,26 @@ class OrderController extends AbstractActionController
         );           
     }        
     
+    public function updateBidsAction()
+    {
+        $orderId = $this->params()->fromRoute('id', -1);
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);        
+
+        if ($order == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        if ($this->getRequest()->isPost()){
+            $data = $this->params()->fromPost();
+            $this->orderManager->updateBids($order, $data);
+        }
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+
     public function bidEditableAction()
     {
         if ($this->getRequest()->isPost()){

@@ -604,15 +604,17 @@ class OrderManager
      * @param array $data
      */
     public function updateBids($order, $data)
-    {
-        $this->removeOrderBids($order);
-        $rowNo = 1;
-        foreach ($data as $key => $row){
-            $row['rowNo'] = $rowNo;
-            $this->insBid($order, $row);
-            $rowNo++;
-        }
-        $this->updOrderTotal($order);
+    {        
+        if (count($data)){
+            $this->removeOrderBids($order);
+            $rowNo = 1;
+            foreach ($data as $key => $row){
+                $row['rowNo'] = $rowNo;
+                $this->insBid($order, $row);
+                $rowNo++;
+            }
+            $this->updOrderTotal($order);
+        }    
         return;
     }
 
