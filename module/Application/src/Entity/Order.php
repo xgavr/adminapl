@@ -20,6 +20,7 @@ use Admin\Entity\Wammchat;
 use Admin\Filter\ClickFilter;
 use Laminas\Json\Encoder;
 use Laminas\Json\Decoder;
+use Company\Entity\Legal;
 
 
 /**

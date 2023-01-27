@@ -371,6 +371,20 @@ return [
                     ],
                 ],
             ],        
+            'edo' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/edo[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*'
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\EdoController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],        
             'pricesettings' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -523,6 +537,7 @@ return [
             Controller\ContactController::class => Controller\Factory\ContactControllerFactory::class,
             Controller\CrossController::class => Controller\Factory\CrossControllerFactory::class,
             Controller\CurrencyController::class => Controller\Factory\CurrencyControllerFactory::class,
+            Controller\EdoController::class => Controller\Factory\EdoControllerFactory::class,
             Controller\ExternalController::class => Controller\Factory\ExternalControllerFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
             Controller\GroupController::class => Controller\Factory\GroupControllerFactory::class,
@@ -562,6 +577,7 @@ return [
             Service\CourierManager::class => Service\Factory\CourierManagerFactory::class,
             Service\CrossManager::class => Service\Factory\CrossManagerFactory::class,
             Service\CurrencyManager::class => Service\Factory\CurrencyManagerFactory::class,
+            Service\EdoManager::class => Service\Factory\EdoManagerFactory::class,
             Service\ExternalManager::class => Service\Factory\ExternalManagerFactory::class,
             Service\ExternalDB\AbcpManager::class => Service\Factory\ExternalDB\AbcpManagerFactory::class,
             Service\ExternalDB\AutodbManager::class => Service\Factory\ExternalDB\AutodbManagerFactory::class,
@@ -640,6 +656,10 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\GroupController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
+            Controller\EdoController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
