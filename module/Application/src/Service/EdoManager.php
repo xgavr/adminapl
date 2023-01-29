@@ -149,9 +149,11 @@ class EdoManager {
                                     $xml->writeAttribute('АдрТекст', $order->getLegal()->getAddress());
                                 $xml->endElement(); //АдрИнф
                             $xml->endElement(); //Адрес
-                            $xml->startElement('Контакт');
-                                $xml->writeAttribute('Тлф', $order->getContact()->getPhone());
-                            $xml->endElement(); //Контакт
+                            if ($order->getContact()->getPhone()){
+                                $xml->startElement('Контакт');
+                                    $xml->writeAttribute('Тлф', $order->getContact()->getPhone()->getName());
+                                $xml->endElement(); //Контакт
+                            }    
                             $xml->startElement('БанкРекв');
                                 $xml->writeAttribute('НомерСчета', $order->getCompany()->getLastActiveBankAccount()->getRs());
                                 $xml->startElement('СвБанк');
