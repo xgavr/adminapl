@@ -306,6 +306,11 @@ class EdoManager {
             $xml->startElement('Документ');
                 $xml->writeAttribute('КНД', '1115131');
                 $xml->writeAttribute('Функция', 'СЧФ');
+                $xml->writeAttribute('ДатаИнфПр', date('d.m.Y'));
+                $xml->writeAttribute('ВремИнфПр', date('H.i.s'));
+                $xml->writeAttribute('НаимЭконСубСост', $order->getCompany()->getName());
+                $xml->writeAttribute('ПоФактХЖ', 'Документ об отгрузке товаров (выполнении работ), передаче имущественных прав (документ об оказании услуг)');
+                $xml->writeAttribute('НаимДокОпр', 'Счет-фактура и документ об отгрузке товаров (выполнении работ), передаче имущественных прав (документ об оказании услуг)');
         
                 $xml->startElement('СвСчФакт');
                     $xml->writeAttribute('НомерСчФ', $order->getAplId());
