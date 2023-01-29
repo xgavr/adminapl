@@ -443,11 +443,12 @@ class EdoManager {
                     $xml->startElement('СвПер');
                         $xml->writeAttribute('СодОпер', 'Поступление товаров и услуг');
                         if ($order->getLegal()){
-                            if ($order->getLegal()->getContract()){
+                            $contract = $order->getLegal()->getLastContract();
+                            if ($contract){
                                 $xml->startElement('ОснПер');
-                                    $xml->writeAttribute('НаимОсн', $order->getLegal()->getContract()->getName());            
-                                    $xml->writeAttribute('НомОсн', $order->getLegal()->getContract()->getAct());            
-                                    $xml->writeAttribute('ДатаОсн', date('d.m.Y', strtotime($order->getLegal()->getContract()->getDateStart())));            
+                                    $xml->writeAttribute('НаимОсн', $contract->getName());            
+                                    $xml->writeAttribute('НомОсн', $contract->getAct());            
+                                    $xml->writeAttribute('ДатаОсн', date('d.m.Y', strtotime($contract->getDateStart())));            
                                 $xml->endElement(); //ОснПер
                             }    
                         }    
