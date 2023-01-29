@@ -327,6 +327,7 @@ class EdoManager {
                         $xml->endElement(); //ИдСв
                         $xml->startElement('Адрес');
                             $xml->startElement('АдрИнф');
+                                $xml->writeAttribute('КодСтр', '643');
                                 $xml->writeAttribute('АдрТекст', $order->getCompany()->getAddress());
                             $xml->endElement(); //АдрИнф
                         $xml->endElement(); //Адрес
