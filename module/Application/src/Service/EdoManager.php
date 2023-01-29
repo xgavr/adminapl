@@ -390,7 +390,7 @@ class EdoManager {
                                 $xml->writeAttribute('КолТов', $bid->getNum());
                                 $xml->writeAttribute('ЦенаТов', $bid->getPrice());
                                 $xml->writeAttribute('СтТовБезНДС', $bid->getPrice());
-                                $xml->writeAttribute('НалСт', 'Без НДС');
+                                $xml->writeAttribute('НалСт', 'без НДС');
                                 $xml->writeAttribute('СтТовУчНал', $bid->getTotal());
                                 $xml->startElement('Акциз');
                                     $xml->startElement('СумАкциз');
@@ -399,7 +399,7 @@ class EdoManager {
                                 $xml->endElement(); //Акциз
                                 $xml->startElement('СумНал');
                                     $xml->startElement('СумНал');
-                                        $xml->text('Без НДС');
+                                        $xml->text('без НДС');
                                     $xml->endElement(); //СумНал
                                 $xml->endElement(); //СумНал
                                 $xml->startElement('СвТД');
@@ -420,6 +420,7 @@ class EdoManager {
                             $xml->writeAttribute('КолТов', '');
                             $xml->writeAttribute('ЦенаТов', $order->getShipmentTotal());
                             $xml->writeAttribute('СтТовБезНДС', $order->getShipmentTotal());
+                            $xml->writeAttribute('НалСт', 'без НДС');
                             $xml->writeAttribute('СтТовУчНал', $order->getShipmentTotal());
                             $xml->startElement('Акциз');
                                 $xml->startElement('СумАкциз');
@@ -428,7 +429,7 @@ class EdoManager {
                             $xml->endElement(); //Акциз
                             $xml->startElement('СумНал');
                                 $xml->startElement('СумНал');
-                                    $xml->text('Без НДС');
+                                    $xml->text('без НДС');
                                 $xml->endElement(); //СумНал
                             $xml->endElement(); //СумНал
                             $xml->startElement('СвТД');
