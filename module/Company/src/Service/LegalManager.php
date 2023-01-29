@@ -79,7 +79,8 @@ class LegalManager
         }
 
         $this->entityManager->persist($legal);        
-        $this->entityManager->flush($legal);                
+        $this->entityManager->flush($legal);
+        $this->entityManager->refresh($legal);
         
         return $legal;
     }
