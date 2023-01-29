@@ -305,6 +305,7 @@ class EdoManager {
         
             $xml->startElement('Документ');
                 $xml->writeAttribute('КНД', '1115131');
+                $xml->writeAttribute('Функция', 'СЧФ');
         
                 $xml->startElement('СвСчФакт');
                     $xml->writeAttribute('НомерСчФ', $order->getAplId());
