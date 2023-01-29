@@ -1,0 +1,122 @@
+<?php
+
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('code')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('inn')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('site')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('info')->setAttributes([
+    'class'=>'form-control', 
+    'rows' => 4
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'edo-operator-submit']);
+
+$form->prepare();
+
+?>
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title">Оператор ЭДО</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
+            </div>
+        </div>    
+        <div class="col-md-4">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('code')); ?>
+                <?= $this->formElement($form->get('code')); ?>
+                <?= $this->formElementErrors($form->get('code')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('inn')); ?>
+                <?= $this->formElement($form->get('inn')); ?>
+                <?= $this->formElementErrors($form->get('inn')); ?>                  
+            </div>
+        </div>    
+        <div class="col-md-4">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-md-12">
+            <?= $this->formLabel($form->get('site')); ?>
+            <?= $this->formElement($form->get('site')); ?>
+            <?= $this->formElementErrors($form->get('site')); ?>                              
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?= $this->formLabel($form->get('info')); ?>
+            <?= $this->formElement($form->get('info')); ?>
+            <?= $this->formElementErrors($form->get('info')); ?>                              
+        </div>
+    </div>
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="edo-operator-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#edo-operator-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/legals/edo-operator-form/<?= ($edoOperator ? $edoOperator->getId():'') ?>',
+            data: $('#edo-operator-form').serialize()
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#modal-dialog').modal('hide');
+                    refreshTable();
+                } else {
+                    $('#modal-content').html(data);
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });
+    });        
+</script>

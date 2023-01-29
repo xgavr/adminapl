@@ -10,6 +10,7 @@ use Application\Entity\Contact;
 use Stock\Entity\Mutual;
 use Bank\Entity\Statement;
 use Stock\Entity\Retail;
+use Company\Entity\EdoOperator;
 
 /**
  * This service legal.
@@ -47,7 +48,6 @@ class LegalManager
      */
     public function updateLegal($legal, $data)
     {                
-
         $inn = (empty($data['inn'])) ? null:$data['inn']; 
         $kpp = (empty($data['kpp'])) ? null:$data['kpp']; 
         $name = (empty($data['name'])) ? null:$data['name']; 
@@ -62,7 +62,16 @@ class LegalManager
         $legal->setInfo((empty($data['info'])) ? null:$data['info']);            
         $legal->setAddress((empty($data['address'])) ? null:$data['address']);            
         $legal->setStatus((empty($data['status'])) ? Legal::STATUS_ACTIVE:$data['status']);            
-        
+        $legal->setEdoAddress((empty($data['edoAddress'])) ? null:$data['edoAddress']); 
+                
+        if (!empty($data['edoOperator'])){
+            $edoOperator = $this->entityManager->getRepository(EdoOperator::class)
+                    ->find($data['edoOperator']);
+            $legal->setEdoOpertator($edoOperator); 
+        } else {
+            $legal->setEdoOpertator(null);             
+        }
+
         $currentDate = date('Y-m-d H:i:s');
         $legal->setDateStart($currentDate);
         if (isset($data['dateStart'])){
@@ -119,6 +128,15 @@ class LegalManager
             $legal->setInfo((empty($data['info'])) ? null:$data['info']);            
             $legal->setAddress((empty($data['address'])) ? null:$data['address']);            
             $legal->setStatus((empty($data['status'])) ? Legal::STATUS_ACTIVE:$data['status']);            
+            $legal->setEdoAddress((empty($data['edoAddress'])) ? null:$data['edoAddress']); 
+            
+            if (!empty($data['edoOperator'])){
+                $edoOperator = $this->entityManager->getRepository(EdoOperator::class)
+                        ->find($data['edoOperator']);
+                $legal->setEdoOpertator($edoOperator); 
+            } else {
+                $legal->setEdoOpertator(null);                 
+            }
 
             $currentDate = date('Y-m-d H:i:s');
             $legal->setDateCreated($currentDate);
@@ -438,5 +456,68 @@ class LegalManager
         return;
     }
     
+    /**
+     * Добавить оператора эдо
+     * 
+     * @param array $data
+     * @return EdoOperator 
+     */
+    public function addEdoOperator($data)
+    {                
+        $edoOperator = new EdoOperator();            
+        $edoOperator->setName($data['name']);            
+        $edoOperator->setCode($data['code']);            
+        $edoOperator->setInn($data['inn']);            
+        $edoOperator->setStatus($data['status']);            
+        $edoOperator->setInfo(empty($data['info']) ? null:$data['info']);            
+        $edoOperator->setSite(empty($data['site']) ? null:$data['site']);            
+                
+        $currentDate = date('Y-m-d H:i:s');
+        $edoOperator->setDateCreated($currentDate);
+            
+        $this->entityManager->persist($edoOperator);
+        $this->entityManager->flush();                
+        
+        return $edoOperator;
+    }
+
+    /**
+     * обновить оператора эдо
+     *  
+     * @param EdoOperator $edoOperator 
+     * @param array $data
+     * @return EdoOperator 
+     */
+    public function updateEdoOperator($edoOperator, $data)
+    {                
+        $edoOperator->setName($data['name']);            
+        $edoOperator->setCode($data['code']);            
+        $edoOperator->setInn($data['inn']);            
+        $edoOperator->setStatus($data['status']);            
+        $edoOperator->setInfo(empty($data['info']) ? null:$data['info']);            
+        $edoOperator->setSite(empty($data['site']) ? null:$data['site']);            
+                
+        $this->entityManager->persist($edoOperator);
+        $this->entityManager->flush();                
+        
+        return $edoOperator;
+    }
+    
+    /**
+     * Удаление опреатора эдо
+     * @param EdoOperator $edoOperator
+     * @return null
+     */
+    public function removeEdoOperator($edoOperator)
+    {
+        $legalCount = $this->entityManager->getRepository(Legal::class)
+                ->count(['edoOperator' => $edoOperator->getId()]);
+        if ($legalCount === 0){
+            $this->entityManager->remove($edoOperator);
+            $this->entityManager->flush();
+        }
+
+        return;
+    }    
 }
 

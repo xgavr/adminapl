@@ -14,6 +14,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Laminas\Filter\Digits;
 use Company\Entity\BankAccount;
+use Company\Entity\Contract;
+use Company\Entity\EdoOperator;
 
 /**
  * Description of Legal
@@ -84,6 +86,11 @@ class Legal {
      */
     protected $address;
 
+    /**
+     * @ORM\Column(name="edo_address")   
+     */
+    protected $edoAddress;
+
     /** 
      * @ORM\Column(name="date_created")  
      */
@@ -94,6 +101,12 @@ class Legal {
      */
     protected $dateStart;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\EdoOperator", inversedBy="legals") 
+     * @ORM\JoinColumn(name="edo_operator_id", referencedColumnName="id")
+     */
+    private $edoOperator;
+
     /**
     * @ORM\OneToMany(targetEntity="Company\Entity\BankAccount", mappedBy="legal")
     * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
@@ -240,6 +253,36 @@ class Legal {
         return;
     }
 
+    public function getHeadLastName() 
+    {
+        if ($this->head){
+            list($lastName, $firstName, $secondName) = explode(' ', $this->head);
+            return $lastName;
+        }
+        
+        return;
+    }
+
+    public function getHeadFirstName() 
+    {
+        if ($this->head){
+            list($lastName, $firstName, $secondName) = explode(' ', $this->head);
+            return $firstName;
+        }
+        
+        return;
+    }
+
+    public function getHeadSecondName() 
+    {
+        if ($this->head){
+            list($lastName, $firstName, $secondName) = explode(' ', $this->head);
+            return $secondName;
+        }
+        
+        return;
+    }
+
     public function setHead($head) 
     {
         $this->head = $head;
@@ -282,6 +325,16 @@ class Legal {
     public function setAddress($address) 
     {
         $this->address = $address;
+    }     
+
+    public function getEdoAddress() 
+    {
+        return $this->edoAddress;
+    }
+
+    public function setEdoAddress($edoAddress) 
+    {
+        $this->edoAddress = $edoAddress;
     }     
 
     /**
@@ -463,6 +516,18 @@ class Legal {
         return new ArrayCollection(iterator_to_array($iterator));
     }    
     
+    /**
+     * Текущий договор
+     * @return Contract
+     */
+    public function getLastContract()
+    {
+        $contracts = $this->getOrderContracts();
+        if ($contracts->count()){
+            return $contracts[0];
+        }        
+        return;
+    }
     
     /**
      * Assigns.
@@ -644,6 +709,25 @@ class Legal {
         
         return $result;
     }
+    
+    /*
+     * @return EdoOperator
+     */    
+    public function getEdoOperator() 
+    {
+        return $this->edoOperator;
+    }
+
+    /**
+     * @param EdoOperator $edoOperator
+     */    
+    public function setEdoOpertator($edoOperator) 
+    {
+        $this->edoOperator = $edoOperator;
+        if ($edoOperator){
+            $edoOperator->addLegal($this);
+        }    
+    }     
     
     /*
      * Возвращает связанный ptu.

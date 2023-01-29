@@ -19,6 +19,8 @@ use Company\Form\ContractForm;
 use Application\Entity\Contact;
 use Laminas\View\Model\JsonModel;
 use Cash\Entity\Cash;
+use Company\Entity\EdoOperator;
+use Company\Form\EdoOperatorForm;
 
 class LegalController extends AbstractActionController
 {
@@ -67,6 +69,97 @@ class LegalController extends AbstractActionController
             'legals' => $legals
         ]);
     }
+    
+    public function edoOperatorsAction()
+    {
+        
+        return new ViewModel([
+        ]);  
+    }
+
+    public function edoOperatorContentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        $limit = $this->params()->fromQuery('limit');
+        $status = $this->params()->fromQuery('status');
+        
+        $query = $this->entityManager->getRepository(EdoOperator::class)
+                        ->findAllEdoOperator(['q' => $q, 'sort' => $sort, 'order' => $order, 'status' => $status]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
+    
+    public function edoOperatorFormAction()
+    {
+        $edoOperatorId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($edoOperatorId>0) {
+            $edoOperator = $this->entityManager->getRepository(EdoOperator::class)
+                    ->find($edoOperatorId);
+        } else {
+            $edoOperator = null;
+        }
+                
+        $form = new EdoOperatorForm();
+        
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                if ($edoOperator){
+                    $this->legalManager->updateEdoOperator($edoOperator, $data);                    
+                } else{
+                    $this->legalManager->addEdoOperator($data);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+                var_dump($form->getMessages());
+            }
+        } else {
+            if ($edoOperator){
+                $data = [
+                    'name' => $edoOperator->getName(),  
+                    'code' => $edoOperator->getCode(),
+                    'inn' =>$edoOperator->getInn(),
+                    'info' => $edoOperator->getInfo(),  
+                    'status' => $edoOperator->getStatus(),
+                    'site' => $edoOperator->getSite(),
+                ];
+                $form->setData($data);
+            }    
+        }  
+
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'edoOperator' => $edoOperator,
+        ]);        
+    }    
     
     /**
      * This action displays a page allowing to add a new office.
@@ -262,6 +355,15 @@ class LegalController extends AbstractActionController
         }        
         
         $legalform = new LegalForm($this->entityManager);
+        
+        $edoOperatorlist = [0 => ''];
+        $edoOperators = $this->entityManager->getRepository(EdoOperator::class)
+                    ->findBy(['status' => EdoOperator::STATUS_ACTIVE]);
+        foreach ($edoOperators as $edoOperator) {
+            $edoOperatorlist[$edoOperator->getId()] = $edoOperator->getName();
+        }
+        $legalform->get('edoOperator')->setValueOptions($edoOperatorlist);
+
 
         if ($this->getRequest()->isPost()) {
             
@@ -296,7 +398,9 @@ class LegalController extends AbstractActionController
                         'info' => $legal->getInfo(),  
                         'address' => $legal->getAddress(),  
                         'status' => $legal->getStatus(),  
-                        'dateStart' => $legal->getDateStart(),  
+                        'dateStart' => $legal->getDateStart(),
+                        'edoOperator' => $legal->getEdoOperator(),
+                        'edoAddress' => $legal->getEdoAddress(),
                     ];
                     $legalform->setData($data);
                 }    

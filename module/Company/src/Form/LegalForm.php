@@ -126,6 +126,17 @@ class LegalForm extends Form
         ]);
         
         $this->add([           
+            'type'  => 'text',
+            'name' => 'edoAddress',
+            'attributes' => [
+                'id' => 'edoAddress'
+            ],
+            'options' => [
+                'label' => 'Адрес ЭДО',
+            ],
+        ]);
+
+        $this->add([           
             'type'  => 'textarea',
             'name' => 'address',
             'attributes' => [
@@ -168,6 +179,17 @@ class LegalForm extends Form
                     1 => 'Действующее',
                     2 => 'Закрыто',                    
                 ]
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'edoOperator',
+            'attributes' => [                
+                'required' => false,                
+            ],
+            'options' => [
+                'label' => 'Оператор ЭДО',
             ],
         ]);
         
@@ -357,6 +379,23 @@ class LegalForm extends Form
                 ],
             ]);                          
         
+        $inputFilter->add([
+                'name'     => 'edoAddress',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 0,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);                          
+
         $inputFilter->add([
                 'name'     => 'dateStart',
                 'required' => false,

@@ -13,6 +13,7 @@ use Company\Entity\Legal;
 use Application\Entity\Contact;
 use Company\Entity\Contract;
 use Company\Entity\BankAccount;
+use Company\Entity\EdoOperator;
 
 /**
  * Description of SupplierRepository
@@ -222,4 +223,40 @@ class LegalRepository extends EntityRepository
         return $queryBuilder->getQuery()->getOneOrNullResult();        
         
     }
+    
+    /**
+     * Запрос по опреаторам эдо по разным параметрам
+     * 
+     * @param array $params
+     * @return object
+     */
+    public function findAllEdoOperator($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('e')
+            ->from(EdoOperator::class, 'e')
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['q'])){
+                $queryBuilder->where('e.name like :search')
+                    ->setParameter('search', '%' . $params['q'] . '%')
+                        ;
+            }
+            if (isset($params['status'])){
+                $queryBuilder->andWhere('e.status = ?3')
+                    ->setParameter('3', $params['status'])
+                        ;
+            }            
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('e.'.$params['sort'], $params['order']);                
+            }            
+        }
+
+        return $queryBuilder->getQuery();
+    }   
+    
 }

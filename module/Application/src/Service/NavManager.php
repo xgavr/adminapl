@@ -340,12 +340,6 @@ class NavManager
                         ];
                 
                 $companyDropdownItems[] = [
-                            'id' => 'regions',
-                            'label' => 'Регионы',
-                            'link' => $url('regions')
-                        ];
-                
-                $companyDropdownItems[] = [
                             'id' => 'bank',
                             'label' => 'Банк',
                             'link' => $url('bank', ['action' => 'statement'])
@@ -368,6 +362,20 @@ class NavManager
                             'label' => 'Подотчет',
                             'link' => $url('accountant')
                         ];
+
+                $companyDropdownItems[] = [
+                            'id' => 'regions',
+                            'label' => 'Регионы',
+                            'link' => $url('regions')
+                        ];
+
+                $companyDropdownItems[] = [
+                            'id' => 'edoOperators',
+                            'label' => 'Операторы ЭДО',
+                            'link' => $url('legals', ['action' => 'edo-operators'])
+                        ];
+                
+                
                 
                 if (count($companyDropdownItems)!=0) {
                     $items[] = [

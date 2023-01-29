@@ -42,7 +42,7 @@ $legalContact = $client->getLegalContact();
     <div class="tab-content" id="featureTabContent">
         <div class="tab-pane fade" role="tabpanel" id="contacts" aria-labelledby="contact-tab">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <table class="table table-bordered table-hover table-condensed">
                         <tr>
                             <td>
@@ -71,6 +71,10 @@ $legalContact = $client->getLegalContact();
                                 </div>
                             <?php endforeach?>    
                         <?php endforeach;?>   
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <table class="table table-bordered table-hover table-condensed">
                         <tr>
                             <td>
                                 <?php if ($legalContact):?>
@@ -98,16 +102,19 @@ $legalContact = $client->getLegalContact();
                                 </div>
                             <?php endforeach?>    
                         <?php endforeach;?>
-                        <tr>
-                            <td>
-                                <button value="/client/apl-union/<?= $client->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
-                                        title="Объеденить по коду Апл">
-                                    <span class="glyphicon glyphicon-refresh" ></span>
-                                </button> 
-                                <a href="https://autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank"><?= $client->getAplId()?></a>
-                            </td>
-                        </tr>
-                    </table>                    
+                    </table>
+                    <button value="/client/apl-union/<?= $client->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
+                            title="Объеденить по коду Апл">
+                        <span class="glyphicon glyphicon-refresh" ></span>
+                    </button> 
+                    <a href="https://autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank"><?= $client->getAplId()?></a>
+                </div>
+            </div> 
+            <div class="row">        
+                <div class="col-md-8">
+                    <div class="panel panel-default">
+                        <?php echo $this->partial('/company/legal/partial-view', ['legalContact' => $legalContact, 'supplier' => $supplier]); ?>
+                    </div>                        
                 </div>
             </div>
         </div>    

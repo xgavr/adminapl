@@ -387,6 +387,36 @@ class Order {
         return "$docName №{$docNo} от {$docDate}";
     }
 
+    /**
+     * Returns the edo namefile.
+     * @param string $docName
+     * @param string $ext
+     * @return string     
+     */
+    public function getEdoName($docName = 'ТОРГ', $ext = 'xml') 
+    {
+        return self::PRINT_FOLDER.'/'.$this->getEdoPresent($docName).'.'.$ext;
+    }
+
+    /**
+     * Returns the present of edo.
+     * @param string $docName
+     * @return string     
+     */
+    public function getEdoPresent($docName = 'ТОРГ') 
+    {
+        $docDate = date('dmY', strtotime($this->getDocDate()));
+        $docNo = $this->getDocNo();
+        $contractNo = '0'; 
+        if ($this->getLegal()){
+            $contract = $this->getLegal()->getLastContract();
+            if ($contract){
+                $contractNo = mb_strtoupper($contract->getDocNo());
+            }
+        }    
+        return $docName.'_'.$contractNo.'_'.$docDate.'_'.$docNo;
+    }
+
     public function getLogKey() 
     {
         return 'ord:'.$this->id;
@@ -830,7 +860,7 @@ class Order {
     
     /*
      * Возвращает связанный legal.
-     * @return \Company\Entity\Legal
+     * @return Legal
      */    
     public function getLegal() 
     {
@@ -870,7 +900,11 @@ class Order {
      */    
     public function getRecipient() 
     {
-        return $this->recipient;
+        if ($this->recipient){
+            return $this->recipient;
+        }
+        
+        return $this->legal;
     }
 
     /**

@@ -403,8 +403,7 @@ class BankAccount {
     {
         $this->dateCreated = $dateCreated;
     }    
-            
-        
+                    
     /*
      * @return Legal
      */    

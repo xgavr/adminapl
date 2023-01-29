@@ -41,6 +41,15 @@ $form->get('address')->setAttributes([
 
 $form->get('info')->setAttributes([
     'class'=>'form-control', 
+    'rows' => 4
+    ]);
+
+$form->get('edoOperator')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('edoAddress')->setAttributes([
+    'class'=>'form-control', 
     ]);
 
 $form->get('status')->setAttributes([
@@ -56,106 +65,121 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'С�
 $form->prepare();
 
 ?>
-
-
             
-            <?= $this->form()->openTag($form); ?>
+<?= $this->form()->openTag($form); ?>
             
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Организация</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Организация</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('inn')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('inn')); ?>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" id="inn-info" type="button" data-toggle="tooltip" data-placement="top" title="Найти и заполнить по ИНН">ИНН</button>
+                    </span>                                                            
+                </div>    
+                <?= $this->formElementErrors($form->get('inn')); ?>                  
             </div>
-            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('inn')); ?>
-                            <div class="input-group">
-                                <?= $this->formElement($form->get('inn')); ?>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" id="inn-info" type="button" data-toggle="tooltip" data-placement="top" title="Найти и заполнить по ИНН">ИНН</button>
-                                </span>                                                            
-                            </div>    
-                            <?= $this->formElementErrors($form->get('inn')); ?>                  
-                        </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('name')); ?>
-                            <?= $this->formElement($form->get('name')); ?>
-                            <?= $this->formElementErrors($form->get('name')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
+            </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('kpp')); ?>
-                            <?= $this->formElement($form->get('kpp')); ?>
-                            <?= $this->formElementErrors($form->get('kpp')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('kpp')); ?>
+                <?= $this->formElement($form->get('kpp')); ?>
+                <?= $this->formElementErrors($form->get('kpp')); ?>                  
+            </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('ogrn')); ?>
-                            <?= $this->formElement($form->get('ogrn')); ?>
-                            <?= $this->formElementErrors($form->get('ogrn')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('ogrn')); ?>
+                <?= $this->formElement($form->get('ogrn')); ?>
+                <?= $this->formElementErrors($form->get('ogrn')); ?>                  
+            </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('okpo')); ?>
-                            <?= $this->formElement($form->get('okpo')); ?>
-                            <?= $this->formElementErrors($form->get('okpo')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('okpo')); ?>
+                <?= $this->formElement($form->get('okpo')); ?>
+                <?= $this->formElementErrors($form->get('okpo')); ?>                  
+            </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('dateStart')); ?>
-                            <?= $this->formElement($form->get('dateStart')); ?>
-                            <?= $this->formElementErrors($form->get('dateStart')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('dateStart')); ?>
+                <?= $this->formElement($form->get('dateStart')); ?>
+                <?= $this->formElementErrors($form->get('dateStart')); ?>                  
+            </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('status')); ?>
-                            <?= $this->formElement($form->get('status')); ?>
-                            <?= $this->formElementErrors($form->get('status')); ?>                  
-                        </div>
-                    </div>                
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>                
 
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('address')); ?>
-                            <?= $this->formElement($form->get('address')); ?>
-                            <?= $this->formElementErrors($form->get('address')); ?>                  
-                        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('address')); ?>
+                <?= $this->formElement($form->get('address')); ?>
+                <?= $this->formElementErrors($form->get('address')); ?>                  
+            </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('head')); ?>
-                            <?= $this->formElement($form->get('head')); ?>
-                            <?= $this->formElementErrors($form->get('head')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('head')); ?>
+                <?= $this->formElement($form->get('head')); ?>
+                <?= $this->formElementErrors($form->get('head')); ?>                  
+            </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('chiefAccount')); ?>
-                            <?= $this->formElement($form->get('chiefAccount')); ?>
-                            <?= $this->formElementErrors($form->get('chiefAccount')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('chiefAccount')); ?>
+                <?= $this->formElement($form->get('chiefAccount')); ?>
+                <?= $this->formElementErrors($form->get('chiefAccount')); ?>                  
+            </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('info')); ?>
-                            <?= $this->formElement($form->get('info')); ?>
-                            <?= $this->formElementErrors($form->get('info')); ?>                  
-                        </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('info')); ?>
+                <?= $this->formElement($form->get('info')); ?>
+                <?= $this->formElementErrors($form->get('info')); ?>                  
+            </div>
 
-                        <?= $this->formElement($form->get('csrf')); ?>
 
-                    </div>
-                </div>
-            </div>    
+            <?= $this->formElement($form->get('csrf')); ?>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('edoOperator')); ?>
+                <?= $this->formElement($form->get('edoOperator')); ?>
+                <?= $this->formElementErrors($form->get('edoOperator')); ?>                  
+            </div>
+        </div>    
+        <div class="col-md-6">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('edoAddress')); ?>
+                <?= $this->formElement($form->get('edoAddress')); ?>
+                <?= $this->formElementErrors($form->get('edoAddress')); ?>                  
+            </div>
+        </div>    
+    </div>
+</div>    
                 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary" id="legal-submit">Сохранить</button>
-            </div>
-            
-            <?= $this->form()->closeTag(); ?>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="legal-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
             
 <script>
     var _dadata;
