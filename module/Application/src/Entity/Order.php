@@ -411,7 +411,7 @@ class Order {
         if ($this->getLegal()){
             $contract = $this->getLegal()->getLastContract();
             if ($contract){
-                $contractNo = mb_strtoupper($contract->getDocNo());
+                $contractNo = mb_strtoupper($contract->getAct());
             }
         }    
         return $docName.'_'.$contractNo.'_'.$docDate.'_'.$docNo;

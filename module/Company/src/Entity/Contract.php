@@ -144,7 +144,16 @@ class Contract {
 
     public function getAct() 
     {
-        return $this->act;
+        if ($this->act){
+            return $this->act;
+        }
+        
+        return 'б/н';
+    }
+    
+    public function getDocNo()
+    {
+        return $this->getAct();
     }
 
     public function setAct($act) 
