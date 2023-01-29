@@ -399,7 +399,7 @@ class LegalController extends AbstractActionController
                         'address' => $legal->getAddress(),  
                         'status' => $legal->getStatus(),  
                         'dateStart' => $legal->getDateStart(),
-                        'edoOperator' => $legal->getEdoOperator(),
+                        'edoOperator' => $legal->getEdoOperator()->getId(),
                         'edoAddress' => $legal->getEdoAddress(),
                     ];
                     $legalform->setData($data);
