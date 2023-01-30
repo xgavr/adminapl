@@ -694,8 +694,8 @@ $form->prepare();
                 <ul class="dropdown-menu" aria-labelledby="dLabel">
                     <li><a href="#" onclick="prnt('/print/check/<?= $orderId?>?ext=Html')">Товарный чек</a></li>
                     <li><a href="/print/order-bill/<?= $orderId?>?ext=Pdf" target="_blank">Счет</a></li>
-                    <li><a href="/edo/order-bill/<?= $orderId?>" target="_blank">Счет ЭДО</a></li>
                     <li><a href="/print/order-bill/<?= $orderId?>?ext=Pdf&stamp=1" target="_blank">Счет с печатью</a></li>
+                    <li><a href="/print/order-bill/<?= $orderId?>?ext=Pdf&stamp=1&edo=1" target="_blank">Счет для ЭДО</a></li>
                     <li><a href="/print/torg12/<?= $orderId?>?ext=Pdf" target="_blank">Торг-12</a></li>
                     <li><a href="/edo/torg12/<?= $orderId?>" target="_blank">Торг-12 ЭДО</a></li>
                     <li><a href="/print/act/<?= $orderId?>?ext=Pdf" target="_blank">Акт на доставку</a></li>

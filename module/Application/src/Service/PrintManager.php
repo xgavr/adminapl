@@ -656,9 +656,10 @@ class PrintManager {
      * @param string $writerType
      * @param bool $stamp
      * @param bool $code
+     * @param bool $edo
      * @return string 
      */
-    public function bill($order, $writerType = 'Pdf', $stamp = false, $code = true)
+    public function bill($order, $writerType = 'Pdf', $stamp = false, $code = true, $edo = false)
     {
         ini_set("pcre.backtrack_limit", "5000000");
         setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
@@ -764,6 +765,9 @@ class PrintManager {
             case 'Pdf':
                 $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
                 $outFilename = $order->getPrintName($writerType, 'Счет');
+                if ($edo){
+                    $outFilename = $order->getEdoName('СЧОП', 'pdf');                    
+                }
                 $writer->save($outFilename);
                 break;
             case 'Xls':

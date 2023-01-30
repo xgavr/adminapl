@@ -146,6 +146,7 @@ class PrintController extends AbstractActionController
         $ext = $this->params()->fromQuery('ext', 'Pdf');
         $stamp = $this->params()->fromQuery('stamp', false);
         $code = $this->params()->fromQuery('code', true);
+        $edo = $this->params()->fromQuery('edo', false);
 
         if ($orderId<0) {
             $this->getResponse()->setStatusCode(404);
@@ -159,7 +160,7 @@ class PrintController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;
         }        
-        $updfile = $this->printManager->bill($order, $ext, boolval($stamp), boolval($code));
+        $updfile = $this->printManager->bill($order, $ext, boolval($stamp), boolval($code), bool($edo));
         
 //        var_dump($torg2); exit;
         
