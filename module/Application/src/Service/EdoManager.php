@@ -300,7 +300,7 @@ class EdoManager {
         
             $xml->startElement('Документ');
                 $xml->writeAttribute('КНД', '1115131');
-                $xml->writeAttribute('Функция', 'СЧФ');
+                $xml->writeAttribute('Функция', 'СЧФДОП');
                 $xml->writeAttribute('ДатаИнфПр', date('d.m.Y'));
                 $xml->writeAttribute('ВремИнфПр', date('H.i.s'));
                 $xml->writeAttribute('НаимЭконСубСост', $order->getCompany()->getName());
