@@ -116,7 +116,7 @@ class JobManager
           309 => ['command' => 'update-good-apl-id',            'shedule' => '14,29,44,59 * * * *',      'description' => 'Обновление AplId товара'],
           310 => ['command' => 'update-good-group',             'shedule' => '43 * * * *',              'description' => 'Обновление групп в АПЛ'],
           311 => ['command' => 'update-group-apl-id',           'shedule' => '53 * * * *',              'description' => 'Получить апл группы товаров'],
-          312 => ['command' => 'check-apl-order',               'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Проверка выгрузки заказов из АПЛ'],
+          312 => ['command' => 'check-apl-order',               'shedule' => '14,29,44,59 * * * *',   'description' => 'Проверка выгрузки заказов из АПЛ'],
           313 => ['command' => 'comments',                      'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление комментариев из АПЛ'],
           314 => ['command' => 'update-apl-cash',               'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление платежей из АПЛ'],
           315 => ['command' => 'update-apl-order',              'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление заказов из АПЛ'],

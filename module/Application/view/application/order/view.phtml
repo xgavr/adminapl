@@ -8,7 +8,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
 ?>
 <div class="modal-header">
     <div class="row">
-        <div class="col-md-11">
+        <div class="col-md-6">
             <h5>
                 <div><?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDateCreated())); ?> 
                     <?= $order->getOffice()->getName()?>
@@ -16,9 +16,22 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                 <div><?= $this->escapeHtml($order->getContact()->getName()); ?></div>
             </h5>
         </div>
-        <div class="col-md-1">
-            <h4 id="orderAmount">
-                <?= $order->getTotal()?>                
+        <div class="col-md-2">
+            <h4>
+                Доставка: 
+                <b id="shipmentTotal"><?= $order->getShipmentTotal()?></b>                
+            </h4>
+        </div>    
+        <div class="col-md-2">
+            <h4>
+                Товаров: 
+                <b id="orderQuantity"></b>                
+            </h4>
+        </div>    
+        <div class="col-md-2">
+            <h4>
+                Итого: 
+                <b id="orderAmount"><?= $order->getTotal()?></b>                
             </h4>
         </div>    
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -196,9 +209,8 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
     $( document ).ready(function() {        
         $('#ordergoodtable').bootstrapTable({
             onLoadSuccess: function(res){
-                $('#shippingTotal').html($('#shipmentTotal').val());    
 //                bidTotal();
-//                orderUpdateTotal();
+                orderUpdateTotal();
             }            
         }); 
         
@@ -207,6 +219,10 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                 
             }            
         });         
+        
+        $(document).on('editable-save.bs.table', '#ordergoodtable', function (e, field, row, old, $el) {
+            orderUpdateTotal();
+        });        
         
         $(document).on('click', '.order-view-close', function (e) {
             $('#ordergoodtable').bootstrapTable('destroy');
