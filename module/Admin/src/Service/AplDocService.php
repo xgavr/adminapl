@@ -690,6 +690,11 @@ class AplDocService {
         if ($data['publish'] == 0){
             $vtStatus = Vt::STATUS_RETIRED;            
         }
+        if (isset($data['desc'])){
+            if (isset($data['desc']['comiss']) == 1){
+                $vtStatus = Vt::STATUS_COMMISSION;
+            }
+        }                
         
         return $vtStatus;
     }
@@ -953,6 +958,11 @@ class AplDocService {
         if ($data['publish'] == 0){
             $otStatus = Ot::STATUS_RETIRED;            
         }
+        if (isset($data['desc'])){
+            if (isset($data['desc']['comiss']) == 1){
+                $otStatus = Ot::STATUS_COMMISSION;
+            }
+        }                
         
         return $otStatus;
     }
