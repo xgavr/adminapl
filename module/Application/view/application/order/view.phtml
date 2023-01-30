@@ -17,7 +17,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             </h5>
         </div>
         <div class="col-md-1">
-            <h4>
+            <h4 id="orderAmount">
                 <?= $order->getTotal()?>                
             </h4>
         </div>    
@@ -44,6 +44,9 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                 <button class="btn btn-default btn-sm bid-row-copy" type="button" title="Копировать выделенные строки">
                     <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
                 </button>                
+                <button type="button" class="btn btn-default btn-sm supplier-order">
+                    <span class="glyphicon" aria-hidden="true">Заказано</span>
+                </button>
             </div>
         </div>
         <table id="ordergoodtable" 
@@ -130,7 +133,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
 </div>    
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-secondary order-view-close" data-dismiss="modal">Закрыть</button>
 </div>
 
 <script>
@@ -148,7 +151,6 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
     
     function getBids(){
         var data = $('#ordergoodtable').bootstrapTable('getData');
-        console.log(data);
         var result = [];
         $.each( data, function( index, row ) {
             var newRow = {
@@ -165,10 +167,11 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
     }
     
     function updateBids(orderId){
+        var postData = {bids: getBids()};
         $.ajax({
             type: 'POST',
             url: '/order/update-bids/'+orderId,
-            data: getBids()
+            data: $.param(postData)
         })
             .done(function (data) {
                 $('#ordergoodtable').bootstrapTable('refresh');
@@ -204,6 +207,11 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                 
             }            
         });         
+        
+        $(document).on('click', '.order-view-close', function (e) {
+            $('#ordergoodtable').bootstrapTable('destroy');
+            $('#vttable').bootstrapTable('destroy');
+        });        
 
         $(document).on('click', '.order-repost', function (e) {
             repostOrder(<?= $order->getId()?>);
@@ -211,21 +219,41 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
         
         $(document).on('click', '.bid-row-copy', function (e) {
             var selections = $('#ordergoodtable').bootstrapTable('getSelections');
-            $.each( selections, function( index, row ) {
-                $('#ordergoodtable').bootstrapTable('insertRow', {index: 1, row: row});
-            });  
             if (selections.length){
+                $.each( selections, function( index, row ) {
+                    $('#ordergoodtable').bootstrapTable('insertRow', {index: 1, row: row});
+                });  
+                $('#ordergoodtable').bootstrapTable('uncheckAll');
                 updateBids(<?= $order->getId()?>);
             }    
         });      
         
         $(document).on('click', '.bid-row-delete', function (e) {
             var id = $(this).attr('value');
-            if (id && confirm('Удалить строку?')){
-                $('#ordergoodtable').bootstrapTable('removeByUniqueId', id);
+            if (id){
+                var row = $('#ordergoodtable').bootstrapTable('getRowByUniqueId', id);
+                if (confirm('Удалить '+row.good.code+'?')){
+                    $('#ordergoodtable').bootstrapTable('removeByUniqueId', id);
+                } 
             }
-//            updateBids(<?= $order->getId()?>);
+            updateBids(<?= $order->getId()?>);
         });        
+        
+        $(document).on('click', '.supplier-order', function (e) {
+            $.get( '/order/supplier-orders/<?= $order->getId()?>', function( data ) {
+                bootbox.dialog({
+                    title: 'Заказано у поставщиков',
+                    message: data,
+                    size: 'large',
+                    buttons: {
+                        ok: {
+                            label: "OK",
+                            className: 'btn-info'
+                        }                    
+                    }
+                }); 
+            });    
+        });            
     });    
 
     function ordergoodQueryParams(params) {
