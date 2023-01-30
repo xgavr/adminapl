@@ -187,6 +187,9 @@ if ($ot){
                 if (data == 'ok'){
                     $('#otModal').modal('hide');
                     $('#table').bootstrapTable('refresh');
+                    if ($('#movementTable').length){
+                        $('#movementTable').bootstrapTable('refresh');
+                    }    
                 } else {
                     $('#otModal .modal-content').html(data);                    
                 }    

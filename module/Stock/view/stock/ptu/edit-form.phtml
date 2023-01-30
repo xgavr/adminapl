@@ -217,6 +217,9 @@ if ($ptu){
                 if (data == 'ok'){
                     $('#ptuModal').modal('hide');
                     $('#table').bootstrapTable('refresh');
+                    if ($('#movementTable').length){
+                        $('#movementTable').bootstrapTable('refresh');
+                    }    
                 } else {
                     $('#ptuModal .modal-content').html(data);                    
                 }    

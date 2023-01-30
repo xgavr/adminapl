@@ -312,6 +312,9 @@ if ($vtp){
                 if (data == 'ok'){
                     $('#vtpModal').modal('hide');
                     $('#vtptable').bootstrapTable('refresh');
+                    if ($('#movementTable').length){
+                        $('#movementTable').bootstrapTable('refresh');
+                    }    
                 } else {
                     $('#vtpModal .modal-content').html(data);                    
                 }    

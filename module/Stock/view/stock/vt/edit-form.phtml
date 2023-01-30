@@ -210,6 +210,9 @@ if ($vt){
                 if (data == 'ok'){
                     $('#vtModal').modal('hide');
                     $('#vttable').bootstrapTable('refresh');
+                    if ($('#movementTable').length){
+                        $('#movementTable').bootstrapTable('refresh');
+                    }    
                 } else {
                     $('#vtModal .modal-content').html(data);                    
                 }    
