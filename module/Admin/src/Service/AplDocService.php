@@ -378,8 +378,8 @@ class AplDocService {
         if ($data['publish'] == 0){
             $ptuStatus = Ptu::STATUS_RETIRED;            
         }
-        if (isset($data['desc'])){
-            if (isset($data['desc']['comiss']) == 1){
+        if (isset($data['comiss'])){
+            if ($data['comiss'] == 1){
                 $ptuStatus = Ptu::STATUS_COMMISSION;
             }
         }                
@@ -690,8 +690,8 @@ class AplDocService {
         if ($data['publish'] == 0){
             $vtStatus = Vt::STATUS_RETIRED;            
         }
-        if (isset($data['desc'])){
-            if (isset($data['desc']['comiss']) == 1){
+        if (isset($data['comiss'])){
+            if ($data['comiss'] == 1){
                 $vtStatus = Vt::STATUS_COMMISSION;
             }
         }                
@@ -791,7 +791,7 @@ class AplDocService {
      */
     public function unloadVt($data)
     {
-        var_dump($data); exit;
+//        var_dump($data); exit;
         $docDate = $data['ds'];
         $dateValidator = new Date();
         $dateValidator->setFormat('Y-m-d H:i:s');
@@ -958,11 +958,6 @@ class AplDocService {
         if ($data['publish'] == 0){
             $otStatus = Ot::STATUS_RETIRED;            
         }
-        if (isset($data['desc'])){
-            if (isset($data['desc']['comiss']) == 1){
-                $otStatus = Ot::STATUS_COMMISSION;
-            }
-        }                
         
         return $otStatus;
     }
