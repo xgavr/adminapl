@@ -401,6 +401,9 @@ class EdoManager {
                                         $xml->text('без НДС');
                                     $xml->endElement(); //БезНДС
                                 $xml->endElement(); //СумНал
+                                $xml->startElement('ДопСведТов');
+                                    $xml->writeAttribute('НаимЕдИзм', 'шт');
+                                $xml->endElement(); //ДопСведТов
 //                                $xml->startElement('СвТД');
 //                                    $xml->writeAttribute('КодПроисх', '-');
 //                                    $xml->writeAttribute('НомерТД', '-');
@@ -415,7 +418,6 @@ class EdoManager {
                         $xml->startElement('СведТов');
                             $xml->writeAttribute('НомСтр', $i);
                             $xml->writeAttribute('НаимТов', 'Организация доставки груза');
-                            $xml->writeAttribute('ОКЕИ_Тов', '');
                             $xml->writeAttribute('КолТов', '');
                             $xml->writeAttribute('ЦенаТов', $order->getShipmentTotal());
                             $xml->writeAttribute('СтТовБезНДС', $order->getShipmentTotal());
