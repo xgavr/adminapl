@@ -190,16 +190,13 @@ class EdoManager {
                                 $xml->writeAttribute('КолТов', $bid->getNum());
                                 $xml->writeAttribute('ЦенаТов', $bid->getPrice());
                                 $xml->writeAttribute('СтТовБезНДС', $bid->getPrice());
+                                $xml->writeAttribute('НалСт', 'без НДС');
                                 $xml->writeAttribute('СтТовУчНал', $bid->getTotal());
                                 $xml->startElement('Акциз');
-                                    $xml->writeAttribute('СумАкциз', 'Без акциза');
+                                    $xml->writeAttribute('БезАкциз', 'без акциза');
                                 $xml->endElement(); //Акциз
-                                $xml->startElement('НалСт');
-                                    $xml->writeAttribute('НалСтВел', 0);
-                                    $xml->writeAttribute('НалСтТип', 'процент');
-                                $xml->endElement(); //НалСт
                                 $xml->startElement('СумНал');
-                                    $xml->writeAttribute('СумНДС', 'Без НДС');
+                                    $xml->writeAttribute('БезНДС', 'без НДС');
                                 $xml->endElement(); //СумНал
                             $xml->endElement(); //СведТов
 
@@ -215,25 +212,21 @@ class EdoManager {
                             $xml->writeAttribute('КолТов', '');
                             $xml->writeAttribute('ЦенаТов', $order->getShipmentTotal());
                             $xml->writeAttribute('СтТовБезНДС', $order->getShipmentTotal());
+                            $xml->writeAttribute('НалСт', 'без НДС');
                             $xml->writeAttribute('СтТовУчНал', $order->getShipmentTotal());
                             $xml->startElement('Акциз');
-                                $xml->writeAttribute('СумАкциз', 'Без акциза');
+                                $xml->writeAttribute('БезАкциз', 'без акциза');
                             $xml->endElement(); //Акциз
-                            $xml->startElement('НалСт');
-                                $xml->writeAttribute('НалСтВел', 0);
-                                $xml->writeAttribute('НалСтТип', 'процент');
-                            $xml->endElement(); //НалСт
                             $xml->startElement('СумНал');
-                                $xml->writeAttribute('СумНДС', 'Без НДС');
+                                $xml->writeAttribute('БезНДС', 'без НДС');
                             $xml->endElement(); //СумНал
                         $xml->endElement(); //СведТов
                     }
         
                     $xml->startElement('ВсегоОпл');
-                        $xml->writeAttribute('СтТовБезНДСВсего', $order->getTotal());
                         $xml->writeAttribute('СтТовУчНалВсего', $order->getTotal());
                         $xml->startElement('СумНалВсего');
-                            $xml->writeAttribute('СумНДС', 'Без НДС');
+                            $xml->writeAttribute('БезНДС', 'без НДС');
                         $xml->endElement(); //СумНалВсего
                     $xml->endElement(); //ВсегоОпл
                 $xml->endElement(); //ТаблСчет
@@ -311,8 +304,8 @@ class EdoManager {
                 $xml->writeAttribute('ДатаИнфПр', date('d.m.Y'));
                 $xml->writeAttribute('ВремИнфПр', date('H.i.s'));
                 $xml->writeAttribute('НаимЭконСубСост', $order->getCompany()->getName());
-                $xml->writeAttribute('ПоФактХЖ', 'Документ об отгрузке товаров (выполнении работ), передаче имущественных прав (документ об оказании услуг)');
-                $xml->writeAttribute('НаимДокОпр', 'Счет-фактура и документ об отгрузке товаров (выполнении работ), передаче имущественных прав (документ об оказании услуг)');
+//                $xml->writeAttribute('ПоФактХЖ', 'Документ об отгрузке товаров (выполнении работ), передаче имущественных прав (документ об оказании услуг)');
+//                $xml->writeAttribute('НаимДокОпр', 'Счет-фактура и документ об отгрузке товаров (выполнении работ), передаче имущественных прав (документ об оказании услуг)');
         
                 $xml->startElement('СвСчФакт');
                     $xml->writeAttribute('НомерСчФ', $order->getAplId());
@@ -373,7 +366,11 @@ class EdoManager {
                                 $xml->endElement(); //АдрИнф
                             $xml->endElement(); //Адрес
                         $xml->endElement(); //СвПокуп
-                    }    
+                    }   
+                    
+                    $xml->startElement('ДопСвФХЖ1');
+                        $xml->writeAttribute('НаимОКВ', 'Российский рубль');
+                    $xml->endElement(); //ДопСвФХЖ1
                     
                 $xml->endElement(); //СвСчФакт
         
@@ -395,19 +392,15 @@ class EdoManager {
                                 $xml->writeAttribute('НалСт', 'без НДС');
                                 $xml->writeAttribute('СтТовУчНал', $bid->getTotal());
                                 $xml->startElement('Акциз');
-                                    $xml->startElement('СумАкциз');
-                                        $xml->text('Без акциза');
-                                    $xml->endElement(); //СумАкциз
+                                    $xml->writeAttribute('БезАкциз', 'без акциза');
                                 $xml->endElement(); //Акциз
                                 $xml->startElement('СумНал');
-                                    $xml->startElement('СумНал');
-                                        $xml->text('без НДС');
-                                    $xml->endElement(); //СумНал
+                                    $xml->writeAttribute('БезНДС', 'без НДС');
                                 $xml->endElement(); //СумНал
-                                $xml->startElement('СвТД');
-                                    $xml->writeAttribute('КодПроисх', '-');
-                                    $xml->writeAttribute('НомерТД', '-');
-                                $xml->endElement(); //СвТД
+//                                $xml->startElement('СвТД');
+//                                    $xml->writeAttribute('КодПроисх', '-');
+//                                    $xml->writeAttribute('НомерТД', '-');
+//                                $xml->endElement(); //СвТД
                             $xml->endElement(); //СведТов
 
                             $i++;
@@ -425,28 +418,18 @@ class EdoManager {
                             $xml->writeAttribute('НалСт', 'без НДС');
                             $xml->writeAttribute('СтТовУчНал', $order->getShipmentTotal());
                             $xml->startElement('Акциз');
-                                $xml->startElement('СумАкциз');
-                                    $xml->text('Без акциза');
-                                $xml->endElement(); //СумАкциз
+                                $xml->writeAttribute('БезАкциз', 'без акциза');
                             $xml->endElement(); //Акциз
                             $xml->startElement('СумНал');
-                                $xml->startElement('СумНал');
-                                    $xml->text('без НДС');
-                                $xml->endElement(); //СумНал
+                                $xml->writeAttribute('БезНДС', 'без НДС');
                             $xml->endElement(); //СумНал
-                            $xml->startElement('СвТД');
-                                $xml->writeAttribute('КодПроисх', '-');
-                                $xml->writeAttribute('НомерТД', '-');
-                            $xml->endElement(); //СвТД
                         $xml->endElement(); //СведТов
                     }
         
                     $xml->startElement('ВсегоОпл');
                         $xml->writeAttribute('СтТовУчНалВсего', $order->getTotal());
                         $xml->startElement('СумНалВсего');
-                            $xml->startElement('СумНал');
-                                $xml->text('Без НДС');
-                            $xml->endElement(); //СумНал
+                            $xml->writeAttribute('БезНДС', 'без НДС');
                         $xml->endElement(); //СумНалВсего
                     $xml->endElement(); //ВсегоОпл
                 $xml->endElement(); //ТаблСчФакт
@@ -469,7 +452,7 @@ class EdoManager {
                 
                 $xml->startElement('Подписант');
                     $xml->writeAttribute('ОснПолн', 'Должностные обязанности');            
-                    $xml->writeAttribute('ОблПолн', '1');            
+                    $xml->writeAttribute('ОблПолн', '0');            
                     $xml->writeAttribute('Статус', '1');            
                     $xml->startElement('ЮЛ');
                         $xml->writeAttribute('ИННЮЛ', $order->getCompany()->getInn());            
