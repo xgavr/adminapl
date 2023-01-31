@@ -310,11 +310,6 @@ class NavManager
                         ];
                 
                 $rbDropdownItems[] = [
-                            'id' => 'tax',
-                            'label' => 'Налоги',
-                            'link' => $url('rb', ['action'=>'tax'])
-                        ];
-                $rbDropdownItems[] = [
                             'id' => 'cost',
                             'label' => 'Статьи затрат',
                             'link' => $url('cost')
@@ -369,6 +364,11 @@ class NavManager
                             'link' => $url('regions')
                         ];
 
+                $companyDropdownItems[] = [
+                            'id' => 'tax',
+                            'label' => 'Налоги',
+                            'link' => $url('rb', ['action'=>'tax'])
+                        ];
                 $companyDropdownItems[] = [
                             'id' => 'edoOperators',
                             'label' => 'Операторы ЭДО',

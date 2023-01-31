@@ -5,11 +5,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace Application\Form;
+namespace Company\Form;
 
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
-use Application\Entity\Tax;
+use Company\Entity\Tax;
 /**
  * Description of Tax
  *
