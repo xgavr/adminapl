@@ -23,6 +23,7 @@ use Application\Entity\Article;
 use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Oem;
+use Cash\Entity\CashDoc;
 
 /**
  * This service register.
@@ -83,6 +84,11 @@ class RegisterManager
      */
     private $orderManager;
     
+    /**
+     * Cash manager
+     * @var \Cash\Service\CashManager
+     */
+    private $cashManager;
     
     private $meDate = '2016-10-30';
 
@@ -90,7 +96,7 @@ class RegisterManager
      * Constructs the service.
      */
     public function __construct($entityManager, $logManager, $otManager, $ptManager,
-            $ptuManager, $stManager, $vtManager, $vtpManager, $orderManager) 
+            $ptuManager, $stManager, $vtManager, $vtpManager, $orderManager, $cashMananger) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
@@ -101,6 +107,7 @@ class RegisterManager
         $this->vtManager = $vtManager;
         $this->vtpManager = $vtpManager;
         $this->orderManager = $orderManager;
+        $this->cashManager = $cashMananger;
     }
     
     public function currentUser()
@@ -457,6 +464,14 @@ class RegisterManager
                     }   
                 }
                 break;
+            case Movement::DOC_CASH:
+                $cashDoc = $this->entityManager->getRepository(CashDoc::class)
+                    ->find($register->getDocId());
+                if ($cashDoc){
+                    $this->cashManager->updateCashTransaction($cashDoc);
+                    $flag = true;
+                }
+                break;                
             default: $flag = false;    
         }
         

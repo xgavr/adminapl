@@ -200,14 +200,15 @@ class CashManager {
     /**
      * Добавить взаиморасчеты
      * @param CashDoc $cashDoc
+     * @param float $docStamp
      */
-    protected function addMutuals($cashDoc)
+    protected function addMutuals($cashDoc, $docStamp)
     {
         if ($cashDoc->isMutual()){
             $office = ($cashDoc->getCash()) ? $cashDoc->getCash()->getOffice():$cashDoc->getUser()->getOffice();
             $contract = $this->findDefaultContract($office, 
                     $cashDoc->getLegal(), $cashDoc->getDateOper(), $cashDoc->getId(),
-                    $cashDoc->getContractKind(), Contract::PAY_CASH);
+                    $cashDoc->getContractKind(), $cashDoc->contractPayCash());
 
             $data = [
                 'doc_key' => $cashDoc->getLogKey(),
@@ -221,6 +222,7 @@ class CashManager {
                 'contract_id' => $contract->getId(),
                 'office_id' => $office->getId(),
                 'company_id' => $cashDoc->getCompany()->getId(),
+                'doc_stamp' => $docStamp,
             ];
 
             $this->entityManager->getRepository(Mutual::class)
@@ -244,16 +246,17 @@ class CashManager {
      * Обновить взаиморасчеты розницы
      * 
      * @param CashDoc $cashDoc
+     * @param float $docStamp
      */
-    public function addRetails($cashDoc)
+    public function addRetails($cashDoc, $docStamp)
     {
         if ($cashDoc->isRetail()){
             $legalId = $contractId = null;
             $office = ($cashDoc->getCash()) ? $cashDoc->getCash()->getOffice():$cashDoc->getUser()->getOffice();            
-            if ($cashDoc->getLegal()->getId()){
+            if ($cashDoc->getLegal()){
                 $contract = $this->findDefaultContract($office, 
                         $cashDoc->getLegal(), $cashDoc->getDateOper(), $cashDoc->getId(),
-                        $cashDoc->getContractKind(), Contract::PAY_CASH);
+                        $cashDoc->getContractKind(), $cashDoc->contractPayCash());
                 $legalId = $cashDoc->getLegal()->getId();
                 $contractId = $contract->getId();
             }
@@ -270,6 +273,7 @@ class CashManager {
                 'company_id' => $cashDoc->getCompany()->getId(),
                 'legal_id' => $legalId,
                 'contract_id' => $contractId,
+                'doc_stamp' =>$docStamp,
             ];
 
             $this->entityManager->getRepository(Retail::class)
@@ -348,7 +352,7 @@ class CashManager {
     public function updateCashTransaction($cashDoc)
     {
         $docStamp = $this->entityManager->getRepository(Register::class)
-                ->cashRegister($order);
+                ->cashDocRegister($cashDoc);
         
         $this->removeMutuals($cashDoc);
         $this->removeRetails($cashDoc);

@@ -569,6 +569,19 @@ class CashDoc {
             default : return false;    
         }
     }
+    
+    /**
+     * Нал
+     * @return bool
+     */
+    public function contractPayCash() 
+    {
+        if ($this->getCash()->getBankAccounts()->count()){
+            return Contract::PAY_CASHLESS;
+        }
+        
+        return Contract::PAY_CASH;
+    }
 
     /**
      * Returns possible kinds as array.

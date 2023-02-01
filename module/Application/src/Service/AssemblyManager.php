@@ -570,15 +570,16 @@ class AssemblyManager
      * Создать производителя из неизвестного производителя с проверками
      * 
      * @param \Application\Entity\UnknownProducer $unknownProducer
+     * @param bool $check
      * @return \Application\Entity\Producer|null
      */
-    public function addProducerFromUnknownProducer($unknownProducer)
+    public function addProducerFromUnknownProducer($unknownProducer, $check = true)
     {        
         $producer = null;
         
         if ($unknownProducer->getSupplierCount() && $unknownProducer->getRawpriceCount() && $unknownProducer->getName()){
 
-            if ($this->checkUnknownProducer($unknownProducer)){
+            if ($this->checkUnknownProducer($unknownProducer) || !$check){
             
                 $producer = $this->intersectUnknownProducer($unknownProducer);
 

@@ -794,7 +794,7 @@ class ProducerController extends AbstractActionController
         }
         
         $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                ->findOneById($unknownProducerId);
+                ->find($unknownProducerId);
         
         if ($unknownProducer == null) {
             $this->getResponse()->setStatusCode(404);
@@ -807,6 +807,30 @@ class ProducerController extends AbstractActionController
         ]);          
     }
     
+    public function createProducerAction()
+    {
+        
+        $unknownProducerId = (int)$this->params()->fromRoute('id', -1);
+
+        if ($unknownProducerId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                ->find($unknownProducerId);
+        
+        if ($unknownProducer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        $this->assemblyManager->addProducerFromUnknownProducer($unknownProducer, false);
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+
     public function assemblyProducersAction()
     {
 

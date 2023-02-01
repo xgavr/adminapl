@@ -15,6 +15,7 @@ use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Stock\Entity\Ptu;
 use Stock\Entity\Vtp;
+use Stock\Entity\Register;
 
 /**
  * Description of MutualRepository
@@ -183,5 +184,45 @@ class MutualRepository extends EntityRepository{
         }
         return $result;
     }
-    
+ 
+    /**
+    * Остаток на момент времени
+    * @param integer $clientId
+     *@param integer $docType 
+     *@param integer $docId 
+     * @param integer $companyId
+    * @return integer
+    */
+    public function clientStampRest($clientId, $docType, $docId, $companyId = null)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $register = $entityManager->getRepository(Register::class)
+                ->findOneBy(['docType' => $docType, 'docId' => $docId]);
+                
+        if ($register){
+            $qb = $entityManager->createQueryBuilder();
+            $qb->select('sum(r.amount) as rSum')
+                    ->from(Retail::class, 'r')
+                    ->join('r.contact', 'c')
+                    ->where('c.client = ?1')
+                    ->andWhere('r.docStamp <= ?2') 
+                    ->andWhere('r.docStamp > 0')
+                    ->setParameter('1', $clientId)
+                    ->setParameter('2', $register->getDocStamp())
+                    ;
+
+            if (!empty($companyId)){
+                if (is_numeric($companyId)){
+                    $qb->andWhere('r.company = ?4');
+                    $qb->setParameter('4', $companyId);
+                }    
+            }
+
+            $result = $qb->getQuery()->getOneOrNullResult();
+
+            return $result['rSum'];
+        }
+        return;
+    }                
 }

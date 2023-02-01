@@ -15,6 +15,7 @@ use User\Entity\User;
 use Application\Form\ClientForm;
 use Application\Form\ContactForm;
 use Laminas\View\Model\JsonModel;
+use Stock\Entity\Retail;
 
 class ClientController extends AbstractActionController
 {
@@ -372,7 +373,7 @@ class ClientController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit');
         $search = $this->params()->fromQuery('search');
         $source = $this->params()->fromQuery('source');
-        $office = $this->params()->fromQuery('office');
+        $company = $this->params()->fromQuery('company');
         $sort = $this->params()->fromQuery('sort', 'dateOper');
         $order = $this->params()->fromQuery('order', 'ASC');
         $year_month = $this->params()->fromQuery('month');
@@ -399,7 +400,7 @@ class ClientController extends AbstractActionController
         
         $query = $this->entityManager->getRepository(Client::class)
                         ->retails($client, ['q' => $search, 'source' => $source, 
-                            'sort' => $sort, 'order' => $order, 'office' => $office,
+                            'sort' => $sort, 'order' => $order, 'company' => $company,
                             'month' => $month, 'year' => $year]);
 
         $total = count($query->getResult(2));
@@ -412,6 +413,10 @@ class ClientController extends AbstractActionController
         }
 
         $result = $query->getResult(2);
+        foreach ($result as $key=>$value){
+            $result[$key]['rest'] = $this->entityManager->getRepository(Retail::class)
+                ->clientStampRest($clientId, $value['docType'], $value['docId'], $company);
+        }
         
         return new JsonModel([
             'total' => $total,
