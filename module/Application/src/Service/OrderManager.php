@@ -140,10 +140,16 @@ class OrderManager
      * Обновить взаиморасчеты розничного заказа
      * 
      * @param Order $order
+     * @param float $docStamp
      */
-    public function updateOrderRetails($order)
+    public function updateOrderRetails($order, $docStamp)
     {
-        
+        $legalId = $contractId = null;
+        if ($order->getLegal()){
+            $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDateOper(), $order->getAplId()); 
+            $legalId = $order->getLegal()->getId();
+            $contractId = $contract->getId();
+        }
         $data = [
             'doc_key' => $order->getLogKey(),
             'doc_type' => Movement::DOC_ORDER,
@@ -155,6 +161,9 @@ class OrderManager
             'contact_id' => $order->getContact()->getId(),
             'office_id' => $order->getOffice()->getId(),
             'company_id' => $order->getCompany()->getId(),
+            'doc_stamp' => $docStamp,
+            'legal_id' => $legalId,
+            'contract_id' => $contractId,
         ];
 
         $this->entityManager->getRepository(Retail::class)
@@ -206,8 +215,9 @@ class OrderManager
      * Обновить взаиморасчеты заказа
      * 
      * @param Order $order
+     * @param float $docStamp
      */
-    public function updateOrderMutuals($order)
+    public function updateOrderMutuals($order, $docStamp)
     {
         $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDateOper(), $order->getAplId());
         $data = [
@@ -222,6 +232,7 @@ class OrderManager
             'contract_id' => $contract->getId(),
             'office_id' => $order->getOffice()->getId(),
             'company_id' => $order->getCompany()->getId(),
+            'doc_stamp' => $docStamp,
         ];
 
         $this->entityManager->getRepository(Mutual::class)
@@ -1028,9 +1039,9 @@ class OrderManager
         $this->updateOrderMovement($order, $docStamp);            
 
         if ($order->getStatus() == Order::STATUS_SHIPPED){
-            $this->updateOrderRetails($order);
+            $this->updateOrderRetails($order, $docStamp);
             if ($order->getLegal()){
-                $this->updateOrderMutuals($order);
+                $this->updateOrderMutuals($order, $docStamp);
             }
         }
         

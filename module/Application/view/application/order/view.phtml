@@ -13,7 +13,11 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                 <div><?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDateCreated())); ?> 
                     <?= $order->getOffice()->getName()?>
                 </div>
-                <div><?= $this->escapeHtml($order->getContact()->getName()); ?></div>
+                <div>
+                    <a href="/cilent/view/<?= $order->getContact()->getClient()->getId()?>" target="_blank">
+                        <?= $this->escapeHtml($order->getContact()->getName()); ?>
+                    </a>    
+                </div>
             </h5>
         </div>
         <div class="col-md-2">

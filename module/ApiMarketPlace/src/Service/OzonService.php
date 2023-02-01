@@ -8,13 +8,9 @@
 
 namespace ApiMarketPlace\Service;
 
-use Gam6itko\OzonSeller\Service\V2\CategoryService as CategoryServiceV2;
-use Gam6itko\OzonSeller\Service\V3\CategoryService as CategoryServiceV3;
 use Gam6itko\OzonSeller\Service\V3\Posting\FbsService;
 use Gam6itko\OzonSeller\Service\V2\ProductService as ProductService2;
 use Gam6itko\OzonSeller\Service\V1\ProductService;
-use GuzzleHttp\Client as GuzzleClient;
-use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use Symfony\Component\HttpClient\Psr18Client;
 use Application\Entity\Goods;
 use Application\Entity\ScaleTreshold;
@@ -81,28 +77,7 @@ class OzonService {
         $this->updateManager = $updateManager;
         $this->marketManager = $marketManager;
     }
-    
-    public function сategoryTree()
-    {
-        $settings = $this->adminManager->getApiMarketPlaces();
         
-        $config = [
-            'clientId' => $settings['ozon_client_id'],
-            'apiKey' => $settings['ozon_api_key'],
-//            'host' => $this->ozon_host,
-        ];
-        
-        $client = new Psr18Client();
-        $svc = new CategoryServiceV2($config, $client);
-        
-        $categoryTree = $svc->tree();
-//        $attributes = $svc->attribute(17038826);
-        var_dump($categoryTree); exit;
-        
-        return $categoryTree;
-    }
-    
-    
     /**
      * Обновить цену товара
      * @param array $input
@@ -489,4 +464,8 @@ class OzonService {
         
         return;
     }
+    
+    /**
+     * Необработанные отправления
+     */
 }

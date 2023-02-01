@@ -54,6 +54,11 @@ class Mutual {
      */
     protected $docId;
 
+    /**
+     * @ORM\Column(name="doc_stamp")   
+     */
+    protected $docStamp;
+
     /** 
      * @ORM\Column(name="date_oper")  
      */
@@ -139,6 +144,16 @@ class Mutual {
     public function setDocId($docId) 
     {
         $this->docId = $docId;
+    }     
+    
+    public function getDocStamp() 
+    {
+        return $this->docStamp;
+    }
+
+    public function setDocStamp($docStamp) 
+    {
+        $this->docStamp = $docStamp;
     }     
     
     /**
@@ -322,7 +337,6 @@ class Mutual {
     {
         return $this->contract;
     }
-
 
     /**
      * Returns the office.

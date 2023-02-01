@@ -364,4 +364,58 @@ class ClientController extends AbstractActionController
         ]);          
     }
     
+    public function retailsAction()
+    {        
+        $clientId = (int)$this->params()->fromRoute('id', -1);
+
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $search = $this->params()->fromQuery('search');
+        $source = $this->params()->fromQuery('source');
+        $office = $this->params()->fromQuery('office');
+        $sort = $this->params()->fromQuery('sort', 'dateOper');
+        $order = $this->params()->fromQuery('order', 'ASC');
+        $year_month = $this->params()->fromQuery('month');
+        
+        $year = $month = null;
+        if ($year_month){
+            $year = date('Y', strtotime($year_month));
+            $month = date('m', strtotime($year_month));
+        }        
+        
+        // Validate input parameter
+        if ($clientId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $client = $this->entityManager->getRepository(Client::class)
+                ->find($clientId);
+
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $query = $this->entityManager->getRepository(Client::class)
+                        ->retails($client, ['q' => $search, 'source' => $source, 
+                            'sort' => $sort, 'order' => $order, 'office' => $office,
+                            'month' => $month, 'year' => $year]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }    
 }

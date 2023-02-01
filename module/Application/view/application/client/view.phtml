@@ -33,7 +33,7 @@ $legalContact = $client->getLegalContact();
         <ul class="nav nav-tabs" id="featureTab" role="tablist">
             <li role="presentation"><a href="#contacts" role="tab" id="contact-tab" data-toggle="tab" aria-controls="contacts" aria-expanded="true">Контакты <span id="contactBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#orders" role="tab" id="order-tab" data-toggle="tab" aria-controls="orders" aria-expanded="true">Заказы <span id="orderBadge" class="badge"></span></a></li>
-            <li role="presentation"><a href="#payments" role="tab" id="payment-tab" data-toggle="tab" aria-controls="payment" aria-expanded="true">Оплаты <span id="paymentBadge" class="badge"></span></a></li>
+            <li role="presentation"><a href="#mutuals" role="tab" id="mutual-tab" data-toggle="tab" aria-controls="mutual" aria-expanded="true">Финансы <span id="mutualBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#vt" role="tab" id="vt-tab" data-toggle="tab" aria-controls="vt" aria-expanded="true">Возвраты <span id="vtBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#cars" role="tab" id="car-tab" data-toggle="tab" aria-controls="cars" aria-expanded="true">Машины <span id="carBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#comments" role="tab" id="comment-tab" data-toggle="tab" aria-controls="comment" aria-expanded="true">Комментарии <span id="commentBadge" class="badge"></span></a></li>
@@ -259,6 +259,38 @@ $legalContact = $client->getLegalContact();
                 </thead>
             </table>    
         </div>    
+        <div class="tab-pane fade" role="tabpanel" id="mutuals" aria-labelledby="mutual-tab">
+            <table id="mutualtable" 
+                data-toggle="table" 
+                data-side-pagination="server"
+                data-pagination="true" 
+                data-url="/client/retails/<?= $client->getId()?>"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#mutualtoolbar"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-show-columns="false"
+                data-query-params="mutualsQueryParams"
+                data-sort-name="id"
+                data-sort-order="desc"            
+                data-response-handler="responseHandler"
+                data-classes = "table table-bordered table-hover table-condensed"
+                data-unique-id="id"
+                data-icon-size="sm"
+                >
+                <thead>
+                    <tr>
+                        <th data-field="dateOper" data-width="100" data-sortable="true" data-formatter="dateFormatter">Дата</th>
+                        <th data-field="amount" data-type="numeric" data-align="right" data-width="30" data-formatter="inFormatter">Отгрузка</th>
+                        <th data-field="amount" data-type="numeric" data-align="right" data-width="30" data-formatter="outFormatter">Оплата</th>
+                        <th data-field="rest" data-type="numeric" data-align="right" data-width="30">Баланс</th>
+                        <th data-field="docKey" data-formatter="docKeyFormatter">Документ</th>
+                        <th data-field="office.name" data-width="50">Офис</th>
+                        <th data-field="company.name" data-width="150">ЮЛ</th>
+                    </tr>                
+                </thead>
+            </table>
+        </div>    
     </div>
 </div>
 
@@ -280,7 +312,6 @@ $legalContact = $client->getLegalContact();
             }
         });     
         var activeTab = Cookies.get('clientSaveId_tab');
-        console.log(activeTab);
         if (activeTab !== undefined){
             $('.nav-tabs #'+activeTab).tab('show');
         } else {
@@ -363,6 +394,22 @@ $legalContact = $client->getLegalContact();
         }    
         
         params.client = <?= $client->getId()?>;
+        return params;
+    }    
+
+    function mutualsQueryParams(params) {
+        $('#mutualtoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#vttable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#vttable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
         return params;
     }    
 
@@ -520,6 +567,13 @@ $legalContact = $client->getLegalContact();
         return;
     }    
     
+    function outFormatter(value){
+        if (value<0){
+            return -Math.round(value*100)/100;
+        }
+        return;
+    }    
+
     function vinFormatter(value, row){
         var result = value;
         if (row.vin2){
@@ -567,6 +621,30 @@ $legalContact = $client->getLegalContact();
 
         return btn;
     }        
+    
+    function docKeyFormatter(value, row){
+        const docKey = value.split(":");
+        let docType = docKey[0];        
+        let docId = docKey[1];        
+        switch(docType){
+            case 'ord': 
+                return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №"+docId+"</a>";
+            case 'vt': 
+                return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
+            case 'ptu': 
+                return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a>";
+            case 'ot': 
+                return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
+            case 'st': 
+                return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
+            case 'vtp': 
+                return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
+            case 'cash': 
+                return "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>Оплата №"+docId+"</a>";
+                return "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>Возврат оплаты №"+docId+"</a>";
+            default: return docKey;            
+        }
+    }
     
     function responseHandler(res) {
         return res;

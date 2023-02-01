@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Application\Entity\Client;
 use User\Filter\PhoneFilter;
 use Laminas\Validator\EmailAddress;
+use Stock\Entity\Retail;
 
 /**
  * Description of ClientRepository
@@ -91,4 +92,54 @@ class ClientRepository extends EntityRepository{
         return $queryBuilder->getQuery()->getResult();        
         
     }
+    
+    /**
+     * Взаиморасчеты
+     * 
+     * @param Client $client
+     * @param array $params
+     * @return Query
+     */
+    public function retails($client, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('r, o, c, ct')
+            ->from(Retail::class, 'r')
+            ->join('r.office', 'o')    
+            ->join('r.company', 'c')
+            ->join('r.contact', 'ct')
+            ->where('ct.client = ?1')
+            ->setParameter('1', $client->getId())
+//            ->orderBy('m.docStamp','ASC')    
+            ;
+        
+        if (is_array($params)){
+            if (!empty($params['sort'])){
+                $sort = $params['sort'];
+                $queryBuilder->addOrderBy('r.'.$sort, $params['order']);
+            }
+            if (!empty($params['office'])){
+                if (is_numeric($params['office'])){
+                    $queryBuilder->andWhere('r.office = ?2')
+                        ->setParameter('2', $params['office']);
+                }    
+            }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(r.dateOper) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(r.dateOper) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery();            
+    }    
 }

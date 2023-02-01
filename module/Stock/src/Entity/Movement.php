@@ -40,6 +40,7 @@ class Movement {
     const DOC_ST = 6;
     const DOC_VTP = 7;
     const DOC_REVISE = 8;
+    const DOC_CASH = 9;
     
     
     /**

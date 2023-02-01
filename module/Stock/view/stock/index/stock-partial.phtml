@@ -215,6 +215,43 @@
             });
         });  
 
+        $(document).on('click', '.cash-in-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            var urlQuery = '?cash='+$('#cashSelect').val();
+            showFormDialog({
+                id: 'cashInModal',
+                url: url+urlQuery,
+                width: '1440px'
+            });
+        });  
+        
+        $(document).on('click', '.cash-out-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'cashOutModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+        
+        $(document).on('click', '.user-in-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'userInModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+        
+        $(document).on('click', '.user-out-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'userOutModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+
         $(document).on('change', '#supplierSelect', function (e) {
             refreshTable();
         });        

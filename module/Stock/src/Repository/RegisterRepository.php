@@ -25,6 +25,7 @@ use Company\Entity\Office;
 use Company\Entity\Legal;
 use User\Entity\User;
 use Stock\Entity\Revise;
+use Cash\Entity\CashDoc;
 
 
 /**
@@ -246,6 +247,18 @@ class RegisterRepository extends EntityRepository
         return $this->register($dateOper, Movement::DOC_ORDER, $order->getId());
     } 
     
+    /**
+     * Регистриция CashDoc
+     * 
+     * @param  CashDoc $cashDoc
+     * @return float
+     */
+    public function cashDocRegister($cashDoc)
+    {
+        $dateOper = date('Y-m-d 15:00:00', strtotime($cashDoc->getDateOper()));
+        return $this->register($dateOper, Movement::DOC_CASH, $cashDoc->getId());
+    } 
+
     public function allRegister()
     {
         ini_set('memory_limit', '8192M');

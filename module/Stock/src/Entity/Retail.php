@@ -54,6 +54,11 @@ class Retail {
      */
     protected $docId;
 
+    /**
+     * @ORM\Column(name="doc_stamp")   
+     */
+    protected $docStamp;
+    
     /** 
      * @ORM\Column(name="date_oper")  
      */
@@ -91,6 +96,19 @@ class Retail {
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
      */
     private $company;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="retails") 
+     * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
+     */
+    private $legal;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Contract", inversedBy="retails") 
+     * @ORM\JoinColumn(name="contract_id", referencedColumnName="id")
+     */
+    private $contract;
+    
 
     public function __construct() {
     }
@@ -133,6 +151,16 @@ class Retail {
     public function setDocId($docId) 
     {
         $this->docId = $docId;
+    }     
+    
+    public function getDocStamp() 
+    {
+        return $this->docStamp;
+    }
+
+    public function setDocStamp($docStamp) 
+    {
+        $this->docStamp = $docStamp;
     }     
     
     /**
@@ -329,6 +357,24 @@ class Retail {
     public function getOffice() 
     {
         return $this->office;
+    }
+
+    /**
+     * Returns the legal.
+     * @return Legal     
+     */
+    public function getLegal() 
+    {
+        return $this->legal;
+    }
+
+    /**
+     * Returns the contract.
+     * @return Contract     
+     */
+    public function getContract() 
+    {
+        return $this->contract;
     }
 
     /**
