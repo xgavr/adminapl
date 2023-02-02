@@ -560,6 +560,11 @@ class Cash {
         $this->bankAccounts[] = $bankAccount;
     }    
     
+    public function getBankAccounts()
+    {
+        return $this->bankAccounts;
+    }
+    
     /**
      * Массив для формы
      * @return array 
