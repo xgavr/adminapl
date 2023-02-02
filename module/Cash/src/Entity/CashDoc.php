@@ -576,9 +576,11 @@ class CashDoc {
      */
     public function contractPayCash() 
     {
-        if ($this->getCash()->getBankAccounts()->count()){
-            return Contract::PAY_CASHLESS;
-        }
+        if ($this->getCash()){
+            if ($this->getCash()->getBankAccounts()->count()){
+                return Contract::PAY_CASHLESS;
+            }
+        }    
         
         return Contract::PAY_CASH;
     }
