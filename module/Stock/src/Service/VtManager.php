@@ -74,17 +74,24 @@ class VtManager
      * Обновить взаиморасчеты документа
      * 
      * @param Vt $vt
+     * @param float $docStamp
      */
-    public function updateVtMutuals($vt)
+    public function updateVtMutuals($vt, $docStamp)
     {
         
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($vt->getLogKey());
         
-        $contract = $this->orderManager->findDefaultContract($vt->getOrder()->getOffice(), 
-                $vt->getOrder()->getLegal(), $vt->getOrder()->getDateOper(), 
-                $vt->getOrder()->getAplId());
-        
+        $contractId = null;
+        if ($vt->getOrder()->getLegal()){
+            $orderRetail = $this->entityManager->getRepository(Retail::class)
+                    ->findOneBy(['docKey' => $vt->getOrder()->getLogKey()]);
+            if ($orderRetail){
+                if ($orderRetail->getContract()){
+                    $contractId = $orderRetail->getContract()->getId();
+                }    
+            }    
+        }
         $data = [
             'doc_key' => $vt->getLogKey(),
             'doc_type' => Movement::DOC_VT,
@@ -94,9 +101,10 @@ class VtManager
             'revise' => Mutual::REVISE_NOT,
             'amount' => -$vt->getAmount(),
             'legal_id' => $vt->getOrder()->getLegal()->getId(),
-            'contract_id' => $contract->getId(),
+            'contract_id' => $contractId,
             'office_id' => $vt->getOffice()->getId(),
             'company_id' => $vt->getOrder()->getCompany()->getId(),
+            'doc_stamp' => $docStamp,
         ];
 
         $this->entityManager->getRepository(Mutual::class)
@@ -109,12 +117,24 @@ class VtManager
      * Обновить взаиморасчеты возврата розничного заказа
      * 
      * @param Vt $vt
+     * @param float $docStamp
      */
-    public function updateVtRetails($vt)
+    public function updateVtRetails($vt, $docStamp)
     {
         $this->entityManager->getRepository(Retail::class)
                 ->removeOrderRetails($vt->getLogKey());        
         
+        $legalId = $contractId = null;
+        if ($vt->getOrder()->getLegal()){
+            $legalId = $vt->getOrder()->getLegal()->getId();
+            $orderRetail = $this->entityManager->getRepository(Retail::class)
+                    ->findOneBy(['docKey' => $vt->getOrder()->getLogKey()]);
+            if ($orderRetail){
+                if ($orderRetail->getContract()){
+                    $contractId = $orderRetail->getContract()->getId();
+                }    
+            }    
+        }
         $data = [
             'doc_key' => $vt->getLogKey(),
             'doc_type' => Movement::DOC_VT,
@@ -126,6 +146,9 @@ class VtManager
             'contact_id' => $vt->getOrder()->getContact()->getId(),
             'office_id' => $vt->getOffice()->getId(),
             'company_id' => $vt->getOrder()->getCompany()->getId(),
+            'doc_stamp' => $docStamp,
+            'legal_id' => $legalId,
+            'contract_id' => $contractId,
         ];
 
         $this->entityManager->getRepository(Retail::class)
@@ -139,12 +162,10 @@ class VtManager
      * Обновить движения документа
      * 
      * @param Vt $vt
+     * @param float $docStamp
      */
-    public function updateVtMovement($vt)
-    {
-        
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->vtRegister($vt);
+    public function updateVtMovement($vt, $docStamp)
+    {        
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($vt->getLogKey());
         $this->entityManager->getRepository(Comiss::class)
@@ -265,10 +286,13 @@ class VtManager
      */
     public function repostVt($vt)
     {
-        $this->updateVtMovement($vt);
-        $this->updateVtRetails($vt);
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->vtRegister($vt);
+        
+        $this->updateVtMovement($vt, $docStamp);
+        $this->updateVtRetails($vt, $docStamp);
         if ($vt->getOrder()->getLegal()){
-            $this->updateVtMutuals($vt);
+            $this->updateVtMutuals($vt, $docStamp);
         } else {
             $this->entityManager->getRepository(Mutual::class)
                     ->removeDocMutuals($vt->getLogKey());            
