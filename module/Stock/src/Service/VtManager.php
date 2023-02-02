@@ -84,7 +84,7 @@ class VtManager
         
         $contractId = null;
         if ($vt->getOrder()->getLegal()){
-            $orderRetail = $this->entityManager->getRepository(Retail::class)
+            $orderRetail = $this->entityManager->getRepository(Mutual::class)
                     ->findOneBy(['docKey' => $vt->getOrder()->getLogKey()]);
             if ($orderRetail){
                 if ($orderRetail->getContract()){
