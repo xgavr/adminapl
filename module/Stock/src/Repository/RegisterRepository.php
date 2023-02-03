@@ -300,12 +300,12 @@ class RegisterRepository extends EntityRepository
 //            $this->vtpRegister($vtp);
 //        }
 //
-//        $sts = $this->getEntityManager()->gRepository(St::class)
+//        $sts = $this->getEntityManager()->getRepository(St::class)
 //                ->findBy([]);
 //        foreach ($sts as $st){
 //            $this->stRegister($st);
 //        }
-        $cd = $this->getEntityManager()->gRepository(CashDoc::class)
+        $cd = $this->getEntityManager()->getRepository(CashDoc::class)
                 ->findBy([]);
         foreach ($cd as $cd){
             $this->cashDocRegister($cd);
