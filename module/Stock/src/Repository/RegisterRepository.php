@@ -305,10 +305,13 @@ class RegisterRepository extends EntityRepository
 //        foreach ($sts as $st){
 //            $this->stRegister($st);
 //        }
-        $cds = $this->getEntityManager()->getRepository(CashDoc::class)
-                ->findBy([]);
-        foreach ($cds as $cd){
-            $this->cashDocRegister($cd);
+        $cdQuery = $this->getEntityManager()->getRepository(CashDoc::class)
+                ->findAllCashDoc(date('Y-m-d', strtotime('2012-01-01')), date('Y-12-31'));
+        $iterator = $cdQuery->iterate();
+        foreach ($iterator as $cd){
+            foreach ($cd as $cashDoc){
+                $this->cashDocRegister($cashDoc);
+            }    
         }
     }
     

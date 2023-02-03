@@ -687,14 +687,16 @@ class AplDocService {
     private function getVtStatus($data)
     {
         $vtStatus = Vt::STATUS_ACTIVE;
-        if ($data['publish'] == 0){
-            $vtStatus = Vt::STATUS_RETIRED;            
-        }
+
         if (isset($data['comiss'])){
             if ($data['comiss'] == 1){
                 $vtStatus = Vt::STATUS_COMMISSION;
             }
         }                
+
+        if ($data['publish'] == 0){
+            $vtStatus = Vt::STATUS_RETIRED;            
+        }
         
         return $vtStatus;
     }
@@ -987,7 +989,7 @@ class AplDocService {
         ];
         
         if (!empty($data['comiss'])){
-            if ($data['comiss'] == 1){
+            if ($data['comiss'] == 1 && $data['publish'] == 1){
                 if (!empty($data['comitent'])){
                     $contact = null;
                     $user = $this->entityManager->getRepository(User::class)
