@@ -22,6 +22,42 @@ use Company\Entity\Office;
  */
 class CashRepository extends EntityRepository
 {
+    
+    /**
+     * Запрос по кассовым документам
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function cashDocQuery($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('cd')
+            ->from(CashDoc::class, 'cd')
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['cashId'])){
+                $queryBuilder->andWhere('cd.cash = ?3')
+                    ->setParameter('3', $params['cashId'])
+                        ;
+            }            
+            if (is_numeric($params['kind'])){
+                $queryBuilder->andWhere('cd.kind = ?4')
+                    ->setParameter('4', $params['kind'])
+                        ;
+            }            
+            if (isset($params['sort'])){
+                $queryBuilder->addOrderBy('cd.'.$params['sort'], $params['order']);
+            }            
+        }
+
+        return $queryBuilder->getQuery();
+    }          
+    
     /**
      * Запрос по кассовым документам
      * 
@@ -307,5 +343,5 @@ class CashRepository extends EntityRepository
         
         return $queryBuilder->getQuery()->getOneOrNullResult();                
         
-    }
+    }        
 }

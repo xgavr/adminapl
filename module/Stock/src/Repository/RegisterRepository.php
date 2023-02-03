@@ -250,15 +250,39 @@ class RegisterRepository extends EntityRepository
     /**
      * Регистриция CashDoc
      * 
+     * @param integer $cashDocId
+     * @param date $cashDocSateOper
+     * @return float
+     */
+    private function cashDocIdRegister($cashDocId, $cashDocSateOper)
+    {
+        $dateOper = date('Y-m-d H:i:s', strtotime($cashDocSateOper));
+        return $this->register($dateOper, Movement::DOC_CASH, $cashDocId);
+    } 
+
+    /**
+     * Регистриция CashDoc
+     * 
      * @param  CashDoc $cashDoc
      * @return float
      */
     public function cashDocRegister($cashDoc)
     {
-        $dateOper = date('Y-m-d H:i:s', strtotime($cashDoc->getDateOper()));
-        return $this->register($dateOper, Movement::DOC_CASH, $cashDoc->getId());
+        return $this->cashDocIdRegister($cashDoc->getId(), $cashDoc->getDateOper());
     } 
 
+    /**
+     * Регистриция корректировки
+     * 
+     * @param  Revise $revise
+     * @return float
+     */
+    public function reviseRegister($revise)
+    {
+        $dateOper = date('Y-m-d 23:00:00', strtotime($revise->getDocDate()));
+        return $this->register($dateOper, Movement::DOC_REVISE, $revise->getId());
+    } 
+    
     public function allRegister()
     {
         ini_set('memory_limit', '8192M');
@@ -306,7 +330,7 @@ class RegisterRepository extends EntityRepository
 //            $this->stRegister($st);
 //        }
         $cdQuery = $this->getEntityManager()->getRepository(CashDoc::class)
-                ->findAllCashDoc(date('Y-m-d', strtotime('2012-01-01')), date('Y-12-31'));
+                ->cashDocQuery();
         $iterator = $cdQuery->iterate();
         foreach ($iterator as $cd){
             foreach ($cd as $cashDoc){

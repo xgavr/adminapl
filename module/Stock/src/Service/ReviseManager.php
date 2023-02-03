@@ -49,8 +49,9 @@ class ReviseManager
      * Обновить взаиморасчеты документа
      * 
      * @param Revise $revise
+     * @param float $docStamp
      */
-    public function updateReviseMutuals($revise)
+    public function updateReviseMutuals($revise, $docStamp)
     {
         
         $this->entityManager->getRepository(Mutual::class)
@@ -69,6 +70,7 @@ class ReviseManager
                 'contract_id' => $revise->getContract()->getId(),
                 'office_id' => $revise->getOffice()->getId(),
                 'company_id' => $revise->getContract()->getCompany()->getId(),
+                'doc_stamp' => $docStamp,
             ];
 
             $this->entityManager->getRepository(Mutual::class)
@@ -82,12 +84,19 @@ class ReviseManager
      * Обновить взаиморасчеты розницы
      * 
      * @param Revise $revise
+     * @param float $docStamp
      */
-    public function updateReviseRetails($revise)
+    public function updateReviseRetails($revise, $docStamp)
     {
         $this->entityManager->getRepository(Retail::class)
                 ->removeOrderRetails($revise->getLogKey());                
-        
+        $legalId = $contractid = null;
+        if ($revise->getLegal()){
+            $legalId = $revise->getLegal()->getId();
+        }
+        if ($revise->getContract()){
+            $contractid = $revise->getContract()->getId();
+        }
         if ($revise->getKind() == Revise::KIND_REVISE_CLIENT){
             $data = [
                 'doc_key' => $revise->getLogKey(),
@@ -100,6 +109,9 @@ class ReviseManager
                 'contact_id' => $revise->getContact()->getId(),
                 'office_id' => $revise->getOffice()->getId(),
                 'company_id' => $revise->getCompany()->getId(),
+                'doc_stamp' => $docStamp,
+                'legal_id' => $revise->getLegal()->getId(),
+                'contract_id' => $revise->getContract()->getId(),                
             ];
 
             $this->entityManager->getRepository(Retail::class)
@@ -115,8 +127,11 @@ class ReviseManager
      */
     public function repostRevise($revise)
     {
-        $this->updateReviseMutuals($revise);
-        $this->updateReviseRetails($revise);
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->reviseRegister($revise);
+        
+        $this->updateReviseMutuals($revise, $docStamp);
+        $this->updateReviseRetails($revise, $docStamp);
         $this->logManager->infoRevise($revise, Log::STATUS_UPDATE);
         
         return;
