@@ -146,7 +146,7 @@ class OrderManager
     {
         $legalId = $contractId = null;
         if ($order->getLegal()){
-            $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDateOper(), $order->getAplId()); 
+            $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId()); 
             $legalId = $order->getLegal()->getId();
             $contractId = $contract->getId();
         }
@@ -219,7 +219,7 @@ class OrderManager
      */
     public function updateOrderMutuals($order, $docStamp)
     {
-        $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDateOper(), $order->getAplId());
+        $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId());
         $data = [
             'doc_key' => $order->getLogKey(),
             'doc_type' => Movement::DOC_ORDER,
