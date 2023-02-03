@@ -334,7 +334,11 @@ class RegisterRepository extends EntityRepository
         $iterator = $cdQuery->iterate();
         foreach ($iterator as $cd){
             foreach ($cd as $cashDoc){
-                $this->cashDocIdRegister($cashDoc['id'], $cashDoc['dateOper']);
+                $reg = $this->getEntityManager()->getRepository(Register::class)
+                        ->findOneBy(['docType' => Movement::DOC_CASH, 'docId' => $cashDoc['id']]);
+                if (!$reg){
+                    $this->cashDocIdRegister($cashDoc['id'], $cashDoc['dateOper']);
+                }    
             }    
         }
 
