@@ -255,7 +255,7 @@ class RegisterRepository extends EntityRepository
      */
     public function cashDocRegister($cashDoc)
     {
-        $dateOper = date('Y-m-d 15:00:00', strtotime($cashDoc->getDateOper()));
+        $dateOper = date('Y-m-d H:i:s', strtotime($cashDoc->getDateOper()));
         return $this->register($dateOper, Movement::DOC_CASH, $cashDoc->getId());
     } 
 
@@ -305,9 +305,9 @@ class RegisterRepository extends EntityRepository
 //        foreach ($sts as $st){
 //            $this->stRegister($st);
 //        }
-        $cd = $this->getEntityManager()->getRepository(CashDoc::class)
+        $cds = $this->getEntityManager()->getRepository(CashDoc::class)
                 ->findBy([]);
-        foreach ($cd as $cd){
+        foreach ($cds as $cd){
             $this->cashDocRegister($cd);
         }
     }
