@@ -35,7 +35,7 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('cd')
+        $queryBuilder->select('cd.id, cd.dateOper')
             ->from(CashDoc::class, 'cd')
                 ;
         

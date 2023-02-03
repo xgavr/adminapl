@@ -334,7 +334,7 @@ class RegisterRepository extends EntityRepository
         $iterator = $cdQuery->iterate();
         foreach ($iterator as $cd){
             foreach ($cd as $cashDoc){
-                $this->cashDocRegister($cashDoc);
+                $this->cashDocIdRegister($cashDoc['id'], $cashDoc['dateOper']);
             }    
         }
 
