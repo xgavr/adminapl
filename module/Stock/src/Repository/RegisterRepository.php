@@ -282,28 +282,33 @@ class RegisterRepository extends EntityRepository
 //            $this->ptRegister($pt);
 //        }
 //
-        $orders = $this->getEntityManager()->getRepository(Order::class)
+//        $orders = $this->getEntityManager()->getRepository(Order::class)
+//                ->findBy([]);
+//        foreach ($orders as $order){
+//            $this->orderRegister($order);
+//        }
+//
+//        $vts = $this->getEntityManager()->getRepository(Vt::class)
+//                ->findBy([]);
+//        foreach ($vts as $vt){
+//            $this->vtRegister($vt);
+//        }
+//
+//        $vtps = $this->getEntityManager()->getRepository(Vtp::class)
+//                ->findBy([]);
+//        foreach ($vtps as $vtp){
+//            $this->vtpRegister($vtp);
+//        }
+//
+//        $sts = $this->getEntityManager()->gRepository(St::class)
+//                ->findBy([]);
+//        foreach ($sts as $st){
+//            $this->stRegister($st);
+//        }
+        $cd = $this->getEntityManager()->gRepository(CashDoc::class)
                 ->findBy([]);
-        foreach ($orders as $order){
-            $this->orderRegister($order);
-        }
-
-        $vts = $this->getEntityManager()->getRepository(Vt::class)
-                ->findBy([]);
-        foreach ($vts as $vt){
-            $this->vtRegister($vt);
-        }
-
-        $vtps = $this->getEntityManager()->getRepository(Vtp::class)
-                ->findBy([]);
-        foreach ($vtps as $vtp){
-            $this->vtpRegister($vtp);
-        }
-
-        $sts = $this->getEntityManager()->getRepository(St::class)
-                ->findBy([]);
-        foreach ($sts as $st){
-            $this->stRegister($st);
+        foreach ($cd as $cd){
+            $this->cashDocRegister($cd);
         }
     }
     
