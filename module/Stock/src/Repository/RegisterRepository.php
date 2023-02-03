@@ -337,6 +337,15 @@ class RegisterRepository extends EntityRepository
                 $this->cashDocRegister($cashDoc);
             }    
         }
+
+        $reviseQuery = $this->getEntityManager()->getRepository(Revise::class)
+                ->queryAllRevise();
+        $iterator = $reviseQuery->iterate();
+        foreach ($iterator as $item){
+            foreach ($item as $revise){
+                $this->reviseRegister($revise);
+            }    
+        }
     }
     
     /**
