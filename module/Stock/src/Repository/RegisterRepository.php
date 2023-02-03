@@ -329,6 +329,15 @@ class RegisterRepository extends EntityRepository
 //        foreach ($sts as $st){
 //            $this->stRegister($st);
 //        }
+        $reviseQuery = $this->getEntityManager()->getRepository(Revise::class)
+                ->queryAllRevise();
+        $iterator = $reviseQuery->iterate();
+        foreach ($iterator as $item){
+            foreach ($item as $revise){
+                $this->reviseRegister($revise);
+            }    
+        }
+
         $cdQuery = $this->getEntityManager()->getRepository(CashDoc::class)
                 ->cashDocQuery();
         $iterator = $cdQuery->iterate();
@@ -342,14 +351,6 @@ class RegisterRepository extends EntityRepository
             }    
         }
 
-        $reviseQuery = $this->getEntityManager()->getRepository(Revise::class)
-                ->queryAllRevise();
-        $iterator = $reviseQuery->iterate();
-        foreach ($iterator as $item){
-            foreach ($item as $revise){
-                $this->reviseRegister($revise);
-            }    
-        }
     }
     
     /**
