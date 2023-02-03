@@ -88,6 +88,8 @@ class OfficeRepository extends EntityRepository{
                 ->setParameter('3', $dateDoc)
                 ->andWhere('c.pay = ?4')
                 ->setParameter('4', $pay)
+                ->andWhere('c.status = :status')
+                ->setParameter('status', Contract::STATUS_ACTIVE)
                 ->orderBy('c.dateStart', 'DESC')
                 ->setMaxResults(1)
                 ;
