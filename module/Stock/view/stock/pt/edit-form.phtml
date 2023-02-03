@@ -136,7 +136,7 @@ if ($pt){
                 data-side-pagination="client"
                 data-pagination="true"
                 data-cookie="true"
-                data-cookie-id-table="ptGoodSaveId"
+                data-cookie-id-table="ptGoodSaveId<?= ($pt) ? $pt->getId():"" ?>"
                 data-cookie-expire="1m"
                 data-page-size = "5"
                 data-page-list="[5, 10, 20, 50]"

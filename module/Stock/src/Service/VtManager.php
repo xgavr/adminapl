@@ -517,7 +517,7 @@ class VtManager
             $row->setGood($newGood);
             $this->entityManager->persist($row);
             $this->entityManager->flush();
-            $this->updateVtMovement($row->getVt());
+            $this->repostVt($row->getVt());
         }
         
         return;
