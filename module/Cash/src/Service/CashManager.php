@@ -462,17 +462,17 @@ class CashManager {
     /**
      * Новый кассовый документ
      * 
-     * @param array $data
+     * @param array $inData
      * @return CashDoc
      */
-    public function addCashDoc($data)
+    public function addCashDoc($inData)
     {
-//        var_dump($data); exit;
-        $data = $this->prepareData($data);
+//        var_dump($inData); exit;
+        $data = $this->prepareData($inData);
         
         $cashDoc = new CashDoc();
         $cashDoc->setAmount($data['amount']);
-        $cashDoc->setAplId(empty($data['aplId']) ?: 0);
+        $cashDoc->setAplId(empty($data['aplId']) ? null:$data['aplId']);
         $cashDoc->setCash(empty($data['cash']) ? null:$data['cash']);
         $cashDoc->setCashRefill(empty($data['cashRefill']) ? null:$data['cashRefill']);
         $cashDoc->setCheckStatus(empty($data['checkStatus']) ? CashDoc::CHECK_RETIRED:$data['checkStatus']);
@@ -507,10 +507,10 @@ class CashManager {
      * Обновить кассовый документ
      * 
      * @param CashDoc $cashDoc
-     * @param array $data
+     * @param array $inData
      * @return CashDoc
      */
-    public function updateCashDoc($cashDoc, $data)
+    public function updateCashDoc($cashDoc, $inData)
     {
 //        var_dump($data); exit;
         $preLog = $this->entityManager->getRepository(Log::class)
@@ -518,10 +518,10 @@ class CashManager {
         if (!$preLog){
             $this->logManager->infoCash($cashDoc, Log::STATUS_INFO);            
         }
-        $data = $this->prepareData($data);
+        $data = $this->prepareData($inData);
 
         $cashDoc->setAmount($data['amount']);
-        $cashDoc->setAplId(empty($data['aplId']) ?: 0);
+        $cashDoc->setAplId(empty($data['aplId']) ? null:$data['aplId']);
         $cashDoc->setCash(empty($data['cash']) ? null:$data['cash']);
         $cashDoc->setCashRefill(empty($data['cashRefill']) ? null:$data['cashRefill']);
         $cashDoc->setCheckStatus(empty($data['checkStatus']) ? CashDoc::CHECK_RETIRED : $data['checkStatus']);
