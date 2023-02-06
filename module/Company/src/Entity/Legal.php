@@ -16,6 +16,7 @@ use Laminas\Filter\Digits;
 use Company\Entity\BankAccount;
 use Company\Entity\Contract;
 use Company\Entity\EdoOperator;
+use Company\Entity\Office;
 
 /**
  * Description of Legal
@@ -596,11 +597,21 @@ class Legal {
         $result = [];
         foreach ($this->contacts as $contact){
             if ($contact->getOffice()){
-                $result[] = $contact->getOffice();
+                $result[$contact->getOffice()->getId()] = $contact->getOffice();
             }
         }
         
         return $result;
+    }
+    
+    /**
+     * Компания есть в этом офисе
+     * @param Office $office
+     * @return bool
+     */
+    public function companyInOffice($office)
+    {
+        return array_key_exists($office->getId(), $this->getOffices());         
     }
 
     /**

@@ -211,6 +211,26 @@ class VtManager
 
                     $this->entityManager->getRepository(Movement::class)
                             ->insertMovement($data);
+                    
+                    //проверка компании заказа и компании офиса, переместить, если не совпадает
+                    if (!$vt->getOrder()->getCompany()->companyInOffice($vt->getOffice())){
+                        
+                        $officeCompany = $this->entityManager->getRepository(Office::class)
+                                ->findDefaultCompany($vt->getOffice(), $vt->getDocDate());
+                        $data['company_id'] = $officeCompany;
+    
+                        $this->entityManager->getRepository(Movement::class)
+                            ->insertMovement($data);
+
+                        $data['quantity'] = -$quantity;
+                        $data['amount'] = -$amount;
+                        $data['company_id'] = $vt->getOrder()->getCompany()->getId();
+                        $data['doc_stamp'] = $docStamp;
+    
+                        $this->entityManager->getRepository(Movement::class)
+                            ->insertMovement($data);
+
+                    }
 
                     if ($vt->getStatus() == Vt::STATUS_COMMISSION){
                         unset($data['base_key']);
