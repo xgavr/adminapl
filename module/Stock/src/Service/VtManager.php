@@ -217,7 +217,7 @@ class VtManager
                         
                         $officeCompany = $this->entityManager->getRepository(Office::class)
                                 ->findDefaultCompany($vt->getOffice(), $vt->getDocDate());
-                        $data['company_id'] = $officeCompany;
+                        $data['company_id'] = $officeCompany->getId();
     
                         $this->entityManager->getRepository(Movement::class)
                             ->insertMovement($data);
