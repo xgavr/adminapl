@@ -532,6 +532,7 @@ class PostManager {
      * Чтение почтового ящика
      * @param array $params
      * server str {imap.yandex.ru:993/imap/ssl}
+     * server str {imap.mail.ru:993/imap/ssl}
      * -foders array ['INBOX', Спам]
      * -trash str - папка "Удаленные"
      * -user str
@@ -543,6 +544,13 @@ class PostManager {
     public function readImap($params)
     {
         ini_set('memory_limit', '512M');
+        
+        $params['server'] = '{imap.yandex.ru:993/imap/ssl}';
+        $nameDomain = explode("@", $params['user']);
+        $domain = $nameDomain[1];
+        if (strtolower($domain) == 'adminapl.ru'){
+            $params['server'] = '{imap.mail.ru:993/imap/ssl}';            
+        }
         
         $result = [];
         $imap_obj = $connection = null;
