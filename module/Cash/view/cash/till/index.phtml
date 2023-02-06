@@ -129,23 +129,6 @@
         $('#ok').click(function () {
             refreshTable();
         });
-        $(document).on('click', '.cash-in-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var urlQuery = '?cash='+$('#cashSelect').val();
-            showFormDialog({
-                id: 'cashInModal',
-                url: url+urlQuery,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.cash-out-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'cashOutModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
         $(document).on('change', '.refresh-table', function (e) {
             refreshTable();
         });

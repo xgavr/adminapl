@@ -227,27 +227,30 @@
         
         $(document).on('click', '.cash-out-modal-show', function (e) {
             var url = $(this).attr('modal-url');
+            var urlQuery = '?cash='+$('#cashSelect').val();
             showFormDialog({
                 id: 'cashOutModal',
-                url: url,
+                url: url+urlQuery,
                 width: '1440px'
             });
         });  
         
         $(document).on('click', '.user-in-modal-show', function (e) {
             var url = $(this).attr('modal-url');
+            var urlQuery = '?user='+$('#userSelect').val();
             showFormDialog({
                 id: 'userInModal',
-                url: url,
+                url: url+urlQuery,
                 width: '1440px'
             });
         });  
         
         $(document).on('click', '.user-out-modal-show', function (e) {
             var url = $(this).attr('modal-url');
+            var urlQuery = '?user='+$('#userSelect').val();
             showFormDialog({
                 id: 'userOutModal',
-                url: url,
+                url: url+urlQuery,
                 width: '1440px'
             });
         });  
