@@ -62,7 +62,7 @@
                 <tr>
                      <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
                      <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="120">Номер</th>
-                     <th data-field="docDate" data-sortable="true" data-width="100">Дата</th>
+                     <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="100">Дата</th>
                      <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
                      <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="amountFormatter">Сумма</th>
                      <th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>
@@ -128,6 +128,12 @@
         
         return value;
     }    
+    
+    function dateFormatter(value){
+        var date = new Date(value);
+        return $.format.date(date, "dd.MM.yyyy");
+    }
+
     
     function linkFormatter(value, row){
         if (!value){
