@@ -126,12 +126,18 @@ class StController extends AbstractActionController
     public function editFormAction()
     {
         $stId = (int)$this->params()->fromRoute('id', -1);
+        $goodId = (int)$this->params()->fromQuery('good', -1);
         
-        $st = $office = $company = $user = $cost = $contactName = null;
+        $st = $office = $company = $user = $cost = $contactName = $good = null;
         $notDisabled = true;        
         if ($stId > 0){
             $st = $this->entityManager->getRepository(St::class)
                     ->findOneById($stId);
+        }    
+
+        if ($goodId > 0){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
         }    
         
         if ($st == null) {
@@ -145,23 +151,28 @@ class StController extends AbstractActionController
             $cost = $st->getCost();
         }       
         
-        if ($this->getRequest()->isPost()){
-            $data = $this->params()->fromPost();
-            $office = $this->entityManager->getRepository(Office::class)
-                    ->findOneById($data['office_id']);
-            $company = $this->entityManager->getRepository(Legal::class)
-                    ->findOneById($data['company']);
-            $user = $this->entityManager->getRepository(User::class)
-                    ->findOneById($data['user']);
-            $cost = $this->entityManager->getRepository(Cost::class)
-                    ->findOneById($data['cost']);
-        }
-                
         $form = new StForm($this->entityManager, $office, $company, $user, $cost);
 
+        $users = $this->entityManager->getRepository(User::class)
+                ->findBy(['status' => User::STATUS_ACTIVE], ['fullName' => 'ASC']);
+        $userList = ['--не выбран--'];
+        foreach ($users as $staff) {
+            $userList[$staff->getId()] = $staff->getFullName();
+        }
+        $form->get('user')->setValueOptions($userList);
+        
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
+            $office = $this->entityManager->getRepository(Office::class)
+                    ->find($data['office_id']);
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($data['company']);
+            $user = $this->entityManager->getRepository(User::class)
+                    ->find($data['user']);
+            $cost = $this->entityManager->getRepository(Cost::class)
+                    ->find($data['cost']);
+
             $form->setData($data);
 
             if ($form->isValid()) {
@@ -180,7 +191,8 @@ class StController extends AbstractActionController
                     $data['user'] = null;
                 }
                 $data['apl_id'] = 0;
-
+                
+                
                 if ($st){
                     $data['apl_id'] = $st->getAplId();
                     $this->stManager->updateSt($st, $data);
@@ -209,17 +221,9 @@ class StController extends AbstractActionController
                     'comment' => $st->getComment(),
                     'status' => $st->getStatus(),
                     'writeOff' => $st->getWriteOff(),
+                    'user' => ($st->getUser()) ? $st->getUser()->getId():null,
+                    'cost' => ($st->getCost()) ? $st->getCost()->getId():null,
                 ];
-                if ($st->getUser()){
-                    $data['user'] = $st->getUser()->getId();
-                    if ($st->getUser()->getLegalContact()->getPhone()){
-                        $data['userSearch'] = $st->getUser()->getLegalContact()->getPhone()->getName(\User\Filter\PhoneFilter::PHONE_FORMAT_DB);
-                    }    
-                    $contactName = $st->getUser()->getFullName();
-                }
-                if ($st->getCost()){
-                    $data['cost'] = $st->getCost()->getId();
-                }
                 $form->setData($data);
                 $notDisabled = $st->getDocDate() > $this->stManager->getAllowDate();
             }    
@@ -232,6 +236,7 @@ class StController extends AbstractActionController
             'allowDate' => $this->stManager->getAllowDate(),
             'disabled' => !$notDisabled,
             'contactName' => $contactName,
+            'good' => $good,
         ]);        
     }    
         

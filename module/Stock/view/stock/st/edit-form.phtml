@@ -12,12 +12,16 @@ $form->get('company')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('userSearch')->setAttributes([
+$form->get('user')->setAttributes([
     'class'=>'form-control', 
-    'data-provide' => "typeahead",
-    'autocomplete' => 'off',
-    'placeholder' => 'Телефон'
     ]);
+
+//$form->get('userSearch')->setAttributes([
+//    'class'=>'form-control', 
+//    'data-provide' => "typeahead",
+//    'autocomplete' => 'off',
+//    'placeholder' => 'Телефон'
+//    ]);
 
 $form->get('cost')->setAttributes([
     'class'=>'form-control', 
@@ -58,146 +62,144 @@ if ($st){
 
 
 
-            
-            <?= $this->form()->openTag($form); ?>
-            
-            <div class="modal-header">
-                <h5 class="modal-title" id="stModalLabel">Списание товаров <?= $docName?></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('doc_no')); ?>
-                            <?= $this->formElement($form->get('doc_no')); ?>
-                            <?= $this->formElementErrors($form->get('doc_no')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('office_id')); ?>
-                            <?= $this->formElement($form->get('office_id')); ?>
-                            <?= $this->formElementErrors($form->get('office_id')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('status')); ?>
-                            <?= $this->formElement($form->get('status')); ?>
-                            <?= $this->formElementErrors($form->get('status')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-2 text-right">
-                    </div>    
-                    <div class="col-xs-2 text-right">
-                        <h1 class="display-4" id="stQuantity"></h1>
-                    </div>    
-                    <div class="col-xs-1 text-right">
-                        <h1 class="display-4" id="stAmount"><?= ($st) ? round($st->getAmount(), 2):"" ?></h1>                        
-                    </div>    
-                </div>    
-                <div class="row">
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('doc_date')); ?>
-                            <?= $this->formElement($form->get('doc_date')); ?>
-                            <?= $this->formElementErrors($form->get('doc_date')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('company')); ?>
-                            <?= $this->formElement($form->get('company')); ?>
-                            <?= $this->formElementErrors($form->get('company')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('writeOff')); ?>
-                            <?= $this->formElement($form->get('writeOff')); ?>
-                            <?= $this->formElementErrors($form->get('writeOff')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-3">                        
-                        <div class="form-group" id="userGroup">
-                            <?= $this->formLabel($form->get('userSearch')); ?>
-                            <em id="userName"><?= $contactName?></em>
-                            <?= $this->formElement($form->get('userSearch')); ?>
-                            <?= $this->formElementErrors($form->get('userSearch')); ?>                  
-                        </div>
-                        <div class="form-group" id="costGroup">
-                            <?= $this->formLabel($form->get('cost')); ?>
-                            <?= $this->formElement($form->get('cost')); ?>
-                            <?= $this->formElementErrors($form->get('cost')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-3">                        
-                    </div>    
-                </div>        
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div id="stgoodtoolbar">
-                            <div class="form-inline" role="form">
-                                <button type="button" class="btn btn-default st-good-modal-show" modal-url="/st/good-edit-form">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                        </div>
-                        <table id="stgoodtable" 
-                            data-toggle="stgoodtable" 
-                            data-url="/st/good-content/<?= ($st) ? $st->getId():"" ?>"
-                            data-side-pagination="client"
-                            data-pagination="true"
-                            data-page-size = "5"
-                            data-page-list="[5, 10, 20, 50]"
-                            data-toolbar="#stgoodtoolbar"
-                            data-show-refresh="true"
-                            data-show-toggle="true"
-                            data-query-params="stgoodQueryParams"
-                            data-response-handler="stgoodResponseHandler"
-                            data-unique-id = "rowNo"
-                            data-row-style="takeStyle"
-                            >
-                            <thead>
-                                <tr>
-                                     <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                                     <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
-                                     <th data-field="good.producer.name" data-type="numeric">Производитель</th>
-                                     <th data-field="good.name" data-type="numeric">Наименование</th>
-                                     <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
-                                     <th data-field='quantity' data-align="right">Количество</th>
-                                     <th data-field='amount' data-align="right">Сумма</th>
-                                     <th data-field="rowNo" data-formatter="pgEditFormatter" data-width="10"></th>
-                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
-                                 </tr>                
-                            </thead>
-                        </table>
-                    </div>
-                </div>    
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('comment')); ?>
-                            <?= $this->formElement($form->get('comment')); ?>
-                            <?= $this->formElementErrors($form->get('comment')); ?>                  
-                        </div>                        
-                    </div>                                            
-                </div>        
 
+<?= $this->form()->openTag($form); ?>
+            
+<div class="modal-header">
+    <h5 class="modal-title" id="stModalLabel">Списание товаров <?= $docName?></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('doc_no')); ?>
+                <?= $this->formElement($form->get('doc_no')); ?>
+                <?= $this->formElementErrors($form->get('doc_no')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('office_id')); ?>
+                <?= $this->formElement($form->get('office_id')); ?>
+                <?= $this->formElementErrors($form->get('office_id')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2 text-right">
+        </div>    
+        <div class="col-xs-2 text-right">
+            <h1 class="display-4" id="stQuantity"></h1>
+        </div>    
+        <div class="col-xs-1 text-right">
+            <h1 class="display-4" id="stAmount"><?= ($st) ? round($st->getAmount(), 2):"" ?></h1>                        
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('doc_date')); ?>
+                <?= $this->formElement($form->get('doc_date')); ?>
+                <?= $this->formElementErrors($form->get('doc_date')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('company')); ?>
+                <?= $this->formElement($form->get('company')); ?>
+                <?= $this->formElementErrors($form->get('company')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('writeOff')); ?>
+                <?= $this->formElement($form->get('writeOff')); ?>
+                <?= $this->formElementErrors($form->get('writeOff')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-3">                        
+            <div class="form-group" id="userGroup">
+                <?= $this->formLabel($form->get('user')); ?>
                 <?= $this->formElement($form->get('user')); ?>
-                <?= $this->formElement($form->get('csrf')); ?>
+                <?= $this->formElementErrors($form->get('user')); ?>                  
             </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="st-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
+            <div class="form-group" id="costGroup">
+                <?= $this->formLabel($form->get('cost')); ?>
+                <?= $this->formElement($form->get('cost')); ?>
+                <?= $this->formElementErrors($form->get('cost')); ?>                  
             </div>
+        </div>    
+        <div class="col-xs-3">                        
+        </div>    
+    </div>        
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="stgoodtoolbar">
+                <div class="form-inline" role="form">
+                    <button type="button" class="btn btn-default st-good-modal-show" modal-url="/st/good-edit-form">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+            <table id="stgoodtable" 
+                data-toggle="stgoodtable" 
+                data-url="/st/good-content/<?= ($st) ? $st->getId():"" ?>"
+                data-side-pagination="client"
+                data-pagination="true"
+                data-page-size = "5"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#stgoodtoolbar"
+                data-show-refresh="true"
+                data-show-toggle="true"
+                data-query-params="stgoodQueryParams"
+                data-response-handler="stgoodResponseHandler"
+                data-unique-id = "rowNo"
+                data-row-style="takeStyle"
+                >
+                <thead>
+                    <tr>
+                         <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                         <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
+                         <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                         <th data-field="good.name" data-type="numeric">Наименование</th>
+                         <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                         <th data-field='quantity' data-align="right">Количество</th>
+                         <th data-field='amount' data-align="right">Сумма</th>
+                         <th data-field="rowNo" data-formatter="pgEditFormatter" data-width="10"></th>
+                         <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('comment')); ?>
+                <?= $this->formElement($form->get('comment')); ?>
+                <?= $this->formElementErrors($form->get('comment')); ?>                  
+            </div>                        
+        </div>                                            
+    </div>        
 
-            <?= $this->form()->closeTag(); ?>
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="st-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
             
 <script>
     function submitForm(){
@@ -234,7 +236,7 @@ if ($st){
             var newRow = {
                 good_id: row.good.id,
                 quantity: row.quantity,
-                amount: row.amount,
+                amount: row.amount
             };
             result.push(newRow);
         });   
@@ -291,6 +293,25 @@ if ($st){
         
         $('#stgoodtable').bootstrapTable({
             onLoadSuccess: function(res){
+                <?php if ($good):?>
+                    var rows = [];
+                    var good = {
+                        id: '<?= $good->getId()?>',
+                        code: '<?= $good->getCode()?>',
+                        name: '<?= $good->getNameShort()?>',
+                        producer: {name: '<?= $good->getProducer()->getName()?>'}
+                    };
+                    var row = {
+                        good: good,
+                        amount: <?= $good->getMeanPrice()?>,
+                        quantity: 1,
+                        price: <?= $good->getMeanPrice()?>,
+                        rowNo: 1
+                    };
+
+                    rows.push(row);
+                    $('#stgoodtable').bootstrapTable('append', rows);                        
+                <?php endif ?>
                 stUpdateTotal();
             }            
         }); 

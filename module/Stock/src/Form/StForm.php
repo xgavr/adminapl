@@ -150,7 +150,7 @@ class StForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([
-            'type'  => 'hidden',
+            'type'  => 'select',
             'name' => 'user',
             'attributes' => [                
                 'id' => 'user',

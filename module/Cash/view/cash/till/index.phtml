@@ -85,7 +85,7 @@
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="outFormatter" data-width="100">Расход</th>
                      <th data-field='cashDoc.comment' data-sortable="false">Комментарий</th>
                      <th data-field='cashDoc.userCreator.fullName' data-sortable="false" data-width="50">Отв.</th>
-                     <th data-field="amount" data-formatter="activeFormatter" data-width="50"></th>
+                     <th data-field="amount" data-formatter="tillActiveFormatter" data-width="50"></th>
                  </tr>                
             </thead>
         </table>
@@ -232,7 +232,7 @@
         return;
     }    
     
-    function activeFormatter(value, row){
+    function tillActiveFormatter(value, row){
         var btn = '';
         if (row.cashDoc.cash && row.statusEx != <?= CashDoc::STATUS_EX_RECD?>){
             if (row.cashDoc.kind<10){

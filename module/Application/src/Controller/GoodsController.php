@@ -692,8 +692,8 @@ class GoodsController extends AbstractActionController
         $images = $this->entityManager->getRepository(Images::class)
                 ->findByGood($goods->getId());
         
-        $rate = $this->entityManager->getRepository(Rate::class)
-                ->findGoodRate($goods);
+//        $rate = $this->entityManager->getRepository(Rate::class)
+//                ->findGoodRate($goods);
         
         $offices = $this->entityManager->getRepository(Office::class)
                 ->findBy([]);
@@ -701,14 +701,17 @@ class GoodsController extends AbstractActionController
         $titleFeatures = $this->entityManager->getRepository(TitleToken::class)
                 ->goodTitleFeatures($goods);
         
-        $rests = $this->entityManager->getRepository(GoodBalance::class)
-                ->findBy(['good' => $goods->getId()]);
+//        $rests = $this->entityManager->getRepository(GoodBalance::class)
+//                ->findBy(['good' => $goods->getId()]);
         
         $goodSuppliers = $this->entityManager->getRepository(Goods::class)
                 ->findGoodSuppliers($goods);
         
         $isApl = $this->entityManager->getRepository(GoodSupplier::class)
                     ->isApl($goods);
+        
+        $base = $this->entityManager->getRepository(Movement::class)
+                ->availableBasePtu($goods->getId());
                 
 
         // Render the view template.
@@ -720,13 +723,14 @@ class GoodsController extends AbstractActionController
             'oemStatuses' => \Application\Entity\Oem::getStatusList(),
             'oemSources' => \Application\Entity\Oem::getSourceList(),
             'priceStatuses' => [Rawprice::STATUS_PARSED => 'Последние'],
-            'rate' => $rate,
+//            'rate' => $rate,
             'titleFeatures' => $titleFeatures,
             'offices' => $offices,
-            'rests' => $rests,
+//            'rests' => $rests,
             'currentUser' => $this->logManager->currentUser(),
             'goodSuppliers' => $goodSuppliers,
-            'isApl' => $isApl
+            'isApl' => $isApl,
+            'base' => $base,    
         ]);
     }      
 

@@ -12,7 +12,7 @@
         });
 
         $(document).on('click', '.ot-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
+            var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'otModal',
                 url: url,
@@ -21,8 +21,8 @@
         });  
 
         $(document).on('click', '.ot-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
+            var url = $(this).attr('modal-url');
+            var uniqueId = $(this).attr('unique-id');
             if (uniqueId){
                 var row = $('#otgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
                 url = url+'?'+$.param(row);
@@ -44,7 +44,7 @@
         });  
         
         $(document).on('click', '.pt-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
+            var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'ptModal',
                 url: url,
@@ -53,7 +53,7 @@
         });  
         
         $(document).on('click', '.pt-combined-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
+            var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'ptCombinedModal',
                 url: url
@@ -62,8 +62,8 @@
         });  
         
         $(document).on('click', '.pt-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
+            var url = $(this).attr('modal-url');
+            var uniqueId = $(this).attr('unique-id');
             if (uniqueId){
                 var row = $('#ptgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
                 url = url+'?'+$.param(row);
@@ -76,7 +76,7 @@
         });  
         
         $(document).on('click', '.ptu-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
+            var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'ptuModal',
                 url: url,
@@ -85,8 +85,8 @@
         });  
         
         $(document).on('click', '.ptu-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
+            var url = $(this).attr('modal-url');
+            var uniqueId = $(this).attr('unique-id');
             if (uniqueId){
                 var row = $('#ptugoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
                 url = url+'?'+$.param(row);
@@ -99,7 +99,7 @@
         });  
         
         $(document).on('click', '.vtp-index-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
+            var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'vtpIndexModal',
                 url: url,
@@ -108,7 +108,7 @@
         });  
         
         $(document).on('click', '.vtp-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
+            var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'vtpModal',
                 url: url,
@@ -118,7 +118,7 @@
         });  
 
         $(document).on('click', '.vtp-combined-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
+            var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'vtpCombinedModal',
                 url: url,
@@ -127,8 +127,8 @@
         });  
 
         $(document).on('click', '.vtp-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
+            var url = $(this).attr('modal-url');
+            var uniqueId = $(this).attr('unique-id');
             if (uniqueId){
                 var row = $('#vtpgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
                 url = url+'?'+$.param(row);
@@ -141,7 +141,7 @@
         });  
         
         $(document).on('click', '.st-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
+            var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'stModal',
                 url: url,
@@ -150,8 +150,8 @@
         });  
 
         $(document).on('click', '.st-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
+            var url = $(this).attr('modal-url');
+            var uniqueId = $(this).attr('unique-id');
             if (uniqueId){
                 var row = $('#stgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
                 url = url+'?'+$.param(row);
@@ -164,7 +164,7 @@
         });  
         
         $(document).on('click', '.st-combined-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
+            var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'stCombinedModal',
                 url: url
@@ -173,7 +173,7 @@
         });  
 
         $(document).on('click', '.vt-index-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
+            var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'vtIndexModal',
                 url: url,
@@ -182,7 +182,7 @@
         });  
 
         $(document).on('click', '.vt-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
+            var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'vtModal',
                 url: url,
@@ -192,8 +192,8 @@
         });  
 
         $(document).on('click', '.vt-good-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            var uniqueId = $(e.currentTarget).attr('unique-id');
+            var url = $(this).attr('modal-url');
+            var uniqueId = $(this).attr('unique-id');
             if (uniqueId){
                 var row = $('#vtgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
                 url = url+'?'+$.param(row);
