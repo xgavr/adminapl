@@ -197,13 +197,13 @@ class BillRepository  extends EntityRepository{
 
         $rawprice = $queryBuilder->getQuery()->getOneOrNullResult();        
         if ($rawprice){
-            if ($rawprice->getGood()){
-                return $rawprice->getGood();
-            }
             if ($rawprice->getCode()){
                 if ($rawprice->getCode()->getGood()){
                     return $rawprice->getCode()->getGood();
                 }                    
+            }
+            if ($rawprice->getGood()){
+                return $rawprice->getGood();
             }
             $producer = null;
             if ($rawprice->getUnknownProducer()){

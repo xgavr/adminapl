@@ -203,7 +203,7 @@ class VtpController extends AbstractActionController
         $ptuId = (int)$this->params()->fromQuery('ptu', -1);
         $goodId = (int)$this->params()->fromQuery('good', -1);
         
-        $ptu = $vtp = $supplier = $legal = $company = $good = $base = null;
+        $ptu = $vtp = $office = $supplier = $legal = $company = $good = $base = null;
         $notDisabled = true; $ptuList = [];
         
         if ($goodId > 0){
