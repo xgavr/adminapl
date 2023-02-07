@@ -398,7 +398,7 @@ class PtuManager
      */
     public function addPtuGood($ptuId, $data, $rowNo)
     {
-        var_dump($data); exit;
+//        var_dump($data); exit;
         $ptuGood = [
             'ptu_id' => $ptuId,
             'status' => (isset($data['status'])) ? $data['status']:PtuGood::STATUS_ACTIVE,
