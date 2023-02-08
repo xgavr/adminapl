@@ -1136,7 +1136,7 @@ class IndexController extends AbstractActionController
                 if ($producer && $newUnknownProducer){
                     if ($newUnknownProducer->getProducer()){
                         if ($good){
-                            $this->registerManager->changeProducer($good, $newProducer);
+                            $this->registerManager->changeProducer($good, $newUnknownProducer->getProducer());
                         } else {
                             $this->registerManager->uniteProducer($newUnknownProducer->getProducer(), $producer);
                         }    
