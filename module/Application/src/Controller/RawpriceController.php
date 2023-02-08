@@ -286,7 +286,7 @@ class RawpriceController extends AbstractActionController
         }        
         
         $query = $this->entityManager->getRepository(Rawprice::class)
-                        ->findPrice($unknownProducer, ['status' => $status, 'limit' => $limit]);
+                        ->findPrice($unknownProducer, ['status' => $status]);
 
         $total = count($query->getResult(2));
         
