@@ -84,7 +84,7 @@ $form->prepare();
         var data = serializeForm('#producer-union-form');
         $.ajax({
             type: 'POST',
-            url: '/admin/producer-union-form/<?= $producer->getId()?>',
+            url: '/admin/producer-union-form/<?= $producer->getId()?>?good=<?= $good->getId()?>',
             data: $.param(data)
         })
             .done(function (data) {

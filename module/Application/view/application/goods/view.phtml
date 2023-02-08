@@ -18,7 +18,7 @@
             <?= $goods->getProducer()->getName()?>
             <sup>
                 <button class="btn btn-default btn-xs producer-union-modal-show" type="button" 
-                        modal-url="/admin/good-change-producer-form/<?= $goods->getProducer()->getId() ?>?good=<?= $goods->getId()?>" 
+                        modal-url="/admin/producer-union-form/<?= $goods->getProducer()->getId() ?>?good=<?= $goods->getId()?>" 
                         data-toggle='tooltip' data-original-title="Заменить производителя">
                     <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
                 </button>

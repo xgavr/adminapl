@@ -1111,52 +1111,6 @@ class IndexController extends AbstractActionController
     public function producerUnionFormAction()
     {
         $producerId = (int)$this->params()->fromRoute('id', -1);
-        
-        $producer = null;
-        if ($producerId > 0){
-            $producer = $this->entityManager->getRepository(Producer::class)
-                    ->find($producerId);
-        }    
-
-        $form = new ProducerUnionForm($this->entityManager);
-
-        if ($this->getRequest()->isPost()) {
-            
-            $data = $this->params()->fromPost();
-            $form->setData($data);
-
-            if ($form->isValid()) {
-                $newUnknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                        ->findOneBy(['name' => $data['newProducer']]);
-                if ($producer && $newUnknownProducer){
-                    if ($newUnknownProducer->getProducer()){
-                        $this->registerManager->uniteProducer($newUnknownProducer->getProducer(), $producer);
-                    }    
-                }
-                
-                return new JsonModel(
-                   ['ok']
-                );           
-            }
-        } else {
-            if ($producer){
-                $data = [
-                    'producer' => $producer->getName(),
-                ];
-                $form->setData($data);
-            }    
-        }
-        $this->layout()->setTemplate('layout/terminal');
-        // Render the view template.
-        return new ViewModel([
-            'form' => $form,
-            'producer' => $producer,
-        ]);        
-    }
-    
-    public function goodChangeProducerFormAction()
-    {
-        $producerId = (int)$this->params()->fromRoute('id', -1);
         $goodId = (int)$this->params()->fromQuery('good', -1);
         
         $producer = $good = null;
@@ -1182,7 +1136,9 @@ class IndexController extends AbstractActionController
                 if ($producer && $newUnknownProducer){
                     if ($newUnknownProducer->getProducer()){
                         if ($good){
-                            $this->registerManager->changeProducer($good, $newUnknownProducer->getProducer());
+                            $this->registerManager->changeProducer($good, $newProducer);
+                        } else {
+                            $this->registerManager->uniteProducer($newUnknownProducer->getProducer(), $producer);
                         }    
                     }    
                 }
@@ -1207,7 +1163,7 @@ class IndexController extends AbstractActionController
             'good' => $good,
         ]);        
     }
-
+    
     public function transactionsAction()
     {
         return new ViewModel([
