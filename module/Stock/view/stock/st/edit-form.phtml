@@ -159,7 +159,7 @@ if ($st){
                 data-page-list="[5, 10, 20, 50]"
                 data-toolbar="#stgoodtoolbar"
                 data-show-refresh="true"
-                data-show-toggle="true"
+                data-show-toggle="false"
                 data-query-params="stgoodQueryParams"
                 data-response-handler="stgoodResponseHandler"
                 data-unique-id = "rowNo"
@@ -409,6 +409,7 @@ if ($st){
     }    
     
     function pgPriceFormatter(value, row){
+        console.log(row);
         if (value){
             return value;
         } else {
