@@ -674,6 +674,7 @@ class BillManager
         foreach ($delimeters as $delimetr){
             $articleStr = $producer = null;
             $art_pro = explode($delimetr, $iid);
+            var_dump($art_pro); exit;
             foreach ($art_pro as $value){
                 $code = $articleFilter->filter($value);
                 $good = $this->entityManager->getRepository(Goods::class)
