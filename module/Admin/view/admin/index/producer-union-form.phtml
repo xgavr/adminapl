@@ -3,17 +3,23 @@
 $form = $this->form;
 
 $form->get('producer')->setAttributes([
-    'class'=>'form-control producer', 
-    'data-provide' => "typeahead",
-    'autocomplete' => 'off',
-    'readonly' => true,
+        'class'=>'form-control producer', 
+        'data-provide' => "typeahead",
+        'autocomplete' => 'off',
+        'readonly' => true,
     ]);
 
 $form->get('newProducer')->setAttributes([
-    'class'=>'form-control producer', 
-    'data-provide' => "typeahead",
-    'autocomplete' => 'off',
+        'class'=>'form-control producer', 
+        'data-provide' => "typeahead",
+        'autocomplete' => 'off',
     ]);
+
+if ($good){
+    $form->get('newProducer')->setOptions([
+            'label' => 'Заменить на',
+        ]);    
+}
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить']);
 
@@ -24,7 +30,13 @@ $form->prepare();
 <?= $this->form()->openTag($form); ?>
             
 <div class="modal-header">
-    <h5 class="modal-title">Объеденить производителей</h5>
+    <h5 class="modal-title">
+        <?php if ($good): ?>
+            Заменить производителя в <?= $good->getCode()?>
+        <?php else:?>
+            Объеденить производителей
+        <?php endif;?>    
+    </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>

@@ -255,6 +255,15 @@
             });
         });  
 
+        $(document).on('click', '.producer-union-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'producerUnionModal',
+                url: url,
+    //            width: '500px'
+            });
+        });  
+
         $(document).on('change', '#supplierSelect', function (e) {
             refreshTable();
         });        

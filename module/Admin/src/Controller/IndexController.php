@@ -23,6 +23,7 @@ use User\Filter\PhoneFilter;
 use Stock\Entity\Register;
 use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
+use Application\Entity\Goods;
 use Admin\Form\ProducerUnionForm;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 
@@ -1110,11 +1111,16 @@ class IndexController extends AbstractActionController
     public function producerUnionFormAction()
     {
         $producerId = (int)$this->params()->fromRoute('id', -1);
+        $goodId = (int)$this->params()->fromQuery('good', -1);
         
-        $producer = null;
+        $producer = $good = null;
         if ($producerId > 0){
             $producer = $this->entityManager->getRepository(Producer::class)
                     ->find($producerId);
+        }    
+        if ($goodId > 0){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
         }    
         
         $form = new ProducerUnionForm($this->entityManager);
@@ -1129,7 +1135,7 @@ class IndexController extends AbstractActionController
                         ->findOneBy(['name' => $data['newProducer']]);
                 if ($producer && $newUnknownProducer){
                     if ($newUnknownProducer->getProducer()){
-                        $this->registerManager->uniteProducer($newUnknownProducer->getProducer(), $producer);
+                        $this->registerManager->uniteProducer($newUnknownProducer->getProducer(), $producer, $good);
                     }    
                 }
                 
@@ -1150,6 +1156,7 @@ class IndexController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'producer' => $producer,
+            'good' => $good,
         ]);        
     }
     
