@@ -171,7 +171,7 @@ if ($st){
                          <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
                          <th data-field="good.producer.name" data-type="numeric">Производитель</th>
                          <th data-field="good.name" data-type="numeric">Наименование</th>
-                         <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                         <th data-field='price' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
                          <th data-field='quantity' data-align="right">Количество</th>
                          <th data-field='amount' data-align="right">Сумма</th>
                          <th data-field="rowNo" data-formatter="pgEditFormatter" data-width="10"></th>
@@ -409,7 +409,11 @@ if ($st){
     }    
     
     function pgPriceFormatter(value, row){
-        return Math.round(value*100/row.quantity)/100;
+        if (value){
+            return value;
+        } else {
+            return Math.round(row.amount*100/row.quantity)/100;
+        }    
     }        
     
     function stgoodResponseHandler(res) {
