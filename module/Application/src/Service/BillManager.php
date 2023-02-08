@@ -682,17 +682,17 @@ class BillManager
                     return $good;
                 }                
                 $producerName = $producerNameFilter->filter($value);
-                var_dump($producerName); exit;
                 if ($producerName){
                     $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
                             ->findOneByName($producerName);
                     if ($unknownProducer){
                         if ($unknownProducer->getProducer()){
                             $producer = $unknownProducer->getProducer();
+                            continue;
                         }    
                     }
                 }
-                if (!$producer && !$articleStr){
+                if (!$articleStr){
                     $articleStr = $value;
                 }
             }
