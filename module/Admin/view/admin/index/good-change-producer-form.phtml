@@ -1,0 +1,131 @@
+<?php
+
+$form = $this->form;
+
+$form->get('producer')->setAttributes([
+        'class'=>'form-control producer', 
+        'data-provide' => "typeahead",
+        'autocomplete' => 'off',
+        'readonly' => true,
+    ]);
+
+$form->get('newProducer')->setAttributes([
+        'class'=>'form-control producer', 
+        'data-provide' => "typeahead",
+        'autocomplete' => 'off',
+    ]);
+
+if ($good){
+    $form->get('newProducer')->setOptions([
+            'label' => 'Заменить на',
+        ]);    
+}
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить']);
+
+$form->prepare();
+
+?>
+            
+<?= $this->form()->openTag($form); ?>
+            
+<div class="modal-header">
+    <h5 class="modal-title">
+        <?php if ($good): ?>
+            Заменить производителя в <?= $good->getCode()?>
+        <?php else:?>
+            Объеденить производителей
+        <?php endif;?>    
+    </h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('producer')); ?>
+                <?= $this->formElement($form->get('producer')); ?>
+                <?= $this->formElementErrors($form->get('producer')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('newProducer')); ?>
+                <?= $this->formElement($form->get('newProducer')); ?>
+                <?= $this->formElementErrors($form->get('newProducer')); ?>                  
+            </div>
+        </div>    
+    </div>
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>
+                
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="producer-union-submit">Сохранить</button>
+</div>
+            
+<?= $this->form()->closeTag(); ?>
+            
+<script  type="text/javascript">
+    /**
+    * очистить поле
+     */
+    function submitForm(){
+        $('#producerUnionModal').modal('hide');
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: false
+        });
+        var data = serializeForm('#producer-union-form');
+        $.ajax({
+            type: 'POST',
+            url: '/admin/producer-union-form/<?= $producer->getId()?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    dialog.modal('hide');
+                }    
+            })
+            .fail(function () {
+                dialog.modal('hide');
+                bootbox.alert("Произошла ошибка при выполнении операции.");
+            });    
+    };
+
+    $( document ).ready(function() {
+
+        $('.producer').typeahead({
+            source: function(query, process) {
+                return $.get("/goods/autocomplete-producer?q="+query, function (data) {
+                    return process(data);
+                });
+            },
+            changeInputOnSelect: true
+        });
+
+        var forms = $('#producer-union-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('producer-union-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });    
+    
+</script>
