@@ -130,7 +130,7 @@ $docName = 'Новый';
                     };
 
                     <?php if($rowNo): ?>
-                        $('#stgoodtable').bootstrapTable('updateByUniqueId', {id: <?= $rowNo ?>, row: row});
+                        $('#stgoodtable').bootstrapTable('updateByUniqueId', {id: <?= $rowNo ?>, row: row, replace: false});
                     <?php else:?>
                         var newRowNo = getNewTableUniqueId('stgoodtable', 'rowNo');
                         row.rowNo = newRowNo;

@@ -409,12 +409,7 @@ if ($st){
     }    
     
     function pgPriceFormatter(value, row){
-        console.log(row);
-        if (value){
-            return value;
-        } else {
-            return Math.round(row.amount*100/row.quantity)/100;
-        }    
+        return Math.round(row.amount*100/row.quantity)/100;
     }        
     
     function stgoodResponseHandler(res) {
