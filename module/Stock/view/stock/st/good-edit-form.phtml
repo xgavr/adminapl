@@ -116,6 +116,7 @@ $docName = 'Новый';
 //                console.log(answer);
                 if (answer.result == 'ok'){
                     var data = serializeForm('#st-good-form');
+                    data.amount = $('#amount').val();
                     var good = {
                         id: answer.good.id,
                         code: answer.good.code,
