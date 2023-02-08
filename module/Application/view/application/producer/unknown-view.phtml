@@ -266,12 +266,12 @@ $this->pageBreadcrumbs()->setItems([
     
     function priceQueryParams(params) {
         params.status = $('#priceStatusSelect').val();
-        return tabQueryParams('#price', params);
+        return tabQueryParams('#priceTable', params);
     }
     
     function intersectQueryParams(params) {
         params.intersect = $('#intersectSelect').val();
-        return tabQueryParams('#intersect', params);
+        return tabQueryParams('#intersectTable', params);
     }
     
     function responseHandler(res) {
@@ -287,11 +287,16 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function codeFormatter(value, row) {
-        if (row.codeId){
-            return '<a href="/producer/article-view/'+row.codeId+'" target="_blank">'+value+'</a>';
+        if (row.goodId){
+            return '<a href="/goods/view/'+row.goodId+'" target="_blank">'+value+'</a>';
         } else {
             return row.article;
         }    
+//        if (row.codeId){
+//            return '<a href="/producer/article-view/'+row.codeId+'" target="_blank">'+value+'</a>';
+//        } else {
+//            return row.article;
+//        }    
     }    
     
     function supplierFormatter(value, row) {

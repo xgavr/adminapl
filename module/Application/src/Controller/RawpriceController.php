@@ -265,6 +265,10 @@ class RawpriceController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
 //        $search = $this->params()->fromQuery('search');
         $status = $this->params()->fromQuery('status', Rawprice::STATUS_PARSED);
+//        $limit = $this->params()->fromQuery('limit', max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount() * UnknownProducer::CHECK_COUNT));
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order', 'DESC');
         
         
         // Validate input parameter
@@ -281,7 +285,6 @@ class RawpriceController extends AbstractActionController
             return;                        
         }        
         
-        $limit = $this->params()->fromQuery('limit', max(UnknownProducer::CHECK_MAX_ROW, $unknownProducer->getSupplierCount() * UnknownProducer::CHECK_COUNT));
         $query = $this->entityManager->getRepository(Rawprice::class)
                         ->findPrice($unknownProducer, ['status' => $status, 'limit' => $limit]);
 
