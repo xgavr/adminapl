@@ -580,29 +580,23 @@ class RegisterManager
      * Объеденить производителей
      * @param Producer $producerDest Новый
      * @param Producer $producerSource Старый
-     * @param Goods $good
      */
-    public function uniteProducer($producerDest, $producerSource, $good = null)
+    public function uniteProducer($producerDest, $producerSource)
     {
         ini_set('memory_limit', '2048M');
         set_time_limit(1800);
         $startTime = time();
         
-        if (!$good){
-            $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
-                    ->findBy(['producer' => $producerSource->getId()]);
-            foreach ($unknownProducers as $unknownProducer){
-                $unknownProducer->setProducer($producerDest);
-                $this->entityManager->persist($unknownProducer);
-                $this->entityManager->flush();            
-            }
-            
-            $oldGoods = $this->entityManager->getRepository(Goods::class)
-                    ->findBy(['producer' => $producerSource->getId()]);
-        } else {
-            $oldGoods = $this->entityManager->getRepository(Goods::class)
-                    ->findBy(['id' => $good->getId()]);            
-        }    
+        $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
+                ->findBy(['producer' => $producerSource->getId()]);
+        foreach ($unknownProducers as $unknownProducer){
+            $unknownProducer->setProducer($producerDest);
+            $this->entityManager->persist($unknownProducer);
+            $this->entityManager->flush();            
+        }
+
+        $oldGoods = $this->entityManager->getRepository(Goods::class)
+                ->findBy(['producer' => $producerSource->getId()]);
                 
         foreach ($oldGoods as $oldGood){
             $this->changeProducer($oldGood, $producerDest);

@@ -1135,7 +1135,11 @@ class IndexController extends AbstractActionController
                         ->findOneBy(['name' => $data['newProducer']]);
                 if ($producer && $newUnknownProducer){
                     if ($newUnknownProducer->getProducer()){
-                        $this->registerManager->uniteProducer($newUnknownProducer->getProducer(), $producer, $good);
+                        if ($good){
+                            $this->registerManager->changeProducer($good, $newUnknownProducer->getProducer());
+                        } else {
+                            $this->registerManager->uniteProducer($newUnknownProducer->getProducer(), $producer);
+                        }    
                     }    
                 }
                 
