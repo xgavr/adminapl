@@ -167,13 +167,14 @@ class MovementRepository extends EntityRepository{
                 ->join('m.good', 'g')
                 ->join('m.ptu', 'p', 'WITH', 'm.docType = 1')
                 ->join('p.supplier', 's')
-                ->join('m.office', 'o')
+                ->join('p.office', 'o')
                 ->andWhere('m.baseType = ?2')
                 ->andWhere('m.status != ?4')
                 ->setParameter('2', Movement::DOC_PTU)
                 ->setParameter('4', Movement::STATUS_RETIRED)
-                ->groupBy('m.baseKey')
-                ->addGroupBy('m.office')
+                ->groupBy('p.id')
+                ->addGroupBy('p.office')
+                ->addGroupBy('g.id')
                 ->having('rest > 0')
                 ;
         

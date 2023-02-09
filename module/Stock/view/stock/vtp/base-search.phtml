@@ -41,7 +41,7 @@ use Stock\Entity\Vtp;
             >
             <thead>
                 <tr>
-                     <th data-field="code" data-width="50">Артикул</th>
+                     <th data-field="code" data-width="50" data-formatter="codeFormatter">Артикул</th>
                      <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="50">Дата поступления</th>
                      <th data-field="docNo" data-sortable="false">Номер</th>
                      <th data-field='supplierName' data-sortable="false">Поставщик</th>
@@ -103,7 +103,17 @@ use Stock\Entity\Vtp;
         return params;
     }
 
-    function baseActiveFormatter(value, row){
+    function codeFormatter(value, row){
+        var url = '/goods/view/'+row.goodId;
+        btn = '<nobr><a';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-link btn-xs" target="_blank">';
+        btn += '<span class="glyphicon glyphicon-link"></span>';
+        btn += '</a>'+value+'</nobr>';
+        return btn;
+    }    
+
+function baseActiveFormatter(value, row){
         var url = '/vtp/edit-form?good='+value;
         btn = '<button';
         btn += ' type="button"';
