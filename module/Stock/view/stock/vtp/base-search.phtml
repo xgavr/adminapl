@@ -34,7 +34,7 @@ use Stock\Entity\Vtp;
             data-show-refresh="true"
             data-show-toggle="false"
             data-query-params="baseptuQueryParams"
-            data-sort-name="dateOper"
+            data-sort-name="docDate"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
@@ -43,9 +43,10 @@ use Stock\Entity\Vtp;
                 <tr>
                      <th data-field="code" data-width="50" data-formatter="codeFormatter">Артикул</th>
                      <th data-field="producerName" >Производитель</th>
-                     <th data-field="dateOper" data-sortable="true" data-formatter="dateFormatter" data-width="50">Дата поступления</th>
+                     <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="50">Дата поступления</th>
                      <th data-field="docNo" data-sortable="false">Номер</th>
                      <th data-field='supplierName' data-sortable="false">Поставщик</th>
+                     <th data-field='ptuOfficeName' data-sortable="false">Офис ПТУ</th>
                      <th data-field='officeName' data-sortable="false">Офис</th>
                      <th data-field='rest' data-sortable="false" data-align="right">Остаток</th>
                      <th data-field="goodId" data-formatter="baseActiveFormatter" data-width="5"></th>

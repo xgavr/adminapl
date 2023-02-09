@@ -158,24 +158,22 @@ class MovementRepository extends EntityRepository{
     {
         $entityManager = $this->getEntityManager();
         $qb = $entityManager->createQueryBuilder();
-//        $qb->select('p.id, p.aplId, p.docDate, p.docNo, '
-//                . 'g.id as goodId, g.code as code, pr.name as producerName, '
-//                . 's.id as supplierId, s.name as supplierName, '
-//                . 'o.id as officeId, o.name as officeName, '
-//                . 'g.code, sum(m.quantity) as rest')
         $qb->select('identity(m.good) as goodId')
                 ->addSelect('m.baseId')
                 ->addSelect('p.aplId')
                 ->addSelect('p.docNo')
+                ->addSelect('p.docDate')
+                ->addSelect('s.name as supplierName')
+                ->addSelect('po.name as ptuOfficeName')
                 ->addSelect('identity(m.office) as officeId')
                 ->addSelect('o.name as officeName')
                 ->addSelect('g.code as code')
                 ->addSelect('pr.name as producerName')
                 ->addSelect('sum(m.quantity) as rest')
-//                ->addSelect('p.id')
                 ->from(Movement::class, 'm')
                 ->join('m.ptu', 'p')
-//                ->join('p.supplier', 's')
+                ->join('p.office', 'po')
+                ->join('p.supplier', 's')
                 ->join('m.office', 'o')
                 ->join('m.good', 'g')
                 ->join('g.producer', 'pr')
@@ -195,7 +193,7 @@ class MovementRepository extends EntityRepository{
             $orX->add($qb->expr()->eq('m.good', 0));                        
 
             if (isset($params['sort'])){
-                $qb->addOrderBy('m.'.$params['sort'], $params['order']);
+                $qb->addOrderBy('p.'.$params['sort'], $params['order']);
             }        
             if (!empty($params['code'])){
                 $codeFilter = new ArticleCode();
