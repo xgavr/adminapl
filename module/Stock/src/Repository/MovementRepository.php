@@ -24,6 +24,7 @@ use Stock\Entity\Pt;
 use Stock\Entity\Vt;
 use Stock\Entity\St;
 use Application\Entity\Goods;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of MovementRepository
@@ -184,10 +185,9 @@ class MovementRepository extends EntityRepository{
             if (isset($params['sort'])){
                 $qb->addOrderBy('p.'.$params['sort'], $params['order']);
             }        
-            if (!empty($params['good'])){
-                if (is_numeric($params['good'])){
-                    $orX->add($qb->expr()->eq('m.good', $params['good']));                        
-                }
+            if (!empty($params['code'])){
+                $codeFilter = new ArticleCode();
+                $orX->add($qb->expr()->eq('g.code', $codeFilter->filter($params['code'])));                        
             }
             if (!empty($params['orderId'])){
                 if (is_numeric($params['orderId'])){
@@ -202,7 +202,7 @@ class MovementRepository extends EntityRepository{
                 $qb->andWhere($orX);
             }    
         }
-        var_dump($qb->getQuery()->getSQL());        
+//        var_dump($qb->getQuery()->getSQL());        
         return $qb->getQuery();
     }
 

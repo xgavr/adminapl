@@ -215,13 +215,8 @@ class VtpController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $sortOrder = $this->params()->fromQuery('order');
         
-        $goodId = 0;
+        $orderId = null;
         if ($q){
-            $good = $this->entityManager->getRepository(Goods::class)
-                    ->findBy(['code' => $good]);
-            if ($good){
-                $goodId = $good->getId();
-            }    
             $order = $this->entityManager->getRepository(Order::class)
                     ->findOneBy(['aplId' => $oq]);
             if ($order){
@@ -230,7 +225,7 @@ class VtpController extends AbstractActionController
         }
         
         $query = $this->entityManager->getRepository(Movement::class)
-                        ->findPtuBases(['order' => $sortOrder, 'sort' => $sort, 'good' => $goodId, 'orderId' => $orderId]);
+                        ->findPtuBases(['order' => $sortOrder, 'sort' => $sort, 'code' => $q, 'orderId' => $orderId]);
         
         $total = count($query->getResult(2));
         
