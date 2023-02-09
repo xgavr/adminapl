@@ -121,42 +121,6 @@ class Movement {
     protected $baseAmount;
     
     /**
-     * Returns possible doc as array.
-     * @return array
-     */
-    public static function getDocList() 
-    {
-        return [
-            self::DOC_ORDER => 'Заказы',
-            self::DOC_VTP => 'Возвраты поставщикам',
-            self::DOC_ST => 'Списания',
-            self::DOC_VT => 'Возвраты покупателей',
-            self::DOC_OT => 'Оприходования',
-            self::DOC_PT => 'Перемещения',
-            self::DOC_PTU => 'Поступления',
-            self::DOC_REVISE => 'Корректировки',
-        ];
-    }        
-
-    /**
-     * Returns possible doc as array.
-     * @return array
-     */
-    public static function getKeyDocList() 
-    {
-        return [
-            self::DOC_ORDER => 'ord',
-            self::DOC_VTP => 'vtp',
-            self::DOC_ST => 'st',
-            self::DOC_VT => 'vt',
-            self::DOC_OT => 'ot',
-            self::DOC_PT => 'pt',
-            self::DOC_PTU => 'ptu',
-            self::DOC_REVISE => 'rvs',
-        ];
-    }        
-
-    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="movements") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
@@ -355,6 +319,42 @@ class Movement {
         return $this->quantity;
     }
         
+    /**
+     * Returns possible doc as array.
+     * @return array
+     */
+    public static function getDocList() 
+    {
+        return [
+            self::DOC_ORDER => 'Заказы',
+            self::DOC_VTP => 'Возвраты поставщикам',
+            self::DOC_ST => 'Списания',
+            self::DOC_VT => 'Возвраты покупателей',
+            self::DOC_OT => 'Оприходования',
+            self::DOC_PT => 'Перемещения',
+            self::DOC_PTU => 'Поступления',
+            self::DOC_REVISE => 'Корректировки',
+        ];
+    }        
+
+    /**
+     * Returns possible doc as array.
+     * @return array
+     */
+    public static function getKeyDocList() 
+    {
+        return [
+            self::DOC_ORDER => 'ord',
+            self::DOC_VTP => 'vtp',
+            self::DOC_ST => 'st',
+            self::DOC_VT => 'vt',
+            self::DOC_OT => 'ot',
+            self::DOC_PT => 'pt',
+            self::DOC_PTU => 'ptu',
+            self::DOC_REVISE => 'rvs',
+        ];
+    }        
+    
     /**
      * Returns status.
      * @return int     

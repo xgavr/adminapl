@@ -23,6 +23,7 @@ use Stock\Entity\Ptu;
 use Stock\Entity\Pt;
 use Stock\Entity\Vt;
 use Stock\Entity\St;
+use Application\Entity\Goods;
 
 /**
  * Description of MovementRepository
@@ -144,6 +145,65 @@ class MovementRepository extends EntityRepository{
                 ;
                 
         return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * Найти партии с остатком
+     * 
+     * @param array $params
+     * @return array
+     */
+    public function findPtuBases($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('p.id, p.aplId, p.docDate, p.docNo, '
+                . 'g.id as goodId, g.code as code, '
+                . 's.id as supplierId, s.name as supplierName, '
+                . 'o.id as officeId, o.name as officeName, '
+                . 'g.code, sum(m.quantity) as rest')
+                ->from(Movement::class, 'm')
+                ->join('m.good', 'g')
+                ->join('m.ptu', 'p', 'WITH', 'm.docType = 1')
+                ->join('p.supplier', 's')
+                ->join('m.office', 'o')
+                ->andWhere('m.baseType = ?2')
+                ->andWhere('m.status != ?4')
+                ->setParameter('2', Movement::DOC_PTU)
+                ->setParameter('4', Movement::STATUS_RETIRED)
+                ->groupBy('m.baseKey')
+                ->addGroupBy('m.office')
+                ->having('rest > 0')
+                ;
+        
+        if (is_array($params)){
+
+            $orX = $qb->expr()->orX();
+            $orX->add($qb->expr()->eq('m.good', 0));                        
+
+            if (isset($params['sort'])){
+                $qb->addOrderBy('p.'.$params['sort'], $params['order']);
+            }        
+            if (!empty($params['good'])){
+                if (is_numeric($params['good'])){
+                    $orX->add($qb->expr()->eq('m.good', $params['good']));                        
+                }
+            }
+            if (!empty($params['orderId'])){
+                if (is_numeric($params['orderId'])){
+                    $bids = $entityManager->getRepository(Bid::class)
+                            ->findBy(['order' => $params['orderId']]);
+                    foreach ($bids as $bid){
+                        $orX->add($qb->expr()->eq('m.good', $bid->getGood()->getId()));                        
+                    }                    
+                }
+            }
+            if ($orX->count()){
+                $qb->andWhere($orX);
+            }    
+        }
+//        var_dump($qb->getQuery()->getSQL());        
+        return $qb->getQuery();
     }
 
     /**

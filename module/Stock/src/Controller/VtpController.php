@@ -19,6 +19,7 @@ use Stock\Form\VtpGoodForm;
 use Company\Entity\Office;
 use Application\Entity\Supplier;
 use Stock\Entity\Movement;
+use Application\Entity\Order;
 
 class VtpController extends AbstractActionController
 {
@@ -197,6 +198,58 @@ class VtpController extends AbstractActionController
         ]);                
     }
     
+    public function baseSearchAction()
+    {
+        
+        $this->layout()->setTemplate('layout/terminal');
+        return new ViewModel([
+        ]);                
+    }
+    
+    public function baseContentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $sortOrder = $this->params()->fromQuery('order');
+        
+        $goodId = 0;
+        if ($q){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->findBy(['code' => $good]);
+            if ($good){
+                $goodId = $good->getId();
+            }    
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->findOneBy(['aplId' => $oq]);
+            if ($order){
+                $orderId = $order->getId();
+            }    
+        }
+        
+        $query = $this->entityManager->getRepository(Movement::class)
+                        ->findPtuBases(['order' => $sortOrder, 'sort' => $sort, 'good' => $goodId, 'orderId' => $orderId]);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+//            'allowDate' => $this->vtpManager->getAllowDate(),
+        ]);          
+    }            
+    
     public function editFormAction()
     {
         $vtpId = (int)$this->params()->fromRoute('id', -1);
@@ -214,6 +267,9 @@ class VtpController extends AbstractActionController
                         ->availableBasePtu($good->getId());
                 if ($base){
                     $ptuId = $base['baseId'];
+                    $vtp = $this->entityManager->getRepository(Vtp::class)
+                            ->findOneBy(['ptu' => $ptuId, 'status' => Vtp::STATUS_ACTIVE, 'statusDoc' => Vtp::STATUS_DOC_NEW]);
+                    $vtpId = $vtp->getId();        
                 }
             }
         }    

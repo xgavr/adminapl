@@ -1,0 +1,119 @@
+<?php
+use Stock\Entity\Vtp;
+
+?>
+
+<div class="modal-header">
+    <h5 class="modal-title">Выбор ПТУ для возврата</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="baseptubar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <div class="btn-group">
+                        <input name="search" style="width: 220px" class="form-control enter-search" type="text" placeholder="Артикул или номер заказа">
+                        <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                    </div>
+                    <button type="submit" class="btn btn-default ok-button" title="Поиск">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>    
+            </div>
+        </div>
+        <table id="baseptutable" 
+            data-toggle="baseptutable" 
+            data-url="/vtp/base-content/"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#baseptubar"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-query-params="baseptuQueryParams"
+            data-sort-name="docDate"
+            data-sort-order="desc"            
+            data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            >
+            <thead>
+                <tr>
+                     <th data-field="code" data-width="50">Артикул</th>
+                     <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="50">Дата поступления</th>
+                     <th data-field="docNo" data-sortable="false">Номер</th>
+                     <th data-field='supplierName' data-sortable="false">Поставщик</th>
+                     <th data-field='officeName' data-sortable="false">Офис</th>
+                     <th data-field='rest' data-sortable="false">Остаток</th>
+                     <th data-field="goodId" data-formatter="baseActiveFormatter" data-width="5"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    var $baseptutable = $('#baseptutable');
+    
+    function baseRefreshTable(){
+        $baseptutable.bootstrapTable('refresh');
+    }
+
+    $( document ).ready(function() {        
+        $('.ok-button').click(function () {
+            baseRefreshTable();
+        });
+        
+        $('.enter-search').on('keypress', function(e){
+            if (e.keyCode === 13) {
+                baseRefreshTable();
+            }
+        });   
+        
+        $(".inputclear").click(function(){
+            $(".enter-search").val('');
+            baseRefreshTable();
+        });
+
+        $baseptutable.bootstrapTable({
+            onLoadSuccess: function(res){
+                
+            }            
+        });         
+    });
+    
+    function baseptuQueryParams(params) {
+        $('#baseptubar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#baseptutable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#baseptutable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+
+    function baseActiveFormatter(value, row){
+        var url = '/vtp/edit-form?good='+value;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs vtp-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        return btn;
+    }    
+    
+</script>
