@@ -328,14 +328,19 @@ class VtpManager
      * Update vtp doc status.
      * @param Vtp $vtp
      * @param integer $statusDoc
+     * @param date $docDate
      * @return integer
      */
-    public function updateVtpDocStatus($vtp, $statusDoc)            
+    public function updateVtpDocStatus($vtp, $statusDoc, $docDate = null)            
     {
 
         if ($vtp->getDocDate() > $this->allowDate){
             $vtp->setStatusDoc($statusDoc);
             $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
+            
+            if ($statusDoc == Vtp::STATUS_DOC_NOT_RECD && $docDate && $docDate > $this->allowDate){
+                $vtp->setDocDate($docDate);
+            }
 
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);

@@ -570,6 +570,8 @@ class VtpController extends AbstractActionController
     {
         $vtpId = $this->params()->fromRoute('id', -1);
         $statusDoc = $this->params()->fromQuery('status', Vtp::STATUS_DOC_NEW);
+        $docDate = $this->params()->fromQuery('docDate');
+        
         $vtp = $this->entityManager->getRepository(Vtp::class)
                 ->find($vtpId);        
 
@@ -578,7 +580,7 @@ class VtpController extends AbstractActionController
             return;                        
         }        
         
-        $this->vtpManager->updateVtpDocStatus($vtp, $statusDoc);
+        $this->vtpManager->updateVtpDocStatus($vtp, $statusDoc, $docDate);
         
         $query = $this->entityManager->getRepository(Vtp::class)
                 ->findAllVtp(['vtpId' => $vtp->getId()]);
