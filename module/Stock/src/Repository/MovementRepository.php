@@ -158,24 +158,27 @@ class MovementRepository extends EntityRepository{
     {
         $entityManager = $this->getEntityManager();
         $qb = $entityManager->createQueryBuilder();
-        $qb->select('p.id, p.aplId, p.docDate, p.docNo, '
-                . 'g.id as goodId, g.code as code, pr.name as producerName, '
-                . 's.id as supplierId, s.name as supplierName, '
-                . 'o.id as officeId, o.name as officeName, '
-                . 'g.code, sum(m.quantity) as rest')
+//        $qb->select('p.id, p.aplId, p.docDate, p.docNo, '
+//                . 'g.id as goodId, g.code as code, pr.name as producerName, '
+//                . 's.id as supplierId, s.name as supplierName, '
+//                . 'o.id as officeId, o.name as officeName, '
+//                . 'g.code, sum(m.quantity) as rest')
+        $qb->select('identity(m.good) as goodId')
+                ->addSelect('m.baseId')
+                ->addSelect('sum(m.quantity) as rest')
                 ->from(Movement::class, 'm')
-                ->join('m.ptu', 'p', 'WITH', 'm.docType = 1')
-                ->join('p.supplier', 's')
-                ->join('p.office', 'o')
-                ->join('m.good', 'g')
-                ->join('g.producer', 'pr')
+//                ->join('m.ptu', 'p', 'WITH', 'm.docType = 1')
+//                ->join('p.supplier', 's')
+//                ->join('p.office', 'o')
+//                ->join('m.good', 'g')
+//                ->join('g.producer', 'pr')
                 ->andWhere('m.baseType = ?2')
                 ->andWhere('m.status != ?4')
                 ->setParameter('2', Movement::DOC_PTU)
                 ->setParameter('4', Movement::STATUS_RETIRED)
-                ->groupBy('p.id')
-                ->addGroupBy('p.office')
-                ->addGroupBy('g.id')
+                ->groupBy('m.good')
+                ->addGroupBy('m.baseId')
+//                ->addGroupBy('g.id')
                 ->having('rest > 0')
                 ;
         
@@ -185,11 +188,11 @@ class MovementRepository extends EntityRepository{
             $orX->add($qb->expr()->eq('m.good', 0));                        
 
             if (isset($params['sort'])){
-                $qb->addOrderBy('p.'.$params['sort'], $params['order']);
+                $qb->addOrderBy('m.'.$params['sort'], $params['order']);
             }        
             if (!empty($params['code'])){
                 $codeFilter = new ArticleCode();
-                $orX->add($qb->expr()->eq('g.code', "'{$codeFilter->filter($params['code'])}'"));                        
+//                $orX->add($qb->expr()->eq('g.code', "'{$codeFilter->filter($params['code'])}'"));                        
             }
             if (!empty($params['orderId'])){
                 if (is_numeric($params['orderId'])){
@@ -204,7 +207,7 @@ class MovementRepository extends EntityRepository{
                 $qb->andWhere($orX);
             }    
         }
-//        var_dump($qb->getQuery()->getSQL());        
+        var_dump($qb->getQuery()->getSQL());        
         return $qb->getQuery();
     }
 
