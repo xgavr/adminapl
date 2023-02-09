@@ -164,6 +164,7 @@ class MovementRepository extends EntityRepository{
                 ->addSelect('p.docNo')
                 ->addSelect('p.docDate')
                 ->addSelect('s.name as supplierName')
+                ->addSelect('po.id as ptuOfficeId')
                 ->addSelect('po.name as ptuOfficeName')
                 ->addSelect('identity(m.office) as officeId')
                 ->addSelect('o.name as officeName')

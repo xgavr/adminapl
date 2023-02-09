@@ -117,13 +117,24 @@ use Stock\Entity\Vtp;
 
 function baseActiveFormatter(value, row){
         var url = '/vtp/edit-form?good='+value;
-        btn = '<button';
-        btn += ' type="button"';
+        btn = '<nobr><button';
+        btn += ' type="button" title="Оформить возврат"';
         btn += ' class="btn btn-default btn-xs vtp-modal-show"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>';
         btn += '</button>';
+
+        var disabled = (row.poOfficeId === row.officeId) ? 'disabled':'';
+        
+        var url = '/pt/combined-form/'+value;
+        btn += ' <button';
+        btn += ' type="button" title="Переместить" '+disabled;
+        btn += ' class="btn btn-default btn-xs pt-combined-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>';
+        btn += '</button></nobr>';
 
         return btn;
     }    
