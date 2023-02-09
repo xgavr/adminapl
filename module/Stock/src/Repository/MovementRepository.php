@@ -202,7 +202,7 @@ class MovementRepository extends EntityRepository{
                 $qb->andWhere($orX);
             }    
         }
-//        var_dump($qb->getQuery()->getSQL());        
+        var_dump($qb->getQuery()->getSQL());        
         return $qb->getQuery();
     }
 
