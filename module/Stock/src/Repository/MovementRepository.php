@@ -159,15 +159,16 @@ class MovementRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $qb = $entityManager->createQueryBuilder();
         $qb->select('p.id, p.aplId, p.docDate, p.docNo, '
-                . 'g.id as goodId, g.code as code, '
+                . 'g.id as goodId, g.code as code, pr.name as producerName, '
                 . 's.id as supplierId, s.name as supplierName, '
                 . 'o.id as officeId, o.name as officeName, '
                 . 'g.code, sum(m.quantity) as rest')
                 ->from(Movement::class, 'm')
-                ->join('m.good', 'g')
                 ->join('m.ptu', 'p', 'WITH', 'm.docType = 1')
                 ->join('p.supplier', 's')
                 ->join('p.office', 'o')
+                ->join('m.good', 'g')
+                ->join('g.producer', 'pr')
                 ->andWhere('m.baseType = ?2')
                 ->andWhere('m.status != ?4')
                 ->setParameter('2', Movement::DOC_PTU)
