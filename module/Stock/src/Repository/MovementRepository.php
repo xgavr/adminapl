@@ -165,6 +165,7 @@ class MovementRepository extends EntityRepository{
 //                . 'g.code, sum(m.quantity) as rest')
         $qb->select('identity(m.good) as goodId')
                 ->addSelect('m.baseId')
+                ->addSelect('identity(m.office) as officeId')
                 ->addSelect('sum(m.quantity) as rest')
 //                ->addSelect('p.id')
 //                ->addSelect('p.aplId')
@@ -181,7 +182,7 @@ class MovementRepository extends EntityRepository{
                 ->setParameter('4', Movement::STATUS_RETIRED)
                 ->groupBy('m.good')
                 ->addGroupBy('m.baseId')
-//                ->addGroupBy('g.id')
+                ->addGroupBy('m.office')
                 ->having('rest > 0')
                 ;
         
@@ -210,7 +211,7 @@ class MovementRepository extends EntityRepository{
                 $qb->andWhere($orX);
             }    
         }
-        var_dump($qb->getQuery()->getSQL());        
+//        var_dump($qb->getQuery()->getSQL());        
         return $qb->getQuery();
     }
 
