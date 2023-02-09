@@ -125,7 +125,7 @@ function baseActiveFormatter(value, row){
         btn += '<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>';
         btn += '</button>';
 
-        var disabled = (row.poOfficeId === row.officeId) ? 'disabled':'';
+        var disabled = (row.poOfficeId == row.officeId) ? 'disabled':'';
         
         var url = '/pt/combined-form/'+value;
         btn += ' <button';
