@@ -39,72 +39,72 @@ $docName = 'Новый';
 
 ?>
             
-            <?= $this->form()->openTag($form); ?>
+<?= $this->form()->openTag($form); ?>
             
-            <div class="modal-header">
-                <h5 class="modal-title" id="ptGoodModalLabel">Строка оприходования товаров</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+<div class="modal-header">
+    <h5 class="modal-title" id="ptGoodModalLabel">Строка оприходования товаров</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
             
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-xs-12">                        
-                        <div class="form-group">
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
 <!--                            <?= $this->formLabel($form->get('goodInputName')); ?>
-                            <em>(артикул;производитель;наименование)</em>-->
-                            <?= $this->formElement($form->get('goodInputName')); ?>
-                            <?= $this->formElementErrors($form->get('goodInputName')); ?>                  
-                        </div>
-                    </div>    
-                </div>
-                <div class="row">
-                    <div class="col-xs-8">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('code')); ?>
-                            <div class="btn-group">
-                                <?= $this->formElement($form->get('code')); ?>
-                                <span class="glyphicon glyphicon-remove-circle inputclear"></span>
-                            </div>
-                            <?= $this->formElementErrors($form->get('code')); ?>                  
-                        </div>
-                    </div>    
-                </div>
-                <div class="row">
-                    <div class="col-xs-3">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('quantity')); ?>
-                            <?= $this->formElement($form->get('quantity')); ?>
-                            <?= $this->formElementErrors($form->get('quantity')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-3">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('amount')); ?>
-                            <?= $this->formElement($form->get('amount')); ?>
-                            <?= $this->formElementErrors($form->get('amount')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-3">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('price')); ?>
-                            <?= $this->formElement($form->get('price')); ?>
-                            <?= $this->formElementErrors($form->get('price')); ?>                  
-                        </div>
-                    </div>
-                </div>    
-
-                <?= $this->formElement($form->get('good')); ?>
-                <?= $this->formElement($form->get('csrf')); ?>
-            </div>    
-                
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary" id="pt-good-submit">Сохранить</button>
+                <em>(артикул;производитель;наименование)</em>-->
+                <?= $this->formElement($form->get('goodInputName')); ?>
+                <?= $this->formElementErrors($form->get('goodInputName')); ?>                  
             </div>
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col-xs-8">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('code')); ?>
+                <div class="btn-group">
+                    <?= $this->formElement($form->get('code')); ?>
+                    <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                </div>
+                <?= $this->formElementErrors($form->get('code')); ?>                  
+            </div>
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('quantity')); ?>
+                <?= $this->formElement($form->get('quantity')); ?>
+                <?= $this->formElementErrors($form->get('quantity')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('amount')); ?>
+                <?= $this->formElement($form->get('amount')); ?>
+                <?= $this->formElementErrors($form->get('amount')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('price')); ?>
+                <?= $this->formElement($form->get('price')); ?>
+                <?= $this->formElementErrors($form->get('price')); ?>                  
+            </div>
+        </div>
+    </div>    
+
+    <?= $this->formElement($form->get('good')); ?>
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>    
+                
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="pt-good-submit">Сохранить</button>
+</div>
             
-            <?= $this->form()->closeTag(); ?>
+<?= $this->form()->closeTag(); ?>
             
 <script  type="text/javascript">
     $('#pt-good-submit').on('click', function() {
@@ -117,6 +117,7 @@ $docName = 'Новый';
 //                console.log(answer);
                 if (answer.result == 'ok'){
                     var data = serializeForm('#pt-good-form');
+                    data.amount = $('#amount').val();
                     var good = {
                         id: answer.good.id,
                         code: answer.good.code,
@@ -126,8 +127,8 @@ $docName = 'Новый';
                     var row = {
                         good: good,
                         amount: data.amount,
-                        quantity: data.quantity,
-                        price: data.price
+                        quantity: data.quantity
+                        //price: data.price
                     };
 
                     <?php if($rowNo): ?>

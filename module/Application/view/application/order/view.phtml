@@ -231,8 +231,9 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
         $(document).on('click', '.order-view-close', function (e) {
             $('#ordergoodtable').bootstrapTable('destroy');
             $('#vttable').bootstrapTable('destroy');
-            $('#ordergoodtable').remove();
-            $('#vttable').remove();
+            $('#ordergoodtoolbar').remove();
+            $('#vttoolbar').remove();
+//            $('#orderViewModal').modal('hide');
         });        
 
         $(document).on('click', '.order-repost', function (e) {

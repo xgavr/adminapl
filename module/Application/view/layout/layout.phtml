@@ -262,8 +262,12 @@
             });
             modalDialog.init();
 
+//            modalDialog.changeTitle('');
+//            modalDialog.changeBody('');
+//            modalDialog.changeFooter('');
             $('#' + modalDialog.id + ' .modal-header').remove();
             $('#' + modalDialog.id + ' .modal-footer').remove();
+
             $('#' + modalDialog.id).modal({
                 backdrop: 'static',
                 keyboard: true
