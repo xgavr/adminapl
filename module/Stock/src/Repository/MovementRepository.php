@@ -174,7 +174,7 @@ class MovementRepository extends EntityRepository{
                 ->addSelect('sum(m.quantity) as rest')
 //                ->addSelect('p.id')
                 ->from(Movement::class, 'm')
-                ->join('m.ptu', 'p', 'WITH', 'm.docType = 1')
+                ->join('m.ptu', 'p')
 //                ->join('p.supplier', 's')
                 ->join('m.office', 'o')
                 ->join('m.good', 'g')
