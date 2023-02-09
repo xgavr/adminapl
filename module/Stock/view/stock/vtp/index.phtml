@@ -452,14 +452,12 @@
     function changeStatus(vtpId, status){
         $.get( "/vtp/status/"+vtpId+'?status='+status, function(data){
             $table.bootstrapTable('updateByUniqueId', {id: vtpId, row: data});
-//            refreshTable();
         });        
     }
 
     function changeStatusDoc(row, statusDoc, docDate){
         $.get( "/vtp/status-doc/"+row.id+'?status='+statusDoc + '&docDate='+docDate, function(data){
             $table.bootstrapTable('updateByUniqueId', {id: row.id, row: data});
-//            refreshTable();
         });        
     }
     
@@ -513,7 +511,7 @@
                         inputType: 'date',
                         size: 'small',
                         value: $.format.date(new Date(), "yyyy-MM-dd"),
-                        min: row.docDate,
+                        min: (row.ptu.docDate > '<?= $allowDate?>') ? row.ptu.docDate:'<?= $allowDate?>',
                         callback: function (result) {
                             if (result){
                                 changeStatusDoc(row, <?= Vtp::STATUS_DOC_NOT_RECD?>, result);
@@ -535,7 +533,7 @@
                             inputType: 'date',
                             size: 'small',
                             value: $.format.date(new Date(row.docDate), "yyyy-MM-dd"),
-                            min: row.docDate,
+                            min: (row.ptu.docDate > '<?= $allowDate?>') ? row.ptu.docDate:'<?= $allowDate?>',
                             callback: function (result) {
                                 if (result){
                                     changeStatusDoc(row, <?= Vtp::STATUS_DOC_NOT_RECD?>, result);

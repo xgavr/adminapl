@@ -30,13 +30,14 @@ if ($ptu){
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#vtptoolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
             data-query-params="vtpQueryParams"
             data-sort-name="id"
             data-sort-order="desc"            
             data-response-handler="vtpResponseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
             data-row-style="vtpRowStyle"
+            data-unique-id="id"
             >
             <thead>
                 <tr>
@@ -59,10 +60,10 @@ if ($ptu){
 </div>
 
 <script>
-    var vtptable = $('#vtptable');
+    var $vtptable = $('#vtptable');
     
     $( document ).ready(function() {        
-        vtptable.bootstrapTable({
+        $vtptable.bootstrapTable({
             onLoadSuccess: function(res){
                 
             }            
@@ -85,7 +86,7 @@ if ($ptu){
     }
     
     function vtpRefreshTable(){
-        vtptable.bootstrapTable('refresh');
+        $vtptable.bootstrapTable('refresh');
     }
 
     function vtpQueryParams(params) {
@@ -152,20 +153,20 @@ if ($ptu){
     
     function changeStatus(vtpId, status){
         $.get( "/vtp/status/"+vtpId+'?status='+status, function(data){
-            vtpRefreshTable();
+            $vtptable.bootstrapTable('updateByUniqueId', {id: vtpId, row: data});
         });        
     }
 
-    function changeStatusDoc(vtpId, statusDoc){
-        $.get( "/vtp/status-doc/"+vtpId+'?status='+statusDoc, function(data){
-            vtpRefreshTable();
+    function changeStatusDoc(row, statusDoc, docDate){
+        $.get( "/vtp/status-doc/"+row.id+'?status='+statusDoc + '&docDate='+docDate, function(data){
+            $vtptable.bootstrapTable('updateByUniqueId', {id: row.id, row: data});
         });        
     }
     
     var menu = new BootstrapMenu('.vtptablerow', {
         fetchElementData: function(rowElem) {
             var rowId = $(rowElem).attr('data-index');
-            return vtptable.bootstrapTable('getData')[rowId];
+            return $vtptable.bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
            ['statusActiv', 'statusRetired'],
@@ -174,7 +175,7 @@ if ($ptu){
             statusDocNew: {
                 name: 'Новый',
                 onClick: function(row) {
-                    changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_NEW?>);
+                    changeStatusDoc(row, <?= Vtp::STATUS_DOC_NEW?>);
                 },
                 isShown: function(row) {
                   return row.statusDoc != '<?= Vtp::STATUS_DOC_NEW?>';
@@ -187,7 +188,7 @@ if ($ptu){
                 name: 'Отправлен',
                 classNames: 'bg-warning',
                 onClick: function(row) {
-                    changeStatusDoc(row.id, <?= Vtp::STATUS_DOC_RECD?>);
+                    changeStatusDoc(row, <?= Vtp::STATUS_DOC_RECD?>);
                 },
                 isShown: function(row) {
                   return row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>';
@@ -206,7 +207,7 @@ if ($ptu){
                         inputType: 'date',
                         size: 'small',
                         value: $.format.date(new Date(), "yyyy-MM-dd"),
-                        min: row.docDate,
+                        min: (row.ptu.docDate > '<?= $allowDate?>') ? row.ptu.docDate:'<?= $allowDate?>',
                         callback: function (result) {
                             if (result){
                                 changeStatusDoc(row, <?= Vtp::STATUS_DOC_NOT_RECD?>, result);
@@ -231,7 +232,7 @@ if ($ptu){
                             inputType: 'date',
                             size: 'small',
                             value: $.format.date(new Date(row.docDate), "yyyy-MM-dd"),
-                            min: row.docDate,
+                            min: (row.ptu.docDate > '<?= $allowDate?>') ? row.ptu.docDate:'<?= $allowDate?>',
                             callback: function (result) {
                                 if (result){
                                     changeStatusDoc(row, <?= Vtp::STATUS_DOC_NOT_RECD?>, result);
