@@ -187,7 +187,7 @@ class MovementRepository extends EntityRepository{
             }        
             if (!empty($params['code'])){
                 $codeFilter = new ArticleCode();
-                $orX->add($qb->expr()->eq('g.code', $codeFilter->filter($params['code'])));                        
+                $orX->add($qb->expr()->eq('g.code', "{$codeFilter->filter($params['code'])}"));                        
             }
             if (!empty($params['orderId'])){
                 if (is_numeric($params['orderId'])){
