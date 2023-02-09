@@ -218,7 +218,7 @@ class VtpController extends AbstractActionController
         $orderId = null;
         if ($q){
             $order = $this->entityManager->getRepository(Order::class)
-                    ->findOneBy(['aplId' => $oq]);
+                    ->findOneBy(['aplId' => $q]);
             if ($order){
                 $orderId = $order->getId();
             }    
