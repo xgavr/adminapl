@@ -71,18 +71,27 @@ class TillController extends AbstractActionController
         $cashId = $this->params()->fromQuery('cash');
         $kind = $this->params()->fromQuery('kind');
         $dateStart = $this->params()->fromQuery('dateStart');
-        $dateEnd = $this->params()->fromQuery('dateEnd');
+        $period = $this->params()->fromQuery('period', 'date');
+        
+        $startDate = date('Y-m-d', strtotime($dateStart));
+        $endDate = $startDate;
+        if ($period == 'week'){
+            $endDate = date('Y-m-d', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+        }    
+        if ($period == 'month'){
+            $endDate = date('Y-m-d', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+        }    
         
         $params = [
-            'sort' => $sort, 'order' => $order, 
+            'sort' => $sort, 'order' => $order, 'office' => $officeId,
             'cashId' => $cashId, 'kind' => $kind,
         ];
         
         $query = $this->entityManager->getRepository(CashDoc::class)
-                        ->findAllCashDoc($dateStart, $dateEnd, $params);
+                        ->findAllCashDoc($startDate, $endDate, $params);
         
         $total = $this->entityManager->getRepository(CashDoc::class)
-                        ->findAllCashDocTotal($dateStart, $dateEnd, $params);
+                        ->findAllCashDocTotal($dateStart, $endDate, $params);
                 
         if ($offset) {
             $query->setFirstResult($offset);

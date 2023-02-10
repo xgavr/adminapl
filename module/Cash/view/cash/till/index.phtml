@@ -30,8 +30,13 @@
                     <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                 </button>                
                 <div class="form-group">
-                    <input name="dateStart" id="dateStart" style="width: 150px" class="form-control refresh-table" type="date" value="<?= date('Y-m-d')?>">
-                    <input name="dateEnd" id="dateEnd" style="width: 150px" class="form-control refresh-table" type="date" value="<?= date('Y-m-d')?>">
+                    <select id="periodSelect" class="form-control" name="period">
+                        <option value="date">Дата</option>
+                        <option value="week">Неделя</option>                        
+                        <option value="month">Месяц</option>                        
+                    </select>
+                    <input name="dateStart" id="dateStart" style="width: 200px" class="form-control refresh-table" type="date" value="<?= date('Y-m-d')?>">
+                    <!--<input name="dateEnd" id="dateEnd" style="width: 150px" class="form-control refresh-table" type="date" value="<?= date('Y-m-d')?>">-->
                 </div>
                 <div class="form-group">
                     <select id="kindSelect" style="width: 200px" class="form-control refresh-table" name="cashId">
@@ -61,17 +66,22 @@
         <table id="table" 
             data-toggle="table" 
             data-url="/till/content"
+            data-cookie="true"
+            data-cookie-id-table="cashSaveId"
+            data-cookie-expire="1m"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
+            data-undefined-text=''
             data-query-params="queryParams"
             data-sort-name="id"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
             data-row-style="rowStyle"
+            data-classes = "table table-bordered table-hover table-condensed"
             >
             <thead>
                 <tr>
@@ -102,7 +112,8 @@
     });
     
     function updateBalance(){
-        $.getJSON( '/till/cash-balance/'+$('#cashSelect').val()+'?dateEnd='+$('#dateEnd').val(), function( data ) {
+        var current = $.format.date(new Date(), "yyyy-MM-dd");
+        $.getJSON( '/till/cash-balance/'+$('#cashSelect').val()+'?dateEnd='+current, function( data ) {
             $('#cashBalance').html((data.balance*100/100).toFixed(2));
         });    
     }
@@ -138,11 +149,16 @@
         $(document).on('change', '#cashSelect', function (e) {
             table.bootstrapTable('selectPage', 1);
         });
-
+        $(document).on('change', '#periodSelect', function (e) {
+            $('#dateStart').attr('type', $(this).val());
+        });
     });
     
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         limit = $('#table .page-size').html();
@@ -153,9 +169,6 @@
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
-        params.office = $('#officeSelect').val();
-        params.cash = $('#cashSelect').val();
-        params.kind = $('#kindSelect').val();
         return params;
     }
     

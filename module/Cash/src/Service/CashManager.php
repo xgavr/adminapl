@@ -383,7 +383,7 @@ class CashManager {
         
         $this->entityManager->flush();
         
-        if ($cashDoc->getStatust() == CashDoc::STATUS_ACTIVE){
+        if ($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE){
             $this->addMutuals($cashDoc, $docStamp);
             $this->addRetails($cashDoc, $docStamp);
         }    
