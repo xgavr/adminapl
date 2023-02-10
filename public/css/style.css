@@ -137,8 +137,8 @@ body {
 /*
 * Bootbox поверх окон
 */
-.bootbox.modal > .modal-dialog {
-  z-index: 1050 !important;
+.bootbox.modal {
+  z-index: 19050 !important;
 }
 
 /*
