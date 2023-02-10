@@ -13,6 +13,7 @@ use Application\Entity\Supplier;
 use Company\Entity\Office;
 use User\Filter\PhoneFilter;
 use Stock\Entity\Movement;
+use Stock\Entity\Register;
 
 /**
  * This service is responsible for adding/editing revise.
