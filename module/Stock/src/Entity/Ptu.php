@@ -202,13 +202,15 @@ class Ptu {
         return $this->info;
     }
 
-    public static function getInfoAsArray()
+    public function getInfoAsArray()
     {
         try{
-            return Decoder::decode($this->info, \Laminas\Json\Json::TYPE_ARRAY);            
+            if ($this->info){
+                return Decoder::decode($this->info, \Laminas\Json\Json::TYPE_ARRAY);            
+            }    
         } catch (Exception $ex) {
-            return [];
         }
+        return [];
     }
 
     public static function setJsonInfo($info)
@@ -607,9 +609,26 @@ class Ptu {
         return $this->office;
     }
     
+    /**
+     * @return array 
+     */
+    public function getPtuGoods()
+    {
+        return $this->ptuGoods;
+    }
+
     public function addPtuGoods($ptuGood)
     {
         $this->ptuGoods[] = $ptuGood;
+    }
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getVtp()
+    {
+        return $this->vtp;
     }
     
     public function addVtp($vtp)

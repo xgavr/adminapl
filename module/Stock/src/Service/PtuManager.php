@@ -10,6 +10,7 @@ use Admin\Entity\Log;
 use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
 use Stock\Entity\Register;
+use Laminas\Json\Encoder;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -151,6 +152,48 @@ class PtuManager
         return;
     }    
     
+    /**
+     * Подготовить зависимые данные
+     * @param Ptu $ptu
+     * @return array
+     */
+    private function dependInfo($ptu)
+    {
+        $result = [
+            'vtp' => [],
+            'goods' => [],
+        ];
+        
+        foreach ($ptu->getVtp() as $vtp){
+            $result['vtp'][] = $vtp->toLog();
+        }
+        
+        foreach ($ptu->getPtuGoods() as $ptuGood){
+            $result['goods'][] = $ptuGood->toLog();
+        }
+                
+        return $result;
+    }    
+    
+    /**
+     * Обновить зависимые записи
+     * @param Ptu $ptu
+     * @param bool $flush
+     */
+    public function updateInfo($ptu, $flush = false)
+    {
+
+        $info = $ptu->getInfoAsArray();
+        $info['depend'] = $this->dependInfo($ptu);
+        $ptu->setInfo($info);
+        
+        if ($flush){
+            $this->entityManager->persist($ptu);
+            $this->entityManager->flush($ptu);
+        }
+        
+        return Encoder::encode($info);
+    }    
     
     /**
      * Перепроведение ПТУ
@@ -158,6 +201,7 @@ class PtuManager
      */
     public function repostPtu($ptu)
     {
+        $this->updateInfo($ptu, true);
         $this->updatePtuMovement($ptu);
         $this->updatePtuMutuals($ptu);
         

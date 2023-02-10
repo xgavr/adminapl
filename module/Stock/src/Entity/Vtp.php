@@ -614,6 +614,7 @@ class Vtp {
     public function toLog()
     {
         return [
+            'id' => $this->getId(),
             'amount' => $this->getAmount(),
             'aplId' => $this->getAplId(),
             'comment' => $this->getComment(),

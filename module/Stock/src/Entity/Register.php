@@ -306,6 +306,10 @@ class Register {
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/{$docId}'>Возврат покупателя №{$docId}</a>";
             case Movement::DOC_VTP:
                 return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/{$docId}'>Возврат поставщику №{$docId}</a>";
+            case Movement::DOC_REVISE:
+                return "Корректировка №{$docId}";
+            case Movement::DOC_CASH:
+                return "Оплата №{$docId}";
         }
         return;
     }
