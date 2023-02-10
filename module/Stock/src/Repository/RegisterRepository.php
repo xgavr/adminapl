@@ -245,7 +245,11 @@ class RegisterRepository extends EntityRepository
      */
     public function orderRegister($order)
     {
-        $dateOper = date('Y-m-d 15:00:00', strtotime($order->getDocDate()));
+        if ($order->getDocDate() > date('2014-01-01')){
+            $dateOper = date('Y-m-d 15:00:00', strtotime($order->getDocDate()));
+        } else {
+            $dateOper = date('Y-m-d 21:01:00', strtotime($order->getDocDate()));            
+        }    
         return $this->register($dateOper, Movement::DOC_ORDER, $order->getId());
     } 
     
