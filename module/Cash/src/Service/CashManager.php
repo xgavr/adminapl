@@ -383,9 +383,11 @@ class CashManager {
         
         $this->entityManager->flush();
         
-        $this->addMutuals($cashDoc, $docStamp);
-        $this->addRetails($cashDoc, $docStamp);
-        
+        if ($cashDoc->getContact()){
+            $this->addMutuals($cashDoc, $docStamp);
+            $this->addRetails($cashDoc, $docStamp);
+        }    
+            
         return;
     }
         
