@@ -21,6 +21,10 @@ use Stock\Entity\Vtp;
                     <button type="submit" class="btn btn-default ok-button" title="Поиск">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
+                    <button id="viewOrder" type="button" class="btn btn-default order-view-show" 
+                            title="Посмотреть заказ" disabled="true" modal-url="">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                    </button>
                 </div>    
             </div>
         </div>
@@ -65,6 +69,16 @@ use Stock\Entity\Vtp;
     function baseRefreshTable(){
         $baseptutable.bootstrapTable('refresh');
     }
+    
+    function viewOrder(orderId){
+        $('#viewOrder').attr('disabled', true);
+        var orderNum = $("input[name='search']").val();
+        if (orderNum && orderId){
+            $('#viewOrder').attr('modal-url', "/order/view/"+orderId);
+            $('#viewOrder').attr('title', "Посмотореть заказ "+orderNum);
+            $('#viewOrder').attr('disabled', false);
+        }
+    }
 
     $( document ).ready(function() {        
         $('.ok-button').click(function () {
@@ -84,7 +98,8 @@ use Stock\Entity\Vtp;
 
         $baseptutable.bootstrapTable({
             onLoadSuccess: function(res){
-                
+                viewOrder(res.orderId);
+//                console.log(res);
             }            
         });         
     });

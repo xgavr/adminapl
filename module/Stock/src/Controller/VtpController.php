@@ -241,7 +241,8 @@ class VtpController extends AbstractActionController
         return new JsonModel([
             'total' => $total,
             'rows' => $result,
-//            'allowDate' => $this->vtpManager->getAllowDate(),
+            'allowDate' => $this->vtpManager->getAllowDate(),
+            'orderId' => $orderId,
         ]);          
     }            
     
