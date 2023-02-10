@@ -99,6 +99,13 @@ class ReviseManager
             $contractid = $revise->getContract()->getId();
         }
         if ($revise->getKind() == Revise::KIND_REVISE_CLIENT){
+            $legalId = $contractId = null;
+            if ($revise->getLegal()){
+                $legalId = $revise->getLegal()->getId();
+                if ($revise->getContract()){
+                    $contractId = $revise->getContract()->getId();
+                }    
+            }
             $data = [
                 'doc_key' => $revise->getLogKey(),
                 'doc_type' => Movement::DOC_REVISE,
@@ -111,8 +118,8 @@ class ReviseManager
                 'office_id' => $revise->getOffice()->getId(),
                 'company_id' => $revise->getCompany()->getId(),
                 'doc_stamp' => $docStamp,
-                'legal_id' => $revise->getLegal()->getId(),
-                'contract_id' => $revise->getContract()->getId(),                
+                'legal_id' => $legalId,
+                'contract_id' => $contractId,                
             ];
 
             $this->entityManager->getRepository(Retail::class)
