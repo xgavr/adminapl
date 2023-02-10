@@ -152,28 +152,6 @@ class PtuManager
         return;
     }    
     
-    /**
-     * Подготовить зависимые данные
-     * @param Ptu $ptu
-     * @return array
-     */
-    private function dependInfo($ptu)
-    {
-        $result = [
-            'vtp' => [],
-            'goods' => [],
-        ];
-        
-        foreach ($ptu->getVtp() as $vtp){
-            $result['vtp'][] = $vtp->toLog();
-        }
-        
-        foreach ($ptu->getPtuGoods() as $ptuGood){
-            $result['goods'][] = $ptuGood->toLog();
-        }
-                
-        return $result;
-    }    
     
     /**
      * Обновить зависимые записи
@@ -183,8 +161,8 @@ class PtuManager
     public function updateInfo($ptu, $flush = false)
     {
 
-        $info = $ptu->getInfoAsArray();
-        $info['depend'] = $this->dependInfo($ptu);
+        $info = $ptu->dependInfo();
+//        var_dump($info);
         $ptu->setInfo($info);
         
         if ($flush){

@@ -10,6 +10,7 @@ use Stock\Entity\Mutual;
 use Stock\Entity\Register;
 use Stock\Entity\Reserve;
 use Laminas\Json\Json;
+use Laminas\Json\Encoder;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -175,6 +176,25 @@ class VtpManager
     
     
     /**
+     * Обновить зависимые записи
+     * @param Ptu $ptu
+     * @param bool $flush
+     */
+    private function updatePtuInfo($ptu, $flush = false)
+    {
+
+        $info = $ptu->dependInfo();
+        $ptu->setInfo($info);
+        
+        if ($flush){
+            $this->entityManager->persist($ptu);
+            $this->entityManager->flush($ptu);
+        }
+        
+        return Encoder::encode($info);
+    }    
+
+    /**
      * Перепроведение ВТП
      * @param Vtp $vtp
      */
@@ -184,6 +204,8 @@ class VtpManager
             ->updateReserve($vtp);
         $this->updateVtpMovement($vtp);
         $this->updateVtpMutuals($vtp);
+        
+        $this->updatePtuInfo($vtp->getPtu(), true);
         
         return true;
     }

@@ -224,6 +224,30 @@ class Ptu {
     }     
 
     /**
+     * Получить зависимые данные
+     * @return array
+     */
+    public function dependInfo()
+    {
+        $result = [
+            'vtp' => [],
+            'goods' => [],
+        ];
+        
+        foreach ($this->vtp as $vtp){
+            $result['vtp'][] = $vtp->toLog();
+        }
+        
+        foreach ($this->ptuGoods as $ptuGood){
+            $result['goods'][] = $ptuGood->toLog();
+        }
+        $info = $this->getInfoAsArray();
+        $info['depend'] = $result;
+        
+        return $info;
+    }    
+    
+    /**
      * Returns status.
      * @return int     
      */
