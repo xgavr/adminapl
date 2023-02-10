@@ -12,6 +12,7 @@ use Stock\Service\VtManager;
 use Stock\Service\VtpManager;
 use Application\Service\OrderManager;
 use Cash\Service\CashManager;
+use Stock\Service\ReviseManager;
 
 /**
  * This is the factory class for RegisterManager service. The purpose of the factory
@@ -34,9 +35,10 @@ class RegisterManagerFactory
         $vtpManager = $container->get(VtpManager::class);
         $orderManager = $container->get(OrderManager::class);
         $cashManager = $container->get(CashManager::class);
+        $reviseManager = $container->get(ReviseManager::class);
                         
         return new RegisterManager($entityManager, $logManager, $otManager,
                 $ptManager, $ptuManager, $stManager, $vtManager, $vtpManager,
-                $orderManager, $cashManager);
+                $orderManager, $cashManager, $reviseManager);
     }
 }

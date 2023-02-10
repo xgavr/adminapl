@@ -79,6 +79,12 @@ class RegisterManager
     private $vtpManager;
 
     /**
+     * Revise manager
+     * @var \Stock\Service\ReviseManager
+     */
+    private $reviseManager;
+
+    /**
      * Order manager
      * @var \Application\Service\OrderManager
      */
@@ -96,7 +102,8 @@ class RegisterManager
      * Constructs the service.
      */
     public function __construct($entityManager, $logManager, $otManager, $ptManager,
-            $ptuManager, $stManager, $vtManager, $vtpManager, $orderManager, $cashMananger) 
+            $ptuManager, $stManager, $vtManager, $vtpManager, $orderManager, 
+            $cashMananger, $reviseManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
@@ -108,6 +115,7 @@ class RegisterManager
         $this->vtpManager = $vtpManager;
         $this->orderManager = $orderManager;
         $this->cashManager = $cashMananger;
+        $this->reviseManager = $reviseManager;
     }
     
     public function currentUser()
@@ -469,6 +477,14 @@ class RegisterManager
                     ->find($register->getDocId());
                 if ($cashDoc){
                     $this->cashManager->updateCashTransaction($cashDoc);
+                    $flag = true;
+                }
+                break;                
+            case Movement::DOC_REVISE:
+                $revise = $this->entityManager->getRepository(Revise::class)
+                    ->find($register->getDocId());
+                if ($revise){
+                    $this->reviseManager->repostRevise($revise);
                     $flag = true;
                 }
                 break;                
