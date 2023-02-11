@@ -250,7 +250,7 @@ class CashManager {
      */
     public function addRetails($cashDoc, $docStamp)
     {
-        if ($cashDoc->isRetail()){
+        if ($cashDoc->isRetail()&& $cashDoc->getContact()){
             $legalId = $contractId = null;
             $office = ($cashDoc->getCash()) ? $cashDoc->getCash()->getOffice():$cashDoc->getUser()->getOffice();            
             if ($cashDoc->getLegal()){
