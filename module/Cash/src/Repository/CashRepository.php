@@ -89,8 +89,8 @@ class CashRepository extends EntityRepository
             ->setParameter('1', $dateStart)    
             ->andWhere('ct.dateOper <= ?2')
             ->setParameter('2', $dateEnd . ' 23:59:59')    
-            ->orderBy('cd.dateOper', 'DESC')                 
-            ->addOrderBy('cd.id', 'DESC')                 
+//            ->orderBy('cd.dateOper', 'DESC')                 
+//            ->addOrderBy('cd.id', 'DESC')                 
                 ;
         
         if (is_array($params)){
@@ -113,6 +113,7 @@ class CashRepository extends EntityRepository
             }            
         }
 
+        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }      
     
@@ -218,8 +219,8 @@ class CashRepository extends EntityRepository
             ->setParameter('1', $dateStart)    
             ->andWhere('cd.dateOper <= ?2')
             ->setParameter('2', $dateEnd . ' 23:59:59')    
-            ->orderBy('cd.dateOper', 'DESC')                 
-            ->addOrderBy('cd.id', 'DESC')                 
+//            ->orderBy('cd.dateOper', 'DESC')                 
+//            ->addOrderBy('cd.id', 'DESC')                 
                 ;
         
         if (is_array($params)){
