@@ -268,7 +268,6 @@ if ($ptu){
             .done(function (data) {
                 $('#ptugoodtable').bootstrapTable('removeAll');
                 
-                var rows = [];
                 $.each( data, function( index, row ) { 
                     var good = {
                         id: row.good.id,
@@ -297,6 +296,7 @@ if ($ptu){
 
                     var newRowNo = getNewTableUniqueId('ptugoodtable', 'rowNo');
                     row.rowNo = newRowNo;
+                    var rows = [];
                     rows.push(row);
                     $('#ptugoodtable').bootstrapTable('prepend', rows);  
                 });    
