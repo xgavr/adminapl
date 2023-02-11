@@ -94,16 +94,20 @@ class CashRepository extends EntityRepository
                 ;
         
         if (is_array($params)){
-            if (isset($params['cashId'])){
-                $queryBuilder->andWhere('ct.cash = ?3')
-                    ->setParameter('3', $params['cashId'])
-                        ;
+            if (!empty($params['cashId'])){
+                if (is_numeric($params['cashId'])){
+                    $queryBuilder->andWhere('ct.cash = ?3')
+                        ->setParameter('3', $params['cashId'])
+                            ;
+                }    
             }            
-            if (is_numeric($params['kind'])){
-                $queryBuilder->andWhere('cd.kind = ?4')
-                    ->setParameter('4', $params['kind'])
-                        ;
-            }            
+            if (!empty($params['kind'])){
+                if (is_numeric($params['kind'])){
+                    $queryBuilder->andWhere('cd.kind = ?4')
+                        ->setParameter('4', $params['kind'])
+                            ;
+                }            
+            }    
             if (isset($params['sort'])){
                 $queryBuilder->addOrderBy('ct.'.$params['sort'], $params['order']);
             }            
@@ -137,16 +141,20 @@ class CashRepository extends EntityRepository
                 ;
         
         if (is_array($params)){
-            if (isset($params['cashId'])){
-                $queryBuilder->andWhere('ct.cash = ?3')
-                    ->setParameter('3', $params['cashId'])
-                        ;
+            if (!empty($params['cashId'])){
+                if (is_numeric($params['cashId'])){
+                    $queryBuilder->andWhere('ct.cash = ?3')
+                        ->setParameter('3', $params['cashId'])
+                            ;
+                }    
             }            
-            if (is_numeric($params['kind'])){
-                $queryBuilder->andWhere('cd.kind = ?4')
-                    ->setParameter('4', $params['kind'])
-                        ;
-            }            
+            if (!empty($params['kind'])){
+                if (is_numeric($params['kind'])){
+                    $queryBuilder->andWhere('cd.kind = ?4')
+                        ->setParameter('4', $params['kind'])
+                            ;
+                }            
+            }    
         }
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
@@ -214,14 +222,14 @@ class CashRepository extends EntityRepository
                 ;
         
         if (is_array($params)){
-            if (isset($params['userId'])){
+            if (!empty($params['userId'])){
                 if (is_numeric($params['userId'])){
                     $queryBuilder->andWhere('ut.user = ?3')
                         ->setParameter('3', $params['userId'])
                             ;
                 }    
             }            
-            if (is_numeric($params['kind'])){
+            if (!empty($params['kind'])){
                 if (is_numeric($params['kind'])){
                     $queryBuilder->andWhere('cd.kind = ?4')
                         ->setParameter('4', $params['kind'])
@@ -261,14 +269,14 @@ class CashRepository extends EntityRepository
                 ;
         
         if (is_array($params)){
-            if (isset($params['userId'])){
+            if (!empty($params['userId'])){
                 if (is_numeric($params['userId'])){
                     $queryBuilder->andWhere('ut.user = ?3')
                         ->setParameter('3', $params['userId'])
                             ;
                 }    
             }            
-            if (is_numeric($params['kind'])){
+            if (!empty($params['kind'])){
                 if (is_numeric($params['kind'])){
                     $queryBuilder->andWhere('cd.kind = ?4')
                         ->setParameter('4', $params['kind'])
