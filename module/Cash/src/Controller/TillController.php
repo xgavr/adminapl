@@ -276,26 +276,19 @@ class TillController extends AbstractActionController
     public function cashBalanceAction()
     {
         $cashId = (int)$this->params()->fromRoute('id', -1);
-        $dateEnd = $this->params()->fromQuery('dateEnd');
-        if ($cashId<1) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        $cash = $this->entityManager->getRepository(Cash::class)
-                ->find($cashId);
-        
-        if ($cash == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
+        $dateOper = $this->params()->fromQuery('dateEnd');
         
         $balance = null;
-        if ($cash->getRestStatus() == Cash::REST_ACTIVE){
-            $balance = $this->entityManager->getRepository(Cash::class)
-                    ->cashBalance($cash->getId(), $dateEnd);
-        }    
         
+        if ($cashId > 0 && is_numeric($cashId)) {
+            $cash = $this->entityManager->getRepository(Cash::class)
+                    ->find($cashId);
+            if ($cash){                
+                $balance = $this->entityManager->getRepository(Cash::class)
+                        ->cashBalance($cash->getId(), $dateOper);
+            }
+        }
+                
         return new JsonModel([
             'balance' => $balance,
         ]);                  
