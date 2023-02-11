@@ -142,31 +142,19 @@
         $('#ok').click(function () {
             refreshTable()
         });
-        $(document).on('click', '.user-in-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'userInModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
-        $(document).on('click', '.user-out-modal-show', function (e) {
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'userOutModal',
-                url: url,
-                width: '1440px'
-            });
-        });  
+
         $(document).on('change', '.refresh-table', function (e) {
             refreshTable();
         });
+        
         $(document).on('change', '#officeSelect', function (e) {
             officeChange();
         });
+        
         $(document).on('change', '#userSelect', function (e) {
             $table.bootstrapTable('selectPage', 1);
         });
+        
         $(document).on('change', '#periodSelect', function (e) {
             $('#dateStart').attr('type', $(this).val());
         });
