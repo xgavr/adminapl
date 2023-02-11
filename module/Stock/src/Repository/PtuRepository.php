@@ -289,7 +289,7 @@ class PtuRepository extends EntityRepository{
             ->setParameter('3', SupplierOrder::STATUS_ORDER_ORDERED) 
             ->andWhere('so.dateCreated > ?4')    
             ->setParameter('4', date('Y-m-d', strtotime('- 1 month'))) 
-            ->orderBy('id', 'DESC')    
+            ->orderBy('so.id', 'DESC')    
                 ;
         
 //        var_dump($queryBuilder->getQuery()->getSQL());
