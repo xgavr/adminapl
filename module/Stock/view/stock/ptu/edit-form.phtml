@@ -298,10 +298,10 @@ if ($ptu){
                     var newRowNo = getNewTableUniqueId('ptugoodtable', 'rowNo');
                     row.rowNo = newRowNo;
                     rows.push(row);
+                    $('#ptugoodtable').bootstrapTable('prepend', rows);  
                 });    
-//                console.log(rows);
-                $('#ptugoodtable').bootstrapTable('prepend', rows);  
                 ptuUpdateTotal();
+                
             })
             .fail(function () {
                 alert("Ошибка при получении данных.");
