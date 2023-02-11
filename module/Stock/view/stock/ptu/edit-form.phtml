@@ -287,9 +287,9 @@ if ($ptu){
                     }
                     var row = {
                         good: good,
-                        amount: row.amount,
+                        amount: row.good.meanPrice*row.quantity,
                         quantity: row.quantity,
-                        price: Math.round(row.amount*100/row.quantity)/100,
+                        price: row.good.meanPrice,
                         unit: unit,
                         country: country,
                         ntd: ntd
