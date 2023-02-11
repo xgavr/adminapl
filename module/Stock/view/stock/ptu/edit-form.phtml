@@ -24,6 +24,7 @@ $form->get('contract_id')->setAttributes([
 $form->get('doc_date')->setAttributes([
     'class'=>'form-control', 
     'min' => date('Y-m-d', strtotime($allowDate.' + 1 day')),
+    'value' => date('Y-m-d'),
     'disabled' => $disabled,
     ]);
 

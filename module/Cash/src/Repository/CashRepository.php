@@ -200,9 +200,9 @@ class CashRepository extends EntityRepository
             ->leftJoin('cd.contact', 'cnt')
             ->leftJoin('cnt.client', 'clt')
             ->leftJoin('cd.cash', 'c')
-            ->where('ct.dateOper >= ?1')
+            ->where('cd.dateOper >= ?1')
             ->setParameter('1', $dateStart)    
-            ->andWhere('ct.dateOper <= ?2')
+            ->andWhere('cd.dateOper <= ?2')
             ->setParameter('2', $dateEnd . ' 23:59:59')    
             ->orderBy('cd.dateOper', 'DESC')                 
             ->addOrderBy('cd.id', 'DESC')                 
@@ -245,9 +245,9 @@ class CashRepository extends EntityRepository
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')
             ->join('cd.user', 'c')
-            ->where('ct.dateOper >= ?1')
+            ->where('cd.dateOper >= ?1')
             ->setParameter('1', $dateStart)    
-            ->andWhere('ct.dateOper <= ?2')
+            ->andWhere('cd.dateOper <= ?2')
             ->setParameter('2', $dateEnd . ' 23:59:59')    
                 ;
         

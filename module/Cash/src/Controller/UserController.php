@@ -65,7 +65,17 @@ class UserController extends AbstractActionController
         $officeId = $this->params()->fromQuery('office');
         $userId = $this->params()->fromQuery('user');
         $kind = $this->params()->fromQuery('kind');
-        $dateOper = $this->params()->fromQuery('dateOper');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period', 'date');
+        
+        $startDate = date('Y-m-d', strtotime($dateStart));
+        $endDate = $startDate;
+        if ($period == 'week'){
+            $endDate = date('Y-m-d', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+        }    
+        if ($period == 'month'){
+            $endDate = date('Y-m-d', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+        }    
         
         $params = [
             'sort' => $sort, 'order' => $order, 
@@ -73,10 +83,10 @@ class UserController extends AbstractActionController
         ];
         
         $query = $this->entityManager->getRepository(CashDoc::class)
-                        ->findAllUserDoc($dateOper, $params);
+                        ->findAllUserDoc($startDate, $endDate, $params);
         
         $total = $this->entityManager->getRepository(CashDoc::class)
-                        ->findAllUserDocTotal($dateOper, $params);
+                        ->findAllUserDocTotal($startDate, $endDate, $params);
                 
         if ($offset) {
             $query->setFirstResult($offset);
@@ -141,13 +151,13 @@ class UserController extends AbstractActionController
             return;
         }
         
-        $cashes = $this->entityManager->getRepository(Cash::class)
-                ->findBy(['office' => $office->getId(), 'status' => Cash::STATUS_ACTIVE]);
+        $users = $this->entityManager->getRepository(User::class)
+                ->findBy(['office' => $office->getId()], ['status' => 'ASC']);
         
-        foreach ($cashes as $cash){
-            $result[$cash->getId()] = [
-                'id' => $cash->getId(),
-                'name' => $cash->getName(),                
+        foreach ($users as $user){
+            $result[$user->getId()] = [
+                'id' => $user->getId(),
+                'name' => $user->getName(),                
             ];
         }
         
@@ -160,21 +170,16 @@ class UserController extends AbstractActionController
     {
         $userId = (int)$this->params()->fromRoute('id', -1);
         $dateOper = $this->params()->fromQuery('dateOper');
-        if ($userId<1) {
-            $this->getResponse()->setStatusCode(404);
-            return;
+        
+        $balance = null;
+        if ($userId > 0 && is_numeric($userId)) {
+            $user = $this->entityManager->getRepository(User::class)
+                    ->find($userId);
+            if ($user){                
+                $balance = $this->entityManager->getRepository(Cash::class)
+                        ->userBalance($user->getId(), $dateOper);
+            }
         }
-        
-        $user = $this->entityManager->getRepository(User::class)
-                ->find($userId);
-        
-        if ($user == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        $balance = $this->entityManager->getRepository(Cash::class)
-                ->userBalance($user->getId(), $dateOper);
         
         return new JsonModel([
             'balance' => $balance,
