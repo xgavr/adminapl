@@ -91,7 +91,7 @@ class TillController extends AbstractActionController
                         ->findAllCashDoc($startDate, $endDate, $params);
         
         $total = $this->entityManager->getRepository(CashDoc::class)
-                        ->findAllCashDocTotal($dateStart, $endDate, $params);
+                        ->findAllCashDocTotal($startDate, $endDate, $params);
                 
         if ($offset) {
             $query->setFirstResult($offset);
