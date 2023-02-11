@@ -201,7 +201,7 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('ut, cd, u, cr, ur, cost, l, c, uc, cnt, clt')
+        $queryBuilder->select('ut, cd, u, cr, ur, cost, l, c, uc, cnt, clt, o')
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')
             ->leftJoin('cd.cashRefill', 'cr')    
@@ -213,6 +213,7 @@ class CashRepository extends EntityRepository
             ->leftJoin('cd.contact', 'cnt')
             ->leftJoin('cnt.client', 'clt')
             ->leftJoin('cd.cash', 'c')
+            ->leftJoin('cd.order', 'o')
             ->where('cd.dateOper >= ?1')
             ->setParameter('1', $dateStart)    
             ->andWhere('cd.dateOper <= ?2')
