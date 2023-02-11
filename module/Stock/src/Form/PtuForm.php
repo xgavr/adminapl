@@ -122,20 +122,13 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
 
         // Добавляем поле "supplier"
         $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'type'  => 'select',
             'name' => 'supplier',
             'attributes' => [                
                 'id' => 'supplier',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
             ],
             'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Supplier',
                 'label' => 'Поставщик',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--выберете поставщика--',                 
             ],
         ]);
         

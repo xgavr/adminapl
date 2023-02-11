@@ -14,6 +14,8 @@ use Stock\Entity\PtuGood;
 use Application\Entity\Supplier;
 use Company\Entity\Office;
 use Application\Filter\ArticleCode;
+use Application\Entity\SupplierOrder;
+use Application\Entity\Order;
 
 /**
  * Description of PtuRepository
@@ -262,6 +264,38 @@ class PtuRepository extends EntityRepository{
         return $queryBuilder->getQuery();
     }        
     
+    /**
+     * Запрос товаров для пту
+     * 
+     * @param integer $supplierId
+     * @return query
+     */
+    public function fillPtu($supplierId)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('so, g, p')
+            ->from(SupplierOrder::class, 'so')
+            ->join('so.good', 'g')    
+            ->join('g.producer', 'p')    
+            ->where('so.supplier = ?1')
+            ->setParameter('1', $supplierId)    
+            ->andWhere('so.status = ?2')
+            ->setParameter('2', SupplierOrder::STATUS_ORDER_ORDERED)    
+            ->andWhere('so.status != ?2')
+            ->setParameter('2', SupplierOrder::STATUS_RECEIVED)    
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['sort'])){
+            }            
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery();
+    }        
+
     /**
      * Найти записи для отправки в АПЛ
      */

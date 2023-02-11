@@ -129,6 +129,19 @@ class PtuController extends AbstractActionController
         return new JsonModel($result);          
     }        
     
+    public function fillContentAction()
+    {
+        	        
+        $supplierId = $this->params()->fromRoute('id', -1);
+        
+        $query = $this->entityManager->getRepository(Ptu::class)
+                        ->fillPtu($supplierId);
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel($result);          
+    }        
+
     public function repostAllPtuAction()
     {                
         $this->ptuManager->repostAllPtu();
@@ -174,6 +187,15 @@ class PtuController extends AbstractActionController
         }
                 
         $form = new PtuForm($this->entityManager, $office, $supplier, $company, $legal);
+        
+        $supplierList = ['--выбререте постащика--'];
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findForFormPtu();
+        foreach ($suppliers as $formSupplier){
+            $supplierList[$formSupplier->getId()] = $formSupplier->getName();
+        }
+        $form->get('supplier')->setValueOptions($supplierList);
+
 
         if ($this->getRequest()->isPost()) {
             

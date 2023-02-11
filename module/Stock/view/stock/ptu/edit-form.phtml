@@ -52,158 +52,152 @@ if ($ptu){
 
 ?>
 
-
-
+<?= $this->form()->openTag($form); ?>
             
-            <?= $this->form()->openTag($form); ?>
+<div class="modal-header">
+    <h5 class="modal-title" id="ptuModalLabel">Поступление товаров <?= $docName?></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
             
-            <div class="modal-header">
-                <h5 class="modal-title" id="ptuModalLabel">Поступление товаров <?= $docName?></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('doc_no')); ?>
+                <?= $this->formElement($form->get('doc_no')); ?>
+                <?= $this->formElementErrors($form->get('doc_no')); ?>                  
             </div>
-            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('doc_no')); ?>
-                            <?= $this->formElement($form->get('doc_no')); ?>
-                            <?= $this->formElementErrors($form->get('doc_no')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('office_id')); ?>
-                            <?= $this->formElement($form->get('office_id')); ?>
-                            <?= $this->formElementErrors($form->get('office_id')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('supplier')); ?>
-                            <?= $this->formElement($form->get('supplier')); ?>
-                            <?= $this->formElementErrors($form->get('supplier')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('status')); ?>
-                            <?= $this->formElement($form->get('status')); ?>
-                            <?= $this->formElementErrors($form->get('status')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-2 text-right">
-                        <h1 class="display-4" id="ptuQuantity"></h1>
-                    </div>    
-                    <div class="col-xs-1 text-right">
-                        <h1 class="display-4" id="ptuAmount"><?= ($ptu) ? round($ptu->getAmount(), 2):"" ?></h1>                        
-                    </div>    
-                </div>    
-                <div class="row">
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('doc_date')); ?>
-                            <?= $this->formElement($form->get('doc_date')); ?>
-                            <?= $this->formElementErrors($form->get('doc_date')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('company')); ?>
-                            <?= $this->formElement($form->get('company')); ?>
-                            <?= $this->formElementErrors($form->get('company')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('legal_id')); ?>
-                            <?= $this->formElement($form->get('legal_id')); ?>
-                            <?= $this->formElementErrors($form->get('legal_id')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('contract_id')); ?>
-                            <?= $this->formElement($form->get('contract_id')); ?>
-                            <?= $this->formElementErrors($form->get('contract_id')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-4 text-right">
-                    </div>    
-                </div>        
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div id="ptugoodtoolbar">
-                            <div class="form-inline" role="form">
-                                <button type="button" class="btn btn-default ptu-good-modal-show" modal-url="/ptu/good-edit-form">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                        </div>
-                        <table id="ptugoodtable" 
-                            data-toggle="ptugoodtable" 
-                            data-url="/ptu/good-content/<?= ($ptu) ? $ptu->getId():"" ?>"
-                            data-cookie-id-table="ptugoodSaveId"
-                            data-cookie-expire="1m"
-                            data-side-pagination="client"
-                            data-pagination="true"
-                            data-page-size = "5"
-                            data-page-list="[5, 10, 20, 50]"
-                            data-toolbar="#ptugoodtoolbar"
-                            data-show-refresh="true"
-                            data-show-toggle="true"
-                            data-query-params="ptugoodQueryParams"
-                            data-response-handler="ptugoodResponseHandler"
-                            data-unique-id = "rowNo"
-                            data-classes = "table table-bordered table-hover table-condensed"
-                            >
-                            <thead>
-                                <tr>
-                                     <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                                     <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
-                                     <th data-field="good.producer.name" data-type="numeric">Производитель</th>
-                                     <th data-field="good.name" data-type="numeric">Наименование</th>
-                                     <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
-                                     <th data-field='quantity' data-align="right">Количество</th>
-                                     <th data-field='unit.code' data-visible="false">ЕИ</th>
-                                     <th data-field='unit.name' data-visible="true" data-width="10">ЕИ</th>
-                                     <th data-field='amount' data-align="right" data-formatter="amountFormatter">Сумма</th>
-                                     <th data-field='country.code' data-visible="false">Страна</th>
-                                     <th data-field='country.name' data-visible="false">Страна</th>
-                                     <th data-field='ntd.ntd' data-visible="false">НТД</th>
-                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
-                                     <th data-field="rowNo" data-formatter="pgRemoveFormatter" data-width="10"></th>
-                                 </tr>                
-                            </thead>
-                        </table>
-                    </div>
-                </div>    
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('comment')); ?>
-                            <?= $this->formElement($form->get('comment')); ?>
-                            <?= $this->formElementErrors($form->get('comment')); ?>                  
-                        </div>                        
-                    </div>                                            
-                </div>        
-
-
-
-
-                        <?= $this->formElement($form->get('csrf')); ?>
-                    </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('office_id')); ?>
+                <?= $this->formElement($form->get('office_id')); ?>
+                <?= $this->formElementErrors($form->get('office_id')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('supplier')); ?>
+                <?= $this->formElement($form->get('supplier')); ?>
+                <?= $this->formElementErrors($form->get('supplier')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2 text-right">
+            <h1 class="display-4" id="ptuQuantity"></h1>
+        </div>    
+        <div class="col-xs-1 text-right">
+            <h1 class="display-4" id="ptuAmount"><?= ($ptu) ? round($ptu->getAmount(), 2):"" ?></h1>                        
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('doc_date')); ?>
+                <?= $this->formElement($form->get('doc_date')); ?>
+                <?= $this->formElementErrors($form->get('doc_date')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('company')); ?>
+                <?= $this->formElement($form->get('company')); ?>
+                <?= $this->formElementErrors($form->get('company')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('legal_id')); ?>
+                <?= $this->formElement($form->get('legal_id')); ?>
+                <?= $this->formElementErrors($form->get('legal_id')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('contract_id')); ?>
+                <?= $this->formElement($form->get('contract_id')); ?>
+                <?= $this->formElementErrors($form->get('contract_id')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-4 text-right">
+        </div>    
+    </div>        
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="ptugoodtoolbar">
+                <div class="form-inline" role="form">
+                    <button type="button" class="btn btn-default ptu-good-modal-show" modal-url="/ptu/good-edit-form">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-default" onclick="ptuFill()" id="fillPtu" disabled>
+                        <span aria-hidden="true">Заполнить из заказов</span>
+                    </button>
                 </div>
-            </div>    
-                
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="ptu-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
             </div>
-            
-            <?= $this->form()->closeTag(); ?>
+            <table id="ptugoodtable" 
+                data-toggle="ptugoodtable" 
+                data-url="/ptu/good-content/<?= ($ptu) ? $ptu->getId():"" ?>"
+                data-cookie-id-table="ptugoodSaveId"
+                data-cookie-expire="1m"
+                data-side-pagination="client"
+                data-pagination="true"
+                data-page-size = "5"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#ptugoodtoolbar"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-query-params="ptugoodQueryParams"
+                data-response-handler="ptugoodResponseHandler"
+                data-unique-id = "rowNo"
+                data-classes = "table table-bordered table-hover table-condensed"
+                >
+                <thead>
+                    <tr>
+                         <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                         <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
+                         <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                         <th data-field="good.name" data-type="numeric">Наименование</th>
+                         <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                         <th data-field='quantity' data-align="right">Количество</th>
+                         <th data-field='unit.code' data-visible="false">ЕИ</th>
+                         <th data-field='unit.name' data-visible="true" data-width="10">ЕИ</th>
+                         <th data-field='amount' data-align="right" data-formatter="amountFormatter">Сумма</th>
+                         <th data-field='country.code' data-visible="false">Страна</th>
+                         <th data-field='country.name' data-visible="false">Страна</th>
+                         <th data-field='ntd.ntd' data-visible="false">НТД</th>
+                         <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
+                         <th data-field="rowNo" data-formatter="pgRemoveFormatter" data-width="10"></th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('comment')); ?>
+                <?= $this->formElement($form->get('comment')); ?>
+                <?= $this->formElementErrors($form->get('comment')); ?>                  
+            </div>                        
+        </div>                                            
+    </div>        
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>
+                
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="ptu-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
             
 <script>
     function submitForm(){
@@ -249,6 +243,73 @@ if ($ptu){
         return result;
     }
     
+    function ptuUpdateTotal(){
+        var data = $('#ptugoodtable').bootstrapTable('getData');
+        var amount = 0; var quantity = 0;
+        $.each(data, function( index, value ) {
+            amount += Math.round(value.amount*100)/100;
+            quantity += Math.round(value.quantity*100)/100; 
+        });
+        $('#ptuAmount').html(Math.round(amount*100)/100);
+        $('#ptuQuantity').html(Math.round(quantity*100)/100);
+    }
+    
+    //удаление строки из таблицы
+    function removeTableRowByUniqueId(index){
+        $('#ptugoodtable').bootstrapTable('removeByUniqueId', index);
+        ptuUpdateTotal();
+    }
+        
+    function ptuFill(){
+        $.ajax({
+            type: 'GET',
+            url: "/ptu/fill-content/"+$('#supplier').val()
+        })
+            .done(function (data) {
+                $('#table').bootstrapTable('removeAll');
+                
+                var rows = [];
+                $.each( data, function( index, row ) { 
+                    var good = {
+                        id: row.good.id,
+                        code: row.good.code,
+                        name: row.good.name,
+                        producer: {name: row.good.producer},
+                    }
+                    var unit = {
+                        name: ''
+                    }
+                    var country = {
+                        name: ''
+                    }
+                    var ntd = {
+                        ntd: ''
+                    }
+                    var row = {
+                        good: good,
+                        amount: row.amount,
+                        quantity: row.quantity,
+                        price: Math.round(row.amount*100/row.quantity)/100,
+                        unit: unit,
+                        country: country,
+                        ntd: ntd
+                    };
+
+                    var newRowNo = getNewTableUniqueId('ptugoodtable', 'rowNo');
+                    row.rowNo = newRowNo;
+                    var rows = [];
+                    rows.push(row);
+                });    
+                
+                $('#ptugoodtable').bootstrapTable('prepend', rows);  
+                ptuUpdateTotal();
+            })
+            .fail(function () {
+                alert("Ошибка при получении данных.");
+
+            });            
+    }
+    
     function contractList(){
         //alert(11);
         $.getJSON( '/contracts/select/?company='+$('#company').val()+'&legal='+$('#legal').val()+'&office='+$('#office').val(), function( data ) {
@@ -274,35 +335,22 @@ if ($ptu){
     });    
     
     $('#supplier').on('change', function(){
+        $('#fillPtu').attr('disabled', true);
         $.getJSON( '/supplier/legals/'+$('#supplier').val(), function( data ) {
             $('#legal').empty();
             $.each( data.rows, function( key, value ) {
                 $('#legal').append('<option value="' + key + '">' + value.name + '</option>');
             });
-            contractList();            
+            contractList();     
+            if (Object.keys(data.rows).length){
+                $('#fillPtu').attr('disabled', false);
+            }
         });    
     });
     
     $('#legal').on('change', function(){
         contractList();
     });
-    
-    function ptuUpdateTotal(){
-        var data = $('#ptugoodtable').bootstrapTable('getData');
-        var amount = 0; var quantity = 0;
-        $.each(data, function( index, value ) {
-            amount += Math.round(value.amount*100)/100;
-            quantity += Math.round(value.quantity*100)/100; 
-        });
-        $('#ptuAmount').html(Math.round(amount*100)/100);
-        $('#ptuQuantity').html(Math.round(quantity*100)/100);
-    }
-    
-    //удаление строки из таблицы
-    function removeTableRowByUniqueId(index){
-        $('#ptugoodtable').bootstrapTable('removeByUniqueId', index);
-        ptuUpdateTotal();
-    }
     
     $( document ).ready(function() {
         

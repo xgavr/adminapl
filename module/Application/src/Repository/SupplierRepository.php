@@ -181,7 +181,7 @@ class SupplierRepository extends EntityRepository{
     /**
      * Выборка для ПТУ
      * 
-     * @return Legal
+     * @return array
      */
     public function findForPtu()
     {
@@ -196,10 +196,29 @@ class SupplierRepository extends EntityRepository{
                 ->addOrderBy('s.name')
                 ;
         
-        return $queryBuilder->getQuery()->getResult();
-        
+        return $queryBuilder->getQuery()->getResult();        
     }
     
+    /**
+     * Выборка для ПТУ form
+     * 
+     * @return array
+     */
+    public function findForFormPtu()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('s')
+                ->from(Supplier::class, 's')
+                ->where('s.parent is null')
+                ->orderBy('s.status')
+                ->addOrderBy('s.name')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+
     /**
      * Поставщики товара для заказа
      * @param integer $goodId
