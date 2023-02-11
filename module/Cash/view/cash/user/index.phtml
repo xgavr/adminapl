@@ -255,7 +255,7 @@
                         return row.cashDoc.cash.name;
                     }    
             case '<?= CashDoc::KIND_OUT_COURIER ?>': 
-                        return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName + ' ' + orderId:null;                        
+                        return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName + ' ' + contactName+ ' ' + orderId:null;                        
             case '<?= CashDoc::KIND_OUT_SALARY ?>': 
             case '<?= CashDoc::KIND_OUT_USER ?>': 
                         return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName:null;
