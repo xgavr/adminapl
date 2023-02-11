@@ -266,7 +266,7 @@ if ($ptu){
             url: "/ptu/fill-content/"+$('#supplier').val()
         })
             .done(function (data) {
-                $('#table').bootstrapTable('removeAll');
+                $('#ptugoodtable').bootstrapTable('removeAll');
                 
                 var rows = [];
                 $.each( data, function( index, row ) { 
@@ -300,7 +300,7 @@ if ($ptu){
                     var rows = [];
                     rows.push(row);
                 });    
-                
+                console.log(rows);
                 $('#ptugoodtable').bootstrapTable('prepend', rows);  
                 ptuUpdateTotal();
             })
