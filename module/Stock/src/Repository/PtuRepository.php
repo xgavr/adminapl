@@ -285,7 +285,7 @@ class PtuRepository extends EntityRepository{
             ->setParameter('1', $supplierId)    
             ->andWhere('so.status = ?2')
             ->setParameter('2', SupplierOrder::STATUS_NEW)    
-            ->andWhere('so.statusOrder != ?3')
+            ->andWhere('so.statusOrder = ?3')
             ->setParameter('3', SupplierOrder::STATUS_ORDER_ORDERED)    
                 ;
         
