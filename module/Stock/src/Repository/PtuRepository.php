@@ -283,15 +283,11 @@ class PtuRepository extends EntityRepository{
             ->where('so.supplier = ?1')
             ->setParameter('1', $supplierId)    
             ->andWhere('so.status = ?2')
-            ->setParameter('2', SupplierOrder::STATUS_ORDER_ORDERED)    
-            ->andWhere('so.status != ?2')
-            ->setParameter('2', SupplierOrder::STATUS_RECEIVED)    
+            ->setParameter('2', SupplierOrder::STATUS_NEW)    
+            ->andWhere('so.statusOrder != ?3')
+            ->setParameter('3', SupplierOrder::STATUS_ORDER_ORDERED)    
                 ;
         
-        if (is_array($params)){
-            if (isset($params['sort'])){
-            }            
-        }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }        
