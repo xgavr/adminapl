@@ -274,7 +274,7 @@ if ($ptu){
                         id: row.good.id,
                         code: row.good.code,
                         name: row.good.name,
-                        producer: {name: row.good.producer},
+                        producer: {name: row.good.producer.name}
                     }
                     var unit = {
                         name: ''
@@ -299,7 +299,7 @@ if ($ptu){
                     row.rowNo = newRowNo;
                     rows.push(row);
                 });    
-                console.log(rows);
+//                console.log(rows);
                 $('#ptugoodtable').bootstrapTable('prepend', rows);  
                 ptuUpdateTotal();
             })
