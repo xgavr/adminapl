@@ -78,7 +78,7 @@ class UserController extends AbstractActionController
         }    
         
         $params = [
-            'sort' => $sort, 'order' => $order, 
+            'sort' => $sort, 'order' => $order, 'officeId' => $officeId,
             'userId' => $userId, 'kind' => $kind,
         ];
         

@@ -38,7 +38,7 @@
                     <input name="dateStart" id="dateStart" style="width: 200px" class="form-control refresh-table" type="date" value="<?= date('Y-m-d')?>">
                 </div>
                 <div class="form-group">
-                    <select id="kindSelect" style="width: 200px" class="form-control refresh-table" name="cashId">
+                    <select id="kindSelect" style="width: 200px" class="form-control refresh-table" name="kind">
                         <option>Все операции</option>
                         <?php foreach (CashDoc::getKindList() as $kind=>$value):?>
                             <option value="<?= $kind?>"><?= ($kind>10) ? '-':'+' ?><?= $value?></option>
@@ -46,14 +46,14 @@
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="officeSelect" style="width: 100px" class="form-control" name="officeId">
+                    <select id="officeSelect" style="width: 100px" class="form-control" name="office">
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="userSelect" style="width: 200px" class="form-control refresh-table" name="cashId">
+                    <select id="userSelect" style="width: 200px" class="form-control refresh-table" name="user">
                         <option value="0">все</option>
                         <?php foreach ($users as $user):?>
                             <option value="<?= $user->getId()?>"><?= $user->getName()?></option>
@@ -75,8 +75,9 @@
             data-toolbar="#toolbar"
             data-show-refresh="true"
             data-show-toggle="false"
+            data-undefined-text=''
             data-query-params="queryParams"
-            data-sort-name="id"
+            data-sort-name="dateOper"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
             data-row-style="rowStyle"
@@ -187,6 +188,19 @@
         }    
         return params;
     }
+    
+    function idFormatter(value, row){
+        if (row.aplId > 0){
+            return value + ' ('+row.aplId+')';
+        }
+        
+        return value;
+    }    
+    
+    function dateFormatter(value){
+        var date = new Date(value);
+        return $.format.date(date, "dd.MM.yyyy");
+    }    
     
     function linkFormatter(value, row){
         if (!value){

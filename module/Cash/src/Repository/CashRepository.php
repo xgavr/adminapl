@@ -142,6 +142,11 @@ class CashRepository extends EntityRepository
                     ->setParameter('3', $params['cashId'])
                         ;
             }            
+            if (is_numeric($params['kind'])){
+                $queryBuilder->andWhere('cd.kind = ?4')
+                    ->setParameter('4', $params['kind'])
+                        ;
+            }            
         }
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
@@ -210,14 +215,18 @@ class CashRepository extends EntityRepository
         
         if (is_array($params)){
             if (isset($params['userId'])){
-                $queryBuilder->andWhere('ut.user = ?3')
-                    ->setParameter('3', $params['userId'])
-                        ;
+                if (is_numeric($params['userId'])){
+                    $queryBuilder->andWhere('ut.user = ?3')
+                        ->setParameter('3', $params['userId'])
+                            ;
+                }    
             }            
             if (is_numeric($params['kind'])){
-                $queryBuilder->andWhere('cd.kind = ?4')
-                    ->setParameter('4', $params['kind'])
-                        ;
+                if (is_numeric($params['kind'])){
+                    $queryBuilder->andWhere('cd.kind = ?4')
+                        ->setParameter('4', $params['kind'])
+                            ;
+                }    
             }            
             if (isset($params['sort'])){
                 $queryBuilder->addOrderBy('ut.'.$params['sort'], $params['order']);
@@ -252,10 +261,19 @@ class CashRepository extends EntityRepository
                 ;
         
         if (is_array($params)){
-            if (isset($params['cashId'])){
-                $queryBuilder->andWhere('ut.cash = ?3')
-                    ->setParameter('3', $params['cashId'])
-                        ;
+            if (isset($params['userId'])){
+                if (is_numeric($params['userId'])){
+                    $queryBuilder->andWhere('ut.user = ?3')
+                        ->setParameter('3', $params['userId'])
+                            ;
+                }    
+            }            
+            if (is_numeric($params['kind'])){
+                if (is_numeric($params['kind'])){
+                    $queryBuilder->andWhere('cd.kind = ?4')
+                        ->setParameter('4', $params['kind'])
+                            ;
+                }    
             }            
         }
         
