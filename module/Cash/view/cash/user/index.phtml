@@ -238,10 +238,13 @@
     }    
     
     function cashFormatter(value, row){
-        if (row.cashDoc.user.fullName){
+        if (row.cashDoc.user){
             return row.cashDoc.user.fullName;
         }        
-        return row.cashDoc.cash.name; 
+        if (row.cashDoc.cash){
+            return row.cashDoc.cash.name;
+        }        
+        return value; 
     }    
 
     function operFormatter(value, row){
