@@ -195,7 +195,8 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
             'attributes' => [                
                 'id' => 'docDate',
                 'step' => 1,
-                'required' => 'required',                
+                'required' => 'required',   
+                'value' => date('Y-m-d'),
             ],
             'options' => [
                 'label' => 'Дата документа',
