@@ -138,7 +138,7 @@ class Register {
 
     public function getDocStamp() 
     {
-        return round($this->docStamp, 3);
+        return $this->docStamp;
     }
 
     public function setDocStamp($docStamp) 
