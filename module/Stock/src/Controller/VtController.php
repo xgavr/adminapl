@@ -337,27 +337,20 @@ class VtController extends AbstractActionController
             return;                        
         }        
         
-        $reg = $this->entityManager->getRepository(Register::class)
-                ->findOneBy(['docId' => $vt->getId(), 'docType' => Movement::DOC_VT]);
-        
-        if ($reg){
-            $docStamp = $reg->getDocStamp();
-        } else {
-            $docStamp = $this->entityManager->getRepository(Register::class)
-                    ->vtRegister($vt);        
-        }    
         $vtGoods = $vt->getVtGoods();
         $result = [0 => VtGood::BASE_KEY_AUTO];
         $keys = [];
         foreach ($vtGoods as $vtGood){
+            $params = ['docKey' => $vt->getOrder()->getLogKey(), 'good' => $vtGood->getGood()->getId()];
             $bases = $this->entityManager->getRepository(Movement::class)
-                    ->findBases($vtGood->getGood()->getId(), $docStamp, $vt->getOffice()->getId());
+                    ->findBy($params, ['quantity' => 'ASC']);
+                            
             foreach ($bases as $base){
-                if (!array_key_exists($base['baseKey'], $keys)){
-                    $keys[$base['baseKey']] = $base['baseKey'];
+                if (!array_key_exists($base->getBasekey(), $keys)){
+                    $keys[$base->getBasekey()] = -$base>getBasekey();
                     $result[] = [
-                        'value' => $base['baseKey'],
-                        'text' => $base['baseKey'],
+                        'value' => $base->getBasekey(),
+                        'text' => $base->getBasekey(),
                     ];
                 }
             }    
