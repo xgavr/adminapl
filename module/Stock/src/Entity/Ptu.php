@@ -242,6 +242,9 @@ class Ptu {
             $result['goods'][] = $ptuGood->toLog();
         }
         $info = $this->getInfoAsArray();
+        if (!is_array($info)){
+            $info = [];
+        }
         $info['depend'] = $result;
         
         return $info;
