@@ -313,7 +313,6 @@ class VtpController extends AbstractActionController
                 unset($data['supplier']);
                 unset($data['company']);
                 unset($data['csrf']);                
-                unset($data['vtpGood']);
                 $data['status_ex'] = Vtp::STATUS_EX_NEW;
                 $data['contract'] = $contract;
                 $data['legal'] = $legal;
@@ -324,6 +323,7 @@ class VtpController extends AbstractActionController
                 if (!empty($data['vtpGood'])){
                     $vtpGood = $data['vtpGood'];
                 }
+                unset($data['vtpGood']);
                 
                 if ($vtp){
                     if ($data['ptu'] != $ptu->getId()){
