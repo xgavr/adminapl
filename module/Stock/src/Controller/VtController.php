@@ -346,11 +346,11 @@ class VtController extends AbstractActionController
                     ->findBy($params, ['quantity' => 'ASC']);
                             
             foreach ($bases as $base){
-                if (!array_key_exists($base->getBasekey(), $keys)){
-                    $keys[$base->getBasekey()] = -$base>getBasekey();
+                if (!array_key_exists($base->getBaseKey(), $keys)){
+                    $keys[$base->getBaseKey()] = $base->getBaseKey();
                     $result[] = [
-                        'value' => $base->getBasekey(),
-                        'text' => $base->getBasekey(),
+                        'value' => $base->getBaseKey(),
+                        'text' => $base->getBaseKey(),
                     ];
                 }
             }    
