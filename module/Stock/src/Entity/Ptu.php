@@ -208,7 +208,7 @@ class Ptu {
             if ($this->info){
                 return Decoder::decode($this->info, \Laminas\Json\Json::TYPE_ARRAY);            
             }    
-        } catch (Laminas\Json\Exception\RuntimeException $ex) {
+        } catch (\Laminas\Json\Exception\RuntimeException $ex) {
         }
         return [];
     }
