@@ -551,7 +551,7 @@ class AplService {
      */
     public function getStaff($row)
     {
-        $user = $contact = null;
+        $contact = null;
         $user = $this->entityManager->getRepository(User::class)
                 ->findOneBy(['aplId' => $row['id']]);
         if (!$user && $row['email']){
@@ -592,7 +592,7 @@ class AplService {
                 'aplId' => $row['id'],
                 'officeAplId' => $row['parent'],
             ];    
-            if (!empty($desc['dob'])){
+            if (!empty($row['dob'])){
                $user_data['birthday'] = date_format(date_create($row['dob']), 'Y-m-d'); 
             }
             
