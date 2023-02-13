@@ -17,6 +17,8 @@ use Application\Entity\Goods;
 use Stock\Form\VtForm;
 use Stock\Form\VtGoodForm;
 use Company\Entity\Office;
+use Stock\Entity\Register;
+use Stock\Entity\Movement;
 
 class VtController extends AbstractActionController
 {
@@ -321,5 +323,48 @@ class VtController extends AbstractActionController
         return new JsonModel(
            ['ok']
         );           
+    }    
+    
+    public function findBaseAction()
+    {
+        $vtId = $this->params()->fromRoute('id', -1);
+        
+        $vt = $this->entityManager->getRepository(Vt::class)
+                ->find($vtId);        
+
+        if ($vt == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $reg = $this->entityManager->getRepository(Register::class)
+                ->findOneBy(['docId' => $vt->getId(), 'docType' => Movement::DOC_VT]);
+        
+        if ($reg){
+            $docStamp = $reg->getDocStamp();
+        } else {
+            $docStamp = $this->entityManager->getRepository(Register::class)
+                    ->vtRegister($vt);        
+        }    
+        $vtGoods = $vt->getVtGoods();
+        $result = [0 => VtGood::BASE_KEY_AUTO];
+        $keys = [];
+        foreach ($vtGoods as $vtGood){
+            $bases = $this->entityManager->getRepository(Movement::class)
+                    ->findBases($vtGood->getGood()->getId(), $docStamp, $vt->getOffice()->getId());
+            foreach ($bases as $base){
+                if (!array_key_exists($base['baseKey'], $keys)){
+                    $keys[$base['baseKey']] = $base['baseKey'];
+                    $result[] = [
+                        'value' => $base['baseKey'],
+                        'text' => $base['baseKey'],
+                    ];
+                }
+            }    
+        }    
+        
+        return new JsonModel(
+            $result
+        );                   
     }    
 }

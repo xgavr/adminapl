@@ -93,6 +93,9 @@ if ($vt){
                     <button id="remove-selected-button" class="btn btn-default" type="button" title="Удалить выделенное">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </button>                
+                    <button class="btn btn-default good-row-copy" type="button" title="Копировать выделенные строки">
+                        <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+                    </button>                
                 </div>
             </div>    
             <table id="vtgoodtable" 
@@ -100,11 +103,15 @@ if ($vt){
                 data-url="/vt/good-content/<?= ($vt) ? $vt->getId():"" ?>"
                 data-side-pagination="client"
                 data-pagination="true"
+                data-cookie="true"
+                data-cookie-id-table="vtGoodSave<?= $vt->getId()?>"
+                data-cookie-expire="1m"
                 data-page-size = "50"
                 data-page-list="[5, 10, 20, 50]"
                 data-toolbar="#vtgoodtoolbar"
                 data-show-refresh="true"
                 data-show-toggle="false"
+                data-show-columns="true"
                 data-query-params="vtgoodQueryParams"
                 data-response-handler="vtgoodResponseHandler"
                 data-unique-id = "rowNo"
@@ -121,7 +128,8 @@ if ($vt){
                         <th data-field='price' data-type="numeric" data-formatter="pgPriceFormatter" data-align="right" data-editable="true">Цена</th>
                         <th data-field='quantity' data-type="numeric" data-align="right" data-editable="true">Количество</th>
                         <th data-field='amount' data-type="numeric" data-formatter="pgAmountFormatter" data-align="right">Сумма</th>
-                        <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="80"></th>
+                        <th data-field="baseKey" data-visible="false" data-editable="true" data-editable-type="select" data-editable-source="/vt/find-base/<?= $vt->getId()?>" data-width="10">Партия</th>
+                        <th data-field="id" data-formatter="pgActiveFormatter" data-width="80"></th>
                     </tr>                
                 </thead>
             </table>
@@ -146,7 +154,7 @@ if ($vt){
 </div>    
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-secondary vt-close" data-dismiss="modal">Закрыть</button>
     <button type="submit" class="btn btn-primary" id="vt-submit">Сохранить</button>
 </div>
 
@@ -209,7 +217,7 @@ if ($vt){
             .done(function (data) {
                 if (data == 'ok'){
                     $('#vtModal').modal('hide');
-                    $('#vttable').bootstrapTable('refresh');
+                    $('#vtgoodtable').bootstrapTable('destroy');
                     if ($('#movementTable').length){
                         $('#movementTable').bootstrapTable('refresh');
                     }    
@@ -230,7 +238,8 @@ if ($vt){
             var newRow = {
                 good_id: row.good.id,
                 quantity: row.quantity,
-                amount: row.amount
+                amount: row.amount,
+                baseKey: row.baseKey
             };
             result.push(newRow);
         });   
@@ -261,6 +270,30 @@ if ($vt){
                 vtUpdateTotal();
             }            
         }); 
+        
+        $(document).on('click', '.vt-close', function (e) {
+            $('#vtgoodtable').bootstrapTable('destroy');
+        });        
+        
+        $(document).on('click', '.good-row-copy', function (e) {
+            var selections = $('#vtgoodtable').bootstrapTable('getSelections');
+            if (selections.length){
+                $.each( selections, function( index, row ) {
+                    var newRowNo = getNewTableUniqueId('vtgoodtable', 'rowNo');
+                    var newRow = {
+                        good: row.good,
+                        price: row.price,
+                        quantity: row.quantity,
+                        amount: row.amount,
+                        rowNo: newRowNo
+                    };
+                    newRow.rowNo = newRowNo;
+                    $('#vtgoodtable').bootstrapTable('insertRow', {index: 1, row: newRow});
+                });  
+                $('#vtgoodtable').bootstrapTable('uncheckAll');
+                vtUpdateTotal();
+            }    
+        });      
         
         var forms = $('#vt-form');
         

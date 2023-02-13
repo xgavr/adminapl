@@ -34,6 +34,8 @@ class VtGood {
      // Ptu status doc constants.
     const STATUS_DOC_RECD       = 1; // Получено.
     const STATUS_DOC_NOT_RECD  = 2; // Не получено.
+    
+    const BASE_KEY_AUTO = 'авто';
 
     /**
      * @ORM\Id
@@ -81,6 +83,11 @@ class VtGood {
      * @ORM\Column(name="take")   
      */
     protected $take;
+    
+    /** 
+     * @ORM\Column(name="base_key")  
+     */
+    protected $baseKey;    
     
     /**
      * @ORM\ManyToOne(targetEntity="Stock\Entity\Vt", inversedBy="vtGoods") 
@@ -161,6 +168,28 @@ class VtGood {
         $this->info = $this->setJsonInfo($info);
     }     
 
+    /**
+     * Sets base key.
+     * @param string $baseKey     
+     */
+    public function setBaseKey($baseKey) 
+    {
+        $this->baseKey = $baseKey;
+    }    
+    
+    /**
+     * Returns the base key.
+     * @return string     
+     */
+    public function getBaseKey() 
+    {
+        if ($this->baseKey != self::BASE_KEY_AUTO){
+            return $this->baseKey;
+        }
+        
+        return;
+    }
+    
     /**
      * Returns status.
      * @return int     

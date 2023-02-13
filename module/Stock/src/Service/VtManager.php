@@ -177,8 +177,14 @@ class VtManager
         $vtTake = Vt::STATUS_ACCOUNT_NO;
         foreach ($vtGoods as $vtGood){
             if ($vt->getStatus() != Vt::STATUS_RETIRED){
+                
+                $params = ['docKey' => $vt->getOrder()->getLogKey(), 'good' => $vtGood->getGood()->getId()];
+                if ($vtGood->getBaseKey()){
+                    $params['baseKey'] = $vtGood->getBaseKey();
+                }
+                
                 $movements = $this->entityManager->getRepository(Movement::class)
-                        ->findBy(['docKey' => $vt->getOrder()->getLogKey(), 'good' => $vtGood->getGood()->getId()], ['quantity' => 'ASC']);
+                        ->findBy($params, ['quantity' => 'ASC']);
                 
                 $posting = $vtGood->getQuantity();
                 
@@ -418,6 +424,7 @@ class VtManager
             'amount' => $data['amount'],
             'good_id' => $data['good_id'],
             'comment' => (isset($data['comment'])) ? $data['comment']:'',
+            'base_key' => (isset($data['baseKey'])) ? $data['baseKey']:null,
 //            'info' => $data['info'],
             'row_no' => $rowNo,
             'take' => VtGood::TAKE_NO,
@@ -490,6 +497,11 @@ class VtManager
         
         $rowNo = 1;
         foreach ($data as $row){
+            if (isset($row['baseKey'])){
+                if ($row['baseKey'] == VtGood::BASE_KEY_AUTO){
+                    unset($row['baseKey']);
+                }
+            }
             $this->addVtGood($vt->getId(), $row, $rowNo);
             $rowNo++;
         }

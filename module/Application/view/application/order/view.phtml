@@ -72,7 +72,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             data-side-pagination="client"
             data-pagination="true"
             data-cookie="true"
-            data-cookie-id-table="orderViewSaveId"
+            data-cookie-id-table="orderViewSave<?= $order->getId()?>"
             data-cookie-expire="1m"
             data-show-refresh="true"
             data-icon-size="sm"
@@ -131,18 +131,19 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             data-sort-order="desc"            
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
+            data-row-style="vtRowStyle"
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="100">Номер</th>
-                     <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="100">Дата</th>
-                     <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
-                     <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="amountFormatter">Сумма</th>
-                     <th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>
-                     <th data-field='office.name' data-sortable="false">Склад</th>
-                     <th data-field='status' data-sortable="false" data-formatter="statusFormatter">Статус</th>
-                     <th data-field='comment' data-sortable="false">Примечание</th>
-                     <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
+                    <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="100">Номер</th>
+                    <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="100">Дата</th>
+                    <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
+                    <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                    <th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>
+                    <th data-field='office.name' data-sortable="false">Склад</th>
+                    <th data-field='status' data-sortable="false" data-formatter="statusFormatter">Статус</th>
+                    <th data-field='comment' data-sortable="false">Примечание</th>
+                    <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
                  </tr>                
             </thead>
         </table>
@@ -317,6 +318,24 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             classes = 'warning';
         }        
         return {classes: classes};
+    }
+
+    function vtRowStyle(row){
+        var retired = 'tablerow';
+        if (row.status === '<?= Vt::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }
+        if (row.status === '<?= Vt::STATUS_COMMISSION?>'){
+           retired += ' info';
+        }
+        if (row.status === '<?= Vt::STATUS_DEFECT?>'){
+           retired += ' info';
+        }
+        if (row.statusAccount === '<?= Vt::STATUS_TAKE_NO?>'){
+           retired = ' warning';
+        }
+        
+        return {classes: retired};
     }
 
     function goodFormatter(value, row){

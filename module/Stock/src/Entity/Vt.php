@@ -536,9 +536,14 @@ class Vt {
         return $this->order;
     }
     
-    public function addVtGoods($vtGood)
+    public function addVtGood($vtGood)
     {
         $this->vtGoods[] = $vtGood;
+    }    
+    
+    public function getVtGoods()
+    {
+        return $this->vtGoods;
     }    
     
     /**
