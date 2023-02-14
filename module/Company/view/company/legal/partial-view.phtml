@@ -2,6 +2,7 @@
     use Company\Entity\BankAccount;
     use Company\Entity\Contract;
     use Company\Entity\Legal;
+    use Company\Entity\LegalLocation;
 ?>
 
 <div class="panel-heading">
@@ -42,6 +43,54 @@
                         </button>                                                           
                     </div>
                 </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="pull-left">
+                        <i>Адреса <?= $legal->getName() ?></i>
+                    </div>                                
+                    <div class="pull-right">
+                        <button value="/legals/location-form/<?= $legal->getId() ?>" class="btn btn-default btn-xs"
+                                data-toggle="modal" data-target="#modal-dialog" title="Добавить новый адрес">
+                            <span class="glyphicon glyphicon-plus" ></span>
+                        </button>                                                        
+                    </div>                                
+                </div>
+                <table class="table table-hover table-condensed">
+                    <tr>
+                        <th>Дата</th>
+                        <th>Адрес</th>
+                        <th>Назначение</th>
+                        <th colspan="2"></th>
+                    </tr>
+                    <?php if ($legal->getLocations()):?>
+                        <?php foreach ($legal->getLocations() as $location): ?>
+                            <tr class="<?= ($location->getStatus() == LegalLocation::STATUS_RETIRED) ? 'retired':''?>">
+                               <td>
+                                   <?= date('d.m.Y', strtotime($location->getDateStart()))?>
+                               </td>
+                               <td>
+                                   <?= $location->getAddress()?>
+                               </td>
+                               <td>
+                                   <?= $location->getStatusAsString() ?>
+                               </td>
+                                <td width='2'>
+                                    <button value="/legals/location-form/<?= $legal->getId() ?>?location=<?= $location->getId() ?>" class="btn btn-default btn-xs"
+                                            data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                        <span class="glyphicon glyphicon-edit" ></span>
+                                    </button>                    
+                                </td>
+                                <td width='2'>
+                                    <button value="/legals/delete-location-form/<?= $location->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                            title="Удалить">
+                                        <span class="glyphicon glyphicon-remove" ></span>
+                                    </button>                                                           
+                                </td>    
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif;?>       
+                </table>
             </div>
             <div class="panel panel-default">
                 <div class="panel-body">

@@ -17,6 +17,7 @@ use Company\Entity\BankAccount;
 use Company\Entity\Contract;
 use Company\Entity\EdoOperator;
 use Company\Entity\Office;
+use Company\Entity\LegalLocation;
 
 /**
  * Description of Legal
@@ -140,6 +141,13 @@ class Legal {
     private $orders;
     
     /**
+    * @ORM\OneToMany(targetEntity="Company\Entity\LegalLocation", mappedBy="legal")
+    * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
+     * @ORM\OrderBy({"status" = "ASC", "id" = "DESC"})
+     */
+    private $locations;
+
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -147,6 +155,7 @@ class Legal {
         $this->bankAccounts = new ArrayCollection();
         $this->contracts = new ArrayCollection();
         $this->contacts = new ArrayCollection();
+        $this->locations = new ArrayCollection();
     }
     
     
@@ -318,7 +327,12 @@ class Legal {
         $this->info = $info;
     }     
 
-    public function getAddress() 
+    /**
+     * Адрес организации
+     * @param date $onDate
+     * @return string
+     */
+    public function getAddress($onDate = null) 
     {
         return $this->address;
     }
@@ -659,15 +673,28 @@ class Legal {
      */
     public function getLegalPresent($options = null)
     {
+        $locationStatus = LegalLocation::STATUS_ACTIVE;
+        $onDate = date('Y-m-d');
+        if (is_array($options)){
+            if (!empty($options['locationStatus'])){
+                $locationStatus = $options['locationStatus'];
+            }
+            if (!empty($options['onDate'])){
+                $onDate = $options['onDate'];
+            }
+        }
+
         $result = '';
         $result .= $this->name;
         if ($this->inn){
             $result .= ', ';
             $result .= $this->inn.'/'.$this->kpp;
         }
-        if ($this->address){
+        
+        $address = $this->getCurrentLocation($locationStatus, $onDate);
+        if ($address){
             $result .= ', ';
-            $result .= $this->address;
+            $result .= $address;
         }
         if ($this->contacts[0]->getPhonesAsString()){
             $result .= ', ';
@@ -675,7 +702,7 @@ class Legal {
         }    
         
         return trim($result);        
-    }
+    }    
     
     /**
      * Представдение организации с р/с
@@ -756,5 +783,55 @@ class Legal {
     public function getOrders() 
     {
         return $this->orders;
+    }    
+    
+    /*
+     * Возвращает связанный location на дату.
+     * @param integer $locationStatus
+     * @param date $onDate
+     * @return string
+     */    
+    public function getCurrentLocation($locationStatus = LegalLocation::STATUS_ACTIVE, $onDate = null) 
+    {
+        if (!$onDate){
+            $onDate = date('Y-m-d');
+        }
+
+        if (!$this->locations->count()){
+            return $this->address;
+        }
+
+        $criteria = Criteria::create()
+                ->andWhere(Criteria::expr()->eq('status', (string) $locationStatus))
+                ->andWhere(Criteria::expr()->lte('dateStart', $onDate))
+                ->orderBy(['dateStart' => Criteria::DESC])
+                ->setMaxResults(1)
+                ;
+        
+        $data = $this->locations->matching($criteria);
+//        var_dump(count($data)); exit;
+        foreach ($data as $row){
+            return $row->getAddress();
+        }
+
+        return $this->address;
+    }    
+
+    /*
+     * Возвращает связанный location.
+     * @return array
+     */    
+    public function getLocations() 
+    {
+        return $this->locations;
+    }    
+    
+    /**
+     * Assigns.
+     * @param LegalLocation $location
+     */
+    public function addLocation($location)
+    {
+        $this->locations[] = $location;
     }    
 }

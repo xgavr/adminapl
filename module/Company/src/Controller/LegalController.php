@@ -21,6 +21,8 @@ use Laminas\View\Model\JsonModel;
 use Cash\Entity\Cash;
 use Company\Entity\EdoOperator;
 use Company\Form\EdoOperatorForm;
+use Company\Entity\LegalLocation;
+use Company\Form\LocationForm;
 
 class LegalController extends AbstractActionController
 {
@@ -873,4 +875,91 @@ class LegalController extends AbstractActionController
             'name' => $legal->getName(),
         ]);                   
     }
+    
+    public function locationFormAction()
+    {
+        $legalId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($legalId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $legal = $this->entityManager->getRepository(Legal::class)
+                ->find($legalId);
+        
+        if ($legal == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $locationId = (int)$this->params()->fromQuery('location', -1);
+        
+        $location = null;
+        if ($locationId>0) {
+            $location = $this->entityManager->getRepository(LegalLocation::class)
+                    ->find($locationId);
+        }
+                
+        $form = new LocationForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                if ($location){
+                    $this->legalManager->updateLegalLocation($location, $data);                    
+                } else{
+                    $this->legalManager->addLegalLocation($legal, $data);
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($location){
+                $data = [
+                    'address' => $location->getAddress(),  
+                    'dateStart' => $location->getDateStart(),
+                    'status' => $location->getStatus(),
+                ];
+                $form->setData($data);
+            }    
+        }        
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'legal' => $legal,
+            'location' => $location,
+        ]);        
+    }    
+    
+    public function deleteLocationFormAction()
+    {
+        $locationId = $this->params()->fromRoute('id', -1);
+        
+        $location = $this->entityManager->getRepository(LegalLocation::class)
+                ->find($locationId);
+        
+        if ($location == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->legalManager->removeLegalLocation($location);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+    }    
 }

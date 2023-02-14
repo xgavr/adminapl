@@ -11,6 +11,7 @@ use Stock\Entity\Mutual;
 use Bank\Entity\Statement;
 use Stock\Entity\Retail;
 use Company\Entity\EdoOperator;
+use Company\Entity\LegalLocation;
 
 /**
  * This service legal.
@@ -520,5 +521,62 @@ class LegalManager
 
         return;
     }    
+    
+    /**
+     * Добавить адрес
+     * 
+     * @param Legal $legal
+     * @param array $data
+     * @retun LegalLocation 
+     */
+    public function addLegalLocation($legal, $data)
+    {                
+        $location = new LegalLocation();            
+        $location->setAddress($data['address']);            
+        $location->setDateStart($data['dateStart']);            
+        $location->setStatus($data['status']);            
+                
+        $currentDate = date('Y-m-d H:i:s');
+        $location->setDateCreated($currentDate);
+        
+        $location->setLegal($legal);
+            
+        $this->entityManager->persist($location);
+        $this->entityManager->flush();                
+        
+        return $location;
+    }
+
+    /**
+     * Обновить адрес
+     *  
+     * @param LegalLocation $location 
+     * @param array $data
+     * @return LegalLocation 
+     */
+    public function updateLegalLocation($location, $data)
+    {                
+        $location->setAddress($data['address']);            
+        $location->setDateStart($data['dateStart']);            
+        $location->setStatus($data['status']);            
+                
+        $this->entityManager->persist($location);
+        $this->entityManager->flush();                
+        
+        return $location;
+    }
+    
+    /**
+     * Удаление адреса
+     * @param LegalLocation $location
+     * @return null
+     */
+    public function removeLegalLocation($location)
+    {
+        $this->entityManager->remove($location);
+        $this->entityManager->flush();
+
+        return;
+    }        
 }
 

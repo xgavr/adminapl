@@ -34,6 +34,7 @@ use Application\Entity\Order;
 use Application\Entity\Bid;
 use Application\Filter\NumToStr;
 use Application\Entity\Shipping;
+use Company\Entity\LegalLocation;
 
 
 /**
@@ -562,10 +563,10 @@ class PrintManager {
         $sheet = $spreadsheet->setActiveSheetIndex(0)
                 ->setCellValue('B3', $company->getCompanyBankAccountPresent($vtp->getPtu()->getOffice()))
                 ->setCellValue('AL4', $company->getOkpo())
-                ->setCellValue('D8', ($recipient) ? $recipient->getLegalBankAccountPresent():'')
+                ->setCellValue('D8', ($recipient) ? $recipient->getLegalBankAccountPresent(['locationStatus' => LegalLocation::STATUS_CONSIGNEE, 'onDate' => $vtp->getPtu()->getDocDate()]):'')
                 ->setCellValue('AL9', $company->getOkpo())
                 ->setCellValue('D10', $company->getCompanyBankAccountPresent($vtp->getPtu()->getOffice()))
-                ->setCellValue('D12', ($recipient) ? $recipient->getLegalBankAccountPresent():'')
+                ->setCellValue('D12', ($recipient) ? $recipient->getLegalBankAccountPresent(['locationStatus' => LegalLocation::STATUS_ACTIVE, 'onDate' => $vtp->getPtu()->getDocDate()]):'')
 //                ->setCellValue('D14', ($order->getContract()) ? $order->getContract()->getContractPresent():'')
                 ->setCellValue('K17', $vtp->getDocNo())
                 ->setCellValue('O17', date('d.m.Y', strtotime($vtp->getDocDate())))
@@ -638,7 +639,7 @@ class PrintManager {
             case 'Xls':
             case 'Xlsx':
                 $writer = IOFactory::createWriter($spreadsheet, $writerType);
-                $outFilename = $order->getPrintName($writerType, 'Накладная');
+                $outFilename = $vtp->getPrintName($writerType, 'Накладная');
 //                $writer->writeAllSheets();
                 $writer->save($outFilename);
                 break;

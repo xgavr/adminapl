@@ -10,7 +10,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
     <div class="row">
         <div class="col-md-6">
             <h5>
-                <div><?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDateCreated())); ?> 
+                <div><?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDocDate())); ?> 
                     <?= $order->getOffice()->getName()?>
                 </div>
                 <div>
