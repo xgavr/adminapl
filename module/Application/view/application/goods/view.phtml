@@ -378,7 +378,7 @@
                     <thead>
                         <tr>
                              <!--<th data-field="id" data-type="numeric">ID</th>-->
-                             <th data-field="dateCreated">Дата</th>
+                             <th data-field="dateCreated" data-formatter="dateTimeFormatter">Дата</th>
                              <th data-field="supplier" data-formatter="baseSupplierFormatter">Поставщик</th>
                              <th data-field="goodname" >Описание</th>
                              <th data-field="rest" data-align='right'>Наличие</th>
@@ -738,6 +738,11 @@
     function dateFormatter(value){
         var date = new Date(value);
         return $.format.date(value, "dd.MM.yyyy");
+    }
+
+    function dateTimeFormatter(value){
+        var date = new Date(value);
+        return $.format.date(value, "dd.MM.yyyy <sup>H:i</sup>");
     }
 
     function oemActiveFormatter(value, row){
