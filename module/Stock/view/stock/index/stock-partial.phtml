@@ -206,10 +206,15 @@
             });
         });  
         
-        $(document).on('click', '.order-view-show', function (e) {
+        var orderViewModal = new ModalApp.ModalProcess({
+            id: 'orderViewModal'
+        });
+        orderViewModal.init();
+                    
+        $(document).on('click', '.order-view-show', function (e) {  
+            e.preventDefault();
             var url = $(this).attr('modal-url');
-            showFormDialog({
-                id: 'orderViewModal',
+            dialogModalShow(orderViewModal, {
                 url: url,
                 width: '1440px',
                 zIndex: 5555

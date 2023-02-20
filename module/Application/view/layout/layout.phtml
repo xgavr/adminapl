@@ -250,6 +250,11 @@
         return result;
     }
 
+    /**
+     * Открыть окно 
+     * @param object params
+     * @returns 
+     */
     function showFormDialog(params)
     {
         //https://itchief.ru/bootstrap/modal-dynamic-creation
@@ -265,6 +270,46 @@
 //            modalDialog.changeTitle('');
 //            modalDialog.changeBody('');
 //            modalDialog.changeFooter('');
+            $('#' + modalDialog.id + ' .modal-header').remove();
+            $('#' + modalDialog.id + ' .modal-footer').remove();
+
+            $('#' + modalDialog.id).modal({
+                backdrop: 'static',
+                keyboard: true
+            });
+            $('#' + modalDialog.id).attr('data-focus-on', "input:first");
+
+            if (params.zIndex){
+                $('#' + modalDialog.id).css('z-index', params.zIndex);                        
+            }
+            if (params.width){
+                $('#' + modalDialog.id + ' .modal-dialog').css('width', params.width);                        
+            }
+
+            modalDialog.changeBody(data);
+
+            modalDialog.showModal();
+
+            $('#' + modalDialog.id).on('hidden.bs.modal', function (e) {
+                modalDialog.changeBody('');
+            });                                    
+        });                                                
+    }
+
+    /**
+     * Открыть окно лучше
+     * @param object modalDialog
+     * @param object params
+     * @returns {undefined}
+     */
+    function dialogModalShow(modalDialog, params)
+    {
+        //https://itchief.ru/bootstrap/modal-dynamic-creation
+
+        $.ajax({
+            url: params.url
+        }).done(function(data) {
+
             $('#' + modalDialog.id + ' .modal-header').remove();
             $('#' + modalDialog.id + ' .modal-footer').remove();
 

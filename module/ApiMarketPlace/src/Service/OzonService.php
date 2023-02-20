@@ -191,7 +191,7 @@ class OzonService {
         $input = [
             'auto_action_enabled' => 'UNKNOWN',
             'currency_code' => 'RUB',
-            'min_price' => $minPrice,
+            'min_price' => $price,
             'offer_id' => $good->getAplId(),
             'old_price' => 0,
             'price' => $price,
@@ -404,7 +404,7 @@ class OzonService {
             $prices[] = [
                 'auto_action_enabled' => 'UNKNOWN',
                 'currency_code' => 'RUB',
-                'min_price' => $market->getExtraMinPrice($opts, $lot),
+                'min_price' => $market->getExtraPrice($opts, $lot, $good['marketPlacePrice']), //$market->getExtraMinPrice($opts, $lot),
                 'offer_id' => $good['aplId'],
                 'old_price' => 0,
                 'price' => $market->getExtraPrice($opts, $lot, $good['marketPlacePrice']),
