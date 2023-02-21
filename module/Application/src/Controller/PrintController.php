@@ -160,7 +160,7 @@ class PrintController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;
         }        
-        $updfile = $this->printManager->bill($order, $ext, boolval($stamp), boolval($code), bool($edo));
+        $updfile = $this->printManager->bill($order, $ext, boolval($stamp), boolval($code), boolval($edo));
         
 //        var_dump($torg2); exit;
         

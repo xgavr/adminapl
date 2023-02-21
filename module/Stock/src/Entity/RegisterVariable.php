@@ -48,6 +48,11 @@ class RegisterVariable {
      */
     protected $varStamp;
         
+    /** 
+     * @ORM\Column(name="allow_date")  
+     */
+    protected $allowDate;    
+
     public function __construct() {
     }
    
@@ -104,6 +109,24 @@ class RegisterVariable {
         $this->dateVar = $dateVar;
     }  
     
+    /**
+     * Returns the date of allow.
+     * @return date     
+     */
+    public function getAllowDate() 
+    {
+        return $this->allowDate;
+    }
+    
+    /**
+     * Sets the date when aloow.
+     * @param date $allowDate    
+     */
+    public function setAllowDate($allowDate) 
+    {
+        $this->allowDate = $allowDate;
+    }  
+
     /**
      * Представление документа
      * @return string

@@ -10,6 +10,8 @@ namespace Admin\Service;
 
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
+use Stock\Entity\RegisterVariable;
+
 /**
  * Description of AdminManager
  *
@@ -32,7 +34,7 @@ class AdminManager {
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
@@ -139,6 +141,15 @@ class AdminManager {
         $writer = new PhpArray();
         
         $writer->toFile(self::SETTINGS_FILE, $config);
+        
+        $registerVariable = $this->entityManager->getRepository(RegisterVariable::class)
+                ->findOneBy([]);
+        if ($registerVariable){
+            $this->entityManager->refresh($registerVariable);
+            $registerVariable->setAllowDate($data['allow_date']);
+            $this->entityManager->persist($registerVariable);
+            $this->entityManager->flush();
+        }
     }
 
     
