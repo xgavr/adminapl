@@ -511,6 +511,12 @@ class RegisterManager
         while (true){
             $register = $this->entityManager->getRepository(Register::class)
                     ->findForActualize();
+            
+            $allowDate = $this->getAllowDate();
+            if ($allowDate > $register->getDateOper()){
+                throw new \Exception('Дата документа меньше разрешенной!');                
+            }
+            
             if ($register){
                 if ($this->docActualize($register)){
                     if ($workTime < 840){
