@@ -57,8 +57,13 @@ class RegisterRepository extends EntityRepository
             $var->setVarId($varId);
             $var->setVarType($varType);
             $var->setVarStamp($varStamp);
+            $var->setAllowDate('2012-01-01');
             $entityManager->persist($var);
             $entityManager->flush($var);
+        }
+        
+        if ($dateVar < $var->getAllowDate()){
+            throw new \Exception("Дата документа $varId($varType) меньше разрешенной!");                            
         }
         
         if ($var->getVarStamp() > $varStamp){
