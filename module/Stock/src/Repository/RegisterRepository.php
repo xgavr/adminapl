@@ -262,12 +262,12 @@ class RegisterRepository extends EntityRepository
      * Регистриция CashDoc
      * 
      * @param integer $cashDocId
-     * @param date $cashDocSateOper
+     * @param date $cashDocDateOper
      * @return float
      */
-    private function cashDocIdRegister($cashDocId, $cashDocSateOper)
+    private function cashDocIdRegister($cashDocId, $cashDocDateOper)
     {
-        $dateOper = date('Y-m-d H:i:s', strtotime($cashDocSateOper));
+        $dateOper = date('Y-m-d H:i:s', strtotime($cashDocDateOper));
         return $this->register($dateOper, Movement::DOC_CASH, $cashDocId);
     } 
 
@@ -340,14 +340,14 @@ class RegisterRepository extends EntityRepository
 //        foreach ($sts as $st){
 //            $this->stRegister($st);
 //        }
-        $reviseQuery = $this->getEntityManager()->getRepository(Revise::class)
-                ->queryAllRevise();
-        $iterator = $reviseQuery->iterate();
-        foreach ($iterator as $item){
-            foreach ($item as $revise){
-                $this->reviseRegister($revise);
-            }    
-        }
+//        $reviseQuery = $this->getEntityManager()->getRepository(Revise::class)
+//                ->queryAllRevise();
+//        $iterator = $reviseQuery->iterate();
+//        foreach ($iterator as $item){
+//            foreach ($item as $revise){
+//                $this->reviseRegister($revise);
+//            }    
+//        }
 
         $cdQuery = $this->getEntityManager()->getRepository(CashDoc::class)
                 ->cashDocQuery();
@@ -356,7 +356,7 @@ class RegisterRepository extends EntityRepository
             foreach ($cd as $cashDoc){
                 $reg = $this->getEntityManager()->getRepository(Register::class)
                         ->findOneBy(['docType' => Movement::DOC_CASH, 'docId' => $cashDoc['id']]);
-                if (!$reg){
+                if (date('Ymd', strtotime($reg->getDateOper())) != date('Ymd', strtotime($cashDoc['dateOper']))){
                     $this->cashDocIdRegister($cashDoc['id'], $cashDoc['dateOper']);
                 }    
             }    
