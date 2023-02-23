@@ -175,9 +175,9 @@ class Goods {
     protected $tdDirect = self::TD_NO_DIRECT;
 
     /**
-     * @ORM\Column(name="in_store")   
+     * @ORM\Column(name="in_strore")   
      */
-    protected $inStore = self::STATUS_STORE_NO;
+    protected $inStore = 0;
 
     /**
      * @ORM\Column(name="car_count")   
