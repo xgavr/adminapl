@@ -32,6 +32,6 @@ class GoodsManagerFactory  implements FactoryInterface
         $logManager = $container->get(LogManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new GoodsManager($entityManager, $externalManager, $mlmanager);
+        return new GoodsManager($entityManager, $externalManager, $mlmanager, $logManager);
     }
 }
