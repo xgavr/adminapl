@@ -151,7 +151,7 @@ class AssemblyManager
             'status_img_ex' => Goods::IMG_EX_NEW,
             'status_price_ex' => Goods::PRICE_EX_NEW,
             'status_group_ex' => Goods::GROUP_EX_NEW,
-            'in_store' => 0,
+            'in_strore' => 0,
             'min_price' => 0.0,
             'mean_price' => 0.0,
             'fix_price' => 0.0,
