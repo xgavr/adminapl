@@ -29,6 +29,7 @@ use Stock\Entity\Vt;
 use Stock\Entity\VtGood;
 use Cash\Entity\CashDoc;
 use Application\Entity\Comment;
+use Application\Entity\Goods;
 
 /**
  * Description of LogManager
@@ -422,11 +423,39 @@ class LogManager {
         
         if ($currentUser){
             
-            $ptuLog = $revise->toLog();
+            $reviseLog = $revise->toLog();
             
             $data = [
                 'log_key' => $revise->getLogKey(),
-                'message' => Json::encode($revise),
+                'message' => Json::encode($reviseLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;
+    }           
+
+    /**
+     * Добавить запись в лог good
+     * @param Good $good
+     * @param integer $status 
+     */
+    public function infoGood($good, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            
+            $goodLog = $good->toLog();
+            
+            $data = [
+                'log_key' => $good->getLogKey(),
+                'message' => Json::encode($goodLog),
                 'date_created' => date('Y-m-d H:i:s'),
                 'status' => $status,
                 'priority' => Log::PRIORITY_INFO,

@@ -90,6 +90,7 @@ class AssemblyManager
         $good->setStatusImage(Goods::IMAGE_FOR_UPDATE);
         $good->setStatusOem(Goods::OEM_FOR_UPDATE);
         $good->setStatusRawpriceEx(Goods::RAWPRICE_EX_NEW);
+        $good->setInStore(0);
         $good->setDateEx(date('Y-m-d H:i:s'));
         $good->setCarCount(0);
         $good->setRetailCount(0);
@@ -150,6 +151,7 @@ class AssemblyManager
             'status_img_ex' => Goods::IMG_EX_NEW,
             'status_price_ex' => Goods::PRICE_EX_NEW,
             'status_group_ex' => Goods::GROUP_EX_NEW,
+            'in_store' => 0,
             'min_price' => 0.0,
             'mean_price' => 0.0,
             'fix_price' => 0.0,

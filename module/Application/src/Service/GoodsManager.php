@@ -28,6 +28,7 @@ use Application\Entity\SupplierOrder;
 use Stock\Entity\PtuGood;
 use Stock\Entity\OtGood;
 use Stock\Entity\GoodBalance;
+use Admin\Entity\Log;
 
 /**
  * Description of GoodsService
@@ -58,13 +59,20 @@ class GoodsManager
      */
     private $mlManager;
   
+     /**
+     * Log manager.
+     * @var \Admin\Service\LogManager
+     */
+    private $logManager;
+  
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $externalManager, $mlManager)
+    public function __construct($entityManager, $externalManager, $mlManager, $logManager)
     {
         $this->entityManager = $entityManager;
         $this->externalManager = $externalManager;
         $this->mlManager = $mlManager;
+        $this->logManager = $logManager;
     }
         
     public function addNewGoods($data, $flushnow=true) 
@@ -161,6 +169,24 @@ class GoodsManager
         $good->setMarketPlacePrice($marketPlacePrice);
         $this->entityManager->persist($good);
         $this->entityManager->flush($good);        
+
+        $this->logManager->infoGood($good, Log::STATUS_UPDATE);
+    }
+
+    /**
+     * Обновить наличие
+     * 
+     * @param Goods $good
+     * @param integer $inStore
+     */
+    public function updateInStore($good, $inStore)
+    {
+        $this->entityManager->refresh($good);
+        $good->setInStore($inStore);
+        $this->entityManager->persist($good);
+        $this->entityManager->flush();
+
+        $this->logManager->infoGood($good, Log::STATUS_UPDATE);
     }
 
     /**

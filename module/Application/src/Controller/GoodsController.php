@@ -1832,6 +1832,23 @@ class GoodsController extends AbstractActionController
         return new JsonModel(['ok']);          
     }
 
+    public function updateInStoreAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $goodId = $data['pk'];
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+                    
+            if ($good){
+                $this->goodsManager->updateInStore($good, $data['value']);                    
+            }    
+        }
+        
+        return new JsonModel(['ok']);          
+    }
+
     public function restAction()
     {
         $goodId = (int)$this->params()->fromRoute('id', -1);

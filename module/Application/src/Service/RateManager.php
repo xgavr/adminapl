@@ -61,6 +61,8 @@ class RateManager
         $good->setFixPrice($fixPrice);
         $this->entityManager->persist($good);
         $this->entityManager->flush($good);
+        
+        $this->logManager->infoGood($good, Log::STATUS_UPDATE);
         return;
     }
     

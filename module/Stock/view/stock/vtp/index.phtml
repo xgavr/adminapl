@@ -35,7 +35,7 @@
                 </div>
                 <div class="form-group">
                     <select id="supplierSelect" style="width: 250px" class="form-control cookie-control">
-                        <option selected>поставщик</option>
+                        <option selected>все поставщики</option>
                         <?php foreach ($suppliers as $supplier):?>
                             <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
                         <?php endforeach;?>

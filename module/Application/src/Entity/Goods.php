@@ -175,6 +175,11 @@ class Goods {
     protected $tdDirect = self::TD_NO_DIRECT;
 
     /**
+     * @ORM\Column(name="in_store")   
+     */
+    protected $inStore = self::STATUS_STORE_NO;
+
+    /**
      * @ORM\Column(name="car_count")   
      */
     protected $carCount;
@@ -1050,6 +1055,16 @@ class Goods {
         $this->statusImgEx = $statusImgEx;
     }    
     
+    public function getInStore()
+    {
+        $this->inStore;
+    }
+    
+    public function setInStore($inStore)
+    {
+        $this->inStore = $inStore;
+    }    
+    
     public function getStatusPriceEx()
     {
         $this->statusPriceEx;
@@ -1167,5 +1182,18 @@ class Goods {
     public function getGoodSuppliers()
     {
         return $this->goodSuppliers;
-    }                
+    }    
+    
+    /**
+     * Лог
+     * @return array
+     */
+    public function toLog()
+    {
+        return [
+            'fixPrice' => $this->getFixPrice(),
+            'inStore' => $this->getInStore(),
+            'marketPlacePrice' => $this->getMarketPlacePrice(),
+        ];
+    }    
 }
