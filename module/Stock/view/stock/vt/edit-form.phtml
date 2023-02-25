@@ -125,11 +125,11 @@ if ($vt){
                         <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
                         <th data-field="good.producer.name" data-type="numeric">Производитель</th>
                         <th data-field="good.name" data-type="numeric">Наименование</th>
-                        <th data-field='price' data-type="numeric" data-formatter="pgPriceFormatter" data-align="right" data-editable="true">Цена</th>
-                        <th data-field='quantity' data-type="numeric" data-align="right" data-editable="true">Количество</th>
-                        <th data-field='amount' data-type="numeric" data-formatter="pgAmountFormatter" data-align="right">Сумма</th>
+                        <th data-field='price' data-type="numeric" data-formatter="pgPriceFormatter" data-always-use-formatter="true" data-align="right" data-editable="true">Цена</th>
+                        <th data-field='quantity' data-type="numeric" data-align="right" data-always-use-formatter="true" data-editable="true">Количество</th>
+                        <th data-field='amount' data-type="numeric" data-formatter="pgAmountFormatter" data-always-use-formatter="true" data-align="right">Сумма</th>
                         <th data-field="baseKey" data-visible="false" data-editable="true" data-editable-type="select" data-editable-source="/vt/find-base/<?= $vt->getId()?>" data-width="10">Партия</th>
-                        <th data-field="id" data-formatter="pgActiveFormatter" data-width="80"></th>
+                        <th data-field="id" data-formatter="pgActiveFormatter" data-width="5"></th>
                     </tr>                
                 </thead>
             </table>
