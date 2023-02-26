@@ -111,6 +111,17 @@ class BankSettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'statement_app_password',
+            'attributes' => [
+                'id' => 'statement_app_password'
+            ],
+            'options' => [
+                'label' => 'Пароль приложения для выписок',
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -198,6 +209,25 @@ class BankSettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'statement_email_password',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 32
+                        ],
+                    ],
+                ],
+            ]);          
+
+        $inputFilter->add([
+                'name'     => 'statement_app_password',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

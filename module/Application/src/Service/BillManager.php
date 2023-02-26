@@ -560,7 +560,7 @@ class BillManager
                 'host' => 'imap.yandex.ru',
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $billGetting->getEmail(),
-                'password' => $billGetting->getEmailPassword(),
+                'password' => $billGetting->getAppPassword(),
                 'leave_message' => false,
             ];
             

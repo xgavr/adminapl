@@ -220,6 +220,17 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         ]);
                 
         $this->add([            
+            'type'  => 'text',
+            'name' => 'hello_app_password',
+            'attributes' => [
+                'id' => 'hello_app_password'
+            ],
+            'options' => [
+                'label' => 'Пароль приложения автосекретаря',
+            ],
+        ]);
+
+        $this->add([            
             'type'  => 'email',
             'name' => 'telefonistka_email',
             'attributes' => [

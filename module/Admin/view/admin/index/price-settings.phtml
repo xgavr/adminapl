@@ -96,6 +96,10 @@ $form->get('cross_mail_box_password')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('cross_mail_app_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('cross_mail_box_check')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -211,13 +215,25 @@ $form->prepare();
         </div>                
         <div class="form-group">
             <?= $this->formLabel($form->get('cross_mail_box')); ?>
-            <?= $this->formElement($form->get('cross_mail_box')); ?>
+            <div class="input-group">
+                <?= $this->formElement($form->get('cross_mail_box')); ?>
+                <span class="input-group-btn">
+                    <a class="btn btn-default" type="button" title="Перейти на biz.mail.ru" href="https://biz.mail.ru/login/autopartslist.ru" target="_blank">
+                        <span class="glyphicon glyphicon-link"></span>
+                    </a>
+                </span>                                                            
+            </div>
             <?= $this->formElementErrors($form->get('cross_mail_box')); ?>                  
         </div>                
         <div class="form-group">
             <?= $this->formLabel($form->get('cross_mail_box_password')); ?>
             <?= $this->formElement($form->get('cross_mail_box_password')); ?>
             <?= $this->formElementErrors($form->get('cross_mail_box_password')); ?>                  
+        </div>                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('cross_mail_app_password')); ?>
+            <?= $this->formElement($form->get('cross_mail_app_password')); ?>
+            <?= $this->formElementErrors($form->get('cross_mail_app_password')); ?>                  
         </div>                
         <div class="form-group">
             <?= $this->formLabel($form->get('cross_mail_box_check')); ?>

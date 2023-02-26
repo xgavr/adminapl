@@ -124,6 +124,7 @@ class AdminManager {
         $config->admin->hello_check = $data['hello_check'];
         $config->admin->hello_email = $data['hello_email'];
         $config->admin->hello_email_password = $data['hello_email_password'];
+        $config->admin->hello_app_password = $data['hello_app_password'];
         $config->admin->autoru_email = $data['autoru_email'];
         $config->admin->autoru_email_password = $data['autoru_email_password'];
         
@@ -209,6 +210,7 @@ class AdminManager {
         $config->price->image_mail_box_check = $data['image_mail_box_check']; //ящик для сбора картинок проверять
         $config->price->cross_mail_box = $data['cross_mail_box']; //ящик для сбора кроссов
         $config->price->cross_mail_box_password = $data['cross_mail_box_password']; //ящик для сбора кроссов пароль
+        $config->price->cross_mail_app_password = $data['cross_mail_app_password']; //ящик для сбора кроссов пароль app
         $config->price->cross_mail_box_check = $data['cross_mail_box_check']; //ящик для сбора кроссов проверять
         
         $writer = new PhpArray();
@@ -258,6 +260,7 @@ class AdminManager {
         $config->bank->tarnsfer_apl = $data['tarnsfer_apl']; //обмен а АПЛ
         $config->bank->statement_email = $data['statement_email']; //Email для получения выписок
         $config->bank->statement_email_password = $data['statement_email_password']; //Пароль на email для выписок
+        $config->bank->statement_app_password = $data['statement_app_password']; //Пароль app на email для выписок
         
         $writer = new PhpArray();
         

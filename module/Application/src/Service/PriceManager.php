@@ -154,7 +154,7 @@ class PriceManager {
                 'host' => 'imap.yandex.ru',
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $priceGetting->getEmail(),
-                'password' => $priceGetting->getEmailPassword(),
+                'password' => $priceGetting->getAppPassword(),
                 'leave_message' => false,
             ];
             
