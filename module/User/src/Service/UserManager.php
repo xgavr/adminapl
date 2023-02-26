@@ -171,7 +171,7 @@ class UserManager
         
         // Do not allow to change user email if another user with such email already exits.
         if($user->getEmail()!=$data['email'] && $this->checkUserExists($data['email'])) {
-            throw new \Exception("Another user with email address " . $data['email'] . " already exists");
+            throw new \Exception($user->getId()."! - Another user with email address " . $data['email'] . " already exists");
         }
 
         // Если изменилась идентификация надо будет перелогинится.
