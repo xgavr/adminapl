@@ -153,8 +153,10 @@ class PostManager {
 
         $transport = new SmtpTransport();
         $smtpOptions   = new SmtpOptions([
-            'name'              => 'yandex',
-            'host'              => 'smtp.yandex.ru',
+//            'name'              => 'yandex',
+//            'host'              => 'smtp.yandex.ru',
+            'name'              => 'mail',
+            'host'              => 'smtp.mail.ru',
             'port'              => 465,
             // Setup SMTP transport using LOGIN authentication
             'connection_class'  => 'login',
@@ -545,7 +547,8 @@ class PostManager {
     {
         ini_set('memory_limit', '512M');
         
-        $params['server'] = '{imap.yandex.ru:993/imap/ssl}';
+//        $params['server'] = '{imap.yandex.ru:993/imap/ssl}';
+        $params['server'] = '{imap.mail.ru:993/imap/ssl}';
         $nameDomain = explode("@", $params['user']);
         $domain = $nameDomain[1];
         if (strtolower($domain) == 'adminapl.ru'){
