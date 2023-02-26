@@ -142,7 +142,7 @@ class CrossManager {
                 'host' => 'imap.yandex.ru',
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $priceSettings['cross_mail_box'],
-                'password' => $priceSettings['cross_mail_box_password'],
+                'password' => $priceSettings['cross_mail_app_password'],
                 'leave_message' => false,
             ];
 //            var_dump($box); exit;

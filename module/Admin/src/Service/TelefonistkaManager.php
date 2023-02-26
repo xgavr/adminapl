@@ -67,7 +67,7 @@ class TelefonistkaManager {
             'host' => 'imap.yandex.ru',
             'server' => '{imap.yandex.ru:993/imap/ssl}',
             'user' => $settings['telefonistka_email'],
-            'password' => $settings['telefonistka_email_password'],
+            'password' => $settings['telefonistka_app_password'],
             'leave_message' => false,
         ];
         

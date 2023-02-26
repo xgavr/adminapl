@@ -396,7 +396,7 @@ class BankManager
                 'host' => 'imap.yandex.ru',
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $bankSettings['statement_email'],
-                'password' => $bankSettings['statement_email_password'],
+                'password' => $bankSettings['statement_app_password'],
                 'leave_message' => false,
             ];
 
