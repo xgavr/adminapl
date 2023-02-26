@@ -73,6 +73,17 @@ class BillGettingForm extends Form
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'appPassword',
+            'attributes' => [
+                'id' => 'app-password'
+            ],
+            'options' => [
+                'label' => 'Пароль приложения',
+            ],
+        ]);
+        
         // Add "status" field
         $this->add([            
             'type'  => 'select',
@@ -165,6 +176,25 @@ class BillGettingForm extends Form
         
         $inputFilter->add([
                 'name'     => 'emailPassword',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 64
+                        ],
+                    ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'appPassword',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],

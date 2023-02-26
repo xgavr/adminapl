@@ -493,6 +493,7 @@ class SupplierController extends AbstractActionController
                     'ftpPassword' => $priceGetting->getFtpPassword(),  
                     'email' => $priceGetting->getEmail(),  
                     'emailPassword' => $priceGetting->getEmailPassword(),  
+                    'appPassword' => $priceGetting->getAppPassword(),  
                     'link' => $priceGetting->getLink(),  
                     'status' => $priceGetting->getStatus(),  
                     'filename' => $priceGetting->getFilename(),  
@@ -614,6 +615,7 @@ class SupplierController extends AbstractActionController
                     'name' => $billGetting->getName(),  
                     'email' => $billGetting->getEmail(),  
                     'emailPassword' => $billGetting->getEmailPassword(),  
+                    'appPassword' => $billGetting->getAppPassword(),  
                     'status' => $billGetting->getStatus(),  
                 ];
                 $form->setData($data);

@@ -177,9 +177,13 @@ $this->pageBreadcrumbs()->setItems([
                                                         title="Проверить почту">
                                                     <span class="glyphicon glyphicon-envelope" ></span>
                                                 </button>
+                                                <a class="btn btn-default btn-xs" type="button" title="Перейти на biz.mail.ru" href="https://biz.mail.ru/login/autopartslist.ru" target="_blank">
+                                                    <span class="glyphicon glyphicon-link"></span>
+                                                </a>
                                             <?php endif; ?>
                                             <br/>
                                             Email пароль: <span><?= $priceGetting->getEmailPassword() ?></span><br/>
+                                            Пароль приложения: <span><?= $priceGetting->getAppPassword() ?></span><br/>
                                             FTP сервер: <span><?= $priceGetting->getFtp() ?></span><br/>
                                             FTP папка: <span><?= $priceGetting->getFtpDir() ?></span><br/>
                                             FTP логин: <span><?= $priceGetting->getFtpLogin() ?></span><br/>
@@ -372,9 +376,13 @@ $this->pageBreadcrumbs()->setItems([
                                                     title="Проверить почту">
                                                 <span class="glyphicon glyphicon-envelope" ></span>
                                             </button>
+                                            <a class="btn btn-default btn-xs" type="button" title="Перейти на biz.mail.ru" href="https://biz.mail.ru/login/autopartslist.ru" target="_blank">
+                                                <span class="glyphicon glyphicon-link"></span>
+                                            </a>
                                         <?php endif; ?>
                                         <br/>
                                         Email пароль: <span><?= $billGetting->getEmailPassword() ?></span><br/>
+                                        Пароль приложения: <span><?= $billGetting->getAppPassword() ?></span><br/>
                                     </div>        
                                     <div class="pull-right">                                
                                         <button value="/supplier/bill-getting-form/<?= $supplier->getId() ?>?billGetting=<?= $billGetting->getId() ?>" class="btn btn-default btn-xs"

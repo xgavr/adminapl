@@ -473,6 +473,7 @@ class SupplierManager
         $priceGetting->setFtpPassword($data['ftpPassword']);
         $priceGetting->setEmail($data['email']);
         $priceGetting->setEmailPassword($data['emailPassword']);
+        $priceGetting->setAppPassword($data['appPassword']);
         $priceGetting->setLink($data['link']);
         $priceGetting->setStatus($data['status']);
         $priceGetting->setStatusFilename($data['statusFilename']);
@@ -499,6 +500,11 @@ class SupplierManager
         $this->entityManager->flush();
     }
     
+    /**
+     * 
+     * @param PriceGetting $priceGetting
+     * @param array $data
+     */
     public function updatePriceGetting($priceGetting, $data)
     {
         $priceGetting->setName($data['name']);
@@ -508,6 +514,7 @@ class SupplierManager
         $priceGetting->setFtpPassword($data['ftpPassword']);
         $priceGetting->setEmail($data['email']);
         $priceGetting->setEmailPassword($data['emailPassword']);
+        $priceGetting->setAppPassword($data['appPassword']);
         $priceGetting->setLink($data['link']);
         $priceGetting->setStatus($data['status']);
         $priceGetting->setStatusFilename($data['statusFilename']);
@@ -526,6 +533,7 @@ class SupplierManager
         
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
+        $this->entityManager->refresh($priceGetting);
     }
     
     public function removePriceGetting($priceGetting)
@@ -540,6 +548,7 @@ class SupplierManager
         $billGetting->setName($data['name']);
         $billGetting->setEmail($data['email']);
         $billGetting->setEmailPassword($data['emailPassword']);
+        $billGetting->setAppPassword($data['appPassword']);
         $billGetting->setStatus($data['status']);
         
         $currentDate = date('Y-m-d H:i:s');
@@ -561,6 +570,7 @@ class SupplierManager
         $billGetting->setName($data['name']);
         $billGetting->setEmail($data['email']);
         $billGetting->setEmailPassword($data['emailPassword']);
+        $billGetting->setAppPassword($data['appPassword']);
         $billGetting->setStatus($data['status']);
         
         // Добавляем сущность в менеджер сущностей.

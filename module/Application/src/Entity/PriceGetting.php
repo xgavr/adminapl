@@ -75,6 +75,11 @@ class PriceGetting {
     protected $emailPassword;
     
     /**
+     * @ORM\Column(name="app_password")   
+     */
+    protected $appPassword;
+    
+    /**
      * @ORM\Column(name="link")   
      */
     protected $link;
@@ -202,6 +207,16 @@ class PriceGetting {
         $this->emailPassword = $emailPassword;
     }     
 
+    public function getAppPassword() 
+    {
+        return $this->appPassword;
+    }
+
+    public function setAppPassword($appPassword) 
+    {
+        $this->appPassword = $appPassword;
+    }     
+    
     public function getLink() 
     {
         return $this->link;

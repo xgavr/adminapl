@@ -45,6 +45,11 @@ class BillGetting {
     protected $emailPassword;
     
     /**
+     * @ORM\Column(name="app_password")   
+     */
+    protected $appPassword;
+
+    /**
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;    
@@ -98,6 +103,16 @@ class BillGetting {
     public function setEmailPassword($emailPassword) 
     {
         $this->emailPassword = $emailPassword;
+    }     
+
+    public function getAppPassword() 
+    {
+        return $this->appPassword;
+    }
+
+    public function setAppPassword($appPassword) 
+    {
+        $this->appPassword = $appPassword;
     }     
 
     public function getDateCreated() 
