@@ -81,7 +81,12 @@ class LogManager {
             $this->user = $this->entityManager->getRepository(User::class)
                     ->findOneByEmail($this->authService->getIdentity());
             if ($this->user==null) {
-                throw new \Exception('Not found user with such email');
+                $email = $this->entityManager->getRepository(Email::class)
+                        ->findOneBy(['name' => $this->authService->getIdentity()]);
+                $user = $email->getUser();
+                if ($user == null){
+                    throw new \Exception('Not found user with such email '.$this->authService->getIdentity());
+                }    
             }
             
             // Return found User.
