@@ -60,7 +60,12 @@ class IndexController extends AbstractActionController
                 ->findOneByEmail($this->identity());
         
         if ($user==null) {
-            throw new \Exception('Not found user with such email');
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneBy(['name' => $this->identity()]);
+            $user = $email->getUser();
+            if ($user == null){
+                throw new \Exception('Not found user with such email '.$this->identity());
+            }    
         }
         
         $phoneform = new PhoneForm($this->entityManager);

@@ -172,6 +172,13 @@ class RbacManager
             return $user->getFullName();
         }
         
+        $email = $this->entityManager->getRepository(Email::class)
+                ->findOneBy(['name' => $identity]);
+        $user = $email->getUser();
+        if ($user){
+            return $user->getFullName();
+        }
+        
         return;
     }
 }
