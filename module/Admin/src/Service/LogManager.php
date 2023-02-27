@@ -30,6 +30,7 @@ use Stock\Entity\VtGood;
 use Cash\Entity\CashDoc;
 use Application\Entity\Comment;
 use Application\Entity\Goods;
+use Application\Entity\Email;
 
 /**
  * Description of LogManager
