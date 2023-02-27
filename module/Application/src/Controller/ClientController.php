@@ -16,6 +16,7 @@ use Application\Form\ClientForm;
 use Application\Form\ContactForm;
 use Laminas\View\Model\JsonModel;
 use Stock\Entity\Retail;
+use Application\Entity\Order;
 
 class ClientController extends AbstractActionController
 {
@@ -242,6 +243,15 @@ class ClientController extends AbstractActionController
     public function viewAction() 
     {       
         $clientId = (int)$this->params()->fromRoute('id', -1);
+        $orderId = (int)$this->params()->fromQuery('order', -1);
+        
+        if ($clientId<0 && $orderId>0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+            if ($order){
+                $clientId = $order->getClient()->getId();
+            }
+        }
         
         // Validate input parameter
         if ($clientId<0) {
@@ -251,7 +261,7 @@ class ClientController extends AbstractActionController
         
         // Find the client ID
         $client = $this->entityManager->getRepository(Client::class)
-                ->findOneById($clientId);
+                ->find($clientId);
         
         if ($client == null) {
             $this->getResponse()->setStatusCode(404);

@@ -848,6 +848,16 @@ class Order {
         return $this->contact;
     }
 
+    /*
+     * Возвращает связанный client.
+     * @return Contact
+     */
+    
+    public function getClient() 
+    {
+        return $this->contact->getClient();
+    }
+
     /**
      * Задает связанный contact.
      * @param Contact $contact

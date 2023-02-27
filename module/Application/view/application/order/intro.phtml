@@ -245,9 +245,17 @@ $form->prepare();
             <div class="col-xs-2">                        
                 <div class="form-group form-group-sm">
                     <?//= $this->formLabel($form->get('name')); ?>
-                    <?= $this->formElement($form->get('name')); ?>
-                    <?= $this->formElementErrors($form->get('name')); ?>                  
+                    <div class="input-group">
+                        <?= $this->formElement($form->get('name')); ?>
+                        <span class="input-group-btn">
+                            <a type="button" class="btn btn-default btn-sm" href="/cilent/view?order=<?= $orderId ?>" 
+                               title="Просмотр клиента" target="_blank" <?= ($orderId) ? '':'disabled'?>>
+                                <span class="glyphicon glyphicon-link"></span>
+                            </a>
+                        </span>    
+                    </div>    
                 </div>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
             </div>    
             <div class="col-xs-2">                        
                 <div class="form-group form-group-sm">
