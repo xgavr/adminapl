@@ -73,8 +73,8 @@ class HelloManager {
         $settings = $this->adminManager->getSettings();
         
         $box = [
-            'host' => 'imap.yandex.ru',
-            'server' => '{imap.yandex.ru:993/imap/ssl}',
+            'host' => 'imap.mail.ru',
+            'server' => '{imap.mail.ru:993/imap/ssl}',
             'user' => $settings['hello_email'],
             'password' => $settings['hello_app_password'],
             'leave_message' => false,

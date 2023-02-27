@@ -11,6 +11,7 @@ use User\Validator\TokenNoExistsValidator;
 use Company\Entity\Office;
 use User\Filter\Rudate;
 use Application\Entity\Order;
+use Application\Entity\Email;
 
 /**
  * This service is responsible for adding/editing users
@@ -316,12 +317,14 @@ class UserManager
     /**
      * Checks whether an active user with given email address already exists in the database.     
      */
-    public function checkUserExists($email) {
+    public function checkUserExists($emailStr) {
         
-        $user = $this->entityManager->getRepository(User::class)
-                ->findOneByEmail($email);
+//        $user = $this->entityManager->getRepository(User::class)
+//                ->findOneByEmail($email);
+        $email = $this->entityManager->getRepository(Email::class)
+                ->findOneBy(['name' => $emailStr]);
         
-        return $user !== null;
+        return $email !== null;
     }
     
     /**
