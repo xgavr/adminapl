@@ -6,6 +6,7 @@ use Laminas\Permissions\Rbac\Role as RbacRole;
 use User\Entity\User;
 use User\Entity\Role;
 use User\Entity\Permission;
+use Application\Entity\Email;
 
 /**
  * This service is responsible for initialzing RBAC (Role-Based Access Control).
@@ -126,9 +127,14 @@ class RbacManager
             $user = $this->entityManager->getRepository(User::class)
                     ->findOneByEmail($identity);
             if ($user==null) {
-                // Oops.. the identity presents in session, but there is no such user in database.
-                // We throw an exception, because this is a possible security problem.
-                throw new \Exception('There is no user with such identity '.$identity);
+                $email = $this->entityManager->getRepository(Email::class)
+                        ->findOneBy(['name' => $identity]);
+                $user = $email->getUser();
+                if ($user == null){
+                    // Oops.. the identity presents in session, but there is no such user in database.
+                    // We throw an exception, because this is a possible security problem.
+                    throw new \Exception('There is no user with such identity '.$identity);
+                }    
             }
         }
         

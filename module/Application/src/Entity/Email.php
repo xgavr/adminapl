@@ -136,6 +136,16 @@ class Email {
         return $this->contact;
     }
 
+    /*
+     * Возвращает связанный contact.
+     * @return \User\Entity\User
+     */    
+    public function getUser() 
+    {
+        $contact = $this->contact;
+        return $contact->getUser();
+    }
+
     /**
      * Задает связанный contact.
      * @param Contact $contact
