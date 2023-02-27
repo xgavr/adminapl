@@ -14,6 +14,7 @@ use User\Entity\User;
 use Application\Entity\Contact;
 use Application\Entity\Phone;
 use Application\Form\PhoneForm;
+use Application\Entity\Email;
 
 
 class IndexController extends AbstractActionController
