@@ -11,7 +11,6 @@ use User\Validator\TokenNoExistsValidator;
 use Company\Entity\Office;
 use User\Filter\Rudate;
 use Application\Entity\Order;
-use Application\Entity\Email;
 
 /**
  * This service is responsible for adding/editing users
