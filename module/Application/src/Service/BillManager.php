@@ -601,7 +601,9 @@ class BillManager
         $billGettings = $this->entityManager->getRepository(BillGetting::class)
                 ->findBy(['status' => BillSetting::STATUS_ACTIVE]);
         foreach ($billGettings as $billGetting){
-            $this->getBillByMail($billGetting);
+            if ($billGetting->getSupplier()->getStatus() == Supplier::STATUS_ACTIVE){
+                $this->getBillByMail($billGetting);
+            }    
             if (time() > $startTime + 840){
                 break;
             }

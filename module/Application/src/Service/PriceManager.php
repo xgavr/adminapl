@@ -208,7 +208,9 @@ class PriceManager {
                 ->findOneBy(['status' => PriceGetting::STATUS_ACTIVE, 'mailBoxCheck' => PriceGetting::MAILBOX_TO_CHECK]);
         
         if ($priceGetting){
-            $this->getPriceByMail($priceGetting);
+            if ($priceGetting->getSupplier()->getStatus() == Supplier::STATUS_ACTIVE){
+                $this->getPriceByMail($priceGetting);
+            }    
             
             $this->entityManager->getConnection()->update('price_gettings', 
                     ['mailbox_check' => PriceGetting::MAILBOX_CHECKED], 
