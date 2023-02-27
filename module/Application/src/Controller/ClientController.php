@@ -244,7 +244,7 @@ class ClientController extends AbstractActionController
     {       
         $clientId = (int)$this->params()->fromRoute('id', -1);
         $orderId = (int)$this->params()->fromQuery('order', -1);
-        
+
         if ($clientId<0 && $orderId>0){
             $order = $this->entityManager->getRepository(Order::class)
                     ->find($orderId);
