@@ -15,7 +15,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                 </div>
                 <div>
                     <a href="/client/view/<?= $order->getContact()->getClient()->getId()?>" target="_blank">
-                        <?= $this->escapeHtml($order->getContact()->getName()); ?>
+                        <?= $this->escapeHtml(($order->getContact()->getName()) ? $order->getContact()->getName():'Nan'); ?>
                     </a>    
                 </div>
             </h5>
