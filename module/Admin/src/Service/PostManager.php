@@ -561,10 +561,10 @@ class PostManager {
         if (!isset($params['folders'])){
             $params['folders'] = ['INBOX', 'Spam', 'Спам'];
         }            
-        if (!isset($params['trash'])) $params['trash'] = ['Trash', 'Удаленные'];
+        if (!isset($params['trash'])) $params['trash'] = ['Trash', 'Удаленные', 'Корзина'];
         
         $boxes = $this->boxNames($params);
-        var_dump($boxes); exit;
+//        var_dump($boxes); exit;
         
         if (is_array($params['folders'])){
             foreach ($params['folders'] as $foldername){
