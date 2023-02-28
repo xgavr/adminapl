@@ -328,6 +328,17 @@
             btn += ' modal-url="'+url+'" title="Отправить в банк">';
             btn += '<span class="glyphicon glyphicon-send" aria-hidden="true"></span>';
             btn += '</button>';
+            //return btn;
+
+            var url = '/payment/send/'+row.id+'?version=2';
+            btn += ' <button ' + disabled;
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs send-payment"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' modal-url="'+url+'" title="Отправить в банк">';
+            btn += '<span class="glyphicon glyphicon-send" aria-hidden="true"></span>2';
+            btn += '</button>';
+            
             return btn;
         } else {
             var url = '/payment/status/'+row.id;
@@ -338,6 +349,16 @@
             btn += ' modal-url="'+url+'" title="Проверить статус платежа">';
             btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
             btn += '</button>';
+
+            var url = '/payment/status/'+row.id+'?version=2';
+            btn += ' <button ' + disabled;
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs status-payment"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' modal-url="'+url+'" title="Проверить статус платежа">';
+            btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>2';
+            btn += '</button>';
+
             return btn;
         }    
     }    
