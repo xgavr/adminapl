@@ -381,7 +381,7 @@ class PaymentManager
         ];
         
 //        var_dump($data); exit;
-        $result = $this->tochkaPayment->payment($data);
+        $result = $this->tochkaPayment->paymentV2($data);
         sleep(1);
 //        var_dump($result);
         $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
@@ -396,7 +396,7 @@ class PaymentManager
         $this->entityManager->refresh($payment);
         
         sleep(1);
-        $this->statusPayment($payment);
+        $this->statusPaymentV2($payment);
         
         return $result;
     }
