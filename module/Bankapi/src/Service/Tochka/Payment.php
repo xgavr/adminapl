@@ -160,7 +160,7 @@ class Payment {
         $client->setRawBody(Encoder::encode($data_payment));
         $client->setOptions(['timeout' => 60]);
         
-        var_dump($this->auth->getUri2('payment', 'for-sign')); exit;
+//        var_dump($this->auth->getUri2('payment', 'for-sign')); exit;
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
