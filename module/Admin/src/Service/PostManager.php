@@ -733,7 +733,7 @@ class PostManager {
                             }
                         }
                         
-                        foreach ($messageNumber as $msgNumer){
+                        foreach ($msgNumbers as $msgNumer){
                             if (!$params['leave_message']){
                                 $move = false;
                                 foreach ($params['trash'] as $trash){      
