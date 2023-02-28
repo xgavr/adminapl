@@ -244,6 +244,12 @@ class Authenticate {
                 if (isset($error['message'])){
                     $error_msg .= ' '.$error['message'];
                 }
+                if (isset($error['Errors'])){
+                    foreach ($error['Errors'] as $error){
+                        $error_msg .= PHP_EOL.' '.$error['errorCode'].' '.$error['message'].' '.$error['url'];
+                        
+                    }
+                }
                 throw new \Exception($error_msg);
         }
         
