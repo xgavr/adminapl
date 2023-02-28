@@ -24,11 +24,14 @@ use Laminas\Json\Encoder;
 class Authenticate {
     
     const URI_PRODUCTION = 'https://enter.tochka.com';
+    const URI_PRODUCTION2 = 'https://enter.tochka.com/uapi/';
     const URI_DEBUGGING = 'https://private-anon-b91c8e0e22-tochka.apiary-proxy.com';
     const MODE_API = 'api';
+    const MODE_API2 = 'uapi';
     const MODE_SANDBOX = 'sandbox';
     
     const VERSION = 'v1';
+    const VERSION2 = 'v1.0';
     
     const TOKEN_AUTH = 'authorization_code';
     const TOKEN_ACCESS = 'access_token';
@@ -55,6 +58,11 @@ class Authenticate {
      * @var string
      */
     private $uri;
+
+    /**
+     * @var string
+     */
+    private $uri2;
 
     /**
      * @var string
@@ -88,6 +96,7 @@ class Authenticate {
             $this->uri = self::URI_DEBUGGING;
         } else {
             $this->uri = self::URI_PRODUCTION;
+            $this->uri2 = self::URI_PRODUCTION2;
         }
 
         $this->mode = $authParams['mode'];
@@ -116,6 +125,17 @@ class Authenticate {
         return $this->uri;
     }
     
+    /**
+     * Получить uri api2
+     * @param string $method
+     * @param string $action
+     * @return string 
+     */
+    public function getUri2($method, $action)
+    {
+        return $this->uri2.$method.'/'.self::VERSION2.'/'.$action;
+    }
+
     /**
      * Получить режим
      * 

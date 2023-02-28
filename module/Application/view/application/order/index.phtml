@@ -142,7 +142,8 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function refreshTable(){
-        $table.bootstrapTable('refresh');
+        $table.bootstrapTable('selectPage', 1);
+//        $table.bootstrapTable('refresh');
     }
 
     function officeChange(){
@@ -185,7 +186,7 @@ $this->pageBreadcrumbs()->setItems([
         });
         
         $(document).on('change', '#userSelect', function (e) {
-            $table.bootstrapTable('selectPage', 1);
+            refreshTable();
         });        
     });
     

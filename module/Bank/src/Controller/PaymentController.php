@@ -240,11 +240,18 @@ class PaymentController extends AbstractActionController
     public function sendAction()
     {
         $paymentId = $this->params()->fromRoute('id', -1);
+        $version = $this->params()->fromQuery('version', 1);
+        
         if ($paymentId > 0){
             $payment = $this->entityManager->getRepository(Payment::class)
                     ->find($paymentId);
             if ($payment){
-                $this->paymentManager->sendPayment($payment);
+                if ($version == 1){
+                    $this->paymentManager->sendPayment($payment);
+                }    
+                if ($version == 2){
+                    $this->paymentManager->sendPaymentV2($payment);
+                }    
             }
         }
         return new JsonModel(
@@ -254,7 +261,9 @@ class PaymentController extends AbstractActionController
         
     public function sendAllAction()
     {
-        $this->paymentManager->sendAll();
+        $version = $this->params()->fromQuery('version', 1);
+        
+        $this->paymentManager->sendAll($version);
         return new JsonModel(
            ['ok']
         );           
@@ -263,11 +272,18 @@ class PaymentController extends AbstractActionController
     public function statusAction()
     {
         $paymentId = $this->params()->fromRoute('id', -1);
+        $version = $this->params()->fromQuery('version', 1);
+        
         if ($paymentId > 0){
             $payment = $this->entityManager->getRepository(Payment::class)
                     ->find($paymentId);
             if ($payment){
-                $result = $this->paymentManager->statusPayment($payment);
+                if ($version == 1){
+                    $result = $this->paymentManager->statusPayment($payment);
+                }    
+                if ($version == 2){
+                    $result = $this->paymentManager->statusPaymentV2($payment);
+                }    
             }
         }
         return new JsonModel(

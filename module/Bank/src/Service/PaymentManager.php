@@ -307,10 +307,106 @@ class PaymentManager
     }
 
     /**
+     * Получить статус платежа v2
+     * @param Payment $payment
+     * "Initiated" Все необходимые реквизиты для платежа получены, платёж готов к проверке на возможность проведения
+        "Wait For Owner Requisites" Часть реквизитов для платежа получена, кроме реквизитов плательщика
+        "NotAllowed"  Платёж нельзя провести: либо у пользователя нет прав для подписи, либо платёж заблокирован комплаенсом
+        "Allowed"  Платёж готов к подписанию, все проверки пройдены
+        "WaitingForSign" Платёж ждёт подписи
+        "WaitingForCreate" Платёж подписан, ждёт создания внутри систем банка
+        "Created" Платёж создан
+        "Paid" Платёж оплачен
+        "Canceled" Платёж отменен
+        "Rejected" Платёж отменён
+     */
+    public function statusPaymentV2($payment)
+    {
+        $result = [];
+        if ($payment->getRequestId()){
+            $result = $this->tochkaPayment->paymentStatusV2($payment->getRequestId());
+            if (!empty($result['message'])){
+                $payment->setStatusMessage($result['message']);                
+            }
+            if (!empty($result['Data'])){
+                $data = $result['Data'];
+                if ($data['status'] == 'WaitingForSign'){
+                    $payment->setStatus(Payment::STATUS_SUCCESS);
+                }
+                if ($data['status'] == 'error'){
+                    $payment->setStatus(Payment::STATUS_ERROR);
+                    if (!empty($result['errors'])){
+                        $message = [];
+                        foreach ($result['errors'] as $error){
+                            $message[] = "({$error['code']}) {$error['message']}";
+                        }
+                        $payment->setStatusMessage(implode(';', $message));
+                    }
+                }
+            }
+            $this->entityManager->persist($payment);
+            $this->entityManager->flush();
+        }    
+        return $result;
+    }
+    
+    /**
+     * Отправить платеж в банк
+     * @param Payment $payment
+     */
+    public function sendPaymentV2($payment)
+    {
+        $data = [
+            "accountCode" => $payment->getBankAccount()->getRs(),
+            "bankCode" =>  $payment->getBankAccount()->getBik(),
+            "counterpartyAccountNumber" => $payment->getCounterpartyAccountNumber(),
+            "counterpartyBankBic" => $payment->getCounterpartyBankBik(),
+            "counterpartyINN" => $payment->getСounterpartyInn(),
+            "counterpartyKPP" => $payment->getСounterpartyKpp(),
+            "counterpartyName" => $payment->getCounterpartyName(),
+            "paymentAmount" => $payment->getFormatAmount(),
+            "paymentDate" => $payment->getFormatPaymentDate(),
+            "paymentNumber" => $payment->getId(),
+            "paymentPriority" => $payment->getPaymentPriority(),
+            "paymentPurpose" => $payment->getPaymentPurpose(),
+            "codePurpose" => $payment->getPaymentPurposeCode(),
+            "supplierBillId" => $payment->getSupplierBillId(),
+            "taxInfoDocumentDate" => $payment->getTaxInfoDocumentDate(),
+            "taxInfoDocumentNumber" => $payment->getTaxInfoDocumentNumber(),
+            "taxInfoKBK" => $payment->getTaxInfoKbk(),
+            "taxInfoOKATO" => $payment->getTaxInfoOkato(),
+            "taxInfoPeriod" => $payment->getTaxInfoPeriod(),
+            "taxInfoReasonCode" => $payment->getTaxInfoReasonCode(),
+            "taxInfoStatus" => $payment->getTaxInfoStatus(),        
+        ];
+        
+//        var_dump($data); exit;
+        $result = $this->tochkaPayment->payment($data);
+        sleep(1);
+//        var_dump($result);
+        $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
+
+        if (!empty($result['request_id'])){
+            $payment->setRequestId(empty($result['request_id']) ? null:$result['request_id']);
+            $payment->setStatus(Payment::STATUS_TRANSFER);            
+        }    
+        
+        $this->entityManager->persist($payment);
+        $this->entityManager->flush();
+        $this->entityManager->refresh($payment);
+        
+        sleep(1);
+        $this->statusPayment($payment);
+        
+        return $result;
+    }
+    
+    /**
      * Отправить все платежи
+     * @param string $version
      * @return null
      */
-    public function sendAll()
+    public function sendAll($version = 1)
     {
         ini_set('memory_limit', '512M');
         set_time_limit(900);
@@ -320,7 +416,12 @@ class PaymentManager
                 ->findBy(['status' => Payment::STATUS_ACTIVE, 'requestId' => null]);
         
         foreach ($payments as $payment){
-            $this->sendPayment($payment);
+            if ($version == 1){
+                $this->sendPayment($payment);
+            }    
+            if ($version == 2){
+                $this->sendPaymentV2($payment);
+            }    
             $this->entityManager->refresh($payment);
             if ($payment->getStatus() != Payment::STATUS_SUCCESS){
                 break;

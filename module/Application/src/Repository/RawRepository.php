@@ -135,8 +135,10 @@ class RawRepository extends EntityRepository
                         ->setParameter('2', $params['status'])
                         ;
             }
-            if ($params['limit']){
-                $queryBuilder->setMaxResults($params['limit']);
+            if (!empty($params['limit'])){
+                if (is_numeric($params['limit'])){
+                    $queryBuilder->setMaxResults($params['limit']);
+                }    
             }
         }
         
