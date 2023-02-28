@@ -59,7 +59,7 @@ $this->pageBreadcrumbs()->setItems([
             data-toolbar="#toolbar"
             data-show-refresh="true"
             data-show-toggle="true"
-            data-query-params="queryParams"
+            data-query-params="billQueryParams"
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
             >
@@ -80,12 +80,14 @@ $this->pageBreadcrumbs()->setItems([
 </div>    
 
 <script type="text/javascript">
-    function refreshTable(){
-        $('#table').bootstrapTable('refresh');
-    }
 
     var table = $('#table').bootstrapTable();
     var ok = $('#ok');
+
+    function refreshTable(){
+        $table.bootstrapTable('selectPage', 1);
+//        $table.bootstrapTable('refresh');
+    }
 
     $(function () {
         ok.click(function () {
@@ -189,7 +191,7 @@ $this->pageBreadcrumbs()->setItems([
         });  
     });
     
-    function queryParams(params) {
+    function billQueryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });

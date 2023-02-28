@@ -591,6 +591,8 @@ class PostManager {
                         $messageNumber = 1;
                         while ($messageNumber <= $imap_obj->Nmsgs){
 
+                        var_dump($imap_obj->Nmsgs);
+                            
                             $structure = imap_fetchstructure($connection, $messageNumber);
                             $headers = imap_fetch_overview($connection, $messageNumber);
 

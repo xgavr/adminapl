@@ -58,9 +58,9 @@ class SoapManager {
      */
     public function transapl($uri)
     {
-        $writer = new Stream($this->logFilename);
-        $logger = new Logger();
-        $logger->addWriter($writer);
+//        $writer = new Stream($this->logFilename);
+//        $logger = new Logger();
+//        $logger->addWriter($writer);
         
         $url = $uri;
         $client = new Client();
@@ -82,11 +82,13 @@ class SoapManager {
 //                var_dump($response->getHeaders()); exit;
         } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
             $ok = true;
+            $result = null;
         } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
             $ok = true;
+            $result = null;
         }    
             
-        unset($logger);
+//        unset($logger);
         return $result;        
     }
 }
