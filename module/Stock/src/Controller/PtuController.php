@@ -154,6 +154,7 @@ class PtuController extends AbstractActionController
     public function editFormAction()
     {
         $ptuId = (int)$this->params()->fromRoute('id', -1);
+        $supplierId = (int) $this->params()->fromQuery('supplier', -1);
         
         $ptu = $supplier = $legal = $company = null;
         $notDisabled = true;
@@ -161,6 +162,11 @@ class PtuController extends AbstractActionController
             $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->findOneById($ptuId);
         }    
+        
+        if ($supplierId > 0){
+            $supplier = $this->entityManager->getRepository(Supplier::class)
+                    ->find($supplierId);
+        }
         
         if ($ptu == null) {
             $officeId = (int)$this->params()->fromQuery('office', $this->ptuManager->currentUser()->getOffice()->getId());

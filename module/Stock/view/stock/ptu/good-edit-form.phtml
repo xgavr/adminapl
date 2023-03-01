@@ -253,13 +253,15 @@ $docName = 'Новый';
             $(this).val(value.replace(",","."));
             $("#amount").val(Math.round($(this).val()*$("#quantity").val()*100)/100);
         });
+        
         $("#amount").on('input', function(){
+            var value = $(this).val();
+            $(this).val(parseFloat(value.replace(",",".").replace(' ', '')));
             if ($("#quantity").val()){
-                var value = $(this).val();
-                $(this).val(value.replace(",","."));
                 $("#price").val(Math.round($(this).val()*100/$("#quantity").val())/100);
             }    
         });
+        
         $("#quantity").on('input', function(){
             if ($("#price").val()){
                 $("#amount").val(Math.round($(this).val()*$("#price").val()*100)/100);
