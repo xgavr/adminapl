@@ -383,7 +383,7 @@ class PaymentManager
 //        var_dump($data); exit;
         $result = $this->tochkaPayment->paymentV2($data);
 
-        var_dump($result); exit;
+//        var_dump($result); exit;
         
         $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
                
