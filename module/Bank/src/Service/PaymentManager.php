@@ -330,7 +330,7 @@ class PaymentManager
             }
             if (!empty($result['Data'])){
                 $data = $result['Data'];
-                if ($data['status'] == 'WaitingForSign'){
+                if ($data['status'] == 'Created'){
                     $payment->setStatus(Payment::STATUS_SUCCESS);
                 }
                 if ($data['status'] == 'error'){
