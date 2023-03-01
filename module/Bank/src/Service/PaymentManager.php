@@ -356,7 +356,7 @@ class PaymentManager
      */
     public function sendPaymentV2($payment)
     {
-        $data = [
+        $data['Data'] = [
             "accountCode" => $payment->getBankAccount()->getRs(),
             "bankCode" =>  $payment->getBankAccount()->getBik(),
             "counterpartyAccountNumber" => $payment->getCounterpartyAccountNumber(),
