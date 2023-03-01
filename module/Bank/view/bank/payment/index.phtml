@@ -28,6 +28,9 @@
                 <button class="btn btn-default payment-send-all" type="button" modal-url="/payment/send-all" title="Отправить все платежи">
                     <span class="glyphicon glyphicon-send" aria-hidden="true"></span>
                 </button>                
+                <button class="btn btn-default payment-send-all" type="button" modal-url="/payment/send-all?version=2" title="Отправить все платежи 2">
+                    <span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+                </button>                
                 <div class="form-group">
                     <div class="btn-group">
                         <input name="search" style="width: 150px" class="form-control enter-search" type="text" placeholder="Поиск">
@@ -213,7 +216,7 @@
             dataType: 'json',
             success: function( data ) {
                 var message = 'Ошибка создания платежа!';
-                if (data.status){
+                if (data.Data.status){
                     message = 'Платеж принят банком!';
                 }
                 if (data.message){

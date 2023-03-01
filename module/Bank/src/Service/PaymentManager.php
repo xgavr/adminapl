@@ -333,7 +333,7 @@ class PaymentManager
                 if ($data['status'] == 'Created'){
                     $payment->setStatus(Payment::STATUS_SUCCESS);
                 }
-                if ($data['status'] == 'error'){
+                if (count($data['errors'])){
                     $payment->setStatus(Payment::STATUS_ERROR);
                     if (!empty($result['errors'])){
                         $message = [];
