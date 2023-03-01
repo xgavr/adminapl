@@ -543,4 +543,62 @@ class BankManager
         
         return true;
     }
+    
+    /**
+     * Получение выписки из банка Точка v2
+     * и запись ее в базу
+     * @param date $dateStart дата начала периода
+     * @param date $dateEnd дата конца периода
+     * @param array $options другие опции
+     */
+    public function tochkaStatementV2($dateStart = null, $dateEnd = null, $options = null)
+    {
+        try{
+            $tochkaStatement = $this->tochkaStatement->statementsV2($dateStart, $dateEnd);
+        } catch (\Exception $e){
+            return $e->getMessage();
+        }
+        if (is_array($tochkaStatement)){            
+            foreach ($tochkaStatement['statements'] as $statement){
+                if (isset($statement->accountId)){
+                    list($code, $bik) = explode('/', $statement->accountId);
+                }    
+                if (isset($statement->startDateBalance) && $code && $bik){
+                    $this->addNewOrUpdateBalance(['bik' => $bik, 'account' => $code, 'dateBalance' => $statement->startDateTime, 'balance' => $statement->startDateBalance]);
+                }    
+                if (isset($statement->Transaction) && $code && $bik){
+                    foreach($statement->Transaction as $transaction){
+                        $payment = [
+                            'bik' => $bik,
+                            'account' => $code,
+                            'counterpartyInn' => (isset($transaction->CreditorParty)) ? $transaction->CreditorParty->inn:$transaction->DebtorParty->inn,
+                            'counterpartyKpp' => (isset($transaction->CreditorParty)) ? $transaction->CreditorParty->kpp:$transaction->DebtorParty->kpp,
+                            'counterpartyName' => (isset($transaction->CreditorParty)) ? $transaction->CreditorParty->name:$transaction->DebtorParty->name,
+                            'counterpartyAccountNumber' => (isset($transaction->CreditorAccount)) ? $transaction->CreditorAccount->identification:$transaction->DebtorAccount->identification,
+                            'counterpartyBankBik' => (isset($transaction->CreditorAgent)) ? $transaction->CreditorAgent->identification:$transaction->DebtorAgent->identification,
+                            'counterpartyBankName' => (isset($transaction->CreditorAgent)) ? $transaction->CreditorAgent->name:$transaction->DebtorAgent->name,
+                            'paymentNumber' => $transaction->documentNumber,
+                            'bankSystemId' => $transaction->transactionId,
+                            'xPaymentId' => $transaction->transactionId,
+                            'paymentDate' => date('Y-m-d', strtotime($transaction->documentProcessDate)),
+                            'chargeDate' => date('Y-m-d', strtotime($transaction->documentProcessDate)),
+                            'operationType' => 0,
+                            'amount' => (isset($transaction->CreditorParty)) ? -$transaction->Amount->amount:$transaction->Amount->amount,
+                            'purpose' => $transaction->description,
+                        ];
+                        $this->addNewOrUpdateStatement($payment);
+                    }
+                }
+            }
+        }
+        
+        return true;
+    }
+
+    public function accountListV2()
+    {
+        $accountList = $this->tochkaStatement->accountListV2();
+        
+        return $accountList;
+    }
 }

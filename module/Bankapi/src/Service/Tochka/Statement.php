@@ -61,6 +61,39 @@ class Statement {
     }
     
     /**
+     * Получить список счетов V2
+     * @return array|\Exception
+     */
+    public function accountListV2()
+    {
+        $this->auth->isAuth();
+        
+        // https://enter.tochka.com/uapi/open-banking/{apiVersion}/accounts
+        
+        $client = new Client();
+        $client->setUri($this->auth->getUri2('open-banking', 'accounts'));
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
+        $client->setMethod('GET');
+        $client->setOptions(['timeout' => 30]);
+        
+        $headers = $client->getRequest()->getHeaders();
+        $headers->addHeaders([
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
+        ]);
+
+        $client->setHeaders($headers);
+        
+        $response = $client->send();
+        
+        if ($response->isOk()){
+            return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
+        }
+
+        return $this->auth->exception($response);
+    }
+
+    /**
      * Получить выписку за период
      * @param string $request_id
      * @return array|\Exception
@@ -241,4 +274,165 @@ class Statement {
         return;
     }
     
+    /**
+     * Получить выписку v2
+     * @param array $params
+     * @param int $attempt
+     * 
+     */
+    public function getStatementV2($params, $attempt = 1)
+    {        
+        $this->auth->isAuth();
+        $client = new Client();
+        $client->setUri($this->auth->getUri2('open-banking', "accounts/{$params['accountId']}/statements/{$params['statementId']}"));
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
+        $client->setMethod('GET');
+//        $client->setRawBody(Encoder::encode($postParameters));
+        $client->setOptions(['timeout' => 30]);
+        
+        $headers = $client->getRequest()->getHeaders();
+        $headers->addHeaders([
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
+        ]);
+
+        $client->setHeaders($headers);
+        
+        $response = $client->send();
+        
+        if ($response->isOk()){
+            $result = Decoder::decode($response->getBody());
+            $statements = $result->Data->Statement;
+            foreach ($statements as $statement){
+                switch ($statement->status){
+                    case 'Ready': 
+                        return $statement;
+                    case 'Error': 
+                        return ['Error'];
+                    default: 
+                        if ($attempt > 3){
+                            return ['Error attempt'];                        
+                        }
+                        sleep(5);
+                        $nextAttempt = $attempt+1;
+                        return $this->getStatementV2($params, $nextAttempt);
+                }
+            }    
+        }
+        
+        return $this->auth->exception($response);
+    }
+    
+    /**
+     * Запрос выписки v2
+     * @param array $params
+     * 
+     */
+    public function initStatementV2($params)
+    {
+        $postParameters = [
+            'Data' => [
+                'Statement' => [
+                    'accountId' => $params['accountId'],
+                    'endDateTime' => $params['date_end'],
+                    'startDateTime' => $params['date_start'],                                
+                ]
+            ] 
+        ];
+        
+        $this->auth->isAuth();
+        $client = new Client();
+        $client->setUri($this->auth->getUri2('open-banking', 'statements'));
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
+        $client->setMethod('POST');
+        $client->setRawBody(Encoder::encode($postParameters));
+        $client->setOptions(['timeout' => 30]);
+        
+        $headers = $client->getRequest()->getHeaders();
+        $headers->addHeaders([
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
+        ]);
+
+        $client->setHeaders($headers);
+        
+        $response = $client->send();
+        
+        if ($response->isOk()){
+            $result = Decoder::decode($response->getBody());
+            switch ($result->Data->Statement->status){
+                case 'Ready': 
+                    return $result->Data->Statement;
+                case 'Error': 
+                    return ['Error'];
+                default: 
+                    sleep(5);
+                    return $this->getStatementV2([
+                        'accountId' => $result->Data->Statement->accountId,
+                        'statementId' => $result->Data->Statement->statementId,
+                    ]);
+            }
+        }
+        
+        return $this->auth->exception($response);
+    }
+    
+    /**
+     * Получить выписку по счету за период v2
+     * 
+     * @param string $accountId Уникальный и неизменный идентификатор счёта 40817810802000000008/044525999
+     * @param date $date_start
+     * @param date $date_end
+     * 
+     * @return array|null
+     */
+    public function statementV2($accountId, $date_start = null, $date_end = null)
+    {
+//        if (!$date_start) $date_start = date('Y-m-d');
+        if (!$date_start) $date_start = date('Y-m-d', strtotime("-1 days"));
+        if (!$date_end) $date_end = date('Y-m-d');
+
+        return $this->initStatementV2([
+            'date_start' => $date_start,
+            'date_end' => $date_end,
+            'accountId' => $accountId,
+        ]);
+    }
+    
+    /**
+     * Получить выписки по всем счетам за период v2
+     * @param date $date_start
+     * @param date $date_end
+     * @return array|null
+     */
+    public function statementsV2($date_start = null, $date_end = null)
+    {
+//        if (!$date_start) $date_start = date('Y-m-d');
+        if (!$date_start) $date_start = date('Y-m-d', strtotime("-1 days"));
+        if (!$date_end) $date_end = date('Y-m-d');
+        
+        $result['date_start'] = $date_start;
+        $result['date_end'] = $date_end;
+        $result['statements'] = [];
+        
+        $data = $this->accountListV2();
+        $result = [];
+        if (!empty($data['Data'])){
+            if (!empty($data['Data']['Account'])){
+                $accounts = $data['Data']['Account'];
+                if (is_array($accounts)){
+                    foreach ($accounts as $account){
+                        $result['statements'][$account['accountId']] = $this->statementV2(
+                            $account['accountId'],
+                            $date_start,
+                            $date_end
+                        );                    
+                        usleep(100);
+                    }
+                }
+            }
+        }
+        
+        return $result;
+    }
 }

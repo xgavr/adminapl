@@ -135,15 +135,17 @@ $this->pageBreadcrumbs()->setItems([
 </div>
 
 <script type="text/javascript">
-    var table = $('#table');
+    var $table = $('#table');
 
     $(function () {
         $('#rawStatusSelect').change(function (){
-            table.bootstrapTable('refresh');
-        })
+            $table.bootstrapTable('selectPage', 1);
+    //        $table.bootstrapTable('refresh');
+        });
         $('#rawStageSelect').change(function (){
-            table.bootstrapTable('refresh');
-        })
+            $table.bootstrapTable('selectPage', 1);
+           // $table.bootstrapTable('refresh');
+        });
     });
     
     function queryParams(params) {

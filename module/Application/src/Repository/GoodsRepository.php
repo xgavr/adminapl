@@ -357,7 +357,7 @@ class GoodsRepository extends EntityRepository
                 ->setParameter('1', date('Y-m-d H:i:s', strtotime("-12 hours")))
 //                ->orderBy('g.retailCount', 'DESC')
                 ->addOrderBy('g.dateEx', 'ASC')
-                ->setMaxResults(10000)
+                ->setMaxResults(50000)
                 ;
 //        var_dump(date('Y-m-d H:i:s', strtotime("-8 hours"))); exit;
         return $queryBuilder->getQuery();        

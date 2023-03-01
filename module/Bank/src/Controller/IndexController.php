@@ -150,7 +150,7 @@ class IndexController extends AbstractActionController
     {
         $date = $this->params()->fromQuery('date', date('Y-m-d'));
         
-        $result = $this->bankManager->tochkaStatement($date, $date);
+        $result = $this->bankManager->tochkaStatementV2($date, $date);
 
         $message = 'ok!';
         $ok = 'ok-reload';
@@ -363,4 +363,29 @@ class IndexController extends AbstractActionController
         ]);                  
     }
     
+    public function tochkaStatementsAction()
+    {
+        $date = $this->params()->fromQuery('date', date('Y-m-d'));
+        
+        $result = $this->bankManager->tochkaStatementV2($date, $date);
+
+        $message = 'ok!';
+        $ok = 'ok-reload';
+//        if ($result !== true){
+//            $message = '<p>'.$result.'</p><p><a href="/bankapi/tochka-access">Проверить доступ к api</a></p>';
+//            $ok = 'error';
+//        }
+        
+        return new JsonModel([
+            'result' => $ok,
+            'message' => $message,
+        ]);          
+    }    
+    
+    public function accountListAction()
+    {
+        $result = $this->bankManager->accountListV2();
+        
+        return new JsonModel($result);                  
+    }
 }

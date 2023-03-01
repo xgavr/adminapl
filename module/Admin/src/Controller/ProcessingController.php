@@ -475,23 +475,8 @@ class ProcessingController extends AbstractActionController
         $message = null;
         if ($settings['statement_by_api'] == 1){
         
-            $result = $this->bankManager->tochkaStatement(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
+            $this->bankManager->tochkaStatementV2(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
             
-            $message = '';
-            if ($result !== true){
-                $message = 'Потерян доступ к банку Точка для обновления выписки'.PHP_EOL;
-                $message .= $result.PHP_EOL;
-                $message .= 'Проверить доступ к api:'.PHP_EOL.'http://adminapl.ru/bankapi/tochka-access';
-
-//                $this->telegramManager->sendMessage(['text' => $message]);
-                $this->telegramManager->addPostponeMesage([
-                    'text' => $message,
-                ]);
-
-                $ok = 'error';
-            } else {
-                //$this->aplBankService->sendBankStatement(); //трансфер выписки в АПЛ
-            }
         }    
         
         return new JsonModel([
