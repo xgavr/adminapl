@@ -364,8 +364,8 @@ class PaymentManager
             "counterpartyINN" => $payment->getСounterpartyInn(),
             "counterpartyKPP" => $payment->getСounterpartyKpp(),
             "counterpartyName" => $payment->getCounterpartyName(),
-            "paymentAmount" => $payment->getFormatAmount(),
-            "paymentDate" => $payment->getFormatPaymentDate(),
+            "paymentAmount" => $payment->getFormatAmount('.'),
+            "paymentDate" => $payment->getPaymentDate(),
             "paymentNumber" => $payment->getId(),
             "paymentPriority" => $payment->getPaymentPriority(),
             "paymentPurpose" => $payment->getPaymentPurpose(),
@@ -386,9 +386,9 @@ class PaymentManager
         var_dump($result); exit;
         
         $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
-
-        if (!empty($result['request_id'])){
-            $payment->setRequestId(empty($result['request_id']) ? null:$result['request_id']);
+               
+        if (!empty($result['Data']['requestId'])){
+            $payment->setRequestId(empty($result['Data']['requestId']) ? null:$result['Data']['requestId']);
             $payment->setStatus(Payment::STATUS_TRANSFER);            
         }    
         

@@ -304,11 +304,12 @@ class Payment {
 
     /**
      * Возвращает сумму.
+     * @param string $delimeter
      * @return float
      */
-    public function getFormatAmount() 
+    public function getFormatAmount($delimeter = ',') 
     {
-        return number_format($this->amount, 2, ',', '');
+        return number_format($this->amount, 2, $delimeter, '');
     }
 
     /**
@@ -515,7 +516,7 @@ class Payment {
      */
     public function getTaxInfoReasonCode() 
     {
-        return ($this->taxInfoReasonCode) ? $this->taxInfoReasonCode:'';
+        return ($this->taxInfoReasonCode) ? $this->taxInfoReasonCode:'ТП';
     }
 
     /**
@@ -533,7 +534,7 @@ class Payment {
      */
     public function getTaxInfoStatus() 
     {
-        return ($this->taxInfoStatus) ? $this->taxInfoStatus:'';
+        return ($this->taxInfoStatus) ? $this->taxInfoStatus:'08';
     }
 
     /**
