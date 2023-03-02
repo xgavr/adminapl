@@ -396,10 +396,18 @@ class PaymentManager
         $this->entityManager->flush();
         $this->entityManager->refresh($payment);
         
-        sleep(1);
-        $this->statusPaymentV2($payment);
+        $attempt = 0;
+        while ($attempt < 3){
+            sleep(1);
+            $statusResult = $this->statusPaymentV2($payment);
+            $this->entityManager->refresh($payment);
+            if ($payment->getStatus() != Payment::STATUS_TRANSFER){
+               return $statusResult;
+            }
+            $attempt++;
+        }    
         
-        return $result;
+        return $statusResult;
     }
     
     /**
