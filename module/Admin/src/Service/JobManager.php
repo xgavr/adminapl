@@ -78,7 +78,7 @@ class JobManager
     private function clearJobList()
     {
         return [
-          101 => ['command' => 'delete-old-prices',         'shedule' => '42 * * * *',  'description' => 'Удаление старых прайсов'],
+          101 => ['command' => 'delete-old-prices',         'shedule' => '12,42 * * * *',  'description' => 'Удаление старых прайсов'],
         ];
     }
     
