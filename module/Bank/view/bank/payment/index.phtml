@@ -25,9 +25,9 @@
                 <button class="btn btn-default suppliers-pay-modal-show" type="button" modal-url="/payment/suppliers-pay-form" title="Оплата поставщикам">
                     <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                 </button>                
-                <button class="btn btn-default payment-send-all" type="button" modal-url="/payment/send-all" title="Отправить все платежи">
+<!--                <button class="btn btn-default payment-send-all" type="button" modal-url="/payment/send-all" title="Отправить все платежи">
                     <span class="glyphicon glyphicon-send" aria-hidden="true"></span>
-                </button>                
+                </button>                -->
                 <button class="btn btn-default payment-send-all" type="button" modal-url="/payment/send-all?version=2" title="Отправить все платежи 2">
                     <span class="glyphicon glyphicon-send" aria-hidden="true"></span>2
                 </button>                
@@ -323,18 +323,18 @@
             disabled = 'disabled = "true"';
         }
         if (!row.requestId){
-            var url = '/payment/send/'+row.id;
-            btn = '<button ' + disabled;
-            btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs send-payment"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'" title="Отправить в банк">';
-            btn += '<span class="glyphicon glyphicon-send" aria-hidden="true"></span>';
-            btn += '</button>';
+//            var url = '/payment/send/'+row.id;
+//            btn = '<button ' + disabled;
+//            btn += ' type="button"';
+//            btn += ' class="btn btn-default btn-xs send-payment"';
+//            btn += ' aria-label="Left Align"'; 
+//            btn += ' modal-url="'+url+'" title="Отправить в банк">';
+//            btn += '<span class="glyphicon glyphicon-send" aria-hidden="true"></span>';
+//            btn += '</button>';
             //return btn;
 
             var url = '/payment/send/'+row.id+'?version=2';
-            btn += ' <button ' + disabled;
+            btn = ' <button ' + disabled;
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs send-payment"';
             btn += ' aria-label="Left Align"'; 
@@ -344,17 +344,17 @@
             
             return btn;
         } else {
-            var url = '/payment/status/'+row.id;
-            btn = '<button ' + disabled;
-            btn += ' type="button"';
-            btn += ' class="btn btn-default btn-xs status-payment"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'" title="Проверить статус платежа">';
-            btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
-            btn += '</button>';
+//            var url = '/payment/status/'+row.id;
+//            btn = '<button ' + disabled;
+//            btn += ' type="button"';
+//            btn += ' class="btn btn-default btn-xs status-payment"';
+//            btn += ' aria-label="Left Align"'; 
+//            btn += ' modal-url="'+url+'" title="Проверить статус платежа">';
+//            btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
+//            btn += '</button>';
 
             var url = '/payment/status/'+row.id+'?version=2';
-            btn += ' <button ' + disabled;
+            btn = ' <button ' + disabled;
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs status-payment"';
             btn += ' aria-label="Left Align"'; 
@@ -369,7 +369,7 @@
     function removeFormatter(value, row){
         var disabled = '';
         if (row.requestId){
-            disabled = 'disabled = "true"';
+            //disabled = 'disabled = "true"';
         }
         var url = '/payment/delete/'+row.id;
         btn = ' <button '+disabled;
