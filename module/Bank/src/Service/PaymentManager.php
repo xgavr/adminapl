@@ -397,7 +397,7 @@ class PaymentManager
         $this->entityManager->refresh($payment);
         
         $attempt = 0;
-        while ($attempt < 3){
+        while ($attempt < 5){
             sleep(1);
             $statusResult = $this->statusPaymentV2($payment);
             $this->entityManager->refresh($payment);
