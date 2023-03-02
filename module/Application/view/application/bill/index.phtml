@@ -245,12 +245,38 @@ $this->pageBreadcrumbs()->setItems([
         return btn;
     }    
     
+    function baseSupplierFormatter(value, row){
+        var supplierId = 0;
+        if (row.supplierId){
+            supplierId = row.supplierId;
+        }
+        if (row.ptu){
+            supplierId = row.ptu.supplier.id;
+        }
+        if (value && supplierId){
+//            return value.substr(0, 25);
+            return [
+                '<nobr>',
+                '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+supplierId+'" title="Перейти на сайт поставщика">',
+                '<span class="glyphicon glyphicon-link"></span></a>',
+                '<a href="/supplier/view/' + supplierId + '" target="_blank">' + value.substr(0, 25) + '</a>',
+                '</nobr>'
+            ].join(''); 
+        }
+        
+        return value;
+    }
+    
     function supplierFormatter(value, row){
         if (!value){
             value = '---';
         }
         return [
-            '<a href="/supplier/view/' + row.supplier.id + '" target="_blank">' + value + '</a>'
+            '<nobr>',
+            '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.supplier.id+'" title="Перейти на сайт поставщика">',
+            '<span class="glyphicon glyphicon-link"></span></a>',
+            '<a href="/supplier/view/' + row.supplier.id + '" target="_blank">' + value + '</a>',
+            '</nobr>'
         ].join(''); 
     }    
     
