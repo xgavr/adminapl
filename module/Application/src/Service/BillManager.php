@@ -442,12 +442,16 @@ class BillManager
             return $this->_html2array($supplier, $filename, $content);
         }       
         if (!empty($pathinfo['extension'])){
+            
             if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
                 return $this->_xls2array($supplier, $filename, $filepath);            
             }
+            
             if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
                 return $this->_csv2array($supplier, $filename, $filepath);            
-            }        
+            } else {
+                return $this->_xls2array($supplier, $filename, $filepath);                                
+            }       
         }
         return $result;
     }    
@@ -565,6 +569,7 @@ class BillManager
             ];
             
             $mailList = $this->postManager->readImap($box);
+//            var_dump($mailList);
             $validator = new IsCompressed();
             if (count($mailList)){
                 foreach ($mailList as $mail){

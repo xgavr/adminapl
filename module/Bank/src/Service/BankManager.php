@@ -572,7 +572,6 @@ class BankManager
                             'bik' => $bik,
                             'account' => $code,
                             'counterparty_inn' => (isset($transaction->CreditorParty)) ? $transaction->CreditorParty->inn:$transaction->DebtorParty->inn,
-                            'counterparty_kpp' => (isset($transaction->CreditorParty)) ? $transaction->CreditorParty->kpp:$transaction->DebtorParty->kpp,
                             'counterparty_name' => (isset($transaction->CreditorParty)) ? $transaction->CreditorParty->name:$transaction->DebtorParty->name,
                             'counterparty_account_number' => (isset($transaction->CreditorAccount)) ? $transaction->CreditorAccount->identification:$transaction->DebtorAccount->identification,
                             'counterparty_bank_bic' => (isset($transaction->CreditorAgent)) ? $transaction->CreditorAgent->identification:$transaction->DebtorAgent->identification,
@@ -586,6 +585,19 @@ class BankManager
                             'payment_amount' => (isset($transaction->CreditorParty)) ? -$transaction->Amount->amount:$transaction->Amount->amount,
                             'payment_purpose' => $transaction->description,
                         ];
+                        
+                        if (isset($transaction->CreditorParty)){
+                            if (isset($transaction->CreditorParty->kpp)){
+                                $payment['counterparty_kpp'] = $transaction->CreditorParty->kpp;
+                            }
+                        }
+
+                        if (isset($transaction->DebtorParty)){
+                            if (isset($transaction->DebtorParty->kpp)){
+                                $payment['counterparty_kpp'] = $transaction->DebtorParty->kpp;
+                            }
+                        }
+                        
                         $this->addNewOrUpdateStatement($payment);
                     }
                 }
