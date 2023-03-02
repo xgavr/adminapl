@@ -26,7 +26,7 @@ $this->pageBreadcrumbs()->setItems([
                     <span class="glyphicon glyphicon-download-alt"></span>
                 </button>
                 <div class="form-group">
-                    <select id="supplierSelect" style="width: 250px" class="form-control">
+                    <select id="supplierSelect" name="supplierSelect" style="width: 250px" class="form-control">
                         <option selected>поставщик</option>
                         <?php foreach ($suppliers as $supplier):?>
                             <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
@@ -34,7 +34,7 @@ $this->pageBreadcrumbs()->setItems([
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="statusSelect" class="form-control">
+                    <select id="statusSelect" name="statusSelect" class="form-control">
                         <option>все</option>
                         <?php foreach (Idoc::getStatusList() as $key=>$value):?>
                             <option value="<?= $key?>"><?= $value?></option>
@@ -43,7 +43,7 @@ $this->pageBreadcrumbs()->setItems([
                     
                 </div>    
                 <div class="form-group">
-                    <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
+                    <input id="monthSelect" name="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@ $this->pageBreadcrumbs()->setItems([
 
 <script type="text/javascript">
 
-    var table = $('#table').bootstrapTable();
+    var $table = $('#table').bootstrapTable();
     var ok = $('#ok');
 
     function refreshTable(){
@@ -91,7 +91,7 @@ $this->pageBreadcrumbs()->setItems([
 
     $(function () {
         ok.click(function () {
-            table.bootstrapTable('refresh');
+            $table.bootstrapTable('refresh');
         });
 
         $(document).on('change', '#supplierSelect', function (e) {
@@ -274,7 +274,7 @@ $this->pageBreadcrumbs()->setItems([
         btn += ' class="btn btn-default btn-xs bill-setting-modal-show"';
 //        btn += ' data-toggle="modal" data-target="#modal-dialog"'; 
         btn += ' title="Изменить">'; 
-        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>';
         btn += '</button>';
         
         var url = '/bills/idoc-to-ptu/'+value;
