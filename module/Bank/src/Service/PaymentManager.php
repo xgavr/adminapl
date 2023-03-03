@@ -387,9 +387,11 @@ class PaymentManager
         
         $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
                
-        if (!empty($result['Data']['requestId'])){
-            $payment->setRequestId(empty($result['Data']['requestId']) ? null:$result['Data']['requestId']);
-            $payment->setStatus(Payment::STATUS_TRANSFER);            
+        if (!empty($result['Data'])){
+            if (!empty($result['Data']['requestId'])){
+                $payment->setRequestId(empty($result['Data']['requestId']) ? null:$result['Data']['requestId']);
+                $payment->setStatus(Payment::STATUS_TRANSFER);            
+            }
         }    
         
         $this->entityManager->persist($payment);

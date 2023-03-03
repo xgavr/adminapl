@@ -250,7 +250,8 @@ class Authenticate {
                         
                     }
                 }
-                throw new \Exception($error_msg);
+//                throw new \Exception($error_msg);
+                return ['message' => $error_msg];
         }
         
         throw new \Exception('Неопознаная ошибка');

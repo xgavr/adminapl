@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\Raw;
+
 $this->headTitle('Прайсы загруженные');
 
 $this->mainMenu()->setActiveItemId('raw');
@@ -16,13 +18,13 @@ $this->pageBreadcrumbs()->setItems([
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <select style="width: 200px" class="form-control" id='rawStatusSelect'>
+                    <select style="width: 200px" class="form-control" id='rawStatusSelect' name="rawStatusSelect">
                         <option>Все</option>
                         <?php foreach ($rawStatuses as $key => $value):?>
-                        <option value="<?= $value['status']?>" <?= ($value['status'] == Application\Entity\Raw::STATUS_PARSED) ? 'selected':'' ?>><?= $value['name']?></option>
+                        <option value="<?= $value['status']?>" <?= ($value['status'] == Raw::STATUS_PARSED) ? 'selected':'' ?>><?= $value['name']?></option>
                         <?php endforeach;?>
                     </select>
-                    <select style="width: 200px" class="form-control" id='rawStageSelect'>
+                    <select style="width: 200px" class="form-control" id='rawStageSelect' name="rawStageSelect">
                         <option selected>Все</option>
                         <?php foreach ($rawStages as $key => $value):?>
                             <option value="<?= $value['stage']?>"><?= $value['name']?></option>
@@ -42,7 +44,7 @@ $this->pageBreadcrumbs()->setItems([
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
             data-query-params="queryParams"
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"

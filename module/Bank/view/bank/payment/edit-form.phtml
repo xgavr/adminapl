@@ -392,10 +392,10 @@ $form->prepare();
         });    
     });
         
-    $( document ).ready(function() {
-        <?php if (!$payment):?>
-            changeBankAccount();    
-        <?php endif;?>        
+    $( document ).ready(function() {        
+        if ($('input[name="counterpartyBankBik"]').val()){
+            bikInfo($('input[name="counterpartyBankBik"]').val()); // company/legal/bik-inn-partial.phtml
+        }
         
         var forms = $('#payment-form');
         
@@ -414,6 +414,11 @@ $form->prepare();
                 submitForm();
             }, false);    
         });        
+
+        <?php if (!$payment): ?>
+            changeBankAccount();    
+        <?php endif; ?>    
+        
     });    
         
 </script>
