@@ -116,7 +116,7 @@ class PtuRepository extends EntityRepository{
 //                        ->andWhere('g.code like :q')
 //                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
                 
-                $orX->add($queryBuilder->expr()->like('g.code', $articleCodeFilter->filter($params['q']).'%'));
+                $orX->add($queryBuilder->expr()->like('g.code', '"'.$articleCodeFilter->filter($params['q']).'%"'));
                 
                 if (is_numeric($params['q'])){
                     $orX->add($queryBuilder->expr()->eq('p.id', $params['q']));                    
