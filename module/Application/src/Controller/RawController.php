@@ -58,12 +58,6 @@ class RawController extends AbstractActionController
     public function indexAction()
     {
         // Визуализируем шаблон представления.
-        return new ViewModel([
-        ]);  
-    }
-    
-    public function statusContentAction()
-    {
         $rawStatuses = $this->entityManager->getRepository(Raw::class)
                 ->rawStatuses();
         foreach ($rawStatuses as $key => $status){
@@ -75,10 +69,17 @@ class RawController extends AbstractActionController
         foreach ($rawStages as $key => $stage){
             $rawStages[$key]['name'] = Raw::getParseStageName($stage['stage']);
         }
-        // Визуализируем шаблон представления.
-        return new JsonModel([
+
+        return new ViewModel([
             'rawStatuses' => $rawStatuses,
             'rawStages' => $rawStages,
+        ]);  
+    }
+    
+    public function statusContentAction()
+    {
+        // Визуализируем шаблон представления.
+        return new JsonModel([
         ]);  
     }
 
