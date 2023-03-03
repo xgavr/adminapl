@@ -106,12 +106,24 @@ class PtuRepository extends EntityRepository{
                 }    
             }
             if (!empty($params['q'])){     
+                $orX = $queryBuilder->expr()->orX();
+
                 $articleCodeFilter = new ArticleCode(); 
                 $queryBuilder->distinct()
                         ->join('p.ptuGoods', 'pg')
                         ->join('pg.good', 'g')
-                        ->andWhere('g.code like :q')
-                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
+                        ;
+//                        ->andWhere('g.code like :q')
+//                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
+                
+                $orX->add($queryBuilder->expr()->like('g.code', $articleCodeFilter->filter($params['q']).'%'));
+                
+                if (is_numeric($params['q'])){
+                    $orX->add($queryBuilder->expr()->eg('p.id', $params['q']));                    
+                    $orX->add($queryBuilder->expr()->eg('p.aplId', $params['q']));                    
+                }
+                
+                $queryBuilder->andWhere($orX);
             }
         }
 
