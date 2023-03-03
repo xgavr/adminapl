@@ -180,9 +180,10 @@ class PtuManager
     public function repostPtu($ptu)
     {
         $this->updateInfo($ptu, true);
-        $this->updatePtuMovement($ptu);
-        $this->updatePtuMutuals($ptu);
-        
+        if ($ptu->getDocDate() < $this->getAllowDate()){
+            $this->updatePtuMovement($ptu);
+            $this->updatePtuMutuals($ptu);
+        }    
         return;
     }
 
