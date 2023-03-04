@@ -566,7 +566,7 @@ class RawManager {
     public function removeOldRaws()
     {
         ini_set('memory_limit', '1024M');
-        set_time_limit(3600);
+        set_time_limit(1800);
         $startTime = time();        
         
         $raws = $this->entityManager->getRepository(Raw::class)
@@ -580,7 +580,7 @@ class RawManager {
                 foreach ($item as $row){
                     $this->entityManager->getConnection()->delete('rawprice', ['id' => $row['id']]);                
                 }
-                if (time() > $startTime + 3540){
+                if (time() > $startTime + 1740){
                     return;
                 }            
             }                        
