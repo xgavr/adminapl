@@ -665,7 +665,7 @@ class RawRepository extends EntityRepository
                 ->from(Raw::class, 'r')
                 ->where('r.dateCreated <= ?1')
                 ->setParameter('1', date('Y-m-d', strtotime('-1 week')))
-                ->setMaxResults(5)
+                ->setMaxResults(50)
                 ;
         
         return $queryBuilder->getQuery()->getResult();        
