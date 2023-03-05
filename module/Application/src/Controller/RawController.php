@@ -89,10 +89,11 @@ class RawController extends AbstractActionController
         foreach ($rawStages as $key => $stage){
             $rawStages[$key]['name'] = Raw::getParseStageName($stage['stage']);
         }
-
+        $queue = $this->supplierManager->getPriceFilesToUpload();
         return new JsonModel([
             'rawStatuses' => $rawStatuses,
             'rawStages' => $rawStages,
+            'queue' => count($queue),
         ]);  
     }
 

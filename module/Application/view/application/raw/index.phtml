@@ -186,9 +186,11 @@ $this->pageBreadcrumbs()->setItems([
     });    
 
     function stat(data){
-        var names1 = ''; var names2 = ''; var values1 = ''; var values2 = '';
+        var names2 = ''; var values2 = '';
         var names3 = ''; var values3 = ''; var status3Count = 0;
         var totalStatus = 0; var totalRow = 0; var totalStage = 0;
+        var names1 = '<a href="/price/queue" target="_blank">Очередь</a>';
+        var values1 = data['queue'];
         $.each(data['rawStatuses'], function( index, value ) {
             if (value['status_count'] > 0){
                 names1 += value['name']+'<br/>';
