@@ -187,16 +187,30 @@ $this->pageBreadcrumbs()->setItems([
 
     function stat(data){
         var names1 = ''; var names2 = ''; var values1 = ''; var values2 = '';
-        var names3 = ''; var values3 = '';
+        var names3 = ''; var values3 = ''; var status3Count = 0;
         var totalStatus = 0; var totalRow = 0; var totalStage = 0;
         $.each(data['rawStatuses'], function( index, value ) {
             if (value['status_count'] > 0){
                 names1 += value['name']+'<br/>';
                 values1 += value['status_count'] + '<br/>';
+                if (value['status'] == 3){
+                    status3Count = Math.round(value['status_count']);
+                }
             }    
             if (value['row_count'] > 0){
                 names2 += value['name']+'<br/>';
-                values2 += value['row_count'] + '<br/>';
+                if (value['status' == 7]){
+                    var textInfo = 'success';
+                    if (Math.round(['row_count']) > status3Count*8){
+                        textInfo = 'warning';
+                    }    
+                    if (Math.round(['row_count']) > status3Count*10){
+                        textInfo = 'danger';
+                    }    
+                    values2 += '<span class=text-'+textInfo+'>'value7 + '</span><br/>';                    
+                } else {
+                    values2 += value['row_count'] + '<br/>';                    
+                }
             }    
             totalStatus += Math.round(value['status_count']);
             totalRow += Math.round(value['row_count']);
