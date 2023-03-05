@@ -71,20 +71,20 @@ $this->pageBreadcrumbs()->setItems([
                             Прайсы
                         </div>    
                         <div class="pull-right">     
-                            <button value="/raw/delete-old-raws" class="btn btn-default btn-xs refresh-button"
+<!--                            <button value="/raw/delete-old-raws" class="btn btn-default btn-xs refresh-button"
                                     title="Удаление старых прайсов">
                                 <span class="glyphicon glyphicon-remove" ></span>
-                            </button>
+                            </button>-->
                         </div>    
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">
-                        <div class="pull-left">
+                        <div class="pull-left" id="statusCountName">
                             <?php foreach($rawStatuses as $rawStatus):?>
                                 <?= $rawStatus['name']?><br/>                                
                             <?php endforeach;?>
                         </div>
-                        <div class="pull-right text-right">
+                        <div class="pull-right text-right" id="statusCountCount">
                             <?php $totalRawStatusCount = 0?>
                             <?php foreach($rawStatuses as $rawStatus):?>
                                 <?= $rawStatus['status_count']?><br/>                                
@@ -97,7 +97,7 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="pull-left">
                             Всего:     
                         </div>
-                        <div class="pull-right text-right">
+                        <div class="pull-right text-right" id="totalStatusCount">
                             <?= $totalRawStatusCount; ?>                        
                         </div>    
                         <div class="clearfix"></div>
@@ -109,14 +109,14 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">
-                        <div class="pull-left">
+                        <div class="pull-left" id="rowCountName">
                             <?php foreach($rawStatuses as $rawStatus):?>
                                 <?php if ($rawStatus['row_count']): ?>
                                     <?= $rawStatus['name']?><br/>                                
                                 <?php endif; ?>    
                             <?php endforeach;?>
                         </div>
-                        <div class="pull-right text-right">
+                        <div class="pull-right text-right" id="rowCountCount">
                             <?php $totalRowStatusCount = 0?>
                             <?php foreach($rawStatuses as $rawStatus):?>
                                 <?php if ($rawStatus['row_count']): ?>
@@ -131,7 +131,7 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="pull-left">
                             Всего:     
                         </div>
-                        <div class="pull-right text-right">
+                        <div class="pull-right text-right" id="totalRowCount">
                             <?= $totalRowStatusCount ?>
                         </div>    
                         <div class="clearfix"></div>
@@ -143,14 +143,14 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">
-                        <div class="pull-left">
+                        <div class="pull-left" id="stageCountName">
                             <?php foreach($rawStages as $rawStage):?>
                                 <?php if ($rawStage['row_count']): ?>
                                     <?= $rawStage['name']?><br/>                                
                                 <?php endif; ?>    
                             <?php endforeach;?>
                         </div>
-                        <div class="pull-right text-right">
+                        <div class="pull-right text-right" id="stageCountCount">
                             <?php $totalRowStageCount = 0?>
                             <?php foreach($rawStages as $rawStage):?>
                                 <?php if ($rawStage['row_count']): ?>
@@ -165,7 +165,7 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="pull-left">
                             Всего:     
                         </div>
-                        <div class="pull-right text-right">
+                        <div class="pull-right text-right" id="totalStageCount">
                             <?= $totalRowStageCount ?>                                                   
                         </div>
                         <div class="clearfix"></div>
@@ -178,9 +178,55 @@ $this->pageBreadcrumbs()->setItems([
 
 <script type="text/javascript">
     var $table = $('#table');
+    
+    $table.bootstrapTable({
+        onLoadSuccess: function (data){
+            statUpdate();
+        }
+    });    
 
     function stat(data){
-        
+        var names1 = ''; var names2 = ''; var values1 = ''; var values2 = '';
+        var names3 = ''; var values3 = '';
+        var totalStatus = 0; var totalRow = 0; var totalStage = 0;
+        $.each(data['rawStatuses'], function( index, value ) {
+            if (value['status_count'] > 0){
+                names1 += value['name']+'<br/>';
+                values1 += value['status_count'] + '<br/>';
+            }    
+            if (value['row_count'] > 0){
+                names2 += value['name']+'<br/>';
+                values2 += value['row_count'] + '<br/>';
+            }    
+            totalStatus += value['status_count'];
+            totalRow += value['row_count'];
+        });
+        $('#statusCountName').html(names1);
+        $('#statusCountCount').html(values1);
+        $('#totalStatusCount').html(totalStatus);
+        $('#rowCountName').html(names2);
+        $('#rowCountCount').html(values2);
+        $('#totalRowCount').html(totalRow);
+
+        $.each(data['rawStages'], function( index, value ) {
+            if (value['row_count'] > 0){
+                names3 += value['name']+'<br/>';
+                values3 += value['row_count'] + '<br/>';
+            }    
+            totalStage += value['row_count'];
+        });
+        $('#stageCountName').html(names3);
+        $('#stageCountCount').html(values3);
+        $('#totalStageCount').html(totalStage);
+    }
+    
+    function statUpdate(){    
+        $.ajax({
+            url: '/raw/status-content',
+            success: function (data) {
+                stat(data);
+            }
+        });        
     }
 
     $(function () {
