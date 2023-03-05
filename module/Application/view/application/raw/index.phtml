@@ -84,7 +84,7 @@ $this->pageBreadcrumbs()->setItems([
                                 <?= $rawStatus['name']?><br/>                                
                             <?php endforeach;?>
                         </div>
-                        <div class="pull-right">
+                        <div class="pull-right text-right">
                             <?php $totalRawStatusCount = 0?>
                             <?php foreach($rawStatuses as $rawStatus):?>
                                 <?= $rawStatus['status_count']?><br/>                                
@@ -97,7 +97,7 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="pull-left">
                             Всего:     
                         </div>
-                        <div class="pull-right">
+                        <div class="pull-right text-right">
                             <?= $totalRawStatusCount; ?>                        
                         </div>    
                         <div class="clearfix"></div>
@@ -116,7 +116,7 @@ $this->pageBreadcrumbs()->setItems([
                                 <?php endif; ?>    
                             <?php endforeach;?>
                         </div>
-                        <div class="pull-right">
+                        <div class="pull-right text-right">
                             <?php $totalRowStatusCount = 0?>
                             <?php foreach($rawStatuses as $rawStatus):?>
                                 <?php if ($rawStatus['row_count']): ?>
@@ -131,7 +131,7 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="pull-left">
                             Всего:     
                         </div>
-                        <div class="pull-right">
+                        <div class="pull-right text-right">
                             <?= $totalRowStatusCount ?>
                         </div>    
                         <div class="clearfix"></div>
@@ -150,7 +150,7 @@ $this->pageBreadcrumbs()->setItems([
                                 <?php endif; ?>    
                             <?php endforeach;?>
                         </div>
-                        <div class="pull-right">
+                        <div class="pull-right text-right">
                             <?php $totalRowStageCount = 0?>
                             <?php foreach($rawStages as $rawStage):?>
                                 <?php if ($rawStage['row_count']): ?>
@@ -165,7 +165,7 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="pull-left">
                             Всего:     
                         </div>
-                        <div class="pull-right">
+                        <div class="pull-right text-right">
                             <?= $totalRowStageCount ?>                                                   
                         </div>
                         <div class="clearfix"></div>
