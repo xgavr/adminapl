@@ -495,4 +495,21 @@ class BigramRepository  extends EntityRepository
         return count($queryBuilder->getQuery()->getResult());
     }
     
+    /**
+     * Биграммы для обновления
+     * 
+     * @return integer
+     */
+    public function findForUupdate()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('b')
+                ->from(Bigram::class, 'b')
+                ->andWhere('b.gf != ?1')
+                ->setParameter('1', date('n'))
+                ;
+        
+        return $queryBuilder->getQuery();
+    }
 }

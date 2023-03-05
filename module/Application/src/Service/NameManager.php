@@ -669,18 +669,7 @@ class NameManager
             $goods = $this->entityManager->getRepository(Goods::class)
                     ->count([]);
         }
-//        if ($tokenGroupCount == null){
-//            if ($bigram->getFrequency() > Bigram::MIN_FREQUENCY){
-//                $tokenGroupCount = $this->entityManager->getRepository(ArticleBigram::class)
-//                        ->bigramTokenGroupCount($bigram);
-//            } else {
-//                $tokenGroupCount = 0;
-//            }    
-//        }    
-//        if ($tokenGroups == null){
-//            $tokenGroups = $this->entityManager->getRepository(TokenGroup::class)
-//                    ->count([]);
-//        }
+
         $idf = 0;
         
         if ($goodCount){
@@ -691,7 +680,7 @@ class NameManager
                 ->updateBigram($bigram, [
                     'frequency' => $goodCount, 
                     'idf' => $idf,
-                    'gf' => 0,
+                    'gf' => date('n'),
                     ]);
 
     }
@@ -711,7 +700,7 @@ class NameManager
                 ->count([]);
         
         $bigramsQuery = $this->entityManager->getRepository(Bigram::class)
-                ->findAllBigram();
+                ->findForUupdate();
         $iterable = $bigramsQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $bigram){
