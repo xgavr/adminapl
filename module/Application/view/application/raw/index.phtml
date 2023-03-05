@@ -198,8 +198,8 @@ $this->pageBreadcrumbs()->setItems([
                 names2 += value['name']+'<br/>';
                 values2 += value['row_count'] + '<br/>';
             }    
-            totalStatus += value['status_count'];
-            totalRow += value['row_count'];
+            totalStatus += Math.round(value['status_count']);
+            totalRow += Math.round(value['row_count']);
         });
         $('#statusCountName').html(names1);
         $('#statusCountCount').html(values1);
@@ -213,7 +213,7 @@ $this->pageBreadcrumbs()->setItems([
                 names3 += value['name']+'<br/>';
                 values3 += value['row_count'] + '<br/>';
             }    
-            totalStage += value['row_count'];
+            totalStage += Math.round(value['row_count']);
         });
         $('#stageCountName').html(names3);
         $('#stageCountCount').html(values3);
