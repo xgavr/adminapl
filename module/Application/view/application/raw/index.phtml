@@ -201,13 +201,13 @@ $this->pageBreadcrumbs()->setItems([
                 names2 += value['name']+'<br/>';
                 if (value['status' == 7]){
                     var textInfo = 'success';
-                    if (Math.round(['row_count']) > status3Count*8){
+                    if (Math.round(value['row_count']) > status3Count*8){
                         textInfo = 'warning';
                     }    
-                    if (Math.round(['row_count']) > status3Count*10){
+                    if (Math.round(value['row_count']) > status3Count*10){
                         textInfo = 'danger';
                     }    
-                    values2 += '<span class=text-'+textInfo+'>'value7 + '</span><br/>';                    
+                    values2 += '<span class=text-'+textInfo+'>'+ value['row_count'] +'</span><br/>';                    
                 } else {
                     values2 += value['row_count'] + '<br/>';                    
                 }
