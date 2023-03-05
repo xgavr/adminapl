@@ -150,11 +150,11 @@ class NavManager
                     'link'  => $url('revise')
                 ];
 
-                $priceDropdownItems[] = [
-                    'id' => 'raw_queue',
-                    'label' => 'Очередь прайсов',
-                    'link'  => $url('price', ['action' => 'queue'])
-                ];
+//                $priceDropdownItems[] = [
+//                    'id' => 'raw_queue',
+//                    'label' => 'Очередь прайсов',
+//                    'link'  => $url('price', ['action' => 'queue'])
+//                ];
                 
                 $priceDropdownItems[] = [
                     'id' => 'raw_uploaded',
