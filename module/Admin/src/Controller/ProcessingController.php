@@ -1569,7 +1569,7 @@ class ProcessingController extends AbstractActionController
         if ($settings['assembly_group_name'] == 1){
             
             $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRICE_UPDATET]);
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_PARSED]);
             
             if ($raw){
                 $this->nameManager->grabTokenGroupFromRaw($raw);
