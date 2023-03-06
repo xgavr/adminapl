@@ -249,14 +249,14 @@ $this->pageBreadcrumbs()->setItems([
                                     </button>
                                 <?php endif;?>
                                 <?php if ($raw->getParseStage() == Raw::STAGE_ARTICLE_PARSED):?>
-                                    <button value="/oem/update-oem-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Разобрать номера">
+                                    <button value="/producer/assembly-producer-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Собрать производителей">
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
                                     <div>
                                         <small>
                                             <i>
-                                                <?= round($parseManager->stageCount($raw, 'statusOem', Rawprice::OEM_PARSED)*100/$totalRawpriceCount).'%'?>
+                                                <?= round($parseManager->stageCount($raw, 'statusProducer', Rawprice::PRODUCER_ASSEMBLY)*100/$totalRawpriceCount).'%'?>
                                             </i>
                                         </small>
                                     </div>
@@ -288,14 +288,14 @@ $this->pageBreadcrumbs()->setItems([
                                     </div>
                                 <?php endif;?>
                                 <?php if ($raw->getParseStage() == Raw::STAGE_PRICE_UPDATET):?>
-                                    <button value="/name/update-token-group-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Разобрать группы наименований">
+                                    <button value="/oem/update-oem-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Разобрать номера">
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
                                     <div>
                                         <small>
                                             <i>
-                                                <?= round($parseManager->stageCount($raw, 'statusToken', Rawprice::TOKEN_GROUP_PARSED)*100/$totalRawpriceCount).'%'?>
+                                                <?= round($parseManager->stageCount($raw, 'statusOem', Rawprice::OEM_PARSED)*100/$totalRawpriceCount).'%'?>
                                             </i>
                                         </small>
                                     </div>
@@ -314,14 +314,14 @@ $this->pageBreadcrumbs()->setItems([
                                     </div>
                                 <?php endif;?>
                                 <?php if ($raw->getParseStage() == Raw::STAGE_TOKEN_PARSED):?>
-                                    <button value="/producer/assembly-producer-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Собрать производителей">
+                                    <button value="/name/update-token-group-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Разобрать группы наименований">
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
                                     <div>
                                         <small>
                                             <i>
-                                                <?= round($parseManager->stageCount($raw, 'statusProducer', Rawprice::PRODUCER_ASSEMBLY)*100/$totalRawpriceCount).'%'?>
+                                                <?= round($parseManager->stageCount($raw, 'statusToken', Rawprice::TOKEN_GROUP_PARSED)*100/$totalRawpriceCount).'%'?>
                                             </i>
                                         </small>
                                     </div>
