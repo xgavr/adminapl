@@ -503,30 +503,7 @@ class ProcessingController extends AbstractActionController
         );
     }
     
-    
-    /**
-     * Обновление неизвестных производителей из прайса
-     */
-    public function unknownProducerFromRawpriceAction()
-    {
-        $settings = $this->adminManager->getPriceSettings();
-
-        if ($settings['parse_producer'] == 1){
-            
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_NOT]);
-            
-            if ($raw){
-                $this->producerManager->grabUnknownProducerFromRaw($raw);
-            }    
-        }    
-                
-        return new JsonModel(
-            ['ok']
-        );
         
-    }
-    
     /**
      * Обновление количестка товаров у неизвестного производителя
      */
@@ -577,30 +554,6 @@ class ProcessingController extends AbstractActionController
     }
 
     /**
-     * Обновление артикулов из прайса
-     */
-    public function articleFromRawpriceAction()
-    {
-        
-        $settings = $this->adminManager->getPriceSettings();
-
-        if ($settings['parse_article'] == 1){
-            
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRODUCER_PARSED]);
-            
-            if ($raw){
-                $this->articleManager->grabArticleFromRaw($raw);
-            }    
-        }    
-                
-        return new JsonModel(
-            ['ok']
-        );
-        
-    }
-
-    /**
      * Удаление пустых артикулов производителей
      */
     public function deleteArticleAction()
@@ -609,30 +562,6 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['parse_article'] == 1){
             $this->articleManager->removeEmptyArticles();
-        }    
-                
-        return new JsonModel(
-            ['ok']
-        );
-        
-    }
-
-    /**
-     * Обновление номеров из прайса
-     */
-    public function oemFromRawpriceAction()
-    {
-        
-        $settings = $this->adminManager->getPriceSettings();
-
-        if ($settings['parse_oem'] == 1){
-            
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_ARTICLE_PARSED]);
-            
-            if ($raw){
-                $this->oemManager->grabOemFromRaw($raw);
-            }    
         }    
                 
         return new JsonModel(
@@ -659,29 +588,6 @@ class ProcessingController extends AbstractActionController
         
     }
     
-    /**
-     * Обновление токенов из прайса
-     */
-    public function tokenFromRawpriceAction()
-    {
-        $settings = $this->adminManager->getPriceSettings();
-
-        if ($settings['parse_name'] == 1){
-            
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_OEM_PARSED]);
-            
-            if ($raw){
-                $this->nameManager->grabTokenFromRaw($raw);
-            }    
-        }    
-                
-        return new JsonModel(
-            ['ok']
-        );
-        
-    }
-
     /**
      * Удаление пустых токенов
      */
@@ -812,6 +718,54 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
+     * 1 -> 2
+     * Обновление неизвестных производителей из прайса
+     */
+    public function unknownProducerFromRawpriceAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_producer'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_NOT]);
+            
+            if ($raw){
+                $this->producerManager->grabUnknownProducerFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    /**
+     * 2 -> 3
+     * Обновление артикулов из прайса
+     */
+    public function articleFromRawpriceAction()
+    {
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_article'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRODUCER_PARSED]);
+            
+            if ($raw){
+                $this->articleManager->grabArticleFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    /**
+     * 3 -> 4
      * Обновление производителей из неизвестных производителей
      */
     public function producerFromUnknownProducerAction()
@@ -834,6 +788,172 @@ class ProcessingController extends AbstractActionController
         
     }
 
+    /**
+     * 4 -> 5
+     * Обновление товаров из прайса
+     */
+    public function goodFromRawAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['assembly_good'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRODUCER_ASSEMBLY]);
+            
+            if ($raw){
+                $this->assemblyManager->assemblyGoodFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }    
+    
+    /**
+     * 5 -> 6
+     * Обновление цен товаров из прайса
+     */
+    public function updateGoodPriceRawAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['update_good_price'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_GOOD_ASSEMBLY]);
+            
+            if ($raw){
+                $this->goodsManager->updatePricesRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }    
+    
+    /**
+     * 6 -> 7
+     * Обновление номеров из прайса
+     */
+    public function oemFromRawpriceAction()
+    {
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_oem'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRICE_UPDATET]);
+            
+            if ($raw){
+                $this->oemManager->grabOemFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    /**
+     * 7 -> 8
+     * Обновление токенов из прайса
+     */
+    public function tokenFromRawpriceAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_name'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_OEM_PARSED]);
+            
+            if ($raw){
+                $this->nameManager->grabTokenFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
+    
+    /**
+     * 8 -> 10
+     * Обновление групп наименований из прайса
+     */
+    public function tokenGroupFromRawpriceAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['assembly_group_name'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_PARSED]);
+            
+            if ($raw){
+                $this->nameManager->grabTokenGroupFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );
+        
+    }
+
+    /**
+     * 10 -> 11
+     * Обновление описания товаров из прайса
+     */
+    public function updateDescriptionAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['update_good_name'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_GROUP_PARSED]);
+            
+            if ($raw){
+                $this->nameManager->descriptionFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }    
+    
+    /**
+     * 11 -> 12
+     * Обновление наименований товаров из прайса
+     */
+    public function updateBestNameAction()
+    {
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['update_good_name'] == 1){
+            
+            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
+                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_DESCRIPTION]);
+            
+            if ($raw){
+                $this->nameManager->bestNameFromRaw($raw);
+            }    
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }    
+    
     /**
      * Обновление наименований производителей
      */
@@ -890,30 +1010,7 @@ class ProcessingController extends AbstractActionController
         );
         
     }
-    
-    /**
-     * Обновление товаров из прайса
-     */
-    public function goodFromRawAction()
-    {
-        $settings = $this->adminManager->getPriceSettings();
-
-        if ($settings['assembly_good'] == 1){
-            
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRODUCER_ASSEMBLY]);
-            
-            if ($raw){
-                $this->assemblyManager->assemblyGoodFromRaw($raw);
-            }    
-        }    
-                
-        return new JsonModel(
-            ['ok']
-        );
         
-    }    
-    
     /**
      * Удаление пустых товаров
      */
@@ -930,30 +1027,7 @@ class ProcessingController extends AbstractActionController
         );
         
     }
-    
-    /**
-     * Обновление цен товаров из прайса
-     */
-    public function updateGoodPriceRawAction()
-    {
-        $settings = $this->adminManager->getPriceSettings();
-
-        if ($settings['update_good_price'] == 1){
-            
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_GOOD_ASSEMBLY]);
-            
-            if ($raw){
-                $this->goodsManager->updatePricesRaw($raw);
-            }    
-        }    
-                
-        return new JsonModel(
-            ['ok']
-        );
         
-    }    
-    
     
     /**
      * Обновление AplId производителей
@@ -1535,76 +1609,6 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
-     * ОТКЛЮЧЕНО
-     * Обновление наименований товаров из прайса
-     * 
-     */
-    public function goodTokenFromRawpriceAction()
-    {
-        $settings = $this->adminManager->getPriceSettings();
-
-        if ($settings['good_token'] == 1){
-            
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_PRICE_UPDATET]);
-            
-            if ($raw){
-                $this->nameManager->grabGoodTokenFromRaw($raw);
-            }    
-        }    
-                
-        return new JsonModel(
-            ['ok']
-        );
-        
-    }
-
-    /**
-     * Обновление групп наименований из прайса
-     */
-    public function tokenGroupFromRawpriceAction()
-    {
-        $settings = $this->adminManager->getPriceSettings();
-
-        if ($settings['assembly_group_name'] == 1){
-            
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_PARSED]);
-            
-            if ($raw){
-                $this->nameManager->grabTokenGroupFromRaw($raw);
-            }    
-        }    
-                
-        return new JsonModel(
-            ['ok']
-        );
-        
-    }
-
-    /**
-     * Обновление описания товаров из прайса
-     */
-    public function updateDescriptionAction()
-    {
-        $settings = $this->adminManager->getPriceSettings();
-
-        if ($settings['update_good_name'] == 1){
-            
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_TOKEN_GROUP_PARSED]);
-            
-            if ($raw){
-                $this->nameManager->descriptionFromRaw($raw);
-            }    
-        }    
-                
-        return new JsonModel(
-            ['ok']
-        );        
-    }
-
-    /**
      * Поддержка токенов наименований
      */
     public function supportTitleTokensAction()
@@ -1636,29 +1640,6 @@ class ProcessingController extends AbstractActionController
         return new JsonModel(
             ['ok']
         );        
-    }
-
-    /**
-     * Обновление наименований товаров из прайса
-     */
-    public function updateBestNameAction()
-    {
-        $settings = $this->adminManager->getPriceSettings();
-
-        if ($settings['update_good_name'] == 1){
-            
-            $raw = $this->entityManager->getRepository(\Application\Entity\Raw::class)
-                    ->findOneBy(['status' => \Application\Entity\Raw::STATUS_PARSED, 'parseStage' => \Application\Entity\Raw::STAGE_DESCRIPTION]);
-            
-            if ($raw){
-                $this->nameManager->bestNameFromRaw($raw);
-            }    
-        }    
-                
-        return new JsonModel(
-            ['ok']
-        );
-        
     }
 
     /**
