@@ -32,11 +32,14 @@ class Raw {
     const STAGE_NOT                 = 1; //поля не разобраны
     const STAGE_PRODUCER_PARSED     = 2; //производители разобраны 
     const STAGE_ARTICLE_PARSED      = 3; //артикулы разобраны 
-    const STAGE_OEM_PARSED          = 4; //номера замен разобраны
-    const STAGE_TOKEN_PARSED        = 5; //наименования разобраны
-    const STAGE_PRODUCER_ASSEMBLY   = 6; //производители собраны
-    const STAGE_GOOD_ASSEMBLY       = 7; //карточки товара собрана
-    const STAGE_PRICE_UPDATET       = 8; //цены рассчитаны
+
+    const STAGE_PRODUCER_ASSEMBLY   = 4; //производители собраны
+    const STAGE_GOOD_ASSEMBLY       = 5; //карточки товара собрана
+    const STAGE_PRICE_UPDATET       = 6; //цены рассчитаны
+
+    const STAGE_OEM_PARSED          = 7; //номера замен разобраны
+    const STAGE_TOKEN_PARSED        = 8; //наименования разобраны
+
     const STAGE_GOOD_TOKEN          = 9; //токены товаров
     const STAGE_TOKEN_GROUP_PARSED  = 10; //группы наименований разобраны
     const STAGE_DESCRIPTION         = 11; // обновлены описания
@@ -301,11 +304,11 @@ class Raw {
             self::STAGE_NOT => 'Производители не разобраны',
             self::STAGE_PRODUCER_PARSED => 'Производители разобраны',
             self::STAGE_ARTICLE_PARSED => 'Артикулы разобраны',
-            self::STAGE_OEM_PARSED => 'Номера замен разобраны',
-            self::STAGE_TOKEN_PARSED => 'Наименования разобраны',
             self::STAGE_PRODUCER_ASSEMBLY => 'Производители собраны',
             self::STAGE_GOOD_ASSEMBLY => 'Товары собраны',
             self::STAGE_PRICE_UPDATET => 'Цены рассчитаны',
+            self::STAGE_OEM_PARSED => 'Номера замен разобраны',
+            self::STAGE_TOKEN_PARSED => 'Наименования разобраны',
             self::STAGE_GOOD_TOKEN => 'Токены товаров разобраны',
             self::STAGE_TOKEN_GROUP_PARSED => 'Группы наименований разобраны',
             self::STAGE_DESCRIPTION => 'Описания обновлены',

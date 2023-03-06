@@ -297,52 +297,23 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function statusFormatter(value, row) {
-        switch (value){
-            case '2': return 'Удален'; 
-            case '3': return 'Разобран'; 
-            case '4': return 'Загружается'; 
-            case '5': return 'Разбирается'; 
-            case '6': return 'Не удалось загрузить<br/><small style="color:red">'+row.name+'</small>'; 
-            case '7': return 'Устарел'; 
-            default: return 'Новый';    
-        }
+        var result = <?= Encoder::encode(Raw::getStatusList())?>
+        return result[value];
     }
     
     function statusStageFormatter(value, row) {
         var status = statusFormatter(value, row);
         var stage = '';
         if (value == '3'){
-            switch (row.parseStage){
-                case '1': stage = 'Производители не разобраны'; break;
-                case '2': stage =  'Производители разобраны'; break;
-                case '3': stage =  'Артикулы разобраны'; break;
-                case '4': stage =  'Номера разобраны'; break;
-                case '5': stage =  'Наименования разобраны'; break;
-                case '6': stage =  'Производители собраны'; break;
-                case '7': stage =  'Товары собраны'; break;
-                case '8': stage =  'Цены пересчитаны'; break;
-                case '9': stage =  'Токены товаров разобраны'; break;
-                case '10': stage =  'Группы наименований разобраны'; break;
-                case '11': stage =  'Описания обновлены'; break;
-                case '12': stage =  'Наименования обновлены'; break;
-                default: stage =  'Неизвестно';                  
-            }
+            var stages = <?= Encoder::encode(Raw::getParseStageList())?>
+            stage = stages[row.parseStage];
         }    
         return (stage) ? stage:status;
     }
     
     function statusExStageFormatter(value, row) {
         var stage = statusStageFormatter(value, row);
-        var statusEx = '';
-        switch (row.statusEx){
-            case '1': statusEx = '<br/> Новый'; break;
-            case '2': statusEx =  '<br/> Готов к передаче'; break;
-            case '3': statusEx =  '<br/> Передан'; break;
-            case '4': statusEx =  '<br/> Готов к удалению'; break;
-            case '5': statusEx =  '<br/> Удален'; break;
-            default: statusEx =  '<br/> Неизвестно';                  
-        }
-        return stage;// + statusEx;
+        return stage;
     }
 
     function dateCreatedFormatter(value, row) {

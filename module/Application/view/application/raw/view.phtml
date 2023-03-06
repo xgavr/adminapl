@@ -236,19 +236,19 @@ $this->pageBreadcrumbs()->setItems([
                                 <?= $raw->getParseStageAsString(); ?>
                             </div>    
                             <div class="pull-right">
-                                <?php if ($raw->getParseStage() == $raw::STAGE_NOT):?>
+                                <?php if ($raw->getParseStage() == Raw::STAGE_NOT):?>
                                     <button value="/producer/update-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Разобрать производителй">
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
                                 <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_PRODUCER_PARSED):?>
+                                <?php if ($raw->getParseStage() == Raw::STAGE_PRODUCER_PARSED):?>
                                     <button value="/producer/update-article-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Разобрать артикулы">
                                         <span class="glyphicon glyphicon-wrench" ></span>
                                     </button>
                                 <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_ARTICLE_PARSED):?>
+                                <?php if ($raw->getParseStage() == Raw::STAGE_ARTICLE_PARSED):?>
                                     <button value="/oem/update-oem-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Разобрать номера">
                                         <span class="glyphicon glyphicon-wrench" ></span>
@@ -261,33 +261,7 @@ $this->pageBreadcrumbs()->setItems([
                                         </small>
                                     </div>
                                 <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_OEM_PARSED):?>
-                                    <button value="/name/update-token-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Разобрать наименования">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button>
-                                    <div>
-                                        <small>
-                                            <i>
-                                                <?= round($parseManager->stageCount($raw, 'statusToken', Rawprice::TOKEN_PARSED)*100/$totalRawpriceCount).'%'?>
-                                            </i>
-                                        </small>
-                                    </div>
-                                <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_TOKEN_PARSED):?>
-                                    <button value="/producer/assembly-producer-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
-                                            title="Собрать производителей">
-                                        <span class="glyphicon glyphicon-wrench" ></span>
-                                    </button>
-                                    <div>
-                                        <small>
-                                            <i>
-                                                <?= round($parseManager->stageCount($raw, 'statusProducer', Rawprice::PRODUCER_ASSEMBLY)*100/$totalRawpriceCount).'%'?>
-                                            </i>
-                                        </small>
-                                    </div>
-                                <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_PRODUCER_ASSEMBLY):?>
+                                <?php if ($raw->getParseStage() == Raw::STAGE_PRODUCER_ASSEMBLY):?>
                                     <button value="/goods/assembly-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Собрать товары">
                                         <span class="glyphicon glyphicon-wrench" ></span>
@@ -300,7 +274,7 @@ $this->pageBreadcrumbs()->setItems([
                                         </small>
                                     </div>
                                 <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_GOOD_ASSEMBLY):?>
+                                <?php if ($raw->getParseStage() == Raw::STAGE_GOOD_ASSEMBLY):?>
                                     <button value="/goods/update-prices-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Рассчитать цены">
                                         <span class="glyphicon glyphicon-wrench" ></span>
@@ -313,7 +287,7 @@ $this->pageBreadcrumbs()->setItems([
                                         </small>
                                     </div>
                                 <?php endif;?>
-                                <?php if ($raw->getParseStage() == $raw::STAGE_PRICE_UPDATET):?>
+                                <?php if ($raw->getParseStage() == Raw::STAGE_PRICE_UPDATET):?>
                                     <button value="/name/update-token-group-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
                                             title="Разобрать группы наименований">
                                         <span class="glyphicon glyphicon-wrench" ></span>
@@ -322,6 +296,32 @@ $this->pageBreadcrumbs()->setItems([
                                         <small>
                                             <i>
                                                 <?= round($parseManager->stageCount($raw, 'statusToken', Rawprice::TOKEN_GROUP_PARSED)*100/$totalRawpriceCount).'%'?>
+                                            </i>
+                                        </small>
+                                    </div>
+                                <?php endif;?>
+                                <?php if ($raw->getParseStage() == Raw::STAGE_OEM_PARSED):?>
+                                    <button value="/name/update-token-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Разобрать наименования">
+                                        <span class="glyphicon glyphicon-wrench" ></span>
+                                    </button>
+                                    <div>
+                                        <small>
+                                            <i>
+                                                <?= round($parseManager->stageCount($raw, 'statusToken', Rawprice::TOKEN_PARSED)*100/$totalRawpriceCount).'%'?>
+                                            </i>
+                                        </small>
+                                    </div>
+                                <?php endif;?>
+                                <?php if ($raw->getParseStage() == Raw::STAGE_TOKEN_PARSED):?>
+                                    <button value="/producer/assembly-producer-from-raw/<?= $raw->getId() ?>" class="btn btn-primary btn-xs refresh-button"
+                                            title="Собрать производителей">
+                                        <span class="glyphicon glyphicon-wrench" ></span>
+                                    </button>
+                                    <div>
+                                        <small>
+                                            <i>
+                                                <?= round($parseManager->stageCount($raw, 'statusProducer', Rawprice::PRODUCER_ASSEMBLY)*100/$totalRawpriceCount).'%'?>
                                             </i>
                                         </small>
                                     </div>
