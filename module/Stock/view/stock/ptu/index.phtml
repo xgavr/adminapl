@@ -179,25 +179,18 @@
         return btn;
     }    
     
-    function vtpButtonClass(data){
-        if (data.vtpCount){
-            $('#vtpbtn'+data.id).removeClass('btn-default');
-            $('#vtpbtn'+data.id).addClass('btn-info');
-        }            
-    }
-    
     function vtpFormatter(value, row){
-        $.get(
-            '/ptu/vtp-count/'+row.id,
-            null,
-            vtpButtonClass                
-        );
+        var info = $.parseJSON(row.info);
+        var btnClass = 'btn-default';
+        if (info.depend.vtp.length > 0){
+            btnClass = 'btn-info';
+        }
 
         var url = '/vtp/ptu-form/'+row.id;
         btn = '<button';
         btn += ' id="vtpbtn' + row.id + '"';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs vtp-index-modal-show"';
+        btn += ' class="btn '+btnClass+' btn-xs vtp-index-modal-show"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span aria-hidden="true">В</span>';
