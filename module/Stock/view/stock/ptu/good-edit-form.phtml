@@ -248,6 +248,11 @@ $docName = 'Новый';
             },
         });
         
+        $("#code").on('input', function(){
+            var value = $(this).val();
+            $(this).val(value.replaceAll("[^A-Za-z0-9]",""));
+        });
+
         $("#price").on('input', function(){
             var value = $(this).val();
             $(this).val(value.replace(",","."));

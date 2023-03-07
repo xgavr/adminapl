@@ -156,7 +156,7 @@ class SupplierRepository extends EntityRepository{
     public function findDefaultSupplierLegal($supplier, $dateDoc = null)
     {
         if (!$dateDoc){
-            $dateDoc = date();
+            $dateDoc = date('Y-m-d');
         }
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();

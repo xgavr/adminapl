@@ -77,7 +77,8 @@
         });  
         
         $(document).on('click', '.ptu-modal-show', function (e) {
-            var url = $(this).attr('modal-url');
+            var supplier = $('#supplierSelect').val();
+            var url = $(this).attr('modal-url')+'?supplier='+supplier;
             showFormDialog({
                 id: 'ptuModal',
                 url: url,

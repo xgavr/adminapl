@@ -21,14 +21,14 @@ $this->pageBreadcrumbs()->setItems([
                 <div class="form-group">
                     <select style="width: 200px" class="form-control" id='rawStatusSelect' name="rawStatusSelect">
                         <option>Все</option>
-                        <?php foreach ($rawStatuses as $key => $value):?>
-                        <option value="<?= $value['status']?>" <?= ($value['status'] == Raw::STATUS_PARSED) ? 'selected':'' ?>><?= $value['name']?></option>
+                        <?php foreach (Raw::getStatusList() as $key => $value):?>
+                        <option value="<?= $key ?>" <?= ($key == Raw::STATUS_PARSED) ? 'selected':'' ?>><?= $value ?></option>
                         <?php endforeach;?>
                     </select>
                     <select style="width: 200px" class="form-control" id='rawStageSelect' name="rawStageSelect">
                         <option selected>Все</option>
-                        <?php foreach ($rawStages as $key => $value):?>
-                            <option value="<?= $value['stage']?>"><?= $value['name']?></option>
+                        <?php foreach (Raw::getParseStageList() as $key => $value):?>
+                            <option value="<?= $key ?>"><?= $value ?></option>
                         <?php endforeach;?>
                     </select>
                 </div>

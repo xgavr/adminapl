@@ -48,7 +48,7 @@ class PtuController extends AbstractActionController
     public function indexAction()
     {
         $suppliers = $this->entityManager->getRepository(Supplier::class)
-                ->findForPtu();
+                ->findForFormPtu();
         $offices = $this->entityManager->getRepository(Office::class)
                 ->findAll();
         return new ViewModel([
@@ -172,6 +172,15 @@ class PtuController extends AbstractActionController
             $officeId = (int)$this->params()->fromQuery('office', $this->ptuManager->currentUser()->getOffice()->getId());
             $office = $this->entityManager->getRepository(Office::class)
                     ->findOneById($officeId);
+            $company = $this->entityManager->getRepository(Office::class)->findDefaultCompany($office);
+            if ($supplier){
+                $legal = $this->entityManager->getRepository(Supplier::class)
+                        ->findDefaultSupplierLegal($supplier);
+                if ($legal){
+                    $contract = $this->entityManager->getRepository(Office::class)
+                            ->findDefaultContract($office, $legal, null, Contract::PAY_CASHLESS);
+                }    
+            }
         } else {
             $supplier = $ptu->getSupplier();
             $office = $ptu->getOffice();
@@ -238,6 +247,15 @@ class PtuController extends AbstractActionController
                 );           
             }
         } else {
+            $data = [
+                'office_id' => $office->getId(),
+                'company' => ($company) ? $company->getId():null,                
+            ];
+            if ($supplier){                
+                $data['supplier'] = $supplier->getId();
+                $data['legal_id'] = ($legal) ? $legal->getId():null;
+                $data['contract_id'] = ($contract) ? $contract->getId():null;
+            }    
             if ($ptu){
                 $data = [
                     'office_id' => $ptu->getOffice()->getId(),
@@ -250,9 +268,9 @@ class PtuController extends AbstractActionController
                     'comment' => $ptu->getComment(),
                     'status' => $ptu->getStatus(),
                 ];
-                $form->setData($data);
                 $notDisabled = $ptu->getDocDate() > $this->ptuManager->getAllowDate();
             }    
+            $form->setData($data);
         }
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
