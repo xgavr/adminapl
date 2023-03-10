@@ -14,7 +14,7 @@ use Application\Entity\Contact;
 use Application\Entity\ContactCar;
 use Application\Entity\Courier;
 use Application\Entity\Shipping;
-use ApiMarketPlace\Entity\MarketplaceUpdate;
+use ApiMarketPlace\Entity\MarketplaceOrder;
 use Stock\Entity\Vt;
 use Admin\Entity\Wammchat;
 use Admin\Filter\ClickFilter;
@@ -274,10 +274,10 @@ class Order {
     private $comments;
     
     /**
-    * @ORM\OneToMany(targetEntity="ApiMarketPlace\Entity\MarketplaceUpdate", mappedBy="order")
+    * @ORM\OneToMany(targetEntity="ApiMarketPlace\Entity\MarketplaceOrder", mappedBy="order")
     * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
      */
-    private $marketplaceUpdates;
+    private $marketplaceOrders;
     
     /**
     * @ORM\OneToMany(targetEntity="Stock\Entity\Vt", mappedBy="order")
@@ -309,7 +309,7 @@ class Order {
         $this->bids = new ArrayCollection();
         $this->selections = new ArrayCollection();
         $this->comments = new ArrayCollection();
-        $this->marketplaceUpdates = new ArrayCollection();
+        $this->marketplaceOrders = new ArrayCollection();
         $this->vt = new ArrayCollection();
         $this->wammchats = new ArrayCollection();
     }
@@ -1380,18 +1380,18 @@ class Order {
      * Returns the array of marketplaceUpdates assigned to this.
      * @return array
      */
-    public function getMarketplaceUpdates()
+    public function getMarketplaceOrders()
     {
-        return $this->marketplaceUpdates;
+        return $this->marketplaceOrders;
     }
         
     /**
      * Assigns.
-     * @param MarketplaceUpdate $marketplaceUpdate
+     * @param MarketplaceOrder $marketplaceOrder
      */
-    public function addMarketplaceUpdate($marketplaceUpdate)
+    public function addMarketplaceOrder($marketplaceOrder)
     {
-        $this->marketplaceUpdates[] = $marketplaceUpdate;
+        $this->marketplaceOrders[] = $marketplaceOrder;
     }
        
     /**

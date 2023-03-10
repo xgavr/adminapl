@@ -91,6 +91,12 @@ class NavManager
                 ];
 
                 $clientDropdownItems[] = [
+                    'id' => 'revise',
+                    'label' => 'Корректировка долга',
+                    'link'  => $url('revise', ['action' => 'index'], ['query' => ['kind' => Revise::KIND_REVISE_CLIENT]]),
+                ];
+                
+                $clientDropdownItems[] = [
                     'id' => 'client',
                     'label' => 'Покупатели',
                     'link'  => $url('client')
@@ -109,11 +115,11 @@ class NavManager
                 ];
 
                 $clientDropdownItems[] = [
-                    'id' => 'revise',
-                    'label' => 'Корректировка долга',
-                    'link'  => $url('revise', ['action' => 'index'], ['query' => ['kind' => Revise::KIND_REVISE_CLIENT]]),
+                    'id' => 'apl',
+                    'label' => 'Маркеты',
+                    'link'  => $url('market-place')
                 ];
-                
+
                 if (count($clientDropdownItems)!=0) {
                     $items[] = [
                         'id' => 'client',

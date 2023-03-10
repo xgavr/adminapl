@@ -15,6 +15,7 @@ use ApiMarketPlace\Service\Request;
 use ApiMarketPlace\Service\Update;
 use ApiMarketPlace\Service\OzonService;
 use Application\Service\MarketManager;
+use ApiMarketPlace\Service\MarketplaceService;
 
 /**
  * Description of OzonServiceFactory
@@ -32,9 +33,10 @@ class OzonServiceFactory  implements FactoryInterface
         $request = $container->get(Request::class);
         $updateManager = $container->get(Update::class);
         $marketManager = $container->get(MarketManager::class);
+        $marketService = $container->get(MarketplaceService::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new OzonService($entityManager, $adminManager, $request, $updateManager,
-                $marketManager);
+                $marketManager, $marketService);
     }
 }

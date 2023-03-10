@@ -11,6 +11,7 @@ namespace ApiMarketPlace\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use ApiMarketPlace\Entity\MarketplaceUpdate;
+use ApiMarketPlace\Entity\MarketplaceOrder;
 
 /**
  * Description of Marketplace
@@ -84,16 +85,23 @@ class Marketplace {
     protected $dateCreated;  
             
     /**
+    * @ORM\OneToMany(targetEntity="ApiMarketPlace\Entity\MarketplaceOrder", mappedBy="marketplace")
+    * @ORM\JoinColumn(name="id", referencedColumnName="marketplace_id")
+     */
+    private $marketplaceOrders;
+    
+    /**
     * @ORM\OneToMany(targetEntity="ApiMarketPlace\Entity\MarketplaceUpdate", mappedBy="marketplace")
     * @ORM\JoinColumn(name="id", referencedColumnName="marketplace_id")
      */
     private $marketplaceUpdates;
-    
+
     /**
      * Constructor.
      */
     public function __construct() 
     {
+        $this->marketplaceOrders = new ArrayCollection();
         $this->marketplaceUpdates = new ArrayCollection();
     }    
     
@@ -258,6 +266,24 @@ class Marketplace {
      * Returns the array of marketplaceUpdates assigned to this.
      * @return array
      */
+    public function getMarketplaceOrders()
+    {
+        return $this->marketplaceOrders;
+    }
+        
+    /**
+     * Assigns.
+     * @param MarketplaceOrder $marketplaceOrder
+     */
+    public function addMarketplaceOrder($marketplaceOrder)
+    {
+        $this->marketplaceOrders[] = $marketplaceOrder;
+    }    
+    
+    /**
+     * Returns the array of marketplaceUpdates assigned to this.
+     * @return array
+     */
     public function getMarketplaceUpdates()
     {
         return $this->marketplaceUpdates;
@@ -265,13 +291,13 @@ class Marketplace {
         
     /**
      * Assigns.
-     * @param MarketplaceUpdate $marketplaceupdate
+     * @param MarketplaceUpdate $marketplaceUpdate
      */
     public function addMarketplaceUpdate($marketplaceUpdate)
     {
         $this->marketplaceUpdates[] = $marketplaceUpdate;
     }    
-    
+
     /**
      * Массив для формы
      * @return array 

@@ -295,10 +295,29 @@ $this->pageBreadcrumbs()->setItems([
                 emails.push('<a href="#" class="post-message-modal-show" modal-url="/post/post-form/" email="'+email.name+'" order-id="'+row.id+'">'+email.name+'</a>');
                 return false;
             });
-            if (phones.length || emails.length){
+
+            var marketplaceOrders = [];
+            if (depend.marketplaceOrders){
+                marketplaceOrders.push('<a href="#" class="marketplace-orders-modal-show" modal-url="/market-place/order-form/" order-id="'+row.id+'" title="Заказы в ТП">('+depend.marketplaceOrders.length+')</a>');
+                $.each(depend.marketplaceOrders, function( index, marketplaceOrder ) {
+                    marketplaceOrders.push(marketplaceOrder.marketplaceName+': '+marketplaceOrder.orderNumber);
+                    if (marketplaceOrders.length > 2){
+                        return false;
+                    }
+                });
+            }    
+            
+            if (phones.length || emails.length || marketplaceOrders.length){
                 result.push('<br/>');
-                result.push(phones.join('; '));
-                result.push('<nobr>'+emails.join('; ')+'</nobr>');
+                if (phones.length){
+                    result.push(phones.join('; '));
+                }    
+                if (emails.length){
+                    result.push('<nobr>'+emails.join('; ')+'</nobr>');
+                }    
+                if (marketplaceOrders.length){
+                    result.push('<nobr>'+marketplaceOrders.join(' ')+'</nobr>');
+                }    
             }    
         }    
         return result.join(' '); 
@@ -408,7 +427,36 @@ $this->pageBreadcrumbs()->setItems([
 //            refreshTable();
             $table.bootstrapTable('updateByUniqueId', {id: orderId, row: data});
         });        
-    }
+    }   
+
+    function addMarketplaceNumber(orderId){
+        bootbox.confirm('<form class="form" id="mpon'+orderId+'">\n\
+                <div class="form-group">\n\
+                    <label>Торговая площадка:</label>\n\
+                    <select name="marketplace" class="form-control"><?= $marketplaceOptions ?></select>\n\
+                </div>\n\
+                <div class="form-group">\n\
+                    <label>Номер заказа:</label\n\
+                    ><input type="text" name="orderNumber" class="form-control" />\n\
+                </div</form>', 
+            function(result) {
+                if(result){
+                    var paramObj = {};
+                    $.each($('#mpon'+orderId).serializeArray(), function(index, kv) {
+                        paramObj[kv.name] = kv.value;
+                    });
+//                    console.log(paramObj);
+                    $.get( "/market-place/order-number-to-order/"+paramObj.marketplace+'?order='+orderId+'&orderNumber='+paramObj.orderNumber, function(data){
+                        if (data.message){
+                            bootbox.alert(data.message);
+                        }
+                        $table.bootstrapTable('updateByUniqueId', {id: orderId, row: data.result});
+                    });        
+                }    
+            }
+        );
+    };                    
+        
 
     var menu = new BootstrapMenu('.tablerow', {
         fetchElementData: function(rowElem) {
@@ -417,6 +465,7 @@ $this->pageBreadcrumbs()->setItems([
         },
         actionsGroups: [
            ['addComment', 'comments', 'history'],
+           ['addMarketplaceNumber'],
            ['vt', 'cash']
         ],      
         actions: {
@@ -540,6 +589,19 @@ $this->pageBreadcrumbs()->setItems([
                     });                    
                 }
             },
+            addMarketplaceNumber: {
+                name: 'Номер заказа в ТП',
+                iconClass: 'glyphicon glyphicon-plus',
+                onClick: function (row){
+                    var url = '/market-place/marketplace-order-form?order='+row.id;
+                    showFormDialog({
+                        id: 'marketplaceOrderModal',
+                        url: url,
+                        zIndex: 9999
+                        //width: $(window).width()-150
+                    });
+                }
+            },    
             vt: {
                 name: 'Возврат',
                 iconClass: 'glyphicon glyphicon-repeat',

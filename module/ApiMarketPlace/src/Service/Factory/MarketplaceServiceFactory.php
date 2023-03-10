@@ -11,6 +11,7 @@ namespace ApiMarketPlace\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use ApiMarketPlace\Service\MarketplaceService;
+use Application\Service\OrderManager;
 
 /**
  * Description of MarketplaceServiceFactory
@@ -24,8 +25,9 @@ class MarketplaceServiceFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $orderManager = $container->get(OrderManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new MarketplaceService($entityManager);
+        return new MarketplaceService($entityManager, $orderManager);
     }
 }

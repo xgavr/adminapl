@@ -14,6 +14,9 @@ use ApiMarketPlace\Entity\Marketplace;
 use ApiMarketPlace\Form\MarketplaceSetting;
 use Application\Entity\Goods;
 use Application\Entity\MarketPriceSetting;
+use Application\Entity\Order;
+use ApiMarketPlace\Entity\MarketplaceOrder;
+use ApiMarketPlace\Form\MarketplaceOrderForm;
 
 
 class IndexController extends AbstractActionController
@@ -109,6 +112,196 @@ class IndexController extends AbstractActionController
             'marketplace' => $marketplace,
         ]);        
     }    
+    
+    public function marketplaceOrderFormAction()
+    {
+        $marketplaceOrderId = (int)$this->params()->fromRoute('id', -1);
+        $orderId = (int) $this->params()->fromQuery('order', -1);
+
+        $marketplaceOrder = $order = NULL;
+        $message = ['message' => []];
+        
+        if ($marketplaceOrderId>0) {
+            $marketplaceOrder = $this->entityManager->getRepository(MarketplaceOrder::class)
+                    ->find($marketplaceOrderId);
+            $order = $marketplaceOrder->getOrder();
+        }        
+
+        if ($orderId>0) {
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }        
+        
+        $form = new MarketplaceOrderForm();
+        
+        $marketplaceList = [];
+        $marketplaces = $this->entityManager->getRepository(Marketplace::class)
+                ->findBy(['status' => Marketplace::STATUS_ACTIVE]);
+        foreach ($marketplaces as $marketplace){
+            $marketplaceList[$marketplace->getId()] = $marketplace->getName();
+        }
+        
+        $form->get('marketplace')->setValueOptions($marketplaceList);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                
+                $data['order'] = $order;
+                
+                if ($marketplaceOrder){
+                    $this->marketplaceService->updateMarketplaceOrder($marketplaceOrder, $data);
+                } else {
+                    $message = $this->marketplaceService->addOrUpdateMarketplaceOrder($data);                    
+                }    
+                
+                if (count($message['message']) == 0){
+                    $query = $this->entityManager->getRepository(Order::class)
+                            ->findAllOrder(['orderId' => $order->getId()]);
+                    $result = $query->getOneOrNullResult(2);
+                    
+                    return new JsonModel([
+                       'message' => implode(' ', $message['message']),   
+                       'result' => $result,
+                    ]);           
+                }    
+                $form->get('orderNumber')->setMessages($message);
+            }
+        } else {
+            if ($marketplaceOrder){
+                $data = [
+                    'marketplace' => $marketplaceOrder->getMarketplace()->getId(),
+                    'orderNumber' => $marketplaceOrder->getOrderNumber(),
+                ];
+                $form->setData($data);
+            }  
+        }    
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'order' => $order,
+            'marketplaceOrder' => $marketplaceOrder,
+        ]);                
+    }
+     
+    public function orderFormAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($orderId <= 0){
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }    
+        
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);
+        
+        if ($order == null){
+            $this->getResponse()->setStatusCode(404);
+            return;            
+        }
+        $marketplaceOrders = $this->entityManager->getRepository(MarketplaceOrder::class)
+                ->findBy(['order' => $order->getId()]);
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+            'order' => $order,
+            'marketplaceOrders' => $marketplaceOrders,
+        ]);                
+    }    
+    
+    public function orderFormContentAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($orderId <= 0){
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }    
+        
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);
+        
+        if ($order == null){
+            $this->getResponse()->setStatusCode(404);
+            return;            
+        }
+        $marketplaceOrders = $this->entityManager->getRepository(MarketplaceOrder::class)
+                ->findBy(['order' => $order->getId()]);
+        
+        $result = [];
+        foreach ($marketplaceOrders as $marketplaceOrder){
+            $result[] = $marketplaceOrder->toLog();
+        }
+        
+        return new JsonModel([
+            'total' => count($result),
+            'rows' => $result,
+        ]);                
+    }    
+    
+    public function marketplaceOrderDeleteAction()
+    {
+        $marketplaceOrderId = $this->params()->fromRoute('id', -1);
+        
+        $marketplaceOrder = $this->entityManager->getRepository(MarketplaceOrder::class)
+                ->find($marketplaceOrderId);
+        
+        if ($marketplaceOrder == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->marketplaceService->removeMarketplaceOrder($marketplaceOrder);
+        
+        $result = null;
+        if ($marketplaceOrder->getOrder()){
+            $query = $this->entityManager->getRepository(Order::class)
+                    ->findAllOrder(['orderId' => $marketplaceOrder->getOrder()->getId()]);
+            $result = $query->getOneOrNullResult(2);
+        }
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'message' => 'ok',
+            'result' => $result,
+        ]);           
+    }        
+
+    public function orderNumberToOrderAction()
+    {
+        $marketplaceId = (int) $this->params()->fromRoute('id', -1);
+        $orderId = (int)$this->params()->fromQuery('order', -1);
+        $orderNumber = (int)$this->params()->fromQuery('orderNumber');
+        
+        $marketplace = $order = null;
+        if ($marketplaceId > 0){
+            $marketplace = $this->entityManager->getRepository(Marketplace::class)
+                    ->find($marketplaceId);
+        }
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }
+        
+        if ($marketplace && $order){
+            $marketplaceOrder = $this->marketplaceService->addMarketplaceOrder($marketplace, ['order' => $order, 'orderNumber' => $orderNumber]);
+        }    
+
+        $query = $this->entityManager->getRepository(Order::class)
+                ->findAllOrder(['orderId' => $order->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
+        return new JsonModel([
+            'maessage' => $message,
+            'result' => $result,
+        ]);           
+    }
     
     public function sbermarketOrderNewAction()
     {

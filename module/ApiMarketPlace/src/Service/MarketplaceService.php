@@ -8,6 +8,7 @@ namespace ApiMarketPlace\Service;
 
 use ApiMarketPlace\Exception\ApiMarketPlaceException;
 use ApiMarketPlace\Entity\Marketplace;
+use ApiMarketPlace\Entity\MarketplaceOrder;
 use ApiMarketPlace\Entity\MarketplaceUpdate;
 
 class MarketplaceService
@@ -18,9 +19,16 @@ class MarketplaceService
      */
     private $entityManager;
     
-    public function __construct($entityManager)
+    /**
+     * Order manager.
+     * @var \Application\Service\OrderManager
+     */
+    private $orderManager;
+
+    public function __construct($entityManager, $orderManager)
     {
         $this->entityManager = $entityManager;
+        $this->orderManager = $orderManager;
     }
     
     /**
@@ -80,9 +88,9 @@ class MarketplaceService
      */
     public function remove($marketplace)
     {
-        $updates = $this->entityManager->getRepository(MarketplaceUpdate::class)
+        $orders = $this->entityManager->getRepository(MarketplaceOrder::class)
                 ->count(['marketplace' => $marketplace->getId()]);
-        if (!$updates){
+        if (!$orders){
             $this->entityManager->remove($marketplace);
             $this->entityManager->flush();
         }
@@ -90,4 +98,117 @@ class MarketplaceService
         return;
     }
     
+    /**
+     * Добавить запись заказа торговой площадки
+     * @param Marketplace $marketplace
+     * @param array $data
+     * @return MarketplaceOrder
+     */
+    public function addMarketplaceOrder($marketplace, $data)
+    {
+        $marketplaceOrder = new MarketplaceOrder();
+        $marketplaceOrder->setDateCreated(date('Y-m-d H:i:s'));
+        $marketplaceOrder->setMarketplace($marketplace);
+        $marketplaceOrder->setOrder((empty($data['order'])) ? null:$data['order']);
+        $marketplaceOrder->setOrderId((empty($data['orderId'])) ? null:$data['orderId']);
+        $marketplaceOrder->setOrderNumber((empty($data['orderNumber'])) ? null:$data['orderNumber']);
+        $marketplaceOrder->setPostingNumber((empty($data['postingNumber'])) ? null:$data['postingNumber']);
+        $marketplaceOrder->setStatus((empty($data['status'])) ? MarketplaceOrder::STATUS_ACTIVE:$data['status']);
+        
+        $this->entityManager->persist($marketplaceOrder);
+        $this->entityManager->flush();
+        
+        if (isset($data['order'])){
+            $this->orderManager->updateDependInfo($data['order'], true);
+        }    
+        
+        return $marketplaceOrder;
+    }
+
+    /**
+     * Добавить запись заказа торговой площадки
+     * @param MarketplaceOrder $marketplaceOrder
+     * @param array $data
+     * @return MarketplaceOrder
+     */
+    public function updateMarketplaceOrder($marketplaceOrder, $data)
+    {
+        $marketplaceOrder->setOrder((empty($data['order'])) ? null:$data['order']);
+        $marketplaceOrder->setOrderId((empty($data['orderId'])) ? null:$data['orderId']);
+        $marketplaceOrder->setOrderNumber((empty($data['orderNumber'])) ? null:$data['orderNumber']);
+        $marketplaceOrder->setPostingNumber((empty($data['postingNumber'])) ? null:$data['postingNumber']);
+        $marketplaceOrder->setStatus((empty($data['status'])) ? MarketplaceOrder::STATUS_ACTIVE:$data['status']);
+        
+        $this->entityManager->persist($marketplaceOrder);
+        $this->entityManager->flush();
+        $this->entityManager->refresh($marketplaceOrder);
+        
+        if (isset($data['order'])){
+            $this->orderManager->updateDependInfo($data['order'], true);
+        }    
+        
+        return $marketplaceOrder;
+    }
+    
+    /**
+     * Добавить или обновить запись заказа торговой площадки
+     * @param array $data
+     * @return array
+     */    
+    public function addOrUpdateMarketplaceOrder($data)
+    {
+        $message = [];
+        $marketplace = null;
+        if (!empty($data['marketplace'])){
+            $marketplace = $this->entityManager->getRepository(Marketplace::class)
+                    ->find($data['marketplace']);
+        }
+        if (!empty($data['order'])){
+            $marketplaceOrders = $this->entityManager->getRepository(MarketplaceOrder::class)
+                    ->findBy(['order' => $data['order']->getId()]);
+            foreach ($marketplaceOrders as $mpOrder){
+                if ($mpOrder->getMarketplace()->getId() != $marketplace->getId()){
+                    $message[] = 'Уже имеются заказы от '.$mpOrder->getMarketplace()->getName();
+                }
+            }
+        }
+        if (!empty($data['orderNumber'])){
+            $marketplaceOrder = $this->entityManager->getRepository(MarketplaceOrder::class)
+                    ->findOneBy(['marketplace' => $marketplace->getId(), 'orderNumber' => $data['orderNumber']]);   
+            if ($marketplaceOrder){
+                $message[] = 'Уже имеются заказы c номером '.$data['orderNumber'];                
+            }
+        }
+        
+        if (!count($message)){
+            if ($marketplace){
+                $this->addMarketplaceOrder($marketplace, $data);
+            }
+        }
+        
+        return [
+            'message' => $message,
+        ];
+    }
+
+    /**
+     * Удалить запись заказа торговой площадки
+     * 
+     * @param MarketplaceOrder $marketplaceOrder
+     */
+    public function removeMarketplaceOrder($marketplaceOrder)
+    {
+        $order = $marketplaceOrder->getOrder();
+        $updates = $this->entityManager->getRepository(MarketplaceUpdate::class)
+                ->count(['marketplaceOrder' => $marketplaceOrder->getId()]);
+        if (!$updates){
+            $this->entityManager->remove($marketplaceOrder);
+            $this->entityManager->flush();
+            if ($order){
+                $this->orderManager->updateDependInfo($order, true);
+            }    
+        }
+        
+        return;
+    }
 }

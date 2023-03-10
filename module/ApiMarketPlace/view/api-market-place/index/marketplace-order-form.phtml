@@ -1,0 +1,101 @@
+<?php
+
+$form = $this->form;
+
+$form->get('marketplace')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('orderNumber')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->prepare();
+
+?>
+
+            
+<?= $this->form()->openTag($form); ?>
+
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('marketplace')); ?>
+                <?= $this->formElement($form->get('marketplace')); ?>
+                <?= $this->formElementErrors($form->get('marketplace')); ?>                  
+            </div>    
+            <div class="form-group">
+                <?= $this->formLabel($form->get('orderNumber')); ?>
+                <?= $this->formElement($form->get('orderNumber')); ?>
+                <?= $this->formElementErrors($form->get('orderNumber')); ?>                  
+            </div>    
+        </div>        
+    </div>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="marketplace-order-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    $( document ).ready(function() {
+        $('#orderNumber').focus();
+        
+        var forms = $('#marketplace-order-form');
+        
+        forms.submit(function() {
+            submitMarketplaceOrder();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('marketplace-order-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitMarketplaceOrder();
+            }, false);    
+        });
+        
+    });
+        
+    function submitMarketplaceOrder(){
+        var data = serializeForm('#marketplace-order-form');
+        $.ajax({
+            type: 'POST',
+            url: '/market-place/marketplace-order-form/<?= ($marketplaceorder) ? $marketplace->getId():"" ?>?order=<?= ($order) ? $order->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                $('#marketplace-order-submit').prop('disabled', false);
+                if (data.message){
+                    bootbox.alert(data.message);
+                }                 
+                if (data.result){ 
+                    $('#marketplaceOrderModal').modal('hide');
+                    <?php if ($order):?>
+                        if ($table){
+                            $table.bootstrapTable('updateByUniqueId', {id: <?= $order->getId()?>, row: data.result});
+                        }    
+                        if ($('#marketplaceOrderTable')){
+                            $('#marketplaceOrderTable').bootstrapTable('refresh');
+                        }
+                    <?php endif; ?>            
+                } else {  
+                    $('#marketplaceOrderModal .modal-content').html(data); 
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+                $('#marketplace-order-submit').prop('disabled', false);
+            });    
+    };
+
+</script>

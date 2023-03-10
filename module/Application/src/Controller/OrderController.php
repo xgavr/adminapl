@@ -26,6 +26,7 @@ use Application\Entity\Oem;
 use Application\Entity\SupplierOrder;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
+use ApiMarketPlace\Entity\Marketplace;
 
 class OrderController extends AbstractActionController
 {
@@ -77,10 +78,18 @@ class OrderController extends AbstractActionController
                 ->findBy([]);
         $users = $this->entityManager->getRepository(User::class)
                 ->managers();
+        $marketplaces = $this->entityManager->getRepository(Marketplace::class)
+                ->findBy(['status' => Marketplace::STATUS_ACTIVE]);
+        $marketplaceOptions = [];
+        foreach ($marketplaces as $marketplace){
+            $marketplaceOptions[] = '<option value="'.$marketplace->getId().'">'.$marketplace->getName().'</optiond>';
+        }
+        
         return new ViewModel([
             'users' =>  $users,
             'offices' =>  $offices,
             'currentUser' => $currentUser,
+            'marketplaceOptions' => implode('', $marketplaceOptions),
             'allowDate' => $this->orderManager->getAllowDate(),
         ]);
     }

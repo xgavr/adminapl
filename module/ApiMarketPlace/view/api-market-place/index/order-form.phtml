@@ -1,0 +1,127 @@
+
+<div class="modal-header">
+    <!--<a href="#" class="marketplace-order-modal-show" order-id="<?= $order->getId() ?>" modal-url="/market-place/marketplace-order-form?order=<?= ($order) ? $order->getId():"" ?>">+ Добавить номер заказа</a>-->
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">     
+        <div id="marketplaceOrderToolbar">
+            <div class="form-inline" role="form">
+                <button type="button" class="btn btn-default btn-sm marketplace-order-modal-show" 
+                        order-id="<?= $order->getId() ?>" title="Добавить номер заказа"
+                        modal-url="/market-place/marketplace-order-form?order=<?= ($order) ? $order->getId():"" ?>">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+        <table id="marketplaceOrderTable" 
+            data-toggle="marketplaceOrderTable" 
+            data-url='/market-place/order-form-content/<?= ($order) ? $order->getId():"" ?>'
+            data-side-pagination="server"
+            data-pagination="false" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#marketplaceOrderToolbar"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-icon-size="sm"
+            data-query-params="marketplaceOrderQueryParams"
+            data-response-handler="marketplaceOrderResponseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            >
+            <thead>
+                <tr>
+                    <!--<th data-field="id" data-sortable="false" data-width="50">Id</th>-->
+                    <th data-field="marketplaceName" data-sortable="false" data-width="50">ТП</th>
+                    <th data-field="orderNumber" data-sortable="false" >Номер заказа</th>
+                    <th data-field="rowNo" data-formatter="mpoActiveFormatter" data-width="5"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>    
+</div>    
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    $marketplaceOrderTable = $('#marketplaceOrderTable');
+    
+    $( document ).ready(function() {        
+        $marketplaceOrderTable.bootstrapTable({
+            onLoadSuccess: function(res){
+            }            
+        }); 
+        
+    });    
+    
+    function marketplaceOrderDelete(id){
+        var url = '/market-place/marketplace-order-delete/'+id;
+        if (confirm('Удалить запись?')){
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: false
+            });
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                    if (data.message == 'ok'){
+                        dialog.modal('hide');
+                        $marketplaceOrderTable.bootstrapTable('refresh');
+                        $table.bootstrapTable('updateByUniqueId', {id: <?= $order->getId()?>, row: data.result});
+                    } else {
+                        alert("Не удалось удалить!");
+                    }    
+                })
+                .fail(function (e) {
+                    alert("Не удалось удалить.");
+
+                });
+        }                
+    }
+    
+    
+    function marketplaceOrderQueryParams(params) {
+        $('#marketplaceOrderToolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#marketplaceOrderTable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#marketplaceOrderTable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        return params;
+    }
+    
+    function mpoActiveFormatter(value, row){
+        var url = '/market-place/marketplace-order-form/'+row.id;
+        btn = '<nobr><button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs marketplace-order-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-danger btn-xs"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' onclick="marketplaceOrderDelete('+row.id+')"';
+        btn += ' title="Удалить">'; 
+        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '</button></nobr>';
+        return btn;
+    }    
+    
+    function marketplaceOrderResponseHandler(res) {
+        return res;
+    }         
+</script>

@@ -66,16 +66,23 @@ class OzonService {
      */
     private $marketManager;
 
+    /**
+     * Market servise.
+     * @var \ApiMarketPlace\Service\MarketplaceService
+     */
+    private $marketService;
+
 //    private $ozon_host = 'http://cb-api.ozonru.me/'; //sandbox
     
     public function __construct($entityManager, $adminManager, $request, $updateManager,
-            $marketManager)
+            $marketManager, $marketService)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->request = $request;
         $this->updateManager = $updateManager;
         $this->marketManager = $marketManager;
+        $this->marketService = $marketService;
     }
         
     /**

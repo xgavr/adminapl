@@ -1059,6 +1059,7 @@ class OrderManager
             'comments' => [],
             'phones' => [],
             'emails' => [],
+            'marketplaces' => [],
         ];
         
         foreach ($order->getComments() as $comment){
@@ -1073,6 +1074,10 @@ class OrderManager
             $result['emails'][] = $email->toLog();
         }
         
+        foreach ($order->getMarketplaceOrders() as $marketplaceOrder){
+            $result['marketplaceOrders'][] = $marketplaceOrder->toLog();
+        }
+
         return $result;
     }
     
