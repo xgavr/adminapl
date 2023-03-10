@@ -232,7 +232,7 @@ $legalContact = $client->getLegalContact();
         <div class="tab-pane fade" role="tabpanel" id="vt" aria-labelledby="vt-tab">
             <table id="vttable" 
                 data-toggle="table" 
-                data-url="/vt/content"
+                data-url="/vt/content/"
                 data-side-pagination="server"
                 data-pagination="true" 
                 data-page-list="[5, 10, 20, 50]"
@@ -251,7 +251,7 @@ $legalContact = $client->getLegalContact();
                          <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="120">Номер</th>
                          <th data-field="docDate" data-sortable="true" data-width="100" data-formatter="vtDateFormatter">Дата</th>
                          <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="inFormatter">Сумма</th>
-                         <th data-field='order.aplId' data-sortable="false" data-formatter="docFormatter">Заказ</th>
+                         <th data-field='order.id' data-sortable="false" data-formatter="docFormatter">Заказ</th>
                          <th data-field='office.name' data-sortable="false">Склад</th>
                          <th data-field='comment' data-sortable="false">Примечание</th>
                          <th data-field="" data-formatter="vtActiveFormatter" data-width="10"></th>
@@ -295,6 +295,7 @@ $legalContact = $client->getLegalContact();
 </div>
 
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
+<?php echo $this->partial('/application/order/comment-partial', []); ?>
 
 <script type="text/javascript">
     function setCookies(cookieKey){
@@ -429,7 +430,9 @@ $legalContact = $client->getLegalContact();
             case '<?= Vt::STATUS_DEFECT?>': 
                         return {classes: 'info '+retired}; break;
             case '<?= Order::STATUS_CONFIRMED?>': 
-                        return {classes: 'default '+retired}; break;
+                        return {classes: retired, css: {"background-color": "LightYellow"}}; break;
+            case '<?= Order::STATUS_PROCESSED?>': 
+                        return {classes: retired, css: {"background-color": "WhiteSmoke"}}; break;
             case '<?= Order::STATUS_CANCELED?>': 
             case '<?= Vt::STATUS_RETIRED?>': 
                         return {classes: 'retired '+retired}; break;
@@ -456,22 +459,24 @@ $legalContact = $client->getLegalContact();
 
     function docFormatter(value, row){
         var orderId = value;
+        var idAplId = value;
         if (row.aplId){
-            orderId += ' ('+row.aplId+')';
+            idAplId += ' ('+row.aplId+')';
         }
         if (row.order){
             orderId = row.order.id;
+            idAplId = row.order.id;
             if (row.order.aplId){
                 orderId += ' ('+row.order.aplId+')';
             }
         }
-        return "<nobr><a href='#' class='order-view-show' modal-url='/order/view/"+value+"'>"+orderId+"</a></nobr>";
+        return "<nobr><a href='#' class='order-view-show' modal-url='/order/view/"+orderId+"'>"+orderId+"</a></nobr>";
     }
         
     function clientFormatter(value, row){
         var result = [];
         var name = (value) ? value:'Nan';
-        result.push(name);
+        result.push('<a style="text-transform:capitalize" href="/contact/view/' + row.contact.id + '" target="_blank">' + name + '</a>');
 
         if (row.dependInfo){
             var depend = $.parseJSON(row.dependInfo);
@@ -489,10 +494,31 @@ $legalContact = $client->getLegalContact();
                 emails.push('<a href="#" class="post-message-modal-show" modal-url="/post/post-form/" email="'+email.name+'" order-id="'+row.id+'">'+email.name+'</a>');
                 return false;
             });
-            if (phones.length || emails.length){
-                result.push('<br/>');
-                result.push(phones.join('; '));
-                result.push('<nobr>'+emails.join('; ')+'</nobr>');
+
+            var marketplaceOrders = [];
+            if (depend.marketplaceOrders){
+                marketplaceOrders.push('<a href="#" class="marketplace-orders-modal-show" modal-url="/market-place/order-form/" order-id="'+row.id+'" title="Заказы в ТП">('+depend.marketplaceOrders.length+')</a>');
+                $.each(depend.marketplaceOrders, function( index, marketplaceOrder ) {
+                    marketplaceOrders.push(marketplaceOrder.marketplaceName+': '+marketplaceOrder.orderNumber);
+                    if (marketplaceOrders.length > 2){
+                        return false;
+                    }
+                });
+            }    
+            
+            if (phones.length || emails.length || marketplaceOrders.length){
+                if (phones.length){
+                    result.push('<br/>');
+                    result.push(phones.join('; '));
+                }    
+                if (emails.length){
+                    result.push('<br/>');
+                    result.push('<nobr>'+emails.join('; ')+'</nobr>');
+                }    
+                if (marketplaceOrders.length){
+                    result.push('<br/>');
+                    result.push('<nobr>'+marketplaceOrders.join(' ')+'</nobr>');
+                }    
             }    
         }    
         return result.join(' '); 
@@ -668,6 +694,7 @@ $legalContact = $client->getLegalContact();
         },
         actionsGroups: [
            ['addComment', 'comments', 'history'],
+           ['addMarketplaceNumber'],
            ['vt', 'cash']
         ],      
         actions: {
@@ -791,6 +818,19 @@ $legalContact = $client->getLegalContact();
                     });                    
                 }
             },
+            addMarketplaceNumber: {
+                name: 'Номер заказа в ТП',
+                iconClass: 'glyphicon glyphicon-plus',
+                onClick: function (row){
+                    var url = '/market-place/marketplace-order-form?order='+row.id;
+                    showFormDialog({
+                        id: 'marketplaceOrderModal',
+                        url: url,
+                        zIndex: 9999
+                        //width: $(window).width()-150
+                    });
+                }
+            },    
             vt: {
                 name: 'Возврат',
                 iconClass: 'glyphicon glyphicon-repeat',

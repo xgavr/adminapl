@@ -219,7 +219,9 @@ $this->pageBreadcrumbs()->setItems([
             case '<?= Order::STATUS_DELIVERY?>': 
                         return {classes: 'info '+retired}; break;
             case '<?= Order::STATUS_CONFIRMED?>': 
-                        return {classes: 'default '+retired}; break;
+                        return {classes: retired, css: {"background-color": "LightYellow"}}; break;
+            case '<?= Order::STATUS_PROCESSED?>': 
+                        return {classes: retired, css: {"background-color": "WhiteSmoke"}}; break;
             case '<?= Order::STATUS_CANCELED?>': 
                         return {classes: 'retired '+retired}; break;
             default:break;     
@@ -430,35 +432,6 @@ $this->pageBreadcrumbs()->setItems([
             $table.bootstrapTable('updateByUniqueId', {id: orderId, row: data});
         });        
     }   
-
-    function addMarketplaceNumber(orderId){
-        bootbox.confirm('<form class="form" id="mpon'+orderId+'">\n\
-                <div class="form-group">\n\
-                    <label>Торговая площадка:</label>\n\
-                    <select name="marketplace" class="form-control"><?= $marketplaceOptions ?></select>\n\
-                </div>\n\
-                <div class="form-group">\n\
-                    <label>Номер заказа:</label\n\
-                    ><input type="text" name="orderNumber" class="form-control" />\n\
-                </div</form>', 
-            function(result) {
-                if(result){
-                    var paramObj = {};
-                    $.each($('#mpon'+orderId).serializeArray(), function(index, kv) {
-                        paramObj[kv.name] = kv.value;
-                    });
-//                    console.log(paramObj);
-                    $.get( "/market-place/order-number-to-order/"+paramObj.marketplace+'?order='+orderId+'&orderNumber='+paramObj.orderNumber, function(data){
-                        if (data.message){
-                            bootbox.alert(data.message);
-                        }
-                        $table.bootstrapTable('updateByUniqueId', {id: orderId, row: data.result});
-                    });        
-                }    
-            }
-        );
-    };                    
-        
 
     var menu = new BootstrapMenu('.tablerow', {
         fetchElementData: function(rowElem) {
