@@ -308,14 +308,16 @@ $this->pageBreadcrumbs()->setItems([
             }    
             
             if (phones.length || emails.length || marketplaceOrders.length){
-                result.push('<br/>');
                 if (phones.length){
+                    result.push('<br/>');
                     result.push(phones.join('; '));
                 }    
                 if (emails.length){
+                    result.push('<br/>');
                     result.push('<nobr>'+emails.join('; ')+'</nobr>');
                 }    
                 if (marketplaceOrders.length){
+                    result.push('<br/>');
                     result.push('<nobr>'+marketplaceOrders.join(' ')+'</nobr>');
                 }    
             }    
