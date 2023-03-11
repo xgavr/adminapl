@@ -217,6 +217,7 @@ $docName = 'Новый';
                 query = query.replaceAll("[^A-Za-z0-9]","");
                 return $.get("/ptu/autocomplete-good?q="+query, function (data) {
                     $('#code').val(query);
+                    console.log(query);
                     return process(data);
                 });
             },
