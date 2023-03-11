@@ -430,7 +430,7 @@ $legalContact = $client->getLegalContact();
             case '<?= Vt::STATUS_DEFECT?>': 
                         return {classes: 'info '+retired}; break;
             case '<?= Order::STATUS_CONFIRMED?>': 
-                        return {classes: retired, css: {"background-color": "LightYellow"}}; break;
+                        return {classes: retired, css: {"background-color": "linen"}}; break;
             case '<?= Order::STATUS_PROCESSED?>': 
                         return {classes: retired, css: {"background-color": "WhiteSmoke"}}; break;
             case '<?= Order::STATUS_CANCELED?>': 
@@ -467,10 +467,10 @@ $legalContact = $client->getLegalContact();
             orderId = row.order.id;
             idAplId = row.order.id;
             if (row.order.aplId){
-                orderId += ' ('+row.order.aplId+')';
+                idAplId += ' ('+row.order.aplId+')';
             }
         }
-        return "<nobr><a href='#' class='order-view-show' modal-url='/order/view/"+orderId+"'>"+orderId+"</a></nobr>";
+        return "<nobr><a href='#' class='order-view-show' modal-url='/order/view/"+orderId+"'>"+idAplId+"</a></nobr>";
     }
         
     function clientFormatter(value, row){
