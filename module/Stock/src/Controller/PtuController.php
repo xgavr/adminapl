@@ -156,7 +156,7 @@ class PtuController extends AbstractActionController
         $ptuId = (int)$this->params()->fromRoute('id', -1);
         $supplierId = (int) $this->params()->fromQuery('supplier', -1);
         
-        $ptu = $supplier = $legal = $company = null;
+        $ptu = $supplier = $legal = $company = $contract = null;
         $notDisabled = true;
         if ($ptuId > 0){
             $ptu = $this->entityManager->getRepository(Ptu::class)
