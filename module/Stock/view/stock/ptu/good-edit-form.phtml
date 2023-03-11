@@ -215,7 +215,7 @@ $docName = 'Новый';
         $('#code').typeahead({
             source: function(query, process) {
                 query = query.replace(/[^A-Za-z0-9]/g,"");
-                $('#code').val(query);
+//                $('#code').val(query);
                 return $.get("/ptu/autocomplete-good?q="+query, function (data) {
                     return process(data);
                 });
@@ -253,6 +253,11 @@ $docName = 'Новый';
             }
         });
         
+        $("#code").on('input', function(){
+            var value = $(this).val();
+            $(this).val(value.replaceAll(/[^A-Za-z0-9]/g,""));
+        });
+
         $("#price").on('input', function(){
             var value = $(this).val();
             $(this).val(value.replace(",","."));
