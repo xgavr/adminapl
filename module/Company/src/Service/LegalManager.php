@@ -59,22 +59,30 @@ class LegalManager
         $legal->setOgrn((empty($data['ogrn'])) ? null:$data['ogrn']);            
         $legal->setOkpo((empty($data['okpo'])) ? null:$data['okpo']);            
         $legal->setHead((empty($data['head'])) ? null:$data['head']);            
-        $legal->setChiefAccount((empty($data['chiefAccount'])) ? null:$data['chiefAccount']);            
-        $legal->setInfo((empty($data['info'])) ? null:$data['info']);            
         $legal->setAddress((empty($data['address'])) ? null:$data['address']);            
-        $legal->setStatus((empty($data['status'])) ? Legal::STATUS_ACTIVE:$data['status']);            
-        $legal->setEdoAddress((empty($data['edoAddress'])) ? null:$data['edoAddress']); 
+        if (isset($data['chiefAccount'])){
+            $legal->setChiefAccount($data['chiefAccount']);            
+        }    
+        if (isset($data['edoAddress'])){
+            $legal->setInfo($data['edoAddress']);            
+        }    
+        if (!empty($data['status'])){
+            $legal->setStatus($data['status']);
+        }    
+        if (isset($data['edoAddress'])){
+            $legal->setEdoAddress($data['edoAddress']); 
+        }    
                 
-        if (!empty($data['edoOperator'])){
-            $edoOperator = $this->entityManager->getRepository(EdoOperator::class)
-                    ->find($data['edoOperator']);
-            $legal->setEdoOpertator($edoOperator); 
-        } else {
-            $legal->setEdoOpertator(null);             
-        }
+        if (isset($data['edoOperator'])){
+            if (is_numeric($data['edoOperator'])){
+                $edoOperator = $this->entityManager->getRepository(EdoOperator::class)
+                        ->find($data['edoOperator']);
+                $legal->setEdoOpertator($edoOperator); 
+            } else {
+                $legal->setEdoOpertator(null);             
+            }
+        }    
 
-        $currentDate = date('Y-m-d H:i:s');
-        $legal->setDateStart($currentDate);
         if (isset($data['dateStart'])){
             $legal->setDateStart(date('Y-m-d', strtotime($data['dateStart'])));
         }
@@ -230,32 +238,44 @@ class LegalManager
      * @param bool $flushnow
      */
     public function addBankAccount($legal, $data, $flushnow = false)
-    {                
-        $bankAccount = new BankAccount();            
-        $bankAccount->setName((empty($data['name'])) ? 'Банк':$data['name']);            
-        $bankAccount->setCity((empty($data['city'])) ? null:$data['city']);            
-        $bankAccount->setBik((empty($data['bik'])) ? null:$data['bik']);            
-        $bankAccount->setKs((empty($data['ks'])) ? null:$data['ks']);            
-        $bankAccount->setRs((empty($data['rs'])) ? null:$data['rs']);            
-        $bankAccount->setStatus((empty($data['status'])) ? BankAccount::STATEMENT_ACTIVE:$data['status']);            
-        $bankAccount->setAccountType((empty($data['accountType'])) ? BankAccount::ACСOUNT_CHECKING:$data['accountType']);            
-        $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
-        $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
-        $bankAccount->setCash((empty($data['cash'])) ? null:$data['cash']); 
-        $bankAccount->setDateStart((empty($data['dateStart'])) ? date('Y-m-d'):$data['dateStart']);                    
-
-        $currentDate = date('Y-m-d H:i:s');
-        $bankAccount->setDateCreated($currentDate);
+    {   
+        if (!empty($data['rs'])){
             
-        $this->entityManager->persist($bankAccount);
-        
-        $bankAccount->setLegal($legal);
-        
-        if ($flushnow){
-            $this->entityManager->flush();                
+            $foundAccount = $this->entityManager->getRepository(BankAccount::class)
+                    ->findOneBy(['legal' => $legal->getId(), 'rs' => $data['rs']]);
+            
+            if ($foundAccount){
+                return $this->updateBankAccount($foundAccount, $data, $flushnow);
+            }
+
+            $bankAccount = new BankAccount();            
+            $bankAccount->setName((empty($data['name'])) ? 'Банк':$data['name']);            
+            $bankAccount->setCity((empty($data['city'])) ? null:$data['city']);            
+            $bankAccount->setBik((empty($data['bik'])) ? null:$data['bik']);            
+            $bankAccount->setKs((empty($data['ks'])) ? null:$data['ks']);            
+            $bankAccount->setRs((empty($data['rs'])) ? null:$data['rs']);            
+            $bankAccount->setStatus((empty($data['status'])) ? BankAccount::STATEMENT_ACTIVE:$data['status']);            
+            $bankAccount->setAccountType((empty($data['accountType'])) ? BankAccount::ACСOUNT_CHECKING:$data['accountType']);            
+            $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
+            $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
+            $bankAccount->setCash((empty($data['cash'])) ? null:$data['cash']); 
+            $bankAccount->setDateStart((empty($data['dateStart'])) ? date('Y-m-d'):$data['dateStart']);                    
+
+            $currentDate = date('Y-m-d H:i:s');
+            $bankAccount->setDateCreated($currentDate);
+
+            $this->entityManager->persist($bankAccount);
+
+            $bankAccount->setLegal($legal);
+
+            if ($flushnow){
+                $this->entityManager->flush();                
+            }
+
+            return $bankAccount;
         }
         
-        return $bankAccount;
+        return;
     }
    
     /**
@@ -267,24 +287,40 @@ class LegalManager
      */
     public function updateBankAccount($bankAccount, $data, $flushnow = false)
     {                
-        $bankAccount->setName((empty($data['name'])) ? null:$data['name']);            
-        $bankAccount->setCity((empty($data['city'])) ? null:$data['city']);            
-        $bankAccount->setBik((empty($data['bik'])) ? null:$data['bik']);            
-        $bankAccount->setKs((empty($data['ks'])) ? null:$data['ks']);            
-        $bankAccount->setRs((empty($data['rs'])) ? null:$data['rs']);            
-        $bankAccount->setStatus((empty($data['status'])) ? BankAccount::STATEMENT_ACTIVE:$data['status']);            
-        $bankAccount->setAccountType((empty($data['accountType'])) ? BankAccount::ACСOUNT_CHECKING:$data['accountType']);            
-        $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
-        $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
-        $bankAccount->setCash((empty($data['cash'])) ? null:$data['cash']);            
-        $bankAccount->setDateStart((empty($data['dateStart'])) ? date('Y-m-d'):$data['dateStart']);                    
+        if (!empty($data['rs'])){
+            $bankAccount->setName((empty($data['name'])) ? null:$data['name']);            
+            $bankAccount->setCity((empty($data['city'])) ? null:$data['city']);            
+            $bankAccount->setBik((empty($data['bik'])) ? null:$data['bik']);            
+            $bankAccount->setKs((empty($data['ks'])) ? null:$data['ks']);            
+            $bankAccount->setRs((empty($data['rs'])) ? null:$data['rs']);
+            if (!empty($data['status'])){
+                $bankAccount->setStatus($data['status']);            
+            }    
+            if (!empty($data['accountType'])){
+                $bankAccount->setAccountType($data['accountType']);            
+            }    
+            if (!empty($data['api'])){
+                $bankAccount->setApi($data['api']);
+            }            
+            if (!empty($data['statement'])){
+                $bankAccount->setStatement($data['statement']);
+            }
+            if (isset($data['cash'])){
+                $bankAccount->setCash($data['cash']);
+            }
+            if (!empty($data['dateStart'])){
+                $bankAccount->setDateStart($data['dateStart']);                    
+            }    
 
-        $this->entityManager->persist($bankAccount);
+            $this->entityManager->persist($bankAccount);
 
-        if ($flushnow){
-            $this->entityManager->flush();                
+            if ($flushnow){
+                $this->entityManager->flush();                
+            }
+            return $bankAccount;
         }
-        return $bankAccount;
+        
+        return;
     }
     
     /**

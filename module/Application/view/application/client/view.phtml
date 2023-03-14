@@ -113,7 +113,9 @@ $legalContact = $client->getLegalContact();
             <div class="row">        
                 <div class="col-md-8">
                     <div class="panel panel-default">
-                        <?php echo $this->partial('/company/legal/partial-view', ['legalContact' => $legalContact, 'client' => $client]); ?>
+                        <?php foreach ($client->getContacts() as $contact):?>
+                            <?php echo $this->partial('/company/legal/partial-view', ['legalContact' => $contact, 'client' => $client]); ?>
+                        <?php endforeach;?>
                     </div>                        
                 </div>
             </div>
@@ -476,6 +478,9 @@ $legalContact = $client->getLegalContact();
     function clientFormatter(value, row){
         var result = [];
         var name = (value) ? value:'Nan';
+        if (row.legal){
+            name = row.legal.name;
+        }
         result.push('<a style="text-transform:capitalize" href="/contact/view/' + row.contact.id + '" target="_blank">' + name + '</a>');
 
         if (row.dependInfo){
@@ -499,7 +504,7 @@ $legalContact = $client->getLegalContact();
             if (depend.marketplaceOrders){
                 marketplaceOrders.push('<a href="#" class="marketplace-orders-modal-show" modal-url="/market-place/order-form/" order-id="'+row.id+'" title="Заказы в ТП">('+depend.marketplaceOrders.length+')</a>');
                 $.each(depend.marketplaceOrders, function( index, marketplaceOrder ) {
-                    marketplaceOrders.push(marketplaceOrder.marketplaceName+': '+marketplaceOrder.orderNumber);
+                    marketplaceOrders.push(marketplaceOrder.marketplaceName+': '+marketplaceOrder.postingNumber);
                     if (marketplaceOrders.length > 2){
                         return false;
                     }
@@ -694,7 +699,7 @@ $legalContact = $client->getLegalContact();
         },
         actionsGroups: [
            ['addComment', 'comments', 'history'],
-           ['addMarketplaceNumber'],
+           ['addMarketplaceNumber', 'addLegal'],
            ['vt', 'cash']
         ],      
         actions: {
@@ -822,13 +827,36 @@ $legalContact = $client->getLegalContact();
                 name: 'Номер заказа в ТП',
                 iconClass: 'glyphicon glyphicon-plus',
                 onClick: function (row){
+                    var depend = $.parseJSON(row.dependInfo);
+                    var dialogId = 'marketplaceOrderModal';
                     var url = '/market-place/marketplace-order-form?order='+row.id;
+                    var zIndex = 9999;
+                    if (depend.marketplaceOrders){
+                        if (depend.marketplaceOrders.length){
+                            var url = '/market-place/order-form/'+row.id;
+                            var dialogId = 'marketplaceOrdersModal';
+                            var zIndex = 8888;
+                        }    
+                    }
+                    
                     showFormDialog({
-                        id: 'marketplaceOrderModal',
+                        id: dialogId,
                         url: url,
-                        zIndex: 9999
-                        //width: $(window).width()-150
+                        zIndex: zIndex
                     });
+                }
+            },    
+            addLegal: {
+                name: 'Юр. лицо',
+                iconClass: 'glyphicon glyphicon-plus',
+                onClick: function (row){
+                    var url = '/order/order-legal-form/'+row.id;
+                    showFormDialog({
+                        id: 'orderLegalModal',
+                        url: url,
+                        width: '1000px',
+                        zIndex: 9999
+                    });    
                 }
             },    
             vt: {

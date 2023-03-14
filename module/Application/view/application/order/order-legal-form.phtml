@@ -1,0 +1,464 @@
+<?php
+
+$form = $this->form;
+
+$form->get('legalName')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('legalInn')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('legalKpp')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('legalOgrn')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('legalOkpo')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('legalHead')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('legalAddress')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('recipientName')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('recipientInn')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('recipientKpp')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('recipientOgrn')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('recipientOkpo')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('recipientHead')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('recipientAddress')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('bankName')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('bankCity')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('bik')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('rs')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('ks')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить']);
+
+$form->prepare();
+
+?>
+            
+<?= $this->form()->openTag($form); ?>
+            
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('legalInn')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('legalInn')); ?>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" id="inn-info" type="button" data-toggle="tooltip" data-placement="top" title="Найти и заполнить по ИНН">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>                                                            
+                </div>    
+                <?= $this->formElementErrors($form->get('legalInn')); ?>                  
+            </div>
+        </div>    
+        <div class="col-md-3">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('legalKpp')); ?>
+                <?= $this->formElement($form->get('legalKpp')); ?>
+                <?= $this->formElementErrors($form->get('legalKpp')); ?>                  
+            </div>
+        </div>    
+        <div class="col-md-3">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('recipientInn')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('recipientInn')); ?>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" id="recipient-inn-info" type="button" data-toggle="tooltip" data-placement="top" title="Найти и заполнить по ИНН">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>                                                            
+                </div>    
+                <?= $this->formElementErrors($form->get('recipientInn')); ?>                  
+            </div>
+        </div>    
+        <div class="col-md-3">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('recipientKpp')); ?>
+                <?= $this->formElement($form->get('recipientKpp')); ?>
+                <?= $this->formElementErrors($form->get('recipientKpp')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('legalName')); ?>
+                <?= $this->formElement($form->get('legalName')); ?>
+                <?= $this->formElementErrors($form->get('legalName')); ?>                  
+            </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('legalAddress')); ?>
+                <?= $this->formElement($form->get('legalAddress')); ?>
+                <?= $this->formElementErrors($form->get('legalAddress')); ?>                  
+            </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('legalOgrn')); ?>
+                <?= $this->formElement($form->get('legalOgrn')); ?>
+                <?= $this->formElementErrors($form->get('legalOgrn')); ?>                  
+            </div>            
+        </div>    
+        <div class="col-md-6">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('recipientName')); ?>
+                <?= $this->formElement($form->get('recipientName')); ?>
+                <?= $this->formElementErrors($form->get('recipientName')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('recipientAddress')); ?>
+                <?= $this->formElement($form->get('recipientAddress')); ?>
+                <?= $this->formElementErrors($form->get('recipientAddress')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('recipientOgrn')); ?>
+                <?= $this->formElement($form->get('recipientOgrn')); ?>
+                <?= $this->formElementErrors($form->get('recipientOgrn')); ?>                  
+            </div>
+            
+        </div>                
+    </div> 
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('rs')); ?>
+                <?= $this->formElement($form->get('rs')); ?>
+                <?= $this->formElementErrors($form->get('rs')); ?>                  
+            </div>
+            
+            <div class="form-group">
+                <?= $this->formLabel($form->get('bankName')); ?>
+                <?= $this->formElement($form->get('bankName')); ?>
+                <?= $this->formElementErrors($form->get('bankName')); ?>                  
+            </div>
+            
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('bik')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('bik')); ?>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" id="bik-info" type="button" data-toggle="tooltip" data-placement="top" title="Заполнить из справочника БИК">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>                                                            
+                </div>
+                <?= $this->formElementErrors($form->get('bik')); ?>                  
+            </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('bankCity')); ?>
+                <?= $this->formElement($form->get('bankCity')); ?>
+                <?= $this->formElementErrors($form->get('bankCity')); ?>                  
+            </div>
+        </div>    
+        <div class="col-md-4">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('ks')); ?>
+                <?= $this->formElement($form->get('ks')); ?>
+                <?= $this->formElementErrors($form->get('ks')); ?>                  
+            </div>
+        </div>    
+    </div>    
+</div>    
+                
+<div class="modal-footer">
+    <div class="pull-left">
+        <button type="button" class="btn btn-secondary" id="order-legal-fill">Заполнить</button>        
+        <button type="button" class="btn btn-secondary" id="order-legal-clear">Очистить</button>        
+    </div>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="order-legal-submit">Сохранить</button>
+</div>
+
+<?= $this->formElement($form->get('legal')); ?>            
+<?= $this->formElement($form->get('legalOkpo')); ?>            
+<?= $this->formElement($form->get('legalHead')); ?>            
+
+<?= $this->formElement($form->get('recipient')); ?>            
+<?= $this->formElement($form->get('recipientOkpo')); ?>            
+<?= $this->formElement($form->get('recipientHead')); ?>            
+
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    var $dadata;
+    
+    function setDadata(data){
+        $dadata = data;
+    }
+    function getDadata(){
+        return $dadata;
+    }
+    
+    $('#order-legal-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/order/order-legal-form/<?= $order->getId() ?>',
+            data: $('#order-legal-form').serialize()
+        })
+            .done(function (data) {
+                console.log(data.row);
+                if (data.row){
+                    var legalName = '+ ЮЛ';
+                    if (data.row.legal){
+                        legalName = data.row.legal;
+                    }
+                    $(".order-legal").html(legalName);
+                    if ($("#table")){
+                        $("#table").bootstrapTable('updateByUniqueId', {id: <?= $order->getId() ?>, row: data.row});
+                    }            
+                    $('#orderLegalModal').modal('hide');
+                } else {
+                    $('#orderLegalModal .modal-content').html(data);
+                }    
+            })
+            .fail(function () {
+                alert("Posting failed.");
+            });
+    })
+    
+    function fillFromData(index, prefix='legal'){
+        var data = getDadata();
+        if (data){
+            var row = data[index];
+            $('input[name="'+prefix+'Inn"]').val(row.data.inn);
+            $('textarea[name="'+prefix+'Name"]').val(row.data.name.short_with_opf);
+            $('input[name="'+prefix+'Kpp"]').val(row.data.kpp);
+            $('input[name="'+prefix+'Ogrn"]').val(row.data.ogrn);
+            $('input[name="'+prefix+'Okpo"]').val(row.data.okpo);
+            $('textarea[name="'+prefix+'Address"]').val(row.data.address.data.source);
+            if (row.data.management){
+                $('input[name="'+prefix+'Head"]').val(row.data.management.name);
+            } else {
+                $('input[name="'+prefix+'Head"]').val('');
+            }
+        }    
+        $('.bootbox.modal').modal('hide');
+    }
+    
+    function fillLegalData(key){
+        var data = getDadata();
+        if (data){            
+            var row = data[key];
+            console.log(key);
+            if (row.legal){
+                $('input[name="legalInn"]').val(row.legal.inn);
+                $('textarea[name="legalName"]').val(row.legal.name);
+                $('input[name="legalKpp"]').val(row.legal.kpp);
+                $('input[name="legalOgrn"]').val(row.legal.ogrn);
+                $('input[name="legalOkpo"]').val(row.legal.okpo);
+                $('textarea[name="legalAddress"]').val(row.legal.address);
+                $('input[name="legalHead"]').val(row.legal.head);
+            }    
+            if (row.recipient){
+                $('input[name="recipientInn"]').val(row.recipient.inn);
+                $('textarea[name="recipientName"]').val(row.recipient.name);
+                $('input[name="recipientKpp"]').val(row.recipient.kpp);
+                $('input[name="recipientOgrn"]').val(row.recipient.ogrn);
+                $('input[name="recipientOkpo"]').val(row.recipient.okpo);
+                $('textarea[name="recipientAddress"]').val(row.recipient.address);
+                $('input[name="recipientHead"]').val(row.recipient.head);
+            }  
+            if (row.bankAccount){
+                $('input[name="bankName"]').val(row.bankAccount.name);
+                $('input[name="bankCity"]').val(row.bankAccount.city);
+                $('input[name="ks"]').val(row.bankAccount.ks);
+                $('input[name="rs"]').val(row.bankAccount.rs);
+                $('input[name="bik"]').val(row.bankAccount.bik);
+            }
+        }    
+        $('.bootbox.modal').modal('hide');
+    }
+    
+    function callInnInfo(inn, prefix){
+        if (inn){
+            $.ajax({
+                type: 'GET',
+                url: '/legals/inn-info/?inn='+inn
+            })
+                .done(function (data) {
+//                    console.log(data);
+                    setDadata(data);
+                    var message = '<table class="table table-striped">';
+                    for (var i in data){
+                        row = data[i];
+                        message += '<tr class>';
+                        message += '<td>'+row.data.inn+'<br/>'+row.data.kpp+'</td>';
+                        message += ' <td>'+row.data.name.short_with_opf+'</td>';
+                        message += ' <td>'+row.data.address.data.source+'</td>';
+                        message += ' <td><button onclick="fillFromData('+i+',\''+prefix+'\')">Выбрать</button></td>';
+                        message += '</tr>';
+                    }
+                    message += '</table>';
+                    bootbox.dialog({
+                        title: "Выберете организацию",
+                        message: message,
+                        size: 'large',
+                        buttons: {
+                            cancel: {
+                                label: 'Закрыть',
+                                className: 'btn-default'
+                            }
+                        }                            
+                    });
+                })
+                .fail(function (error) {
+                    console.log(error);
+                });
+        }        
+    }
+    
+    $( document ).ready(function() {   
+        $('#inn-info').on('click', function() {        
+            var inn = $('input[name="legalInn"]').val();
+            callInnInfo(inn, 'legal');
+        });
+
+        $('#recipient-inn-info').on('click', function() {        
+            var inn = $('input[name="recipientInn"]').val();
+            callInnInfo(inn, 'recipient');
+        });
+        
+        $('#bik-info').on('click', function() {
+            var bik = $('input[name="bik"]').val();
+            if (bik){
+                $.ajax({
+                    type: 'GET',
+                    url: '/legals/bik-info/'+bik
+                })
+                    .done(function (data) {
+                        if (data){
+                            $('input[name="bankName"]').val(data.name);
+                            $('input[name="bankCity"]').val(data.city);
+                            $('input[name="ks"]').val(data.ks);
+                        }
+                    })
+                    .fail(function (e) {
+                        console.log(e);
+                    });    
+                }        
+        }); 
+        
+        $('#order-legal-clear').on('click', function() {
+            $('#orderLegalModal .form-control').val('');
+        });
+
+        $('#order-legal-fill').on('click', function() {
+            $.ajax({
+                type: 'GET',
+                url: '/client/legals/<?= $order->getContact()->getClient()->getId() ?>'
+            })
+                .done(function (data) {
+                    if (data){
+                        setDadata(data);
+                        if (data.length == 1){
+                            fillLegalData(0);
+                        } else {
+                            var message = '<table class="table table-striped">';
+                            message += '<tr>';
+                            message += '<th>Покупатель</th>';
+                            message += '<th>Грузополучатель</th>';
+                            message += '<th>Банк</th>';
+                            message += '<th></th>';
+                            message += '</tr>';
+                            $.each(data, function( key, row) {
+                                message += '<tr class>';
+                                if (row.legal){
+                                    message += '<td>'+row.legal.inn+'/'+row.legal.kpp+'<br/>'+row.legal.name+'</td>';
+                                } else {
+                                    message += '<td></td>';
+                                }
+                                if (row.recipient){
+                                    message += '<td>'+row.recipient.inn+'/'+row.recipient.kpp+'<br/>'+row.recipient.name+'</td>';
+                                } else {
+                                    message += '<td></td>';
+                                }   
+                                if (row.bankAccount){
+                                    message += '<td>'+row.bankAccount.name+'<br/>'+row.bankAccount.rs+'</td>';
+                                } else {
+                                    message += '<td></td>';
+                                }    
+                                message += '<td><button onclick="fillLegalData('+key+')">Выбрать</button></td>';
+                                message += '</tr>';
+                            });
+                            message += '</table>';
+                            bootbox.dialog({
+                                title: "Выберете организацию",
+                                message: message,
+                                size: 'large',
+                                buttons: {
+                                    cancel: {
+                                        label: 'Закрыть',
+                                        className: 'btn-default'
+                                    }
+                                }                            
+                            });
+                        }
+                    }    
+                })
+                .fail(function (e) {
+                    console.log(e);
+                });            
+        });
+    });    
+</script>

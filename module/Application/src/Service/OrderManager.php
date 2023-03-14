@@ -958,7 +958,7 @@ class OrderManager
                     'name' => $data['bankName'],
                     'city' => empty($data['bankCity']) ? null:$data['bankCity'],
                     'ks' => empty($data['ks']) ? null:$data['ks'],
-                ]);
+                ], true);
                 $upd['bank_account_id'] = $bankAccount->getId();
             }
 
@@ -1388,7 +1388,7 @@ class OrderManager
                     'name' => $data['bankName'],
                     'city' => empty($data['bankCity']) ? null:$data['bankCity'],
                     'ks' => empty($data['ks']) ? null:$data['ks'],
-                ]);
+                ], true);
                 $upd['bank_account_id'] = $bankAccount->getId();
             }
 
@@ -1445,6 +1445,73 @@ class OrderManager
         return;
     }    
     
+        /**
+     * Обновить ЮЛ заказа
+     * @param Order $order
+     * @param array $data
+     */
+    public function updOrderLegal($order, $data) 
+    {
+        
+        if ($order->getDateOper() > $this->allowDate){
+
+            $upd = [
+                'legal_id' => null,
+                'recipient_id' => null,
+                'bank_account_id' => null,
+            ];
+
+            $legal = null;
+            if (empty($data['legal']) && !empty($data['legalInn']) && !empty($data['legalName'])){
+                $legal = $this->legalManager->addLegal($order->getContact(), [
+                    'inn' => $data['legalInn'],
+                    'name' => $data['legalName'],
+                    'kpp' => empty($data['legalKpp']) ? null:$data['legalKpp'],
+                    'ogrn' => empty($data['legalOgrn']) ? null:$data['legalOgrn'],
+                    'okpo' => empty($data['legalOkpo']) ? null:$data['legalOkpo'],
+                    'head' => empty($data['legalHead']) ? null:$data['legalHead'],
+                    'address' => empty($data['legalAddress']) ? null:$data['legalAddress'],
+                ]);
+                $upd['legal_id'] = $legal->getId();
+            }
+
+            if (empty($data['recipient']) && !empty($data['recipientInn']) && !empty($data['recipientName'])){
+                $recipient = $this->legalManager->addLegal($order->getContact(), [
+                    'inn' => $data['recipientInn'],
+                    'name' => $data['recipientName'],
+                    'kpp' => empty($data['recipientKpp']) ? null:$data['recipientKpp'],
+                    'ogrn' => empty($data['recipientOgrn']) ? null:$data['recipientOgrn'],
+                    'okpo' => empty($data['recipientOkpo']) ? null:$data['recipientOkpo'],
+                    'head' => empty($data['recipientHead']) ? null:$data['recipientHead'],
+                    'address' => empty($data['recipientAddress']) ? null:$data['recipientAddress'],
+                ]);
+                $upd['recipient_id'] = $recipient->getId();
+            }
+
+            if ($legal && empty($data['bankAccount']) && !empty($data['rs']) && !empty($data['bik']) && !empty($data['bankName'])){
+                $bankAccount = $this->legalManager->addBankAccount($legal, [
+                    'rs' => $data['rs'],
+                    'bik' => $data['bik'],
+                    'name' => $data['bankName'],
+                    'city' => empty($data['bankCity']) ? null:$data['bankCity'],
+                    'ks' => empty($data['ks']) ? null:$data['ks'],
+                ], true);
+                $upd['bank_account_id'] = $bankAccount->getId();
+            }
+
+            $this->entityManager->getConnection()
+                    ->update('orders', $upd, ['id' => $order->getId()]);
+
+            $this->repostOrder($order);
+            $this->logManager->infoOrder($order, Log::STATUS_UPDATE);
+
+            return $order;
+        }
+        
+        return;
+    }    
+    
+
     /**
      * Update order status.
      * @param Order $order

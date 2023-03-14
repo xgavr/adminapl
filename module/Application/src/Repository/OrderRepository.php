@@ -214,7 +214,7 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('o, c, u, off, cc, m, sk')
+        $queryBuilder->select('o, c, u, off, cc, m, sk, l')
             ->from(Order::class, 'o')
             ->leftJoin('o.contact', 'c')
 //            ->leftJoin('o.comments', 'com')
@@ -225,6 +225,7 @@ class OrderRepository extends EntityRepository{
             ->leftJoin('o.user', 'u')
             ->leftJoin('o.skiper', 'sk')
             ->leftJoin('o.office', 'off')
+            ->leftJoin('o.legal', 'l')
 //            ->orderBy('o.dateCreated', 'DESC')                 
 //            ->addOrderBy('o.dateOper', 'DESC') 
                 ;

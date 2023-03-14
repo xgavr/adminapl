@@ -18,6 +18,11 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                         <?= $this->escapeHtml(($order->getContact()->getName()) ? $order->getContact()->getName():'Nan'); ?>
                     </a>    
                 </div>
+                <div class="text-muted"><h6>
+                    <a href="#" class="order-legal" modal-url="/order/order-legal-form/<?= $order->getId()?>">
+                        <?= ($order->getLegal()) ? $order->getLegal()->getName():'+ ЮЛ'; ?>
+                    </a></h6>    
+                </div>
             </h5>
         </div>
         <div class="col-md-2">

@@ -175,6 +175,7 @@ class IndexController extends AbstractActionController
                 $data = [
                     'marketplace' => $marketplaceOrder->getMarketplace()->getId(),
                     'orderNumber' => $marketplaceOrder->getOrderNumber(),
+                    'postingNumber' => $marketplaceOrder->getPostingNumber(),
                 ];
                 $form->setData($data);
             }  

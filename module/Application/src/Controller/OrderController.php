@@ -27,6 +27,7 @@ use Application\Entity\SupplierOrder;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
 use ApiMarketPlace\Entity\Marketplace;
+use Application\Form\OrderLegalForm;
 
 class OrderController extends AbstractActionController
 {
@@ -293,8 +294,7 @@ class OrderController extends AbstractActionController
             'comments' => $orderComments,
         ]);        
     }        
-    
-    
+        
     public function editFormAction()
     {
         $orderId = (int)$this->params()->fromRoute('id', -1);
@@ -481,6 +481,74 @@ class OrderController extends AbstractActionController
         }    
         
         return new JsonModel($result);
+    }        
+    
+    public function orderLegalFormAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        $order = null;
+        
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }    
+        
+        $form = new OrderLegalForm($this->entityManager);
+        
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost(); 
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                
+                $this->orderManager->updOrderLegal($order, $data);
+                
+                $query = $this->entityManager->getRepository(Order::class)
+                        ->findAllOrder(['orderId' => $order->getId()]);
+                $result = $query->getOneOrNullResult(2);
+                return new JsonModel([
+                    'row' => $result,
+                ]);
+            } else {
+                return new JsonModel(
+                   ['error' => $form->getMessages()]
+                );           
+            }
+        } else {
+            if ($order){
+                $data = [
+                    'legalInn' => ($order->getLegal()) ? $order->getLegal()->getInn():null,
+                    'legalName' => ($order->getLegal()) ? $order->getLegal()->getName():null,
+                    'legalKpp' => ($order->getLegal()) ? $order->getLegal()->getKpp():null,
+                    'legalOgrn' => ($order->getLegal()) ? $order->getLegal()->getOgrn():null,
+                    'legalOkpo' => ($order->getLegal()) ? $order->getLegal()->getOkpo():null,
+                    'legalAddress' => ($order->getLegal()) ? $order->getLegal()->getAddress():null,
+                    'legalHead' => ($order->getLegal()) ? $order->getLegal()->getHead():null,
+                    'recipientInn' => ($order->getRecipient()) ? $order->getRecipient()->getInn():null,
+                    'recipientName' => ($order->getRecipient()) ? $order->getRecipient()->getName():null,
+                    'recipientKpp' => ($order->getRecipient()) ? $order->getRecipient()->getKpp():null,
+                    'recipientOgrn' => ($order->getRecipient()) ? $order->getRecipient()->getOgrn():null,
+                    'recipientOkpo' => ($order->getRecipient()) ? $order->getRecipient()->getOkpo():null,
+                    'recipientAddress' => ($order->getRecipient()) ? $order->getRecipient()->getAddress():null,
+                    'recipientHead' => ($order->getRecipient()) ? $order->getRecipient()->getHead():null,
+                    'rs' => ($order->getBankAccount()) ? $order->getBankAccount()->getRs():null,
+                    'ks' => ($order->getBankAccount()) ? $order->getBankAccount()->getKs():null,
+                    'bik' => ($order->getBankAccount()) ? $order->getBankAccount()->getBik():null,
+                    'bankName' => ($order->getBankAccount()) ? $order->getBankAccount()->getName():null,
+                    'bankCity' => ($order->getBankAccount()) ? $order->getBankAccount()->getCity():null,
+                ];
+                $form->setData($data);
+            }    
+        }
+        // Render the view template.
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+            'form' => $form,
+            'order' => $order,
+        ]);        
     }        
     
     public function viewAction() 

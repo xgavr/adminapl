@@ -13,6 +13,9 @@ use Application\Entity\Client;
 use User\Filter\PhoneFilter;
 use Laminas\Validator\EmailAddress;
 use Stock\Entity\Retail;
+use Application\Entity\Order;
+use Company\Entity\Legal;
+use Company\Entity\BankAccount;
 
 /**
  * Description of ClientRepository
@@ -142,4 +145,29 @@ class ClientRepository extends EntityRepository{
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();            
     }    
+    
+    /**
+     * Юрлица клиента
+     * @param Client $client
+     * @return array
+     */
+    public function findClientLegals($client) 
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('o, l, p, b')
+            ->from(Order::class, 'o')
+            ->join('o.contact', 'c')
+            ->distinct()    
+            ->join('o.legal', 'l', 'WITH', 'o.legal = l.id')
+            ->leftJoin('o.recipient', 'p', 'WITH', 'o.recipient = l.id')
+            ->leftJoin('o.bankAccount', 'b', 'WITH', 'o.bankAccount = b.id')
+            ->where('c.client = ?1')
+            ->setParameter('1', $client->getId())
+            ;
+        
+        return $queryBuilder->getQuery()->getResult(2);
+    }
+    
 }

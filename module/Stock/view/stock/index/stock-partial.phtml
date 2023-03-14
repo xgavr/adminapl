@@ -221,6 +221,16 @@
                 zIndex: 5555
             });
         });  
+        
+        $(document).on('click', '.order-legal', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'orderLegalModal',
+                url: url,
+                width: '1000px',
+                zIndex: 9999
+            });    
+        });                    
 
         $(document).on('click', '.cash-in-modal-show', function (e) {
             var url = $(this).attr('modal-url');

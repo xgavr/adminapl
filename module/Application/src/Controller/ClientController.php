@@ -432,5 +432,48 @@ class ClientController extends AbstractActionController
             'total' => $total,
             'rows' => $result,
         ]);                  
+    }   
+    
+    public function legalsAction()
+    {
+        $clientId = (int) $this->params()->fromRoute('id', '');
+        
+        if ($clientId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $client = $this->entityManager->getRepository(Client::class)
+                ->find($clientId);
+
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }
+        
+        $result = [];
+        $orderLegals = $this->entityManager->getRepository(Client::class)
+                ->findClientLegals($client);
+        foreach ($orderLegals as $orderLegal){
+            $legalId = $recipientId = $bankAccountId = 0;
+            if (isset($orderLegal['legal'])){
+                $legalId = $orderLegal['legal']['id'];
+            }
+            if (isset($orderLegal['recipient'])){
+                $recipientId = $orderLegal['recipient']['id'];
+            }
+            if (isset($orderLegal['bankAccount'])){
+                $bankAccountId = $orderLegal['bankAccount']['id'];
+            }
+            $result[implode('k', [$legalId, $recipientId, $bankAccountId])] = [
+                'legal' => $orderLegal['legal'],
+                'recipient' => $orderLegal['recipient'],
+                'bankAccount' => $orderLegal['bankAccount'],
+            ];
+        }
+        
+        return new JsonModel(
+            array_values($result)
+        );           
     }    
 }

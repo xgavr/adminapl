@@ -26,15 +26,18 @@
     });
         
     function orderDetail (index, row, $detail) {
+        var url = "/order/good-content/"+row.id;
         $.ajax({
             type: "GET",
-            url: "/order/good-content/"+row.id,
+            url: url,
             success: function (result) {
                 $detail.html('<table id="detail'+index+'"></table>').find('table').bootstrapTable({
                     classes: 'table table-bordered table-hover table-condensed', 
                     rowStyle: takeStyle,
+                    iconSize: 'xs',
                     editableUrl: "/order/bid-editable/",
                     idField: "id",
+                    showRefresh: false,
                     columns: [{
                         field: 'good.code',
                         title: 'Артикул',

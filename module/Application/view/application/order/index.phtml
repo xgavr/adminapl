@@ -83,7 +83,7 @@ $this->pageBreadcrumbs()->setItems([
                      <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
                      <th data-field="dateOper" data-sortable="true" data-width="50" data-formatter="dateFormatter">Дата</th>
                      <th data-field="id" data-sortable="false" data-width="50">Id</th>
-                     <th data-field="aplId" data-sortable="false" data-width="50">Apl</th>
+                     <th data-field="aplId" data-sortable="false" data-width="50" data-formatter="aplLinkFormatter">Apl</th>
                      <th data-field="office.name" data-sortable="false" data-width="50">Офис</th>
                      <th data-field="contact.name" data-sortable="false" data-formatter="clientFormatter">Покупатель</th>
 <!--                     <th data-field="contact.phones" data-sortable="false" data-formatter="phoneFormatter" data-width="50">Телефон</th>
@@ -276,9 +276,19 @@ $this->pageBreadcrumbs()->setItems([
         return '<nobr>'+$.format.date(value, "dd.MM.yy")+'</nobr>';        
     }
     
+    function aplLinkFormatter(value, row){
+        if (value){
+            return '<a title="АПЛ ссылка" href="https://autopartslist.ru/admin/orders/view/id/' + value + '" target="_blank">' + value + '</a>';
+        }    
+        return '';
+    }    
+
     function clientFormatter(value, row){
         var result = [];
         var name = (value) ? value:'Nan';
+        if (row.legal){
+            name = row.legal.name;
+        }
         result.push('<a style="text-transform:capitalize" href="/contact/view/' + row.contact.id + '" target="_blank">' + name + '</a>');
 
         if (row.dependInfo){
@@ -302,7 +312,7 @@ $this->pageBreadcrumbs()->setItems([
             if (depend.marketplaceOrders){
                 marketplaceOrders.push('<a href="#" class="marketplace-orders-modal-show" modal-url="/market-place/order-form/" order-id="'+row.id+'" title="Заказы в ТП">('+depend.marketplaceOrders.length+')</a>');
                 $.each(depend.marketplaceOrders, function( index, marketplaceOrder ) {
-                    marketplaceOrders.push(marketplaceOrder.marketplaceName+': '+marketplaceOrder.orderNumber);
+                    marketplaceOrders.push(marketplaceOrder.marketplaceName+': '+marketplaceOrder.postingNumber);
                     if (marketplaceOrders.length > 2){
                         return false;
                     }
@@ -440,7 +450,7 @@ $this->pageBreadcrumbs()->setItems([
         },
         actionsGroups: [
            ['addComment', 'comments', 'history'],
-           ['addMarketplaceNumber'],
+           ['addMarketplaceNumber', 'addLegal'],
            ['vt', 'cash']
         ],      
         actions: {
@@ -568,13 +578,36 @@ $this->pageBreadcrumbs()->setItems([
                 name: 'Номер заказа в ТП',
                 iconClass: 'glyphicon glyphicon-plus',
                 onClick: function (row){
+                    var depend = $.parseJSON(row.dependInfo);
+                    var dialogId = 'marketplaceOrderModal';
                     var url = '/market-place/marketplace-order-form?order='+row.id;
+                    var zIndex = 9999;
+                    if (depend.marketplaceOrders){
+                        if (depend.marketplaceOrders.length){
+                            var url = '/market-place/order-form/'+row.id;
+                            var dialogId = 'marketplaceOrdersModal';
+                            var zIndex = 8888;
+                        }    
+                    }
+                    
                     showFormDialog({
-                        id: 'marketplaceOrderModal',
+                        id: dialogId,
                         url: url,
-                        zIndex: 9999
-                        //width: $(window).width()-150
+                        zIndex: zIndex
                     });
+                }
+            },    
+            addLegal: {
+                name: 'Юр. лицо',
+                iconClass: 'glyphicon glyphicon-plus',
+                onClick: function (row){
+                    var url = '/order/order-legal-form/'+row.id;
+                    showFormDialog({
+                        id: 'orderLegalModal',
+                        url: url,
+                        width: '1000px',
+                        zIndex: 9999
+                    });    
                 }
             },    
             vt: {

@@ -172,11 +172,11 @@ class MarketplaceService
                 }
             }
         }
-        if (!empty($data['orderNumber'])){
+        if (!empty($data['postingNumber'])){
             $marketplaceOrder = $this->entityManager->getRepository(MarketplaceOrder::class)
-                    ->findOneBy(['marketplace' => $marketplace->getId(), 'orderNumber' => $data['orderNumber']]);   
+                    ->findOneBy(['marketplace' => $marketplace->getId(), 'postingNumber' => $data['postingNumber']]);   
             if ($marketplaceOrder){
-                $message[] = 'Уже имеются заказы c номером '.$data['orderNumber'];                
+                $message[] = 'Уже имеются заказы c отправлением '.$data['postingNumber'];                
             }
         }
         

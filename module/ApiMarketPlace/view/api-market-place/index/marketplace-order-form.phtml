@@ -10,6 +10,10 @@ $form->get('orderNumber')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('postingNumber')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->prepare();
 
 ?>
@@ -25,6 +29,11 @@ $form->prepare();
                 <?= $this->formLabel($form->get('marketplace')); ?>
                 <?= $this->formElement($form->get('marketplace')); ?>
                 <?= $this->formElementErrors($form->get('marketplace')); ?>                  
+            </div>    
+            <div class="form-group">
+                <?= $this->formLabel($form->get('postingNumber')); ?>
+                <?= $this->formElement($form->get('postingNumber')); ?>
+                <?= $this->formElementErrors($form->get('postingNumber')); ?>                  
             </div>    
             <div class="form-group">
                 <?= $this->formLabel($form->get('orderNumber')); ?>
@@ -70,7 +79,7 @@ $form->prepare();
         var data = serializeForm('#marketplace-order-form');
         $.ajax({
             type: 'POST',
-            url: '/market-place/marketplace-order-form/<?= ($marketplaceorder) ? $marketplace->getId():"" ?>?order=<?= ($order) ? $order->getId():"" ?>',
+            url: '/market-place/marketplace-order-form/<?= ($marketplaceOrder) ? $marketplaceOrder->getId():"" ?>?order=<?= ($order) ? $order->getId():"" ?>',
             data: $.param(data)
         })
             .done(function (data) {

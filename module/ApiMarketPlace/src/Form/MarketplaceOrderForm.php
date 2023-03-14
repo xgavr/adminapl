@@ -56,12 +56,23 @@ class MarketplaceOrderForm extends Form
         
         $this->add([           
             'type'  => 'text',
-            'name' => 'orderNumber',
+            'name' => 'postingNumber',
             'attributes' => [
                 'required' => 'required',                
             ],
             'options' => [
-                'label' => 'Номер заказа в ТП',
+                'label' => 'Номер отправления',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'orderNumber',
+            'attributes' => [
+                //'required' => 'required',                
+            ],
+            'options' => [
+                'label' => 'Номер заказа',
             ],
         ]);
 
@@ -85,8 +96,20 @@ class MarketplaceOrderForm extends Form
         $this->setInputFilter($inputFilter);
         
         $inputFilter->add([
+                'name'     => 'postingNumber',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                ],
+            ]);        
+        
+        $inputFilter->add([
                 'name'     => 'orderNumber',
-                'required' => true,
+                'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
                     ['name' => 'StripTags'],
