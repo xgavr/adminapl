@@ -41,6 +41,7 @@ class LegalRepository extends EntityRepository
                 ->from(Legal::class, 'r')
                 ->where('r.inn = ?1')    
                 ->setParameter('1', $inn)
+                ->setMaxResults(1);    
     //            ->orderBy(['id DESC'])    
                     ;
 
@@ -52,7 +53,7 @@ class LegalRepository extends EntityRepository
 
             }        
 
-            $query = $queryBuilder->getQuery();
+//            $query = $queryBuilder->getQuery();
 
             if ($resultMode){
                 return $queryBuilder->getQuery()->getResult($resultMode);        
