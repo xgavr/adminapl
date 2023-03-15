@@ -1023,6 +1023,9 @@ class OrderManager
      */
     public function repostOrder($order)
     {
+        if ($order->getDateOper() < $this->getAllowDate()){
+            return;
+        }
         
         $docStamp = $this->entityManager->getRepository(Register::class)
                 ->orderRegister($order);
