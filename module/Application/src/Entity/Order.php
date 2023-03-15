@@ -937,6 +937,19 @@ class Order {
     }
 
     /**
+     * user apl id
+     * @return integer
+     */
+    public function getUserApl() 
+    {
+        if ($this->user){
+            return $this->user->getAplId();
+        } 
+        
+        return;
+    }
+
+    /**
      * Задает связанный user.
      * @param \User\Entity\User $user
      */    
@@ -1062,6 +1075,20 @@ class Order {
     {
         if ($this->contactCar){
             return $this->contactCar->getVin();
+        }
+        return;
+    }
+
+    /*
+     * Возвращает make name.
+     * @return string
+     */    
+    public function getContactCarMakeName() 
+    {
+        if ($this->contactCar){
+            if ($this->contactCar->getMake()){
+                return $this->contactCar->getMake()->getName();
+            }    
         }
         return;
     }

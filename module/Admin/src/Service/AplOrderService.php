@@ -1054,4 +1054,116 @@ class AplOrderService {
         return;        
     }    
     
+    /**
+     * Отправить заказ в апл
+     * @param Order $order
+     */
+    public function sendOrder($order)
+    {
+        $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
+
+        $result = false;
+
+        if ($order){
+            $post = [
+                'publish' => $order->getOffice()->getAplId(),
+                'user' => $order->getUserApl(),
+                'name' => $order->getContact()->getName(),
+                'email' => $order->getContact()->getEmail(),
+                'firmName' => ($order->getLegal()) ? $order->getLegal()->getName():null,
+                'inn' => ($order->getLegal()) ? $order->getLegal()->getInn():null,
+                'kpp' => ($order->getLegal()) ? $order->getLegal()->getKpp():null,
+                'ogrn' => ($order->getLegal()) ? $order->getLegal()->getOgrn():null,
+                'okpo' => ($order->getLegal()) ? $order->getLegal()->getOkpo():null,
+                'firmAddress' => ($order->getLegal()) ? $order->getLegal()->getAddress():null,
+                'firmAccount' => ($order->getBankAccount()) ? $order->getBankAccount()->getRs():null,
+                'bank' => ($order->getBankAccount()) ? $order->getBankAccount()->getName():null,
+                'bik' => ($order->getBankAccount()) ? $order->getBankAccount()->getBik():null,
+                'firmAccount1' => ($order->getBankAccount()) ? $order->getBankAccount()->getKs():null,
+                'consignee' => ($order->getRecipient()) ? $order->getRecipient()->getName():null,
+                'consigneeKpp' => ($order->getRecipient()) ? $order->getRecipient()->getKpp():null,
+                'consigneeAddress' => ($order->getRecipient()) ? $order->getRecipient()->getAddress():null,
+                'vin' => ($order->getContactCar()) ? $order->getContactCar()->getVin():null,
+                'auto' => $order->getContactCarMakeName(),
+                
+                'parent' => $order->getOffice()->getAplId(),
+                'type' =>   'Suppliersorders',
+                'sort' =>   $order->getAmount(),
+                'name' =>   $order->getSupplier()->getAplId(),
+                'comment' => $order->getComment(),
+                'sf' =>     0,
+                'ns' =>     $order->getDocNo(),
+                'ds' =>     $order->getDocDate(),
+                'aa' =>     1,
+                'cashless' => $order->getContract()->getAplCashlessAsString(),
+                'nsasis' => $order->getDocNo(),
+                'comiss' => 0,
+            ];
+
+            if ($order->getAplId()){
+                $post['id'] = $order->getAplId();
+            }
+            
+            $so = [];
+            $bids = $this->entityManager->getRepository(Bid::class)
+                    ->findBy(['order' => $order->getId()]);
+            foreach ($bids as $bid){
+                $tp = [
+                    'sort' => $order->getQuantity(),
+                    'name' => $order->getSupplier()->getAplId(),
+                    'sf' => $bid->getGood()->getAplId(),
+                    'ns' => $order->getDocNo(),
+                    'ds' => $order->getDocDate(),
+                    'price' => $bid->getPrice(),                    
+                    'nsasis' => $order->getDocNo(),
+                    'total' => $bid->getAmount(),
+                    'maker' => '',
+                    'country' => $bid->getCountry()->getName(),
+                    'countrycode' => $bid->getCountry()->getCode(),
+                    'ntd' => $bid->getNtd()->getNtd(),
+                    'pack' => $bid->getUnit()->getName(),
+                    'packcode' => $bid->getUnit()->getCode(),
+                    'cashless' => $order->getContract()->getAplCashlessAsString(),
+                ];                
+                $so[] = $tp;
+            }
+            $post['tp'] = $so;
+            
+//            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 60]);
+            $client->setParameterPost($post);            
+
+            $ok = $result = false;
+            $aplId = 0;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {                    
+                    $aplId = (int) $response->getBody();
+                    if ($aplId){
+                        $ok = $result = true;
+                    }
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok) {            
+                $order->setStatusEx(Order::STATUS_EX_APL);
+                if ($aplId > 0){
+                    $order->setAplId($aplId);
+                }    
+                $this->entityManager->persist($order);
+                $this->entityManager->flush($order);
+            }
+
+            $this->entityManager->detach($order);
+        }
+        
+        return $result;
+        
+    }
 }
