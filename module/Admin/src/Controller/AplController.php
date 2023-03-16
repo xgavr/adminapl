@@ -758,6 +758,15 @@ class AplController extends AbstractActionController
         ]);
     }    
     
+    public function sendOrdersAction()
+    {                
+        $this->aplOrderService->sendOrders();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+    
     public function sendOrderIdAction()
     {                
         $orderId = $this->params()->fromRoute('id', -1);
