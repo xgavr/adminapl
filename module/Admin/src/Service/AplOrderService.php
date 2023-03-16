@@ -1089,7 +1089,7 @@ class AplOrderService {
                 'info' => ($order->getContactCar()) ? $order->getContactCar()->getComment():null,
                 'carrier' => ($order->getCourier()) ? $order->getCourier()->getAplId():null,
                 'tracker' => $order->getTrackNumber(),
-                'delivery_rate_options' => $order->getShipment()->getAplRateAsString(),
+                'delivery_rate_options' => $order->getShipping()->getAplRateAsString(),
                 'delivery_rate' => $order->getShipmentRate(),
                 'delivery_distance' => $order->getShipmentDistance(),
                 'delivery_rate_adv' =>$order->getShipmentAddRate(),
