@@ -1131,7 +1131,7 @@ class AplOrderService {
             $post['tp'] = $so;
             
             
-//            var_dump($post); exit;
+            var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
