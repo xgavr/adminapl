@@ -1027,6 +1027,8 @@ class OrderManager
             return;
         }
         
+        $this->entityManager->refresh($order);
+        
         $docStamp = $this->entityManager->getRepository(Register::class)
                 ->orderRegister($order);
         $this->entityManager->getRepository(Movement::class)

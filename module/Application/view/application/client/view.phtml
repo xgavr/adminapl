@@ -246,7 +246,7 @@ $legalContact = $client->getLegalContact();
                 data-sort-order="desc"            
                 data-response-handler="responseHandler"
                 data-classes = "table table-bordered table-hover table-condensed"
-                data-row-style="rowStyle"
+                data-row-style="vtRowStyle"
             >
                 <thead>
                     <tr>
@@ -444,6 +444,25 @@ $legalContact = $client->getLegalContact();
         return {classes: retired};
     }
     
+    function vtRowStyle(row){
+        var retired = 'default';
+        switch(row.status){
+            case '<?= Vt::STATUS_TAKE_NO?>': 
+                return {classes: 'warning '+retired};
+            default: break;            
+        }                
+        switch(row.status){
+            case '<?= Vt::STATUS_COMMISSION?>': 
+            case '<?= Vt::STATUS_DEFECT?>': 
+                        return {classes: 'info '+retired}; break;
+            case '<?= Vt::STATUS_RETIRED?>': 
+                        return {classes: 'retired '+retired}; break;
+            default:break;     
+        }
+        
+        return {classes: retired};
+    }
+
     function idFormatter(value, row){
         if (row.aplId > 0){
             return value + ' ('+row.aplId+')';
