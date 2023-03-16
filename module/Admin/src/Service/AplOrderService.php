@@ -26,6 +26,7 @@ use Application\Entity\Order;
 use Laminas\Validator\Date;
 use Laminas\Json\Dcoder;
 use Application\Entity\Bid;
+use Laminas\Json\Encoder;
 
 
 /**
@@ -1060,12 +1061,12 @@ class AplOrderService {
      */
     public function sendOrder($order)
     {
-        $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
+        $url = $this->aplApi().'update-order?api='.$this->aplApiKey();
 
         $result = false;
-
+        $post = [];
         if ($order){
-            $post = [
+            $value = [
                 'publish' => $order->getOffice()->getAplId(),
                 'user' => $order->getUserApl(),
                 'name' => $order->getContact()->getName(),
@@ -1085,49 +1086,50 @@ class AplOrderService {
                 'consigneeAddress' => ($order->getRecipient()) ? $order->getRecipient()->getAddress():null,
                 'vin' => ($order->getContactCar()) ? $order->getContactCar()->getVin():null,
                 'auto' => $order->getContactCarMakeName(),
-                
-                'parent' => $order->getOffice()->getAplId(),
-                'type' =>   'Suppliersorders',
-                'sort' =>   $order->getAmount(),
-                'name' =>   $order->getSupplier()->getAplId(),
-                'comment' => $order->getComment(),
-                'sf' =>     0,
-                'ns' =>     $order->getDocNo(),
-                'ds' =>     $order->getDocDate(),
-                'aa' =>     1,
-                'cashless' => $order->getContract()->getAplCashlessAsString(),
-                'nsasis' => $order->getDocNo(),
-                'comiss' => 0,
+                'info' => ($order->getContactCar()) ? $order->getContactCar()->getComment():null,
+                'carrier' => ($order->getCourier()) ? $order->getCourier()->getAplId():null,
+                'tracker' => $order->getTrackNumber(),
+                'delivery_rate_options' => $order->getShipment()->getAplRateAsString(),
+                'delivery_rate' => $order->getShipmentRate(),
+                'delivery_distance' => $order->getShipmentDistance(),
+                'delivery_rate_adv' =>$order->getShipmentAddRate(),
+                'delivery' => $order->getShipping()->getAplId(),
+                'type' => $order->getDateShipment(),
+                'delivery_sum' => $order->getShipmentTotal(),
+                'address' => $order->getAddress(),
+                'brand' => $order->getContactCarMakeAplId(),
+                'shipping' => $order->getShipping()->getAplShipping(),
+                'selections' => $order->getSelectionsAsAplString(),
+                'phone' => $order->getContact()->getPhonesAsString(),
+                'parent' => $order->getAplStatusAsString(),
+                'paystatus' => 0,
+                'mode' => $order->getAplModeAsString(),
+                'info2' => $order->getInfo(),                
             ];
 
             if ($order->getAplId()){
-                $post['id'] = $order->getAplId();
+                $value['id'] = $order->getAplId();
             }
+            
+            $post['value'] = Encoder::encode($value);
             
             $so = [];
             $bids = $this->entityManager->getRepository(Bid::class)
                     ->findBy(['order' => $order->getId()]);
             foreach ($bids as $bid){
                 $tp = [
-                    'sort' => $order->getQuantity(),
-                    'name' => $order->getSupplier()->getAplId(),
-                    'sf' => $bid->getGood()->getAplId(),
-                    'ns' => $order->getDocNo(),
-                    'ds' => $order->getDocDate(),
-                    'price' => $bid->getPrice(),                    
-                    'nsasis' => $order->getDocNo(),
-                    'total' => $bid->getAmount(),
-                    'maker' => '',
-                    'country' => $bid->getCountry()->getName(),
-                    'countrycode' => $bid->getCountry()->getCode(),
-                    'ntd' => $bid->getNtd()->getNtd(),
-                    'pack' => $bid->getUnit()->getName(),
-                    'packcode' => $bid->getUnit()->getCode(),
-                    'cashless' => $order->getContract()->getAplCashlessAsString(),
+                    'parent' => $bid->getGood()->getAplId(),
+                    'sort' => $bid->getNum(),
+                    'publish' => $order->getAplId(),
+                    'comment' => $bid->getPrice(),
+                    'opts' => $bid->getOpts(),
+                    'selection' => $bid->getOe(),                    
+                    'dispname' => $bid->getDisplayName(),
                 ];                
                 $so[] = $tp;
             }
             $post['tp'] = $so;
+            
             
 //            var_dump($post); exit;
             $client = new Client();
@@ -1152,7 +1154,7 @@ class AplOrderService {
             }    
 
             if ($ok) {            
-                $order->setStatusEx(Order::STATUS_EX_APL);
+                $order->setStatusEx(Order::STATUS_EX_OK);
                 if ($aplId > 0){
                     $order->setAplId($aplId);
                 }    
@@ -1163,7 +1165,45 @@ class AplOrderService {
             $this->entityManager->detach($order);
         }
         
-        return $result;
-        
+        return $result;        
     }
+    
+    /**
+     * Обновить заказ в апл
+     */
+    public function sendNexOrder()
+    {
+        $order = $this->entityManager->getRepository(Order::class)
+                ->findForUpdateApl();
+        if ($order){
+            if ($this->sendOrder($order)){
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Отправить заказы в АПЛ
+     */
+    public function sendOrders()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        while (true){
+            if ($this->sendNexOrder()) {
+                usleep(100);
+                if (time() > $startTime + 870){
+                    break;
+                }
+            } else {
+                break;
+            }
+        }    
+        return;        
+    }
+    
 }

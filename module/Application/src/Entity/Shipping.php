@@ -288,6 +288,30 @@ class Shipping {
     }    
     
     /**
+     * Returns apl rate as string.
+     * @return string
+     */
+    public function getAplRateAsString()
+    {
+        if ($this->rate == self::RATE_TRIP){
+            return 'trip';
+        }
+        return '';
+    }    
+
+    /**
+     * Returns apl shipping.
+     * @return string
+     */
+    public function getAplShipping()
+    {
+        if ($this->rate == self::RATE_PICKUP){
+            return 0;
+        }
+        return 1;
+    }    
+
+    /**
      * Sets rate.
      * @param int $rate     
      */

@@ -1462,9 +1462,10 @@ class OrderManager
                 'legal_id' => null,
                 'recipient_id' => null,
                 'bank_account_id' => null,
+                'status_ex' => Order::STATUS_EX_NEW,
             ];
 
-            $legal = null;
+            $legal = $recipient = $bankAccount = null;
             if (empty($data['legal']) && !empty($data['legalInn']) && !empty($data['legalName'])){
                 $legal = $this->legalManager->addLegal($order->getContact(), [
                     'inn' => $data['legalInn'],
@@ -1501,7 +1502,7 @@ class OrderManager
                 ], true);
                 $upd['bank_account_id'] = $bankAccount->getId();
             }
-
+            
             $this->entityManager->getConnection()
                     ->update('orders', $upd, ['id' => $order->getId()]);
 

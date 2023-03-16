@@ -558,4 +558,39 @@ class OrderRepository extends EntityRepository{
         
         return $queryBuilder->getQuery();
     }
+
+    /**
+     * Найти записи для отправки в АПЛ
+     */
+    public function findForUpdateApl()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('o')
+            ->from(Order::class, 'o')
+            ->where('o.statusEx = ?1')
+            ->setParameter('1', Order::STATUS_EX_NEW)    
+                ;
+        
+        $data = $queryBuilder->getQuery()->getResult();
+        foreach ($data as $order){
+            $flag = true;
+            $bids = $entityManager->getRepository(Bid::class)
+                    ->findBy(['order' => $order->getId()]);
+            foreach ($bids as $bid){
+               if (empty($bids->getGood()->getAplId())){
+                   $flag = false;
+                   break;
+               }  
+            }
+            if ($flag){
+                return $order;
+            }    
+        }
+        
+        return;                
+        
+    }                    
 }

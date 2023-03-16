@@ -48,6 +48,7 @@ class Order {
     
     const STATUS_EX_OK  = 1;// обновлено 
     const STATUS_EX_NO  = 2;// не обновлено
+    const STATUS_EX_NEW  = 3;// надо обновить в апл
     const STATUS_EX_TOTAL_NO_MATH  = 9;// ошибка при обновлении, не совпадает сумма
         
     const STATUS_ACCOUNT_OK  = 1;// обновлено 
@@ -696,6 +697,35 @@ class Order {
     }    
         
     /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getAplStatusList() 
+    {
+        return [
+            self::STATUS_NEW => '0',
+            self::STATUS_PROCESSED => '50',
+            self::STATUS_CONFIRMED => '100',
+            self::STATUS_DELIVERY => '150',
+            self::STATUS_SHIPPED => '210',
+            self::STATUS_CANCELED => '-1',
+        ];
+    }    
+    
+    /**
+     * Returns user status as string.
+     * @return string
+     */
+    public function getAplStatusAsString()
+    {
+        $list = self::getAplStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+
+    /**
      * Sets status.
      * @param int $status     
      */
@@ -742,6 +772,34 @@ class Order {
     }    
         
     /**
+     * Returns possible apl modes as array.
+     * @return array
+     */
+    public static function getAplModesList() 
+    {
+        return [
+            self::MODE_MAN => 'man',
+            self::MODE_ORDER => 'order',
+            self::MODE_VIN => 'vin',
+            self::MODE_FAST => 'fast',
+            self::MODE_INNER => 'inner',
+        ];
+    }    
+    
+    /**
+     * Returns apl mode as string.
+     * @return string
+     */
+    public function getAplModeAsString()
+    {
+        $list = self::getAplModesList();
+        if (isset($list[$this->mode]))
+            return $list[$this->mode];
+        
+        return 'Unknown';
+    }    
+
+    /**
      * Sets mode.
      * @param int $mode     
      */
@@ -768,6 +826,7 @@ class Order {
         return [
             self::STATUS_EX_OK => 'Обновлено',
             self::STATUS_EX_NO => 'Не обновлено',
+            self::STATUS_EX_NEW => 'Не обновлено в АПЛ',
             self::STATUS_EX_TOTAL_NO_MATH => 'Не совпадает сумма',
         ];
     }    
@@ -1093,6 +1152,20 @@ class Order {
         return;
     }
 
+    /*
+     * Возвращает apl make id.
+     * @return string
+     */    
+    public function getContactCarMakeAplId() 
+    {
+        if ($this->contactCar){
+            if ($this->contactCar->getMake()){
+                return $this->contactCar->getMake()->getAplId();
+            }    
+        }
+        return;
+    }
+
     /**
      * Задает связанный contactCar.
      * @param ContactCar $contactCar
@@ -1335,6 +1408,19 @@ class Order {
         $result = [];
         foreach ($this->selections as $selection){
             $result[] = $selection->getOe();
+        } 
+        
+        return Encoder::encode($result);
+    }
+        
+    public function  getSelectionsAsAplString()
+    {
+        $result = [];
+        foreach ($this->selections as $selection){
+            $result[] = [
+                'q' => $selection->getOe(),
+                'qc' => $selection->getComment(),
+            ];
         } 
         
         return Encoder::encode($result);
