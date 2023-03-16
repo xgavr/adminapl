@@ -1129,6 +1129,7 @@ class AplOrderService {
                 $so[] = $tp;
             }
             $post['tp'] = $so;
+            $post['ds'] = $order->getDocDate();
             
             
 //            var_dump($post); exit;
