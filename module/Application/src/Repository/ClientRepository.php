@@ -165,6 +165,8 @@ class ClientRepository extends EntityRepository{
             ->leftJoin('o.bankAccount', 'b', 'WITH', 'o.bankAccount = b.id')
             ->where('c.client = ?1')
             ->setParameter('1', $client->getId())
+            ->andWhere('o.dateCreated > ?2')
+            ->setParameter('2', strtotime('- 3 month'))    
             ;
         
         return $queryBuilder->getQuery()->getResult(2);
