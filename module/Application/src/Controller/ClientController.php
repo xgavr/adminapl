@@ -460,7 +460,7 @@ class ClientController extends AbstractActionController
                 $legalId = $orderLegal['legal']['id'];
             }
             if (isset($orderLegal['recipient'])){
-                if ($recipientId != $legalId){
+                if ($orderLegal['recipient']['id'] != $legalId){
                     $recipientId = $orderLegal['recipient']['id'];
                 }    
             }
