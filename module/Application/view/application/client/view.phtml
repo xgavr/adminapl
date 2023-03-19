@@ -3,6 +3,8 @@ use Application\Entity\Order;
 use Application\Entity\ContactCar;
 use Laminas\Json\Encoder;
 use Stock\Entity\Vt;
+use Stock\Entity\Retail;
+use Stock\Entity\Movement;
 
 $this->headTitle($client->getName());
 
@@ -279,6 +281,7 @@ $legalContact = $client->getLegalContact();
                 data-classes = "table table-bordered table-hover table-condensed"
                 data-unique-id="id"
                 data-icon-size="sm"
+                data-row-style="mutualRowStyle"
                 >
                 <thead>
                     <tr>
@@ -459,6 +462,25 @@ $legalContact = $client->getLegalContact();
                         return {classes: 'retired '+retired}; break;
             default:break;     
         }
+        
+        return {classes: retired};
+    }
+
+    function mutualRowStyle(row){
+        var retired = 'default';
+//        switch(row.status){
+//            case '<?= Vt::STATUS_TAKE_NO?>': 
+//                return {classes: 'warning '+retired};
+//            default: break;            
+//        }                
+//        switch(row.status){
+//            case '<?= Vt::STATUS_COMMISSION?>': 
+//            case '<?= Vt::STATUS_DEFECT?>': 
+//                        return {classes: 'info '+retired}; break;
+//            case '<?= Vt::STATUS_RETIRED?>': 
+//                        return {classes: 'retired '+retired}; break;
+//            default:break;     
+//        }
         
         return {classes: retired};
     }
@@ -677,26 +699,27 @@ $legalContact = $client->getLegalContact();
     }        
     
     function docKeyFormatter(value, row){
-        const docKey = value.split(":");
-        let docType = docKey[0];        
-        let docId = docKey[1];        
+        let docType = row.docType;        
+        let docId = row.docId;        
         switch(docType){
-            case 'ord': 
+            case '<?= Movement::DOC_ORDER?>': 
                 return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №"+docId+"</a>";
-            case 'vt': 
+            case '<?= Movement::DOC_VT?>': 
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
-            case 'ptu': 
+            case '<?= Movement::DOC_PTU?>': 
                 return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a>";
-            case 'ot': 
+            case '<?= Movement::DOC_OT?>': 
                 return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
-            case 'st': 
+            case '<?= Movement::DOC_ST?>': 
                 return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
-            case 'vtp': 
+            case '<?= Movement::DOC_VTP?>': 
                 return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
-            case 'cash': 
-                return "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>Оплата №"+docId+"</a>";
+            case '<?= Movement::DOC_CASH?>': 
+                if (row.amount < 0){
+                    return "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>Оплата №"+docId+"</a>";
+                }    
                 return "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>Возврат оплаты №"+docId+"</a>";
-            default: return docKey;            
+            default: return docId;            
         }
     }
     
