@@ -104,7 +104,7 @@ if ($vt){
                 data-side-pagination="client"
                 data-pagination="true"
                 data-cookie="true"
-                data-cookie-id-table="vtGoodSave<?= $vt->getId()?>"
+                data-cookie-id-table="vtGoodSave<?= ($vt) ? $vt->getId():"new" ?>"
                 data-cookie-expire="1m"
                 data-page-size = "50"
                 data-page-list="[5, 10, 20, 50]"
