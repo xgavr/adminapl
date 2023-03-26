@@ -292,6 +292,6 @@ class OtRepository extends EntityRepository{
                 ;
         
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery()->getResult(2);
     }
 }
