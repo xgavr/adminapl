@@ -98,9 +98,9 @@ class OtManager
                     $base = $this->entityManager->getRepository(Ot::class)
                         ->findStForStorno($otGood);
                     if ($base){
-                        $baseKey = $base->getBaseKey();
-                        $baseType = $base->getBaseType();
-                        $baseId = $base->getBaseId();
+                        $baseKey = $base['baseKey'];
+                        $baseType = $base['baseType'];
+                        $baseId = $base['baseId'];
                     }
                 }
 
