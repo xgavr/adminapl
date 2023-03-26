@@ -97,7 +97,7 @@ class OtManager
                 if ($ot->getStatus() == Ot::STATUS_ST_STORNO) {
                     $base = $this->entityManager->getRepository(Ot::class)
                         ->findStForStorno($otGood);
-                var_dump($base); exit;
+//                var_dump($base); exit;
                     if ($base){
                         $baseKey = $base['baseKey'];
                         $baseType = $base['baseType'];
