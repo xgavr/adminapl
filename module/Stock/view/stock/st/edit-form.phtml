@@ -148,6 +148,9 @@ if ($st){
                     <button type="button" class="btn btn-default st-good-modal-show" modal-url="/st/good-edit-form">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
+                    <button type="button" class="btn btn-default" onclick="stFill()">
+                        <span aria-hidden="true">Заполнить из заказа</span>
+                    </button>
                 </div>
             </div>
             <table id="stgoodtable" 
@@ -155,11 +158,15 @@ if ($st){
                 data-url="/st/good-content/<?= ($st) ? $st->getId():"" ?>"
                 data-side-pagination="client"
                 data-pagination="true"
+                data-cookie="true"
+                data-cookie-id-table="stGoodSave<?= ($st) ? $st->getId():"new" ?>"
+                data-cookie-expire="1m"
                 data-page-size = "5"
                 data-page-list="[5, 10, 20, 50]"
                 data-toolbar="#stgoodtoolbar"
                 data-show-refresh="true"
                 data-show-toggle="false"
+                data-show-columns="true"
                 data-query-params="stgoodQueryParams"
                 data-response-handler="stgoodResponseHandler"
                 data-unique-id = "rowNo"
@@ -167,15 +174,16 @@ if ($st){
                 >
                 <thead>
                     <tr>
-                         <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                         <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
-                         <th data-field="good.producer.name" data-type="numeric">Производитель</th>
-                         <th data-field="good.name" data-type="numeric">Наименование</th>
-                         <th data-field='price' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
-                         <th data-field='quantity' data-align="right">Количество</th>
-                         <th data-field='amount' data-align="right">Сумма</th>
-                         <th data-field="rowNo" data-formatter="pgEditFormatter" data-width="10"></th>
-                         <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
+                        <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                        <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
+                        <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                        <th data-field="good.name" data-type="numeric">Наименование</th>
+                        <th data-field='price' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                        <th data-field='quantity' data-align="right">Количество</th>
+                        <th data-field='amount' data-align="right">Сумма</th>
+                        <th data-field="baseKey" data-visible="false" data-editable="true" data-editable-type="select" data-editable-source="/st/find-base/<?= ($st) ? $st->getId():"" ?>" data-width="10">Партия</th>
+                        <th data-field="rowNo" data-formatter="pgEditFormatter" data-width="10"></th>
+                        <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
                      </tr>                
                 </thead>
             </table>
@@ -243,16 +251,6 @@ if ($st){
         return result;
     }
     
-    
-    $('#office').on('change', function(){
-        $.getJSON( '/offices/legals/'+$('#office').val(), function( data ) {
-            $('#company').empty();
-            $.each( data.rows, function( key, value ) {
-                $('#company').append('<option value="' + key + '">' + value.name + '</option>');
-            });
-        });    
-    });
-        
     function stUpdateTotal(){
         var data = $('#stgoodtable').bootstrapTable('getData');
         var amount = 0; var quantity = 0;
@@ -270,6 +268,55 @@ if ($st){
         stUpdateTotal();
     }
     
+    function stFill(){
+        bootbox.prompt('Номер заказа в АПЛ',
+            function(result) {
+                if (result){
+                    $('input[name="comment"]').val(result);
+                    $.ajax({
+                        type: 'GET',
+                        url: "/order/good-content?aplId="+result
+                    })
+                        .done(function (data) {
+                            $('#stgoodtable').bootstrapTable('removeAll');
+                            var rows = [];
+                            $.each( data, function( index, row ) { 
+                                var good = {
+                                    id: row.good.id,
+                                    code: row.good.code,
+                                    name: row.good.name,
+                                    producer: {name: row.good.producer.name}
+                                };
+                                var row = {
+                                    good: good,
+                                    amount: row.price*row.num,
+                                    quantity: row.num,
+                                    price: row.price,
+                                    rowNo: index+1
+                                };
+
+                                rows.push(row);
+                            });   
+                            $('#stgoodtable').bootstrapTable('append', rows);                        
+                            stUpdateTotal();
+                        })
+                        .fail(function () {
+                            alert("Ошибка при получении данных.");
+
+                        });            
+                }        
+        });        
+    }
+    
+    $('#office').on('change', function(){
+        $.getJSON( '/offices/legals/'+$('#office').val(), function( data ) {
+            $('#company').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#company').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    });
+            
     function hideUserGroup()
     {
         $('#userGroup').hide();

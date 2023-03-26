@@ -142,6 +142,14 @@ class OrderController extends AbstractActionController
     {
         	        
         $orderId = $this->params()->fromRoute('id', -1);
+        $orderAplId = $this->params()->fromQuery('aplId', -1);
+        
+        if ($orderAplId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->findOneBy(['aplId' => $orderAplId]);
+            $orderId = $order->getId();
+        }
+        
         $result = [];
         
         if ($orderId>0) {

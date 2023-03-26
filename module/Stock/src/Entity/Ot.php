@@ -30,6 +30,7 @@ class Ot {
     const STATUS_RETIRED      = 2; // Retired.
     const STATUS_COMMISSION   = 3; // commission.
     const STATUS_INVENTORY    = 4; // инвентаризация.
+    const STATUS_ST_STORNO    = 5; // отена списания.
    
      // Ptu status doc constants.
     const STATUS_DOC_RECD       = 1; // Получено.
@@ -209,6 +210,7 @@ class Ot {
             self::STATUS_RETIRED => 'Удален',
             self::STATUS_COMMISSION => 'На комиссии',
             self::STATUS_INVENTORY => 'Инвентаризация',
+            self::STATUS_ST_STORNO => 'Отмена списания',
         ];
     }    
     

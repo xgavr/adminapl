@@ -13,6 +13,8 @@ use Company\Entity\Office;
 use Stock\Entity\Ot;
 use Stock\Entity\OtGood;
 use Application\Filter\ArticleCode;
+use Stock\Entity\St;
+use Stock\Entity\Movement;
 
 /**
  * Description of OtRepository
@@ -262,5 +264,33 @@ class OtRepository extends EntityRepository{
         
         return;                
         
-    }            
+    }         
+    
+    /**
+     * Найти списание для сторно
+     * @param OtGood $otGood
+     */
+    public function findStForStorno($otGood)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('m')
+            ->from(Movement::class, 'm')
+            ->join('m.docId', 's', 'WITH', 'm.docType = :docType')
+            ->setParameter('docType', Movement::DOC_ST)    
+            ->where('m.status = ?1')
+            ->setParameter('1', Movement::STATUS_ACTIVE)
+            ->andWhere('m.dateOper < ?2')
+            ->setParameter('2', $otGood->getOt()->getDocDate())
+            ->andWhere('m.good = ?3')
+            ->setParameter('3', $otGood->getGood()->getId())
+            ->andWhere('s.writeOff = ?4 or s.writeOff = ?5')    
+            ->setParameter('4', St::WRITE_COST)
+            ->setParameter('5', St::WRITE_PAY)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

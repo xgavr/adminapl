@@ -89,14 +89,28 @@ class OtManager
             $otGoods = $this->entityManager->getRepository(OtGood::class)
                     ->findByOt($ot->getId());
 
+            $baseKey = $ot->getLogKey();
+            $baseType = Movement::DOC_OT;
+            $baseId = $ot->getId();
+            
             foreach ($otGoods as $otGood){
+                if ($ot->getStatus() == Ot::STATUS_ST_STORNO) {
+                    $base = $this->entityManager->getRepository(Ot::class)
+                        ->findStForStorno($otGood);
+                    if ($base){
+                        $baseKey = $base->getBaseKey();
+                        $baseType = $base->getBaseType();
+                        $baseId = $base->getBaseId();
+                    }
+                }
+
                 $data = [
                     'doc_key' => $ot->getLogKey(),
-                    'base_key' => $ot->getLogKey(),
                     'doc_type' => Movement::DOC_OT,
                     'doc_id' => $ot->getId(),
-                    'base_type' => Movement::DOC_OT,
-                    'base_id' => $ot->getId(),
+                    'base_key' => $baseKey,
+                    'base_type' => $baseType,
+                    'base_id' => $baseId,
                     'doc_row_key' => $otGood->getDocRowKey(),
                     'doc_row_no' => $otGood->getRowNo(),
                     'date_oper' => date('Y-m-d 00:00:00', strtotime($ot->getDocDate())),
