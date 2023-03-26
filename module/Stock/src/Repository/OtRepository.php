@@ -291,7 +291,7 @@ class OtRepository extends EntityRepository{
             ->setParameter('5', St::WRITE_PAY)
                 ;
         
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();
     }
 }
