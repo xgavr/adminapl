@@ -278,7 +278,7 @@ class OtRepository extends EntityRepository{
 
         $queryBuilder->select('m')
             ->from(Movement::class, 'm')
-            ->join('m.docId', 's', 'WITH', 'm.docType = :docType')
+            ->join(St::class, 's', 'WITH', 'm.docId = s.id and m.docType = :docType')
             ->setParameter('docType', Movement::DOC_ST)    
             ->where('m.status = ?1')
             ->setParameter('1', Movement::STATUS_ACTIVE)
@@ -291,6 +291,7 @@ class OtRepository extends EntityRepository{
             ->setParameter('5', St::WRITE_PAY)
                 ;
         
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();
     }
 }
