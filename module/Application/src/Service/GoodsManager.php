@@ -1049,4 +1049,44 @@ class GoodsManager
         
         return;
     }
+    
+    /**
+     * Инфо для Апл
+     * @param Goods $good
+     * @return array
+     */
+    public function goodForApl($good)
+    {
+        $rawprices = $this->entityManager->getRepository(Goods::class)
+                ->rawpriceArticles($good);
+        
+        $sups = [];
+        $prices = [];
+        foreach ($rawprices as $rawprice){
+            $sups[$rawprice->getRaw()->getSupplier()->getId()] = $rawprice->getRaw()->getSupplier()->getAplId();
+            $prices[] = [
+                'price' => $rawprice->getRealPrice(),
+                'name' => $rawprice->getRaw()->getSupplier()->getAplId(),
+                'created' => $rawprice->getRaw()->getDateCreated(),
+                'type' => $rawprice->getIid(),
+                'producer' => $rawprice->getProducer(),
+                'rawdata' => $rawprice->getRawdata(),
+                'article' => $rawprice->getArticle(),
+                'rest' => $rawprice->getRealRest(),
+                'lot' => $rawprice->getLot(),
+                'goodname' => $rawprice->getGoodname(),
+            ];
+        }
+        
+        $result = [
+            'g5' => [
+                'bestname' => $good->getName(),
+                'shortname' => $good->getNameShort(),
+            ],
+            'sups' => array_values($sups),
+            'prices' => $prices,
+        ];
+        
+        return $result;
+    }
 }

@@ -289,6 +289,7 @@ class OtRepository extends EntityRepository{
             ->andWhere('s.writeOff = ?4 or s.writeOff = ?5')    
             ->setParameter('4', St::WRITE_COST)
             ->setParameter('5', St::WRITE_PAY)
+            ->orderBy('m.dateOper', 'DESC')    
             ->setMaxResults(1)    
                 ;
         

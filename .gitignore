@@ -35,3 +35,5 @@ phpunit.xml
 /data/template/.~lock.torg12.xls#
 /config/autoload/bankapi.local._server.php
 /data/reports/
+/config/autoload/global-development.php
+/data/DoctrineORMModule/

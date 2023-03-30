@@ -3,6 +3,7 @@
 use Laminas\Mvc\Application;
 use Laminas\Stdlib\ArrayUtils;
 
+
 /**
  * This makes our life easier when dealing with paths. Everything is relative
  * to the application root now.
@@ -36,5 +37,6 @@ if (file_exists(__DIR__ . '/../config/development.config.php')) {
     $appConfig = ArrayUtils::merge($appConfig, require __DIR__ . '/../config/development.config.php');
 }
 
+//var_dump($appConfig);
 // Run the application!
 Application::init($appConfig)->run();

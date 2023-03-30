@@ -11,6 +11,8 @@
  * This should be an array of module namespaces used in the application.
  */
 return [
+    'Laminas\Mvc\I18n',
+    'Laminas\Db',
     'Laminas\ZendFrameworkBridge',
     'Laminas\Log',
     'Laminas\Mail',
@@ -33,6 +35,20 @@ return [
     'DoctrineORMModule',
     'MvlabsPHPExcel',
     'Laminas\DeveloperTools',
+    'Laminas\ApiTools\Versioning',
+    'Laminas\ApiTools\ApiProblem',
+    'Laminas\ApiTools\ContentNegotiation',
+    'Laminas\ApiTools\Rpc',
+    'Laminas\ApiTools\MvcAuth',
+    'Laminas\ApiTools\Hal',
+    'Laminas\ApiTools\Rest',
+    'Laminas\ApiTools\ContentValidation',
+    'Laminas\ApiTools',
+    'Laminas\ApiTools\Provider',
+    'Laminas\ApiTools\OAuth2',
+    'Laminas\DevelopmentMode',
+    'Laminas\ApiTools\Configuration',
+    'Laminas\ApiTools\Admin',
     'Admin',
     'Company',
     'User',
@@ -43,4 +59,5 @@ return [
     'ApiMarketPlace',
     'ApiSupplier',
     'Cash',
+    'Api',
 ];

@@ -53,7 +53,7 @@
         "laminas/laminas-mvc-plugin-identity": "^1.1",
         "laminas/laminas-mvc-plugin-prg": "^1.2",
         "laminas/laminas-mvc-plugins": "^1.0",
-        "laminas/laminas-development-mode": "^3.2",
+        "laminas/laminas-development-mode": "~2.0",
         "hflabs/dadata": "^20.7",
         "bukashk0zzz/yml-generator": "dev-master",
         "alexmg86/laravel-goodsru": "^1.1",
@@ -65,7 +65,8 @@
         "symfony/http-client": "^4.4",
         "nyholm/psr7": "^1.5",
         "laminas/laminas-soap": "^2.8",
-        "lee-to/php-tochka-api-v2-sdk": "^1.0"
+        "lee-to/php-tochka-api-v2-sdk": "^1.0",
+        "laminas-api-tools/api-tools": "~1.0"
     },
     "autoload": {
         "psr-4": {
@@ -78,7 +79,8 @@
             "Stock\\": "module/Stock/src/",
             "ApiMarketPlace\\": "module/ApiMarketPlace/src/",
             "ApiSupplier\\": "module/ApiSupplier/src/",
-            "Cash\\": "module/Cash/src/"
+            "Cash\\": "module/Cash/src/",
+            "Api\\": "module/Api/src/"
         }
     },
     "autoload-dev": {
@@ -105,7 +107,8 @@
         "test": "phpunit"
     },
     "require-dev": {
-        "laminas/laminas-developer-tools": "^1.1"
+        "laminas/laminas-developer-tools": "^1.1",
+        "laminas-api-tools/api-tools-admin": "~1.0"
     },
     "config": {
         "allow-plugins": {
