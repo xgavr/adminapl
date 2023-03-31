@@ -333,6 +333,9 @@ class PaymentManager
                 if ($data['status'] == 'Created'){
                     $payment->setStatus(Payment::STATUS_SUCCESS);
                 }
+                if ($data['status'] == 'WaitingForCreate'){
+                    $payment->setStatus(Payment::STATUS_SUCCESS);
+                }
                 if (count($data['errors'])){
                     $payment->setStatus(Payment::STATUS_ERROR);
                     if (!empty($result['errors'])){
