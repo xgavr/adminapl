@@ -1065,7 +1065,7 @@ class GoodsManager
         foreach ($rawprices as $rawprice){
             $sups[$rawprice->getRaw()->getSupplier()->getId()] = $rawprice->getRaw()->getSupplier()->getAplId();
             $prices[] = [
-                'price' => $rawprice->getRealPrice(),
+                'price' => round($rawprice->getRealPrice(), 2),
                 'name' => $rawprice->getRaw()->getSupplier()->getAplId(),
                 'created' => $rawprice->getRaw()->getDateCreated(),
                 'type' => $rawprice->getIid(),

@@ -770,7 +770,7 @@ class Rawprice {
     public function getRealPrice() 
     {
         $filter = new ToFloat();
-        return round($filter->filter($this->price), 2);
+        return $filter->filter($this->price);
     }
 
     public function setPrice($price) 
