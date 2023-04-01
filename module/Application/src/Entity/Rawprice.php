@@ -934,7 +934,7 @@ class Rawprice {
     {
         if ($this->comment){
             $filter = new Digits();
-            return (int) $filter->filter($this->comment);
+            return number_format((int) $filter->filter($this->comment), 0, '', '');
         }
         return $this->comment;
     }
@@ -976,6 +976,15 @@ class Rawprice {
 
     public function getSale() 
     {
+        return $this->sale;
+    }
+
+    public function getAplReserve() 
+    {
+        if ($this->sale){
+            $filter = new ToFloat();
+            return $filter->filter($this->sale);            
+        }
         return $this->sale;
     }
 
