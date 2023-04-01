@@ -16,6 +16,7 @@ use Doctrine\Common\Collections\Criteria;
 use Application\Entity\Token;
 use Application\Filter\ProducerName;
 use Application\Filter\ToFloat;
+use Laminas\Filter\Digits;
 
 /**
  * Description of Customer
@@ -926,6 +927,15 @@ class Rawprice {
 
     public function getComment() 
     {
+        return $this->comment;
+    }
+
+    public function getAplOrderId() 
+    {
+        if ($this->comment){
+            $filter = new Digits();
+            return (int) $filter->filter($this->comment);
+        }
         return $this->comment;
     }
 

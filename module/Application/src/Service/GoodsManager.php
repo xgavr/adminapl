@@ -1075,6 +1075,8 @@ class GoodsManager
                 'rest' => $rawprice->getRealRest(),
                 'lot' => $rawprice->getLot(),
                 'goodname' => $rawprice->getGoodname(),
+                'reserve' => $rawprice->getSale(),
+                'comment' => $rawprice->getAplOrderId(),
             ];
         }
         

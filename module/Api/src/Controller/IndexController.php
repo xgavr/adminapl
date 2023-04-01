@@ -33,7 +33,6 @@ class IndexController extends AbstractActionController
     
     public function indexAction()
     {
-        //$this->layout()->setTemplate('layout/layout_api_tools');
         if (class_exists(AdminModule::class, false)) {
             return $this->redirect()->toRoute('api-tools/ui');
         }
