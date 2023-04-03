@@ -520,7 +520,7 @@
                     });                    
                 },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>' && row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>' && row.status == <?= Vtp::STATUS_ACTIVE?>;
+                    return row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>' && row.status == <?= Vtp::STATUS_ACTIVE?>;
                 }                
             }, 
             statusActiv: {
@@ -549,7 +549,7 @@
                   return row.status == <?= Vtp::STATUS_RETIRED?>;
                 },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>';
+                    return row.docDate > '<?= $allowDate?>' || row.status != <?= Vtp::STATUS_ACTIVE?> || row.statusDoc != <?= Vtp::STATUS_DOC_NOT_RECD?>;
                 }                
             }, 
             statusRetired: {
