@@ -279,8 +279,8 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getSettings();
         
         if ($settings['hello_check'] == 1){
-            $this->helloManager->checkingMail();
             $this->billManager->billsByMail();
+            $this->helloManager->checkingMail();
         }    
         return new JsonModel(
             ['ok']

@@ -67,9 +67,6 @@ class HelloManager {
         
     public function checkingMail()
     {
-        set_time_limit(300);
-        $startTime = time();
-        
         $settings = $this->adminManager->getSettings();
         
         $box = [
@@ -80,7 +77,7 @@ class HelloManager {
             'leave_message' => false,
         ];
         
-        $mail = $this->postManager->readImap($box);
+        $this->postManager->readImap($box);
         
         return;
     }

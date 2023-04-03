@@ -363,7 +363,7 @@ class VtpController extends AbstractActionController
                 $data['status'] = $vtp->getStatus();
                 $data['statusDoc'] = $vtp->getStatusDoc();
                 $data['vtpType'] = $vtp->getVtpType();
-                $notDisabled = $vtp->getDocDate() > $this->vtpManager->getAllowDate();
+                $notDisabled = $vtp->getDocDate() > $this->vtpManager->getAllowDate() && $vtp->getStatus() == Vtp::STATUS_ACTIVE && $vtp->getStatusDoc() == Vtp::STATUS_DOC_NOT_RECD;
             }    
             $form->setData($data);
         }
