@@ -747,7 +747,7 @@ class PostManager {
                                     if (!in_array($trash, $boxes)){
                                         continue;
                                     }                                        
-                                    //$move = imap_mail_move($connection, (string) $msgNumber, mb_convert_encoding($trash, 'UTF7-IMAP', 'UTF-8'));
+                                    $move = imap_mail_move($connection, (string) $msgNumber, mb_convert_encoding($trash, 'UTF7-IMAP', 'UTF-8'));
                                 }    
                                 if (!$move){
                                     //imap_delete($connection, $msgNumber);                                
