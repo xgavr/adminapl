@@ -596,6 +596,7 @@ class PostManager {
                         $messageNumber = 1;
                         $msgNumbers = [];
                         
+//                        var_dump($imap_obj->Nmsgs);
                         while ($messageNumber <= $imap_obj->Nmsgs){
 
                             $msgNumbers[] = $messageNumber;
@@ -734,22 +735,22 @@ class PostManager {
 
                             $messageNumber++;
 
-                            if ($messageNumber > 5) {
+                            if ($messageNumber > 150) {
                                 break;
                             }
                         }
                         
-                        foreach ($msgNumbers as $msgNumer){
+                        foreach ($msgNumbers as $msgNumber){
                             if (!$params['leave_message']){
                                 $move = false;
                                 foreach ($params['trash'] as $trash){      
                                     if (!in_array($trash, $boxes)){
                                         continue;
                                     }                                        
-                                    $move = imap_mail_move($connection, (string) $msgNumer, mb_convert_encoding($trash, 'UTF7-IMAP', 'UTF-8'));
+                                    //$move = imap_mail_move($connection, (string) $msgNumber, mb_convert_encoding($trash, 'UTF7-IMAP', 'UTF-8'));
                                 }    
                                 if (!$move){
-                                    //imap_delete($connection, $msgNumer);                                
+                                    //imap_delete($connection, $msgNumber);                                
                                 }    
                             }                                            
                         }

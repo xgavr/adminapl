@@ -72,7 +72,7 @@ class GoodAplResource extends AbstractResourceListener
                 return $this->goodManager->goodForApl($good);                
             }
         }        
-        return new ApiProblem(404, 'Товар с кодом '.$id.'не найден');        
+        return new ApiProblem(404, 'Товар с кодом '.$id.' не найден');        
     }
 
     /**
