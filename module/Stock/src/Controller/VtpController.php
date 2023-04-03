@@ -53,7 +53,7 @@ class VtpController extends AbstractActionController
             'offices' => $offices,
             'years' => array_combine(range(date("Y"), 2014), range(date("Y"), 2014)),
             'monthes' => array_combine(range(1, 12), range(1, 12)),
-            'allowDate' => $this->vtpManager->getAllowDate(),
+            'allowDate' => date('Y-m-d', strtotime($this->vtpManager->getAllowDate().' + 1 day')),
         ]);  
     }
         

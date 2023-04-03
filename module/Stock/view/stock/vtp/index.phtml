@@ -549,7 +549,7 @@
                   return row.status == <?= Vtp::STATUS_RETIRED?>;
                 },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>' || row.status != <?= Vtp::STATUS_ACTIVE?> || row.statusDoc != <?= Vtp::STATUS_DOC_NOT_RECD?>;
+                    return row.docDate > '<?= $allowDate?>';
                 }                
             }, 
             statusRetired: {
@@ -563,7 +563,7 @@
                   return row.status == <?= Vtp::STATUS_ACTIVE?>;
                 },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>';
+                    return row.docDate > '<?= $allowDate?>' || row.status != <?= Vtp::STATUS_ACTIVE?> || row.statusDoc != <?= Vtp::STATUS_DOC_NOT_RECD?>;
                 }                
             },
             repostEx: {
