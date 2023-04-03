@@ -335,6 +335,10 @@ class VtpManager
         if ($vtp->getDocDate() > $this->allowDate || $vtp->getStatus() != Vtp::STATUS_ACTIVE || $vtp->getStatusDoc() != Vtp::STATUS_DOC_NOT_RECD){
             $vtp->setStatus($status);
             $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
+            
+            if ($vtp->getDocDate() < $this->getAllowDate() && $status == Vtp::STATUS_RETIRED){
+                $vtp->setDocDate(date('Y-m-d', strtotime($this->getAllowDate().' + 1 day')));
+            }
 
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);
