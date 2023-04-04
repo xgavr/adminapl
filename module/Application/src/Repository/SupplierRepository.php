@@ -436,6 +436,6 @@ class SupplierRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         
         return $entityManager->getRepository(GoodSupplier::class)
-                ->count(['good' => $good->getId(), 'supplier' => 7, 'update' => date('Y-m-d')]);
+                ->findOneBy(['good' => $good->getId(), 'supplier' => 7, 'update' => date('Y-m-d')]);
     }
 }
