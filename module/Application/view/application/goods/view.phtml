@@ -196,11 +196,11 @@
                             <?php endforeach;?>
                         </select>
                         <button value="/goods/good-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
-                                title="Обновить номера">
+                                title="Обновить номера" data-table="oemTable">
                             <span class="glyphicon glyphicon-refresh" ></span>
                         </button>                             
                         <button value="/apl/ex-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
-                                title="Обновить в АПЛ">
+                                title="Обновить в АПЛ" data-table="oemTable">
                             <span class="glyphicon glyphicon-export" ></span>
                         </button>
                     </div>
@@ -527,9 +527,6 @@
             $('#priceTable').bootstrapTable('refresh');
         })
         $('#oemSourceSelect').change(function (){
-            $('#oemTable').bootstrapTable('refresh');
-        })
-        $('.refresh-oem-table').change(function (){
             $('#oemTable').bootstrapTable('refresh');
         })
         $('select[name="office"]').change(function (){

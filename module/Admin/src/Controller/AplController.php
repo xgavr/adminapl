@@ -473,8 +473,8 @@ class AplController extends AbstractActionController
         $this->aplService->sendGoodOem($good);
         
         return new JsonModel([
-            'oke'
-        ]);
+            'result' => 'ok',
+        ]);           
     }
     
     public function updateGoodOemAction()
