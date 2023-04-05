@@ -23,7 +23,10 @@
                 <div id="toolbar">
                     <div class="form-inline" role="form">
                         <div class="form-group">
-                            <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск по ИНН,Контрагенту,Назначению,Сумме">
+                            <div class="btn-group">
+                                <input name="search" style="width: 400px" class="form-control enter-search" type="text" onfocus="this.select();" placeholder="Поиск по ИНН,Контрагенту,Назначению,Сумме">
+                                <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                            </div>
                         </div>
                         <button id="ok" type="submit" class="btn btn-default">OK</button>
                         <div class="form-group">
@@ -40,7 +43,7 @@
                     data-page-list="[5, 10, 20, 50]"
                     data-toolbar="#toolbar"
                     data-show-refresh="true"
-                    data-show-toggle="true"
+                    data-show-toggle="false"
                     data-show-export="true"
                     data-query-params="statementQueryParams"
                     data-response-handler="responseHandler"
@@ -75,7 +78,7 @@
                     data-page-list="[5, 10, 20, 50]"
                     data-toolbar="#toolbar_balance"
                     data-show-refresh="true"
-                    data-show-toggle="true"
+                    data-show-toggle="false"
                     data-query-params="balanceQueryParams"
                     data-response-handler="responseHandler"
                     data-classes = "table table-bordered table-hover table-condensed"
@@ -106,7 +109,10 @@
                             <span class="glyphicon glyphicon-check" ></span>
                         </button>                         
                         <div class="form-group">
-                            <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Карта, rrn, заказ">
+                            <div class="btn-group">
+                                <input name="search" style="width: 200px" class="form-control enter-search" type="text" onfocus="this.select();" placeholder="Карта, rrn, заказ">
+                                <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                            </div>
                         </div>
                         <button id="okAcquiring" type="submit" class="btn btn-default">OK</button>
                         <div class="form-group">
@@ -160,7 +166,10 @@
                             <span class="glyphicon glyphicon-check" ></span>
                         </button>                         
                         <div class="form-group">
-                            <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Карта, rrn, заказ">
+                            <div class="btn-group">
+                                <input name="search" style="width: 200px" class="form-control enter-search" type="text" onfocus="this.select();" placeholder="Карта, rrn, заказ">
+                                <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                            </div>
                         </div>
                         <button id="okAplPayment" type="submit" class="btn btn-default">OK</button>
                         <div class="form-group">
@@ -177,7 +186,7 @@
                     data-page-list="[5, 10, 20, 50]"
                     data-toolbar="#toolbar_apl"
                     data-show-refresh="true"
-                    data-show-toggle="true"
+                    data-show-toggle="false"
                     data-query-params="aplQueryParams"
                     data-response-handler="responseHandler"
                     >
@@ -251,38 +260,50 @@
         $(this).tab('show');
     });
 
+    var $table = $('#table'),
+        $ok = $('#ok'), 
+        $okStatementDate = $('#okStatementDate'),
+        $okAcquiring = $('#okAcquiring'), 
+        $okAcquiringDate = $('#okAcquiringDate'),
+        $okAplPayment = $('#okAplPayment'), 
+        $okAplPaymentDate = $('#okAplPaymentDate');
+
     function refreshTable(){
-        $('#table').bootstrapTable('refresh');
+        $table.bootstrapTable('refresh');
         $('#table_balance').bootstrapTable('refresh');
         $('#table_acquiring').bootstrapTable('refresh');
         $('#table_apl').bootstrapTable('refresh');
     }
 
-    var table = $('#table'),
-        ok = $('#ok'), 
-        okStatementDate = $('#okStatementDate'),
-        okAcquiring = $('#okAcquiring'), 
-        okAcquiringDate = $('#okAcquiringDate'),
-        okAplPayment = $('#okAplPayment'), 
-        okAplPaymentDate = $('#okAplPaymentDate');
 
     $(function () {
-        ok.click(function () {
-            table.bootstrapTable('refresh');
+        $(".inputclear").click(function(){
+            if ($(".enter-search").val()){
+                $(".enter-search").val('');
+                refreshTable();
+            }    
         });
-        okStatementDate.click(function () {
-            table.bootstrapTable('refresh');
+
+        $('input[name="date"]').change(function (){
+            refreshTable();
         });
-        okAcquiring.click(function () {
+
+        $ok.click(function () {
+            $table.bootstrapTable('refresh');
+        });
+        $okStatementDate.click(function () {
+            $table.bootstrapTable('refresh');
+        });
+        $okAcquiring.click(function () {
             $('#table_acquiring').bootstrapTable('refresh');
         });
-        okAcquiringDate.click(function () {
+        $okAcquiringDate.click(function () {
             $('#table_acquiring').bootstrapTable('refresh');
         });
-        okAplPayment.click(function () {
+        $okAplPayment.click(function () {
             $('#table_apl').bootstrapTable('refresh');
         });
-        okAplPaymentDate.click(function () {
+        $okAplPaymentDate.click(function () {
             $('#table_apl').bootstrapTable('refresh');
         });
     });
@@ -514,18 +535,19 @@
         btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
         btn += '</button>';
         
-        var urlDelete = '/bank/delete-apl-payment-status/'+row.id;
-        btnDelete = '<button';
-        btnDelete += ' type="button"';
-        btnDelete += ' class="btn btn-danger btn-xs this-delete"';
-        btnDelete += ' aria-label="Left Align"'; 
-        btnDelete += ' title="Удалить"'; 
-        btnDelete += ' onclick="tableRowDelete(\''+urlDelete+'\', \'table_apl\')">';
-        btnDelete += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-        btnDelete += '</button>';
+        return btn;
         
-        
-        return btn+' '+btnDelete;
+//        var urlDelete = '/bank/delete-apl-payment-status/'+row.id;
+//        btnDelete = '<button';
+//        btnDelete += ' type="button"';
+//        btnDelete += ' class="btn btn-danger btn-xs this-delete"';
+//        btnDelete += ' aria-label="Left Align"'; 
+//        btnDelete += ' title="Удалить"'; 
+//        btnDelete += ' onclick="tableRowDelete(\''+urlDelete+'\', \'table_apl\')">';
+//        btnDelete += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+//        btnDelete += '</button>';
+//                
+//        return btn+' '+btnDelete;
     }    
     
     function statusFormatter(value, row){
