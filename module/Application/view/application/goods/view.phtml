@@ -210,6 +210,7 @@
                     data-response-handler="responseHandler"
                     data-row-style="oeRowStyle"
                     data-classes = "table table-bordered table-hover table-condensed"
+                    data-silent-sort ="true"
                     >
                     <thead>
                         <tr>
@@ -274,6 +275,7 @@
                     data-response-handler="responseHandler"
                     data-row-style="movementRowStyle"
                     data-classes = "table table-bordered table-hover table-condensed"
+                    data-silent-sort ="true"
                     >
                     <thead>
                         <tr>
@@ -296,6 +298,7 @@
                 </div>
                 <table id="balanceTable" 
                     data-toggle="table" 
+                    data-url ="/goods/balance/<?= $goods->getId()?>"
                     data-side-pagination="server"
                     data-cookie="false"
                     data-cookie-id-table="balanceSaveId"
@@ -308,6 +311,9 @@
                     data-response-handler="responseHandler"
                     data-row-style="movementRowStyle"
                     data-classes = "table table-bordered table-hover table-condensed"
+                    data-auto-refresh ="true"
+                    data-auto-refresh-interval="20"
+                    data-show-auto-refresh="false"
                     >
                     <thead>
                         <tr>
@@ -334,6 +340,7 @@
                     data-query-params="linkedQueryParams"
                     data-response-handler="responseHandler"
                     data-classes = "table table-bordered table-hover table-condensed"
+                    data-silent-sort ="true"
                     >
                     <thead>
                         <tr>
@@ -375,6 +382,7 @@
                     data-query-params="priceQueryParams"
                     data-response-handler="responseHandler"
                     data-classes = "table table-bordered table-hover table-condensed"
+                    data-silent-sort ="true"
                     >
                     <thead>
                         <tr>
@@ -414,6 +422,7 @@
                     data-response-handler="responseHandler"
                     data-show-header="false"
                     data-classes = "table table-bordered table-hover"
+                    data-silent-sort ="true"
                     >
                     <thead>
                         <tr>
@@ -517,7 +526,7 @@
             $('#movementTable').bootstrapTable('refresh');
         })
         $('#monthSelect').change(function (){
-            $('#movementTable').bootstrapTable('refresh');
+            $('#movementTable').bootstrapTable('refresh', {silent: true});
         })
     });
 
@@ -587,7 +596,7 @@
     var movementTable = $('#movementTable').bootstrapTable({
         onLoadSuccess: function(res){
             $('#movementBadge').html($('#movementTable').bootstrapTable('getOptions').totalRows);
-            $('#balanceTable').bootstrapTable('refreshOptions', {url: "/goods/balance/<?= $goods->getId()?>"});
+//            $('#balanceTable').bootstrapTable('refreshOptions', {url: "/goods/balance/<?= $goods->getId()?>", silent: true});
         }
     });
 
