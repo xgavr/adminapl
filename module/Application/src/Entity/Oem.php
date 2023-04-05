@@ -294,6 +294,34 @@ class Oem {
     }    
     
     /**
+     * Returns possible apl cpub as array.
+     * @return array
+     */
+    public static function getAplCpubList() 
+    {
+        return [
+            self::SOURCE_TD => 0,
+            self::SOURCE_SUP => 0,
+            self::SOURCE_MAN => 1,
+            self::SOURCE_CROSS => 1,
+            self::SOURCE_INTERSECT => 0,
+        ];
+    }    
+    
+    /**
+     * Returns apl cpub as string.
+     * @return string
+     */
+    public function getAplCpubAsString()
+    {
+        $list = self::getAplCpubList();
+        if (isset($list[$this->source]))
+            return $list[$this->source];
+        
+        return 0;
+    }    
+
+    /**
      * Sets source.
      * @param int $source     
      */

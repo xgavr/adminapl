@@ -1707,6 +1707,7 @@ class AplService {
                     'desc'      => $oem->getTransferBrandName(),
                     'sf'        => $oem->getSourceAsString(),
                     'publish'   => $oem->getAplPublish(),
+                    'cpub'      => $oem->getAplCpubAsString(),
                 ]; 
             }
 //            var_dump($post); exit;
