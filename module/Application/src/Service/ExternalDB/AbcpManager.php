@@ -466,7 +466,7 @@ class AbcpManager
             }
             
             $oemsQuery = $this->entityManager->getRepository(\Application\Entity\Goods::class)
-                    ->findOems($good, ['limit' => 10, 'source' => \Application\Entity\Oem::SOURCE_SUP]);
+                    ->findOems($good->getId(), ['limit' => 10, 'source' => \Application\Entity\Oem::SOURCE_SUP]);
             $oems = $oemsQuery->getResult();
             
             foreach ($oems as $oem){

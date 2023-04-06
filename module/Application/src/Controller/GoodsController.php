@@ -803,7 +803,7 @@ class GoodsController extends AbstractActionController
         }        
         
         $query = $this->entityManager->getRepository(Goods::class)
-                        ->findOems($goods, ['q' => $search, 'source' => $source]);
+                        ->findOems($goods->getId(), ['q' => $search, 'source' => $source]);
 
         $total = count($query->getResult(2));
         
@@ -1262,8 +1262,6 @@ class GoodsController extends AbstractActionController
 
     public function goodOemAction()
     {
-        set_time_limit(90);
-        
         $goodsId = $this->params()->fromRoute('id', -1);
         
         $goods = $this->entityManager->getRepository(Goods::class)
@@ -1273,7 +1271,27 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
 
-        $this->externalManager->addOemsToGood($goods);
+        $this->externalManager->addOemsToGood($goods->getId());
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                   
+    }
+
+    public function goodOemIntersectAction()
+    {
+        $goodsId = $this->params()->fromRoute('id', -1);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodsId);        
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->entityManager->getRepository(Oem::class)
+                        ->addIntersectGood($goods);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([

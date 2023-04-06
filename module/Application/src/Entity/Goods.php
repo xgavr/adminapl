@@ -40,6 +40,7 @@ class Goods {
     const GROUP_FOR_UPDATE = 1; // группы не обновлялись
 
     const OEM_UPDATED = 2; // номера обновлены
+    const OEM_INTERSECT = 3; // пересечения обновлены
     const OEM_FOR_UPDATE = 1; // номера не обновлялись
 
     const RAWPRICE_EX_NEW            = 1; // не передано
@@ -925,7 +926,8 @@ class Goods {
     public function getStyleListStatusOem()
     {
         return [
-            self::OEM_FOR_UPDATE => '',
+            self::OEM_FOR_UPDATE => 'alert-warning',
+            self::OEM_INTERSECT => 'alert-info',
             self::OEM_UPDATED => 'alert-success',
         ];
     }

@@ -487,7 +487,7 @@ class ZetasoftManager
             }
             
             $oemsQuery = $this->entityManager->getRepository(Goods::class)
-                    ->findOems($good, ['limit' => 10, 'source' => Oem::SOURCE_SUP]);
+                    ->findOems($good->getId(), ['limit' => 10, 'source' => Oem::SOURCE_SUP]);
             $oems = $oemsQuery->getResult();
             
             foreach ($oems as $oem){

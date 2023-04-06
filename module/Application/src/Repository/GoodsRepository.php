@@ -1062,17 +1062,38 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g')
+        $queryBuilder->select('g.id as goodId')
             ->from(Goods::class, 'g')
             ->where('g.statusOem = ?1')
             ->setParameter('1', Goods::OEM_FOR_UPDATE) 
 //            ->orderBy('g.id')
-            ->setMaxResults(10000)    
+            ->setMaxResults(50000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
     }
     
+    /**
+     * Найти товары для обновления пересечений номеров
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateOemIntersect()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->where('g.statusOem = ?1')
+            ->setParameter('1', Goods::OEM_INTERSECT) 
+//            ->orderBy('g.id')
+            ->setMaxResults(50000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();            
+    }
+
     /**
      * Найти товары для обновления картинок по апи текдока
      * 
@@ -1291,10 +1312,10 @@ class GoodsRepository extends EntityRepository
     /**
      * Найти номера для добавления
      * 
-     * @param Goods $good
+     * @param integer $goodId
      * @return array
      */
-    public function findOemRaw($good)
+    public function findOemRaw($goodId)
     {
         $entityManager = $this->getEntityManager();
 
@@ -1305,7 +1326,7 @@ class GoodsRepository extends EntityRepository
             ->join(OemRaw::class, 'o', 'WITH', 'o.article = a.id')    
             ->where('g.id = ?1')
             ->andWhere('o.code != ?2')    
-            ->setParameter('1', $good->getId())
+            ->setParameter('1', $goodId)
             ->setParameter('2', OemRaw::LONG_CODE)    
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -1315,11 +1336,11 @@ class GoodsRepository extends EntityRepository
     /**
      * Найти номера товара
      * 
-     * @param Goods $good
+     * @param integer $goodId
      * @param array $params
      * @return Query
      */
-    public function findOems($good, $params = null)
+    public function findOems($goodId, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -1328,7 +1349,7 @@ class GoodsRepository extends EntityRepository
             ->from(Oem::class, 'o')
             ->where('o.good = ?1')
             ->andWhere('o.source != ?2')    
-            ->setParameter('1', $good->getId())
+            ->setParameter('1', $goodId)
             ->setParameter('2', Oem::SOURCE_MY_CODE)    
             ;
         
@@ -1606,16 +1627,13 @@ class GoodsRepository extends EntityRepository
      * Добавление номера к товару
      * 
      * @param array $data
-     * @param integer $statusOemEx
      * @return integer
      */
-    public function addGoodOem($data, $statusOemEx = 0)
+    public function addGoodOem($data)
     {
         try{
             $inserted = $this->getEntityManager()->getConnection()->insert('oem', $data);
-            if ($statusOemEx != Goods::ATTR_EX_NEW){
-                $this->updateGoodId($data['good_id'], ['status_oem_ex' => Goods::OEM_EX_NEW]);
-            }    
+            $this->updateGoodId($data['good_id'], ['status_oem_ex' => Goods::OEM_EX_NEW]);
         } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $exx){
             $inserted = 0;
         }    
@@ -1660,13 +1678,13 @@ class GoodsRepository extends EntityRepository
     /**
      * Удаления oem товара по источнику
      * 
-     * @param Goods $good
+     * @param integer $goodId
      * @param integer $source
      * @return integer
      */
-    public function removeGoodSourceOem($good, $source)
+    public function removeGoodSourceOem($goodId, $source)
     {
-        $this->deleteGoodOem($good->getId(), $source);
+        $this->deleteGoodOem($goodId, $source);
         return;        
     }
 

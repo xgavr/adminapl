@@ -29,6 +29,7 @@ use Stock\Entity\PtuGood;
 use Stock\Entity\OtGood;
 use Stock\Entity\GoodBalance;
 use Admin\Entity\Log;
+use Application\Entity\Oem;
 
 /**
  * Description of GoodsService
@@ -256,7 +257,7 @@ class GoodsManager
             return false;
         }
         
-        if (!$this->entityManager->getRepository(\Application\Entity\Oem::class)
+        if (!$this->entityManager->getRepository(Oem::class)
                 ->removeAllGoodOem($good)){
             return false;
         }
@@ -277,8 +278,8 @@ class GoodsManager
                 ->removeGoodTitles($good);
         
                 
-        $this->entityManager->getRepository(\Application\Entity\Oem::class)
-                ->removeIntersectOem($good);
+        $this->entityManager->getRepository(Oem::class)
+                ->removeIntersectOem($good->getId());
         
         $this->entityManager->getConnection()->delete('good_supplier', ['good_id' => $good->getId()]);
         
@@ -384,7 +385,7 @@ class GoodsManager
      */
     public function updateOemTd()
     {        
-        ini_set('memory_limit', '8192M');
+        ini_set('memory_limit', '4096M');
         set_time_limit(900);
         $startTime = time();
         $finishTime = $startTime + 840;
@@ -396,9 +397,44 @@ class GoodsManager
         $iterable = $goodsForUpdate->iterate();
 
         foreach($iterable as $item){
+            foreach ($item as $goodId){
+                $this->externalManager->addOemsToGood($goodId);
+            }
+            $i++;
+            if (time() >= $finishTime){
+                return;
+            }
+        }
+        
+//        if ($i == 0){
+//            $this->entityManager->getRepository(Goods::class)
+//                    ->resetUpdateOemTd();
+//            return;
+//        }
+        
+        return;
+    }
+
+    /**
+     * Обновить пересечения номеров у товаров
+     */
+    public function updateOemIntersect()
+    {        
+        ini_set('memory_limit', '4096M');
+        set_time_limit(900);
+        $startTime = time();
+        $finishTime = $startTime + 840;
+        
+        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateOemIntersect();
+        $i = 0;
+
+        $iterable = $goodsForUpdate->iterate();
+
+        foreach($iterable as $item){
             foreach ($item as $good){
-                $this->externalManager->addOemsToGood($good);
-                $this->entityManager->detach($good);
+                $this->entityManager->getRepository(Oem::class)
+                        ->addIntersectGood($good);
             }
             $i++;
             if (time() >= $finishTime){
@@ -1024,7 +1060,7 @@ class GoodsManager
         foreach ($iterable as $row){
             foreach ($row as $good){
 //                var_dump($good); exit;
-                $this->entityManager->getRepository(\Application\Entity\Oem::class)
+                $this->entityManager->getRepository(Oem::class)
                         ->addMyCodeAsOe($good);
                 
                 $this->entityManager->detach($good);

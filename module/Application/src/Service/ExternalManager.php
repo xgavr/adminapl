@@ -837,12 +837,15 @@ class ExternalManager
     /**
      * Добавление номеров к товару
      * 
-     * @param Goods $good
+     * @param integer $goodId
      */
-    public function addOemsToGood($good)
+    public function addOemsToGood($goodId)
     {
         $notSimilar = true;
         $change = false;
+        
+        $good = $this->entityManager->getRepository(Goods::clas)
+                ->find($goodId);
         try{
             $info = $this->zetasoftManager->getDirectInfo($good);
             if (!is_array($info)){
@@ -856,9 +859,9 @@ class ExternalManager
 
             if ($change || !$notSimilar){
                 $this->entityManager->getRepository(Goods::class)
-                        ->removeGoodSourceOem($good, Oem::SOURCE_TD);
+                        ->removeGoodSourceOem($goodId, Oem::SOURCE_TD);
                 $this->entityManager->getRepository(Oem::class)
-                        ->removeIntersectOem($good);            
+                        ->removeIntersectOem($goodId);            
             }
         } catch (\Exception $ex){
             $info = null;
@@ -872,7 +875,7 @@ class ExternalManager
         if (is_array($info) && $notSimilar){
             if (!$change){
                 $oemCount = $this->entityManager->getRepository(Oem::class)
-                        ->count(['good' => $good->getId(), 'source' => Oem::SOURCE_TD]);
+                        ->count(['good' => $goodId, 'source' => Oem::SOURCE_TD]);
                 $change = $oemCount === 0;
             }
             
@@ -880,7 +883,7 @@ class ExternalManager
                 if (isset($info['crossCodes'])){
                     foreach ($info['crossCodes'] as $oen){
                         $this->entityManager->getRepository(Oem::class)
-                                ->addOemToGood($good, [
+                                ->addOemToGood($good->getId(), [
                                     'oeNumber' => $oen['vendorCode'],
                                     'brandName' => $oen['vendorName'],
                                 ], Oem::SOURCE_TD);
@@ -889,7 +892,7 @@ class ExternalManager
             }
         }
         
-        $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
+        $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_INTERSECT], ['id' => $goodId]);
         
         return;
     }

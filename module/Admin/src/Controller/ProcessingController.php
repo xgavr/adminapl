@@ -1739,8 +1739,25 @@ class ProcessingController extends AbstractActionController
                 
         return new JsonModel(
             ['ok']
-        );
-        
+        );        
+    }
+    
+    /**
+     * Обновление пересечений номеров
+     * @return JsonModel
+     */
+    public function updateOemIntersectAction()
+    {
+        $settings = $this->adminManager->getTdExchangeSettings();
+
+        if ($settings['update_oe'] == 1){
+
+            $this->goodsManager->updateOemIntersect();            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
     }
     
     /**

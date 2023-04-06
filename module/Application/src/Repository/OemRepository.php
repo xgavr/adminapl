@@ -60,15 +60,15 @@ class OemRepository  extends EntityRepository{
     /**
      * Добавление номера к товару
      * 
-     * @param Goods $good
+     * @param integer $goodId
      * @param array $oems
      */
-    public function addOemToGood($good, $oems, $source = Oem::SOURCE_TD)
+    public function addOemToGood($goodId, $oems, $source = Oem::SOURCE_TD)
     {
         $filter = new ArticleCode();
         $oe = $filter->filter($oems['oeNumber']);
         $oem = $this->getEntityManager()->getRepository(Oem::class)
-                ->findOneBy(['good' => $good->getId(), 'oe' => $oe]);
+                ->findOneBy(['good' => $goodId, 'oe' => $oe]);
         
         $brandName = null;
         if (isset($oems['brandName'])){
@@ -83,7 +83,7 @@ class OemRepository  extends EntityRepository{
             }
 
             $data = [
-                'good_id' => $good->getId(),
+                'good_id' => $goodId,
                 'oe' => $oe,
                 'oe_number' => $oems['oeNumber'],
                 'brand_name' => $brandName,
@@ -93,11 +93,8 @@ class OemRepository  extends EntityRepository{
             ];
 //            var_dump($data);
             $this->getEntityManager()->getRepository(Goods::class)
-                    ->addGoodOem($data, $good->getStatusOemEx());
+                    ->addGoodOem($data);
             
-            if ($source != Oem::SOURCE_INTERSECT && $source != Oem::SOURCE_MY_CODE){
-                $this->addIntersectOem($good, $oe);
-            }    
         } else {
             if ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD){
                 $this->getEntityManager()->getConnection()->update('oem', 
@@ -121,7 +118,7 @@ class OemRepository  extends EntityRepository{
      */
     public function addMyCodeAsOe($good)
     {
-        $oem = $this->addOemToGood($good, [
+        $oem = $this->addOemToGood($good->getId(), [
             'oeNumber' => $good->getCode(), 
             'brandName' => $good->getProducer()->getName(),
           ], Oem::SOURCE_MY_CODE);
@@ -482,13 +479,13 @@ class OemRepository  extends EntityRepository{
         
         $data = $queryBuilder->getQuery()->getResult();
         foreach($data as $rowGood){
-            $this->addOemToGood($rowGood, [
+            $this->addOemToGood($rowGood->getId(), [
                 'oeNumber' => $good->getCode(), 
                 'brandName' => $good->getProducer()->getName(),
                 'intescetGoodId' => $good->getId(),
               ], Oem::SOURCE_INTERSECT);
             
-            $this->addOemToGood($good, [
+            $this->addOemToGood($good->getId(), [
                 'oeNumber' => $rowGood->getCode(), 
                 'brandName' => $rowGood->getProducer()->getName(),
                 'intescetGoodId' => $rowGood->getId(),
@@ -506,18 +503,19 @@ class OemRepository  extends EntityRepository{
      */
     public function addIntersectGood($good)
     {
-        $this->removeIntersectOem($good);
+        $this->removeIntersectOem($good->getId());
         
         $oemsQuery = $this->getEntityManager()->getRepository(Goods::class)
-                ->findOems($good);
+                ->findOems($good->getId());
 
         $iterable = $oemsQuery->iterate();
 
         foreach($iterable as $item){
             foreach ($item as $oe){
-                $this->addIntersectOem($good, $oe->getOe());
-                $this->getEntityManager()->detach($oe);
-            }
+                if ($oe->getSource() != Oem::SOURCE_INTERSECT && $oe->getSource() != Oem::SOURCE_MY_CODE){
+                    $this->addIntersectOem($good, $oe->getOe());
+                }
+            }    
         }
         
         return;
@@ -532,14 +530,14 @@ class OemRepository  extends EntityRepository{
     public function addSupOem($good)
     {
         $this->getEntityManager()->getRepository(Goods::class)
-                ->removeGoodSourceOem($good, Oem::SOURCE_SUP);
+                ->removeGoodSourceOem($good->getId(), Oem::SOURCE_SUP);
         
         $oemsRaw = $this->getEntityManager()->getRepository(Goods::class)
-                ->findOemRaw($good);
+                ->findOemRaw($good->getId());
         
         foreach ($oemsRaw as $oemRaw){
             if ($oemRaw->getCode()){
-                $this->addOemToGood($good, ['oe' => $oemRaw->getCode(), 'oeNumber' => $oemRaw->getFullCode()], Oem::SOURCE_SUP);            
+                $this->addOemToGood($good->getId(), ['oe' => $oemRaw->getCode(), 'oeNumber' => $oemRaw->getFullCode()], Oem::SOURCE_SUP);            
             }    
         }        
     }    
@@ -552,14 +550,14 @@ class OemRepository  extends EntityRepository{
     public function addCrossOem($good)
     {
         $this->getEntityManager()->getRepository(Goods::class)
-                ->removeGoodSourceOem($good, Oem::SOURCE_CROSS);
+                ->removeGoodSourceOem($good->getId(), Oem::SOURCE_CROSS);
         
         $codeFilter = new ArticleCode();
         $crossList = $this->getEntityManager()->getRepository(CrossList::class)
                 ->findBy(['codeId' => $good->getId()]);        
         foreach ($crossList as $line){
             if ($codeFilter->filter($line->getOe())){
-                $this->addOemToGood($good, [
+                $this->addOemToGood($good->getId(), [
                             'oe' => $codeFilter->filter($line->getOe()),
                             'brandName' => $line->getOeBrand(), 
                             'oeNumber' => $line->getOe()
@@ -605,9 +603,9 @@ class OemRepository  extends EntityRepository{
     /**
      * Удаление пересечений номеров товара
      * 
-     * @param Goods $good
+     * @param integer $goodId
      */
-    public function removeIntersectOem($good)
+    public function removeIntersectOem($goodId)
     {
         $entityManager = $this->getEntityManager();
 
@@ -615,7 +613,7 @@ class OemRepository  extends EntityRepository{
         $queryBuilder->select('o')
             ->from(Oem::class, 'o')
             ->where('o.intersectGoodId = ?1')    
-            ->setParameter('1', $good->getId())
+            ->setParameter('1', $goodId)
             ;
 
         $oemsQuery = $queryBuilder->getQuery();            
@@ -633,10 +631,8 @@ class OemRepository  extends EntityRepository{
             }
         }        
         if ($k){
-            if ($good->getStatusOemEx() != Goods::ATTR_EX_NEW){
-                $entityManager->getRepository(Goods::class)
-                        ->updateGoodId($good->getId(), ['status_oem_ex' => Goods::OEM_EX_NEW]);
-            }   
+            $entityManager->getRepository(Goods::class)
+                    ->updateGoodId($goodId, ['status_oem_ex' => Goods::OEM_EX_NEW]);
         }    
         return;
     }
