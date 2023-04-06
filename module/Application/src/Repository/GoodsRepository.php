@@ -1633,7 +1633,6 @@ class GoodsRepository extends EntityRepository
     {
         try{
             $inserted = $this->getEntityManager()->getConnection()->insert('oem', $data);
-            $this->updateGoodId($data['good_id'], ['status_oem_ex' => Goods::OEM_EX_NEW]);
         } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $exx){
             $inserted = 0;
         }    
