@@ -844,7 +844,7 @@ class ExternalManager
         $notSimilar = true;
         $change = false;
         
-        $good = $this->entityManager->getRepository(Goods::clas)
+        $good = $this->entityManager->getRepository(Goods::class)
                 ->find($goodId);
         try{
             $info = $this->zetasoftManager->getDirectInfo($good);
