@@ -422,6 +422,40 @@ class GoodsManager
     /**
      * Обновить пересечения номеров у товаров
      */
+    public function updateOemSupCross()
+    {        
+        ini_set('memory_limit', '4096M');
+        set_time_limit(900);
+        $startTime = time();
+        $finishTime = $startTime + 840;
+        
+        $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForUpdateOemSupCross();
+        $i = 0;
+
+        $iterable = $goodsForUpdate->iterate();
+
+        foreach($iterable as $item){
+            foreach ($item as $good){
+                $this->entityManager->getRepository(Oem::class)
+                        ->addSupOem($good['goodId']);
+                $this->entityManager->getRepository(Oem::class)
+                        ->addCrossOem($good['goodId']);    
+                
+                $this->getEntityManager()->getConnection()->update('goods', ['status_oem' => Goods::OEM_INTERSECT], ['id' => $good->getId()]);
+            }
+            $i++;
+            if (time() >= $finishTime){
+                return;
+            }
+        }
+        
+        return;
+    }
+
+    /**
+     * Обновить пересечения номеров у товаров
+     */
     public function updateOemIntersect()
     {        
         ini_set('memory_limit', '4096M');
@@ -445,12 +479,6 @@ class GoodsManager
                 return;
             }
         }
-        
-//        if ($i == 0){
-//            $this->entityManager->getRepository(Goods::class)
-//                    ->resetUpdateOemTd();
-//            return;
-//        }
         
         return;
     }

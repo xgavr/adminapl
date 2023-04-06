@@ -1119,6 +1119,27 @@ class GoodsRepository extends EntityRepository
     }
 
     /**
+     * Найти товары для обновления номеров поставщиков и кроссов
+     * 
+     * @return object
+     */
+    public function findGoodsForUpdateOemSupCross()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g.id as goodId')
+            ->from(Goods::class, 'g')
+            ->where('g.statusOem = ?1')
+            ->setParameter('1', Goods::OEM_SUP_CROSS) 
+//            ->orderBy('g.id')
+            ->setMaxResults(50000)    
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();            
+    }
+
+    /**
      * Найти товары для обновления картинок по апи текдока
      * 
      * @return object

@@ -868,11 +868,6 @@ class ExternalManager
             $info = null;
         }    
         
-        $this->entityManager->getRepository(Oem::class)
-                ->addSupOem($goodId);
-        $this->entityManager->getRepository(Oem::class)
-                ->addCrossOem($goodId);                                
-        
         if (is_array($info) && $notSimilar){
             if (!$change){
                 $oemCount = $this->entityManager->getRepository(Oem::class)
@@ -893,7 +888,7 @@ class ExternalManager
             }
         }
         
-        $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_INTERSECT], ['id' => $goodId]);
+        $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_SUP_CROSS], ['id' => $goodId]);
         
         return;
     }

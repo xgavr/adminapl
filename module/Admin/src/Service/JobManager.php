@@ -199,7 +199,8 @@ class JobManager
           603 => ['command' => 'td-update-group',       'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление групп из текдока'],
           604 => ['command' => 'td-update-images',      'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление картинок из текдока'],
           605 => ['command' => 'td-update-oem',         'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление оригинальных номеров'],
-          606 => ['command' => 'update-oem-intersect',  'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление пересечений оригинальных номеров'],
+          606 => ['command' => 'update-oem-sup-cross',  'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление номеров поставщиков и кроссов'],
+          607 => ['command' => 'update-oem-intersect',  'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление пересечений оригинальных номеров'],
         ];
     }
 

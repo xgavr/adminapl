@@ -40,7 +40,8 @@ class Goods {
     const GROUP_FOR_UPDATE = 1; // группы не обновлялись
 
     const OEM_UPDATED = 2; // номера обновлены
-    const OEM_INTERSECT = 3; // пересечения обновлены
+    const OEM_INTERSECT = 3; // пересечения не обновлены
+    const OEM_SUP_CROSS = 4; // номера поставщиков и кроссы не обновлены
     const OEM_FOR_UPDATE = 1; // номера не обновлялись
 
     const RAWPRICE_EX_NEW            = 1; // не передано

@@ -1279,6 +1279,28 @@ class GoodsController extends AbstractActionController
         ]);                   
     }
 
+    public function goodOemSupCrossAction()
+    {
+        $goodsId = $this->params()->fromRoute('id', -1);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodsId);        
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->entityManager->getRepository(Oem::class)
+                ->addSupOem($goods->getId());
+        $this->entityManager->getRepository(Oem::class)
+                ->addCrossOem($goods->getId());    
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                   
+    }
+
     public function goodOemIntersectAction()
     {
         $goodsId = $this->params()->fromRoute('id', -1);
