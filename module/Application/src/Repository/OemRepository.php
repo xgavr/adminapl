@@ -520,7 +520,7 @@ class OemRepository  extends EntityRepository{
             }    
         }
 
-        $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
+        $this->getEntityManager()->getConnection()->update('goods', ['status_oem' => Goods::OEM_UPDATED], ['id' => $good->getId()]);
         
         return;
         
