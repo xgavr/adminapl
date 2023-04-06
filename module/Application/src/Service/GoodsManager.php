@@ -392,7 +392,6 @@ class GoodsManager
         
         $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateOemTd();
-        $i = 0;
 
         $iterable = $goodsForUpdate->iterate();
 
@@ -404,17 +403,11 @@ class GoodsManager
                 }
                 $this->externalManager->addOemsToGood($good['goodId'], $good['code'], $good['genericGroupTdId'], $tokenGroupId);
             }
-            $i++;
+            
             if (time() >= $finishTime){
                 return;
             }
         }
-        
-//        if ($i == 0){
-//            $this->entityManager->getRepository(Goods::class)
-//                    ->resetUpdateOemTd();
-//            return;
-//        }
         
         return;
     }
@@ -431,7 +424,6 @@ class GoodsManager
         
         $goodsForUpdate = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForUpdateOemSupCross();
-        $i = 0;
 
         $iterable = $goodsForUpdate->iterate();
 
@@ -444,7 +436,7 @@ class GoodsManager
                 
                 $this->getEntityManager()->getConnection()->update('goods', ['status_oem' => Goods::OEM_INTERSECT], ['id' => $good['goodId']]);
             }
-            $i++;
+            
             if (time() >= $finishTime){
                 return;
             }

@@ -1070,7 +1070,7 @@ class GoodsRepository extends EntityRepository
             ->where('g.statusOem = ?1')
             ->setParameter('1', Goods::OEM_FOR_UPDATE) 
 //            ->orderBy('g.id')
-            ->setMaxResults(10000)    
+            ->setMaxResults(50000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
@@ -1366,10 +1366,9 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('o')
-            ->from(Goods::class, 'g')
-            ->join('g.articles', 'a')    
-            ->join(OemRaw::class, 'o', 'WITH', 'o.article = a.id')    
-            ->where('g.id = ?1')
+            ->from(OemRaw::class, 'o')
+            ->join('o.article', 'a')    
+            ->where('a.good = ?1')
             ->andWhere('o.code != ?2')    
             ->setParameter('1', $goodId)
             ->setParameter('2', OemRaw::LONG_CODE)    
