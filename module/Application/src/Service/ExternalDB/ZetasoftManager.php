@@ -522,7 +522,7 @@ class ZetasoftManager
                 $genericGroups = $this->entityManager->getRepository(GenericGroup::class)
                         ->genericTokenGroup($tokenGroupId, $goodId);
                 foreach ($genericGroups as $row){
-                    $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($goodId, $code, $row[0]->getTd());
+                    $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($goodId, $code, $row[0]->getTdId());
                     if (is_array($articles)){
                         break;
                     }
