@@ -95,7 +95,8 @@ class OemRepository  extends EntityRepository{
             $this->getEntityManager()->getRepository(Goods::class)
                     ->addGoodOem($data);
             
-            $this->updateGoodId($goodId, ['status_oem_ex' => Goods::OEM_EX_NEW]);            
+            $this->getEntityManager()->getRepository(Goods::class)
+                    ->updateGoodId($goodId, ['status_oem_ex' => Goods::OEM_EX_NEW]);            
         } else {
             if ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD){
                 $this->getEntityManager()->getConnection()->update('oem', 
