@@ -397,8 +397,8 @@ class GoodsManager
         $iterable = $goodsForUpdate->iterate();
 
         foreach($iterable as $item){
-            foreach ($item as $goodId){
-                $this->externalManager->addOemsToGood($goodId);
+            foreach ($item as $good){
+                $this->externalManager->addOemsToGood($good['goodId']);
             }
             $i++;
             if (time() >= $finishTime){
