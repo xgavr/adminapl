@@ -116,9 +116,9 @@ class ExternalManager
             case 'countries': $result = $this->autoDbManager->getCountries(); break;
             case 'сriteria': $result = $this->autoDbManager->getCriteria2(); break;
             case 'getArticle': $result = $this->autoDbManager->getArticleDirectSearchAllNumbersWithState($params['good']); break;
-            case 'getBestArticle': $result = $this->autoDbManager->getBestArticle($params['good']); break;
-            case 'getInfo': $result = $this->autoDbManager->getDirectInfo($params['good']); break;
-            case 'getSimilarInfo': $result = $this->autoDbManager->getSimilarDirectInfo($params['good']); break;
+            case 'getBestArticle': $result = $this->autoDbManager->getBestArticle($params['good']->getId(), $params['good']->getCode()); break;
+            case 'getInfo': $result = $this->autoDbManager->getDirectInfo($params['good']->getId(), $params['good']->getCode()); break;
+            case 'getSimilarInfo': $result = $this->autoDbManager->getSimilarDirectInfo($params['good']->getId(), $params['good']->getCode(), $params['good']->getGenericGroup()->getTdId(), $params['good']->getTokenGroupId()); break;
             case 'getLinked': $result = $this->autoDbManager->getGoodLinked($params['good']); break;
             case 'getImages': $result = $this->autoDbManager->getImages($params['good']); break;
             case 'getGenericArticles': $result = $this->autoDbManager->getGenericArticles(); break;
@@ -142,13 +142,13 @@ class ExternalManager
             case 'ping': $result = $this->zetasoftManager->ping(); break;
 //            case 'token': $result = $this->zetasoftManager->token(); break;
 //            case 'vendorCode': $result = $this->zetasoftManager->getVendorCode($params['good']); break;
-            case 'vendorCode': $result = $this->zetasoftManager->getVendorCodeV2($params['good']); break;
+            case 'vendorCode': $result = $this->zetasoftManager->getVendorCodeV2($params['good']->getCode()); break;
             case 'getPartGroup': $result = $this->zetasoftManager->getPartGroups(); break;
             case 'getLinked': $result = $this->zetasoftManager->getGoodLinked($params['good']); break;
             case 'сriteria': $result = $this->zetasoftManager->getCriteria2(); break;
-            case 'getBestArticle': $result = $this->zetasoftManager->getBestArticle($params['good']); break;
-            case 'getInfo': $result = $this->zetasoftManager->getDirectInfo($params['good']); break;
-            case 'getSimilarInfo': $result = $this->zetasoftManager->getSimilarDirectInfo($params['good']); break;
+            case 'getBestArticle': $result = $this->zetasoftManager->getBestArticle($params['good']->getId(), $params['good']->getCode()); break;
+            case 'getInfo': $result = $this->zetasoftManager->getDirectInfo($params['good']->getId(), $params['good']->getCode()); break;
+            case 'getSimilarInfo': $result = $this->zetasoftManager->getSimilarDirectInfo($params['good']->getId(), $params['good']->getCode(), $params['good']->getGenericGroup()->getTdId(), $params['good']->getTokenGroupId()); break;
             case 'getImages': $result = $this->zetasoftManager->getImages($params['good']); break;
             default: break;
         }
@@ -838,19 +838,20 @@ class ExternalManager
      * Добавление номеров к товару
      * 
      * @param integer $goodId
+     * @param string $code
+     * @param integer $genericGroupTdId
+     * @param integer $tokenGroupId
      */
-    public function addOemsToGood($goodId)
+    public function addOemsToGood($goodId, $code, $genericGroupTdId, $tokenGroupId = null)
     {
         $notSimilar = true;
         $change = false;
         
-        $good = $this->entityManager->getRepository(Goods::class)
-                ->find($goodId);
         try{
-            $info = $this->zetasoftManager->getDirectInfo($good);
+            $info = $this->zetasoftManager->getDirectInfo($goodId, $code);
             if (!is_array($info)){
                 $notSimilar = false;                
-                $info = $this->zetasoftManager->getSimilarDirectInfo($good);
+                $info = $this->zetasoftManager->getSimilarDirectInfo($goodId, $code, $genericGroupTdId, $tokenGroupId);
             }
 
             if (is_array($info)){
@@ -868,9 +869,9 @@ class ExternalManager
         }    
         
         $this->entityManager->getRepository(Oem::class)
-                ->addSupOem($good);
+                ->addSupOem($goodId);
         $this->entityManager->getRepository(Oem::class)
-                ->addCrossOem($good);                                
+                ->addCrossOem($goodId);                                
         
         if (is_array($info) && $notSimilar){
             if (!$change){
@@ -883,7 +884,7 @@ class ExternalManager
                 if (isset($info['crossCodes'])){
                     foreach ($info['crossCodes'] as $oen){
                         $this->entityManager->getRepository(Oem::class)
-                                ->addOemToGood($good->getId(), [
+                                ->addOemToGood($goodId, [
                                     'oeNumber' => $oen['vendorCode'],
                                     'brandName' => $oen['vendorName'],
                                 ], Oem::SOURCE_TD);
@@ -908,14 +909,14 @@ class ExternalManager
         $genericArticleId = null;
         
         try {
-            $tdData = $this->zetasoftManager->getBestArticle($good);
+            $tdData = $this->zetasoftManager->getBestArticle($good->getId(), $good->getCode());
             if (is_numeric($tdData['partGroupId'])){
                 $genericArticleId = $tdData['partGroupId'];
                 $statusData = ['td_direct' => Goods::TD_DIRECT];
             }
 
             if (!$genericArticleId){
-                $tdData = $this->zetasoftManager->getSimilarArticle($good, true);
+                $tdData = $this->zetasoftManager->getSimilarArticle($good->getId(), $good->getCode(), $good->getGenericGroup()->getTdId(), $good->getTokenGroupId(), true);
                 if (is_numeric($tdData['partGroupId'])){
                     $genericArticleId = $tdData['partGroupId'];
                 }            
@@ -986,9 +987,9 @@ class ExternalManager
         $similarGood = false;
         
         try{
-            $info = $this->zetasoftManager->getDirectInfo($good);        
+            $info = $this->zetasoftManager->getDirectInfo($good->getId(), $good->getCode());        
             if (!is_array($info)){
-                $info = $this->zetasoftManager->getSimilarDirectInfo($good, null, 'attr');
+                $info = $this->zetasoftManager->getSimilarDirectInfo($good->getId(), $good->getCode(), $good->getGenericGroup()->getTdId(), $good->getTokenGroupId());
                 $similarGood = true;
                 if (!is_array($info)){
                     $this->entityManager->getRepository(Goods::class)

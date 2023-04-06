@@ -166,12 +166,13 @@ class GenericGroupRepository extends EntityRepository{
     /**
      * Поиск группы по группе наименований
      * 
-     * @param TokenGroup $tokenGroup
+     * @param integer $tokenGroupId
+     * @param integer $goodId
      * @param Goods $good
      */
-    public function genericTokenGroup($tokenGroup, $good = null)
+    public function genericTokenGroup($tokenGroupId, $goodId = null)
     {
-        if ($tokenGroup){
+        if ($tokenGroupId){
             $entityManager = $this->getEntityManager();
 
             $queryBuilder = $entityManager->createQueryBuilder();
@@ -184,13 +185,13 @@ class GenericGroupRepository extends EntityRepository{
                     ->andWhere('gg.tdId != 0')
                     ->groupBy('gg.id')
                     ->orderBy('goodCount', 'DESC')
-                    ->setParameter('1', $tokenGroup->getId())
+                    ->setParameter('1', $tokenGroupId)
                     ->setParameter('3', Goods::TD_DIRECT)
                     ;
             if (isset($good)){
                 $queryBuilder->andWhere('gg.id != ?2')
                         ->andHaving('goodCount > ?4')
-                        ->setParameter('2', $good->getId())
+                        ->setParameter('2', $goodId)
                         ->setParameter('4', GenericGroup::MIN_GOOD_COUNT)
                         ;
             }
@@ -236,7 +237,7 @@ class GenericGroupRepository extends EntityRepository{
      */
     public function findGenericTokenGroup($tokenGroup, $good = null)
     {
-        $data = $this->genericTokenGroup($tokenGroup, $good);
+        $data = $this->genericTokenGroup($tokenGroup->getId(), $good->getId());
         if ($data){
             if (count($data) == 1){
                 foreach ($data as $row){

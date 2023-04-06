@@ -398,7 +398,11 @@ class GoodsManager
 
         foreach($iterable as $item){
             foreach ($item as $good){
-                $this->externalManager->addOemsToGood($good['goodId']);
+                $tokenGroupId = null;
+                if (!empty($good['tokenGroupId'])){
+                    $tokenGroupId = $good['tokenGroupId'];
+                }
+                $this->externalManager->addOemsToGood($good['goodId'], $good['code'], $good['genericGroupTdId'], $tokenGroupId);
             }
             $i++;
             if (time() >= $finishTime){

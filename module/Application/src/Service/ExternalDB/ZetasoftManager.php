@@ -373,13 +373,13 @@ class ZetasoftManager
     /**
      * Найти запчасти по коду (артикулу) (уточнение бренда)
      * 
-     * @param Goods $good
+     * @param string $code
      * @return array|Esception
      */
-    public function getVendorCodeV2($good)
+    public function getVendorCodeV2($code)
     {
         return $this->getAction('ru-ru/v2/Part/VendorCode', [
-            'vendorCode' => urlencode($good->getCode()),
+            'vendorCode' => urlencode($code),
             'vendorCodeStartsWith' => 'false',
             'disableOem' => 'true',
             'NewVendorCodes' => 'false',
@@ -469,33 +469,33 @@ class ZetasoftManager
     /**
      * Получить похожий по группе articleId
      * 
-     * @param Goods $good
-     * @param GenericGroup $genericGroup
+     * @param integer $goodId
+     * @params string $code
+     * @param string $genericGroupTdId
      * 
      * @return array|null|Exception
      */
-    public function getArticleDirectSearchAllNumbersWithGeneric($good, $genericGroup = null)
+    public function getArticleDirectSearchAllNumbersWithGeneric($goodId, $code, $genericGroupTdId = 0)
     {
-        if (!$genericGroup){
-            $genericGroup = $good->getGenericGroup();
-        }
-        
-        if ($genericGroup->getTdId()>0){
-            $result = $this->getVendorCodeAndPartGroupV2($good->getCode(), $genericGroup->getTdId());
+        if ($genericGroupTdId>0){
+            $result = $this->getVendorCodeAndPartGroupV2($code, $genericGroupTdId);
             if (isset($result['data'])){                
                 return $result;
             }
             
-            $oemsQuery = $this->entityManager->getRepository(Goods::class)
-                    ->findOems($good->getId(), ['limit' => 10, 'source' => Oem::SOURCE_SUP]);
-            $oems = $oemsQuery->getResult();
-            
-            foreach ($oems as $oem){
-                $result = $this->getVendorCodeAndPartGroupV2($oem->getOe(), $genericGroup->getTdId());
-                if (isset($result['data'])){
-                    return $result;
-                }
-            }                
+            $sources = [Oem::SOURCE_SUP, Oem::SOURCE_CROSS, Oem::SOURCE_MAN];
+            foreach ($sources as $source){
+                $oemsQuery = $this->entityManager->getRepository(Goods::class)
+                        ->findOems($goodId, ['limit' => 10, 'source' => $source]);
+                $oems = $oemsQuery->getResult();
+
+                foreach ($oems as $oem){
+                    $result = $this->getVendorCodeAndPartGroupV2($oem->getOe(), $genericGroupTdId);
+                    if (isset($result['data'])){
+                        return $result;
+                    }
+                }                                
+            }            
         }
         
         return;
@@ -504,22 +504,25 @@ class ZetasoftManager
     /**
      * Плучить похожий товару артикул
      * 
-     * @param Goods $good
+     * @param integer $goodId
+     * @param string $code
+     * @param integer $genericGroupTdId
+     * @param integer $tokenGroupId
      * @param bool $newSearch
      * 
      * @return array
      */
-    public function getSimilarArticle($good, $newSearch = false)
+    public function getSimilarArticle($goodId, $code, $genericGroupTdId, $tokenGroupId = null, $newSearch = false)
     {
         $articles = [];
-        if ($good->getGenericGroup()->getTdId() > 0 && !$newSearch){
-            $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good);
+        if ($genericGroupTdId > 0 && !$newSearch){
+            $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($goodId, $code, $genericGroupTdId);
         } else {
-            if ($good->getTokenGroup()){
+            if ($tokenGroupId){
                 $genericGroups = $this->entityManager->getRepository(GenericGroup::class)
-                        ->genericTokenGroup($good->getTokenGroup(), $good);
+                        ->genericTokenGroup($tokenGroupId, $goodId);
                 foreach ($genericGroups as $row){
-                    $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($good, $row[0]);
+                    $articles = $this->getArticleDirectSearchAllNumbersWithGeneric($goodId, $code, $row[0]->getTd());
                     if (is_array($articles)){
                         break;
                     }
@@ -544,29 +547,32 @@ class ZetasoftManager
     /**
      * Плучить наиболее подходящий к товару артикул
      * 
-     * @param Goods $good
+     * @param integer $goodId
+     * @param string $code
      * @return array
      */
-    public function getBestArticle($good)
+    public function getBestArticle($goodId, $code)
     {
         $filter = new ProducerName();
-        $articles = $this->getVendorCodeV2($good);
+        $articles = $this->getVendorCodeV2($code);
         $change = $articles['change'];
         if ($articles['data']){
-            foreach ($articles['data'] as $row){
-                foreach($good->getProducer()->getUnknownProducer() as $unknownProducer){
-                    if ($filter->filter($row['vendorName']) == $filter->filter($unknownProducer->getName())){
+            $upNames = $this->entityManager->getRepository(Goods::class)
+                    ->findUnknownProducerNames($goodId);
+            foreach($upNames as $upName){
+                foreach ($articles['data'] as $row){
+                    if ($filter->filter($row['vendorName']) == $filter->filter($upName['name'])){
                         $row['change'] = $change;
                         return $row;
                     }
-                    if ($unknownProducer->getNameTd()){
-                        if ($filter->filter($row['vendorName']) == $filter->filter($unknownProducer->getNameTd())){
+                    if (!empty($upName['nameTd'])){
+                        if ($filter->filter($row['vendorName']) == $filter->filter($upName['nameTd'])){
                             $row['change'] = $change;
                             return $row;
                         }                        
                     }
-                }        
-            }
+                }
+            }    
         }
         
         return;
@@ -575,24 +581,28 @@ class ZetasoftManager
     /**
      * Получить информацию по товару
      * 
-     * @param Goods $good
+     * @param integer $goodId
+     * @param string $code
      * @return array
      */
-    public function getDirectInfo($good)
+    public function getDirectInfo($goodId, $code)
     {
-        return $this->getBestArticle($good);        
+        return $this->getBestArticle($goodId, $code);        
     }
 
     /**
      * Получить информацию по похожему товару
      * 
-     * @param Goods $good
+     * @param integer $goodId
+     * @param string $code
+     * @param integer $genericGroupTdId
+     * @param integer $tokenGroupId
      * 
      * @return array
      */
-    public function getSimilarDirectInfo($good)
+    public function getSimilarDirectInfo($goodId, $code, $genericGroupTdId, $tokenGroupId = null)
     {
-        return $this->getSimilarArticle($good);        
+        return $this->getSimilarArticle($goodId, $code, $genericGroupTdId, $tokenGroupId);        
     }
 
     /**
@@ -664,10 +674,10 @@ class ZetasoftManager
      */
     public function getGoodLinked($good)
     {
-        $article = $this->getBestArticle($good);  
+        $article = $this->getBestArticle($good->getId(), $good->getCode());  
 //        var_dump($article); exit;
         if (!$article){
-            $article = $this->getSimilarArticle($good);
+            $article = $this->getSimilarArticle($good->getId(), $good->getCode(), $good->getGenericGroup()->getTdId(), $good->getTokenGroupId());
         }
         
         if (is_array($article)){
@@ -706,7 +716,7 @@ class ZetasoftManager
      */
     public function getSimilarGoodLinked($good)
     {
-        $article = $this->getSimilarArticle($good);        
+        $article = $this->getSimilarArticle($good->getId(), $good->getCode(), $good->getGenericGroup()->getTdId(), $good->getTokenGroupId());        
         return $this->getGoodLinked($article);        
     }
 
@@ -731,10 +741,10 @@ class ZetasoftManager
      */
     public function getImages($good)
     {
-        $articleInfo = $this->getDirectInfo($good);
+        $articleInfo = $this->getDirectInfo($good->getId(), $good->getCode());
         $similar = Images::SIMILAR_MATCH;
         if (!is_array($articleInfo)){
-            $articleInfo = $this->getSimilarDirectInfo($good);
+            $articleInfo = $this->getSimilarDirectInfo($good->getId(), $good->getCode(), $good->getGenericGroup()->getTdId(), $good->getTokenGroupId());
             $similar = Images::SIMILAR_SIMILAR;   
             if (!is_array($articleInfo)){
                 $this->entityManager->getRepository(Images::class)->removeGoodImages($good, Images::STATUS_TD);                

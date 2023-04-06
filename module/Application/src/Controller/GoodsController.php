@@ -1271,7 +1271,7 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
 
-        $this->externalManager->addOemsToGood($goods->getId());
+        $this->externalManager->addOemsToGood($goods->getId(), $goods->getCode(), $goods->getGenericGroup()->getTdId(), $goods->getTokenGroupId());
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([

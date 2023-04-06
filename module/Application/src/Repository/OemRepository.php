@@ -529,19 +529,19 @@ class OemRepository  extends EntityRepository{
     /**
      * Добавить номера из прайса
      * 
-     * @param Goods $good
+     * @param integer $goodId
      */
-    public function addSupOem($good)
+    public function addSupOem($goodId)
     {
         $this->getEntityManager()->getRepository(Goods::class)
-                ->removeGoodSourceOem($good->getId(), Oem::SOURCE_SUP);
+                ->removeGoodSourceOem($goodId, Oem::SOURCE_SUP);
         
         $oemsRaw = $this->getEntityManager()->getRepository(Goods::class)
-                ->findOemRaw($good->getId());
+                ->findOemRaw($goodId);
         
         foreach ($oemsRaw as $oemRaw){
             if ($oemRaw->getCode()){
-                $this->addOemToGood($good->getId(), ['oe' => $oemRaw->getCode(), 'oeNumber' => $oemRaw->getFullCode()], Oem::SOURCE_SUP);            
+                $this->addOemToGood($goodId, ['oe' => $oemRaw->getCode(), 'oeNumber' => $oemRaw->getFullCode()], Oem::SOURCE_SUP);            
             }    
         }        
     }    
@@ -549,19 +549,19 @@ class OemRepository  extends EntityRepository{
     /**
      * Добавить номера из кросса
      * 
-     * @param Goods $good
+     * @param integer $goodId
      */
-    public function addCrossOem($good)
+    public function addCrossOem($goodId)
     {
         $this->getEntityManager()->getRepository(Goods::class)
-                ->removeGoodSourceOem($good->getId(), Oem::SOURCE_CROSS);
+                ->removeGoodSourceOem($goodId, Oem::SOURCE_CROSS);
         
         $codeFilter = new ArticleCode();
         $crossList = $this->getEntityManager()->getRepository(CrossList::class)
-                ->findBy(['codeId' => $good->getId()]);        
+                ->findBy(['codeId' => $goodId]);        
         foreach ($crossList as $line){
             if ($codeFilter->filter($line->getOe())){
-                $this->addOemToGood($good->getId(), [
+                $this->addOemToGood($goodId, [
                             'oe' => $codeFilter->filter($line->getOe()),
                             'brandName' => $line->getOeBrand(), 
                             'oeNumber' => $line->getOe()

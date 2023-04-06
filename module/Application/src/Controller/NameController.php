@@ -970,7 +970,7 @@ class NameController extends AbstractActionController
                 ->getGroupApl($tokenGroup);
                        
         $tdGroups = $this->entityManager->getRepository(GenericGroup::class)
-                ->genericTokenGroup($tokenGroup);
+                ->genericTokenGroup($tokenGroup->getId());
         
         $meanFrequency = $this->entityManager->getRepository(TokenGroup::class)
                 ->meanFrequency($tokenGroup);

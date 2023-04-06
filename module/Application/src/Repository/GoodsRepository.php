@@ -19,6 +19,7 @@ use Application\Entity\Oem;
 use Stock\Entity\GoodBalance;
 use Application\Entity\GoodSupplier;
 use Stock\Entity\Ptu;
+use Application\Entity\UnknownProducer;
 
 
 /**
@@ -1062,17 +1063,40 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g.id as goodId')
+        $queryBuilder->select('g.id as goodId, g.code as code, gg.tdId as genericGroupTdId, tg.id as tokenGroupId')
             ->from(Goods::class, 'g')
+            ->join('g.genericGroup', 'gg')    
+            ->leftJoin('g.tokenGroup', 'tg')    
             ->where('g.statusOem = ?1')
             ->setParameter('1', Goods::OEM_FOR_UPDATE) 
 //            ->orderBy('g.id')
-            ->setMaxResults(50000)    
+            ->setMaxResults(10000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
     }
     
+    /**
+     * Найти неизвестных производ телей связанных с товаром
+     * @param integer $goodId 
+     * @return object
+     */
+    public function findUnknownProducerNames($goodId)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('u.name, u.nameTd')
+            ->from(Goods::class, 'g')
+            ->join('g.producer', 'p')    
+            ->join('p.uncnownProducer', 'u')    
+            ->where('g.id = ?1')
+            ->setParameter('1', $goodId) 
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();            
+    }
+
     /**
      * Найти товары для обновления пересечений номеров
      * 
