@@ -345,9 +345,9 @@ class RegisterManager
                             ];
                             $rows = [];
                             foreach ($bids as $bid){
-                                if ($this->findNearPtu($bid->getGood(), $order->getDateOper(), $order->getOffice(), $order->getLogKey(), $order)){
-                                    return true;
-                                } 
+//                                if ($this->findNearPtu($bid->getGood(), $order->getDateOper(), $order->getOffice(), $order->getLogKey(), $order)){
+//                                    return true;
+//                                } 
                                 if ($this->correctCodePtu($bid->getGood(), $order->getDateOper(), $order->getOffice())){
                                     return true;
                                 } 
@@ -387,9 +387,9 @@ class RegisterManager
                             $ptGoods = $this->entityManager->getRepository(PtGood::class)
                                     ->findBy(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
                             foreach ($ptGoods as $ptGood){
-                                if ($this->findNearPtu($ptGood->getGood(), $pt->getDocDate(), $pt->getOffice(), $pt->getLogKey(), $pt)){
-                                    return true;
-                                } 
+//                                if ($this->findNearPtu($ptGood->getGood(), $pt->getDocDate(), $pt->getOffice(), $pt->getLogKey(), $pt)){
+//                                    return true;
+//                                } 
                                 if ($this->correctCodePtu($ptGood->getGood(), $pt->getDocDate(), $pt->getOffice())){
                                     return true;
                                 } 
@@ -422,9 +422,9 @@ class RegisterManager
                             $stCount = $st->getStGoods()->count();
                             if (count($stGoods) ==  $stCount && $stCount == 1){
                                 foreach ($stGoods as $stGood){
-                                    if ($this->findNearPtu($stGood->getGood(), $st->getDocDate(), $st->getOffice(), $st->getLogKey(), $st)){
-                                        return true;
-                                    } 
+//                                    if ($this->findNearPtu($stGood->getGood(), $st->getDocDate(), $st->getOffice(), $st->getLogKey(), $st)){
+//                                        return true;
+//                                    } 
                                     if ($this->correctCodePtu($stGood->getGood(), $st->getDocDate(), $st->getOffice())){
                                         return true;                                    
                                     } 
