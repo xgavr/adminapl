@@ -262,7 +262,7 @@ class OrderManager
 
             foreach ($bases as $base){
                 $movement = $this->entityManager->getRepository(Movement::class)
-                        ->findOneByBaseKey($base['baseKey']);
+                        ->findOneByDocKey($base['baseKey']);
 
                 $quantity = min($base['rest'], $write);
                 $amount = $quantity*$bid->getPrice();
@@ -289,7 +289,7 @@ class OrderManager
 
                 $this->entityManager->getRepository(Movement::class)
                         ->insertMovement($data);     
-                var_dump($movement->getStatus());
+//                var_dump($movement->getStatus());
                 if ($movement->getStatus() == Movement::STATUS_COMMISSION){
                     $comiss = $this->entityManager->getRepository(Comiss::class)
                             ->findOneByDocKey($base['baseKey']);
