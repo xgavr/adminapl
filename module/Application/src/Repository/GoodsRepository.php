@@ -1542,6 +1542,7 @@ class GoodsRepository extends EntityRepository
                     $queryBuilder->andWhere('g.id in (:comiss)')
                             ->setParameter('comiss', implode(',', $comiss))
                             ;
+                    var_dump(implode(',', $comiss));
                 }    
             }
             if (isset($params['q'])){                
@@ -1606,6 +1607,7 @@ class GoodsRepository extends EntityRepository
             }
         }
         
+        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();            
     }    
 
