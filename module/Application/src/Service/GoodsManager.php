@@ -1140,6 +1140,21 @@ class GoodsManager
             ];
         }
         
+        $rests = $this->entityManager->getRepository(GoodBalance::class)
+                ->findBy(['good' => $good->getId()]);
+        $inStore = [];
+        foreach ($rests as $rest){
+            $inStore[] = [
+                'office' => $rest->getOffice()->getName().' ('.$rest->getCompany()->getName().')',
+                'officeAplId' => $rest->getOffice()->getAplId(),
+                'rest' => $rest->getRest(),
+                'reserve' => $rest->getReserve(),
+                'delivery' => $rest->getDelivery(),
+                'vozvrat' => $rest->getVozvrat(),
+                'available' => $rest->getAvailable(),                    
+            ];
+        }
+        
         $result = [
             'g5' => [
                 'bestname' => $good->getName(),
@@ -1147,6 +1162,7 @@ class GoodsManager
             ],
             'sups' => array_values($sups),
             'prices' => $prices,
+            'inStore' => $inStore,
         ];
         
         return $result;
