@@ -288,7 +288,8 @@ class OrderManager
                 ];
 
                 $this->entityManager->getRepository(Movement::class)
-                        ->insertMovement($data);                
+                        ->insertMovement($data);     
+                var_dump($base['baseKey']);
                 if ($movement->getStatus() == Movement::STATUS_COMMISSION){
                     $comiss = $this->entityManager->getRepository(Comiss::class)
                             ->findOneByDocKey($base['baseKey']);
