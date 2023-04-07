@@ -1746,7 +1746,7 @@ class ProcessingController extends AbstractActionController
      * Обновление пересечений номеров
      * @return JsonModel
      */
-    public function updateOemSupCrosstAction()
+    public function updateOemSupCrossAction()
     {
         $settings = $this->adminManager->getTdExchangeSettings();
 
