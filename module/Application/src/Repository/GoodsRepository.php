@@ -1540,7 +1540,9 @@ class GoodsRepository extends EntityRepository
                             ->goodInCommiss(['asArray' => 1]);
                     
                     $inX = $queryBuilder->expr()->in('g.id', implode(',', $comiss));
-                    $queryBuilder->andWhere($inX); 
+                    $queryBuilder
+                            ->resetDQLPart('where')
+                            ->andWhere($inX); 
                 }    
             }
             if (isset($params['q'])){                
