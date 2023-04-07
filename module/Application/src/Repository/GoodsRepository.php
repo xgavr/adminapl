@@ -1539,10 +1539,8 @@ class GoodsRepository extends EntityRepository
                     $comiss = $this->getEntityManager()->getRepository(Comiss::class)
                             ->goodInCommiss(['asArray' => 1]);
                     
-                    $queryBuilder->andWhere('g.id in (:comiss)')
-                            ->setParameter('comiss', implode(',', $comiss))
-                            ;
-                    var_dump(implode(',', $comiss));
+                    $inX = $queryBuilder->expr()->in('g.id', implode(',', $comiss));
+                    $queryBuilder->andWhere($inX); 
                 }    
             }
             if (isset($params['q'])){                
