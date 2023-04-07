@@ -19,6 +19,36 @@ use Stock\Entity\Comiss;
 class ComissRepository extends EntityRepository{
     
     /**
+     * Товары на комиссии
+     * @param array $options
+     */
+    public function goodInCommiss($options = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('identity(c.good) as goodId')
+                ->from(Comiss::class, 'c')
+                ->distinct()
+                ->groupBy('c.good')
+                ->having('sum(c.quantity) > 0')
+                ;
+        $data = $qb->getQuery()->getResult();
+        
+        if (is_array($options)){
+            if (isset($options['asArray'])){
+                $result = [];
+                foreach ($data as $row){
+                    $result[] = $row['goodId'];
+                }
+                return $result;
+            }
+        }
+        
+        return $data;        
+    }
+    
+    /**
      * Удаление записей движения документа
      * 
      * @param string $docKey

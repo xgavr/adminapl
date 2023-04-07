@@ -18,8 +18,7 @@ use Stock\Entity\Movement;
 use Application\Entity\Oem;
 use Stock\Entity\GoodBalance;
 use Application\Entity\GoodSupplier;
-use Stock\Entity\Ptu;
-use Application\Entity\UnknownProducer;
+use Stock\Entity\Comiss;
 
 
 /**
@@ -1535,6 +1534,16 @@ class GoodsRepository extends EntityRepository
                 ;
         
         if (is_array($params)){
+            if (isset($params['accurate'])){
+                if ($params['accurate'] == Goods::SEARCH_COMISS){
+                    $comiss = $this->getEntityManager()->getRepository(Comiss::class)
+                            ->goodInCommiss(['asArray' => 1]);
+                    
+                    $queryBuilder->andWhere('g.id in (:comiss)')
+                            ->setParameter('comiss', implode(',', $comiss))
+                            ;
+                }    
+            }
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);

@@ -79,6 +79,7 @@ class Goods {
     const SEARCH_CODE = 1; //поиск по артикулу
     const SEARCH_APLID = 2; //поиск по aplId
     const SEARCH_OE = 3; //поиск по ое
+    const SEARCH_COMISS = 4; //товары на комиссии
     
     /**
      * @ORM\Id
@@ -1012,6 +1013,7 @@ class Goods {
             self::SEARCH_CODE => 'Поиск по артикулу',
             self::SEARCH_APLID => 'Поиск по aplId',
             self::SEARCH_OE => 'Поиск по ОЕ',
+            self::SEARCH_COMISS => 'На комиссии',
         ];
     }
 
