@@ -434,7 +434,7 @@ class GoodsManager
                 $this->entityManager->getRepository(Oem::class)
                         ->addCrossOem($good['goodId']);    
                 
-                $this->getEntityManager()->getConnection()->update('goods', ['status_oem' => Goods::OEM_INTERSECT], ['id' => $good['goodId']]);
+                $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_INTERSECT], ['id' => $good['goodId']]);
             }
             
             if (time() >= $finishTime){
