@@ -760,7 +760,7 @@
         
         if (row.ot){
             if (row.ot.comiss){
-                return row.ot.comiss.name;
+                return (row.ot.comiss.name) ? row.ot.comiss.name:'Nan';
             }
         }
         if (row.vt){
