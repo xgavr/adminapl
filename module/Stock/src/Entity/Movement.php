@@ -144,6 +144,18 @@ class Movement {
      */
     private $ptu;    
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Ot", inversedBy="movements") 
+     * @ORM\JoinColumn(name="base_id", referencedColumnName="id")
+     */
+    private $ot;    
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Vt", inversedBy="movements") 
+     * @ORM\JoinColumn(name="base_id", referencedColumnName="id")
+     */
+    private $vt;    
+
     public function __construct() {
     }
    
@@ -528,5 +540,37 @@ class Movement {
     public function setPtu($ptu) 
     {
         $this->ptu = $ptu;
+    }                         
+
+    /*
+     * @return Ot
+     */    
+    public function getOt() 
+    {
+        return $this->ot;
+    }
+
+    /**
+     * @param Ot $ot
+     */    
+    public function setOt($ot) 
+    {
+        $this->ot = $ot;
+    }                         
+
+    /*
+     * @return Vt
+     */    
+    public function getVt() 
+    {
+        return $this->vt;
+    }
+
+    /**
+     * @param Vt $vt
+     */    
+    public function setVt($vt) 
+    {
+        $this->vt = $vt;
     }                         
 }

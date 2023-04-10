@@ -758,6 +758,16 @@
             ].join(''); 
         }
         
+        if (row.ot){
+            if (row.ot.comiss){
+                return row.ot.comiss.name;
+            }
+        }
+        if (row.vt){
+            if (row.vt.order){
+                return docFormatter('<?= Movement::DOC_ORDER?>', row.vt.order.id, '');
+            }
+        }
         return value;
     }
     

@@ -1437,12 +1437,16 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m, o, c, p, s')
+        $queryBuilder->select('m, o, c, p, s, ot, contact, vt, vtOrder')
             ->from(Movement::class, 'm')
             ->join('m.office', 'o')    
             ->join('m.company', 'c')
             ->leftJoin('m.ptu', 'p', 'WITH', 'm.baseType = '.Movement::DOC_PTU) 
             ->leftJoin('p.supplier', 's')    
+            ->leftJoin('m.ot', 'ot', 'WITH', 'm.baseType = '.Movement::DOC_OT) 
+            ->leftJoin('ot.comiss', 'contact')    
+            ->leftJoin('m.vt', 'vt', 'WITH', 'm.baseType = '.Movement::DOC_VT) 
+            ->leftJoin('vt.order', 'vtOrder')    
             ->where('m.good = ?1')
             ->setParameter('1', $good->getId())
 //            ->orderBy('m.docStamp','ASC')    
