@@ -718,11 +718,17 @@ $legalContact = $client->getLegalContact();
                 return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
             case '<?= Movement::DOC_VTP?>': 
                 return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
-            case '<?= Movement::DOC_CASH?>': 
+            case '<?= Movement::DOC_CASH?>':
+                var cashName = '';
+                if (row.cashDoc){
+                    if (row.cashDoc.cash){
+                        cashName = row.cashDoc.cash.name;
+                    }
+                }
                 if (row.amount < 0){
-                    return "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>Оплата №"+docId+"</a>";
+                    return "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
                 }    
-                return "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>Возврат оплаты №"+docId+"</a>";
+                return "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
             default: return docId;            
         }
     }

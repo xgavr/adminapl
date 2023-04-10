@@ -14,8 +14,7 @@ use User\Filter\PhoneFilter;
 use Laminas\Validator\EmailAddress;
 use Stock\Entity\Retail;
 use Application\Entity\Order;
-use Company\Entity\Legal;
-use Company\Entity\BankAccount;
+use Stock\Entity\Movement;
 
 /**
  * Description of ClientRepository
@@ -108,11 +107,13 @@ class ClientRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r, o, c, ct')
+        $queryBuilder->select('r, o, c, ct, cd, cash')
             ->from(Retail::class, 'r')
             ->join('r.office', 'o')    
             ->join('r.company', 'c')
             ->join('r.contact', 'ct')
+            ->leftJoin('r.cashDoc', 'cd', 'WITH', 'r.docType = '.Movement::DOC_CASH) 
+            ->leftJoin('cd.cash', 'cash')    
             ->where('ct.client = ?1')
             ->setParameter('1', $client->getId())
 //            ->orderBy('m.docStamp','ASC')    

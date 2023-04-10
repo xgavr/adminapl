@@ -15,6 +15,7 @@ use Application\Entity\Contact;
 use Stock\Entity\Pt;
 use Application\Entity\Order;
 use Stock\Entity\St;
+use Cash\Entity\CashDoc;
 
 
 /**
@@ -109,6 +110,12 @@ class Retail {
      */
     private $contract;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Cash\Entity\CashDoc", inversedBy="retails") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $cashDoc;    
+        
 
     public function __construct() {
     }
@@ -386,4 +393,19 @@ class Retail {
         return $this->company;
     }
 
+    /*
+     * @return CashDoc
+     */    
+    public function getCashDoc() 
+    {
+        return $this->cashDoc;
+    }
+
+    /**
+     * @param CashDoc $cashDoc
+     */    
+    public function setCashDoc($cashDoc) 
+    {
+        $this->cashDoc = $cashDoc;
+    }                         
 }
