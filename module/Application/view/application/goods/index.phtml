@@ -144,9 +144,7 @@ $this->pageBreadcrumbs()->setItems([
             refreshTable();
         });
         $('select[name="accurate"]').change(function(){
-            if ($('#searchinput').val()){
-                refreshTable();
-            }    
+            refreshTable();
         });        
     });
     
