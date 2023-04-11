@@ -72,7 +72,8 @@ class RegisterRepository extends EntityRepository
             $var->setVarType($varType);
             $var->setVarStamp($varStamp);
             $entityManager->persist($var);
-            $entityManager->flush($var);            
+            $entityManager->flush($var);
+            $entityManager->refresh($var);
         }        
         
         return;

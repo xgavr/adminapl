@@ -1572,6 +1572,12 @@ class GoodsRepository extends EntityRepository
                                 ->setParameter('aplId', $q)    
                                 ;
                             break;    
+                        case Goods::SEARCH_ID:
+                            $queryBuilder
+                                ->andWhere('g.id = :id')                           
+                                ->setParameter('id', $q)    
+                                ;
+                            break;    
                         case Goods::SEARCH_OE:
                             $orX = $queryBuilder->expr()->orX(
                                     $queryBuilder->expr()->eq('o.oe', '?4')    

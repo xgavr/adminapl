@@ -278,10 +278,8 @@
 
     $(function () {
         $(".inputclear").click(function(){
-            if ($(".enter-search").val()){
-                $(".enter-search").val('');
-                refreshTable();
-            }    
+            $(".enter-search").val('');
+            refreshTable();
         });
 
         $('input[name="date"]').change(function (){
