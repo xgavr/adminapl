@@ -513,9 +513,6 @@ $legalContact = $client->getLegalContact();
         switch(row.status){
             case '<?= Vt::STATUS_TAKE_NO?>': 
                 return {classes: 'warning '+retired};
-            default: break;            
-        }                
-        switch(row.status){
             case '<?= Vt::STATUS_COMMISSION?>': 
             case '<?= Vt::STATUS_DEFECT?>': 
                         return {classes: 'info '+retired}; break;
