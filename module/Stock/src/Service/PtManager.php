@@ -236,7 +236,7 @@ class PtManager
                 
                 if ($write == 0){
                     $take = PtGood::TAKE_OK;
-                } else {
+                } elseif ($pt->getDocDate() < date('Y-m-d', strtotime('+1 day'))) {
                     $ptTake = Pt::STATUS_TAKE_NO;
                 }
                 
