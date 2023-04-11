@@ -154,6 +154,7 @@ class StManager
                                     'office_id' => $st->getOffice()->getId(),
                                     'company_id' => $st->getCompany()->getId(),
                                     'contact_id' => $comiss->getContact()->getId(),
+                                    'doc_stamp' => $docStamp,
                                 ];
                                 $this->entityManager->getRepository(Comiss::class)
                                         ->insertComiss($data);

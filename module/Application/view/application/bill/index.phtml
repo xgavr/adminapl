@@ -14,7 +14,7 @@ $this->pageBreadcrumbs()->setItems([
 ?>
 <div class="row">
     <div class="col-md-12">
-        <div id="toolbar">
+        <div id="billtoolbar">
             <div class="form-inline" role="form">
 <!--                <div class="form-group">
                     <input name="search" style="width: 400px" class="form-control" type="text" placeholder="">
@@ -56,7 +56,7 @@ $this->pageBreadcrumbs()->setItems([
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
-            data-toolbar="#toolbar"
+            data-toolbar="#billtoolbar"
             data-show-refresh="true"
             data-show-toggle="false"
             data-query-params="billQueryParams"
@@ -193,14 +193,14 @@ $this->pageBreadcrumbs()->setItems([
     });
     
     function billQueryParams(params) {
-        $('#toolbar').find('input[name]').each(function () {
+        $('#billtoolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('.page-size').html();
+        limit = $('#billTable .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('li.page-number.active a').html();
+        offset = $('#billTable li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    

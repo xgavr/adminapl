@@ -132,7 +132,6 @@ class OtManager
                     unset($data['base_key']);
                     unset($data['base_type']);
                     unset($data['base_id']);
-                    unset($data['doc_stamp']);
                     unset($data['base_amount']);
                     $data['contact_id'] = $ot->getComiss()->getId();                    
                     $this->entityManager->getRepository(Comiss::class)

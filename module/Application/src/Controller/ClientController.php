@@ -17,6 +17,7 @@ use Application\Form\ContactForm;
 use Laminas\View\Model\JsonModel;
 use Stock\Entity\Retail;
 use Application\Entity\Order;
+use Stock\Entity\Comiss;
 
 class ClientController extends AbstractActionController
 {
@@ -434,6 +435,65 @@ class ClientController extends AbstractActionController
         ]);                  
     }   
     
+    public function comissAction()
+    {        
+        $clientId = (int)$this->params()->fromRoute('id', -1);
+
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $search = $this->params()->fromQuery('search');
+        $source = $this->params()->fromQuery('source');
+        $company = $this->params()->fromQuery('company');
+        $sort = $this->params()->fromQuery('sort', 'dateOper');
+        $order = $this->params()->fromQuery('order', 'ASC');
+        $year_month = $this->params()->fromQuery('month');
+        
+        $year = $month = null;
+        if ($year_month){
+            $year = date('Y', strtotime($year_month));
+            $month = date('m', strtotime($year_month));
+        }        
+        
+        // Validate input parameter
+        if ($clientId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $client = $this->entityManager->getRepository(Client::class)
+                ->find($clientId);
+
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $query = $this->entityManager->getRepository(Client::class)
+                        ->comiss($client, ['q' => $search, 'source' => $source, 
+                            'sort' => $sort, 'order' => $order, 'company' => $company,
+                            'month' => $month, 'year' => $year]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        foreach ($result as $key=>$value){
+            $result[$key]['rest'] = $this->entityManager->getRepository(Comiss::class)
+                ->clientStampRest($clientId, $value['docType'], $value['docId'], $company);
+        }
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }   
+
     public function legalsAction()
     {
         $clientId = (int) $this->params()->fromRoute('id', '');

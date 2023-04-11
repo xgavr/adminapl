@@ -37,6 +37,7 @@ $legalContact = $client->getLegalContact();
             <li role="presentation"><a href="#orders" role="tab" id="order-tab" data-toggle="tab" aria-controls="orders" aria-expanded="true">Заказы <span id="orderBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#mutuals" role="tab" id="mutual-tab" data-toggle="tab" aria-controls="mutual" aria-expanded="true">Финансы <span id="mutualBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#vt" role="tab" id="vt-tab" data-toggle="tab" aria-controls="vt" aria-expanded="true">Возвраты <span id="vtBadge" class="badge"></span></a></li>
+            <li role="presentation"><a href="#comiss" role="tab" id="comiss-tab" data-toggle="tab" aria-controls="comiss" aria-expanded="true">Комиссия <span id="comissBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#cars" role="tab" id="car-tab" data-toggle="tab" aria-controls="cars" aria-expanded="true">Машины <span id="carBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#comments" role="tab" id="comment-tab" data-toggle="tab" aria-controls="comment" aria-expanded="true">Комментарии <span id="commentBadge" class="badge"></span></a></li>
         </ul>        
@@ -275,7 +276,7 @@ $legalContact = $client->getLegalContact();
                 data-show-toggle="false"
                 data-show-columns="false"
                 data-query-params="mutualsQueryParams"
-                data-sort-name="id"
+                data-sort-name="dateOper"
                 data-sort-order="desc"            
                 data-response-handler="responseHandler"
                 data-classes = "table table-bordered table-hover table-condensed"
@@ -285,13 +286,57 @@ $legalContact = $client->getLegalContact();
                 >
                 <thead>
                     <tr>
-                        <th data-field="dateOper" data-width="100" data-sortable="true" data-formatter="dateFormatter">Дата</th>
+                        <th data-field="dateOper" data-width="80" data-sortable="true" data-formatter="dateFormatter">Дата</th>
                         <th data-field="amount" data-type="numeric" data-align="right" data-width="30" data-formatter="inFormatter">Отгрузка</th>
                         <th data-field="amount" data-type="numeric" data-align="right" data-width="30" data-formatter="outFormatter">Оплата</th>
                         <th data-field="rest" data-type="numeric" data-align="right" data-formatter="restFormatter" data-width="30">Баланс</th>
                         <th data-field="docKey" data-formatter="docKeyFormatter">Документ</th>
                         <th data-field="office.name" data-width="50">Офис</th>
                         <th data-field="company.name" data-width="150">ЮЛ</th>
+                    </tr>                
+                </thead>
+            </table>
+        </div>    
+        <div class="tab-pane fade" role="tabpanel" id="comiss" aria-labelledby="comiss-tab">
+            <table id="comisstable" 
+                data-toggle="table" 
+                data-side-pagination="server"
+                data-pagination="true" 
+                data-url="/client/comiss/<?= $client->getId()?>"
+                data-page-list="[5, 10, 15, 20, 50]"
+                data-toolbar="#comisstoolbar"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-show-columns="false"
+                data-query-params="comissQueryParams"
+                data-sort-name="dateOper"
+                data-sort-order="desc"            
+                data-response-handler="responseHandler"
+                data-classes = "table table-bordered table-hover table-condensed"
+                data-unique-id="id"
+                data-icon-size="sm"
+                data-row-style="comissRowStyle"
+                >
+                <thead>
+                    <tr>
+                        <th data-field="dateOper" rowspan="2" data-width="80" data-sortable="true" data-formatter="dateFormatter">Дата</th>
+                        <th data-field="good.code" rowspan="2" data-formatter="goodFormatter" data-width="50">Артикул</th>
+                        <th data-field="good.producer.name" rowspan="2" data-width="50">Производитель</th>
+                        <th data-field="good.name" rowspan="2" data-formatter="goodNameFormatter">Наименование</th>
+                        <th colspan="2">Поступило</th>
+                        <th colspan="2">Списано</th>
+                        <th colspan="2">Остаток</th>
+                        <th data-field="docKey" rowspan="2" data-formatter="docKeyFormatter">Документ</th>
+                        <th data-field="office.name" rowspan="2" data-width="50">Офис</th>
+                        <th data-field="company.name" rowspan="2" data-width="150">ЮЛ</th>
+                    </tr>                
+                    <tr>
+                        <th data-field="quantity" data-type="numeric" data-align="right" data-width="30" data-formatter="inQuantityFormatter">Количество</th>
+                        <th data-field="amount" data-type="numeric" data-align="right" data-width="30" data-formatter="inFormatter">Сумма</th>
+                        <th data-field="quantity" data-type="numeric" data-align="right" data-width="30" data-formatter="outQuantityFormatter">Количетсво</th>
+                        <th data-field="amount" data-type="numeric" data-align="right" data-width="30" data-formatter="outFormatter">Сумма</th>
+                        <th data-field="rest.quantity" data-type="numeric" data-align="right" data-formatter="restQuantityFormatter" data-width="30">Количетсво</th>
+                        <th data-field="rest.amount" data-type="numeric" data-align="right" data-formatter="restFormatter" data-width="30">Сумма</th>
                     </tr>                
                 </thead>
             </table>
@@ -407,11 +452,27 @@ $legalContact = $client->getLegalContact();
         $('#mutualtoolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('#vttable .page-size').html();
+        limit = $('#mutualtable .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('#vttable li.page-number.active a').html();
+        offset = $('#mutualtable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }    
+
+    function comissQueryParams(params) {
+        $('#comisstoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#comisstable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#comisstable li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
@@ -467,6 +528,25 @@ $legalContact = $client->getLegalContact();
     }
 
     function mutualRowStyle(row){
+        var retired = 'default';
+//        switch(row.status){
+//            case '<?= Vt::STATUS_TAKE_NO?>': 
+//                return {classes: 'warning '+retired};
+//            default: break;            
+//        }                
+//        switch(row.status){
+//            case '<?= Vt::STATUS_COMMISSION?>': 
+//            case '<?= Vt::STATUS_DEFECT?>': 
+//                        return {classes: 'info '+retired}; break;
+//            case '<?= Vt::STATUS_RETIRED?>': 
+//                        return {classes: 'retired '+retired}; break;
+//            default:break;     
+//        }
+        
+        return {classes: retired};
+    }
+
+    function comissRowStyle(row){
         var retired = 'default';
 //        switch(row.status){
 //            case '<?= Vt::STATUS_TAKE_NO?>': 
@@ -646,7 +726,25 @@ $legalContact = $client->getLegalContact();
         return;
     }    
 
+    function inQuantityFormatter(value){
+        if (value>0){
+            return Math.round(value*100)/100;
+        }
+        return;
+    }    
+    
+    function outQuantityFormatter(value){
+        if (value<0){
+            return -Math.round(value*100)/100;
+        }
+        return;
+    }    
+
     function restFormatter(value){
+        return Math.round(value*100)/100;
+    }    
+
+    function restQuantityFormatter(value){
         return Math.round(value*100)/100;
     }    
 
@@ -700,6 +798,23 @@ $legalContact = $client->getLegalContact();
         btn += '</button>';
 
         return btn;
+    }        
+    
+    function goodFormatter(value, row){
+        var url = '/goods/view/'+row.good.id;
+        btn = '<nobr><a';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-link btn-xs" target="_blank">';
+        btn += '<span class="glyphicon glyphicon-link"></span>';
+        btn += '</a>'+value+'</nobr>';
+        return btn;
+    }    
+      
+    function goodNameFormatter(value, row){
+        if (row.tokenGroup){
+            return row.tokenGroup.name;
+        }
+        return value;
     }        
     
     function docKeyFormatter(value, row){

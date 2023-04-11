@@ -15,6 +15,7 @@ use Laminas\Validator\EmailAddress;
 use Stock\Entity\Retail;
 use Application\Entity\Order;
 use Stock\Entity\Movement;
+use Stock\Entity\Comiss;
 
 /**
  * Description of ClientRepository
@@ -147,6 +148,59 @@ class ClientRepository extends EntityRepository{
         return $queryBuilder->getQuery();            
     }    
     
+    /**
+     * Товары на комиссии
+     * 
+     * @param Client $client
+     * @param array $params
+     * @return Query
+     */
+    public function comiss($client, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('c, o, company, ct, g, p, tg')
+            ->from(Comiss::class, 'c')
+            ->join('c.office', 'o')    
+            ->join('c.company', 'company')
+            ->join('c.contact', 'ct')
+            ->join('c.good', 'g')
+            ->join('g.producer', 'p')
+            ->leftJoin('g.tokenGroup', 'tg')    
+            ->where('ct.client = ?1')
+            ->setParameter('1', $client->getId())
+//            ->orderBy('m.docStamp','ASC')    
+            ;
+        
+        if (is_array($params)){
+            if (!empty($params['sort'])){
+                $sort = $params['sort'];
+                $queryBuilder->addOrderBy('c.'.$sort, $params['order']);
+            }
+            if (!empty($params['office'])){
+                if (is_numeric($params['office'])){
+                    $queryBuilder->andWhere('c.office = ?2')
+                        ->setParameter('2', $params['office']);
+                }    
+            }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(c.dateOper) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(c.dateOper) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery();            
+    }    
+
     /**
      * Юрлица клиента
      * @param Client $client

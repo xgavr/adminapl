@@ -307,6 +307,7 @@ class OrderManager
                         'office_id' => $order->getOffice()->getId(),
                         'company_id' => $order->getCompany()->getId(),
                         'contact_id' => $comiss->getContact()->getId(),
+                        'doc_stamp' => $docStamp,
                     ];
                     $this->entityManager->getRepository(Comiss::class)
                             ->insertComiss($data);

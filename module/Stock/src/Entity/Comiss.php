@@ -79,6 +79,11 @@ class Comiss {
     protected $amount;
 
     /**
+     * @ORM\Column(name="doc_stamp")   
+     */
+    protected $docStamp;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="comiss") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
@@ -219,6 +224,16 @@ class Comiss {
         return $this->quantity;
     }
         
+    public function getDocStamp() 
+    {
+        return $this->docStamp;
+    }
+
+    public function setDocStamp($docStamp) 
+    {
+        $this->docStamp = $docStamp;
+    }     
+    
     /**
      * Returns status.
      * @return int     

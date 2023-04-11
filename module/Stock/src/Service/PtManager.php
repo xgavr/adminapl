@@ -174,6 +174,7 @@ class PtManager
                                 'office_id' => $pt->getOffice()->getId(),
                                 'company_id' => $pt->getCompany()->getId(),
                                 'contact_id' => $comiss->getContact()->getId(),
+                                'doc_stamp' => $docStamp,
                             ];
                             $this->entityManager->getRepository(Comiss::class)
                                     ->insertComiss($data);
@@ -220,6 +221,7 @@ class PtManager
                                     'office_id' => $pt->getOffice2()->getId(),
                                     'company_id' => $pt->getCompany2()->getId(),
                                     'contact_id' => $comiss->getContact()->getId(),
+                                    'doc_stamp' => $docStamp,
                                 ];
                                 $this->entityManager->getRepository(Comiss::class)
                                         ->insertComiss($data);

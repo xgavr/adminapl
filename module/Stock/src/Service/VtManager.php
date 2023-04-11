@@ -81,6 +81,10 @@ class VtManager
         
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($vt->getLogKey());
+
+        if ($vt->getStatus() == Vt::STATUS_COMMISSION){
+            return;
+        }
         
         $contractId = null;
         if ($vt->getOrder()->getLegal()){
@@ -122,7 +126,11 @@ class VtManager
     public function updateVtRetails($vt, $docStamp)
     {
         $this->entityManager->getRepository(Retail::class)
-                ->removeOrderRetails($vt->getLogKey());        
+                ->removeOrderRetails($vt->getLogKey());  
+        
+        if ($vt->getStatus() == Vt::STATUS_COMMISSION){
+            return;
+        }
         
         $legalId = $contractId = null;
         if ($vt->getOrder()->getLegal()){
@@ -243,7 +251,6 @@ class VtManager
                         unset($data['base_type']);
                         unset($data['base_id']);
                         unset($data['base_amount']);
-                        unset($data['doc_stamp']);
                         $data['contact_id'] = $vt->getOrder()->getContact()->getId();
                         $this->entityManager->getRepository(Comiss::class)
                                 ->insertComiss($data);
@@ -253,7 +260,6 @@ class VtManager
                             unset($data['base_key']);
                             unset($data['base_type']);
                             unset($data['base_id']);
-                            unset($data['doc_stamp']);
                             $data['contact_id'] = $movement->getContact()->getId();
                             $this->entityManager->getRepository(Comiss::class)
                                     ->insertComiss($data);                            

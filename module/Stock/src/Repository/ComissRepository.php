@@ -10,6 +10,7 @@ namespace Stock\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Stock\Entity\Comiss;
+use Stock\Entity\Register;
 
 /**
  * Description of ComissRepository
@@ -112,4 +113,45 @@ class ComissRepository extends EntityRepository{
         $connection->insert('comiss', $data);
         return;
     }
+    
+    /**
+    * Остаток на момент времени
+    * @param integer $clientId
+     *@param integer $docType 
+     *@param integer $docId 
+     * @param integer $companyId
+    * @return integer
+    */
+    public function clientStampRest($clientId, $docType, $docId, $companyId = null)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $register = $entityManager->getRepository(Register::class)
+                ->findOneBy(['docType' => $docType, 'docId' => $docId]);
+                
+        if ($register){
+            $qb = $entityManager->createQueryBuilder();
+            $qb->select('sum(c.amount) as amount, sum(c.quantity) as quantity')
+                    ->from(Comiss::class, 'c')
+                    ->join('c.contact', 'contact')
+                    ->where('contact.client = ?1')
+                    ->andWhere('c.docStamp <= ?2') 
+                    ->andWhere('c.docStamp > 0')
+                    ->setParameter('1', $clientId)
+                    ->setParameter('2', $register->getDocStamp())
+                    ;
+
+            if (!empty($companyId)){
+                if (is_numeric($companyId)){
+                    $qb->andWhere('с.company = ?4');
+                    $qb->setParameter('4', $companyId);
+                }    
+            }
+
+            $result = $qb->getQuery()->getOneOrNullResult();
+
+            return $result;
+        }
+        return;
+    }                    
 }
