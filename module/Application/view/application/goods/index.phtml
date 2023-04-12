@@ -39,7 +39,7 @@ $this->pageBreadcrumbs()->setItems([
                     <select style="width: 200px" class="form-control refresh-table good-toolbar cookie-control" name="office">
                         <option>все офисы</option>
                         <?php foreach ($offices as $office):?>
-                            <option value="<?= $office->getId()?>" <?//= ($office->getId() == $currentUser->getOffice()->getId()) ? 'selected':''?>><?= $office->getName()?></option>
+                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>
@@ -101,6 +101,7 @@ $this->pageBreadcrumbs()->setItems([
     function refreshTable(){
 //        $table.bootstrapTable('refresh');
         $table.bootstrapTable('selectPage', 1);
+        setCookies('goodsSaveId');
     }
 
     function setCookies(cookieKey){
@@ -118,15 +119,10 @@ $this->pageBreadcrumbs()->setItems([
             }
         });                        
         $table.bootstrapTable('refresh', {
-            url: '/goods/presence'
+            url: '/goods/presence',
         });
     }
 
-    $table.bootstrapTable({
-        onLoadSuccess: function (data){
-            setCookies('goodsSaveId');
-        }
-    });
     
     $(function () {
         getCookies('goodsSaveId');
