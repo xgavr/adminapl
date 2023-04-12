@@ -151,9 +151,7 @@ class RingForm extends Form
                 'label' => 'Машина',
             ],
         ]);
-                
-        
-        
+                        
         $this->add([           
             'type'  => 'text',
             'name' => 'gds',

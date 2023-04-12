@@ -5,6 +5,10 @@ $form->get('make')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('makeName')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('model')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -78,6 +82,7 @@ $form->prepare();
         <div class="col-xs-4">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('vin')); ?>
+                <span id="vinLength"></span>
                 <?= $this->formElement($form->get('vin')); ?>
                 <?= $this->formElementErrors($form->get('vin')); ?>                  
             </div>
@@ -85,6 +90,7 @@ $form->prepare();
         <div class="col-xs-4">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('vin2')); ?>
+                <span id="vin2Length"></span>
                 <?= $this->formElement($form->get('vin2')); ?>
                 <?= $this->formElementErrors($form->get('vin2')); ?>                  
             </div>
@@ -100,9 +106,11 @@ $form->prepare();
     <div class="row">
         <div class="col-xs-4">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('make')); ?>
+                <?= $this->formLabel($form->get('makeName')); ?>
+                <?= $this->formElement($form->get('makeName')); ?>
+                <?= $this->formElementErrors($form->get('makeName')); ?>                  
+                
                 <?= $this->formElement($form->get('make')); ?>
-                <?= $this->formElementErrors($form->get('make')); ?>                  
             </div>
         </div>    
         <div class="col-xs-4">                        
@@ -216,25 +224,47 @@ $form->prepare();
                 alert("Ошибка при открытии формы.");
 
             });
-    })    
+    });    
     
-    $('#make').on('change', function(){
-        $.getJSON( '/make/models/'+$('#make').val(), function( data ) {
-            $('#model').empty();
-            $('#car').empty();
-            $.each( data.rows, function( key, value ) {
-                $('#model').append('<option value="' + key + '">' + value.name + '</option>');
-            });
-        });    
-    });
+    $( document ).ready(function() {
+        $('#makeName').typeahead({
+            source: function(query, process) {
+                return $.get("/make/autocomplete?q="+query, function (data) {
+                    return process(data);
+                });
+            },
+            changeInputOnSelect: false,
+            afterSelect: function(data) {
+                $('#make').val(data.id);
+            }
+        });
     
-    $('#model').on('change', function(){
-        $.getJSON( '/make/cars/'+$('#model').val(), function( data ) {
-            $('#car').empty();
-            $.each( data.rows, function( key, value ) {
-                $('#car').append('<option value="' + key + '">' + value.name + '</option>');
-            });
-        });    
-    });
+        $('#vin').on('input', function(){
+            $("#vinLength").html($("#vin").val().length);
+        });
+
+        $('#vin2').on('input', function(){
+            $("#vin2Length").html($("#vin2").val().length);
+        });
+
+        $('#make').on('change', function(){
+            $.getJSON( '/make/models/'+$('#make').val(), function( data ) {
+                $('#model').empty();
+                $('#car').empty();
+                $.each( data.rows, function( key, value ) {
+                    $('#model').append('<option value="' + key + '">' + value.name + '</option>');
+                });
+            });    
+        });
+
+        $('#model').on('change', function(){
+            $.getJSON( '/make/cars/'+$('#model').val(), function( data ) {
+                $('#car').empty();
+                $.each( data.rows, function( key, value ) {
+                    $('#car').append('<option value="' + key + '">' + value.name + '</option>');
+                });
+            });    
+        });
+    });    
     
 </script>

@@ -52,65 +52,49 @@ class ContactCarForm extends Form
     {
                 
         // Добавляем поле "make"
-        $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+        $this->add([           
+            'type'  => 'hidden',
             'name' => 'make',
-            'attributes' => [                
-                'id' => 'make',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
-                //'value' => $this->make->getId(),
+            'attributes' => [
+                'id' => 'make'
             ],
             'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Make',
-                'label' => 'Марка',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--выберете марку--',
-                'disable_inarray_validator' => true,
+                'label' => 'Машина',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'makeName',
+            'attributes' => [
+                'id' => 'makeName'
+            ],
+            'options' => [
+                'label' => 'Машина',
             ],
         ]);
 
         // Добавляем поле "model"
-        $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+        $this->add([           
+            'type'  => 'select',
             'name' => 'model',
-            'attributes' => [                
-                'id' => 'model',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
-                //'value' => $this->model->getId(),
+            'attributes' => [
+                'id' => 'model'
             ],
             'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Model',
                 'label' => 'Модель',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--выберете модель--',
-                'disable_inarray_validator' => true,
             ],
         ]);
 
         // Добавляем поле "car"
-        $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+        $this->add([           
+            'type'  => 'select',
             'name' => 'car',
-            'attributes' => [                
-                'id' => 'car',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
-                //'value' => $this->car->getId(),
+            'attributes' => [
+                'id' => 'car'
             ],
             'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Car',
                 'label' => 'Модификация',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--выберете модификацию--',
-                'disable_inarray_validator' => true,
             ],
         ]);
 
