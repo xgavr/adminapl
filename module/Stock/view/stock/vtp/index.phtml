@@ -149,6 +149,7 @@
 
     function refreshTable(){
         $table.bootstrapTable('selectPage', 1);
+        setCookies('vtpSaveId');
 //        $table.bootstrapTable('refresh');
     }
     
@@ -166,69 +167,64 @@
                 $(this).val(cookieVal);                
             }
         });                        
-        $table.bootstrapTable('refresh', {
-            url: '/vtp/content'
+        $table.bootstrapTable('refreshOptions', {
+            url: '/vtp/content',
+            silent: true,
+            onExpandRow: function (index, row, $detail) {
+                $detail.html('Идет загрузка...');
+                $.ajax({
+                    type: "GET",
+                    url: "/vtp/good-content/"+row.id,
+                    success: function (result) {
+                        $detail.html('<table id="detail'+index+'"></table>').find('table').bootstrapTable({
+                            classes: 'table table-bordered table-hover table-condensed', 
+                            rowStyle: vtpIndexTakeStyle,
+                            editableUrl: "/vtp/vtp-good-editable/",
+                            idField: "vtpId",
+                            columns: [{
+                                field: 'vtpg.good.code',
+                                title: 'Артикул',
+                                formatter: 'goodFormatter'
+                            }, {
+                                field: 'vtpg.good.producer.name',
+                                title: 'Производитель'
+                            }, {
+                                field: 'quantity',
+                                title: 'Количество',
+                                width: 200,
+                                align: 'right',
+                                editable: true
+                            }, {
+                                field: 'price',
+                                title: 'Цена',
+                                width: 200,
+                                align: 'right',
+                                editable: true,
+                            }, {
+                                field: 'amount',
+                                title: 'Сумма',
+                                width: 200,
+                                align: 'right',
+                                formatter: "pgAmountFormatter"
+                            }],
+                            data: result,
+                            onEditableSave: function(field, geRow, oldValue, $el){
+                                $.ajax({
+                                    type: "GET",
+                                    url: "/vtp/info/"+row.id,
+                                    success: function(info){
+    //                                    $table.bootstrapTable('updateCell', {index: index, field: 'amount', value: info.amount, reinit: true});
+    //                                    $table.bootstrapTable('collapseRowByUniqueId', index);
+    //                                    $table.bootstrapTable('expandRowByUniqueId', index);
+                                    }
+                                });
+                            }                        
+                        });
+                    }    
+                });
+            }
         });
     }
-    
-    $table.bootstrapTable({
-        onLoadSuccess: function (data){
-            setCookies('vtpSaveId');
-        },
-        onExpandRow: function (index, row, $detail) {
-            $detail.html('Идет загрузка...');
-            $.ajax({
-                type: "GET",
-                url: "/vtp/good-content/"+row.id,
-                success: function (result) {
-                    $detail.html('<table id="detail'+index+'"></table>').find('table').bootstrapTable({
-                        classes: 'table table-bordered table-hover table-condensed', 
-                        rowStyle: vtpIndexTakeStyle,
-                        editableUrl: "/vtp/vtp-good-editable/",
-                        idField: "vtpId",
-                        columns: [{
-                            field: 'vtpg.good.code',
-                            title: 'Артикул',
-                            formatter: 'goodFormatter'
-                        }, {
-                            field: 'vtpg.good.producer.name',
-                            title: 'Производитель'
-                        }, {
-                            field: 'quantity',
-                            title: 'Количество',
-                            width: 200,
-                            align: 'right',
-                            editable: true
-                        }, {
-                            field: 'price',
-                            title: 'Цена',
-                            width: 200,
-                            align: 'right',
-                            editable: true,
-                        }, {
-                            field: 'amount',
-                            title: 'Сумма',
-                            width: 200,
-                            align: 'right',
-                            formatter: "pgAmountFormatter"
-                        }],
-                        data: result,
-                        onEditableSave: function(field, geRow, oldValue, $el){
-                            $.ajax({
-                                type: "GET",
-                                url: "/vtp/info/"+row.id,
-                                success: function(info){
-//                                    $table.bootstrapTable('updateCell', {index: index, field: 'amount', value: info.amount, reinit: true});
-//                                    $table.bootstrapTable('collapseRowByUniqueId', index);
-//                                    $table.bootstrapTable('expandRowByUniqueId', index);
-                                }
-                            });
-                        }                        
-                    });
-                }    
-            });
-        }
-    });
     
     $(function () {
         getCookies('vtpSaveId');
