@@ -264,75 +264,79 @@ class OrderManager
                 $movement = $this->entityManager->getRepository(Movement::class)
                         ->findOneByDocKey($base['baseKey']);
 
-                $quantity = min($base['rest'], $write);
-                $amount = $quantity*$bid->getPrice();
 
-                $data = [
-                    'doc_key' => $order->getLogKey(),
-                    'doc_type' => Movement::DOC_ORDER,
-                    'doc_id' => $order->getId(),
-                    'base_type' => $movement->getBaseType(),
-                    'base_key' => $movement->getBaseKey(),
-                    'base_id' => $movement->getBaseId(),
-                    'doc_row_key' => $bid->getRowKey(),
-                    'doc_row_no' => $bid->getRowNo(),
-                    'date_oper' => date('Y-m-d 22:00:00', strtotime($order->getDocDate())),
-                    'status' => Movement::getStatusFromOrder($order),
-                    'quantity' => -$quantity,
-                    'amount' => -$amount,
-                    'base_amount' => -$base['price']*$quantity,
-                    'good_id' => $bid->getGood()->getId(),
-                    'office_id' => $order->getOffice()->getId(),
-                    'company_id' => $order->getCompany()->getId(),
-                    'doc_stamp' => $docStamp,
-                ];
+                if ($movement){
+                    
+                    $quantity = min($base['rest'], $write);
+                    $amount = $quantity*$bid->getPrice();
 
-                $this->entityManager->getRepository(Movement::class)
-                        ->insertMovement($data);     
-//                var_dump($movement->getStatus());
-                if ($movement->getStatus() == Movement::STATUS_COMMISSION){
-                    $comiss = $this->entityManager->getRepository(Comiss::class)
-                            ->findOneByDocKey($base['baseKey']);
                     $data = [
                         'doc_key' => $order->getLogKey(),
                         'doc_type' => Movement::DOC_ORDER,
                         'doc_id' => $order->getId(),
+                        'base_type' => $movement->getBaseType(),
+                        'base_key' => $movement->getBaseKey(),
+                        'base_id' => $movement->getBaseId(),
                         'doc_row_key' => $bid->getRowKey(),
                         'doc_row_no' => $bid->getRowNo(),
-                        'date_oper' => $order->getDateOper(),
+                        'date_oper' => date('Y-m-d 22:00:00', strtotime($order->getDocDate())),
                         'status' => Movement::getStatusFromOrder($order),
                         'quantity' => -$quantity,
                         'amount' => -$amount,
+                        'base_amount' => -$base['price']*$quantity,
                         'good_id' => $bid->getGood()->getId(),
                         'office_id' => $order->getOffice()->getId(),
                         'company_id' => $order->getCompany()->getId(),
-                        'contact_id' => $comiss->getContact()->getId(),
                         'doc_stamp' => $docStamp,
                     ];
-                    $this->entityManager->getRepository(Comiss::class)
-                            ->insertComiss($data);
 
-                    $data = [
-                        'doc_key' => $order->getLogKey(),
-                        'doc_type' => Movement::DOC_ORDER,
-                        'doc_id' => $order->getId(),
-                        'date_oper' => $order->getDateOper(),
-                        'status' => Retail::getStatusFromOrder($order),
-                        'revise' => Retail::REVISE_NOT,
-                        'amount' => -$amount,
-                        'contact_id' => $comiss->getContact()->getId(),
-                        'office_id' => $order->getOffice()->getId(),
-                        'company_id' => $order->getCompany()->getId(),
-                    ];
+                    $this->entityManager->getRepository(Movement::class)
+                            ->insertMovement($data);     
+    //                var_dump($movement->getStatus());
+                    if ($movement->getStatus() == Movement::STATUS_COMMISSION){
+                        $comiss = $this->entityManager->getRepository(Comiss::class)
+                                ->findOneByDocKey($base['baseKey']);
+                        $data = [
+                            'doc_key' => $order->getLogKey(),
+                            'doc_type' => Movement::DOC_ORDER,
+                            'doc_id' => $order->getId(),
+                            'doc_row_key' => $bid->getRowKey(),
+                            'doc_row_no' => $bid->getRowNo(),
+                            'date_oper' => $order->getDateOper(),
+                            'status' => Movement::getStatusFromOrder($order),
+                            'quantity' => -$quantity,
+                            'amount' => -$amount,
+                            'good_id' => $bid->getGood()->getId(),
+                            'office_id' => $order->getOffice()->getId(),
+                            'company_id' => $order->getCompany()->getId(),
+                            'contact_id' => $comiss->getContact()->getId(),
+                            'doc_stamp' => $docStamp,
+                        ];
+                        $this->entityManager->getRepository(Comiss::class)
+                                ->insertComiss($data);
 
-                    $this->entityManager->getRepository(Retail::class)
-                            ->insertRetail($data);                                
-                }  
+                        $data = [
+                            'doc_key' => $order->getLogKey(),
+                            'doc_type' => Movement::DOC_ORDER,
+                            'doc_id' => $order->getId(),
+                            'date_oper' => $order->getDateOper(),
+                            'status' => Retail::getStatusFromOrder($order),
+                            'revise' => Retail::REVISE_NOT,
+                            'amount' => -$amount,
+                            'contact_id' => $comiss->getContact()->getId(),
+                            'office_id' => $order->getOffice()->getId(),
+                            'company_id' => $order->getCompany()->getId(),
+                        ];
 
-                $write -= $quantity;
-                if ($write <= 0){
-                    break;
-                }                    
+                        $this->entityManager->getRepository(Retail::class)
+                                ->insertRetail($data);                                
+                    }  
+                    $write -= $quantity;
+                    if ($write <= 0){
+                        break;
+                    }                    
+                }
+                
             }
 
             $takeNoCount += $write;
