@@ -71,13 +71,13 @@ $form->prepare();
 $make = $model = $car = null;
 if ($contactCar){
     if ($contactCar->getMake()){
-        $make = $contactCar->geMake()->getId();
+        $make = $contactCar->getMake()->getId();
     }    
     if ($contactCar->getModel()){
-        $model = $contactCar->geModel()->getId();
+        $model = $contactCar->getModel()->getId();
     }    
     if ($contactCar->getCar()){
-        $car = $contactCar->geCar()->getId();
+        $car = $contactCar->getCar()->getId();
     }    
 }            
 
