@@ -226,6 +226,27 @@ $form->prepare();
             });
     });    
     
+    function makeChange(){
+        $.getJSON( '/make/models/'+$('#make').val(), function( data ) {
+            $('#model').empty();
+            $('#car').empty();
+            $('#model').append('<option></option>');
+            $.each( data.rows, function( key, value ) {
+                $('#model').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    }
+    
+    function modelChange(){
+        $.getJSON( '/make/cars/'+$('#model').val(), function( data ) {
+            $('#car').empty();
+            $('#car').append('<option></option>');
+            $.each( data.rows, function( key, value ) {
+                $('#car').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    }
+    
     $( document ).ready(function() {
         $('#makeName').typeahead({
             source: function(query, process) {
@@ -236,6 +257,7 @@ $form->prepare();
             changeInputOnSelect: false,
             afterSelect: function(data) {
                 $('#make').val(data.id);
+                $('#makeName').val(data.name);
             }
         });
     
@@ -248,22 +270,11 @@ $form->prepare();
         });
 
         $('#make').on('change', function(){
-            $.getJSON( '/make/models/'+$('#make').val(), function( data ) {
-                $('#model').empty();
-                $('#car').empty();
-                $.each( data.rows, function( key, value ) {
-                    $('#model').append('<option value="' + key + '">' + value.name + '</option>');
-                });
-            });    
+            makeChange();
         });
 
         $('#model').on('change', function(){
-            $.getJSON( '/make/cars/'+$('#model').val(), function( data ) {
-                $('#car').empty();
-                $.each( data.rows, function( key, value ) {
-                    $('#car').append('<option value="' + key + '">' + value.name + '</option>');
-                });
-            });    
+            modelChange();
         });
     });    
     
