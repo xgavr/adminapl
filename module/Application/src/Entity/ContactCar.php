@@ -546,9 +546,10 @@ class ContactCar {
             'md'      => $this->getMd(),
             'ed'      => $this->getEd(),
             'ep'      => $this->getEp(),
-            'make'    => $this->getMake(),
-            'model'   => $this->getModel(),
-            'car'     => $this->getCar(),
+            'make'    => ($this->getMake()) ? $this->getMake()->getId():null,
+            'makeName'    => ($this->getMake()) ? $this->getMake()->getName():null,
+            'model'   => ($this->getModel()) ? $this->getModel()->getId():null,
+            'car'     => ($this->getCar()) ? $this->getCar()->getId():null,
         ];    
     }    
 

@@ -121,7 +121,6 @@ class ContactCarController extends AbstractActionController
     
    public function editAction()
    {
-
         // Получаем ID contactCar.    
         $contactCarId = $this->params()->fromRoute('id', -1);
         
