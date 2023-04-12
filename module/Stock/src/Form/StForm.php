@@ -97,6 +97,7 @@ class StForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
+        
         $this->add([
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
             'name' => 'company',

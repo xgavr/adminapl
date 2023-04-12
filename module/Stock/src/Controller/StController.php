@@ -126,6 +126,7 @@ class StController extends AbstractActionController
     public function editFormAction()
     {
         $stId = (int)$this->params()->fromRoute('id', -1);
+        $officeId = (int)$this->params()->fromQuery('office', $this->stManager->currentUser()->getOffice()->getId());
         $goodId = (int)$this->params()->fromQuery('good', -1);
         
         $st = $office = $company = $user = $cost = $contactName = $good = null;
@@ -140,11 +141,12 @@ class StController extends AbstractActionController
                     ->find($goodId);
         }    
         
-        if ($st == null) {
-            $officeId = (int)$this->params()->fromQuery('office', 1);
+        if ($officeId > 0){
             $office = $this->entityManager->getRepository(Office::class)
-                    ->findOneById($officeId);
-        } else {
+                    ->find($officeId);
+        }    
+
+        if ($st) {
             $office = $st->getOffice();
             $company = $st->getCompany();
             $user = $st->getUser();

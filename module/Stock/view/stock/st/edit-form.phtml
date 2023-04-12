@@ -215,7 +215,7 @@ if ($st){
         data.stGood = getFormatedStGood();
         $.ajax({
             type: 'POST',
-            url: '/st/edit-form/<?= ($st) ? $st->getId():"" ?>',
+            url: '/st/edit-form/<?= ($st) ? $st->getId():"" ?>?office='+$('#office').val(),
             data: $.param(data)
         })
             .done(function (data) {
