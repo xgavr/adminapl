@@ -68,6 +68,19 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Ð¡Ð
 
 $form->prepare();
 
+$make = $model = $car = null;
+if ($contactCar){
+    if ($contactCar->getMake()){
+        $make = $contactCar->geMake()->getId();
+    }    
+    if ($contactCar->getModel()){
+        $model = $contactCar->geModel()->getId();
+    }    
+    if ($contactCar->getCar()){
+        $car = $contactCar->geCar()->getId();
+    }    
+}            
+
 ?>
 
 <?= $this->form()->openTag($form); ?>
@@ -228,7 +241,7 @@ $form->prepare();
             });
     });    
     
-    function makeChange(){
+    function makeChange(model = null){
         $.getJSON( '/make/models/'+$('#make').val(), function( data ) {
             $('#model').empty();
             $('#car').empty();
@@ -236,20 +249,34 @@ $form->prepare();
             $.each( data.rows, function( key, value ) {
                 $('#model').append('<option value="' + key + '">' + value.name + '</option>');
             });
+            
+            if (model){
+               $('#model').val(model); 
+            }
         });    
     }
     
-    function modelChange(){
+    function modelChange(car = null){
         $.getJSON( '/make/cars/'+$('#model').val(), function( data ) {
             $('#car').empty();
             $('#car').append('<option></option>');
             $.each( data.rows, function( key, value ) {
                 $('#car').append('<option value="' + key + '">' + value.name + '</option>');
             });
+            if (car){
+               $('#car').val(car); 
+            }
         });    
     }
     
     $( document ).ready(function() {
+        <?php if ($make):?>
+            makeChange(<?= $model ?>);
+            <?php if ($model):?>
+                modelChange(<?= $car ?>);
+            <?php endif; ?>    
+        <?php endif; ?>    
+        
         $('#makeName').typeahead({
             source: function(query, process) {
                 return $.get("/make/autocomplete?q="+query, function (data) {
