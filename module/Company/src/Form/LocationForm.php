@@ -60,6 +60,17 @@ class LocationForm extends Form
         ]);
         
         $this->add([           
+            'type'  => 'text',
+            'name' => 'kpp',
+            'attributes' => [
+                'id' => 'kpp'
+            ],
+            'options' => [
+                'label' => 'КПП',
+            ],
+        ]);
+
+        $this->add([           
             'type'  => 'date',
             'name' => 'dateStart',
             'attributes' => [
@@ -129,6 +140,22 @@ class LocationForm extends Form
                 ],
             ]);                          
         
+        $inputFilter->add([
+                'name'     => 'kpp',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 0,
+                            'max' => 24
+                        ],
+                    ],
+                ],
+            ]);                          
 
         $inputFilter->add([
                 'name'     => 'dateStart',

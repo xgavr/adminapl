@@ -571,6 +571,7 @@ class LegalManager
         $location->setAddress($data['address']);            
         $location->setDateStart($data['dateStart']);            
         $location->setStatus($data['status']);            
+        $location->setKpp($data['kpp']);            
                 
         $currentDate = date('Y-m-d H:i:s');
         $location->setDateCreated($currentDate);
@@ -595,6 +596,7 @@ class LegalManager
         $location->setAddress($data['address']);            
         $location->setDateStart($data['dateStart']);            
         $location->setStatus($data['status']);            
+        $location->setKpp($data['kpp']);            
                 
         $this->entityManager->persist($location);
         $this->entityManager->flush();                

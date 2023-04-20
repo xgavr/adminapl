@@ -15,6 +15,10 @@ $form->get('dateStart')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('kpp')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить']);
 
 $form->prepare();
@@ -43,14 +47,21 @@ $form->prepare();
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <div class="form-group">
                 <?= $this->formLabel($form->get('dateStart')); ?>
                 <?= $this->formElement($form->get('dateStart')); ?>
                 <?= $this->formElementErrors($form->get('dateStart')); ?>                  
             </div>
         </div>    
-        <div class="col-md-6">
+        <div class="col-md-3">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('kpp')); ?>
+                <?= $this->formElement($form->get('kpp')); ?>
+                <?= $this->formElementErrors($form->get('kpp')); ?>                  
+            </div>
+        </div>    
+        <div class="col-md-4">
             <div class="form-group">
                 <?= $this->formLabel($form->get('status')); ?>
                 <?= $this->formElement($form->get('status')); ?>

@@ -55,6 +55,11 @@ class LegalLocation {
      */
     protected $dateStart;
     
+    /** 
+     * @ORM\Column(name="kpp")  
+     */
+    protected $kpp;
+
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="locations") 
      * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
@@ -169,6 +174,24 @@ class LegalLocation {
         $this->dateStart = $dateStart;
     }    
             
+    /**
+     * Returns the kpp.
+     * @return string     
+     */
+    public function getKpp() 
+    {
+        return $this->kpp;
+    }
+    
+    /**
+     * Sets the kpp.
+     * @param string $kpp     
+     */
+    public function setKpp($kpp) 
+    {
+        $this->kpp = $kpp;
+    }    
+
     /*
      * @return Legal
      */    

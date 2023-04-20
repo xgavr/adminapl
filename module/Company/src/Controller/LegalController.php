@@ -928,6 +928,7 @@ class LegalController extends AbstractActionController
                     'address' => $location->getAddress(),  
                     'dateStart' => $location->getDateStart(),
                     'status' => $location->getStatus(),
+                    'kpp' => $location->getKpp(),
                 ];
                 $form->setData($data);
             }    

@@ -60,6 +60,7 @@
                     <tr>
                         <th>Дата</th>
                         <th>Адрес</th>
+                        <th>КПП</th>
                         <th>Назначение</th>
                         <th colspan="2"></th>
                     </tr>
@@ -71,6 +72,9 @@
                                </td>
                                <td>
                                    <?= $location->getAddress()?>
+                               </td>
+                               <td>
+                                   <?= $location->getKpp()?>
                                </td>
                                <td>
                                    <?= $location->getStatusAsString() ?>

@@ -686,9 +686,10 @@ class Legal {
 
         $result = '';
         $result .= $this->name;
+        $kpp = $this->getCurrentKpp($locationStatus, $onDate);
         if ($this->inn){
             $result .= ', ';
-            $result .= $this->inn.'/'.$this->kpp;
+            $result .= $this->inn.'/'.$kpp;
         }
         
         $address = $this->getCurrentLocation($locationStatus, $onDate);
@@ -815,6 +816,40 @@ class Legal {
         }
 
         return $this->address;
+    }    
+
+    /*
+     * Возвращает связанный kpp на дату.
+     * @param integer $locationStatus
+     * @param date $onDate
+     * @return string
+     */    
+    public function getCurrentKpp($locationStatus = LegalLocation::STATUS_ACTIVE, $onDate = null) 
+    {
+        if (!$onDate){
+            $onDate = date('Y-m-d');
+        }
+
+        if (!$this->locations->count()){
+            return $this->kpp;
+        }
+
+        $criteria = Criteria::create()
+                ->andWhere(Criteria::expr()->eq('status', (string) $locationStatus))
+                ->andWhere(Criteria::expr()->lte('dateStart', $onDate))
+                ->orderBy(['dateStart' => Criteria::DESC])
+                ->setMaxResults(1)
+                ;
+        
+        $data = $this->locations->matching($criteria);
+//        var_dump(count($data)); exit;
+        foreach ($data as $row){
+            if (!empty($row->getKpp())){
+                return $row->getKpp();
+            }    
+        }
+
+        return $this->kpp;
     }    
 
     /*
