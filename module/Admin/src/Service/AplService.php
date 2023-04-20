@@ -1707,8 +1707,10 @@ class AplService {
                     'desc'      => $oem->getTransferBrandName(),
                     'sf'        => $oem->getSourceAsString(),
                     'publish'   => $oem->getAplPublish(),
-                    'cpub'      => $oem->getAplCpubAsString(),
                 ]; 
+                if ($oem->getAplCpubAsString()){
+                    $post['oems'][$oem->getId()]['cpub'] = $oem->getAplCpubAsString();
+                }
             }
 //            var_dump($post); exit;
             $client = new Client();

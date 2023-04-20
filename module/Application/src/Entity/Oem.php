@@ -300,11 +300,11 @@ class Oem {
     public static function getAplCpubList() 
     {
         return [
-            self::SOURCE_TD => 0,
-            self::SOURCE_SUP => 0,
+            self::SOURCE_TD => null,
+            self::SOURCE_SUP => null,
             self::SOURCE_MAN => 1,
             self::SOURCE_CROSS => 1,
-            self::SOURCE_INTERSECT => 0,
+            self::SOURCE_INTERSECT => null,
         ];
     }    
     
