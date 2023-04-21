@@ -137,8 +137,13 @@ class RegisterRepository extends EntityRepository
                     ->update('register', ['date_oper' => $dateOper, 'doc_stamp' => $docStamp], ['id' => $reg->getId()]);  
             $entityManager->refresh($reg);
         }
+
+        $var = $entityManager->getRepository(RegisterVariable::class)
+                ->findOneBy([]);
         
-        $this->updateVariable($dateOper, $docType, $docId, $docStamp);
+        if ($var->getVarStamp() > $docStamp){        
+            $this->updateVariable($dateOper, $docType, $docId, $docStamp);
+        }    
         
         return $docStamp;        
     }
