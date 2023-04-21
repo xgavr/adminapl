@@ -44,75 +44,102 @@ $legalContact = $client->getLegalContact();
     </div>
     <div class="tab-content" id="featureTabContent">
         <div class="tab-pane fade" role="tabpanel" id="contacts" aria-labelledby="contact-tab">
+            <div class="clearfix"></div>
+            <div class="panel panel-body">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <table class="table table-bordered table-hover table-condensed">
                         <tr>
-                            <td>
-                                <?php if ($legalContact):?>
-                                    <button value="/contact/phone-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
-                                            data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
-                                        <span class="glyphicon glyphicon-phone-alt"></span> <span class="glyphicon glyphicon-plus"></span>
-                                    </button>
-                                <?php endif; ?>                        
+                            <td width="100%">
+                                <div class="pull-left">
+                                    <?php if ($legalContact):?>
+                                        <button value="/contact/phone-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                                data-toggle="modal" data-target="#modal-dialog" title="Добавить телефон">
+                                            <span class="glyphicon glyphicon-phone-alt"></span> <span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                    <?php endif; ?>                        
+                                </div>    
                             </td>
                         </tr>
                         <?php foreach ($client->getContacts() as $contact): ?>
                             <?php foreach ($contact->getPhones() as $phone): ?>
                                 <tr>
-                                    <td width="100">
-                                        <button value="/contact/phone-form/<?= $contact->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
-                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                                            <span class="glyphicon glyphicon-edit"></span>
-                                        </button>                                                            
-                                        <button value="/contact/delete-phone-form/<?= $phone->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                                title="Удалить">
-                                            <span class="glyphicon glyphicon-remove" ></span>
-                                        </button>                                                            
-                                        <?= $phone->getName()?> <span><?= $phone->getComment()?></span>
+                                    <td>
+                                        <div class="pull-left">
+                                            <?= $phone->getName()?> <span><?= $phone->getComment()?></span>                                            
+                                        </div>
+                                        <div class="pull-right">
+                                            <button value="/contact/phone-form/<?= $contact->getId() ?>?phone=<?= ($phone ? $phone->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                                    data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                                <span class="glyphicon glyphicon-edit"></span>
+                                            </button>                                                            
+                                            <button value="/contact/delete-phone-form/<?= $phone->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                    title="Удалить">
+                                                <span class="glyphicon glyphicon-remove" ></span>
+                                            </button>                                                           
+                                        </div>    
                                     </td>
                                 </div>
                             <?php endforeach?>    
                         <?php endforeach;?>   
                     </table>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <table class="table table-bordered table-hover table-condensed">
                         <tr>
-                            <td>
-                                <?php if ($legalContact):?>
-                                    <button value="/contact/email-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
-                                            data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
-                                        <span class="glyphicon glyphicon-envelope"></span> <span class="glyphicon glyphicon-plus" ></span>
-                                    </button>                                        
-                                <?php endif; ?>                        
+                            <td width="1005">
+                                <div class="pull-left">
+                                    <?php if ($legalContact):?>
+                                        <button value="/contact/email-form/<?= $legalContact->getId() ?>" class="btn btn-default btn-xs"
+                                                data-toggle="modal" data-target="#modal-dialog" title="Добавить email">
+                                            <span class="glyphicon glyphicon-envelope"></span> <span class="glyphicon glyphicon-plus" ></span>
+                                        </button>                                        
+                                    <?php endif; ?>
+                                </div>    
                             </td>
                         </tr>
                         <?php foreach ($client->getContacts() as $contact): ?>
                             <?php foreach ($contact->getEmails() as $email): ?>
                                 <tr>
                                     <td>
-                                        <button value="/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
-                                                data-toggle="modal" data-target="#modal-dialog" title="Изменить">
-                                            <span class="glyphicon glyphicon-edit" ></span>
-                                        </button>                                                            
-                                        <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
-                                                title="Удалить">
-                                            <span class="glyphicon glyphicon-remove" ></span>
-                                        </button>                                                            
-                                        <?= $email->getName()?>
+                                        <div class="pull-left">
+                                            <?= $email->getName()?>
+                                        </div>    
+                                        <div class="pull-right">
+                                            <button value="/contact/email-form/<?= $contact->getId() ?>?email=<?= ($email ? $email->getId():'') ?>" class="btn btn-default btn-xs phone-edit"
+                                                    data-toggle="modal" data-target="#modal-dialog" title="Изменить">
+                                                <span class="glyphicon glyphicon-edit" ></span>
+                                            </button>                                                            
+                                            <button value="/contact/delete-email-form/<?= $email->getId() ?>" class="btn btn-default btn-xs this-delete"
+                                                    title="Удалить">
+                                                <span class="glyphicon glyphicon-remove" ></span>
+                                            </button>                                                           
+                                        </div>    
                                     </td>
                                 </div>
                             <?php endforeach?>    
                         <?php endforeach;?>
                     </table>
-                    <button value="/client/apl-union/<?= $client->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
-                            title="Объеденить по коду Апл">
-                        <span class="glyphicon glyphicon-refresh" ></span>
-                    </button> 
-                    <a href="https://autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank"><?= $client->getAplId()?></a>
+                </div>    
+                <div class="col-md-2">
+                    <table class="table table-bordered table-hover table-condensed">
+                        <tr>
+                            <td width="100%">
+                                <div class="pull-left">
+                                    <a href="https://autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank">АПЛ id: <?= $client->getAplId()?></a>                                    
+                                </div>
+                                <div class="pull-right">
+                                    <button value="/client/apl-union/<?= $client->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
+                                            title="Объеденить по коду Апл">
+                                        <span class="glyphicon glyphicon-refresh" ></span>
+                                    </button>                                     
+                                </div>
+                            </td>
+                        </tr>
+                    </table>    
                 </div>
             </div> 
+        </div>
             <div class="row">        
                 <div class="col-md-8">
                     <div class="panel panel-default">
