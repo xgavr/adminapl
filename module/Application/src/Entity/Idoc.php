@@ -197,6 +197,8 @@ class Idoc {
      */
     public function getDescriptionAsHtmlTable($allColumn = true)
     {
+        ini_set('memory_limit', '512M');
+        
         $data = $this->getDescriptionAsArray($allColumn);
         if (is_array($data)){
             $maxH = count($data)*5;
