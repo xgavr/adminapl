@@ -78,9 +78,9 @@ final class Version20230428065646 extends AbstractMigration
         $table->addColumn('start_date', 'date', ['notnull'=>true, 'comment' => 'начало периода']);
         $table->addColumn('stop_date', 'date', ['notnull'=>true, 'comment' => 'конец периода']);
         $table->addColumn('contract_id', 'integer', ['notnull'=>false, 'comment' => 'договор']);
-        $table->addColumn('doc_amount', 'integer', ['notnull'=>true, 'default' => 0, 'comment' => 'сумма отчета']);
-        $table->addColumn('total_amount', 'integer', ['notnull'=>true, 'default' => 0, 'comment' => 'сумма начислено']);
-        $table->addColumn('vat_amount', 'integer', ['notnull'=>true, 'default' => 0, 'comment' => 'сумма НДС']);
+        $table->addColumn('doc_amount', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'сумма отчета']);
+        $table->addColumn('total_amount', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'сумма начислено']);
+        $table->addColumn('vat_amount', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'сумма НДС']);
         $table->addColumn('currency_code', 'string', ['notnull'=>false, 'length' => 6, 'default' => 'RUR', 'comment' => 'валюта отчета']);
         $table->addColumn('status_doc', 'integer', ['notnull'=>true, 'default' => MarketSaleReport::STATUS_DOC_NOT_RECD, 'comment' => 'Получено']);
         $table->addColumn('status_ex', 'integer', ['notnull'=>true, 'default' => MarketSaleReport::STATUS_EX_NEW, 'comment' => 'Отправлено']);

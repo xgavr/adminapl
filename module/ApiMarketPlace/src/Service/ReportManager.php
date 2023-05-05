@@ -80,14 +80,14 @@ class ReportManager
         $report = null;
         if (isset($header['num'])){
             $report = $this->entityManager->getRepository(MarketSaleReport::class)
-                    ->findBy(['marketplace' => $marketplace->getId(), 'num' => $header['num']]);
+                    ->findOneBy(['marketplace' => $marketplace->getId(), 'num' => $header['num']]);
             if (!$report){                
                 if ($marketplace->getContact()){
                     $report = new MarketSaleReport();
-                    $report->setDateCreated(date('Y-m-d'));
+                    $report->setDateCreated(date('Y-m-d H:i:s'));
                     $report->setNum($header['num']);
                     $report->setMarketplace($marketplace);
-                    $report->setContract($marketplace->getContact());
+                    $report->setContract($marketplace->getContract());
                 }    
             }
         }
@@ -162,11 +162,12 @@ class ReportManager
             $item->setSaleCommission(empty($row['sale_commission']) ? 0:$row['sale_commission']);
             $item->setSaleDiscount(empty($row['sale_discount']) ? 0:$row['sale_discount']);
             $item->setSalePriceSeller(empty($row['sale_price_seller']) ? 0:$row['sale_price_seller']);
-            $item->setSaleQty(empty($row['sale_qty']) ? 0:$row['sale_qty']);            
+            $item->setSaleQty(empty($row['sale_qty']) ? 0:$row['sale_qty']); 
+            $item->setTake(MarketSaleReportItem::TAKE_NO);
 
             $this->entityManager->persist($item);
             
-            $totalAmount += $row['sale_amount'] + $row['sale_discount'] - $row['sale_commission'] - $row['return_amount'];
+            //$totalAmount += $row['sale_amount'] + $row['sale_discount'] - $row['sale_commission'] - $row['return_amount'];
         }
         
         $report->setTotalAmount($totalAmount);
