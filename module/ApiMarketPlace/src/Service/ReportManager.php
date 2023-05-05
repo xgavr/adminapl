@@ -100,6 +100,7 @@ class ReportManager
             $report->setStatus(MarketSaleReport::STATUS_ACTIVE);
             $report->setStopDate(empty($header['stop_date']) ? null:$header['stop_date']);
             $report->setVatAmount(empty($header['vat_amount']) ? 0:$header['vat_amount']);
+            $report->setTotalAmount(0);
             
             $this->entityManager->persist($report);
             $this->entityManager->flush();
@@ -158,7 +159,7 @@ class ReportManager
             $item->setSaleCommission(empty($row['sale_commission']) ? 0:$row['sale_commission']);
             $item->setSaleDiscount(empty($row['sale_discount']) ? 0:$row['sale_discount']);
             $item->setSalePriceSeller(empty($row['sale_price_seller']) ? 0:$row['sale_price_seller']);
-            $item->setSaleQty(empty($row['sale_qty']) ? 0:$row['sale_qty']);
+            $item->setSaleQty(empty($row['sale_qty']) ? 0:$row['sale_qty']);            
 
             $this->entityManager->persist($item);
             
