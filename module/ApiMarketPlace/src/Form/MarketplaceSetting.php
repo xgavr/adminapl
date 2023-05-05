@@ -119,6 +119,39 @@ class MarketplaceSetting extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'phone',
+            'attributes' => [
+                'id' => 'phone'
+            ],
+            'options' => [
+                'label' => 'Телефон',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'contact',
+            'attributes' => [
+                'id' => 'contact'
+            ],
+            'options' => [
+                'label' => 'Контакт',
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'contract',
+            'attributes' => [                
+                'id' => 'contract'
+            ],
+            'options' => [
+                'label' => 'Договор с комитентом',
+            ],
+        ]);
+        
         // Add "status" field
         $this->add([            
             'type'  => 'select',
@@ -130,6 +163,20 @@ class MarketplaceSetting extends Form implements ObjectManagerAwareInterface
             'options' => [
                 'label' => 'Статус',
                 'value_options' => Marketplace::getStatusList(),
+            ],
+        ]);
+
+        // Add "status" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'marketType',
+            'attributes' => [
+                'id' => 'marketType',
+                'value' => Marketplace::TYPE_UNKNOWN,
+            ],
+            'options' => [
+                'label' => 'Тип ТП',
+                'value_options' => Marketplace::getMarketTypeList(),
             ],
         ]);
 
@@ -223,7 +270,46 @@ class MarketplaceSetting extends Form implements ObjectManagerAwareInterface
                         ],
                     ],
                 ],
-            ]);                  
+            ]);     
+
+        $inputFilter->add([
+                'name'     => 'phone',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);     
+
+        $inputFilter->add([
+                'name'     => 'contact',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                ],
+            ]); 
+
+        $inputFilter->add([
+                'name'     => 'contract',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                ],
+            ]); 
     }    
     
     public function setObjectManager(ObjectManager $objectManager)

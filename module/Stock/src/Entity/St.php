@@ -29,11 +29,11 @@ class St {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
    
-     // Ptu status doc constants.
+     // St status doc constants.
     const STATUS_DOC_RECD       = 1; // Получено.
     const STATUS_DOC_NOT_RECD  = 2; // Не получено.
 
-     // Ptu status doc constants.
+     // St status doc constants.
     const STATUS_EX_NEW  = 1; // Не отправлено.
     const STATUS_EX_RECD  = 2; // Получено из АПЛ.
     const STATUS_EX_APL  = 3; // Отправлено в АПЛ.

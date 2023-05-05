@@ -158,6 +158,7 @@ class TillController extends AbstractActionController
         
         return new JsonModel([
             'name' => $phone->getContact()->getName(),
+            'id' => $phone->getContact()->getId(),
         ]);                  
     }
 

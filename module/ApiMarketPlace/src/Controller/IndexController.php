@@ -17,6 +17,8 @@ use Application\Entity\MarketPriceSetting;
 use Application\Entity\Order;
 use ApiMarketPlace\Entity\MarketplaceOrder;
 use ApiMarketPlace\Form\MarketplaceOrderForm;
+use Application\Entity\Contact;
+use Company\Entity\Contract;
 
 
 class IndexController extends AbstractActionController
@@ -47,14 +49,22 @@ class IndexController extends AbstractActionController
     private $ozonService;
         
     /**
+     * Report manager.
+     * @var \ApiMarketPlace\Service\ReportManager
+     */
+    private $reportManager;
+
+    /**
      * Constructor. Its purpose is to inject dependencies into the controller.
      */
-    public function __construct($entityManager, $sbermarketManager, $marketplaceService, $ozonService) 
+    public function __construct($entityManager, $sbermarketManager, $marketplaceService, 
+            $ozonService, $reportManager) 
     {
        $this->entityManager = $entityManager;
        $this->sbermarketManager = $sbermarketManager;
        $this->marketplaceService = $marketplaceService;
        $this->ozonService = $ozonService;
+       $this->reportManager = $reportManager;
     }
 
     
@@ -66,19 +76,59 @@ class IndexController extends AbstractActionController
             'marketplaces' =>  $marketplaces,
         ]);
     }
+    
+    public function viewAction() 
+    {
+        $id = (int)$this->params()->fromRoute('id', -1);
+        if ($id<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Find a role with such ID.
+        $marketplace = $this->entityManager->getRepository(Marketplace::class)
+                ->find($id);
+        
+        if ($marketplace == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+                        
+        return new ViewModel([
+            'marketplace' => $marketplace,
+        ]);
+    }    
 
     public function editFormAction()
     {
         $marketplaceId = (int)$this->params()->fromRoute('id', -1);
         
-        $marketplace = null;
+        $marketplace = $contact = null;
+        $contractList = [];
         
         if ($marketplaceId > 0){
             $marketplace = $this->entityManager->getRepository(Marketplace::class)
                     ->find($marketplaceId);
+            $contact = $marketplace->getContact();
         }    
         
+        if ($this->getRequest()->isPost()){
+            $data = $this->params()->fromPost();
+            $contactId = $data['contact'];
+            $contact = $this->entityManager->getRepository(Contact::class)
+                    ->find($contactId);
+        }    
+        
+        if ($contact){
+            $contracts = $this->entityManager->getRepository(Contract::class)
+                    ->contactSelect($contact, Contract::KIND_COMITENT);
+            foreach ($contracts as $contract){
+                $contractList[$contract->getId()] = $contract->getName();
+            }            
+        }
+        
         $form = new MarketplaceSetting($this->entityManager);
+        $form->get('contract')->setValueOptions($contractList);
         
         if ($this->getRequest()->isPost()) {
             
@@ -398,6 +448,29 @@ class IndexController extends AbstractActionController
         return new JsonModel($result);
     }
     
+    public function ozonRealizationAction()
+    {
+        $marketplaceId = $this->params()->fromRoute('id', -1);
+        $month = $this->params()->fromQuery('date', '2023-03-01');
+        
+        if ($marketplaceId <= 0){
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }    
+        
+        $marketplace = $this->entityManager->getRepository(Marketplace::class)
+                ->find($marketplaceId);
+        
+        if ($marketplace == null){
+            $this->getResponse()->setStatusCode(404);
+            return;            
+        }
+        
+        $result = $this->reportManager->ozonRealization($marketplace, $month);
+
+        return new JsonModel($result);
+    }
+
     public function downloadLogAction()
     {
         setlocale(LC_ALL,'ru_RU.UTF-8');

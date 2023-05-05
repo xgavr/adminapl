@@ -282,6 +282,7 @@ class VtManager
                         }
                     }
                     
+                    
                     $posting -= $quantity;
                     if ($posting <= 0){
                         break;

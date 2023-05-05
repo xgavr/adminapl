@@ -73,6 +73,7 @@ return [
             Service\MarketplaceService::class => Service\Factory\MarketplaceServiceFactory::class,
             Service\OzonService::class => Service\Factory\OzonServiceFactory::class,
             Service\Request::class => Service\Factory\RequestFactory::class,
+            Service\ReportManager::class => Service\Factory\ReportManagerFactory::class,
             Service\Update::class => Service\Factory\UpdateFactory::class,
             Service\SberMarket::class => Service\Factory\SberMarketFactory::class,
         ],

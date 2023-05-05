@@ -263,4 +263,41 @@ class LegalRepository extends EntityRepository
         return $queryBuilder->getQuery();
     }   
     
+    /**
+     * Найти договра контакта
+     * @param Contact $contact
+     * @param integer $kind
+     */
+    public function contactSelect($contact, $kind = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('ct')
+            ->from(Contract::class, 'ct')
+            ->distinct()    
+            ->join('ct.legal', 'l')
+            ->join('l.contacts', 'cs')                 
+            ->andWhere('cs.id = :contact')
+            ->setParameter('contact', $contact->getId())
+                ;
+        
+        $client = $contact->getClient();
+        if ($client){
+            $queryBuilder->join('cs.client', 'cl')
+                    ->orWhere('cl.id = :client')
+                    ->setParameter('client', $client->getId())
+                    ;
+        }
+
+        if ($kind){
+            $queryBuilder->andWhere('ct.kind = :kind')
+                    ->setParameter('kind', $kind)
+                    ;            
+        }
+                
+
+        return $queryBuilder->getQuery()->getResult();        
+    }
 }

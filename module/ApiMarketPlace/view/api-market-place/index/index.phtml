@@ -22,6 +22,9 @@ $this->pageBreadcrumbs()->setItems([
         <th>Id</th>
         <th>Наименование</th>
         <th>ID Личного кабинета</th>  
+        <th>Клиент</th>  
+        <th>Договор</th>  
+        <th>Тип</th>  
         <th>Статус</th>  
         <th></th>
     </tr>
@@ -34,6 +37,15 @@ $this->pageBreadcrumbs()->setItems([
             </td>
             <td>
                 <?= $this->escapeHtml($marketplace->getMerchantId()); ?>
+            </td>
+            <td>
+                <?= $marketplace->getContactPresent(); ?>
+            </td>
+            <td>
+                <?= $marketplace->getContractPresent(); ?>
+            </td>
+            <td>
+                <?= $this->escapeHtml($marketplace->getMarketTypeAsString()); ?>
             </td>
             <td>
                 <?= $this->escapeHtml($marketplace->getStatusAsString()); ?>

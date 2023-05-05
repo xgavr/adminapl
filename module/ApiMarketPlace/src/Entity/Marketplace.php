@@ -24,6 +24,9 @@ class Marketplace {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     
+    const TYPE_OZON = 1; // 
+    const TYPE_UNKNOWN = 99; // 
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -79,6 +82,11 @@ class Marketplace {
      */
     protected $status;
 
+    /**
+     * @ORM\Column(name="market_type")   
+     */
+    protected $marketType;
+
     /** 
      * @ORM\Column(name="date_created")  
      */
@@ -95,6 +103,18 @@ class Marketplace {
     * @ORM\JoinColumn(name="id", referencedColumnName="marketplace_id")
      */
     private $marketplaceUpdates;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Contact", inversedBy="marketplaces") 
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
+     */
+    private $contact;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Contract", inversedBy="marketplaces") 
+     * @ORM\JoinColumn(name="contract_id", referencedColumnName="id")
+     */
+    protected $contract;
 
     /**
      * Constructor.
@@ -132,7 +152,13 @@ class Marketplace {
 
     public function getTagName() 
     {
-        return '<a href="'.$this->site.'" target=_blank>'.$this->name.'</a>';
+        $result = '<nobr>';
+        if ($this->site){
+            $result .= '<a href="'.$this->site.'" class="btn btn-link btn-xs" title="Перейти на сайт '.$this->name.'" target="_blank"><span class="glyphicon glyphicon-link"></span></a> ';
+        }
+        $result .= '<a href="/market-place/view/'.$this->id.'" target=_blank>'.$this->name.'</a></nobr>';
+
+        return $result;
     }
 
     public function setSite($site) 
@@ -262,6 +288,40 @@ class Marketplace {
         $this->status = $status;
     }   
     
+    public function getMarketType() {
+        return $this->marketType;
+    }
+
+    /**
+     * Returns possible market type as array.
+     * @return array
+     */
+    public static function getMarketTypeList() 
+    {
+        return [
+            self::TYPE_UNKNOWN => 'Неизвестно',
+            self::TYPE_OZON => 'Озон'
+        ];
+    }    
+    
+    /**
+     * Returns marketplace market type as string.
+     * @return string
+     */
+    public function getMarketTypeAsString()
+    {
+        $list = self::getMarketTypeList();
+        if (isset($list[$this->marketType]))
+            return $list[$this->marketType];
+        
+        return 'Unknown';
+    }    
+    
+    public function setMarketType($marketType): void {
+        $this->marketType = $marketType;
+    }
+
+       
     /**
      * Returns the array of marketplaceUpdates assigned to this.
      * @return array
@@ -298,7 +358,39 @@ class Marketplace {
         $this->marketplaceUpdates[] = $marketplaceUpdate;
     }    
 
-    /**
+    public function getContact() {
+        return $this->contact;
+    }
+
+    public function getContactPresent() {
+        if ($this->contact){
+            return $this->contact->getParetnLink();
+        }
+        
+        return;
+    }
+
+    public function getContract() {
+        return $this->contract;
+    }
+
+    public function getContractPresent() {
+        if ($this->contract){
+            return $this->contract->getContractPresent();
+        }
+        
+        return;
+    }
+
+    public function setContact($contact): void {
+        $this->contact = $contact;
+    }
+
+    public function setContract($contract): void {
+        $this->contract = $contract;
+    }
+
+        /**
      * Массив для формы
      * @return array 
      */
@@ -313,6 +405,10 @@ class Marketplace {
             'merchantId' => $this->getMerchantId(),
             'password' => $this->getPassword(),
             'site' => $this->getSite(),
+            'contact' => ($this->getContact()) ? $this->getContact()->getId():null,
+            'phone' => ($this->getContact()) ? $this->getContact()->getPhoneAsString():null,
+            'contract' => ($this->getContract()) ? $this->getContract()->getId():null,
+            'marketType' => $this->getMarketType(),
         ];
         
         return $result;

@@ -11,11 +11,14 @@ namespace ApiMarketPlace\Service;
 use Gam6itko\OzonSeller\Service\V3\Posting\FbsService;
 use Gam6itko\OzonSeller\Service\V2\ProductService as ProductService2;
 use Gam6itko\OzonSeller\Service\V1\ProductService;
+use Gam6itko\OzonSeller\Service\V1\FinanceService;
 use Symfony\Component\HttpClient\Psr18Client;
 use Application\Entity\Goods;
 use Application\Entity\ScaleTreshold;
 use Application\Entity\MarketPriceSetting;
 use Application\Entity\GoodSupplier;
+use ApiMarketPlace\Entity\MarketSaleReport;
+use ApiMarketPlace\Entity\MarketSaleReportItem;
 
 /**
  * Description of OzonService
@@ -473,6 +476,24 @@ class OzonService {
     }
     
     /**
-     * Необработанные отправления
+     * Отчет реализации за период
+     * @param date $month
+     * @return array 
      */
+    public function realization($month)
+    {
+        $settings = $this->adminManager->getApiMarketPlaces();
+
+        $config = [
+            'clientId' => $settings['ozon_client_id'],
+            'apiKey' => $settings['ozon_api_key'],
+//            'host' => $this->ozon_host,
+        ];
+        
+        $client = new Psr18Client();
+        $financeService= new FinanceService($config, $client);
+        $result = $financeService->realization(['date' => date('Y-m', strtotime($month))]);
+        
+        return $result;        
+    }
 }

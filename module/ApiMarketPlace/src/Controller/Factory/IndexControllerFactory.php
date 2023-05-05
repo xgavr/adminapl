@@ -7,6 +7,7 @@ use ApiMarketPlace\Controller\IndexController;
 use ApiMarketPlace\Service\SberMarket;
 use ApiMarketPlace\Service\MarketplaceService;
 use ApiMarketPlace\Service\OzonService;
+use ApiMarketPlace\Service\ReportManager;
 
 /**
  * This is the factory for IndexController. Its purpose is to instantiate the
@@ -20,8 +21,10 @@ class IndexControllerFactory implements FactoryInterface
         $sbermarketManager = $container->get(SberMarket::class);
         $marketplaceService = $container->get(MarketplaceService::class);
         $ozonService = $container->get(OzonService::class);
+        $reportManager = $container->get(ReportManager::class);
         
         // Instantiate the controller and inject dependencies
-        return new IndexController($entityManager, $sbermarketManager, $marketplaceService, $ozonService);
+        return new IndexController($entityManager, $sbermarketManager, $marketplaceService, 
+                $ozonService, $reportManager);
     }
 }

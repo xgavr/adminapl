@@ -10,6 +10,8 @@ use ApiMarketPlace\Exception\ApiMarketPlaceException;
 use ApiMarketPlace\Entity\Marketplace;
 use ApiMarketPlace\Entity\MarketplaceOrder;
 use ApiMarketPlace\Entity\MarketplaceUpdate;
+use Application\Entity\Contact;
+use Company\Entity\Contract;
 
 class MarketplaceService
 {
@@ -38,6 +40,17 @@ class MarketplaceService
      */
     public function add($data)
     {
+        $contact = $contract = null;
+        if (isset($data['contact'])){
+            $contact = $this->entityManager->getRepository(Contact::class)
+                    ->find($data['contact']);
+        }
+
+        if (isset($data['contract'])){
+            $contract = $this->entityManager->getRepository(Contract::class)
+                    ->find($data['contract']);
+        }
+
         $marketplace = new Marketplace();
         $marketplace->setApiToken($data['apiToken']);
         $marketplace->setComment($data['comment']);
@@ -49,6 +62,9 @@ class MarketplaceService
         $marketplace->setRemoteAddr($data['remoteAddr']);
         $marketplace->setSite($data['site']);
         $marketplace->setStatus($data['status']);
+        $marketplace->setContact($contact);
+        $marketplace->setContract($contract);
+        $marketplace->setMarketType($data['maerketType']);
         
         $this->entityManager->persist($marketplace);
         $this->entityManager->flush();
@@ -65,6 +81,17 @@ class MarketplaceService
      */
     public function update($marketplace, $data)
     {
+        $contact = $contract = null;
+        if (isset($data['contact'])){
+            $contact = $this->entityManager->getRepository(Contact::class)
+                    ->find($data['contact']);
+        }
+
+        if (isset($data['contract'])){
+            $contract = $this->entityManager->getRepository(Contract::class)
+                    ->find($data['contract']);
+        }
+        
         $marketplace->setApiToken($data['apiToken']);
         $marketplace->setComment($data['comment']);
         $marketplace->setLogin($data['login']);
@@ -74,6 +101,9 @@ class MarketplaceService
         $marketplace->setRemoteAddr($data['remoteAddr']);
         $marketplace->setSite($data['site']);
         $marketplace->setStatus($data['status']);
+        $marketplace->setContact($contact);
+        $marketplace->setContract($contract);
+        $marketplace->setMarketType($data['marketType']);
         
         $this->entityManager->persist($marketplace);
         $this->entityManager->flush();

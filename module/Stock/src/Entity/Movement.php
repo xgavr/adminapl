@@ -41,6 +41,7 @@ class Movement {
     const DOC_VTP = 7;
     const DOC_REVISE = 8;
     const DOC_CASH = 9;
+    const DOC_MSR = 10; //MarketSaleReport
     
     
     /**
@@ -346,6 +347,7 @@ class Movement {
             self::DOC_PT => 'Перемещения',
             self::DOC_PTU => 'Поступления',
             self::DOC_REVISE => 'Корректировки',
+            self::DOC_MSR => 'Отчет комитента',
         ];
     }        
 
@@ -364,6 +366,7 @@ class Movement {
             self::DOC_PT => 'pt',
             self::DOC_PTU => 'ptu',
             self::DOC_REVISE => 'rvs',
+            self::DOC_MSR => 'msr',
         ];
     }        
     

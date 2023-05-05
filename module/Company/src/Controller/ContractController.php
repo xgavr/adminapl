@@ -12,6 +12,8 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Company\Entity\Contract;
 use Company\Form\ContractForm;
+use Company\Entity\Legal;
+use Application\Entity\Contact;
 
 class ContractController extends AbstractActionController
 {
@@ -220,4 +222,28 @@ class ContractController extends AbstractActionController
         ]);                  
     }
     
+    public function contactSelectAction()
+    {
+        $contactId = (int) $this->params()->fromRoute('id', -1);
+        $kind = (int)$this->params()->fromQuery('kind');
+
+        $result = [];
+        if ($contactId>0) {
+            $contact = $this->entityManager->getRepository(Contact::class)
+                    ->find($contactId);            
+            $contracts = $this->entityManager->getRepository(Contract::class)
+                    ->contactSelect($contact, $kind);
+            
+            foreach ($contracts as $contract){
+                $result[$contract->getId()] = [
+                    'id' => $contract->getId(),
+                    'name' => $contract->getName(),                
+                ];
+            }                
+        }    
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }
 }

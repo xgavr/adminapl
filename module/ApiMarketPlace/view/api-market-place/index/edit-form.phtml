@@ -1,4 +1,6 @@
 <?php
+use Company\Entity\Contract;
+
 $form = $this->form;
 
 $form->get('name')->setAttributes([
@@ -30,6 +32,22 @@ $form->get('merchantId')->setAttributes([
     ]);
 
 $form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('phone')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('contact')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('contract')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('marketType')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -88,6 +106,13 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('password')); ?>                  
                     </div>
                 </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('marketType')); ?>
+                        <?= $this->formElement($form->get('marketType')); ?>
+                        <?= $this->formElementErrors($form->get('marketType')); ?>                  
+                    </div>
+                </div>    
             </div>    
             <div class="row">
                 <div class="col-xs-3">                        
@@ -104,6 +129,15 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('apiToken')); ?>                  
                     </div>
                 </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('phone')); ?>
+                        <span id="contactName"></span>
+                        <?= $this->formElement($form->get('phone')); ?>
+                        <?= $this->formElementErrors($form->get('phone')); ?>                  
+                        <?= $this->formElement($form->get('contact')); ?>
+                    </div>
+                </div>    
             </div>    
             <div class="row">
                 <div class="col-xs-9">                        
@@ -113,6 +147,16 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('comment')); ?>                  
                     </div>
                 </div>
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('contract')); ?>
+                        <button type="button" class="btn btn-default btn-xs contract-refresh">
+                            <span class="glyphicon glyphicon-refresh"></span>
+                        </button>
+                        <?= $this->formElement($form->get('contract')); ?>
+                        <?= $this->formElementErrors($form->get('contract')); ?>                  
+                    </div>
+                </div>    
             </div>    
         </div>    
     </div>
@@ -125,6 +169,27 @@ $form->prepare();
 <?= $this->form()->closeTag(); ?>
             
 <script>         
+    $('#phone').mask('8 (000) 000-0000', {selectOnFocus: false});
+    
+    function contractList(){
+        $.getJSON( '/contracts/contact-select/'+$('#contact').val()+'?kind=<?= Contract::KIND_COMITENT?>', function( data ) {
+            $('#contract').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#contract').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    }
+    
+    function contactName(){
+        if ($('#phone').val()){
+            $.getJSON( '/till/phone-contact?phone='+$('#phone').val(), function( data ) {
+                $('#contactName').html('<a href="/contact/view/'+data.id+'" target="_blank">'+data.name+'</a>');
+                $('#contact').val(data.id);
+                contractList();
+            });            
+        }    
+    }
+    
     function submitForm(){
         var data = serializeForm('#marketplace-form');
          $('#marketplace-submit').prop('disabled', true);
@@ -150,6 +215,17 @@ $form->prepare();
     
     $( document ).ready(function() {
         var forms = $('#marketplace-form');
+        
+        $('#phone').on('change', function(){
+            $('#contactName').html('');
+            $('#contact').val(0);
+            $('#contract').empty();
+            contactName();
+        });
+
+        $('.contract-refresh').on('click', function(){
+            contractList();
+        });
         
         forms.submit(function() {
             submitForm();

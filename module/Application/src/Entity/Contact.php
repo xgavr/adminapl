@@ -440,6 +440,16 @@ class Contact {
    }    
    
     /**
+     * Возвращает 1 phone для этого contact.
+     * @return array
+     */   
+   public function getPhoneAsString() {
+       if ($this->phones[0]){
+            return $this->phones[0]->getName();
+       }
+   }    
+
+   /**
      * Возвращает phone для этого contact.
      * @return array
      */   

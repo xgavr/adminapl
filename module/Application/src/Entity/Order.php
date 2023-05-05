@@ -257,6 +257,12 @@ class Order {
     private $company;
         
     /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Contract", inversedBy="orders") 
+     * @ORM\JoinColumn(name="contract_id", referencedColumnName="id")
+     */
+    private $contract;
+
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Bid", mappedBy="order")
     * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
      */
@@ -1115,6 +1121,24 @@ class Order {
     public function setCompany($company) 
     {
         $this->company = $company;
+    }         
+ 
+    /*
+     * Возвращает связанный contract.
+     * @return \Company\Entity\Contract
+     */    
+    public function getContract() 
+    {
+        return $this->contract;
+    }
+
+    /**
+     * Задает связанный contract.
+     * @param \Company\Entity\Contract $contract
+     */    
+    public function setContract($contract) 
+    {
+        $this->contract = $contract;
     }         
  
     /*

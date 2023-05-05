@@ -26,6 +26,7 @@ use Company\Entity\Legal;
 use User\Entity\User;
 use Stock\Entity\Revise;
 use Cash\Entity\CashDoc;
+use ApiMarketPlace\Entity\MarketSaleReport;
 
 
 /**
@@ -300,6 +301,18 @@ class RegisterRepository extends EntityRepository
         return $this->register($dateOper, Movement::DOC_REVISE, $revise->getId());
     } 
     
+    /**
+     * Регистриция отчета комитента
+     * 
+     * @param  MarketSaleReport $marketSaleReport
+     * @return float
+     */
+    public function reviseRegister($marketSaleReport)
+    {
+        $dateOper = date('Y-m-d 23:00:00', strtotime($marketSaleReport->getDocDate()));
+        return $this->register($dateOper, Movement::DOC_MSR, $marketSaleReport->getId());
+    } 
+
     public function allRegister()
     {
         ini_set('memory_limit', '8192M');

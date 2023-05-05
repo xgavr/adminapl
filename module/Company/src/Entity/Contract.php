@@ -30,6 +30,8 @@ class Contract {
     const KIND_SUPPLIER       = 1; // С поставщиком.
     const KIND_CUSTOMER      = 2; // С покупателем.
     const KIND_OTHER         = 3; // Прочее
+    const KIND_COMISSIONER      = 4; // с комиссионером
+    const KIND_COMITENT      = 5; // с комитентом
 
      // Contract pay constants.
     const PAY_CASH       = 1; // Оплата нал.
@@ -139,7 +141,11 @@ class Contract {
 
     public function setName($name) 
     {
-        $this->name = trim($name);
+        if (!empty($name)){
+            $this->name = trim($name);
+        } else {
+            $this->name = trim($name).' '. mb_strtolower($this->getKindAsString());
+        }    
     }     
 
     public function getAct() 
@@ -232,7 +238,9 @@ class Contract {
         return [
             self::KIND_SUPPLIER => 'С поставщиком',
             self::KIND_CUSTOMER => 'С покупателем',
-            self::KIND_OTHER => 'Прочее'
+            self::KIND_COMISSIONER => 'С комиссионером',
+            self::KIND_COMITENT => 'С комитентом',
+            self::KIND_OTHER => 'Прочее',
         ];
     }    
     
