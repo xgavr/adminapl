@@ -101,6 +101,9 @@ class ReportManager
             $report->setStopDate(empty($header['stop_date']) ? null:$header['stop_date']);
             $report->setVatAmount(empty($header['vat_amount']) ? 0:$header['vat_amount']);
             $report->setTotalAmount(0);
+            $report->setStatusDoc(MarketSaleReport::STATUS_DOC_NOT_RECD);
+            $report->setStatusEx(MarketSaleReport::STATUS_EX_NEW);
+            $report->setStatusAccount(MarketSaleReport::STATUS_ACCOUNT_NO);
             
             $this->entityManager->persist($report);
             $this->entityManager->flush();
