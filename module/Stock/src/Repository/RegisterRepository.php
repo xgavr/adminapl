@@ -307,7 +307,7 @@ class RegisterRepository extends EntityRepository
      * @param  MarketSaleReport $marketSaleReport
      * @return float
      */
-    public function reviseRegister($marketSaleReport)
+    public function msrRegister($marketSaleReport)
     {
         $dateOper = date('Y-m-d 23:00:00', strtotime($marketSaleReport->getDocDate()));
         return $this->register($dateOper, Movement::DOC_MSR, $marketSaleReport->getId());
