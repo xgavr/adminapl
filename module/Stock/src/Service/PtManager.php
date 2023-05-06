@@ -112,13 +112,13 @@ class PtManager
                 
         $ptTake = Pt::STATUS_ACCOUNT_NO;
         
-        if ($pt->getStatus() == Pt::STATUS_ACTIVE){
-            
             $ptGoods = $this->entityManager->getRepository(PtGood::class)
                     ->findByPt($pt->getId());
 
-            foreach ($ptGoods as $ptGood){
+        foreach ($ptGoods as $ptGood){
 
+            if ($pt->getStatus() == Pt::STATUS_ACTIVE){
+            
                 $bases = $this->entityManager->getRepository(Movement::class)
                         ->findBases($ptGood->getGood()->getId(), $docStamp, $pt->getOffice()->getId(), $ptGood->getBaseKey());
 
@@ -242,12 +242,10 @@ class PtManager
                 
                 $this->entityManager->getConnection()
                         ->update('pt_good', ['take' => $take], ['id' => $ptGood->getId()]);
-
-                $this->entityManager->getRepository(Movement::class)
-                        ->updateGoodBalance($ptGood->getGood()->getId(), $pt->getOffice()->getId(), $pt->getCompany()->getId());
-                $this->entityManager->getRepository(Movement::class)
-                        ->updateGoodBalance($ptGood->getGood()->getId(), $pt->getOffice2()->getId(), $pt->getCompany2()->getId());
             }    
+            
+            $this->entityManager->getRepository(Movement::class)
+                    ->updateGoodBalance($ptGood->getGood()->getId());
         }
 
         $this->entityManager->getConnection()

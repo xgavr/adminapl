@@ -11,6 +11,9 @@ use Stock\Entity\Retail;
 use Company\Entity\Office;
 use Stock\Entity\Comiss;
 use Stock\Entity\Register;
+use Stock\Entity\ComissBalance;
+use Stock\Entity\ComitentBalance;
+use Stock\Entity\Comitent;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -178,6 +181,8 @@ class VtManager
                 ->removeDocMovements($vt->getLogKey());
         $this->entityManager->getRepository(Comiss::class)
                 ->removeDocComiss($vt->getLogKey());        
+        $this->entityManager->getRepository(Comitent::class)
+                ->removeDocComitent($vt->getLogKey());        
         
         $vtGoods = $this->entityManager->getRepository(VtGood::class)
                 ->findByVt($vt->getId());
@@ -303,7 +308,12 @@ class VtManager
             $this->entityManager->getConnection()
                     ->update('goods', ['retail_count' => -$rCount], ['id' => $vtGood->getGood()->getId()]);
             $this->entityManager->getRepository(Movement::class)
-                    ->updateGoodBalance($vtGood->getGood()->getId(), $vt->getOffice()->getId(), $vt->getOrder()->getCompany()->getId());
+                    ->updateGoodBalance($vtGood->getGood()->getId());
+            $this->entityManager->getRepository(ComitentBalance::class)
+                    ->updateComitentBalance($vtGood->getGood()->getId()); 
+
+            $this->entityManager->getRepository(ComissBalance::class)
+                    ->updateComissBalance($vtGood->getGood()->getId());
         }
 
         $this->entityManager->getConnection()

@@ -109,10 +109,11 @@ class VtpManager
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($vtp->getLogKey());
         $vtpTake = Vtp::STATUS_ACCOUNT_NO;
-        if ($vtp->getStatus() == Vtp::STATUS_ACTIVE && $vtp->getStatusDoc() == Vtp::STATUS_DOC_NOT_RECD){
-            $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
+
+        $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
                     ->findByVtp($vtp->getId());
-            foreach ($vtpGoods as $vtpGood){
+        foreach ($vtpGoods as $vtpGood){
+            if ($vtp->getStatus() == Vtp::STATUS_ACTIVE && $vtp->getStatusDoc() == Vtp::STATUS_DOC_NOT_RECD){
                 $bases = $this->entityManager->getRepository(Movement::class)
                         ->findBases($vtpGood->getGood()->getId(), $docStamp, $vtp->getPtu()->getOffice()->getId(), $vtp->getPtu()->getLogKey());
                 
@@ -163,9 +164,9 @@ class VtpManager
                 }
                 $this->entityManager->getConnection()
                         ->update('vtp_good', ['take' => $take], ['id' => $vtpGood->getId()]);
-                $this->entityManager->getRepository(Movement::class)
-                        ->updateGoodBalance($vtpGood->getGood()->getId(), $vtp->getPtu()->getOffice()->getId(), $vtp->getPtu()->getContract()->getCompany()->getId());
-            }
+            }    
+            $this->entityManager->getRepository(Movement::class)
+                    ->updateGoodBalance($vtpGood->getGood()->getId()); 
         }    
 
         $this->entityManager->getConnection()

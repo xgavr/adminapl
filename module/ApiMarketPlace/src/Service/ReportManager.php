@@ -137,7 +137,6 @@ class ReportManager
      */
     private function addReportItems($report, $data)
     {
-        $totalAmount = 0;
         foreach ($data as $row){
             $good = $this->entityManager->getRepository(Goods::class)
                     ->findOneBy(['aplId' => $row['offer_id']]);
@@ -165,13 +164,8 @@ class ReportManager
             $item->setSaleQty(empty($row['sale_qty']) ? 0:$row['sale_qty']); 
             $item->setTake(MarketSaleReportItem::TAKE_NO);
 
-            $this->entityManager->persist($item);
-            
-            //$totalAmount += $row['sale_amount'] + $row['sale_discount'] - $row['sale_commission'] - $row['return_amount'];
+            $this->entityManager->persist($item);            
         }
-        
-        $report->setTotalAmount($totalAmount);
-        $this->entityManager->persist($report);
         
         $this->entityManager->flush();
         
@@ -212,7 +206,7 @@ class ReportManager
      * 
      * @param MarketSaleReport $marketSaleReport
      */
-    public function updateMarektSaleReportMutuals($marketSaleReport)
+    public function updateMarketSaleReportMutuals($marketSaleReport)
     {
         
         $this->entityManager->getRepository(Mutual::class)
@@ -310,10 +304,7 @@ class ReportManager
                 $this->entityManager->getConnection()
                         ->update('market_sale_report_item', ['take' => $take], ['id' => $item->getId()]);
                 $this->entityManager->getRepository(ComitentBalance::class)
-                        ->updateComitentBalance($item->getGood()->getId(), 
-                                $marketSaleRepot->getContract()->getLegal()->getId(), 
-                                $marketSaleRepot->getContract()->getCompany()->getId(),
-                                $marketSaleRepot->getContract()->getId());
+                        ->updateComitentBalance($item->getGood()->getId()); 
             }
         }
         
@@ -331,7 +322,7 @@ class ReportManager
     {
         $take = $this->updateComitent($marketSaleReport);
         if ($take != MarketSaleReport::STATUS_TAKE_NO){
-            $this->updateMarektSaleReportMutuals($marketSaleReport);
+            $this->updateMarketSaleReportMutuals($marketSaleReport);
         }    
         
         return true;

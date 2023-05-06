@@ -56,7 +56,7 @@ class ComitentBalance {
             
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="comitentBalances") 
-     * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
      */
     private $legal;    
     

@@ -97,7 +97,7 @@ class MovementRepository extends EntityRepository{
                 ->from(Movement::class, 'm')
                 ->distinct()
                 ->where('m.good = ?1')
-                ->andWhere('m.docStamp < ?2')
+                ->andWhere('m.docStamp <= ?2')
                 ->andWhere('m.docStamp > 0')
                 ->andWhere('m.office = ?3')
                 ->andWhere('m.status != ?4')
@@ -548,71 +548,96 @@ class MovementRepository extends EntityRepository{
     }
         
     /**
+     * Получить актуальный остаток
+     * @param integer $goodId
+     * @return array
+     */
+    private function goodGroupRest($goodId)
+    {
+        
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('identity(m.office) as officeId, identity(m.company) as companyId, sum(m.quantity) as rest, sum(m.baseAmount) as amount')
+                ->from(Movement::class, 'm')
+                ->where('m.good = ?1')
+                ->setParameter('1', $goodId)
+                ->groupBy('officeId')
+                ->addGroupBy('companyId')
+                ;
+            
+        return $qb->getQuery()->getResult();            
+    }
+
+    /**
      * Обновить актуальные остатки
      * @param integer $goodId
-     * @param integer $officeId
-     * @param integer $companyId
-     * @param float $baseStamp
      * @return null
      */
-    public function updateGoodBalance($goodId, $officeId, $companyId) 
+    public function updateGoodBalance($goodId) 
     {
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
-
-        $goodRest = $price = $reserveRest = $deliveryRest = $vozvratRest = 0;
         
-        $rest = $this->goodBaseRest($goodId,$officeId, $companyId);
+        $connection->update('good_balance', ['rest' => 0, 'price' => 0, 'reserve' => 0, 'delivery' => 0, 'vozvrat' => 0], ['good_id' => $goodId]);
         
-        if (is_array($rest)){
-            if (!empty($rest['rest'])){
-                $goodRest = $rest['rest'];
-                $price = abs($rest['amount']/$rest['rest']);
-            }    
-        }
-
-        $reserves = $this->reserveRests($goodId, $officeId, $companyId);
-        
-        if (is_array($reserves)){
-            foreach ($reserves as $reserve){
-                switch ($reserve['status']){
-                    case Reserve::STATUS_RESERVE: $reserveRest = $reserve['reserve']; break;
-                    case Reserve::STATUS_DELIVERY: $deliveryRest = $reserve['reserve']; break;
-                    case Reserve::STATUS_VOZVRAT: $vozvratRest = $reserve['reserve']; break;
-                }
+        $rests = $this->goodGroupRest($goodId);
+//        var_dump($rests); exit;
+        foreach ($rests as $rest){
+            
+            $goodRest = $price = $reserveRest = $deliveryRest = $vozvratRest = 0;
+            
+            if (is_array($rest)){
+                if (!empty($rest['rest'])){
+                    $goodRest = $rest['rest'];
+                    $price = abs($rest['amount']/$rest['rest']);
+                }    
             }
+
+            $reserves = $this->reserveRests($goodId, $rest['officeId'], $rest['companyId']);
+
+            if (is_array($reserves)){
+                foreach ($reserves as $reserve){
+                    switch ($reserve['status']){
+                        case Reserve::STATUS_RESERVE: $reserveRest = $reserve['reserve']; break;
+                        case Reserve::STATUS_DELIVERY: $deliveryRest = $reserve['reserve']; break;
+                        case Reserve::STATUS_VOZVRAT: $vozvratRest = $reserve['reserve']; break;
+                    }
+                }
+            }    
+
+            if ($goodRest || $reserveRest || $deliveryRest || $vozvratRest){
+                $upd = [
+                    'rest' => $goodRest,
+                    'price' => $price,
+                    'reserve' => $reserveRest,
+                    'delivery' => $deliveryRest,
+                    'vozvrat' => $vozvratRest,
+                ];
+
+                $crit = array_filter([
+                    'good' => $goodId,
+                    'office' => $rest['officeId'],
+                    'company' => $rest['companyId'],
+                ]);
+
+                $goodBalance = $entityManager->getRepository(GoodBalance::class)
+                        ->findOneBy($crit);
+                if ($goodBalance){
+                    $connection->update('good_balance', $upd, ['id' => $goodBalance->getId()]);
+                } else {
+                    $connection->insert('good_balance', [
+                        'good_id' => $goodId, 
+                        'office_id' => $rest['officeId'], 
+                        'company_id' => $rest['companyId'],
+                        'rest' => $goodRest,
+                        'price' => $price,
+                        'reserve' => $reserveRest,
+                        'delivery' => $deliveryRest,
+                        'vozvrat' => $vozvratRest,
+                    ]);
+                }
+            }    
         }    
-        
-        $upd = [
-            'rest' => $goodRest,
-            'price' => $price,
-            'reserve' => $reserveRest,
-            'delivery' => $deliveryRest,
-            'vozvrat' => $vozvratRest,
-        ];
-        
-        $crit = array_filter([
-            'good' => $goodId,
-            'office' => $officeId,
-            'company' => $companyId,
-        ]);
-        
-        $goodBalance = $entityManager->getRepository(GoodBalance::class)
-                ->findOneBy($crit);
-        if ($goodBalance){
-            $connection->update('good_balance', $upd, ['id' => $goodBalance->getId()]);
-        } else {
-            $connection->insert('good_balance', [
-                'good_id' => $goodId, 
-                'office_id' => $officeId, 
-                'company_id' => $companyId,
-                'rest' => $goodRest,
-                'price' => $price,
-                'reserve' => $reserveRest,
-                'delivery' => $deliveryRest,
-                'vozvrat' => $vozvratRest,
-            ]);
-        }
                         
         return;
     }

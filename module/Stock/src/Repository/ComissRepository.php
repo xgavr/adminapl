@@ -11,6 +11,7 @@ namespace Stock\Repository;
 use Doctrine\ORM\EntityRepository;
 use Stock\Entity\Comiss;
 use Stock\Entity\Register;
+use Stock\Entity\ComissBalance;
 
 /**
  * Description of ComissRepository
@@ -154,4 +155,78 @@ class ComissRepository extends EntityRepository{
         }
         return;
     }                    
+    
+    /**
+     * Получить актуальный остаток
+     * @param integer $goodId
+     * @return array
+     */
+    private function goodComissRest($goodId)
+    {
+        
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('identity(c.contact) as contactId, sum(c.quantity) as rest, sum(c.amount) as amount')
+                ->from(Comiss::class, 'c')
+                ->where('c.good = ?1')
+                ->setParameter('1', $goodId)
+                ->groupBy('contactId')
+                ;
+            
+        return $qb->getQuery()->getResult();            
+    }
+    
+    /**
+     * Обновить актуальные остатки
+     * @param integer $goodId
+     * @param float $baseStamp
+     * @return null
+     */
+    public function updateComissBalance($goodId) 
+    {
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        
+        $connection->update('comiss_balance', ['rest' => 0, 'price' => 0], ['good_id' => $goodId]);
+
+        $rests = $this->goodComissRest($goodId);
+        
+        foreach ($rests as $rest){
+            $goodRest = $price = 0;    
+            if (is_array($rest)){
+                if (!empty($rest['rest'])){
+                    $goodRest = $rest['rest'];
+                    $price = abs($rest['amount']/$rest['rest']);
+                }    
+            }
+
+            if ($goodRest){
+                $upd = [
+                    'rest' => $goodRest,
+                    'price' => $price,
+                ];
+
+                $crit = array_filter([
+                    'good' => $goodId,
+                    'contact' => $rest['contactId'],
+                ]);
+
+                $comissBalance = $entityManager->getRepository(ComissBalance::class)
+                        ->findOneBy($crit);
+
+                if ($comissBalance){
+                    $connection->update('comiss_balance', $upd, ['id' => $comissBalance->getId()]);
+                } else {
+                    $connection->insert('comiss_balance', [
+                        'good_id' => $goodId, 
+                        'contact_id' => $rest['contactId'],
+                        'rest' => $goodRest,
+                        'price' => $price,
+                    ]);
+                }
+            }    
+        }    
+                        
+        return;
+    }    
 }

@@ -10,6 +10,7 @@ use Stock\Entity\Movement;
 use Stock\Entity\Comiss;
 use Stock\Entity\Register;
 use Application\Entity\Goods;
+use Stock\Entity\ComissBalance;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -85,15 +86,16 @@ class OtManager
         $this->entityManager->getRepository(Comiss::class)
                 ->removeDocComiss($ot->getLogKey());
 
-        if ($ot->getStatus() != Ot::STATUS_RETIRED){        
-            $otGoods = $this->entityManager->getRepository(OtGood::class)
-                    ->findByOt($ot->getId());
+              
+        $otGoods = $this->entityManager->getRepository(OtGood::class)
+                ->findByOt($ot->getId());
 
-            $baseKey = $ot->getLogKey();
-            $baseType = Movement::DOC_OT;
-            $baseId = $ot->getId();
-            
-            foreach ($otGoods as $otGood){
+        $baseKey = $ot->getLogKey();
+        $baseType = Movement::DOC_OT;
+        $baseId = $ot->getId();
+
+        foreach ($otGoods as $otGood){
+            if ($ot->getStatus() != Ot::STATUS_RETIRED){  
                 if ($ot->getStatus() == Ot::STATUS_ST_STORNO) {
                     $base = $this->entityManager->getRepository(Ot::class)
                         ->findStForStorno($otGood);
@@ -137,10 +139,12 @@ class OtManager
                     $this->entityManager->getRepository(Comiss::class)
                             ->insertComiss($data);
                 }
-                
-                $this->entityManager->getRepository(Movement::class)
-                        ->updateGoodBalance($otGood->getGood()->getId(), $ot->getOffice()->getId(), $ot->getCompany()->getId());
-            }
+            }    
+            
+            $this->entityManager->getRepository(Movement::class)
+                    ->updateGoodBalance($otGood->getGood()->getId());
+            $this->entityManager->getRepository(ComissBalance::class)
+                    ->updateComissBalance($otGood->getGood()->getId());            
         }    
 
         return;

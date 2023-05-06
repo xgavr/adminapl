@@ -38,6 +38,9 @@ use Stock\Entity\Comiss;
 use Stock\Entity\Register;
 use Stock\Entity\Reserve;
 use Laminas\Json\Encoder;
+use Stock\Entity\ComissBalance;
+use Stock\Entity\ComitentBalance;
+use Stock\Entity\Comitent;
 
 /**
  * Description of OrderService
@@ -146,7 +149,12 @@ class OrderManager
     {
         $legalId = $contractId = null;
         if ($order->getLegal()){
-            $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId()); 
+            $contract = $order->getContract();
+            if (!$contract){
+                $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId()); 
+                $this->entityManager->getConnection()->update('orders', ['contract_id' => $contract->getId()], ['id' => $order->getId()]);
+                $this->entityManager->refresh($order);
+            }    
             $legalId = $order->getLegal()->getId();
             $contractId = $contract->getId();
         }
@@ -219,7 +227,12 @@ class OrderManager
      */
     public function updateOrderMutuals($order, $docStamp)
     {
-        $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId());
+        $contract = $order->getContract();
+        if (!$contract){
+            $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId());
+            $this->entityManager->getConnection()->update('orders', ['contract_id' => $contract->getId()], ['id' => $order->getId()]);
+            $this->entityManager->refresh($order);
+        }    
         $data = [
             'doc_key' => $order->getLogKey(),
             'doc_type' => Movement::DOC_ORDER,
@@ -315,7 +328,7 @@ class OrderManager
                         $this->entityManager->getRepository(Comiss::class)
                                 ->insertComiss($data);
 
-                        $data = [
+                        $retailData = [
                             'doc_key' => $order->getLogKey(),
                             'doc_type' => Movement::DOC_ORDER,
                             'doc_id' => $order->getId(),
@@ -329,7 +342,7 @@ class OrderManager
                         ];
 
                         $this->entityManager->getRepository(Retail::class)
-                                ->insertRetail($data);                                
+                                ->insertRetail($retailData);                                
                     }  
                     $write -= $quantity;
                     if ($write <= 0){
@@ -375,7 +388,13 @@ class OrderManager
                 $orderTake = Order::STATUS_TAKE_NO; //не проведено
             }
             $this->entityManager->getRepository(Movement::class)
-                    ->updateGoodBalance($bid->getGood()->getId(), $order->getOffice()->getId(), $order->getCompany()->getId());
+                    ->updateGoodBalance($bid->getGood()->getId());
+            
+            $this->entityManager->getRepository(ComitentBalance::class)
+                    ->updateComitentBalance($bid->getGood()->getId()); 
+
+            $this->entityManager->getRepository(ComissBalance::class)
+                    ->updateComissBalance($bid->getGood()->getId());
         }
         
         $this->entityManager->getConnection()
@@ -981,7 +1000,7 @@ class OrderManager
                     'head' => empty($data['recipientHead']) ? null:$data['recipientHead'],
                     'chiefAccount' => empty($data['recipientChiefAccount']) ? null:$data['recipientChiefAccount'],
                     'info' => empty($data['recipientInfo']) ? null:data['recipientInfo'],
-                    'address' => empty($sdata['recipientAddress']) ? null:$data['recipientAddress'],
+                    'address' => empty($data['recipientAddress']) ? null:$data['recipientAddress'],
                 ]);
                 $upd['recipient_id'] = $recipient->getId();
             }
@@ -1032,7 +1051,10 @@ class OrderManager
         if ($order->getDateOper() < $this->getAllowDate()){
             return;
         }
-        
+        if (!$order->getContract()){
+            $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId());
+            $this->entityManager->getConnection()->update('orders', ['contract_id' => $contract->getId()], ['id' => $order->getId()]);
+        }            
         $this->entityManager->refresh($order);
         
         $docStamp = $this->entityManager->getRepository(Register::class)
@@ -1041,6 +1063,8 @@ class OrderManager
                 ->removeDocMovements($order->getLogKey());        
         $this->entityManager->getRepository(Comiss::class)
                 ->removeDocComiss($order->getLogKey());
+        $this->entityManager->getRepository(Comitent::class)
+                ->removeDocComitent($order->getLogKey());        
         $this->entityManager->getRepository(Retail::class)
                 ->removeOrderRetails($order->getLogKey());
         $this->entityManager->getRepository(Mutual::class)

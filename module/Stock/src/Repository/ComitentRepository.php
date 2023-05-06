@@ -101,84 +101,78 @@ class ComitentRepository extends EntityRepository{
     /**
      * Получить актуальный остаток
      * @param integer $goodId
-     * @param integer $legalId
-     * @param integer $companyId
-     * @param integer $contractId
      * @return array
      */
-    private function goodBaseRest($goodId, $legalId, $companyId, $contractId)
+    private function goodComitentRest($goodId)
     {
         
         $entityManager = $this->getEntityManager();
         $qb = $entityManager->createQueryBuilder();
-        $qb->select('sum(c.quantity) as rest, sum(c.baseAmount) as amount')
+        $qb->select('identity(c.company) as companyId, identity(c.legal) as legalId, identity(c.contract) as contractId, sum(c.quantity) as rest, sum(c.amount) as amount')
                 ->from(Comitent::class, 'c')
                 ->where('c.good = ?1')
-                ->andWhere('c.legal = ?2') 
-                ->andWhere('c.company = ?3') 
-                ->andWhere('c.contract = ?4') 
                 ->setParameter('1', $goodId)
-                ->setParameter('2', $legalId)
-                ->setParameter('3', $companyId)
-                ->setParameter('4', $contractId)
-                ->setMaxResults(1)
+                ->groupBy('companyId')
+                ->addGroupBy('legalId')
+                ->addGroupBy('contractId')
                 ;
             
-        return $qb->getQuery()->getOneOrNullResult();            
+        return $qb->getQuery()->getResult();            
     }
     
     /**
      * Обновить актуальные остатки
      * @param integer $goodId
-     * @param integer $legalId
-     * @param integer $companyId
-     * @param integer $contractId
-     * @param float $baseStamp
      * @return null
      */
-    public function updateComitentBalance($goodId, $legalId, $companyId, $contractId) 
+    public function updateComitentBalance($goodId) 
     {
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
+        
+        $connection->update('comitent_balance', ['rest' => 0, 'price' => 0], ['good_id' => $goodId]);
 
-        $goodRest = $price = 0;
+        $rests = $this->goodComitentRest($goodId);
         
-        $rest = $this->goodBaseRest($goodId, $legalId, $companyId, $contractId);
-        
-        if (is_array($rest)){
-            if (!empty($rest['rest'])){
-                $goodRest = $rest['rest'];
-                $price = abs($rest['amount']/$rest['rest']);
+        foreach ($rests as $rest){
+            $goodRest = $price = 0;        
+            if (is_array($rest)){
+                if (!empty($rest['rest'])){
+                    $goodRest = $rest['rest'];
+                    $price = abs($rest['amount']/$rest['rest']);
+                }    
+            }
+
+            if ($goodRest){
+                $upd = [
+                    'rest' => $goodRest,
+                    'price' => $price,
+                ];
+
+                $crit = array_filter([
+                    'good' => $goodId,
+                    'legal' => $rest['legalId'],
+                    'company' => $rest['companyId'],
+                    'contract' => $rest['contractId'],
+                ]);
+
+                $comitentBalance = $entityManager->getRepository(ComitentBalance::class)
+                        ->findOneBy($crit);
+
+                if ($comitentBalance){
+                    $connection->update('comitent_balance', $upd, ['id' => $comitentBalance->getId()]);
+                } else {
+                    $connection->insert('comitent_balance', [
+                        'good_id' => $goodId, 
+                        'legal_id' => $rest['legalId'], 
+                        'company_id' => $rest['companyId'],
+                        'contract_id' => $rest['contractId'],
+                        'rest' => $goodRest,
+                        'price' => $price,
+                    ]);
+                }
             }    
-        }
-
-        $upd = [
-            'rest' => $goodRest,
-            'price' => $price,
-        ];
-        
-        $crit = array_filter([
-            'good' => $goodId,
-            'legal' => $legalId,
-            'company' => $companyId,
-            'contract' => $contractId,
-        ]);
-        
-        $comitentBalance = $entityManager->getRepository(ComitentBalance::class)
-                ->findOneBy($crit);
-        
-        if ($comitentBalance){
-            $connection->update('comitent_balance', $upd, ['id' => $comitentBalance->getId()]);
-        } else {
-            $connection->insert('comitent_balance', [
-                'good_id' => $goodId, 
-                'legal_id' => $legalId, 
-                'company_id' => $companyId,
-                'contract_id' => $contractId,
-                'rest' => $goodRest,
-                'price' => $price,
-            ]);
-        }
+        }    
                         
         return;
     }

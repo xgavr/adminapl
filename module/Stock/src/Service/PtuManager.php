@@ -118,10 +118,10 @@ class PtuManager
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($ptu->getLogKey());
         
-        if ($ptu->getStatus() == Ptu::STATUS_ACTIVE){        
-            $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
-                    ->findByPtu($ptu->getId());
-            foreach ($ptuGoods as $ptuGood){
+        $ptuGoods = $this->entityManager->getRepository(PtuGood::class)
+                ->findByPtu($ptu->getId());
+        foreach ($ptuGoods as $ptuGood){
+            if ($ptu->getStatus() == Ptu::STATUS_ACTIVE){        
                 $data = [
                     'doc_key' => $ptu->getLogKey(),
                     'doc_type' => Movement::DOC_PTU,
@@ -144,9 +144,10 @@ class PtuManager
 
                 $this->entityManager->getRepository(Movement::class)
                         ->insertMovement($data);
-                $this->entityManager->getRepository(Movement::class)
-                        ->updateGoodBalance($ptuGood->getGood()->getId(), $ptu->getOffice()->getId(), $ptu->getContract()->getCompany()->getId());
-            }
+            }  
+            
+            $this->entityManager->getRepository(Movement::class)
+                    ->updateGoodBalance($ptuGood->getGood()->getId());
         }    
         
         return;

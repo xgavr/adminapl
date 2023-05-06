@@ -8,6 +8,7 @@ use Stock\Entity\Movement;
 use Stock\Entity\Comiss;
 use Stock\Entity\Retail;
 use Stock\Entity\Register;
+use Stock\Entity\ComissBalance;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -93,11 +94,11 @@ class StManager
         $this->entityManager->getRepository(Retail::class)
                 ->removeOrderRetails($st->getLogKey());
         $stTake = St::STATUS_ACCOUNT_NO;
-        if ($st->getStatus() == St::STATUS_ACTIVE){
-            $stGoods = $this->entityManager->getRepository(StGood::class)
-                    ->findBySt($st->getId());
-        
-            foreach ($stGoods as $stGood){
+        $stGoods = $this->entityManager->getRepository(StGood::class)
+                ->findBySt($st->getId());
+
+        foreach ($stGoods as $stGood){
+            if ($st->getStatus() == St::STATUS_ACTIVE){
                 $bases = $this->entityManager->getRepository(Movement::class)
                         ->findBases($stGood->getGood()->getId(), $docStamp, $st->getOffice()->getId());
                 
@@ -193,9 +194,12 @@ class StManager
 
                 $this->entityManager->getConnection()
                         ->update('st_good', ['take' => $take], ['id' => $stGood->getId()]);
-                $this->entityManager->getRepository(Movement::class)
-                        ->updateGoodBalance($stGood->getGood()->getId(), $st->getOffice()->getId(), $st->getCompany()->getId());
             }    
+            
+            $this->entityManager->getRepository(Movement::class)
+                    ->updateGoodBalance($stGood->getGood()->getId());
+            $this->entityManager->getRepository(ComissBalance::class)
+                    ->updateComissBalance($stGood->getGood()->getId());            
         }
 
         $this->entityManager->getConnection()
