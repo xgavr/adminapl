@@ -91,8 +91,7 @@ class ComitentRepository extends EntityRepository{
                 'doc_stamp' => $data['doc_stamp'],
             ];
 
-            $this->entityManager->getRepository(Comitent::class)
-                    ->insertComitent($comitentData);             
+            $this->insertComitent($comitentData);             
         }
     }
     
@@ -125,8 +124,7 @@ class ComitentRepository extends EntityRepository{
                 'doc_stamp' => $data['doc_stamp'],
             ];
 
-            $this->entityManager->getRepository(Comitent::class)
-                    ->insertComitent($comitentData);             
+            $this->insertComitent($comitentData);             
         }
     }
 
