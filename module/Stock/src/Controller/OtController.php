@@ -45,8 +45,6 @@ class OtController extends AbstractActionController
                 ->findAll();
         return new ViewModel([
             'offices' => $offices,
-            'years' => array_combine(range(date("Y"), 2014), range(date("Y"), 2014)),
-            'monthes' => array_combine(range(1, 12), range(1, 12)),
         ]);  
     }
         

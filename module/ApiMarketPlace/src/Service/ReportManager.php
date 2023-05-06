@@ -15,6 +15,7 @@ use Application\Entity\Goods;
 use Stock\Entity\Comitent;
 use Stock\Entity\ComitentBalance;
 use Stock\Entity\Movement;
+use Stock\Entity\Register;
 
 class ReportManager
 {
@@ -103,7 +104,7 @@ class ReportManager
             $report->setTotalAmount(0);
             $report->setStatusDoc(MarketSaleReport::STATUS_DOC_NOT_RECD);
             $report->setStatusEx(MarketSaleReport::STATUS_EX_NEW);
-            $report->setStatusAccount(MarketSaleReport::STATUS_ACCOUNT_NO);
+            $report->setStatusAccount(MarketSaleReport::STATUS_TAKE_NO);
             
             $this->entityManager->persist($report);
             $this->entityManager->flush();
@@ -256,7 +257,7 @@ class ReportManager
                             ->findBases($item->getGood()->getId(), $docStamp, $contract->getId());
                 }
                 
-                $write = $item->getQuantity();
+                $write = $item->getSaleQty();
                 
                 $take = MarketSaleReportItem::TAKE_NO;
                 
@@ -271,8 +272,8 @@ class ReportManager
                         'base_key' => $base['baseKey'],
                         'base_type' => $base['baseType'],
                         'base_id' => $base['baseId'],
-                        'doc_row_key' => $item->getDocRowKey(),
-                        'doc_row_no' => $item->getRowNo(),
+                        'doc_row_key' => $item->getId(),
+                        'doc_row_no' => $item->getId(),
                         'date_oper' => date('Y-m-d 23:00:00', strtotime($marketSaleRepot->getDocDate())),
                         'status' => Comitent::getStatusFromMarketSaleReport($marketSaleRepot),
                         'quantity' => -$quantity,
@@ -302,8 +303,10 @@ class ReportManager
 
                 $this->entityManager->getConnection()
                         ->update('market_sale_report_item', ['take' => $take], ['id' => $item->getId()]);
-                $this->entityManager->getRepository(ComitentBalance::class)
-                        ->updateComitentBalance($item->getGood()->getId()); 
+                if ($item->getGood()){
+                    $this->entityManager->getRepository(ComitentBalance::class)
+                            ->updateComitentBalance($item->getGood()->getId()); 
+                }    
             }
         }
         
@@ -324,6 +327,22 @@ class ReportManager
             $this->updateMarketSaleReportMutuals($marketSaleReport);
         }    
         
+        return true;
+    }
+    
+    /**
+     * Сменить статус
+     * 
+     * @param MarketSaleReport $marketSaleReport
+     * @param integer $status
+     * @return boolean
+     */
+    public function changeStatus($marketSaleReport, $status)
+    {
+        $marketSaleReport->setStatus($status);
+        $this->entityManager->persist($marketSaleReport);
+        $this->entityManager->flush();
+        $this->entityManager->refresh($marketSaleReport);
         return true;
     }
 

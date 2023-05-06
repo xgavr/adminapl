@@ -280,6 +280,15 @@
     //            width: '500px'
             });
         });  
+        
+        $(document).on('click', '.msp-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'mspModal',
+                url: url,
+                width: '1440px'
+            });
+        });          
 
         $(document).on('change', '#supplierSelect', function (e) {
             refreshTable();

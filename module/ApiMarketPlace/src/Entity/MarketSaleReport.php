@@ -162,6 +162,10 @@ class MarketSaleReport {
         return $this->docDate;
     }
 
+    public function getDocPresent() {
+        return $this->marketplace->getName().' Отчет о реализации №'.$this->num.' от '.date('d-m-Y', strtotime($this->docDate));
+    }
+
     public function getStartDate() {
         return $this->startDate;
     }

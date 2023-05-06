@@ -14,6 +14,7 @@ use Stock\Entity\Register;
 use Stock\Entity\ComissBalance;
 use Stock\Entity\ComitentBalance;
 use Stock\Entity\Comitent;
+use Company\Entity\Contract;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -88,6 +89,12 @@ class VtManager
         if ($vt->getStatus() == Vt::STATUS_COMMISSION){
             return;
         }
+
+        if ($vt->getOrder()->getContract()){
+            if ($vt->getOrder()->getContract()->getKind() == Contract::KIND_COMITENT){
+                return;
+            }
+        }
         
         $contractId = null;
         if ($vt->getOrder()->getLegal()){
@@ -133,6 +140,12 @@ class VtManager
         
         if ($vt->getStatus() == Vt::STATUS_COMMISSION){
             return;
+        }
+        
+        if ($vt->getOrder()->getContract()){
+            if ($vt->getOrder()->getContract()->getKind() == Contract::KIND_COMITENT){
+                return;
+            }
         }
         
         $legalId = $contractId = null;

@@ -157,6 +157,10 @@ class OrderManager
             }    
             $legalId = $order->getLegal()->getId();
             $contractId = $contract->getId();
+            
+            if ($contract->getKind() == Contract::KIND_COMITENT){
+                return;
+            }
         }
         $data = [
             'doc_key' => $order->getLogKey(),
@@ -233,6 +237,11 @@ class OrderManager
             $this->entityManager->getConnection()->update('orders', ['contract_id' => $contract->getId()], ['id' => $order->getId()]);
             $this->entityManager->refresh($order);
         }    
+        
+        if ($contract->getKind() == Contract::KIND_COMITENT){
+            return;
+        }
+        
         $data = [
             'doc_key' => $order->getLogKey(),
             'doc_type' => Movement::DOC_ORDER,
@@ -1495,12 +1504,13 @@ class OrderManager
 
             $upd = [
                 'legal_id' => null,
+                'contract_id' => null,
                 'recipient_id' => null,
                 'bank_account_id' => null,
                 'status_ex' => Order::STATUS_EX_NEW,
             ];
 
-            $legal = $recipient = $bankAccount = null;
+            $legal = $recipient = $bankAccount = $contract = null;
             if (empty($data['legal']) && !empty($data['legalInn']) && !empty($data['legalName'])){
                 $legal = $this->legalManager->addLegal($order->getContact(), [
                     'inn' => $data['legalInn'],
@@ -1512,6 +1522,9 @@ class OrderManager
                     'address' => empty($data['legalAddress']) ? null:$data['legalAddress'],
                 ]);
                 $upd['legal_id'] = $legal->getId();
+                
+                $contract = $this->findDefaultContract($order->getOffice(), $legal, $order->getDocDate(), $order->getAplId());
+                $upd['contract_id'] = $contract->getId();
             }
 
             if (empty($data['recipient']) && !empty($data['recipientInn']) && !empty($data['recipientName'])){

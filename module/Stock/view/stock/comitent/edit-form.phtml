@@ -1,0 +1,122 @@
+<?php
+
+?>
+
+            
+<div class="modal-header">
+    <h3 class="modal-title" id="ptModalLabel"><?= $marketSaleReport->getDocPresent()?> на сумму <?= $marketSaleReport->getDocAmount()?> руб.</h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="mspgoodtoolbar">
+            </div>
+            <table id="mspgoodtable" 
+                data-toggle="ptgoodtable" 
+                data-url="/comitent/good-content/<?= $marketSaleReport->getId() ?>"
+                data-side-pagination="client"
+                data-pagination="true"
+                data-cookie="true"
+                data-cookie-id-table="mspGoodSaveId"
+                data-cookie-expire="1m"
+                data-page-size = "10"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#mspgoodtoolbar"
+                data-icon-size="sm"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-show-columns="true"
+                data-query-params="mspgoodQueryParams"
+                data-response-handler="mspgoodResponseHandler"
+                data-unique-id = "id"
+                data-row-style="takeStyle"
+                >
+                <thead>
+                    <tr>
+                        <th data-field="id" data-type="hidden" data-align="right">N</th>
+                        <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
+                        <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                        <th data-field="good.name" data-type="numeric">Наименование</th>
+                        <th data-field='priceSale' data-align="right">Цена</th>
+                        <th data-field='saleQty' data-align="right">Количество</th>
+                        <th data-field='returnQty' data-align="right">Возврат</th>
+                        <th data-field='saleAmount' data-align="right">Сумма</th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>
+    </div>    
+</div>
+                
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>    
+    function mspUpdateTotal(){
+        var data = $('#ptgoodtable').bootstrapTable('getData');
+        var amount = 0; var quantity = 0;
+        $.each(data, function( index, value ) {
+            amount += Math.round(value.amount*100)/100;
+            quantity += Math.round(value.quantity*100)/100; 
+        });
+        $('#mspAmount').html(Math.round(amount*100)/100);
+        $('#mspQuantity').html(Math.round(quantity*100)/100);
+    }
+    
+    $( document ).ready(function() {
+        
+        $('#mspgoodtable').bootstrapTable({
+            onLoadSuccess: function(res){
+                //mspUpdateTotal();
+            }            
+        }); 
+        
+    });    
+    
+    function mspGoodRefreshTable(){
+        $('#mspgoodtable').bootstrapTable('refresh');
+    }
+    
+    function mspgoodQueryParams(params) {
+        $('#mspgoodtoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#mspgoodtable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#mspgoodtable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function goodFormatter(value, row){
+        if (row.good){
+            var url = '/goods/view/'+row.good.id;
+            btn = '<nobr><a';
+            btn += ' href="'+url+'"';
+            btn += ' class="btn btn-link btn-xs" target="_blank">';
+            btn += '<span class="glyphicon glyphicon-link"></span>';
+            btn += '</a>'+value+'</nobr>';
+            return btn;
+        }
+        
+        return;
+    }    
+        
+    function pgPriceFormatter(value, row){
+        return Math.round(value*100/row.quantity)/100;
+    }        
+    
+    function mspgoodResponseHandler(res) {
+        return res;
+    }     
+</script>

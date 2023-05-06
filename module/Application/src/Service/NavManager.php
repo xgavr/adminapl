@@ -120,6 +120,12 @@ class NavManager
                     'link'  => $url('market-place')
                 ];
 
+                $clientDropdownItems[] = [
+                    'id' => 'apl',
+                    'label' => 'Отчеты ТП',
+                    'link'  => $url('comitent')
+                ];
+
                 if (count($clientDropdownItems)!=0) {
                     $items[] = [
                         'id' => 'client',
