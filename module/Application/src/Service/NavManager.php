@@ -109,19 +109,19 @@ class NavManager
                 ];
                 
                 $clientDropdownItems[] = [
-                    'id' => 'apl',
+                    'id' => 'market',
                     'label' => 'Прайс-листы для ТП',
                     'link'  => $url('market')
                 ];
 
                 $clientDropdownItems[] = [
-                    'id' => 'apl',
+                    'id' => 'marketPlace',
                     'label' => 'Маркеты',
                     'link'  => $url('market-place')
                 ];
 
                 $clientDropdownItems[] = [
-                    'id' => 'apl',
+                    'id' => 'comitent',
                     'label' => 'Отчеты ТП',
                     'link'  => $url('comitent')
                 ];
