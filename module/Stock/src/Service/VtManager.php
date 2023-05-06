@@ -231,6 +231,9 @@ class VtManager
                     $this->entityManager->getRepository(Movement::class)
                             ->insertMovement($data);
                     
+                    $this->entityManager->getRepository(Movement::class)
+                            ->insertVtComitent($vt, $data);
+
                     //проверка компании заказа и компании офиса, переместить, если не совпадает
                     if (!$vt->getOrder()->getCompany()->companyInOffice($vt->getOffice())){
                         

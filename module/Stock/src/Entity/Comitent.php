@@ -14,6 +14,8 @@ use Company\Entity\Office;
 use Application\Entity\Goods;
 use Application\Entity\Contact;
 use ApiMarketPlace\Entity\MarketSaleReport;
+use Application\Entity\Order;
+use Stock\Entity\Vt;
 
 
 /**
@@ -272,6 +274,32 @@ class Comitent {
         }
     }    
     
+    /**
+     * Returns possible st status.
+     * @param Order $order
+     * @return integer
+     */
+    public static function getStatusFromOrder($order) 
+    {
+        switch ($order->getStatus()){
+            case Order::STATUS_SHIPPED: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }    
+
+    /**
+     * Returns possible st status.
+     * @param Vt $vt
+     * @return integer
+     */
+    public static function getStatusFromVt($vt) 
+    {
+        switch ($vt->getStatus()){
+            case Vt::STATUS_ACTIVE: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }    
+
     /**
      * Returns possible statuses as array.
      * @return array

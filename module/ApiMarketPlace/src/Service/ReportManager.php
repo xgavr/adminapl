@@ -265,9 +265,9 @@ class ReportManager
                     $amount = $base['price']*$quantity;
 
                     $data = [
-                        'doc_key' => $$marketSaleRepot->getLogKey(),
-                        'doc_type' => Movement::DOC_ST,
-                        'doc_id' => $$marketSaleRepot->getId(),
+                        'doc_key' => $marketSaleRepot->getLogKey(),
+                        'doc_type' => Movement::DOC_MSR,
+                        'doc_id' => $marketSaleRepot->getId(),
                         'base_key' => $base['baseKey'],
                         'base_type' => $base['baseType'],
                         'base_id' => $base['baseId'],
@@ -280,7 +280,7 @@ class ReportManager
                         'base_amount' => -$amount,
                         'good_id' => $item->getGood()->getId(),
                         'legal_id' => $marketSaleRepot->getContract()->getLegal()->getId(),
-                        'company_id' => $$marketSaleRepot->getContract()->getCompany()->getId(), //
+                        'company_id' => $marketSaleRepot->getContract()->getCompany()->getId(), //
                         'contract_id' => $marketSaleRepot->getContract()->getId(), //
                         'doc_stamp' => $docStamp,
                     ];

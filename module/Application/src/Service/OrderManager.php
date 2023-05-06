@@ -305,7 +305,10 @@ class OrderManager
 
                     $this->entityManager->getRepository(Movement::class)
                             ->insertMovement($data);     
-    //                var_dump($movement->getStatus());
+                    
+                    $this->entityManager->getRepository(Comitent::class)
+                            ->insertOrderComitent($order, $data);     
+
                     if ($movement->getStatus() == Movement::STATUS_COMMISSION){
                         $comiss = $this->entityManager->getRepository(Comiss::class)
                                 ->findOneByDocKey($base['baseKey']);
@@ -1051,7 +1054,7 @@ class OrderManager
         if ($order->getDateOper() < $this->getAllowDate()){
             return;
         }
-        if (!$order->getContract()){
+        if (!$order->getContract() && $order->getLegal()){
             $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId());
             $this->entityManager->getConnection()->update('orders', ['contract_id' => $contract->getId()], ['id' => $order->getId()]);
         }            
