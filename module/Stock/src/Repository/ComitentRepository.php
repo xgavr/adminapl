@@ -151,7 +151,7 @@ class ComitentRepository extends EntityRepository{
                 ->andWhere('c.docStamp <= ?2')
                 ->andWhere('c.docStamp > 0')
                 ->andWhere('c.contract = ?3')
-                ->andWhere('m.status != ?4')
+                ->andWhere('c.status != ?4')
                 ->setParameter('1', $goodId)
                 ->setParameter('2', $docStamp)
                 ->setParameter('3', $contractId)
