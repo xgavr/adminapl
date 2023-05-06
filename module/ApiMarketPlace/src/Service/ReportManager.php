@@ -277,7 +277,6 @@ class ReportManager
                         'status' => Comitent::getStatusFromMarketSaleReport($marketSaleRepot),
                         'quantity' => -$quantity,
                         'amount' => -$amount,
-                        'base_amount' => -$amount,
                         'good_id' => $item->getGood()->getId(),
                         'legal_id' => $marketSaleRepot->getContract()->getLegal()->getId(),
                         'company_id' => $marketSaleRepot->getContract()->getCompany()->getId(), //
