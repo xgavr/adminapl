@@ -69,28 +69,30 @@ class ComitentRepository extends EntityRepository{
      */
     public function insertOrderComitent($order, $data)
     {
-        if ($order->getContract()->getKind() == Contract::KIND_COMITENT && $order->getStatus() == Order::STATUS_SHIPPED){
-            $comitentData = [
-                'doc_key' => $order->getLogKey(),
-                'doc_type' => Movement::DOC_ORDER,
-                'doc_id' => $order->getId(),
-                'base_key' => $order->getLogKey(),
-                'base_type' => Movement::DOC_ORDER,
-                'base_id' => $order->getId(),
-                'doc_row_key' => $data['doc_row_key'],
-                'doc_row_no' => $data['doc_row_no'],
-                'date_oper' => date('Y-m-d 12:00:00', strtotime($order->getDocDate())),
-                'status' => Comitent::getStatusFromOrder($order),
-                'quantity' => -$data['quantity'], //минус озознанный
-                'amount' => -$data['amount'],
-                'good_id' => $data['good_id'],
-                'legal_id' => $order->getLegal()->getId(),
-                'company_id' => $order->getCompany()->getId(), //
-                'contract_id' => $order->getContract()->getId(), //
-                'doc_stamp' => $data['doc_stamp'],
-            ];
+        if ($order->getContract()){
+            if ($order->getContract()->getKind() == Contract::KIND_COMITENT && $order->getStatus() == Order::STATUS_SHIPPED){
+                $comitentData = [
+                    'doc_key' => $order->getLogKey(),
+                    'doc_type' => Movement::DOC_ORDER,
+                    'doc_id' => $order->getId(),
+                    'base_key' => $order->getLogKey(),
+                    'base_type' => Movement::DOC_ORDER,
+                    'base_id' => $order->getId(),
+                    'doc_row_key' => $data['doc_row_key'],
+                    'doc_row_no' => $data['doc_row_no'],
+                    'date_oper' => date('Y-m-d 12:00:00', strtotime($order->getDocDate())),
+                    'status' => Comitent::getStatusFromOrder($order),
+                    'quantity' => -$data['quantity'], //минус озознанный
+                    'amount' => -$data['amount'],
+                    'good_id' => $data['good_id'],
+                    'legal_id' => $order->getLegal()->getId(),
+                    'company_id' => $order->getCompany()->getId(), //
+                    'contract_id' => $order->getContract()->getId(), //
+                    'doc_stamp' => $data['doc_stamp'],
+                ];
 
-            $this->insertComitent($comitentData);             
+                $this->insertComitent($comitentData);             
+            }
         }
     }
     
@@ -101,29 +103,31 @@ class ComitentRepository extends EntityRepository{
      */
     public function insertVtComitent($vt, $data)
     {
-        if ($vt->getOrder()->getContract()->getKind() == Contract::KIND_COMITENT && $vt->getStatus() == Vt::STATUS_ACTIVE){
-            $comitentData = [
-                'doc_key' => $vt->getLogKey(),
-                'doc_type' => Movement::DOC_VT,
-                'doc_id' => $vt->getId(),
-                'base_key' => $vt->getOrder()->getLogKey(),
-                'base_type' => Movement::DOC_ORDER,
-                'base_id' => $vt->getOrder()->getId(),
-                'doc_row_key' => $data['doc_row_key'],
-                'doc_row_no' => $data['doc_row_no'],
-                'date_oper' => date('Y-m-d 22:00:00', strtotime($vt->getDocDate())),
-                'status' => Comitent::getStatusFromVt($vt),
-                'quantity' => -$data['quantity'], //минус озознанный
-                'amount' => -$data['amount'],
-                'good_id' => $data['good_id'],
-                'legal_id' => $vt->getOrder()->getLegal()->getId(),
-                'company_id' => $vt->getOrder()->getCompany()->getId(), //
-                'contract_id' => $vt->getOrder()->getContract()->getId(), //
-                'doc_stamp' => $data['doc_stamp'],
-            ];
+        if ($vt->getOrder()->getContract()){
+            if ($vt->getOrder()->getContract()->getKind() == Contract::KIND_COMITENT && $vt->getStatus() == Vt::STATUS_ACTIVE){
+                $comitentData = [
+                    'doc_key' => $vt->getLogKey(),
+                    'doc_type' => Movement::DOC_VT,
+                    'doc_id' => $vt->getId(),
+                    'base_key' => $vt->getOrder()->getLogKey(),
+                    'base_type' => Movement::DOC_ORDER,
+                    'base_id' => $vt->getOrder()->getId(),
+                    'doc_row_key' => $data['doc_row_key'],
+                    'doc_row_no' => $data['doc_row_no'],
+                    'date_oper' => date('Y-m-d 22:00:00', strtotime($vt->getDocDate())),
+                    'status' => Comitent::getStatusFromVt($vt),
+                    'quantity' => -$data['quantity'], //минус озознанный
+                    'amount' => -$data['amount'],
+                    'good_id' => $data['good_id'],
+                    'legal_id' => $vt->getOrder()->getLegal()->getId(),
+                    'company_id' => $vt->getOrder()->getCompany()->getId(), //
+                    'contract_id' => $vt->getOrder()->getContract()->getId(), //
+                    'doc_stamp' => $data['doc_stamp'],
+                ];
 
-            $this->insertComitent($comitentData);             
-        }
+                $this->insertComitent($comitentData);             
+            }
+        }    
     }
 
     /**
