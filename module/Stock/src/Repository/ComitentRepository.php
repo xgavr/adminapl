@@ -42,7 +42,7 @@ class ComitentRepository extends EntityRepository{
         $comiss = $qb->getQuery()->getResult();
         
         foreach ($comiss as $cms){
-            $connection->delete('comiss', ['id' => $cms->getId()]);
+            $connection->delete('comitent', ['id' => $cms->getId()]);
         }
         
         return;
