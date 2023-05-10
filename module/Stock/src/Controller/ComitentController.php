@@ -36,6 +36,10 @@ class ComitentController extends AbstractActionController
         $this->reportManager = $reportManager;
     }   
     
+    /**
+     * Дата запрета редактирования
+     * @return date
+     */    
     private function getAllowDate()
     {
         $var = $this->entityManager->getRepository(RegisterVariable::class)

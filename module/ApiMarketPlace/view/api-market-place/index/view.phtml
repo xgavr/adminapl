@@ -93,6 +93,7 @@ $this->mainMenu()->setActiveItemId('');
                 title: 'Месяц отчета',
                 inputType: 'date',
                 size: 'small',
+                min: '<?= $allowDate?>',
                 value: $.format.date(new Date(), "yyyy-MM-dd"),
                 callback: function (result) {
                     if (result){

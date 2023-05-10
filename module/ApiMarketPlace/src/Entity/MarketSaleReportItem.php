@@ -32,6 +32,12 @@ class MarketSaleReportItem {
     protected $id;
     
     /**
+     * Номер строки в отчёте
+     * @ORM\Column(name="row_number")   
+     */
+    protected $rowNumber;
+
+    /**
      * ид товара на площадке
      * @ORM\Column(name="product_id")   
      */
@@ -364,6 +370,14 @@ class MarketSaleReportItem {
 
     public function setGood($good): void {
         $this->good = $good;
+    }
+
+    public function getRowNumber() {
+        return $this->rowNumber;
+    }
+
+    public function setRowNumber($rowNumber): void {
+        $this->rowNumber = $rowNumber;
     }
 
 }

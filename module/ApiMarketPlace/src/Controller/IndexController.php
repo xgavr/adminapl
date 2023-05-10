@@ -19,6 +19,7 @@ use ApiMarketPlace\Entity\MarketplaceOrder;
 use ApiMarketPlace\Form\MarketplaceOrderForm;
 use Application\Entity\Contact;
 use Company\Entity\Contract;
+use Stock\Entity\RegisterVariable;
 
 
 class IndexController extends AbstractActionController
@@ -67,6 +68,16 @@ class IndexController extends AbstractActionController
        $this->reportManager = $reportManager;
     }
 
+    /**
+     * Дата запрета редактирования
+     * @return date
+     */    
+    private function getAllowDate()
+    {
+        $var = $this->entityManager->getRepository(RegisterVariable::class)
+                ->findOneBy([]);
+        return $var->getAllowDate();
+    }
     
     public function indexAction()
     {
@@ -96,6 +107,7 @@ class IndexController extends AbstractActionController
                         
         return new ViewModel([
             'marketplace' => $marketplace,
+            'allowDate' => date('Y-m-d', strtotime($this->getAllowDate(), '+1 day')),
         ]);
     }    
 

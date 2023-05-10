@@ -16,6 +16,7 @@ use Stock\Entity\Comitent;
 use Stock\Entity\ComitentBalance;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
+use Stock\Entity\RegisterVariable;
 
 class ReportManager
 {
@@ -37,6 +38,17 @@ class ReportManager
     {
         $this->entityManager = $entityManager;
         $this->ozonService = $ozonService;
+    }
+    
+    /**
+     * Дата запрета редактирования
+     * @return date
+     */
+    private function getAllowDate()
+    {
+        $var = $this->entityManager->getRepository(RegisterVariable::class)
+                ->findOneBy([]);
+        return $var->getAllowDate();
     }
     
     /**
@@ -107,7 +119,9 @@ class ReportManager
             $report->setStatusAccount(MarketSaleReport::STATUS_TAKE_NO);
             
             $this->entityManager->persist($report);
-            $this->entityManager->flush();
+            if ($report->getDocDate() > $this->getAllowDate()){
+                $this->entityManager->flush();
+            }    
         }
         
         return $report;
@@ -125,7 +139,9 @@ class ReportManager
             $this->entityManager->remove($item);            
         }
         
-        $this->entityManager->flush();
+        if ($report->getDocDate() > $this->getAllowDate()){
+            $this->entityManager->flush();
+        }    
         
         return;
     }
@@ -164,11 +180,14 @@ class ReportManager
             $item->setSalePriceSeller(empty($row['sale_price_seller']) ? 0:$row['sale_price_seller']);
             $item->setSaleQty(empty($row['sale_qty']) ? 0:$row['sale_qty']); 
             $item->setTake(MarketSaleReportItem::TAKE_NO);
+            $item->setRowNumber(empty($row['row_number']) ? 0:$row['row_number']);
 
             $this->entityManager->persist($item);            
         }
         
-        $this->entityManager->flush();
+        if ($report->getDocDate() > $this->getAllowDate()){
+            $this->entityManager->flush();
+        }    
         
         return;
     }
@@ -186,6 +205,7 @@ class ReportManager
             if ($report){
                 $this->clearReport($report);
                 $this->addReportItems($report, $saleReport['rows']);
+                $this->repostMarketSaleReport($report);
             }
         }      
         
@@ -322,11 +342,12 @@ class ReportManager
      */
     public function repostMarketSaleReport($marketSaleReport)
     {
-        $take = $this->updateComitent($marketSaleReport);
-        if ($take != MarketSaleReport::STATUS_TAKE_NO){
-            $this->updateMarketSaleReportMutuals($marketSaleReport);
-        }    
-        
+        if ($marketSaleReport->getDocDate() > $this->getAllowDate()){
+            $take = $this->updateComitent($marketSaleReport);
+            if ($take != MarketSaleReport::STATUS_TAKE_NO){
+                $this->updateMarketSaleReportMutuals($marketSaleReport);
+            }    
+        }
         return true;
     }
     
