@@ -30,47 +30,47 @@ $this->mainMenu()->setActiveItemId('');
         <table class="table table-striped table-bordered">
              <tr>
                 <th>ID:</th>
-                <td><?= $this->escapeHtml($marketplace->getId()) ?></th>
+                <td><?= $this->escapeHtml($marketplace->getId()) ?></td>
             </tr>
             <tr>
                 <th>Наименование:</th>
-                <td><?= $this->escapeHtml($marketplace->getName()) ?></th>
+                <td><?= $this->escapeHtml($marketplace->getName()) ?></td>
             </tr>
             <tr>
                 <th>Номер в магазина в торговой площадке:</th>
-                <td><?= $this->escapeHtml($marketplace->getMerchantId()) ?></th>
+                <td><?= $this->escapeHtml($marketplace->getMerchantId()) ?></td>
             </tr>
             <tr>
                 <th>Сайт:</th>
-                <td><?= $this->escapeHtml($marketplace->getSite()) ?></th>
+                <td><a href="$marketplace->getSite()" target="_blank"><?= $this->escapeHtml($marketplace->getSite()) ?></a></td>
             </tr>
             <tr>
                 <th>Ip торговой площадки:</th>
-                <td><?= $this->escapeHtml($marketplace->getRemoteAddr()) ?></th>
+                <td><?= $this->escapeHtml($marketplace->getRemoteAddr()) ?></td>
             </tr>
             <tr>
                 <th>Клиент:</th>
-                <td><?= $marketplace->getContactPresent() ?></th>
+                <td><?= $marketplace->getContactPresent() ?></td>
             </tr>
             <tr>
                 <th>Договор:</th>
-                <td><?= $marketplace->getContractPresent() ?></th>
+                <td><?= $marketplace->getContractPresent() ?></td>
             </tr>
             <tr>
                 <th>Тип:</th>
-                <td><?= $this->escapeHtml($marketplace->getMarketTypeAsString()) ?></th>
+                <td><?= $this->escapeHtml($marketplace->getMarketTypeAsString()) ?></td>
             </tr>
             <tr>
                 <th>Статус:</th>
-                <td><?= $this->escapeHtml($marketplace->getStatusAsString()) ?></th>
+                <td><?= $this->escapeHtml($marketplace->getStatusAsString()) ?></td>
             </tr>
             <tr>
                 <th>Комментарий:</th>
-                <td><?= $this->escapeHtml($marketplace->getComment()) ?></th>
+                <td><?= $this->escapeHtml($marketplace->getComment()) ?></td>
             </tr>
             <tr>
                 <th>Дата создания:</th>
-                <td><?= $this->escapeHtml($marketplace->getDateCreated()) ?></th>
+                <td><?= $this->escapeHtml($marketplace->getDateCreated()) ?></td>
             </tr>
         </table>
     </div>
