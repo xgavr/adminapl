@@ -251,6 +251,7 @@ class ReportManager
 
             $this->entityManager->getRepository(Mutual::class)
                     ->insertMutual($data);
+            $this->entityManager->refresh($marketSaleReport);
         }    
          
         return;
