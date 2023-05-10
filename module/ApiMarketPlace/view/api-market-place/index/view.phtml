@@ -42,7 +42,11 @@ $this->mainMenu()->setActiveItemId('');
             </tr>
             <tr>
                 <th>Сайт:</th>
-                <td><a href="$marketplace->getSite()" target="_blank"><?= $this->escapeHtml($marketplace->getSite()) ?></a></td>
+                <td>
+                    <?php if ($marketplace->getSite()):?>
+                        <a href="<?= $marketplace->getSite() ?>" target="_blank"><?= $this->escapeHtml($marketplace->getSite()) ?></a>
+                    <?php endif; ?>    
+                </td>    
             </tr>
             <tr>
                 <th>Ip торговой площадки:</th>
