@@ -14,6 +14,8 @@ use ApiMarketPlace\Entity\Marketplace;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Stock\Entity\RegisterVariable;
 use ApiMarketPlace\Entity\MarketSaleReportItem;
+use Stock\Form\MsrGoodForm;
+use Application\Entity\Goods;
 
 class ComitentController extends AbstractActionController
 {
@@ -146,6 +148,60 @@ class ComitentController extends AbstractActionController
             'rows' => $result,
         ]);          
     }        
+    
+    public function goodEditFormAction()
+    {        
+        $itemId = $this->params()->fromRoute('id', -1);
+        
+        $item = $good = $result = null;
+        if ($itemId>0){
+            $item = $this->entityManager->getRepository(MarketSaleReportItem::class)
+                    ->find($itemId);
+        }
+                        
+        $form = new MsrGoodForm($this->entityManager, $good);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                if (isset($data['good'])){
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->find($data['good']);            
+                }
+                if ($good){
+                    $result = 'ok';
+                    $this->reportManager->updateItemGood($item, $good);
+                    $query = $this->entityManager->getRepository(MarketSaleReportItem::class)
+                                    ->findReportItems($item->getMarketSaleReport()->getId(), ['itemId' => $item->getId()]);
+                    $row = $query->getOneOrNullResult(2);
+                }    
+                return new JsonModel([
+                    'result' => $result,
+                    'row' => $row,
+                ]);        
+            }
+        } else {
+            if ($good){
+                $data = [
+                    'good' => $good->getId(),
+                    'code' => $good->getCode(),
+                    'goodInputName' => $good->getInputName(),
+                ];
+                $form->setData($data);
+            }    
+        }        
+
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'item' => $item,
+            'good' => $good,
+        ]);        
+    }
     
     public function repostAction()
     {

@@ -194,6 +194,21 @@ class ReportManager
     }
     
     /**
+     * Обновить товар в строке отчета
+     * @param MarketSaleReportItem $item
+     * @param Goods $good
+     */
+    public function updateItemGood($item, $good)
+    {
+        $item->setGood($good);
+        $this->entityManager->persist($item);
+        $this->entityManager->flush();
+        $this->entityManager->refresh($item);
+        
+        return;
+    }
+    
+    /**
      * Отчет по реализациям от озон
      * @param date $date
      */

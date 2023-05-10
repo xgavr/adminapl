@@ -290,6 +290,20 @@
             });
         });          
 
+        $(document).on('click', '.msr-good-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            var uniqueId = $(this).attr('unique-id');
+            if (uniqueId){
+                url = url+uniqueId;
+            }    
+            showFormDialog({
+                id: 'msrGoodModal',
+                url: url,
+                zIndex: 9999
+            });
+        });  
+        
+
         $(document).on('change', '#supplierSelect', function (e) {
             refreshTable();
         });        

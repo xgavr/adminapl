@@ -141,6 +141,13 @@ class MarketplaceRepository extends EntityRepository
         if (is_array($params)){
             if (isset($params['sort'])){
             }            
+            if (!empty($params['itemId'])){
+                if (is_numeric($params['itemId'])){
+                    $queryBuilder->andWhere('i.id = :id')
+                        ->setParameter('id', $params['itemId'])
+                            ;
+                }    
+            }            
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();

@@ -13,25 +13,25 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-xs-12">
-            <div id="mspgoodtoolbar">
+            <div id="msrgoodtoolbar">
             </div>
-            <table id="mspgoodtable" 
-                data-toggle="ptgoodtable" 
+            <table id="msrgoodtable" 
+                data-toggle="msrgoodtable" 
                 data-url="/comitent/good-content/<?= $marketSaleReport->getId() ?>"
                 data-side-pagination="client"
                 data-pagination="true"
                 data-cookie="true"
-                data-cookie-id-table="mspGoodSaveId"
+                data-cookie-id-table="msrGoodSaveId"
                 data-cookie-expire="1m"
                 data-page-size = "10"
                 data-page-list="[5, 10, 20, 50]"
-                data-toolbar="#mspgoodtoolbar"
+                data-toolbar="#msrgoodtoolbar"
                 data-icon-size="sm"
                 data-show-refresh="true"
                 data-show-toggle="false"
                 data-show-columns="true"
-                data-query-params="mspgoodQueryParams"
-                data-response-handler="mspgoodResponseHandler"
+                data-query-params="msrgoodQueryParams"
+                data-response-handler="msrgoodResponseHandler"
                 data-unique-id = "id"
                 data-row-style="takeStyle"
                 >
@@ -45,6 +45,7 @@
                         <th data-field='saleQty' data-align="right">Количество</th>
                         <th data-field='returnQty' data-align="right">Возврат</th>
                         <th data-field='saleAmount' data-align="right">Сумма</th>
+                        <th data-field="button" data-formatter="msrActiveFormatter" data-width="20"></th>
                      </tr>                
                 </thead>
             </table>
@@ -57,20 +58,20 @@
 </div>
 
 <script>    
-    function mspUpdateTotal(){
+    function msrUpdateTotal(){
         var data = $('#ptgoodtable').bootstrapTable('getData');
         var amount = 0; var quantity = 0;
         $.each(data, function( index, value ) {
             amount += Math.round(value.amount*100)/100;
             quantity += Math.round(value.quantity*100)/100; 
         });
-        $('#mspAmount').html(Math.round(amount*100)/100);
-        $('#mspQuantity').html(Math.round(quantity*100)/100);
+        $('#msrAmount').html(Math.round(amount*100)/100);
+        $('#msrQuantity').html(Math.round(quantity*100)/100);
     }
     
     $( document ).ready(function() {
         
-        $('#mspgoodtable').bootstrapTable({
+        $('#msrgoodtable').bootstrapTable({
             onLoadSuccess: function(res){
                 //mspUpdateTotal();
             }            
@@ -78,12 +79,12 @@
         
     });    
     
-    function mspGoodRefreshTable(){
-        $('#mspgoodtable').bootstrapTable('refresh');
+    function msrGoodRefreshTable(){
+        $('#msrgoodtable').bootstrapTable('refresh');
     }
     
-    function mspgoodQueryParams(params) {
-        $('#mspgoodtoolbar').find('input[name]').each(function () {
+    function msrgoodQueryParams(params) {
+        $('#msrgoodtoolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         limit = $('#mspgoodtable .page-size').html();
@@ -112,11 +113,25 @@
         return;
     }    
         
+    function msrActiveFormatter(value, row){
+        var url = '/comitent/good-edit-form/';
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs msr-good-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' unique-id="'+row.id+'"';
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+        
+        return btn;
+    }    
+        
     function pgPriceFormatter(value, row){
         return Math.round(value*100/row.quantity)/100;
     }        
     
-    function mspgoodResponseHandler(res) {
+    function msrgoodResponseHandler(res) {
         return res;
     }     
 </script>

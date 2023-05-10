@@ -108,6 +108,12 @@ class Register {
      */
     private $revise;
 
+    /**
+     * @ORM\OneToOne(targetEntity="ApiMarketPlace\Entity\MarketSaleReport") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $marketSaleReport;
+
     public function __construct() {
     }
    
@@ -278,6 +284,18 @@ class Register {
     {
         if ($this->docType == Movement::DOC_REVISE){
             return $this->revise;
+        }
+        
+        return;
+    }
+
+    /**
+     * return MarketSaleReport
+     */
+    public function getMarketSaleReport()
+    {
+        if ($this->docType == Movement::DOC_MSR){
+            return $this->marketSaleReport;
         }
         
         return;

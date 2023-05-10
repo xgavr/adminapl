@@ -525,6 +525,7 @@ class RegisterRepository extends EntityRepository
             ->leftJoin('r.st', 's', 'WITH', 'r.docId = s.id and r.docType = 6')
             ->leftJoin('r.vtp', 'vtp', 'WITH', 'r.docId = vtp.id and r.docType = 7')
             ->leftJoin('r.revise', 'rev', 'WITH', 'r.docId = rev.id and r.docType = 8')
+            ->leftJoin('r.marketSaleReport', 'msr', 'WITH', 'r.docId = msr.id and r.docType = 10')
             ; 
 
         if (is_array($params)){
@@ -565,6 +566,7 @@ class RegisterRepository extends EntityRepository
                             $orX->add($queryBuilder->expr()->eq('ord.statusAccount', Order::STATUS_TAKE_NO));
                             $orX->add($queryBuilder->expr()->eq('s.statusAccount', St::STATUS_TAKE_NO));
                             $orX->add($queryBuilder->expr()->eq('vtp.statusAccount', Vtp::STATUS_TAKE_NO));
+                            $orX->add($queryBuilder->expr()->eq('msr.statusAccount', MarketSaleReport::STATUS_TAKE_NO));
                             break;
                     }
                     if ($orX->count()){

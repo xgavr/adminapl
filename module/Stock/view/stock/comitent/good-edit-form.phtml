@@ -1,0 +1,118 @@
+<?php
+
+$form = $this->form;
+
+$form->get('goodInputName')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => true,
+    ]);
+
+$form->get('code')->setAttributes([
+    'class'=>'form-control', 
+    'data-provide' => "typeahead",
+    'autocomplete' => 'off',
+    ]);
+
+$form->get('good')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'msr-good-submit']);
+
+$form->prepare();
+
+$docName = 'Новый';
+
+?>
+            
+<?= $this->form()->openTag($form); ?>
+            
+<div class="modal-header">
+    <h5 class="modal-title" id="msrGoodModalLabel">Замена товара в отчете по реализации</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
+<!--                            <?= $this->formLabel($form->get('goodInputName')); ?>
+                <em>(артикул;производитель;наименование)</em>-->
+                <?= $this->formElement($form->get('goodInputName')); ?>
+                <?= $this->formElementErrors($form->get('goodInputName')); ?>                  
+            </div>
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col-xs-8">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('code')); ?>
+                <div class="btn-group">
+                    <?= $this->formElement($form->get('code')); ?>
+                    <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                </div>
+                <?= $this->formElementErrors($form->get('code')); ?>                  
+            </div>
+        </div>    
+    </div>
+    <div class="row">
+    </div>    
+
+    <?= $this->formElement($form->get('good')); ?>
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>    
+                
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="msr-good-submit">Сохранить</button>
+</div>
+            
+<?= $this->form()->closeTag(); ?>
+            
+<script  type="text/javascript">
+    $('#msr-good-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/comitent/good-edit-form/<?= ($item) ? $item->getId():''?>',
+            data: $('#msr-good-form').serialize()
+        })
+            .done(function (data) {
+//                console.log(answer);
+                if (data.result == 'ok'){
+                    <?php if($item): ?>
+                        $('#msrgoodtable').bootstrapTable('updateByUniqueId', {id: <?= $item->getId() ?>, row: data.row});
+                    <?php endif; ?>        
+                    
+                    $('#msrGoodModal').modal('hide');
+                } else {
+                    $('#msrGoodModal .modal-content').html(answer);
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });
+    });    
+    
+    $( document ).ready(function() {
+        $('#code').on('input', function(){
+            $('#code').val($.trim($('#code').val()));
+        });
+        $('#code').typeahead({
+            source: function(query, process) {
+                return $.get("/ptu/autocomplete-good?q="+query, function (data) {
+                    return process(data);
+                });
+            },
+            changeInputOnSelect: false,
+            afterSelect: function(data) {
+                $('#good').val(data.id);
+                $('#code').val(data.code);
+                $('#goodInputName').val(data.name);
+            }
+        });        
+        
+    });    
+</script>
