@@ -17,6 +17,7 @@ use Stock\Entity\ComitentBalance;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
 use Stock\Entity\RegisterVariable;
+use Stock\Entity\Mutual;
 
 class ReportManager
 {
