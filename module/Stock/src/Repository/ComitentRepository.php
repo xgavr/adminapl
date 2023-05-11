@@ -192,10 +192,14 @@ class ComitentRepository extends EntityRepository{
                 ->andWhere('c.docStamp > 0')
                 ->andWhere('c.contract = ?3')
                 ->andWhere('c.status != ?4')
+                ->andWhere('c.docType = ?5')
                 ->setParameter('1', $goodId)
                 ->setParameter('2', $docStamp)
                 ->setParameter('3', $contractId)
                 ->setParameter('4', Comitent::STATUS_RETIRED)
+                ->setParameter('5', Movement::DOC_MSR)
+//                ->groupBy('c.baseKey')
+//                ->having('rest > 0')
                 ;
         
         $qb->addOrderBy('c.docStamp', $method);
