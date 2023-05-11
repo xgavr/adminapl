@@ -254,6 +254,7 @@ class OrderController extends AbstractActionController
                 
                 if ($order){
                     if ($contact->getId() != $order->getContact()->getId()){
+                        var_dump($contact->getId());
                         $this->orderManager->updateOrderContact($order, $contact);
                     }
                     $this->orderManager->updateOrder($order, $data);
