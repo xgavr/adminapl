@@ -253,6 +253,9 @@ class OrderController extends AbstractActionController
                 $data['total'] = $data['shipmentTotal'];
                 
                 if ($order){
+                    if ($contact->getId() != $order->getContact()->getId()){
+                        $this->orderManager->updateOrderContact($order, $contact);
+                    }
                     $this->orderManager->updateOrder($order, $data);
                 } else {
                     $order = $this->orderManager->addNewOrder($office, $contact, $data);

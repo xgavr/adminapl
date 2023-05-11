@@ -1587,6 +1587,37 @@ class OrderManager
     }
     
     /**
+     * Обновить контакт клиента
+     * @param Order $order
+     * @param Contact $newContact
+     */
+    public function updateOrderContact($order, $newContact)
+    {
+        $order->setContact($newContact);
+        $this->entityManager->persist($order);
+        
+        $contactCar = $order->getContactCar();
+        if ($contactCar){
+            $contactCar->setContact($newContact);
+            $this->entityManager->persist($contactCar);
+        }
+        
+        $legal = $order->getLegal();
+        if ($legal){
+            $legal->addContact($newContact);
+            $this->entityManager->persist($legal);
+        }
+        
+        $recipient = $order->getRecipient();
+        if ($recipient){
+            $recipient->addContact($newContact);
+            $this->entityManager->persist($recipient);
+        }
+        
+        $this->entityManager->flush();
+    }
+    
+    /**
      * Удалить строки заказа
      * @param Order $order
      */
