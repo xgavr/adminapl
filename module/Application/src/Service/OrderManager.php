@@ -1615,6 +1615,7 @@ class OrderManager
         }
         
         $this->entityManager->flush();
+        $this->entityManager->refresh($order);
     }
     
     /**
