@@ -171,6 +171,44 @@ class ComitentRepository extends EntityRepository{
     }
     
     /**
+     * Найти документ для возврата
+     * 
+     * @param integer $goodId
+     * @param float $docStamp
+     * @param integer $contractId
+     * $param string $baseKey
+     * 
+     */
+    public function findForReturn($goodId, $docStamp, $contractId, $baseKey = null)
+    {
+        $method = 'DESC';
+        $entityManager = $this->getEntityManager();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('c')
+                ->from(Comitent::class, 'c')
+                ->distinct()
+                ->where('c.good = ?1')
+                ->andWhere('c.docStamp <= ?2')
+                ->andWhere('c.docStamp > 0')
+                ->andWhere('c.contract = ?3')
+                ->andWhere('c.status != ?4')
+                ->setParameter('1', $goodId)
+                ->setParameter('2', $docStamp)
+                ->setParameter('3', $contractId)
+                ->setParameter('4', Comitent::STATUS_RETIRED)
+                ;
+        
+        $qb->addOrderBy('c.docStamp', $method);
+        
+        if ($baseKey){
+            $qb->andWhere('c.baseKey = ?5')
+               ->setParameter('5', $baseKey);     
+        }
+        
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Получить актуальный остаток
      * @param integer $goodId
      * @return array

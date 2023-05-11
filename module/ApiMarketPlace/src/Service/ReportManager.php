@@ -341,7 +341,7 @@ class ReportManager
                     $comitents = [];
                     if ($item->getGood()){                
                         $comitents = $this->entityManager->getRepository(Comitent::class)
-                                ->findBy(['good' => $item->getGood()->getId(), 'docType' => Movement::DOC_MSR], ['dateOper' => 'DESC']);
+                                ->findForReturn($item->getGood()->getId(), $docStamp, $contract->getId());
                     }
 
                     foreach ($comitents as $comitent){
