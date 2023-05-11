@@ -291,8 +291,8 @@ class ReportManager
 
                 $take = MarketSaleReportItem::TAKE_NO;
 
-                $write = $item->getSaleQty() - $item->getReturnQty();
-                $posting = $item->getReturnQty() - $item->getSaleQty();
+                $write = max(0, $item->getSaleQty() - $item->getReturnQty());
+                $posting = max(0, $item->getReturnQty() - $item->getSaleQty());
 
                 if ($write > 0){
                     
