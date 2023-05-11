@@ -288,58 +288,105 @@ class ReportManager
             $items = $this->entityManager->getRepository(MarketSaleReportItem::class)
                     ->findBy(['marketSaleReport' => $marketSaleRepot->getId()]);
             foreach ($items as $item){
-                $bases = [];
-                if ($item->getGood()){                
-                    $bases = $this->entityManager->getRepository(Comitent::class)
-                            ->findBases($item->getGood()->getId(), $docStamp, $contract->getId());
-                }
-                
-                $write = $item->getSaleQty();
-                
+
                 $take = MarketSaleReportItem::TAKE_NO;
-                
-                foreach ($bases as $base){
-                    $quantity = min($base['rest'], $write);
-                    $amount = $base['price']*$quantity;
 
-                    $data = [
-                        'doc_key' => $marketSaleRepot->getLogKey(),
-                        'doc_type' => Movement::DOC_MSR,
-                        'doc_id' => $marketSaleRepot->getId(),
-                        'base_key' => $base['baseKey'],
-                        'base_type' => $base['baseType'],
-                        'base_id' => $base['baseId'],
-                        'doc_row_key' => $item->getId(),
-                        'doc_row_no' => $item->getId(),
-                        'date_oper' => date('Y-m-d 23:00:00', strtotime($marketSaleRepot->getDocDate())),
-                        'status' => Comitent::getStatusFromMarketSaleReport($marketSaleRepot),
-                        'quantity' => -$quantity,
-                        'amount' => -$amount,
-                        'good_id' => $item->getGood()->getId(),
-                        'legal_id' => $marketSaleRepot->getContract()->getLegal()->getId(),
-                        'company_id' => $marketSaleRepot->getContract()->getCompany()->getId(), //
-                        'contract_id' => $marketSaleRepot->getContract()->getId(), //
-                        'doc_stamp' => $docStamp,
-                    ];
+                $write = $item->getSaleQty() - $item->getReturnQty();
+                $posting = $item->getReturnQty() - $item->getSaleQty();
 
-                    $this->entityManager->getRepository(Comitent::class)
-                            ->insertComitent($data); 
-
-                    $write -= $quantity;
-                    if ($write <= 0){
-                        break;
-                    }
+                if ($write > 0){
                     
+                    $bases = [];
+                    if ($item->getGood()){                
+                        $bases = $this->entityManager->getRepository(Comitent::class)
+                                ->findBases($item->getGood()->getId(), $docStamp, $contract->getId());
+                    }
+
+                    foreach ($bases as $base){
+                        $quantity = min($base['rest'], $write);
+                        $amount = $base['price']*$quantity;
+
+                        $data = [
+                            'doc_key' => $marketSaleRepot->getLogKey(),
+                            'doc_type' => Movement::DOC_MSR,
+                            'doc_id' => $marketSaleRepot->getId(),
+                            'base_key' => $base['baseKey'],
+                            'base_type' => $base['baseType'],
+                            'base_id' => $base['baseId'],
+                            'doc_row_key' => $item->getId(),
+                            'doc_row_no' => $item->getRowNumber(),
+                            'date_oper' => date('Y-m-d 23:00:00', strtotime($marketSaleRepot->getDocDate())),
+                            'status' => Comitent::getStatusFromMarketSaleReport($marketSaleRepot),
+                            'quantity' => -$quantity,
+                            'amount' => -$amount,
+                            'good_id' => $item->getGood()->getId(),
+                            'legal_id' => $marketSaleRepot->getContract()->getLegal()->getId(),
+                            'company_id' => $marketSaleRepot->getContract()->getCompany()->getId(), //
+                            'contract_id' => $marketSaleRepot->getContract()->getId(), //
+                            'doc_stamp' => $docStamp,
+                        ];
+
+                        $this->entityManager->getRepository(Comitent::class)
+                                ->insertComitent($data); 
+
+                        $write -= $quantity;
+                        if ($write <= 0){
+                            break;
+                        }                    
+                    }
                 }
                 
-                if ($write == 0){
+                if ($posting > 0){
+                    
+                    $comitents = [];
+                    if ($item->getGood()){                
+                        $comitents = $this->entityManager->getRepository(Comitent::class)
+                                ->findBy(['good' => $item->getGood()->getId(), 'docType' => Movement::DOC_MSR], ['dateOper' => 'DESC']);
+                    }
+
+                    foreach ($comitents as $comitent){
+                        $quantity = min($posting, -$comitent->getQuantity());
+                        $amount = $quantity*$comitent->getAmount()/$comitent->getQuantity();
+
+                        $data = [
+                            'doc_key' => $marketSaleRepot->getLogKey(),
+                            'doc_type' => Movement::DOC_MSR,
+                            'doc_id' => $marketSaleRepot->getId(),
+                            'base_key' => $comitent->getBaseKey(),
+                            'base_type' => $comitent->getBaseType(),
+                            'base_id' => $comitent->getBaseId(),
+                            'doc_row_key' => $item->getId(),
+                            'doc_row_no' => $item->getRowNumber(),
+                            'date_oper' => date('Y-m-d 13:00:00', strtotime($marketSaleRepot->getDocDate())),
+                            'status' => Comitent::getStatusFromMarketSaleReport($marketSaleRepot),
+                            'quantity' => $quantity,
+                            'amount' => $amount,
+                            'good_id' => $item->getGood()->getId(),
+                            'legal_id' => $marketSaleRepot->getContract()->getLegal()->getId(),
+                            'company_id' => $marketSaleRepot->getContract()->getCompany()->getId(), //
+                            'contract_id' => $marketSaleRepot->getContract()->getId(), //
+                            'doc_stamp' => $docStamp,
+                        ];
+
+                        $this->entityManager->getRepository(Comitent::class)
+                                ->insertComitent($data); 
+
+                        $posting -= $quantity;
+                        if ($posting <= 0){
+                            break;
+                        }
+                    }
+                }
+                
+                if ($write == 0 && $posting == 0){
                     $take = MarketSaleReportItem::TAKE_OK;
                 } else {
                     $msrTake = MarketSaleReport::STATUS_TAKE_NO;
                 }    
-
+                
                 $this->entityManager->getConnection()
                         ->update('market_sale_report_item', ['take' => $take], ['id' => $item->getId()]);
+                
                 if ($item->getGood()){
                     $this->entityManager->getRepository(ComitentBalance::class)
                             ->updateComitentBalance($item->getGood()->getId()); 
