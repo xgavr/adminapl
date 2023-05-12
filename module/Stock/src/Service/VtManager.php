@@ -276,31 +276,35 @@ class VtManager
                         $this->entityManager->getRepository(Comiss::class)
                                 ->insertComiss($data);
                     } else {
-                        if ($movement->getStatus() == Movement::STATUS_COMMISSION){
-                            // вернуть на комиссию
-                            unset($data['base_key']);
-                            unset($data['base_type']);
-                            unset($data['base_id']);
-                            $data['contact_id'] = $movement->getContact()->getId();
-                            $this->entityManager->getRepository(Comiss::class)
-                                    ->insertComiss($data);                            
-                            
-                            $data = [
-                                'doc_key' => $vt->getLogKey(),
-                                'doc_type' => Movement::DOC_ORDER,
-                                'doc_id' => $vt->getId(),
-                                'date_oper' => $vt->getDateOper(),
-                                'status' => Retail::getStatusFromVt($vt),
-                                'revise' => Retail::REVISE_NOT,
-                                'amount' => $amount,
-                                'contact_id' => $movement->getContact()->getId(),
-                                'office_id' => $vt->getOffice()->getId(),
-                                'company_id' => $vt->getOrder()->getCompany()->getId(),
-                            ];
+                        $baseMovement = $this->entityManager->getRepository(Movement::class)
+                                ->findOneBy(['docKey' => $movement->getBaseKey(), 'good' => $movement->getGood()->getId()]);
+                        if ($baseMovement){
+                            if ($baseMovement->getStatus() == Movement::STATUS_COMMISSION){
+                                // вернуть на комиссию
+                                unset($data['base_key']);
+                                unset($data['base_type']);
+                                unset($data['base_id']);
+                                $data['contact_id'] = $movement->getContact()->getId();
+                                $this->entityManager->getRepository(Comiss::class)
+                                        ->insertComiss($data);                            
 
-                            $this->entityManager->getRepository(Retail::class)
-                                    ->insertRetail($data);                                
-                        }
+                                $data = [
+                                    'doc_key' => $vt->getLogKey(),
+                                    'doc_type' => Movement::DOC_ORDER,
+                                    'doc_id' => $vt->getId(),
+                                    'date_oper' => $vt->getDateOper(),
+                                    'status' => Retail::getStatusFromVt($vt),
+                                    'revise' => Retail::REVISE_NOT,
+                                    'amount' => $basePrice*$movement->getQuantity(),
+                                    'contact_id' => $movement->getContact()->getId(),
+                                    'office_id' => $vt->getOffice()->getId(),
+                                    'company_id' => $vt->getOrder()->getCompany()->getId(),
+                                ];
+
+                                $this->entityManager->getRepository(Retail::class)
+                                        ->insertRetail($data);                                
+                            }
+                        }    
                     }
                     
                     
