@@ -330,7 +330,7 @@ class OrderManager
                             'date_oper' => $order->getDateOper(),
                             'status' => Movement::getStatusFromOrder($order),
                             'quantity' => -$quantity,
-                            'amount' => -$amount,
+                            'amount' => -$base['price']*$quantity,
                             'good_id' => $bid->getGood()->getId(),
                             'office_id' => $order->getOffice()->getId(),
                             'company_id' => $order->getCompany()->getId(),

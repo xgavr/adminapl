@@ -278,13 +278,15 @@ class VtManager
                     } else {
                         $baseMovement = $this->entityManager->getRepository(Movement::class)
                                 ->findOneBy(['docKey' => $movement->getBaseKey(), 'good' => $movement->getGood()->getId()]);
-                        if ($baseMovement){
+                        $comiss = $this->entityManager->getRepository(Comiss::class)
+                                ->findOneByDocKey($movement->getBaseKey());
+                        if ($baseMovement && $comiss){
                             if ($baseMovement->getStatus() == Movement::STATUS_COMMISSION){
                                 // вернуть на комиссию
                                 unset($data['base_key']);
                                 unset($data['base_type']);
                                 unset($data['base_id']);
-                                $data['contact_id'] = $movement->getContact()->getId();
+                                $data['contact_id'] = $comiss->getContact()->getId();
                                 $this->entityManager->getRepository(Comiss::class)
                                         ->insertComiss($data);                            
 
@@ -296,7 +298,7 @@ class VtManager
                                     'status' => Retail::getStatusFromVt($vt),
                                     'revise' => Retail::REVISE_NOT,
                                     'amount' => $basePrice*$movement->getQuantity(),
-                                    'contact_id' => $movement->getContact()->getId(),
+                                    'contact_id' => $comiss->getContact()->getId(),
                                     'office_id' => $vt->getOffice()->getId(),
                                     'company_id' => $vt->getOrder()->getCompany()->getId(),
                                 ];
