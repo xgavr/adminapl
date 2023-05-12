@@ -161,6 +161,7 @@ class StManager
                                         ->insertComiss($data);
 
                                 if ($st->getWriteOff() != St::WRITE_COMMISSION){
+                                    $legalId = $contractId = null;
                                     $data = [
                                         'doc_key' => $st->getLogKey(),
                                         'doc_type' => Movement::DOC_ST,
@@ -172,6 +173,9 @@ class StManager
                                         'contact_id' => $comiss->getContact()->getId(),
                                         'office_id' => $st->getOffice()->getId(),
                                         'company_id' => $st->getCompany()->getId(),
+                                        'doc_stamp' => $docStamp,
+                                        'legal_id' => $legalId,
+                                        'contract_id' => $contractId,
                                     ];
 
                                     $this->entityManager->getRepository(Retail::class)

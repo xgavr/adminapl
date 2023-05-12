@@ -295,13 +295,13 @@ class VtManager
                                 $legalId = $contractId = null;
                                 
                                 $data = [
-                                    'doc_key' => $vt->getOrder()->getLogKey(),
+                                    'doc_key' => $vt->getLogKey(),
                                     'doc_type' => Movement::DOC_VT,
                                     'doc_id' => $vt->getId(),
                                     'date_oper' => $vt->getDocDate(),
                                     'status' => Retail::getStatusFromVt($vt),
                                     'revise' => Retail::REVISE_NOT,
-                                    'amount' => $basePrice*$movement->getQuantity(),
+                                    'amount' => -$basePrice*$movement->getQuantity(),
                                     'contact_id' => $comiss->getContact()->getId(),
                                     'office_id' => $vt->getOffice()->getId(),
                                     'company_id' => $vt->getOrder()->getCompany()->getId(),
@@ -360,7 +360,6 @@ class VtManager
         $docStamp = $this->entityManager->getRepository(Register::class)
                 ->vtRegister($vt);
         
-        $this->updateVtMovement($vt, $docStamp);
         $this->updateVtRetails($vt, $docStamp);
         if ($vt->getOrder()->getLegal()){
             $this->updateVtMutuals($vt, $docStamp);
@@ -368,6 +367,7 @@ class VtManager
             $this->entityManager->getRepository(Mutual::class)
                     ->removeDocMutuals($vt->getLogKey());            
         }    
+        $this->updateVtMovement($vt, $docStamp);
         
         return;
     }
