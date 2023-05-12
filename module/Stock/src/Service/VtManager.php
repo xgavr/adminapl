@@ -295,7 +295,7 @@ class VtManager
                                     'doc_key' => $vt->getLogKey(),
                                     'doc_type' => Movement::DOC_ORDER,
                                     'doc_id' => $vt->getId(),
-                                    'date_oper' => $vt->getDateOper(),
+                                    'date_oper' => $vt->getDocDate(),
                                     'status' => Retail::getStatusFromVt($vt),
                                     'revise' => Retail::REVISE_NOT,
                                     'amount' => $basePrice*$movement->getQuantity(),
