@@ -422,7 +422,6 @@ class OrderManager
     public function findContactByOrderData($data)
     {
         $contact = $client = null;
-        var_dump($data);
         if (isset($data['contact'])){
             $contact = $this->entityManager->getRepository(Contact::class)
                     ->find($data['contact']);

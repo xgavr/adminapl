@@ -753,10 +753,11 @@ $form->prepare();
         }           
     }
 
-    $('.phone').on('input', function(){
+    $('.phone').on('input paste', function(){
         var value = $( this ).val();
         if (value.length == 16){
             $.post('/ring/find-phone', {phone: value}, function (data) {
+                console.log(data);
                 if (data){
                     setTextValue('#contact', data.contact);
                     setTextValue('#name', data.name, true);
