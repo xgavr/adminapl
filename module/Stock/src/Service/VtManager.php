@@ -296,7 +296,7 @@ class VtManager
                                 
                                 $data = [
                                     'doc_key' => $vt->getLogKey(),
-                                    'doc_type' => Movement::DOC_ORDER,
+                                    'doc_type' => Movement::DOC_VT,
                                     'doc_id' => $vt->getId(),
                                     'date_oper' => $vt->getDocDate(),
                                     'status' => Retail::getStatusFromVt($vt),
@@ -309,7 +309,7 @@ class VtManager
                                     'legal_id' => $legalId,
                                     'contract_id' => $contractId,
                                 ];
-
+                                var_dump($data);    
                                 $this->entityManager->getRepository(Retail::class)
                                         ->insertRetail($data);                                
                             }
