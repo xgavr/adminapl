@@ -341,16 +341,6 @@ class OrderManager
                                 ->insertComiss($data);
 
                         $legalId = $contractId = null;
-                        if ($order->getLegal()){
-                            $contract = $order->getContract();
-                            if (!$contract){
-                                $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId()); 
-                                $this->entityManager->getConnection()->update('orders', ['contract_id' => $contract->getId()], ['id' => $order->getId()]);
-                                $this->entityManager->refresh($order);
-                            }    
-                            $legalId = $order->getLegal()->getId();
-                            $contractId = $contract->getId();
-                        }
                         
                         $retailData = [
                             'doc_key' => $order->getLogKey(),
