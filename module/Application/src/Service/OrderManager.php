@@ -340,6 +340,18 @@ class OrderManager
                         $this->entityManager->getRepository(Comiss::class)
                                 ->insertComiss($data);
 
+                        $legalId = $contractId = null;
+                        if ($order->getLegal()){
+                            $contract = $order->getContract();
+                            if (!$contract){
+                                $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId()); 
+                                $this->entityManager->getConnection()->update('orders', ['contract_id' => $contract->getId()], ['id' => $order->getId()]);
+                                $this->entityManager->refresh($order);
+                            }    
+                            $legalId = $order->getLegal()->getId();
+                            $contractId = $contract->getId();
+                        }
+                        
                         $retailData = [
                             'doc_key' => $order->getLogKey(),
                             'doc_type' => Movement::DOC_ORDER,
@@ -347,10 +359,13 @@ class OrderManager
                             'date_oper' => $order->getDateOper(),
                             'status' => Retail::getStatusFromOrder($order),
                             'revise' => Retail::REVISE_NOT,
-                            'amount' => -$amount,
+                            'amount' => -$base['price']*$quantity,
                             'contact_id' => $comiss->getContact()->getId(),
                             'office_id' => $order->getOffice()->getId(),
                             'company_id' => $order->getCompany()->getId(),
+                            'doc_stamp' => $docStamp,
+                            'legal_id' => $legalId,
+                            'contract_id' => $contractId,
                         ];
 
                         $this->entityManager->getRepository(Retail::class)

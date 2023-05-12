@@ -288,9 +288,22 @@ class VtManager
                                 unset($data['base_id']);
                                 unset($data['base_amount']);
                                 $data['contact_id'] = $comiss->getContact()->getId();
+                                $data['amount'] = $basePrice*$movement->getQuantity();
                                 $this->entityManager->getRepository(Comiss::class)
                                         ->insertComiss($data);                            
 
+                                $legalId = $contractId = null;
+                                if ($vt->getOrder()->getLegal()){
+                                    $legalId = $vt->getOrder()->getLegal()->getId();
+                                    $orderRetail = $this->entityManager->getRepository(Retail::class)
+                                            ->findOneBy(['docKey' => $vt->getOrder()->getLogKey()]);
+                                    if ($orderRetail){
+                                        if ($orderRetail->getContract()){
+                                            $contractId = $orderRetail->getContract()->getId();
+                                        }    
+                                    }    
+                                }
+                                
                                 $data = [
                                     'doc_key' => $vt->getLogKey(),
                                     'doc_type' => Movement::DOC_ORDER,
@@ -302,6 +315,9 @@ class VtManager
                                     'contact_id' => $comiss->getContact()->getId(),
                                     'office_id' => $vt->getOffice()->getId(),
                                     'company_id' => $vt->getOrder()->getCompany()->getId(),
+                                    'doc_stamp' => $docStamp,
+                                    'legal_id' => $legalId,
+                                    'contract_id' => $contractId,
                                 ];
 
                                 $this->entityManager->getRepository(Retail::class)
