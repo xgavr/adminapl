@@ -757,9 +757,8 @@ $form->prepare();
         var value = $( this ).val();
         if (value.length == 16){
             $.post('/ring/find-phone', {phone: value}, function (data) {
-                console.log(data);
                 if (data){
-                    setTextValue('#contact', data.contact);
+                    $('#contact').val(data.contact);
                     setTextValue('#name', data.name, true);
                     setTextValue('#email', data.email, true);
                     if (data.cars){
