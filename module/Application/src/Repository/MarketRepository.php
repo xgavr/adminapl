@@ -208,15 +208,27 @@ class MarketRepository extends EntityRepository{
                     ;
         }    
         
-        $queryBuilder->andWhere('g.available = ?3')
-            ->andWhere('g.statusPriceEx = ?4')    
-            ->setParameter('3', Goods::AVAILABLE_TRUE)    
-            ->setParameter('4', Goods::PRICE_EX_TRANSFERRED)    
+        $queryBuilder
+            //->andWhere('g.available = ?3')
+            //->andWhere('g.statusPriceEx = ?4')    
+            //->setParameter('3', Goods::AVAILABLE_TRUE)    
+            //->setParameter('4', Goods::PRICE_EX_TRANSFERRED)    
             ->setMaxResults($market::MAX_BLOCK_ROW_COUNT*2)    
             ->join('g.producer', 'p')    
                 ;
         
         $this->rateParams($market, $queryBuilder, 'g');
+        
+        if ($market->getRestSetting() == MarketPriceSetting::REST_AVAILABILITY || $market->getRestSetting() == MarketPriceSetting::REST_ALL){
+                    $queryBuilder->andWhere('g.available = :rest')
+                        ->setParameter('rest', Goods::AVAILABLE_TRUE)    
+                    ;
+        }
+        
+        if ($market->getRestSetting() == MarketPriceSetting::REST_SALE){
+                    $queryBuilder->andWhere('g.retailCount > 0')
+                    ;
+        }
         
         if ($market->getNameSetting() == MarketPriceSetting::NAME_GENERATED){
                     $queryBuilder->andWhere('g.name != g.description')

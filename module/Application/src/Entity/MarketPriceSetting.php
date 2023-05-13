@@ -41,6 +41,7 @@ class MarketPriceSetting {
 
     const REST_AVAILABILITY  = 1; // Только наличие
     const REST_ALL        = 2; // Все остатки.
+    const REST_SALE       = 3; // Все что продавалось независимо от остатков
 
     const SUPPLIER_TAGGED   = 1; // Поставщики меченные.
     const SUPPLIER_ALL      = 2; // Поставщики все.
@@ -979,7 +980,8 @@ class MarketPriceSetting {
     {
         return [
             self::REST_AVAILABILITY => 'Наличие',
-            self::REST_ALL => 'Все'
+            //self::REST_ALL => 'Все',
+            self::REST_SALE => 'Все, что продавалось'
         ];
     }    
     

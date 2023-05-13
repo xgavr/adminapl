@@ -151,11 +151,15 @@ class RegisterRepository extends EntityRepository
     
     /**
      * Найти документы для восстановления последовательности
+     * @param float $stamp
      */
-    public function findForActualize()
+    public function findForActualize($stamp = null)
     {
-        $var = $this->getEntityManager()->getRepository(RegisterVariable::class)
-                ->findOneBy([]);
+        $var = null;
+        if (!$stamp){
+            $var = $this->getEntityManager()->getRepository(RegisterVariable::class)
+                    ->findOneBy([]);
+        }    
         
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -170,11 +174,15 @@ class RegisterRepository extends EntityRepository
             $queryBuilder->where('r.docStamp > ?1')
                 ->setParameter('1', $var->getVarStamp())
                     ;
-
         }
-        return $queryBuilder->getQuery()->getOneOrNullResult();        
         
-        return;
+        if ($stamp){
+            $queryBuilder->where('r.docStamp > ?1')
+                ->setParameter('1', $stamp)
+                    ;
+        }
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();        
     }
     
     /**

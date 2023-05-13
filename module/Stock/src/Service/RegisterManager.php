@@ -507,10 +507,13 @@ class RegisterManager
         ini_set('memory_limit', '2048M');
         set_time_limit(900);
         $startTime = time();
+        $stamp = null;
         
         while (true){
             $register = $this->entityManager->getRepository(Register::class)
-                    ->findForActualize();
+                    ->findForActualize($stamp);
+            
+            $stamp = $register->getDocStamp();
             
             $allowDate = $this->getAllowDate();
             if ($allowDate > $register->getDateOper()){

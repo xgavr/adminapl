@@ -276,15 +276,15 @@ class MarketForm extends Form
         ]);
                                 
         $this->add([            
-            'type'  => 'hidden',
+            'type'  => 'select',
             'name' => 'restSetting',
             'attributes' => [
                 'value' => MarketPriceSetting::REST_ALL,
             ],    
-//            'options' => [
-//                'label' => 'Остатки',
-//                'value_options' => MarketPriceSetting::getRestSettingList(),
-//            ],
+            'options' => [
+                'label' => 'Остатки',
+                'value_options' => MarketPriceSetting::getRestSettingList(),
+            ],
         ]);
                                 
         $this->add([            

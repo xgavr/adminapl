@@ -357,6 +357,13 @@ if ($market && !$copy){
                 </div>                                            
                 <div class="col-xs-2">                        
                     <div class="form-group">
+                        <?= $this->formLabel($form->get('restSetting')); ?>
+                        <?= $this->formElement($form->get('restSetting')); ?>
+                        <?= $this->formElementErrors($form->get('restSetting')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-2">                        
+                    <div class="form-group">
                         <?= $this->formLabel($form->get('retailLimit')); ?>
                         <?= $this->formElement($form->get('retailLimit')); ?>
                         <?= $this->formElementErrors($form->get('retailLimit')); ?>                  
@@ -389,7 +396,6 @@ if ($market && !$copy){
     </div>
 </div>    
 <?= $this->formElement($form->get('supplierSetting')); ?>
-<?= $this->formElement($form->get('restSetting')); ?>
                 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
