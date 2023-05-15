@@ -118,7 +118,7 @@ class MovementRepository extends EntityRepository{
             $qb->andWhere('m.baseKey = ?5')
                ->setParameter('5', $baseKey);     
         }
-        
+        var_dump($qb->getQuery()->getSQL());
         return $qb->getQuery()->getResult();
     }
     
