@@ -287,8 +287,8 @@ class OrderManager
                         ->findOneByDocKey($base['baseKey']);
 
                 
+                var_dump($base);
                 if ($movement){
-                    var_dump($base);
                     $quantity = min($base['rest'], $write);
                     $amount = $quantity*$bid->getPrice();
 
