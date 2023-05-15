@@ -286,9 +286,9 @@ class OrderManager
                 $movement = $this->entityManager->getRepository(Movement::class)
                         ->findOneByDocKey($base['baseKey']);
 
-
+                
                 if ($movement){
-                    
+                    var_dump($base);
                     $quantity = min($base['rest'], $write);
                     $amount = $quantity*$bid->getPrice();
 
