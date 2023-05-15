@@ -980,7 +980,7 @@ class MarketPriceSetting {
     {
         return [
             self::REST_AVAILABILITY => 'Наличие',
-            //self::REST_ALL => 'Все',
+            self::REST_ALL => 'Все',
             self::REST_SALE => 'Все, что продавалось'
         ];
     }    

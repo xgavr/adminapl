@@ -855,6 +855,7 @@ class OrderController extends AbstractActionController
         foreach ($bids as $bid){
             $bases = $this->entityManager->getRepository(Movement::class)
                     ->findBases($bid->getGood()->getId(), $docStamp, $order->getOffice()->getId());
+            var_dump($bases);
             foreach ($bases as $base){
                 $result[] = [
                     'value' => $base['baseKey'],
