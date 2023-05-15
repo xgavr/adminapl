@@ -24,6 +24,8 @@ use Application\Entity\Producer;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Oem;
 use Cash\Entity\CashDoc;
+use ApiMarketPlace\Entity\MarketSaleReport;
+use ApiMarketPlace\Entity\MarketSaleReportItem;
 
 /**
  * This service register.
@@ -96,6 +98,12 @@ class RegisterManager
      */
     private $cashManager;
     
+    /**
+     * Report manager
+     * @var \ApiMarketPlace\Service\ReportManager
+     */
+    private $reportManager;
+    
     private $meDate = '2016-10-30';
 
     /**
@@ -103,7 +111,7 @@ class RegisterManager
      */
     public function __construct($entityManager, $logManager, $otManager, $ptManager,
             $ptuManager, $stManager, $vtManager, $vtpManager, $orderManager, 
-            $cashMananger, $reviseManager) 
+            $cashMananger, $reviseManager, $reportManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
@@ -116,6 +124,7 @@ class RegisterManager
         $this->orderManager = $orderManager;
         $this->cashManager = $cashMananger;
         $this->reviseManager = $reviseManager;
+        $this->reportManager = $reportManager;
     }
     
     public function currentUser()
@@ -488,6 +497,19 @@ class RegisterManager
                     $flag = true;
                 }
                 break;                
+            case Movement::DOC_MSR:
+                $marketSaleReport = $this->entityManager->getRepository(MarketSaleReport::class)
+                    ->find($register->getDocId());
+                if ($marketSaleReport){
+                    $flag = true;
+                    $this->reportManager->repostMarketSaleReport($marketSaleReport);
+                    if ($marketSaleReport->getStatus() == MarketSaleReport::STATUS_ACTIVE){
+                        $takeNo = $this->entityManager->getRepository(MarketSaleReportItem::class)
+                                ->count(['marketSaleReport' => $marketSaleReport->getId(), 'take' => MarketSaleReportItem::TAKE_NO]);
+                        $flag = $takeNo == 0;
+                    }   
+                }
+                break;
             default: $flag = false;    
         }
         
