@@ -5,6 +5,7 @@ use Laminas\Json\Encoder;
 use Stock\Entity\Vt;
 use Stock\Entity\Retail;
 use Stock\Entity\Movement;
+use Stock\Entity\Revise;
 
 $this->headTitle($client->getName());
 
@@ -292,6 +293,13 @@ $legalContact = $client->getLegalContact();
             </table>    
         </div>    
         <div class="tab-pane fade" role="tabpanel" id="mutuals" aria-labelledby="mutual-tab">
+            <div id="mutualtoolbar">
+                <div class="form-inline" role="form">
+                    <button class="btn btn-default btn-xs revise-modal-show" type="button" modal-url="/revise/edit-form?client=<?= $client->getId()?>&kind=<?= Revise::KIND_REVISE_CLIENT?>">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>                
+                </div>
+            </div>
             <table id="mutualtable" 
                 data-toggle="table" 
                 data-side-pagination="server"

@@ -565,6 +565,20 @@ class Revise {
         return $this->contact;
     }
 
+    /*
+     * @return string
+     */    
+    public function getContactPhone() 
+    {
+        if ($this->contact){
+            if ($this->contact->getPhone()){
+                return $this->contact->getPhone()->getName();
+            }
+        }
+        
+        return;
+    }
+
     /**
      * @param Contact $contact
      */    
@@ -601,7 +615,7 @@ class Revise {
             'contact' => ($this->contact) ? $this->contact->getId():NULL,            
             'contract' => ($this->contract) ? $this->contract->getId():NULL,            
             'kind' => $this->kind,
-            'phone' => ($this->contact) ? ($this->contact->getPhone()) ? $this->contact->getPhone()->getName():NULL:NULL,            
+            'phone' => $this->getContactPhone(),            
             'docDate' => date('Y-m-d', strtotime($this->docDate)),
             'info' => $this->info,
             'legal' => ($this->legal) ? $this->legal->getId():null,
