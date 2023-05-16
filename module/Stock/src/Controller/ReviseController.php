@@ -218,7 +218,7 @@ class ReviseController extends AbstractActionController
         }    
         
         if ($contact){
-            $contactName = $revise->getContact()->getName();
+            $contactName = $contact->getName();
         }    
         
         $form = new ReviseForm($this->entityManager);
