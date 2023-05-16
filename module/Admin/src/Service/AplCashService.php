@@ -488,7 +488,7 @@ class AplCashService {
         $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                 ->findForUpdateApl();
         if ($cashDoc){
-            $this->entityManager->refresh($cashDoc);
+//            $this->entityManager->refresh($cashDoc);
             if ($cashDoc->getAplParent()){
                 $desc = [
                     'kind' => $cashDoc->getKindAsApl(),
