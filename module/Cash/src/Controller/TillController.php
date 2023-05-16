@@ -156,9 +156,15 @@ class TillController extends AbstractActionController
             return;
         }
         
+        $clientId = null;
+        if ($phone->getContact()->getClient()){
+            $clientId = $phone->getContact()->getClient()->getId();
+        }
+        
         return new JsonModel([
             'name' => $phone->getContact()->getName(),
             'id' => $phone->getContact()->getId(),
+            'clientId' => $clientId,
         ]);                  
     }
 

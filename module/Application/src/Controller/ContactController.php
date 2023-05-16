@@ -875,7 +875,7 @@ class ContactController extends AbstractActionController
             'rows' => $result,
         ]);          
     }    
-    
+        
     public function deleteEmptyContactsAction()
     {
         $deleted = $this->contactManager->cleanContacts();

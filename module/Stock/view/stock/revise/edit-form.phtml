@@ -189,11 +189,24 @@ $form->prepare();
         <?php endif; ?>        
     }
     
+    function clientLegals(clientId){
+        $('#legal').empty();
+        $('#legal').append('<option>---</option>');
+        if (clientId){
+            $.getJSON( '/client/client-legals/'+clientId, function( data ) {
+                $.each( data.rows, function( key, value ) {
+                    $('#legal').append('<option value="' + key + '">' + value.name + '</option>');
+                });
+                contractList();            
+            });            
+        }    
+    }
+    
     function contactName(){
         if ($('#phone').val()){
             $.getJSON( '/till/phone-contact?phone='+$('#phone').val(), function( data ) {
                 $('#contactName').html(data.name);
-
+                clientLegals(data.clientId);
             });            
         }    
     }    

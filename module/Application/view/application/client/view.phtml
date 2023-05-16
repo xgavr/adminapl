@@ -862,7 +862,7 @@ $legalContact = $client->getLegalContact();
                 return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
             case '<?= Movement::DOC_REVISE?>': 
                 var comment = row.reviseDoc.comment;        
-                return "<a href='#' class='revise-modal-show' modal-url='/revise/edit-form/"+docId+"'>Корректировка №"+docId+"</a> <span class='text-mute'>"+comment+"</span>";
+                return "<a href='#' class='revise-modal-show' modal-url='/revise/edit-form/"+docId+"'>Корректировка №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
             case '<?= Movement::DOC_CASH?>':
                 var cashName = '';
                 if (row.cashDoc){

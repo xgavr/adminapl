@@ -216,12 +216,12 @@ class ReviseManager
 
     /**
      * Adds a new revise.
-     * @param array $data
+     * @param array $inData
      * @return integer
      */
-    public function addRevise($data)
+    public function addRevise($inData)
     {
-        $data = $this->prepareData($data);
+        $data = $this->prepareData($inData);
         
         $revise = new Revise();        
         $revise->setAplId(empty($data['aplId']) ? null:$data['aplId']);

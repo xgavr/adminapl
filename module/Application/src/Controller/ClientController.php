@@ -538,4 +538,35 @@ class ClientController extends AbstractActionController
             array_values($result)
         );           
     }    
+    
+    public function clientLegalsAction()
+    {
+        $clientId = (int)$this->params()->fromRoute('id', -1);
+        if ($clientId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $client = $this->entityManager->getRepository(Client::class)
+                ->find($clientId);
+        
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $result = [];
+        $legals = $this->entityManager->getRepository(Client::class)
+                ->findClientLegals($client);
+        foreach ($legals as $legal){
+            $result[$legal->getId()] = [
+                'id' => $legal->getId(),
+                'name' => $legal->getName(),                
+            ];
+        }
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }    
 }
