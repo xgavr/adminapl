@@ -308,6 +308,21 @@ class Client {
         return $this->contacts;
     }
         
+    public function getContact()
+    {
+        return $this->contacts[0];
+    }
+
+    public function getContactPhone()
+    {
+        foreach ($this->contacts as $contact){
+            if ($contact->getPhone()){
+                return $contact->getPhone()->getName();
+            }
+        }
+        return;
+    }
+
     /**
      * Assigns.
      */
