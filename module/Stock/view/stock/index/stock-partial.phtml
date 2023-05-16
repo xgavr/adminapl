@@ -303,6 +303,15 @@
             });
         });  
         
+        $(document).on('click', '.revise-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'reviseModal',
+                url: url,
+                width: '1440px'
+            });
+        });          
+
 
         $(document).on('change', '#supplierSelect', function (e) {
             refreshTable();

@@ -848,6 +848,8 @@ $legalContact = $client->getLegalContact();
         switch(docType){
             case '<?= Movement::DOC_ORDER?>': 
                 return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №"+docId+"</a>";
+            case '<?= Movement::DOC_MSR?>': 
+                return "<a href='#' class='msr-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о продажах №"+docId+"</a>";
             case '<?= Movement::DOC_VT?>': 
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
             case '<?= Movement::DOC_PTU?>': 
@@ -858,6 +860,8 @@ $legalContact = $client->getLegalContact();
                 return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
             case '<?= Movement::DOC_VTP?>': 
                 return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
+            case '<?= Movement::DOC_REVISE?>': 
+                return "<a href='#' class='revise-modal-show' modal-url='/revise/edit-form/"+docId+"'>Корректировка №"+docId+"</a>";
             case '<?= Movement::DOC_CASH?>':
                 var cashName = '';
                 if (row.cashDoc){

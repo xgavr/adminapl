@@ -97,12 +97,18 @@ $form->prepare();
             </div>
         </div>    
     </div>
-    <div class="row" id="supplierRevise">
+    <div class="row">
         <div class="col-xs-3">                        
-            <div class="form-group">
+            <div class="form-group" id="supplierRevise">
                 <?= $this->formLabel($form->get('supplier')); ?>
                 <?= $this->formElement($form->get('supplier')); ?>
                 <?= $this->formElementErrors($form->get('supplier')); ?>                  
+            </div>
+            <div class="form-group" id="clientRevise">
+                <?= $this->formLabel($form->get('phone')); ?>
+                <span id="contactName"><?= $contactName?></span>
+                <?= $this->formElement($form->get('phone')); ?>
+                <?= $this->formElementErrors($form->get('phone')); ?>                  
             </div>
         </div>    
         <div class="col-xs-3">                        
@@ -117,20 +123,6 @@ $form->prepare();
                 <?= $this->formLabel($form->get('contract')); ?>
                 <?= $this->formElement($form->get('contract')); ?>
                 <?= $this->formElementErrors($form->get('contract')); ?>                  
-            </div>
-        </div>    
-    </div>    
-    <div class="row" id="clientRevise">
-        <div class="col-xs-3">                        
-            <div class="form-group">
-                <?= $this->formLabel($form->get('phone')); ?>
-                <span id="contactName"><?= $contactName?></span>
-                <?= $this->formElement($form->get('phone')); ?>
-                <?= $this->formElementErrors($form->get('phone')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-3">                        
-            <div class="form-group">
             </div>
         </div>    
     </div>    
