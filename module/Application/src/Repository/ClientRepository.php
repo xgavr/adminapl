@@ -16,6 +16,7 @@ use Stock\Entity\Retail;
 use Application\Entity\Order;
 use Stock\Entity\Movement;
 use Stock\Entity\Comiss;
+use Company\Entity\Legal;
 
 /**
  * Description of ClientRepository
@@ -208,6 +209,27 @@ class ClientRepository extends EntityRepository{
      * @param Client $client
      * @return array
      */
+    public function findLegals($client) 
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('l')
+            ->from(Legal::class, 'l')
+            ->join('l.contacts', 'c')
+            ->distinct()    
+            ->where('c.client = ?1')
+            ->setParameter('1', $client->getId())
+            ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /**
+     * Юрлица клиента
+     * @param Client $client
+     * @return array
+     */
     public function findClientLegals($client) 
     {
         $entityManager = $this->getEntityManager();
@@ -228,5 +250,4 @@ class ClientRepository extends EntityRepository{
         
         return $queryBuilder->getQuery()->getResult(2);
     }
-    
 }

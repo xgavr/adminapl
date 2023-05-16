@@ -145,7 +145,7 @@ class ReviseController extends AbstractActionController
         
         if ($client && $kind == Revise::KIND_REVISE_CLIENT){
             $legals = $this->entityManager->getRepository(Client::class)
-                    ->findClientLegals($client);
+                    ->findLegals($client);
         }    
 
         foreach ($legals as $legal){

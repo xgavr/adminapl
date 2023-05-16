@@ -557,11 +557,11 @@ class ClientController extends AbstractActionController
         
         $result = [];
         $legals = $this->entityManager->getRepository(Client::class)
-                ->findClientLegals($client);
+                ->findLegals($client);
         foreach ($legals as $legal){
-            $result[$legal['legal']['id']] = [
-                'id' => $legal['legal']['id'],
-                'name' => $legal['legal']['name'],                
+            $result[$legal->getId()] = [
+                'id' => $legal->getId(),
+                'name' => $legal->getName(),                
             ];
         }
         
