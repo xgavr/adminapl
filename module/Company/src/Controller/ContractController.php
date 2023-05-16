@@ -202,10 +202,10 @@ class ContractController extends AbstractActionController
         $officeId = (int)$this->params()->fromQuery('office', -1);
 
         $result = [];
-        if ($companyId>0 && $legalId>0 && $officeId > 0) {
+        if ($companyId>0 && $legalId>0) {
 
             $contracts = $this->entityManager->getRepository(Contract::class)
-                    ->findBy(['company' => $companyId, 'legal' => $legalId, 'office' => $officeId]);
+                    ->findBy(['company' => $companyId, 'legal' => $legalId]);
 
             if ($contracts){
                 foreach ($contracts as $contract){
