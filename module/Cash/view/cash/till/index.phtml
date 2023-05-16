@@ -176,8 +176,8 @@
     }
     
     function idFormatter(value, row){
-        if (row.aplId){
-            return '<nobr>' + value + ' (' + row.aplId + ')</nobr>';
+        if (row.cashDoc.aplId){
+            return '<nobr>' + value + ' (' + row.cashDoc.aplId + ')</nobr>';
         }
         return value;
     }    
