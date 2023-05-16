@@ -17,6 +17,7 @@ use Application\Entity\Order;
 use Stock\Entity\St;
 use Cash\Entity\CashDoc;
 use ApiMarketPlace\Entity\MarketSaleReport;
+use Stock\Entity\Revise;
 
 
 /**
@@ -117,7 +118,12 @@ class Retail {
      */
     private $cashDoc;    
         
-
+    /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Revise", inversedBy="retails") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $reviseDoc;    
+        
     public function __construct() {
     }
    
@@ -421,5 +427,21 @@ class Retail {
     public function setCashDoc($cashDoc) 
     {
         $this->cashDoc = $cashDoc;
+    }                         
+
+    /*
+     * @return Revise
+     */    
+    public function getReviseDoc() 
+    {
+        return $this->reviseDoc;
+    }
+
+    /**
+     * @param Revise $reviseDoc
+     */    
+    public function setReviseDoc($reviseDoc) 
+    {
+        $this->reviseDoc = $reviseDoc;
     }                         
 }
