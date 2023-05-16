@@ -553,6 +553,21 @@ class Legal {
     }    
     
     /*
+     * Возвращает первый связанный contact с клиентом.
+     * @return Contact
+     */
+    
+    public function getClientContact() 
+    {
+        foreach ($this->contacts as $contact){
+            if ($contact->getClient()){
+                return $contact;
+            }
+        }
+        return;
+    }
+
+    /*
      * Возвращает связанный contact.
      * @return array
      */

@@ -16,6 +16,7 @@ use Stock\Entity\Pt;
 use Application\Entity\Order;
 use Stock\Entity\St;
 use Cash\Entity\CashDoc;
+use ApiMarketPlace\Entity\MarketSaleReport;
 
 
 /**
@@ -225,6 +226,19 @@ class Retail {
     {
         switch ($order->getStatus()){
             case Order::STATUS_SHIPPED: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }    
+    
+    /**
+     * Returns possible MarketSaleReport status.
+     * @param MarketSaleReport $marketSaleReport
+     * @return integer
+     */
+    public static function getStatusFromMsr($marketSaleReport) 
+    {
+        switch ($marketSaleReport->getStatus()){
+            case MarketSaleReport::STATUS_ACTIVE: return self::STATUS_ACTIVE;
             default: return self::STATUS_RETIRED;    
         }
     }    

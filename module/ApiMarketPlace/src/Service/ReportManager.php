@@ -18,6 +18,7 @@ use Stock\Entity\Movement;
 use Stock\Entity\Register;
 use Stock\Entity\RegisterVariable;
 use Stock\Entity\Mutual;
+use Stock\Entity\Retail;
 
 class ReportManager
 {
@@ -242,8 +243,9 @@ class ReportManager
      * Обновить взаиморасчеты документа
      * 
      * @param MarketSaleReport $marketSaleReport
+     * @param float $docStamp
      */
-    public function updateMarketSaleReportMutuals($marketSaleReport)
+    public function updateMarketSaleReportMutuals($marketSaleReport, $docStamp)
     {
         
         $this->entityManager->getRepository(Mutual::class)
@@ -262,31 +264,68 @@ class ReportManager
                 'contract_id' => $marketSaleReport->getContract()->getId(),
                 'office_id' => $marketSaleReport->getContract()->getOffice()->getId(),
                 'company_id' => $marketSaleReport->getContract()->getCompany()->getId(),
+                'doc_stamp' => $docStamp,
             ];
 
             $this->entityManager->getRepository(Mutual::class)
                     ->insertMutual($data);
-            $this->entityManager->refresh($marketSaleReport);
         }    
          
         return;
     }    
     
     /**
-     * Обновить движения по отчету
-     * @param MarketSaleReport $marketSaleRepot
+     * Обновить взаиморасчеты документа
+     * 
+     * @param MarketSaleReport $marketSaleReport
+     * @param float $docStamp
      */
-    public function updateComitent($marketSaleRepot)
+    public function updateMarketSaleReportRetails($marketSaleReport, $docStamp)
     {
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->msrRegister($marketSaleRepot);
-        $this->clearComitent($marketSaleRepot);
+        
+        $this->entityManager->getRepository(Retail::class)
+                ->removeOrderRetails($marketSaleReport->getLogKey());
+        
+        $contact = $marketSaleReport->getContract()->getLegal()->getClientContact();
+        
+        if ($contact && $marketSaleReport->getStatus() == MarketSaleReport::STATUS_ACTIVE){
+            $data = [
+                'doc_key' => $marketSaleReport->getLogKey(),
+                'doc_type' => Movement::DOC_MSR,
+                'doc_id' => $marketSaleReport->getId(),
+                'date_oper' => $marketSaleReport->getDocDate(),
+                'status' => Retail::getStatusFromMsr($marketSaleReport),
+                'revise' => Retail::REVISE_NOT,
+                'amount' => $marketSaleReport->getDocAmount(),
+                'contact_id' => $contact->getId(),
+                'legal_id' => $marketSaleReport->getContract()->getLegal()->getId(),
+                'contract_id' => $marketSaleReport->getContract()->getId(),
+                'office_id' => $marketSaleReport->getContract()->getOffice()->getId(),
+                'company_id' => $marketSaleReport->getContract()->getCompany()->getId(),
+                'doc_stamp' => $docStamp,
+            ];
+
+            $this->entityManager->getRepository(Retail::class)
+                    ->insertRetail($data);
+        }    
+         
+        return;
+    }    
+
+    /**
+     * Обновить движения по отчету
+     * @param MarketSaleReport $marketSaleReport
+     * @param float $docStamp
+     */
+    public function updateComitent($marketSaleReport, $docStamp)
+    {
+        $this->clearComitent($marketSaleReport);
         
         $msrTake = MarketSaleReport::STATUS_ACCOUNT_NO;
-        $contract = $marketSaleRepot->getMarketplace()->getContract();
-        if ($marketSaleRepot->getStatus() == MarketSaleReport::STATUS_ACTIVE){
+        $contract = $marketSaleReport->getMarketplace()->getContract();
+        if ($marketSaleReport->getStatus() == MarketSaleReport::STATUS_ACTIVE){
             $items = $this->entityManager->getRepository(MarketSaleReportItem::class)
-                    ->findBy(['marketSaleReport' => $marketSaleRepot->getId()]);
+                    ->findBy(['marketSaleReport' => $marketSaleReport->getId()]);
             foreach ($items as $item){
 
                 $take = MarketSaleReportItem::TAKE_NO;
@@ -307,22 +346,22 @@ class ReportManager
                         $amount = $base['price']*$quantity;
 
                         $data = [
-                            'doc_key' => $marketSaleRepot->getLogKey(),
+                            'doc_key' => $marketSaleReport->getLogKey(),
                             'doc_type' => Movement::DOC_MSR,
-                            'doc_id' => $marketSaleRepot->getId(),
+                            'doc_id' => $marketSaleReport->getId(),
                             'base_key' => $base['baseKey'],
                             'base_type' => $base['baseType'],
                             'base_id' => $base['baseId'],
                             'doc_row_key' => $item->getId(),
                             'doc_row_no' => $item->getRowNumber(),
-                            'date_oper' => date('Y-m-d 23:00:00', strtotime($marketSaleRepot->getDocDate())),
-                            'status' => Comitent::getStatusFromMarketSaleReport($marketSaleRepot),
+                            'date_oper' => date('Y-m-d 23:00:00', strtotime($marketSaleReport->getDocDate())),
+                            'status' => Comitent::getStatusFromMarketSaleReport($marketSaleReport),
                             'quantity' => -$quantity,
                             'amount' => -$amount,
                             'good_id' => $item->getGood()->getId(),
-                            'legal_id' => $marketSaleRepot->getContract()->getLegal()->getId(),
-                            'company_id' => $marketSaleRepot->getContract()->getCompany()->getId(), //
-                            'contract_id' => $marketSaleRepot->getContract()->getId(), //
+                            'legal_id' => $marketSaleReport->getContract()->getLegal()->getId(),
+                            'company_id' => $marketSaleReport->getContract()->getCompany()->getId(), //
+                            'contract_id' => $marketSaleReport->getContract()->getId(), //
                             'doc_stamp' => $docStamp,
                         ];
 
@@ -349,22 +388,22 @@ class ReportManager
                         $amount = $quantity*$comitent->getAmount()/$comitent->getQuantity();
 
                         $data = [
-                            'doc_key' => $marketSaleRepot->getLogKey(),
+                            'doc_key' => $marketSaleReport->getLogKey(),
                             'doc_type' => Movement::DOC_MSR,
-                            'doc_id' => $marketSaleRepot->getId(),
+                            'doc_id' => $marketSaleReport->getId(),
                             'base_key' => $comitent->getBaseKey(),
                             'base_type' => $comitent->getBaseType(),
                             'base_id' => $comitent->getBaseId(),
                             'doc_row_key' => $item->getId(),
                             'doc_row_no' => $item->getRowNumber(),
-                            'date_oper' => date('Y-m-d 13:00:00', strtotime($marketSaleRepot->getDocDate())),
-                            'status' => Comitent::getStatusFromMarketSaleReport($marketSaleRepot),
+                            'date_oper' => date('Y-m-d 13:00:00', strtotime($marketSaleReport->getDocDate())),
+                            'status' => Comitent::getStatusFromMarketSaleReport($marketSaleReport),
                             'quantity' => $quantity,
                             'amount' => $amount,
                             'good_id' => $item->getGood()->getId(),
-                            'legal_id' => $marketSaleRepot->getContract()->getLegal()->getId(),
-                            'company_id' => $marketSaleRepot->getContract()->getCompany()->getId(), //
-                            'contract_id' => $marketSaleRepot->getContract()->getId(), //
+                            'legal_id' => $marketSaleReport->getContract()->getLegal()->getId(),
+                            'company_id' => $marketSaleReport->getContract()->getCompany()->getId(), //
+                            'contract_id' => $marketSaleReport->getContract()->getId(), //
                             'doc_stamp' => $docStamp,
                         ];
 
@@ -395,7 +434,7 @@ class ReportManager
         }
         
         $this->entityManager->getConnection()
-                ->update('market_sale_report', ['status_account' => $msrTake], ['id' => $marketSaleRepot->getId()]);        
+                ->update('market_sale_report', ['status_account' => $msrTake], ['id' => $marketSaleReport->getId()]);        
         
         return $msrTake;        
     }
@@ -406,10 +445,13 @@ class ReportManager
      */
     public function repostMarketSaleReport($marketSaleReport)
     {
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->msrRegister($marketSaleReport);
         if ($marketSaleReport->getDocDate() > $this->getAllowDate()){
-            $take = $this->updateComitent($marketSaleReport);
+            $take = $this->updateComitent($marketSaleReport, $docStamp);
             if ($take != MarketSaleReport::STATUS_TAKE_NO){
-                $this->updateMarketSaleReportMutuals($marketSaleReport);
+                $this->updateMarketSaleReportMutuals($marketSaleReport, $docStamp);
+                $this->updateMarketSaleReportRetails($marketSaleReport, $docStamp);
             }    
         }
         return true;
