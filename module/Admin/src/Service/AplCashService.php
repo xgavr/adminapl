@@ -260,7 +260,7 @@ class AplCashService {
     }
 
     /**
-     * Загрузить платеж
+     * Загрузить платеж 
      * 
      * @param array $data
      */

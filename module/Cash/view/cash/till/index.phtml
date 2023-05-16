@@ -176,10 +176,9 @@
     }
     
     function idFormatter(value, row){
-        if (row.aplId > 0){
-            return value + ' ('+row.aplId+')';
+        if (row.aplId){
+            return '<nobr>' + value + ' (' + row.aplId + ')</nobr>';
         }
-        
         return value;
     }    
     
