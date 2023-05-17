@@ -64,11 +64,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
             $report = $this->entityManager->getRepository(MarketSaleReport::class)
                     ->find($id);
             if ($report){
-                $result = $report->toArray();
-                $result['legal'] = $report->getContract()->getLegal()->toArray();
-                $result['contract'] = $report->getContract()->toArray();
-                $result['items'] = $report->itemsToArray();
-                return $result;                
+                return $report->toArray();                
             }
         }                
         return new ApiProblem(404, 'Отчет комиссионера с ид '.$id.'не найден!');
@@ -86,7 +82,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
         $reports = $this->entityManager->getRepository(MarketSaleReport::class)
                 ->findBy(['statusAccount' => MarketSaleReport::STATUS_ACCOUNT_NO]);
         foreach ($reports as $report){
-            $result[] = $this->fetch($report->getId()); 
+            $result[] = $report->toArray(); 
         }
         if (count($result)){
             return $result;

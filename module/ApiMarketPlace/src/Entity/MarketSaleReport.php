@@ -435,7 +435,7 @@ class MarketSaleReport {
         $result = [
             'status' => $this->getStatus(),
             'num' => $this->getNum(),
-            'contract' => $this->getContract()->getId(),
+            'contract' => $this->getContract()->toArray(),
             'currencyCode' => $this->getCurrencyCode(),
             'docAmount' => $this->getDocAmount(),
             'docDate' => $this->getDocDate(),
@@ -444,6 +444,8 @@ class MarketSaleReport {
             'stopDate' => $this->getStopDate(),
             'vatAmount' => $this->getVatAmount(),
             'id' => $this->getId(),
+            'legal' => $this->getContract()->getLegal()->toArray(),
+            'items' => $this->itemsToArray(),
         ];
         
         return $result;
