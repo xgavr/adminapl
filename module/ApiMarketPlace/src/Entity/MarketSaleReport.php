@@ -10,8 +10,7 @@ namespace ApiMarketPlace\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use ApiMarketPlace\Entity\MarketplaceUpdate;
-use ApiMarketPlace\Entity\MarketplaceOrder;
+use ApiMarketPlace\Entity\MarketSaleReportItem;
 
 /**
  * Description of Marketplace
@@ -131,10 +130,17 @@ class MarketSaleReport {
     private $contract;
 
     /**
+    * @ORM\OneToMany(targetEntity="ApiMarketPlace\Entity\MarketSaleReportItem", mappedBy="marketSaleReport")
+    * @ORM\JoinColumn(name="id", referencedColumnName="marketplace_order_id")
+     */
+    private $marketSaleReportItems;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
+        $this->marketSaleReportItems = new ArrayCollection();
     }    
             
     public function getId() 
@@ -403,6 +409,24 @@ class MarketSaleReport {
     }
 
     /**
+     * Returns the array of marketSaleReportItems assigned to this.
+     * @return array
+     */
+    public function getMarketSaleReportItems()
+    {
+        return $this->marketSaleReportItems;
+    }
+        
+    /**
+     * Assigns.
+     * @param MarketSaleReportItem $marketSaleReportItem
+     */
+    public function addMarketSaleReportItem($marketSaleReportItem)
+    {
+        $this->marketSaleReportItems[] = $marketSaleReportItem;
+    }    
+    
+    /**
      * Массив для формы
      * @return array 
      */
@@ -419,7 +443,22 @@ class MarketSaleReport {
             'startDate' => $this->getStartDate(),
             'stopDate' => $this->getStopDate(),
             'vatAmount' => $this->getVatAmount(),
+            'id' => $this->getId(),
         ];
+        
+        return $result;
+    }    
+
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function itemsToArray()
+    {
+        $result = [];
+        foreach ($this->marketSaleReportItems as $item){
+            $result[] = $item->toArray();
+        }    
         
         return $result;
     }    

@@ -44,6 +44,15 @@ return [
                     ],
                 ],
             ],
+            'api.rest.api-account-comitent' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api-account-comitent[/:api_account_comitent_id]',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\ApiAccountComitent\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -72,6 +81,7 @@ return [
         'factories' => [
             \Api\V1\Rest\Good\GoodResource::class => \Api\V1\Rest\Good\GoodResourceFactory::class,
             \Api\V1\Rest\GoodApl\GoodAplResource::class => \Api\V1\Rest\GoodApl\GoodAplResourceFactory::class,
+            \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentResource::class => \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentResourceFactory::class,
         ],
     ],
     'view_manager' => [
@@ -100,6 +110,7 @@ return [
             0 => 'api.rpc.ping',
             1 => 'api.rest.good',
             2 => 'api.rest.good-apl',
+            3 => 'api.rest.api-account-comitent',
         ],
     ],
     'api-tools-rpc' => [
@@ -116,6 +127,7 @@ return [
             'Api\\V1\\Rpc\\Ping\\Controller' => 'Json',
             'Api\\V1\\Rest\\Good\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\GoodApl\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\ApiAccountComitent\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -133,6 +145,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiAccountComitent\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -144,6 +161,10 @@ return [
                 1 => 'application/json',
             ],
             'Api\\V1\\Rest\\GoodApl\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
+            'Api\\V1\\Rest\\ApiAccountComitent\\Controller' => [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
@@ -210,6 +231,28 @@ return [
             'collection_class' => \Api\V1\Rest\GoodApl\GoodAplCollection::class,
             'service_name' => 'goodApl',
         ],
+        'Api\\V1\\Rest\\ApiAccountComitent\\Controller' => [
+            'listener' => \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentResource::class,
+            'route_name' => 'api.rest.api-account-comitent',
+            'route_identifier_name' => 'api_account_comitent_id',
+            'collection_name' => 'api_account_comitent',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentEntity::class,
+            'collection_class' => \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentCollection::class,
+            'service_name' => 'ApiAccountComitent',
+        ],
     ],
     'api-tools-hal' => [
         'metadata_map' => [
@@ -235,6 +278,18 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.good-apl',
                 'route_identifier_name' => 'good_apl_id',
+                'is_collection' => true,
+            ],
+            \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-account-comitent',
+                'route_identifier_name' => 'api_account_comitent_id',
+                'hydrator' => \Laminas\Hydrator\ArraySerializable::class,
+            ],
+            \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-account-comitent',
+                'route_identifier_name' => 'api_account_comitent_id',
                 'is_collection' => true,
             ],
         ],

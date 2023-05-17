@@ -1217,5 +1217,24 @@ class Goods {
             'inStore' => $this->getInStore(),
             'marketPlacePrice' => $this->getMarketPlacePrice(),
         ];
-    }    
+    }   
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'aplId' => $this->getAplId(),
+            'description' => $this->getDescription(),
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'nameShort' => $this->getNameShort(),
+            'producer' => $this->getProducer()->toArray(),
+        ];
+        
+        return $result;
+    }        
+    
 }

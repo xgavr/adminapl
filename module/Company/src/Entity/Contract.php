@@ -501,4 +501,21 @@ class Contract {
     {
         return $this->ptu;
     }    
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'act' => $this->getAct(),
+            'date' => $this->getDateStart(),
+            'name' => $this->getName(),
+            'kind' => $this->getKind(),
+            'id' => $this->getId(),
+        ];
+        
+        return $result;
+    }            
 }

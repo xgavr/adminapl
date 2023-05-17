@@ -259,4 +259,18 @@ class Producer {
         $this->rates[] = $rate;
     }     
             
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'aplId' => $this->getAplId(),
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+        ];
+        
+        return $result;
+    }            
 }

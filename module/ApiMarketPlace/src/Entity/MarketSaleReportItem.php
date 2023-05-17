@@ -364,8 +364,14 @@ class MarketSaleReportItem {
         $this->take = $take;
     }
 
+    /**
+     * Добавить строку отчета
+     * @param MarketSaleReport $marketSaleReport
+     * @return void
+     */
     public function setMarketSaleReport($marketSaleReport): void {
         $this->marketSaleReport = $marketSaleReport;
+        $marketSaleReport->addMarketSaleReportItem($this);
     }
 
     public function setGood($good): void {
@@ -380,4 +386,34 @@ class MarketSaleReportItem {
         $this->rowNumber = $rowNumber;
     }
 
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'comissionPercent' => $this->getCommissionPercent(),
+            'good' => ($this->getGood()) ? $this->getGood()->toArray():null,
+            'offerId' => $this->getOfferId(),
+            'price' => $this->getPrice(),
+            'priceSale' => $this->getPriceSale(),
+            'productName' => $this->getProductName(),
+            'returnAmount' => $this->getReturnAmount(),
+            'returnComission' => $this->getReturnCommission(),
+            'returnDiscount' => $this->getReturnDiscount(),
+            'returnPriceSeller' => $this->getReturnPriceSeller(),
+            'returnQty' => $this->getReturnQty(),
+            'returnSale' => $this->getReturnSale(),
+            'rowNumber' => $this->getRowNumber(),
+            'saleAmount' => $this->getSaleAmount(),
+            'saleComission' => $this->getSaleCommission(),
+            'saleDiscount' => $this->getSaleDiscount(),
+            'salePriceSeller' => $this->getSalePriceSeller(),
+            'saleQty' => $this->getSaleQty(),
+            'id' => $this->getId(),
+        ];
+        
+        return $result;
+    }        
 }

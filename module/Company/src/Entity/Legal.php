@@ -883,5 +883,23 @@ class Legal {
     public function addLocation($location)
     {
         $this->locations[] = $location;
-    }    
+    }
+
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'inn' => $this->getInn(),
+            'kpp' => $this->getKpp(),
+            'ogrn' => $this->getOgrn(),
+            'okpo' => $this->getOkpo(),
+            'name' => $this->getName(),
+            'id' => $this->getId(),
+        ];
+        
+        return $result;
+    }        
 }

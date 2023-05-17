@@ -229,6 +229,7 @@ class RegisterManager
                 $doc->setComment('#Поправка даты, старая дата: '.$oldDate.' '.$docKey);
                 $this->entityManager->persist($doc);
                 $this->entityManager->flush($doc);
+                $this->entityManager->refresh($doc);
                 return true;
             }
         }
@@ -244,6 +245,7 @@ class RegisterManager
                 $doc->setComment('#Поправка даты, старая дата: '.$oldDate.' '.$docKey);
                 $this->entityManager->persist($doc);
                 $this->entityManager->flush($doc);
+                $this->entityManager->refresh($doc);
                 return true;
             }
         }
@@ -368,7 +370,7 @@ class RegisterManager
                             }
                             $data['rows'] = $rows;
                             if ($order->getDateOper() <= $this->meDate){
-                                return $this->oldOt($data);
+                                //return $this->oldOt($data);
                             }    
                         }
                     }   
