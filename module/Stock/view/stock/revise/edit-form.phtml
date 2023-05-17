@@ -158,7 +158,12 @@ $form->prepare();
             .done(function (data) {
                 if (data == 'ok'){
                     $('#reviseModal').modal('hide');
-                    $('#table').bootstrapTable('refresh');
+                    if ($('#table')){
+                        $('#table').bootstrapTable('refresh');
+                    }    
+                    if ($('#mutualtable')){
+                        $('#mutualtable').bootstrapTable('refresh');
+                    }    
                 } else {
                     $('#reviseModal .modal-content').html(data);                    
                 }    
