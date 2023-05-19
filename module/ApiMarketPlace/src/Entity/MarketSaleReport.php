@@ -443,7 +443,7 @@ class MarketSaleReport {
             'contract' => $this->getContract()->toArray(),
             'currencyCode' => $this->getCurrencyCode(),
             'docAmount' => $this->getDocAmount(),
-            'docDate' => $this->getDocDate(),
+            'docDate' => $this->getDocDateAtomFormat(),
             'marketplace' => $this->getMarketplace()->getId(),
             'startDate' => $this->getStartDate(),
             'stopDate' => $this->getStopDate(),
