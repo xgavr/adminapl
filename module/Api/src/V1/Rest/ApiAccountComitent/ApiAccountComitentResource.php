@@ -82,7 +82,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
         $reports = $this->entityManager->getRepository(MarketSaleReport::class)
                 ->findBy(['statusAccount' => MarketSaleReport::STATUS_ACCOUNT_NO]);
         foreach ($reports as $report){
-            $result[$report->getId()] = $report->toArray(); 
+            $result[] = $report->toArray(); 
         }
         if (count($result)){
             return ['reports' => $result];
