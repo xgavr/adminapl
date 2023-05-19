@@ -169,8 +169,8 @@ class MarketSaleReport {
     }
 
     public function getDocDateAtomFormat() {
-        $datetime = new DateTime($this->docDate);
-        return $datetime->format(DateTime::ATOM);
+        $datetime = new \DateTime($this->docDate);
+        return $datetime->format(\DateTime::ATOM);
     }
 
     public function getDocPresent() {
