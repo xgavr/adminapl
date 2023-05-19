@@ -181,10 +181,20 @@ class MarketSaleReport {
         return $this->startDate;
     }
 
+    public function getStartDateAtomFormat() {
+        $datetime = new \DateTime($this->startDate);
+        return $datetime->format(\DateTime::ATOM);
+    }
+
     public function getStopDate() {
         return $this->stopDate;
     }
 
+    public function getStopDateAtomFormat() {
+        $datetime = new \DateTime($this->stopDate);
+        return $datetime->format(\DateTime::ATOM);
+    }
+    
     public function getDocAmount() {
         return $this->docAmount;
     }
@@ -445,8 +455,8 @@ class MarketSaleReport {
             'docAmount' => $this->getDocAmount(),
             'docDate' => $this->getDocDateAtomFormat(),
             'marketplace' => $this->getMarketplace()->getId(),
-            'startDate' => $this->getStartDate(),
-            'stopDate' => $this->getStopDate(),
+            'startDate' => $this->getStartDateAtomFormat(),
+            'stopDate' => $this->getStopDateAtomFormat(),
             'vatAmount' => $this->getVatAmount(),
             'id' => $this->getId(),
             'legal' => $this->getContract()->getLegal()->toArray(),

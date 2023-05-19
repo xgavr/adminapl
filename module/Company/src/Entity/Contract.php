@@ -434,6 +434,11 @@ class Contract {
         return $this->dateStart;
     }
     
+    public function getDateStartAtomFormat() {
+        $datetime = new \DateTime($this->dateStart);
+        return $datetime->format(\DateTime::ATOM);
+    }
+    
     /**
      * Sets the date start when this contract was start.
      * @param string $dateStart     
@@ -510,7 +515,7 @@ class Contract {
     {
         $result = [
             'act' => $this->getAct(),
-            'date' => $this->getDateStart(),
+            'date' => $this->getDateStartAtomFormat(),
             'name' => $this->getName(),
             'kind' => $this->getKind(),
             'id' => $this->getId(),
