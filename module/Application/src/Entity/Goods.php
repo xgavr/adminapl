@@ -1229,9 +1229,11 @@ class Goods {
             'aplId' => $this->getAplId(),
             'description' => $this->getDescription(),
             'id' => $this->getId(),
+            'code' => $this->getCode(),
             'name' => $this->getName(),
             'nameShort' => $this->getNameShort(),
             'producer' => $this->getProducer()->toArray(),
+            'group' => $this->getGenericGroup()->toArray(),
         ];
         
         return $result;
