@@ -130,6 +130,24 @@ class ReportManager
     }
     
     /**
+     * Обновить отчет
+     * 
+     * @param MarketSaleReport $report
+     * @param integer $statusAccount
+     * @return MarketSaleReport
+     */
+    public function updateReportSatusAccount($report, $statusAccount)
+    {
+        $report->setStatusAccount($statusAccount);
+
+        $this->entityManager->persist($report);
+        $this->entityManager->flush();
+        $this->entityManager->refresh($report);
+        
+        return $report;
+    }
+    
+    /**
      * Очистить отчет
      * @param MarketSaleReport $report
      */

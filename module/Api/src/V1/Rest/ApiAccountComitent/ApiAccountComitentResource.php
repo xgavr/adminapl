@@ -14,9 +14,16 @@ class ApiAccountComitentResource extends AbstractResourceListener
      */
     private $entityManager;
 
-    public function __construct($entityManager) 
+    /**
+     * Report manager.
+     * @var \ApiMarketPlace\Service\ReportManager
+     */
+    private $reportManager;
+
+    public function __construct($entityManager, $reportManager) 
     {
-       $this->entityManager = $entityManager;
+       $this->entityManager = $entityManager;       
+       $this->reportManager = $reportManager;       
     }
 
     /**
@@ -67,7 +74,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 return $report->toArray();                
             }
         }                
-        return new ApiProblem(404, 'Отчет комиссионера с ид '.$id.'не найден!');
+        return new ApiProblem(404, 'Отчет комиссионера с ид '.$id.' не найден!');
     }
 
     /**
@@ -94,13 +101,26 @@ class ApiAccountComitentResource extends AbstractResourceListener
     /**
      * Patch (partial in-place update) a resource
      *
-     * @param  mixed $id
-     * @param  mixed $data
+     * @param  integer $id
+     * @param  array $data
      * @return ApiProblem|mixed
      */
     public function patch($id, $data)
     {
-        return new ApiProblem(405, 'The PATCH method has not been defined for individual resources');
+        if (is_object($data)){
+            if (!empty($data->statusAccount)){
+                $error = 'statusAccount not in array';
+                if ($data->statusAccount == MarketSaleReport::STATUS_ACCOUNT_OK || $data->statusAccount == MarketSaleReport::STATUS_ACCOUNT_NO){
+                    $report = $this->entityManager->getRepository(MarketSaleReport::class)
+                            ->find($id);
+                    if ($report){
+                        $report = $this->reportManager->updateReportSatusAccount($report, $data->statusAccount);
+                        return ['statusAccount' => $report->getStatusAccount()];
+                    }
+                }
+            }
+        }
+        return new ApiProblem(404, 'Не верные данные');
     }
 
     /**
@@ -128,12 +148,25 @@ class ApiAccountComitentResource extends AbstractResourceListener
     /**
      * Update a resource
      *
-     * @param  mixed $id
-     * @param  mixed $data
+     * @param  integer $id
+     * @param  array $data
      * @return ApiProblem|mixed
      */
     public function update($id, $data)
     {
-        return new ApiProblem(405, 'The PUT method has not been defined for individual resources');
+        if (is_object($data)){
+            if (!empty($data->statusAccount)){
+                $error = 'statusAccount not in array';
+                if ($data->statusAccount == MarketSaleReport::STATUS_ACCOUNT_OK || $data->statusAccount == MarketSaleReport::STATUS_ACCOUNT_NO){
+                    $report = $this->entityManager->getRepository(MarketSaleReport::class)
+                            ->find($id);
+                    if ($report){
+                        $report = $this->reportManager->updateReportSatusAccount($report, $data['statusAccount']);
+                        return ['statusAccount' => $report->getStatusAccount()];
+                    }
+                }
+            }
+        }    
+        return new ApiProblem(404, 'Не верные данные');
     }
 }

@@ -1,4 +1,6 @@
 <?php
+use ApiMarketPlace\Entity\MarketSaleReport;
+
 return [
     'router' => [
         'routes' => [
@@ -174,6 +176,9 @@ return [
         'Api\\V1\\Rpc\\Ping\\Controller' => [
             'input_filter' => 'Api\\V1\\Rpc\\Ping\\Validator',
         ],
+        'Api\\V1\\Rest\\ApiAccountComitent\\Controller' => [
+            'input_filter' => 'Api\\V1\\Rest\\ApiAccountComitent\\Validator',
+        ],
     ],
     'input_filter_specs' => [
         'Api\\V1\\Rpc\\Ping\\Validator' => [
@@ -183,6 +188,26 @@ return [
                 'filters' => [],
                 'name' => 'ask',
                 'description' => 'Подтвердить запрос с отметкой времени',
+            ],
+        ],
+        'Api\\V1\\Rest\\ApiAccountComitent\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\InArray::class,
+                        'options' => ['haystack'=>array_keys(MarketSaleReport::getStatusAccountList())],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'statusAccount',
+                'description' => 'Статус проведения документа в бухгалтерии',
+                'error_message' => 'Не верный статус',
             ],
         ],
     ],
@@ -284,7 +309,7 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.api-account-comitent',
                 'route_identifier_name' => 'api_account_comitent_id',
-                'hydrator' => \Laminas\Hydrator\ArraySerializable::class,
+                'hydrator' => \Laminas\Hydrator\ObjectProperty::class,
             ],
             \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentCollection::class => [
                 'entity_identifier_name' => 'id',
