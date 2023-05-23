@@ -624,7 +624,7 @@ $legalContact = $client->getLegalContact();
     }    
     
     function dateFormatter(value, row){
-        return '<nobr>'+$.format.date(row.dateOper, "dd.MM.yy")+'</nobr>';        
+        return '<nobr>'+$.format.date(value, "dd.MM.yy")+'</nobr>';        
     }
         
     function vtDateFormatter(value){
