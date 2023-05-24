@@ -2020,7 +2020,7 @@ class ProcessingController extends AbstractActionController
     /**
      * Чтение сообщений wamm
      */
-    public function readWamm()
+    public function readWammAction()
     {
         $settings = $this->adminManager->getSettings();
 
