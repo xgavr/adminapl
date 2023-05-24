@@ -297,7 +297,9 @@ class SmsManager {
             if (is_numeric($row['chat_name'])){
                 $order = $this->entityManager->getRepository(Order::class)
                         ->findOneBy(['aplId' => $row['chat_name']]);
-                $chat->setOrder($order);
+                if ($order){
+                    $chat->setOrder($order);
+                }    
             }
             
             $this->entityManager->persist($chat);
