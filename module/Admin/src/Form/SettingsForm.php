@@ -87,6 +87,21 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([           
+            'type'  => 'select',
+            'name' => 'wamm_read',
+            'attributes' => [
+                'id' => 'wamm_read'
+            ],
+            'options' => [
+                'label' => 'WAMM читать',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+
+        $this->add([           
             'type'  => 'text',
             'name' => 'dadata_api_key',
             'attributes' => [

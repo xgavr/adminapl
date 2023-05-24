@@ -206,6 +206,12 @@ class ProcessingController extends AbstractActionController
      */
     private $userManager;    
 
+    /**
+     * Sms manager.
+     * @var \Admin\Service\SmsManager
+     */
+    private $smsManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
@@ -213,7 +219,7 @@ class ProcessingController extends AbstractActionController
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
             $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
-            $ozonService, $userManager) 
+            $ozonService, $userManager, $smsManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -246,6 +252,7 @@ class ProcessingController extends AbstractActionController
         $this->jobManager = $jobManager;
         $this->ozonManager = $ozonService;
         $this->userManager = $userManager;
+        $this->smsManager = $smsManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -2008,6 +2015,23 @@ class ProcessingController extends AbstractActionController
         return new JsonModel(
             ['ok']
         );        
-    }    
+    }   
+    
+    /**
+     * Чтение сообщений wamm
+     */
+    public function readWamm()
+    {
+        $settings = $this->adminManager->getSettings();
+
+        if ($settings['wamm_read'] == 1){
+
+            $this->smsManager->wammMsgGetLast(100);            
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
     
 }
