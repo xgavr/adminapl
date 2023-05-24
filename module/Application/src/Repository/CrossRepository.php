@@ -129,9 +129,9 @@ class CrossRepository extends EntityRepository{
             ->leftJoin('c.supplier', 's')    
                 ;
         
-        if ($status){
+        if (is_numeric($status)){
             $queryBuilder->andWhere('c.status = ?2')
-            ->setParameter('2', (int) $status)    
+            ->setParameter('2', $status)    
                 ;                    
         }
 
