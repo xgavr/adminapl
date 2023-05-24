@@ -118,7 +118,8 @@ $this->pageBreadcrumbs()->setItems([
                                                                data-type="select" 
                                                                data-pk="<?= $key ?>" 
                                                                data-value="<?= $value ?>" 
-                                                               data-url="/cross/update-cross-description/<?= $cross->getId()?>">                                                                
+                                                               data-url="/cross/update-cross-description/<?= $cross->getId()?>">
+                                                               <?= $value ?>                                                                
                                                             </a>
                                                         <?php else:?>
                                                             <a href="#" 
