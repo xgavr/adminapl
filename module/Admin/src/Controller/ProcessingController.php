@@ -2026,7 +2026,7 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['wamm_read'] == 1){
 
-            $this->smsManager->wammMsgGetLast(100);            
+            $this->smsManager->getAndUpdateWammchat(100);            
         }    
                 
         return new JsonModel(
