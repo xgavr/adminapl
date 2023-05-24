@@ -111,12 +111,23 @@ $this->pageBreadcrumbs()->setItems([
                                                 </td>
                                                 <td align="right">
                                                     <?php if ($cross->getStatus() == $cross::STATUS_EXPLORED):?>
-                                                        <a href="#" 
-                                                           class="editable" data-type="text" 
-                                                           data-pk="<?= $key ?>" 
-                                                           data-url="/cross/update-cross-description/<?= $cross->getId()?>">
-                                                            <?= $value ?>
-                                                        </a>
+                                                        <?php if ($key == 'articleBy'):?>
+                                                            <a href="#" 
+                                                               id="articleBy"
+                                                               class="editable" data-type="select" 
+                                                               data-pk="<?= $key ?>" 
+                                                               data-value="<?= $value ?>" 
+                                                               data-url="/cross/update-cross-description/<?= $cross->getId()?>">
+                                                                <?= $value ?>
+                                                            </a>
+                                                        <?php else:?>
+                                                            <a href="#" 
+                                                               class="editable" data-type="text" 
+                                                               data-pk="<?= $key ?>" 
+                                                               data-url="/cross/update-cross-description/<?= $cross->getId()?>">
+                                                                <?= $value ?>
+                                                            </a>
+                                                        <?php endif;?>        
                                                     <?php else: ?>
                                                         <?= $value?>
                                                     <?php endif; ?>
@@ -138,14 +149,20 @@ $this->pageBreadcrumbs()->setItems([
 <script type="text/javascript">
     $(window).on('load', function() {
         $('.editable').editable();
+        $('#articleBy').editable({
+            source: [
+                  {value: 'producer', text: 'producer'},
+                  {value: 'brand', text: 'brand'},
+               ]
+        });
     });
 
-    var table = $('#table'),
-        ok = $('#ok');
+    var $table = $('#table'),
+        $ok = $('#ok');
 
     $(function () {
-        ok.click(function () {
-            table.bootstrapTable('refresh');
+        $ok.click(function () {
+            $table.bootstrapTable('refresh');
         });
     });
     
