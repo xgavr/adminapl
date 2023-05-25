@@ -385,7 +385,6 @@ class SmsManager {
                     $this->entityManager->persist($wammchat);
                     $this->entityManager->flush();
                     $this->entityManager->refresh($wammchat);
-                    break;
                 }                
             }    
 
