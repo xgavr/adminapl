@@ -173,10 +173,13 @@ class Wammchat {
 
     public function getMsgTextAsHtml() 
     {
+        //в комментах апл [] - это макроподстановка
+        $msgText = str_replace(array( '[', ']' ), '', $this->msgText);
+        
         if ($this->msgLink){
-            return '<a href="'.$this->msgLink.'" target="_blank">'.$this->msgText.'</a>';
+            return '<a href="'.$this->msgLink.'" target="_blank">'.$msgText.'</a>';
         }
-        return $this->msgText;
+        return $msgText;
     }
 
     public function setMsgText($msgText) 
