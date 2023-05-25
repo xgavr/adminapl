@@ -1,6 +1,4 @@
 <?php
-use ApiMarketPlace\Entity\MarketSaleReport;
-
 return [
     'router' => [
         'routes' => [
@@ -55,6 +53,15 @@ return [
                     ],
                 ],
             ],
+            'api.rest.api-comment-to-apl' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api-comment-to-apl[/:api_comment_to_apl_id]',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\ApiCommentToApl\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -84,6 +91,7 @@ return [
             \Api\V1\Rest\Good\GoodResource::class => \Api\V1\Rest\Good\GoodResourceFactory::class,
             \Api\V1\Rest\GoodApl\GoodAplResource::class => \Api\V1\Rest\GoodApl\GoodAplResourceFactory::class,
             \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentResource::class => \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentResourceFactory::class,
+            \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplResource::class => \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplResourceFactory::class,
         ],
     ],
     'view_manager' => [
@@ -113,6 +121,7 @@ return [
             1 => 'api.rest.good',
             2 => 'api.rest.good-apl',
             3 => 'api.rest.api-account-comitent',
+            4 => 'api.rest.api-comment-to-apl',
         ],
     ],
     'api-tools-rpc' => [
@@ -130,6 +139,7 @@ return [
             'Api\\V1\\Rest\\Good\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\GoodApl\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiAccountComitent\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\ApiCommentToApl\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -152,6 +162,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiCommentToApl\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -170,6 +185,10 @@ return [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiCommentToApl\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
         ],
     ],
     'api-tools-content-validation' => [
@@ -178,6 +197,9 @@ return [
         ],
         'Api\\V1\\Rest\\ApiAccountComitent\\Controller' => [
             'input_filter' => 'Api\\V1\\Rest\\ApiAccountComitent\\Validator',
+        ],
+        'Api\\V1\\Rest\\ApiCommentToApl\\Controller' => [
+            'input_filter' => 'Api\\V1\\Rest\\ApiCommentToApl\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -196,7 +218,13 @@ return [
                 'validators' => [
                     0 => [
                         'name' => \Laminas\Validator\InArray::class,
-                        'options' => ['haystack'=>array_keys(MarketSaleReport::getStatusAccountList())],
+                        'options' => [
+                            'haystack' => [
+                                0 => 1,
+                                1 => 2,
+                                2 => 3,
+                            ],
+                        ],
                     ],
                 ],
                 'filters' => [
@@ -208,6 +236,48 @@ return [
                 'name' => 'statusAccount',
                 'description' => 'Статус проведения документа в бухгалтерии',
                 'error_message' => 'Не верный статус',
+            ],
+        ],
+        'Api\\V1\\Rest\\ApiCommentToApl\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'order',
+                'description' => 'Номер заказа в Апл',
+                'error_message' => 'Не верный номер заказа',
+                'field_type' => 'integer',
+            ],
+            1 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\StringLength::class,
+                        'options' => [
+                            'max' => '256',
+                        ],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'message',
+                'description' => 'Сообщение',
+                'error_message' => 'Длина не больше 256 символов',
+                'field_type' => 'string',
             ],
         ],
     ],
@@ -278,6 +348,28 @@ return [
             'collection_class' => \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentCollection::class,
             'service_name' => 'ApiAccountComitent',
         ],
+        'Api\\V1\\Rest\\ApiCommentToApl\\Controller' => [
+            'listener' => \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplResource::class,
+            'route_name' => 'api.rest.api-comment-to-apl',
+            'route_identifier_name' => 'api_comment_to_apl_id',
+            'collection_name' => 'api_comment_to_apl',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplEntity::class,
+            'collection_class' => \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplCollection::class,
+            'service_name' => 'ApiCommentToApl',
+        ],
     ],
     'api-tools-hal' => [
         'metadata_map' => [
@@ -315,6 +407,18 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.api-account-comitent',
                 'route_identifier_name' => 'api_account_comitent_id',
+                'is_collection' => true,
+            ],
+            \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-comment-to-apl',
+                'route_identifier_name' => 'api_comment_to_apl_id',
+                'hydrator' => \Laminas\Hydrator\ArraySerializable::class,
+            ],
+            \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-comment-to-apl',
+                'route_identifier_name' => 'api_comment_to_apl_id',
                 'is_collection' => true,
             ],
         ],

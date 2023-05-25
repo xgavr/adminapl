@@ -1071,8 +1071,9 @@ class AplOrderService {
     /*
      * Отправить comment в апл
      * @param Comment $comment
+     * @param array $post
      */
-    public function sendComment($comment)
+    public function sendComment($comment = null, $post = null)
     {
         $url = $this->aplApi().'update-comment?api='.$this->aplApiKey();
 
@@ -1088,7 +1089,9 @@ class AplOrderService {
             if ($comment->getAplId()){
                 $post['id'] = $comment->getAplId();
             }
-            
+        }    
+        
+        if (is_array($post)){
 //            var_dump($post); exit;
             $client = new Client();
             $client->setUri($url);
@@ -1100,7 +1103,7 @@ class AplOrderService {
             $aplId = 0;
             try{
                 $response = $client->send();
-//                var_dump($response->getBody()); exit;
+//                var_dump($response->getStatusCode()); exit;
                 if ($response->isOk()) {                    
                     $aplId = (int) $response->getBody();
                     if ($aplId){
@@ -1111,14 +1114,16 @@ class AplOrderService {
                 $ok = true;
             }    
 
-            if ($ok) {            
-                $comment->setStatusEx(Comment::STATUS_EX_APL);
-                if ($aplId > 0){
-                    $comment->setAplId($aplId);
+            if ($ok) {      
+                if ($comment){
+                    $comment->setStatusEx(Comment::STATUS_EX_APL);
+                    if ($aplId > 0){
+                        $comment->setAplId($aplId);
+                    }    
+                    $this->entityManager->persist($comment);
+                    $this->entityManager->flush();
+                    $this->entityManager->refresh($comment);
                 }    
-                $this->entityManager->persist($comment);
-                $this->entityManager->flush();
-                $this->entityManager->refresh($comment);
             }
         }
         
