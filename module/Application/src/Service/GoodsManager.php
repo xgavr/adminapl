@@ -42,6 +42,8 @@ class GoodsManager
     const GOOD_IMAGE_DIR = './public/img/goods'; //папка для хранения картинок товаров    
     const TD_IMAGE_DIR = './pulic/img/goods/TD'; //папка для хранения картинок товаров
     
+    const MIN_REST_FOR_PRICE = 1; //,было 1000, мнимальное количество для расчета среденей цены, если 1, то считается по среднему
+    
     /**
      * Doctrine entity manager.
      * @var \Doctrine\ORM\EntityManager
@@ -800,7 +802,7 @@ class GoodsManager
                         ->findBy(['code' => $article->getId(), 'status' => Rawprice::STATUS_PARSED]);
                 foreach ($rawprices as $rawprice){
                     if ($rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
-                        $rest = min(1000, $rawprice->getRealRest());
+                        $rest = min(self::MIN_REST_FOR_PRICE, $rawprice->getRealRest());
                         $prices = array_merge($prices, array_fill(0, $rest, $rawprice->getRealPrice()));
                         
                         if ($rawprice->getRaw()->getSupplier()->getAmount() > $bestSupplierAmount){
