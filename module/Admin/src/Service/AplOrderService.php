@@ -1050,14 +1050,14 @@ class AplOrderService {
     public function uploadComments()
     {
         ini_set('memory_limit', '512M');
-        set_time_limit(900);
+        set_time_limit(600);
         $startTime = time();
         $start = 0;
         
         while (true){
             if ($this->unloadComment()) {
                 usleep(100);
-                if (time() > $startTime + 840){
+                if (time() > $startTime + 560){
                     break;
                 }
             } else {
@@ -1131,7 +1131,7 @@ class AplOrderService {
     public function sendComments($limit = null)
     {
         ini_set('memory_limit', '512M');
-        set_time_limit(900);
+        set_time_limit(300);
         $startTime = time();
         
         $comments = $this->entityManager->getRepository(Comment::class)
@@ -1142,7 +1142,7 @@ class AplOrderService {
             if ($this->sendComment($comment)) {
                 $result = $comment->getId();
                 usleep(100);
-                if (time() > $startTime + 870){
+                if (time() > $startTime + 280){
                     break;
                 }
             } else {
