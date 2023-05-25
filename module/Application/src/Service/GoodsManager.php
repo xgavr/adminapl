@@ -687,7 +687,7 @@ class GoodsManager
         
         foreach ($rawprices as $rawprice){
             if ($rawprice->getRealPrice()>0 && $rawprice->getRealRest()>0){
-                $rest = min(1000, $rawprice->getRealRest());
+                $rest = min(self::MIN_REST_FOR_PRICE, $rawprice->getRealRest());
                 $result = array_merge($result, array_fill(0, $rest, $rawprice->getRealPrice()));
             }
         }
@@ -748,7 +748,8 @@ class GoodsManager
             
             $newPrices = array_filter($prices);
             if (count($newPrices)){
-                return Mean::median($newPrices);
+//                return Mean::median($newPrices);
+                return Mean::arithmetic($newPrices);
             } else {
                 if (empty($defaultPrice)){
                     return $minPrice;
@@ -881,7 +882,7 @@ class GoodsManager
             $rest = $goodSupplier['rest'];
             $supplierPrice = $goodSupplier['price'];
             if ($rest>0 && $supplierPrice>0){
-                $rest = min(1000, $rest);
+                $rest = min(self::MIN_REST_FOR_PRICE, $rest);
                 $prices = array_merge($prices, array_fill(0, $rest, $supplierPrice));
 
                 if ($goodSupplier['supplier']['amount'] > $bestSupplierAmount){
