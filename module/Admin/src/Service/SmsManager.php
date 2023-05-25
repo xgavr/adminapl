@@ -318,7 +318,7 @@ class SmsManager {
     public function getAndUpdateWammchat($col = 100)
     {
 //        ini_set('memory_limit', '4096M');
-        set_time_limit(300);
+        set_time_limit(420);
         
         $result = $this->wammMsgGetLast($col);
         if (is_array($result)){
@@ -370,7 +370,7 @@ class SmsManager {
      */
     public function wammchatToOrderComments()
     {
-        set_time_limit(900);
+        set_time_limit(450);
         $startTime = time();
 
         $wammchats = $this->entityManager->getRepository(Wammchat::class)
@@ -389,7 +389,7 @@ class SmsManager {
                 }                
             }    
 
-            if (time() > $startTime + 840){
+            if (time() > $startTime + 420){
                 break;
             }
         }
