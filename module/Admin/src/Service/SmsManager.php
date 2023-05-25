@@ -358,6 +358,8 @@ class SmsManager {
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
             $this->entityManager->refresh($comment);
+            
+            return $comment;
         }
         
         return;
@@ -376,14 +378,16 @@ class SmsManager {
                 ->findBy(['status' => Wammchat::STATUS_ACTIVE]);
         foreach ($wammchats as $wammchat){
             if ($wammchat->getOrder()){
-                $this->wammchatToOrderComment($wammchat);
-
-                $wammchat->setStatus(Wammchat::STATUS_OK);
-                $this->entityManager->persist($wammchat);
-                $this->entityManager->flush();
-                $this->entityManager->refresh($wammchat);
-
-                break;
+                $comment = $this->wammchatToOrderComment($wammchat);
+                
+                if ($comment){
+                    $wammchat->setStatus(Wammchat::STATUS_OK);
+                    $wammchat->setComment($comment);
+                    $this->entityManager->persist($wammchat);
+                    $this->entityManager->flush();
+                    $this->entityManager->refresh($wammchat);
+                    break;
+                }                
             }    
 
             if (time() > $startTime + 840){

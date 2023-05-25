@@ -125,10 +125,10 @@ class Wammchat {
     public function getFromMeAsSting()
     {
         if ($this->fromMe){
-            return '=> '.$this->getStateAsString();
+            return $this->getStateAsString().'=>';
         }
         
-        return '<=';
+        return $this->getStateAsString().'<=';
     }
 
     public function setFromMe($fromMe) 
@@ -222,10 +222,10 @@ class Wammchat {
     public function getStateAsString() 
     {
         switch ($this->state){
-            case 'viewed': return 'просмотрено';
-            case 'received': return 'полученный';
-            case 'sent': return 'отправил';
-            case 'delivered': return 'доставленный';
+            case 'viewed': return 'W';
+            case 'received': return 'w';
+            case 'sent': return 'w';
+            case 'delivered': return 'W';
             default: return '';     
         }
         
@@ -277,7 +277,7 @@ class Wammchat {
 
     public function getCommentMsg() 
     {
-        return '[W'.$this->getFromMeAsSting().'] '.$this->getMsgTextAsHtml();
+        return '['.$this->getFromMeAsSting().'] '.$this->getMsgTextAsHtml();
     }
 
     /**
