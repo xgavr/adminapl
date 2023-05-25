@@ -766,7 +766,7 @@ class AplController extends AbstractActionController
             'result' => 'ok',
         ]);
     }    
-    
+
     public function sendOrderIdAction()
     {                
         $orderId = $this->params()->fromRoute('id', -1);
@@ -787,6 +787,24 @@ class AplController extends AbstractActionController
         ]);
     }        
 
+    public function sendCommentAction()
+    {                
+        $result = $this->aplOrderService->sendComments(1);
+        
+        return new JsonModel([
+            'result' => $result,
+        ]);
+    }    
+    
+    public function sendCommentsAction()
+    {                
+        $this->aplOrderService->sendComments();
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+    
     public function unloadDocsAction()
     {                
         $this->aplDocService->unloadDocs();

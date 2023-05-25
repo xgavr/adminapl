@@ -24,7 +24,7 @@ use Application\Entity\Comment;
 use User\Entity\User;
 use Application\Entity\Order;
 use Laminas\Validator\Date;
-use Laminas\Json\Dcoder;
+use Laminas\Json\Decoder;
 use Application\Entity\Bid;
 use Laminas\Json\Encoder;
 
@@ -1067,6 +1067,90 @@ class AplOrderService {
         }    
         return;        
     }    
+    
+    /*
+     * Отправить comment в апл
+     * @param Comment $comment
+     */
+    public function sendComment($comment)
+    {
+        $url = $this->aplApi().'update-comment?api='.$this->aplApiKey();
+
+        $result = false;
+        if ($comment){
+            $post = [
+                'parent' => $comment->getOrder()->getAplId(),
+                'type' => 'Orders',
+                'comment' => $comment->getComment(),
+                'sf' => 1,
+            ];
+
+            if ($comment->getAplId()){
+                $post['id'] = $comment->getAplId();
+            }
+            
+//            var_dump($post); exit;
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setOptions(['timeout' => 60]);
+            $client->setParameterPost($post);            
+
+            $ok = $result = false;
+            $aplId = 0;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {                    
+                    $aplId = (int) $response->getBody();
+                    if ($aplId){
+                        $ok = $result = true;
+                    }
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+
+            if ($ok) {            
+                $comment->setStatusEx(Comment::STATUS_EX_APL);
+                if ($aplId > 0){
+                    $comment->setAplId($aplId);
+                }    
+                $this->entityManager->persist($comment);
+                $this->entityManager->flush();
+                $this->entityManager->refresh($comment);
+            }
+        }
+        
+        return $result;        
+    }
+    
+    /**
+     * Отправить comments в АПЛ
+     */
+    public function sendComments($limit = null)
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        $comments = $this->entityManager->getRepository(Comment::class)
+                ->findBy(['statusEx' => Comment::STATUS_EX_NEW], null, $limit);
+        
+        $result = 0;
+        foreach ($comments as $comment){
+            if ($this->sendComment($comment)) {
+                $result = $comment->getId();
+                usleep(100);
+                if (time() > $startTime + 870){
+                    break;
+                }
+            } else {
+                break;
+            }
+        }    
+        return $result;        
+    }
     
     /**
      * Отправить заказ в апл
