@@ -290,7 +290,8 @@ class BillManager
                 $spreadsheet = $reader->load($filepath);
                 libxml_use_internal_errors(false);
             } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
-                var_dump($e->getMessage()); exit;
+//                var_dump($e->getMessage()); 
+                return;
             }    
 
             $sheets = $spreadsheet->getAllSheets();
