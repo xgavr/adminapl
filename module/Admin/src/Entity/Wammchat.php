@@ -92,7 +92,7 @@ class Wammchat {
     protected $order;    
     
     /**
-     * @ORM\OneToOne(targetEntity="Application\Entity\Comment", inversedBy="wammchat") 
+     * @ORM\OneToOne(targetEntity="Application\Entity\Comment") 
      * @ORM\JoinColumn(name="comment_id", referencedColumnName="id")
      */
     private $comment;    
@@ -272,11 +272,7 @@ class Wammchat {
      */    
     public function getComment() 
     {
-        if ($this->comment){
-            return $this->comment;
-        }
-        
-        return;
+        return $this->comment;
     }
 
     public function getCommentAsMessage() 
