@@ -337,7 +337,7 @@ class SmsManager {
     public function wammchatToOrderComment($wammchat)
     {
         if ($wammchat->getOrder()){
-            $msg = $wammchat->getCommentMsg();
+            $msg = $wammchat->getCommentAsMessage();
             if ($wammchat->getComment()){
                 $comment = $wammchat->getComment();
                 if ($comment->getComment() == $msg){
@@ -374,8 +374,7 @@ class SmsManager {
         $startTime = time();
 
         $wammchats = $this->entityManager->getRepository(Wammchat::class)
-//                ->findBy(['status' => Wammchat::STATUS_ACTIVE]);
-                ->findAll();
+                ->findBy(['status' => Wammchat::STATUS_ACTIVE]);
         foreach ($wammchats as $wammchat){
             if ($wammchat->getOrder()){
                 $comment = $this->wammchatToOrderComment($wammchat);

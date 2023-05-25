@@ -272,10 +272,14 @@ class Wammchat {
      */    
     public function getComment() 
     {
-        return $this->comment;
+        if ($this->comment){
+            return $this->comment;
+        }
+        
+        return;
     }
 
-    public function getCommentMsg() 
+    public function getCommentAsMessage() 
     {
         return '['.$this->getFromMeAsSting().'] '.$this->getMsgTextAsHtml();
     }
