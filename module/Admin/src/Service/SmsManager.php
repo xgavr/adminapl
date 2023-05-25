@@ -287,7 +287,7 @@ class SmsManager {
 
             $chat->setChatName($row['chat_name']);
             $chat->setDateIns($row['date_ins']);
-            $chat->setDateUpd($row['date_upd']);
+//            $chat->setDateUpd($row['date_upd']);
             $chat->setFromMe($row['from_me']);
             $chat->setMsgLink($row['msg_link']);
             $chat->setMsgText($row['msg_text']);
