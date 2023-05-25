@@ -372,7 +372,6 @@ class SmsManager {
     {
         set_time_limit(900);
         $startTime = time();
-        $start = 0;
 
         $wammchats = $this->entityManager->getRepository(Wammchat::class)
                 ->findBy(['status' => Wammchat::STATUS_ACTIVE]);
