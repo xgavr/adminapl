@@ -62,6 +62,7 @@ class CommentManager
         $comment->setDateCreated(empty($data['dateCreated']) ? date('Y-m-d H:i:s'):$data['dateCreated']);
         $comment->setOrder($order);
         $comment->setUser(empty($data['user']) ? $this->currentUser():$data['user']);
+        $comment->setStatusEx(empty($data['statusEx']) ? Comment::STATUS_EX_NEW:$data['statusEx']);
         
         $this->entityManager->persist($comment);
         $this->entityManager->flush($comment);
@@ -87,6 +88,7 @@ class CommentManager
         $comment->setDateCreated(empty($data['dateCreated']) ? date('Y-m-d H:i:s'):$data['dateCreated']);
         $comment->setOrder(null);
         $comment->setUser(empty($data['user']) ? $this->currentUser():$data['user']);
+        $comment->setStatusEx(empty($data['statusEx']) ? Comment::STATUS_EX_NEW:$data['statusEx']);
         
         $this->entityManager->persist($comment);
         $this->entityManager->flush($comment);

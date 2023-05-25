@@ -17,6 +17,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Daddy
  */
 class Comment {
+    
+     // Pt status doc constants.
+    const STATUS_EX_NEW  = 1; // Не отправлено.
+    const STATUS_EX_RECD  = 2; // Получено из АПЛ.
+    const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -39,6 +45,10 @@ class Comment {
      */
     protected $dateCreated;
 
+    /** 
+     * @ORM\Column(name="status_ex")  
+     */
+    protected $statusEx;
 
     /**
      * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="comments") 
@@ -57,7 +67,6 @@ class Comment {
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     private $client;
-    
     
     public function getId() 
     {
@@ -107,6 +116,50 @@ class Comment {
         $this->dateCreated = $dateCreated;
     }     
 
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatusEx() 
+    {
+        return $this->statusEx;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusExList() 
+    {
+        return [
+            self::STATUS_EX_NEW => 'Новый',
+            self::STATUS_EX_APL => 'Отправлен в АПЛ',
+            self::STATUS_EX_RECD => 'Получен из АПЛ',
+        ];
+    }    
+    
+    /**
+     * Returns user status as string.
+     * @return string
+     */
+    public function getStatusExAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->statusEx]))
+            return $list[$this->statusEx];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets status.
+     * @param int $statusEx     
+     */
+    public function setStatusEx($statusEx) 
+    {
+        $this->statusEx = $statusEx;
+    }   
+    
     /*
      * Возвращает связанный order.
      * @return \Application\Entity\Order

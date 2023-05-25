@@ -969,6 +969,7 @@ class AplOrderService {
                 'comment' => $result['comment'],
                 'dateCreated' => $result['created'],
                 'user' => $user,
+                'statusEx' => Comment::STATUS_EX_RECD,
             ];    
 
             if ($comment){                    

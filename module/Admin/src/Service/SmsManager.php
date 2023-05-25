@@ -11,6 +11,7 @@ namespace Admin\Service;
 use Laminas\Json\Json;
 use Admin\Entity\Wammchat;
 use Application\Entity\Order;
+use Application\Entity\Comment;
 
 /**
  * Description of SmsManager
@@ -324,6 +325,58 @@ class SmsManager {
             if (!empty($result['msg_data'])){
                 $this->updateWammchat($result['msg_data']);
             }
+        }
+        
+        return;
+    }
+    
+    /**
+     * Добавить комментарий из вамчата
+     * @param Wammchat $wammchat
+     */
+    public function wammchatToOrderComment($wammchat)
+    {
+        if ($wammchat->getOrder()){
+            $msg = $wammchat->getCommentMsg();
+            if ($wammchat->getComment()){
+                $comment = $wammchat->getComment();
+                if ($comment->getComment() == $msg){
+                    return; //не изменилось
+                }
+            } else {
+                $comment = new Comment();
+                $comment->setAplId(null);
+                $comment->setDateCreated(date('Y-m-d H:i:s'));
+                $comment->setUser(null);
+                $comment->setOrder($wammchat->getOrder());
+                $comment->setClient($wammchat->getOrder()->getContact()->getClient());
+            }
+            
+            $comment->setComment($msg);
+            $comment->setStatusEx(Comment::STATUS_EX_NEW);
+            
+            $this->entityManager->persist($comment);
+            $this->entityManager->flush();
+            $this->entityManager->refresh($comment);
+        }
+        
+        return;
+    }
+    
+    /**
+     * Обновить комментарии с вамчата
+     */
+    public function wammchatToOrderComments()
+    {
+        $wammchats = $this->entityManager->getRepository(Wammchat::class)
+                ->findBy(['status' => Wammchat::STATUS_ACTIVE]);
+        foreach ($wammchats as $wammchat){
+            $this->wammchatToOrderComment($wammchat);
+            
+            $wammchat->setStatus(Wammchat::STATUS_OK);
+            $this->entityManager->persist($wammchat);
+            $this->entityManager->flush();
+            $this->entityManager->refresh($wammchat);
         }
         
         return;

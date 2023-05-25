@@ -955,6 +955,14 @@ class IndexController extends AbstractActionController
             'ok'
         ]);        
     }
+    
+    public function wammToCommentsAction() 
+    {
+        $this->smsManager->wammchatToOrderComments();
+        return new JsonModel([
+            'ok'
+        ]);        
+    }
 
     public function testGetAndUpdateWammAction()
     {

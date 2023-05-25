@@ -10,6 +10,7 @@ namespace Admin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Application\Entity\Order;
+use Application\Entity\Comment;
 
 /**
  * Description of Producer
@@ -89,6 +90,12 @@ class Wammchat {
      * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
      */
     protected $order;    
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Admin\Entity\Wammchat", inversedBy="wammchat") 
+     * @ORM\JoinColumn(name="comment_id", referencedColumnName="id")
+     */
+    private $comment;    
 
     public function getId() 
     {
@@ -115,6 +122,15 @@ class Wammchat {
         return $this->fromMe;
     }
     
+    public function getFromMeAsSting()
+    {
+        if ($this->fromMe){
+            return '=> '.$this->getStateAsString();
+        }
+        
+        return '<=';
+    }
+
     public function setFromMe($fromMe) 
     {
         $this->fromMe = $fromMe;
@@ -152,6 +168,14 @@ class Wammchat {
 
     public function getMsgText() 
     {
+        return $this->msgText;
+    }
+
+    public function getMsgTextAsHtml() 
+    {
+        if ($this->msgLink){
+            return '<a href="'.$this->msgLink.'" target="_blank">'.$this->msgText.'</a>';
+        }
         return $this->msgText;
     }
 
@@ -195,6 +219,19 @@ class Wammchat {
         return $this->state;
     }
 
+    public function getStateAsString() 
+    {
+        switch ($this->state){
+            case 'viewed': return 'просмотрено';
+            case 'received': return 'полученный';
+            case 'sent': return 'отправил';
+            case 'delivered': return 'доставленный';
+            default: return '';     
+        }
+        
+        return;
+    }
+
     public function setState($state) 
     {
         $this->state = $state;
@@ -227,5 +264,28 @@ class Wammchat {
     {
         $this->order = $order;
         $order->addWammchat($this);
+    }               
+
+    /**
+     * Возвращает связанный comment.
+     * @return Comment
+     */    
+    public function getComment() 
+    {
+        return $this->comment;
+    }
+
+    public function getCommentMsg() 
+    {
+        return '[W'.$this->getFromMeAsSting().'] '.$this->getMsgTextAsHtml();
+    }
+
+    /**
+     * Задает связанный comment.
+     * @param Comment $comment
+     */    
+    public function setComment($comment) 
+    {
+        $this->comment = $comment;
     }               
 }
