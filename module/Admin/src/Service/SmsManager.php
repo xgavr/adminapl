@@ -368,15 +368,27 @@ class SmsManager {
      */
     public function wammchatToOrderComments()
     {
+        set_time_limit(900);
+        $startTime = time();
+        $start = 0;
+
         $wammchats = $this->entityManager->getRepository(Wammchat::class)
                 ->findBy(['status' => Wammchat::STATUS_ACTIVE]);
         foreach ($wammchats as $wammchat){
-            $this->wammchatToOrderComment($wammchat);
-            
-            $wammchat->setStatus(Wammchat::STATUS_OK);
-            $this->entityManager->persist($wammchat);
-            $this->entityManager->flush();
-            $this->entityManager->refresh($wammchat);
+            if ($wammchat->getOrder()){
+                $this->wammchatToOrderComment($wammchat);
+
+                $wammchat->setStatus(Wammchat::STATUS_OK);
+                $this->entityManager->persist($wammchat);
+                $this->entityManager->flush();
+                $this->entityManager->refresh($wammchat);
+
+                break;
+            }    
+
+            if (time() > $startTime + 840){
+                break;
+            }
         }
         
         return;
