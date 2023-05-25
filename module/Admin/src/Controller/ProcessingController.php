@@ -1550,7 +1550,7 @@ class ProcessingController extends AbstractActionController
         
         if ($settings['order'] == 1){
             $this->aplOrderService->uploadComments();
-            $this->aplOrderService->sendComments();
+            //$this->aplOrderService->sendComments();
         }    
         
         return new JsonModel([
