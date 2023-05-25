@@ -1470,6 +1470,14 @@ class SupplierController extends AbstractActionController
         if ($requestSetting){
             $result = $requestSetting->getSiteNormalize();
         }
+        
+        if (!$result && $supplier->getParent()){
+            $requestSetting = $this->entityManager->getRepository(RequestSetting::class)
+                    ->findOneBy(['supplier' => $supplier->getParent()->getId(), 'status' => RequestSetting::STATUS_ACTIVE, 'mode' => RequestSetting::MODE_MANUALLY]);
+            if ($requestSetting){
+                $result = $requestSetting->getSiteNormalize();
+            }            
+        }
         return new JsonModel([
             'url' => $result,
         ]);                  
