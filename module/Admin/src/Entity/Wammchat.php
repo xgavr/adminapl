@@ -92,7 +92,7 @@ class Wammchat {
     protected $order;    
     
     /**
-     * @ORM\OneToOne(targetEntity="Admin\Entity\Wammchat", inversedBy="wammchat") 
+     * @ORM\OneToOne(targetEntity="Application\Entity\Comment", inversedBy="wammchat") 
      * @ORM\JoinColumn(name="comment_id", referencedColumnName="id")
      */
     private $comment;    
