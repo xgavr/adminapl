@@ -72,7 +72,7 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                 foreach ($data as $row){
                     $result[] = [
                         'price' => $row->getPrice(),
-                        'name' => $row->getSupplier()->getName()->getAplId(),
+                        'name' => $row->getSupplier()->getAplId(),
                         'created' => $row->getUpdate(),
                         'supplier' => $row->getSupplier()->getName(),
                         'saleprice' => $good->getPrice(),
