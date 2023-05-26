@@ -5,6 +5,8 @@ use Laminas\ApiTools\ApiProblem\ApiProblem;
 use Laminas\ApiTools\Rest\AbstractResourceListener;
 use Application\Entity\GoodSupplier;
 use Application\Entity\Goods;
+use Stock\Entity\Reserve;
+use Stock\Entity\Movement;
 
 class ApiSuppliersPricesResource extends AbstractResourceListener
 {
@@ -70,6 +72,23 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                 $data = $goodSuppliersQuery->getResult();
                 $result = [];
                 foreach ($data as $row){
+                    $reserves = $this->entityManager->getRepository(Reserve::class)
+                            ->findBy(['good' => $good->getId()]);
+                    $rsrv = [];
+                    foreach ($reserves as $reserve){
+                        $doc = $this->entityManager->getRepository(Movement::class)
+                                ->docFromLogKey($reserve->getDocKey());
+                        $docAplId = null;
+                        if ($doc){
+                            $docAplId = ($doc->getAplId()) ? $doc->getAplId():null;
+                        }
+                        $rsrv[] = [
+                            'status' => $reserve->getStatusAsString(),
+                            'rest' => $reserve->getRest(),
+                            'order' => $docAplId,
+                        ];
+                    }
+                    
                     $result[] = [
                         'price' => $row->getPrice(),
                         'name' => $row->getSupplier()->getAplId(),
@@ -78,6 +97,7 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                         'saleprice' => $good->getPrice(),
                         'rest' => $row->getRest(),
                         'comp' => $row->getLot(),
+                        'reserves' => $rsrv,
                     ];
                 }
 
