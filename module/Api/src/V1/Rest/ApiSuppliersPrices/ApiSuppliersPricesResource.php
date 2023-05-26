@@ -67,27 +67,28 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                     ->findOneBy(['aplId' => $id]);
             
             if ($good){
+                $reserves = $this->entityManager->getRepository(Reserve::class)
+                        ->findBy(['good' => $good->getId()]);
+                $rsrv = [];
+                foreach ($reserves as $reserve){
+                    $doc = $this->entityManager->getRepository(Movement::class)
+                            ->docFromLogKey($reserve->getDocKey());
+                    $docAplId = null;
+                    if ($doc){
+                        $docAplId = ($doc->getAplId()) ? $doc->getAplId():null;
+                    }
+                    $rsrv[] = [
+                        'status' => $reserve->getStatus(),
+                        'rest' => $reserve->getRest(),
+                        'order' => $docAplId,
+                    ];
+                }
+
                 $goodSuppliersQuery = $this->entityManager->getRepository(GoodSupplier::class)
                         ->orderGoodSuppliers($good->getId());
                 $data = $goodSuppliersQuery->getResult();
                 $result = [];
                 foreach ($data as $row){
-                    $reserves = $this->entityManager->getRepository(Reserve::class)
-                            ->findBy(['good' => $good->getId()]);
-                    $rsrv = [];
-                    foreach ($reserves as $reserve){
-                        $doc = $this->entityManager->getRepository(Movement::class)
-                                ->docFromLogKey($reserve->getDocKey());
-                        $docAplId = null;
-                        if ($doc){
-                            $docAplId = ($doc->getAplId()) ? $doc->getAplId():null;
-                        }
-                        $rsrv[] = [
-                            'status' => $reserve->getStatusAsString(),
-                            'rest' => $reserve->getRest(),
-                            'order' => $docAplId,
-                        ];
-                    }
                     
                     $result[] = [
                         'price' => $row->getPrice(),
@@ -97,11 +98,10 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                         'saleprice' => $good->getPrice(),
                         'rest' => $row->getRest(),
                         'comp' => $row->getLot(),
-                        'reserves' => $rsrv,
                     ];
                 }
 
-                return ['data' => $result];                
+                return ['data' => $result, 'rsrv' => $rsrv];                
             }    
         }                
         return new ApiProblem(404, 'Товар с апл ид '.$id.' не найден!');
