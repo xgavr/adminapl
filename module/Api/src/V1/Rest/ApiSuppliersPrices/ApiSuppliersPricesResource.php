@@ -55,6 +55,34 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
     }
 
     /**
+     * Резервы Апл
+     * @param Goods $good
+     * @return string
+     */
+    private function aplReserve($good)
+    {
+        $reserves = $this->entityManager->getRepository(Reserve::class)
+                ->findBy(['good' => $good->getId()]);
+        $result = [];
+        foreach ($reserves as $reserve){
+            $doc = $this->entityManager->getRepository(Movement::class)
+                    ->docFromLogKey($reserve->getDocKey());
+            $docAplId = null;
+            if ($doc){
+                $docAplId = ($doc->getAplId()) ? $doc->getAplId():null;
+            }
+            if ($reserve->getStatus() == Reserve::STATUS_VOZVRAT){
+                $result[] = "Возврат({$reserve->getRest})"; 
+            }
+            if ($docAplId && ($reserve->getStatus() == Reserve::STATUS_RESERVE || $reserve->getStatus() == Reserve::STATUS_DELIVERY)){
+                $result[] = "<a href='/admin/orders/view/id/$docAplId' target='_blank'>$docAplId</a>({$reserve->getRest()})"; 
+            }
+        }      
+        
+        return implode(',', $result);
+    }
+    
+    /**
      * Цены и наличие товара из прайсов поставщиков
      *
      * @param  integer $id Апл Ид товара
@@ -67,29 +95,16 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                     ->findOneBy(['aplId' => $id]);
             
             if ($good){
-                $reserves = $this->entityManager->getRepository(Reserve::class)
-                        ->findBy(['good' => $good->getId()]);
-                $rsrv = [];
-                foreach ($reserves as $reserve){
-                    $doc = $this->entityManager->getRepository(Movement::class)
-                            ->docFromLogKey($reserve->getDocKey());
-                    $docAplId = null;
-                    if ($doc){
-                        $docAplId = ($doc->getAplId()) ? $doc->getAplId():null;
-                    }
-                    $rsrv[] = [
-                        'status' => $reserve->getStatus(),
-                        'rest' => $reserve->getRest(),
-                        'order' => $docAplId,
-                    ];
-                }
 
                 $goodSuppliersQuery = $this->entityManager->getRepository(GoodSupplier::class)
                         ->orderGoodSuppliers($good->getId());
                 $data = $goodSuppliersQuery->getResult();
                 $result = [];
-                foreach ($data as $row){
-                    
+                foreach ($data as $row){      
+                    $reserve = null;
+                    if ($row->getSupplier()->getAplId() == 6){ //если Апл
+                        $reserve = $this->aplReserve($good);
+                    }
                     $result[] = [
                         'price' => $row->getPrice(),
                         'name' => $row->getSupplier()->getAplId(),
@@ -98,6 +113,7 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                         'saleprice' => $good->getPrice(),
                         'rest' => $row->getRest(),
                         'comp' => $row->getLot(),
+                        'reserve' => $reserve,
                     ];
                 }
 
