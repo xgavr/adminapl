@@ -14,7 +14,7 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
      */
     private $entityManager;
 
-    public function __construct($entityManager, $reportManager) 
+    public function __construct($entityManager) 
     {
        $this->entityManager = $entityManager;       
     }
