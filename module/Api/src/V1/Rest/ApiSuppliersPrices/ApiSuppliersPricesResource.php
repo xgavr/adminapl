@@ -76,10 +76,12 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                         'created' => $row->getUpdate(),
                         'supplier' => $row->getSupplier()->getName(),
                         'saleprice' => $good->getPrice(),
+                        'rest' => $row->getRest(),
+                        'comp' => $row->getLot(),
                     ];
                 }
 
-                return $result;                
+                return ['data' => $result];                
             }    
         }                
         return new ApiProblem(404, 'Товар с апл ид '.$id.' не найден!');
