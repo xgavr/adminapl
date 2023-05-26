@@ -61,12 +61,12 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
     public function fetch($id)
     {
         if (is_numeric($id)){
-            $goodId = $this->entityManager->getRepository(Goods::class)
-                    ->find($id);
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->findOneBy(['aplId' => $id]);
             
-            if ($goodId){
+            if ($good){
                 $goodSuppliersQuery = $this->entityManager->getRepository(GoodSupplier::class)
-                        ->orderGoodSuppliers($goodId);
+                        ->orderGoodSuppliers($good->getId());
                 $data = $goodSuppliersQuery->getResult();
                 $result = [];
                 foreach ($data as $row){
@@ -75,7 +75,7 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                         'name' => $row->getSupplier()->getName()->getAplId(),
                         'created' => $row->getUpdate(),
                         'supplier' => $row->getSupplier()->getName(),
-                        'saleprice' => $row->getGood()->getPrice(),
+                        'saleprice' => $good->getPrice(),
                     ];
                 }
 
