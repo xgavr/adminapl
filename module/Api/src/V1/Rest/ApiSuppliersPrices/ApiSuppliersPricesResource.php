@@ -90,6 +90,7 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
      */
     public function fetch($id)
     {
+        $result = [];
         if (is_numeric($id)){
             $good = $this->entityManager->getRepository(Goods::class)
                     ->findOneBy(['aplId' => $id]);
@@ -99,7 +100,6 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                 $goodSuppliersQuery = $this->entityManager->getRepository(GoodSupplier::class)
                         ->orderGoodSuppliers($good->getId());
                 $data = $goodSuppliersQuery->getResult();
-                $result = [];
                 foreach ($data as $row){      
                     $reserve = null;
                     if ($row->getSupplier()->getAplId() == 6){ //если Апл
@@ -116,11 +116,10 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                         'reserve' => $reserve,
                     ];
                 }
-
-                return ['data' => $result];                
             }    
         }                
-        return new ApiProblem(404, 'Товар с апл ид '.$id.' не найден!');
+        return ['data' => $result];                
+//        return new ApiProblem(404, 'Товар с апл ид '.$id.' не найден!');
     }
 
     /**
