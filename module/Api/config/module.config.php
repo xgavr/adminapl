@@ -62,6 +62,15 @@ return [
                     ],
                 ],
             ],
+            'api.rest.api-suppliers-prices' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api-suppliers-prices[/:api_suppliers_prices_id]',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\ApiSuppliersPrices\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -92,6 +101,7 @@ return [
             \Api\V1\Rest\GoodApl\GoodAplResource::class => \Api\V1\Rest\GoodApl\GoodAplResourceFactory::class,
             \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentResource::class => \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentResourceFactory::class,
             \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplResource::class => \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplResourceFactory::class,
+            \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesResource::class => \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesResourceFactory::class,
         ],
     ],
     'view_manager' => [
@@ -122,6 +132,7 @@ return [
             2 => 'api.rest.good-apl',
             3 => 'api.rest.api-account-comitent',
             4 => 'api.rest.api-comment-to-apl',
+            5 => 'api.rest.api-suppliers-prices',
         ],
     ],
     'api-tools-rpc' => [
@@ -140,6 +151,7 @@ return [
             'Api\\V1\\Rest\\GoodApl\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiAccountComitent\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiCommentToApl\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\ApiSuppliersPrices\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -167,6 +179,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiSuppliersPrices\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -186,6 +203,10 @@ return [
                 1 => 'application/json',
             ],
             'Api\\V1\\Rest\\ApiCommentToApl\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
+            'Api\\V1\\Rest\\ApiSuppliersPrices\\Controller' => [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
@@ -370,6 +391,28 @@ return [
             'collection_class' => \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplCollection::class,
             'service_name' => 'ApiCommentToApl',
         ],
+        'Api\\V1\\Rest\\ApiSuppliersPrices\\Controller' => [
+            'listener' => \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesResource::class,
+            'route_name' => 'api.rest.api-suppliers-prices',
+            'route_identifier_name' => 'api_suppliers_prices_id',
+            'collection_name' => 'api_suppliers_prices',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesEntity::class,
+            'collection_class' => \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesCollection::class,
+            'service_name' => 'ApiSuppliersPrices',
+        ],
     ],
     'api-tools-hal' => [
         'metadata_map' => [
@@ -419,6 +462,18 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.api-comment-to-apl',
                 'route_identifier_name' => 'api_comment_to_apl_id',
+                'is_collection' => true,
+            ],
+            \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-suppliers-prices',
+                'route_identifier_name' => 'api_suppliers_prices_id',
+                'hydrator' => \Laminas\Hydrator\ObjectProperty::class,
+            ],
+            \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-suppliers-prices',
+                'route_identifier_name' => 'api_suppliers_prices_id',
                 'is_collection' => true,
             ],
         ],
