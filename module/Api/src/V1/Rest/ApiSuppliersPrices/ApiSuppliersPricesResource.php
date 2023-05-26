@@ -117,7 +117,7 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                     ];
                 }
 
-                return ['data' => $result, 'rsrv' => $rsrv];                
+                return ['data' => $result];                
             }    
         }                
         return new ApiProblem(404, 'Товар с апл ид '.$id.' не найден!');
