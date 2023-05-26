@@ -237,7 +237,7 @@ class SupplierRepository extends EntityRepository{
                 ->setParameter('2', date('Y-m-d', strtotime('-2 days')))
                 //->andWhere('g.price > gs.price')
                 ->orderBy('gs.update', 'desc')
-                ->orderBy('gs.price', 'asc')
+                ->addOrderBy('gs.price', 'asc')
                 ;
         
         return $queryBuilder->getQuery();        
