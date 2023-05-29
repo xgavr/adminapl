@@ -65,6 +65,48 @@ class UserController extends AbstractActionController
         ]);
     } 
     
+    public function contentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order', 'DESC');
+        $status = $this->params()->fromQuery('status');
+        $officeId = $this->params()->fromQuery('office');
+        
+        $params = [
+            'q' => $q, 'sort' => $sort, 'order' => $order, 
+            'officeId' => $officeId, 'status' => $status,
+        ];
+        $query = $this->entityManager->getRepository(User::class)
+                        ->findAllUser($params);
+        
+        $total = $this->entityManager->getRepository(User::class)
+                        ->findAllUserTotal($params);
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $data = $query->getResult(2);
+        
+        $result = [];
+        foreach ($data as $row){
+            $row['statusAsString'] = User::getStatusList()[$row['status']];
+            $result[] = $row;
+        }
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }        
+    
     /**
      * This action displays a page allowing to add a new user.
      */

@@ -77,6 +77,85 @@ class UserRepository  extends EntityRepository
     }
     
     /**
+     * Запрос по сотрудникам
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function findAllUser($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('u, o')
+            ->from(User::class, 'u')
+            ->leftJoin('u.office', 'o')    
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('u.'.$params['sort'], $params['order']);
+            }            
+            if (!empty($params['officeId'])){
+                $office = $entityManager->getRepository(Office::class)
+                        ->findOneById($params['officeId']);
+                
+                if ($office){
+                    $queryBuilder->andWhere('u.office = ?1')
+                            ->setParameter('1', $office->getId());
+                }
+            }
+            if (!empty($params['status'])){
+                if (is_numeric($params['status'])){
+                    $queryBuilder->andWhere('u.status = :status')
+                            ->setParameter('status', $params['status']);
+                }    
+            }
+        }
+
+        return $queryBuilder->getQuery();
+    }      
+    
+    /**
+     * Запрос по количеству записей
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function findAllUserTotal($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('count(u.id) as countUser')
+            ->from(User::class, 'u')
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['officeId'])){
+                $office = $entityManager->getRepository(Office::class)
+                        ->findOneById($params['officeId']);
+                if ($office){
+                    $queryBuilder->andWhere('u.office = ?1')
+                            ->setParameter('1', $office->getId());
+                }
+            }
+            if (!empty($params['status'])){
+                if (is_numeric($params['status'])){
+                    $queryBuilder->andWhere('r.status = :status')
+                            ->setParameter('status', $params['status']);
+                }    
+            }
+        }
+        
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result['countUser'];
+    }    
+    
+    /**
      * Запрос по поиска
      * 
      * @param array $params

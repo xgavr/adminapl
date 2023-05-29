@@ -423,7 +423,7 @@ class NavManager
             if ($this->rbacManager->isGranted(null, 'user.manage')) {
                 $useradminDropdownItems[] = [
                             'id' => 'users',
-                            'label' => 'Пользователи',
+                            'label' => 'Сотрудники',
                             'link' => $url('users')
                         ];
             }
@@ -447,7 +447,7 @@ class NavManager
             if (count($useradminDropdownItems)!=0) {
                 $items[] = [
                     'id' => 'users',
-                    'label' => 'Пользователи',
+                    'label' => 'Сотрудники',
                     'dropdown' => $useradminDropdownItems
                 ];
             }

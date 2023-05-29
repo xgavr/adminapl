@@ -214,8 +214,8 @@ class User
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Active',
-            self::STATUS_RETIRED => 'Retired'
+            self::STATUS_ACTIVE => 'Работает',
+            self::STATUS_RETIRED => 'Уволен'
         ];
     }    
     
