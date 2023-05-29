@@ -72,7 +72,7 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                 $docAplId = ($doc->getAplId()) ? $doc->getAplId():null;
             }
             if ($reserve->getStatus() == Reserve::STATUS_VOZVRAT){
-                $result[] = "Возврат({$reserve->getRest})"; 
+                $result[] = "Возврат({$reserve->getRest()})"; 
             }
             if ($docAplId && ($reserve->getStatus() == Reserve::STATUS_RESERVE || $reserve->getStatus() == Reserve::STATUS_DELIVERY)){
                 $result[] = "<a href='/admin/orders/view/id/$docAplId' target='_blank'>$docAplId</a>({$reserve->getRest()})"; 

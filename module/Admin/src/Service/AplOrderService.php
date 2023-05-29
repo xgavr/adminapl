@@ -1309,4 +1309,11 @@ class AplOrderService {
         return;        
     }
     
+    /**
+     * Отменить старые заказы со статусом новый и обработан
+     */
+    public function cancelOld()
+    {
+        return $this->orderManager->cancelOld();
+    }        
 }

@@ -868,4 +868,13 @@ class OrderController extends AbstractActionController
             $result
         );                   
     }
+    
+    public function cancelOldAction()
+    {
+        $this->orderManager->cancelOld();
+
+        return new JsonModel(
+            ['ok']
+        );                   
+    }
 }

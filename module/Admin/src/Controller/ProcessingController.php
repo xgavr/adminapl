@@ -1538,6 +1538,25 @@ class ProcessingController extends AbstractActionController
             ['ok']
         ]);
     }    
+
+    /**
+     * Отмена старых заказов
+     * 
+     * @return JsonModel
+     */
+    public function cancelOldOrdersAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['order'] == 1){
+            $this->aplOrderService->cancelOld();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
     
     /**
      * Выгрузка комментариев из апл

@@ -1813,5 +1813,25 @@ class OrderManager
         }
         
         return;
-    }                
+    }  
+    
+    /**
+     * Отменить старые заказы со статусом новый и обработан
+     */
+    public function cancelOld()
+    {
+        $orders = $this->entityManager->getRepository(Order::class)
+                ->findForCancel();
+        foreach ($orders as $order){
+            if ($order->getDocDate() < date('Y-m-d H:i:s', strtotime(" -7 days"))){
+                $order->setStatus(Order::STATUS_CANCELED);
+                $order->setStatusEx(Order::STATUS_EX_NO);
+                $this->entityManager->persist($order);
+            }
+        }
+        
+        $this->entityManager->flush();
+        
+        return;
+    }
 }

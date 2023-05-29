@@ -80,6 +80,7 @@ class JobManager
     {
         return [
           101 => ['command' => 'delete-old-prices',         'shedule' => '12,42 * * * *',  'description' => 'Удаление старых прайсов'],
+          102 => ['command' => 'cancel-old-orders',         'shedule' => self::CRON_EVERY_DAY,  'description' => 'Отмена старых заказов'],
         ];
     }
     

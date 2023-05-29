@@ -593,4 +593,29 @@ class OrderRepository extends EntityRepository{
         return;                
         
     }                    
+
+    /**
+     * Найти заказы для отмены
+     */
+    public function findForCancel()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('o')
+            ->from(Order::class, 'o')
+            ->where('o.dateCreated < ?1')
+            ->setParameter('1', date('Y-m-d H:i:s', strtotime('-7 days')))    
+                ;
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('o.status', Order::STATUS_NEW));
+        $orX->add($queryBuilder->expr()->eq('o.status', Order::STATUS_PROCESSED));
+        
+        $queryBuilder->andWhere($orX);
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }                    
 }
