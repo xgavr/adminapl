@@ -715,10 +715,10 @@ class AplController extends AbstractActionController
         
     public function sendOtAction()
     {                
-        $this->aplDocService->sendOt();
+        $result = $this->aplDocService->sendOt();
         
         return new JsonModel([
-            'result' => 'ok',
+            'result' => $result,
         ]);
     }    
         
