@@ -24,7 +24,7 @@ class JobManager
 {
     const WGET_URL = 'wget -O - -q -t 1 http://adminapl.ru/proc/';
     
-    const CRON_EVERY_DAY = '01 01 * * *';
+    const CRON_EVERY_DAY = '01 23 * * *';
     const CRON_EVERY_HOUR = '02 * * * *';
     const CRON_EVERY_MIN = '*/1 * * * *';
     const CRON_EVERY_MIN_3 = '*/3 * * * *';
