@@ -1130,6 +1130,8 @@ class AplDocService {
                     if ($aplId){
                         $ok = $result = true;
                     }
+                } else {
+                    $result = $response->getBody();
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
