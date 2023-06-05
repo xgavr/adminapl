@@ -93,11 +93,11 @@ class UserController extends AbstractActionController
             $query->setMaxResults($limit);
         }
 
-        $data = $query->getResult(2);
+        $data = $query->getResult();
         
         $result = [];
-        foreach ($data as $row){
-            $row['statusAsString'] = User::getStatusList()[$row['status']];
+        foreach ($data as $user){
+            $row = $user->toArray();
             $result[] = $row;
         }
         

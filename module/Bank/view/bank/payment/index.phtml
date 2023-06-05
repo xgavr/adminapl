@@ -96,7 +96,7 @@
                      <th data-field="paymentDate" data-sortable="true" data-width="100">Дата</th>
                      <th data-field="id" data-sortable="true" data-type="numeric" data-align="right" data-width="50">Номер</th>
                      <th data-field='amount' data-sortable="true" data-align="right" data-formatter="amountFormatter">Сумма</th>
-                     <th data-field='bankAccount.name' data-sortable="false">Банк списания</th>
+                     <th data-field='bankAccount.bik' data-sortable="false" data-formatter="formatBank">Отправитель БИК/счет</th>
                      <th data-field='counterpartyBankBik' data-sortable="false" data-formatter="formatAccount">Получатель БИК/счет</th>
                      <th data-field='counterpartyName' data-sortable="false" data-formatter="formatCounterparty">Получатель</th>
                      <th data-field='purpose' data-sortable="false" data-formatter="purposeFormatter">Назначение</th>
@@ -267,6 +267,14 @@
         return (Math.round(value*100)/100).toFixed(2);
     }    
     
+    function formatBankAccount(value, row){
+        var result = value;
+        if (row.bankAccount.rs){
+            result += '<br/>' + row.bankAccount.rs;
+        }
+        return result;
+    }
+
     function formatAccount(value, row){
         var result = value;
         if (row.counterpartyAccountNumber){

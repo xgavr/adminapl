@@ -185,7 +185,7 @@ class BankAccount {
 
     public function getShortRs() 
     {
-        return '***'.substr($this->rs, -4);
+        return '('.$this->getAccountTypeAsChar().')***'.substr($this->rs, -4);
     }
 
     public function setRs($rs) 
@@ -294,6 +294,32 @@ class BankAccount {
         $list = self::getAccountTypeList();
         if (isset($list[$this->accountType]))
             return $list[$this->accountType];
+        
+        return 'Unknown';
+    }    
+
+    /**
+     * Returns possible account types as array.
+     * @return array
+     */
+    public static function getAccountTypeCharList() 
+    {
+        return [
+            self::ACСOUNT_CHECKING => 'Р',
+            self::ACCOUNT_SAVINGS => 'Н'
+        ];
+    }    
+    
+    /**
+     * Returns account type as string.
+     * @return string
+     */
+    public function getAccountTypeAsChar()
+    {
+        $list = self::getAccountTypeCharList();
+        if (isset($list[$this->accountType])){
+            return $list[$this->accountType];
+        }    
         
         return 'Unknown';
     }    

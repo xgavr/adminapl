@@ -115,10 +115,10 @@ class PaymentController extends AbstractActionController
         $form = new PaymentForm($this->entityManager);
         
         $accounts = $this->entityManager->getRepository(BankAccount::class)
-                ->findBy(['status' => BankAccount::STATEMENT_ACTIVE, 'api' => BankAccount::API_TOCHKA, 'accountType' => BankAccount::ACСOUNT_CHECKING]);
+                ->findBy(['status' => BankAccount::STATEMENT_ACTIVE, 'api' => BankAccount::API_TOCHKA]);
         $accountList = [];
         foreach ($accounts as $account){
-            $accountList[$account->getId()] = $account->getRs();
+            $accountList[$account->getId()] = $account->getShortRs();
         }        
         $form->get('bankAccount')->setValueOptions($accountList);
 
@@ -339,10 +339,10 @@ class PaymentController extends AbstractActionController
         $form = new SuppliersPayForm($this->entityManager);
         
         $accounts = $this->entityManager->getRepository(BankAccount::class)
-                ->findBy(['status' => BankAccount::STATEMENT_ACTIVE, 'api' => BankAccount::API_TOCHKA, 'accountType' => BankAccount::ACСOUNT_CHECKING]);
+                ->findBy(['status' => BankAccount::STATEMENT_ACTIVE, 'api' => BankAccount::API_TOCHKA]);
         $accountList = [];
         foreach ($accounts as $account){
-            $accountList[$account->getId()] = $account->getRs();
+            $accountList[$account->getId()] = $account->getShortRs();
         }        
         $form->get('bankAccount')->setValueOptions($accountList);
 

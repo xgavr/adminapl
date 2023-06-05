@@ -305,7 +305,7 @@ class LegalManager
             if (!empty($data['statement'])){
                 $bankAccount->setStatement($data['statement']);
             }
-            if (isset($data['cash'])){
+            if (!empty($data['cash'])){
                 $bankAccount->setCash($data['cash']);
             }
             if (!empty($data['dateStart'])){

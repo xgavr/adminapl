@@ -412,7 +412,7 @@ class RegisterManager
             case Movement::DOC_PTU:
                 $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->find($register->getDocId());
-                if ($ptu){
+                if (!empty($ptu)){
                     $this->ptuManager->repostPtu($ptu);
                     $flag = true;
                 }

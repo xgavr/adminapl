@@ -404,6 +404,19 @@ class User
     {
         return $this->contacts;
     }
+    
+    /**
+     * Получить телефоны сотрудника
+     */
+    public function getPhones()
+    {
+        $result = [];
+        foreach ($this->contacts as $contact){
+            $result[] = $contact->getPhonesAsString();
+        }
+        
+        return implode(', ', array_filter($result));
+    }
         
     /**
      * Assigns.
@@ -493,7 +506,28 @@ class User
         if ($office){
             $office->addUser($this);
         }    
-    }        
+    }      
+    
+    public function toArray()
+    {
+        return [
+            'aplId' => $this->getAplId(),
+            'birthday' => $this->getBirthday(),
+            'dateCreated' => $this->getDateCreated(),
+            'email' => $this->getEmail(),
+            'fullName' => $this->getFullName(),
+            'id' => $this->getId(),
+            'link' => $this->getLink(),
+            'name' => $this->getName(),
+            'office' => $this->getOffice()->getId(),
+            'officeName' => $this->getOffice()->getName(),
+            'orderCount' => $this->getOrderCount(),
+            'phones' => $this->getPhones(),
+            'roles' => $this->getRolesAsString(),
+            'status' => $this->getStatus(),
+            'statusAsString' => $this->getStatusAsString(),
+        ];
+    }
 }
 
 
