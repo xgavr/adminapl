@@ -38,7 +38,7 @@ class IndexController extends AbstractActionController
                 return $this->redirect()->toRoute('api-tools/ui');
             }
         }    
-        return $this->redirect()->toRoute('/');
+        return $this->redirect()->toRoute('home');
     }
     
 }
