@@ -571,6 +571,14 @@ class NavManager
                     'label' => 'Машинное обучение',
                     'link'  => $url('ml')
                 ];
+
+                if (file_exists('./config/development.config.php')) {
+                    $adminDropdownItems[] = [
+                        'id' => 'api',
+                        'label' => 'Api',
+                        'link'  => $url('api')
+                    ];
+                }    
                 
                 if (count($adminDropdownItems)!=0) {
                     $items[] = [

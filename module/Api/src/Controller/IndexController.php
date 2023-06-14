@@ -33,9 +33,11 @@ class IndexController extends AbstractActionController
     
     public function indexAction()
     {
-        if (class_exists(AdminModule::class, false)) {
-            return $this->redirect()->toRoute('api-tools/ui');
-        }
+        if (file_exists('./config/development.config.php')) {
+            if (class_exists(AdminModule::class, false)) {
+                return $this->redirect()->toRoute('api-tools/ui');
+            }
+        }    
         return new ViewModel();
     }
     
