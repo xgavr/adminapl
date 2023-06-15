@@ -618,6 +618,9 @@ class PtManager
     public function checkAutoPt($pt)
     {
         if ($pt->getStatusAccount() == Pt::STATUS_TAKE_NO && $pt->getStatus() == Pt::STATUS_ACTIVE){
+            
+            $this->repostPt($pt);
+            
             $ptGoods = $this->entityManager->getRepository(PtGood::class)
                     ->findBy(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
             foreach ($ptGoods as $ptGood){
