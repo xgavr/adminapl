@@ -720,7 +720,7 @@ class PtManager
 
                 $ptGood = [
                     'quantity' => $supplierOrder['quantity'],
-                    'amount' => $good->getMeanPrice()*$supplierOrder['quantity'],
+                    'amount' => $good->getFormatMeanPrice()*$supplierOrder['quantity'],
                     'good_id' => $supplierOrder['goodId'],
                     'comment' => $supplierOrder['orderAplId'].' '.$supplierOrder['supplierName'],
                 ];
