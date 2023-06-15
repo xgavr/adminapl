@@ -295,8 +295,8 @@ class PtRepository extends EntityRepository{
 
         $queryBuilder->select('sum(m.quantity) as movementCount')
                 ->from(Movement::class, 'm')
-                ->where('m.docType = :docType')
-                ->setParameter('docType', $ptGood->getPt()->getLogKey())
+                ->where('m.docKey = :docKey')
+                ->setParameter('docKey', $ptGood->getPt()->getLogKey())
                 ->andWhere('m.good = :goodId')
                 ->setParameter('goodId', $ptGood->getGood()->getId())
                 ->andWhere('m.office = :officeId')
