@@ -14,6 +14,7 @@ use Stock\Entity\Pt;
 use Stock\Entity\PtGood;
 use Company\Entity\Legal;
 use Application\Filter\ArticleCode;
+use Stock\Entity\Movement;
 
 /**
  * Description of PtRepository
@@ -100,6 +101,12 @@ class PtRepository extends EntityRepository{
                 if (is_numeric($params['month'])){
                     $queryBuilder->andWhere('MONTH(p.docDate) = :month')
                             ->setParameter('month', $params['month']);
+                }    
+            }
+            if (!empty($params['ptId'])){
+                if (is_numeric($params['ptId'])){
+                    $queryBuilder->andWhere('p.id = :ptId')
+                            ->setParameter('ptId', $params['ptId']);
                 }    
             }
             if (!empty($params['q'])){     
@@ -273,5 +280,37 @@ class PtRepository extends EntityRepository{
         return;                
         
     }                
+    
+    /**
+     * Количество списано
+     * 
+     * @param PtGood $ptGood 
+     * @return integer
+     */
+    public function movementQuantityCount($ptGood)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('sum(m.quantity) as movementCount')
+                ->from(Movement::class, 'm')
+                ->where('m.docType = :docType')
+                ->setParameter('docType', $ptGood->getPt()->getLogKey())
+                ->andWhere('m.good = :goodId')
+                ->setParameter('goodId', $ptGood->getGood()->getId())
+                ->andWhere('m.office = :officeId')
+                ->setParameter('officeId', $ptGood->getPt()->getOffice()->getId())
+                ->setMaxResults(1)
+                ;
+        
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+        
+        if (!empty($result['movementCount'])){
+            return abs($result['movementCount']);
+        }
+        
+        return 0;
+    }
     
 }

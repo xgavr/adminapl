@@ -550,4 +550,51 @@ class PtController extends AbstractActionController
             $result
         );                   
     }    
+    
+    public function statusAction()
+    {
+        $ptId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', Pt::STATUS_ACTIVE);
+        $pt = $this->entityManager->getRepository(Pt::class)
+                ->find($ptId);        
+
+        if ($pt == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->ptManager->updatePtStatus($pt, $status);
+
+        $query = $this->entityManager->getRepository(Pt::class)
+                ->findAllPt(['ptId' => $pt->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
+        return new JsonModel(
+           $result
+        );           
+    }            
+    
+    public function clearTakeAction()
+    {
+        $ptId = $this->params()->fromRoute('id', -1);
+        
+        $pt = $this->entityManager->getRepository(Pt::class)
+                ->find($ptId);        
+
+        if ($pt == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->ptManager->checkAutoPt($pt);
+        
+        $query = $this->entityManager->getRepository(Pt::class)
+                ->findAllPt(['ptId' => $pt->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
+        return new JsonModel(
+           $result
+        );           
+        
+    }
 }

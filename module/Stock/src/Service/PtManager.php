@@ -545,6 +545,34 @@ class PtManager
         return;
     }
     
+    
+    /**
+     * Update pt status.
+     * @param Pt $pt
+     * @param integer $status
+     * @return integer
+     */
+    public function updatePtStatus($pt, $status)            
+    {
+
+        if ($pt->getDocDate() > $this->allowDate || $pt->getStatus() != Pt::STATUS_ACTIVE){
+            $pt->setStatus($status);
+            $pt->setStatusEx(Pt::STATUS_EX_NEW);
+            
+            if ($pt->getDocDate() < $this->getAllowDate() && $status == Pt::STATUS_RETIRED){
+                $pt->setDocDate(date('Y-m-d', strtotime($this->getAllowDate().' + 1 day')));
+            }
+
+            $this->entityManager->persist($pt);
+            $this->entityManager->flush();
+
+            $this->repostPt($pt);
+            $this->logManager->infoPt($pt, Log::STATUS_UPDATE);
+        }    
+        
+        return;
+    }
+    
     /**
      * Удалить автоперемещения за дату
      * @param Office $office
@@ -580,6 +608,42 @@ class PtManager
         foreach ($pts as $pt){            
             $this->updatePtAmount($pt);            
         }
+        return;
+    }
+    
+    /**
+     * Проверка автоперемещений
+     * @param Pt $pt
+     */
+    public function checkAutoPt($pt)
+    {
+        if ($pt->getStatusAccount() == Pt::STATUS_TAKE_NO && $pt->getStatus() == Pt::STATUS_ACTIVE){
+            $ptGoods = $this->entityManager->getRepository(PtGood::class)
+                    ->findBy(['pt' => $pt->getId(), 'take' => PtGood::TAKE_NO]);
+            foreach ($ptGoods as $ptGood){
+                $movementCount = $this->entityManager->getRepository(Pt::class)
+                        ->movementQuantityCount($ptGood);
+                if (!$movementCount){
+                    $this->entityManager->remove($ptGood);
+                } else {
+                    $ptGood->setQuantity($movementCount);
+                    $this->entityManager->persist($ptGood);
+                }                
+            }
+            $this->entityManager->flush();
+            
+            $ptGoodsCount = $this->entityManager->getRepository(PtGood::class)
+                    ->findBy(['pt' => $pt->getId()]);
+            if (!$ptGoodsCount){
+                $pt->setStatus(Pt::STATUS_RETIRED);
+                $this->entityManager->persist($pt);
+                $this->entityManager->flush();
+            }
+            
+            $this->updatePtAmount($pt);                                    
+            $this->entityManager->refresh($pt);
+        }
+        
         return;
     }
     

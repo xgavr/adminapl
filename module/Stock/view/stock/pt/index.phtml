@@ -67,6 +67,7 @@
             data-show-columns="true"
             data-query-params="queryParams"
             data-sort-name="docDate"
+            data-unique-id="id"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
@@ -105,7 +106,16 @@
     }
 
     var $table = $('#table'),
-            $ok = $('#ok');
+        $ok = $('#ok'),
+        curentRowIndex = -1;
+    
+    function setCurrentIndex(index){
+        curentRowIndex = index;
+    }
+    
+    function getCurrentIndex(){
+        return curentRowIndex;
+    }
     
     function refreshTable(){
         $table.bootstrapTable('refresh');
@@ -176,5 +186,89 @@
     function responseHandler(res) {
         return res;
     }    
+    
+    function changeStatus(ptId, status){
+        $.get( "/pt/status/"+ptId+'?status='+status, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: ptId, row: data});
+        });        
+    }    
+    
+    function clearTake(ptId){
+        $.get( "/pt/clear-take/"+ptId, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: ptId, row: data});
+        });        
+    }    
+    
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            setCurrentIndex($(rowElem).attr('data-index'));
+            return $table.bootstrapTable('getData')[getCurrentIndex()];
+        },
+        actionsGroups: [
+           ['clearTake'], ['history']
+        ],      
+        actions: {
+            statusActiv: {
+                name: 'Сделать активным',
+                iconClass: 'glyphicon glyphicon-ok',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Pt::STATUS_ACTIVE?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Pt::STATUS_RETIRED?>;
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
+            }, 
+            statusRetired: {
+                name: 'Сделать не активным',
+                iconClass: 'glyphicon glyphicon-remove',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Pt::STATUS_RETIRED?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Pt::STATUS_ACTIVE?>;
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>' || row.status != <?= Pt::STATUS_ACTIVE ?>;
+                }                
+            },
+            clearTake: {
+                name: 'Удалить отсутствующие товары',
+                iconClass: 'glyphicon glyphicon-trash',
+                classNames: 'bg-warning',
+                onClick: function(row) {
+                    clearTake(row.id);
+                },
+                isShown: function(row) {
+                    return true;
+                },
+                isEnabled: function(row) {
+                    return row.status == <?= Pt::STATUS_ACTIVE?> && row.statusAccount == <?= Pt::STATUS_TAKE_NO ?>;
+    //                return row.docDate > '<?= $allowDate?>';
+                }                
+            },
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.id+"?docType=pt",
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
+                }
+            }
+        }
+    });    
+    
 </script>
 
