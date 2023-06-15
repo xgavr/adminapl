@@ -627,11 +627,15 @@ class PtManager
                     $this->entityManager->remove($ptGood);
                 } else {
                     $ptGood->setQuantity($movementCount);
+                    $ptGood->setAmount($movementCount*$ptGood->getGood()->getFormatMeanPrice());
                     $this->entityManager->persist($ptGood);
                 }                
             }
-            $this->entityManager->flush();
             
+            $pt->setStatusEx(Pt::STATUS_EX_NEW);
+            $this->entityManager->persist($pt);
+            $this->entityManager->flush();
+
             $ptGoodsCount = $this->entityManager->getRepository(PtGood::class)
                     ->findBy(['pt' => $pt->getId()]);
             if (!$ptGoodsCount){
@@ -639,7 +643,7 @@ class PtManager
                 $this->entityManager->persist($pt);
                 $this->entityManager->flush();
             }
-            
+
             $this->updatePtAmount($pt);                                    
             $this->entityManager->refresh($pt);
         }
