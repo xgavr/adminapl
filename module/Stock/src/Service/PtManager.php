@@ -652,6 +652,34 @@ class PtManager
     }
     
     /**
+     * Проверка перемещений между офисами
+     * @param PtSheduler $ptSheduler
+     */
+    public function ptCheckGenerator($ptSheduler)
+    {
+        $checkTime = $ptSheduler->getGeneratorCheckTime();
+        $nowTime = date('H:i');
+
+        if ($nowTime < $checkTime){
+            return;
+        }
+
+        $office = $ptSheduler->getOffice();
+        $office2 = $ptSheduler->getOffice2();
+        $ptDate = date('Y-m-d');
+        
+        $pts = $this->entityManager->getRepository(Pt::class)
+                ->findBy(['office' => $office, 'office2' => $office2, 
+                    'docDate' => $ptDate, 'docNo' => $this->autoPtDocNo,
+                    'statusAccount' => Pt::STATUS_TAKE_NO]);
+        
+        foreach ($pts as $pt){
+            $this->checkAutoPt($pt);
+        }
+        return;        
+    }
+        
+    /**
      * Генерация перемещений между офисами
      * @param PtSheduler $ptSheduler
      */
@@ -736,7 +764,7 @@ class PtManager
         
         return;
     }
-    
+        
     /**
      * Генерация всех перемещений
      */
@@ -746,6 +774,7 @@ class PtManager
                 ->findBy(['status' => PtSheduler::STATUS_ACTIVE]);
         foreach ($shedulers as $ptSheduler){
             $this->ptGenerator($ptSheduler);
+            $this->ptCheckGenerator($ptSheduler);
         }
         
         return;

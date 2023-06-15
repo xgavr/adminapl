@@ -85,6 +85,11 @@ class PtSheduler {
         return date('H:i', $this->generatorTime);
     }
 
+    public function getGeneratorCheckTime() 
+    {
+        return date('H:i', $this->generatorTime + 60*60*3);
+    }
+
     public function setGeneratorTime($generatorTime) 
     {
         $this->generatorTime = strtotime($generatorTime);

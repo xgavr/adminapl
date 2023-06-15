@@ -344,6 +344,7 @@ $legalContact = $office->getLegalContact();
                         <th>Отправитель</th>
                         <th>Получатель</th>
                         <th>Время перемещения</th>
+                        <th>Время проверки</th>
                         <th>День</th>
                         <th></th>        
                     </tr>
@@ -358,6 +359,9 @@ $legalContact = $office->getLegalContact();
                         </td>
                         <td>
                             <?= $this->escapeHtml($ptSheduler->getGeneratorTime()); ?>
+                        </td>
+                        <td>
+                            <?= $this->escapeHtml($ptSheduler->getGeneratorCheckTime()); ?>
                         </td>
                         <td>
                             <?= $this->escapeHtml($ptSheduler->getGeneratorDayAsString()); ?>
