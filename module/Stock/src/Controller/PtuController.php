@@ -377,7 +377,7 @@ class PtuController extends AbstractActionController
                     'id' => $row->getId(), 
                     'name' => $row->getInputName(), 
                     'code' => $row->getCode(),
-                    'price' => $row->getMeanPrice(),
+                    'price' => $row->getFormatMeanPrice(),
                 ];
             }
         }    

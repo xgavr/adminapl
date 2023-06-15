@@ -623,7 +623,6 @@ class PtManager
             foreach ($ptGoods as $ptGood){
                 $movementCount = $this->entityManager->getRepository(Pt::class)
                         ->movementQuantityCount($ptGood);
-                var_dump($movementCount);
                 if (!$movementCount){
                     $this->entityManager->remove($ptGood);
                 } else {
