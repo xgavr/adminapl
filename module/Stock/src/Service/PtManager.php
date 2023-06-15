@@ -630,7 +630,7 @@ class PtManager
                     $this->entityManager->persist($ptGood);
                 }                
             }
-            //$this->entityManager->flush();
+            $this->entityManager->flush();
             
             $ptGoodsCount = $this->entityManager->getRepository(PtGood::class)
                     ->findBy(['pt' => $pt->getId()]);
