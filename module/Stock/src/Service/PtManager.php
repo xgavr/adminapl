@@ -623,6 +623,7 @@ class PtManager
             foreach ($ptGoods as $ptGood){
                 $movementCount = $this->entityManager->getRepository(Pt::class)
                         ->movementQuantityCount($ptGood);
+                var_dump($movementCount);
                 if (!$movementCount){
                     $this->entityManager->remove($ptGood);
                 } else {
@@ -630,7 +631,7 @@ class PtManager
                     $this->entityManager->persist($ptGood);
                 }                
             }
-            $this->entityManager->flush();
+            //$this->entityManager->flush();
             
             $ptGoodsCount = $this->entityManager->getRepository(PtGood::class)
                     ->findBy(['pt' => $pt->getId()]);
