@@ -266,7 +266,7 @@ $docName = 'Новый';
         
         $("#amount").on('input', function(){
             var value = $(this).val();
-            $(this).val(parseFloat(value.replace(",",".").replace(' ', '')));
+            $(this).val(parseFloat(value.replace(",",".").replace(/\s/g, '')));
             if ($("#quantity").val()){
                 $("#price").val(Math.round($(this).val()*100/$("#quantity").val())/100);
             }    

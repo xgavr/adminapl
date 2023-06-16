@@ -252,15 +252,15 @@ class PtuForm extends Form implements ObjectManagerAwareInterface
         ]);        
 
         // Add the CSRF field
-        $this->add([
-            'type' => 'csrf',
-            'name' => 'csrf',
-            'options' => [
-                'csrf_options' => [
-                'timeout' => 600
-                ]
-            ],
-        ]);
+//        $this->add([
+//            'type' => 'csrf',
+//            'name' => 'csrf',
+//            'options' => [
+//                'csrf_options' => [
+//                'timeout' => 600
+//                ]
+//            ],
+//        ]);
         
     }
     

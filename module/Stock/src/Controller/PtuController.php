@@ -219,7 +219,7 @@ class PtuController extends AbstractActionController
 
             if ($form->isValid()) {
                 unset($data['company']);
-                unset($data['csrf']);
+//                unset($data['csrf']);
                 $ptuGood = $data['ptuGood'];
                 unset($data['ptuGood']);
                 $data['status_ex'] = Ptu::STATUS_EX_NEW;

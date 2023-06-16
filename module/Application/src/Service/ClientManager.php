@@ -14,6 +14,7 @@ use User\Entity\User;
 use Application\Entity\Phone;
 use Application\Entity\Email;
 use User\Filter\PhoneFilter;
+use Application\Entity\Comment;
 
 /**
  * Description of ClientService
@@ -161,15 +162,25 @@ class ClientManager
      */
     public function isRemoveClient($client)
     {
-        $rows = $this->entityManager->getRepository(Contact::class)
+        $contactCount = $this->entityManager->getRepository(Contact::class)
                 ->count(['client' => $client->getId()]);
-        if ($rows){
+        if ($contactCount){
             return false;
         }
+
+        $commentCount = $this->entityManager->getRepository(Comment::class)
+                ->count(['client' => $client->getId()]);
+        if ($commentCount){
+            return false;
+        }    
         
         return true;
     }
     
+    /**
+     * Удаление клиента
+     * @param Client $client
+     */
     public function removeClient($client) 
     {   
         
@@ -181,6 +192,11 @@ class ClientManager
         $carts = $client->getCart();
         foreach ($carts as $cart) {
             $this->entityManager->remove($cart);
+        }               
+
+        $comments = $client->getComments();
+        foreach ($comments as $comment) {
+            $this->entityManager->remove($comment);
         }               
         
         $this->entityManager->remove($client);
