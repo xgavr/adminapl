@@ -505,7 +505,7 @@ class AplCashService {
                     'name' =>   ($cashDoc->getOrder()) ? $cashDoc->getOrder()->getAplId():0,
                     'comment' => ($cashDoc->getOrder()) ? 'Orders':'',
                     'desc' =>   Encoder::encode($desc),
-                    'user' =>   $cashDoc->getUserCreator()->getAplId(),
+                    'user' =>   ($cashDoc->getUserCreator()) ? $cashDoc->getUserCreator()->getAplId():0,
                     'sf' =>     $cashDoc->getAplSf(),
                     'bo' =>     $cashDoc->getAplBo(),
                     'link' =>   0,
