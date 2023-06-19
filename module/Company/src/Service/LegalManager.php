@@ -49,6 +49,7 @@ class LegalManager
      */
     public function updateLegal($legal, $data)
     {                
+//        var_dump($data);
         $inn = (empty($data['inn'])) ? null:$data['inn']; 
         $kpp = (empty($data['kpp'])) ? null:$data['kpp']; 
         $name = (empty($data['name'])) ? null:$data['name']; 
@@ -59,12 +60,13 @@ class LegalManager
         $legal->setOgrn((empty($data['ogrn'])) ? null:$data['ogrn']);            
         $legal->setOkpo((empty($data['okpo'])) ? null:$data['okpo']);            
         $legal->setHead((empty($data['head'])) ? null:$data['head']);            
-        $legal->setAddress((empty($data['address'])) ? null:$data['address']);            
+        $legal->setAddress((empty($data['address'])) ? null:$data['address']); 
+        $legal->setInfo((empty($data['info'])) ? null:$data['info']);            
+        $legal->setEdoAddress((empty($data['edoAddress'])) ? null:$data['edoAddress']); 
+        $legal->setSbpLegalId((empty($data['sbpLegalId'])) ? null:$data['sbpLegalId']); 
+        
         if (isset($data['chiefAccount'])){
             $legal->setChiefAccount($data['chiefAccount']);            
-        }    
-        if (isset($data['edoAddress'])){
-            $legal->setInfo($data['edoAddress']);            
         }    
         if (!empty($data['status'])){
             $legal->setStatus($data['status']);
@@ -139,6 +141,7 @@ class LegalManager
             $legal->setAddress((empty($data['address'])) ? null:$data['address']);            
             $legal->setStatus((empty($data['status'])) ? Legal::STATUS_ACTIVE:$data['status']);            
             $legal->setEdoAddress((empty($data['edoAddress'])) ? null:$data['edoAddress']); 
+            $legal->setSbpLegalId((empty($data['spbLegalId'])) ? null:$data['spbLegalId']); 
             
             if (!empty($data['edoOperator'])){
                 $edoOperator = $this->entityManager->getRepository(EdoOperator::class)

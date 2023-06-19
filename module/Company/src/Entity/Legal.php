@@ -93,6 +93,12 @@ class Legal {
      */
     protected $edoAddress;
 
+    /**
+     * Уникальный код клиента в СПБ
+     * @ORM\Column(name="sbp_legal_id")   
+     */
+    protected $sbpLegalId;
+
     /** 
      * @ORM\Column(name="date_created")  
      */
@@ -352,6 +358,14 @@ class Legal {
         $this->edoAddress = $edoAddress;
     }     
 
+    public function getSbpLegalId() {
+        return $this->sbpLegalId;
+    }
+
+    public function setSbpLegalId($sbpLegalId): void {
+        $this->sbpLegalId = $sbpLegalId;
+    }
+    
     /**
      * Returns status.
      * @return int     

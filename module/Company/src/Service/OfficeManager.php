@@ -51,6 +51,7 @@ class OfficeManager
         $office->setShippingLimit2($data['shippingLimit2']);
         $office->setSbCard($data['sbCard']);
         $office->setSbOwner($data['sbOwner']);
+        $office->setSbpMerchantId((empty($data['sbpMerchantId'])) ? null:$data['sbpMerchantId']); 
         
         $currentDate = date('Y-m-d H:i:s');        
         $office->setDateCreated($currentDate);
@@ -94,6 +95,7 @@ class OfficeManager
         $office->setShippingLimit2($data['shippingLimit2']);
         $office->setSbCard($data['sbCard']);
         $office->setSbOwner($data['sbOwner']);
+        $office->setSbpMerchantId((empty($data['sbpMerchantId'])) ? null:$data['sbpMerchantId']); 
         
         $office->setRegion($region);
         

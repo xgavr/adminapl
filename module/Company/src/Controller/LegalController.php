@@ -377,7 +377,7 @@ class LegalController extends AbstractActionController
                 $this->legalManager->addLegal($contact, $data);
                 
                 return new JsonModel(
-                   ['ok']
+                   ['result' => 'ok']
                 );           
             }
         } else {           
@@ -403,6 +403,7 @@ class LegalController extends AbstractActionController
                         'dateStart' => $legal->getDateStart(),
                         'edoOperator' => ($legal->getEdoOperator()) ? $legal->getEdoOperator()->getId():null,
                         'edoAddress' => $legal->getEdoAddress(),
+                        'sbpLegalId' => $legal->getSbpLegalId(),
                     ];
                     $legalform->setData($data);
                 }    

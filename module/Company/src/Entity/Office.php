@@ -94,6 +94,12 @@ class Office {
      * @ORM\Column(name="sb_owner")   
      */
     protected $sbOwner;
+
+    /**
+     * Идентификатор ТСП в СПБ
+     * @ORM\Column(name="sbp_merchant_id")   
+     */
+    protected $sbpMerchantId;
     
     /**
     * @ORM\OneToMany(targetEntity="\Application\Entity\Contact", mappedBy="office")
@@ -274,6 +280,14 @@ class Office {
     {
         $this->sbOwner = $sbOwner;
     }     
+
+    public function getSbpMerchantId() {
+        return $this->sbpMerchantId;
+    }
+
+    public function setSbpMerchantId($sbpMerchantId): void {
+        $this->sbpMerchantId = $sbpMerchantId;
+    }
 
     /**
      * Returns status.

@@ -39,6 +39,10 @@ $form->get('order')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('aplId')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('company')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -163,6 +167,8 @@ $form->prepare();
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
     <button type="submit" class="btn btn-primary" id="user-in-submit">Сохранить</button>
 </div>
+
+<?= $this->formElement($form->get('aplId')); ?>
 <?= $this->form()->closeTag(); ?>
             
 <script>         

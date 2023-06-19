@@ -246,6 +246,7 @@ class OfficeController extends AbstractActionController
                     'shippingLimit2'=>$office->getShippingLimit2(),     
                     'sbCard'=>$office->getSbCard(),     
                     'sbOwner'=>$office->getSbOwner(),     
+                    'sbpMerchantId' => $office->getSbpMerchantId(),
                 ));
         }
         

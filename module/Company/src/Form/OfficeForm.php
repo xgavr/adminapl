@@ -93,6 +93,17 @@ class OfficeForm extends Form implements ObjectManagerAwareInterface
                 'label' => 'Держатель карты СБ',
             ],
         ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'sbpMerchantId',
+            'attributes' => [
+                'id' => 'sbpMerchantId'
+            ],
+            'options' => [
+                'label' => 'Идентификатор ТСП в СПБ',
+            ],
+        ]);
         
         $this->add([           
             'type'  => 'number',

@@ -159,6 +159,17 @@ class CashInForm extends Form implements ObjectManagerAwareInterface
                 'label' => 'Номер заказа',
             ],
         ]);
+
+        $this->add([            
+            'type'  => 'hidden',
+            'name' => 'aplId',
+            'attributes' => [                
+                'id' => 'aplId'
+            ],
+            'options' => [
+                'label' => 'Apl Id',
+            ],
+        ]);
         
         $this->add([            
             'type'  => 'number',

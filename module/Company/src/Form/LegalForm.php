@@ -137,6 +137,17 @@ class LegalForm extends Form
         ]);
 
         $this->add([           
+            'type'  => 'text',
+            'name' => 'sbpLegalId',
+            'attributes' => [
+                'id' => 'sbpLegalId'
+            ],
+            'options' => [
+                'label' => 'Код в СПБ',
+            ],
+        ]);
+
+        $this->add([           
             'type'  => 'textarea',
             'name' => 'address',
             'attributes' => [
@@ -165,7 +176,7 @@ class LegalForm extends Form
                 'id' => 'dateStart'
             ],
             'options' => [
-                'label' => 'Дата начала деятельности',
+                'label' => 'Начало деятельности',
             ],
         ]);
         
@@ -391,6 +402,23 @@ class LegalForm extends Form
                         'options' => [
                             'min' => 0,
                             'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);                          
+
+        $inputFilter->add([
+                'name'     => 'sbpLegalId',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 0,
+                            'max' => 64
                         ],
                     ],
                 ],

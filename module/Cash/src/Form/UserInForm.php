@@ -158,6 +158,17 @@ class UserInForm extends Form implements ObjectManagerAwareInterface
         ]);
         
         $this->add([            
+            'type'  => 'hidden',
+            'name' => 'aplId',
+            'attributes' => [                
+                'id' => 'aplId'
+            ],
+            'options' => [
+                'label' => 'Apl Id',
+            ],
+        ]);
+        
+        $this->add([            
             'type'  => 'select',
             'name' => 'supplier',
             'attributes' => [                

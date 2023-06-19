@@ -36,12 +36,13 @@ $form->get('chiefAccount')->setAttributes([
 
 $form->get('address')->setAttributes([
     'class'=>'form-control', 
-    'style' => 'height: 182px',
+    'rows' => 2
+//    'style' => 'height: 182px',
     ]);
 
 $form->get('info')->setAttributes([
     'class'=>'form-control', 
-    'rows' => 4
+    'rows' => 1
     ]);
 
 $form->get('edoOperator')->setAttributes([
@@ -49,6 +50,10 @@ $form->get('edoOperator')->setAttributes([
     ]);
 
 $form->get('edoAddress')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('sbpLegalId')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -77,6 +82,15 @@ $form->prepare();
             
 <div class="modal-body">
     <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
+            </div>
+        </div>    
+    </div>
+    <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 <?= $this->formLabel($form->get('inn')); ?>
@@ -88,87 +102,95 @@ $form->prepare();
                 </div>    
                 <?= $this->formElementErrors($form->get('inn')); ?>                  
             </div>
-
-            <div class="form-group">
-                <?= $this->formLabel($form->get('name')); ?>
-                <?= $this->formElement($form->get('name')); ?>
-                <?= $this->formElementErrors($form->get('name')); ?>                  
-            </div>
-
-            <div class="form-group">
-                <?= $this->formLabel($form->get('kpp')); ?>
-                <?= $this->formElement($form->get('kpp')); ?>
-                <?= $this->formElementErrors($form->get('kpp')); ?>                  
-            </div>
-
             <div class="form-group">
                 <?= $this->formLabel($form->get('ogrn')); ?>
                 <?= $this->formElement($form->get('ogrn')); ?>
                 <?= $this->formElementErrors($form->get('ogrn')); ?>                  
             </div>
-
+        </div>                
+        <div class="col-md-6">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('kpp')); ?>
+                <?= $this->formElement($form->get('kpp')); ?>
+                <?= $this->formElementErrors($form->get('kpp')); ?>                  
+            </div>
             <div class="form-group">
                 <?= $this->formLabel($form->get('okpo')); ?>
                 <?= $this->formElement($form->get('okpo')); ?>
                 <?= $this->formElementErrors($form->get('okpo')); ?>                  
             </div>
-
-            <div class="form-group">
-                <?= $this->formLabel($form->get('dateStart')); ?>
-                <?= $this->formElement($form->get('dateStart')); ?>
-                <?= $this->formElementErrors($form->get('dateStart')); ?>                  
-            </div>
-
-            <div class="form-group">
-                <?= $this->formLabel($form->get('status')); ?>
-                <?= $this->formElement($form->get('status')); ?>
-                <?= $this->formElementErrors($form->get('status')); ?>                  
-            </div>
-        </div>                
-
-        <div class="col-md-6">
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-md-12">
             <div class="form-group">
                 <?= $this->formLabel($form->get('address')); ?>
                 <?= $this->formElement($form->get('address')); ?>
                 <?= $this->formElementErrors($form->get('address')); ?>                  
             </div>
-
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col-md-6">
             <div class="form-group">
                 <?= $this->formLabel($form->get('head')); ?>
                 <?= $this->formElement($form->get('head')); ?>
                 <?= $this->formElementErrors($form->get('head')); ?>                  
             </div>
-
+        </div>    
+        <div class="col-md-6">
             <div class="form-group">
                 <?= $this->formLabel($form->get('chiefAccount')); ?>
                 <?= $this->formElement($form->get('chiefAccount')); ?>
                 <?= $this->formElementErrors($form->get('chiefAccount')); ?>                  
             </div>
-
-            <div class="form-group">
-                <?= $this->formLabel($form->get('info')); ?>
-                <?= $this->formElement($form->get('info')); ?>
-                <?= $this->formElementErrors($form->get('info')); ?>                  
-            </div>
-
-
-            <?= $this->formElement($form->get('csrf')); ?>
-
         </div>
-    </div>
+    </div>    
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="form-group">
                 <?= $this->formLabel($form->get('edoOperator')); ?>
                 <?= $this->formElement($form->get('edoOperator')); ?>
                 <?= $this->formElementErrors($form->get('edoOperator')); ?>                  
             </div>
-        </div>    
-        <div class="col-md-6">
+        </div>        
+        <div class="col-md-9">
             <div class="form-group">
                 <?= $this->formLabel($form->get('edoAddress')); ?>
                 <?= $this->formElement($form->get('edoAddress')); ?>
                 <?= $this->formElementErrors($form->get('edoAddress')); ?>                  
+            </div>
+        </div> 
+    </div>    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('dateStart')); ?>
+                <?= $this->formElement($form->get('dateStart')); ?>
+                <?= $this->formElementErrors($form->get('dateStart')); ?>                  
+            </div>
+        </div>    
+        <div class="col-md-4">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('sbpLegalId')); ?>
+                <?= $this->formElement($form->get('sbpLegalId')); ?>
+                <?= $this->formElementErrors($form->get('sbpLegalId')); ?>                  
+            </div>
+        </div>    
+        <div class="col-md-4">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('info')); ?>
+                <?= $this->formElement($form->get('info')); ?>
+                <?= $this->formElementErrors($form->get('info')); ?>                  
             </div>
         </div>    
     </div>
@@ -179,6 +201,7 @@ $form->prepare();
     <button type="button" class="btn btn-primary" id="legal-submit">Сохранить</button>
 </div>
 
+<?= $this->formElement($form->get('csrf')); ?>
 <?= $this->form()->closeTag(); ?>
             
 <script>
@@ -200,8 +223,9 @@ $form->prepare();
             data: $('#legal-form').serialize()
         })
             .done(function (data) {
-                if (data == 'ok'){
-                    $('#legal-modal').modal('hide');
+                console.log(data);
+                if (data.result == 'ok'){
+                    $('#modal-dialog').modal('hide');
                     window.location.reload();
                 } else {
                     $('#modal-dialog .modal-content').html(data);

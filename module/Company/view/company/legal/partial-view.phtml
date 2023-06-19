@@ -29,7 +29,8 @@
                         Местонахождение: <?= $legal->getAddress() ?><br/>
                         Руководитель: <?= $legal->getHead() ?> <?= $legal->getChiefAccountPresent() ?><br/>
                         Дата начала деятельности: <?= date('d.m.Y', strtotime($legal->getDateStart())); ?><br/>
-                        ЭДО: <?= ($legal->getEdoOperator())? $legal->getEdoOperator()->getName():'нет' ?> <?= ($legal->getEdoOperator())? $legal->getEdoAddress():'' ?>
+                        ЭДО: <?= ($legal->getEdoOperator())? $legal->getEdoOperator()->getName():'нет' ?> <?= ($legal->getEdoOperator())? $legal->getEdoAddress():'' ?><br/>
+                        Код в СПБ: <?= $legal->getSbpLegalId() ?><br/>
                         <?= $legal->getInfo() ?>                           
                     </div>
                     <div class="pull-right">

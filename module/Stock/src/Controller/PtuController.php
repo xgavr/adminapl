@@ -240,7 +240,7 @@ class PtuController extends AbstractActionController
 //                var_dump($ptuGood); exit;
                 $this->ptuManager->updatePtuGoods($ptu, $ptuGood);
                 
-                $this->ptuManager->repostPtu($ptu);
+//                $this->ptuManager->repostPtu($ptu);
                 
                 return new JsonModel(
                    ['ok']

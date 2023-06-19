@@ -227,7 +227,8 @@ class PtuManager
             $ptu->setDocNo($data['doc_no']);
             $ptu->setDocDate($data['doc_date']);
             $ptu->setComment(empty($data['comment']) ? null:$data['comment']);
-            $ptu->setStatusEx($data['status_ex']);
+//            $ptu->setStatusEx($data['status_ex']);
+            $ptu->setStatusEx(empty($data['status_ex']) ? Ptu::STATUS_EX_NEW:$data['status_ex']);
             $ptu->setStatusAccount(Ptu::STATUS_ACCOUNT_NO);
             $ptu->setStatus($data['status']);
             $ptu->setOffice($data['office']);
@@ -260,7 +261,8 @@ class PtuManager
             $ptu->setDocNo($data['doc_no']);
             $ptu->setDocDate($data['doc_date']);
             $ptu->setComment(empty($data['comment']) ? null:$data['comment']);
-            $ptu->setStatusEx($data['status_ex']);
+//            $ptu->setStatusEx($data['status_ex']);
+            $ptu->setStatusEx(empty($data['status_ex']) ? Ptu::STATUS_EX_NEW:$data['status_ex']);
             $ptu->setStatusAccount(Ptu::STATUS_ACCOUNT_NO);
             $ptu->setStatus($data['status']);
             $ptu->setOffice($data['office']);

@@ -31,6 +31,10 @@ $form->get('sbOwner')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('sbpMerchantId')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('status')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'Статус'
@@ -43,41 +47,55 @@ $form->get('submit')
 $form->prepare();
 ?>
 
-        <?= $this->form()->openTag($form); ?>
+<?= $this->form()->openTag($form); ?>
 
-        <div class="modal-header">
-            <h5 class="modal-title">Изменить данные офиса</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+<div class="modal-header">
+    <h5 class="modal-title">Изменить данные офиса</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
             
-        <div class="modal-body">
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
             <div class="row">
-                <div class="col-md-10">
-        
+                <div class="col-md-12">
                     <div class="form-group">
                         <?= $this->formLabel($form->get('name')); ?>
                         <?= $this->formElement($form->get('name')); ?>
                         <?= $this->formElementErrors($form->get('name')); ?>                  
                     </div>
-
+                </div>
+            </div>    
+            <div clalss="row">
+                <div class="col-md-6">
                     <div class="form-group">
                         <?= $this->formLabel($form->get('aplId')); ?>
                         <?= $this->formElement($form->get('aplId')); ?>
                         <?= $this->formElementErrors($form->get('aplId')); ?>                  
                     </div>
-
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('region')); ?>
-                        <?= $this->formElement($form->get('region')); ?>
-                        <?= $this->formElementErrors($form->get('region')); ?>                  
-                    </div>
-                    
                     <div class="form-group">
                         <?= $this->formLabel($form->get('shippingLimit1')); ?>
                         <?= $this->formElement($form->get('shippingLimit1')); ?>
                         <?= $this->formElementErrors($form->get('shippingLimit1')); ?>                  
+                    </div>
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('sbCard')); ?>
+                        <?= $this->formElement($form->get('sbCard')); ?>
+                        <?= $this->formElementErrors($form->get('sbCard')); ?>                  
+                    </div>
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('sbpMerchantId')); ?>
+                        <?= $this->formElement($form->get('sbpMerchantId')); ?>
+                        <?= $this->formElementErrors($form->get('sbpMerchantId')); ?>                  
+                    </div>
+                </div>
+                <div class="col-md-6">                
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('region')); ?>
+                        <?= $this->formElement($form->get('region')); ?>
+                        <?= $this->formElementErrors($form->get('region')); ?>                  
                     </div>
 
                     <div class="form-group">
@@ -85,38 +103,30 @@ $form->prepare();
                         <?= $this->formElement($form->get('shippingLimit2')); ?>
                         <?= $this->formElementErrors($form->get('shippingLimit2')); ?>                  
                     </div>
-
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('sbCard')); ?>
-                        <?= $this->formElement($form->get('sbCard')); ?>
-                        <?= $this->formElementErrors($form->get('sbCard')); ?>                  
-                    </div>
-        
                     <div class="form-group">
                         <?= $this->formLabel($form->get('sbOwner')); ?>
                         <?= $this->formElement($form->get('sbOwner')); ?>
                         <?= $this->formElementErrors($form->get('sbOwner')); ?>                  
                     </div>
-        
                     <div class="form-group">
                         <?= $this->formLabel($form->get('status')); ?>
                         <?= $this->formElement($form->get('status')); ?>
                         <?= $this->formElementErrors($form->get('status')); ?>                  
                     </div>
-        
-                    <?= $this->formElement($form->get('csrf')); ?>
-                </div>
+                </div>    
             </div>
         </div>    
+    </div>
+</div>    
         
-        <?= $this->form()->closeTag(); ?>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="office-submit">Сохранить</button>
+</div>
         
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-            <button type="button" class="btn btn-primary" id="office-submit">Сохранить</button>
-        </div>
+<?= $this->formElement($form->get('csrf')); ?>
+<?= $this->form()->closeTag(); ?>
         
-
 <script>
     $('#office-submit').on('click', function() {
         $.ajax({
