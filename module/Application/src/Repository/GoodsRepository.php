@@ -1088,7 +1088,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('u.name, u.nameTd')
             ->from(Goods::class, 'g')
             ->join('g.producer', 'p')    
-            ->join('p.uncnownProducer', 'u')    
+            ->join('p.unknownProducer', 'u')    
             ->where('g.id = ?1')
             ->setParameter('1', $goodId) 
                 ;

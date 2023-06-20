@@ -54,8 +54,7 @@ class PtController extends AbstractActionController
         return new ViewModel([
             'offices' => $offices,
             'companies' => $companies,
-            'years' => array_combine(range(date("Y"), 2014), range(date("Y"), 2014)),
-            'monthes' => array_combine(range(1, 12), range(1, 12)),
+            'allowDate' => $this->ptManager->getAllowDate(),
         ]);  
     }
         
