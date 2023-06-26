@@ -32,6 +32,7 @@ class Vt {
     const STATUS_RETIRED      = 2; // Retired.
     const STATUS_COMMISSION   = 3; // commission.
     const STATUS_DEFECT       = 4; // брак.
+    const STATUS_WAIT         = 5; // ожидает поставки.
    
      // Ptu status doc constants.
     const STATUS_DOC_RECD       = 1; // Получено.
@@ -212,8 +213,9 @@ class Vt {
         return [
             self::STATUS_ACTIVE => 'Активный',
             self::STATUS_RETIRED => 'Удален',
-            self::STATUS_COMMISSION => 'На комиссии',
+            self::STATUS_COMMISSION => 'На комиссию',
             self::STATUS_DEFECT => 'Брак',
+            self::STATUS_WAIT => 'Ожидание доставки',
         ];
     }    
     
@@ -241,6 +243,7 @@ class Vt {
             self::STATUS_RETIRED => 0,
             self::STATUS_COMMISSION => 1,
             self::STATUS_DEFECT => 1,
+            self::STATUS_WAIT => 1,
         ];
     }    
     
@@ -269,6 +272,7 @@ class Vt {
             self::STATUS_RETIRED => 0,
             self::STATUS_COMMISSION => 1,
             self::STATUS_DEFECT => 1,
+            self::STATUS_WAIT => 1,
         ];
     }    
     

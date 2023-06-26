@@ -548,6 +548,7 @@ $legalContact = $client->getLegalContact();
             case '<?= Order::STATUS_DELIVERY?>': 
             case '<?= Vt::STATUS_COMMISSION?>': 
             case '<?= Vt::STATUS_DEFECT?>': 
+            case '<?= Vt::STATUS_WAIT?>': 
                         return {classes: 'info '+retired}; break;
             case '<?= Order::STATUS_CONFIRMED?>': 
                         return {classes: retired, css: {"background-color": "linen"}}; break;
@@ -569,6 +570,7 @@ $legalContact = $client->getLegalContact();
                 return {classes: 'warning '+retired};
             case '<?= Vt::STATUS_COMMISSION?>': 
             case '<?= Vt::STATUS_DEFECT?>': 
+            case '<?= Vt::STATUS_WAIT?>': 
                         return {classes: 'info '+retired}; break;
             case '<?= Vt::STATUS_RETIRED?>': 
                         return {classes: 'retired '+retired}; break;

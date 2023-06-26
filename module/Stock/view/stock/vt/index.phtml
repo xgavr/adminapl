@@ -92,6 +92,9 @@
         if (row.status === '<?= Vt::STATUS_DEFECT?>'){
            retired += ' info';
         }
+        if (row.status === '<?= Vt::STATUS_WAIT?>'){
+           retired += ' info';
+        }
         if (row.statusAccount === '<?= Vt::STATUS_TAKE_NO?>'){
            retired = ' warning';
         }

@@ -1,0 +1,862 @@
+<?php
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ * 
+ * https://enter.tochka.com/doc/v1/payment.html#id2
+ */
+
+namespace Bank\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use User\Entity\User;
+use Company\Entity\BankAccount;
+use Application\Entity\Supplier;
+
+/**
+ * Description of QrCode
+ * 
+ * @ORM\Entity(repositoryClass="\Bank\Repository\QrCodeRepository")
+ * @ORM\Table(name="bank_payment")
+ * @author Daddy
+ */
+class QrCode {
+    
+
+    const STATUS_ACTIVE = 1; //данные новые
+    const STATUS_TRANSFER = 2; //данные переданы
+    const STATUS_SUCCESS = 3; //данные получены
+    const STATUS_RETIRED = 4; //данные удалены
+    const STATUS_ERROR = 5; //ошибка в данных
+    
+    const PAYMENT_TYPE_NORMAL = 1; //обычный платеж
+    const PAYMENT_TYPE_TAX = 2; // налог
+    
+    const NDS_NO = 1; //без НДС
+    const NDS_10 = 10; // НДС 20%
+    const NDS_20 = 20; // НДС 20%
+    
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(name="id")   
+     */
+    protected $id;
+              
+    /**
+     * Уникальный и неизменный идентификатор счёта юрлица
+     * @ORM\Column(name="account")   
+     */
+    protected $account;
+
+    /**
+     * Идентификатор ТСП в СБП (12 символов)
+     * @ORM\Column(name="merchant_id")   
+     */
+    protected $merchantId;
+   
+    /** 
+     * Сумма в копейках
+     * @ORM\Column(name="amount")  
+     */
+    protected $amount;
+
+    /** 
+     * Валюта операции
+     * @ORM\Column(name="currency")  
+     */
+    protected $currency;
+
+    /** 
+     * Дополнительная информация от ТСП - номер заказа
+     * @ORM\Column(name="payment_purpose")  
+     */
+    protected $paymentPurpose;
+
+    /** 
+     * Тип QR-кода
+     * @ORM\Column(name="qrc_type")  
+     */
+    protected $qrcType;
+
+    /**
+     * Идентификатор QR-кода в СБП
+     * @ORM\Column(name="qrc_id")   
+     */
+    protected $qrcId;
+
+    /** 
+     * Payload зарегистрированного QR-кода в СБП
+     * @ORM\Column(name="payload")  
+     */
+    protected $payload;
+
+    /** 
+     * Ширина изображения (>=200, по умолчанию: 300)
+     * @ORM\Column(name="image_width")  
+     */
+    protected $imageWidth;
+
+    /** 
+     * Высота изображения (>=200, по умолчанию: 300)
+     * @ORM\Column(name="image_hieght")  
+     */
+    protected $imageHeight;
+
+    /** 
+     * Тип контента
+     * @ORM\Column(name="image_media_type")  
+     */
+    protected $imageMediaType;
+
+    /** 
+     * содержимое изображения (для image/png - в кодировке base64)
+     * @ORM\Column(name="image_content")  
+     */
+    protected $imageContent;
+
+    /** 
+     * название источника (системы создавшей QR-код)
+     * @ORM\Column(name="sourceName")  
+     */
+    protected $sourceName;
+
+    /** 
+     * Период использования QR-кода в минутах
+     * @ORM\Column(name="ttl")  
+     */
+    protected $ttl;
+
+    /** 
+     * @ORM\Column(name="date_created")  
+     */
+    protected $dateCreated;
+    
+    /** 
+     * Статус объекта
+     * @ORM\Column(name="status")  
+     */
+    protected $status;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\BankAccount", inversedBy="qrcodes") 
+     * @ORM\JoinColumn(name="bank_account_id", referencedColumnName="id")
+     */
+    protected $bankAccount;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="qrcodes") 
+     * @ORM\JoinColumn(name="bank_account_id", referencedColumnName="id")
+     */
+    protected $office;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Order", inversedBy="qrcodes") 
+     * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+     */
+    protected $order;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Contact", inversedBy="qrcodes") 
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
+     */
+    protected $contact;
+    
+        
+    /**
+     * Возвращает Id
+     * @return int
+     */    
+    public function getId() 
+    {
+        return $this->id;
+    }
+
+    /**
+     * Устанавливает Id
+     * @param int $id
+     */
+    public function setId($id) 
+    {
+        $this->id = $id;
+    }     
+
+    /**
+     * Возвращает расчетный счет.
+     * @return string
+     */
+    public function getCounterpartyAccountNumber() 
+    {
+        return $this->counterpartyAccountNumber;
+    }
+
+    /**
+     * Устанавливает расчетный счет
+     * @param string $counterpartyAccountNumber
+     */
+    public function setCounterpartyAccountNumber($counterpartyAccountNumber) 
+    {
+        $this->counterpartyAccountNumber = $counterpartyAccountNumber;
+    }     
+
+    /**
+     * Возвращает БИК.
+     * @return string
+     */
+    public function getCounterpartyBankBik() 
+    {
+        return $this->counterpartyBankBik;
+    }
+
+    /**
+     * Устанавливает БИК
+     * @param string $counterpartyBankBik
+     */
+    public function setCounterpartyBankBik($counterpartyBankBik) 
+    {
+        $this->counterpartyBankBik = $counterpartyBankBik;
+    }     
+
+
+    /**
+     * Возвращает инн.
+     * @return string
+     */
+    public function getСounterpartyInn() 
+    {
+        return $this->counterpartyInn;
+    }
+
+    /**
+     * Устанавливает инн
+     * @param string $counterpartyInn
+     */
+    public function setCounterpartyInn($counterpartyInn) 
+    {
+        $this->counterpartyInn = $counterpartyInn;
+    }     
+
+    /**
+     * Возвращает кпп.
+     * @return string
+     */
+    public function getСounterpartyKpp() 
+    {
+        return ($this->counterpartyKpp) ? $this->counterpartyKpp:'';
+    }
+
+    /**
+     * Устанавливает кпп
+     * @param string $counterpartyKpp
+     */
+    public function setCounterpartyKpp($counterpartyKpp) 
+    {
+        $this->counterpartyKpp = $counterpartyKpp;
+    }     
+
+    /**
+     * Возвращает имя.
+     * @return string
+     */
+    public function getCounterpartyName() 
+    {
+        return $this->counterpartyName;
+    }
+
+    /**
+     * Устанавливает имя
+     * @param string $counterpartyName
+     */
+    public function setCounterpartyName($counterpartyName) 
+    {
+        $this->counterpartyName = $counterpartyName;
+    }     
+
+    /**
+     * Возвращает сумму.
+     * @return float
+     */
+    public function getAmount() 
+    {
+        return $this->amount;
+    }
+
+    /**
+     * Возвращает сумму.
+     * @param string $delimeter
+     * @return float
+     */
+    public function getFormatAmount($delimeter = ',') 
+    {
+        return number_format($this->amount, 2, $delimeter, '');
+    }
+
+    /**
+     * Устанавливает сумму
+     * @param float $amount
+     */
+    public function setAmount($amount) 
+    {
+        $this->amount = $amount;
+    }     
+    
+    /**
+     * Возвращает paymentDate.
+     * @return date
+     */
+    public function getPaymentDate() 
+    {
+        return $this->paymentDate;
+    }
+
+    /**
+     * Возвращает paymentDate в формате банка.
+     * @return date
+     */
+    public function getFormatPaymentDate() 
+    {
+        return date('d.m.Y', strtotime($this->paymentDate));
+    }
+
+    /**
+     * Устанавливает paymentDate
+     * @param date $paymentDate
+     */
+    public function setPaymentDate($paymentDate) 
+    {
+        $this->paymentDate = date('Y-m-d', strtotime($paymentDate));
+    }     
+    
+    /**
+     * Возвращает paymentPriority.
+     * @return string
+     */
+    public function getPaymentPriority() 
+    {
+        return $this->paymentPriority;
+    }
+
+    /**
+     * Устанавливает paymentPriority
+     * @param string $paymentPriority
+     */
+    public function setPaymentPriority($paymentPriority) 
+    {
+        $this->paymentPriority = $paymentPriority;
+    }     
+    
+    /**
+     * Возвращает назначение платежа.
+     * @return string
+     */
+    public function getPaymentPurpose() 
+    {
+        return $this->purpose;
+    }
+
+    /**
+     * Устанавливает назначение платежа
+     * @param string $purpose
+     */
+    public function setPurpose($purpose) 
+    {
+        $this->purpose = $purpose;
+    }     
+
+    /**
+     * Возвращает опциональное поле.
+     * @return string
+     */
+    public function getPaymentPurposeCode() 
+    {
+        return $this->purposeCode;
+    }
+
+    /**
+     * Устанавливает опциональное поле
+     * @param string $purposeCode
+     */
+    public function setPurposeCode($purposeCode) 
+    {
+        $this->purposeCode = $purposeCode;
+    }     
+
+    /**
+     * Возвращает supplierBillId.
+     * @return string
+     */
+    public function getSupplierBillId() 
+    {
+        return ($this->supplierBillId) ? $this->supplierBillId:0;
+    }
+
+    /**
+     * Устанавливает supplierBillId
+     * @param string $supplierBillId
+     */
+    public function setSupplierBillId($supplierBillId) 
+    {
+        $this->supplierBillId = $supplierBillId;
+    }     
+    
+    /**
+     * Возвращает taxInfoDocumentDate.
+     * @return date
+     */
+    public function getTaxInfoDocumentDate() 
+    {
+        return ($this->taxInfoDocumentDate) ? $this->taxInfoDocumentDate:0;
+    }
+
+    /**
+     * Устанавливает taxInfoDocumentDate
+     * @param date $taxInfoDocumentDate
+     */
+    public function setTaxInfoDocumentDate($taxInfoDocumentDate) 
+    {
+        $this->taxInfoDocumentDate = $taxInfoDocumentDate;
+    }     
+    
+    /**
+     * Возвращает taxInfoDocumentNumber.
+     * @return string
+     */
+    public function getTaxInfoDocumentNumber() 
+    {
+        return ($this->taxInfoDocumentDate) ? $this->taxInfoDocumentDate:0;
+    }
+
+    /**
+     * Устанавливает taxInfoDocumentNumber
+     * @param string $taxInfoDocumentNumber
+     */
+    public function setTaxInfoDocumentNumber($taxInfoDocumentNumber) 
+    {
+        $this->taxInfoDocumentNumber = $taxInfoDocumentNumber;
+    }     
+    
+    /**
+     * Возвращает taxInfoKbk.
+     * @return string
+     */
+    public function getTaxInfoKbk() 
+    {
+        return ($this->taxInfoKbk) ? $this->taxInfoKbk:'';
+    }
+
+    /**
+     * Устанавливает taxInfoKbk
+     * @param string $taxInfoKbk
+     */
+    public function setTaxInfoKbk($taxInfoKbk) 
+    {
+        $this->taxInfoKbk = $taxInfoKbk;
+    }     
+
+    /**
+     * Возвращает taxInfoOkato.
+     * @return string
+     */
+    public function getTaxInfoOkato() 
+    {
+        return ($this->taxInfoOkato) ? $this->taxInfoOkato:'';
+    }
+
+    /**
+     * Устанавливает taxInfoOkato
+     * @param string $taxInfoOkato
+     */
+    public function setTaxInfoOkato($taxInfoOkato) 
+    {
+        $this->taxInfoOkato = $taxInfoOkato;
+    }     
+    
+    /**
+     * Возвращает taxInfoPeriod.
+     * @return string
+     */
+    public function getTaxInfoPeriod() 
+    {
+        return ($this->taxInfoPeriod) ? $this->taxInfoPeriod:'';
+    }
+
+    /**
+     * Устанавливает taxInfoPeriod
+     * @param string $taxInfoPeriod
+     */
+    public function setTaxInfoPeriod($taxInfoPeriod) 
+    {
+        $this->taxInfoPeriod = $taxInfoPeriod;
+    }     
+    
+    /**
+     * Возвращает taxInfoReasonCode.
+     * @return string
+     */
+    public function getTaxInfoReasonCode() 
+    {
+        return ($this->taxInfoReasonCode) ? $this->taxInfoReasonCode:'ТП';
+    }
+
+    /**
+     * Устанавливает taxInfoReasonCode
+     * @param string $taxInfoReasonCode
+     */
+    public function setTaxInfoReasonCode($taxInfoReasonCode) 
+    {
+        $this->taxInfoReasonCode = $taxInfoReasonCode;
+    }     
+    
+    /**
+     * Возвращает taxInfoStatus.
+     * @return string
+     */
+    public function getTaxInfoStatus() 
+    {
+        return ($this->taxInfoStatus) ? $this->taxInfoStatus:'08';
+    }
+
+    /**
+     * Устанавливает taxInfoStatus
+     * @param string $taxInfoStatus
+     */
+    public function setTaxInfoStatus($taxInfoStatus) 
+    {
+        $this->taxInfoStatus = $taxInfoStatus;
+    }     
+    
+    /**
+     * Возвращает сообщение от банка.
+     * @return string
+     */
+    public function getStatusMessage() 
+    {
+        return $this->statusMessage;
+    }
+
+    /**
+     * Устанавливает сообщение от банка
+     * @param string $statusMessage
+     */
+    public function setStatusMessage($statusMessage) 
+    {
+        $this->statusMessage = $statusMessage;
+    }     
+
+    /**
+     * Возвращает код ответа банка.
+     * @return string
+     */
+    public function getRequestId() 
+    {
+        return $this->requestId;
+    }
+
+    /**
+     * Устанавливает код ответа банка
+     * @param string $requestId
+     */
+    public function setRequestId($requestId) 
+    {
+        $this->requestId = $requestId;
+    }     
+
+    /**
+     * Returns the date of payment creation.
+     * @return string     
+     */
+    public function getDateCreated() 
+    {
+        return $this->dateCreated;
+    }
+    
+    /**
+     * Sets the date when this payment was created.
+     * @param string $dateCreated     
+     */
+    public function setDateCreated($dateCreated) 
+    {
+        $this->dateCreated = $dateCreated;
+    }    
+    
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 'Новый',
+            self::STATUS_TRANSFER => 'Отправлен в банк',
+            self::STATUS_SUCCESS => 'Проведен',
+            self::STATUS_RETIRED => 'Отменен',
+            self::STATUS_ERROR => 'Ошибка',
+        ];
+    }    
+    
+    /**
+     * Returns status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets status.
+     * @param int $status     
+     */
+    public function setStatus($status) 
+    {
+        $this->status = $status;
+    }   
+
+    /**
+     * Returns pyamentType.
+     * @return int     
+     */
+    public function getPaymentType() 
+    {
+        return $this->paymentType;
+    }
+
+    /**
+     * Returns possible payment types as array.
+     * @return array
+     */
+    public static function getPaymentTypeList() 
+    {
+        return [
+            self::PAYMENT_TYPE_NORMAL => 'Обычный',
+            self::PAYMENT_TYPE_TAX => 'Налог',
+        ];
+    }    
+    
+    /**
+     * Returns payment type as string.
+     * @return string
+     */
+    public function getPaymentTypeAsString()
+    {
+        $list = self::getPaymentTypeList();
+        if (isset($list[$this->paymentType]))
+            return $list[$this->paymentType];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets payment type.
+     * @param int $paymentType     
+     */
+    public function setPaymentType($paymentType) 
+    {
+        $this->paymentType = $paymentType;
+    }   
+
+    /**
+     * Returns НДС.
+     * @return int     
+     */
+    public function getNds() 
+    {
+        return $this->nds;
+    }
+
+    /**
+     * Returns possible nds as array.
+     * @return array
+     */
+    public static function getNdsList() 
+    {
+        return [
+            self::NDS_NO => 'без НДС',
+            self::NDS_10 => 'в т.ч. НДС 10%',
+            self::NDS_20 => 'в т.ч. НДС 20%',
+        ];
+    }    
+    
+    /**
+     * Returns possible nds percent as array.
+     * @return array
+     */
+    public static function getNdsPercentList() 
+    {
+        return [
+            self::NDS_NO => 'без НДС',
+            self::NDS_10 => '10%',
+            self::NDS_20 => '20%',
+        ];
+    }    
+
+    /**
+     * Расчитать ндс
+     * @param float $amount
+     * @param integer $nds
+     */
+    public static function nds($amount, $nds) 
+    {
+        switch ($nds){
+            case Payment::NDS_10:
+                return round($amount*10/110, 2);
+            case Payment::NDS_20:
+                return round($amount*20/120, 2);
+            default: return 0;    
+        }
+        
+        return;
+    }
+
+
+    /**
+     * Returns nds as string.
+     * @return string
+     */
+    public function getNdsAsString()
+    {
+        $list = self::getNdsList();
+        if (isset($list[$this->nds]))
+            return $list[$this->nds];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Returns nds percent as string.
+     * @return string
+     */
+    public function getNdsPercentAsString()
+    {
+        $list = self::getNdsPercentList();
+        if (isset($list[$this->nds]))
+            return $list[$this->nds];
+        
+        return 'Unknown';
+    }    
+
+    /**
+     * Sets nds.
+     * @param int $nds     
+     */
+    public function setNds($nds) 
+    {
+        $this->nds = $nds;
+    }   
+
+    /**
+     * Возвращает расчетный счет.
+     * @return BankAccount
+     */
+    public function getBankAccount() 
+    {
+        return $this->bankAccount;
+    }
+
+    /**
+     * Устанавливает расчетный счет
+     * @param BankAccount $bankAccount
+     */
+    public function setBankAccount($bankAccount) 
+    {
+        $this->bankAccount = $bankAccount;
+    }     
+
+    /**
+     * Возвращает supplier.
+     * @return Supplier
+     */
+    public function getSupplier() 
+    {
+        return $this->supplier;
+    }
+
+    /**
+     * Возвращает supplier id.
+     * @return Supplier
+     */
+    public function getSupplierId() 
+    {
+        if ($this->supplier){
+            return $this->supplier->getId();
+        }
+        
+        return;
+    }
+    /**
+     * Устанавливает supplier
+     * @param Supplier $supplier
+     */
+    public function setSupplier($supplier) 
+    {
+        if ($supplier instanceof Supplier){
+            $this->supplier = $supplier;
+        } else {
+            $this->supplier = null;
+        }    
+    }     
+
+    /**
+     * Возвращает user.
+     * @return User
+     */
+    public function getUser() 
+    {
+        return $this->user;
+    }
+
+    /**
+     * Устанавливает user
+     * @param User $user
+     */
+    public function setUser($user) 
+    {
+        $this->user = $user;
+    }     
+    
+    /**
+     * Данные в форму
+     * @return array 
+     */
+    public function toLog()
+    {
+        return [
+            'bankAccount' => $this->getBankAccount()->getId(),
+            'supplier' => $this->getSupplierId(),
+            'counterpartyAccountNumber' => $this->getCounterpartyAccountNumber(),
+            'counterpartyBankBik' => $this->getCounterpartyBankBik(),
+            'counterpartyInn' => $this->getСounterpartyInn(),
+            'counterpartyKpp' => $this->getСounterpartyKpp(),
+            'counterpartyName' => $this->getCounterpartyName(),
+            'amount' => $this->getAmount(),
+            'paymentDate' => $this->getPaymentDate(),
+            'purpose' => $this->getPaymentPurpose(),
+            'nds' => $this->getNds(),
+            'supplierBillId' => $this->getSupplierBillId(),
+            'taxInfoDocumentDate' => $this->getTaxInfoDocumentDate(),
+            'taxInfoDocumentNumber' => $this->getTaxInfoDocumentNumber(),
+            'taxInfoKbk' => $this->getTaxInfoKbk(),
+            'taxInfoOkato' => $this->getTaxInfoOkato(),
+            'taxInfoPeriod' => $this->getTaxInfoPeriod(),
+            'taxInfoReasonCode' => $this->getTaxInfoReasonCode(),
+            'taxInfoStatus' => $this->getTaxInfoStatus(),
+            'status' => $this->getStatus(),
+            'paymentType' => $this->getPaymentType(),            
+        ];
+    }
+}

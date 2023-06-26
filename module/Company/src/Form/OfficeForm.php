@@ -101,7 +101,7 @@ class OfficeForm extends Form implements ObjectManagerAwareInterface
                 'id' => 'sbpMerchantId'
             ],
             'options' => [
-                'label' => 'Идентификатор ТСП в СПБ',
+                'label' => 'Идентификатор ТСП в СБП',
             ],
         ]);
         

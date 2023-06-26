@@ -442,6 +442,7 @@ class Movement {
             case Vt::STATUS_RETIRED: return self::STATUS_RETIRED;
             case Vt::STATUS_COMMISSION: return self::STATUS_COMMISSION;    
             case Vt::STATUS_DEFECT: return self::STATUS_COMMISSION;    
+            case Vt::STATUS_WAIT: return self::STATUS_COMMISSION;    
             default: return self::STATUS_ACTIVE;    
         }
     }    

@@ -80,6 +80,9 @@ $disabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
         if (row.status == '<?= Vt::STATUS_DEFECT ?>'){
            retired += ' info';
         }
+        if (row.status == '<?= Vt::STATUS_WAIT ?>'){
+           retired += ' info';
+        }
         
         return {classes: retired};
     }
@@ -134,6 +137,9 @@ $disabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
         }
         if (value == '<?= Vt::STATUS_DEFECT?>'){
             return 'Брак';
+        }
+        if (value == '<?= Vt::STATUS_WAIT?>'){
+            return 'Ожидание доставки';
         }
         return '';
     }

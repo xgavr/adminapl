@@ -143,7 +143,7 @@ class LegalForm extends Form
                 'id' => 'sbpLegalId'
             ],
             'options' => [
-                'label' => 'Код в СПБ',
+                'label' => 'Код в СБП',
             ],
         ]);
 

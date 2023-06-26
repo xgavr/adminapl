@@ -106,7 +106,7 @@ class SbpManager {
         $client->setRawBody(Encoder::encode($data));
         $client->setOptions(['timeout' => 60]);
         
-//        var_dump($this->auth->getUri2('payment', 'for-sign')); exit;
+        var_dump($client->getUri()); exit;
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([

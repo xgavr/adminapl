@@ -181,6 +181,7 @@ $this->pageBreadcrumbs()->setItems([
                         return {classes: 'retired '+retired}; break;
                     case '<?= Vt::STATUS_COMMISSION?>': 
                     case '<?= Vt::STATUS_DEFECT?>': 
+                    case '<?= Vt::STATUS_WAIT?>': 
                         return {classes: 'info '+retired}; break;
                     default:break;     
                 }; break;

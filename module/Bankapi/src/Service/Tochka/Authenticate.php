@@ -25,6 +25,7 @@ class Authenticate {
     
     const URI_PRODUCTION = 'https://enter.tochka.com';
     const URI_PRODUCTION2 = 'https://enter.tochka.com/uapi/';
+    const URI_SANDBOX2 = 'https://enter.tochka.com/sandbox/v2/';
     const URI_DEBUGGING = 'https://private-anon-b91c8e0e22-tochka.apiary-proxy.com';
     const MODE_API = 'api';
     const MODE_API2 = 'uapi';
@@ -36,6 +37,8 @@ class Authenticate {
     const TOKEN_AUTH = 'authorization_code';
     const TOKEN_ACCESS = 'access_token';
     const TOKEN_REFRESH = 'refresh_token';
+
+    const TOKEN_ACCESS_SANDBOX = 'working_token';
     
     const TOKEN_FILENAME = 'bankapi_tochka.php'; //файл, где хранятся токены
     
@@ -92,8 +95,10 @@ class Authenticate {
         $this->token_dir = $authParams['token_dir'];
         $this->permanent_access_token = $authParams['access_token'];
 
-        if ($authParams['debug']){
+        if (file_exists('./config/development.config.php')) {
             $this->uri = self::URI_DEBUGGING;
+            $this->uri2 = self::URI_SANDBOX2;
+            $this->permanent_access_token = self::TOKEN_ACCESS_SANDBOX;
         } else {
             $this->uri = self::URI_PRODUCTION;
             $this->uri2 = self::URI_PRODUCTION2;

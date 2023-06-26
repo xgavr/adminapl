@@ -567,6 +567,7 @@ class RegisterRepository extends EntityRepository
                             $orX->add($queryBuilder->expr()->eq('vtp.status', Vtp::STATUS_COMMISSION));
                             $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_COMMISSION));
                             $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_DEFECT));
+                            $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_WAIT));
                             break;
                         case Register::STATUS_TAKE_NO:
                             $orX->add($queryBuilder->expr()->eq('pt.statusAccount', Pt::STATUS_TAKE_NO));
@@ -662,6 +663,7 @@ class RegisterRepository extends EntityRepository
                             $orX->add($queryBuilder->expr()->eq('o.status', Ot::STATUS_COMMISSION));
                             $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_COMMISSION));
                             $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_DEFECT));
+                            $orX->add($queryBuilder->expr()->eq('v.status', Vt::STATUS_WAIT));
                             break;
                         case Register::STATUS_TAKE_NO:
                             $orX->add($queryBuilder->expr()->eq('pt.statusAccount', Pt::STATUS_TAKE_NO));
