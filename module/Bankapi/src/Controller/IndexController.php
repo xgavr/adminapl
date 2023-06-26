@@ -9,6 +9,7 @@ namespace Bankapi\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
 
 class IndexController extends AbstractActionController
 {
@@ -21,14 +22,21 @@ class IndexController extends AbstractActionController
 
     /**
      * Statement manager.
-     * @var Bankapi\Service\Tochka\Statement
+     * @var \Bankapi\Service\Tochka\Statement
      */
     private $tochkaStatement;    
 
-    public function __construct($tochkaAuth, $tochkaStatement) 
+    /**
+     * Sbp manager.
+     * @var \Bankapi\Service\Tochka\SbpManager
+     */
+    private $sbpManager;    
+
+    public function __construct($tochkaAuth, $tochkaStatement, $sbpManager) 
     {
         $this->tochkaAuth = $tochkaAuth;
         $this->tochkaStatement = $tochkaStatement;        
+        $this->sbpManager = $sbpManager;        
     }   
     
     public function indexAction()
@@ -104,4 +112,14 @@ class IndexController extends AbstractActionController
                 'result' => $result,
             ]);
     }    
+    
+    public function registerQrCodeAction()
+    {
+        $account = 
+        $result = $this->sbpManager->registerQrCode($account, $merchant_id, $data);
+
+        return new JsonModel([
+                'result' => $result,
+            ]);
+    }
 }

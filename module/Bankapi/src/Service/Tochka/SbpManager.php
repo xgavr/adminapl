@@ -106,7 +106,7 @@ class SbpManager {
         $client->setRawBody(Encoder::encode($data));
         $client->setOptions(['timeout' => 60]);
         
-        var_dump($client->getUri()); exit;
+//        var_dump($client->getUri()); exit;
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
@@ -126,19 +126,30 @@ class SbpManager {
     }
 
     /**
-     * Возвращает статус платежного поручения в банке
+     * Регистрация qr кода
+     * Data:
+     *  "amount": 0,
+        "currency": "RUB",
+        "paymentPurpose": "?",
+        "qrcType": "01",
+        "imageParams": {},
+        "sourceName": "string",
+        "ttl": 0
+     * @param string $account
+     * @param string $merchant_id
+     * @param array $data
      * 
-     * @param string $request_id
      * @return array|Exception
      */
-    public function paymentStatusV2($request_id)
+    public function registerQrCode($account, $merchant_id, $data)
     {
 //        var_dump($request_id); exit; 
         $this->auth->isAuth();
         $client = new Client();
-        $client->setUri($this->auth->getUri2('payment', 'status').'/'.$request_id);
+        $client->setUri($this->auth->getUri2('sbp', 'qr-code/merchant/'.$merchant_id.'/'.$account));
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
-        $client->setMethod('GET');
+        $client->setMethod('POST');
+        $client->setRawBody(Encoder::encode($data));
         $client->setOptions(['timeout' => 60]);
         
         $headers = $client->getRequest()->getHeaders();
