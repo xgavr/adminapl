@@ -1,0 +1,19 @@
+<strong>Module:</strong>        BankApi &raquo;
+<strong>Controller:</strong>    Index &raquo;
+<strong>Action:</strong>        RegisterSbpCode
+
+<?php // var_dump($result); ?>
+
+<p>
+    <?php if(!empty($result['Data'])):?>
+        <?php foreach($result['Data'] as $key=>$value):?>
+            <?php if ($key=='image'):?>
+                <div><img src="data:<?= $value['mediaType'] ?>;base64, <?= $value['content'] ?>" width="<?= $value['width'] ?>" height="<?= $value['height'] ?>" /></div>            
+            <?php else: ?>
+                <div>
+                    <strong><?= $key ?></strong>: <span><?= $value ?></span>
+                </div>    
+            <?php endif; ?>    
+        <?php endforeach; ?>
+    <?php endif; ?>    
+</p>

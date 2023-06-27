@@ -10,6 +10,7 @@ namespace Bankapi\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
+use Laminas\Json\Decoder;
 
 class IndexController extends AbstractActionController
 {
@@ -115,10 +116,26 @@ class IndexController extends AbstractActionController
     
     public function registerQrCodeAction()
     {
-        $account = 
+        $account = '40817810802000000008/044525999';
+        $merchant_id = 'MF0000000001';
+        $data = [
+            'Data' => [
+                "amount" => 0,
+                "currency" => "RUB",
+                "paymentPurpose" => "?",
+                "qrcType" => "01",
+                "imageParams" => [
+                    "width" => 200,
+                    "height" => 200,
+                    "mediaType" => "image/png"
+                ],
+                "sourceName" => "string",  
+                "ttl" => 0  
+            ],
+        ];
         $result = $this->sbpManager->registerQrCode($account, $merchant_id, $data);
-
-        return new JsonModel([
+        $this->layout()->setTemplate('layout/terminal');
+        return new ViewModel([
                 'result' => $result,
             ]);
     }
