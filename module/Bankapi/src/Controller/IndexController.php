@@ -120,16 +120,16 @@ class IndexController extends AbstractActionController
         $merchant_id = 'MF0000000001';
         $data = [
             'Data' => [
-                "amount" => 0,
+                "amount" => 1000,
                 "currency" => "RUB",
-                "paymentPurpose" => "?",
+                "paymentPurpose" => "Оплата заказа №452213",
                 "qrcType" => "01",
                 "imageParams" => [
                     "width" => 200,
                     "height" => 200,
                     "mediaType" => "image/png"
                 ],
-                "sourceName" => "string",  
+                "sourceName" => "452213",  
                 "ttl" => 0  
             ],
         ];
