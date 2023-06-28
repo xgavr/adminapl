@@ -30,14 +30,16 @@ final class Version20230620042855 extends AbstractMigration
         $table->addColumn('image_media_type', 'string', ['notnull'=>true, 'length' => 24, 'comment' => 'Тип контента']);
         $table->addColumn('image_content', 'text', ['notnull'=>true, 'length' => 512, 'comment' => 'Содержимое изображения']);
         $table->addColumn('source_name', 'string', ['notnull'=>false, 'length' => 24, 'comment' => 'Название источника']);
+        $table->addColumn('order_apl_id', 'integer', ['notnull'=>false, 'comment' => 'Номер заказа в Апл']);
         $table->addColumn('ttl', 'integer', ['notnull'=>true, 'default' => 0, 'comment' => 'Период использования QR-кода в минутах']);
         $table->addColumn('status', 'integer', ['notnull'=>true, 'comment' => 'Статус объекта', 'default' => QrCode::STATUS_ACTIVE]);        
-        $table->addColumn('bank_account_id', 'integer', ['notnull'=>true]);
+        $table->addColumn('bank_account_id', 'integer', ['notnull'=>false]);
         $table->addColumn('office_id', 'integer', ['notnull'=>true]);
         $table->addColumn('order_id', 'integer', ['notnull'=>false]);
         $table->addColumn('contact_id', 'integer', ['notnull'=>false]);
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['qrc_id']);
+        $table->addIndex(['order_apl_id', 'amount']);
         $table->addForeignKeyConstraint('bank_account', ['bank_account_id'], ['id'], 
                 ['onUpdate'=>'CASCADE', 'onDelete'=>'CASCADE'], 'ba_id_qrcode_ba_id_fk');
         $table->addForeignKeyConstraint('office', ['office_id'], ['id'], 

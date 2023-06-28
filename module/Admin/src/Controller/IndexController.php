@@ -26,6 +26,8 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Admin\Form\ProducerUnionForm;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
+use Admin\Form\SbpSettings;
+use Company\Entity\BankAccount;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -853,6 +855,61 @@ class IndexController extends AbstractActionController
                 $this->flashMessenger()->addInfoMessage(
                         'Настройки не сохранены.');                
             }
+        }
+        
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+    
+    /**
+     * Управление настройками оплат по СБП
+     * 
+     * @return ViewModel
+     */
+    public function sbpSettingsAction()
+    {
+        $form = new SbpSettings();
+    
+        $settings = $this->adminManager->getSbpSettings();
+        
+        $accounts = [0 => ''];
+        $bankAcounts = $this->entityManager->getRepository(BankAccount::class)
+                    ->findBy(['status' => BankAccount::STATUS_ACTIVE, 'statement' => BankAccount::STATEMENT_ACTIVE]);
+        foreach ($bankAcounts as $bankAccount) {
+            $accounts[$bankAccount->getId()] = $bankAccount->getNameWithShortRs();
+        }
+        $form->get('account')->setValueOptions($accounts);
+
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                //                 
+                $this->adminManager->setSbpSettings($data);
+                
+                $this->flashMessenger()->addSuccessMessage(
+                        'Настройки сохранены.');
+
+                $this->redirect()->toRoute('admin', ['action' => 'sbp-settings']);
+            } else {
+                $this->flashMessenger()->addInfoMessage(
+                        'Настройки не сохранены.');                
+            }
+        } else {
+            if ($settings){
+                $form->setData($settings);
+            }                
         }
         
         return new ViewModel([

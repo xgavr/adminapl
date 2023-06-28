@@ -21,7 +21,7 @@ use Application\Entity\Contact;
  * Description of QrCode
  * 
  * @ORM\Entity(repositoryClass="\Bank\Repository\QrCodeRepository")
- * @ORM\Table(name="bank_payment")
+ * @ORM\Table(name="qrcode")
  * @author Daddy
  */
 class QrCode {
@@ -125,6 +125,12 @@ class QrCode {
     protected $ttl;
 
     /** 
+     * Номер заказа в Апл
+     * @ORM\Column(name="order_apl_id")  
+     */
+    protected $orderAplId;
+
+    /** 
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;
@@ -220,6 +226,26 @@ class QrCode {
 
     public function getImageContent() {
         return $this->imageContent;
+    }
+    
+    public function getImg()
+    {
+        switch ($this->imageMediaType){
+            case 'image/png':
+                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='{$this->imageWidth}' height='{{$this->imageWidth}}'";
+        }
+        
+        return;
+    }
+
+    public function getCheckImg()
+    {
+        switch ($this->imageMediaType){
+            case 'image/png':
+                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='200' height='200'";
+        }
+        
+        return;
     }
 
     public function getSourceName() {
@@ -353,7 +379,15 @@ class QrCode {
         $this->ttl = $ttl;
     }
 
-        /**
+    public function getOrderAplId() {
+        return $this->orderAplId;
+    }
+
+    public function setOrderAplId($orderAplId): void {
+        $this->orderAplId = $orderAplId;
+    }
+
+    /**
      * Returns status.
      * @return int     
      */

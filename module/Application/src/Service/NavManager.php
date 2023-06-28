@@ -516,6 +516,12 @@ class NavManager
                     'link'  => $url('admin', ['action' => 'api-market-places'])                    
                 ];
 
+                $settingsDropDownItems[] = [
+                    'id' => 'sbpSettings',
+                    'label' => 'Настройи оплат по СБП',
+                    'link'  => $url('admin', ['action' => 'sbp-settings'])                    
+                ];
+
                 if (count($settingsDropDownItems)!=0) {
                     $items[] = [
                         'id' => 'settings',

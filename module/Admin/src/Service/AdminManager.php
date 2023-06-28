@@ -31,6 +31,7 @@ class AdminManager {
     const ZETASOFT_SETTINGS_FILE                    = './data/settings/zetasoft_config.php'; //файл с настройками abcp
     const PARTS_API_SETTINGS_FILE      = './data/settings/parts_api_config.php'; //файл с настройками abcp
     const API_MARKET_PLACES      = './data/settings/api_market_places.php'; //файл с настройками апи тп
+    const SBP_SETTINGS      = './data/settings/sbp_settings.php'; //файл с настройками сбп
     
     /**
      * Doctrine entity manager.
@@ -657,6 +658,55 @@ class AdminManager {
         $writer = new PhpArray();
         
         $writer->toFile(self::API_MARKET_PLACES, $config);
+    }
+
+    /**
+     * Получить настройки СБП
+     * 
+     * @return array
+     */
+    public function getSbpSettings()
+    {
+        if (file_exists(self::SBP_SETTINGS)){
+            $config = new Config(include self::SBP_SETTINGS);
+        }  else {
+            $config = new Config([], true);
+            $config->sbp_settings = [];
+        }   
+        
+        return $config->sbp_settings;
+    }
+
+    
+    /**
+     * Настройки СБП
+     * @param array $data
+     */
+    public function setSbpSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::SBP_SETTINGS)){
+            $config = new Config(include self::SBP_SETTINGS, true);
+        }  else {
+            $config = new Config([], true);
+            $config->sbp_settings = [];
+        }
+        
+        if (!isset($config->sbp_settings)){
+            $config->sbp_settings = [];
+        }
+        
+        $config->sbp_settings->legal_id = $data['legal_id'];
+        $config->sbp_settings->merchant_id = $data['merchant_id'];
+        $config->sbp_settings->account = $data['account'];
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::SBP_SETTINGS, $config);
+        
+        return;
     }
     
 }

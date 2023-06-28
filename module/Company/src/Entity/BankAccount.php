@@ -152,6 +152,11 @@ class BankAccount {
         return trim($this->name.' '.$this->city);
     }
 
+    public function getNameWithShortRs() 
+    {
+        return trim($this->name.' '.'***'.substr($this->rs, -4));
+    }
+
     public function setName($name) 
     {
         $this->name = $name;
@@ -186,6 +191,11 @@ class BankAccount {
     public function getShortRs() 
     {
         return '('.$this->getAccountTypeAsChar().')***'.substr($this->rs, -4);
+    }
+    
+    public function getSbpAccountId()
+    {
+        return $this->rs.'/'.$this->bik;
     }
 
     public function setRs($rs) 

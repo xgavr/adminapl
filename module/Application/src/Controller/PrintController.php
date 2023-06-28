@@ -15,7 +15,6 @@ use Application\Entity\Order;
 use Application\Entity\Client;
 use Stock\Entity\Vtp;
 
-
 class PrintController extends AbstractActionController
 {
     
@@ -30,8 +29,7 @@ class PrintController extends AbstractActionController
      * @var \Application\Service\PrintManager 
      */
     private $printManager;    
-    
-    
+            
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $printManager) 
     {
@@ -41,7 +39,6 @@ class PrintController extends AbstractActionController
     
     public function indexAction()
     {
-
         return new ViewModel([
             'printManager' => $this->printManager,
         ]);  

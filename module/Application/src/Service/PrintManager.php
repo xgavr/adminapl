@@ -35,6 +35,7 @@ use Application\Entity\Bid;
 use Application\Filter\NumToStr;
 use Application\Entity\Shipping;
 use Company\Entity\LegalLocation;
+use Bank\Entity\QrCode;
 
 
 /**
@@ -54,6 +55,12 @@ class PrintManager {
      */
     private $entityManager;
   
+    /**
+     * Менеджер СБП.
+     * @var \Bank\Service\SbpManager 
+     */
+    private $sbpManager;    
+    
     private function _getTemplateFolder()
     {
         return self::TEMPLATE_FOLDER;
@@ -69,9 +76,10 @@ class PrintManager {
     }        
         
   // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $sbpManager)
     {
         $this->entityManager = $entityManager;
+        $this->sbpManager = $sbpManager;
         
         $this->_addTemplatesFolder();
     }
@@ -1195,6 +1203,26 @@ class PrintManager {
     }    
     
     /**
+     * Получить QrCode для оплаты по СБП
+     * @param Order $order
+     * @return string
+     */
+    private function getQrCode($order)
+    {
+        if ($order->getAplId()){
+            $qrCode = $this->sbpManager->registerQrCode([
+                'amount' => $order->getTotal(),
+                'orderAplId' => $order->getAplId(),
+            ]);
+            if ($qrCode instanceof QrCode){
+                return $qrCode->getCheckImg();
+            }
+        }    
+        
+        return;
+    }
+    
+    /**
      * Товарный чек
      * @param Order $order
      * @param string $writerType
@@ -1211,7 +1239,7 @@ class PrintManager {
             mkdir($folder_name);
         }        
         
-        $content = file_get_contents(Order::TEMPLATE_CHECK);
+        $content = \file_get_contents(Order::TEMPLATE_CHECK);
         
         $out = []; $outShip = [];
         preg_match('|<tabparts>(.*)</tabparts>|Uis', $content, $out);
@@ -1235,6 +1263,7 @@ class PrintManager {
             '[Предоплата]' => 0,
             '[КОплате]' => number_format($order->getTotal(), 2, ',', ' '),
             '[КомментарийКЗаказу]' => $order->getInfoShipping(),
+            '[qrCode]' => $this->getQrCode($order),
         ];
         
         $tabData = [];
