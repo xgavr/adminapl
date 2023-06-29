@@ -298,7 +298,11 @@ class SbpManager
 //            var_dump($result);
             if (!empty($result['Data'])){
                 foreach ($result['Data']['paymentList'] as $payment){
-                    $this->updatePaymentStatus($payment['qrcId'], $payment);
+                    $qrCode = $this->entityManager->getRepository(QrCode::class)
+                            ->findOneBy(['qrcId' => $payment['qrcId']]);
+                    if ($qrCode){
+                        $this->updatePaymentStatus($qrCode, $payment);
+                    }    
                 }
             }
         }
