@@ -75,6 +75,42 @@ class SbpManager {
     }
 
     /**
+     * получения данных юрлица в Системе быстрых платежей.
+     * https://enter.tochka.com/uapi/sbp/{apiVersion}/legal-entity/{legalId}
+     * 
+     * @param string $legalId
+     * 
+     * @return array|Exception
+     */
+    public function getLegal($legalId)
+    {
+        $this->auth->isAuth();
+        $client = new Client();
+        $client->setUri($this->auth->getUri2('sbp', 'legal-entity/'.$legalId));
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
+        $client->setMethod('GET');
+        $client->setOptions(['timeout' => 60]);
+        
+//        var_dump($this->auth->getUri2('payment', 'for-sign')); exit;
+        
+        $headers = $client->getRequest()->getHeaders();
+        $headers->addHeaders([
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
+        ]);
+
+        $client->setHeaders($headers);
+        
+        $response = $client->send();
+        
+        if ($response->isOk()){
+            return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
+        }
+        
+        return $this->auth->exception($response);        
+    }    
+    
+    /**
      * Выполняет регистрацию юрлица в СБП.
      * https://enter.tochka.com/uapi/sbp/{apiVersion}/merchant/legal-entity/{legalId}
      * 

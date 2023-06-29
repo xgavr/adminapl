@@ -68,6 +68,17 @@ class SbpManager
     }
     
     /**
+     * Инфо о клиенте СБП
+     * @return array
+     */
+    public function getLegal()
+    {
+        $settings = $this->adminManager->getSbpSettings();
+
+        return $this->sbpManager->getLegal($settings['legal_id']);
+    }
+    
+    /**
      * Регистрация qrcode
      * 
      * @param array $data

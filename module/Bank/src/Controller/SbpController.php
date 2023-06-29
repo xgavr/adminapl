@@ -200,6 +200,15 @@ class SbpController extends AbstractActionController
         );           
     }
     
+    public function legalInfoAction()
+    {
+        $result = $this->sbpManager->getLegal();
+        
+        return new JsonModel(
+           $result
+        );           
+    }
+
     public function paymentStatusesAction()
     {
         $result = $this->sbpManager->updatePaymentStatuses();
