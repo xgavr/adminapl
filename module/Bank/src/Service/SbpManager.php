@@ -78,8 +78,13 @@ class SbpManager
      * @return Payment
      */
     public function registerQrCode($data)
-    {
+    {        
         $amount = round($data['amount']*100);
+        
+        if (empty($amount)){
+            return;
+        }
+        
         $qrCode = $this->entityManager->getRepository(QrCode::class)
                 ->qrCodeByOrderAplId($data['orderAplId'], $amount);
         if ($qrCode){
@@ -142,6 +147,7 @@ class SbpManager
                 $qrCode->setSourceName($qrCodeData['Data']['sourceName']);
                 $qrCode->setOrderAplId($data['orderAplId']);
                 $qrCode->setStatus($qrCode::STATUS_ACTIVE);
+                $qrCode->setPaymentStatus($qrCode::PAYMENT_NOT_STARTED);
                 $qrCode->setTtl($qrCodeData['Data']['ttl']);
                 
                 $order = $this->entityManager->getRepository(Order::class)
