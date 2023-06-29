@@ -239,9 +239,9 @@ class SbpManager
      */
     public function updatePaymentStatus($qrCode, $data) 
     {
-        $qrCode->setPaymentCode($data['code']);
-        $qrCode->setPaymentMessage($data['message']);
-        $qrCode->setPaymentTrxId($data['trxId']);
+        $qrCode->setPaymentCode(empty($data['code']) ? null:$data['code']);
+        $qrCode->setPaymentMessage(empty($data['message']) ? null:$data['message']);
+        $qrCode->setPaymentTrxId(empty($data['trxId']) ? null:$data['trxId']);
         
         switch ($data['status']){
             case 'NotStarted': $qrCode->setPaymentStatus(QrCode::PAYMENT_NOT_STARTED); break;
@@ -267,7 +267,7 @@ class SbpManager
             }
         }    
         
-        if ($qrCode->getDateCreated() > date('Y-m-d H:i:s', strtotime('- 3 days'))){
+        if ($qrCode->getDateCreated() < date('Y-m-d H:i:s', strtotime('- 3 days'))){
             $qrCode->setStatus(QrCode::STATUS_RETIRED);
         }
         
