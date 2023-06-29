@@ -28,7 +28,14 @@ class QrCode {
     
 
     const STATUS_ACTIVE = 1; //данные новые
+    const STATUS_SUSPENDED = 2; //данные приостановленны
     const STATUS_RETIRED = 9; //данные удалены
+
+    const PAYMENT_NOT_STARTED = 1; //операции по QR-коду не существует
+    const PAYMENT_RECEIVED = 2; //операция в обработке
+    const PAYMENT_IN_PROGRESS = 3; //операция в обработке
+    const PAYMENT_ACCEPTED = 4; //операция завершена успешно
+    const PAYMENT_REJECTED = 5; //операция отклонена
     
     const QR_Static = 1; //QR наклейка
     const QR_Dynamic  = 2; // QR на кассе
@@ -134,12 +141,36 @@ class QrCode {
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;
-    
+        
     /** 
      * Статус объекта
      * @ORM\Column(name="status")  
      */
     protected $status;
+
+    /** 
+     * Код платежа
+     * @ORM\Column(name="payment_code")  
+     */
+    protected $paymentCode;
+
+    /** 
+     * Сообщение статуса платежа
+     * @ORM\Column(name="payment_message")  
+     */
+    protected $paymentMessage;
+
+    /** 
+     * Идентификатор операции, инициированной Dynamic QR-кодом
+     * @ORM\Column(name="payment_trx_id")  
+     */
+    protected $paymentTrxId;
+
+    /** 
+     * Статус платежа
+     * @ORM\Column(name="payment_status")  
+     */
+    protected $paymentStatus;
 
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\BankAccount", inversedBy="qrcodes") 
@@ -387,6 +418,30 @@ class QrCode {
         $this->orderAplId = $orderAplId;
     }
 
+    public function getPaymentCode() {
+        return $this->paymentCode;
+    }
+
+    public function getPaymentMessage() {
+        return $this->paymentMessage;
+    }
+
+    public function getPaymentTrxId() {
+        return $this->paymentTrxId;
+    }
+
+    public function setPaymentCode($paymentCode) {
+        $this->paymentCode = $paymentCode;
+    }
+
+    public function setPaymentMessage($paymentMessage) {
+        $this->paymentMessage = $paymentMessage;
+    }
+
+    public function setPaymentTrxId($paymentTrxId) {
+        $this->paymentTrxId = $paymentTrxId;
+    }
+
     /**
      * Returns status.
      * @return int     
@@ -404,6 +459,7 @@ class QrCode {
     {
         return [
             self::STATUS_ACTIVE => 'Новый',
+            self::STATUS_SUSPENDED => 'Приостановлен',
             self::STATUS_RETIRED => 'Отменен',
         ];
     }    
@@ -428,6 +484,52 @@ class QrCode {
     public function setStatus($status) 
     {
         $this->status = $status;
+    }   
+
+    /**
+     * Returns payment status.
+     * @return int     
+     */
+    public function getPaymentStatus() 
+    {
+        return $this->paymentStatus;
+    }
+
+    /**
+     * Returns possible payment statuses as array.
+     * @return array
+     */
+    public static function getPaymentStatusList() 
+    {
+        return [
+            self::PAYMENT_NOT_STARTED => 'Операции по QR-коду не существует',
+            self::PAYMENT_RECEIVED => 'Операция в обработке',
+            self::PAYMENT_IN_PROGRESS => 'Операция в обработке',
+            self::PAYMENT_ACCEPTED => 'Операция завершена успешно',
+            self::PAYMENT_REJECTED => 'Операция отклонена',
+        ];
+    }    
+    
+    /**
+     * Returns payment status as string.
+     * @return string
+     */
+    public function getPaymentStatusAsString()
+    {
+        $list = self::getPaymentStatusList();
+        if (isset($list[$this->paymentStatus]))
+            return $list[$this->paymentStatus];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets payment status.
+     * @param int $paymentStatus     
+     */
+    public function setPaymentStatus($paymentStatus) 
+    {
+        $this->paymentStatus = $paymentStatus;
     }   
 
     /**

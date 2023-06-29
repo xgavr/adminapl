@@ -166,9 +166,107 @@ class SbpManager {
             return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
         }
         
-        return $this->auth->exception($response);
+        return $this->auth->exception($response);        
+    }
         
+    /**
+     * Метод для получения информации о QR-коде
+     * @param string $qrcid
+     * 
+     * @return array|Exception
+     */
+    public function getQrCode($qrcid)
+    {
+        $this->auth->isAuth();
+        $client = new Client();
+        $client->setUri($this->auth->getUri2('sbp', 'qr-code/'.$qrcid));
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
+        $client->setMethod('GET');
+        $client->setOptions(['timeout' => 60]);
+        
+        $headers = $client->getRequest()->getHeaders();
+        $headers->addHeaders([
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
+        ]);
+
+        $client->setHeaders($headers);
+        
+        $response = $client->send();
+        
+        if ($response->isOk()){
+            return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
+        }
+        
+        return $this->auth->exception($response);                
     }
     
+    /**
+     * Метод для получения статусов операций по динамическим QR-кодам
+     * https://enter.tochka.com/uapi/sbp/{apiVersion}/qr-codes/{qrc_ids}/payment-status
+     * 
+     * @param string $qrCodes
+     * 
+     * @return array|Exception
+     */
+    public function getPaymentStatuses($qrCodes)
+    {
+        $this->auth->isAuth();
+        $client = new Client();
+        $client->setUri($this->auth->getUri2('sbp', 'qr-codes/'.$qrCodes.'/payment-status'));
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
+        $client->setMethod('GET');
+        $client->setOptions(['timeout' => 60]);
+        
+        $headers = $client->getRequest()->getHeaders();
+        $headers->addHeaders([
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
+        ]);
+
+        $client->setHeaders($headers);
+        
+        $response = $client->send();
+        
+        if ($response->isOk()){
+            return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
+        }
+        
+        return $this->auth->exception($response);                        
+    }
+    
+    /**
+     * Метод для получения информации о QR-коде
+     * https://enter.tochka.com/uapi/sbp/{apiVersion}/qr-code/{qrcId}/payment-sbp-data
+     * 
+     * @param string $qrcid
+     * 
+     * @return array|Exception
+     */
+    public function getPayment($qrcid)
+    {
+        $this->auth->isAuth();
+        $client = new Client();
+        $client->setUri($this->auth->getUri2('sbp', 'qr-code/'.$qrcid.'/payment-sbp-data'));
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
+        $client->setMethod('GET');
+        $client->setOptions(['timeout' => 60]);
+        
+        $headers = $client->getRequest()->getHeaders();
+        $headers->addHeaders([
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
+        ]);
+
+        $client->setHeaders($headers);
+        
+        $response = $client->send();
+        
+        if ($response->isOk()){
+            return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
+        }
+        
+        return $this->auth->exception($response);                        
+    }
 }
 

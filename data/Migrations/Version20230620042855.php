@@ -30,9 +30,13 @@ final class Version20230620042855 extends AbstractMigration
         $table->addColumn('image_media_type', 'string', ['notnull'=>true, 'length' => 24, 'comment' => 'Тип контента']);
         $table->addColumn('image_content', 'text', ['notnull'=>true, 'length' => 512, 'comment' => 'Содержимое изображения']);
         $table->addColumn('source_name', 'string', ['notnull'=>false, 'length' => 24, 'comment' => 'Название источника']);
+        $table->addColumn('payment_code', 'string', ['notnull'=>false, 'length' => 24, 'comment' => 'Код операции']);
+        $table->addColumn('payment_message', 'string', ['notnull'=>false, 'length' => 128, 'comment' => 'Текстовое представление статуса']);
+        $table->addColumn('payment_trx_id', 'string', ['notnull'=>false, 'length' => 128, 'comment' => 'Идентификатор операции']);
         $table->addColumn('order_apl_id', 'integer', ['notnull'=>false, 'comment' => 'Номер заказа в Апл']);
         $table->addColumn('ttl', 'integer', ['notnull'=>true, 'default' => 0, 'comment' => 'Период использования QR-кода в минутах']);
         $table->addColumn('status', 'integer', ['notnull'=>true, 'comment' => 'Статус объекта', 'default' => QrCode::STATUS_ACTIVE]);        
+        $table->addColumn('payment_status', 'integer', ['notnull'=>true, 'comment' => 'Статус операции', 'default' => QrCode::PAYMENT_NOT_STARTED]);        
         $table->addColumn('bank_account_id', 'integer', ['notnull'=>false]);
         $table->addColumn('office_id', 'integer', ['notnull'=>true]);
         $table->addColumn('order_id', 'integer', ['notnull'=>false]);

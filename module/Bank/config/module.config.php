@@ -50,6 +50,25 @@ return [
                     // route defined above here.
                 ],
             ],    
+            'sbp' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/sbp[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\SbpController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    // You can place additional routes that match under the
+                    // route defined above here.
+                ],
+            ],    
         ],
     ],
     'access_filter' => [
@@ -62,12 +81,17 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+bank.manage'],
             ],
+            Controller\SbpController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+bank.manage'],
+            ],
         ],
     ],    
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\PaymentController::class => Controller\Factory\PaymentControllerFactory::class,
+            Controller\SbpController::class => Controller\Factory\SbpControllerFactory::class,
         ],
     ],
     'service_manager' => [

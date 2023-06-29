@@ -1215,7 +1215,7 @@ class PrintManager {
                 'orderAplId' => $order->getAplId(),
             ]);
             if ($qrCode instanceof QrCode){
-                return $qrCode->getCheckImg();
+                return $qrCode->getImg();
             }
         }    
         

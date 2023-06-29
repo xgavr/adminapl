@@ -163,349 +163,188 @@ class SbpManager
     }
 
     /**
-     * Обновить платежку
+     * Обновить qr код
      * 
-     * @param Payment $payment
-     * @param array $data
-     * @return Payment
+     * @param QrCode $qrCode
+     * 
+     * @return QrCode
      */
-    public function updatePayment($payment, $data)
+    public function updateQrCode($qrCode)
     {
-        $payment->setAmount($data['amount']);
-        $payment->setCounterpartyAccountNumber($data['counterpartyAccountNumber']);
-        $payment->setCounterpartyBankBik($data['counterpartyBankBik']);
-        $payment->setCounterpartyInn($data['counterpartyInn']);
-        $payment->setCounterpartyKpp($data['counterpartyKpp']);
-        $payment->setCounterpartyName($data['counterpartyName']);
-        $payment->setPaymentDate($data['paymentDate']);
-        $payment->setPaymentPriority(5);
-        $payment->setPaymentType(empty($data['paymentType']) ? Payment::PAYMENT_TYPE_NORMAL:$data['paymentType']);
-        $payment->setPurpose($data['purpose']);
-        $payment->setStatus($data['status']);
-        $payment->setPurposeCode(empty($data['purposeCode']) ? '':$data['purposeCode']);
-        $payment->setSupplierBillId(empty($data['supplierBillId']) ? 0:$data['supplierBillId']);
-        $payment->setTaxInfoDocumentDate(empty($data['taxInfoDocumentDate']) ? null:$data['taxInfoDocumentDate']);
-        $payment->setTaxInfoDocumentNumber(empty($data['taxInfoDocumentNumber']) ? null:$data['taxInfoDocumentNumber']);
-        $payment->setTaxInfoKbk(empty($data['taxInfoKbk']) ? null:$data['taxInfoKbk']);
-        $payment->setTaxInfoOkato(empty($data['taxInfoOkato']) ? null:$data['taxInfoOkato']);
-        $payment->setTaxInfoPeriod(empty($data['taxInfoPeriod']) ? null:$data['taxInfoPeriod']);
-        $payment->setTaxInfoReasonCode(empty($data['taxInfoReasonCode']) ? null:$data['taxInfoReasonCode']);
-        $payment->setTaxInfoStatus(empty($data['taxInfoStatus']) ? null:$data['taxInfoStatus']);
-        $payment->setNds($data['nds']);
-        $payment->setBankAccount($data['bankAccount']);
-        $payment->setSupplier($data['supplier']);
+        $result = $this->sbpManager->getQrCode($qrCode->getQrcId());
+
+        if (!empty($result['Data'])){
         
-        $this->entityManager->persist($payment);
-        $this->entityManager->flush();
+            $resultData = $result['Data'];
+            
+            $qrCode->setAccount($resultData['accountId']);
+            $qrCode->setAmount($resultData['amount']);
+            $qrCode->setCurrency($resultData['currency']);
+            $qrCode->setImageContent($resultData['image']['content']);
+            $qrCode->setImageHeight($resultData['image']['height']);
+            $qrCode->setImageMediaType($resultData['image']['mediaType']);
+            $qrCode->setImageWidth($resultData['image']['width']);
+            $qrCode->setMerchantId($resultData['merchantId']);
+            $qrCode->setPayload($resultData['payload']);
+            $qrCode->setPaymentPurpose($resultData['paymentPurpose']);
+            $qrCode->setSourceName($resultData['sourceName']);            
+            $qrCode->setTtl($resultData['ttl']);
+            
+            switch ($resultData['status']){
+                case 'Active': $qrCode->setStatus($qrCode::STATUS_ACTIVE); break;
+                case 'Suspended': $qrCode->setStatus($qrCode::STATUS_SUSPENDED); break;
+            }
+
+            if (!$qrCode->getOrder()){
+                $order = $this->entityManager->getRepository(Order::class)
+                        ->findOneBy(['aplId' => $qrCode->getOrderAplId()]);
+
+                if ($order){
+                    $qrCode->setContact($order->getContact());
+                    $qrCode->setOffice($order->getOffice());
+                    $qrCode->setOrder($order);
+                }    
+            }    
+            
+            $this->entityManager->persist($qrCode);
+            $this->entityManager->flush();
+
+            return $qrCode;
+        }
         
-        return $payment;
+        return $result;
     }
     
     /**
-     * Удалить платежку
-     * @param Payment $payment
+     * Удалить qrcode
+     * @param QrCode $qrCode
      */
-    public function removePayment($payment)
+    public function removeQrCode($qrCode)
     {
-        $this->entityManager->remove($payment);
+        $this->entityManager->remove($qrCode);
+        $this->entityManager->flush();
+        
+        return;
+    }
+        
+    /**
+     * Обновить статус платежа по qr коду
+     * @param QrCode $qrCode
+     */
+    public function updatePaymentStatus($qrCode, $data) 
+    {
+        $qrCode->setPaymentCode($data['code']);
+        $qrCode->setPaymentMessage($data['message']);
+        $qrCode->setPaymentTrxId($data['trxId']);
+        
+        switch ($data['status']){
+            case 'NotStarted': $qrCode->setPaymentStatus(QrCode::PAYMENT_NOT_STARTED); break;
+            case 'Received': $qrCode->setPaymentStatus(QrCode::PAYMENT_RECEIVED); break;
+            case 'InProgress': $qrCode->setPaymentStatus(QrCode::PAYMENT_IN_PROGRESS); break;
+            case 'Accepted': 
+                $qrCode->setPaymentStatus(QrCode::PAYMENT_ACCEPTED);
+                $qrCode->setStatus(QrCode::STATUS_RETIRED); 
+                break;
+            case 'Rejected': 
+                $qrCode->setPaymentStatus(QrCode::PAYMENT_REJECTED);
+                $qrCode->setStatus(QrCode::STATUS_RETIRED); 
+                break;
+        }
+        
+        if (!$qrCode->getOrder() && $qrCode->getOrderAplId()){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->findOneBy(['aplId' => $qrCode->getOrderAplId]);
+            if ($order){
+                $qrCode->setContact($order->getContact());
+                $qrCode->setOffice($order->getOffice());
+                $qrCode->setOrder($order);
+            }
+        }    
+        
+        if ($qrCode->getDateCreated() > date('Y-m-d H:i:s', strtotime('- 3 days'))){
+            $qrCode->setStatus(QrCode::STATUS_RETIRED);
+        }
+        
+        $this->entityManager->persist($qrCode);
         $this->entityManager->flush();
         
         return;
     }
     
     /**
-     * Реквизиты поставщика
-     * @param Supplier $supplier
-     * @param Legal $company
-     * @return array
+     * Обновить статусы qr кодов
      */
-    public function supplierDetail($supplier, $company)
+    public function updatePaymentStatuses()
     {
-        $data = [];
-        $legal = $this->entityManager->getRepository(Supplier::class)
-                ->findDefaultSupplierLegal($supplier, date('Y-m-d'));
+        $codes = $this->entityManager->getRepository(QrCode::class)
+                ->findBy(['status' => QrCode::STATUS_ACTIVE, 'qrcType' => QrCode::QR_Dynamic]);
         
-        if ($legal){
-            $data['inn'] = $legal->getInn();
-            $data['kpp'] = $legal->getKpp();
-            $data['name'] = $legal->getName();
-
-            $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                    ->findDefaultBankAccount($legal);
-            if ($bankAccount){
-                $data['rs'] = $bankAccount->getRs();
-                $data['bik'] = $bankAccount->getBik();
-            }
-
-            $contract = $this->entityManager->getRepository(Office::class)
-                    ->findCurrentContract($company, $legal, date('Y-m-d'), Contract::PAY_CASHLESS);
-            if ($contract){
-                $data['purpose'] = 'Оплата по '.$contract->getContractPresent('договору');
-                $data['nds'] = $contract->getNds();
-            }
-        } 
+        $qrcIds = [];
+        $result = [];
         
-        return $data;
-    }
-    
-    /**
-     * Оплата постащикам
-     * @param array $data
-     */
-    public function suppliersPayment($data)
-    {
-        if (!empty($data['amount'])){
-            $bankAccount = $data['bankAccount'];
-            $company = $bankAccount->getLegal();
-            foreach ($data['amount'] as $row){
-                $supplier = $this->entityManager->getRepository(Supplier::class)
-                        ->find($row['supplier']);
-                if ($supplier && !empty($row['amount'])){
-                    $detail = $this->supplierDetail($supplier, $company);
-                    if (!empty($detail['rs']) && !empty($detail['bik']) && !empty($detail['inn']) && !empty($detail['name']) && !empty($detail['purpose'])){
-                        $payment = [
-                            'amount' => $row['amount'],
-                            'counterpartyAccountNumber' => $detail['rs'],
-                            'counterpartyBankBik' => $detail['bik'],
-                            'counterpartyInn' => $detail['inn'],
-                            'counterpartyKpp' => $detail['kpp'],
-                            'counterpartyName' => $detail['name'],
-                            'paymentDate' => $data['paymentDate'],
-                            'nds' => $detail['nds'],
-                            'purpose' => $detail['purpose'].' '.Payment::getNdsList()[$detail['nds']].' '.Payment::nds($row['amount'], $detail['nds']),
-                            'bankAccount' => $bankAccount,
-                            'supplier' => $supplier,
-                        ];
-                        $this->addPayment($payment);
-                    }    
+        foreach ($codes as $qrCode){
+            $qrcIds[] = $qrCode->getQrcId();
+        }
+        
+        if (count($qrcIds)){
+            $result = $this->sbpManager->getPaymentStatuses(implode(',', $qrcIds));
+//            var_dump($qrcIds);
+//            var_dump($result);
+            if (!empty($result['Data'])){
+                foreach ($result['Data']['paymentList'] as $payment){
+                    $this->updatePaymentStatus($payment['qrcId'], $payment);
                 }
             }
         }
         
-        return;
-    }
-    
-    /**
-     * Получить статус платежа
-     * @param Payment $payment
-     */
-    public function statusPayment($payment)
-    {
-        $result = [];
-        if ($payment->getRequestId()){
-            $result = $this->tochkaPayment->paymentStatus($payment->getRequestId());
-            if (!empty($result['message'])){
-                $payment->setStatusMessage($result['message']);                
-            }
-            if (!empty($result['status'])){
-                if ($result['status'] == 'success'){
-                    $payment->setStatus(Payment::STATUS_SUCCESS);
-                }
-                if ($result['status'] == 'error'){
-                    $payment->setStatus(Payment::STATUS_ERROR);
-                    if (!empty($result['errors'])){
-                        $message = [];
-                        foreach ($result['errors'] as $error){
-                            $message[] = "({$error['code']}) {$error['message']}";
-                        }
-                        $payment->setStatusMessage(implode(';', $message));
-                    }
-                }
-            }
-            $this->entityManager->persist($payment);
-            $this->entityManager->flush();
-        }    
-        return $result;
-    }
-
-    /**
-     * Отправить платеж в банк
-     * @param Payment $payment
-     */
-    public function sendPayment($payment)
-    {
-        $data = [
-            "account_code" => $payment->getBankAccount()->getRs(),
-            "bank_code" =>  $payment->getBankAccount()->getBik(),
-            "counterparty_account_number" => $payment->getCounterpartyAccountNumber(),
-            "counterparty_bank_bic" => $payment->getCounterpartyBankBik(),
-            "counterparty_inn" => $payment->getСounterpartyInn(),
-            "counterparty_kpp" => $payment->getСounterpartyKpp(),
-            "counterparty_name" => $payment->getCounterpartyName(),
-            "payment_amount" => $payment->getFormatAmount(),
-            "payment_date" => $payment->getFormatPaymentDate(),
-            "payment_number" => $payment->getId(),
-            "payment_priority" => $payment->getPaymentPriority(),
-            "payment_purpose" => $payment->getPaymentPurpose(),
-            "payment_purpose_code" => $payment->getPaymentPurposeCode(),
-            "supplier_bill_id" => $payment->getSupplierBillId(),
-            "tax_info_document_date" => $payment->getTaxInfoDocumentDate(),
-            "tax_info_document_number" => $payment->getTaxInfoDocumentNumber(),
-            "tax_info_kbk" => $payment->getTaxInfoKbk(),
-            "tax_info_okato" => $payment->getTaxInfoOkato(),
-            "tax_info_period" => $payment->getTaxInfoPeriod(),
-            "tax_info_reason_code" => $payment->getTaxInfoReasonCode(),
-            "tax_info_status" => $payment->getTaxInfoStatus(),        
-        ];
-        
-//        var_dump($data); exit;
-        $result = $this->tochkaPayment->payment($data);
-        sleep(1);
-//        var_dump($result);
-        $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
-
-        if (!empty($result['request_id'])){
-            $payment->setRequestId(empty($result['request_id']) ? null:$result['request_id']);
-            $payment->setStatus(Payment::STATUS_TRANSFER);            
-        }    
-        
-        $this->entityManager->persist($payment);
-        $this->entityManager->flush();
-        $this->entityManager->refresh($payment);
-        
-        sleep(1);
-        $this->statusPayment($payment);
-        
-        return $result;
-    }
-
-    /**
-     * Получить статус платежа v2
-     * @param Payment $payment
-     * "Initiated" Все необходимые реквизиты для платежа получены, платёж готов к проверке на возможность проведения
-        "Wait For Owner Requisites" Часть реквизитов для платежа получена, кроме реквизитов плательщика
-        "NotAllowed"  Платёж нельзя провести: либо у пользователя нет прав для подписи, либо платёж заблокирован комплаенсом
-        "Allowed"  Платёж готов к подписанию, все проверки пройдены
-        "WaitingForSign" Платёж ждёт подписи
-        "WaitingForCreate" Платёж подписан, ждёт создания внутри систем банка
-        "Created" Платёж создан
-        "Paid" Платёж оплачен
-        "Canceled" Платёж отменен
-        "Rejected" Платёж отменён
-     */
-    public function statusPaymentV2($payment)
-    {
-        $result = [];
-        if ($payment->getRequestId()){
-            $result = $this->tochkaPayment->paymentStatusV2($payment->getRequestId());
-            if (!empty($result['message'])){
-                $payment->setStatusMessage($result['message']);                
-            }
-            if (!empty($result['Data'])){
-                $data = $result['Data'];
-                if ($data['status'] == 'Created'){
-                    $payment->setStatus(Payment::STATUS_SUCCESS);
-                }
-                if ($data['status'] == 'WaitingForCreate'){
-                    $payment->setStatus(Payment::STATUS_SUCCESS);
-                }
-                if (count($data['errors'])){
-                    $payment->setStatus(Payment::STATUS_ERROR);
-                    if (!empty($result['errors'])){
-                        $message = [];
-                        foreach ($result['errors'] as $error){
-                            $message[] = "({$error['code']}) {$error['message']}";
-                        }
-                        $payment->setStatusMessage(implode(';', $message));
-                    }
-                }
-            }
-            $this->entityManager->persist($payment);
-            $this->entityManager->flush();
-        }    
         return $result;
     }
     
     /**
-     * Отправить платеж в банк
-     * @param Payment $payment
-     */
-    public function sendPaymentV2($payment)
-    {
-        $data['Data'] = [
-            "accountCode" => $payment->getBankAccount()->getRs(),
-            "bankCode" =>  $payment->getBankAccount()->getBik(),
-            "counterpartyAccountNumber" => $payment->getCounterpartyAccountNumber(),
-            "counterpartyBankBic" => $payment->getCounterpartyBankBik(),
-            "counterpartyINN" => $payment->getСounterpartyInn(),
-            "counterpartyKPP" => $payment->getСounterpartyKpp(),
-            "counterpartyName" => $payment->getCounterpartyName(),
-            "paymentAmount" => $payment->getFormatAmount('.'),
-            "paymentDate" => $payment->getPaymentDate(),
-            "paymentNumber" => $payment->getId(),
-            "paymentPriority" => $payment->getPaymentPriority(),
-            "paymentPurpose" => $payment->getPaymentPurpose(),
-            "codePurpose" => $payment->getPaymentPurposeCode(),
-            "supplierBillId" => $payment->getSupplierBillId(),
-            "taxInfoDocumentDate" => $payment->getTaxInfoDocumentDate(),
-            "taxInfoDocumentNumber" => $payment->getTaxInfoDocumentNumber(),
-            "taxInfoKBK" => $payment->getTaxInfoKbk(),
-            "taxInfoOKATO" => $payment->getTaxInfoOkato(),
-            "taxInfoPeriod" => $payment->getTaxInfoPeriod(),
-            "taxInfoReasonCode" => $payment->getTaxInfoReasonCode(),
-            "taxInfoStatus" => $payment->getTaxInfoStatus(),        
-        ];
-        
-//        var_dump($data); exit;
-        $result = $this->tochkaPayment->paymentV2($data);
-
-//        var_dump($result); exit;
-        
-        $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
-               
-        if (!empty($result['Data'])){
-            if (!empty($result['Data']['requestId'])){
-                $payment->setRequestId(empty($result['Data']['requestId']) ? null:$result['Data']['requestId']);
-                $payment->setStatus(Payment::STATUS_TRANSFER);            
-            }
-        }    
-        
-        $this->entityManager->persist($payment);
-        $this->entityManager->flush();
-        $this->entityManager->refresh($payment);
-        
-        $attempt = 0;
-        while ($attempt < 5){
-            sleep(1);
-            $statusResult = $this->statusPaymentV2($payment);
-            $this->entityManager->refresh($payment);
-            if ($payment->getStatus() != Payment::STATUS_TRANSFER){
-               return $statusResult;
-            }
-            $attempt++;
-        }    
-        
-        return $statusResult;
-    }
-    
-    /**
-     * Отправить все платежи
-     * @param string $version
+     * Проверить активные qr коды
+     * 
      * @return null
      */
-    public function sendAll($version = 1)
+    public function checkAllDynamic()
     {
         ini_set('memory_limit', '512M');
         set_time_limit(900);
         $startTime = time();
         
-        $payments = $this->entityManager->getRepository(Payment::class)
-                ->findBy(['status' => Payment::STATUS_ACTIVE, 'requestId' => null]);
+        $codes = $this->entityManager->getRepository(QrCode::class)
+                ->findBy(['status' => QrCode::STATUS_ACTIVE, 'qrcType' => QrCode::QR_Dynamic]);
         
-        foreach ($payments as $payment){
-            if ($version == 1){
-                $this->sendPayment($payment);
+        $flush = false;
+        foreach ($codes as $qrCode){
+            $flag = false;
+            if (!$qrCode->getOrder() && $qrCode->getOrderAplId()){
+                $order = $this->entityManager->getRepository(Order::class)
+                        ->findOneBy(['aplId' => $qrCode->getOrderAplId]);
+                if ($order){
+                    $qrCode->setContact($order->getContact());
+                    $qrCode->setOffice($order->getOffice());
+                    $qrCode->setOrder($order);
+                    $flag = true;
+                }
             }    
-            if ($version == 2){
-                $this->sendPaymentV2($payment);
-            }    
-            $this->entityManager->refresh($payment);
-            if ($payment->getStatus() != Payment::STATUS_SUCCESS){
-                break;
+            
+            if ($qrCode->getDateCreated() > date('Y-m-d H:i:s', strtotime('- 3 days'))){
+                $qrCode->setStatus(QrCode::STATUS_RETIRED);
+                $flag = true;
             }
+            
+            if ($flag){
+                $this->entityManager->persist($qrCode);
+                $flush = true;
+            }
+            
             if (time() > $startTime + 840){
                 break;
             }
+        }
+        
+        if ($flush){
+            $this->entityManager->flush();
         }
         
         return;
