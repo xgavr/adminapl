@@ -332,7 +332,35 @@ class SbpManager
      */
     public function addQrCodePayment($qrCode, $data)
     {
+        if (!empty($data['refTransactionId'])){
+            $payment = $this->entityManager->getRepository(QrCodePayment::class)
+                    ->findOneBy(['refTransactionId' => $data['refTransactionId']]);
+        } else {
+            $payment = new QrCodePayment();            
+            $payment->setDateCreated(date('Y-m-d H:i:s'));
+            $payment->setCashDoc(null);
+        }
         
+        $payment->setAmount(empty($data['amount']) ? $qrCode->getAmount():$data['amount']);
+        $payment->setBankAccount($qrCode->getBankAccount());
+        $payment->setContact($qrCode->getContact());
+        $payment->setOffice($qrCode->getOffice());
+        $payment->setOrder($qrCode->getOrder());
+        
+        $payment->setPaymentMessage($data['message']);
+        $payment->setPaymentPurpose($data['purpose']);
+        $payment->setPaymentType($paymentType);
+        $payment->setPurpose($data['purpose']);
+        $payment->setQrCode($qrCode);
+        $payment->setRefTransactionId(data['refTransactionId']);
+        $payment->setRefundRequestId($data['requestId']);
+        $payment->setStatus($data['status']);
+        $payment->setBankAccount($bankAccount);
+        
+        $this->entityManager->persist($payment);
+        $this->entityManager->flush();
+        
+        return $payment;        
     }
     
     /**

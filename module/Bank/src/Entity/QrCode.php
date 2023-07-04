@@ -227,6 +227,10 @@ class QrCode {
         return $this->amount;
     }
 
+    public function getAmountAsRub() {
+        return round($this->amount/100, 2);
+    }
+
     public function getCurrency() {
         return $this->currency;
     }
