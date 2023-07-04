@@ -699,6 +699,7 @@ class AdminManager {
         }
         
         $config->sbp_settings->legal_id = $data['legal_id'];
+        $config->sbp_settings->customer_code = $data['customer_code'];
         $config->sbp_settings->merchant_id = $data['merchant_id'];
         $config->sbp_settings->account = $data['account'];
         

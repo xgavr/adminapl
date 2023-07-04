@@ -49,6 +49,14 @@ class SbpSettings extends Form implements ObjectManagerAwareInterface
                 ]
             ],
         ]);
+
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'customer_code',
+            'options' => [
+                'label' => 'Уникальный код клиента',
+            ],
+        ]);
                 
         $this->add([            
             'type'  => 'text',

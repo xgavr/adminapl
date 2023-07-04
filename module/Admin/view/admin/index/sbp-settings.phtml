@@ -25,6 +25,10 @@ $form->get('legal_id')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('customer_code')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('merchant_id')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -61,6 +65,11 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('legal_id')); ?>                  
         </div>
         <div class="form-group">
+            <?= $this->formLabel($form->get('customer_code')); ?>
+            <?= $this->formElement($form->get('customer_code')); ?>
+            <?= $this->formElementErrors($form->get('customer_code')); ?>                  
+        </div>
+        <div class="form-group">
             <?= $this->formLabel($form->get('merchant_id')); ?>
             <?= $this->formElement($form->get('merchant_id')); ?>
             <?= $this->formElementErrors($form->get('merchant_id')); ?>                  
@@ -71,16 +80,17 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('account')); ?>                  
         </div>
                         
+        <?= $this->formElement($form->get('submit')); ?>
     </div>   
     <div class="col-md-5">
     </div>
-    <div class="col-md-2" id="side-nav" >
+<!--    <div class="col-md-2" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">
             <li class="active">
                 <?= $this->formElement($form->get('submit')); ?>
             </li>
         </ul>
-    </div>    
+    </div>    -->
     
 </div>   
 

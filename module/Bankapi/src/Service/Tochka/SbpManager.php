@@ -272,20 +272,25 @@ class SbpManager {
     }
     
     /**
-     * Метод для получения информации о QR-коде
-     * https://enter.tochka.com/uapi/sbp/{apiVersion}/qr-code/{qrcId}/payment-sbp-data
+     * Метод для получения списка платежей в Системе быстрых платежей
+     * https://enter.tochka.com/uapi/sbp/{apiVersion}/get-sbp-payments
      * 
+     * @param string $customerCode
      * @param string $qrcid
      * 
      * @return array|Exception
      */
-    public function getPayment($qrcid)
+    public function getPaymentData($customerCode, $qrcid)
     {
         $this->auth->isAuth();
         $client = new Client();
         $client->setUri($this->auth->getUri2('sbp', 'qr-code/'.$qrcid.'/payment-sbp-data'));
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('GET');
+        $client->setParameterGet([
+            'customerCode' => $customerCode,
+            'qrcId' => $qrcid,
+        ]);
         $client->setOptions(['timeout' => 60]);
         
         $headers = $client->getRequest()->getHeaders();

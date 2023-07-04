@@ -17,6 +17,7 @@ use Company\Entity\Contract;
 use Company\Entity\Legal;
 use Bank\Entity\QrCode;
 use Application\Entity\Order;
+use Bank\Entity\QrCodePayment;
 
 
 /**
@@ -317,6 +318,40 @@ class SbpManager
                 }
             }
         }
+        
+        return $result;
+    }
+    
+    /**
+     * Добавить данные о платеже по qr коду
+     * 
+     * @param QrCode $qrCode
+     * @param array $data
+     * 
+     * @return QrCodePayment
+     */
+    public function addQrCodePayment($qrCode, $data)
+    {
+        
+    }
+    
+    /**
+     * Получить платежи по qr коду
+     * @param QrCode $qrCode
+     */
+    public function getPayment($qrCode)
+    {
+        $result = [];
+        $settings = $this->adminManager->getSbpSettings();
+        $customerCode = $settings['customer_code'];
+        if ($customerCode){
+            $result = $this->sbpManager->getPaymentData($customerCode, $qrCode);
+            if (!empty($result['Data'])){
+                foreach ($result['Data']['Payments'] as $payment){
+                    $this->updatePaymentStatus($qrCode, $payment);
+                }
+            }
+        }    
         
         return $result;
     }
