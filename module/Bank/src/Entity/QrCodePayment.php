@@ -53,16 +53,10 @@ class QrCodePayment {
     protected $id;
     
     /** 
-     * Идентификатор операции, инициированной Dynamic QR-кодом
+     * Идентификатор операции, инициированной Dynamic QR-кодом или ID запроса возврата
      * @ORM\Column(name="ref_transaction_id")  
      */
     protected $refTransactionId;    
-              
-    /** 
-     * ID запроса возврата
-     * @ORM\Column(name="refund_request_id")  
-     */
-    protected $refundRequestId;    
               
     /** 
      * Cумма операции в рублях
@@ -164,10 +158,6 @@ class QrCodePayment {
         return $this->amount;
     }
 
-    public function getPaymentPurpose() {
-        return $this->paymentPurpose;
-    }
-
     public function getQrcId() {
         return $this->qrcId;
     }
@@ -213,7 +203,7 @@ class QrCodePayment {
     }
 
     public function setPaymentPurpose($paymentPurpose) {
-        $this->paymentPurpose = $paymentPurpose;
+        $this->purpose = $paymentPurpose;
     }
 
     public function setQrcId($qrcId) {
@@ -254,14 +244,6 @@ class QrCodePayment {
      */
     public function setContact($contact) {
         $this->contact = $contact;
-    }
-
-    public function getTtl() {
-        return $this->ttl;
-    }
-
-    public function setTtl($ttl) {
-        $this->ttl = $ttl;
     }
 
     public function getPaymentMessage() {
@@ -371,10 +353,6 @@ class QrCodePayment {
         return $this->refTransactionId;
     }
 
-    public function getRefundRequestId() {
-        return $this->refundRequestId;
-    }
-
     public function getPurpose() {
         return $this->purpose;
     }
@@ -418,11 +396,6 @@ class QrCodePayment {
 
     public function setRefTransactionId($refTransactionId) {
         $this->refTransactionId = $refTransactionId;
-        return $this;
-    }
-
-    public function setRefundRequestId($refundRequestId) {
-        $this->refundRequestId = $refundRequestId;
         return $this;
     }
 

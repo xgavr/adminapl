@@ -339,23 +339,80 @@ class SbpManager
             $payment = new QrCodePayment();            
             $payment->setDateCreated(date('Y-m-d H:i:s'));
             $payment->setCashDoc(null);
+            $payment->setBankAccount($qrCode->getBankAccount());
+            $payment->setContact($qrCode->getContact());
+            $payment->setOffice($qrCode->getOffice());
+            $payment->setOrder($qrCode->getOrder());
+            $payment->setQrCode($qrCode);
+            $payment->setStatus(QrCodePayment::STATUS_ACTIVE);
+            $payment->setPaymentStatus(QrCodePayment::PAYMENT_CONFIRMING);
         }
         
-        $payment->setAmount(empty($data['amount']) ? $qrCode->getAmount():$data['amount']);
-        $payment->setBankAccount($qrCode->getBankAccount());
-        $payment->setContact($qrCode->getContact());
-        $payment->setOffice($qrCode->getOffice());
-        $payment->setOrder($qrCode->getOrder());
+        if (!empty($data['amount'])){
+            $payment->setAmount($data['amount']);            
+        }
         
-        $payment->setPaymentMessage($data['message']);
-        $payment->setPaymentPurpose($data['purpose']);
-        $payment->setPaymentType($paymentType);
-        $payment->setPurpose($data['purpose']);
-        $payment->setQrCode($qrCode);
-        $payment->setRefTransactionId(data['refTransactionId']);
-        $payment->setRefundRequestId($data['requestId']);
-        $payment->setStatus($data['status']);
-        $payment->setBankAccount($bankAccount);
+        if (!empty($data['message'])){
+            $payment->setPaymentMessage($data['message']);            
+        }
+        if (!empty($data['statusDescription'])){
+            $payment->setPaymentMessage($data['statusDescription']);            
+        }
+        
+        if (!empty($data['purpose'])){
+            $payment->setPurpose($data['purpose']);
+        }    
+        
+        if (!empty(data['refTransactionId'])){
+            $payment->setRefTransactionId(data['refTransactionId']);
+            $payment->setPaymentType(QrCodePayment::TYPE_PAYMENT);
+            $payment->setAmount($qrCode->getAmountAsRub());
+        }    
+        if (!empty(data['requestId'])){
+            $payment->setRefTransactionId(data['requestId']);
+            $payment->setPaymentType(QrCodePayment::TYPE_REFUND);
+        }    
+                
+        if (!empty($data['status'])){
+            switch ($data['status']){ 
+                case 'Confirming': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_CONFIRMING);
+                    break;
+                case 'Confirming': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_CONFIRMING);
+                    break;
+                case 'Confirmed': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_CONFIRMED);
+                    break;
+                case 'Initiated': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_INITIATED);
+                    break;
+                case 'Accepting': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_ACCEPTING);
+                    break;
+                case 'Accepted': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_ACCEPTED);
+                    break;
+                case 'InProgress': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_IN_PROGRESS);
+                    break;
+                case 'Rejected': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_REJECTED);
+                    break;
+                case 'Error': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_ERROR);
+                    break;
+                case 'Timeout': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_TIMEOUT);
+                    break;
+                case 'WaitingForConfirm': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_WAITING_FOR_CONFIRM);
+                    break;
+                case 'WaitingForAccept': 
+                    $payment->setPaymentStatus(QrCodePayment::PAYMENT_WAITING_FOR_ACCEPT);
+                    break;
+            }    
+        }
         
         $this->entityManager->persist($payment);
         $this->entityManager->flush();

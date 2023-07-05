@@ -215,6 +215,15 @@ class Authenticate {
     }
 
     /**
+     * Получить Client_id
+     * @return bool
+     */
+    public function getClientId()
+    {
+        return $this->client_id;
+    }
+
+    /**
      * Удаление токенов
      * @return void
      */
