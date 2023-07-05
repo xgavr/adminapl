@@ -113,8 +113,7 @@ class Payment {
             return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
         }
         
-        return $this->auth->exception($response);
-        
+        return $this->auth->exception($response);        
     }
     
     

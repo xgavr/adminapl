@@ -47,6 +47,7 @@ return [
             Service\Tochka\Payment::class => Service\Tochka\Factory\PaymentFactory::class,
             Service\Tochka\SbpManager::class => Service\Tochka\Factory\SbpManagerFactory::class,
             Service\Tochka\Statement::class => Service\Tochka\Factory\StatementFactory::class,
+            Service\Tochka\Webhook::class => Service\Tochka\Factory\WebhookFactory::class,
         ],
     ],    
     'view_manager' => [

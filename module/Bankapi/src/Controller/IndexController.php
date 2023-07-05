@@ -33,11 +33,19 @@ class IndexController extends AbstractActionController
      */
     private $sbpManager;    
 
-    public function __construct($tochkaAuth, $tochkaStatement, $sbpManager) 
+    /**
+     * Webhook manager.
+     * @var \Bankapi\Service\Tochka\Webhook
+     */
+    private $webhook;    
+
+    public function __construct($tochkaAuth, $tochkaStatement, $sbpManager,
+            $webhook) 
     {
         $this->tochkaAuth = $tochkaAuth;
         $this->tochkaStatement = $tochkaStatement;        
         $this->sbpManager = $sbpManager;        
+        $this->webhook = $webhook;        
     }   
     
     public function indexAction()
@@ -136,6 +144,55 @@ class IndexController extends AbstractActionController
         $result = $this->sbpManager->registerQrCode($account, $merchant_id, $data);
         $this->layout()->setTemplate('layout/terminal');
         return new ViewModel([
+                'result' => $result,
+            ]);
+    }
+    
+    public function webhooksAction()
+    {
+        $result = $this->webhook->getWebhooks();
+
+        return new JsonModel([
+                'result' => $result,
+            ]);
+    }
+
+    public function createWebhookAction()
+    {
+        $url = '';
+        
+        $result = $this->webhook->createWebhook($url);
+
+        return new JsonModel([
+                'result' => $result,
+            ]);
+    }
+
+    public function editWebhookAction()
+    {
+        $url = '';
+        
+        $result = $this->webhook->editWebhook($url);
+
+        return new JsonModel([
+                'result' => $result,
+            ]);
+    }
+
+    public function deleteWebhookAction()
+    {
+        $result = $this->webhook->deleteWebhook();
+
+        return new JsonModel([
+                'result' => $result,
+            ]);
+    }
+
+    public function testWebhookAction()
+    {
+        $result = $this->webhook->testWebhook();
+
+        return new JsonModel([
                 'result' => $result,
             ]);
     }

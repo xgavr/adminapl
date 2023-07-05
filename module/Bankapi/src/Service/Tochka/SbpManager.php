@@ -308,8 +308,6 @@ class SbpManager {
         }
         
         return $this->auth->exception($response);                        
-    }
-    
-    public function 
+    }    
 }
 
