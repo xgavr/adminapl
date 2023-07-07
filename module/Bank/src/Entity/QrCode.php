@@ -267,7 +267,7 @@ class QrCode {
     {
         switch ($this->imageMediaType){
             case 'image/png':
-                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='{$this->imageWidth}' height='{{$this->imageWidth}}'";
+                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='{$this->imageWidth}' height='{$this->imageWidth}'>";
         }
         
         return;
@@ -277,7 +277,7 @@ class QrCode {
     {
         switch ($this->imageMediaType){
             case 'image/png':
-                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='200' height='200'";
+                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='200' height='200'>";
         }
         
         return;

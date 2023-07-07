@@ -693,9 +693,28 @@
         }        
     }       
     
+    function qrcodeShow(imageContent){
+        bootbox.alert("<img src='data:image/png;base64,"+imageContent+"' width='200' height='200'>", function() {
+            //console.log("It was awesome!");
+        });
+    }
+    
+    
     function qrcodeFormatter(value, row){
+        var btn = '<nobr>';
+        
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Показать QR Код"'; 
+        btn += ' onclick="qrcodeShow(\''+row.imageContent+'\')">';
+        btn += '<span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span>';
+        btn += '</button>';
+
         var url = '/sbp/update-acquiring-status/'+row.id;
-        btn = '<button';
+        
+        btn += ' <button';
         btn += ' type="button" disabled';
         btn += ' class="btn btn-warning btn-xs this-delete"';
         btn += ' aria-label="Left Align"'; 
@@ -703,6 +722,8 @@
         btn += ' onclick="tableRowDelete(\''+url+'\', \'table_qrcode\')">';
         btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
+
+        btn += '</nobr>';
         return btn;
     }    
     
