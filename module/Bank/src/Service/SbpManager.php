@@ -290,39 +290,6 @@ class SbpManager
     }
     
     /**
-     * Обновить статусы qr кодов
-     */
-    public function updatePaymentStatuses()
-    {
-        $codes = $this->entityManager->getRepository(QrCode::class)
-                ->findBy(['status' => QrCode::STATUS_ACTIVE, 'qrcType' => QrCode::QR_Dynamic]);
-        
-        $qrcIds = [];
-        $result = [];
-        
-        foreach ($codes as $qrCode){
-            $qrcIds[] = $qrCode->getQrcId();
-        }
-        
-        if (count($qrcIds)){
-            $result = $this->sbpManager->getPaymentStatuses(implode(',', $qrcIds));
-//            var_dump($qrcIds);
-//            var_dump($result);
-            if (!empty($result['Data'])){
-                foreach ($result['Data']['paymentList'] as $payment){
-                    $qrCode = $this->entityManager->getRepository(QrCode::class)
-                            ->findOneBy(['qrcId' => $payment['qrcId']]);
-                    if ($qrCode){
-                        $this->updatePaymentStatus($qrCode, $payment);
-                    }    
-                }
-            }
-        }
-        
-        return $result;
-    }
-    
-    /**
      * Добавить данные о платеже по qr коду
      * 
      * @param QrCode $qrCode
@@ -490,4 +457,38 @@ class SbpManager
         
         return;
     }
+    
+    /**
+     * Обновить статусы qr кодов
+     */
+    public function updatePaymentStatuses()
+    {
+        $codes = $this->entityManager->getRepository(QrCode::class)
+                ->findBy(['status' => QrCode::STATUS_ACTIVE, 'qrcType' => QrCode::QR_Dynamic]);
+        
+        $qrcIds = [];
+        $result = [];
+        
+        foreach ($codes as $qrCode){
+            $qrcIds[] = $qrCode->getQrcId();
+        }
+        
+        if (count($qrcIds)){
+            $result = $this->sbpManager->getPaymentStatuses(implode(',', $qrcIds));
+//            var_dump($qrcIds);
+//            var_dump($result);
+            if (!empty($result['Data'])){
+                foreach ($result['Data']['paymentList'] as $payment){
+                    $qrCode = $this->entityManager->getRepository(QrCode::class)
+                            ->findOneBy(['qrcId' => $payment['qrcId']]);
+                    if ($qrCode){
+                        $this->updatePaymentStatus($qrCode, $payment);
+                    }    
+                }
+            }
+        }
+        
+        return $result;
+    }
+        
 }

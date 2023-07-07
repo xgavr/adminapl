@@ -52,74 +52,45 @@ class QrCodeRepository extends EntityRepository
 
 
     /**
-     * Получить выборку записей платежек
+     * Получить выборку записей кодов
      * 
      * @param string $q поисковый запрос
      * @param string $rs счет
      * @param array $params
      * @return object
      */
-    public function findPayments($q = null, $rs = null, $params = null)
+    public function findQrcodes($q = null, $rs = null, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('p, ba, u, s')
-                ->from(Payment::class, 'p')
-                ->join('p.bankAccount', 'ba')
-                ->join('p.user', 'u')
-                ->leftJoin('p.supplier', 's')
+        $queryBuilder->select('q')
+                ->from(QrCode::class, 'q')
                 ;
+        
         if (is_array($params)){
             if (!empty($params['sort'])){
-                $queryBuilder->addOrderBy('p.'.$params['sort'], $params['order']);
+                $queryBuilder->addOrderBy('q.'.$params['sort'], $params['order']);
             }
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
-                    $queryBuilder->andWhere('YEAR(p.paymentDate) = :year')
+                    $queryBuilder->andWhere('YEAR(q.dateCreated) = :year')
                             ->setParameter('year', $params['year']);
                 }    
             }
             if (!empty($params['month'])){
                 if (is_numeric($params['month'])){
-                    $queryBuilder->andWhere('MONTH(p.paymentDate) = :month')
+                    $queryBuilder->andWhere('MONTH(q.dateCreated) = :month')
                             ->setParameter('month', $params['month']);
                 }    
             }
-            if (!empty($params['supplier'])){
-                $supplier = $entityManager->getRepository(Supplier::class)
-                        ->findOneById($params['supplier']);
-                if ($supplier){
-                    $queryBuilder->andWhere('p.supplier = :supplier')
-                            ->setParameter('supplier', $supplier->getId());
-                }    
-            }            
             if (!empty($params['status'])){
                 if (is_numeric($params['status'])){
-                    $queryBuilder->andWhere('p.status = :status')
+                    $queryBuilder->andWhere('q.status = :status')
                             ->setParameter('status', $params['status']);
                 }    
             }            
-            if (!empty($params['paymentType'])){
-                if (is_numeric($params['paymentType'])){
-                    $queryBuilder->andWhere('p.paymentType = :paymentType')
-                            ->setParameter('paymentType', $params['paymentType']);
-                }    
-            }            
-        }
-        if ($q){
-            $or = $queryBuilder->expr()->orX();
-            $or->add($queryBuilder->expr()->like('p.counterpartyInn', '?1'));
-            $or->add($queryBuilder->expr()->like('p.counterpartyName', '?1'));
-            $or->add($queryBuilder->expr()->like('p.purpose', '?1'));
-            $queryBuilder->setParameter('1', '%' . $q . '%');
-
-            if (is_numeric($q)){
-                $or->add($queryBuilder->expr()->eq('FLOOR(p.amount)', floor($q)));
-//                $or->add($queryBuilder->expr()->eq('FLOOR(s.amount)', -floor($q)));                
-            }
-            $queryBuilder->andWhere($or);
         }
                 
         return $queryBuilder->getQuery();
@@ -127,95 +98,45 @@ class QrCodeRepository extends EntityRepository
     }    
 
     /**
-     * Получить всего количество записей платежек
+     * Получить всего количество записей кодов
      * 
      * @param string $q поисковый запрос
      * @param string $rs счет
      * @param array $params
      * @return object
      */
-    public function findTotalPayments($q = null, $rs = null, $params = null)
+    public function findTotalQrcodes($q = null, $rs = null, $params = null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('count(p) as countP')
-                ->from(Payment::class, 'p')
+        $queryBuilder->select('count(q) as countQ')
+                ->from(QrCode::class, 'q')
                 ;
         if (is_array($params)){
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
-                    $queryBuilder->andWhere('YEAR(p.paymentDate) = :year')
+                    $queryBuilder->andWhere('YEAR(q.dateCreated) = :year')
                             ->setParameter('year', $params['year']);
                 }    
             }
             if (!empty($params['month'])){
                 if (is_numeric($params['month'])){
-                    $queryBuilder->andWhere('MONTH(p.paymentDate) = :month')
+                    $queryBuilder->andWhere('MONTH(q.dateCreated) = :month')
                             ->setParameter('month', $params['month']);
                 }    
             }
-            if (!empty($params['supplier'])){
-                $supplier = $entityManager->getRepository(Supplier::class)
-                        ->findOneById($params['supplier']);
-                if ($supplier){
-                    $queryBuilder->andWhere('p.supplier = :supplier')
-                            ->setParameter('supplier', $supplier->getId());
-                }    
-            }            
             if (!empty($params['status'])){
                 if (is_numeric($params['status'])){
-                    $queryBuilder->andWhere('p.status = :status')
+                    $queryBuilder->andWhere('q.status = :status')
                             ->setParameter('status', $params['status']);
                 }    
             }            
-            if (!empty($params['paymentType'])){
-                if (is_numeric($params['paymentType'])){
-                    $queryBuilder->andWhere('p.paymentType = :paymentType')
-                            ->setParameter('paymentType', $params['paymentType']);
-                }    
-            }            
-        }
-        if ($q){
-            $or = $queryBuilder->expr()->orX();
-            $or->add($queryBuilder->expr()->like('p.counterpartyInn', '?1'));
-            $or->add($queryBuilder->expr()->like('p.counterpartyName', '?1'));
-            $or->add($queryBuilder->expr()->like('p.purpose', '?1'));
-            $queryBuilder->setParameter('1', '%' . $q . '%');
-
-            if (is_numeric($q)){
-                $or->add($queryBuilder->expr()->eq('FLOOR(p.amount)', floor($q)));
-//                $or->add($queryBuilder->expr()->eq('FLOOR(s.amount)', -floor($q)));                
-            }
-            $queryBuilder->andWhere($or);
         }
                 
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
-        return $result['countP'];
+        return $result['countQ'];
     }    
 
-    /**
-     * Сумма платежей
-     * @param integer $status
-     * @return float
-     */
-    public function statusTotal($status = Payment::STATUS_ACTIVE)
-    {
-        $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-        
-        $queryBuilder->select('sum(p.amount) as totalP')
-                ->from(Payment::class, 'p')
-                ->where('p.status = ?1')
-                ->setParameter('1', $status)
-                ;
-        $result = $queryBuilder->getQuery()->getOneOrNullResult();
-        if (is_array($result)){
-            return round($result['totalP'], 2);                
-        }    
-        
-        return 0;
-    }
 }

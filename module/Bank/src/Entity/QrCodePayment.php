@@ -101,7 +101,7 @@ class QrCodePayment {
 
     /**
      * @ORM\ManyToOne(targetEntity="Bank\Entity\QrCode", inversedBy="qrcodePayments") 
-     * @ORM\JoinColumn(name="bank_account_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="qrcode_id", referencedColumnName="id")
      */
     protected $qrCode;
     

@@ -17,6 +17,7 @@
             <li role="presentation"><a href="#balance" role="tab" id="balance-tab" data-toggle="tab" aria-controls="balance" aria-expanded="true">Остатки</a></li>
             <li role="presentation"><a href="#acquiring" role="tab" id="acquiring-tab" data-toggle="tab" aria-controls="acquiring" aria-expanded="true">Эквайринг</a></li>
             <li role="presentation"><a href="#apl" role="tab" id="apl-tab" data-toggle="tab" aria-controls="apl" aria-expanded="true">Оплаты картой</a></li>
+            <li role="presentation"><a href="#qrcode" role="tab" id="qrcode-tab" data-toggle="tab" aria-controls="qrcode" aria-expanded="true">QR коды</a></li>
         </ul>
         <div class="tab-content" id="featureTabContent">
             <div class="tab-pane fade" role="tabpanel" id="statement" aria-labelledby="statement-tab">
@@ -205,6 +206,57 @@
                     </thead>
                 </table>                
             </div>            
+            <div class="tab-pane fade" role="tabpanel" id="qrcode" aria-labelledby="qrcode-tab">
+                <div id="toolbar_qrcode">
+                    <div class="form-inline" role="form">
+<!--                        <button value="/apl/update-acquiring/" class="btn btn-info refresh-table-button"
+                                title="Загрузить данные АПЛ">
+                            <span class="glyphicon glyphicon-upload" ></span>
+                        </button>                         
+                        <button value="/bank/compress-apl-payment/" class="btn btn-warning refresh-table-button"
+                                title="Удалить отказы">
+                            <span class="glyphicon glyphicon-remove-circle" ></span>
+                        </button>                         
+                        <button value="/bank/acquiring-intersect/" class="btn btn-default refresh-table-button"
+                                title="Установить соответствия">
+                            <span class="glyphicon glyphicon-check" ></span>
+                        </button>                         
+                        <div class="form-group">
+                            <div class="btn-group">
+                                <input name="search" style="width: 200px" class="form-control enter-search" type="text" onfocus="this.select();" placeholder="Карта, rrn, заказ">
+                                <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                            </div>
+                        </div>
+                        <button id="okQrcode" type="submit" class="btn btn-default">OK</button>
+                        <div class="form-group">
+                            <input name="date" class="form-control" type="date">
+                        </div>
+                        <button id="okAplPaymentDate" type="submit" class="btn btn-default">OK</button>-->
+                    </div>    
+                </div>
+                <table id="table_qrcode" 
+                    data-toggle="table" 
+                    data-url="/sbp/content"
+                    data-side-pagination="server"
+                    data-pagination="true" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#toolbar_qrcode"
+                    data-show-refresh="true"
+                    data-show-toggle="false"
+                    data-query-params="qrcodeQueryParams"
+                    data-response-handler="responseHandler"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="id" data-width="5" data-align="right">Id</th>
+                             <th data-field="dateCreated" data-width="200">Дата</th>
+                             <th data-field="orderAplId">Заказ</th>
+                             <th data-field="amount" data-formatter="amountIn" data-align='right' data-width="200">Сумма</th>             
+                             <th data-field="status" data-width="20" data-formatter="qrcodeFormatter"></th>             
+                         </tr>                
+                    </thead>
+                </table>                
+            </div>            
         </div>
     </div>
     <div class="col-md-2" id="side-nav" >
@@ -273,6 +325,7 @@
         $('#table_balance').bootstrapTable('refresh');
         $('#table_acquiring').bootstrapTable('refresh');
         $('#table_apl').bootstrapTable('refresh');
+        $('#table_qrcode').bootstrapTable('refresh');
     }
 
 
@@ -415,6 +468,13 @@
             params[$(this).attr('name')] = $(this).val();
         });
         return tabQueryParams('#table_apl', params);
+    }
+
+    function qrcodeQueryParams(params) {
+        $('#toolbar_qrcode').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        return tabQueryParams('#table_qrcode', params);
     }
 
     function responseHandler(res) {
@@ -631,5 +691,19 @@
                     bootbox.alert("Произошла ошибка при выполнении операции.");
                 });        
         }        
-    }        
+    }       
+    
+    function qrcodeFormatter(value, row){
+        var url = '/sbp/update-acquiring-status/'+row.id;
+        btn = '<button';
+        btn += ' type="button" disabled';
+        btn += ' class="btn btn-warning btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\', \'table_qrcode\')">';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
 </script>

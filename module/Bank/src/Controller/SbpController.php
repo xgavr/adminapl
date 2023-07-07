@@ -14,7 +14,8 @@ use Bank\Entity\Payment;
 use Bank\Form\PaymentForm;
 use Company\Entity\BankAccount;
 use Application\Entity\Supplier;
-use Bank\Form\SuppliersPayForm;
+use Bank\Entity\QrCode;
+use Bank\Entity\QrCodePayment;
 
 class SbpController extends AbstractActionController
 {
@@ -49,12 +50,11 @@ class SbpController extends AbstractActionController
         $q = $this->params()->fromQuery('search');
         $rs = $this->params()->fromQuery('rs');
         $year_month = $this->params()->fromQuery('month');
-        $supplier = $this->params()->fromQuery('supplier');
+        $aplOrder = $this->params()->fromQuery('aplOrder');
         $status = $this->params()->fromQuery('status');
-        $paymentType = $this->params()->fromQuery('paymentType');
         $offset = $this->params()->fromQuery('offset');
-        $order = $this->params()->fromQuery('order', 'id');
-        $sort = $this->params()->fromQuery('sort', 'DESC');
+        $order = $this->params()->fromQuery('order', 'DESC');
+        $sort = $this->params()->fromQuery('sort', 'id');
         $limit = $this->params()->fromQuery('limit');
 
         $year = $month = null;
@@ -63,25 +63,16 @@ class SbpController extends AbstractActionController
             $month = date('m', strtotime($year_month));
         }        
         
-        $query = $this->entityManager->getRepository(Payment::class)
-                        ->findPayments(trim($q), $rs, [
+        $query = $this->entityManager->getRepository(QrCode::class)
+                        ->findQrcodes(trim($q), $rs, [
                             'order' => $order,
                             'sort' => $sort,
                             'year' => $year, 'month' => $month,
-                            'supplier' => $supplier,
+                            'aplOrder' => $aplOrder,
                             'status' => $status,
-                            'paymentType' => $paymentType,
                     ]);
         
-//        $total = count($query->getResult());
-        $total = $this->entityManager->getRepository(Payment::class)
-                        ->findTotalPayments(trim($q), $rs, [
-                            'year' => $year, 'month' => $month,
-                            'supplier' => $supplier,
-                            'status' => $status,
-                            'paymentType' => $paymentType,
-                            'count' => true,
-                        ]);
+        $total = count($query->getResult());
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -218,4 +209,19 @@ class SbpController extends AbstractActionController
         );           
     }
     
+    public function qrcodeDeleteAction()
+    {
+        $qrcodeId = $this->params()->fromRoute('id', -1);
+        $result = [];
+        if ($qrcodeId > 0){
+            $qrcode = $this->entityManager->getRepository(QrCode::class)
+                    ->find($qrcodeId);
+            if ($qrcode){
+                $result = $this->sbpManager->removeQrCode($qrcode);
+            }
+        }
+        return new JsonModel(
+           $result
+        );           
+    }
 }
