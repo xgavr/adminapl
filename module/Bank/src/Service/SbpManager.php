@@ -300,11 +300,11 @@ class SbpManager
     public function addQrCodePayment($qrCode, $data)
     {
         $tarnsactionId = null;
-        if (!empty(data['refTransactionId'])){
-            $tarnsactionId = data['refTransactionId'];
+        if (!empty($data['refTransactionId'])){
+            $tarnsactionId = $data['refTransactionId'];
         }    
-        if (!empty(data['requestId'])){
-            $tarnsactionId = data['requestId'];
+        if (!empty($data['requestId'])){
+            $tarnsactionId = $data['requestId'];
         }    
         
         if ($tarnsactionId){
@@ -339,8 +339,8 @@ class SbpManager
                 $payment->setPurpose($data['purpose']);
             }    
 
-            if (!empty(data['refTransactionId'])){
-                $payment->setRefTransactionId(data['refTransactionId']);
+            if (!empty($data['refTransactionId'])){
+                $payment->setRefTransactionId($data['refTransactionId']);
                 $payment->setPaymentType(QrCodePayment::TYPE_PAYMENT);
                 $payment->setAmount($qrCode->getAmountAsRub());
             }    
@@ -495,6 +495,13 @@ class SbpManager
                             ->findOneBy(['qrcId' => $payment['qrcId']]);
                     if ($qrCode){
                         $this->updatePaymentStatus($qrCode, $payment);
+                        $this->entityManager->refresh($qrCode);
+                        if ($qrCode->getPaymentStatus() == QrCode::PAYMENT_ACCEPTED){
+                            $this->addQrCodePayment($qrCode, [
+                                'refTransactionId' => $payment['trxId'],
+                                'status' => $payment['status'],
+                            ]);
+                        }
                     }    
                 }
             }
