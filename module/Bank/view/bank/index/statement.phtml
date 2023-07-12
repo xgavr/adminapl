@@ -726,7 +726,12 @@
                 url: url
             })
                 .done(function (data) {
-                    console.log(data);
+//                    console.log(data);
+                    if (data.message){
+                        bootbox.alert(data.message, function() {
+                            //console.log("It was awesome!");
+                        });                    
+                    }    
                 })
                 .fail(function () {
                     bootbox.alert("Произошла ошибка при выполнении операции.");
