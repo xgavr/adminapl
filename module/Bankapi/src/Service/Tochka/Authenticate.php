@@ -248,7 +248,7 @@ class Authenticate {
                 $this->reAuth();
             default:
                 $error = Decoder::decode($response->getContent(), \Laminas\Json\Json::TYPE_ARRAY);
-                $error_msg = $response->getStatusCode();
+                $error_msg = $response->getStatusCode().' '.$response->getReasonPhrase();
                 if (isset($error['error'])){
                     $error_msg .= ' ('.$error['error'].')';
                 }
