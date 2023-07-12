@@ -282,6 +282,9 @@ class SbpManager {
      */
     public function getPaymentData($customerCode, $qrcid)
     {
+        var_dump($customerCode);
+        var_dump($qrcid); exit;
+        
         $this->auth->isAuth();
         $client = new Client();
         $client->setUri($this->auth->getUri2('sbp', 'qr-code/'.$qrcid.'/get-sbp-payments'));
