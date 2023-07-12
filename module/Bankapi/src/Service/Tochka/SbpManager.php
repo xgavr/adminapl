@@ -306,7 +306,7 @@ class SbpManager {
         if ($response->isOk()){
             return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
         }
-        
+        var_dump($response); exit;
         return $this->auth->exception($response);                        
     }    
 
