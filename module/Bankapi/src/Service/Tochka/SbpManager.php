@@ -353,5 +353,39 @@ class SbpManager {
         
         return $this->auth->exception($response);                        
     }    
+
+    /**
+     * Метод для получения информация о платеже-возврате по Системе быстрых платежей
+     * https://enter.tochka.com/uapi/sbp/{apiVersion}/refund/{request_id}
+     * 
+     * @param string $requestId
+     * 
+     * @return array|Exception
+     */
+    public function refundData($requestId)
+    {
+        $this->auth->isAuth();
+        $client = new Client();
+        $client->setUri($this->auth->getUri2('sbp', 'refund/'.$requestId));
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
+        $client->setMethod('GET');
+        $client->setOptions(['timeout' => 60]);
+        
+        $headers = $client->getRequest()->getHeaders();
+        $headers->addHeaders([
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
+        ]);
+
+        $client->setHeaders($headers);
+        
+        $response = $client->send();
+        
+        if ($response->isOk()){
+            return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
+        }
+        
+        return $this->auth->exception($response);                        
+    }    
 }
 

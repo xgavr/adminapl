@@ -11,11 +11,11 @@
 namespace Bank\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use User\Entity\User;
 use Company\Entity\BankAccount;
 use Application\Entity\Order;
 use Company\Entity\Office;
 use Application\Entity\Contact;
+use Bank\Entity\QrCode;
 
 /**
  * Description of QrCode
@@ -386,6 +386,10 @@ class QrCodePayment {
         return 'Unknown';
     }    
     
+    /**
+     * 
+     * @return QrCode
+     */
     public function getQrCode() {
         return $this->qrCode;
     }

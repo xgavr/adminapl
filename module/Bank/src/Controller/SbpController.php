@@ -51,7 +51,7 @@ class SbpController extends AbstractActionController
         $rs = $this->params()->fromQuery('rs');
         $year_month = $this->params()->fromQuery('month');
         $aplOrder = $this->params()->fromQuery('aplOrder');
-        $status = $this->params()->fromQuery('status');
+        $status = $this->params()->fromQuery('status', QrCode::STATUS_ACTIVE);
         $offset = $this->params()->fromQuery('offset');
         $order = $this->params()->fromQuery('order', 'DESC');
         $sort = $this->params()->fromQuery('sort', 'id');
@@ -234,6 +234,24 @@ class SbpController extends AbstractActionController
                     ->find($qrcodeId);
             if ($qrcode){
                 $result = $this->sbpManager->getPayment($qrcode);
+            }
+        }
+        return new JsonModel(
+           $result
+        );           
+    }
+
+    public function refundAction()
+    {
+        $qrcodePaymentId = $this->params()->fromRoute('id', -1);
+        $amount = $this->params()->fromQuery('amount', 0);
+        
+        $result = [];
+        if ($qrcodePaymentId > 0 && !empty($amount)){
+            $qrcodePayment = $this->entityManager->getRepository(QrCodePayment::class)
+                    ->find($qrcodePaymentId);
+            if ($qrcodePayment){
+                $result = $this->sbpManager->refund($qrcodePayment, $amount);
             }
         }
         return new JsonModel(

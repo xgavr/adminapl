@@ -1,5 +1,7 @@
 <?php
     use Bank\Entity\Statement;
+    use Bank\Entity\QrCode;
+    use Bank\Entity\QrCodePayment;
 
     $this->headTitle('Банк');
     $this->mainMenu()->setActiveItemId('company');
@@ -232,6 +234,11 @@
                             <input name="date" class="form-control" type="date">
                         </div>
                         <button id="okAplPaymentDate" type="submit" class="btn btn-default">OK</button>-->
+                        <select name="status" class="form-control qrcode-refresh">
+                            <?php foreach (QrCode::getStatusList() as $key => $value):?>
+                                <option value="<?= $key?>"><?= $value?></option>
+                            <?php endforeach;?>
+                        </select>
                     </div>    
                 </div>
                 <table id="table_qrcode" 
@@ -422,6 +429,11 @@
         });            
     });
     
+    
+    $(document).on('change', '.qrcode-refresh', function (e) {
+        $('#table_qrcode').bootstrapTable('refresh');
+    });  
+
     function tabQueryParams(tab, params) {
         limit = $(tab + ' .page-size').html();
         if (limit){
@@ -472,6 +484,9 @@
 
     function qrcodeQueryParams(params) {
         $('#toolbar_qrcode').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar_qrcode').find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         return tabQueryParams('#table_qrcode', params);
