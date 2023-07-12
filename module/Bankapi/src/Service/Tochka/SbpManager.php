@@ -284,13 +284,57 @@ class SbpManager {
     {
         $this->auth->isAuth();
         $client = new Client();
-        $client->setUri($this->auth->getUri2('sbp', 'qr-code/'.$qrcid.'/payment-sbp-data'));
+        $client->setUri($this->auth->getUri2('sbp', 'qr-code/'.$qrcid.'/get-sbp-payments'));
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('GET');
         $client->setParameterGet([
             'customerCode' => $customerCode,
             'qrcId' => $qrcid,
         ]);
+        $client->setOptions(['timeout' => 60]);
+        
+        $headers = $client->getRequest()->getHeaders();
+        $headers->addHeaders([
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
+        ]);
+
+        $client->setHeaders($headers);
+        
+        $response = $client->send();
+        
+        if ($response->isOk()){
+            return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
+        }
+        
+        return $this->auth->exception($response);                        
+    }    
+
+    /**
+     * Метод запрашивает возврат платежа через Систему быстрых платежей
+     * https://enter.tochka.com/uapi/sbp/{apiVersion}/refund
+     * 
+     * Data:
+        "bankCode": "044525104",
+        "accountCode": "40817810802000000008",
+        "amount": "10",
+        "currency": "RUB",
+        "qrcId": "AS10007GLJ1216F4905A1MTT3CP7GK3N",
+        "purpose": "Оплата по счету № 1 от 01.01.2021. Без НДС",
+        "refTransactionId": "48232c9a-ce82-1593-3cb6-5c85a1ffef8f"      
+     * 
+     * @param string $data
+     * 
+     * @return array|Exception
+     */
+    public function refund($data)
+    {
+        $this->auth->isAuth();
+        $client = new Client();
+        $client->setUri($this->auth->getUri2('sbp', 'refund'));
+        $client->setAdapter($this->auth::HTTPS_ADAPTER);
+        $client->setMethod('POST');
+        $client->setRawBody(Encoder::encode($data));
         $client->setOptions(['timeout' => 60]);
         
         $headers = $client->getRequest()->getHeaders();

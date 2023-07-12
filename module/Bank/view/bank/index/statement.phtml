@@ -698,11 +698,36 @@
             //console.log("It was awesome!");
         });
     }
+
+    function qrcodePayments(qrcodeId){
+        var url = "/sbp/qrcode-payments/" + qrcodeId;
+        if (url){
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                    console.log(data);
+                })
+                .fail(function () {
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });        
+        }        
+    }
     
     
     function qrcodeFormatter(value, row){
         var btn = '<nobr>';
-        
+
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Платежи по QR Коду"'; 
+        btn += ' onclick="qrcodePayments(\''+row.id+'\')">';
+        btn += '<span class="glyphicon glyphicon-list" aria-hidden="true"></span>';
+        btn += '</button>';
+
         btn += ' <button';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs"';

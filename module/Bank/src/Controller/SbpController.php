@@ -233,7 +233,7 @@ class SbpController extends AbstractActionController
             $qrcode = $this->entityManager->getRepository(QrCode::class)
                     ->find($qrcodeId);
             if ($qrcode){
-                $result = $this->sbpManager->add($qrcode);
+                $result = $this->sbpManager->getPayment($qrcode);
             }
         }
         return new JsonModel(
