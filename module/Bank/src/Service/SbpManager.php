@@ -410,6 +410,7 @@ class SbpManager
         $customerCode = $settings['customer_code'];
         if ($customerCode){
             $result = $this->sbpManager->getPaymentData($customerCode, $qrCode->getQrcId());
+            var_dump($result); exit;
             if (!empty($result['Data'])){
                 foreach ($result['Data']['Payments'] as $payment){
                     $result = $this->addQrCodePayment($qrCode, $payment);
