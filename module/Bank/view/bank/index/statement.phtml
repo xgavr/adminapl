@@ -752,7 +752,7 @@
     }
 
     function qrcodePayments(qrcodeId){
-        var url = "/sbp/qrcode-payments/" + qrcodeId;
+        var url = "/sbp/payment-status/" + qrcodeId;
         if (url){
             $.ajax({
                 type: 'GET',

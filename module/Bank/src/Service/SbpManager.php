@@ -470,20 +470,27 @@ class SbpManager
         return;
     }
     
+
     /**
      * Обновить статусы qr кодов
+     * @param QrCode $qrCode
+     * @return array
      */
-    public function updatePaymentStatuses()
+    public function updatePaymentStatuses($qrCode = null)
     {
-        $codes = $this->entityManager->getRepository(QrCode::class)
-                ->findBy(['status' => QrCode::STATUS_ACTIVE, 'qrcType' => QrCode::QR_Dynamic]);
-        
         $qrcIds = [];
         $result = [];
-        
-        foreach ($codes as $qrCode){
+
+        if (empty($qrCode)){
+            $codes = $this->entityManager->getRepository(QrCode::class)
+                    ->findBy(['status' => QrCode::STATUS_ACTIVE, 'qrcType' => QrCode::QR_Dynamic]);
+
+            foreach ($codes as $qrCode){
+                $qrcIds[] = $qrCode->getQrcId();
+            }
+        } else {
             $qrcIds[] = $qrCode->getQrcId();
-        }
+        }    
         
         if (count($qrcIds)){
             $result = $this->sbpManager->getPaymentStatuses(implode(',', $qrcIds));

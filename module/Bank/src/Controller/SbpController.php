@@ -208,6 +208,22 @@ class SbpController extends AbstractActionController
            $result
         );           
     }
+
+    public function paymentStatusAction()
+    {
+        $qrcodeId = $this->params()->fromRoute('id', -1);
+        $result = [];
+        if ($qrcodeId > 0){
+            $qrcode = $this->entityManager->getRepository(QrCode::class)
+                    ->find($qrcodeId);
+            if ($qrcode){
+                $result = $this->sbpManager->updatePaymentStatuses($qrcode);
+            }
+        }
+        return new JsonModel(
+           $result
+        );           
+    }
     
     public function qrcodeDeleteAction()
     {
