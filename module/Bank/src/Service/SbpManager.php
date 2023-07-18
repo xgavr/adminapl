@@ -526,14 +526,16 @@ class SbpManager
     {
         $purpose = 'Воззврат оплаты по заказу '.$qrcodePayment->getQrCode()->getOrderAplId();
         
-        $data = [
-            'bankCode' => $qrcodePayment->getBankAccount()->getBik(),
-            'accountCode' => $qrcodePayment->getBankAccount()->getRs(),
-            'amount' => $amount,
-            'currency' => $qrcodePayment->getQrCode()->getCurrency(),
-            'qrcId' => $qrcodePayment->getQrCode()->getQrcId(),
-            'purpose' => $purpose,
-            'refTransactionId' => $qrcodePayment->getRefTransactionId(),
+        $data = ['Data' => 
+            [
+                'bankCode' => $qrcodePayment->getBankAccount()->getBik(),
+                'accountCode' => $qrcodePayment->getBankAccount()->getRs(),
+                'amount' => $amount,
+                'currency' => $qrcodePayment->getQrCode()->getCurrency(),
+                'qrcId' => $qrcodePayment->getQrCode()->getQrcId(),
+                'purpose' => $purpose,
+                'refTransactionId' => $qrcodePayment->getRefTransactionId(),
+            ],    
         ];
         
         $result = $this->sbpManager->refund($data);
