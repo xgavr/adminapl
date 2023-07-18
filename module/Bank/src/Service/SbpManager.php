@@ -308,10 +308,10 @@ class SbpManager
         }    
         
         if ($tarnsactionId){
-            if (!empty($data['refTransactionId'])){
-                $payment = $this->entityManager->getRepository(QrCodePayment::class)
-                        ->findOneBy(['refTransactionId' => $tarnsactionId]);
-            } else {
+            $payment = $this->entityManager->getRepository(QrCodePayment::class)
+                    ->findOneBy(['refTransactionId' => $tarnsactionId]);
+            
+            if (!$payment){
                 $payment = new QrCodePayment();            
                 $payment->setDateCreated(date('Y-m-d H:i:s'));
                 $payment->setCashDoc(null);
