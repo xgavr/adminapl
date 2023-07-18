@@ -224,6 +224,25 @@ class SbpController extends AbstractActionController
            $result
         );           
     }
+
+    public function refundAction()
+    {
+        $paymentId = $this->params()->fromRoute('id', -1);
+        $amount = $this->params()->fromQuery('amoun', 0);
+        
+        $result = [];
+        
+        if ($paymentId > 0){
+            $payment = $this->entityManager->getRepository(QrCodePayment::class)
+                    ->find($paymentId);
+            if ($payment && $amount){
+                $result = $this->sbpManager->refund($payment, $amount);
+            }
+        }
+        return new JsonModel(
+           $result
+        );           
+    }
     
     public function qrcodeDeleteAction()
     {

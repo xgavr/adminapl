@@ -771,6 +771,34 @@
                 });        
         }        
     }
+
+    function sbpRefund(paymentId){
+        bootbox.prompt({
+            title: 'Укажите сумму возврата',
+            inputType: 'number',
+            callback: function (result) {
+                if (result){
+                    var url = "/sbp/refund/" + paymentId + "?amount="+result;
+                    if (url){
+                        $.ajax({
+                            type: 'GET',
+                            url: url
+                        })
+                            .done(function (data) {
+                                if (data.message){
+                                    bootbox.alert(data.message, function() {
+                                    });                    
+                                }    
+                            })
+                            .fail(function () {
+                                bootbox.alert("Произошла ошибка при выполнении операции.");
+                            });        
+                    }        
+                    
+                }
+            }
+        });
+    }
     
     
     function qrcodeFormatter(value, row){
@@ -783,6 +811,15 @@
         btn += ' title="Платежи по QR Коду"'; 
         btn += ' onclick="qrcodePayments(\''+row.id+'\')">';
         btn += '<span class="glyphicon glyphicon-list" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Возврат"'; 
+        btn += ' onclick="sbpRefund(\''+row.id+'\')">';
+        btn += '<span class="glyphicon glyphicon-return" aria-hidden="true"></span>';
         btn += '</button>';
 
         btn += ' <button';
