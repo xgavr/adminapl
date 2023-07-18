@@ -197,7 +197,7 @@ class QrCode {
     protected $contact;
     
     /**
-     * @ORM\OneToMany(targetEntity="Bank\Entity\QrCodePayment", inversedBy="qrcodePayments") 
+     * @ORM\OneToMany(targetEntity="Bank\Entity\QrCodePayment", mappedBy="qrCode") 
      * @ORM\JoinColumn(name="id", referencedColumnName="qrcode_id")
      */
     protected $qrcodePayments;    
