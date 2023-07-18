@@ -265,7 +265,7 @@ class SbpController extends AbstractActionController
         $result = [];
         if ($qrcodePaymentId && !empty($amount)){
             $qrcodePayment = $this->entityManager->getRepository(QrCodePayment::class)
-                    ->findBy(['refTransactionId' => $qrcodePaymentId]);
+                    ->findOneBy(['refTransactionId' => $qrcodePaymentId]);
             if ($qrcodePayment){
                 $result = $this->sbpManager->refund($qrcodePayment, $amount);
             }
