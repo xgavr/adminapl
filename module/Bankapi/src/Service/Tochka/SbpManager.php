@@ -284,7 +284,7 @@ class SbpManager {
     {        
         $this->auth->isAuth();
         $client = new Client();
-        $client->setUri($this->auth->getUri2('sbp', 'qr-code/'.$qrcid.'/get-sbp-payments'));
+        $client->setUri($this->auth->getUri2('sbp', 'get-sbp-payments'));
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('GET');
         $client->setParameterGet([
