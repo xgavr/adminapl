@@ -297,6 +297,12 @@ class Order {
     * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
    */
    private $supplierOrders;
+
+   /**
+    * @ORM\OneToMany(targetEntity="Bank\Entity\QrCode", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
+   */
+   private $qrcodes;
     
     /**
     * @ORM\OneToMany(targetEntity="Admin\Entity\Wammchat", mappedBy="order")
@@ -319,6 +325,7 @@ class Order {
         $this->marketplaceOrders = new ArrayCollection();
         $this->vt = new ArrayCollection();
         $this->wammchats = new ArrayCollection();
+        $this->qrcodes = new ArrayCollection();
     }
     
     protected function _encrypt($unencryptedText, $passphrase)
