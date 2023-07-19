@@ -149,7 +149,7 @@ class PriceManager {
      */
     public function getPriceByMail($priceGetting)
     {
-        if ($priceGetting->getEmail() && $priceGetting->getEmailPassword()){
+        if ($priceGetting->getEmail() && $priceGetting->getAppPassword()){
             $box = [
                 'host' => 'imap.yandex.ru',
                 'server' => '{imap.yandex.ru:993/imap/ssl}',
