@@ -753,7 +753,7 @@ class GoodsRepository extends EntityRepository
             ->andWhere('g.aplId > 0')    
             ->andWhere('g.statusOemEx = ?1')
             ->setParameter('1', Goods::OEM_EX_NEW)    
-            ->setMaxResults(10000)    
+            ->setMaxResults(1000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
