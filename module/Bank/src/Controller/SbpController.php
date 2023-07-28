@@ -282,7 +282,7 @@ class SbpController extends AbstractActionController
 
     public function refundAction()
     {
-        $paymentId = $this->params()->fromRounte('payment');
+        $paymentId = $this->params()->fromRounte('id');
         $amount = $this->params()->fromQuery('amount', 0);
         
         $result = [];

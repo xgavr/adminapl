@@ -849,7 +849,7 @@
             value: amount,
             callback: function (result) {
                 if (result){
-                    var url = "/sbp/refund/" + paymentId + "&amount="+result;
+                    var url = "/sbp/refund/" + paymentId + "?amount="+result;
                     if (url){
                         $.ajax({
                             type: 'GET',
