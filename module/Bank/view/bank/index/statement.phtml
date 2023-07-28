@@ -392,7 +392,7 @@
                             }, {
                                 field: 'dateCreated',
                                 title: 'Дата',
-                                width: 50
+                                width: 200
                             }, {
                             }, {
                                 field: 'amount',
@@ -844,13 +844,14 @@
         }        
     }
 
-    function sbpRefund(paymentId){
+    function sbpRefund(paymentId, amount=0){
         bootbox.prompt({
             title: 'Укажите сумму возврата',
             inputType: 'number',
+            value: amount,
             callback: function (result) {
                 if (result){
-                    var url = "/sbp/refund/?payment=" + paymentId + "&amount="+result;
+                    var url = "/sbp/refund/" + paymentId + "&amount="+result;
                     if (url){
                         $.ajax({
                             type: 'GET',
@@ -890,7 +891,7 @@
         btn += ' class="btn btn-default btn-xs"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Платежи по QR Коду"'; 
-        btn += ' onclick="qrcodePayments(\''+row.id+'\')">';
+        btn += ' onclick="qrcodePayments(\''+row.id+'\', \''+row.amount+'\')">';
         btn += '<span class="glyphicon glyphicon-list" aria-hidden="true"></span>';
         btn += '</button>';
 
@@ -927,7 +928,7 @@
             btn += ' class="btn btn-default btn-xs"';
             btn += ' aria-label="Left Align"'; 
             btn += ' title="Возврат"'; 
-            btn += ' onclick="sbpRefund(\''+row.refTransactionId+'\')">';
+            btn += ' onclick="sbpRefund(\''+row.id+'\')">';
             btn += '<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>';
             btn += '</button>';
         }    
