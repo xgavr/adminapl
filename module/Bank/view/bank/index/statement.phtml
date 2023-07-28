@@ -405,8 +405,7 @@
                                 width: 200
                             }, {
                                 field: 'paymentMessage',
-                                title: 'Состояние',
-                                width: 2
+                                title: 'Состояние'
                             }, {
                                 field: 'active',
                                 title: '',
@@ -890,7 +889,7 @@
         btn += ' class="btn btn-default btn-xs"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Платежи по QR Коду"'; 
-        btn += ' onclick="qrcodePayments(\''+row.id+'\', \''+row.amount+'\')">';
+        btn += ' onclick="qrcodePayments(\''+row.id+'\')">';
         btn += '<span class="glyphicon glyphicon-list" aria-hidden="true"></span>';
         btn += '</button>';
 
@@ -927,7 +926,7 @@
             btn += ' class="btn btn-default btn-xs"';
             btn += ' aria-label="Left Align"'; 
             btn += ' title="Возврат"'; 
-            btn += ' onclick="sbpRefund(\''+row.id+'\')">';
+            btn += ' onclick="sbpRefund(\''+row.id+'\', \''+row.amount+'\')">';
             btn += '<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>';
             btn += '</button>';
         }    
