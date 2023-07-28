@@ -14,6 +14,7 @@ use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Company\Entity\Contract;
 use Bank\Entity\QrCode;
+use Bank\Entity\QrCodePayment;
 
 /**
  * Description of QrCodeRepository
@@ -90,6 +91,54 @@ class QrCodeRepository extends EntityRepository
             if (!empty($params['status'])){
                 if (is_numeric($params['status'])){
                     $queryBuilder->andWhere('q.status = :status')
+                            ->setParameter('status', $params['status']);
+                }    
+            }            
+        }
+                
+        return $queryBuilder->getQuery();
+        
+    }    
+
+    /**
+     * Получить выборку оплат по qr коду
+     * 
+     * @param QrCode $qrCode
+     * @param array $params
+     * @return object
+     */
+    public function findQrcodePayments($qrCode, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('qp, o')
+                ->from(QrCodePayment::class, 'qp')
+                ->leftJoin('qp.order', 'o')
+                ->where('qp.qrCode = :qrCodeId')
+                ->setParameter('qrCodeId', $qrCode->getId())
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['sort'])){
+                $queryBuilder->addOrderBy('qp.'.$params['sort'], $params['order']);
+            }
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(qp.dateCreated) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(qp.dateCreated) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
+            if (!empty($params['status'])){
+                if (is_numeric($params['status'])){
+                    $queryBuilder->andWhere('qp.status = :status')
                             ->setParameter('status', $params['status']);
                 }    
             }            

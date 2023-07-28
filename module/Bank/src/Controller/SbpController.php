@@ -96,11 +96,14 @@ class SbpController extends AbstractActionController
         $result = [];
         
         if ($qrcodeId > 0){
-            $payments = $this->entityManager->getRepository(QrCodePayment::class)
-                    ->findBy(['qrCode' => $qrcodeId]);
-            foreach ($payments as $payment){
-                $result[] = $payment;
-            }
+            $qrCode = $this->entityManager->getRepository(QrCode::class)
+                    ->find($qrcodeId);
+            
+            if ($qrCode){
+                $query = $this->entityManager->getRepository(QrCodePayment::class)
+                        ->findQrcodePayments($qrCode);
+                $result = $query->getResult(2);
+            }    
         }
         
         return new JsonModel([
