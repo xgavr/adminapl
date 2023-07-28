@@ -277,10 +277,11 @@ class SbpManager {
      * 
      * @param string $customerCode
      * @param string $qrcid
+     * @param date $fromDate
      * 
      * @return array|Exception
      */
-    public function getPaymentData($customerCode, $qrcid)
+    public function getPaymentData($customerCode, $qrcid, $fromDate = null)
     {        
         $this->auth->isAuth();
         $client = new Client();
@@ -290,6 +291,7 @@ class SbpManager {
         $client->setParameterGet([
             'customerCode' => $customerCode,
             'qrcId' => $qrcid,
+            'fromDate' => $fromDate,
         ]);
         $client->setOptions(['timeout' => 60]);
         

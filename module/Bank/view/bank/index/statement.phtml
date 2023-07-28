@@ -255,6 +255,7 @@
                     data-show-toggle="false"
                     data-query-params="qrcodeQueryParams"
                     data-response-handler="responseHandler"
+                    data-detail-view="true"
                     >
                     <thead>
                         <tr>
@@ -325,6 +326,7 @@
     });
 
     var $table = $('#table'),
+        $qrCodeTable = $('#table_qrcode'),    
         $ok = $('#ok'), 
         $okStatementDate = $('#okStatementDate'),
         $okAcquiring = $('#okAcquiring'), 
@@ -337,9 +339,8 @@
         $('#table_balance').bootstrapTable('refresh');
         $('#table_acquiring').bootstrapTable('refresh');
         $('#table_apl').bootstrapTable('refresh');
-        $('#table_qrcode').bootstrapTable('refresh');
+        $qrCodeTable.bootstrapTable('refresh');
     }
-
 
     $(function () {
         $(".inputclear").click(function(){
@@ -368,6 +369,56 @@
         });
         $okAplPaymentDate.click(function () {
             $('#table_apl').bootstrapTable('refresh');
+        });
+
+        $qrCodeTable.bootstrapTable('refreshOptions', {
+            url: '/sbp/content',
+            silent: true,
+            onExpandRow: function (index, row, $detail) {
+                $detail.html('Идет загрузка...');
+                $.ajax({
+                    type: "GET",
+                    url: "/sbp/payment-content/"+row.id,
+                    success: function (result) {
+                        $detail.html('<table id="detail'+index+'"></table>').find('table').bootstrapTable({
+                            classes: 'table table-bordered table-hover table-condensed', 
+                            idField: "vtpId",
+                            columns: [{
+                                field: 'id',
+                                title: 'Id',
+                                width: 5,
+                                align: 'right'
+                                
+                            }, {
+                                field: 'dateCreated',
+                                title: 'Дата',
+                                width: 50
+                            }, {
+                            }, {
+                                field: 'amount',
+                                title: 'Сумма',
+                                width: 100,
+                                align: 'right'
+                            }, {
+                            }, {
+                                field: 'purpose',
+                                title: 'Назначение платежа',
+                                width: 200
+                            }, {
+                                field: 'status',
+                                title: 'Состояние',
+                                width: 2
+                            }, {
+                                field: 'active',
+                                title: '',
+                                width: 2,
+                                formatter: 'qrcodeRefundFormatter' 
+                            }],
+                            data: result                                                
+                        });
+                    }    
+                });
+            }
         });
     });
 
@@ -825,14 +876,14 @@
     function qrcodeFormatter(value, row){
         var btn = '<nobr>';
 
-        btn += ' <button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-info btn-xs"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' title="Платежи по QR Коду"'; 
-        btn += ' onclick="sbpPayments(\''+row.id+'\')">';
-        btn += '<span class="glyphicon glyphicon-list" aria-hidden="true"></span>';
-        btn += '</button>';
+//        btn += ' <button';
+//        btn += ' type="button"';
+//        btn += ' class="btn btn-info btn-xs"';
+//        btn += ' aria-label="Left Align"'; 
+//        btn += ' title="Платежи по QR Коду"'; 
+//        btn += ' onclick="sbpPayments(\''+row.id+'\')">';
+//        btn += '<span class="glyphicon glyphicon-list" aria-hidden="true"></span>';
+//        btn += '</button>';
 
         btn += ' <button';
         btn += ' type="button"';
@@ -841,15 +892,6 @@
         btn += ' title="Платежи по QR Коду"'; 
         btn += ' onclick="qrcodePayments(\''+row.id+'\')">';
         btn += '<span class="glyphicon glyphicon-list" aria-hidden="true"></span>';
-        btn += '</button>';
-
-        btn += ' <button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' title="Возврат"'; 
-        btn += ' onclick="sbpRefund(\''+row.paymentTrxId+'\')">';
-        btn += '<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>';
         btn += '</button>';
 
         btn += ' <button';
@@ -871,6 +913,24 @@
         btn += ' onclick="tableRowDelete(\''+url+'\', \'table_qrcode\')">';
         btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
+
+        btn += '</nobr>';
+        return btn;
+    }    
+    
+    function qrcodeRefundFormatter(value, row){
+        var btn = '<nobr>';
+
+        if (row.paymentType == '<?= QrCodePayment::TYPE_PAYMENT?>'){
+            btn += ' <button';
+            btn += ' type="button"';
+            btn += ' class="btn btn-default btn-xs"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' title="Возврат"'; 
+            btn += ' onclick="sbpRefund(\''+row.refTransactionId+'\')">';
+            btn += '<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>';
+            btn += '</button>';
+        }    
 
         btn += '</nobr>';
         return btn;

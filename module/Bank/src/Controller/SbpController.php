@@ -87,6 +87,26 @@ class SbpController extends AbstractActionController
             'total' => $total,
             'rows' => $result,
         ]);          
+    } 
+    
+    public function paymentContentAction()
+    {        	        
+        $qrcodeId = $this->params()->fromRoute('id', -1);
+        
+        $result = [];
+        
+        if ($qrcodeId > 0){
+            $payments = $this->entityManager->getRepository(QrCodePayment::class)
+                    ->findBy(['qrCode' => $qrcodeId]);
+            foreach ($payments as $payment){
+                $result[] = $payment;
+            }
+        }
+        
+        return new JsonModel([
+            'total' => count($result),
+            'rows' => $result,
+        ]);          
     }    
     
     public function editFormAction()
