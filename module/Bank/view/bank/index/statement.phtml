@@ -394,7 +394,7 @@
                                 title: 'Назначение платежа',
                                 width: 200
                             }, {
-                                field: 'paymentMessage',
+                                field: 'paymentStatus',
                                 title: 'Статус',
                                 formatter: 'sbpPaymentStatusFormatter'
                             }, {
@@ -816,6 +816,10 @@
     }
 
     function sbpPayments(qrcodeId){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: false
+        });
         var url = "/sbp/qrcode-payments/" + qrcodeId;
         if (url){
             $.ajax({
@@ -824,6 +828,7 @@
             })
                 .done(function (data) {
 //                    console.log(data);
+                    dialog.modal('hide');
                     if (data.message){
                         bootbox.alert(data.message, function() {
                             //console.log("It was awesome!");
@@ -831,11 +836,17 @@
                     }    
                 })
                 .fail(function () {
+                    dialog.modal('hide');
                     bootbox.alert("Произошла ошибка при выполнении операции.");
                 });        
         }        
     }
 
+    /**
+     * Не используется
+     * @param string qrcodeId
+     * @returns {undefined}
+     */
     function qrcodePayments(qrcodeId){
         var url = "/sbp/payment-status/" + qrcodeId;
         if (url){
@@ -904,7 +915,7 @@
         btn += ' class="btn btn-default btn-xs"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Платежи по QR Коду"'; 
-        btn += ' onclick="qrcodePayments(\''+row.id+'\')">';
+        btn += ' onclick="sbpPayments(\''+row.id+'\')">';
         btn += '<span class="glyphicon glyphicon-list" aria-hidden="true"></span>';
         btn += '</button>';
 

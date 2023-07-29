@@ -501,12 +501,12 @@ class SbpManager
                     if ($qrCode){
                         $this->updatePaymentStatus($qrCode, $payment);
                         $this->entityManager->refresh($qrCode);
-                        if ($qrCode->getPaymentStatus() == QrCode::PAYMENT_ACCEPTED){
-                            $this->addQrCodePayment($qrCode, [
-                                'refTransactionId' => $payment['trxId'],
-                                'status' => $payment['status'],
-                            ]);
-                        }
+//                        if ($qrCode->getPaymentStatus() == QrCode::PAYMENT_ACCEPTED){
+//                            $this->addQrCodePayment($qrCode, [
+//                                'refTransactionId' => $payment['trxId'],
+//                                'status' => $payment['status'],
+//                            ]);
+//                        }
                     }    
                 }
             }
