@@ -345,7 +345,7 @@ class SbpManager
                 $payment->setAmount($qrCode->getAmountAsRub());
             }    
             if (!empty($data['requestId'])){
-                $payment->setRefTransactionId(data['requestId']);
+                $payment->setRefTransactionId($data['requestId']);
                 $payment->setPaymentType(QrCodePayment::TYPE_REFUND);
             }    
 
@@ -392,6 +392,7 @@ class SbpManager
 
             $this->entityManager->persist($payment);
             $this->entityManager->flush();
+            $this->entityManager->refresh($payment);
 
             return $payment;        
         }
@@ -413,6 +414,18 @@ class SbpManager
             if (!empty($result['Data'])){
                 foreach ($result['Data']['Payments'] as $payment){
                     $payment = $this->addQrCodePayment($qrCode, $payment);
+                    if ($payment){
+                        switch ($payment->getPaymentStatus()){
+                            case QrCodePayment::PAYMENT_ACCEPTED:
+                            case QrCodePayment::PAYMENT_ERROR:
+                            case QrCodePayment::PAYMENT_REJECTED:
+                            case QrCodePayment::PAYMENT_TIMEOUT:
+                                return $payment;
+                            default:
+                                sleep(5);
+                                $this->getPayment($qrCode); //обновить статус
+                        }
+                    }
                 }
             }
         }    
@@ -500,13 +513,6 @@ class SbpManager
                             ->findOneBy(['qrcId' => $payment['qrcId']]);
                     if ($qrCode){
                         $this->updatePaymentStatus($qrCode, $payment);
-//                        $this->entityManager->refresh($qrCode);
-//                        if ($qrCode->getPaymentStatus() == QrCode::PAYMENT_ACCEPTED){
-//                            $this->addQrCodePayment($qrCode, [
-//                                'refTransactionId' => $payment['trxId'],
-//                                'status' => $payment['status'],
-//                            ]);
-//                        }
                     }    
                 }
             }
@@ -539,7 +545,7 @@ class SbpManager
         ];
         
         $result = $this->sbpManager->refund($data);
-        var_dump($result); exit;
+//        var_dump($result); exit;
         if (!empty($result['Data'])){
             $resultData = $result['Data'];
             $this->addQrCodePayment($qrcodePayment->getQrCode(), [
