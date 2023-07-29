@@ -827,6 +827,7 @@
             })
                 .done(function (data) {
 //                    console.log(data);
+                    $qrCodeTable.bootstrapTable('refresh');
                     dialog.modal('hide');
                     if (data.message){
                         bootbox.alert(data.message, function() {
@@ -885,6 +886,7 @@
                             url: url
                         })
                             .done(function (data) {
+                                $qrCodeTable.bootstrapTable('refresh');
                                 dialog.modal('hide');
                                 if (data.message){
                                     bootbox.alert(data.message, function() {
@@ -914,6 +916,7 @@
                 url: url
             })
                 .done(function (data) {
+                    $qrCodeTable.bootstrapTable('refresh');
                     dialog.modal('hide');
                     if (data.message){
                         bootbox.alert(data.message, function() {
@@ -992,7 +995,7 @@
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs"';
             btn += ' aria-label="Left Align"'; 
-            btn += ' title="Возврат"'; 
+            btn += ' title="Обовить статус"'; 
             btn += ' onclick="sbpRefundUpdate(\''+row.id+'\')">';
             btn += '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>';
             btn += '</button>';
