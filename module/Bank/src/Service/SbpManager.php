@@ -500,7 +500,7 @@ class SbpManager
                             ->findOneBy(['qrcId' => $payment['qrcId']]);
                     if ($qrCode){
                         $this->updatePaymentStatus($qrCode, $payment);
-                        $this->entityManager->refresh($qrCode);
+//                        $this->entityManager->refresh($qrCode);
 //                        if ($qrCode->getPaymentStatus() == QrCode::PAYMENT_ACCEPTED){
 //                            $this->addQrCodePayment($qrCode, [
 //                                'refTransactionId' => $payment['trxId'],
@@ -539,7 +539,7 @@ class SbpManager
         ];
         
         $result = $this->sbpManager->refund($data);
-        
+        var_dump($result); exit;
         if (!empty($result['Data'])){
             $resultData = $result['Data'];
             $this->addQrCodePayment($qrcodePayment->getQrCode(), [
