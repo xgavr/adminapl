@@ -548,6 +548,23 @@ class SbpManager
                 'status' => $resultData['status'],
                 'purpose' => $purpose,
             ]);
+            
+            $status = $resultData['status'];
+                    
+            $try = 0;
+            while ($try < 5){
+                switch($status){
+                    case 'Accepted':
+                    case 'Rejected':
+                    case 'Error':
+                    case 'Timeout': return $result;
+                    default: 
+                        sleep(5);
+                        $result = $this->updateRefund($qrcodePayment);
+                        $status = $result['Data']['status'];
+                }
+                $try++;
+            }
         }
         
         return $result;
