@@ -29,7 +29,7 @@ class QrCode {
 
     const STATUS_ACTIVE = 1; //данные новые
     const STATUS_SUSPENDED = 2; //данные приостановленны
-    const STATUS_RETIRED = 9; //данные удалены
+    const STATUS_RETIRED = 9; //устарело
 
     const PAYMENT_NOT_STARTED = 1; //операции по QR-коду не существует
     const PAYMENT_RECEIVED = 2; //операция в обработке
@@ -469,7 +469,7 @@ class QrCode {
         return [
             self::STATUS_ACTIVE => 'Новый',
             self::STATUS_SUSPENDED => 'Приостановлен',
-            self::STATUS_RETIRED => 'Отменен',
+            self::STATUS_RETIRED => 'Завершен',
         ];
     }    
     

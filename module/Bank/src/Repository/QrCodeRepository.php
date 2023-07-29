@@ -94,6 +94,15 @@ class QrCodeRepository extends EntityRepository
                             ->setParameter('status', $params['status']);
                 }    
             }            
+            if (!empty($q)){
+                if (is_numeric($q)){
+                    $orX = $queryBuilder->expr()->orX();
+                    $orX->add($queryBuilder->expr()->eq('o.aplId', $q));                        
+                    $orX->add($queryBuilder->expr()->eq('q.amount', round($q*100)));                        
+
+                    $queryBuilder->andWhere($orX);
+                }    
+            }            
         }
                 
         return $queryBuilder->getQuery();

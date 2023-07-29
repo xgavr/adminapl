@@ -344,7 +344,7 @@ class SbpManager
                 $payment->setPaymentType(QrCodePayment::TYPE_PAYMENT);
                 $payment->setAmount($qrCode->getAmountAsRub());
             }    
-            if (!empty(data['requestId'])){
+            if (!empty($data['requestId'])){
                 $payment->setRefTransactionId(data['requestId']);
                 $payment->setPaymentType(QrCodePayment::TYPE_REFUND);
             }    

@@ -51,7 +51,7 @@ class SbpController extends AbstractActionController
         $rs = $this->params()->fromQuery('rs');
         $year_month = $this->params()->fromQuery('month');
         $aplOrder = $this->params()->fromQuery('aplOrder');
-        $status = $this->params()->fromQuery('status', QrCode::STATUS_ACTIVE);
+        $status = $this->params()->fromQuery('status');
         $offset = $this->params()->fromQuery('offset');
         $order = $this->params()->fromQuery('order', 'DESC');
         $sort = $this->params()->fromQuery('sort', 'id');
