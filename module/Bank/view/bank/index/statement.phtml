@@ -394,7 +394,7 @@
                                 title: 'Назначение платежа',
                                 width: 200
                             }, {
-                                field: 'paymentStatus',
+                                field: 'paymentMessage',
                                 title: 'Статус',
                                 formatter: 'sbpPaymentStatusFormatter'
                             }, {
@@ -731,7 +731,7 @@
 
     function sbpPaymentStatusFormatter(value, row){
         var statuses = <?= Encoder::encode(QrCodePayment::getPaymentStatusList())?>;
-        return statuses[value];
+        return statuses[row.paymentStatus];
     }    
 
     function formatDate(value){
