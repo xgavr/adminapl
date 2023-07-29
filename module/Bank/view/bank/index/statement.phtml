@@ -2,6 +2,7 @@
     use Bank\Entity\Statement;
     use Bank\Entity\QrCode;
     use Bank\Entity\QrCodePayment;
+    use Laminas\Json\Encoder;
 
     $this->headTitle('Банк');
     $this->mainMenu()->setActiveItemId('company');
@@ -213,7 +214,7 @@
                     <div class="form-inline" role="form">
                         <div class="form-group">
                             <div class="btn-group">
-                                <input name="search" style="width: 200px" class="form-control enter-search" type="text" onfocus="this.select();" placeholder="Номер заказа в АПЛ, сумма">
+                                <input name="search" style="width: 250px" class="form-control enter-search" type="text" onfocus="this.select();" placeholder="Номер заказа в АПЛ, сумма">
                                 <span class="glyphicon glyphicon-remove-circle inputclear"></span>
                             </div>
                         </div>
@@ -247,7 +248,7 @@
                              <th data-field="dateCreated" data-width="200">Дата</th>
                              <th data-field="orderAplId" data-width="200" data-formatter="docFormatter">Заказ</th>
                              <th data-field="amount" data-formatter="sbpAmount" data-align='right' data-width="200">Сумма</th>             
-                             <th data-field="paymentMessage">Статус</th>
+                             <th data-field="paymentStatus" data-formatter="sbpPaymentStatusFormatter">Статус</th>
                              <th data-field="status" data-width="20" data-formatter="qrcodeFormatter"></th>             
                          </tr>                
                     </thead>
@@ -721,6 +722,11 @@
         
         return value;
     }
+
+    function sbpPaymentStatusFormatter(value, row){
+        var statuses = <?= Encoder::encode(QrCode::getPaymentStatusList())?>;
+        return statuses[value];
+    }    
 
     function formatDate(value){
         if (value){

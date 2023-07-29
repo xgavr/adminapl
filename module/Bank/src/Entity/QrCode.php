@@ -511,11 +511,11 @@ class QrCode {
     public static function getPaymentStatusList() 
     {
         return [
-            self::PAYMENT_NOT_STARTED => 'Операции по QR-коду не существует',
-            self::PAYMENT_RECEIVED => 'Операция в обработке',
-            self::PAYMENT_IN_PROGRESS => 'Операция в обработке',
-            self::PAYMENT_ACCEPTED => 'Операция завершена успешно',
-            self::PAYMENT_REJECTED => 'Операция отклонена',
+            self::PAYMENT_NOT_STARTED => 'Оплаты по QR-коду не существует',
+            self::PAYMENT_RECEIVED => 'Оплата в обработке',
+            self::PAYMENT_IN_PROGRESS => 'Оплата в обработке',
+            self::PAYMENT_ACCEPTED => 'Оплата завершена успешно',
+            self::PAYMENT_REJECTED => 'Оплата отклонена',
         ];
     }    
     
