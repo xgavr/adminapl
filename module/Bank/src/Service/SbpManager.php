@@ -420,7 +420,7 @@ class SbpManager
                             case QrCodePayment::PAYMENT_ERROR:
                             case QrCodePayment::PAYMENT_REJECTED:
                             case QrCodePayment::PAYMENT_TIMEOUT:
-                                return $payment;
+                                return $result;
                             default:
                                 sleep(5);
                                 $this->getPayment($qrCode); //обновить статус
