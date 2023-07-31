@@ -34,6 +34,10 @@ $form->get('cash')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('cashSbp')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('dateStart')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -132,6 +136,12 @@ $form->prepare();
                         <?= $this->formLabel($form->get('cash')); ?>
                         <?= $this->formElement($form->get('cash')); ?>
                         <?= $this->formElementErrors($form->get('cash')); ?>                  
+                    </div>
+
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('cashSbp')); ?>
+                        <?= $this->formElement($form->get('cashSbp')); ?>
+                        <?= $this->formElementErrors($form->get('cashSbp')); ?>                  
                     </div>
 
                     <div class="form-group">

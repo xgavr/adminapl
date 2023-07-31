@@ -109,6 +109,12 @@ class BankAccount {
     private $cash;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Cash\Entity\Cash", inversedBy="bank_account") 
+     * @ORM\JoinColumn(name="cash_sbp_id", referencedColumnName="id")
+     */
+    private $cashSbp;
+    
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Order", mappedBy="bankAccount")
     * @ORM\JoinColumn(name="id", referencedColumnName="bank_account_id")
      */
@@ -474,6 +480,22 @@ class BankAccount {
         if ($cash){
             $cash->addBankAccount($this);
         }    
+    }     
+
+    /*
+     * @return Cash
+     */    
+    public function getCashSbp() 
+    {
+        return $this->cashSbp;
+    }
+
+    /**
+     * @param Cash $cashSbp
+     */    
+    public function setCashSbp($cashSbp) 
+    {
+        $this->cashSbp = $cashSbp;
     }     
 
     /*

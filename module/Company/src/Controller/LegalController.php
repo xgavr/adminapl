@@ -543,6 +543,7 @@ class LegalController extends AbstractActionController
 
         $cashList = [0 => 'нет'];
         $form->get('cash')->setAttribute('disabled', 'true');
+        $form->get('cashSbp')->setAttribute('disabled', 'true');
         if ($legal->isOfficeLegal()){
             $offices = $legal->getOffices();
             foreach ($offices as $office){
@@ -553,9 +554,11 @@ class LegalController extends AbstractActionController
                 }
             }    
             $form->get('cash')->removeAttribute('disabled');
+            $form->get('cashSbp')->removeAttribute('disabled');
         }
         
         $form->get('cash')->setValueOptions($cashList);
+        $form->get('cashSbp')->setValueOptions($cashList);
         
         if ($this->getRequest()->isPost()) {
             
@@ -566,6 +569,10 @@ class LegalController extends AbstractActionController
                 if (!empty($data['cash'])){
                     $data['cash'] = $this->entityManager->getRepository(Cash::class)
                             ->find($data['cash']);
+                }
+                if (!empty($data['cashSbp'])){
+                    $data['cashSbp'] = $this->entityManager->getRepository(Cash::class)
+                            ->find($data['cashSbp']);
                 }
 
                 if ($bankAccount){
@@ -593,6 +600,7 @@ class LegalController extends AbstractActionController
                     'api' => $bankAccount->getApi(),  
                     'statement' => $bankAccount->getStatement(),
                     'cash' => ($bankAccount->getCash()) ? $bankAccount->getCash()->getId():null,
+                    'cashSbp' => ($bankAccount->getCashSbp()) ? $bankAccount->getCashSbp()->getId():null,
                     'dateStart' => $bankAccount->getDateStart(),
                 ];
                 $form->setData($data);

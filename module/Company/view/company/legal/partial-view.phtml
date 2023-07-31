@@ -114,11 +114,11 @@
                         <th>Банк</th>
                         <th>БИК</th>
                         <th>Счет</th>
-                        <th>Корр. счет</th>
                         <th>Дата</th>
                         <?php if ($legal->isOfficeLegal()):?>
                             <th>Api</th>
                             <th>Касса</th>
+                            <th>Касса СБП</th>
                         <?php endif;?>   
                         <th colspan="2"></th>
                     </tr>
@@ -140,14 +140,12 @@
                                 <?php endif;?>   
                            </td>
                            <td>
-                               <?= $bankAccount->getKs()?>
-                           </td>
-                           <td>
                                <?= date('d.m.Y', strtotime($bankAccount->getDateStart()))?>
                            </td>
                             <?php if ($legal->isOfficeLegal()):?>
                                 <td><?= $bankAccount->getApiAsString()?></td>
                                 <td><?= ($bankAccount->getCash()) ? $bankAccount->getCash()->getName():''?></td>
+                                <td><?= ($bankAccount->getCashSbp()) ? $bankAccount->getCashSbp()->getName():''?></td>
                             <?php endif;?>
                             <td width='2'>
                                 <button value="/legals/bank-account-form/<?= $legal->getId() ?>?bankAccount=<?= $bankAccount->getId() ?>" class="btn btn-default btn-xs"

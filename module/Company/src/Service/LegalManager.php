@@ -262,6 +262,7 @@ class LegalManager
             $bankAccount->setApi((empty($data['api'])) ? BankAccount::API_NO:$data['api']);            
             $bankAccount->setStatement((empty($data['statement'])) ? BankAccount::STATEMENT_RETIRED:$data['statement']);            
             $bankAccount->setCash((empty($data['cash'])) ? null:$data['cash']); 
+            $bankAccount->setCashSbp((empty($data['cashSbp'])) ? null:$data['cashSbp']); 
             $bankAccount->setDateStart((empty($data['dateStart'])) ? date('Y-m-d'):$data['dateStart']);                    
 
             $currentDate = date('Y-m-d H:i:s');
@@ -296,6 +297,7 @@ class LegalManager
             $bankAccount->setBik((empty($data['bik'])) ? null:$data['bik']);            
             $bankAccount->setKs((empty($data['ks'])) ? null:$data['ks']);            
             $bankAccount->setRs((empty($data['rs'])) ? null:$data['rs']);
+            
             if (!empty($data['status'])){
                 $bankAccount->setStatus($data['status']);            
             }    
@@ -308,8 +310,13 @@ class LegalManager
             if (!empty($data['statement'])){
                 $bankAccount->setStatement($data['statement']);
             }
+            $bankAccount->setCash(null);
             if (!empty($data['cash'])){
                 $bankAccount->setCash($data['cash']);
+            }
+            $bankAccount->setCashSbp(null);
+            if (!empty($data['cashSbp'])){
+                $bankAccount->setCashSbp($data['cashSbp']);
             }
             if (!empty($data['dateStart'])){
                 $bankAccount->setDateStart($data['dateStart']);                    

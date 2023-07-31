@@ -20,6 +20,7 @@ use Application\Entity\Phone;
 use User\Filter\PhoneFilter;
 use Application\Entity\Order;
 use Bank\Entity\Statement;
+use Bank\Entity\QrCodePayment;
 
 
 class TillController extends AbstractActionController
@@ -413,6 +414,21 @@ class TillController extends AbstractActionController
                     ->find($statementId);
             if ($statement){
                 $this->cashManager->cashDocFromStatement($statement);
+            }
+        }
+        return new JsonModel(
+           ['ok']
+        );                   
+    }
+
+    public function qrcodePaymentToCashDocAction()
+    {
+        $qrCodePaymentId = $this->params()->fromRoute('id', -1);
+        if ($qrCodePaymentId > 0){
+            $qrCodePayment = $this->entityManager->getRepository(QrCodePayment::class)
+                    ->find($qrCodePaymentId);
+            if ($qrCodePayment){
+                $this->cashManager->cashDocFromQrCodePayment($qrCodePayment);
             }
         }
         return new JsonModel(

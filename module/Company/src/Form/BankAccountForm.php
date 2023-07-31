@@ -140,6 +140,14 @@ class BankAccountForm extends Form
                 'label' => 'Связанная касса',
             ],
         ]);
+
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'cashSbp',
+            'options' => [
+                'label' => 'Касса СБП',
+            ],
+        ]);
         
         $this->add([           
             'type'  => 'date',
@@ -319,6 +327,16 @@ class BankAccountForm extends Form
         
         $inputFilter->add([
                 'name'     => 'cash',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'cashSbp',
                 'required' => false,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

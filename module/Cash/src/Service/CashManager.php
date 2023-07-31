@@ -33,6 +33,7 @@ use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
 use Stock\Entity\Register;
 use Stock\Entity\Movement;
+use Bank\Entity\QrCodePayment;
 
 /**
  * Description of CashManager
@@ -853,6 +854,53 @@ class CashManager {
         $statement->setPay(Statement::PAY_CHECK);
         $statement->setCashDoc($cashDoc);
         $this->entityManager->persist($statement);
+        $this->entityManager->flush();
+        
+        return $cashDoc;
+    }
+    
+    /**
+     * Создать платеж из оплаты по qr коду
+     * поступление/возврат от покупателя
+     * 
+     * @param QrCodePayment $qrCodePayment
+     * @return CashDoc
+     */
+    public function cashDocFromQrCodePayment($qrCodePayment)
+    {
+        $cash = $company = null;
+        $cashDoc = $qrCodePayment->getCashDoc();
+        $data = [
+            'amount' => abs($qrCodePayment->getAmount()),
+            'status' => CashDoc::STATUS_ACTIVE,
+        ];
+        
+        $companyAccount = $qrCodePayment->getBankAccount();
+        
+        if ($companyAccount){
+            $cash = $companyAccount->getCashSbp();
+            $company = $companyAccount->getLegal();
+        }    
+        if ($cash && $company){
+            $data['cash'] = $cash;
+            $data['checkStatus'] = $cash->getCheckStatus();
+            $data['company'] = $company;
+            $data['dateOper'] = $qrCodePayment->getDateCreated();
+            $order = $qrCodePayment->getOrder();
+            if ($order){
+                $data['order'] = $order;
+                $data['contact'] = $order->getContact();                
+                $data['kind'] = $qrCodePayment->getCashDocKind();
+                if ($cashDoc){
+                    $this->updateCashDoc($cashDoc, $data);
+                } else {
+                    $cashDoc = $this->addCashDoc($data);
+                }                
+            }            
+        }
+        
+        $qrCodePayment->setCashDoc($cashDoc);
+        $this->entityManager->persist($qrCodePayment);
         $this->entityManager->flush();
         
         return $cashDoc;

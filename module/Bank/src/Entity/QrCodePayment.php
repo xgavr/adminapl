@@ -16,6 +16,7 @@ use Application\Entity\Order;
 use Company\Entity\Office;
 use Application\Entity\Contact;
 use Bank\Entity\QrCode;
+use Cash\Entity\CashDoc;
 
 /**
  * Description of QrCode
@@ -380,6 +381,31 @@ class QrCodePayment {
     public function getPaymentTypeAsString()
     {
         $list = self::getPaymentTypeList();
+        if (isset($list[$this->paymentType]))
+            return $list[$this->paymentType];
+        
+        return 'Unknown';
+    }    
+
+    /**
+     * Returns possible cashDoc kind as array.
+     * @return array
+     */
+    public static function getCashDocKindList() 
+    {
+        return [
+            self::TYPE_PAYMENT => CashDoc::KIND_IN_PAYMENT_CLIENT,
+            self::TYPE_REFUND => CashDoc::KIND_OUT_RETURN_CLIENT,
+        ];
+    }    
+    
+    /**
+     * Returns cashDoc kind as integer.
+     * @return string
+     */
+    public function getCashDocKind()
+    {
+        $list = self::getCashDocKindList();
         if (isset($list[$this->paymentType]))
             return $list[$this->paymentType];
         
