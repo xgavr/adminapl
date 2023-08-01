@@ -69,7 +69,7 @@ class QrCodeRepository extends EntityRepository
         $queryBuilder->select('q, o, p')
                 ->from(QrCode::class, 'q')
                 ->leftJoin('q.order', 'o')
-                ->leftJoin('q.qrcodePayments', 'p')
+                //->leftJoin('q.qrcodePayments', 'p')
                 ;
         
         if (is_array($params)){
@@ -102,7 +102,7 @@ class QrCodeRepository extends EntityRepository
 
                     $queryBuilder->andWhere($orX);
                 }    
-            }            
+            }     
         }
         
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
