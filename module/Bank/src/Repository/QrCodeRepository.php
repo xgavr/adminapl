@@ -122,9 +122,10 @@ class QrCodeRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('qp, o')
+        $queryBuilder->select('qp, o, cd')
                 ->from(QrCodePayment::class, 'qp')
                 ->leftJoin('qp.order', 'o')
+                ->leftJoin('qp.cashDoc', 'cd')
                 ->where('qp.qrCode = :qrCodeId')
                 ->setParameter('qrCodeId', $qrCode->getId())
                 ;
