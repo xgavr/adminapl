@@ -20,6 +20,7 @@ use Cash\Entity\CashTransaction;
 use User\Entity\User;
 use Company\Entity\Contract;
 use Bank\Entity\Statement;
+use Bank\Entity\QrCodePayment;
 
 /**
  * Description of CashOut
@@ -192,6 +193,11 @@ class CashDoc {
     * @ORM\OneToOne(targetEntity="Bank\Entity\Statement", mappedBy="cashDoc")
    */
    private $statement;    
+
+   /**
+    * @ORM\OneToOne(targetEntity="Bank\Entity\QrCodePayment", mappedBy="cashDoc")
+   */
+   private $qrcodePayment;    
 
    /**
      * Constructor.
@@ -954,6 +960,15 @@ class CashDoc {
     public function getStatement()
     {
         return $this->statement;
+    }
+    
+    /**
+     * 
+     * @return QrCodePayment
+     */
+    public function getQrCodePayment()
+    {
+        return $this->qrcodePayment;
     }
     
     /**
