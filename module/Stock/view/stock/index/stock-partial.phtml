@@ -234,20 +234,24 @@
 
         $(document).on('click', '.cash-in-modal-show', function (e) {
             var url = $(this).attr('modal-url');
-            var urlQuery = '?cash='+$('#cashSelect').val();
+            if ($('#cashSelect')){
+                url += '?cash='+$('#cashSelect').val();
+            }    
             showFormDialog({
                 id: 'cashInModal',
-                url: url+urlQuery,
+                url: url,
                 width: '1440px'
             });
         });  
         
         $(document).on('click', '.cash-out-modal-show', function (e) {
             var url = $(this).attr('modal-url');
-            var urlQuery = '?cash='+$('#cashSelect').val();
+            if ($('#cashSelect')){
+                url += '?cash='+$('#cashSelect').val();
+            }    
             showFormDialog({
                 id: 'cashOutModal',
-                url: url+urlQuery,
+                url: url,
                 width: '1440px'
             });
         });  
