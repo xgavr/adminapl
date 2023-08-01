@@ -584,6 +584,16 @@ class QrCode {
         $this->qrcType = $qrcType;
     }   
     
+    public function getQrcodePayments() {
+        return $this->qrcodePayments;
+    }
+
+    public function setQrcodePayments($qrcodePayments) {
+        $this->qrcodePayments = $qrcodePayments;
+        return $this;
+    }
+
+        
     /**
      * Данные в форму
      * @return array 
