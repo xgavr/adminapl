@@ -1069,7 +1069,7 @@ class GoodsRepository extends EntityRepository
             ->where('g.statusOem = ?1')
             ->setParameter('1', Goods::OEM_FOR_UPDATE) 
 //            ->orderBy('g.id')
-            ->setMaxResults(10000)    
+            ->setMaxResults(5000)    
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
