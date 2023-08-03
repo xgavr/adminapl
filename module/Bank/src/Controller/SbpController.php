@@ -260,7 +260,7 @@ class SbpController extends AbstractActionController
             }
         }
         return new JsonModel(
-           $result
+           ['ok']
         );           
     }
 

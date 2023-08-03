@@ -954,10 +954,11 @@
         btn += '<span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span>';
         btn += '</button>';
 
-        var url = '/sbp/update-acquiring-status/'+row.id;
+        var url = '/sbp/qrcode-delete/'+row.id;
+        var disabled = (row.paymentTrxId) ? 'disabled':'';
         
         btn += ' <button';
-        btn += ' type="button" disabled';
+        btn += ' type="button" '+disabled;
         btn += ' class="btn btn-warning btn-xs this-delete"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 

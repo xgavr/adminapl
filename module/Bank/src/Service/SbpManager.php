@@ -239,9 +239,12 @@ class SbpManager
      */
     public function removeQrCode($qrCode)
     {
-        $this->entityManager->remove($qrCode);
-        $this->entityManager->flush();
-        
+        $paymentCount = $this->entityManager->getRepository(QrCodePayment::class)
+                ->count(['qrCode' => $qrCode->getId()]);
+        if (empty($paymentCount)){
+            $this->entityManager->remove($qrCode);
+            $this->entityManager->flush();
+        }    
         return;
     }
         
@@ -261,7 +264,7 @@ class SbpManager
             case 'InProgress': $qrCode->setPaymentStatus(QrCode::PAYMENT_IN_PROGRESS); break;
             case 'Accepted': 
                 $qrCode->setPaymentStatus(QrCode::PAYMENT_ACCEPTED);
-                $qrCode->setStatus(QrCode::STATUS_RETIRED); 
+                $qrCode->setStatus(QrCode::STATUS_USED); 
                 break;
             case 'Rejected': 
                 $qrCode->setPaymentStatus(QrCode::PAYMENT_REJECTED);
@@ -530,6 +533,9 @@ class SbpManager
                             if (empty($paymentCount)){
                                 $this->getPayment($qrCode);
                             }                            
+                        }
+                        if ($qrCode->getStatus() == $qrCode::STATUS_RETIRED){
+                            $this->removeQrCode($qrCode);
                         }
                     }    
                 }
