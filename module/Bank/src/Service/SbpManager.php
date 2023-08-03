@@ -505,6 +505,10 @@ class SbpManager
      */
     public function updatePaymentStatuses($qrCode = null)
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+
         $qrcIds = [];
         $result = [];
 
@@ -538,6 +542,9 @@ class SbpManager
                             $this->removeQrCode($qrCode);
                         }
                     }    
+                    if (time() > $startTime + 840){
+                        break;
+                    }
                 }
             }
         }

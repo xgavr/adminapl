@@ -33,6 +33,10 @@ $form->get('merchant_id')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('qrcode_check')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -78,6 +82,11 @@ $form->prepare();
             <?= $this->formLabel($form->get('account')); ?>
             <?= $this->formElement($form->get('account')); ?>
             <?= $this->formElementErrors($form->get('account')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('qrcode_check')); ?>
+            <?= $this->formElement($form->get('qrcode_check')); ?>
+            <?= $this->formElementErrors($form->get('qrcode_check')); ?>                  
         </div>
                         
         <?= $this->formElement($form->get('submit')); ?>

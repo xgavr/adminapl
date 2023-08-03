@@ -74,6 +74,21 @@ class SbpSettings extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
+        $this->add([           
+            'type'  => 'select',
+            'name' => 'qrcode_check',
+            'attributes' => [
+                'id' => 'qrcode_check'
+            ],
+            'options' => [
+                'label' => 'Проверка оплат',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',

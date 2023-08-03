@@ -69,6 +69,7 @@ class JobManager
           6 => ['command' => 'statement-update',    'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление выписки банка'],
           7 => ['command' => 'update-mail-tokens',  'shedule' => '23 * * * *',              'description' => 'Обработка токенов писем'],
           8 => ['command' => 'read-wamm',           'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Чтение сообщений WAMM'],
+          9 => ['command' => 'sbp-check',           'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Проверка оплат по СБП'],
         ];
     }
 

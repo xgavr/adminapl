@@ -212,6 +212,12 @@ class ProcessingController extends AbstractActionController
      */
     private $smsManager;    
 
+    /**
+     * Sbp manager.
+     * @var \Bank\Service\SbpManager
+     */
+    private $sbpManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
@@ -219,7 +225,7 @@ class ProcessingController extends AbstractActionController
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
             $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
-            $ozonService, $userManager, $smsManager) 
+            $ozonService, $userManager, $smsManager, $sbpManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -253,6 +259,7 @@ class ProcessingController extends AbstractActionController
         $this->ozonManager = $ozonService;
         $this->userManager = $userManager;
         $this->smsManager = $smsManager;
+        $this->sbpManager = $sbpManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -2048,6 +2055,23 @@ class ProcessingController extends AbstractActionController
 
             $this->smsManager->getAndUpdateWammchat(100);     
             $this->smsManager->wammchatToOrderComments();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+
+    /**
+     * Проверка оплат по куаркоду
+     */
+    public function sbpCheckAction()
+    {
+        $settings = $this->adminManager->getSbpSettings();
+
+        if ($settings['qrcode_check'] == 1){
+
+            $this->sbpManager->updatePaymentStatuses();
         }    
                 
         return new JsonModel(
