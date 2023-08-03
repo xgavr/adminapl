@@ -218,6 +218,12 @@ class ProcessingController extends AbstractActionController
      */
     private $sbpManager;    
 
+    /**
+     * Cash manager.
+     * @var \Cash\Service\CashManager
+     */
+    private $cashManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
@@ -225,7 +231,7 @@ class ProcessingController extends AbstractActionController
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
             $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
-            $ozonService, $userManager, $smsManager, $sbpManager) 
+            $ozonService, $userManager, $smsManager, $sbpManager, $cashManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -260,6 +266,7 @@ class ProcessingController extends AbstractActionController
         $this->userManager = $userManager;
         $this->smsManager = $smsManager;
         $this->sbpManager = $sbpManager;
+        $this->cashManager = $cashManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -2072,6 +2079,7 @@ class ProcessingController extends AbstractActionController
         if ($settings['qrcode_check'] == 1){
 
             $this->sbpManager->updatePaymentStatuses();
+            $this->cashManager->cashDocFromQrCodePayments();
         }    
                 
         return new JsonModel(

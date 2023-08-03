@@ -905,4 +905,28 @@ class CashManager {
         
         return $cashDoc;
     }
+    
+    /**
+     * Создать документы из платежей по куаркоду
+     * 
+     * @return null
+     */
+    public function cashDocFromQrCodePayments()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        $payments = $this->entityManager->getRepository(QrCodePayment::class)
+                ->findBy(['cashDoc' => null]);
+        foreach ($payments as $qrCodePayment){
+            $this->cashDocFromQrCodePayment($qrCodePayment);
+            
+            if (time() > $startTime + 840){
+                break;
+            }
+        }
+        
+        return;
+    }
 }
