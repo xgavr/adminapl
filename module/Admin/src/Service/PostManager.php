@@ -659,7 +659,9 @@ class PostManager {
                                                     $message = iconv($charset, 'UTF-8//IGNORE', $message);
                                                 }    
                                                 // now do something with the message, e.g. render it
-                                                $result[$messageNumber]['content'][$part->subtype] = $message;
+                                                if (!empty($part->subtype)){
+                                                    $result[$messageNumber]['content'][$part->subtype] = $message;
+                                                }    
 
                                                 $filename = $this->getFilenameFromPart($part);
                                                 if($filename) {
