@@ -131,7 +131,7 @@ class SbpManager
             ];
             
             $result = $this->sbpManager->registerQrCode($account, $merchant_id, $qrCodeData);
-            //var_dump($result);
+//            var_dump($result);
             if (!empty($result['Data'])){
                 $resultData = $result['Data'];
                 

@@ -159,9 +159,12 @@ class IndexController extends AbstractActionController
 
     public function createWebhookAction()
     {
-        $url = '';
+        $url = $this->params()->fromQuery('url');
+        $result = [];
         
-        $result = $this->webhook->createWebhook($url);
+        if ($url){
+            $result = $this->webhook->createWebhook($url);
+        }    
 
         return new JsonModel([
                 'result' => $result,
@@ -170,9 +173,12 @@ class IndexController extends AbstractActionController
 
     public function editWebhookAction()
     {
-        $url = '';
+        $url = $this->params()->fromQuery('url');
+        $result = [];
         
-        $result = $this->webhook->editWebhook($url);
+        if ($url){
+            $result = $this->webhook->editWebhook($url);
+        }    
 
         return new JsonModel([
                 'result' => $result,

@@ -11,6 +11,7 @@ namespace Bankapi\Service\Tochka;
 use Laminas\Http\Client;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
+use OAuth2\Encryption\Jwt;
 
 /**
  * Работа с вебхуками
@@ -225,6 +226,19 @@ class Webhook {
         }
         
         return $this->auth->exception($response);
+    }
+    
+    /**
+     * Чтение вебхука
+     * @param string $jwtToken
+     */
+    public function readWebhook($jwtToken)
+    {
+        $jwt = new Jwt();
+        $key = $this->auth->getJwtPublicKey();
+        $result = $jwt->decode($jwtToken, $key);
+        
+        return $result;
     }
 }
 

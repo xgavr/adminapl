@@ -71,6 +71,24 @@ return [
                     ],
                 ],
             ],
+            'api.rest.api-qrcode' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api-qrcode[/:api_qrcode_id]',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\ApiQrcode\\Controller',
+                    ],
+                ],
+            ],
+            'api.rest.api-tochka-webhook' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api-tochka-webhook[/:api_tochka_webhook_id]',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\ApiTochkaWebhook\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -102,12 +120,13 @@ return [
             \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentResource::class => \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentResourceFactory::class,
             \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplResource::class => \Api\V1\Rest\ApiCommentToApl\ApiCommentToAplResourceFactory::class,
             \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesResource::class => \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesResourceFactory::class,
+            \Api\V1\Rest\ApiQrcode\ApiQrcodeResource::class => \Api\V1\Rest\ApiQrcode\ApiQrcodeResourceFactory::class,
+            \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookResource::class => \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookResourceFactory::class,
         ],
     ],
     'view_manager' => [
         'template_path_stack' => [
-//            'Api' => 'C:\\OpenServer\\domains\\adminapl\\module\\Api\\config/../view',
-            'Api' => __DIR__ . '/../view',
+            'Api' => 'C:\\OpenServer\\domains\\adminapl\\module\\Api\\config/../view',
         ],
     ],
     'doctrine' => [
@@ -116,7 +135,7 @@ return [
                 'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
                 'cache' => 'array',
                 'paths' => [
-                    0 => __DIR__ . '/../src/Entity',
+                    0 => 'C:\\OpenServer\\domains\\adminapl\\module\\Api\\config/../src/Entity',
                 ],
             ],
             'orm_default' => [
@@ -134,6 +153,8 @@ return [
             3 => 'api.rest.api-account-comitent',
             4 => 'api.rest.api-comment-to-apl',
             5 => 'api.rest.api-suppliers-prices',
+            6 => 'api.rest.api-qrcode',
+            7 => 'api.rest.api-tochka-webhook',
         ],
     ],
     'api-tools-rpc' => [
@@ -153,6 +174,8 @@ return [
             'Api\\V1\\Rest\\ApiAccountComitent\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiCommentToApl\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiSuppliersPrices\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\ApiQrcode\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\ApiTochkaWebhook\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -185,6 +208,16 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiQrcode\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
+            'Api\\V1\\Rest\\ApiTochkaWebhook\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -211,6 +244,14 @@ return [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiQrcode\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
+            'Api\\V1\\Rest\\ApiTochkaWebhook\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
         ],
     ],
     'api-tools-content-validation' => [
@@ -222,6 +263,9 @@ return [
         ],
         'Api\\V1\\Rest\\ApiCommentToApl\\Controller' => [
             'input_filter' => 'Api\\V1\\Rest\\ApiCommentToApl\\Validator',
+        ],
+        'Api\\V1\\Rest\\ApiQrcode\\Controller' => [
+            'input_filter' => 'Api\\V1\\Rest\\ApiQrcode\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -300,6 +344,44 @@ return [
                 'description' => 'Сообщение',
                 'error_message' => 'Длина не больше 256 символов',
                 'field_type' => 'string',
+            ],
+        ],
+        'Api\\V1\\Rest\\ApiQrcode\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'order',
+                'description' => 'Номер заказа в Апл',
+                'field_type' => 'integer',
+            ],
+            1 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsFloat::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToFloat::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'amount',
+                'description' => 'Сумма к оплате',
+                'field_type' => 'float',
             ],
         ],
     ],
@@ -414,6 +496,50 @@ return [
             'collection_class' => \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesCollection::class,
             'service_name' => 'ApiSuppliersPrices',
         ],
+        'Api\\V1\\Rest\\ApiQrcode\\Controller' => [
+            'listener' => \Api\V1\Rest\ApiQrcode\ApiQrcodeResource::class,
+            'route_name' => 'api.rest.api-qrcode',
+            'route_identifier_name' => 'api_qrcode_id',
+            'collection_name' => 'api_qrcode',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Api\V1\Rest\ApiQrcode\ApiQrcodeEntity::class,
+            'collection_class' => \Api\V1\Rest\ApiQrcode\ApiQrcodeCollection::class,
+            'service_name' => 'ApiQrcode',
+        ],
+        'Api\\V1\\Rest\\ApiTochkaWebhook\\Controller' => [
+            'listener' => \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookResource::class,
+            'route_name' => 'api.rest.api-tochka-webhook',
+            'route_identifier_name' => 'api_tochka_webhook_id',
+            'collection_name' => 'api_tochka_webhook',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookEntity::class,
+            'collection_class' => \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookCollection::class,
+            'service_name' => 'ApiTochkaWebhook',
+        ],
     ],
     'api-tools-hal' => [
         'metadata_map' => [
@@ -475,6 +601,30 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.api-suppliers-prices',
                 'route_identifier_name' => 'api_suppliers_prices_id',
+                'is_collection' => true,
+            ],
+            \Api\V1\Rest\ApiQrcode\ApiQrcodeEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-qrcode',
+                'route_identifier_name' => 'api_qrcode_id',
+                'hydrator' => \Laminas\Hydrator\ArraySerializable::class,
+            ],
+            \Api\V1\Rest\ApiQrcode\ApiQrcodeCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-qrcode',
+                'route_identifier_name' => 'api_qrcode_id',
+                'is_collection' => true,
+            ],
+            \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-tochka-webhook',
+                'route_identifier_name' => 'api_tochka_webhook_id',
+                'hydrator' => \Laminas\Hydrator\ArraySerializable::class,
+            ],
+            \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-tochka-webhook',
+                'route_identifier_name' => 'api_tochka_webhook_id',
                 'is_collection' => true,
             ],
         ],

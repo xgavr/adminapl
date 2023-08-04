@@ -41,6 +41,7 @@ class Authenticate {
     const TOKEN_ACCESS_SANDBOX = 'working_token';
     
     const TOKEN_FILENAME = 'bankapi_tochka.php'; //файл, где хранятся токены
+    const JWT_PUBLIC_KEY = 'bankapi_tochka_public_key.txt'; //публичный ключ OpenAPI
     
     /**
      * Adapter
@@ -86,6 +87,11 @@ class Authenticate {
      * @var string
      */
     private $token_filename;
+
+    /**
+     * @var string
+     */
+    private $jwt_public_key;
     
 
     public function __construct($authParams) 
@@ -117,7 +123,12 @@ class Authenticate {
             mkdir($this->token_dir);
         }
         
-        $this->token_filename = $this->token_dir.self::TOKEN_FILENAME;        
+        $this->token_filename = $this->token_dir.self::TOKEN_FILENAME;
+
+        $this->jwt_public_key = '';
+        if (file_exists($this->token_dir.self::JWT_PUBLIC_KEY)){
+            $this->jwt_public_key = file_get_contents($this->token_dir.self::JWT_PUBLIC_KEY);
+        }
     }
     
     /**
@@ -316,5 +327,10 @@ class Authenticate {
         }
         
         return $this->exception($response);
-    }    
+    }  
+    
+    public function getJwtPublicKey()
+    {
+        return $this->jwt_public_key;
+    }
 }
