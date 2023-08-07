@@ -300,21 +300,18 @@ class BillManager
                 foreach ($sheet->getRowIterator() as $row) { 
                     $cellIterator = $row->getCellIterator();
                     $resultRow = [];
-                    foreach ($cellIterator as $cell) {   
+                    foreach ($cellIterator as $cell) {  
+//                        var_dump($cell->getValue());
+//                        var_dump($cell->getCalculatedValue());
+//                        var_dump($cell->getFormattedValue());
                         if (Date::isDateTime($cell) && $cell->getValue()) {
                             $value = date('Y-m-d', Date::excelToTimestamp($cell->getValue()));
                         } elseif (Date::isDateTimeFormat($cell->getStyle()->getNumberFormat()) && $cell->getValue()) {
                             $value = date('Y-m-d', Date::excelToTimestamp($cell->getValue()));
-                            if (empty($value) || trim($value) == '#NULL!'){
-                                $value = mb_substr(trim($cell->getCalculatedValue()), 0, 50);
-                            }
                         } else {
                             $value = mb_substr(trim($cell->getCalculatedValue()), 0, 50);
-                            if (empty($value) || trim($value) == '#NULL!'){
-                                $value = mb_substr(trim($cell->getValue()), 0, 50);
-                            }
                         }                        
-                        $resultRow[] = $value;
+                        $resultRow[] = trim($value, '#NULL!');
                     }
                     $result[] = $resultRow;                              
                 }              
