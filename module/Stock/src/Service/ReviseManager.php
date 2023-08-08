@@ -141,7 +141,7 @@ class ReviseManager
         
         $this->updateReviseMutuals($revise, $docStamp);
         $this->updateReviseRetails($revise, $docStamp);
-        $this->entityManager->getRepository(Revise)
+        $this->entityManager->getRepository(Revise::class)
                 ->updateReportRevise($revise);
         $this->logManager->infoRevise($revise, Log::STATUS_UPDATE);
         
