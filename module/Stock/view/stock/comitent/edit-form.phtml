@@ -42,10 +42,11 @@
                         <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
                         <th data-field="good.producer.name" data-type="numeric">Производитель</th>
                         <th data-field="good.name" data-type="numeric">Наименование</th>
-                        <th data-field='priceSale' data-align="right">Цена</th>
+                        <th data-field='priceSale' data-align="right" data-formatter="amountFormatter">Цена</th>
                         <th data-field='saleQty' data-align="right">Количество</th>
                         <th data-field='returnQty' data-align="right">Возврат</th>
-                        <th data-field='saleAmount' data-align="right">Сумма</th>
+                        <th data-field='saleAmount' data-align="right" data-formatter="amountFormatter">Сумма</th>
+                        <th data-field='baseAmount' data-align="right" data-formatter="amountFormatter">Закупка</th>
                         <th data-field="button" data-formatter="msrActiveFormatter" data-width="20"></th>
                      </tr>                
                 </thead>
@@ -113,6 +114,10 @@
         
         return;
     }    
+    
+    function amountFormatter(value){
+        return (Math.round(value*100)/100).toFixed(2);
+    }        
         
     function msrActiveFormatter(value, row){
         var url = '/comitent/good-edit-form/';
