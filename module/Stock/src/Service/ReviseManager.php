@@ -14,6 +14,7 @@ use Company\Entity\Office;
 use User\Filter\PhoneFilter;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
+use ApiMarketPlace\Entity\MarketSaleReport;
 
 /**
  * This service is responsible for adding/editing revise.
@@ -140,6 +141,8 @@ class ReviseManager
         
         $this->updateReviseMutuals($revise, $docStamp);
         $this->updateReviseRetails($revise, $docStamp);
+        $this->entityManager->getRepository(Revise)
+                ->updateReportRevise($revise);
         $this->logManager->infoRevise($revise, Log::STATUS_UPDATE);
         
         return;

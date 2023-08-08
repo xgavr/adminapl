@@ -86,6 +86,18 @@ class MarketSaleReport {
     protected $vatAmount;
 
     /**
+     * Закупка
+     * @ORM\Column(name="base_amount")   
+     */
+    protected $baseAmount;
+
+    /**
+     * расходы
+     * @ORM\Column(name="cost_amount")   
+     */
+    protected $costAmount;
+
+    /**
      * валюта отчета
      * @ORM\Column(name="currency_code")   
      */
@@ -441,6 +453,24 @@ class MarketSaleReport {
         $this->marketSaleReportItems[] = $marketSaleReportItem;
     }    
     
+    public function getBaseAmount() {
+        return $this->baseAmount;
+    }
+
+    public function getCostAmount() {
+        return $this->costAmount;
+    }
+
+    public function setBaseAmount($baseAmount) {
+        $this->baseAmount = $baseAmount;
+        return $this;
+    }
+
+    public function setCostAmount($costAmount) {
+        $this->costAmount = $costAmount;
+        return $this;
+    }
+
     /**
      * Массив для формы
      * @return array 
@@ -458,6 +488,8 @@ class MarketSaleReport {
             'startDate' => $this->getStartDateAtomFormat(),
             'stopDate' => $this->getStopDateAtomFormat(),
             'vatAmount' => $this->getVatAmount(),
+            'baseAmount' => $this->getBaseAmount(),
+            'costAmount' => $this->getCostAmount(),
             'id' => $this->getId(),
             'legal' => $this->getContract()->getLegal()->toArray(),
             'items' => $this->itemsToArray(),

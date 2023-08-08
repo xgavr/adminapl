@@ -19,6 +19,7 @@ use Stock\Entity\Register;
 use Stock\Entity\RegisterVariable;
 use Stock\Entity\Mutual;
 use Stock\Entity\Retail;
+use Stock\Entity\Revise;
 
 class ReportManager
 {
@@ -341,6 +342,7 @@ class ReportManager
         
         $msrTake = MarketSaleReport::STATUS_ACCOUNT_NO;
         $contract = $marketSaleReport->getMarketplace()->getContract();
+        $reportBaseTotal = 0;
         if ($marketSaleReport->getStatus() == MarketSaleReport::STATUS_ACTIVE){
             $items = $this->entityManager->getRepository(MarketSaleReportItem::class)
                     ->findBy(['marketSaleReport' => $marketSaleReport->getId()]);
@@ -350,6 +352,7 @@ class ReportManager
 
                 $write = max(0, $item->getSaleQty() - $item->getReturnQty());
                 $posting = max(0, $item->getReturnQty() - $item->getSaleQty());
+                $baseTotal = 0;
 
                 if ($write > 0){
                     
@@ -362,6 +365,8 @@ class ReportManager
                     foreach ($bases as $base){
                         $quantity = min($base['rest'], $write);
                         $amount = $base['price']*$quantity;
+                        $baseAmount = $base['basePrice']*$quantity;
+                        $baseTotal += $baseAmount;
 
                         $data = [
                             'doc_key' => $marketSaleReport->getLogKey(),
@@ -376,6 +381,7 @@ class ReportManager
                             'status' => Comitent::getStatusFromMarketSaleReport($marketSaleReport),
                             'quantity' => -$quantity,
                             'amount' => -$amount,
+                            'base_amount' => -$baseAmount,
                             'good_id' => $item->getGood()->getId(),
                             'legal_id' => $marketSaleReport->getContract()->getLegal()->getId(),
                             'company_id' => $marketSaleReport->getContract()->getCompany()->getId(), //
@@ -404,6 +410,8 @@ class ReportManager
                     foreach ($comitents as $comitent){
                         $quantity = min($posting, -$comitent->getQuantity());
                         $amount = $quantity*$comitent->getAmount()/$comitent->getQuantity();
+                        $baseAmount = $quantity*$comitent->getBaseAmount()/$comitent->getQuantity();
+                        $baseTotal -= $baseAmount;
 
                         $data = [
                             'doc_key' => $marketSaleReport->getLogKey(),
@@ -418,6 +426,7 @@ class ReportManager
                             'status' => Comitent::getStatusFromMarketSaleReport($marketSaleReport),
                             'quantity' => $quantity,
                             'amount' => $amount,
+                            'base_amount' => $baseAmount,
                             'good_id' => $item->getGood()->getId(),
                             'legal_id' => $marketSaleReport->getContract()->getLegal()->getId(),
                             'company_id' => $marketSaleReport->getContract()->getCompany()->getId(), //
@@ -442,21 +451,23 @@ class ReportManager
                 }    
                 
                 $this->entityManager->getConnection()
-                        ->update('market_sale_report_item', ['take' => $take], ['id' => $item->getId()]);
+                        ->update('market_sale_report_item', ['take' => $take, 'base_amount' => $baseTotal], ['id' => $item->getId()]);
                 
                 if ($item->getGood()){
                     $this->entityManager->getRepository(ComitentBalance::class)
                             ->updateComitentBalance($item->getGood()->getId()); 
-                }    
+                }  
+                
+                $reportBaseTotal += $baseTotal;
             }
         }
         
         $this->entityManager->getConnection()
-                ->update('market_sale_report', ['status_account' => $msrTake], ['id' => $marketSaleReport->getId()]);        
+                ->update('market_sale_report', ['status_account' => $msrTake, 'base_amount' => $reportBaseTotal], ['id' => $marketSaleReport->getId()]);        
         
         return $msrTake;        
     }
-    
+        
     /**
      * Перепроведение Отчета
      * @param MarketSaleReport $marketSaleReport
@@ -472,6 +483,10 @@ class ReportManager
                 $this->updateMarketSaleReportRetails($marketSaleReport, $docStamp);
             }    
         }
+        
+        $this->entityManager->getRepository(MarketSaleReport::class)
+                ->updateReportRevise($marketSaleReport);
+        
         return true;
     }
     

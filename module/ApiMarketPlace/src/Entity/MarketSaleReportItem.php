@@ -126,6 +126,12 @@ class MarketSaleReportItem {
      * @ORM\Column(name="return_amount")  
      */
     protected $returnAmount;  
+
+    /** 
+     * Закупка на сумму
+     * @ORM\Column(name="base_amount")  
+     */
+    protected $baseAmount;  
             
     /** 
      * Доплата за счёт торговой площадки
@@ -386,6 +392,15 @@ class MarketSaleReportItem {
         $this->rowNumber = $rowNumber;
     }
 
+    public function getBaseAmount() {
+        return $this->baseAmount;
+    }
+
+    public function setBaseAmount($baseAmount) {
+        $this->baseAmount = $baseAmount;
+        return $this;
+    }
+
     /**
      * Массив для формы
      * @return array 
@@ -407,6 +422,7 @@ class MarketSaleReportItem {
             'returnSale' => $this->getReturnSale(),
             'rowNumber' => $this->getRowNumber(),
             'saleAmount' => $this->getSaleAmount(),
+            'baseAmount' => $this->getBaseAmount(),
             'saleComission' => $this->getSaleCommission(),
             'saleDiscount' => $this->getSaleDiscount(),
             'salePriceSeller' => $this->getSalePriceSeller(),

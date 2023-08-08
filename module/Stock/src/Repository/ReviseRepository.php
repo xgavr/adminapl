@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Company\Entity\Office;
 use Stock\Entity\Revise;
 use Application\Entity\Supplier;
+use ApiMarketPlace\Entity\MarketSaleReport;
 
 /**
  * Description of ReviseRepository
@@ -214,4 +215,37 @@ class ReviseRepository extends EntityRepository
         return $result['countRevise'];
     }    
 
+    /**
+     * Обновить расходы по отчету
+     * @param Revise $revise
+     */
+    public function updateReportRevise($revise)
+    {
+        $cost = 0;
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('msp')
+            ->from(MarketSaleReport::class, 'msp')
+            ->where('msp.contract = :contractId')
+            ->setParameter('contractId', $revise->getContract()->getId())    
+            ->andWhere('msp.docDate >= :date1')
+            ->setParameter('date1', date('Y-m-d', strtotime("first day of month", strtotime($revise->getDocDate()))))    
+            ->andWhere('r.docDate <= :date2')
+            ->setParameter('date1', date('Y-m-d', strtotime("last day of month", strtotime($revise->getDocDate()))))
+            ->setMaxResults(1)   
+                ;
+                
+        $marketSaleReport = $queryBuilder->getQuery()->getOneOrNullResult();   
+        
+        if ($marketSaleReport){
+            $entityManager->getRepository(MarketSaleReport::class)
+                    ->updateReportRevise($marketSaleReport);
+        }
+        
+        return;
+    }
+    
 }

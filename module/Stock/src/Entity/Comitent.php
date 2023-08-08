@@ -96,6 +96,11 @@ class Comitent {
      */
     protected $amount;
 
+    /** 
+     * @ORM\Column(name="base_amount")  
+     */
+    protected $baseAmount;
+
     /**
      * @ORM\Column(name="doc_stamp")   
      */
@@ -224,6 +229,15 @@ class Comitent {
         return $this->amount;
     }
     
+    public function getBaseAmount() {
+        return $this->baseAmount;
+    }
+
+    public function setBaseAmount($baseAmount) {
+        $this->baseAmount = $baseAmount;
+        return $this;
+    }
+       
     /**
      * Sets  quantity.
      * @param float $quantity     

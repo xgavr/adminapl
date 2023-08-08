@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use ApiMarketPlace\Entity\MarketplaceUpdate;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use ApiMarketPlace\Entity\MarketSaleReportItem;
+use Stock\Entity\Revise;
 
 /**
  * Description of MarketplaceRepository
@@ -151,5 +152,39 @@ class MarketplaceRepository extends EntityRepository
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
-    }            
+    }    
+    
+    /**
+     * Обновить расходы по отчету
+     * @param MarketSaleReport $marketSaleReport
+     */
+    public function updateReportRevise($marketSaleReport)
+    {
+        $cost = 0;
+        
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('sum(r.amount) as cost')
+            ->from(Revise::class, 'r')
+            ->where('r.contract = :contractId')
+            ->setParameter('contractId', $marketSaleReport->getContract()->getId())    
+            ->andWhere('r.docDate >= :date1')
+            ->setParameter('date1', date('Y-m-d', strtotime("first day of month", strtotime($marketSaleReport->getDocDate()))))    
+            ->andWhere('r.docDate <= :date2')
+            ->setParameter('date1', date('Y-m-d', strtotime("last day of month", strtotime($marketSaleReport->getDocDate()))))
+            ->setMaxResults(1)    
+                ;
+                
+        $row = $queryBuilder->getQuery()->getOneOrNullResult();   
+        
+        if ($row){
+            $cost = $result['cost'];
+        }
+        
+        $entityManager->getConnection()->update('market_sale_report', ['cost_amount' => $cost], ['id' => $marketSaleReport->getId()]);
+        
+        return;
+    }
 }

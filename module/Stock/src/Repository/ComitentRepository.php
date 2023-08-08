@@ -84,6 +84,7 @@ class ComitentRepository extends EntityRepository{
                     'status' => Comitent::getStatusFromOrder($order),
                     'quantity' => -$data['quantity'], //минус озознанный
                     'amount' => -$data['amount'],
+                    'base_amount' => -$data['base_amount'],
                     'good_id' => $data['good_id'],
                     'legal_id' => $order->getLegal()->getId(),
                     'company_id' => $order->getCompany()->getId(), //
@@ -118,6 +119,7 @@ class ComitentRepository extends EntityRepository{
                     'status' => Comitent::getStatusFromVt($vt),
                     'quantity' => -$data['quantity'], //минус озознанный
                     'amount' => -$data['amount'],
+                    'base_amount' => -$data['base_amount'],
                     'good_id' => $data['good_id'],
                     'legal_id' => $vt->getOrder()->getLegal()->getId(),
                     'company_id' => $vt->getOrder()->getCompany()->getId(), //
@@ -144,7 +146,7 @@ class ComitentRepository extends EntityRepository{
         $method = 'ASC';
         $entityManager = $this->getEntityManager();
         $qb = $entityManager->createQueryBuilder();
-        $qb->select('sum(c.quantity) as rest, c.baseKey, c.baseType, c.baseId, c.docStamp, sum(c.amount)/sum(c.quantity) as price')
+        $qb->select('sum(c.quantity) as rest, c.baseKey, c.baseType, c.baseId, c.docStamp, sum(c.amount)/sum(c.quantity) as price, sum(c.baseAmount)/sum(c.quantity) as basePrice')
                 ->from(Comitent::class, 'c')
                 ->distinct()
                 ->where('c.good = ?1')

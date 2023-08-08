@@ -311,7 +311,7 @@ class BillManager
                         } else {
                             $value = mb_substr(trim($cell->getCalculatedValue()), 0, 50);
                         }                        
-                        $resultRow[] = trim($value, '#NULL!');
+                        $resultRow[] = str_replace('#NULL!', '', $value);
                     }
                     $result[] = $resultRow;                              
                 }              
