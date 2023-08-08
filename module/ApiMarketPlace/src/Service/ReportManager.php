@@ -463,7 +463,9 @@ class ReportManager
         }
         
         $this->entityManager->getConnection()
-                ->update('market_sale_report', ['status_account' => $msrTake, 'base_amount' => $reportBaseTotal], ['id' => $marketSaleReport->getId()]);        
+                ->update('market_sale_report', ['status_account' => $msrTake, 'base_amount' => $reportBaseTotal], ['id' => $marketSaleReport->getId()]);   
+        
+        $this->entityManager->refresh($marketSaleReport);
         
         return $msrTake;        
     }
