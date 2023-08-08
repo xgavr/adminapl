@@ -180,7 +180,7 @@ class MarketplaceRepository extends EntityRepository
         $row = $queryBuilder->getQuery()->getOneOrNullResult();   
         
         if ($row){
-            $cost = $result['cost'];
+            $cost = abs($row['cost']);
         }
         
         $entityManager->getConnection()->update('market_sale_report', ['cost_amount' => $cost], ['id' => $marketSaleReport->getId()]);
