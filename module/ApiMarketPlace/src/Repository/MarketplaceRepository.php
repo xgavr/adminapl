@@ -171,9 +171,9 @@ class MarketplaceRepository extends EntityRepository
             ->where('r.contract = :contractId')
             ->setParameter('contractId', $marketSaleReport->getContract()->getId())    
             ->andWhere('r.docDate >= :date1')
-            ->setParameter('date1', date('Y-m-d', strtotime("first day of month", strtotime($marketSaleReport->getDocDate()))))    
+            ->setParameter('date1', date('Y-m-01', strtotime($marketSaleReport->getDocDate())))    
             ->andWhere('r.docDate <= :date2')
-            ->setParameter('date2', date('Y-m-d', strtotime("last day of month", strtotime($marketSaleReport->getDocDate()))))
+            ->setParameter('date2', date('Y-m-t', strtotime($marketSaleReport->getDocDate())))
             ->setMaxResults(1)    
                 ;
                 

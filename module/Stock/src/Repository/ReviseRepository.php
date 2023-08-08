@@ -232,15 +232,13 @@ class ReviseRepository extends EntityRepository
             ->where('msp.contract = :contractId')
             ->setParameter('contractId', $revise->getContract()->getId())    
             ->andWhere('msp.docDate >= :date1')
-            ->setParameter('date1', date('Y-m-d', strtotime("first day of month", strtotime($revise->getDocDate()))))    
+            ->setParameter('date1', date('Y-m-01', strtotime($revise->getDocDate())))  
             ->andWhere('msp.docDate <= :date2')
-            ->setParameter('date2', date('Y-m-d', strtotime("last day of month", strtotime($revise->getDocDate()))))
+            ->setParameter('date2', date('Y-m-t', strtotime($revise->getDocDate())))
             ->setMaxResults(1)   
                 ;
                 
         $marketSaleReport = $queryBuilder->getQuery()->getOneOrNullResult(); 
-        
-        var_dump(date('Y-m-d', strtotime("last day of month", strtotime($revise->getDocDate()))));
         
         if ($marketSaleReport){
             $entityManager->getRepository(MarketSaleReport::class)
