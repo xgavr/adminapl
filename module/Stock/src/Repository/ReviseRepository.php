@@ -238,7 +238,9 @@ class ReviseRepository extends EntityRepository
             ->setMaxResults(1)   
                 ;
                 
-        $marketSaleReport = $queryBuilder->getQuery()->getOneOrNullResult();   
+        $marketSaleReport = $queryBuilder->getQuery()->getOneOrNullResult(); 
+        
+        var_dump($marketSaleReport->getId());
         
         if ($marketSaleReport){
             $entityManager->getRepository(MarketSaleReport::class)
