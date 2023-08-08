@@ -72,6 +72,9 @@
                      <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="80">Дата</th>
                      <th data-field="num" data-sortable="false">Номер</th>
                      <th data-field='docAmount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Реализовано</th>
+                     <th data-field='baseAmount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Закупка</th>
+                     <th data-field='costAmount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Расходы</th>
+                     <th data-field='inAmount' data-sortable="false" data-align="right" data-formatter="inAmountFormatter">Прибыль</th>
                      <th data-field='marketplace.name' data-sortable="false" data-formatter="linkFormatter">Торговая площадка</th>
                      <th data-field="id2" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
@@ -163,6 +166,10 @@
     
     function amountFormatter(value){
         return (Math.round(value*100)/100).toFixed(2);
+    }    
+
+    function inAmountFormatter(value, row){
+        return (Math.round((row.docAmount - row.baseAmount - row.costAmount)*100)/100).toFixed(2);
     }    
     
     function activeFormatter(value, row){
