@@ -173,7 +173,7 @@ class MarketplaceRepository extends EntityRepository
             ->andWhere('r.docDate >= :date1')
             ->setParameter('date1', date('Y-m-d', strtotime("first day of month", strtotime($marketSaleReport->getDocDate()))))    
             ->andWhere('r.docDate <= :date2')
-            ->setParameter('date1', date('Y-m-d', strtotime("last day of month", strtotime($marketSaleReport->getDocDate()))))
+            ->setParameter('date2', date('Y-m-d', strtotime("last day of month", strtotime($marketSaleReport->getDocDate()))))
             ->setMaxResults(1)    
                 ;
                 

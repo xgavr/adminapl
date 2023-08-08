@@ -234,7 +234,7 @@ class ReviseRepository extends EntityRepository
             ->andWhere('msp.docDate >= :date1')
             ->setParameter('date1', date('Y-m-d', strtotime("first day of month", strtotime($revise->getDocDate()))))    
             ->andWhere('msp.docDate <= :date2')
-            ->setParameter('date1', date('Y-m-d', strtotime("last day of month", strtotime($revise->getDocDate()))))
+            ->setParameter('date2', date('Y-m-d', strtotime("last day of month", strtotime($revise->getDocDate()))))
             ->setMaxResults(1)   
                 ;
                 
