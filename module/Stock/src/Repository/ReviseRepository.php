@@ -240,7 +240,7 @@ class ReviseRepository extends EntityRepository
                 
         $marketSaleReport = $queryBuilder->getQuery()->getOneOrNullResult(); 
         
-        var_dump($marketSaleReport->getId());
+        var_dump(date('Y-m-d', strtotime("last day of month", strtotime($revise->getDocDate()))));
         
         if ($marketSaleReport){
             $entityManager->getRepository(MarketSaleReport::class)
