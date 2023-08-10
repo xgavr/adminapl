@@ -37,3 +37,4 @@ phpunit.xml
 /data/reports/
 /config/autoload/global-development.php
 /data/DoctrineORMModule/
+/data/session_10/
