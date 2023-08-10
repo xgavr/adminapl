@@ -387,7 +387,7 @@ class GoodsManager
      */
     public function updateOemTd()
     {        
-        ini_set('memory_limit', '8192');
+        ini_set('memory_limit', '4092');
         set_time_limit(900);
         $startTime = time();
         $finishTime = $startTime + 840;

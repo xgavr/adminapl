@@ -485,10 +485,14 @@ class RawManager {
                             'target' => $pathinfo['dirname'],
                         ],
                     ]);
-                    if ($filter->filter($filename)){
-                        unlink($filename);
-                        return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
-                    }
+                    try {
+                        if ($filter->filter($filename)){
+                            unlink($filename);
+                            return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
+                        }
+                    } catch (Laminas\Filter\Exception\RuntimeException $e){
+                        
+                    }    
                 }
 
                 if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){

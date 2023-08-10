@@ -56,6 +56,12 @@ $form->prepare();
         <button class="btn btn-default test-button" value="/bankapi/create-webhook">
             <span class="glyphicon glyphicon-edit" ></span> Создать вебхуки Точки
         </button>                
+        <button class="btn btn-default test-button" value="/bankapi/delete-webhook">
+            <span class="glyphicon glyphicon-trash" ></span> Удалить вебхуки Точки
+        </button>                
+        <button class="btn btn-default test-button" value="/bankapi/test-webhook">
+            <span class="glyphicon glyphicon-signal" ></span> Проверить вебхуки Точки
+        </button>                
     </div>
 </div>
 
@@ -129,7 +135,21 @@ $form->prepare();
                     dialog.modal('hide');
                     console.log(data);
                     if (data){
-                        bootbox.alert("Успешно!");
+                        var message = '';
+                        if (data.result){
+                            if (data.result.message){
+                                message = data.result.message;
+                            }
+                        }
+                        if (data.Data){
+                            if (data.Data.webhooksList){
+                                message = data.Data.webhooksList.join(', ');
+                            }
+                            if (data.Data.result){
+                                message = data.Data.result;
+                            }
+                        }
+                        bootbox.alert(message);
                     } else {
                         bootbox.alert("Не удалось отправить сообщение!");
                     }    

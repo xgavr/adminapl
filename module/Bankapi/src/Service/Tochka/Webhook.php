@@ -189,7 +189,7 @@ class Webhook {
 
     /**
      * Метод для проверки отправки вебхука
-     * https://enter.tochka.com/uapi/webhook/{apiVersion}/{client_id}
+     * https://enter.tochka.com/uapi/webhook/{apiVersion}/{client_id}/test_send
      * 
      * @param string $webhookType incomingSbpPayment,incomingSbpPayment
      * 
@@ -205,7 +205,7 @@ class Webhook {
         ];        
         
         $client = new Client();
-        $client->setUri($this->auth->getUri2('webhook', $clientId));
+        $client->setUri($this->auth->getUri2('webhook', $clientId.'/test_send'));
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('POST');
         $client->setRawBody(Encoder::encode($data));
