@@ -70,7 +70,7 @@ class Raw {
     protected $filename;
 
     /**
-     * @ORM\Column(name="rows")   
+     * @ORM\Column(name="row_count")   
      */
     protected $rows;
 
