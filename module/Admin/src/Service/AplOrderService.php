@@ -357,7 +357,7 @@ class AplOrderService {
     {
         $vin = $make = $model = $car = NULL;
         if (!empty($data['vin'])){
-            $vin = $data['vin'];
+            $vin = trim($data['vin']);
         }
         if (!empty($data['brand'])){
             $make = $this->entityManager->getRepository(Make::class)
