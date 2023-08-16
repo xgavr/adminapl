@@ -286,6 +286,7 @@ class RawManager {
                 $raw->setFilename($basenameFilter->filter($filename));
                 $raw->setStatus(Raw::STATUS_LOAD);
                 $raw->setRows($rows);
+                $raw->setName('');
 
                 $currentDate = date('Y-m-d H:i:s');
                 $raw->setDateCreated($currentDate);
