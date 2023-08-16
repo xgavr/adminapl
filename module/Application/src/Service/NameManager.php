@@ -2213,10 +2213,10 @@ class NameManager
             $description = Article::jsonToArray($row['description']);
             if (is_array($description)){
                 if (isset($description['numberTitle'])){
-                    if ($description['numberTitle'] > $numberTitle){
+                    if ($description['numberTitle'] > $numberTitle && $description['numberTitle']){
                         $numberTitle = $description['numberTitle'];
                         if (isset($description['fullName'])){
-                            $newDescription = $description['fullName'];
+                            $newDescription = mb_strcut($description['fullName'], 0, 512);
                         }    
                     }
                 }    
