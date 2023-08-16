@@ -215,7 +215,7 @@ class ContactManager
     {
         $contact->setName($data['name']);
         $contact->setStatus($data['status']);
-        $contact->setDescription(null);
+        $contact->setDescription('');
         if (!empty($data['description'])){
             $contact->setDescription($data['description']);
         }    
