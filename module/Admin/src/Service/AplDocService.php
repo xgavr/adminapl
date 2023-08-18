@@ -1822,7 +1822,7 @@ class AplDocService {
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
             var_dump($ex->getMessage());
             var_dump($body);
-            exit;
+            return false;
         }
 //        var_dump($result); exit;
 
@@ -1839,6 +1839,9 @@ class AplDocService {
                     }
                 }
                 $this->updateSupplierOrder($data);
+                if (time() > $startTime + 840){
+                    break;
+                }
             }
         } else {            
             return false;
