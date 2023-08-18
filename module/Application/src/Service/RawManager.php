@@ -585,7 +585,7 @@ class RawManager {
                 foreach ($item as $row){
                     $this->entityManager->getConnection()->delete('rawprice', ['id' => $row['id']]);                
                 }
-                if (time() > $startTime + 1740){
+                if (time() > $startTime + 1700){
                     return;
                 }            
             }                        

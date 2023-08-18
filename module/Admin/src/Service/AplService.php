@@ -1546,7 +1546,7 @@ class AplService {
     public function updateRawprices()
     {
         ini_set('memory_limit', '4096M');
-        set_time_limit(900);
+        set_time_limit(1800);
         $startTime = time();
         
         $goodsQuery = $this->entityManager->getRepository(Goods::class)
@@ -1567,7 +1567,7 @@ class AplService {
                 $goods = [];
             }
             $k++;
-            if (time() > $startTime + 800){
+            if (time() > $startTime + 840){
                 break;
             }
         }        
