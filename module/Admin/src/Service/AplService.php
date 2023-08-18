@@ -1567,7 +1567,7 @@ class AplService {
                 $goods = [];
             }
             $k++;
-            if (time() > $startTime + 840){
+            if (time() > $startTime + 800){
                 break;
             }
         }        
