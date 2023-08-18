@@ -941,7 +941,7 @@ class Rawprice {
 
     public function setComment($comment) 
     {
-        $this->comment = $comment;
+        $this->comment = mb_strcut($comment, 0, 256);
     }     
 
     public function getWeight() 
