@@ -217,7 +217,7 @@ class JobManager
         $load = sys_getloadavg();
         if ($load[0] < 7){
             $processCount = $this->entityManager->getRepository(Setting::class)
-                    ->count(['status' => Setting::STATUS_ACTIVE]);
+                    ->procCount();
             
             if ($processCount < 11){
                 $jobs = array_merge($this->postJobList(), $this->clearJobList(), 

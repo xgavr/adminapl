@@ -43,8 +43,26 @@ class SettingRepository extends EntityRepository{
         
 
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery();            
-        
+        return $queryBuilder->getQuery();                    
     }
     
+    public function procCount()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('count(s.id) as procCount')
+            ->from(Setting::class, 's')
+            ->where('s.status = :status')
+            ->setParameter('status', Setting::STATUS_ACTIVE)
+            ->andWhere('s.lastMod > :lastMod')    
+            ->setParameter('lastMod', date('Y-m-d H:i:s', strtotime('-1 hour')))
+                ;        
+
+        $data = $queryBuilder->getQuery()->getResult();
+        foreach ($data as $row){
+            return $row['procCount']; 
+        }
+        return 0;                            
+    }
 }
