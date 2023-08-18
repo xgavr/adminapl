@@ -711,7 +711,7 @@ class Rawprice {
 
     public function setIid($iid) 
     {
-        $this->iid = (string) $iid;
+        $this->iid = mb_strcut($iid, 0, 64);
     }     
 
     public function getProducer() 
