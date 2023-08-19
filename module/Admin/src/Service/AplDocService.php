@@ -1802,6 +1802,7 @@ class AplDocService {
     {
         ini_set('memory_limit', '512M');
         set_time_limit(900);
+        $startTime = time();
         
         $url = $this->aplApi().'unload-suppliers-order?api='.$this->aplApiKey();
         
