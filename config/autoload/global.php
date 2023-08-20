@@ -28,7 +28,7 @@ return [
         'cookie_lifetime' => 0,     
         // Данные сессии будут храниться на сервере месяц.
         'gc_maxlifetime'     => 60*60*24*30,
-        'save_path' => './data/session'
+        'savePath' => './data/session'
     ],
     // Настройка менеджера сессий.
     'session_manager' => [
