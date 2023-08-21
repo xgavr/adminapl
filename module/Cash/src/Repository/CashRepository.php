@@ -109,7 +109,11 @@ class CashRepository extends EntityRepository
                 }            
             }    
             if (isset($params['sort'])){
-                $queryBuilder->addOrderBy('ct.'.$params['sort'], $params['order']);
+                if ($params['sort'] == 'cashDoc.id'){
+                    $queryBuilder->addOrderBy('cd.id', $params['order']);                    
+                } else {
+                    $queryBuilder->addOrderBy('ct.'.$params['sort'], $params['order']);
+                }    
             }            
         }
 

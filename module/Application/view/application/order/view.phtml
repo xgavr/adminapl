@@ -67,7 +67,7 @@ $tag = md5(time());
                 <button class="btn btn-default btn-sm bid-row-copy" type="button" title="Копировать выделенные строки">
                     <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
                 </button>                
-                <button type="button" class="btn btn-default btn-sm supplier-order_<?= $tag?>">
+                <button type="button" class="btn btn-default btn-sm supplier-order-<?= $tag?>">
                     <span class="glyphicon" aria-hidden="true">Заказано</span>
                 </button>
             </div>
@@ -269,7 +269,7 @@ $tag = md5(time());
             updateBids(<?= $order->getId()?>);
         });        
         
-        $(document).on('click', '.supplier-order_<?= $tag?>', function (e) {
+        $(document).on('click', '.supplier-order-<?= $tag?>', function (e) {
             $.get( '/order/supplier-orders/<?= $order->getId()?>', function( data ) {
                 bootbox.dialog({
                     title: 'Заказано у поставщиков',
