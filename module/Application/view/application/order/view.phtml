@@ -66,7 +66,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                 <button class="btn btn-default btn-sm bid-row-copy" type="button" title="Копировать выделенные строки">
                     <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
                 </button>                
-                <button type="button" class="btn btn-default btn-sm supplier-order">
+                <button type="button" class="btn btn-default btn-sm supplier-order<?= $order->getId()?>">
                     <span class="glyphicon" aria-hidden="true">Заказано</span>
                 </button>
             </div>
@@ -268,7 +268,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             updateBids(<?= $order->getId()?>);
         });        
         
-        $(document).on('click', '.supplier-order', function (e) {
+        $(document).on('click', '.supplier-order<?= $order->getId()?>', function (e) {
             $.get( '/order/supplier-orders/<?= $order->getId()?>', function( data ) {
                 bootbox.dialog({
                     title: 'Заказано у поставщиков',
