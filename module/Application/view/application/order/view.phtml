@@ -5,6 +5,7 @@ use Application\Entity\Bid;
 use Laminas\Json\Encoder;
 
 $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
+$tag = md5(time());
 ?>
 <div class="modal-header">
     <div class="row">
@@ -66,7 +67,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
                 <button class="btn btn-default btn-sm bid-row-copy" type="button" title="Копировать выделенные строки">
                     <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
                 </button>                
-                <button type="button" class="btn btn-default btn-sm supplier-order<?= $order->getId()?>">
+                <button type="button" class="btn btn-default btn-sm supplier-order_<?= $tag?>">
                     <span class="glyphicon" aria-hidden="true">Заказано</span>
                 </button>
             </div>
@@ -268,7 +269,7 @@ $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
             updateBids(<?= $order->getId()?>);
         });        
         
-        $(document).on('click', '.supplier-order<?= $order->getId()?>', function (e) {
+        $(document).on('click', '.supplier-order_<?= $tag?>', function (e) {
             $.get( '/order/supplier-orders/<?= $order->getId()?>', function( data ) {
                 bootbox.dialog({
                     title: 'Заказано у поставщиков',
