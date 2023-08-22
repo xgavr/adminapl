@@ -14,7 +14,8 @@ $this->pageBreadcrumbs()->setItems([
 $editableSourse = [];
 foreach ($statuses as $key => $value){
     $editableSourse[] = '{value:"'.$key.'", text:"'.$value.'"}';      
-}            
+}     
+$sourceString = '['.implode(',', $editableSourse).']';
 ?>
 
 <div class="row">
@@ -86,7 +87,7 @@ foreach ($statuses as $key => $value){
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
-    var $editableSource = '<?= implode(',', $editableSourse)?>';
+    var $editableSource = <?= $sourceString ?>;
     
     var $ok = $('#ok');
     var $table = $('#table').bootstrapTable({
@@ -95,9 +96,7 @@ foreach ($statuses as $key => $value){
             updateSyslog();
             $('.editable').editable();
             $('.status').editable({
-                source: [
-                    $editableSource
-                ]
+                source: $editableSource               
             });  
         }        
     });
