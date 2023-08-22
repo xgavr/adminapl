@@ -11,6 +11,10 @@ $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             ]);
 
+$editableSourse = [];
+foreach ($statuses as $key => $value){
+    $editableSourse[] = '{value:"'.$key.'", text:"'.$value.'"}';      
+}            
 ?>
 
 <div class="row">
@@ -82,15 +86,25 @@ $this->pageBreadcrumbs()->setItems([
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
-    var $ok = $('#ok');
-
-    $(window).on('load', function() {
-        $('.editable').editable();
-    });
+    var $editableSource = '<?php implode(',', $editableSourse)?>';
     
+    var $ok = $('#ok');
+    var $table = $('#table').bootstrapTable({
+        onLoadSuccess: function(res){
+            updateVariable();
+            updateSyslog();
+            $('.editable').editable();
+            $('.status').editable({
+                source: [
+                    $editableSource
+                ]
+            });  
+        }        
+    });
+
     function refreshTable(){
-        $('#table').bootstrapTable('refresh');
-    }
+        $table.bootstrapTable('refresh');
+    }    
     
     function updateVariable(){
         $.get( "/log/variable", function( data ) {
@@ -103,30 +117,14 @@ $this->pageBreadcrumbs()->setItems([
             $('.syslog-info').html('Нагрузка: '+data[0]+' '+data[1]+' '+data[2]);
         });
     }
-    
-    var table = $('#table').bootstrapTable({
-        onLoadSuccess: function(res){
-            updateVariable();
-            updateSyslog();
-            $('.editable').editable();
-            $('.status').editable({
-                source: [
-                    <?php foreach ($statuses as $key => $value):?>
-                        {value:"<?= $key?>", text:"<?= $value?>"},      
-                    <?php endforeach;?>            
-                ]
-            });  
-        }
-    });
-
 
     $(function () {
         $ok.click(function () {
-            table.bootstrapTable('refresh');
+            refreshTable();
         });
 
         $('#statusSelect').change(function (){
-            $('#table').bootstrapTable('refresh');
+            refreshTable();
         })
         
         $(document).on('click', '.error-modal-show', function (e) {

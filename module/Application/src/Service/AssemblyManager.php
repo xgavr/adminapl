@@ -842,7 +842,7 @@ class AssemblyManager
         ini_set('memory_limit', '4096M');
         set_time_limit(900);
         $startTime = time();
-        $finishTime = $startTime + 800;
+        $finishTime = $startTime + 840;
         
         $rawpricesQuery = $this->entityManager->getRepository(Goods::class)
                 ->findGoodsForAccembly($raw);
