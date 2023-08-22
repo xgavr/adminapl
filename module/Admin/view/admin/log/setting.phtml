@@ -86,7 +86,7 @@ foreach ($statuses as $key => $value){
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
-    var $editableSource = '<?php implode(',', $editableSourse)?>';
+    var $editableSource = '<?= implode(',', $editableSourse)?>';
     
     var $ok = $('#ok');
     var $table = $('#table').bootstrapTable({
