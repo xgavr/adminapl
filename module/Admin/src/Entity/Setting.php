@@ -22,6 +22,7 @@ class Setting {
     const STATUS_ACTIVE       = 1; // Active proccess.
     const STATUS_RETIRED      = 2; // Deactive process.
     const STATUS_ERROR      = 3; // Error process.
+    const STATUS_ACTIVE_AND_ERROR      = 10; // Active and Error process.
     
     /**
      * @ORM\Id
@@ -124,6 +125,7 @@ class Setting {
     public static function getStatusList() 
     {
         return [
+            self::STATUS_ACTIVE_AND_ERROR => 'Активные',
             self::STATUS_ACTIVE => 'Запущен',
             self::STATUS_RETIRED => 'Завершен',
             self::STATUS_ERROR => 'Ошибка'    

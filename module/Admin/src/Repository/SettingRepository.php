@@ -33,8 +33,15 @@ class SettingRepository extends EntityRepository{
                 ;
         if (is_array($params)){
             if (isset($params['status'])){
-                $queryBuilder->andWhere('s.status = ?1')
-                        ->setParameter('1', $params['status']);
+                if ($params['status'] == Setting::STATUS_ACTIVE_AND_ERROR){
+                    $orX = $queryBuilder->expr()->orX();
+                    $orX->add($queryBuilder->expr()->eq('s.status', Setting::STATUS_ACTIVE));
+                    $orX->add($queryBuilder->expr()->eq('s.status', Setting::STATUS_ERROR));
+                    $queryBuilder->andWhere($orX);                    
+                } else {
+                    $queryBuilder->andWhere('s.status = ?1')
+                            ->setParameter('1', $params['status']);
+                }    
             }
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('s.'.$params['sort'], $params['order']);
@@ -42,7 +49,7 @@ class SettingRepository extends EntityRepository{
         }
         
 
-        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();                    
     }
     
