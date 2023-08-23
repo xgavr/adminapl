@@ -239,6 +239,10 @@ class ZetasoftManager
                 throw new \Exception("Достигнут лимит запросов {$settings['max_query']}");
             }
                         
+            if ($settings['do_query'] == 2){
+                return; //не подключаться к серверу
+            }
+
 //            if (!$this->getAccess()){
 //                return;
 //            }

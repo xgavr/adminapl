@@ -466,10 +466,16 @@ class OzonService {
      */
     public function updateMarkets($markets)
     {
+        set_time_limit(900);
+        $startTime = time();
+        
         foreach ($markets as $market){
             if ($market->getOzonUpdate() == MarketPriceSetting::OZON_UPDATE){
                 $this->marketUpdate($market);
             }    
+            if (time() > $startTime + 840){
+                break;
+            }
         }
         
         return;

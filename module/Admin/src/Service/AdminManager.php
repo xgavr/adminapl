@@ -607,6 +607,7 @@ class AdminManager {
         $config->zetasoft_settings->md5_key = $data['md5_key'];
         $config->zetasoft_settings->api_key = $data['api_key'];
         $config->zetasoft_settings->max_query = $data['max_query'];
+        $config->zetasoft_settings->do_query = $data['do_query'];
         
         $writer = new PhpArray();
         

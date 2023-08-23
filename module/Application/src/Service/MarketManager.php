@@ -878,10 +878,16 @@ class MarketManager
      */
     public function unloadNext()
     {
+        set_time_limit(900);
+        $startTime = time();
+        
         $markets = $this->entityManager->getRepository(MarketPriceSetting::class)
                 ->findNext();
         foreach ($markets as $market){
             $this->unload($market);
+            if (time() > $startTime + 840){
+                break;
+            }
         }        
         return $markets;
     }

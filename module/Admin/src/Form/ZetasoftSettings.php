@@ -96,6 +96,21 @@ class ZetasoftSettings extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
+        $this->add([           
+            'type'  => 'select',
+            'name' => 'do_query',
+            'attributes' => [
+                'id' => 'do_query'
+            ],
+            'options' => [
+                'label' => 'Делать запросы',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Остановить',                    
+                ]
+            ],
+        ]);
+        
         $this->add([
             'type'  => 'submit',
             'name' => 'submit',
@@ -205,6 +220,17 @@ class ZetasoftSettings extends Form implements ObjectManagerAwareInterface
                     ],
                 ],
             ]);                  
+
+        $inputFilter->add([
+                'name'     => 'do_query',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
     }    
     
     public function setObjectManager(ObjectManager $objectManager)

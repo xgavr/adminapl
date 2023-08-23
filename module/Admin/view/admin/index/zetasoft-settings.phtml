@@ -38,6 +38,10 @@ $form->get('max_query')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('do_query')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -90,6 +94,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('max_query')); ?>
             <?= $this->formElement($form->get('max_query')); ?>
             <?= $this->formElementErrors($form->get('max_query')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('do_query')); ?>
+            <?= $this->formElement($form->get('do_query')); ?>
+            <?= $this->formElementErrors($form->get('do_query')); ?>                  
         </div>
         
         <div  class="form-group">
