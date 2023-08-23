@@ -905,17 +905,19 @@ class ExternalManager
         
         try {
             $tdData = $this->zetasoftManager->getBestArticle($good->getId(), $good->getCode());
-            if (is_numeric($tdData['partGroupId'])){
-                $genericArticleId = $tdData['partGroupId'];
-                $statusData = ['td_direct' => Goods::TD_DIRECT];
-            }
-
-            if (!$genericArticleId){
-                $tdData = $this->zetasoftManager->getSimilarArticle($good->getId(), $good->getCode(), $good->getGenericGroup()->getTdId(), $good->getTokenGroupId(), true);
+            if (is_array($tdData)){
                 if (is_numeric($tdData['partGroupId'])){
                     $genericArticleId = $tdData['partGroupId'];
-                }            
-            }
+                    $statusData = ['td_direct' => Goods::TD_DIRECT];
+                }
+
+                if (!$genericArticleId){
+                    $tdData = $this->zetasoftManager->getSimilarArticle($good->getId(), $good->getCode(), $good->getGenericGroup()->getTdId(), $good->getTokenGroupId(), true);
+                    if (is_numeric($tdData['partGroupId'])){
+                        $genericArticleId = $tdData['partGroupId'];
+                    }            
+                }
+            }    
         } catch (\Exception $ex){
             if ($good->getGenericGroup()){
                 if ($good->getGenericGroup()->getTdId()>0){
