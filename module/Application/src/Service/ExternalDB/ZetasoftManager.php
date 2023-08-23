@@ -559,8 +559,8 @@ class ZetasoftManager
     {
         $filter = new ProducerName();
         $articles = $this->getVendorCodeV2($code);
-        $change = $articles['change'];
         if (is_array($articles)){
+            $change = $articles['change'];
             if ($articles['data']){
                 $upNames = $this->entityManager->getRepository(Goods::class)
                         ->findUnknownProducerNames($goodId);
