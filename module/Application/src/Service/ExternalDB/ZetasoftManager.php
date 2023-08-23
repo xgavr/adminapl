@@ -560,24 +560,26 @@ class ZetasoftManager
         $filter = new ProducerName();
         $articles = $this->getVendorCodeV2($code);
         $change = $articles['change'];
-        if ($articles['data']){
-            $upNames = $this->entityManager->getRepository(Goods::class)
-                    ->findUnknownProducerNames($goodId);
-            foreach($upNames as $upName){
-                foreach ($articles['data'] as $row){
-                    if ($filter->filter($row['vendorName']) == $filter->filter($upName['name'])){
-                        $row['change'] = $change;
-                        return $row;
-                    }
-                    if (!empty($upName['nameTd'])){
-                        if ($filter->filter($row['vendorName']) == $filter->filter($upName['nameTd'])){
+        if (is_array($articles)){
+            if ($articles['data']){
+                $upNames = $this->entityManager->getRepository(Goods::class)
+                        ->findUnknownProducerNames($goodId);
+                foreach($upNames as $upName){
+                    foreach ($articles['data'] as $row){
+                        if ($filter->filter($row['vendorName']) == $filter->filter($upName['name'])){
                             $row['change'] = $change;
                             return $row;
-                        }                        
+                        }
+                        if (!empty($upName['nameTd'])){
+                            if ($filter->filter($row['vendorName']) == $filter->filter($upName['nameTd'])){
+                                $row['change'] = $change;
+                                return $row;
+                            }                        
+                        }
                     }
-                }
-            }    
-        }
+                }    
+            }
+        }    
         
         return;
     }
