@@ -958,7 +958,7 @@ class GoodsRepository extends EntityRepository
             ->setParameter('1', Goods::CAR_FOR_UPDATE)
             ->andWhere('g.genericGroup > ?2')
             ->setParameter('2', 0)    
-            ->setMaxResults(5000) 
+            ->setMaxResults(1000) 
                 
                 ;
         //var_dump($queryBuilder->getQuery()->getSQL()); exit;
