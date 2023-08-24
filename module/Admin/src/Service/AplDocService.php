@@ -1873,13 +1873,13 @@ class AplDocService {
         $body = $response->getBody();
 
 //        var_dump($body); exit;
-        try{
+//        try{
             $result = json_decode($body, true);
-        } catch (\Laminas\Json\Exception\RuntimeException $ex) {
-            var_dump('msg: '.$ex->getMessage());
-            var_dump('body: '.$body);
-            exit;
-        }
+//        } catch (\Laminas\Json\Exception\RuntimeException $ex) {
+//            var_dump('msg: '.$ex->getMessage());
+//            var_dump('body: '.$body);
+//            exit;
+//        }
 //        var_dump($result); exit;
 
         if (is_array($result)){
