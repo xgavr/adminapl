@@ -1866,7 +1866,7 @@ class AplDocService {
         $client = new Client();
         $client->setUri($url);
         $client->setMethod('POST');
-        $client->setOptions(['timeout' => 30]);
+        $client->setOptions(['timeout' => 60]);
         $client->setParameterPost($post);
 
         $response = $client->send();
@@ -1876,8 +1876,8 @@ class AplDocService {
         try{
             $result = json_decode($body, true);
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
-            var_dump($ex->getMessage());
-            var_dump($body);
+            var_dump('msg: '.$ex->getMessage());
+            var_dump('body: '.$body);
             exit;
         }
 //        var_dump($result); exit;
@@ -1941,7 +1941,7 @@ class AplDocService {
      */
     public function unloadDocs()
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '512M');
         set_time_limit(900);
         $startTime = time();
         $start = 0;
