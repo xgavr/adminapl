@@ -41,7 +41,7 @@ $sourceString = '['.implode(',', $editableSourse).']';
 
 <div class="row">
     <div class="col-md-12">
-        <div id="toolbar">
+        <div id="tableToolbar">
             <div class="form-inline" role="form">
 <!--                <div class="form-group">
                     <input name="search" style="width: 200px" class="form-control" type="text" placeholder="Поиск">
@@ -122,7 +122,7 @@ $sourceString = '['.implode(',', $editableSourse).']';
     }    
     
     function updateVariable(){
-        $.get( "/log/variable", function( data ) {
+        $.get( "/log/variable/", function( data ) {
             $('.var-info').html('Метка последовательности: '+data.varDate+' '+data.varDoc+'; следующий '+data.actDate+' '+data.actDoc);
         });
     }
