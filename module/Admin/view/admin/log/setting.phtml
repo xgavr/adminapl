@@ -127,7 +127,8 @@ $sourceString = '['.implode(',', $editableSourse).']';
 
     function updateErrorLog(){
         $.get( "/log/error-log/", function( data ) {
-            console.log(data);
+//            console.log(data);            
+            $( ".stripe-line" ).remove();
             $.each(data.rows, function( index, value ) {
                 $('#error-log').append('<div class="stripe-line">'+value+'</div>')
             });
