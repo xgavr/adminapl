@@ -63,7 +63,7 @@ $sourceString = '['.implode(',', $editableSourse).']';
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
-            data-toolbar="#toolbar"
+            data-toolbar="#tableToolbar"
             data-show-refresh="true"
             data-auto-refresh="true"
             data-show-toggle="false"
@@ -94,17 +94,7 @@ $sourceString = '['.implode(',', $editableSourse).']';
 <script type="text/javascript">
     var $editableSource = <?= $sourceString ?>;
     
-    var $ok = $('#ok');
-    var $table = $('#table').bootstrapTable({
-        onLoadSuccess: function(res){
-            updateVariable();
-            updateSyslog();
-            $('.editable').editable();
-            $('.status').editable({
-                source: $editableSource               
-            });  
-        }        
-    });
+    var $table = $('#table');
 
     function rowStyle(row){
         var retired = 'tablerow';
@@ -133,14 +123,21 @@ $sourceString = '['.implode(',', $editableSourse).']';
         });
     }
 
-    $(function () {
-        $ok.click(function () {
-            refreshTable();
-        });
+    $(function () {        
+        $table.bootstrapTable('refreshOptions', {
+            onLoadSuccess: function(res){
+                updateVariable();
+                updateSyslog();
+                $('.editable').editable();
+                $('.status').editable({
+                    source: $editableSource               
+                });  
+            }        
+        });   
 
         $('#statusSelect').change(function (){
             refreshTable();
-        })
+        });
         
         $(document).on('click', '.error-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
