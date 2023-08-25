@@ -85,10 +85,12 @@ $sourceString = '['.implode(',', $editableSourse).']';
             </thead>
         </table>
     </div>
-    <div class="col-md-3" id="side-nav">
-    </div>
 </div>
-
+<div class="row">
+    <div class="col-md-12">
+        <p id="error-log"></p>;
+    </div>
+</div>    
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
@@ -123,11 +125,19 @@ $sourceString = '['.implode(',', $editableSourse).']';
         });
     }
 
+    function updateErrorLog(){
+        $.get( "/log/error-log/", function( data ) {
+            console.log(data);
+    //            $('.syslog-info').html('Нагрузка: '+data[0]+' '+data[1]+' '+data[2]);
+        });
+    }
+
     $(function () {        
         $table.bootstrapTable('refreshOptions', {
             onLoadSuccess: function(res){
                 updateVariable();
                 updateSyslog();
+                updateErrorLog();
                 $('.editable').editable();
                 $('.status').editable({
                     source: $editableSource               
