@@ -482,7 +482,7 @@ class LogManager {
         $errorLogFile = '.../logs/adminapl.ru.error.log';
         $result = [];
         $size = filesize($errorLogFile);
-        
+        var_dum($size);
         if ($size > 1024*1000){
             $result[] = 'Слишком большой размер лога - '.$size;
         }
