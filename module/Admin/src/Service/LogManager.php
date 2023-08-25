@@ -479,7 +479,7 @@ class LogManager {
      */
     public function errorLog()
     {
-        $errorLogFile = '.../logs/adminapl.ru.error.log';
+        $errorLogFile = './././logs/adminapl.ru.error.log';
         $result = [];
         $size = filesize($errorLogFile);
         var_dump($size);
