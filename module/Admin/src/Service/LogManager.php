@@ -472,5 +472,32 @@ class LogManager {
         }    
         
         return;
-    }           
+    }          
+    
+    /**
+     * Получить последние строки error.log
+     */
+    public function errorLog()
+    {
+        $errorLogFile = '.../logs/adminapl.ru.error.log';
+        $result = [];
+        $size = filesize($errorLogFile);
+        
+        if ($size > 1024*1000){
+            $result[] = 'Слишком большой размер лога - '.$size;
+        }
+        
+        $fp = @fopen($errorLogFile, "r");
+        if ($fp) {
+            while (($buffer = fgets($fp, 4096)) !== false) {
+                $result[] = $buffer;
+            }
+            if (!feof($fp)) {
+                $result[] = "Ошибка: fgets() неожиданно потерпел неудачу\n";
+            }
+            fclose($fp);
+        }        
+        
+        return array_slice($result, -5);
+    }
 }

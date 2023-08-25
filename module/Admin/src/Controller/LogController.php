@@ -163,6 +163,16 @@ class LogController extends AbstractActionController
         exit;
     }
     
+    public function errorLogAction()
+    {
+        $result = $this->logManager->errorLog();
+        
+        return new JsonModel([
+            'total' => count($result),
+            'rows' => $result,
+        ]);                  
+    }
+    
     public function settingErrorTextAction()
     {
         $settingId = $this->params()->fromRoute('id', -1);
