@@ -712,6 +712,7 @@ class BillManager
                 }
             }
             if ($articleStr && $producer){
+                var_dump($articleStr, $producer);
                 return $this->_newGood($articleStr, $producer, $goodName);                
             }
             if ($articleStr){
