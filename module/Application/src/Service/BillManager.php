@@ -712,7 +712,7 @@ class BillManager
                 }
             }
             if ($articleStr && $producer){
-                var_dump($articleStr, $producer);
+//                var_dump($articleStr, $producer);
                 return $this->_newGood($articleStr, $producer, $goodName);                
             }
             if ($articleStr){
@@ -789,6 +789,11 @@ class BillManager
         }
         
         if ($iid){
+            $good = $this->_parseIid($iid, $goodName);
+            if ($good){
+                return $good;
+            }
+
             $good = $this->entityManager->getRepository(BillSetting::class)
                     ->findGoodFromRawprice($idoc->getSupplier(), $iid);
             if (is_array($good)){
@@ -798,10 +803,6 @@ class BillManager
                 return $good;
             }
             
-            $good = $this->_parseIid($iid, $goodName);
-            if ($good){
-                return $good;
-            }
         }
 
         return $this->_newGood($articleStr, $producer, $goodName);
