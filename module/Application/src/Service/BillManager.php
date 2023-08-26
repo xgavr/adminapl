@@ -696,12 +696,6 @@ class BillManager
             $articleStr = $producer = null;
             $art_pro = explode($delimetr, $iid);
             foreach ($art_pro as $value){
-                $code = $articleFilter->filter($value);
-                $good = $this->entityManager->getRepository(Goods::class)
-                        ->findOneByCode($code);
-                if ($good){
-                    return $good;
-                }                
                 $producerName = $producerNameFilter->filter($value);
                 if ($producerName){
                     $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
@@ -720,6 +714,14 @@ class BillManager
             if ($articleStr && $producer){
                 return $this->_newGood($articleStr, $producer, $goodName);                
             }
+            if ($articleStr){
+                $code = $articleFilter->filter($articleStr);
+                $good = $this->entityManager->getRepository(Goods::class)
+                        ->findOneByCode($code);
+                if ($good){
+                    return $good;
+                }                
+            }    
         }
         return;
     }
