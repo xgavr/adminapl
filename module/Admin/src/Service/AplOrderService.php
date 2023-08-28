@@ -588,13 +588,15 @@ class AplOrderService {
             }  
 //            var_dump(222); exit;
             if (isset($data['selections'])){
-                foreach ($data['selections'] as $selection){
-                    if (!empty($selection['q'])){
-                        $this->orderManager->insSelection($order, [
-                           'oem'  => $selection['q'],
-                           'comment'  => $selection['qc'],
-                        ]);
-                    }
+                if (is_array($data['selections'])){
+                    foreach ($data['selections'] as $selection){
+                        if (!empty($selection['q'])){
+                            $this->orderManager->insSelection($order, [
+                               'oem'  => $selection['q'],
+                               'comment'  => $selection['qc'],
+                            ]);
+                        }
+                    }    
                 }    
             }
 

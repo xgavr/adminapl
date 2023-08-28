@@ -322,6 +322,11 @@ class ImageRepository extends EntityRepository
             return;
         }
         $headers = get_headers($url, 1);
+
+        if ($headers === false){
+            return;
+        }
+        
         if (preg_match("|301|", $headers[0])){
             $uriNormalizeFilterS = new UriNormalize(['enforcedScheme' => 'https']);
             $url = $uriNormalizeFilterS->filter($headers['Location']);
@@ -330,10 +335,6 @@ class ImageRepository extends EntityRepository
             } 
             $headers = @get_headers($url);
 //            var_dump($headers);
-        }
-        
-        if ($headers === false){
-            return;
         }
         
         if(preg_match("|200|", $headers[0])) {

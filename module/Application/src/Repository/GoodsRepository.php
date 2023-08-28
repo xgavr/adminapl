@@ -1044,7 +1044,7 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->where('g.statusDescription = ?1')
             ->setParameter('1', Goods::DESCRIPTION_FOR_UPDATE)    
-            ->setMaxResults(10000)    
+            ->setMaxResults(5000)    
             //->orderBy('g.statusGroup', 'DESC')
             //->addOrderBy('g.id')    
                 ;

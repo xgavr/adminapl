@@ -12,7 +12,8 @@ $tag = md5(time());
         <div class="col-md-6">
             <h5>
                 <div><?= 'Заказ №'.$order->getDocNo().' от '. date('d.m.Y H:i:s', strtotime($order->getDocDate())); ?> 
-                    <?= $order->getOffice()->getName()?>
+                    <?= $order->getOffice()->getName()?> 
+                    <?= $order->getStatusAsString()?> 
                 </div>
                 <div>
                     <a href="/client/view/<?= $order->getContact()->getClient()->getId()?>" target="_blank">

@@ -237,7 +237,7 @@
 
     function operFormatter(value, row){
         var cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
-        var orderId = (row.cashDoc.order) ? "<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+row.cashDoc.order.aplId+"</a>":'Пополнение ЛЦ';
+        var orderId = (row.cashDoc.order) ? "<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+row.cashDoc.order.aplId+"</a>":'Пополнение ЛС';
         var contactName = '!Контакт не указан!';
         if (row.cashDoc.contact){
             var contactName = (row.cashDoc.contact.client) ? "<a href='/client/view/"+row.cashDoc.contact.client.id+"' target=_blank>"+row.cashDoc.contact.client.name+"</a>":'NaN';

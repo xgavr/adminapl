@@ -7,7 +7,7 @@ use Stock\Entity\Retail;
 use Stock\Entity\Movement;
 use Stock\Entity\Revise;
 
-$this->headTitle($client->getName());
+$this->headTitle(ucfirst($client->getName()));
 
 $this->mainMenu()->setActiveItemId('client');
 
@@ -27,14 +27,13 @@ $legalContact = $client->getLegalContact();
 <?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
 <?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
 
-<h1 style="text-transform: capitalize">
-    <?= $this->escapeHtml($client->getName()); ?>    
-</h1>
+<!--<h1 style="text-transform: capitalize">
+</h1>-->
 
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-tabs" id="featureTab" role="tablist">
-            <li role="presentation"><a href="#contacts" role="tab" id="contact-tab" data-toggle="tab" aria-controls="contacts" aria-expanded="true">Контакты <span id="contactBadge" class="badge"></span></a></li>
+            <li role="presentation"><a href="#contacts" role="tab" id="contact-tab" data-toggle="tab" aria-controls="contacts" aria-expanded="true"><span style="text-transform: capitalize"><?= $this->escapeHtml($client->getName()); ?></span> <span id="contactBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#orders" role="tab" id="order-tab" data-toggle="tab" aria-controls="orders" aria-expanded="true">Заказы <span id="orderBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#mutuals" role="tab" id="mutual-tab" data-toggle="tab" aria-controls="mutual" aria-expanded="true">Финансы <span id="mutualBadge" class="badge"></span></a></li>
             <li role="presentation"><a href="#vt" role="tab" id="vt-tab" data-toggle="tab" aria-controls="vt" aria-expanded="true">Возвраты <span id="vtBadge" class="badge"></span></a></li>

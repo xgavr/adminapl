@@ -39,6 +39,16 @@ $form->get('order')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('orderApl')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('phone')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'8 (000) 000-0000',
+    'aria-describedby' => "basic-addon2",
+    ]);
+
 $form->get('aplId')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -143,9 +153,10 @@ $form->prepare();
             <div class="row" id="payment">
                 <div class="col-xs-3">                        
                     <div class="form-group">
-                        <?= $this->formLabel($form->get('order')); ?>
+                        <?= $this->formLabel($form->get('orderApl')); ?>
+                        <?= $this->formElement($form->get('orderApl')); ?>
+                        <?= $this->formElementErrors($form->get('orderApl')); ?>                  
                         <?= $this->formElement($form->get('order')); ?>
-                        <?= $this->formElementErrors($form->get('order')); ?>                  
                     </div>
                 </div>    
                 <div class="col-xs-3">                        
@@ -154,7 +165,15 @@ $form->prepare();
                         <?= $this->formElement($form->get('vt')); ?>
                         <?= $this->formElementErrors($form->get('vt')); ?>                  
                     </div>
-                </div>    
+                </div> 
+                <div class="col-xs-3">
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('phone')); ?>
+                        <span id="contactName"></span>
+                        <?= $this->formElement($form->get('phone')); ?>
+                        <?= $this->formElementErrors($form->get('phone')); ?>                  
+                    </div>
+                </div>
             </div>    
             <div class="row" id="supplierReturn">
                 <div class="col-xs-3">                        
@@ -236,6 +255,22 @@ $form->prepare();
         });    
     }
     
+    function contactName(){
+        if ($('#phone').val()){
+            $.getJSON( '/till/phone-contact?phone='+$('#phone').val(), function( data ) {
+                $('#contactName').html(data.name);
+
+            });            
+        }    
+        if ($('#orderApl').val()){
+            $.getJSON( '/till/order-apl/'+$('#orderApl').val(), function( data ) {
+                $('#contactName').html(data.name);
+                $('#phone').val(data.phone);
+                $('#order').val(data.order);
+            });            
+        }    
+    }
+    
     function showKindOutGroup()
     {
         $('#costGroup').hide();
@@ -265,7 +300,8 @@ $form->prepare();
         $('#legal').attr('required', false);
         if ($("#kind").val() == <?= CashDoc::KIND_OUT_RETURN_CLIENT?>){
             $('#payment').show();
-            $('#order').attr('required', true);
+            $('#phone').attr('required', true);
+ //           $('#orderApl').attr('required', true);
             //$('#legal').attr('required', true);
         }
 
@@ -283,6 +319,7 @@ $form->prepare();
     $( document ).ready(function() {
         
         showKindOutGroup();
+        contactName();
         //cashChange();
 
         $('#kind').on('change', function(){
@@ -292,6 +329,12 @@ $form->prepare();
             cashChange()
         });
         
+        $('#phone').on('change', function(){
+            contactName();
+        });
+        $('#orderApl').on('change', function(){
+            contactName();
+        });
         
         var forms = $('#cash-out-form');
         
