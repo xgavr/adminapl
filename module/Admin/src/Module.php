@@ -110,7 +110,7 @@ class Module
                 } else {
                     $settingManager->removeProcess($controllerName, $actionName);
                 }    
-                session_destroy();        
+                //session_destroy();        
             }
         }    
         

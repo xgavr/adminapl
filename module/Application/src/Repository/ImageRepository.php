@@ -323,7 +323,7 @@ class ImageRepository extends EntityRepository
         }
         $headers = get_headers($url, 1);
 
-        if (is_bool($headers)){
+        if (empty($headers)){
             return;
         }
         
@@ -337,6 +337,10 @@ class ImageRepository extends EntityRepository
 //            var_dump($headers);
         }
         
+        if (empty($headers)){
+            return;
+        }
+
         if(preg_match("|200|", $headers[0])) {
             $saveDocFileName = mb_ereg_replace("[\\\/\!\@\#\$\&\~\%\*\'\"\:\;\>\<\`ÂÅÁÉËÖÜ]", '_',  $docFileName);
             $path = $this->getImageFolder($good, $status)."/".$saveDocFileName;
