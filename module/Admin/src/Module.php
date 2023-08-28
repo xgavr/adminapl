@@ -113,6 +113,8 @@ class Module
             }
         }    
         
+        session_destroy();
+        
         return;
     }        
 }

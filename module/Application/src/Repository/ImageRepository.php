@@ -323,7 +323,7 @@ class ImageRepository extends EntityRepository
         }
         $headers = get_headers($url, 1);
 
-        if ($headers === false){
+        if (is_bool($headers)){
             return;
         }
         
