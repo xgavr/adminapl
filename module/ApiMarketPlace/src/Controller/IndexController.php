@@ -107,7 +107,7 @@ class IndexController extends AbstractActionController
                         
         return new ViewModel([
             'marketplace' => $marketplace,
-            'allowDate' => date('Y-m-d', strtotime($this->getAllowDate(), '+1 day')),
+            'allowDate' => date('Y-m-d', strtotime($this->getAllowDate().' +1 day')),
         ]);
     }    
 

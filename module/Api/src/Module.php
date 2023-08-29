@@ -25,13 +25,4 @@ class Module implements ApiToolsProviderInterface
         //return include __DIR__ . '/../config/module.config.php';
     }
 
-    public function onFinish(MvcEvent $event)
-    {
-        // Get controller and action to which the HTTP request was dispatched.
-        //session_destroy();
-        //var_dump(203);
-        
-        return;
-    }        
-    
 }
