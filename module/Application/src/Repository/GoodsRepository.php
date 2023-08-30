@@ -1696,7 +1696,7 @@ class GoodsRepository extends EntityRepository
             }
         }
         
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();            
     }    
 
