@@ -196,7 +196,8 @@ class GoodsRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('tg.id, tg.name')
             ->distinct()    
-            ->from(TokenGroup::class, 'tg')    
+            ->from(TokenGroup::class, 'tg')
+            ->where('tg.movement > 0')    
             ;
         $orX = $queryBuilder->expr()->orX();
                 
