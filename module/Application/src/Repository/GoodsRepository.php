@@ -1615,7 +1615,7 @@ class GoodsRepository extends EntityRepository
                     $tg = $this->findTokenGroupByPhrase($params['q']);
 //                    var_dump($tg); exit;
                     if (count($tg)){
-                        $inX = $queryBuilder->expr()->in('g.tokenGroup', $tg);
+                        $inX = $queryBuilder->expr()->in('tg.id', $tg);
                         $queryBuilder
                                 ->andWhere($inX);                
                     }                                    
