@@ -1629,7 +1629,7 @@ class GoodsRepository extends EntityRepository
                 if (isset($params['accurate'])){
                     $searchOpt= $params['accurate'];
                 }
-
+                
                 if ($q){
                     
                     $queryBuilder->resetDQLPart('from')
@@ -1661,6 +1661,8 @@ class GoodsRepository extends EntityRepository
                                 ->setParameter('4', $q)    
                                 ;
                             break;    
+                        case Goods::SEARCH_NAME: 
+                            break;
                         default:
                             $queryBuilder
                                 ->andWhere('g.code = :code')                           
@@ -1691,7 +1693,7 @@ class GoodsRepository extends EntityRepository
             }
         }
         
-        var_dump($queryBuilder->getQuery()->getSQL());
+//        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();            
     }    
 
