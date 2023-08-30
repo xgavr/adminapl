@@ -1610,6 +1610,15 @@ class GoodsRepository extends EntityRepository
                             ->resetDQLPart('where')
                             ->andWhere($inX); 
                 }    
+                
+                if ($params['accurate'] == Goods::SEARCH_NAME){
+                    $tg = $this->findTokenGroupByPhrase($params['q']);
+                    if (count($tg)){
+                        $inX = $queryBuilder->expr()->in('g.tokenGroup', $tg);
+                        $queryBuilder
+                                ->andWhere($inX);                
+                    }                                    
+                }    
             }
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
@@ -1620,7 +1629,7 @@ class GoodsRepository extends EntityRepository
                     $searchOpt= $params['accurate'];
                 }
 
-                if ($q || $searchOpt == Goods::SEARCH_NAME){
+                if ($q){
                     
                     $queryBuilder->resetDQLPart('from')
                             ->resetDQLPart('join')
@@ -1650,14 +1659,6 @@ class GoodsRepository extends EntityRepository
                                 ->andWhere($orX) 
                                 ->setParameter('4', $q)    
                                 ;
-                            break;    
-                        case Goods::SEARCH_NAME:
-                            $tg = $this->findTokenGroupByPhrase($params['q']);
-                            if (count($tg)){
-                                $inX = $queryBuilder->expr()->in('g.tokenGroup', $tg);
-                                $queryBuilder
-                                        ->andWhere($inX);                
-                            }                                    
                             break;    
                         default:
                             $queryBuilder
