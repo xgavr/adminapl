@@ -19,6 +19,8 @@ use Application\Entity\Oem;
 use Stock\Entity\GoodBalance;
 use Application\Entity\GoodSupplier;
 use Stock\Entity\Comiss;
+use Application\Filter\Lemma;
+use Application\Filter\Tokenizer;
 
 
 /**
@@ -176,6 +178,55 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найди товары токенов
+     * 
+     * @param string $phrase
+     * 
+     * @return Goods|null
+     */
+    public function findTokenGroupByPhrase($phrase)
+    {
+
+        $entityManager = $this->getEntityManager();
+        $lemmaFilter = new Lemma($entityManager);
+        $tokenFilter = new Tokenizer();
+        $result = [];
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('tg.id, tg.name')
+            ->distinct()    
+            ->from(TokenGroup::class, 'tg')    
+            ;
+        $orX = $queryBuilder->expr()->orX();
+                
+        $andX = $queryBuilder->expr()->andX();
+        $lemms = $lemmaFilter->filter($tokenFilter->filter($phrase));
+        if (count($lemms)){                                                
+            foreach ($lemms as $k => $words){
+                foreach ($words as $key => $word){
+                    if ($word){
+                        $andX->add($queryBuilder->expr()->like('tg.lemms', '\'%'.$word.'%\''));
+                    }    
+                }
+            }    
+        }    
+        if ($andX->count()){
+            $orX->add($andX);
+        }    
+        
+        if ($orX->count()){
+            $queryBuilder->andWhere($orX);
+//                            var_dump($queryBuilder->getQuery()->getSQL()); exit;
+            $data = $queryBuilder->getQuery()->getResult();
+            foreach ($data as $row){
+                $result[] = $row['id'];
+            }                                
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Запрос по товарам по разным параметрам
      * 
      * @param array $params
@@ -237,6 +288,14 @@ class GoodsRepository extends EntityRepository
                                 ->andWhere($orX) 
                                 ->setParameter('4', $q)    
                                 ;
+                            break;    
+                        case Goods::SEARCH_NAME:
+                            $tg = $this->findTokenGroupByPhrase($params['q']);
+                            if (count($tg)){
+                                $inX = $queryBuilder->expr()->in('g.tokenGroup', $tg);
+                                $queryBuilder
+                                        ->andWhere($inX);                
+                            }                                    
                             break;    
                         default:
                             $queryBuilder
