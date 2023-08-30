@@ -1632,7 +1632,7 @@ class GoodsRepository extends EntityRepository
                 if (isset($params['accurate'])){
                     $searchOpt= $params['accurate'];
                 }
-                var_dump($q); exit;
+//                var_dump($q); exit;
                 if ($q){
                     
                     $queryBuilder->resetDQLPart('from')
