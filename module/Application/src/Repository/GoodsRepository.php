@@ -1611,8 +1611,9 @@ class GoodsRepository extends EntityRepository
                             ->andWhere($inX); 
                 }    
                 
-                if ($params['accurate'] == Goods::SEARCH_NAME){
+                if ($params['accurate'] == Goods::SEARCH_NAME && !empty($params['q'])){
                     $tg = $this->findTokenGroupByPhrase($params['q']);
+                    var_dump($tg); exit;
                     if (count($tg)){
                         $inX = $queryBuilder->expr()->in('g.tokenGroup', $tg);
                         $queryBuilder
