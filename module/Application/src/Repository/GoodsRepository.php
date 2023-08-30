@@ -191,15 +191,15 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
         $lemmaFilter = new Lemma($entityManager);
         $tokenFilter = new Tokenizer();
-        $result = [];
+        $result = [0];
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('tg.id, tg.name')
             ->distinct()    
             ->from(TokenGroup::class, 'tg')
-            ->where('tg.movement > 10')
+            ->where('tg.movement > 0')
             ->orderBy('tg.movement', 'DESC')
-            ->setMaxResults(5)    
+//            ->setMaxResults(5)    
             ;
         $orX = $queryBuilder->expr()->orX();
                 
@@ -311,12 +311,12 @@ class GoodsRepository extends EntityRepository
                             break;    
                     }
                 } else {
-                    $lastGood = $this->findLastGoodId($params);   
+                    //$lastGood = $this->findLastGoodId($params);   
                     $queryBuilder
-                        ->andWhere('g.id > :lastId')   
+                        //->andWhere('g.id > :lastId')   
                         ->orderBy('g.id', 'DESC')    
                         ->setMaxResults(100)    
-                        ->setParameter('lastId', $lastGood['maxId'] - 1000)    
+                        //->setParameter('lastId', $lastGood['maxId'] - 1000)    
                      ;                    
                 }    
             }
@@ -1612,17 +1612,7 @@ class GoodsRepository extends EntityRepository
                     $queryBuilder
                             ->resetDQLPart('where')
                             ->andWhere($inX); 
-                }    
-                
-                if ($params['accurate'] == Goods::SEARCH_NAME && !empty($params['q'])){
-                    $tg = $this->findTokenGroupByPhrase($params['q']);
-//                    var_dump($tg); exit;
-                    if (count($tg)){
-                        $inX = $queryBuilder->expr()->in('tg.id', $tg);
-                        $queryBuilder
-                                ->andWhere($inX);                
-                    }                                    
-                }    
+                }                    
             }
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
@@ -1665,6 +1655,15 @@ class GoodsRepository extends EntityRepository
                                 ;
                             break;    
                         case Goods::SEARCH_NAME: 
+                            $tg = $this->findTokenGroupByPhrase($params['q']);
+        //                    var_dump($tg); exit;
+                            if (count($tg)){
+                                $inX = $queryBuilder->expr()->in('tg.id', $tg);
+                                $queryBuilder
+                                        ->andWhere($inX)
+                                        ->andWhere('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0') 
+                                        ;                                        
+                            }                                    
                             break;
                         default:
                             $queryBuilder
