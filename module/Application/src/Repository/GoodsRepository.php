@@ -21,6 +21,7 @@ use Application\Entity\GoodSupplier;
 use Stock\Entity\Comiss;
 use Application\Filter\Lemma;
 use Application\Filter\Tokenizer;
+use Application\Entity\TokenGroup;
 
 
 /**
@@ -186,7 +187,7 @@ class GoodsRepository extends EntityRepository
      */
     public function findTokenGroupByPhrase($phrase)
     {
-
+//        var_dump($phrase); exit;
         $entityManager = $this->getEntityManager();
         $lemmaFilter = new Lemma($entityManager);
         $tokenFilter = new Tokenizer();
@@ -216,7 +217,7 @@ class GoodsRepository extends EntityRepository
         
         if ($orX->count()){
             $queryBuilder->andWhere($orX);
-                            var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//                            var_dump($queryBuilder->getQuery()->getSQL()); exit;
             $data = $queryBuilder->getQuery()->getResult();
             foreach ($data as $row){
                 $result[] = $row['id'];
@@ -268,11 +269,13 @@ class GoodsRepository extends EntityRepository
             if (isset($params['q'])){
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
-                if ($q){
-                    $searchOpt= Goods::SEARCH_CODE;
-                    if (isset($params['accurate'])){
-                        $searchOpt= $params['accurate'];
-                    }
+
+                $searchOpt = Goods::SEARCH_CODE;
+                if (isset($params['accurate'])){
+                    $searchOpt= $params['accurate'];
+                }
+
+                if ($q || $searchOpt == Goods::SEARCH_NAME){
                     switch ($searchOpt){
                         case Goods::SEARCH_APLID:
                             $queryBuilder
@@ -1611,7 +1614,13 @@ class GoodsRepository extends EntityRepository
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
-                if ($q){
+
+                $searchOpt= Goods::SEARCH_CODE;
+                if (isset($params['accurate'])){
+                    $searchOpt= $params['accurate'];
+                }
+
+                if ($q || $searchOpt == Goods::SEARCH_NAME){
                     
                     $queryBuilder->resetDQLPart('from')
                             ->resetDQLPart('join')
@@ -1620,10 +1629,6 @@ class GoodsRepository extends EntityRepository
                             ->leftJoin('g.goodBalances', 'gb')
                             ;
                 
-                    $searchOpt= Goods::SEARCH_CODE;
-                    if (isset($params['accurate'])){
-                        $searchOpt= $params['accurate'];
-                    }
                     switch ($searchOpt){
                         case Goods::SEARCH_APLID:
                             $queryBuilder
@@ -1645,6 +1650,14 @@ class GoodsRepository extends EntityRepository
                                 ->andWhere($orX) 
                                 ->setParameter('4', $q)    
                                 ;
+                            break;    
+                        case Goods::SEARCH_NAME:
+                            $tg = $this->findTokenGroupByPhrase($params['q']);
+                            if (count($tg)){
+                                $inX = $queryBuilder->expr()->in('g.tokenGroup', $tg);
+                                $queryBuilder
+                                        ->andWhere($inX);                
+                            }                                    
                             break;    
                         default:
                             $queryBuilder
