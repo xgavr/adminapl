@@ -197,7 +197,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('tg.id, tg.name')
             ->distinct()    
             ->from(TokenGroup::class, 'tg')
-            ->where('tg.movement > 0')
+            ->where('tg.movement > 10')
             ->orderBy('tg.movement', 'DESC')
             ->setMaxResults(5)    
             ;
@@ -359,7 +359,7 @@ class GoodsRepository extends EntityRepository
                 $queryBuilder->orderBy('g.'.$params['sort'], $params['order']);                
             }            
         }
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }
     

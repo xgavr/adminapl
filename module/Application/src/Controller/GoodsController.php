@@ -428,7 +428,7 @@ class GoodsController extends AbstractActionController
     
     public function presenceAction()
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '512M');
         	        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
