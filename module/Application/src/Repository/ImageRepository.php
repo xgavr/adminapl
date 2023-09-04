@@ -336,7 +336,7 @@ class ImageRepository extends EntityRepository
             )
         );        
         
-        $headers = get_headers($url);
+        $headers = get_headers($url, 1);
 
         if (empty($headers)){
             return;
