@@ -328,13 +328,13 @@ class ImageRepository extends EntityRepository
             return;
         }
         
-        stream_context_set_default(
-            array(
-                'http' => array(
-                    'protocol_version' => '1.1',
-                ),
-            )
-        );        
+//        stream_context_set_default(
+//            array(
+//                'http' => array(
+//                    'protocol_version' => '1.1',
+//                ),
+//            )
+//        );        
         
         $headers = get_headers($url, 1);
 
