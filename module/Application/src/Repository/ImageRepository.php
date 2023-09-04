@@ -13,6 +13,7 @@ use Application\Entity\Images;
 use Application\Entity\Goods;
 use Laminas\Filter\UriNormalize;
 use Application\Validator\UrlExists;
+use Laminas\Validator\Uri;
 
 /**
  * Description of ImageRepository
@@ -316,9 +317,14 @@ class ImageRepository extends EntityRepository
     {
         $uriNormalizeFilter = new UriNormalize(['enforcedScheme' => 'http']);
         $urlExists = new UrlExists();
+        $uriValidator = new Uri();
+        
         $url = $uriNormalizeFilter->filter($uri);
         
         if (!$urlExists->isValid($url)){
+            return;
+        }
+        if (!$uriValidator->isValid($url)){
             return;
         }
         
@@ -330,18 +336,24 @@ class ImageRepository extends EntityRepository
             )
         );        
         
-        $headers = get_headers($url, 1);
+        $headers = get_headers($url);
 
         if (empty($headers)){
             return;
         }
         
         if (preg_match("|301|", $headers[0])){
-            $uriNormalizeFilterS = new UriNormalize(['enforcedScheme' => 'http']);
+            $uriNormalizeFilterS = new UriNormalize(['enforcedScheme' => 'https']);
             $url = $uriNormalizeFilterS->filter($headers['Location']);
             if (!$fp = curl_init($url)) {
                 return;
             } 
+            if (!$urlExists->isValid($url)){
+                return;
+            }
+            if (!$uriValidator->isValid($url)){
+                return;
+            }
             $headers = get_headers($url);
 //            var_dump($headers);
         }
