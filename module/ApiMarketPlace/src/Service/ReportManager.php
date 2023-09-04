@@ -249,6 +249,33 @@ class ReportManager
     }       
     
     /**
+     * Подготовить отчеты комитентов за прошлый месяц
+     */
+    public function monthReports()
+    {
+        $marketplaces = $this->entityManager->getRepository(Marketplace::class)
+                ->findBy(['status' => Marketplace::STATUS_ACTIVE]);
+        
+        foreach ($marketplaces as $marketplace){
+            $reportDate = date('Y-m-d', strtotime('last day of previous month'));
+            
+            $marketplaceReport = $this->entityManager->getRepository(MarketSaleReport::class)
+                    ->findOneBy(['status' => MarketSaleReport::STATUS_ACTIVE, 
+                        'marketplace' => $marketplace->getId(), 'docDate' => $reportDate]);
+            
+            if (!empty($marketplaceReport)){
+                break;
+            }
+            
+            if ($marketplace->getMarketType() == Marketplace::TYPE_OZON){
+                $this->ozonRealization($marketplace, $reportDate);
+            }
+        }
+        
+        return;
+    }
+    
+    /**
      * Очитить движения по отчету
      * @param MarketSaleReport $marketSaleRepot
      */

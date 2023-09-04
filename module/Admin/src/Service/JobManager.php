@@ -132,6 +132,8 @@ class JobManager
           323 => ['command' => 'update-good-car',               'shedule' => '27 * * * *',              'description' => 'Обновление машин товаров'],
           324 => ['command' => 'update-good-img',               'shedule' => '37 * * * *',              'description' => 'Обновление картинок товаров'],
           325 => ['command' => 'update-good-oem',               'shedule' => '18,48 * * * *',           'description' => 'Обновление номеров товаров'],
+          326 => ['command' => 'update-apl-order',              'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление заказов из АПЛ'],
+          327 => ['command' => 'update-apl-ptu',                'shedule' => '25,55 * * * *',           'description' => 'Обновление поступлений из АПЛ'],
         ];
     }
     
@@ -145,6 +147,7 @@ class JobManager
           401 => ['command' => 'idocs',                 'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Загрузка электронных жокументов'],
           403 => ['command' => 'varact',                'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Восстановление последовательности'],
           404 => ['command' => 'unload-market-prices ', 'shedule' => '*/10 4-9 * * *',         'description' => 'Генерация прайс листов для ТП'],
+          405 => ['command' => 'pt-generator',          'shedule' => '20,50 * * * *','description' => 'Генерация перемещений между офисами'],
         ];
     }
 
@@ -155,9 +158,6 @@ class JobManager
     private function updateJobList()
     {
         return [
-          315 => ['command' => 'update-apl-order',                  'shedule' => self::CRON_EVERY_MIN_15,'description' => 'Обновление заказов из АПЛ'],
-          321 => ['command' => 'update-apl-ptu',                    'shedule' => '25,55 * * * *','description' => 'Обновление поступлений из АПЛ'],
-          402 => ['command' => 'pt-generator',                      'shedule' => '20,50 * * * *','description' => 'Генерация перемещений между офисами'],
           501 => ['command' => 'fill-token-group-token',            'shedule' => '14 12 * * *', 'description' => 'Заполнение токенов групп наименований'],
           502 => ['command' => 'fill-token-group-bigram',           'shedule' => '14 13 * * *', 'description' => 'Заполнение биграм групп наименований'],
           503 => ['command' => 'producer-best-name',                'shedule' => '14 14 * * *', 'description' => 'Обновление наименований производителей'],
@@ -176,17 +176,18 @@ class JobManager
           516 => ['command' => 'delete-article',                    'shedule' => '14 3 * * *',  'description' => 'Удаление пустых артикулов производителей'],
           517 => ['command' => 'delete-unknown-producer',           'shedule' => '14 4 * * *',  'description' => 'Удаление пустых неизвестных производителей'],
           518 => ['command' => 'delete-token',                      'shedule' => '14 5 * * *',  'description' => 'Удаление пустых токенов'],
-          523 => ['command' => 'update-apl-acquiring',              'shedule' => '14 6 * * *', 'description' => 'Загрузить эквайринг с АПЛ'],
+          523 => ['command' => 'update-apl-acquiring',              'shedule' => '14 6 * * *',  'description' => 'Загрузить эквайринг с АПЛ'],
           519 => ['command' => 'delete-bigram',                     'shedule' => '14 7 * * *',  'description' => 'Удаление пустых биграм'],
           520 => ['command' => 'delete-goods',                      'shedule' => '14 8 * * *',  'description' => 'Удаление пустых карточек товаров'],
           521 => ['command' => 'prices-by-link',                    'shedule' => '14 9 * * *',  'description' => 'Скачивание прайсов по ссылке'],
-          522 => ['command' => 'delete-token-group',                'shedule' => '14 10 * * *',  'description' => 'Удаление пустых групп наименований с пересчетом товаров в группе'],
+          522 => ['command' => 'delete-token-group',                'shedule' => '14 10 * * *', 'description' => 'Удаление пустых групп наименований с пересчетом товаров в группе'],
           524 => ['command' => 'update-attribute-apl-id',           'shedule' => '14 11 * * *', 'description' => 'Обновление атрибутов товаров'],
           525 => ['command' => 'update-generic-group-apl-id',       'shedule' => '44 12 * * *', 'description' => 'Обновление группы Apl общих групп'],
           526 => ['command' => 'update-make-apl-id',                'shedule' => '44 13 * * *', 'description' => 'Обновление aqplId брендов машин'],
           527 => ['command' => 'update-model-apl-id',               'shedule' => '44 14 * * *', 'description' => 'Обновление aplId моделей машин'],
           528 => ['command' => 'update-producer-apl-id',            'shedule' => '44 15 * * *', 'description' => 'Обновление производителей APL ID'],
           529 => ['command' => 'update-user',                       'shedule' => '44 16 * * *', 'description' => 'Обновление сотрудников'],
+          529 => ['command' => 'market-place-reports',              'shedule' => '40 3 * * *',  'description' => 'Загрузка отчетов ТП'],
         ];
     }
 
@@ -219,7 +220,7 @@ class JobManager
             $processCount = $this->entityManager->getRepository(Setting::class)
                     ->procCount();
             
-            if ($processCount < 11){
+            if ($processCount < 15){
                 $jobs = array_merge($this->postJobList(), $this->clearJobList(), 
                         $this->priceJobList(), $this->aplExJobList(), 
                         $this->docJobList(), $this->updateJobList(),

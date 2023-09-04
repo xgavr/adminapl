@@ -68,6 +68,18 @@ class ApiMarketPlaces extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'get_report',
+            'options' => [
+                'label' => 'Загрузка отчетов',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -82,7 +94,19 @@ class ApiMarketPlaces extends Form implements ObjectManagerAwareInterface
     
     private function addInputFilter() 
     {
+        $inputFilter = new InputFilter();        
+        $this->setInputFilter($inputFilter);
         
+        $inputFilter->add([
+                'name'     => 'get_report',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]);         
     }    
     
     public function setObjectManager(ObjectManager $objectManager)

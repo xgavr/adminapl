@@ -321,6 +321,15 @@ class ImageRepository extends EntityRepository
         if (!$urlExists->isValid($url)){
             return;
         }
+        
+        stream_context_set_default(
+            array(
+                'http' => array(
+                    'protocol_version' => '1.1',
+                ),
+            )
+        );        
+        
         $headers = get_headers($url, 1);
 
         if (empty($headers)){
@@ -333,7 +342,7 @@ class ImageRepository extends EntityRepository
             if (!$fp = curl_init($url)) {
                 return;
             } 
-            $headers = @get_headers($url);
+            $headers = get_headers($url);
 //            var_dump($headers);
         }
         

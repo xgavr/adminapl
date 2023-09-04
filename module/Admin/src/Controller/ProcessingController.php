@@ -224,6 +224,12 @@ class ProcessingController extends AbstractActionController
      */
     private $cashManager;    
 
+    /**
+     * Report manager.
+     * @var \ApiMarketPlace\Service\ReportManager
+     */
+    private $ampReportManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
@@ -231,7 +237,8 @@ class ProcessingController extends AbstractActionController
             $oemManager, $nameManager, $assemblyManager, $goodsManager, $settingManager,
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
             $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
-            $ozonService, $userManager, $smsManager, $sbpManager, $cashManager) 
+            $ozonService, $userManager, $smsManager, $sbpManager, $cashManager,
+            $ampReportManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -267,6 +274,7 @@ class ProcessingController extends AbstractActionController
         $this->smsManager = $smsManager;
         $this->sbpManager = $sbpManager;
         $this->cashManager = $cashManager;
+        $this->ampReportManager = $ampReportManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -2080,6 +2088,23 @@ class ProcessingController extends AbstractActionController
 
             $this->sbpManager->updatePaymentStatuses();
             $this->cashManager->cashDocFromQrCodePayments();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+
+    /**
+     * Отчеты торговых площадок
+     */
+    public function marketPlaceReportsAction()
+    {
+        $settings = $this->adminManager->getApiMarketPlaces();
+
+        if ($settings['get_report'] == 1){
+
+            $this->ampReportManager->monthReports();
         }    
                 
         return new JsonModel(
