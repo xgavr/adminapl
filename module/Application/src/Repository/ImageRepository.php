@@ -354,7 +354,7 @@ class ImageRepository extends EntityRepository
             if (!$uriValidator->isValid($url)){
                 return;
             }
-            $headers = \get_headers($url);
+            $headers = @get_headers($url);
 //            var_dump($headers);
         }
         
