@@ -187,14 +187,9 @@ class ReportManager
             }
             $saleQty = empty($row['sale_qty']) ? 0:$row['sale_qty']*$complect;
             $returnQty = empty($row['return_qty']) ? 0:$row['return_qty']*$complect;
-            $price = empty($row['price']) ? 0:$row['price'];
-            $priceSale = empty($row['price_sale']) ? 0:$row['price_sale'];
-            
-            if ($saleQty){
-                $price = $price/$saleQty;
-                $priceSale = $priceSale/$saleQty;
-            }
-                    
+            $price = empty($row['price']) ? 0:$row['price']/$complect;
+            $priceSale = empty($row['price_sale']) ? 0:$row['price_sale']/$complect;
+                                
             $good = $this->entityManager->getRepository(Goods::class)
                     ->findOneBy(['aplId' => $offerId]);
 //            var_dump($row['offer_id']);
