@@ -104,6 +104,8 @@ class ReportManager
                     $report->setNum($header['num']);
                     $report->setMarketplace($marketplace);
                     $report->setContract($marketplace->getContract());
+                    $report->setBaseAmount(0);
+                    $report->setCostAmount(0);
                 }    
             }
         }
@@ -202,6 +204,7 @@ class ReportManager
             $item->setSaleQty(empty($row['sale_qty']) ? 0:$row['sale_qty']); 
             $item->setTake(MarketSaleReportItem::TAKE_NO);
             $item->setRowNumber(empty($row['row_number']) ? 0:$row['row_number']);
+            $item->setBaseAmount(0);
 
             $this->entityManager->persist($item);            
         }
@@ -258,7 +261,7 @@ class ReportManager
         
         foreach ($marketplaces as $marketplace){
             $reportDate = date('Y-m-d', strtotime('last day of previous month'));
-            
+//            var_dump($reportDate); exit;
             $marketplaceReport = $this->entityManager->getRepository(MarketSaleReport::class)
                     ->findOneBy(['status' => MarketSaleReport::STATUS_ACTIVE, 
                         'marketplace' => $marketplace->getId(), 'docDate' => $reportDate]);

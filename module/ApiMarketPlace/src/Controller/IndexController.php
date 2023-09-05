@@ -483,6 +483,13 @@ class IndexController extends AbstractActionController
         return new JsonModel($result);
     }
 
+    public function realizationReportsAction()
+    {
+        $result = $this->reportManager->monthReports();
+
+        return new JsonModel($result);
+    }
+
     public function downloadLogAction()
     {
         setlocale(LC_ALL,'ru_RU.UTF-8');
