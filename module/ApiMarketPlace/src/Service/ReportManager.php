@@ -178,30 +178,47 @@ class ReportManager
     private function addReportItems($report, $data)
     {
         foreach ($data as $row){
-            $good = $this->entityManager->getRepository(Goods::class)
-                    ->findOneBy(['aplId' => $row['offer_id']]);
             
+            $offer_complect = explode('_', str_replace(['-'], '_', empty($row['offer_id']) ? 0:$row['offer_id']));
+            $offerId = $offer_complect[0];
+            $complect = 1;
+            if (!empty($offer_complect[1])){
+                $complect = max(1, (int) $offer_complect[1]);
+            }
+            $saleQty = empty($row['sale_qty']) ? 0:$row['sale_qty']*$complect;
+            $returnQty = empty($row['return_qty']) ? 0:$row['return_qty']*$complect;
+            $price = empty($row['price']) ? 0:$row['price'];
+            $priceSale = empty($row['price_sale']) ? 0:$row['price_sale'];
+            
+            if ($saleQty){
+                $price = $price/$saleQty;
+                $priceSale = $priceSale/$saleQty;
+            }
+                    
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->findOneBy(['aplId' => $offerId]);
+//            var_dump($row['offer_id']);
             $item = new MarketSaleReportItem();
             $item->setBarcode(empty($row['barcode']) ? null:$row['barcode']);
             $item->setCommissionPercent(empty($row['commission_percent']) ? 0:$row['commission_percent']);
             $item->setGood($good);
             $item->setMarketSaleReport($report);
-            $item->setPrice(empty($row['price']) ? 0:$row['price']);
-            $item->setPriceSale(empty($row['price_sale']) ? 0:$row['price_sale']);
+            $item->setPrice($price);
+            $item->setPriceSale($priceSale);
             $item->setProductId(empty($row['product_id']) ? 0:$row['product_id']);
-            $item->setOfferId(empty($row['offer_id']) ? 0:$row['offer_id']);
+            $item->setOfferId($offerId);
             $item->setProductName(empty($row['product_name']) ? 0:$row['product_name']);
             $item->setReturnAmount(empty($row['return_amount']) ? 0:$row['return_amount']);
             $item->setReturnCommission(empty($row['return_commission']) ? 0:$row['return_commission']);
             $item->setReturnDiscount(empty($row['return_discount']) ? 0:$row['return_discount']);
             $item->setReturnPriceSeller(empty($row['return_price_seller']) ? 0:$row['return_price_seller']);
-            $item->setReturnQty(empty($row['return_qty']) ? 0:$row['return_qty']);
+            $item->setReturnQty($returnQty);
             $item->setReturnSale(empty($row['return_sale']) ? 0:$row['return_sale']);
             $item->setSaleAmount(empty($row['sale_amount']) ? 0:$row['sale_amount']);
             $item->setSaleCommission(empty($row['sale_commission']) ? 0:$row['sale_commission']);
             $item->setSaleDiscount(empty($row['sale_discount']) ? 0:$row['sale_discount']);
             $item->setSalePriceSeller(empty($row['sale_price_seller']) ? 0:$row['sale_price_seller']);
-            $item->setSaleQty(empty($row['sale_qty']) ? 0:$row['sale_qty']); 
+            $item->setSaleQty($saleQty); 
             $item->setTake(MarketSaleReportItem::TAKE_NO);
             $item->setRowNumber(empty($row['row_number']) ? 0:$row['row_number']);
             $item->setBaseAmount(0);
