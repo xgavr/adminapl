@@ -412,10 +412,14 @@ class RegisterManager
             case Movement::DOC_PTU:
                 $ptu = $this->entityManager->getRepository(Ptu::class)
                     ->find($register->getDocId());
-                var_dump($ptu->getDocNo()); exit;
                 if ($ptu){
-                    $this->ptuManager->repostPtu($ptu);
-                    $flag = true;
+                    try{
+                        $this->ptuManager->repostPtu($ptu);
+                        $flag = true;
+                    } catch (\Doctrine\ORM\EntityNotFoundException $e){
+                        $this->entityManager->getConnection()
+                                ->delete('register', ['id' => $register->getId()]);
+                    }    
                 }
                 break;
             case Movement::DOC_ST:
