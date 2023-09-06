@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use ApiMarketPlace\Entity\MarketSaleReportItem;
 
 /**
- * Description of Marketplace
+ * Description of MarketPlaceReport
  * @ORM\Entity(repositoryClass="\ApiMarketPlace\Repository\MarketplaceRepository")
  * @ORM\Table(name="market_sale_report")
  * @author Daddy
@@ -23,11 +23,11 @@ class MarketSaleReport {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     
-     // St status doc constants.
+     // status doc constants.
     const STATUS_DOC_RECD       = 1; // Получено.
     const STATUS_DOC_NOT_RECD  = 2; // Не получено.
 
-     // St status doc constants.
+     // status doc constants.
     const STATUS_EX_NEW  = 1; // Не отправлено.
     const STATUS_EX_RECD  = 2; // Получено из АПЛ.
     const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
@@ -35,6 +35,9 @@ class MarketSaleReport {
     const STATUS_ACCOUNT_OK  = 1;// обновлено 
     const STATUS_ACCOUNT_NO  = 2;// не обновлено
     const STATUS_TAKE_NO  = 3;// не проведено
+    
+    const TYPE_REPORT = 1; //отчет о продажах
+    const TYPE_COMPENSATION = 2; //отчет о компенсациях
     
     /**
      * @ORM\Id
@@ -122,6 +125,16 @@ class MarketSaleReport {
      * @ORM\Column(name="status_account")  
      */
     protected $statusAccount;
+
+    /** 
+     * @ORM\Column(name="report_type")  
+     */
+    protected $reportType;
+
+    /** 
+     * @ORM\Column(name="comment")  
+     */
+    protected $comment;
     
     /** 
      * дата создания
@@ -471,6 +484,24 @@ class MarketSaleReport {
         return $this;
     }
 
+    public function getReportType() {
+        return $this->reportType;
+    }
+
+    public function setReportType($reportType) {
+        $this->reportType = $reportType;
+        return $this;
+    }
+
+    public function getComment() {
+        return $this->comment;
+    }
+
+    public function setComment($comment) {
+        $this->comment = $comment;
+        return $this;
+    }
+        
     /**
      * Массив для формы
      * @return array 

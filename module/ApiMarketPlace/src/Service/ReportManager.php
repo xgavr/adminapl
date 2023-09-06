@@ -106,6 +106,8 @@ class ReportManager
                     $report->setContract($marketplace->getContract());
                     $report->setBaseAmount(0);
                     $report->setCostAmount(0);
+                    $report->setComment('');
+                    $report->setReportType(MarketSaleReport::TYPE_REPORT);
                 }    
             }
         }
