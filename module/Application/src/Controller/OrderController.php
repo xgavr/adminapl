@@ -239,10 +239,12 @@ class OrderController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost(); 
-            if ($office->getId() != $data['office']){
-                $office = $this->entityManager->getRepository(Office::class)
-                        ->find($data['office']);
-                $form->get('shipping')->setValueOptions($this->entityManager->getRepository(Shipping::class)->shippingOptions($office));
+            if (!empty($data['office'])){
+                if ($office->getId() != $data['office']){
+                    $office = $this->entityManager->getRepository(Office::class)
+                            ->find($data['office']);
+                    $form->get('shipping')->setValueOptions($this->entityManager->getRepository(Shipping::class)->shippingOptions($office));
+                }    
             }    
             
             $form->setData($data);

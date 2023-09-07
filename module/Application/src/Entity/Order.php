@@ -21,6 +21,7 @@ use Admin\Filter\ClickFilter;
 use Laminas\Json\Encoder;
 use Laminas\Json\Decoder;
 use Company\Entity\Legal;
+use User\Entity\User;
 
 
 /**
@@ -1000,7 +1001,7 @@ class Order {
      
     /*
      * Возвращает связанный user.
-     * @return \User\Entity\User
+     * @return User
      */
     
     public function getUser() 
@@ -1023,7 +1024,7 @@ class Order {
 
     /**
      * Задает связанный user.
-     * @param \User\Entity\User $user
+     * @param User $user
      */    
     public function setUser($user) 
     {
@@ -1032,7 +1033,7 @@ class Order {
  
     /*
      * Возвращает связанный skiper.
-     * @return \User\Entity\User
+     * @return User
      */
     
     public function getSkiper() 
@@ -1060,7 +1061,7 @@ class Order {
 
     /**
      * Задает связанный skiper.
-     * @param \User\Entity\User $skiper
+     * @param User $skiper
      */    
     public function setSkiper($skiper) 
     {
@@ -1599,14 +1600,20 @@ class Order {
             'dateShipment' => date('Y-m-d', strtotime($this->getDateShipment())),
             'timeShipment' => date('H', strtotime($this->getDateShipment())),
             'courier' => ($this->getCourier()) ? $this->getCourier()->getId():null,
+            'courierName' => ($this->getCourier()) ? $this->getCourierName():null,
             'office' => $this->getOffice()->getId(),
+            'officeName' => $this->getOffice()->getName(),
             'status' => $this->getStatus(),
+            'statusName' => $this->getStatusAsString(),
             'info' => $this->getInfo(),
             'invoiceInfo' => $this->getInvoiceInfo(),
             'mode' =>$this->getMode(),
+            'modeName' =>$this->getModeAsString(),
             'trackNumber' => $this->getTrackNumber(),
             'user' => ($this->getUser()) ? $this->getUser()->getId():null,
+            'userName' => ($this->getUser()) ? $this->getUser()->getFullName():null,
             'skiper' => ($this->getSkiper()) ? $this->getSkiper()->getId():null,
+            'skiperName' => ($this->getSkiper()) ? $this->getSkiper()->getFullName():null,
             'shipping' => ($this->getShipping()) ? $this->getShipping()->getId():null,
             'shipmentTotal' => $this->getShipmentTotal(),
             'shipmentRate' => $this->getShipmentRate(),

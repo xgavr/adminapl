@@ -89,6 +89,15 @@ return [
                     ],
                 ],
             ],
+            'api.rest.api-order-info' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api-order-info[/:api_order_info_id]',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\ApiOrderInfo\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -122,6 +131,7 @@ return [
             \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesResource::class => \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesResourceFactory::class,
             \Api\V1\Rest\ApiQrcode\ApiQrcodeResource::class => \Api\V1\Rest\ApiQrcode\ApiQrcodeResourceFactory::class,
             \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookResource::class => \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookResourceFactory::class,
+            \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoResource::class => \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoResourceFactory::class,
         ],
     ],
     'view_manager' => [
@@ -155,6 +165,7 @@ return [
             5 => 'api.rest.api-suppliers-prices',
             6 => 'api.rest.api-qrcode',
             7 => 'api.rest.api-tochka-webhook',
+            8 => 'api.rest.api-order-info',
         ],
     ],
     'api-tools-rpc' => [
@@ -176,6 +187,7 @@ return [
             'Api\\V1\\Rest\\ApiSuppliersPrices\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiQrcode\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiTochkaWebhook\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\ApiOrderInfo\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -218,6 +230,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiOrderInfo\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -249,6 +266,10 @@ return [
                 1 => 'application/json',
             ],
             'Api\\V1\\Rest\\ApiTochkaWebhook\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
+            'Api\\V1\\Rest\\ApiOrderInfo\\Controller' => [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
@@ -540,6 +561,28 @@ return [
             'collection_class' => \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookCollection::class,
             'service_name' => 'ApiTochkaWebhook',
         ],
+        'Api\\V1\\Rest\\ApiOrderInfo\\Controller' => [
+            'listener' => \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoResource::class,
+            'route_name' => 'api.rest.api-order-info',
+            'route_identifier_name' => 'api_order_info_id',
+            'collection_name' => 'api_order_info',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoEntity::class,
+            'collection_class' => \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoCollection::class,
+            'service_name' => 'apiOrderInfo',
+        ],
     ],
     'api-tools-hal' => [
         'metadata_map' => [
@@ -625,6 +668,18 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.api-tochka-webhook',
                 'route_identifier_name' => 'api_tochka_webhook_id',
+                'is_collection' => true,
+            ],
+            \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-order-info',
+                'route_identifier_name' => 'api_order_info_id',
+                'hydrator' => \Laminas\Hydrator\ArraySerializable::class,
+            ],
+            \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-order-info',
+                'route_identifier_name' => 'api_order_info_id',
                 'is_collection' => true,
             ],
         ],
