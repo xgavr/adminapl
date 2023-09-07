@@ -89,5 +89,20 @@ class SupplierOrderManager
         $this->entityManager->flush();
         return true;
     }
+    
+    /**
+     * Удалить все заказы поставщикам по заказу
+     * 
+     * @param Order $order
+     */
+    public function removeByOrder($order)
+    {
+        $supplierOrders = $this->entityManager->getRepository(SupplierOrder::class)
+                ->findBy(['order' => $order->getId()]);
+        foreach ($supplierOrders as $supplierOrder){
+            $this->removeSupplierOrder($supplierOrder);
+        }
         
+        return;
+    }
 }

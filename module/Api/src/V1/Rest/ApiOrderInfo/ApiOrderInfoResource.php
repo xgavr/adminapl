@@ -5,6 +5,8 @@ use Laminas\ApiTools\ApiProblem\ApiProblem;
 use Laminas\ApiTools\Rest\AbstractResourceListener;
 use Application\Entity\Order;
 use Application\Entity\Bid;
+use Application\Entity\Supplier;
+use Application\Entity\Goods;
 
 class ApiOrderInfoResource extends AbstractResourceListener
 {
@@ -26,12 +28,19 @@ class ApiOrderInfoResource extends AbstractResourceListener
      * @var \Application\Service\GoodsManager
      */
     private $goodManager;
+
+    /**
+     * SupplierOrder manager.
+     * @var \Application\Service\SupplierOrderManager
+     */
+    private $supplierOrderManager;
     
-    public function __construct($entityManager, $orderManager, $goodManager) 
+    public function __construct($entityManager, $orderManager, $goodManager, $supplierOrderManager) 
     {
        $this->entityManager = $entityManager;
        $this->orderManager = $orderManager;
        $this->goodManager = $goodManager;
+       $this->supplierOrderManager = $supplierOrderManager;
     }
     
     /**
@@ -42,7 +51,52 @@ class ApiOrderInfoResource extends AbstractResourceListener
      */
     public function create($data)
     {
-        return new ApiProblem(405, 'The POST method has not been defined');
+        if (is_object($data)){
+            $order = null;
+            if (!empty($data->orderId)){
+                $order = $this->entityManager->getRepository(Order::class)
+                            ->find($data->orderId);
+            }
+            if (!empty($data->orderAplId) && !$order){
+                $order = $this->entityManager->getRepository(Order::class)
+                            ->findOneBy(['aplId' => $data->orderId]);
+            }
+            if ($order){
+                
+                $this->supplierOrderManager->removeByOrder($order);
+
+                foreach ($data->Data as $supplierOrder){
+                    $supplier = $this->entityManager->getRepository(Supplier::class)
+                            ->findOneBy(['aplId' => $supplierOrder->supplierAplId]);
+                    
+                    $good = null;
+                    
+                    if (!empty($supplierOrder->goodId)){
+                        $good = $this->entityManager->getRepository(Goods::class)
+                                ->find($supplierOrder->goodId);
+                    }    
+                    if (!empty($supplierOrder->goodAplId && !$good)){
+                        $good = $this->entityManager->getRepository(Goods::class)
+                                ->findOneBy($supplierOrder->goodAplId);
+                    }    
+
+                    if ($supplier && $good){
+                        $orderData = [
+                            'good' => $good,
+                            'order' => $order,
+                            'supplier' => $supplier,
+                            'quantity' => $data->Data->quantity,
+                            'statusOrder' => $supplierOrder->status,
+                        ];
+                        $this->supplierOrderManager->addSupplierOrder($orderData);
+                    }    
+                }    
+                
+                return ['result' => 'ok'];
+            }
+        }
+        
+        return new ApiProblem(404, 'Не верные данные');
     }
 
     /**
