@@ -274,6 +274,7 @@ class Comment {
             'order' => $this->getOrder()->getId(),
             'user' => ($this->getUser()) ? $this->getUser()->getId():'',
             'userName' => $this->getUserName(),
+            'created' => $this->getDateCreated(),
         ];
     }        
 }

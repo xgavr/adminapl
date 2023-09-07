@@ -2011,9 +2011,9 @@ class ProcessingController extends AbstractActionController
      */
     public function ptGeneratorAction()
     {
-        $settings = $this->adminManager->getAplExchangeSettings();
+        $settings = $this->adminManager->getSettings();
 
-        if ($settings['ptu'] == 1){
+        if ($settings['job'] == 1){
 
             $this->ptManager->ptGenerators();            
         }    
