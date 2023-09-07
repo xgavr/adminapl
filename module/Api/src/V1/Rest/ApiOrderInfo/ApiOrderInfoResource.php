@@ -134,6 +134,22 @@ class ApiOrderInfoResource extends AbstractResourceListener
                     ->find($id);
             if ($order){
                 $orderInfo = $order->toArray();
+                
+                $lastCommentInfo = [];
+                
+                $lastComment = $this->orderManager->lastComment($order);
+                
+                if ($lastComment){
+                    $lastCommentInfo = [
+                        'comment' => $lastComment->getComment(),
+                        'user' => ($lastComment->getUser()) ? $lastComment->getUser()->getId():'',
+                        'userName' => $lastComment->getUserName(),
+                        'created' => $lastComment->getDateCreated(),
+                    ];
+                }
+                
+                $orderInfo['lastComment'] = $lastCommentInfo;
+                
                 $bids = $this->entityManager->getRepository(Bid::class)
                         ->findBy(['order' => $id]);
                 $bidsInfo = [];

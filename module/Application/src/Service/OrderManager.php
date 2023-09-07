@@ -41,6 +41,7 @@ use Laminas\Json\Encoder;
 use Stock\Entity\ComissBalance;
 use Stock\Entity\ComitentBalance;
 use Stock\Entity\Comitent;
+use Application\Entity\Comment;
 
 /**
  * Description of OrderService
@@ -1096,6 +1097,17 @@ class OrderManager
         }
         
         return;
+    }
+    
+    /**
+     * Получить последний комментарий
+     * 
+     * @param Order $order
+     */
+    public function lastComment($order)
+    {
+        return $this->entityManager->getRepository(Comment::class)
+                ->lastComment($order);
     }
     
     /**

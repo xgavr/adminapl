@@ -73,4 +73,25 @@ class CommentRepository  extends EntityRepository{
         return $queryBuilder->getQuery();
     }       
     
+    /**
+     * Получить последний комментарий
+     * 
+     * @param Order $order
+     */
+    public function lastComment($order)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+            ->from(Comment::class, 'c')
+            ->where('c.order = :orderId')
+            ->setParameter('orderId', $order->getId())    
+            ->setMaxResults(1)    
+            ->addOrderBy('c.id', 'DESC')    
+                ;
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();        
+    }
 }
