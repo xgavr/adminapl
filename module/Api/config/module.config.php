@@ -516,6 +516,14 @@ return [
                         'name' => \Laminas\I18n\Validator\IsFloat::class,
                         'options' => [],
                     ],
+                    1 => [
+                        'name' => \Laminas\Validator\NotEmpty::class,
+                        'options' => [],
+                    ],
+                    2 => [
+                        'name' => \Laminas\Validator\GreaterThan::class,
+                        'options' => [],
+                    ],
                 ],
                 'filters' => [
                     0 => [
@@ -526,7 +534,7 @@ return [
                 'name' => 'quantity',
                 'description' => 'Количество заказано',
                 'field_type' => 'integer',
-                'error_message' => 'Не верное количество заказано',
+                'error_message' => 'Количество заказано должно быть больше 0',
             ],
             6 => [
                 'required' => true,
