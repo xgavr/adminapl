@@ -147,7 +147,8 @@ class CommentController extends AbstractActionController
 
     public function editLocalFormAction()
     {        
-        $orderId = (int)$this->params()->fromRoute('id', -1);        
+        $orderId = (int)$this->params()->fromRoute('id', -1);  
+        $order = null;
         if ($orderId > 0){
             $order = $this->entityManager->getRepository(Order::class)
                     ->find($orderId);

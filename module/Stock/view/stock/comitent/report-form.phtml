@@ -1,0 +1,254 @@
+<?php
+use Stock\Entity\Revise;
+
+$form = $this->form;
+
+$form->get('docDate')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('num')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('marketplace')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'compensation-submit']);
+
+$form->prepare();
+
+?>
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="compensationModalLabel">Отчет о компенсациях</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('num')); ?>
+                <?= $this->formElement($form->get('num')); ?>
+                <?= $this->formElementErrors($form->get('num')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('docDate')); ?>
+                <?= $this->formElement($form->get('docDate')); ?>
+                <?= $this->formElementErrors($form->get('docDate')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('marketplace')); ?>
+                <?= $this->formElement($form->get('marketplace')); ?>
+                <?= $this->formElementErrors($form->get('marketplace')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="msrgoodtoolbar">
+                <div class="form-inline" role="form">
+                    <button type="button" class="btn btn-default btn-sm pt-good-modal-show" modal-url="/comitent/good-edit-form">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+            <table id="msrgoodtable" 
+                data-toggle="msrgoodtable" 
+                data-url="/comitent/good-content/<?= ($marketSaleReport) ? $marketSaleReport->getId():'' ?>"
+                data-side-pagination="client"
+                data-pagination="true"
+                data-cookie="true"
+                data-cookie-id-table="msrGoodSaveId"
+                data-cookie-expire="1m"
+                data-page-size = "10"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#msrgoodtoolbar"
+                data-icon-size="sm"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-show-columns="true"
+                data-query-params="msrgoodQueryParams"
+                data-response-handler="msrgoodResponseHandler"
+                data-unique-id = "id"
+                data-row-style="takeStyle"
+                >
+                <thead>
+                    <tr>
+                        <th data-field="rowNumber" data-type="numeric" data-align="right" data-width="20">N</th>
+                        <th data-field="offerId" data-type="numeric" >Apl Id</th>
+                        <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
+                        <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                        <th data-field="good.name" data-type="numeric">Наименование</th>
+                        <th data-field='priceSale' data-align="right" data-formatter="amountFormatter">Цена</th>
+                        <th data-field='saleQty' data-align="right">Количество</th>
+                        <th data-field='returnQty' data-align="right">Возврат</th>
+                        <th data-field='saleAmount' data-align="right" data-formatter="amountFormatter">Сумма</th>
+                        <th data-field='baseAmount' data-align="right" data-formatter="amountFormatter">Закупка</th>
+                        <th data-field="button" data-formatter="msrActiveFormatter" data-width="20"></th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>
+    </div>    
+    <div class="row">    
+        <div class="col-xs-12">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('comment')); ?>
+                <?= $this->formElement($form->get('comment')); ?>
+                <?= $this->formElementErrors($form->get('comment')); ?>                  
+            </div>
+        </div>    
+    </div>    
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="compensation-submit">Сохранить</button>
+</div>
+<?= $this->form()->closeTag(); ?>
+            
+<script>             
+    function submitForm(){
+        var data = serializeForm('#compensation-form');
+         $('#compensation-submit').prop('disabled', true);
+        //console.log(data);
+        $.ajax({
+            type: 'POST',
+            url: '/comitent/compensation-edit-form/<?= ($revise) ? $revise->getId():"" ?>?kind=<?= $kind?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#compensationModal').modal('hide');
+                    if ($('#table')){
+                        $('#table').bootstrapTable('refresh');
+                    }    
+                    if ($('#mutualtable')){
+                        $('#mutualtable').bootstrapTable('refresh');
+                    }    
+                } else {
+                    $('#compensationModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    $( document ).ready(function() {
+        
+        $('#msrgoodtable').bootstrapTable({
+            onLoadSuccess: function(res){
+                //mspUpdateTotal();
+            }            
+        }); 
+        
+    });    
+    
+    function msrGoodRefreshTable(){
+        $('#msrgoodtable').bootstrapTable('refresh');
+    }
+    
+    function msrgoodQueryParams(params) {
+        $('#msrgoodtoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#mspgoodtable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#mspgoodtable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function goodFormatter(value, row){
+        if (row.good){
+            var url = '/goods/view/'+row.good.id;
+            btn = '<nobr><a';
+            btn += ' href="'+url+'"';
+            btn += ' class="btn btn-link btn-xs" target="_blank">';
+            btn += '<span class="glyphicon glyphicon-link"></span>';
+            btn += '</a>'+value+'</nobr>';
+            return btn;
+        }
+        
+        return;
+    }    
+    
+    function amountFormatter(value){
+        return (Math.round(value*100)/100).toFixed(2);
+    }        
+        
+    function msrActiveFormatter(value, row){
+        var url = '/comitent/good-edit-form/';
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs msr-good-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' unique-id="'+row.id+'"';
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+        
+        return btn;
+    }    
+        
+    function pgPriceFormatter(value, row){
+        return Math.round(value*100/row.quantity)/100;
+    }        
+    
+    function msrgoodResponseHandler(res) {
+        return res;
+    }     
+
+$( document ).ready(function() {
+                
+        var forms = $('#compensation-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('revise-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });            
+</script>

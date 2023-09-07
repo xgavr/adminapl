@@ -278,7 +278,8 @@ class ReportManager
 //            var_dump($reportDate); exit;
             $marketplaceReport = $this->entityManager->getRepository(MarketSaleReport::class)
                     ->findOneBy(['status' => MarketSaleReport::STATUS_ACTIVE, 
-                        'marketplace' => $marketplace->getId(), 'docDate' => $reportDate]);
+                        'marketplace' => $marketplace->getId(), 'docDate' => $reportDate,
+                        'reportType' => MarketSaleReport::TYPE_REPORT]);
             
             if (!empty($marketplaceReport)){
                 break;

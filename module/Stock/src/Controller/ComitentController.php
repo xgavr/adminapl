@@ -16,6 +16,7 @@ use Stock\Entity\RegisterVariable;
 use ApiMarketPlace\Entity\MarketSaleReportItem;
 use Stock\Form\MsrGoodForm;
 use Application\Entity\Goods;
+use Stock\Form\MarketSaleReportForm;
 
 class ComitentController extends AbstractActionController
 {
@@ -118,6 +119,51 @@ class ComitentController extends AbstractActionController
             'marketSaleReport' => $msp,
         ]);        
     }    
+    
+    public function reportFormAction()
+    {
+        $reportId = (int)$this->params()->fromRoute('id', -1);
+        $marketplaceId = (int) $this->params()->fromQuery('marketplace', -1);
+        
+        $report = null;
+        
+        if ($marketplaceId > 0){
+            $marketplace = $this->entityManager->getRepository(Marketplace::class)
+                    ->find($marketplaceId);
+        }
+        
+        if ($reportId > 0){
+            $report = $this->entityManager->getRepository(MarketSaleReport::class)
+                    ->find($reportId);
+        }    
+        
+        $form = new MarketSaleReportForm($this->entityManager);
+        
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                
+                $this->reportManager->ozonRealization($revise, $data);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+        } else {
+            if ($report){
+                $form->setData($revise->toArray());
+            }    
+        }
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'marketSaleReport' => $report,
+        ]);        
+    }        
     
     public function goodContentAction()
     {
