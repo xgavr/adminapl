@@ -7,6 +7,7 @@ use Application\Entity\Order;
 use Application\Entity\Bid;
 use Application\Entity\Supplier;
 use Application\Entity\Goods;
+use Application\Entity\SupplierOrder;
 
 class ApiOrderInfoResource extends AbstractResourceListener
 {
@@ -52,51 +53,88 @@ class ApiOrderInfoResource extends AbstractResourceListener
     public function create($data)
     {
         if (is_object($data)){
-            $order = null;
+            $order = $supplier = null;
+            $message = '';
+
+            if (empty($data->orderId) && empty($data->orderAplId)){
+                $message .= "id или aplId заказа не передан ";                    
+            }
+
             if (!empty($data->orderId)){
                 $order = $this->entityManager->getRepository(Order::class)
                             ->find($data->orderId);
+                if (!$order){
+                    $message .= "Заказ id:{$data->orderId} не найден ";
+                }    
             }
             if (!empty($data->orderAplId) && !$order){
                 $order = $this->entityManager->getRepository(Order::class)
-                            ->findOneBy(['aplId' => $data->orderId]);
+                            ->findOneBy(['aplId' => $data->orderAplId]);
+                if (!$order){
+                    $message .= "Заказ aplId:{$data->orderAplId} не найден ";
+                }    
             }
             if ($order){
                 
-                $this->supplierOrderManager->removeByOrder($order);
+                if (empty($data->supplierId) && empty($data->supplierAplId)){
+                    $message .= "id или aplId поставщика не передан ";                    
+                }
 
-                foreach ($data->Data as $supplierOrder){
+                if (!empty($data->supplierId)){
                     $supplier = $this->entityManager->getRepository(Supplier::class)
-                            ->findOneBy(['aplId' => $supplierOrder->supplierAplId]);
-                    
-                    $good = null;
-                    
-                    if (!empty($supplierOrder->goodId)){
-                        $good = $this->entityManager->getRepository(Goods::class)
-                                ->find($supplierOrder->goodId);
+                            ->find($data->supplierId);
+                    if (!$supplier){
+                        $message .= "Поставщик id:{$data->supplierId} не найден ";
                     }    
-                    if (!empty($supplierOrder->goodAplId && !$good)){
-                        $good = $this->entityManager->getRepository(Goods::class)
-                                ->findOneBy($supplierOrder->goodAplId);
+                }    
+                if (!empty($data->supplierAplId)){
+                    $supplier = $this->entityManager->getRepository(Supplier::class)
+                            ->findOneBy(['aplId' => $data->supplierAplId]);
+                    if (!$supplier){
+                        $message .= "Поставщик aplId:{$data->supplierAplId} не найден ";
                     }    
-
-                    if ($supplier && $good){
-                        $orderData = [
-                            'good' => $good,
-                            'order' => $order,
-                            'supplier' => $supplier,
-                            'quantity' => $data->Data->quantity,
-                            'statusOrder' => $supplierOrder->status,
-                        ];
-                        $this->supplierOrderManager->addSupplierOrder($orderData);
+                }    
+                    
+                $good = null;
+                
+                if (empty($data->goodId) && empty($data->goodAplId)){
+                    $message .= "id или aplId товара не передан ";                    
+                }
+                    
+                if (!empty($data->goodId)){
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->find($data->goodId);
+                    if (!$good){
+                        $message .= "Товар id:{$data->goodId} не найден ";
+                    }    
+                }    
+                if (!empty($data->goodAplId) && !$good){
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->findOneBy($data->goodAplId);
+                    if (!$good){
+                        $message .= "Товар aplId:{$data->goodAplId} не найден ";
                     }    
                 }    
                 
-                return ['result' => 'ok'];
+                if ($data->status == SupplierOrder::STATUS_ORDER_NEW){
+                    $message .= "Товар не заказан ";
+                }
+                
+                if ($supplier && $good && $data->status == SupplierOrder::STATUS_ORDER_ORDERED){
+                    $orderData = [
+                        'good' => $good,
+                        'order' => $order,
+                        'supplier' => $supplier,
+                        'quantity' => $data->quantity,
+                        'statusOrder' => $data->status,
+                    ];
+                    $this->supplierOrderManager->addSupplierOrder($orderData);
+                    return ['result' => 'ok'];
+                }                    
             }
         }
         
-        return new ApiProblem(404, 'Не верные данные');
+        return new ApiProblem(404, trim($message));
     }
 
     /**

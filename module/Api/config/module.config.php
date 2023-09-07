@@ -288,6 +288,9 @@ return [
         'Api\\V1\\Rest\\ApiQrcode\\Controller' => [
             'input_filter' => 'Api\\V1\\Rest\\ApiQrcode\\Validator',
         ],
+        'Api\\V1\\Rest\\ApiOrderInfo\\Controller' => [
+            'input_filter' => 'Api\\V1\\Rest\\ApiOrderInfo\\Validator',
+        ],
     ],
     'input_filter_specs' => [
         'Api\\V1\\Rpc\\Ping\\Validator' => [
@@ -403,6 +406,175 @@ return [
                 'name' => 'amount',
                 'description' => 'Сумма к оплате',
                 'field_type' => 'float',
+            ],
+        ],
+        'Api\\V1\\Rest\\ApiOrderInfo\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'orderId',
+                'field_type' => 'integer',
+                'description' => 'Номер заказа в adminapl',
+                'error_message' => 'Не верный номер заказа',
+                'allow_empty' => true,
+            ],
+            1 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'orderAplId',
+                'description' => 'Номер заказа в apl',
+                'field_type' => 'integer',
+                'allow_empty' => true,
+                'error_message' => 'Не верный номер заказа',
+            ],
+            2 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'supplierAplId',
+                'description' => 'Номер поставщика в apl',
+                'field_type' => 'integer',
+                'error_message' => 'Не верный id поставщика',
+                'allow_empty' => true,
+            ],
+            3 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'goodId',
+                'description' => 'Id товара в adminapl',
+                'field_type' => 'integer',
+                'allow_empty' => true,
+                'error_message' => 'Не верный id товара',
+            ],
+            4 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'goodAplId',
+                'description' => 'Id товара в apl',
+                'field_type' => 'integer',
+                'allow_empty' => true,
+                'error_message' => 'Не верный id товара',
+            ],
+            5 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsFloat::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToFloat::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'quantity',
+                'description' => 'Количество заказано',
+                'field_type' => 'integer',
+                'error_message' => 'Не верное количество заказано',
+            ],
+            6 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                    1 => [
+                        'name' => \Laminas\Validator\InArray::class,
+                        'options' => [
+                            'haystack' => [
+                                0 => 1,
+                                1 => 2,
+                            ],
+                        ],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'status',
+                'description' => 'Заказано - 2, не заказано - 1 (не добавляется)',
+                'field_type' => 'integer',
+                'error_message' => 'Не верный статус',
+            ],
+            7 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'supplierId',
+                'description' => 'Id поставщика в adminapl',
+                'field_type' => 'integer',
+                'allow_empty' => true,
+                'error_message' => 'Не верный id поставщика',
             ],
         ],
     ],
