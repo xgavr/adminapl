@@ -266,6 +266,8 @@ class CommentController extends AbstractActionController
     {
         $commentId = (int)$this->params()->fromRoute('id', -1);
         
+        $comment = $comments = null;
+        
         if ($commentId > 0){
             $comment = $this->entityManager->getRepository(Comment::class)
                     ->find($commentId);
@@ -283,11 +285,13 @@ class CommentController extends AbstractActionController
                 $dependInfo = $this->orderManager->updateDependInfo($comment->getOrder(), true);
                 $commentsQuery = $this->entityManager->getRepository(Comment::class)
                         ->orderComments($comment->getOrder());
+                
+                $comments = $commentsQuery->getResult(2);
             }
         }    
         
         return new JsonModel([
-            'comments' => $commentsQuery->getResult(2),
+            'comments' => $comments,
             'dependInfo' => $dependInfo,
         ]);                   
     }    

@@ -1159,6 +1159,8 @@ class GoodsManager
         }
         
         $result = [
+            'goodId' => $good->getId(),
+            'goodAplId' => $good->getAplId(),
             'g5' => [
                 'bestname' => $good->getName(),
                 'shortname' => $good->getNameShort(),
