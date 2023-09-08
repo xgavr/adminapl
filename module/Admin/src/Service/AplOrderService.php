@@ -1174,7 +1174,7 @@ class AplOrderService {
                 'publish' => $order->getOffice()->getAplId(),
                 'user' => $order->getUserApl(),
                 'name' => $order->getContact()->getName(),
-                'email' => $order->getContact()->getEmail(),
+                'email' => $order->getContact()->getEmailAsString(),
                 'firmName' => ($order->getLegal()) ? $order->getLegal()->getName():null,
                 'inn' => ($order->getLegal()) ? $order->getLegal()->getInn():null,
                 'kpp' => ($order->getLegal()) ? $order->getLegal()->getKpp():null,

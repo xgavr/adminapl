@@ -494,6 +494,16 @@ class Contact {
    }    
    
     /**
+     * Возвращает 1 email для этого contact.
+     * @return array
+     */   
+   public function getEmailAsString() {
+       if ($this->emails[0]){
+            return $this->emails[0]->getName();
+       }
+   }    
+   
+    /**
      * Возвращает email для этого contact.
      * @return array
      */   
