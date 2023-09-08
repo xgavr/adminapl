@@ -966,8 +966,8 @@ class AplService {
                 $response = $client->send();
                 $body = $response->getBody();
                 if (is_numeric($body)){
-                    $this->entityManager->getRepository(Goods::class)
-                            ->updateGoodId($good->getId(), ['apl_id' => $body]);
+//                    $this->entityManager->getRepository(Goods::class)
+//                            ->updateGoodId($good->getId(), ['apl_id' => $body]);
                     $result = true;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $ex){
@@ -1523,7 +1523,7 @@ class AplService {
                 foreach ($data as $good){
                     $upd = ['status_rawprice_ex' => Goods::RAWPRICE_EX_TRANSFERRED, 'date_ex' => date('Y-m-d H:i:s')];
                     if ($aplIdFlag){
-                        $upd['apl_id'] = 0;
+                        //$upd['apl_id'] = 0;
                     }    
                     $this->entityManager->getRepository(Goods::class)
                             ->updateGoodId($good->getId(), $upd);
