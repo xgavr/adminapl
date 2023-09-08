@@ -693,6 +693,25 @@ class OrderForm extends Form
             ]);        
 
         $inputFilter->add([
+                'name'     => 'address',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);        
+
+        $inputFilter->add([
                 'name'     => 'user',
                 'required' => false,
                 'filters'  => [],                
