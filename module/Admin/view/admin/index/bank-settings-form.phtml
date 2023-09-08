@@ -13,10 +13,6 @@ $form->get('doc_by_api')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('tarnsfer_apl')->setAttributes([
-    'class'=>'form-control', 
-    ]);
-
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -52,13 +48,7 @@ $form->prepare();
             <?= $this->formElement($form->get('doc_by_api')); ?>
             <?= $this->formElementErrors($form->get('doc_by_api')); ?>                  
         </div>
-                        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('tarnsfer_apl')); ?>
-            <?= $this->formElement($form->get('tarnsfer_apl')); ?>
-            <?= $this->formElementErrors($form->get('tarnsfer_apl')); ?>                  
-        </div>
-                        
+                                                
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
             <button type="button" class="btn btn-primary" id="bank-settings-submit">Загрузить</button>

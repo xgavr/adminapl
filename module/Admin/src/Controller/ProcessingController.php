@@ -524,9 +524,14 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['statement_by_file'] == 1){
             $this->bankManager->getStatementsByEmail(); //проверить почту
-            $this->bankManager->checkStatementFolder();//проверить папку с файлами
-            $this->aplBankService->sendBankStatement(); //трансфер выписки в АПЛ
+            $this->bankManager->checkStatementFolder();//проверить папку с файлами            
         }
+        
+        $aplExSettings = $this->adminManager->getAplExchangeSettings();
+        if ($aplExSettings['bank'] == 1){
+            $this->aplBankService->sendBankStatement(); //трансфер выписки в АПЛ
+        }    
+        
         return new JsonModel(
             ['ok']
         );

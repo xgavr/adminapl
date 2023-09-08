@@ -76,19 +76,7 @@ class BankSettingsForm extends Form implements ObjectManagerAwareInterface
                 ]
             ],
         ]);
-                
-        $this->add([            
-            'type'  => 'select',
-            'name' => 'tarnsfer_apl',
-            'options' => [
-                'label' => 'Обмен а АПЛ',
-                'value_options' => [
-                    1 => 'Делать',
-                    2 => 'Остановить',                    
-                ]
-            ],
-        ]);
-                
+                                
         $this->add([            
             'type'  => 'email',
             'name' => 'statement_email',
@@ -171,18 +159,7 @@ class BankSettingsForm extends Form implements ObjectManagerAwareInterface
                     ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
                 ],
             ]); 
-        
-        $inputFilter->add([
-                'name'     => 'tarnsfer_apl',
-                'required' => true,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
-                ],                
-                'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
-                ],
-            ]); 
-        
+                
         $inputFilter->add([
                 'name'     => 'statement_email',
                 'required' => true,

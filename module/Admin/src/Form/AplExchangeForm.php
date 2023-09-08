@@ -258,6 +258,18 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'bank',
+            'options' => [
+                'label' => 'Выгружать выписки в АПЛ',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Остановить',                    
+                ]
+            ],
+        ]);
+        
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -480,6 +492,17 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
                     ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
                 ],
             ]); 
+        
+        $inputFilter->add([
+                'name'     => 'bank',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]);         
     }    
     
     public function setObjectManager(ObjectManager $objectManager)
