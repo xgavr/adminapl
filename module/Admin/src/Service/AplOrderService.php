@@ -1223,6 +1223,10 @@ class AplOrderService {
             foreach ($bids as $bid){
                 $tp = [
                     'parent' => $bid->getGood()->getAplId(),
+                    'makerAplId' => $bid->getGood()->getProducer()->getAplId(), 
+                    'makerId' => $bid->getGood()->getProducer()->getId(), 
+                    'makerName' => $bid->getGood()->getProducer()->getName(), 
+                    'article' => $bid->getGood()->getCode(), 
                     'sort' => $bid->getNum(),
                     'publish' => $order->getAplId(),
                     'comment' => $bid->getPrice(),
