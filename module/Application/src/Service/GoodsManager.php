@@ -1130,6 +1130,7 @@ class GoodsManager
             $prices[] = [
                 'price' => number_format($rawprice->getRealPrice(), 2, '.', ''),
                 'name' => $rawprice->getRaw()->getSupplier()->getAplId(),
+                'supplierId' => $rawprice->getRaw()->getSupplier()->getId(),
                 'created' => $rawprice->getRaw()->getDateCreated(),
                 'type' => $rawprice->getIid(),
                 'producer' => $rawprice->getProducer(),
