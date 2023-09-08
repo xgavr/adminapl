@@ -995,7 +995,7 @@ class AplService {
         $iterable = $goodsQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $good){
-                $result = $this->getGoodAplId($good);
+                //$result = $this->getGoodAplId($good); //Закрыто до восстановления данных
                 $this->entityManager->detach($good);
                 if (!$result){
                     return;
@@ -1173,16 +1173,18 @@ class AplService {
     {
         if ($make->getName()){
 
-            $url = $this->aplApi().'get-brand-id?name='.urlencode($make->getTransferName()).'&api='.$this->aplApiKey();
+            $url = $this->aplApi().'get-brand-id?id='.$make->getAplId().'&name='.urlencode($make->getTransferName()).'&api='.$this->aplApiKey();
             
 //                var_dump($url); exit;
             $response = file_get_contents($url);
             try {
                 if (is_numeric($response)){
 //                    var_dump($response);
-                    $make->setAplId($response);
-                    $this->entityManager->persist($make);
-                    $this->entityManager->flush($make);
+                    if (!$make->getAplId()){
+                        $make->setAplId($response);
+                        $this->entityManager->persist($make);
+                        $this->entityManager->flush($make);
+                    }    
                     return;
                 }
             } catch (Exception $ex) {
@@ -1234,6 +1236,7 @@ class AplService {
                 'name' => urlencode($model->getTransferName()),
                 'desc' => $model->getInterval(),
                 'sf' => $sf,
+                'id' => ($model->getId()) ? $model->getId():null,
             ]);
 
             $response = $client->send();
@@ -1241,7 +1244,9 @@ class AplService {
             try {
                 if (is_numeric($response->getBody())){
 //                        var_dump($response);
-                    $model->setAplId($response->getBody());
+                    if (!$model->getAplId()){
+                        $model->setAplId($response->getBody());
+                    }    
                     $model->setTransferFlag(Model::TRANSFER_YES);
                     $this->entityManager->persist($model);
                     $this->entityManager->flush($model);
@@ -1310,6 +1315,7 @@ class AplService {
                     'comment' => urlencode($car->getTransferFullName()),
                     'desc' => Json::encode($desc),
                     'sf' => $sf,
+                    'id' => ($car->getAplId()) ? $car->getAplId():null,
                 ]);
 
                 $response = $client->send();
@@ -1318,7 +1324,11 @@ class AplService {
                 try {
                     if (is_numeric($response->getBody())){
                         $this->entityManager->getConnection()
-                                ->update('car', ['apl_id' => $response->getBody(), 'transfer_flag' => Car::TRANSFER_YES], ['id' => $car->getId()]);
+                                ->update('car', [
+                                    'apl_id' => $response->getBody(), 
+                                    'transfer_flag' => Car::TRANSFER_YES], 
+                                    ['id' => $car->getId()]
+                                        );
                         return;
                     }
                 } catch (Exception $ex) {
