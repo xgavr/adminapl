@@ -882,13 +882,14 @@ class AplService {
      */
     public function updateProducerAplId($producer)
     {
-    $producerName = mb_strtoupper($producer->getName(), 'utf-8');
+        $producerName = mb_strtoupper($producer->getName(), 'utf-8');
 
         $url = $this->aplApi().'get-maker-id?api='.$this->aplApiKey();
         
         $post = [
             'name' => $producer->getName(),
             'type' => $producer->getId(),
+            'id' => $producer->getAplId(),
         ];
 
         $client = new Client();
@@ -995,7 +996,7 @@ class AplService {
         $iterable = $goodsQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $good){
-                //$result = $this->getGoodAplId($good); //Закрыто до восстановления данных
+                $result = $this->getGoodAplId($good); //Закрыто до восстановления данных
                 $this->entityManager->detach($good);
                 if (!$result){
                     return;
