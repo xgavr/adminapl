@@ -1097,6 +1097,10 @@ class AplService {
                 'goodId' => $good->getAplId(),
                 'newname' => $good->getName(),
                 'description' => $good->getDescription(),
+                'article' => $good->getCode(),
+                'makerId' => $good->getProducer()->getId(),
+                'makerAplId' => $good->getProducer()->getAplId(),
+                'makerName' => $good->getProducer()->getName(),
                 'nameok' => 0,
             ];
             
