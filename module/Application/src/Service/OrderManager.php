@@ -429,14 +429,14 @@ class OrderManager
         if (!empty($data['contact'])){
             $contact = $this->entityManager->getRepository(Contact::class)
                     ->find($data['contact']);
-            var_dump(1);
+//            var_dump(1);
         }
         if (!$contact && !empty($data['phone'])){
             $phone = $this->entityManager->getRepository(Phone::class)
                     ->findOneByName($data['phone']);
             if ($phone){
                 $contact = $phone->getContact();
-                var_dump(2);
+//                var_dump(2);
             }
         }      
         if (!$contact && !empty($data['phone2'])){
@@ -444,7 +444,7 @@ class OrderManager
                     ->findOneByName($data['phone2']);
             if ($phone2){
                 $contact = $phone->getContact();
-                var_dump(3);
+//                var_dump(3);
             }
         }      
         if (!$contact && !empty($data['email'])){
@@ -452,14 +452,14 @@ class OrderManager
                     ->findOneByName($data['email']);
             if ($email){
                 $contact = $email->getContact();
-                var_dump(4);
+//                var_dump(4);
             }
         }      
         if (!$contact){
             $client = $this->clientManager->addNewClient(['name' => $data['name'], 'status' => Client::STATUS_ACTIVE]);
             $data['status'] = Contact::STATUS_LEGAL;
             $contact = $this->clientManager->addContactToClient($client, $data);
-            var_dump(5);
+//            var_dump(5);
         }    
         
         if ($contact){
