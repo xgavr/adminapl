@@ -572,8 +572,9 @@ class OrderRepository extends EntityRepository{
             ->from(Order::class, 'o')
             ->where('o.statusEx = ?1')
             ->setParameter('1', Order::STATUS_EX_NEW)  
+            ->setMaxResults(1)
                 
-            ->andWhere('o.aplId > 0')    
+            ->andWhere('o.aplId > 0')
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
