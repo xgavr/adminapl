@@ -751,10 +751,10 @@ class AplController extends AbstractActionController
 
     public function sendOrderAction()
     {                
-        $this->aplOrderService->sendNexOrder();
+        $result = $this->aplOrderService->sendNexOrder($debug = true);
         
         return new JsonModel([
-            'result' => 'ok',
+            'result' => $result,
         ]);
     }    
     

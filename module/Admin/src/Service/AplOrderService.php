@@ -1281,8 +1281,9 @@ class AplOrderService {
     
     /**
      * Обновить заказ в апл
+     * @param bool $debug
      */
-    public function sendNexOrder()
+    public function sendNexOrder($debug = false)
     {
         $order = $this->entityManager->getRepository(Order::class)
                 ->findForUpdateApl();
@@ -1292,6 +1293,9 @@ class AplOrderService {
             }
         }
         
+        if ($debug){
+            var_dump($order->getId());
+        }
         return false;
     }
     
