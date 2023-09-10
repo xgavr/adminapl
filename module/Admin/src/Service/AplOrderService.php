@@ -1312,7 +1312,7 @@ class AplOrderService {
                     break;
                 }
             } else {
-                //break;
+                break;
             }
         }    
         return $order;        
