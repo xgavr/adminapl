@@ -1251,14 +1251,14 @@ class AplOrderService {
             $aplId = 0;
             try{
                 $response = $client->send();
-                var_dump($response->getBody()); exit;
+//                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {                    
                     $aplId = (int) $response->getBody();
                     if ($aplId){
                         $ok = $result = true;
                     }
                 } else {
-                    var_dump($response->getBody()); exit;                    
+//                    var_dump($response->getBody()); exit;                    
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
