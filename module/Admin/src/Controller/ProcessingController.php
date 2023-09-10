@@ -1558,7 +1558,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getAplExchangeSettings();
 
         if ($settings['order'] == 1){
-            $this->aplOrderService->checkOrders();
+            //$this->aplOrderService->checkOrders();
         }    
         
         return new JsonModel([
@@ -1595,7 +1595,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getAplExchangeSettings();
         
         if ($settings['order'] == 1){
-            $this->aplOrderService->uploadComments();
+            //$this->aplOrderService->uploadComments();
             //$this->aplOrderService->sendComments();
         }    
         
@@ -1634,7 +1634,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getAplExchangeSettings();
 
         if ($settings['order'] == 1){
-            $this->aplService->uploadUsers();
+            //$this->aplService->uploadUsers();
         }    
         
         return new JsonModel([
