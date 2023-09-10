@@ -586,7 +586,7 @@ class OrderRepository extends EntityRepository{
             foreach ($bids as $bid){
                if (empty($bid->getGood()->getAplId())){
                    $flag = false;
-                   var_dump(11); exit;
+                   var_dump($order->getId()); exit;
                    break;
                }  
             }
