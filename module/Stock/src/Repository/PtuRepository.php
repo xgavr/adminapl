@@ -323,7 +323,7 @@ class PtuRepository extends EntityRepository{
             ->setParameter('1', Ptu::STATUS_EX_NEW)
             ->setMaxResults(1)    
                 
-            ->andWhere('p.aplId > 0')    
+            ->andWhere('p.aplId > 0')   
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
