@@ -258,19 +258,21 @@ class SbpManager
         $qrCode->setPaymentMessage(empty($data['message']) ? null:$data['message']);
         $qrCode->setPaymentTrxId(empty($data['trxId']) ? null:$data['trxId']);
         
-        switch ($data['status']){
-            case 'NotStarted': $qrCode->setPaymentStatus(QrCode::PAYMENT_NOT_STARTED); break;
-            case 'Received': $qrCode->setPaymentStatus(QrCode::PAYMENT_RECEIVED); break;
-            case 'InProgress': $qrCode->setPaymentStatus(QrCode::PAYMENT_IN_PROGRESS); break;
-            case 'Accepted': 
-                $qrCode->setPaymentStatus(QrCode::PAYMENT_ACCEPTED);
-                $qrCode->setStatus(QrCode::STATUS_USED); 
-                break;
-            case 'Rejected': 
-                $qrCode->setPaymentStatus(QrCode::PAYMENT_REJECTED);
-                $qrCode->setStatus(QrCode::STATUS_RETIRED); 
-                break;
-        }
+        if (!empty($data['status'])){
+            switch ($data['status']){
+                case 'NotStarted': $qrCode->setPaymentStatus(QrCode::PAYMENT_NOT_STARTED); break;
+                case 'Received': $qrCode->setPaymentStatus(QrCode::PAYMENT_RECEIVED); break;
+                case 'InProgress': $qrCode->setPaymentStatus(QrCode::PAYMENT_IN_PROGRESS); break;
+                case 'Accepted': 
+                    $qrCode->setPaymentStatus(QrCode::PAYMENT_ACCEPTED);
+                    $qrCode->setStatus(QrCode::STATUS_USED); 
+                    break;
+                case 'Rejected': 
+                    $qrCode->setPaymentStatus(QrCode::PAYMENT_REJECTED);
+                    $qrCode->setStatus(QrCode::STATUS_RETIRED); 
+                    break;
+            }
+        }    
         
         if (!$qrCode->getOrder() && $qrCode->getOrderAplId()){
             $order = $this->entityManager->getRepository(Order::class)
