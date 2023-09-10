@@ -544,6 +544,10 @@ class AplDocService {
                     'pack' => $ptuGood->getUnit()->getName(),
                     'packcode' => $ptuGood->getUnit()->getCode(),
                     'cashless' => $ptu->getContract()->getAplCashlessAsString(),
+                    'makerAplId' => $ptuGood->getGood()->getProducer()->getAplId(), 
+                    'makerId' => $ptuGood->getGood()->getProducer()->getId(), 
+                    'makerName' => $ptuGood->getGood()->getProducer()->getName(),
+                    'article' => $ptuGood->getGood()->getCode(),
                 ];                
                 $so[] = $tp;
             }
@@ -560,7 +564,7 @@ class AplDocService {
             $aplId = 0;
             try{
                 $response = $client->send();
-                var_dump($response->getBody()); exit;
+//                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {                    
                     $aplId = (int) $response->getBody();
                     if ($aplId){
@@ -745,6 +749,10 @@ class AplDocService {
                     'comment' => $vtpGood->getPrice(),                    
                     'art' => $vtpGood->getGood()->getCode(),
                     'artid' => $vtpGood->getGood()->getAplId(),
+                    'makerAplId' => $vtpGood->getGood()->getProducer()->getAplId(), 
+                    'makerId' => $vtpGood->getGood()->getProducer()->getId(), 
+                    'makerName' => $vtpGood->getGood()->getProducer()->getName(),
+                    'article' => $vtpGood->getGood()->getCode(),
                 ];                
                 $so[] = $tp;
             }
@@ -904,6 +912,10 @@ class AplDocService {
                     'art' => $vtGood->getGood()->getCode(),
                     'artid' => $vtGood->getGood()->getAplId(),
                     'artname' => $vtGood->getGood()->getNameShort(),
+                    'makerAplId' => $vtGood->getGood()->getProducer()->getAplId(), 
+                    'makerId' => $vtGood->getGood()->getProducer()->getId(), 
+                    'makerName' => $vtGood->getGood()->getProducer()->getName(),
+                    'article' => $vtGood->getGood()->getCode(),
                 ];                
                 $so[] = $tp;
             }
@@ -1109,6 +1121,10 @@ class AplDocService {
                     'comment' => $otGood->getPrice(),                    
                     'art' => $otGood->getGood()->getCode(),
                     'artid' => $otGood->getGood()->getAplId(),
+                    'makerAplId' => $otGood->getGood()->getProducer()->getAplId(), 
+                    'makerId' => $otGood->getGood()->getProducer()->getId(), 
+                    'makerName' => $otGood->getGood()->getProducer()->getName(),
+                    'article' => $otGood->getGood()->getCode(),
                 ];                
                 $so[] = $tp;
             }
@@ -1331,6 +1347,10 @@ class AplDocService {
                     'comment' => $stGood->getGood()->getMeanPrice(),                    
                     'art' => $stGood->getGood()->getCode(),
                     'artid' => $stGood->getGood()->getAplId(),
+                    'makerAplId' => $stGood->getGood()->getProducer()->getAplId(), 
+                    'makerId' => $stGood->getGood()->getProducer()->getId(), 
+                    'makerName' => $stGood->getGood()->getProducer()->getName(),
+                    'article' => $stGood->getGood()->getCode(),
                 ];                
                 $so[] = $tp;
             }
@@ -1511,6 +1531,10 @@ class AplDocService {
                     'art' => $ptGood->getGood()->getCode(),
                     'artid' => $ptGood->getGood()->getAplId(),
                     'info' => $ptGood->getComment(),
+                    'makerAplId' => $ptGood->getGood()->getProducer()->getAplId(), 
+                    'makerId' => $ptGood->getGood()->getProducer()->getId(), 
+                    'makerName' => $ptGood->getGood()->getProducer()->getName(),
+                    'article' => $ptGood->getGood()->getCode(),
                 ];                
                 $so[] = $tp;
             }
