@@ -573,7 +573,9 @@ class OrderRepository extends EntityRepository{
             ->where('o.statusEx = ?1')
             ->setParameter('1', Order::STATUS_EX_NEW)  
             ->setMaxResults(1)
-//            ->orderBy('o.id')    
+                
+            ->addOrderBy('o.status', 'DESC')    
+            ->addOrderBy('o.id', 'DESC')    
                 
             ->andWhere('o.aplId > 0')
                 ;
