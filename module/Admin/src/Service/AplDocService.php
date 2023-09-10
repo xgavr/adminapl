@@ -574,7 +574,7 @@ class AplDocService {
             if ($ok) {            
                 $ptu->setStatusEx(Ptu::STATUS_EX_APL);
                 if ($aplId > 0){
-                    $ptu->setAplId($aplId);
+                    //$ptu->setAplId($aplId);
                 }    
                 $this->entityManager->persist($ptu);
                 $this->entityManager->flush($ptu);
@@ -774,7 +774,7 @@ class AplDocService {
             if ($ok) {            
                 $vtp->setStatusEx(Vtp::STATUS_EX_APL);
                 if ($aplId > 0){
-                    $vtp->setAplId($aplId);
+                    //$vtp->setAplId($aplId);
                 }    
                 $this->entityManager->persist($vtp);
                 $this->entityManager->flush($vtp);
@@ -933,7 +933,7 @@ class AplDocService {
             if ($ok) {            
                 $vt->setStatusEx(Vt::STATUS_EX_APL);
                 if ($aplId > 0){
-                    $vt->setAplId($aplId);
+                    //$vt->setAplId($aplId);
                 }    
                 $this->entityManager->persist($vt);
                 $this->entityManager->flush($vt);
@@ -1140,7 +1140,7 @@ class AplDocService {
             if ($ok) {            
                 $ot->setStatusEx(Ot::STATUS_EX_APL);
                 if ($aplId > 0){
-                    $ot->setAplId($aplId);
+                    //$ot->setAplId($aplId);
                 }    
                 $this->entityManager->persist($ot);
                 $this->entityManager->flush($ot);
@@ -1361,7 +1361,7 @@ class AplDocService {
             if ($ok) {            
                 $st->setStatusEx(St::STATUS_EX_APL);
                 if ($aplId > 0){
-                    $st->setAplId($aplId);
+                    //$st->setAplId($aplId);
                 }    
                 $this->entityManager->persist($st);
                 $this->entityManager->flush($st);
@@ -1540,7 +1540,7 @@ class AplDocService {
             if ($ok) {            
                 $pt->setStatusEx(Pt::STATUS_EX_APL);
                 if ($aplId != 0){
-                    $pt->setAplId($aplId);
+                    //$pt->setAplId($aplId);
                 }    
                 $this->entityManager->persist($pt);
                 $this->entityManager->flush($pt);
@@ -1945,17 +1945,17 @@ class AplDocService {
         set_time_limit(900);
         $startTime = time();
         $start = 0;
-        while (true){
-            if ($this->unloadDoc($start)) {
-                usleep(100);
-                if (time() > $startTime + 840){
-                    break;
-                }
-            } else {
-                break;
-            }    
-            $start++;
-        }    
+//        while (true){
+//            if ($this->unloadDoc($start)) {
+//                usleep(100);
+//                if (time() > $startTime + 840){
+//                    break;
+//                }
+//            } else {
+//                break;
+//            }    
+//            $start++;
+//        }    
 
         while (true){
             if ($this->sendPtu()) {

@@ -251,6 +251,9 @@ class VtRepository extends EntityRepository{
             ->from(Vt::class, 'v')
             ->where('v.statusEx = ?1')
             ->setParameter('1', Vt::STATUS_EX_NEW)    
+                
+            ->andWhere('v.aplId > 0')    
+                
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();

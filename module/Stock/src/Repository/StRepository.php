@@ -243,6 +243,9 @@ class StRepository extends EntityRepository{
             ->from(St::class, 's')
             ->where('s.statusEx = ?1')
             ->setParameter('1', St::STATUS_EX_NEW)    
+                
+            ->andWhere('s.aplId > 0')    
+                
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();

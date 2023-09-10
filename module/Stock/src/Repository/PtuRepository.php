@@ -320,7 +320,9 @@ class PtuRepository extends EntityRepository{
         $queryBuilder->select('p')
             ->from(Ptu::class, 'p')
             ->where('p.statusEx = ?1')
-            ->setParameter('1', Ptu::STATUS_EX_NEW)    
+            ->setParameter('1', Ptu::STATUS_EX_NEW) 
+                
+            ->andWhere('p.aplId > 0')    
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();

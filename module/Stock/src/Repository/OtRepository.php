@@ -243,7 +243,10 @@ class OtRepository extends EntityRepository{
         $queryBuilder->select('o')
             ->from(Ot::class, 'o')
             ->where('o.statusEx = ?1')
-            ->setParameter('1', Ot::STATUS_EX_NEW)    
+            ->setParameter('1', Ot::STATUS_EX_NEW) 
+                
+            ->andWhere('o.aplId > 0')    
+                
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
