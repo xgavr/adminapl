@@ -320,7 +320,8 @@ class PtuRepository extends EntityRepository{
         $queryBuilder->select('p')
             ->from(Ptu::class, 'p')
             ->where('p.statusEx = ?1')
-            ->setParameter('1', Ptu::STATUS_EX_NEW) 
+            ->setParameter('1', Ptu::STATUS_EX_NEW)
+            ->setMaxResults(1)    
                 
             ->andWhere('p.aplId > 0')    
                 ;
@@ -328,14 +329,14 @@ class PtuRepository extends EntityRepository{
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $ptu){
             $flag = true;
-            $ptuGoods = $entityManager->getRepository(PtuGood::class)
-                    ->findBy(['ptu' => $ptu->getId()]);
-            foreach ($ptuGoods as $ptuGood){
-               if (empty($ptuGood->getGood()->getAplId())){
-                   $flag = false;
-                   break;
-               }  
-            }
+//            $ptuGoods = $entityManager->getRepository(PtuGood::class)
+//                    ->findBy(['ptu' => $ptu->getId()]);
+//            foreach ($ptuGoods as $ptuGood){
+//               if (empty($ptuGood->getGood()->getAplId())){
+//                   $flag = false;
+//                   break;
+//               }  
+//            }
             if ($flag){
                 return $ptu;
             }    

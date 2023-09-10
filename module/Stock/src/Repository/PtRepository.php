@@ -260,21 +260,22 @@ class PtRepository extends EntityRepository{
             ->where('p.statusEx = ?1')
             ->setParameter('1', Pt::STATUS_EX_NEW)  
                 
-            ->andWhere('p.aplId > 0')    
+            ->andWhere('p.aplId > 0') 
+            ->setMaxResults(1)    
                 
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $pt){
             $flag = true;
-            $ptGoods = $entityManager->getRepository(PtGood::class)
-                    ->findBy(['pt' => $pt->getId()]);
-            foreach ($ptGoods as $ptGood){
-               if (empty($ptGood->getGood()->getAplId())){
-                   $flag = false;
-                   break;
-               }  
-            }
+//            $ptGoods = $entityManager->getRepository(PtGood::class)
+//                    ->findBy(['pt' => $pt->getId()]);
+//            foreach ($ptGoods as $ptGood){
+//               if (empty($ptGood->getGood()->getAplId())){
+//                   $flag = false;
+//                   break;
+//               }  
+//            }
             if ($flag){
                 return $pt;
             }    

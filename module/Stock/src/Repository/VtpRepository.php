@@ -372,20 +372,20 @@ class VtpRepository extends EntityRepository{
             ->setParameter('1', Vtp::STATUS_EX_NEW)   
                 
             ->andWhere('v.aplId > 0')    
-                
+            ->setMaxResults(1)    
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $vtp){
             $flag = true;
-            $vtpGoods = $entityManager->getRepository(VtpGood::class)
-                    ->findBy(['vtp' => $vtp->getId()]);
-            foreach ($vtpGoods as $vtpGood){
-               if (empty($vtpGood->getGood()->getAplId())){
-                   $flag = false;
-                   break;
-               }  
-            }
+//            $vtpGoods = $entityManager->getRepository(VtpGood::class)
+//                    ->findBy(['vtp' => $vtp->getId()]);
+//            foreach ($vtpGoods as $vtpGood){
+//               if (empty($vtpGood->getGood()->getAplId())){
+//                   $flag = false;
+//                   break;
+//               }  
+//            }
             if ($flag){
                 return $vtp;
             }    

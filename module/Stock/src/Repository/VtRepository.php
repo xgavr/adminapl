@@ -252,21 +252,22 @@ class VtRepository extends EntityRepository{
             ->where('v.statusEx = ?1')
             ->setParameter('1', Vt::STATUS_EX_NEW)    
                 
-            ->andWhere('v.aplId > 0')    
+            ->andWhere('v.aplId > 0')  
+            ->setMaxResults(1)    
                 
                 ;
         
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $vt){
             $flag = true;
-            $vtGoods = $entityManager->getRepository(VtGood::class)
-                    ->findBy(['vt' => $vt->getId()]);
-            foreach ($vtGoods as $vtGood){
-               if (empty($vtGood->getGood()->getAplId())){
-                   $flag = false;
-                   break;
-               }  
-            }
+//            $vtGoods = $entityManager->getRepository(VtGood::class)
+//                    ->findBy(['vt' => $vt->getId()]);
+//            foreach ($vtGoods as $vtGood){
+//               if (empty($vtGood->getGood()->getAplId())){
+//                   $flag = false;
+//                   break;
+//               }  
+//            }
             if ($flag){
                 return $vt;
             }    
