@@ -1257,6 +1257,8 @@ class AplOrderService {
                     if ($aplId){
                         $ok = $result = true;
                     }
+                } else {
+                    var_dump($response->getBody()); exit;                    
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
                 $ok = true;
