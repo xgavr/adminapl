@@ -883,10 +883,10 @@ class AplController extends AbstractActionController
     
     public function unloadOrdersAction()
     {                
-        $this->aplOrderService->uploadOrders(true);
+        $result = $this->aplOrderService->uploadOrders(true);
         
         return new JsonModel([
-            'result' => 'ok',
+            'result' => $result,
         ]);
     }    
     

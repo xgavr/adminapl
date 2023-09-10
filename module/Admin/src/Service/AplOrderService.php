@@ -744,7 +744,7 @@ class AplOrderService {
 //        }    
         
         while (true){
-            if ($this->sendOrders()) {
+            if ($order = $this->sendOrders()) {
                 usleep(100);
                 if (time() > $startTime + 870){
                     return;
@@ -754,7 +754,7 @@ class AplOrderService {
             }
             $start++;
         }    
-        return;        
+        return $order;        
     }
     
     /**
@@ -1286,7 +1286,7 @@ class AplOrderService {
                 ->findForUpdateApl();
         if ($order){
             if ($this->sendOrder($order)){
-                return true;
+                return $order->getId();
             }
         }
         
@@ -1301,9 +1301,10 @@ class AplOrderService {
         ini_set('memory_limit', '1024M');
         set_time_limit(900);
         $startTime = time();
+        $order = null;
         
         while (true){
-            if ($this->sendNexOrder()) {
+            if ($order = $this->sendNexOrder()) {
                 usleep(100);
                 if (time() > $startTime + 870){
                     break;
@@ -1312,7 +1313,7 @@ class AplOrderService {
                 break;
             }
         }    
-        return;        
+        return $order;        
     }
     
     /**
