@@ -573,7 +573,7 @@ class OrderRepository extends EntityRepository{
             ->where('o.statusEx = ?1')
             ->setParameter('1', Order::STATUS_EX_NEW)  
             ->setMaxResults(1)
-            ->orderBy('o.id')    
+//            ->orderBy('o.id')    
                 
             ->andWhere('o.aplId > 0')
                 ;
@@ -586,6 +586,7 @@ class OrderRepository extends EntityRepository{
             foreach ($bids as $bid){
                if (empty($bid->getGood()->getAplId())){
                    $flag = false;
+                   var_dump(11); exit;
                    break;
                }  
             }
