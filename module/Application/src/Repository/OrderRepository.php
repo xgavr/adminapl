@@ -582,14 +582,14 @@ class OrderRepository extends EntityRepository{
         foreach ($data as $order){
 //            var_dump($order->getId()); 
             $flag = true;
-            $bids = $entityManager->getRepository(Bid::class)
-                    ->findBy(['order' => $order->getId()]);
-            foreach ($bids as $bid){
-               if (empty($bid->getGood()->getAplId())){
-                   $flag = false;
-                   break;
-               }  
-            }
+//            $bids = $entityManager->getRepository(Bid::class)
+//                    ->findBy(['order' => $order->getId()]);
+//            foreach ($bids as $bid){
+//               if (empty($bid->getGood()->getAplId())){
+//                   $flag = false;
+//                   break;
+//               }  
+//            }
             if ($flag){
                 return $order;
             }    
