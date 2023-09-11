@@ -164,6 +164,14 @@ class AplController extends AbstractActionController
         } 
         
         $this->aplService->getGoodAplId($good);
+        $this->aplService->sendGroup($good);
+        $this->aplService->sendGoodOem($good);
+        $this->aplService->sendGoodImg($good);
+        $this->aplService->sendGoodCar($good);
+        $this->aplService->sendRawpricesPackage([$good]);
+        $this->aplService->sendGoodAttribute($good);
+        $this->aplService->updateGoodName($good);
+        $this->aplService->updateGoodPrice([$good]);
         
         return new JsonModel([
             'result' => 'ok-reload',
@@ -196,7 +204,7 @@ class AplController extends AbstractActionController
         $this->aplService->getGroupAplId($good);
         
         return new JsonModel([
-            'result' => 'ok-reload',
+            'result' => 'ok',
         ]);
     }
     

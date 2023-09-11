@@ -946,6 +946,8 @@ class AplService {
             $post = [                
                 'art' => $good->getCode(),
                 'makerid' => $good->getProducer()->getAplId(),
+                'makerName' => $good->getProducer()->getName(),
+                'makerType' => $good->getProducer()->getId(),
                 'createnew' => 1,
             ];
             if ($good->getGroupApl()>0){
