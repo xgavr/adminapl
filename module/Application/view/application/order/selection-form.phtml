@@ -363,7 +363,7 @@ $form->prepare();
         return btn;
     }    
 
-function stActiveFormatter(value, row){
+    function stActiveFormatter(value, row){
         let btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-danger btn-xs"';
@@ -373,6 +373,29 @@ function stActiveFormatter(value, row){
         btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
-    }    
+    }  
+    
+    function soFormatter(value, row){
+        btn = '<span class="text-nowrap">';
+        btn += '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs supplier-list"';
+        btn += ' aria-label="Center Align"'; 
+        btn += ' title="Доступные поставщики"'; 
+        btn += ' onclick="goodSuppliers('+value+')">';
+        btn += '<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs supplier-list"';
+        btn += ' aria-label="Center Align"'; 
+        btn += ' title="Оригинальные номера"'; 
+        btn += ' onclick="oems('+value+')">';
+        btn += '<span class="glyphicon" aria-hidden="true">OE</span>';
+        btn += '</button>';
+        btn += '</span>';
+        return btn;
+    }        
     
 </script>
