@@ -782,8 +782,13 @@ class AplController extends AbstractActionController
         
         $result = $this->aplOrderService->sendOrder($order, true);
         
+        $query = $this->entityManager->getRepository(\Application\Entity\Order::class)
+                ->findAllOrder(['orderId' => $order->getId()]);
+        $data = $query->getOneOrNullResult(2);
+        
         return new JsonModel([
             'result' => $result,
+            'data' => $data,
         ]);
     }        
 
@@ -876,8 +881,13 @@ class AplController extends AbstractActionController
             $this->aplOrderService->unloadOrder(0, $order->getAplId());
         }    
         
+        $query = $this->entityManager->getRepository(\Application\Entity\Order::class)
+                ->findAllOrder(['orderId' => $order->getId()]);
+        $data = $query->getOneOrNullResult(2);
+        
         return new JsonModel([
             'result' => 'ok',
+            'data' => $data,
         ]);
     }    
     
