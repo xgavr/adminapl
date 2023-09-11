@@ -1549,7 +1549,7 @@ class AplService {
             }
             
             if ($debug){
-                var_dump($post, $response);
+                var_dump($post, $response->getStatusCode(), $response->getBody());
             }
 
             unset($post);
