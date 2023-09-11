@@ -462,7 +462,7 @@ $this->pageBreadcrumbs()->setItems([
         },
         actionsGroups: [
            ['addComment', 'comments', 'history'],
-           ['addMarketplaceNumber', 'addLegal', 'updateFromApl', 'sendToApl'],
+           ['addLegal', 'updateFromApl', 'sendToApl'],
            ['vt', 'cash']
         ],      
         actions: {
@@ -586,29 +586,29 @@ $this->pageBreadcrumbs()->setItems([
                     });                    
                 }
             },
-            addMarketplaceNumber: {
-                name: 'Номер заказа в ТП',
-                iconClass: 'glyphicon glyphicon-plus',
-                onClick: function (row){
-                    var depend = $.parseJSON(row.dependInfo);
-                    var dialogId = 'marketplaceOrderModal';
-                    var url = '/market-place/marketplace-order-form?order='+row.id;
-                    var zIndex = 9999;
-                    if (depend.marketplaceOrders){
-                        if (depend.marketplaceOrders.length){
-                            var url = '/market-place/order-form/'+row.id;
-                            var dialogId = 'marketplaceOrdersModal';
-                            var zIndex = 8888;
-                        }    
-                    }
-                    
-                    showFormDialog({
-                        id: dialogId,
-                        url: url,
-                        zIndex: zIndex
-                    });
-                }
-            },    
+//            addMarketplaceNumber: {
+//                name: 'Номер заказа в ТП',
+//                iconClass: 'glyphicon glyphicon-plus',
+//                onClick: function (row){
+//                    var depend = $.parseJSON(row.dependInfo);
+//                    var dialogId = 'marketplaceOrderModal';
+//                    var url = '/market-place/marketplace-order-form?order='+row.id;
+//                    var zIndex = 9999;
+//                    if (depend.marketplaceOrders){
+//                        if (depend.marketplaceOrders.length){
+//                            var url = '/market-place/order-form/'+row.id;
+//                            var dialogId = 'marketplaceOrdersModal';
+//                            var zIndex = 8888;
+//                        }    
+//                    }
+//                    
+//                    showFormDialog({
+//                        id: dialogId,
+//                        url: url,
+//                        zIndex: zIndex
+//                    });
+//                }
+//            },    
             addLegal: {
                 name: 'Юр. лицо',
                 iconClass: 'glyphicon glyphicon-plus',

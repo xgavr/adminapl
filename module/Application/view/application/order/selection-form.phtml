@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\Goods;
+
 $form = $this->form;
 
 $form->get('info')->setAttributes([
@@ -38,7 +40,7 @@ $form->prepare();
                 <div class="input-group">
                     <?= $this->formElement($form->get('oem')); ?>
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-sm selection-add" title="Добавить ОЕ">
+                        <button type="button" class="btn btn-default btn-sm selection-add enter-search" title="Добавить ОЕ">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
                     </span>    
@@ -72,7 +74,7 @@ $form->prepare();
 </div>    
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-    <button type="button" class="btn btn-primary selections-submit">Сохранить</button>
+    <button type="button" class="btn btn-info selections-submit">Сохранить</button>
 </div>
 
 
@@ -176,7 +178,7 @@ $form->prepare();
             pagination: true,
             search: false,
             showRefresh: true,
-            url: '/goods/content?opts=1&search='+tabName,
+            url: '/goods/content?opts=1&accurate=<?= Goods::SEARCH_OE?>&search='+tabName,
             buttonsPrefix: 'btn-xs btn',
             columns: [{
                 field: 'id', title: '', formatter: 'stAddFormatter', width: 10
