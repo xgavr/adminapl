@@ -493,8 +493,10 @@ class AplDocService {
     /**
      * Отправить пту
      * 
+     * @param bool $debug
+     * 
      */
-    public function sendPtu()
+    public function sendPtu($debug = false)
     {
         $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
 
@@ -582,6 +584,10 @@ class AplDocService {
                 }    
                 $this->entityManager->persist($ptu);
                 $this->entityManager->flush($ptu);
+            }
+            
+            if (!$result && $debug){
+                var_dump($response->getBody());                
             }
 
             $this->entityManager->detach($ptu);

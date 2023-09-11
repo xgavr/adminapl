@@ -697,7 +697,7 @@ class AplController extends AbstractActionController
 
     public function sendPtuAction()
     {                
-        $this->aplDocService->sendPtu();
+        $this->aplDocService->sendPtu($debug = true);
         
         return new JsonModel([
             'result' => 'ok',
