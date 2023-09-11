@@ -37,7 +37,8 @@ class OrderForm extends Form
      
         $this->entityManager = $entityManager;
         // Задает для этой формы метод POST.
-        $this->setAttribute('method', 'post');
+        //$this->setAttribute('method', 'post');
+        $this->setAttribute('onsubmit', 'return false;');
                 
         $this->addElements();
         $this->addInputFilter();         

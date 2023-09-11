@@ -10,7 +10,7 @@ $form->get('info')->setAttributes([
     ]);
 
 $form->get('oem')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control enter-add', 
     'placeholder' => 'Номер ОЕ',
     ]);
 
@@ -40,7 +40,7 @@ $form->prepare();
                 <div class="input-group">
                     <?= $this->formElement($form->get('oem')); ?>
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-sm selection-add enter-search" title="Добавить ОЕ">
+                        <button type="button" class="btn btn-default btn-sm selection-add" title="Добавить ОЕ">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
                     </span>    
@@ -74,7 +74,7 @@ $form->prepare();
 </div>    
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-    <button type="button" class="btn btn-info selections-submit">Сохранить</button>
+    <button type="button" class="btn btn-primary selections-submit">Сохранить</button>
 </div>
 
 
@@ -83,7 +83,7 @@ $form->prepare();
 <script>
     var selectionTabId = 0;
     var button = '<button class="close selection-close" type="button" title="Закрыть">×</button>';
-    
+                
     function upddateOrderGoodtable(){
         $('#ordergoodtable').bootstrapTable('load', $('#selectionGoodTable').bootstrapTable('getData'));
     }
@@ -213,8 +213,25 @@ $form->prepare();
         $('input[name="oem"]').val('');
         addSelectedTable(selectionTableId, tabName);
     }
+    
+    function selectionAdd(){
+        let tabName = $('input[name="oem"]').val(); 
+        if (tabName){
+            selectionTabId++;
+            addSelectedTab(selectionTabId, tabName);
+            $('#selection-tab-list a[href="#selection-tab'+selectionTabId+'"]').tab('show');        
+        }    
+    }
 
     $(document).ready(function() {
+        
+        $('.enter-add').on('keydown', function(e){
+            console.log(e.keyCode);
+            if (e.keyCode === 13) {
+                selectionAdd();
+            }
+        });
+        
         $('.selection-modal-show').attr('disabled', false);
                 
         $('.selections-submit').click(function(){
@@ -222,12 +239,7 @@ $form->prepare();
         });        
         
         $('.selection-add').click(function() {
-            let tabName = $('input[name="oem"]').val(); 
-            if (tabName){
-                selectionTabId++;
-                addSelectedTab(selectionTabId, tabName);
-                $('#selection-tab-list a[href="#selection-tab'+selectionTabId+'"]').tab('show');        
-            }    
+            selectionAdd();
         });
 
         $('#selection-tab-list').on('click', '.selection-close', function() {

@@ -31,7 +31,8 @@ class SelectionForm extends Form
         parent::__construct('selection-form');
      
         // Задает для этой формы метод POST.
-        $this->setAttribute('method', 'post');
+        //$this->setAttribute('method', 'post');
+        $this->setAttribute('onsubmit', 'return false;');
                 
         $this->addElements();
         $this->addInputFilter();         

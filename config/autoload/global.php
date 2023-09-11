@@ -121,6 +121,7 @@ return [
                 'string_functions' => [
                     'match' => 'DoctrineExtensions\Query\Mysql\MatchAgainst',
                     'group_concat' => 'DoctrineExtensions\Query\Mysql\GroupConcat',
+                    'match_against' => 'DoctrineExtensions\Query\Mysql\MatchAgainst',
                 ],
                 'numeric_functions' => [
                     'floor' => 'DoctrineExtensions\Query\Mysql\Floor',

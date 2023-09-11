@@ -1301,9 +1301,10 @@ class AplDocService {
 
     /**
      * Отправить st
+     * @param bool $debug
      * 
      */
-    public function sendSt()
+    public function sendSt($debug = false)
     {
         $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
 
@@ -1393,6 +1394,9 @@ class AplDocService {
                 $this->entityManager->flush($st);
             }
 
+            if ($debug){
+                var_dump($post, $response->getBody());
+            }
             $this->entityManager->detach($st);
         }
         

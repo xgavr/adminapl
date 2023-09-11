@@ -12,209 +12,209 @@ $this->mainMenu()->setActiveUrl($this->url('order'));
 $form = $this->form;
 
 $form->get('office')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Офис',
     ]);
 
 $form->get('user')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Менеджер',
     ]);
 
 $form->get('aplId')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Номер АПЛ',
     //'style' => 'width:60px',
     ]);
 
 $form->get('skiper')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Водитель',
     ]);
 
 $form->get('name')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'style' => "text-transform:capitalize",
     'placeholder' => 'Имя',
     'required' => true,
     ]);
 
 $form->get('phone')->setAttributes([
-    'class'=>'form-control phone', 
+    'class'=>'form-control phone intro', 
     'placeholder' => 'Телефон',
     'required' => true,
     ]);
 
 $form->get('phone2')->setAttributes([
-    'class'=>'form-control phone', 
+    'class'=>'form-control phone intro', 
     'placeholder' => 'Телефон дополнительный',
     ]);
 
 $form->get('email')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Email',
     ]);
 
 $form->get('info')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Что нужно',
     'rows' => 4,
     ]);
 
 $form->get('dateShipment')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Дата доставки/самовывоза',
     'title' => 'Дата доставки/самовывоза',
     'min' => ($orderId)? null:date('Y-m-d'),
     ]);
 
 $form->get('timeShipment')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Время доставки/самовываза',
     'title' => 'Время доставки/самовывоза',
     ]);
 
 $form->get('shipping')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Вариант доставки',
     ]);
 
 $form->get('shipmentTotal')->setAttributes([
-    'class'=>'form-control  select-on-focus', 
+    'class'=>'form-control  select-on-focus intro', 
     'placeholder' => 'Стоимость доставки',
     ]);
 
 $form->get('infoShipping')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Комментарий к доставке',
     ]);
 
 $form->get('trackNumber')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Накладная ТК',
     ]);
 
 $form->get('courier')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'ТК',
     ]);
 
 $form->get('shipmentDistance')->setAttributes([
-    'class'=>'form-control select-on-focus', 
+    'class'=>'form-control select-on-focus intro', 
     'placeholder' => 'КМ',
     ]);
 
 $form->get('address')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Адрес доставки',
     'rows' => 1,
     ]);
 
 $form->get('vin')->setAttributes([
-    'class' => 'form-control', 
+    'class' => 'form-control intro', 
     'style' => "text-transform:uppercase",
     'placeholder' => 'VIN',
     ]);
 
 $form->get('make')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'style' => "text-transform:none",
     'data-provide' => "typeahead",
     'placeholder' => 'Марка машины',
     ]);
 
 $form->get('makeComment')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Дополнительно о машине',
     ]);
 
 $form->get('note')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Комментарий менеджера',
     ]);
 
 $form->get('legalName')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Наименование ЮЛ',
     ]);
 
 $form->get('legalInn')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'ИНН ЮЛ',
     ]);
 
 $form->get('legalKpp')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'КПП ЮЛ',
     ]);
 
 $form->get('legalOgrn')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'ОГРН ЮЛ',
     ]);
 
 $form->get('legalAddress')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Местонахождение ЮЛ',
     ]);
 
 $form->get('recipientName')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Грузополучатель',
     ]);
 
 $form->get('recipientInn')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'ИНН Грузополучателя',
     ]);
 
 $form->get('recipientKpp')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'КПП Грузополучателя',
     ]);
 
 $form->get('recipientOgrn')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'ОГРН Грузополучателя',
     ]);
 
 $form->get('recipientAddress')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Местонахождение Грузополучателя',
     ]);
 
 $form->get('rs')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Расчетный счет',
     ]);
 
 $form->get('ks')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Корр. счет',
     ]);
 
 $form->get('bik')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'БИК банка',
     ]);
 
 $form->get('bankName')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Наименование банка',
     ]);
 
 $form->get('bankCity')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Город банка',
     ]);
 
 $form->get('invoiceInfo')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     'placeholder' => 'Комментарий к счету',
     ]);
 
 $form->get('status')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control intro', 
     ]);
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'order-submit']);
@@ -749,6 +749,13 @@ $form->prepare();
             return true;
     };
     
+    var $orderIntroForm = $('#order-form');
+        
+    $orderIntroForm.submit(function() {
+        submitForm();
+        return false;
+    });
+        
     function setTextValue(node, value, clear = false)
     {
         if (!$(node).val()){
@@ -777,7 +784,7 @@ $form->prepare();
 //                        $.each(data.cars, function( i, car ){
 //                        });                    
                 }    
-            })
+            });
         }    
     });    
     
@@ -791,7 +798,7 @@ $form->prepare();
                 return process(data);
             });
         },
-        changeInputOnSelect: true,
+        changeInputOnSelect: true
     });
         
     $(document).on('click', '.order-good-modal-show', function (e) {
@@ -904,7 +911,7 @@ $form->prepare();
         $(".new-manager-comment").each(function( index ) {
             if ($(this).text()){
                 var newComment = {
-                    comment: $(this).text(),
+                    comment: $(this).text()
                 };
                 result.push(newComment);
             }
@@ -1134,7 +1141,7 @@ $form->prepare();
     $( document ).ready(function() {
         
 	$(document).on('input', ':input', function() {
-		window.onbeforeunload = set_onbeforeunload;
+            window.onbeforeunload = set_onbeforeunload;
 	});
 
         $('.select-on-focus').on('click', function () {
@@ -1172,25 +1179,7 @@ $form->prepare();
         $('#order-submit').on('click', function(){
             $('#order-submit').attr('disabled', true);
             submitForm();
-        });    
-        
-//        var forms = $('#order-form');
-//        
-//        forms.submit(function() {
-//            submitForm();
-//            return false;
-//        });
-//        // Loop over them and prevent submission
-//        var validation = Array.prototype.filter.call(forms, function(form) {
-//            form.addEventListener('order-submit', function(event) {
-//                if (form.checkValidity() === false) {
-//                    event.preventDefault();
-//                    event.stopPropagation();
-//                }
-//                form.classList.add('was-validated');
-//                submitForm();
-//            }, false);    
-//        });
+        });            
     });    
     
     function orderGoodRefreshTable(){

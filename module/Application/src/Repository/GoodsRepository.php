@@ -293,6 +293,8 @@ class GoodsRepository extends EntityRepository
                             $queryBuilder->join('g.oems', 'o')
                                 ->andWhere($orX) 
                                 ->setParameter('4', $q)    
+                                ->addOrderBy('MATCH (o.oe) AGAINST (:field)')    
+                                ->setParameter('field', $q)    
                                 ;
                             break;    
                         case Goods::SEARCH_NAME:
@@ -356,7 +358,7 @@ class GoodsRepository extends EntityRepository
                 }    
             }
             if (isset($params['sort'])){
-                $queryBuilder->orderBy('g.'.$params['sort'], $params['order']);                
+                $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);                
             }            
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
