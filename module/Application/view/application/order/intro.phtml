@@ -1088,37 +1088,7 @@ $form->prepare();
         });
         orderUpdateTotal();
     }
-     
-    function goodSuppliers(goodId){
-        $.get( '/order/good-suppliers/'+goodId, function( data ) {
-            bootbox.dialog({
-                title: 'Доступные поставщики',
-                message: data,
-                buttons: {
-                    ok: {
-                        label: "OK",
-                        className: 'btn-info'
-                    }                    
-                }
-            }); 
-        });    
-    }
-     
-    function oems(goodId){
-        $.get( '/order/good-oem/'+goodId, function( data ) {
-            bootbox.dialog({
-                title: 'Оригинальные номера',
-                message: data,
-                buttons: {
-                    ok: {
-                        label: "OK",
-                        className: 'btn-info'
-                    }                    
-                }
-            }); 
-        });    
-    }
-     
+          
     function supplierOrders(){
         let orderId = $('#orderId').val();
         if (orderId){

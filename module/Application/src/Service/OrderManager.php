@@ -1753,7 +1753,7 @@ class OrderManager
             $selections = [];
         }    
         
-        $thid->updateSelections($order, $selections);
+        $this->updateSelections($order, $selections);
 
         return;
     }
