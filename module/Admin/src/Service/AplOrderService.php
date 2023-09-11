@@ -1267,8 +1267,8 @@ class AplOrderService {
 
             if ($ok) {            
                 $order->setStatusEx(Order::STATUS_EX_OK);
-                if ($aplId > 0){
-                    //$order->setAplId($aplId);
+                if ($aplId > 0 && empty($order->getAplId())){
+                    $order->setAplId($aplId);
                 }    
                 $this->entityManager->persist($order);
                 $this->entityManager->flush($order);
