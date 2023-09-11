@@ -133,7 +133,8 @@ return [
             Controller\IndexController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+admin.manage'],
-                ['actions' => 'telegramm-hook', 'allow' => '*']
+                ['actions' => 'telegramm-hook', 'allow' => '*'],
+                ['actions' => ['sms-form', 'sms-partial'], 'allow' => '@']
             ],
             Controller\LogController::class => [
                 // Allow access to authenticated users.
@@ -141,7 +142,7 @@ return [
             ],
             Controller\PostController::class => [
                 // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '+admin.manage']
+                ['actions' => '*', 'allow' => '@']
             ],
             Controller\ProcessingController::class => [
                 // Allow access to all users.
