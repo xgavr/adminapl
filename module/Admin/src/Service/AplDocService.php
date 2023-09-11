@@ -587,7 +587,7 @@ class AplDocService {
             }
             
             if (!$result && $debug){
-                var_dump($response->getBody());                
+                var_dump($ptu->getId(), $response->getBody());                
             }
 
             $this->entityManager->detach($ptu);
