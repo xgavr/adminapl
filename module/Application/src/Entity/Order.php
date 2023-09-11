@@ -1445,6 +1445,16 @@ class Order {
         return Encoder::encode($result);
     }
         
+    public function  getSelectionsAsArray()
+    {
+        $result = [];
+        foreach ($this->selections as $selection){
+            $result[] = $selection->getOe();
+        } 
+        
+        return $result;
+    }
+
     public function  getSelectionsAsAplString()
     {
         $result = [];
@@ -1456,6 +1466,19 @@ class Order {
         } 
         
         return Encoder::encode($result);
+    }
+
+    public function  getSelectionsAsAplArray()
+    {
+        $result = [];
+        foreach ($this->selections as $selection){
+            $result[] = [
+                'q' => $selection->getOe(),
+                'qc' => $selection->getComment(),
+            ];
+        } 
+        
+        return $result;
     }
         
     /**
