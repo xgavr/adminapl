@@ -1471,8 +1471,9 @@ class AplService {
      * Отправить строки прайсов пакета товаров 
      * 
      * @param array $data
+     * @param bool $debug
      */
-    public function sendRawpricesPackage($data)
+    public function sendRawpricesPackage($data, $debug = false)
     {
         $url = $this->aplApi().'update-rawprice-package?api='.$this->aplApiKey();
 
@@ -1545,6 +1546,10 @@ class AplService {
                     
                     $this->entityManager->detach($good);
                 }    
+            }
+            
+            if ($debug){
+                var_dump($post, $response->getBody());
             }
 
             unset($post);
