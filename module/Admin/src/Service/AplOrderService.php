@@ -744,7 +744,7 @@ class AplOrderService {
 //        }    
         
         while (true){
-            if ($order = $this->sendOrders()) {
+            if ($order = $this->sendOrders($debug)) {
                 usleep(100);
                 if (time() > $startTime + 870){
                     return;
@@ -1162,8 +1162,9 @@ class AplOrderService {
     /**
      * Отправить заказ в апл
      * @param Order $order
+     * @param bool $debug
      */
-    public function sendOrder($order)
+    public function sendOrder($order, $debug = false)
     {
         $url = $this->aplApi().'update-order?api='.$this->aplApiKey();
 
@@ -1273,6 +1274,10 @@ class AplOrderService {
                 $this->entityManager->flush($order);
             }
 
+            if (!$result && $debug){
+                var_dump($order->getId(), $response->getBody());                
+            }
+
             $this->entityManager->detach($order);
         }
         
@@ -1288,7 +1293,7 @@ class AplOrderService {
         $order = $this->entityManager->getRepository(Order::class)
                 ->findForUpdateApl();
         if ($order){
-            if ($this->sendOrder($order)){
+            if ($this->sendOrder($order, $debug)){
                 return $order->getId();
             }
         }
@@ -1301,8 +1306,9 @@ class AplOrderService {
     
     /**
      * Отправить заказы в АПЛ
+     * @param bool $debug
      */
-    public function sendOrders()
+    public function sendOrders($debug = false)
     {
         ini_set('memory_limit', '1024M');
         set_time_limit(900);
@@ -1310,7 +1316,7 @@ class AplOrderService {
         $order = null;
         
         while (true){
-            if ($order = $this->sendNexOrder()) {
+            if ($order = $this->sendNexOrder($debug)) {
                 usleep(100);
                 if (time() > $startTime + 870){
                     break;

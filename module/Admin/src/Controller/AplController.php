@@ -760,7 +760,7 @@ class AplController extends AbstractActionController
     
     public function sendOrdersAction()
     {                
-        $this->aplOrderService->sendOrders();
+        $this->aplOrderService->sendOrders(true);
         
         return new JsonModel([
             'result' => 'ok',
@@ -780,7 +780,7 @@ class AplController extends AbstractActionController
             return;                        
         } 
         
-        $result = $this->aplOrderService->sendOrder($order);
+        $result = $this->aplOrderService->sendOrder($order, true);
         
         return new JsonModel([
             'result' => $result,
