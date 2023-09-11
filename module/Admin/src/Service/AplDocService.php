@@ -771,7 +771,7 @@ class AplDocService {
             $client->setOptions(['timeout' => 60]);
             $client->setParameterPost($post);            
 
-            $ok = $result = false;
+            $ok = $result = $aplId = false;
             try{
                 $response = $client->send();
 //                var_dump($response->getBody());
@@ -1557,7 +1557,7 @@ class AplDocService {
             $client->setOptions(['timeout' => 60]);
             $client->setParameterPost($post);            
 
-            $ok = $result = false;
+            $ok = $result = $aplId = false;
             try{
                 $response = $client->send();
 //                var_dump($response->getBody()); exit;

@@ -6,7 +6,8 @@ $form = $this->form;
 $form->get('info')->setAttributes([
     'class'=>'form-control', 
     'rows' => 3,
-    'placeholder' => 'Что нужно'
+    'placeholder' => 'Что нужно', 
+    'value' => ($order) ? $order->getInfo():null,
     ]);
 
 $form->get('oem')->setAttributes([
@@ -93,18 +94,55 @@ $form->prepare();
         $('.selection-name').each(function(){
            selections.push($(this).html()); 
         });
-        $('#order-form').find('input[name="selections"]').val(JSON.stringify(selections));
-        upddateOrderGoodtable();
-        $('#selectionModal').modal('hide');
+        
+        if ($('#order-form').length){
+            $('#order-form').find('input[name="selections"]').val(JSON.stringify(selections));
+            upddateOrderGoodtable();
+            $('#selectionModal').modal('hide');
+        }    
+        
+        <?php if ($order): ?>
+            var data = $('#selectionGoodTable').bootstrapTable('getData');
+            var result = [];
+            $.each( data, function( index, row ) {
+                var newRow = {
+                    good: row.good.id,
+                    displayName: row.displayName,
+                    num: row.num,
+                    price: row.price,
+                    oem: row.oem,
+                    baseKey: row.baseKey
+                };
+                result.push(newRow);
+            });   
+    
+            var dataPost = {bid: result, selections: selections};
+
+            $.ajax({
+                type: 'POST',
+                url: '/order/selections-edit/<?= $order->getId()?>',
+                data: $.param(dataPost)
+            })
+                .done(function (data) {
+                    $('#table').bootstrapTable('updateByUniqueId', {id: <?= $order->getId()?>, row: data.row});
+                })
+                .fail(function () {
+                    alert("Ошибка при записи данных.");
+
+                })    
+                .always(function () {
+                    $('#selectionModal').modal('hide');
+                });                
+        <?php endif;?>                
     }
 
     function resetSelectionTab(){
             var tabs=$("#selection-tab-list li:not(:first)");
-            var len=1
+            var len=1;
             $(tabs).each(function(k,v){
                 len++;
 //                $(this).find('a').html('Tab ' + len + button);
-            })
+            });
             selectionTabId--;
     }
 
@@ -115,8 +153,8 @@ $form->prepare();
             id: row.id,
             code: row.code,
             name: row.name,
-            producer: {name: row.producer.name},
-        }
+            producer: {name: row.producer.name}
+        };
         var newRow = {
             good: good,
             displayName: (row.tokenGroup) ? row.tokenGroup.name:row.name,
@@ -128,7 +166,7 @@ $form->prepare();
 
         var newRowNo = getNewTableUniqueId('selectionGoodTable', 'rowNo');
         newRow.rowNo = newRowNo;
-        console.log(newRow);
+//        console.log(newRow);
         var rows = [];
         rows.push(newRow);
         $('#selectionGoodTable').bootstrapTable('prepend', rows);                        
@@ -140,7 +178,10 @@ $form->prepare();
     }
 
     function selectionGoodTable(){
-        let data = $('#ordergoodtable').bootstrapTable('getData');
+        var data = '';
+        if ($('#order-form').length){
+            data = $('#ordergoodtable').bootstrapTable('getData');
+        }    
         $('#selectionGoodTable').bootstrapTable({
             idField: 'rowNo',
             uniqueId: 'rowNo',
@@ -167,7 +208,11 @@ $form->prepare();
             }, {
                 field: 'oem',title: 'OE', visible: false
             }],
-            data: data
+            <?php if ($order): ?>
+                url: '/order/good-content/<?= $order->getId() ?>'        
+            <?php else: ?>                
+                data: data
+            <?php endif; ?>    
         });        
     }
     
@@ -226,7 +271,7 @@ $form->prepare();
     $(document).ready(function() {
         
         $('.enter-add').on('keydown', function(e){
-            console.log(e.keyCode);
+//            console.log(e.keyCode);
             if (e.keyCode === 13) {
                 selectionAdd();
             }
@@ -257,11 +302,20 @@ $form->prepare();
             }    
         });
         
-        $('#selection-form').find('textarea[name="info"]').val($('#order-form').find('textarea[name="info"]').val());
-        
         selectionGoodTable();
+        var inputSelections = '';
+        if ($('#order-form').length){
+            $('#selection-form').find('textarea[name="info"]').val($('#order-form').find('textarea[name="info"]').val());
+
+            inputSelections = $('#order-form').find('input[name="selections"]').val();
+//            console.log(inputSelections);
+        }    
         
-        let inputSelections = $('#order-form').find('input[name="selections"]').val();
+        <?php if ($order):?>
+            inputSelections = '<?= $order->getSelectionsAsString() ?>';   
+//            console.log(inputSelections);
+        <?php endif; ?>        
+        
         if (inputSelections){
             let selections = $.parseJSON(inputSelections);
             if ($.isArray(selections)){
@@ -272,7 +326,6 @@ $form->prepare();
                 $('#selection-tab-list a:first').tab('show');
             }
         }
-        
     });    
     
     function stGoodFormatter(value, row){

@@ -461,6 +461,7 @@ $this->pageBreadcrumbs()->setItems([
             return $table.bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
+           ['selection'],
            ['addComment', 'comments', 'history'],
            ['addLegal', 'updateFromApl', 'sendToApl'],
            ['vt', 'cash']
@@ -544,6 +545,18 @@ $this->pageBreadcrumbs()->setItems([
                     return row.dateOper > '<?= $allowDate?>';
                 }                
             },
+            selection: {
+                name: 'Подбор',
+                iconClass: 'glyphicon glyphicon-plus',
+                onClick: function (row){
+                    showFormDialog({
+                        id: 'selectionModal',
+                        url: '/order/selection-form/'+row.id,
+                        zIndex: 0,
+                        width: $(window).width()-50
+                    });
+                }
+            },    
             addComment: {
                 name: 'Добавить комментарий',
                 iconClass: 'glyphicon glyphicon-plus',

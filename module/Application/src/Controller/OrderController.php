@@ -420,6 +420,12 @@ class OrderController extends AbstractActionController
         $params = $this->params()->fromQuery();
         $orderId = $this->params()->fromRoute('id', -1);
         
+        $order = null;
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }
+        
         $selections = null;
         
         $form = new SelectionForm($this->entityManager);
@@ -446,9 +452,9 @@ class OrderController extends AbstractActionController
                 ]);        
             }
         } else {
-            if ($orderId > 0){
+            if ($order){
                 $selections = $this->entityManager->getRepository(Selection::class)
-                        ->findByOrder($orderId);
+                        ->findByOrder($order->getId());
             }
 //                $data = [
 //                    'good' => $good->getId(),
@@ -462,12 +468,12 @@ class OrderController extends AbstractActionController
 //                $form->setData($data);
 //            }    
         }        
-
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
         return new ViewModel([
             'form' => $form,
             'selections' => $selections,
+            'order' => $order,
         ]);        
     }
 
@@ -562,6 +568,36 @@ class OrderController extends AbstractActionController
             'form' => $form,
             'order' => $order,
         ]);        
+    }        
+
+    public function selectionsEditAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        $order = null;
+        
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }    
+        
+        if ($this->getRequest()->isPost() && $order) {
+            
+            $data = $this->params()->fromPost(); 
+            
+//            var_dump($data); exit;
+                
+            $this->orderManager->updateSelections($order, $data['selections']);
+            $this->orderManager->updateBids($order, $data['bid']);
+        }    
+                
+        $query = $this->entityManager->getRepository(Order::class)
+                ->findAllOrder(['orderId' => $order->getId()]);
+        $result = $query->getOneOrNullResult(2);
+                
+        return new JsonModel([
+            'row' => $result,
+        ]);
     }        
     
     public function viewAction() 

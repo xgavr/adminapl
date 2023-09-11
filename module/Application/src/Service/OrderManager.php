@@ -1720,6 +1720,25 @@ class OrderManager
         return;
     }
     
+    
+    /**
+     * Обновить подборы
+     * @param Order $order
+     * @param array $data
+     */
+    public function updateSelections($order, $data)
+    {
+        $this->removeOrderSelections($order);
+        
+        if (is_array($data)){
+            foreach ($data as $selection){
+                $this->insSelection($order, ['oem' => $selection]);
+            }    
+        }
+        
+        return;
+    }
+    
     /**
      * Обновить подборы
      * @param Order $order
@@ -1727,19 +1746,15 @@ class OrderManager
      */
     public function updateSelectionsFromJson($order, $strSelections)
     {
-        $this->removeOrderSelections($order);
         
         try{
             $selections = Decoder::decode($strSelections);
         } catch (Exception $ex){
-            
+            $selections = [];
         }    
+        
+        $thid->updateSelections($order, $selections);
 
-        if (is_array($selections)){
-            foreach ($selections as $selection){
-                $this->insSelection($order, ['oem' => $selection]);
-            }    
-        }
         return;
     }
     
