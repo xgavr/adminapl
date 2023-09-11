@@ -507,7 +507,11 @@ class Order {
     
     public function getInfo() 
     {
-        return $this->info;
+        if (!empty($this->info)){
+            return $this->info;
+        }
+        
+        return '';
     }
 
     public function setInfo($info) 
