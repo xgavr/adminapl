@@ -1204,7 +1204,7 @@ class AplOrderService {
                 'address' => $order->getAddress(),
                 'brand' => $order->getContactCarMakeAplId(),
                 'shipping' => $order->getShipping()->getAplShipping(),
-                'selections' => $order->getSelectionsAsAplString(),
+                //'selections' => $order->getSelectionsAsAplString(),
                 'phone' => $order->getContact()->getPhonesAsString(),
                 'parent' => $order->getAplStatusAsString(),
                 'paystatus' => 0,
