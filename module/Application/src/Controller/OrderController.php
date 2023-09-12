@@ -629,17 +629,28 @@ class OrderController extends AbstractActionController
     
     public function searchAction() 
     {       
-        $orderId = (int)$this->params()->fromQuery('orderId', -1);
+        $orderAplId = strtoupper($this->params()->fromQuery('orderId', -1));
         
-        // Validate input parameter
-        if ($orderId>0) {
-            $order = $this->entityManager->getRepository(Order::class)
-                    ->findOneByAplId($orderId);
-
-            if ($order) {
-                return $this->redirect()->toRoute('order', ['action'=>'intro', 'id' => $order->getId()]);
-            }        
-        }
+        $order = null;
+        $pos = strpos($orderAplId, 'Z');
+        if ($pos === false){        
+            if ($orderAplId>0) {
+                $order = $this->entityManager->getRepository(Order::class)
+                        ->findOneByAplId($orderAplId);
+            }
+        } else {
+            $orderId = preg_replace("/[^0-9]/", '', $orderAplId);
+            if ($orderId>0) {
+                $order = $this->entityManager->getRepository(Order::class)
+                        ->find($orderId);
+            }            
+        }    
+        
+        if ($order) {
+            return $this->redirect()->toRoute('order', ['action'=>'intro', 'id' => $order->getId()]);
+        }        
+        
+        
         return $this->redirect()->toRoute('order', ['action'=>'index']);        
     } 
 
