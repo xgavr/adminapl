@@ -789,7 +789,7 @@ class AplController extends AbstractActionController
         } 
         
         $result = $this->aplOrderService->sendOrder($order, true);
-        sleep(100);
+        usleep(100);
         
         $query = $this->entityManager->getRepository(\Application\Entity\Order::class)
                 ->findAllOrder(['orderId' => $order->getId()]);
