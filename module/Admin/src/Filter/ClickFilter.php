@@ -36,7 +36,7 @@ class ClickFilter extends AbstractFilter
      */
     public function filter($url)
     {
-        return file_get_contents("https://clck.ru/--?url=$url");
+        return file_get_contents("https://clck.ru/--?url=".$url);
     }
     
 }

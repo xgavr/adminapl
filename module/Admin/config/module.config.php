@@ -134,7 +134,7 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+admin.manage'],
                 ['actions' => 'telegramm-hook', 'allow' => '*'],
-                ['actions' => ['sms-form', 'sms-partial'], 'allow' => '@']
+                ['actions' => ['sms-form', 'sms-partial', 'order-prepay', 'sms'], 'allow' => '@']
             ],
             Controller\LogController::class => [
                 // Allow access to authenticated users.

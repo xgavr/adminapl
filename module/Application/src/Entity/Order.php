@@ -457,8 +457,8 @@ class Order {
     
     public function getAplTurboId($passphrase)
     {
-        //return "https://autopartslist.ru/index/turbo?order=".base64_encode($this->_encrypt($this->aplId, $passphrase));
-        return '';
+        return "https://autopartslist.ru/index/turbo?order=".base64_encode($this->_encrypt($this->aplId, $passphrase));
+//        return '';
     }
 
     public function getAplTurboClick($passphrase)
