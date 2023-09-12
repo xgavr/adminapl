@@ -642,7 +642,7 @@ $this->pageBreadcrumbs()->setItems([
                     updateApl(row.id, '/apl/unload-order-id/'+row.id);
                 },
                 isEnabled: function(row) {
-                    return true;
+                    return row.aplId > 0;
                 }                
             },    
             sendToApl: {
@@ -652,7 +652,7 @@ $this->pageBreadcrumbs()->setItems([
                     updateApl(row.id, '/apl/send-order-id/'+row.id);
                 },
                 isEnabled: function(row) {
-                    return true;
+                    return row.id > 0;
                 }                
             },    
             vt: {
@@ -682,6 +682,9 @@ $this->pageBreadcrumbs()->setItems([
                         zIndex: 8888
                     });
                 }
+                isEnabled: function(row) {
+                    return false;
+                }                
             }
         }
     });    
