@@ -207,9 +207,10 @@ class SmsManager {
                 }    
             }
             if ($fileName){
-                if ($this->printManager->renameIfNeed($fileName, random_int(10000, 99999).'.pdf')){
+                $newFileName = $options['name'].'_'.random_int(10000, 99999).'.pdf';
+                if ($this->printManager->renameIfNeed($fileName, $newFileName)){
     //                    var_dump('https://adminapl.ru/doc/'.$url);
-                    $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url=https://adminapl.ru/doc/'.$url);
+                    $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url=https://adminapl.ru/doc/'.$newFileName);
                 }
             }    
         } 
