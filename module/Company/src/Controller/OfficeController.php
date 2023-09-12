@@ -219,6 +219,11 @@ class OfficeController extends AbstractActionController
                 ->findBy(['status' => Office::STATUS_ACTIVE], ['name' => 'ASC']);
         $officeList = ['--нет--'];
         foreach ($offices as $value) {
+            if ($office){
+                if ($office->getId() == $value->getId()){
+                    continue;
+                }
+            }
             $officeList[$value->getId()] = $value->getName();
         }
         $form->get('parent')->setValueOptions($officeList);        
