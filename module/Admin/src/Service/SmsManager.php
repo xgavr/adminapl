@@ -191,21 +191,25 @@ class SmsManager {
     public function wammFileTo($options)
     {
         $settings = $this->adminManager->getSettings();
-        $response = $url = false;
-        if (self::WAMM_API && $settings['wamm_api_id'] && $options['attachment'] == 'preorder'){
-            if (!empty($options['attachment'])){
-                if ($options['attachment'] == 'preorder'){
+        $response = $url = $order = false;
+        if (self::WAMM_API && $settings['wamm_api_id'] && !empty($options['attachment'])){
+            if ($options['attachment'] == 'preorder'){
+                if (!empty($options['name'])){ //from apl
                     $order = $this->entityManager->getRepository(Order::class)
                             ->findOneBy(['aplId' => $options['name']]);
-                    if ($order){
-                        $url = $this->printManager->preorder($order, 'Pdf', false, true);
-                    }    
-                }
-                if ($url){
-//                    var_dump('https://adminapl.ru/doc/'.$url);
-                    $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url=https://adminapl.ru/doc/'.$url);
+                }    
+                if (!empty($options['orderId'])){ //from adminapl
+                    $order = $this->entityManager->getRepository(Order::class)
+                            ->find($options['orderId']);
+                }    
+                if ($order){
+                    $url = $this->printManager->preorder($order, 'Pdf', false, true);
                 }    
             }
+            if ($url){
+//                    var_dump('https://adminapl.ru/doc/'.$url);
+                $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url=https://adminapl.ru/doc/'.$url);
+            }    
         } 
         if ($response){
             $data = Json::decode($response, Json::TYPE_ARRAY);

@@ -59,6 +59,7 @@ class SmsController extends AbstractActionController
             if (!empty($data['phone']) && !empty($data['message']) && !empty($data['mode'])){
                 $filter = new PhoneFilter(['filter' => PhoneFilter::PHONE_FORMAT_DB]);
                 $phone = '7'.$filter->filter($data['phone']);
+                
                 if ($data['mode'] == 1){
                     $result = $this->smsManager->send(['phone' => $phone, 'text' => $data['message']]);
                 }    

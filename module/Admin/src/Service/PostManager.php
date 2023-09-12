@@ -100,10 +100,11 @@ class PostManager {
         
         $parts = [$html];
         
-        if (!empty($options['bill'])){
-            $order = $this->entityManager->getRepository(Order::class)
-                    ->find($options['orderId']);
-            if ($order){
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($options['orderId']);
+        
+        if ($order){
+            if (!empty($options['bill'])){
                 $billFileName = $this->printManager->bill($order, 'Pdf', true, !empty($options['showCode']));
                 if (file_exists($billFileName)){
                     $billFile              = new MimePart(fopen($billFileName, 'r'));
@@ -111,16 +112,12 @@ class PostManager {
                     $billFile->filename    = basename($billFileName);
                     $billFile->disposition = Mime::DISPOSITION_ATTACHMENT;
                     $billFile->encoding    = Mime::ENCODING_BASE64;      
-                    
+
                     $parts[] = $billFile;
                 }
-            }    
-        }
+            }
         
-        if (!empty($options['offer'])){
-            $order = $this->entityManager->getRepository(Order::class)
-                    ->find($options['orderId']);
-            if ($order){
+            if (!empty($options['offer'])){
                 $offerFileName = $this->printManager->offer($order, 'Pdf', true, !empty($options['showCode']));
                 if (file_exists($offerFileName)){
                     $offerFile              = new MimePart(fopen($offerFileName, 'r'));
@@ -128,11 +125,24 @@ class PostManager {
                     $offerFile->filename    = basename($offerFileName);
                     $offerFile->disposition = Mime::DISPOSITION_ATTACHMENT;
                     $offerFile->encoding    = Mime::ENCODING_BASE64;      
-                    
+
                     $parts[] = $offerFile;
                 }
-            }    
-        }
+            }
+            
+            if (!empty($options['preorder'])){
+                $preorderFileName = $this->printManager->preorder($order, 'Pdf', true, !empty($options['showCode']));
+                if (file_exists($preorderFileName)){
+                    $preorderFile              = new MimePart(fopen($preorderFileName, 'r'));
+                    $preorderFile->type        = 'application/pdf';
+                    $preorderFile->filename    = basename($preorderFileName);
+                    $preorderFile->disposition = Mime::DISPOSITION_ATTACHMENT;
+                    $preorderFile->encoding    = Mime::ENCODING_BASE64;      
+
+                    $parts[] = $preorderFile;
+                }
+            }
+        }    
         
         $body = new MimeMessage();
         $body->setParts($parts);
