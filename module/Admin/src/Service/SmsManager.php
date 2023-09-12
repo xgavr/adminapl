@@ -202,7 +202,8 @@ class SmsManager {
                     
                     if ($order){
                         $url = $this->printManager->preorder($order, 'Pdf', false, true);
-                    }    
+                    }  
+                }    
             }
             if ($url){
 //                    var_dump('https://adminapl.ru/doc/'.$url);
