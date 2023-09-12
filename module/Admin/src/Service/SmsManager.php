@@ -276,9 +276,12 @@ class SmsManager {
     public function wamm($options)
     {
 //        var_dump($options); exit;
+        $fileTo = true;
         $contactTo = $this->wammContactTo($options);
         $msgTo = $this->wammMsgTo($options);
-        $fileTo = $this->wammFileTo($options);
+        if (!empty($options['attachment'])){
+            $fileTo = $this->wammFileTo($options);
+        }    
         return $contactTo || $msgTo || $fileTo;
     }
 
