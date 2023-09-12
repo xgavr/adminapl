@@ -216,7 +216,7 @@ class SmsManager {
         } 
         if ($response){
             $data = Json::decode($response, Json::TYPE_ARRAY);            
-            var_dump($data);
+//            var_dump($data);
             if (!empty($data['err'])){
                 return $data['err'] == 0;
             }
@@ -283,7 +283,7 @@ class SmsManager {
         if (!empty($options['attachment'])){
             $fileTo = $this->wammFileTo($options);
         }    
-        return $contactTo || $msgTo || $fileTo;
+        return $contactTo || $msgTo;
     }
 
     /**
