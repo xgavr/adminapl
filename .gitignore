@@ -38,3 +38,4 @@ phpunit.xml
 /config/autoload/global-development.php
 /data/DoctrineORMModule/
 /data/session_10/
+/public/doc/
