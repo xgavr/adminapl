@@ -288,7 +288,7 @@ $form->prepare();
     
     function addSelectedTab(selectionTabId, tabName){
         let selectionTableId = 'st'+selectionTabId;
-        $('#selection-tab-list').append($('<li><a href="#selection-tab' + selectionTabId + '" role="tab" data-toggle="tab"><span class="selection-name">' + tabName + '</span><button class="close selection-close" type="button" title="Закрыть">×</button></a></li>'));
+        $('#selection-tab-list').append($('<li><a href="#selection-tab' + selectionTabId + '" role="tab" data-toggle="tab" class="selection-tab"><span class="selection-name">' + tabName + '</span><button class="close selection-close" type="button" title="Закрыть">×</button></a></li>'));
         $('#selection-tab-content').append($('<div class="tab-pane fade" id="selection-tab' + selectionTabId + '"><table id="' + selectionTableId + '" class="table-bordered table-hover table-condensed"></table></div>'));
         $('input[name="oem"]').val('');
         addSelectedTable(selectionTableId, tabName);
@@ -342,8 +342,8 @@ $form->prepare();
             }    
         });
         
-        $('#selection-tab-list').on('click', '.selection-name', function() {
-            $('input[name="oemInfo"]').val($(this).html());
+        $('#selection-tab-list').on('click', '.selection-tab', function() {
+            $('input[name="oemInfo"]').val($(this).find('.selection-name').html());
         });
 
         selectionGoodTable();
