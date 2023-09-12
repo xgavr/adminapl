@@ -54,7 +54,7 @@ class OrderFromIdZ extends AbstractFilter
             $orderId = preg_replace("/[^0-9]/", '', $value);
             if ($orderId > 0) {
                 $order = $this->entityManager->getRepository(Order::class)
-                        ->find($value);
+                        ->find($orderId);
             }            
         }    
         
