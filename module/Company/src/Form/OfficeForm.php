@@ -177,6 +177,15 @@ class OfficeForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
         
+        // Add "parent" field
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'parent',
+            'options' => [
+                'label' => 'Головной офис',
+            ],
+        ]);
+        
         // Add the CSRF field
         $this->add([
             'type' => 'csrf',
@@ -262,6 +271,12 @@ class OfficeForm extends Form implements ObjectManagerAwareInterface
                 ],
             ]); 
         
+        $inputFilter->add([
+                'name'     => 'parent',
+                'required' => false,
+                'filters'  => [],                
+                'validators' => [],
+            ]); 
         
     }           
 }

@@ -549,8 +549,8 @@ class OrderRepository extends EntityRepository{
         }
         if (!empty($params['month'])){
             $queryBuilder->select('DAY(o.dateOper) as day, sum(o.total) as total')
-                    ->andWhere('DAY(o.dateOper) = :day')
-                    ->setParameter('day', $params['day']);
+                    ->andWhere('MONTH(o.dateOper) = :month')
+                    ->setParameter('month', $params['month']);
         }
         if (!empty($params['base'])){
             

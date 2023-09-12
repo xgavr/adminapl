@@ -179,6 +179,19 @@ class Office {
    */
    private $suppliers;    
    
+    /**
+     * One Office has Many Offices.
+     * @ORM\OneToMany(targetEntity="Company\Entity\Office", mappedBy="parent")
+     */
+    private $children;
+
+   /**
+     * Many Offices have One Office.
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     */
+    private $parent;    
+   
    /**
      * Constructor.
      */
@@ -194,6 +207,7 @@ class Office {
         $this->ptShedulers = new ArrayCollection();
         $this->ptShedulers2 = new ArrayCollection();
         $this->suppliers = new ArrayCollection();
+        $this->children = new ArrayCollection();        
     }
     
     public function getId() 
@@ -397,6 +411,11 @@ class Office {
                 return $filter->filter($contact->getPhone()->getName());
             }
         }
+        
+        if ($this->getParent()){
+            return $this->getParent()->getLegalContactPhone();
+        }
+        
         return;
     }
         
@@ -412,6 +431,11 @@ class Office {
                 }    
             }
         }
+
+        if ($this->getParent()){
+            return $this->getParent()->getLegalContactPhone();
+        }
+        
         return implode(', ', $result);
     }
         
@@ -437,6 +461,9 @@ class Office {
                     }    
                 }    
             }    
+        }
+        if ($this->getParent()){
+            return $this->getParent()->getLegalContactWhatsapp();
         }
         return;
     }
@@ -644,5 +671,69 @@ class Office {
     public function addSupplier($supplier) 
     {
         $this->suppliers[] = $supplier;
-    }                 
+    }         
+    
+   /**
+     * Add children
+     * @param Office $office
+     */
+    public function addChildren($office)
+    {
+        $this->children[] = $office;
+
+    }
+
+    /**
+     * Remove children
+     *
+     * @param Office $office
+     */
+    public function removeChildren($office)
+    {
+        $this->children->removeElement($office);
+    }
+
+    /**
+     * Get children
+     * @return array
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+    
+    /**
+     * Set parent
+     * @param Office $office
+     * @return MenuItem
+     */
+    public function setParent($office)
+    {
+        $this->parent = $office;
+        if ($office){
+            $office->addChildren($this);
+        }    
+    }
+
+    /**
+     * Get parent
+     * @return Supplier
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }    
+
+    /**
+     * Get parent Id
+     * @return integer
+     */
+    public function getParentId()
+    {
+        if ($this->parent){
+            return $this->parent->getId();
+        }    
+        
+        return;
+    }        
 }

@@ -215,6 +215,14 @@ class OfficeController extends AbstractActionController
         // Create form
         $form = new OfficeForm($this->entityManager);
         
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy(['status' => Office::STATUS_ACTIVE], ['name' => 'ASC']);
+        $officeList = ['--нет--'];
+        foreach ($offices as $value) {
+            $officeList[$value->getId()] = $value->getName();
+        }
+        $form->get('parent')->setValueOptions($officeList);        
+        
         // Check if user has submitted the form
         if ($this->getRequest()->isPost()) {
             
@@ -228,6 +236,14 @@ class OfficeController extends AbstractActionController
                 
                 // Get filtered and validated data
                 $data = $form->getData();
+                
+                if (!empty($data['parent'])){
+                    $parentOffice = $this->entityManager->getRepository(Office::class)
+                            ->find($data['parent']);
+                    if ($parentOffice){
+                        $data['parent'] = $parentOffice;
+                    }
+                }
                 
                 // Update permission.
                 $this->officeManager->updateOffice($office, $data);
@@ -247,6 +263,7 @@ class OfficeController extends AbstractActionController
                     'sbCard'=>$office->getSbCard(),     
                     'sbOwner'=>$office->getSbOwner(),     
                     'sbpMerchantId' => $office->getSbpMerchantId(),
+                    'parent' => $office->getParentId(),
                 ));
         }
         

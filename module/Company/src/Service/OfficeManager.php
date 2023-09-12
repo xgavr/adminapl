@@ -52,6 +52,7 @@ class OfficeManager
         $office->setSbCard($data['sbCard']);
         $office->setSbOwner($data['sbOwner']);
         $office->setSbpMerchantId((empty($data['sbpMerchantId'])) ? null:$data['sbpMerchantId']); 
+        $office->setParent((empty($data['parent'])) ? null:$data['parent']); 
         
         $currentDate = date('Y-m-d H:i:s');        
         $office->setDateCreated($currentDate);
@@ -96,6 +97,7 @@ class OfficeManager
         $office->setSbCard($data['sbCard']);
         $office->setSbOwner($data['sbOwner']);
         $office->setSbpMerchantId((empty($data['sbpMerchantId'])) ? null:$data['sbpMerchantId']); 
+        $office->setParent((empty($data['parent'])) ? null:$data['parent']); 
         
         $office->setRegion($region);
         

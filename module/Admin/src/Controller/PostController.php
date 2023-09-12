@@ -90,7 +90,7 @@ class PostController extends AbstractActionController
                     $options['copyMe'] = $data['copyMe'];
                     $options['bill'] = $data['bill'];
                     $options['offer'] = $data['offer'];
-                    $options['showCode'] = $data['showCode'];
+                    $options['showCode'] = (empty($data['showCode'])) ? 0:1;
                     $options['orderId'] = $data['orderId'];
                     $options['subject'] = $data['subject'];
                     $options['body'] = $data['message'];
