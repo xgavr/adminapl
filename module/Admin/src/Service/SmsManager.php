@@ -177,6 +177,7 @@ class SmsManager {
         } 
         if ($response){
             $data = Json::decode($response, Json::TYPE_ARRAY);
+            var_dump($data);
             if (!empty($data['err'])){
                 return $data['err'] == 0;
             }
@@ -215,7 +216,7 @@ class SmsManager {
             }    
         } 
         if ($response){
-            $data = Json::decode($response, Json::TYPE_ARRAY);
+            $data = Json::decode($response, Json::TYPE_ARRAY);            
             if (!empty($data['err'])){
                 return $data['err'] == 0;
             }
