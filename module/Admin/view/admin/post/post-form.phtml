@@ -15,7 +15,7 @@ $form->get('fromEmail')->setAttributes([
 $form->get('subject')->setAttributes([
     'class'=>'form-control', 
     'placeholder' => 'Тема',
-    'value' => 'По заказу №'.$order->getAplId(),
+    'value' => 'По заказу №'.$order->getMessageAplId(),
     ]);
 
 $form->get('showCode')->setAttributes([
@@ -136,33 +136,33 @@ $form->prepare();
                 <div class="list-group">
                     <button type="button" class="list-group-item local-comment">№ запроса
                         <div class="text-hide">
-                            Ваш запрос №<?= $order->getAplId()?>.
+                            Ваш запрос №<?= $order->getMessageAplId()?>.
                                 Для подтверждения заказа звоните по телефону <?= $order->getOffice()->getLegalContactPhones()?>.
                         </div>
                     </button>
                     <button type="button" class="list-group-item local-comment">Заказ принят, на сборке
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getAplId()?> на сумму <?= $order->getTotal()?> руб. принят.
+                            Ваш заказ №<?= $order->getMessageAplId()?> на сумму <?= $order->getTotal()?> руб. принят.
                             <br/>Спасибо за заказ!
                         </div>
                     </button>
                     <button type="button" class="list-group-item local-comment">Готов к отгр., ждет самовывоза
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getAplId()?> готов к отгрузке и ожидает Вас по адресу:
+                            Ваш заказ №<?= $order->getMessageAplId()?> готов к отгрузке и ожидает Вас по адресу:
                             <br/><?= $order->getOffice()->getLegalContactSmsAddress()?>,
                             <br/>тел.: <?= $order->getOffice()->getLegalContactPhones()?>
                         </div>
                     </button>
                     <button type="button" class="list-group-item local-comment">№ заказа, адрес офиса
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getAplId()?> на сумму <?= $order->getTotal()?> руб.
+                            Ваш заказ №<?= $order->getMessageAplId()?> на сумму <?= $order->getTotal()?> руб.
                             <br/><?= $order->getOffice()->getLegalContactSmsAddress()?>
                             <br/>тел.: <?= $order->getOffice()->getLegalContactPhones()?>
                         </div>
                     </button>
                     <button type="button" class="list-group-item local-comment">На доставке
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getAplId()?>. Дата доставки <?= date('d.m.y', strtotime($order->getDateShipment()))?>. Сумма к оплате <?= $order->getTotal()?> р.
+                            Ваш заказ №<?= $order->getMessageAplId()?>. Дата доставки <?= date('d.m.y', strtotime($order->getDateShipment()))?>. Сумма к оплате <?= $order->getTotal()?> р.
                             <br/>Телефон водителя-экспедитора <?= $order->getSkiperPhone()?> <?= $order->getSkiperName()?>.
                             <br/>Спасибо за заказ!
                         </div>
@@ -176,7 +176,7 @@ $form->prepare();
                         </button>
                         <button type="button" class="list-group-item local-comment">Доставка ТК
                             <div class="text-hide">
-                                Ваш заказ №<?= $order->getAplId()?> доставлен в транспортную компанию <?= $order->getCourierName()?>.
+                                Ваш заказ №<?= $order->getMessageAplId()?> доставлен в транспортную компанию <?= $order->getCourierName()?>.
                                 <br/>Номер накладной для отслеживания статуса груза: <?= $order->getTrackNumber()?>
                                 <br/>Спасибо за заказ!
                             </div>
@@ -193,13 +193,13 @@ $form->prepare();
                     <?php endif;?>    
                     <button type="button" class="list-group-item local-comment">Ответ по заказу или запросу
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getAplId()?> поступил в обработку.
+                            Ваш заказ №<?= $order->getMessageAplId()?> поступил в обработку.
                             <br/>
                             <br/>В ближайшее время с Вами свяжется менеджер.
                             <br/>    
                             <br/><b>Внимание!</b> В связи с большим количеством заказов, возможны задержки с их обработкой. 
                             Если Вы желаете чтобы ваш заказ был обработан макимально оперативно, то рекомендуем позвонить нам 
-                            и сообщить оператору присвоенный номер - <b><?= $order->getAplId()?></b>                        
+                            и сообщить оператору присвоенный номер - <b><?= $order->getMessageAplId()?></b>                        
                         </div>
                     </button>
                 </div>
@@ -211,7 +211,7 @@ $form->prepare();
                 <ul class="list-group">
                     <button type="button" class="list-group-item local-comment py-sm-0">Предоплата
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> руб.
+                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> руб.
                             <br/>Просмотреть содержимое заказа и оплатить его Вы можете в личном кабинете на сайте autopartslist.ru
                             <br/>Логин: <?= $order->getContact()->getPhone()->getName()?>
                             <br/>Пароль:                         
@@ -219,7 +219,7 @@ $form->prepare();
                     </button>
                     <button type="button" class="list-group-item local-comment  py-sm-0">100% оплата
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> руб.
+                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> руб.
                             <br/>Просмотреть содержимое заказа и оплатить его Вы можете в личном кабинете на сайте autopartslist.ru
                             <br/>Логин: <?= $order->getContact()->getPhone()->getName()?>
                             <br/>Пароль:                         
@@ -227,30 +227,30 @@ $form->prepare();
                     </button>
                     <button type="button" class="list-group-item  py-sm-0 local-comment">Предоплата на СБ или ЛК
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> р.
+                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> р.
                             <br/>
                             <br/><b>Варианты оплаты:</b>
                             <br/>1 - через личный кабинет на сайте autopartslist.ru
                             <br/>Логин: "<?= $order->getContact()->getPhone()->getName()?>"; пароль: 
                             <br/>
                             <br/>2 - на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
-                            <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getAplId()?>".
+                            <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getMessageAplId()?>".
                             <br/>
-                            <br/>Для идентификации платежа, после оплаты обязательно позвоните в офис по тел.: <?= $order->getOffice()->getLegalContactPhones()?> и сообщите об осуществлении платежа по заказу №<?= $order->getAplId()?>.
+                            <br/>Для идентификации платежа, после оплаты обязательно позвоните в офис по тел.: <?= $order->getOffice()->getLegalContactPhones()?> и сообщите об осуществлении платежа по заказу №<?= $order->getMessageAplId()?>.
                         </div>
                     </button>
                     <button type="button" class="list-group-item  py-lg-0 local-comment">100% оплата СБ или ЛК
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р.
+                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р.
                             <br/>
                             <br/><b>Варианты оплаты:</b>
                             <br/>1 - через личный кабинет на сайте autopartslist.ru
                             <br/>Логин: "<?= $order->getContact()->getPhone()->getName()?>"; пароль: 
                             <br/>
                             <br/>2 - на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
-                            <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getAplId()?>".
+                            <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getMessageAplId()?>".
                             <br/>
-                            <br/>Для идентификации платежа, после оплаты обязательно позвоните в офис по тел.: <?= $order->getOffice()->getLegalContactPhones()?> и сообщите об осуществлении платежа по заказу №<?= $order->getAplId()?>.
+                            <br/>Для идентификации платежа, после оплаты обязательно позвоните в офис по тел.: <?= $order->getOffice()->getLegalContactPhones()?> и сообщите об осуществлении платежа по заказу №<?= $order->getMessageAplId()?>.
                         </div>
                     </button>
                     <button type="button" class="list-group-item local-comment">100% оплата регионы
@@ -258,7 +258,7 @@ $form->prepare();
                             Для отправки заказа необходима 100% оплата за товар и услугу доставки до Транспортной Компании.
                             <br/>Услуги ТК оплачиваются Вами при получении заказа в офисе ТК в вашем городе.
                             <br/>
-                            <br/>Ваш заказ №<?= $order->getAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р. - с учетом нашей доставки (<?= $order->getShipmentTotal()?> р.) до ТК.
+                            <br/>Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р. - с учетом нашей доставки (<?= $order->getShipmentTotal()?> р.) до ТК.
                             <br/>Просмотреть содержимое заказа и оплатить его Вы можете в личном кабинете на сайте autopartslist.ru
                             <br/>Логин: <?= $order->getContact()->getPhone()->getName()?>
                             <br/>Пароль: 
@@ -281,23 +281,23 @@ $form->prepare();
                     </button>
                     <button type="button" class="list-group-item local-comment-sb-total">100% оплата регионы, ссылка на платежную форму Сбер
                         <div class="text-hide">
-                            <br/>Ваш заказ №<?= $order->getAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> Р - с учетом нашей доставки (<?= $order->getShipmentTotal()?> Р) до транспортной компании. Для отправки заказа необходима 100% оплата за товар и услугу доставки до транспортной компании. Услуги транспортной компании оплачиваются Вами при получении заказа в офисе транспортной компании в вашем городе.
+                            <br/>Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> Р - с учетом нашей доставки (<?= $order->getShipmentTotal()?> Р) до транспортной компании. Для отправки заказа необходима 100% оплата за товар и услугу доставки до транспортной компании. Услуги транспортной компании оплачиваются Вами при получении заказа в офисе транспортной компании в вашем городе.
                             <br/>Воспользуйтесь формой ниже для проведения платежа.   
                         </div>
                     </button>
                     <button type="button" class="list-group-item local-comment">Предоплата на Сбер
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> р.
+                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> р.
                             <br/>Номер карты Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
-                            <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getAplId()?>".
+                            <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getMessageAplId()?>".
                             <br/>Для идентификации платежа, после оплаты, обязательно позвоните в офис по тел.: <?= $order->getOffice()->getLegalContactPhones()?> и сообщите последние 4 цифры номера карты и имя отчество держателя карты.                        
                         </div>
                     </button>
                     <button type="button" class="list-group-item local-comment">100% оплата на Сбер
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р.
+                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р.
                             <br/>Номер карты Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
-                            <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getAplId()?>".
+                            <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getMessageAplId()?>".
                             <br/>Для идентификации платежа, после оплаты, обязательно позвоните в офис по тел.: <?= $order->getOffice()->getLegalContactPhones()?> и сообщите последние 4 цифры номера карты и имя отчество держателя карты.                        
                         </div>
                     </button>
@@ -312,7 +312,7 @@ $form->prepare();
                         <div class="text-hide">
                             Вами неверно указан номер телефона для связи: <?= $order->getContact()->getPhone()->getName()?>.
                             <br/>
-                            <br/>Ваш запрос №<?= $order->getAplId()?>. Для подтверждения заказа звоните <?= $order->getOffice()->getLegalContactPhones()?>.
+                            <br/>Ваш запрос №<?= $order->getMessageAplId()?>. Для подтверждения заказа звоните <?= $order->getOffice()->getLegalContactPhones()?>.
                         </div>
                     </button>
                     <button type="button" class="list-group-item local-comment">Ошибка VIN

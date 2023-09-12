@@ -446,6 +446,14 @@ class Order {
     {
         return $this->aplId;
     }
+
+    public function getMessageAplId() 
+    {
+        if (empty($this->aplId)){
+            return 'Z'.$this->getId();
+        }
+        return $this->aplId;
+    }
     
     public function getAplTurboId($passphrase)
     {

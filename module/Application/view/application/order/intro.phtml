@@ -233,12 +233,11 @@ $form->prepare();
                     <div class="input-group">
                         <?= $this->formElement($form->get('phone')); ?>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-sm sms-message-modal-show" modal-url="/admin/sms-form/" title="Отправить сообщение">
-                                <span class="glyphicon glyphicon-envelope"></span>
+                            <button type="button" class="btn btn-default btn-sm sms-message-from-order" modal-url="/admin/sms-form/" title="Отправить сообщение">
+                                <span class="glyphicon glyphicon-phone"></span>
                             </button>
                         </span>    
                     </div>    
-                    <?php echo $this->partial('/admin/index/sms-partial', ['phoneNode' => 'phone', 'idNode' => 'orderId']); ?>
                     <?= $this->formElementErrors($form->get('phone')); ?>                  
                 </div>
             </div>    
@@ -263,12 +262,11 @@ $form->prepare();
                     <div class="input-group">
                         <?= $this->formElement($form->get('email')); ?>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-sm post-message-modal-show" modal-url="/post/post-form/" title="Отправить сообщение">
+                            <button type="button" class="btn btn-default btn-sm post-message-from-order" modal-url="/post/post-form/" title="Отправить сообщение">
                                 <span class="glyphicon glyphicon-envelope"></span>
                             </button>
                         </span>    
                     </div>    
-                    <?php echo $this->partial('/admin/post/post-partial', ['emailNode' => 'email', 'idNode' => 'orderId']); ?>
                     <?= $this->formElementErrors($form->get('email')); ?>                  
                 </div>
             </div>    
@@ -691,7 +689,15 @@ $form->prepare();
     <div class="col-sm-1">
         <div class="list-group" data-spy="affix" data-offset-top="20">        
             <div class="form-group form-group-sm">
-                <?= $this->formElement($form->get('aplId')); ?>
+                <?//= $this->formLabel($form->get('aplId')); ?>
+                <div class="input-group">
+                    <?= $this->formElement($form->get('aplId')); ?>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-sm link-to-order-apl" title="Просмотр заказа в АПЛ">
+                            <span class="glyphicon glyphicon-link"></span>
+                        </button>
+                    </span>    
+                </div>    
                 <?= $this->formElementErrors($form->get('aplId')); ?>                  
             </div>
             <button type="button" class="btn btn-primary btn-sm btn-block" id="order-submit">Сохранить</button>    
@@ -739,6 +745,8 @@ $form->prepare();
             
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 <?php echo $this->partial('/application/order/comment-partial', []); ?>
+<?php echo $this->partial('/admin/index/sms-partial', ['phoneNode' => 'phone', 'idNode' => 'orderId']); ?>
+<?php echo $this->partial('/admin/post/post-partial', ['emailNode' => 'email', 'idNode' => 'orderId']); ?>
 
 <script>
     var $table = $('#ordergoodtable');
@@ -1023,9 +1031,12 @@ $form->prepare();
 
     function enableExAplNodes(){
         let aplId = Number($('#aplId').val());
-        $('.sms-message-modal-show').attr('disabled', !aplId);
-        $('.post-message-modal-show').attr('disabled', !aplId);
-        $('.unload-order-from-apl').attr('disabled', !aplId);
+        let orderId = Number($('#orderId').val());
+        $('.sms-message-from-order').attr('disabled', !orderId);
+        $('.post-message-from-order').attr('disabled', !orderId);
+        $('.unload-order-from-apl').attr('disabled', !aplId || !orderId);
+        $('.send-order-to-apl').attr('disabled', !orderId);
+        $('.link-to-order-apl').attr('disabled', !aplId);
     }
     
     $table.on('editable-init.bs.table', function(e){
@@ -1062,6 +1073,31 @@ $form->prepare();
     
     $('#legal').on('change', function(){
         contractList();
+    });
+
+    $('.link-to-order-apl').on('click', function(){
+        let aplId = Number($('#aplId').val());
+        if (aplId){
+            window.open('https://autopartslist.ru/admin/orders/view/id/'+aplId, '_blank');
+        }    
+    });
+
+    $('.sms-message-from-order').on('click', function(){
+        let aplId = Number($('#aplId').val());
+        let orderId = Number($('#orderId').val());
+        let phone = $('#phone').val();
+        if (orderId){
+            sendSmsMessagePartial(orderId, phone);
+        }    
+    });
+
+    $('.post-message-from-order').on('click', function(){
+        let aplId = Number($('#aplId').val());
+        let orderId = Number($('#orderId').val());
+        let email = $('#email').val();
+        if (orderId){
+            postMessagePartial(orderId, email);
+        }    
     });
     
     function orderUpdateTotal(){

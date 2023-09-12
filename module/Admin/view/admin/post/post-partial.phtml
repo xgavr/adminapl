@@ -1,4 +1,16 @@
 <script>
+    function postMessagePartial(orderId, email){
+        if (orderId){
+            var url = '/post/post-form/';
+            showFormDialog({
+                id: 'postMessageModal',
+                url: url+orderId+'?email='+email,
+                zIndex: 9999,
+                width: $(window).width()-150
+            });
+        };        
+    }
+
     $(document).on('click', '.post-message-modal-show', function (e) {
         var orderId = $(this).attr('order-id');
         var email = $(this).attr('email');
@@ -8,14 +20,7 @@
         <?php if (!empty($emailNode)):?>
             email = $('#<?= $emailNode ?>').val();
         <?php endif; ?>    
-        if (orderId){
-            var url = $(e.currentTarget).attr('modal-url');
-            showFormDialog({
-                id: 'postMessageModal',
-                url: url+orderId+'?email='+email,
-                zIndex: 9999,
-                width: $(window).width()-150
-            });
-        }    
+            
+        postMessagePartial(orderId, email);    
     });  
 </script>
