@@ -12,6 +12,7 @@ use Laminas\Json\Json;
 use Admin\Entity\Wammchat;
 use Application\Entity\Order;
 use Application\Entity\Comment;
+use Application\Filter\OrderFromIdZ;
 
 /**
  * Description of SmsManager
@@ -191,20 +192,17 @@ class SmsManager {
     public function wammFileTo($options)
     {
         $settings = $this->adminManager->getSettings();
-        $response = $url = $order = false;
+        $response = $url = false;
         if (self::WAMM_API && $settings['wamm_api_id'] && !empty($options['attachment'])){
             if ($options['attachment'] == 'preorder'){
-                if (!empty($options['name'])){ //from apl
-                    $order = $this->entityManager->getRepository(Order::class)
-                            ->findOneBy(['aplId' => $options['name']]);
-                }    
-                if (!empty($options['orderId'])){ //from adminapl
-                    $order = $this->entityManager->getRepository(Order::class)
-                            ->find($options['orderId']);
-                }    
-                if ($order){
-                    $url = $this->printManager->preorder($order, 'Pdf', false, true);
-                }    
+                if (!empty($options['name'])){ 
+                    
+                    $orderFilter = new OrderFromIdZ($this->entityManager);
+                    $order = $orderFilter->filter($options['name']);
+                    
+                    if ($order){
+                        $url = $this->printManager->preorder($order, 'Pdf', false, true);
+                    }    
             }
             if ($url){
 //                    var_dump('https://adminapl.ru/doc/'.$url);

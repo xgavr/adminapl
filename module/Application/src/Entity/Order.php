@@ -350,10 +350,7 @@ class Order {
     
     public function getDocNo()
     {
-        if ($this->aplId){
-            return $this->aplId;
-        }
-        return $this->id;        
+        return $this->getMessageAplId();
     }
 
     /**
@@ -450,7 +447,7 @@ class Order {
     public function getMessageAplId() 
     {
         if (empty($this->aplId)){
-            return 'Z'.$this->getId();
+            return 'Z'.$this->id;
         }
         return $this->aplId;
     }

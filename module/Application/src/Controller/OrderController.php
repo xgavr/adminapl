@@ -28,6 +28,7 @@ use Stock\Entity\Movement;
 use Stock\Entity\Register;
 use ApiMarketPlace\Entity\Marketplace;
 use Application\Form\OrderLegalForm;
+use Application\Filter\OrderFromIdZ;
 
 class OrderController extends AbstractActionController
 {
@@ -631,20 +632,8 @@ class OrderController extends AbstractActionController
     {       
         $orderAplId = strtoupper($this->params()->fromQuery('orderId', -1));
         
-        $order = null;
-        $pos = strpos($orderAplId, 'Z');
-        if ($pos === false){        
-            if ($orderAplId>0) {
-                $order = $this->entityManager->getRepository(Order::class)
-                        ->findOneByAplId($orderAplId);
-            }
-        } else {
-            $orderId = preg_replace("/[^0-9]/", '', $orderAplId);
-            if ($orderId>0) {
-                $order = $this->entityManager->getRepository(Order::class)
-                        ->find($orderId);
-            }            
-        }    
+        $orderFilter = new OrderFromIdZ($this->entityManager);
+        $order = $orderFilter->filter($orderAplId);
         
         if ($order) {
             return $this->redirect()->toRoute('order', ['action'=>'intro', 'id' => $order->getId()]);
