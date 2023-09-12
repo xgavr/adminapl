@@ -1,0 +1,27 @@
+
+<script>
+    function sendSmsMessagePartial(orderId, phone){
+        if (orderId){
+            var url = '/sms/sms-form/';
+            showFormDialog({
+                id: 'smsMessageModal',
+                url: url+orderId+'?phone='+phone,
+                zIndex: 9999,
+                width: $(window).width()-150
+            });
+        };        
+    }
+    
+    $(document).on('click', '.sms-message-modal-show', function (e) {
+        var orderId = $(this).attr('order-id');
+        var phone = $(this).attr('phone');
+        <?php if (!empty($idNode)):?>
+            orderId = $('#<?= $idNode ?>').val();
+        <?php endif; ?>    
+        <?php if (!empty($phoneNode)):?>
+            phone = $('#<?= $phoneNode ?>').val();
+        <?php endif; ?>    
+
+        sendSmsMessagePartial(orderId, phone);
+    });  
+</script>

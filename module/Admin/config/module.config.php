@@ -93,6 +93,20 @@ return [
                     ],
                 ],
             ],
+            'sms' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/sms[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\SmsController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
             'soap' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -134,7 +148,7 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+admin.manage'],
                 ['actions' => 'telegramm-hook', 'allow' => '*'],
-                ['actions' => ['sms-form', 'sms-partial', 'order-prepay', 'sms'], 'allow' => '@']
+                ['actions' => ['smsForm', 'sms-partial', 'order-prepay', 'sms'], 'allow' => '@']
             ],
             Controller\LogController::class => [
                 // Allow access to authenticated users.
@@ -147,6 +161,10 @@ return [
             Controller\ProcessingController::class => [
                 // Allow access to all users.
                 ['actions' => '*', 'allow' => '*']
+            ],
+            Controller\SmsController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
             ],
             Controller\SoapController::class => [
                 // Allow access to all users.
@@ -165,6 +183,7 @@ return [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\LogController::class => Controller\Factory\LogControllerFactory::class,
             Controller\PostController::class => Controller\Factory\PostControllerFactory::class,
+            Controller\SmsController::class => Controller\Factory\SmsControllerFactory::class,
             Controller\ProcessingController::class => Controller\Factory\ProcessingControllerFactory::class,
             Controller\SoapController::class => Controller\Factory\SoapControllerFactory::class,
             Controller\TelegrammController::class => Controller\Factory\TelegrammControllerFactory::class,

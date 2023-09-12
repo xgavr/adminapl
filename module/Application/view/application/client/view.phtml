@@ -665,7 +665,7 @@ $legalContact = $client->getLegalContact();
             var phones = [];
 
             $.each(depend.phones, function( index, phone ) {
-                phones.push('<a href="#" class="sms-message-modal-show" modal-url="/admin/sms-form/" phone="'+phone.name+'" order-id="'+row.id+'">'+phone.name.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2-$3')+'</a>');
+                phones.push('<a href="#" class="sms-message-modal-show" modal-url="/sms/sms-form/" phone="'+phone.name+'" order-id="'+row.id+'">'+phone.name.replace(/(\d{3})(\d{3})(\d{4})/, '$1 $2-$3')+'</a>');
                 if (phones.length > 1){
                     return false;
                 }

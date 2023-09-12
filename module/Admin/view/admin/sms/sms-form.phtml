@@ -1,0 +1,300 @@
+<?php
+
+$form = $this->form;
+
+$form->get('message')->setAttributes([
+    'class'=>'form-control', 
+    'rows' => 4
+    ]);
+
+$form->get('phone')->setAttributes([
+    'class'=>'form-control phone', 
+    'placeholder' => 'Телефон',
+    ]);
+
+$form->get('mode')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('orderId')->setAttributes([
+    'class'=>'form-control',
+    'value' => $order->getMessageAplId(),
+    ]);
+
+$form->get('attachment')->setAttributes([
+    'class'=>'form-control',
+    ]);
+
+$form->prepare();
+
+?>
+
+            
+<?= $this->form()->openTag($form); ?>
+
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group form-group-md">
+                <?= $this->formElement($form->get('phone')); ?>
+                <?= $this->formElementErrors($form->get('phone')); ?>                  
+            </div>    
+        </div>        
+        <div class="col-md-1">
+            <div class="form-group form-group-md">
+                <?= $this->formElement($form->get('mode')); ?>
+                <?= $this->formElementErrors($form->get('mode')); ?>                  
+            </div>    
+        </div>        
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group form-group-md">
+                <?= $this->formElement($form->get('message')); ?>
+                <?= $this->formElementErrors($form->get('message')); ?>                  
+            </div>    
+        </div>        
+    </div>
+    
+    <?= $this->formElement($form->get('orderId')); ?>
+    <?= $this->formElement($form->get('attachment')); ?>
+    
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">статусы заказов, информация</div>
+                <ul class="list-group">
+                    <li class="list-group-item local-comment">№ запроса
+                        <div class="text-hide">
+                            Ваш запрос №<?= $order->getMessageAplId()?>. Просмотреть и подтвердить его можно здесь - <?= $turbo ?> или звоните <?= $order->getOffice()->getLegalContactPhone()?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">не дозвон, № запроса
+                        <div class="text-hide">
+                            К сожалению мы не дозвонились до Вас! Ваш запрос №<?= $order->getMessageAplId()?>. Ознакомьтесь с ним тут <?= $turbo?> или звоните <?= $order->getOffice()->getLegalContactPhone()?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">№ заказа, адрес офиса
+                        <div class="text-hide">
+                            Ваш заказ №<?= $order->getMessageAplId()?> на сумму <?= $order->getTotal()?> руб. Адрес офиса: <?= $order->getOffice()->getLegalContactSmsAddress()?>, тел.: <?= $order->getOffice()->getLegalContactPhone()?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Готов к отгр., ждет самовывоза
+                        <div class="text-hide">
+                            Ваш заказ №<?= $order->getMessageAplId()?> готов к выдаче и ожидает Вас по адресу: <?= $order->getOffice()->getLegalContactSmsAddress()?>, тел.: <?= $order->getOffice()->getLegalContactPhone()?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">На доставке
+                        <div class="text-hide">
+                            Ваш заказ №<?= $order->getMessageAplId()?>, доставка <?= date('d-m', strtotime($order->getDateShipment()))?>, к оплате <?= $order->getTotal()?> р. Обязательно будьте на связи - курьер Вам заранее позвонит. Спасибо за заказ!
+                        </div>
+                    </li>
+                    <?php if ($order->getCourier()):?>
+                        <li class="list-group-item local-comment">Отправка ТК и СПС <b>WhatsApp</b>
+                            <div class="text-hide">
+                                Мы отправили заказ №<?= $order->getMessageAplId()?>. Накладная в <?= $order->getCourier()->getName()?> №<?= $order->getTrackNumber()?>. Спасибо что выбрали нас! Нам важно знать Ваше мнение о нашей работе! Как только заберете заказ из ТК, по возможности, оставьте оценку или отзыв - https://clck.ru/YJRpd
+                            </div>
+                        </li>
+                    <?php endif;?>    
+                    <?php if ($order->getCourier()):?>
+                        <li class="list-group-item local-comment">Отправка ТК
+                            <div class="text-hide">
+                                Ваш заказ №<?= $order->getMessageAplId()?>, отправка через ТК <?= $order->getCourier()->getName()?>, № накладной ТК - <?= $order->getTrackNumber()?>. Спасибо за заказ!
+                            </div>
+                        </li>
+                    <?php endif;?>    
+                    <li class="list-group-item local-comment">турбоссылка
+                        <div class="text-hide">
+                            Ссылка для просмотра заказа №<?= $order->getMessageAplId()?> - <?= $turbo?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment" attachment="preorder">Предзаказ PDF <b>WhatsApp</b>
+                        <div class="text-hide">
+                            Предварительный заказ №<?= $order->getMessageAplId()?> для подтверждения звоните <?= $order->getOffice()->getLegalContactPhone()?>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>        
+        <div class="col-xs-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">ошибки, отказы</div>
+                <ul class="list-group">
+                    <li class="list-group-item local-comment">Ошибка VIN
+                        <div class="text-hide">
+                            Указанный Вами VIN не пробивается. Подбор необходимых деталей невозможен!
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Ошибка VIN <b>WhatsApp</b>
+                        <div class="text-hide">
+                            Указанный Вами VIN не пробивается. Просьба проверить VIN на наличие ошибок и в случае их обнаружения, прислать правильный.
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Пришлите VIN <b>WhatsApp</b>
+                        <div class="text-hide">
+                            Для подбора запчастей необходим VIN автомобиля. Пришлите его пожалуйста в WhatsApp. Ваш запрос №<?= $order->getMessageAplId()?>. Обращаем внимание - телефон для звонков  <?= $order->getOffice()->getLegalContactPhone()?>. Наш телефон с WhatsApp только для сообщений - звонки на него не принимаются!
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Проверка по VIN
+                        <div class="text-hide">
+                            Для проверки правильности подбора необходим VIN автомобиля. Ваш запрос №<?= $order->getMessageAplId()?>. Звоните - <?= $order->getOffice()->getLegalContactPhone()?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Нет в наличии
+                        <div class="text-hide">
+                            К сожалению, нужного Вам товара нет в наличии
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Авто помойка
+                        <div class="text-hide">
+                            К сожалению, в связи с отсутствием каталогов, подобрать запчасти на Ваш автомобиль не представляется возможным
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>        
+        <div class="col-xs-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">оплаты картами</div>
+                <ul class="list-group">
+                    <li class="list-group-item local-comment-sb-prepay">Предоплата, ссылка на платежную форму
+                        <div class="text-hide">
+                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает предоплаты в размере
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">100% оплата, ссылка на платежную форму
+                        <div class="text-hide">
+                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р. Для оплаты пройдите по ссылке <?= $order->getAplPaymentLinkClick()?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Предоплата на карту Сбер
+                        <div class="text-hide">
+                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> р. Номер карты Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?> Укажите "<?= $order->getMessageAplId()?>" в поле "Сообщение получателю". После оплаты ОБЯЗАТЕЛЬНО сообщите об оплате <?= $order->getOffice()->getLegalContactPhone()?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">100% оплата на карту Сбер
+                        <div class="text-hide">
+                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р. Номер карты Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?> Укажите "<?= $order->getMessageAplId()?>" в поле "Сообщение получателю". После оплаты ОБЯЗАТЕЛЬНО сообщите об оплате <?= $order->getOffice()->getLegalContactPhone()?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Номер карты, получатель
+                        <div class="text-hide">
+                            Номер карты Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
+                        </div>
+                    </li>
+                </ul>
+<!--                <div class="panel-heading">оплаты через личный кабинет</div>
+                <ul class="list-group">
+                    <li class="list-group-item local-comment">Предоплата
+                        <div class="text-hide">
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">100% оплата
+                        <div class="text-hide">
+                        </div>
+                    </li>
+                </ul>-->
+            </div>
+        </div>        
+        <div class="col-xs-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">прочее</div>
+                <ul class="list-group">
+                    <li class="list-group-item local-comment">предложение со скидкой
+                        <div class="text-hide">
+                            Если Вам еще нужны запчасти - для Вас скидка! Узнайте подробности сейчас - <?= $turbo?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Логин, пароль
+                        <div class="text-hide">
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Номер телефона WhatsApp
+                        <div class="text-hide">
+                            Телефон для сообщений из WhatsApp, Viber, Telegram: <?= $order->getOffice()->getLegalContactWhatsapp()?>. Телефон для звонков: <?= $order->getOffice()->getLegalContactPhone()?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Не звоните в <b>WhatsApp</b>!
+                        <div class="text-hide">
+                            Наш телефон WhatsApp <?= $order->getOffice()->getLegalContactWhatsapp()?> - ТОЛЬКО для сообщений! Убедительная просьба, не пытайтесь на него звонить ни из WhatsApp ни прямыми звонками. Наш телефон для звонков: <?= $order->getOffice()->getLegalContactPhone()?>. Спасибо за понимание!                        
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Мой емайл
+                        <div class="text-hide">
+                            емайл: <?= $currentUser->getEmail()?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Спасибо - Маркет
+                        <div class="text-hide">
+                            Спасибо что выбрали нас! Нам важно знать Ваше мнение о нашей работе!По возможности, оставьте оценку или отзыв - https://clck.ru/YJRpd                            
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>        
+    </div>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary clear-button">Очистить</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="sms-submit">Отправить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('.phone').mask('8 (000) 000-0000', {selectOnFocus: true});
+    
+    $( document ).ready(function() {
+        $('#message').focus();
+    });
+    
+    function updateMode(wa){
+        if (wa){
+            $('#smsMode').val(2); //whatsapp
+        } else {
+            $('#smsMode').val(1); //sms            
+        }        
+    }
+    
+    
+    $('.local-comment').on('click', function() {
+        let str = $(this).children('.text-hide').html();
+        $('#message').val($.trim(str));
+        updateMode($(this).children('b').length);
+        
+        $('input[name="attachment"]').val($(this).attr('attachment'));
+    });
+    
+    $('.local-comment-sb-prepay').on('click', function() {
+        let prepay = prompt("Сумма предоплаты", "<?= $order->getPrepay()?>");
+        let str = $(this).children('.text-hide').html();
+        if (prepay != null) {
+            $.get('/admin/order-prepay/<?= $order->getId()?>?prepay='+prepay, function( data ) {                
+                if (data.prepayLink){
+                    $('#message').val($.trim(str)+' '+prepay+' р. Для оплаты пройдите по ссылке ' + data.prepayLink);
+                    updateMode($(this).children('b').length);
+                }    
+            });
+        }            
+    });    
+    
+    $('.clear-button').on('click', function() {
+        $('#message').val('');
+    });
+
+    $('#sms-submit').on('click', function() {
+        $.post( "/sms/sms", $('#sms-form').serialize())
+          .done(function( data ) {
+            $('#smsMessageModal').modal('hide');
+            alert(data.result);
+//            console.log(data);
+          })
+        .fail(function(data) {
+            alert( "Не ушло!" );
+            console.log(data);
+        });      
+    });    
+</script>

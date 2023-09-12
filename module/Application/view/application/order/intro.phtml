@@ -233,7 +233,7 @@ $form->prepare();
                     <div class="input-group">
                         <?= $this->formElement($form->get('phone')); ?>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default btn-sm sms-message-from-order" modal-url="/admin/sms-form/" title="Отправить сообщение">
+                            <button type="button" class="btn btn-default btn-sm sms-message-from-order" modal-url="/sms/sms-form/" title="Отправить сообщение">
                                 <span class="glyphicon glyphicon-phone"></span>
                             </button>
                         </span>    
@@ -745,7 +745,7 @@ $form->prepare();
             
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 <?php echo $this->partial('/application/order/comment-partial', []); ?>
-<?php echo $this->partial('/admin/index/sms-partial', ['phoneNode' => 'phone', 'idNode' => 'orderId']); ?>
+<?php echo $this->partial('/admin/sms/sms-partial', ['phoneNode' => 'phone', 'idNode' => 'orderId']); ?>
 <?php echo $this->partial('/admin/post/post-partial', ['emailNode' => 'email', 'idNode' => 'orderId']); ?>
 
 <script>
