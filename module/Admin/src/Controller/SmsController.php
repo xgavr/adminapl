@@ -28,7 +28,7 @@ class SmsController extends AbstractActionController
      * AplService manager.
      * @var \Admin\Service\smsManager
      */
-    private $postManager;    
+    private $smsManager;    
     
     /**
      * AdminManager manager.

@@ -13,6 +13,13 @@ $form->get('info')->setAttributes([
 $form->get('oem')->setAttributes([
     'class'=>'form-control enter-add', 
     'placeholder' => 'Номер ОЕ',
+    'onfocus' => "this.select();",
+    ]);
+
+$form->get('oemInfo')->setAttributes([
+    'class'=>'form-control', 
+    'onfocus' => "this.select();",
+    'readonly' => 'true',
     ]);
 
 $form->get('comment')->setAttributes([
@@ -47,6 +54,11 @@ $form->prepare();
                     </span>    
                 </div>    
                 <?= $this->formElementErrors($form->get('oem')); ?>                  
+            </div>
+        </div>    
+        <div class="col-sm-1">                        
+            <div class="form-group form-group-sm">
+                <?= $this->formElement($form->get('oemInfo')); ?>
             </div>
         </div>    
     </div>    
@@ -287,7 +299,8 @@ $form->prepare();
         if (tabName){
             selectionTabId++;
             addSelectedTab(selectionTabId, tabName);
-            $('#selection-tab-list a[href="#selection-tab'+selectionTabId+'"]').tab('show');        
+            $('#selection-tab-list a[href="#selection-tab'+selectionTabId+'"]').tab('show'); 
+            $('input[name="oemInfo"]').val(tabName);
         }    
     }
 
@@ -302,6 +315,10 @@ $form->prepare();
         
         $('.selection-modal-show').attr('disabled', false);
                 
+        $('.selection-name').click(function(){
+            console.log($(this).html());
+        });        
+
         $('.selections-submit').click(function(){
             submitSelectionForm();
         });        
@@ -325,6 +342,10 @@ $form->prepare();
             }    
         });
         
+        $('#selection-tab-list').on('click', '.selection-name', function() {
+            $('input[name="oemInfo"]').val($(this).html());
+        });
+
         selectionGoodTable();
         var inputSelections = '';
         if ($('#order-form').length){

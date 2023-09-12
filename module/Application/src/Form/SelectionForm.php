@@ -63,6 +63,16 @@ class SelectionForm extends Form
                 'label' => 'OE',
             ],
         ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'oemInfo',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'OE',
+            ],
+        ]);
         
 
         // Добавляем поле "comment"
@@ -99,6 +109,18 @@ class SelectionForm extends Form
         
         $inputFilter->add([
                 'name'     => 'comment',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                ],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'oemInfo',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],
