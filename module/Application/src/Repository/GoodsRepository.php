@@ -293,7 +293,7 @@ class GoodsRepository extends EntityRepository
                             $queryBuilder->join('g.oems', 'o')
                                 ->andWhere($orX) 
                                 ->setParameter('4', $q)    
-                                ->addOrderBy('MATCH (o.oe) AGAINST (:field)')    
+                                ->addOrderBy('MATCH (g.code) AGAINST (:field)')    
                                 ->setParameter('field', $q)    
                                 ;
                             break;    
