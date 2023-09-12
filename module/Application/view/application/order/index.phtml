@@ -681,9 +681,9 @@ $this->pageBreadcrumbs()->setItems([
                         url: url,
                         zIndex: 8888
                     });
-                }
+                },
                 isEnabled: function(row) {
-                    return false;
+                    return row.id > 0;
                 }                
             }
         }
