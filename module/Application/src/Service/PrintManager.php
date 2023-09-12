@@ -983,11 +983,15 @@ class PrintManager {
      * @param bool $public
      * @return string 
      */
-    public function preorder($order, $writerType = 'Pdf', $code = false, $public = false)
+    public function preorder($order, $writerType = 'Pdf', $code = false, $public = false, $reportName = null)
     {
         ini_set("pcre.backtrack_limit", "5000000");
         setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
 //        echo strftime("%B %d, %Y", time()); exit;
+        
+        if (empty($reportName)){
+            $reportName = 'Предварительный заказ';
+        }
 
         $folder_name = Order::PRINT_FOLDER;
         if (!is_dir($folder_name)){
@@ -1000,10 +1004,10 @@ class PrintManager {
         $reader = IOFactory::createReader($inputFileType);
         $spreadsheet = $reader->load(Order::TEMPLATE_PREORDER);
         $spreadsheet->getProperties()
-                ->setTitle($order->getDocPresent('Предварительный заказ'))
+                ->setTitle($order->getDocPresent($reportName))
                 ;
         $sheet = $spreadsheet->setActiveSheetIndex(0)
-                ->setCellValue('B3', $order->getDocPresent('Предварительный заказ'))
+                ->setCellValue('B3', $order->getDocPresent($reportName))
                 ->setCellValue('B5', $order->getCompany()->getName())
                 ->setCellValue('B7', $order->getOffice()->getLegalContactSmsAddress())
                 ->setCellValue('AD13', number_format($order->getTotal(), 2, ',', ' '))
@@ -1051,13 +1055,13 @@ class PrintManager {
         switch ($writerType){
             case 'Pdf':
                 $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
-                $outFilename = $order->getPrintName($writerType, 'Предварительный заказ');
+                $outFilename = $order->getPrintName($writerType, $reportName);
                 $writer->save($outFilename);
                 break;
             case 'Xls':
             case 'Xlsx':
                 $writer = IOFactory::createWriter($spreadsheet, $writerType);
-                $outFilename = $order->getPrintName($writerType, 'Предварительный заказ');
+                $outFilename = $order->getPrintName($writerType, $reportName);
 //                $writer->writeAllSheets();
                 $writer->save($outFilename);
                 break;

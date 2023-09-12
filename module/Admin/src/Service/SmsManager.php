@@ -202,7 +202,7 @@ class SmsManager {
                     $order = $orderFilter->filter($options['name']);
                     
                     if ($order){
-                        $url = $this->printManager->preorder($order, 'Pdf', false, true);
+                        $url = $this->printManager->preorder($order, 'Pdf', false, true, $options['name'].'_'. random_int(10000, 99999));
                     }  
                 }    
             }
