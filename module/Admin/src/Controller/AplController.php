@@ -17,7 +17,7 @@ class AplController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
@@ -789,6 +789,7 @@ class AplController extends AbstractActionController
         } 
         
         $result = $this->aplOrderService->sendOrder($order, true);
+        $this->entityManager->refresh($order);
         
         $query = $this->entityManager->getRepository(\Application\Entity\Order::class)
                 ->findAllOrder(['orderId' => $order->getId()]);
@@ -797,7 +798,7 @@ class AplController extends AbstractActionController
         return new JsonModel([
             'result' => $result,
             'data' => $data,
-            'orderAplId' => $order->getAplId(),
+            'orderAplId' => ($order->getAplId()) ? $order->getAplId():null,
         ]);
     }        
 
