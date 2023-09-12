@@ -676,13 +676,12 @@ $form->prepare();
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <div class="input-group">
-                    <button type="button" class="btn btn-info btn-sm unload-order-from-apl" title="Обновить из Апл" <?= ($orderId) ? '':'disabled'?>>
-                        <span class="glyphicon glyphicon-refresh"></span>
+                <div class="form-group">
+                    <button type="button" class="btn btn-info btn-sm unload-order-from-apl" title="Загрузить из Апл" <?= ($orderId) ? '':'disabled'?>>
+                        <span class="glyphicon glyphicon-arrow-down"></span> Загрузить из Апл
                     </button>
-
-                    <button type="button" class="btn btn-default btn-sm send-order-to-apl" title="Обновить в Апл" <?= ($orderId) ? '':'disabled'?>>
-                        <span class="glyphicon glyphicon-refresh"></span>
+                    <button type="button" class="btn btn-default btn-sm send-order-to-apl" title="Отправить в Апл" <?= ($orderId) ? '':'disabled'?>>
+                        <span class="glyphicon glyphicon-arrow-up"></span> Отправить в Апл
                     </button>
                 </div>    
 
@@ -816,28 +815,41 @@ $form->prepare();
     });  
         
     $(document).on('click', '.unload-order-from-apl', function (e) {
-        var dialog = bootbox.dialog({
-            message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста, подождите, пока мы что-то делаем...</p>',
-            closeButton: false
-        });        
-        $.get('/apl/unload-order-id/<?= $orderId?>', function(data){
-            if (data.result == 'ok'){
-                window.location.reload();
-            }
-        });            
+        bootbox.confirm('Заказ будет перезаписан данными с сайта АПЛ?',
+            function(result) {
+                if (result){
+                    var dialog = bootbox.dialog({
+                        message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста, подождите, пока мы что-то делаем...</p>',
+                        closeButton: false
+                    });        
+                    $.get('/apl/unload-order-id/<?= $orderId?>', function(data){
+                        if (data.result == 'ok'){
+                            window.location.reload();
+                        }
+                    });                                
+                }
+        });
     });
 
     $(document).on('click', '.send-order-to-apl', function (e) {
-        var dialog = bootbox.dialog({
-            message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста, подождите, пока мы что-то делаем...</p>',
-            closeButton: false
-        });        
-        $.get('/apl/send-order-id/<?= $orderId?>', function(data){
-            dialog.modal('hide');
-            if (data.result == 'ok'){
-                //window.location.reload();
-            }
-        });            
+        bootbox.confirm('Обновить заказ на сайте АПЛ?',
+            function(result) {
+                if (result){
+                    var dialog = bootbox.dialog({
+                        message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста, подождите, пока мы что-то делаем...</p>',
+                        closeButton: false
+                    });        
+                    $.get('/apl/send-order-id/<?= $orderId?>', function(data){
+                        dialog.modal('hide');
+                        if (data.orderAplId > 0){
+                            $('#aplId').val(data.orderAplId);
+                            enableExAplNodes();
+                        } else {
+                            
+                        }
+                    });            
+                }
+        });
     });
     
     function submitForm(){
@@ -863,8 +875,7 @@ $form->prepare();
                     $('#legal').val(data.legal);
                     $('#recipient').val(data.recipient);
                     $('#bankAccount').val(data.bankAccount);
-                    enableSms();
-                    enablePost();
+                    enableExAplNodes();
                     if (reload && data.id){
                         window.location.href = '/order/intro/'+data.id;
                     } else {
@@ -1010,14 +1021,11 @@ $form->prepare();
         });    
     }
 
-    function enableSms(){
+    function enableExAplNodes(){
         let aplId = Number($('#aplId').val());
         $('.sms-message-modal-show').attr('disabled', !aplId);
-    }
-    
-    function enablePost(){
-        let aplId = Number($('#aplId').val());
         $('.post-message-modal-show').attr('disabled', !aplId);
+        $('.unload-order-from-apl').attr('disabled', !aplId);
     }
     
     $table.on('editable-init.bs.table', function(e){
@@ -1128,8 +1136,7 @@ $form->prepare();
             }            
         }); 
         
-        enableSms();
-        enablePost();
+        enableExAplNodes();
         
         $("#vinLength").html($('input[name="vin"]').val().length);
 
@@ -1226,7 +1233,7 @@ $form->prepare();
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
         btn += ' onclick="removeTableRowByUniqueId('+value+')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
     }    

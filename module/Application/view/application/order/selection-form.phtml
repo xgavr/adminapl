@@ -146,6 +146,18 @@ $form->prepare();
             selectionTabId--;
     }
 
+    function updateGoodTableTotal(){
+        var amount = 0;
+        var data = $('#selectionGoodTable').bootstrapTable('getData');
+        $.each(data, function( index, value ) {
+            amount += Math.round(value.price*value.num*100)/100;
+        });
+//        console.log($('#selectionGoodTable').find('th[data-field="amount"]'));
+        var totalNode = $('#selectionGoodTable').find('th[data-field="amount"]').find('.th-inner');
+        totalNode.html(amount.toFixed(0));
+        totalNode.css('text-align','right');
+    }
+    
     function addRowToOrderGoodTable(tableId, rowId){
         var oem = $("ul#selection-tab-list li.active").find('.selection-name').html();
         let row = $('#'+tableId).bootstrapTable('getRowByUniqueId', rowId);
@@ -169,7 +181,8 @@ $form->prepare();
 //        console.log(newRow);
         var rows = [];
         rows.push(newRow);
-        $('#selectionGoodTable').bootstrapTable('prepend', rows);                        
+        $('#selectionGoodTable').bootstrapTable('prepend', rows); 
+        updateGoodTableTotal();
     }
     
     function removeSelectionTableRowByUniqueId(index){
@@ -208,12 +221,22 @@ $form->prepare();
             }, {
                 field: 'oem',title: 'OE', visible: false
             }],
+            onPostBody: function(res){
+                $('#selectionGoodTable').on('editable-save.bs.table', function (e, field, row, old, $el) {
+                    updateGoodTableTotal();
+                });               
+            },
             <?php if ($order): ?>
-                url: '/order/good-content/<?= $order->getId() ?>'        
+                url: '/order/good-content/<?= $order->getId() ?>',
+                onLoadSuccess: function(res){
+                    updateGoodTableTotal();
+                }                         
             <?php else: ?>                
                 data: data
             <?php endif; ?>    
-        });        
+        });   
+        
+        updateGoodTableTotal();
     }
     
     function addSelectedTable(selectionTableId, tabName){
@@ -366,11 +389,11 @@ $form->prepare();
     function stActiveFormatter(value, row){
         let btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs"';
+        btn += ' class="btn btn-default btn-xs"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
         btn += ' onclick="removeSelectionTableRowByUniqueId('+value+')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
     }  

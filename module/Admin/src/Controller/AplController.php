@@ -797,6 +797,7 @@ class AplController extends AbstractActionController
         return new JsonModel([
             'result' => $result,
             'data' => $data,
+            'orderAplId' => $order->getAplId,
         ]);
     }        
 
