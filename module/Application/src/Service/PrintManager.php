@@ -66,6 +66,16 @@ class PrintManager {
         return self::TEMPLATE_FOLDER;
     }        
     
+    /**
+     * Переименовать файл в папке doc
+     * @param sting $oldFileName
+     * @param string $newFileName
+     */
+    public function renameIfNeed($oldFileName, $newFileName)
+    {
+        return rename(self::PUBLIC_DOC_FOLDER.'/'.$oldFileName, self::PUBLIC_DOC_FOLDER.'/'.$newFileName);        
+    }
+    
     private function _addTemplatesFolder()
     {
         //Создать папку для шаблонов

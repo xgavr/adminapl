@@ -202,13 +202,15 @@ class SmsManager {
                     $order = $orderFilter->filter($options['name']);
                     
                     if ($order){
-                        $url = $this->printManager->preorder($order, 'Pdf', false, true, $options['name'].'_'. random_int(10000, 99999));
+                        $fileName = $this->printManager->preorder($order, 'Pdf', false, true);
                     }  
                 }    
             }
-            if ($url){
-//                    var_dump('https://adminapl.ru/doc/'.$url);
-                $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url=https://adminapl.ru/doc/'.$url);
+            if ($fileName){
+                if ($this->printManager->renameIfNeed($fileName, random_int(10000, 99999).'.pdf')){
+    //                    var_dump('https://adminapl.ru/doc/'.$url);
+                    $response = file_get_contents(self::WAMM_API.'/file_to/'.$settings['wamm_api_id'].'/?phone='.$options['phone'].'&url=https://adminapl.ru/doc/'.$url);
+                }
             }    
         } 
         if ($response){
