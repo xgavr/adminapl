@@ -191,6 +191,7 @@ class SmsManager {
      */
     public function wammFileTo($options)
     {
+//        var_dump($options); exit;
         $settings = $this->adminManager->getSettings();
         $response = $url = false;
         if (self::WAMM_API && $settings['wamm_api_id'] && !empty($options['attachment'])){
@@ -270,7 +271,11 @@ class SmsManager {
      */
     public function wamm($options)
     {
-        return $this->wammContactTo($options) || $this->wammMsgTo($options) || $this->wammFileTo($options);
+//        var_dump($options); exit;
+        $contactTo = $this->wammContactTo($options);
+        $msgTo = $this->wammMsgTo($options);
+        $fileTo = $this->wammFileTo($options);
+        return $contactTo || $msgTo || $fileTo;
     }
 
     /**
