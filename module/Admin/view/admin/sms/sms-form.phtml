@@ -289,7 +289,9 @@ $form->prepare();
         $.post( "/sms/sms", $('#sms-form').serialize())
           .done(function( data ) {
             $('#smsMessageModal').modal('hide');
-            alert(data.result);
+            if (data.result){
+                alert('Отправлено!');
+            }    
 //            console.log(data);
           })
         .fail(function(data) {
