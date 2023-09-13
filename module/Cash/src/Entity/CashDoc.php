@@ -572,6 +572,17 @@ class CashDoc {
             default : return '';    
         }
     }    
+    
+    public function getAplParentParent()
+    {
+        if ($this->getCash()){
+            return $this->getCash()->getOffice()->getAplId();
+        }
+        if ($this->getUser()){
+            return $this->getUser()->getOffice()->getAplId();
+        }
+        return;
+    }
 
     public function isMutual()
     {
