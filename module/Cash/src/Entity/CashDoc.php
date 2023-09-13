@@ -535,10 +535,16 @@ class CashDoc {
             case $this::KIND_OUT_USER:
                 return 'Users';
             case $this::KIND_OUT_SALARY:
+            case $this::KIND_OUT_COURIER:
                 return 'Staffs';
             case $this::KIND_IN_RETURN_SUPPLIER:
             case $this::KIND_OUT_SUPPLIER:                
                 return 'Suppliers';
+            case $this::KIND_OUT_REFILL:
+            case $this::KIND_IN_REFILL:
+                return 'Tills';    
+            case $this::KIND_OUT_COST:
+                return 'Costs';    
             default : return '';    
         }
     }    
@@ -556,6 +562,13 @@ class CashDoc {
             case $this::KIND_OUT_SALARY:
             case $this::KIND_OUT_USER:
                 return $this->getUserRefill()->getAplId();
+            case $this::KIND_OUT_REFILL:
+            case $this::KIND_IN_REFILL:
+                return $this->getCashRefill()->getAplId();
+            case $this::KIND_OUT_COST:
+                return $this->getCost()->getAplId();    
+            case $this::KIND_OUT_COURIER:
+                return $this->getOrder()->getClientAplId();    
             default : return '';    
         }
     }    

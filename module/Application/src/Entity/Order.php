@@ -941,6 +941,14 @@ class Order {
         return $this->contact->getClient();
     }
 
+    public function getClientAplId() 
+    {
+        if ($this->contact->getClient()){
+            return $this->contact->getClient()->getAplId();
+        }
+        return;
+    }
+
     /**
      * Задает связанный contact.
      * @param Contact $contact
