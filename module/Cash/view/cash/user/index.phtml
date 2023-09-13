@@ -179,10 +179,9 @@
     }
     
     function idFormatter(value, row){
-        if (row.aplId > 0){
-            return value + ' ('+row.aplId+')';
+        if (row.cashDoc.aplId){
+            return '<nobr>' + value + ' (' + row.cashDoc.aplId + ')</nobr>';
         }
-        
         return value;
     }    
     
@@ -269,11 +268,11 @@
     }    
     
     function activeFormatter(value, row){
-        var btn = '';
-        if (row.cashDoc.user){
+        var btn = '<nobr>';
+        if (row.cashDoc.user != <?= CashDoc::STATUS_EX_RECD?>){
             if (row.cashDoc.kind<10){
                 var url = '/accountant/edit-user-in/'+row.cashDoc.id;
-                btn = '<button';
+                btn += '<button';
                 btn += ' type="button"';
                 btn += ' class="btn btn-default btn-xs user-in-modal-show"';
                 btn += ' aria-label="Left Align"'; 
@@ -291,7 +290,17 @@
                 btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
                 btn += '</button>';
             }    
+
+            var url = '/apl/send-cash-doc/'+row.cashDoc.id;
+            btn += ' <button';
+            btn += ' type="button"';
+            btn += ' class="btn btn-info btn-xs send-cash-doc"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' modal-url="'+url+'">';
+            btn += '<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>';
+            btn += '</button>';
         }    
+        btn += '</nobr>';
         return btn;
     }    
     
