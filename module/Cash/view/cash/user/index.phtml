@@ -158,6 +158,19 @@
         $(document).on('change', '#periodSelect', function (e) {
             $('#dateStart').attr('type', $(this).val());
         });
+        $(document).on('click', '.send-cash-doc', function (e) {
+            var url = $(this).attr('modal-url');
+//            console.log(url);
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: true
+            });
+            $.get( url, function(data){
+//                console.log(data);
+//                $table.bootstrapTable('updateByUniqueId', {id: id, row: data.data});
+                dialog.modal('hide');
+            });
+        });
     });
     
     function queryParams(params) {
