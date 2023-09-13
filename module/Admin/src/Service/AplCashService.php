@@ -499,6 +499,7 @@ class AplCashService {
                 'ds' => $cashDoc->getDateOper(),
                 'comment' => $cashDoc->getComment(),
                 'info' => $cashDoc->getInfo(),
+                'parentparent' => $cashDoc->getCash()->getOffice()->getAplId(),
             ];
 
             $post = [

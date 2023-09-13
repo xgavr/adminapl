@@ -532,6 +532,8 @@ class CashDoc {
             case $this::KIND_IN_PAYMENT_CLIENT:
             case $this::KIND_OUT_RETURN_CLIENT:
                 return 'Users';
+            case $this::KIND_OUT_SALARY:
+                return 'Staffs';
             case $this::KIND_IN_RETURN_SUPPLIER:
             case $this::KIND_OUT_SUPPLIER:                
                 return 'Suppliers';
