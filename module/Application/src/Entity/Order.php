@@ -454,7 +454,7 @@ class Order {
     
     public function getAplTurboId($passphrase)
     {
-        return "https://autopartslist.ru/index/turbo?order=".base64_encode($this->_encrypt($this->aplId, $passphrase));
+        //return "https://autopartslist.ru/index/turbo?order=".base64_encode($this->_encrypt($this->aplId, $passphrase));
 //        return '';
     }
 
@@ -472,7 +472,7 @@ class Order {
     public function getAplPaymentLink($prepay = 0)
     {
         $sum = ($prepay) ? $prepay:$this->total;
-        return 'https://autopartslist.ru/payments/sb-register/amount/'.$sum.'/id/'.$this->aplId;
+        ///return 'https://autopartslist.ru/payments/sb-register/amount/'.$sum.'/id/'.$this->aplId;
     }
 
     public function getAplPaymentLinkClick($prepay = 0)
@@ -483,7 +483,7 @@ class Order {
 
     public function getAplIdLink() 
     {
-        return "<a href='https://autopartslist.ru/admin/orders/view/id/{$this->aplId}' target=_blank>{$this->aplId}</a>";
+        //return "<a href='https://autopartslist.ru/admin/orders/view/id/{$this->aplId}' target=_blank>{$this->aplId}</a>";
     }
 
     public function setAplId($aplId) 
