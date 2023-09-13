@@ -514,7 +514,7 @@ class AplCashService {
                 'sf' =>     $cashDoc->getAplSf(),
                 'bo' =>     $cashDoc->getAplBo(),
                 'link' =>   0,
-                //'check' =>  $cashDoc->getCheckStatusAsApl(),
+                'check' =>  $cashDoc->getCheckStatusAsApl(),
                 'created' => $cashDoc->getDateOper(),
                 'aa' =>     1
             ];
