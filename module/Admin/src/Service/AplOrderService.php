@@ -731,17 +731,17 @@ class AplOrderService {
         $startTime = time();
         $start = 0;
         
-//        while (true){
-//            if ($this->unloadOrder($start, null, null, $debug)) {
-//                usleep(100);
-//                if (time() > $startTime + 870){
-//                    return;
-//                }
-//            } else {
-//                break;
-//            }
-//            $start++;
-//        }    
+        while (true){
+            if ($this->unloadOrder($start, null, null, $debug)) {
+                usleep(100);
+                if (time() > $startTime + 870){
+                    return;
+                }
+            } else {
+                break;
+            }
+            $start++;
+        }    
         
         while (true){
             if ($order = $this->sendOrders($debug)) {
