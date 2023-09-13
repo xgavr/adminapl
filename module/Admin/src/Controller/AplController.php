@@ -802,6 +802,32 @@ class AplController extends AbstractActionController
         ]);
     }        
 
+    public function sendCashDocAction()
+    {                
+        $cashDocId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий заказ в базе данных.    
+        $cashDoc = $this->entityManager->getRepository(\Cash\Entity\CashDoc::class)
+                ->find($cashDocId);  
+        	
+        if ($cashDoc == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        $result = $this->aplCashService->sendPayment($cashDoc);
+        //usleep(100);
+        
+//        $query = $this->entityManager->getRepository(\Cash\Entity\CashDoc::class)
+//                ->findAllOrder(['orderId' => $cashDoc->getId()]);
+//        $data = $query->getOneOrNullResult(2);
+        
+        return new JsonModel([
+            'result' => $result,
+//            'data' => $data,
+        ]);
+    }        
+
     public function sendCommentAction()
     {                
         $result = $this->aplOrderService->sendComments(1);

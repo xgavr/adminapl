@@ -353,8 +353,9 @@ class CashRepository extends EntityRepository
     
     /**
      * Найти записи для отправки в АПЛ
+     * @param CashDoc $cashDoc
      */
-    public function findForUpdateApl()
+    public function findForUpdateApl($cashDoc = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -364,14 +365,24 @@ class CashRepository extends EntityRepository
             ->from(CashDoc::class, 'cd')
             ->where('cd.statusEx = ?1')
             ->setParameter('1', CashDoc::STATUS_EX_NEW)    
-            ->setMaxResults(1)    
+            ->setMaxResults(1)   
+                
+            ->andWhere('cd.aplId > 0')
                 ;
-            $orX = $queryBuilder->expr()->orX();
-            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_IN_PAYMENT_CLIENT));
-            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_OUT_RETURN_CLIENT));
-            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_IN_RETURN_SUPPLIER));
-            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_OUT_SUPPLIER));
-            $queryBuilder->andWhere($orX);
+                
+            if ($cashDoc){
+                $queryBuilder->where('cd.id = ?1')
+                   ->setParameter('1', $cashDoc->getId())
+                        ;
+            }    
+                
+                
+//            $orX = $queryBuilder->expr()->orX();
+//            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_IN_PAYMENT_CLIENT));
+//            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_OUT_RETURN_CLIENT));
+//            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_IN_RETURN_SUPPLIER));
+//            $orX->add($queryBuilder->expr()->eq('cd.kind', CashDoc::KIND_OUT_SUPPLIER));
+//            $queryBuilder->andWhere($orX);
         
         return $queryBuilder->getQuery()->getOneOrNullResult();                
         
