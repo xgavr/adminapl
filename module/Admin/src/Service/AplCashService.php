@@ -497,8 +497,8 @@ class AplCashService {
             $desc = [
                 'kind' => $cashDoc->getKindAsApl(),
                 'ds' => $cashDoc->getDateOper(),
-                'comment' => $cashDoc->getComment(),
-                'info' => $cashDoc->getInfo(),
+                'info' => $cashDoc->getComment(),
+                'comment' => $cashDoc->getInfo(),
                 'parentparent' => $cashDoc->getCash()->getOffice()->getAplId(),
             ];
 
