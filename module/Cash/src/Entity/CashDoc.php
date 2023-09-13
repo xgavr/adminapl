@@ -548,6 +548,8 @@ class CashDoc {
             case $this::KIND_IN_RETURN_SUPPLIER:
             case $this::KIND_OUT_SUPPLIER:                
                 return ($this->legal->getSupplier()) ? $this->legal->getSupplier()->getAplId():null;
+            case $this::KIND_OUT_SALARY:
+                return $this->getUserRefill()->getAplId();
             default : return '';    
         }
     }    
