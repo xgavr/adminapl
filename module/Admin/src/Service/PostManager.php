@@ -24,6 +24,7 @@ use Admin\Filter\EmailFromStr;
 use Admin\Entity\PostLog;
 use User\Entity\User;
 use Application\Entity\Order;
+use Application\Filter\OrderFromIdZ;
 
 /**
  * Description of PostManager
@@ -83,7 +84,8 @@ class PostManager {
      */
     public function send($options)
     {
-        if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') return; //если отладка на локальной машине, либо использовать sendmail
+        //if ($_SERVER['SERVER_ADDR'] == '127.0.0.1') return; //если отладка на локальной машине, либо использовать sendmail
+//        var_dump($options); exit;
         
         $breaks = array("<br />","<br>","<br/>");  
         $text = strip_tags(str_ireplace($breaks, PHP_EOL, $options['body']));
@@ -100,8 +102,10 @@ class PostManager {
         
         $parts = [$html];
         
-        $order = $this->entityManager->getRepository(Order::class)
-                ->find($options['orderId']);
+//        $order = $this->entityManager->getRepository(Order::class)
+//                ->find($options['orderId']);
+        $orderFilter = new OrderFromIdZ($this->entityManager);
+        $order = $orderFilter->filter($options['orderId']);
         
         if ($order){
             if (!empty($options['bill'])){
@@ -180,7 +184,7 @@ class PostManager {
         $transport->setOptions($smtpOptions);
         try {
             $transport->send($message);
-        } catch (Laminas\Mail\Protocol\Exception\RuntimeException $ex){
+        } catch (\Laminas\Mail\Protocol\Exception\RuntimeException $ex){
             return $ex->getMessage();
         }
         return 'ok';

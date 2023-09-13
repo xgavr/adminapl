@@ -4,6 +4,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\IndexController;
 use Application\Service\ContactManager;
+use User\Service\UserManager;
 /**
  * This is the factory for IndexController. Its purpose is to instantiate the
  * controller and inject dependencies into it.
@@ -14,8 +15,9 @@ class IndexControllerFactory implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $contactManager = $container->get(ContactManager::class);
+        $userManager = $container->get(UserManager::class);
         
         // Instantiate the controller and inject dependencies
-        return new IndexController($entityManager, $contactManager);
+        return new IndexController($entityManager, $contactManager, $userManager);
     }
 }

@@ -180,8 +180,10 @@ class UserManager
         }
         
         $user->setEmail($data['email']);
-        $user->setFullName($data['full_name']);        
-        $user->setStatus($data['status']);
+        $user->setFullName($data['full_name']);  
+        if (!empty($data['status'])){
+            $user->setStatus($data['status']);
+        }    
         if (isset($data['aplId'])){
             $user->setAplId($data['aplId']);
         }    
@@ -203,7 +205,9 @@ class UserManager
         }    
 
         // Assign roles to user.
-        $this->assignRoles($user, $data['roles']);
+        if (!empty($data['roles'])){
+            $this->assignRoles($user, $data['roles']);
+        }    
         
         $currentDate = date('Y-m-d H:i:s');
         $legalContact = $user->getLegalContact();

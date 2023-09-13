@@ -1,103 +1,160 @@
 <?php
-$this->headTitle('Настройки');
-$this->mainMenu()->setActiveItemId('settings');
+$this->headTitle('Edit User');
+
+$this->mainMenu()->setActiveItemId('users');
+
 $this->pageBreadcrumbs()->setItems([
-            'Главная'=>$this->url('home'),
-            'Настройки пользователя'=>$this->url('application', ['action'=>'settings']),
+            'Home'=>$this->url('home'),
+            'Edit User'=>$this->url('application', ['action'=>'settings', 'id'=>$user->getId()])
             ]);
 
-$phoneForm = $this->phoneForm;
-$phoneForm->get('phone')->setAttributes([
-    'class'=>'form-control', 
-    'placeholder'=>'8 (000) 000-0000',
-    'aria-describedby' => "basic-addon2",
+$form->get('aplId')->setAttributes([
+    'class'=>'form-control',
+    'readonly' => true, 
     ]);
 
-$phoneForm->get('submit')->setAttributes(['class'=>'btn btn-outline-secondary', 'value' => 'Добавить']);
-$phoneForm->prepare();
+$form->get('email')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'name@example.com'
+    ]);
 
-$this->headScript()
-            ->appendFile($this->basePath('js/jquery.mask.min.js'))
-        ;
+$form->get('mailPassword')->setAttributes([
+    'class'=>'form-control', 
+    ]);
 
+$form->get('sign')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('full_name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'John Doe'
+    ]);
+
+$form->get('birthday')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control',
+    'disabled' => true,
+    ]);
+
+$form->get('roles')->setAttributes([
+    'class'=>'form-control',
+    'rows' => 20,
+    'readonly' => true,
+    ]);
+
+$form->get('office')->setAttributes([
+    'class'=>'form-control'
+    ]);
+
+$form->get('submit')
+        ->setAttributes(['class'=>'btn btn-primary'])
+        ->setValue('Сохранить');
+
+$form->prepare();
 ?>
 
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<h1>Edit User <?= $this->escapeHtml($user->getEmail()) ?></h1>
+<p>
+    <a class="btn btn-default" href="<?= $this->url('members',
+            ['action'=>'change-password', 'id'=>$user->getId()]); ?>">
+        <span class="glyphicon glyphicon-asterisk"></span> Изменить пароль
+    </a>        
+</p>
 <div class="row">
     <div class="col-md-6">
-        <h2>Настройки пользователя</h2>
-        <p>
-            <a class="btn btn-default" href="<?= $this->url('members', 
-                    ['action'=>'edit', 'id'=>$user->getId()]); ?>">
-                <span class="glyphicon glyphicon-pencil" ></span> Редактировать
-            </a>
-            <a class="btn btn-default" href="<?= $this->url('members',
-                    ['action'=>'change-password', 'id'=>$user->getId()]); ?>">
-                <span class="glyphicon glyphicon-asterisk"></span> Изменить пароль
-            </a>    
-        </p>
-        <table class="table table-striped table-bordered">
-             <tr>
-                <th>ID:</th>
-                <td><?= $this->escapeHtml($user->getId()) ?></td>
-            </tr>
-            <tr>
-                <th>E-mail:</th>
-                <td><?= $this->escapeHtml($user->getEmail()) ?></td>
-            </tr>
-            <tr>
-                <th>ФИО:</th>
-                <td><?= $this->escapeHtml($user->getFullName()) ?></td>
-            </tr>
-            <tr>
-                <th>Дата регистрации:</th>
-                <td><?= $this->escapeHtml($user->getDateCreated()) ?></td>
-            </tr>
-        </table>
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('aplId')); ?>
+            <?= $this->formElement($form->get('aplId')); ?>
+            <?= $this->formElementErrors($form->get('aplId')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('full_name')); ?>
+            <?= $this->formElement($form->get('full_name')); ?>
+            <?= $this->formElementErrors($form->get('full_name')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('birthday')); ?>
+            <?= $this->formElement($form->get('birthday')); ?>
+            <?= $this->formElementErrors($form->get('birthday')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('status')); ?>
+            <?= $this->formElement($form->get('status')); ?>
+            <?= $this->formElementErrors($form->get('status')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('office')); ?>
+            <?= $this->formElement($form->get('office')); ?>
+            <?= $this->formElementErrors($form->get('office')); ?>                  
+        </div>
+        
+        <?= $this->formElement($form->get('submit')); ?>
+        
     </div>
     <div class="col-md-6">
-        <h2>Контактные телефоны</h2>
-        <p>
-            <?= $this->form()->openTag($phoneForm); ?>
-            <div class="input-group">
-                <?= $this->formElement($phoneForm->get('phone')); ?>
-                <div class="input-group-btn">
-                    <?= $this->formElement($phoneForm->get('submit')); ?>
-                </div>    
-            </div>    
-            <div class="input-group">
-                <?= $this->formElementErrors($phoneForm->get('phone')); ?>                  
-            </div>    
-
-            <?= $this->form()->closeTag(); ?>                        
-        </p>
         
-        <table class="table table-striped table-bordered">
-            <?php foreach ($user->getContacts() as $contact):?>
-                <?php foreach ($contact->getPhones() as $phone): ?>
-                    <tr>
-                       <th class="phone_name"><?= $phone->getName() ?></th>
-                       <td>
-                            <a class="btn btn-danger" href="<?= $this->url('application',
-                                    ['action'=>'delete-phone'], ['query' => ['id' => $phone->getId()]]); ?>">
-                                <span class="glyphicon glyphicon-remove"></span> Удалить
-                            </a>                           
-                       </td>
-                   </tr>
-                <?php endforeach; ?>
-            <?php endforeach; ?>
-        </table>
-    </div>
-</div>
+        <div class="form-group form-inline">
+            <?= $this->formLabel($form->get('email')); ?>
+            <?= $this->formElement($form->get('email')); ?>
+            <?= $this->formElementErrors($form->get('email')); ?>                  
+
+            <?= $this->formLabel($form->get('mailPassword')); ?>
+            <?= $this->formElementErrors($form->get('mailPassword')); ?>                  
+            <div class="input-group">
+                <?= $this->formElement($form->get('mailPassword')); ?>
+                <span class="input-group-btn">
+                    <button class="btn btn-default password-generator" type="button" data-toggle="tooltip" data-placement="top" title="Генератор пароля">
+                        <span class="glyphicon glyphicon-qrcode"></span>
+                    </button>
+                </span>                                                            
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('sign')); ?>
+            <?= $this->formElement($form->get('sign')); ?>
+            <?= $this->formElementErrors($form->get('sign')); ?>                  
+        </div>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   
 
 <script>
-//    var options =  {
-//        onKeyPress: function(cep, e, field, options) {
-////          var masks = ['+7 (000) 000-0000', '8 (000) 000-0000'];
-////          var mask = masks[0];
-////          console.log(cep.charAt(0));
-//////          if (cep.charAt(0) == 8){ mask = masks[1];}
-////          var mask = (cep.charAt(0) == 8) ? masks[1] : masks[0];
-////          $('.phone_with_ddd').mask(mask, options);
-//    }};
-    $('#phone_name').mask('8 (000) 000-0000', {selectOnFocus: false});
-</script>    
+    $( document ).ready(function() {
+        $('textarea[name="sign"]').summernote({
+            lang: 'ru-RU', // default: 'en-US'
+            height: 200
+        });
+        
+    });
+    
+    $('.password-generator').on('click', function() {
+        $.ajax({
+            type: 'GET',
+            url: '/admin/password-generator/'
+        })
+            .done(function (data) {
+                if (data){
+                    $('input[name=mailPassword]').val(data['password']);
+                }
+            })
+            .fail(function (e) {
+                console.log(e);
+            });    
+    });    
+    
+</script>

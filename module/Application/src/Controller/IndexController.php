@@ -15,6 +15,8 @@ use Application\Entity\Contact;
 use Application\Entity\Phone;
 use Application\Form\PhoneForm;
 use Application\Entity\Email;
+use User\Form\UserForm;
+use Company\Entity\Office;
 
 
 class IndexController extends AbstractActionController
@@ -22,23 +24,30 @@ class IndexController extends AbstractActionController
     
     /**
      * Entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * Contact manager.
-     * @var Application\Srvice\ContactManager
+     * @var \Application\Srvice\ContactManager
      */
     private $contactManager;
+
+    /**
+     * User manager.
+     * @var User\Srvice\UserManager
+     */
+    private $userManager;
     
     /**
      * Constructor. Its purpose is to inject dependencies into the controller.
      */
-    public function __construct($entityManager, $contactManager) 
+    public function __construct($entityManager, $contactManager, $userManager) 
     {
        $this->entityManager = $entityManager;
        $this->contactManager = $contactManager;
+       $this->userManager = $userManager;
     }
 
     
@@ -69,36 +78,59 @@ class IndexController extends AbstractActionController
             }    
         }
         
-        $phoneform = new PhoneForm($this->entityManager);
+        $form = new UserForm('update', $this->entityManager, $user);
+
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy([]);
+        $officeList = [];
+        foreach ($offices as $office) {
+            $officeList[$office->getId()] = $office->getName();
+        }
+        
+        $form->get('office')->setValueOptions($officeList);
         
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
-            $phoneform->setData($data);
-            
-            if ($phoneform->isValid()) {
 
-                $data['phone'] = $data['name'];
-                unset($data['name']);
+            if ($user->getEmail() == $this->identity() && $user->getEmail() != $data['email']){
+                $logout = true;
+            } else {
+                $logout = false;
+            } 
+                    
+                // Update the user.
+            $result = $this->userManager->updateUser($user, $data);
 
-                $contacts = $user->getContacts();
-                if (count($contacts)){
-                    foreach ($contacts as $contact){
-                        $this->contactManager->addPhone($contact, $data, true);
-                    }                    
-                } else {
-                    $data['full_name'] = $data['name'] = $user->getFullName();
-                    $data['status'] = Contact::STATUS_ACTIVE;
-                    $this->contactManager->addNewContact($user, $data);
-                }
+            if ($logout){
+                return $this->redirect()->toRoute('logout');
+
+            } else {
+                $this->flashMessenger()->addSuccessMessage(
+                        'Настройки сохранены.');
                 
-                $phoneform->setData(['name' => null]);
+                return $this->redirect()->toRoute('application', 
+                    ['action'=>'settings']);
+
             }
-        }    
+
+            
+        }  else {
+            $form->setData(array(
+                    'aplId' => $user->getAplId(),
+                    'full_name'=>$user->getFullName(),
+                    'birthday' => $user->getBirthday(),
+                    'email'=>$user->getEmail(),
+                    'sign' => $user->getSign(),
+                    'mailPassword' => $this->userManager->userMailPassword($user),
+                    'office' => ($user->getOffice()) ? $user->getOffice()->getId():null,
+                ));
+            
+        }   
         
         return new ViewModel([
             'user' => $user,
-            'phoneForm' => $phoneform,
+            'form' => $form
         ]);
     }    
     

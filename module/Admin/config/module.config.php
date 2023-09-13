@@ -147,8 +147,8 @@ return [
             Controller\IndexController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+admin.manage'],
-                ['actions' => 'telegramm-hook', 'allow' => '*'],
-                ['actions' => ['smsForm', 'sms-partial', 'order-prepay', 'sms'], 'allow' => '@']
+                ['actions' => 'telegrammHook', 'allow' => '*'],
+                ['actions' => ['smsForm', 'smsPartial', 'orderPrepay', 'sms'], 'allow' => '@']
             ],
             Controller\LogController::class => [
                 // Allow access to authenticated users.

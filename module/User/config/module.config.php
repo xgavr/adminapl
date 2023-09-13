@@ -191,8 +191,8 @@ return [
                 // to anyone.
                 ['actions' => ['resetPassword', 'resetPasswordByPhone', 'smsToken', 'message', 'setPassword'], 'allow' => '*'],
                 // Give access to "index", "add", "edit", "view", "changePassword" actions to users having the "user.manage" permission.
-                ['actions' => ['index', 'add', 'edit', 'view', 'changePassword', 'content'], 'allow' => '+user.manage'],
-                ['actions' => ['liveSearch', 'ddReport', 'updateOrderCount'], 'allow' => '@'],
+                ['actions' => ['index', 'add', 'edit', 'view', 'content'], 'allow' => '+user.manage'],
+                ['actions' => ['liveSearch', 'ddReport', 'updateOrderCount', 'changePassword',], 'allow' => '@'],
             ],
         ]
     ],

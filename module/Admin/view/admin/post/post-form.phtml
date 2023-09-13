@@ -186,7 +186,7 @@ $form->prepare();
                         <button type="button" class="list-group-item local-comment">Логин, пароль
                             <div class="text-hide">
                                 Данные для доступа в личный кабинет на сайте autopartslist.ru
-                                <br/>Логин: <?= $order->getContact()->getPhone()->getName()?>
+                                <br/>Логин: <?= $order->getContact()->getPhoneAsString() ?>
                                 <br/>Пароль: 
                             </div>
                         </button>
@@ -213,7 +213,7 @@ $form->prepare();
                         <div class="text-hide">
                             Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> руб.
                             <br/>Просмотреть содержимое заказа и оплатить его Вы можете в личном кабинете на сайте autopartslist.ru
-                            <br/>Логин: <?= $order->getContact()->getPhone()->getName()?>
+                            <br/>Логин: <?= $order->getContact()->getPhoneAsString() ?>
                             <br/>Пароль:                         
                         </div>
                     </button>
@@ -221,7 +221,7 @@ $form->prepare();
                         <div class="text-hide">
                             Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> руб.
                             <br/>Просмотреть содержимое заказа и оплатить его Вы можете в личном кабинете на сайте autopartslist.ru
-                            <br/>Логин: <?= $order->getContact()->getPhone()->getName()?>
+                            <br/>Логин: <?= $order->getContact()->getPhoneAsString() ?>
                             <br/>Пароль:                         
                         </div>
                     </button>
@@ -231,7 +231,7 @@ $form->prepare();
                             <br/>
                             <br/><b>Варианты оплаты:</b>
                             <br/>1 - через личный кабинет на сайте autopartslist.ru
-                            <br/>Логин: "<?= $order->getContact()->getPhone()->getName()?>"; пароль: 
+                            <br/>Логин: "<?= $order->getContact()->getPhoneAsString() ?>"; пароль: 
                             <br/>
                             <br/>2 - на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
                             <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getMessageAplId()?>".
@@ -245,7 +245,7 @@ $form->prepare();
                             <br/>
                             <br/><b>Варианты оплаты:</b>
                             <br/>1 - через личный кабинет на сайте autopartslist.ru
-                            <br/>Логин: "<?= $order->getContact()->getPhone()->getName()?>"; пароль: 
+                            <br/>Логин: "<?= $order->getContact()->getPhoneAsString() ?>"; пароль: 
                             <br/>
                             <br/>2 - на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
                             <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getMessageAplId()?>".
@@ -260,7 +260,7 @@ $form->prepare();
                             <br/>
                             <br/>Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р. - с учетом нашей доставки (<?= $order->getShipmentTotal()?> р.) до ТК.
                             <br/>Просмотреть содержимое заказа и оплатить его Вы можете в личном кабинете на сайте autopartslist.ru
-                            <br/>Логин: <?= $order->getContact()->getPhone()->getName()?>
+                            <br/>Логин: <?= $order->getContact()->getPhoneAsString() ?>
                             <br/>Пароль: 
                         </div>
                     </button>
@@ -310,7 +310,7 @@ $form->prepare();
                 <div class="list-group">
                     <button type="button" class="list-group-item local-comment">Ошибка телефона
                         <div class="text-hide">
-                            Вами неверно указан номер телефона для связи: <?= $order->getContact()->getPhone()->getName()?>.
+                            Вами неверно указан номер телефона для связи: <?= $order->getContact()->getPhoneAsString() ?>.
                             <br/>
                             <br/>Ваш запрос №<?= $order->getMessageAplId()?>. Для подтверждения заказа звоните <?= $order->getOffice()->getLegalContactPhones()?>.
                         </div>
