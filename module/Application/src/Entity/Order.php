@@ -461,7 +461,7 @@ class Order {
     public function getAplTurboClick($passphrase)
     {
         $filter = new ClickFilter();
-        return $filter->filter($this->getAplTurboId($passphrase));
+        //return $filter->filter($this->getAplTurboId($passphrase));
     }
     
     /**
