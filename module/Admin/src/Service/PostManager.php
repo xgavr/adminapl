@@ -101,6 +101,8 @@ class PostManager {
         $html->encoding = Mime::ENCODING_QUOTEDPRINTABLE;        
         
         $parts = [$html];
+        $parts[] = $html;
+        $parts[] = $text;
         
 //        $order = $this->entityManager->getRepository(Order::class)
 //                ->find($options['orderId']);
