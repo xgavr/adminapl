@@ -87,9 +87,9 @@ class PostController extends AbstractActionController
                     $settings = $this->adminManager->getSettings();
                     $options['to'] = $data['toEmail'];
                     $options['from'] = $data['fromEmail'];
-                    $options['copyMe'] = $data['copyMe'];
-                    $options['bill'] = $data['bill'];
-                    $options['offer'] = $data['offer'];
+                    $options['copyMe'] = (empty($data['copyMe'])) ? 0:$data['copyMe'];
+                    $options['bill'] = (empty($data['bill'])) ? 0:$data['bill'];
+                    $options['offer'] = (empty($data['offer'])) ? 0:$data['offer'];
                     $options['showCode'] = (empty($data['showCode'])) ? 0:1;
                     $options['orderId'] = $data['orderId'];
                     $options['subject'] = $data['subject'];
