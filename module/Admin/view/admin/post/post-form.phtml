@@ -41,7 +41,7 @@ $form->get('message')->setAttributes([
 
 $form->get('orderId')->setAttributes([
     'class'=>'form-control', 
-    'value' => $order->getId(),
+    'value' => $order->getMessageAplId(),
     ]);
 
 $form->prepare();
