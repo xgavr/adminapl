@@ -530,6 +530,7 @@ class CashDoc {
     {
         switch ($this->kind){
             case $this::KIND_IN_PAYMENT_CLIENT:
+            case $this::KIND_IN_RETURN_USER:
             case $this::KIND_OUT_RETURN_CLIENT:
             case $this::KIND_OUT_USER:
                 return 'Users';
@@ -551,6 +552,7 @@ class CashDoc {
             case $this::KIND_IN_RETURN_SUPPLIER:
             case $this::KIND_OUT_SUPPLIER:                
                 return ($this->legal->getSupplier()) ? $this->legal->getSupplier()->getAplId():null;
+            case $this::KIND_IN_RETURN_USER:
             case $this::KIND_OUT_SALARY:
             case $this::KIND_OUT_USER:
                 return $this->getUserRefill()->getAplId();
