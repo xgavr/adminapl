@@ -478,9 +478,10 @@ class AplCashService {
     /**
      * Отправить платеж
      * @param CashDoc $cashDoc
+     * @param bool $debug
      * 
      */
-    public function sendPayment($cashDoc = null)
+    public function sendPayment($cashDoc = null, $debug = false)
     {
         $url = $this->aplApi().'update-payment?api='.$this->aplApiKey();
 
@@ -521,7 +522,7 @@ class AplCashService {
                 $post['id'] = $cashDoc->getAplId();
             }
             
-            var_dump($post); exit;
+//            var_dump($post); exit;
             
             $client = new Client();
             $client->setUri($url);
@@ -550,6 +551,10 @@ class AplCashService {
                 }    
                 $this->entityManager->persist($cashDoc);
                 $this->entityManager->flush($cashDoc);
+            }
+            
+            if ($debug){
+                var_dump($post, $response->getBody());
             }
 
             $this->entityManager->detach($cashDoc);

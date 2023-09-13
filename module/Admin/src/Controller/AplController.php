@@ -815,7 +815,7 @@ class AplController extends AbstractActionController
             return;                        
         } 
         
-        $result = $this->aplCashService->sendPayment($cashDoc);
+        $result = $this->aplCashService->sendPayment($cashDoc, true);
         //usleep(100);
         
 //        $query = $this->entityManager->getRepository(\Cash\Entity\CashDoc::class)
