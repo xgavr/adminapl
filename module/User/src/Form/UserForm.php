@@ -91,7 +91,7 @@ class UserForm extends Form
             'type'  => 'textarea',
             'name' => 'sign',            
             'options' => [
-                'label' => 'Подпись',
+                'label' => 'Подпись в сообщениях',
             ],
         ]);
 
@@ -99,7 +99,7 @@ class UserForm extends Form
             'type'  => 'text',
             'name' => 'mailPassword',            
             'options' => [
-                'label' => 'Пароль почты',
+                'label' => 'Пароль приложения почты',
             ],
         ]);
         
