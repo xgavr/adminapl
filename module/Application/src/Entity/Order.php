@@ -478,7 +478,7 @@ class Order {
     public function getAplPaymentLinkClick($prepay = 0)
     {
         $filter = new ClickFilter();
-        return $filter->filter($this->getAplPaymentLink($prepay));
+        //return $filter->filter($this->getAplPaymentLink($prepay));
     }
 
     public function getAplIdLink() 
