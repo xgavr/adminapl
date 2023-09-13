@@ -225,7 +225,7 @@ class CashDoc {
 
     public function getComment() 
     {
-        return $this->comment;
+        return ($this->comment) ? $this->comment:'';
     }
 
     public function setComment($comment) 
@@ -235,7 +235,7 @@ class CashDoc {
 
     public function getInfo() 
     {
-        return $this->info;
+        return ($this->info) ? $this->info:'';
     }
 
     public function setInfo($info) 
