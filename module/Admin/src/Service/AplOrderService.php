@@ -688,7 +688,7 @@ class AplOrderService {
 //            var_dump($body); exit;
             
         if ($debug){
-            var_dump($body);
+            var_dump($response->getStatusCode(), $body);
         }    
         try{
             $result = json_decode($body, true);
