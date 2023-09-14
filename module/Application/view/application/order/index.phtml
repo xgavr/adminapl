@@ -69,6 +69,7 @@ $this->pageBreadcrumbs()->setItems([
             data-show-refresh="true"
             data-show-toggle="false"
             data-show-columns="true"
+            data-auto-refresh="true"
             data-query-params="queryParams"
             data-sort-name="dateOper"
             data-sort-order="desc"            
@@ -289,7 +290,12 @@ $this->pageBreadcrumbs()->setItems([
     }
 
     function createdFormatter(value, row){
-        return '<nobr>'+$.format.date(value, "dd.MM.yy h:MM:ss")+'</nobr><br/><nobr>'+$.format.date(row.dateOper, "dd.MM.yy ")+'</nobr>';        
+        return [
+            '<nobr>',
+            $.format.date(value, "dd.MM.yy h:MM:ss"),
+            '</nobr><br/>',
+            (row.dateShipment) ? $.format.date(row.dateShipment, "dd.MM.yy"):''
+        ].join('');
     }
 
     function idAplFormatter(value, row){
@@ -305,7 +311,7 @@ $this->pageBreadcrumbs()->setItems([
             row.office.name,
             '<br/>',
             value
-        ].join(' ');
+        ].join('');
     }    
     
     
@@ -404,7 +410,7 @@ $this->pageBreadcrumbs()->setItems([
         var result = '';
         var userName = '';
         var created = '';
-        var commentLength = '0';
+        var commentLength = 0;
         if (value){
             var depend = $.parseJSON(value);
             var comments = depend.comments;
@@ -426,7 +432,7 @@ $this->pageBreadcrumbs()->setItems([
             userName,
             '</small>',
             '</nobr><br/>',
-            '<a href="#" class="comments-modal-show" modal-url="/comments/order-form/" order-id="'+row.id+'" title="Комментарии">('+commentLength+')</a>',
+            (commentLength) ? '<a href="#" class="comments-modal-show" modal-url="/comments/order-form/" order-id="'+row.id+'" title="Комментарии">('+commentLength+')</a>':'',
             result
         ].join(' ');
     }

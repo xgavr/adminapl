@@ -240,8 +240,16 @@ class OrderRepository extends EntityRepository{
             }            
             if (!empty($params['userId'])){
                 if (is_numeric($params['userId'])){
-                    $queryBuilder->andWhere('o.user = ?2')
-                        ->setParameter('2', $params['userId'])
+                    $orX = $queryBuilder->expr()->orX();
+                    if (!empty($params['status'])){
+                        if ($params['status'] == Order::STATUS_NEW){
+                            $orX->add($queryBuilder->expr()->isNull('o.user'));
+                        }
+                    }
+                    $orX->add($queryBuilder->expr()->eq('o.user', $params['userId']));
+                    $queryBuilder->andWhere($orX);
+//                    $queryBuilder->andWhere('o.user = ?2')
+//                        ->setParameter('2', $params['userId'])
                             ;
                 }    
             }            
