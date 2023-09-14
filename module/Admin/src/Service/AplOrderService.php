@@ -543,6 +543,7 @@ class AplOrderService {
             'skiper' => $skiperId,
             'user' => $userId,
             'office' => $office->getId(),
+            'statusEx' => Order::STATUS_EX_OK,
         ];
         
         $order = $this->entityManager->getRepository(Order::class)
