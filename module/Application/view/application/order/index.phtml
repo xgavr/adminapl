@@ -295,13 +295,13 @@ $this->pageBreadcrumbs()->setItems([
     function idAplFormatter(value, row){
         var result = value;
         if (row.aplId){
-            result += '<br/><a title="АПЛ ссылка" href="https://autopartslist.ru/admin/orders/view/id/' + value + '" target="_blank">' + value + '</a>';
+            result += '<br/><a title="АПЛ ссылка" href="https://autopartslist.ru/admin/orders/view/id/' + row.aplId + '" target="_blank">' + row.aplId + '</a>';
         }
         return result;
     }    
     
     function officeUserFormatter(value, row){
-        return row.office.name + '<br/>'+ value;
+        return row.office.name + '<br/>'+ (value) ? value:'';
     }    
     
     
