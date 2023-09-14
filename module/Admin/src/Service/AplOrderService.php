@@ -1304,7 +1304,7 @@ class AplOrderService {
             }
         }
         
-        if ($debug){
+        if ($debug && $order){
             var_dump($order->getId());
         }
         return false;

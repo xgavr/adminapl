@@ -576,7 +576,7 @@ class OrderRepository extends EntityRepository{
                ;
         
             //восстановление утеряных данных
-            if (date('w') || (date('G') > 8 && date('G') < 21)){    
+            if (date('N') < 7 && date('G') > 8 && date('G') < 21){    
                 $queryBuilder->andWhere('o.status != ?2')
                     ->setParameter('2', Order::STATUS_CANCELED)  
     //            ->andWhere('o.aplId > 0')
