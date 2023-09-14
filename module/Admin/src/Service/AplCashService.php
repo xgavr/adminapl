@@ -356,7 +356,8 @@ class AplCashService {
                     $contacts = $client->getContacts();
                     $dataCash['contact'] = $contacts[0]->getId();
                 } else {
-                    return false;
+                    throw new \Exception('Оплата не загружена! заказ: '.$data['name'].' клиент: '.$data['parent']);
+//                    return false;
                 }                   
             }   
         }    
