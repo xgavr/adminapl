@@ -420,10 +420,10 @@ $this->pageBreadcrumbs()->setItems([
             '<small><nobr>',
             $.format.date(created, "dd.MM.yy HH:MM:ss"),
             userName,
+            '</small>',
             '</nobr><br/>',
             '<a href="#" class="comments-modal-show" modal-url="/comments/order-form/" order-id="'+row.id+'" title="Комментарии">('+commentLength+')</a>',
-            result,
-            '</small>'
+            result
         ].join(' ');
     }
 
