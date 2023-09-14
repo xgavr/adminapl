@@ -436,9 +436,10 @@ class AplCashService {
     /**
      * Загрузить платеж из Апл
      * @param int $start
+     * @param bool $debug
      * @return 
      */
-    public function unloadPayment($start = 0)
+    public function unloadPayment($start = 0, $debug = false)
     {
         $url = $this->aplApi().'unload-payment?api='.$this->aplApiKey();
         
@@ -464,6 +465,10 @@ class AplCashService {
             exit;
         }
 //        var_dump($result); exit;
+        
+        if ($debug){
+            var_dump($result);
+        }
 
         if (is_array($result)){
             if ($this->updatePayment($result)){ 

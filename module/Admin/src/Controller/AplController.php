@@ -857,7 +857,7 @@ class AplController extends AbstractActionController
     
     public function unloadCashAction()
     {                
-        $this->aplCashService->unloadPayment();
+        $this->aplCashService->unloadPayment(0, true);
         
         return new JsonModel([
             'result' => 'ok',
