@@ -573,11 +573,15 @@ class OrderRepository extends EntityRepository{
             ->where('o.statusEx = ?1')
             ->setParameter('1', Order::STATUS_EX_NEW)  
             ->setMaxResults(1)
-                
-            ->andWhere('o.status != ?2')
-            ->setParameter('2', Order::STATUS_CANCELED)  
-//            ->andWhere('o.aplId > 0')
-                ;
+               ;
+        
+            //восстановление утеряных данных
+            if (date('w') || (date('G') > 8 && date('G') < 21)){    
+                $queryBuilder->andWhere('o.status != ?2')
+                    ->setParameter('2', Order::STATUS_CANCELED)  
+    //            ->andWhere('o.aplId > 0')
+                    ;
+            }    
         
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $order){
