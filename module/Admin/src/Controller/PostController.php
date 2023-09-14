@@ -152,11 +152,12 @@ class PostController extends AbstractActionController
     {
         $orderId = (int)$this->params()->fromRoute('id', -1);
         $showCode = $this->params()->fromQuery('showCode');
+        
         $result = [];
         if ($orderId > 0){
             $order = $this->entityManager->getRepository(Order::class)
                     ->find($orderId);
-            $result['body'] = $order->getBidsAsHtml($showCode === 'true');
+            $result['body'] = $order->getBidsAsHtml($showCode === 'true');            
         }
         $result['sign'] = $this->currentUser()->getSign();
         
@@ -177,7 +178,7 @@ class PostController extends AbstractActionController
         $this->layout()->setTemplate('layout/terminal');
 
         return new ViewModel([
-            'orderAplId' => $order->getAplId(),
+            'orderAplId' => $order->getMessageAplId(),
             'prepay' => $prepay,
         ]);                        
     }

@@ -104,7 +104,7 @@ $form->prepare();
                             </div>
                         </li>
                     <?php endif;?>    
-                    <li class="list-group-item local-comment">турбоссылка
+                    <li class="list-group-item local-comment" style="text-decoration: line-through">турбоссылка
                         <div class="text-hide">
                             Ссылка для просмотра заказа №<?= $order->getMessageAplId()?> - <?= $turbo?>
                         </div>
@@ -163,9 +163,9 @@ $form->prepare();
                             Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает предоплаты в размере
                         </div>
                     </li>
-                    <li class="list-group-item local-comment">100% оплата, ссылка на платежную форму
+                    <li class="list-group-item local-comment-sb-total">100% оплата, ссылка на платежную форму
                         <div class="text-hide">
-                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р. Для оплаты пройдите по ссылке <?= $order->getAplPaymentLinkClick()?>
+                            Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р.
                         </div>
                     </li>
                     <li class="list-group-item local-comment">Предоплата на карту Сбер
@@ -206,7 +206,7 @@ $form->prepare();
                             Если Вам еще нужны запчасти - для Вас скидка! Узнайте подробности сейчас - <?= $turbo?>
                         </div>
                     </li>
-                    <li class="list-group-item local-comment">Логин, пароль
+                    <li class="list-group-item local-comment" style="text-decoration: line-through">Логин, пароль
                         <div class="text-hide">
                         </div>
                     </li>
@@ -259,7 +259,6 @@ $form->prepare();
         }        
     }
     
-    
     $('.local-comment').on('click', function() {
         let str = $(this).children('.text-hide').html();
         $('#message').val($.trim(str));
@@ -268,17 +267,35 @@ $form->prepare();
         $('input[name="attachment"]').val($(this).attr('attachment'));
     });
     
-    $('.local-comment-sb-prepay').on('click', function() {
-        let prepay = prompt("Сумма предоплаты", "<?= $order->getPrepay()?>");
-        let str = $(this).children('.text-hide').html();
-        if (prepay != null) {
-            $.get('/admin/order-prepay/<?= $order->getId()?>?prepay='+prepay, function( data ) {                
+    $('.local-comment-sb-total').on('click', function() {
+        <?php if ($order->getAplId()): ?>
+            let str = $(this).children('.text-hide').html();
+            $.get('/sms/order-prepay/<?= $order->getId()?>?prepay='+<?= $order->getTotal()?> , function( data ) {                
                 if (data.prepayLink){
-                    $('#message').val($.trim(str)+' '+prepay+' р. Для оплаты пройдите по ссылке ' + data.prepayLink);
+                    $('#message').val($.trim(str)+' р. Для оплаты пройдите по ссылке ' + data.prepayLink);
                     updateMode($(this).children('b').length);
                 }    
             });
-        }            
+        <?php else:?>
+            bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');
+        <?php endif;?>
+    });    
+
+    $('.local-comment-sb-prepay').on('click', function() {
+        <?php if ($order->getAplId()): ?>
+            let prepay = prompt("Сумма предоплаты", "<?= $order->getPrepay()?>");
+            let str = $(this).children('.text-hide').html();
+            if (prepay != null) {
+                $.get('/sms/order-prepay/<?= $order->getId()?>?prepay='+prepay, function( data ) {                
+                    if (data.prepayLink){
+                        $('#message').val($.trim(str)+' '+prepay+' р. Для оплаты пройдите по ссылке ' + data.prepayLink);
+                        updateMode($(this).children('b').length);
+                    }    
+                });
+            }            
+        <?php else:?>
+            bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');
+        <?php endif;?>
     });    
     
     $('.clear-button').on('click', function() {

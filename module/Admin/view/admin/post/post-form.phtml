@@ -183,7 +183,7 @@ $form->prepare();
                         </button>
                     <?php endif;?>    
                     <?php if ($order->getContact()):?>
-                        <button type="button" class="list-group-item local-comment">Логин, пароль
+                        <button type="button" class="list-group-item local-comment" style="text-decoration: line-through">Логин, пароль
                             <div class="text-hide">
                                 Данные для доступа в личный кабинет на сайте autopartslist.ru
                                 <br/>Логин: <?= $order->getContact()->getPhoneAsString() ?>
@@ -209,7 +209,7 @@ $form->prepare();
             <div class="panel panel-default small">
                 <div class="panel-heading">оплаты через личный кабинет</div>
                 <ul class="list-group">
-                    <button type="button" class="list-group-item local-comment py-sm-0">Предоплата
+                    <button type="button" class="list-group-item local-comment py-sm-0" style="text-decoration: line-through">Предоплата
                         <div class="text-hide">
                             Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> руб.
                             <br/>Просмотреть содержимое заказа и оплатить его Вы можете в личном кабинете на сайте autopartslist.ru
@@ -217,7 +217,7 @@ $form->prepare();
                             <br/>Пароль:                         
                         </div>
                     </button>
-                    <button type="button" class="list-group-item local-comment  py-sm-0">100% оплата
+                    <button type="button" class="list-group-item local-comment  py-sm-0" style="text-decoration: line-through">100% оплата
                         <div class="text-hide">
                             Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> руб.
                             <br/>Просмотреть содержимое заказа и оплатить его Вы можете в личном кабинете на сайте autopartslist.ru
@@ -230,10 +230,10 @@ $form->prepare();
                             Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> р.
                             <br/>
                             <br/><b>Варианты оплаты:</b>
-                            <br/>1 - через личный кабинет на сайте autopartslist.ru
-                            <br/>Логин: "<?= $order->getContact()->getPhoneAsString() ?>"; пароль: 
+<!--                            <br/>- через личный кабинет на сайте autopartslist.ru
+                            <br/>Логин: "<?= $order->getContact()->getPhoneAsString() ?>"; пароль: -->
                             <br/>
-                            <br/>2 - на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
+                            <br/>- на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
                             <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getMessageAplId()?>".
                             <br/>
                             <br/>Для идентификации платежа, после оплаты обязательно позвоните в офис по тел.: <?= $order->getOffice()->getLegalContactPhones()?> и сообщите об осуществлении платежа по заказу №<?= $order->getMessageAplId()?>.
@@ -244,16 +244,16 @@ $form->prepare();
                             Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р.
                             <br/>
                             <br/><b>Варианты оплаты:</b>
-                            <br/>1 - через личный кабинет на сайте autopartslist.ru
-                            <br/>Логин: "<?= $order->getContact()->getPhoneAsString() ?>"; пароль: 
+<!--                            <br/>- через личный кабинет на сайте autopartslist.ru
+                            <br/>Логин: "<?= $order->getContact()->getPhoneAsString() ?>"; пароль: -->
                             <br/>
-                            <br/>2 - на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
+                            <br/>- на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
                             <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getMessageAplId()?>".
                             <br/>
                             <br/>Для идентификации платежа, после оплаты обязательно позвоните в офис по тел.: <?= $order->getOffice()->getLegalContactPhones()?> и сообщите об осуществлении платежа по заказу №<?= $order->getMessageAplId()?>.
                         </div>
                     </button>
-                    <button type="button" class="list-group-item local-comment">100% оплата регионы
+                    <button type="button" class="list-group-item local-comment" style="text-decoration: line-through">100% оплата регионы
                         <div class="text-hide">
                             Для отправки заказа необходима 100% оплата за товар и услугу доставки до Транспортной Компании.
                             <br/>Услуги ТК оплачиваются Вами при получении заказа в офисе ТК в вашем городе.
@@ -414,20 +414,28 @@ $form->prepare();
     });
     
     $('.local-comment-sb-prepay').on('click', function() {
-        let prepay = prompt("Сумма предоплаты", "<?= $order->getPrepay()?>");
-        $currentNode = $(this);
-        if (prepay !== null) {
-            $.get('/post/sber-form/<?= $order->getId()?>?prepay='+prepay, function( data ) {
-                renderBody(data);
-            });
-        }            
+        <?php if ($order->getAplId()): ?>
+            let prepay = prompt("Сумма предоплаты", "<?= $order->getPrepay()?>");
+            $currentNode = $(this);
+            if (prepay !== null) {
+                $.get('/post/sber-form/<?= $order->getId()?>?prepay='+prepay, function( data ) {
+                    renderBody(data);
+                });
+            }            
+        <?php else:?>
+            bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');
+        <?php endif;?>
     });    
     
     $('.local-comment-sb-total').on('click', function() {
-        $currentNode = $(this);
-        $.get('/post/sber-form/<?= $order->getId()?>?prepay='+<?= $order->getTotal()?>, function( data ) {
-            renderBody(data);
-        });
+        <?php if ($order->getAplId()): ?>
+            $currentNode = $(this);
+            $.get('/post/sber-form/<?= $order->getId()?>?prepay='+<?= $order->getTotal()?>, function( data ) {
+                renderBody(data);
+            });
+        <?php else:?>
+            bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');
+        <?php endif;?>
     });    
     
     $('.clear-button').on('click', function() {

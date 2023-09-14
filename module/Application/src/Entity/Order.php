@@ -17,7 +17,6 @@ use Application\Entity\Shipping;
 use ApiMarketPlace\Entity\MarketplaceOrder;
 use Stock\Entity\Vt;
 use Admin\Entity\Wammchat;
-use Admin\Filter\ClickFilter;
 use Laminas\Json\Encoder;
 use Laminas\Json\Decoder;
 use Company\Entity\Legal;
@@ -454,16 +453,9 @@ class Order {
     
     public function getAplTurboId($passphrase)
     {
-        //return "https://autopartslist.ru/index/turbo?order=".base64_encode($this->_encrypt($this->aplId, $passphrase));
-//        return '';
+        return "https://autopartslist.ru/index/turbo?order=".base64_encode($this->_encrypt($this->aplId, $passphrase));
     }
 
-    public function getAplTurboClick($passphrase)
-    {
-        $filter = new ClickFilter();
-        //return $filter->filter($this->getAplTurboId($passphrase));
-    }
-    
     /**
      * Сыылка на платежную форму
      * @param float $prepay
@@ -472,18 +464,12 @@ class Order {
     public function getAplPaymentLink($prepay = 0)
     {
         $sum = ($prepay) ? $prepay:$this->total;
-        ///return 'https://autopartslist.ru/payments/sb-register/amount/'.$sum.'/id/'.$this->aplId;
-    }
-
-    public function getAplPaymentLinkClick($prepay = 0)
-    {
-        $filter = new ClickFilter();
-        //return $filter->filter($this->getAplPaymentLink($prepay));
+        return 'https://autopartslist.ru/payments/sb-register/amount/'.$sum.'/id/'.$this->aplId;
     }
 
     public function getAplIdLink() 
     {
-        //return "<a href='https://autopartslist.ru/admin/orders/view/id/{$this->aplId}' target=_blank>{$this->aplId}</a>";
+        return "<a href='https://autopartslist.ru/admin/orders/view/id/{$this->aplId}' target=_blank>{$this->aplId}</a>";
     }
 
     public function setAplId($aplId) 

@@ -13,6 +13,7 @@ use Laminas\View\Model\JsonModel;
 use Application\Entity\Order;
 use Admin\Form\SmsForm;
 use User\Filter\PhoneFilter;
+use Admin\Filter\ClickFilter;
 
 
 class SmsController extends AbstractActionController
@@ -112,5 +113,24 @@ class SmsController extends AbstractActionController
             'turbo' => $order->getAplTurboId($turbo_passphrase),
             'currentUser' => $this->smsManager->currentUser(),
         ]);                        
+    }    
+    
+    public function orderPrepayAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        $prepay = $this->params()->fromQuery('prepay', 0);
+        
+        $result = [];
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+            
+            if ($order){
+                $clickFilter = new ClickFilter();
+                $result['prepayLink'] = $clickFilter->filter($order->getAplPaymentLink($prepay));
+            }    
+        }
+        
+        return new JsonModel($result);                   
     }    
 }
