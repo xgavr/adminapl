@@ -1355,6 +1355,7 @@ class OrderManager
                 $user = $this->entityManager->getRepository(User::class)
                         ->find($data['user']);
                 $order->setUser($user);
+                    
             }
 
             $this->entityManager->persist($order);
@@ -1596,6 +1597,10 @@ class OrderManager
         if ($order->getDateOper() > $this->allowDate){
             $order->setStatus($status);
             $order->setStatusEx(Order::STATUS_EX_NEW);
+            
+            if (empty($order->getUser()) && $this->currentUser()){
+                $order->setUser($this->currentUser());
+            }
 
             $this->entityManager->persist($order);
             $this->entityManager->flush($order);

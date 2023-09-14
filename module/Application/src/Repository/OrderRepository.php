@@ -249,8 +249,7 @@ class OrderRepository extends EntityRepository{
                     $orX->add($queryBuilder->expr()->eq('o.user', $params['userId']));
                     $queryBuilder->andWhere($orX);
 //                    $queryBuilder->andWhere('o.user = ?2')
-//                        ->setParameter('2', $params['userId'])
-                            ;
+//                        ->setParameter('2', $params['userId'])                            
                 }    
             }            
             if (!empty($params['clientId'])){

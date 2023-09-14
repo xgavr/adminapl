@@ -288,6 +288,7 @@ class OrderController extends AbstractActionController
                        'legal' => ($order->getLegal()) ? $order->getLegal()->getId():null,
                        'recipient' => ($order->getRecipient()) ? $order->getRecipient()->getId():null,
                        'bankAccount' => ($order->getBankAccount()) ? $order->getBankAccount()->getId():null,
+                       'user' => ($order->getUser()) ? $order->getUser()->getId():null,
                     ]
                 );           
             } else {

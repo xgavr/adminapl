@@ -266,7 +266,7 @@ class CommentController extends AbstractActionController
     {
         $commentId = (int)$this->params()->fromRoute('id', -1);
         
-        $comment = $comments = null;
+        $comment = $comments = $dependInfo = null;
         
         if ($commentId > 0){
             $comment = $this->entityManager->getRepository(Comment::class)
