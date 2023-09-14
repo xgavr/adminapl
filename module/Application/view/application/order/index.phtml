@@ -301,7 +301,11 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function officeUserFormatter(value, row){
-        return row.office.name + '<br/>'+ (value) ? value:'';
+        return [
+            row.office.name,
+            '<br/>',
+            value
+        ].join(' ');
     }    
     
     
