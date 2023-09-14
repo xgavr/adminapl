@@ -804,6 +804,7 @@ class AplOrderService {
             
             $this->entityManager->getConnection()
                     ->update('orders', ['status_ex' => $statusEx], ['id' => $order->getId()]);
+            $this->entityManager->refresh($order);
                 
             if (time() > $startTime + 870){
                 break;
