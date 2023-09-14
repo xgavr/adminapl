@@ -687,12 +687,14 @@ class AplOrderService {
 
 //            var_dump($body); exit;
             
+        if ($debug){
+            var_dump($body);
+        }    
         try{
             $result = json_decode($body, true);
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
             if ($debug){
                 var_dump($ex->getMessage());
-                var_dump($body);
             }    
             return false;
         } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
@@ -700,6 +702,9 @@ class AplOrderService {
         }    
 
         if (is_array($result)){
+            if ($debug){
+                var_dump($result);
+            }    
             if (is_numeric($orderTotal) && $aplId){
                 if ($orderTotal == $result['sort']){
                     return true;
