@@ -254,6 +254,7 @@ class OrderController extends AbstractActionController
                 
                 $contact = $this->orderManager->findContactByOrderData($data);
                 $data['total'] = $data['shipmentTotal'];
+                $data['statusEx'] = Order::STATUS_EX_NEW;
                 
                 if ($order){
                     if ($contact->getId() != $order->getContact()->getId()){

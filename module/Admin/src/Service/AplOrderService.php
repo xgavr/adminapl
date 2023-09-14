@@ -798,7 +798,10 @@ class AplOrderService {
                 } else {
                     $statusEx = Order::STATUS_EX_TOTAL_NO_MATH;
                 }
+            } else {
+               $statusEx = Order::STATUS_EX_NEW; 
             }    
+            
             $this->entityManager->getConnection()
                     ->update('orders', ['status_ex' => $statusEx], ['id' => $order->getId()]);
                 

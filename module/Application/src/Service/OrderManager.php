@@ -782,7 +782,7 @@ class OrderManager
             $order->setTrackNumber(!empty($data['trackNumber']) ? $data['trackNumber'] : null);
             $order->setInfoShipping(!empty($data['infoShipping']) ? $data['infoShipping'] : null);
             $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
-            $order->setStatusEx(Order::STATUS_EX_NO);
+            $order->setStatusEx(empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx']);
 
             $order->setOffice($office);
             if (empty($data['company'])){
@@ -950,7 +950,7 @@ class OrderManager
                 'contact_id' => $contact->getId(),
                 'date_created' => date('Y-m-d H:i:s'),
                 'status_account' => Order::STATUS_ACCOUNT_NO,
-                'status_ex' => Order::STATUS_EX_NO,
+                'status_ex' => empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx'],
             ];
 
             $company = null;
@@ -1260,7 +1260,7 @@ class OrderManager
             $order->setTrackNumber(!empty($data['trackNumber']) ? $data['trackNumber'] : null);
             $order->setInfoShipping(!empty($data['infoShipping']) ? $data['infoShipping'] : null);
             $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
-            $order->setStatusEx(Order::STATUS_EX_NO);
+            $order->setStatusEx(empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx']);
 
             if ($order->getOffice()->getId() != $data['office']){
                 $office = $this->entityManager->getRepository(Office::class)
@@ -1404,7 +1404,7 @@ class OrderManager
                 'skiper_id' => null,
                 'user_id' => null,
                 'status_account' => Order::STATUS_ACCOUNT_NO,
-                'status_ex' => Order::STATUS_EX_NO,
+                'status_ex' => empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx'],
             ];
 
             if ($order->getOffice()->getId() != $data['office']){
@@ -1595,6 +1595,7 @@ class OrderManager
 
         if ($order->getDateOper() > $this->allowDate){
             $order->setStatus($status);
+            $order->setStatusEx(Order::STATUS_EX_NEW);
 
             $this->entityManager->persist($order);
             $this->entityManager->flush($order);
@@ -1857,7 +1858,7 @@ class OrderManager
         foreach ($orders as $order){
             if ($order->getDocDate() < date('Y-m-d H:i:s', strtotime(" -7 days"))){
                 $order->setStatus(Order::STATUS_CANCELED);
-                $order->setStatusEx(Order::STATUS_EX_NO);
+                //$order->setStatusEx(Order::STATUS_EX_NO);
                 $this->entityManager->persist($order);
             }
         }
