@@ -417,12 +417,13 @@ $this->pageBreadcrumbs()->setItems([
         return [
 //            '<a href="#" class="order-comment-modal-show" modal-url="/comments/edit-local-form/" order-id="'+row.id+'" title="Добавить комментарий">(+)</a>',
             //'(' + value.length + ')',
-            '<h5><small>',
-            '<a href="#" class="comments-modal-show" modal-url="/comments/order-form/" order-id="'+row.id+'" title="Комментарии">('+commentLength+')</a>',
-            $.format.date(created, "dd.MM.yy h:MM:ss"),
+            '<small><nobr>',
+            $.format.date(created, "dd.MM.yy HH:MM:ss"),
             userName,
+            '</nobr><br/>',
+            '<a href="#" class="comments-modal-show" modal-url="/comments/order-form/" order-id="'+row.id+'" title="Комментарии">('+commentLength+')</a>',
             result,
-            '</small></h5>'
+            '</small>'
         ].join(' ');
     }
 
