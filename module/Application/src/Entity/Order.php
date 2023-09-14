@@ -1392,6 +1392,35 @@ class Order {
             $result .= "</tr>";
         }
         
+        if ($this->getShipmentTotal()){
+            $i++;
+            $result .= "<tr>";
+
+            $result .= "<td class='article-code'>";
+            $result .= $i;
+            $result .= "</td>";
+
+            $result .= "<td>";
+            $result .= "</td>";
+
+            $result .= "<td>";
+            $result .= "Организация доставки груза";
+            $result .= "</td>";
+
+            $result .= "<td align='right'>";
+            $result .= "</td>";
+
+            $result .= "<td align='right'>";
+            $result .= "</td>";
+
+            $result .= "<td align='right'>";
+            $result .= $this->getShipmentTotal();
+            $result .= "</td>";
+
+            $result .= "</tr>";
+            
+        }     
+        
         return $result;
     }
 
