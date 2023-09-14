@@ -1058,6 +1058,15 @@ class Order {
     {
         return $this->skiper;
     }
+    
+    public function getSkiperAplId()
+    {
+        if ($this->skiper){
+            return $this->skiper->getAplId();            
+        }
+        
+        return;
+    }
 
     public function getSkiperPhone() 
     {

@@ -1209,7 +1209,8 @@ class AplOrderService {
                 'parent' => $order->getAplStatusAsString(),
                 'paystatus' => 0,
                 'mode' => $order->getAplModeAsString(),
-                'info2' => $order->getInfo(),                
+                'info2' => $order->getInfo(),
+                'skiper' => $order->getSkiperAplId(),
             ];
 
             if ($order->getAplId()){
