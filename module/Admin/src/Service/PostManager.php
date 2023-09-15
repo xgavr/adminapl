@@ -106,8 +106,11 @@ class PostManager {
         
 //        $order = $this->entityManager->getRepository(Order::class)
 //                ->find($options['orderId']);
-        $orderFilter = new OrderFromIdZ($this->entityManager);
-        $order = $orderFilter->filter($options['orderId']);
+        $order = null;
+        if (!empty($options['orderId'])){
+            $orderFilter = new OrderFromIdZ($this->entityManager);
+            $order = $orderFilter->filter($options['orderId']);
+        }    
         
         if ($order){
             if (!empty($options['bill'])){
@@ -158,7 +161,7 @@ class PostManager {
         $message->addTo($options['to']);
         $message->addFrom($options['from']);
         $message->setSubject($options['subject']);
-        if ($options['copyMe']){
+        if (!empty($options['copyMe'])){
             $message->setCc($options['from']);
         }    
 
