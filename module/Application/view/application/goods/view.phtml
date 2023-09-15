@@ -17,14 +17,22 @@
         <h3>
             <?= $goods->getCode()?>
             <?= $goods->getProducer()->getName()?>
-            <sup>
+<!--            <sup>
                 <button class="btn btn-default btn-xs producer-union-modal-show" type="button" 
                         modal-url="/admin/producer-union-form/<?= $goods->getProducer()->getId() ?>?good=<?= $goods->getId()?>" 
                         data-toggle='tooltip' data-original-title="Заменить производителя">
                     <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
                 </button>
-            </sup>    
+            </sup>    -->
         </h3>
+        <h5>
+            <?= $goods->getAplIdLinkId('Ссылка на АПЛ'); ?>
+            Цена: <?= $goods->getPrice(); ?>
+            <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                    title="Обновить в АПЛ">
+                <span class="glyphicon glyphicon-refresh" ></span> Обновить в АПЛ
+            </button>
+        </h5>
         <h3>
             <?= $goods->getNameShort() ?>
         </h3>

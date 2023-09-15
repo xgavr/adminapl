@@ -386,6 +386,22 @@ class Goods {
         }
         return;
     }
+
+    /**
+     * Ссылка на Апл
+     * @param string $title
+     * @return string
+     */
+    public function getAplIdLinkId($title = null) 
+    {
+        if (!$title){
+            $title = $this->aplId;
+        }
+        if ($this->aplId){
+            return "<a href='https://autopartslist.ru/catalog/view/id/{$this->aplId}' target=_blank>{$title}</a>";
+        }
+        return 'Товара нет в Апл';
+    }
     
     public function setAplId($aplId) 
     {
