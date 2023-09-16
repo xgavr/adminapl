@@ -87,7 +87,7 @@
                 <tr>
                      <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
                      <th data-field="cashDoc.dateOper" data-sortable="false" data-formatter="dateFormatter" data-width="80">Дата</th>
-                     <th data-field="cashDoc.id" data-sortable="false" data-width="50" data-formatter="idFormatter" data-align="right">Номер</th>
+                     <th data-field="cashDoc.id" data-sortable="false" data-width="50" data-formatter="cashIdFormatter" data-align="right">Номер</th>
                      <th data-field='cashDoc.kind' data-sortable="false" data-formatter="kindFormatter" data-width="200">Операция</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Приход</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="outFormatter" data-width="100">Расход</th>
@@ -191,7 +191,7 @@
         return params;
     }
     
-    function idFormatter(value, row){
+    function cashIdFormatter(value, row){
         if (row.cashDoc.aplId){
             return '<nobr>' + value + ' (' + row.cashDoc.aplId + ')</nobr>';
         }
