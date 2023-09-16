@@ -248,6 +248,7 @@
     }    
 
     function operFormatter(value, row){
+        var userRefill = null;
         var orderId = (row.cashDoc.order) ? "<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+row.cashDoc.order.aplId+"</a>":'Пополнение ЛС';
         var contactName = '!Контакт не указан!';
         if (row.cashDoc.contact){
@@ -261,12 +262,13 @@
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
                         return row.cashDoc.cashRefill.name;
             case '<?= CashDoc::KIND_IN_RETURN_USER ?>':
-                    return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.userRefill.fullName;                        
+                    return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.cashRefill.name;                        
             case '<?= CashDoc::KIND_OUT_COURIER ?>': 
                         return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName + ' ' + contactName+ ' ' + orderId:null;                        
-            case '<?= CashDoc::KIND_OUT_SALARY ?>': 
+            case '<?= CashDoc::KIND_OUT_SALARY ?>':  
+                        return row.cashDoc.userRefill.fullName;
             case '<?= CashDoc::KIND_OUT_USER ?>': 
-                    return (row.cashDoc.user) ? row.cashDoc.userRefill.fullName:row.cashDoc.cashRefill.name;                        
+                    return (row.cashDoc.user) ? row.cashDoc.userRefill.fullName:row.cashDoc.cash.name;                        
             case '<?= CashDoc::KIND_OUT_COST ?>': 
                         return row.cashDoc.cost.name;
             case '<?= CashDoc::KIND_IN_RETURN_SUPPLIER ?>': 
