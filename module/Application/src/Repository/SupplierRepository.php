@@ -276,6 +276,27 @@ class SupplierRepository extends EntityRepository{
     }
     
     /**
+     * Наличие у поставщиков
+     * @param Goods $good
+     */
+    public function goodAvailable($good)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('gs')
+                ->from(GoodSupplier::class, 'gs')
+                ->where('gs.good = ?1')
+                ->setParameter('1', $good->getId())
+                ->andWhere('gs.update > ?2')
+                ->setParameter('2', date('Y-m-d', strtotime('-2 days')))
+                //->andWhere('g.price > gs.price')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+
+    /**
      * Найти ид
      * @param integer $goodId
      * @param integer $supplierId

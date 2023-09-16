@@ -663,6 +663,28 @@ class MovementRepository extends EntityRepository{
     }
     
     /**
+     * Наличие в АПЛ
+     * @param Good $good
+     * @return array
+     */
+    public function available($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('gb')
+                ->from(GoodBalance::class, 'gb')
+                ->where('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0')    
+                ->andWhere('gb.good = ?1')
+                ->setParameter('1', $good->getId())
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+    
+    /**
      * Получить ссылку на документ
      * @param string $logkey
      */

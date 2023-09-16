@@ -731,6 +731,7 @@ class GoodsController extends AbstractActionController
             'goodSuppliers' => $goodSuppliers,
             'isApl' => $isApl,
             'base' => $base,    
+            'entityManager' => $this->entityManager,
         ]);
     }      
 

@@ -23,8 +23,9 @@ use Laminas\Json\Encoder;
 class Goods {
     
     // Константы доступности товар.
-    const AVAILABLE_TRUE    = 1; // Доступен.
-    const AVAILABLE_FALSE   = 0; // Недоступен.
+    const AVAILABLE_TRUE    = 1; // В наличии у поставщиков.
+    const AVAILABLE_APL    = 2; // В наличии в Апл.
+    const AVAILABLE_FALSE   = 9; // Нет в наличии.
     
     const CAR_UPDATED = 2; // машины обновлены
     const CAR_UPDATING = 3; // машины обновляются
@@ -673,6 +674,52 @@ class Goods {
     {
         return $this->available;
     }
+    
+    /**
+     * Опции наличия
+     * @return array
+     */
+    public static function getAvailableList()
+    {
+        return [
+            self::AVAILABLE_TRUE => 'В наличии',
+            self::AVAILABLE_APL => 'В наличии',
+            self::AVAILABLE_FALSE => 'Нет в наличии',
+        ];
+    }
+    
+    public function getAvailableAsString()
+    {
+        $list = self::getAvailableList();
+        if (isset($list[$this->available])) {
+            return $list[$this->available];
+        }
+
+        return 'Нет в наличии';
+    }    
+
+    /**
+     * Опции наличия
+     * @return array
+     */
+    public static function getAvailableHtmlList()
+    {
+        return [
+            self::AVAILABLE_TRUE => '<label class="text-primary">В наличии</label>',
+            self::AVAILABLE_APL => '<label class="text-success">В наличии</label>',
+            self::AVAILABLE_FALSE => '<label class="text-danger">Нет в наличии</label>',
+        ];
+    }
+    
+    public function getAvailableAsHtml()
+    {
+        $list = self::getAvailableHtmlList();
+        if (isset($list[$this->available])) {
+            return $list[$this->available];
+        }
+
+        return '<label class="text-warning">Нет в наличии</label>';
+    }    
 
     public function setAvailable($available) 
     {
