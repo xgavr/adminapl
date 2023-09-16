@@ -1624,6 +1624,7 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * ОТМЕНЕНО
      * Выгрузка клентов из апл
      * 
      * @return JsonModel

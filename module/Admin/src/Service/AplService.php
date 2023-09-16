@@ -725,6 +725,37 @@ class AplService {
         return $result;        
     }
 
+    /**
+     * Запросить данные клиента
+     * @param Order $order
+     */
+    public function getOrderBayerInfo($order)
+    {
+        $url = $this->aplApi().'bayer-password?api='.$this->aplApiKey();
+
+        $post = [
+            'orderId' => $order->getAplId(),
+        ];
+
+        $client = new Client();
+        $client->setUri($url);
+        $client->setMethod('POST');
+        $client->setParameterPost($post);
+
+        try{
+            $response = $client->send();
+//                var_dump($response->getBody()); exit;
+            if ($response->isOk()) {
+                return $response->getBody();
+            }
+        } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
+        } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+        }    
+
+        return;        
+    }
+    
+    
     /*
      * Получить клиента
      * @param array $row;

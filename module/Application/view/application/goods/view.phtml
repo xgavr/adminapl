@@ -31,12 +31,12 @@
             </sup>    -->
         </h3>
         <h5>
-            <?= $goods->getAplIdLinkId('Ссылка на АПЛ'); ?>
             Цена: <?= $goods->getPrice(); ?>
             <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
                     title="Обновить в АПЛ">
                 <span class="glyphicon glyphicon-refresh" ></span> Обновить в АПЛ
             </button>
+            <?= $goods->getAplIdLinkId('Ссылка на АПЛ'); ?>
         </h5>
         <h3>
             <?= $goods->getNameShort() ?>

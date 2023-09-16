@@ -36,13 +36,20 @@ class SmsController extends AbstractActionController
      * @var \Admin\Service\AdminManager
      */
     private $adminManager;        
+
+    /**
+     * AplService manager.
+     * @var \Admin\Service\AplService
+     */
+    private $aplService;        
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $smsManager, $adminManager) 
+    public function __construct($entityManager, $smsManager, $adminManager, $aplService) 
     {
         $this->smsManager = $smsManager;        
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
+        $this->aplService = $aplService;
     }   
 
     
@@ -148,6 +155,24 @@ class SmsController extends AbstractActionController
                     $clickFilter = new ClickFilter();
                     $result['turboLink'] = $clickFilter->filter($turboLink);
                 }    
+            }    
+        }
+        
+        return new JsonModel($result);                   
+    }    
+
+    public function profileAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        $result = [];
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+            
+            if ($order){
+                $result['login'] = $order->getAplLogin();
+                $result['password'] = $this->aplService->getOrderBayerInfo($order);
             }    
         }
         

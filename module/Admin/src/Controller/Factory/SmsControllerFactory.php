@@ -12,6 +12,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Controller\SmsController;
 use Admin\Service\SmsManager;
 use Admin\Service\AdminManager;
+use Admin\Service\AplService;
 
 
 /**
@@ -27,8 +28,9 @@ class SmsControllerFactory implements FactoryInterface {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');        
         $smsManager = $container->get(SmsManager::class);
         $adminManager = $container->get(AdminManager::class);
+        $aplService = $container->get(AplService::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new SmsController($entityManager, $smsManager, $adminManager);
+        return new SmsController($entityManager, $smsManager, $adminManager, $aplService);
     }
 }

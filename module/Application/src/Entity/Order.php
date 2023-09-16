@@ -920,6 +920,15 @@ class Order {
     {
         return $this->contact;
     }
+    
+    public function getAplLogin()
+    {
+        if ($this->contact){
+            $phone = $this->contact->getPhoneAsString();
+            return $phone;
+        }
+        return;
+    }
 
     /*
      * Возвращает связанный client.

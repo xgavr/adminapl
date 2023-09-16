@@ -190,7 +190,7 @@ $form->prepare();
                         </div>
                     </li>
                 </ul>
-<!--                <div class="panel-heading">оплаты через личный кабинет</div>
+                <div class="panel-heading">оплаты через личный кабинет</div>
                 <ul class="list-group">
                     <li class="list-group-item local-comment">Предоплата
                         <div class="text-hide">
@@ -200,7 +200,7 @@ $form->prepare();
                         <div class="text-hide">
                         </div>
                     </li>
-                </ul>-->
+                </ul>
             </div>
         </div>        
         <div class="col-xs-3">
@@ -212,11 +212,12 @@ $form->prepare();
                             Если Вам еще нужны запчасти - для Вас скидка! Узнайте подробности сейчас - [turbo]
                         </div>
                     </li>
-                    <li class="list-group-item local-comment" style="text-decoration: line-through">Логин, пароль
+                    <li class="list-group-item local-comment-client-info" style="text-decoration: line-through">Логин, пароль
                         <div class="text-hide">
+                            Данные для доступа в личный кабинет на сайте autopartslist.ru - логин: [clientLogin], пароль: [clientPassword]
                         </div>
                     </li>
-                    <li class="list-group-item local-comment">Номер телефона WhatsApp
+                    <li class="list-group-item local-comment">Номер телефона <b>WhatsApp</b>
                         <div class="text-hide">
                             Телефон для сообщений из WhatsApp, Viber, Telegram: <?= $order->getOffice()->getLegalContactWhatsapp()?>. Телефон для звонков: <?= $order->getOffice()->getLegalContactPhone()?>
                         </div>
@@ -310,6 +311,21 @@ $form->prepare();
             $.get('/sms/turbo-link/<?= $order->getId()?>', function( data ) {                
                 if (data.turboLink){
                     $('#message').val($.trim(str.replace("[turbo]", data.turboLink)));
+                    updateMode($(this).children('b').length);
+                }    
+            });
+        <?php else:?>
+            bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');
+        <?php endif;?>
+    });    
+
+    $('.local-comment-client-info').on('click', function() {
+        <?php if ($order->getAplId()): ?>
+            let str = $(this).children('.text-hide').html();
+            $.get('/sms/profile/<?= $order->getId()?>', function( data ) {                
+                if (data){
+                    $('#message').val($.trim(str.replace("[clientLogin]", data.login)));
+                    $('#message').val($.trim(str.replace("[clientPassword]", data.password)));
                     updateMode($(this).children('b').length);
                 }    
             });
