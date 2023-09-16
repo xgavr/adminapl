@@ -203,6 +203,7 @@ class CashRepository extends EntityRepository
      */
     public function findAllUserDoc($dateStart='2012-01-01', $dateEnd='2199-01-01', $params = null)
     {
+        var_dump($dateStart, $dateEnd);
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -249,7 +250,7 @@ class CashRepository extends EntityRepository
             }            
         }
 
-        var_dump($queryBuilder->getQuery()->getSQL());
+//        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }      
     
