@@ -451,9 +451,13 @@ class Order {
         return $this->aplId;
     }
     
-    public function getAplTurboId($passphrase)
+    public function getAplTurboLink()
     {
-        return "https://autopartslist.ru/index/turbo?order=".base64_encode($this->_encrypt($this->aplId, $passphrase));
+        if ($this->getAplId()){
+            return "https://autopartslist.ru/orders/turbo-link/id/". $this->getAplId();
+        }
+        
+        return;
     }
 
     /**

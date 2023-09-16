@@ -110,7 +110,6 @@ class SmsController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'order' => $order,
-            'turbo' => $order->getAplTurboId($turbo_passphrase),
             'currentUser' => $this->smsManager->currentUser(),
         ]);                        
     }    
@@ -128,6 +127,27 @@ class SmsController extends AbstractActionController
             if ($order){
                 $clickFilter = new ClickFilter();
                 $result['prepayLink'] = $clickFilter->filter($order->getAplPaymentLink($prepay));
+            }    
+        }
+        
+        return new JsonModel($result);                   
+    }    
+
+    public function turboLinkAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        $result = [];
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+            
+            if ($order){
+                $turboLink = file_get_contents($order->getAplTurboLink());
+                if ($turboLink){
+                    $clickFilter = new ClickFilter();
+                    $result['turboLink'] = $clickFilter->filter($turboLink);
+                }    
             }    
         }
         

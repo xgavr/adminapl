@@ -143,7 +143,6 @@ class PostController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'order' => $order,
-//            'turbo' => $order->getAplTurboId($turbo_passphrase),
             'currentUser' => $currentUser,
         ]);                        
     }

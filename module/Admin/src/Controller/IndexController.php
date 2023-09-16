@@ -952,7 +952,6 @@ class IndexController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'order' => $order,
-            'turbo' => $order->getAplTurboId($turbo_passphrase),
             'currentUser' => $this->smsManager->currentUser(),
         ]);                        
     }
