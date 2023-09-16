@@ -68,6 +68,7 @@ class UserController extends AbstractActionController
         $dateStart = $this->params()->fromQuery('dateStart');
         $period = $this->params()->fromQuery('period', 'date');
         
+        $endDate = null;
         if (!empty($dateStart)){
             $startDate = date('Y-m-d', strtotime($dateStart));
             $endDate = $startDate;

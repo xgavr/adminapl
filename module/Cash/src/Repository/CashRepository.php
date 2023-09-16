@@ -66,7 +66,7 @@ class CashRepository extends EntityRepository
      * @param array $params
      * @return query
      */
-    public function findAllCashDoc($dateStart, $dateEnd, $params = null)
+    public function findAllCashDoc($dateStart='2012-01-01', $dateEnd='2199-01-01', $params = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -260,7 +260,7 @@ class CashRepository extends EntityRepository
      * @param array $params
      * @return query
      */
-    public function findAllUserDocTotal($dateStart, $dateEnd, $params = null)
+    public function findAllUserDocTotal($dateStart = '2012-01-01', $dateEnd='2199-01-01', $params = null)
     {
         $entityManager = $this->getEntityManager();
 
