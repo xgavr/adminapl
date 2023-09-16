@@ -68,7 +68,7 @@ class UserController extends AbstractActionController
         $dateStart = $this->params()->fromQuery('dateStart');
         $period = $this->params()->fromQuery('period', 'date');
         
-        if ($dateStart){
+        if (!empty($dateStart)){
             $startDate = date('Y-m-d', strtotime($dateStart));
             $endDate = $startDate;
             if ($period == 'week'){
