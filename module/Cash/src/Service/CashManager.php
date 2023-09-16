@@ -375,9 +375,7 @@ class CashManager {
                 $this->addUserTransaction($cashDoc, -$cashDoc->getAmount(), $cashDoc->getUserRefill());
                 break;
             case CashDoc::KIND_OUT_USER:
-                if ($cashDoc->getUser()){
-                    $this->addUserTransaction($cashDoc, $cashDoc->getAmount(), $cashDoc->getUserRefill());
-                }    
+                $this->addUserTransaction($cashDoc, $cashDoc->getAmount(), $cashDoc->getUserRefill());
                 break;
             case CashDoc::KIND_OUT_REFILL:
                 $this->addTransaction($cashDoc, $cashDoc->getAmount(), $cashDoc->getCashRefill());

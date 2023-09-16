@@ -646,7 +646,7 @@ class CashDoc {
     public static function getKindOutList() 
     {
         return [
-            self::KIND_OUT_USER => 'Подотчет сотруднику',
+            self::KIND_OUT_USER => 'Выдача в подотчет',
             self::KIND_OUT_SUPPLIER => 'Оплата поставщику',
             self::KIND_OUT_COURIER => 'Оплата курьеру',
             self::KIND_OUT_REFILL => 'Пополнение',
