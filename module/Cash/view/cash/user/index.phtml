@@ -261,11 +261,11 @@
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
                         return row.cashDoc.cashRefill.name;
             case '<?= CashDoc::KIND_IN_RETURN_USER ?>':
-                    return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName:row.cashDoc.cash.name;                        
+                    return (row.cashDoc.user) ? row.cashDoc.user.fullName:row.cashDoc.cash.name;                        
             case '<?= CashDoc::KIND_OUT_COURIER ?>': 
                         return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName + ' ' + contactName+ ' ' + orderId:null;                        
             case '<?= CashDoc::KIND_OUT_SALARY ?>': 
-            case '<?= CashDoc::KIND_OUT_USER ?>': 
+//            case '<?= CashDoc::KIND_OUT_USER ?>': 
                     return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName:row.cashDoc.cash.name;                        
             case '<?= CashDoc::KIND_OUT_COST ?>': 
                         return row.cashDoc.cost.name;
