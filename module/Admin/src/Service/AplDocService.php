@@ -934,7 +934,7 @@ class AplDocService {
             $client->setOptions(['timeout' => 60]);
             $client->setParameterPost($post);            
 
-            $ok = $result = false;
+            $ok = $result = $aplId = false;
             try{
                 $response = $client->send();
 //                var_dump($response->getBody()); exit;
@@ -948,7 +948,7 @@ class AplDocService {
                 $ok = true;
             }    
 
-            if ($ok) {            
+            if ($ok && $aplId) {            
                 $vt->setStatusEx(Vt::STATUS_EX_APL);
                 if ($aplId > 0 && empty($vt->getAplId())){
                     $vt->setAplId($aplId);
