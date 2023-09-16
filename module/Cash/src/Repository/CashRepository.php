@@ -249,6 +249,7 @@ class CashRepository extends EntityRepository
             }            
         }
 
+        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }      
     
