@@ -92,7 +92,7 @@
                      <th data-field='cashDoc.kind' data-sortable="false" data-formatter="kindFormatter" data-width="200">Операция</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Приход</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="outFormatter" data-width="100">Расход</th>
-                     <th data-field='cashDoc.cash.name' data-sortable="false" data-width="150">Касса</th>
+                     <th data-field='cash.name' data-sortable="false" data-width="150">Касса</th>
                      <!--<th data-field="aplId" data-type="numeric"data-align="right">AplId</th>-->
                      <th data-field='cashDoc.kind' data-sortable="false" data-formatter="operFormatter">Кому/от кого</th>
                      <th data-field='cashDoc.comment' data-sortable="false">Комментарий</th>
@@ -235,7 +235,7 @@
     }    
     
     function operFormatter(value, row){
-        var cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
+        var cashName = row.cash.name;
         switch(value){
             case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
             case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
