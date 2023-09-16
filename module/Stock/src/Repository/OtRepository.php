@@ -245,7 +245,7 @@ class OtRepository extends EntityRepository{
             ->where('o.statusEx = ?1')
             ->setParameter('1', Ot::STATUS_EX_NEW) 
                 
-            ->andWhere('o.aplId > 0')    
+//            ->andWhere('o.aplId > 0')    
             ->setMaxResults(1)    
                 
                 ;
@@ -253,14 +253,14 @@ class OtRepository extends EntityRepository{
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $ot){
             $flag = true;
-//            $otGoods = $entityManager->getRepository(OtGood::class)
-//                    ->findBy(['ot' => $ot->getId()]);
-//            foreach ($otGoods as $otGood){
-//               if (empty($otGood->getGood()->getAplId())){
-//                   $flag = false;
-//                   break;
-//               }  
-//            }
+            $otGoods = $entityManager->getRepository(OtGood::class)
+                    ->findBy(['ot' => $ot->getId()]);
+            foreach ($otGoods as $otGood){
+               if (empty($otGood->getGood()->getAplId())){
+                   $flag = false;
+                   break;
+               }  
+            }
             if ($flag){
                 return $ot;
             }    

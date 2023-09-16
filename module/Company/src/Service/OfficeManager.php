@@ -53,6 +53,7 @@ class OfficeManager
         $office->setSbOwner($data['sbOwner']);
         $office->setSbpMerchantId((empty($data['sbpMerchantId'])) ? null:$data['sbpMerchantId']); 
         $office->setParent((empty($data['parent'])) ? null:$data['parent']); 
+        $office->setLinkReview((empty($data['linkReview'])) ? null:$data['linkReview']); 
         
         $currentDate = date('Y-m-d H:i:s');        
         $office->setDateCreated($currentDate);
@@ -98,6 +99,7 @@ class OfficeManager
         $office->setSbOwner($data['sbOwner']);
         $office->setSbpMerchantId((empty($data['sbpMerchantId'])) ? null:$data['sbpMerchantId']); 
         $office->setParent((empty($data['parent'])) ? null:$data['parent']); 
+        $office->setLinkReview((empty($data['linkReview'])) ? null:$data['linkReview']); 
         
         $office->setRegion($region);
         

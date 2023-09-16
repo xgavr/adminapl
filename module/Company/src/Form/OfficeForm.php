@@ -104,6 +104,17 @@ class OfficeForm extends Form implements ObjectManagerAwareInterface
                 'label' => 'Идентификатор ТСП в СБП',
             ],
         ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'linkReview',
+            'attributes' => [
+                'id' => 'linkReview'
+            ],
+            'options' => [
+                'label' => 'Ссылка на страницу отзывов',
+            ],
+        ]);
         
         $this->add([           
             'type'  => 'number',

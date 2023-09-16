@@ -244,7 +244,7 @@ class StRepository extends EntityRepository{
             ->where('s.statusEx = ?1')
             ->setParameter('1', St::STATUS_EX_NEW)    
                 
-            ->andWhere('s.aplId > 0')  
+//            ->andWhere('s.aplId > 0')  
             ->setMaxResults(1)    
                 
                 ;
@@ -252,14 +252,14 @@ class StRepository extends EntityRepository{
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $st){
             $flag = true;
-//            $stGoods = $entityManager->getRepository(StGood::class)
-//                    ->findBy(['st' => $st->getId()]);
-//            foreach ($stGoods as $stGood){
-//               if (empty($stGood->getGood()->getAplId())){
-//                   $flag = false;
-//                   break;
-//               }  
-//            }
+            $stGoods = $entityManager->getRepository(StGood::class)
+                    ->findBy(['st' => $st->getId()]);
+            foreach ($stGoods as $stGood){
+               if (empty($stGood->getGood()->getAplId())){
+                   $flag = false;
+                   break;
+               }  
+            }
             if ($flag){
                 return $st;
             }    

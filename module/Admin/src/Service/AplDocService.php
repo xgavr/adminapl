@@ -1979,17 +1979,17 @@ class AplDocService {
         set_time_limit(900);
         $startTime = time();
         $start = 0;
-//        while (true){
-//            if ($this->unloadDoc($start)) {
-//                usleep(100);
-//                if (time() > $startTime + 840){
-//                    break;
-//                }
-//            } else {
-//                break;
-//            }    
-//            $start++;
-//        }    
+        while (true){
+            if ($this->unloadDoc($start)) {
+                usleep(100);
+                if (time() > $startTime + 840){
+                    break;
+                }
+            } else {
+                break;
+            }    
+            $start++;
+        }    
 
         while (true){
             if ($this->sendPtu()) {

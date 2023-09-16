@@ -100,6 +100,12 @@ class Office {
      * @ORM\Column(name="sbp_merchant_id")   
      */
     protected $sbpMerchantId;
+
+    /**
+     * Ссылка на отзыв
+     * @ORM\Column(name="link_review")   
+     */
+    protected $linkReview;
     
     /**
     * @ORM\OneToMany(targetEntity="\Application\Entity\Contact", mappedBy="office")
@@ -735,5 +741,14 @@ class Office {
         }    
         
         return;
-    }        
+    }    
+
+    public function getLinkReview() {
+        return $this->linkReview;
+    }
+
+    public function setLinkReview($linkReview) {
+        $this->linkReview = $linkReview;
+        return $this;
+    }
 }

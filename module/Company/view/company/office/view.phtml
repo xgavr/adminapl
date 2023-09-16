@@ -40,6 +40,7 @@ $legalContact = $office->getLegalContact();
                     Карта СБ: <?= $this->escapeHtml($office->getSbCard()) ?> <?= $this->escapeHtml($office->getSbOwner()) ?><br/>
                     Идентификатор ТСП в СБП: <?= $this->escapeHtml($office->getSbpMerchantId()) ?><br/>
                     Статус: <?= $this->escapeHtml($office->getStatusAsString()) ?><br/>
+                    Страница отзывов: <a href="<?= $office->getLinkReview() ?>" target="_blank"><?= $office->getLinkReview() ?></a><br/>
                 </div>
                 <div class="pull-right">
                     <button value="/offices/edit-form/<?= $office->getId() ?>" class="btn btn-default btn-xs"

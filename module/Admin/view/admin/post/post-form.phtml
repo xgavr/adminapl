@@ -167,30 +167,26 @@ $form->prepare();
                             <br/>Спасибо за заказ!
                         </div>
                     </button>
-                    <?php if ($order->getCourier()):?>
-                        <button type="button" class="list-group-item local-comment">Отследить отправку СДЕК
-                            <div class="text-hide">
-                                Ваш заказ отправлен через ТК СДЕК. Отследить движение заказа Вы можете перейдя по ссылке <?= $order->getTrackLink()?>.
-                                <br/>Спасибо за заказ! Ждем Вас снова!                       
-                            </div>
-                        </button>
-                        <button type="button" class="list-group-item local-comment">Доставка ТК
-                            <div class="text-hide">
-                                Ваш заказ №<?= $order->getMessageAplId()?> доставлен в транспортную компанию <?= $order->getCourierName()?>.
-                                <br/>Номер накладной для отслеживания статуса груза: <?= $order->getTrackNumber()?>
-                                <br/>Спасибо за заказ!
-                            </div>
-                        </button>
-                    <?php endif;?>    
-                    <?php if ($order->getContact()):?>
-                        <button type="button" class="list-group-item local-comment" style="text-decoration: line-through">Логин, пароль
-                            <div class="text-hide">
-                                Данные для доступа в личный кабинет на сайте autopartslist.ru
-                                <br/>Логин: <?= $order->getContact()->getPhoneAsString() ?>
-                                <br/>Пароль: 
-                            </div>
-                        </button>
-                    <?php endif;?>    
+                    <button type="button" class="list-group-item local-comment">Отследить отправку СДЕК
+                        <div class="text-hide">
+                            Ваш заказ отправлен через ТК СДЕК. Отследить движение заказа Вы можете перейдя по ссылке <?= $order->getTrackLink()?>.
+                            <br/>Спасибо за заказ! Ждем Вас снова!                       
+                        </div>
+                    </button>
+                    <button type="button" class="list-group-item local-comment">Доставка ТК
+                        <div class="text-hide">
+                            Ваш заказ №<?= $order->getMessageAplId()?> доставлен в транспортную компанию <?= $order->getCourierName()?>.
+                            <br/>Номер накладной для отслеживания статуса груза: <?= $order->getTrackNumber()?>
+                            <br/>Спасибо за заказ!
+                        </div>
+                    </button>
+                    <button type="button" class="list-group-item local-comment-client-info">Логин, пароль
+                        <div class="text-hide">
+                            Данные для доступа в личный кабинет на сайте autopartslist.ru
+                            <br/>Логин: [clientLogin]
+                            <br/>Пароль: [clientPassword]
+                        </div>
+                    </button>
                     <button type="button" class="list-group-item local-comment">Ответ по заказу или запросу
                         <div class="text-hide">
                             Ваш заказ №<?= $order->getMessageAplId()?> поступил в обработку.
@@ -209,59 +205,59 @@ $form->prepare();
             <div class="panel panel-default small">
                 <div class="panel-heading">оплаты через личный кабинет</div>
                 <ul class="list-group">
-                    <button type="button" class="list-group-item local-comment py-sm-0" style="text-decoration: line-through">Предоплата
+                    <button type="button" class="list-group-item local-comment-client-info py-sm-0">Предоплата
                         <div class="text-hide">
                             Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> руб.
                             <br/>Просмотреть содержимое заказа и оплатить его Вы можете в личном кабинете на сайте autopartslist.ru
-                            <br/>Логин: <?= $order->getContact()->getPhoneAsString() ?>
-                            <br/>Пароль:                         
+                            <br/>Логин: [clientLogin]
+                            <br/>Пароль: [clientPassword]                        
                         </div>
                     </button>
-                    <button type="button" class="list-group-item local-comment  py-sm-0" style="text-decoration: line-through">100% оплата
+                    <button type="button" class="list-group-item local-comment-client-info  py-sm-0">100% оплата
                         <div class="text-hide">
                             Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> руб.
                             <br/>Просмотреть содержимое заказа и оплатить его Вы можете в личном кабинете на сайте autopartslist.ru
-                            <br/>Логин: <?= $order->getContact()->getPhoneAsString() ?>
-                            <br/>Пароль:                         
+                            <br/>Логин: [clientLogin]
+                            <br/>Пароль: [clientPassword]                        
                         </div>
                     </button>
-                    <button type="button" class="list-group-item  py-sm-0 local-comment">Предоплата на СБ или ЛК
+                    <button type="button" class="list-group-item  py-sm-0 local-comment-client-info">Предоплата на СБ или ЛК
                         <div class="text-hide">
                             Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает предоплаты в размере <?= $order->getPrepay()?> р.
                             <br/>
                             <br/><b>Варианты оплаты:</b>
-<!--                            <br/>- через личный кабинет на сайте autopartslist.ru
-                            <br/>Логин: "<?= $order->getContact()->getPhoneAsString() ?>"; пароль: -->
+                            <br/>1 - через личный кабинет на сайте autopartslist.ru
+                            <br/>Логин: [clientLogin]; пароль: [clientPassword] 
                             <br/>
-                            <br/>- на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
+                            <br/>2 - на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
                             <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getMessageAplId()?>".
                             <br/>
                             <br/>Для идентификации платежа, после оплаты обязательно позвоните в офис по тел.: <?= $order->getOffice()->getLegalContactPhones()?> и сообщите об осуществлении платежа по заказу №<?= $order->getMessageAplId()?>.
                         </div>
                     </button>
-                    <button type="button" class="list-group-item  py-lg-0 local-comment">100% оплата СБ или ЛК
+                    <button type="button" class="list-group-item  py-lg-0 local-comment-client-info">100% оплата СБ или ЛК
                         <div class="text-hide">
                             Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р.
                             <br/>
                             <br/><b>Варианты оплаты:</b>
-<!--                            <br/>- через личный кабинет на сайте autopartslist.ru
-                            <br/>Логин: "<?= $order->getContact()->getPhoneAsString() ?>"; пароль: -->
+                            <br/>1 - через личный кабинет на сайте autopartslist.ru
+                            <br/>Логин: [clientLogin]; пароль: [clientPassword]
                             <br/>
-                            <br/>- на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
+                            <br/>2 - на карту Сбербанка <?= $order->getOffice()->getSbCard()?>, получатель <?= $order->getOffice()->getSbOwner()?>
                             <br/>При оплате просьба в поле "Сообщение получателю" указать "<?= $order->getMessageAplId()?>".
                             <br/>
                             <br/>Для идентификации платежа, после оплаты обязательно позвоните в офис по тел.: <?= $order->getOffice()->getLegalContactPhones()?> и сообщите об осуществлении платежа по заказу №<?= $order->getMessageAplId()?>.
                         </div>
                     </button>
-                    <button type="button" class="list-group-item local-comment" style="text-decoration: line-through">100% оплата регионы
+                    <button type="button" class="list-group-item local-comment-client-info">100% оплата регионы
                         <div class="text-hide">
                             Для отправки заказа необходима 100% оплата за товар и услугу доставки до Транспортной Компании.
                             <br/>Услуги ТК оплачиваются Вами при получении заказа в офисе ТК в вашем городе.
                             <br/>
                             <br/>Ваш заказ №<?= $order->getMessageAplId()?> принят и ожидает оплаты в размере <?= $order->getTotal()?> р. - с учетом нашей доставки (<?= $order->getShipmentTotal()?> р.) до ТК.
                             <br/>Просмотреть содержимое заказа и оплатить его Вы можете в личном кабинете на сайте autopartslist.ru
-                            <br/>Логин: <?= $order->getContact()->getPhoneAsString() ?>
-                            <br/>Пароль: 
+                            <br/>Логин: [clientLogin]
+                            <br/>Пароль: [clientPassword]
                         </div>
                     </button>
                 </ul>
@@ -357,7 +353,7 @@ $form->prepare();
 <?= $this->form()->closeTag(); ?>
 
 <div class="text-hide" id="mail-welcome">
-    Здравствуйте, <strong class="text-capitalize"><?= $order->getContact()->getName();?></strong>!
+    Здравствуйте<?php if (!empty($order->getContact()->getName())): ?>, <strong class="text-capitalize"><?= $order->getContact()->getName();?></strong><?php endif;?>!
     <br/><br/>
 </div>
 <div class="text-hide" id="mail-info">
@@ -380,10 +376,17 @@ $form->prepare();
         
     });
     
-    function renderBody(sberForm = '<br/><br/>'){
+    function renderBody(sberForm = '<br/><br/>', macro = ''){
         let welcome = $('#mail-welcome').html();
         let info = $('#mail-info').html();
-        let str = $currentNode.children('.text-hide').html();
+        var str = $currentNode.children('.text-hide').html();
+        
+        if (macro){
+            $.each( macro, function( key, value ) {
+                str = str.replace("["+key+"]", value);
+            });            
+        }
+        
         $.get('/post/order-body/<?= $order->getId()?>?showCode='+$showCode.prop('checked'), function( data ) {                
             let sign = (data.sign) ? data.sign:'';
             $bodyEditor.summernote('code', welcome + info + data.body + '<br/><br/>' + $.trim(str) + sberForm + sign);
@@ -432,6 +435,19 @@ $form->prepare();
             $currentNode = $(this);
             $.get('/post/sber-form/<?= $order->getId()?>?prepay='+<?= $order->getTotal()?>, function( data ) {
                 renderBody(data);
+            });
+        <?php else:?>
+            bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');
+        <?php endif;?>
+    });    
+    
+    $('.local-comment-client-info').on('click', function() {
+        <?php if ($order->getAplId()): ?>
+            $currentNode = $(this);    
+            $.get('/sms/profile/<?= $order->getId()?>', function( data ) {                
+                if (data){
+                    renderBody('', {clientLogin: data.login, clientPassword: data.password});
+                }    
             });
         <?php else:?>
             bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');

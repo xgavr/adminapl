@@ -44,6 +44,10 @@ $form->get('parent')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('linkReview')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')
         ->setAttributes(['class'=>'btn btn-primary'])
         ->setValue('Сохранить');
@@ -124,6 +128,15 @@ $form->prepare();
                     </div>
                 </div>    
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('linkReview')); ?>
+                        <?= $this->formElement($form->get('linkReview')); ?>
+                        <?= $this->formElementErrors($form->get('linkReview')); ?>                  
+                    </div>
+                </div>
+            </div>    
         </div>    
     </div>
 </div>    
