@@ -246,9 +246,9 @@
                         }    
                         return contactName+' '+orderId;
             case '<?= CashDoc::KIND_IN_REFILL ?>': 
-                        return (row.amount < 0) ? cashName:row.cashDoc.cashRefill.name;
-            case '<?= CashDoc::KIND_OUT_REFILL ?>': 
                         return (row.amount > 0) ? cashName:row.cashDoc.cashRefill.name;
+            case '<?= CashDoc::KIND_OUT_REFILL ?>': 
+                        return (row.amount < 0) ? cashName:row.cashDoc.cashRefill.name;
             case '<?= CashDoc::KIND_IN_RETURN_USER ?>': 
             case '<?= CashDoc::KIND_OUT_COURIER ?>': 
             case '<?= CashDoc::KIND_OUT_SALARY ?>': 
