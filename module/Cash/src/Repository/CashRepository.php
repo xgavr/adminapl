@@ -72,16 +72,16 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('ct, cd, c, cr, ur, cost, l, u, uc, cnt, clt, o')
+        $queryBuilder->select('ct, cash, cd, c, cr, ur, cost, l, u, uc, cnt, clt, o')
             ->from(CashTransaction::class, 'ct')
             ->join('ct.cashDoc', 'cd')
-            ->join('ct.cash', 'cash')
+            ->join('ct.cash', 'c')
             ->leftJoin('cd.cashRefill', 'cr')    
             ->leftJoin('cd.userRefill', 'ur')    
             ->leftJoin('cd.userCreator', 'uc')    
             ->leftJoin('cd.cost', 'cost')    
             ->leftJoin('cd.legal', 'l')
-            ->leftJoin('cd.cash', 'c')
+//            ->leftJoin('cd.cash', 'c')
             ->leftJoin('cd.user', 'u')
             ->leftJoin('cd.contact', 'cnt')
             ->leftJoin('cnt.client', 'clt')
