@@ -235,7 +235,7 @@
     }    
     
     function operFormatter(value, row){
-        var cashRefill = (row.cashDoc.cashRefill) ? row.cashDoc.cashRefill.name:row.cashDoc.userRefill.fullName;
+        var cashRefill = null;
         switch(value){
             case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
             case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
@@ -246,8 +246,10 @@
                         }    
                         return contactName+' '+orderId;
             case '<?= CashDoc::KIND_IN_REFILL ?>': 
+                        cashRefill = (row.cashDoc.cashRefill) ? row.cashDoc.cashRefill.name:row.cashDoc.userRefill.fullName;
                         return (row.amount < 0) ? row.cashDoc.cash.name:cashRefill;
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
+                        cashRefill = (row.cashDoc.cashRefill) ? row.cashDoc.cashRefill.name:row.cashDoc.userRefill.fullName;
                         return (row.amount > 0) ? row.cashDoc.cash.name:cashRefill;
             case '<?= CashDoc::KIND_IN_RETURN_USER ?>': 
             case '<?= CashDoc::KIND_OUT_COURIER ?>': 
