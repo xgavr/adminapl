@@ -90,20 +90,16 @@ $form->prepare();
                             Ваш заказ №<?= $order->getMessageAplId()?>, доставка <?= date('d-m', strtotime($order->getDateShipment()))?>, к оплате <?= $order->getTotal()?> р. Обязательно будьте на связи - курьер Вам заранее позвонит. Спасибо за заказ!
                         </div>
                     </li>
-                    <?php if ($order->getCourier()):?>
-                        <li class="list-group-item local-comment">Отправка ТК и СПС <b>WhatsApp</b>
-                            <div class="text-hide">
-                                Мы отправили заказ №<?= $order->getMessageAplId()?>. Накладная в <?= $order->getCourier()->getName()?> №<?= $order->getTrackNumber()?>. Спасибо что выбрали нас! Нам важно знать Ваше мнение о нашей работе! Как только заберете заказ из ТК, по возможности, оставьте оценку или отзыв - https://clck.ru/YJRpd
-                            </div>
-                        </li>
-                    <?php endif;?>    
-                    <?php if ($order->getCourier()):?>
-                        <li class="list-group-item local-comment">Отправка ТК
-                            <div class="text-hide">
-                                Ваш заказ №<?= $order->getMessageAplId()?>, отправка через ТК <?= $order->getCourier()->getName()?>, № накладной ТК - <?= $order->getTrackNumber()?>. Спасибо за заказ!
-                            </div>
-                        </li>
-                    <?php endif;?>    
+                    <li class="list-group-item local-comment">Отправка ТК и СПС <b>WhatsApp</b>
+                        <div class="text-hide">
+                            Мы отправили заказ №<?= $order->getMessageAplId()?>. Накладная <?= ($order->getCourier()) ? 'в '.$order->getCourier()->getName():''?> №<?= $order->getTrackNumber()?>. Спасибо что выбрали нас! Нам важно знать Ваше мнение о нашей работе! Как только заберете заказ из ТК, по возможности, оставьте оценку или отзыв - https://clck.ru/YJRpd
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Отправка ТК
+                        <div class="text-hide">
+                            Ваш заказ №<?= $order->getMessageAplId()?>, отправка через ТК <?= ($order->getCourier()) ? 'в '.$order->getCourier()->getName():''?>, № накладной ТК - <?= $order->getTrackNumber()?>. Спасибо за заказ!
+                        </div>
+                    </li>
                     <li class="list-group-item local-comment-turbo-link">турбоссылка
                         <div class="text-hide">
                             Ссылка для просмотра заказа №<?= $order->getMessageAplId()?> - [turbo]
@@ -112,6 +108,16 @@ $form->prepare();
                     <li class="list-group-item local-comment" attachment="preorder">Предзаказ PDF <b>WhatsApp</b>
                         <div class="text-hide">
                             Предварительный заказ №<?= $order->getMessageAplId()?> для подтверждения звоните <?= $order->getOffice()->getLegalContactPhone()?>
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Последний день <b>WhatsApp</b>
+                        <div class="text-hide">
+                            Сегодня последний день хранения вашего заказа №<?= $order->getMessageAplId()?>. Заказ ждет Вас по адресу <?= $order->getOffice()->getLegalContactSmsAddress()?>. Для продления срока хранения, звоните <?= $order->getOffice()->getLegalContactPhone()?>.
+                        </div>
+                    </li>
+                    <li class="list-group-item local-comment">Последний день <b>WhatsApp</b>
+                        <div class="text-hide">
+                            Ваш заказ №<?= $order->getMessageAplId()?> расформирован. В случае если он для Вас по-прежнему актуален - звоните <?= $order->getOffice()->getLegalContactPhone()?>   
                         </div>
                     </li>
                 </ul>
