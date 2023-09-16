@@ -262,13 +262,21 @@
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
                         return row.cashDoc.cashRefill.name;
             case '<?= CashDoc::KIND_IN_RETURN_USER ?>':
-                    return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.userRefill.fullName;                        
+                    if (row.amount > 0){
+                        return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.userRefill.fullName;
+                    } else {
+                        return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
+                    }    
             case '<?= CashDoc::KIND_OUT_COURIER ?>': 
                         return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName + ' ' + contactName+ ' ' + orderId:null;                        
             case '<?= CashDoc::KIND_OUT_SALARY ?>':  
                         return row.cashDoc.userRefill.fullName;
             case '<?= CashDoc::KIND_OUT_USER ?>': 
-                    return (row.cashDoc.user) ? row.cashDoc.userRefill.fullName:row.cashDoc.cash.name;                        
+                    if (row.amount < 0){
+                        return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.userRefill.fullName;
+                    } else {
+                        return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
+                    }    
             case '<?= CashDoc::KIND_OUT_COST ?>': 
                         return row.cashDoc.cost.name;
             case '<?= CashDoc::KIND_IN_RETURN_SUPPLIER ?>': 
