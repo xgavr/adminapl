@@ -106,7 +106,9 @@ class UserController extends AbstractActionController
         $result = $query->getResult(2);
         
         return new JsonModel([
-            'total' => $total,
+            'amountIn' => $total['amountIn'],
+            'amountOut' => $total['amountOut'],
+            'total' => $total['countCd'],
             'rows' => $result,
         ]);                  
     }
