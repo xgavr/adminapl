@@ -805,7 +805,7 @@ $legalContact = $client->getLegalContact();
     }    
 
     function vinFormatter(value, row){
-        var result = value;
+        var result = (value) ? value:'';
         if (row.vin2){
             result += ' (' + row.vin2 + ')';
         }
