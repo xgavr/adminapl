@@ -296,8 +296,8 @@ class CashRepository extends EntityRepository
         }
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
-var_dump($result);
-        return $result['countCd'];
+//var_dump($result);
+        return $result;
     }    
 
     /**
