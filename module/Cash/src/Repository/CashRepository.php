@@ -268,7 +268,7 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('count(ut.id) as countCd')
+        $queryBuilder->select('count(ut.id) as countCd, sum(ut.amount) as amountSum')
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')
 //            ->join('cd.user', 'c')
@@ -296,7 +296,7 @@ class CashRepository extends EntityRepository
         }
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
-
+var_dump($result);
         return $result['countCd'];
     }    
 

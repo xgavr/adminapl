@@ -79,8 +79,12 @@ class UserController extends AbstractActionController
             if ($period == 'month'){
                 $endDate = date('Y-m-d', strtotime('+ 1 month - 1 day', strtotime($startDate)));
             }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
         }    
-        
+//        var_dump($startDate, $endDate);
         $params = [
             'sort' => $sort, 'order' => $order, 'officeId' => $officeId,
             'userId' => $userId, 'kind' => $kind,
