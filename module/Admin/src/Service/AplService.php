@@ -1000,8 +1000,8 @@ class AplService {
                 $response = $client->send();
                 $body = $response->getBody();
                 if (is_numeric($body)){
-//                    $this->entityManager->getRepository(Goods::class)
-//                            ->updateGoodId($good->getId(), ['apl_id' => $body]);
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGoodId($good->getId(), ['apl_id' => $body]);
                     $result = true;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $ex){
