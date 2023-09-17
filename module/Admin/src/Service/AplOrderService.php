@@ -1209,7 +1209,7 @@ class AplOrderService {
                 'delivery_distance' => $order->getShipmentDistance(),
                 'delivery_rate_adv' =>$order->getShipmentAddRate(),
                 'delivery' => $order->getShipping()->getAplId(),
-                'type' => $order->getDateShipment(),
+                'type' => date('Y-m-d', strtotime($order->getDateOper())),
                 'delivery_sum' => $order->getShipmentTotal(),
                 'address' => $order->getAddress(),
                 'brand' => $order->getContactCarMakeAplId(),

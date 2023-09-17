@@ -58,7 +58,7 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'select',
             'name' => 'get_acquiring',
             'options' => [
-                'label' => 'Выгрузка эквайринга',
+                'label' => 'Выгрузка эквайринга ОТКЛЮЧЕНО',
                 'value_options' => [
                     1 => 'Делать',
                     2 => 'Не делать',                    
