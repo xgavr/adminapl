@@ -587,7 +587,7 @@ class OrderRepository extends EntityRepository{
                 $queryBuilder->andWhere('o.status != ?2')
                     ->setParameter('2', Order::STATUS_CANCELED)  
     //            ->andWhere('o.aplId > 0')
-//                    ;
+                    ;
 //            }    
         
         $data = $queryBuilder->getQuery()->getResult();
