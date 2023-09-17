@@ -337,9 +337,9 @@ class PtuRepository extends EntityRepository{
 //                   break;
 //               }  
 //            }
-//            if ($flag){
-//                return $ptu;
-//            }    
+            if ($flag){
+                return $ptu;
+            }    
         }
         
         return;                
