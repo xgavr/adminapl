@@ -42,7 +42,6 @@ use Stock\Entity\ComissBalance;
 use Stock\Entity\ComitentBalance;
 use Stock\Entity\Comitent;
 use Application\Entity\Comment;
-use Laminas\Json\Encoder;
 
 /**
  * Description of OrderService
