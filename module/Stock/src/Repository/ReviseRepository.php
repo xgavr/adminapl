@@ -221,7 +221,7 @@ class ReviseRepository extends EntityRepository
      */
     public function updateReportRevise($revise)
     {
-        if ($revise->getContact()){
+        if ($revise->getContract()){
         
             $entityManager = $this->getEntityManager();
 
