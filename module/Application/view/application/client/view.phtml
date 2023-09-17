@@ -909,7 +909,7 @@ $legalContact = $client->getLegalContact();
                         return "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
                     }    
                     if (row.cashDoc.user){
-                        cashName = row.cashDoc.user.FullName;
+                        cashName = row.cashDoc.user.fullName;
                         if (row.amount < 0){
                             return "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
                         }    
