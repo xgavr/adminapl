@@ -41,49 +41,47 @@ $form->prepare();
                 <?= $this->formElement($form->get('info')); ?>
                 <?= $this->formElementErrors($form->get('info')); ?>                  
             </div>
+            <div id="order-tab-content">
+                <table id="selectionGoodTable" class="table-bordered table-hover table-condensed"></table>
+            </div>                            
         </div>    
-        <div class="col-sm-3">                        
-            <div class="form-group form-group-sm">
-                <?//= $this->formLabel($form->get('oem')); ?>
-                <div class="input-group">
-                    <?= $this->formElement($form->get('oem')); ?>
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default btn-sm selection-add" title="Добавить ОЕ">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                    </span>    
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group form-group-sm">
+                        <?//= $this->formLabel($form->get('oem')); ?>
+                        <div class="input-group">
+                            <?= $this->formElement($form->get('oem')); ?>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default btn-sm selection-add" title="Добавить ОЕ">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </span>    
+                        </div>    
+                        <?= $this->formElementErrors($form->get('oem')); ?>                  
+                    </div>                    
+                </div>                
+                <div class="col-sm-4">                        
+                    <div class="form-group form-group-sm">
+                        <?= $this->formElement($form->get('oemInfo')); ?>
+                    </div>
                 </div>    
-                <?= $this->formElementErrors($form->get('oem')); ?>                  
             </div>
-        </div>    
-        <div class="col-sm-1">                        
-            <div class="form-group form-group-sm">
-                <?= $this->formElement($form->get('oemInfo')); ?>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul id="selection-tab-list" class="nav nav-tabs" role="tablist">
+                    </ul>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- Tab panes -->
+                            <div id="selection-tab-content" class="tab-content">
+                            </div>        
+                        </div>
+                    </div>    
+                </div>                
             </div>
         </div>    
     </div>    
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div id="order-tab-content">
-                        <table id="selectionGoodTable" class="table-bordered table-hover table-condensed"></table>
-                    </div>                            
-                </div>
-            </div>                
-        </div>
-        <div class="col-sm-6">
-            <ul id="selection-tab-list" class="nav nav-tabs" role="tablist">
-            </ul>
-            <div class="row">
-                <div class="col-sm-12">
-                    <!-- Tab panes -->
-                    <div id="selection-tab-content" class="tab-content">
-                    </div>        
-                </div>
-            </div>    
-        </div>
-    </div>   
 </div>    
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
