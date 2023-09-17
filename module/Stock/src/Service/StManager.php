@@ -9,6 +9,7 @@ use Stock\Entity\Comiss;
 use Stock\Entity\Retail;
 use Stock\Entity\Register;
 use Stock\Entity\ComissBalance;
+use Laminas\Json\Encoder;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -176,6 +177,7 @@ class StManager
                                         'doc_stamp' => $docStamp,
                                         'legal_id' => $legalId,
                                         'contract_id' => $contractId,
+                                        'doc_info' => Encoder::encode($st->toLog()),
                                     ];
 
                                     $this->entityManager->getRepository(Retail::class)

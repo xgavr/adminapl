@@ -20,6 +20,7 @@ use Stock\Entity\RegisterVariable;
 use Stock\Entity\Mutual;
 use Stock\Entity\Retail;
 use Stock\Entity\Revise;
+use Laminas\Json\Encoder;
 
 class ReportManager
 {
@@ -367,6 +368,7 @@ class ReportManager
                 'office_id' => $marketSaleReport->getContract()->getOffice()->getId(),
                 'company_id' => $marketSaleReport->getContract()->getCompany()->getId(),
                 'doc_stamp' => $docStamp,
+                'doc_info' => Encoder::encode($marketSaleReport->toArray()),
             ];
 
             $this->entityManager->getRepository(Retail::class)
@@ -525,10 +527,10 @@ class ReportManager
                 ->msrRegister($marketSaleReport);
         if ($marketSaleReport->getDocDate() > $this->getAllowDate()){
             $take = $this->updateComitent($marketSaleReport, $docStamp);
-            if ($take != MarketSaleReport::STATUS_TAKE_NO){
+            //if ($take != MarketSaleReport::STATUS_TAKE_NO){
                 $this->updateMarketSaleReportMutuals($marketSaleReport, $docStamp);
                 $this->updateMarketSaleReportRetails($marketSaleReport, $docStamp);
-            }    
+            //}    
         }
         
         $this->entityManager->getRepository(MarketSaleReport::class)

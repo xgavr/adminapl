@@ -14,6 +14,7 @@ use Application\Entity\SupplierOrder;
 use Application\Entity\Goods;
 use Stock\Entity\PtSheduler;
 use Application\Entity\Order;
+use Laminas\Json\Encoder;
 
 /**
  * This service is responsible for adding/editing pt.
@@ -275,6 +276,7 @@ class PtManager
                 'contact_id' => $pt->getOffice2()->getLegalContact()->getId(),
                 'office_id' => $pt->getOffice()->getId(),
                 'company_id' => $pt->getCompany()->getId(),
+                'doc_info' => Encoder::encode($pt->toLog()),
             ];
 
             $this->entityManager->getRepository(Retail::class)

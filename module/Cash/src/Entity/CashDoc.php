@@ -1046,7 +1046,9 @@ class CashDoc {
             'amount' => $this->amount,
             'aplId' => $this->aplId,
             'cash' => ($this->cash) ? $this->cash->getId():null,
+            'cashInfo' => ($this->cash) ? $this->cash->toArray():null,
             'cashRefull' => ($this->cashRefill) ? $this->cashRefill->getId():NULL,
+            'cashRefullInfo' => ($this->cashRefill) ? $this->cashRefill->toArray():NULL,
             'comment' => $this->comment,
             'company' => $this->company->getId(),
             'contact' => ($this->contact) ? $this->contact->getId():NULL,            
@@ -1059,7 +1061,9 @@ class CashDoc {
             'order' => ($this->order) ? $this->order->getAplId():null,
             'status' => $this->status,
             'user' => ($this->user) ? $this->user->getId():null,
+            'userInfo' => ($this->user) ? $this->user->toArray():null,
             'userRefill' => ($this->userRefill) ? $this->userRefill->getId():null,
+            'userRefillInfo' => ($this->userRefill) ? $this->userRefill->toArray():null,
             'order' => ($this->vt) ? $this->vt->getId():null,
         ];
     }    

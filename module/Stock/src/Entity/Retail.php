@@ -82,6 +82,11 @@ class Retail {
      */
     protected $amount;
 
+    /** 
+     * @ORM\Column(name="doc_info")  
+     */
+    protected $docInfo;
+
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Contact", inversedBy="retails") 
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
@@ -367,6 +372,16 @@ class Retail {
         $this->revise = $revise;
     }   
     
+    public function getDocInfo() {
+        return $this->docInfo;
+    }
+
+    public function setDocInfo($docInfo) {
+        $this->docInfo = $docInfo;
+        return $this;
+    }
+
+        
     /**
      * Returns the contact.
      * @return Contact     

@@ -42,6 +42,7 @@ use Stock\Entity\ComissBalance;
 use Stock\Entity\ComitentBalance;
 use Stock\Entity\Comitent;
 use Application\Entity\Comment;
+use Laminas\Json\Encoder;
 
 /**
  * Description of OrderService
@@ -177,6 +178,7 @@ class OrderManager
             'doc_stamp' => $docStamp,
             'legal_id' => $legalId,
             'contract_id' => $contractId,
+            'doc_info' => Encoder::encode($order->toLog()),
         ];
 
         $this->entityManager->getRepository(Retail::class)
@@ -355,6 +357,7 @@ class OrderManager
                             'doc_stamp' => $docStamp,
                             'legal_id' => $legalId,
                             'contract_id' => $contractId,
+                            'doc_info' => Encoder::encode($order->toLog()),
                         ];
 
                         $this->entityManager->getRepository(Retail::class)

@@ -903,22 +903,18 @@ $legalContact = $client->getLegalContact();
                 if (row.cashDoc){
                     if (row.cashDoc.cash){
                         cashName = row.cashDoc.cash.name;
-                    }
+                        if (row.amount < 0){
+                            return "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        }    
+                        return "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                    }    
                     if (row.cashDoc.user){
                         cashName = row.cashDoc.user.FullName;
-                    }
-                }
-                if (row.cashDoc.cash){
-                    if (row.amount < 0){
-                        return "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        if (row.amount < 0){
+                            return "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        }    
+                        return "<a href='#' class='cash-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
                     }    
-                    return "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
-                }    
-                if (row.cashDoc.user){
-                    if (row.amount < 0){
-                        return "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
-                    }    
-                    return "<a href='#' class='cash-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
                 }    
             default: return docId;            
         }

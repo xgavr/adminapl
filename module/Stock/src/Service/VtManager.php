@@ -15,6 +15,7 @@ use Stock\Entity\ComissBalance;
 use Stock\Entity\ComitentBalance;
 use Stock\Entity\Comitent;
 use Company\Entity\Contract;
+use Laminas\Json\Encoder;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -173,6 +174,7 @@ class VtManager
             'doc_stamp' => $docStamp,
             'legal_id' => $legalId,
             'contract_id' => $contractId,
+            'doc_info' => Encoder::encode($vt->toLog()),
         ];
 
         $this->entityManager->getRepository(Retail::class)
@@ -308,6 +310,7 @@ class VtManager
                                     'doc_stamp' => $docStamp,
                                     'legal_id' => $legalId,
                                     'contract_id' => $contractId,
+                                    'doc_info' => Encoder::encode($vt->toLog()),
                                 ];
                                 $this->entityManager->getRepository(Retail::class)
                                         ->insertRetail($data);                                

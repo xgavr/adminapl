@@ -34,6 +34,7 @@ use Company\Entity\BankAccount;
 use Stock\Entity\Register;
 use Stock\Entity\Movement;
 use Bank\Entity\QrCodePayment;
+use Laminas\Json\Encoder;
 
 /**
  * Description of CashManager
@@ -275,6 +276,7 @@ class CashManager {
                 'legal_id' => $legalId,
                 'contract_id' => $contractId,
                 'doc_stamp' =>$docStamp,
+                'doc_info' => Encoder::encode($cashDoc->toLog()),
             ];
 
             $this->entityManager->getRepository(Retail::class)

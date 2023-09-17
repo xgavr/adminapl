@@ -15,6 +15,7 @@ use User\Filter\PhoneFilter;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
 use ApiMarketPlace\Entity\MarketSaleReport;
+use Laminas\Json\Encoder;
 
 /**
  * This service is responsible for adding/editing revise.
@@ -121,6 +122,7 @@ class ReviseManager
                 'doc_stamp' => $docStamp,
                 'legal_id' => $legalId,
                 'contract_id' => $contractId,                
+                'doc_info' => Encoder::encode($revise->toArray()),
             ];
 
             $this->entityManager->getRepository(Retail::class)
