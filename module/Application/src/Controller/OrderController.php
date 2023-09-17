@@ -589,6 +589,12 @@ class OrderController extends AbstractActionController
             $data = $this->params()->fromPost(); 
             
 //            var_dump($data); exit;
+            if (empty($data['selections'])){
+                $data['selections'] = [];
+            }
+            if (empty($data['bid'])){
+                $data['bid'] = [];
+            }
                 
             $this->orderManager->updateSelections($order, $data['selections']);
             $this->orderManager->updateBids($order, $data['bid']);

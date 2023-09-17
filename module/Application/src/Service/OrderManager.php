@@ -665,7 +665,7 @@ class OrderManager
     public function updateBids($order, $data)
     {        
         $this->removeOrderBids($order);
-        if (count($data)){
+        if (is_array($data)){
             $rowNo = 1;
             foreach ($data as $key => $row){
                 $row['rowNo'] = $rowNo;
