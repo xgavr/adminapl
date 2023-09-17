@@ -258,10 +258,10 @@ class ReviseManager
     /**
      * Update revise.
      * @param Revise $revise
-     * @param array $data
+     * @param array $inData
      * @return integer
      */
-    public function updateRevise($revise, $data)            
+    public function updateRevise($revise, $inData)            
     {
         $preLog = $this->entityManager->getRepository(Log::class)
                 ->findOneByLogKey($revise->getLogKey());
@@ -269,7 +269,7 @@ class ReviseManager
             $this->logManager->infoRevise($revise, Log::STATUS_INFO);            
         }
 
-        $data = $this->prepareData($data);
+        $data = $this->prepareData($inData);
         
         $revise->setAplId(empty($data['aplId']) ? null:$data['aplId']);
         $revise->setDocNo(empty($data['docNo']) ? null:$data['docNo']);

@@ -221,29 +221,30 @@ class ReviseRepository extends EntityRepository
      */
     public function updateReportRevise($revise)
     {
-        $cost = 0;
+        if ($revise->getContact()){
         
-        $entityManager = $this->getEntityManager();
+            $entityManager = $this->getEntityManager();
 
-        $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('msp')
-            ->from(MarketSaleReport::class, 'msp')
-            ->where('msp.contract = :contractId')
-            ->setParameter('contractId', $revise->getContract()->getId())    
-            ->andWhere('msp.docDate >= :date1')
-            ->setParameter('date1', date('Y-m-01', strtotime($revise->getDocDate())))  
-            ->andWhere('msp.docDate <= :date2')
-            ->setParameter('date2', date('Y-m-t', strtotime($revise->getDocDate())))
-            ->setMaxResults(1)   
-                ;
-                
-        $marketSaleReport = $queryBuilder->getQuery()->getOneOrNullResult(); 
-        
-        if ($marketSaleReport){
-            $entityManager->getRepository(MarketSaleReport::class)
-                    ->updateReportRevise($marketSaleReport);
-        }
+            $queryBuilder->select('msp')
+                ->from(MarketSaleReport::class, 'msp')
+                ->where('msp.contract = :contractId')
+                ->setParameter('contractId', $revise->getContract()->getId())    
+                ->andWhere('msp.docDate >= :date1')
+                ->setParameter('date1', date('Y-m-01', strtotime($revise->getDocDate())))  
+                ->andWhere('msp.docDate <= :date2')
+                ->setParameter('date2', date('Y-m-t', strtotime($revise->getDocDate())))
+                ->setMaxResults(1)   
+                    ;
+
+            $marketSaleReport = $queryBuilder->getQuery()->getOneOrNullResult(); 
+
+            if ($marketSaleReport){
+                $entityManager->getRepository(MarketSaleReport::class)
+                        ->updateReportRevise($marketSaleReport);
+            }
+        }    
         
         return;
     }
