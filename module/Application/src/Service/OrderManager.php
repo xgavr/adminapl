@@ -672,8 +672,8 @@ class OrderManager
                 $this->insBid($order, $row);
                 $rowNo++;
             }
-            $this->updOrderTotal($order);
         }    
+        $this->updOrderTotal($order);
         return;
     }
 
