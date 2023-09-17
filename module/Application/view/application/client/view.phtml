@@ -896,7 +896,7 @@ $legalContact = $client->getLegalContact();
                     var comment = row.reviseDoc.comment;        
                     return "<a href='#' class='revise-modal-show' modal-url='/revise/edit-form/"+docId+"'>Корректировка №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
                 } else {
-                    return '!Документ не найде!';
+                    return '!Документ не найден!';
                 }    
             case '<?= Movement::DOC_CASH?>':
                 var cashName = '';
