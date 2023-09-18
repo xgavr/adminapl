@@ -738,18 +738,6 @@ class AplOrderService {
         $start = 0;
         
         while (true){
-            if ($order = $this->sendOrders($debug)) {
-                usleep(100);
-            } else {
-                break;
-            }
-            if (time() > $startTime + 770){
-                break;
-            }
-            $start++;
-        }    
-
-        while (true){
             if ($this->unloadOrder($start, null, null, $debug)) {
                 usleep(100);
             } else {
@@ -761,6 +749,18 @@ class AplOrderService {
             $start++;
         }    
         
+        while (true){
+            if ($order = $this->sendOrders($debug)) {
+                usleep(100);
+            } else {
+                break;
+            }
+            if (time() > $startTime + 770){
+                break;
+            }
+            $start++;
+        }    
+
         return $order;        
     }
     
