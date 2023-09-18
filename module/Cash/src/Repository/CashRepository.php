@@ -102,6 +102,13 @@ class CashRepository extends EntityRepository
                             ;
                 }    
             }            
+            if (!empty($params['officeId'])){
+                if (is_numeric($params['officeId'])){
+                    $queryBuilder->andWhere('c.office = :office')
+                        ->setParameter('office', $params['officeId'])
+                            ;
+                }    
+            }            
             if (!empty($params['kind'])){
                 if (is_numeric($params['kind'])){
                     $queryBuilder->andWhere('cd.kind = ?4')
@@ -139,7 +146,7 @@ class CashRepository extends EntityRepository
         $queryBuilder->select('count(ct.id) as countCd')
             ->from(CashTransaction::class, 'ct')
             ->join('ct.cashDoc', 'cd')
-//            ->join('cd.cash', 'c')
+            ->join('cd.cash', 'c')
             ->where('ct.dateOper >= ?1')
             ->setParameter('1', $dateStart)    
             ->andWhere('ct.dateOper <= ?2')
@@ -151,6 +158,13 @@ class CashRepository extends EntityRepository
                 if (is_numeric($params['cashId'])){
                     $queryBuilder->andWhere('ct.cash = ?3')
                         ->setParameter('3', $params['cashId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['officeId'])){
+                if (is_numeric($params['officeId'])){
+                    $queryBuilder->andWhere('c.office = :office')
+                        ->setParameter('office', $params['officeId'])
                             ;
                 }    
             }            
@@ -238,6 +252,13 @@ class CashRepository extends EntityRepository
                             ;
                 }    
             }            
+            if (!empty($params['officeId'])){
+                if (is_numeric($params['officeId'])){
+                    $queryBuilder->andWhere('u.office = :office')
+                        ->setParameter('office', $params['officeId'])
+                            ;
+                }    
+            }            
             if (!empty($params['kind'])){
                 if (is_numeric($params['kind'])){
                     $queryBuilder->andWhere('cd.kind = ?4')
@@ -271,7 +292,7 @@ class CashRepository extends EntityRepository
         $queryBuilder->select('count(ut.id) as countCd, sum(CASE WHEN ut.amount >= 0 THEN ut.amount ELSE 0 END) as amountIn, sum(CASE WHEN ut.amount < 0 THEN ut.amount ELSE 0 END) as amountOut')
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')
-//            ->join('cd.user', 'c')
+            ->join('cd.user', 'c')
             ->where('cd.dateOper >= ?1')
             ->setParameter('1', $dateStart)    
             ->andWhere('cd.dateOper <= ?2')
@@ -283,6 +304,13 @@ class CashRepository extends EntityRepository
                 if (is_numeric($params['userId'])){
                     $queryBuilder->andWhere('ut.user = ?3')
                         ->setParameter('3', $params['userId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['officeId'])){
+                if (is_numeric($params['officeId'])){
+                    $queryBuilder->andWhere('c.office = :office')
+                        ->setParameter('office', $params['officeId'])
                             ;
                 }    
             }            
