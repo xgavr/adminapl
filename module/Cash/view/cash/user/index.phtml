@@ -47,7 +47,7 @@
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="officeSelect" style="width: 100px" class="form-control" name="office">
+                    <select id="tillOfficeSelect" style="width: 100px" class="form-control" name="office">
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
                         <?php endforeach;?>
@@ -128,7 +128,7 @@
     }
 
     function officeChange(){
-        $.getJSON( '/accountant/office-cashes/'+$('#officeSelect').val(), function( data ) {
+        $.getJSON( '/accountant/office-cashes/'+$('#tillOfficeSelect').val(), function( data ) {
             $('#userSelect').empty();
             $('#userBalance').empty();
             $('#userSelect').append('<option value="0">все</option>');
@@ -148,7 +148,7 @@
             refreshTable();
         });
         
-        $(document).on('change', '#officeSelect', function (e) {
+        $(document).on('change', '#tillOfficeSelect', function (e) {
             officeChange();
         });
         
