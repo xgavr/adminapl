@@ -102,10 +102,10 @@ class CashRepository extends EntityRepository
                             ;
                 }    
             }            
-            if (!empty($params['officeId'])){
-                if (is_numeric($params['officeId'])){
+            if (!empty($params['office'])){
+                if (is_numeric($params['office'])){
                     $queryBuilder->andWhere('c.office = :office')
-                        ->setParameter('office', $params['officeId'])
+                        ->setParameter('office', $params['office'])
                             ;
                 }    
             }            
