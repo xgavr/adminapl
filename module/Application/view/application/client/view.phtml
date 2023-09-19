@@ -921,7 +921,7 @@ $legalContact = $client->getLegalContact();
                         if (row.cashDoc.order.aplId){
                             orderId = row.cashDoc.order.aplId;
                         }
-                        result += ' оплата заказа '+"<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+orderId+"</a>";
+                        result += " <a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+orderId+"</a>";
                     }
                     return result;
                 }    
