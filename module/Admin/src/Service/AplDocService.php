@@ -1889,7 +1889,7 @@ class AplDocService {
      * @param int $start
      * @return 
      */
-    public function unloadDoc($start = 0)
+    public function unloadDoc($start = 0, $debug = false)
     {
         $url = $this->aplApi().'unload-doc?api='.$this->aplApiKey();
         
