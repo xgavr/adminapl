@@ -250,11 +250,11 @@
             case '<?= CashDoc::KIND_IN_REFILL ?>': 
                         cashRefill = (row.cashDoc.cashRefill) ? row.cashDoc.cashRefill.name:row.cashDoc.userRefill.fullName;
                         cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:'!Касса не указана!';
-                        return (row.amount < 0) ? row.cashDoc.cash.name:cashRefill;
+                        return (row.amount < 0) ? cashName:cashRefill;
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
                         cashRefill = (row.cashDoc.cashRefill) ? row.cashDoc.cashRefill.name:row.cashDoc.userRefill.fullName;
                         cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:'!Касса не указана!';
-                        return (row.amount > 0) ? row.cashDoc.cash.name:cashRefill;
+                        return (row.amount > 0) ? cashName:cashRefill;
             case '<?= CashDoc::KIND_IN_RETURN_USER ?>': 
             case '<?= CashDoc::KIND_OUT_COURIER ?>': 
             case '<?= CashDoc::KIND_OUT_SALARY ?>': 
