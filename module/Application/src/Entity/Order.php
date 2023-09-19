@@ -593,6 +593,9 @@ class Order {
 
     public function getDateShipment() 
     {
+        if (empty($this->dateShipment)){
+            return date('Y-m-d');
+        }   
         return $this->dateShipment;
     }
 

@@ -740,9 +740,9 @@ class OrderManager
     private function _shipmentDateTime($data)
     {
         $result = null;
-        if (isset($data['dateShipment'])){
+        if (!empty($data['dateShipment'])){
             $result = date('Y-m-d', strtotime($data['dateShipment']));
-            if (isset($data['timeShipment'])){                
+            if (!empty($data['timeShipment'])){                
                 $result = date('Y-m-d H:i:s', strtotime($data['dateShipment'].' '.$data['timeShipment'].':00:00'));
             }
         }
