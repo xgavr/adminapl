@@ -13,6 +13,7 @@ use User\Entity\User;
 use User\Entity\Role;
 use User\Filter\PhoneFilter;
 use Application\Entity\Order;
+use Company\Entity\Office;
 
 class UserRepository  extends EntityRepository
 {
@@ -144,7 +145,7 @@ class UserRepository  extends EntityRepository
             }
             if (!empty($params['status'])){
                 if (is_numeric($params['status'])){
-                    $queryBuilder->andWhere('r.status = :status')
+                    $queryBuilder->andWhere('u.status = :status')
                             ->setParameter('status', $params['status']);
                 }    
             }

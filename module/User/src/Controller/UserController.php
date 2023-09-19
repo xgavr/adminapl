@@ -57,11 +57,12 @@ class UserController extends AbstractActionController
         $currentUser = $this->entityManager->getRepository(User::class)
             ->findOneByEmail($this->identity());
         
-        $users = $this->entityManager->getRepository(User::class)
+        $offices = $this->entityManager->getRepository(Office::class)
                 ->findBy([], ['id'=>'ASC']);
         
         return new ViewModel([
-            'users' => $users,
+            'offices' => $offices,
+            'currentUser' => $currentUser,
         ]);
     } 
     

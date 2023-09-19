@@ -904,14 +904,14 @@ $legalContact = $client->getLegalContact();
                 if (row.cashDoc){
                     if (row.cashDoc.cash){
                         cashName = row.cashDoc.cash.name;
-                        if (row.amount < 0){
+                        if (Math.round(row.amount*100) < 0){
                             result = "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
                         }    
                         result = "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
                     }    
                     if (row.cashDoc.user){
                         cashName = row.cashDoc.user.fullName;
-                        if (row.amount < 0){
+                        if (Math.round(row.amount*100) < 0){
                             result = "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
                         }    
                         result = "<a href='#' class='cash-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";

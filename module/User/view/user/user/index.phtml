@@ -1,4 +1,6 @@
 <?php
+use User\Entity\User;
+
 $this->headTitle('Сотрудники');
 
 $this->mainMenu()->setActiveItemId('users');
@@ -12,14 +14,31 @@ $this->pageBreadcrumbs()->setItems([
 
 <h1>Сотрудники</h1>
 
-<p>
-<a class="btn btn-default" href="
-    <?= $this->url('users', ['action'=>'add']); ?>" target="_blank">
-    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New User
-</a>
-</p>
 <div class="row">
     <div class="col-md-12">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <a class="btn btn-default" type="button" href="<?= $this->url('users', ['action'=>'add']); ?>" target="_blank">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить
+                </a>                
+                <div class="form-group">
+                    <select id="officeSelect" style="width: 200px" class="form-control refresh-table" name="office">
+                        <option>Все офисы</option>
+                        <?php foreach ($offices as $office):?>
+                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="statusSelect" style="width: 200px" class="form-control refresh-table" name="status">
+                        <option>Все</option>
+                        <?php foreach (User::getStatusList() as $status=>$value):?>
+                            <option value="<?= $status?>"><?= $value?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+            </div>
+        </div>
         <table id="table" 
             data-toggle="table" 
             data-url="/users/content"
@@ -39,73 +58,18 @@ $this->pageBreadcrumbs()->setItems([
                 <tr>
                      <th data-field="id" data-type="numeric" data-sortable="true" data-formatter="idFormatter" data-width="80">Id</th>
                      <th data-field="dateCreated" data-sortable="true" data-formatter="dateFormatter" data-width="80">Дата</th>
-                     <th data-field='fullName' data-sortable="true">ФИО</th>
+                     <th data-field='fullName' data-sortable="true" data-formatter="linkFormatter">ФИО</th>
                      <th data-field='phones' data-sortable="false">Телефон</th>
                      <th data-field='email' data-sortable="false">Email</th>
                      <th data-field='officeName' data-sortable="false">Офис</th>
                      <th data-field='roles' data-sortable="false">Права</th>
                      <th data-field='statusAsString' data-sortable="false">Статус</th>
-                     <th data-field="" data-formatter="activeFormatter"></th>
+                     <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
                  </tr>                
             </thead>
         </table>
     </div>
 </div>    
-
-<table class="table table-striped">
-
-   <tr>
-        <th>ID</th>
-        <th>APL ID</th>
-        <th>E-mail</th>
-        <th>Full Name</th>
-        <th>Role(s)</th>        
-        <th>Офис</th>        
-        <th>Date Created</th>
-        <th>Status</th>        
-        <th>Actions</th>        
-    </tr>
-    
-    <?php foreach ($users as $user): ?>
-    
-    <tr>
-        <td><?= $this->escapeHtml($user->getId()); ?></td>
-        <td><?= $this->escapeHtml($user->getAplId()); ?></td>
-        <td>
-            <a href="<?= $this->url('users', ['action'=>'view', 'id'=>$user->getId()]); ?>">
-                <?= $this->escapeHtml($user->getEmail()); ?>
-            </a> 
-        </td>
-        <td>
-            <?= $this->escapeHtml($user->getFullName()); ?> 
-        </td>
-        <td>
-            <?= $this->escapeHtml($user->getRolesAsString()); ?> 
-        </td>
-        <td>
-            <?php if ($user->getOffice()):?>
-                <a href="<?= $this->url('offices', ['action'=>'view', 'id'=>$user->getOffice()->getId()]); ?>">
-                    <?= $this->escapeHtml($user->getOffice()->getName()); ?>
-                </a> 
-            <?php endif;?>
-        </td>
-        <td><nobr><?= $this->escapeHtml($user->getDateCreated()); ?></nobr></td>        
-        <td><?= $this->escapeHtml($user->getStatusAsString()); ?></td>
-        <td>
-            <a class="btn btn-info" href="<?= $this->url('users', 
-                    ['action'=>'edit', 'id'=>$user->getId()]); ?>">
-                <span class="glyphicon glyphicon-pencil" ></span> Edit
-            </a>
-            <a class="btn btn-default" href="<?= $this->url('users',
-                    ['action'=>'change-password', 'id'=>$user->getId()]); ?>">
-                <span class="glyphicon glyphicon-asterisk"></span> Change Password
-            </a>
-        </td>    
-    </tr>
-        
-    <?php endforeach; ?>   
-    
-</table>
 
 <script type="text/javascript">
     var $table = $('#table');        
@@ -115,8 +79,22 @@ $this->pageBreadcrumbs()->setItems([
         $table.bootstrapTable('selectPage', 1);
     }
     
+    $(function () {
+        $('#ok').click(function () {
+            refreshTable();
+        });
+
+        $(document).on('change', '.refresh-table', function (e) {
+            refreshTable();
+        });
+        
+    });
+    
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         limit = $('#table .page-size').html();
@@ -127,7 +105,6 @@ $this->pageBreadcrumbs()->setItems([
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
-        params.status = $('#statusSelect').val();
         
         return params;
     }
@@ -138,11 +115,47 @@ $this->pageBreadcrumbs()->setItems([
         }
         return value;
     }    
+
+    function linkFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<div class="pull-left">',
+            '<a href="/users/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
     
     function dateFormatter(value){
         var date = new Date(value);
         return $.format.date(date, "dd.MM.yyyy");
     }
+    
+    function activeFormatter(value, row){
+        var btn = '<nobr>';
+
+        var url = '/users/edit/'+row.id;
+        btn += '<a';
+        btn += ' type="button"';
+        btn += ' class="btn btn-info btn-xs"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' href="'+url+'" target="_blank" title="Изменить">';
+        btn += '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>';
+        btn += '</a>';
+
+        var url = '/users/change-password/'+row.id;
+        btn += ' <a';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' href="'+url+'" target="_blank" title="Сменить пароль">';
+        btn += '<span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>';
+        btn += '</a>';
+        
+        btn += '</nobr>';
+        return btn;
+    }    
     
     function responseHandler(res) {
         return res;
