@@ -917,7 +917,11 @@ $legalContact = $client->getLegalContact();
                         result = "<a href='#' class='cash-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
                     } 
                     if (row.cashDoc.order){
-                        result += ' оплата заказа '+"<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №Z"+row.cashDoc.order.id+"</a>";
+                        var orderId = 'Z'+row.cashDoc.order.id;
+                        if (row.cashDoc.order.aplId){
+                            orderId = row.cashDoc.order.aplId;
+                        }
+                        result += ' оплата заказа '+"<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+orderId+"</a>";
                     }
                     return result;
                 }    
