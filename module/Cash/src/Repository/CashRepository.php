@@ -399,7 +399,7 @@ class CashRepository extends EntityRepository
             ->setParameter('1', CashDoc::STATUS_EX_NEW)    
             ->setMaxResults(1)   
                 
-            ->andWhere('cd.aplId > 0')
+//            ->andWhere('cd.aplId > 0')
                 ;
                 
             if ($cashDoc){

@@ -134,7 +134,7 @@ class CashOutForm extends Form implements ObjectManagerAwareInterface
             'attributes' => [                
             ],
             'options' => [
-                'label' => 'Из кассы',
+                'label' => 'В кассу',
             ],
         ]);
         
