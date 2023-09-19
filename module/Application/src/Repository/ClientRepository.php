@@ -109,7 +109,7 @@ class ClientRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r, o, c, contract, rd, cd, cash, user')
+        $queryBuilder->select('r, o, c, contract, rd, cd, cash, user, order')
             ->from(Retail::class, 'r')
             ->join('r.contact', 'ct')
             ->join('r.company', 'c')
