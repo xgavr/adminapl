@@ -292,7 +292,7 @@ class CashRepository extends EntityRepository
         $queryBuilder->select('count(ut.id) as countCd, sum(CASE WHEN ut.amount >= 0 THEN ut.amount ELSE 0 END) as amountIn, sum(CASE WHEN ut.amount < 0 THEN ut.amount ELSE 0 END) as amountOut')
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')
-            ->join('cd.user', 'c')
+            ->join('ut.user', 'c')
             ->where('cd.dateOper >= ?1')
             ->setParameter('1', $dateStart)    
             ->andWhere('cd.dateOper <= ?2')
