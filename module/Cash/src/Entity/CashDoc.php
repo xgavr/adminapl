@@ -568,7 +568,9 @@ class CashDoc {
             case $this::KIND_OUT_COST:
                 return $this->getCost()->getAplId();    
             case $this::KIND_OUT_COURIER:
-                return ($this->contact->getClient()) ? $this->contact->getClient()->getAplId():null;
+                if ($this->contact){
+                    return ($this->contact->getClient()) ? $this->contact->getClient()->getAplId():null;
+                }    
 //                return $this->getOrder()->getClientAplId();    
             default : return '';    
         }
