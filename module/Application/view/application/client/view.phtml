@@ -900,21 +900,26 @@ $legalContact = $client->getLegalContact();
                 }    
             case '<?= Movement::DOC_CASH?>':
                 var cashName = '';
+                var result = '';
                 if (row.cashDoc){
                     if (row.cashDoc.cash){
                         cashName = row.cashDoc.cash.name;
                         if (row.amount < 0){
-                            return "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                            result = "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
                         }    
-                        return "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        result = "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
                     }    
                     if (row.cashDoc.user){
                         cashName = row.cashDoc.user.fullName;
                         if (row.amount < 0){
-                            return "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                            result = "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
                         }    
-                        return "<a href='#' class='cash-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
-                    }    
+                        result = "<a href='#' class='cash-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                    } 
+                    if (row.cashDoc.order){
+                        result += ' оплата заказа '+"<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №Z"+row.cashDoc.order.id+"</a>";
+                    }
+                    return result;
                 }    
             default: return docId;            
         }
