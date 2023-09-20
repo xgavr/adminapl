@@ -1942,6 +1942,7 @@ class ProcessingController extends AbstractActionController
     {
         $aplPaymentId = $this->params()->fromRoute('id', -1);
         
+        $result = [];
         if ($aplPaymentId <= 0){
             $this->getResponse()->setStatusCode(401);
             goto r;                                    
@@ -1955,7 +1956,6 @@ class ProcessingController extends AbstractActionController
             goto r;                        
         } 
         
-        $result = [];
         foreach ($aplPayments as $aplPayment){
             $asquirings = $aplPayment->getAcquirings();
             foreach ($asquirings as $asquiring){

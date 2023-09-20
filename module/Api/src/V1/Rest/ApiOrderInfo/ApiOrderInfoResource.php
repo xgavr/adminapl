@@ -35,13 +35,21 @@ class ApiOrderInfoResource extends AbstractResourceListener
      * @var \Application\Service\SupplierOrderManager
      */
     private $supplierOrderManager;
+
+    /**
+     * AplOrderService manager.
+     * @var \Admin\Service\AplOrderService
+     */
+    private $aplOrderService;
     
-    public function __construct($entityManager, $orderManager, $goodManager, $supplierOrderManager) 
+    public function __construct($entityManager, $orderManager, $goodManager, $supplierOrderManager,
+            $aplOrderService) 
     {
        $this->entityManager = $entityManager;
        $this->orderManager = $orderManager;
        $this->goodManager = $goodManager;
        $this->supplierOrderManager = $supplierOrderManager;
+       $this->aplOrderService = $aplOrderService;
     }
     
     /**
@@ -74,6 +82,11 @@ class ApiOrderInfoResource extends AbstractResourceListener
                     $message .= "Заказ aplId:{$data->orderAplId} не найден ";
                 }    
             }
+            
+            if (!$order && !empty($data->orderAplId)){
+                $order = $this->aplOrderService->unloadOrder(0, $data->orderAplId);
+            }
+            
             if ($order){
                 
                 if (empty($data->supplierId) && empty($data->supplierAplId)){

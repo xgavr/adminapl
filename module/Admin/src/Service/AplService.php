@@ -1513,6 +1513,7 @@ class AplService {
         $result = true;
         $aplIdFlag = false;
         $post = [];
+        $package = [];
         
         foreach ($data as $good){
             if ($good->getAplId()>0){

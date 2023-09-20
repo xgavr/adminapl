@@ -4,6 +4,7 @@ namespace Api\V1\Rest\ApiOrderInfo;
 use Application\Service\OrderManager;
 use Application\Service\GoodsManager;
 use Application\Service\SupplierOrderManager;
+use Admin\Service\AplOrderService;
 
 class ApiOrderInfoResourceFactory
 {
@@ -13,8 +14,9 @@ class ApiOrderInfoResourceFactory
         $orderManager = $services->get(OrderManager::class);
         $goodManager = $services->get(GoodsManager::class);
         $supplierOrderManager = $services->get(SupplierOrderManager::class);
+        $aplOrderService = $services->get(AplOrderService::class);
 
         return new ApiOrderInfoResource($entityManager, $orderManager, $goodManager,
-                $supplierOrderManager);
+                $supplierOrderManager, $aplOrderService);
     }
 }
