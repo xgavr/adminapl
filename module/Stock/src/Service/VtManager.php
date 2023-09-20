@@ -174,7 +174,6 @@ class VtManager
             'doc_stamp' => $docStamp,
             'legal_id' => $legalId,
             'contract_id' => $contractId,
-            'doc_info' => Encoder::encode($vt->toLog()),
         ];
 
         $this->entityManager->getRepository(Retail::class)
@@ -310,7 +309,6 @@ class VtManager
                                     'doc_stamp' => $docStamp,
                                     'legal_id' => $legalId,
                                     'contract_id' => $contractId,
-                                    'doc_info' => Encoder::encode($vt->toLog()),
                                 ];
                                 $this->entityManager->getRepository(Retail::class)
                                         ->insertRetail($data);                                

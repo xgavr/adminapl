@@ -177,7 +177,6 @@ class StManager
                                         'doc_stamp' => $docStamp,
                                         'legal_id' => $legalId,
                                         'contract_id' => $contractId,
-                                        'doc_info' => Encoder::encode($st->toLog()),
                                     ];
 
                                     $this->entityManager->getRepository(Retail::class)

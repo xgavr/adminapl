@@ -368,7 +368,6 @@ class ReportManager
                 'office_id' => $marketSaleReport->getContract()->getOffice()->getId(),
                 'company_id' => $marketSaleReport->getContract()->getCompany()->getId(),
                 'doc_stamp' => $docStamp,
-                'doc_info' => Encoder::encode($marketSaleReport->toArray()),
             ];
 
             $this->entityManager->getRepository(Retail::class)

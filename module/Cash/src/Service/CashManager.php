@@ -276,7 +276,6 @@ class CashManager {
                 'legal_id' => $legalId,
                 'contract_id' => $contractId,
                 'doc_stamp' =>$docStamp,
-                'doc_info' => Encoder::encode($cashDoc->toLog()),
             ];
 
             $this->entityManager->getRepository(Retail::class)

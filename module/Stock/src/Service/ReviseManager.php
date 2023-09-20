@@ -122,7 +122,6 @@ class ReviseManager
                 'doc_stamp' => $docStamp,
                 'legal_id' => $legalId,
                 'contract_id' => $contractId,                
-                'doc_info' => Encoder::encode($revise->toArray()),
             ];
 
             $this->entityManager->getRepository(Retail::class)
