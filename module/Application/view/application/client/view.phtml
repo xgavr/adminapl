@@ -6,6 +6,7 @@ use Stock\Entity\Vt;
 use Stock\Entity\Retail;
 use Stock\Entity\Movement;
 use Stock\Entity\Revise;
+use Cash\Entity\CashDoc;
 
 $this->headTitle(ucfirst($client->getName()));
 
@@ -332,6 +333,7 @@ $legalContact = $client->getLegalContact();
                 data-unique-id="id"
                 data-icon-size="sm"
                 data-row-style="mutualRowStyle"
+                data-undefined-text = ""
                 >
                 <thead>
                     <tr>
@@ -768,16 +770,30 @@ $legalContact = $client->getLegalContact();
         ].join(' ');
     }
 
-    function inFormatter(value){
-        if (value>0){
-            return Math.round(value*100)/100;
+    function inFormatter(value, row){
+        switch(row.docType){
+            case '<?= Movement::DOC_VT?>':
+                return Math.round(value*100)/100;
+            case '<?= Movement::DOC_CASH?>':
+                return;
+            default:
+                if (value>0){
+                    return Math.round(value*100)/100;
+                }
         }
         return;
     }    
     
-    function outFormatter(value){
-        if (value<0){
-            return -Math.round(value*100)/100;
+    function outFormatter(value, row){
+        switch(row.docType){
+            case '<?= Movement::DOC_VT?>':
+                return;
+            case '<?= Movement::DOC_CASH?>':
+                return -Math.round(value*100)/100;
+            default:
+                if (value<0){
+                    return -Math.round(value*100)/100;
+                }
         }
         return;
     }    
@@ -901,9 +917,12 @@ $legalContact = $client->getLegalContact();
             case '<?= Movement::DOC_CASH?>':
                 var cashName = '';
                 var result = '';
+                var kindName = '';
+                var kindNames = <?= CashDoc::getKindListAsJavascriptArray()?>;
                 if (row.cashDoc){
                     if (row.cashDoc.cash){
-                        cashName = row.cashDoc.cash.name;
+                        kindName = kindNames[row.cashDoc.kind];
+                        cashName = kindName +' '+ row.cashDoc.cash.name;
                         if (row.amount < 0){
                             result = "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
                         } else {   
@@ -911,7 +930,7 @@ $legalContact = $client->getLegalContact();
                         }    
                     }    
                     if (row.cashDoc.user){
-                        cashName = row.cashDoc.user.fullName;
+                        cashName = kindName +' '+ row.cashDoc.user.fullName;
                         if (row.amount < 0){
                             result = "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
                         } else {    
