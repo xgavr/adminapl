@@ -152,6 +152,7 @@ class CashOutForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'hidden',
             'name' => 'order',
             'attributes' => [                
+                'id' => 'order',
             ],
             'options' => [
                 'label' => 'Номер заказа',

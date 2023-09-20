@@ -39,6 +39,10 @@ $form->get('order')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('aplId')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('orderApl')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -301,7 +305,7 @@ $form->prepare();
         if ($("#kind").val() == <?= CashDoc::KIND_OUT_RETURN_CLIENT?>){
             $('#payment').show();
             $('#phone').attr('required', true);
- //           $('#orderApl').attr('required', true);
+            $('#orderApl').attr('required', true);
             //$('#legal').attr('required', true);
         }
 
