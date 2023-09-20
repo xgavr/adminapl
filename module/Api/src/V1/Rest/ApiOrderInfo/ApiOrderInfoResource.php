@@ -84,7 +84,9 @@ class ApiOrderInfoResource extends AbstractResourceListener
             }
             
             if (!$order && !empty($data->orderAplId)){
-                $order = $this->aplOrderService->unloadOrder(0, $data->orderAplId);
+                $this->aplOrderService->unloadOrder(0, $data->orderAplId);
+                $order = $this->entityManager->getRepository(Order::class)
+                            ->findOneBy(['aplId' => $data->orderAplId]);
             }
             
             if ($order){
