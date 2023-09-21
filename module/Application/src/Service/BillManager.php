@@ -847,10 +847,10 @@ class BillManager
         
         if ($iid){
             
-            $good = $this->entityManager->getRepository(Oem::class)
+            $oem = $this->entityManager->getRepository(Oem::class)
                     ->findOneBy(['oe' => $articleFilter->filter($iid), 'status' => Oem::STATUS_ACTIVE, 'source' => Oem::SOURCE_IID]);
-            if ($good){
-                return $good;
+            if ($oem){
+                return $oem->getGood();
             }
             
             if ($idoc->getSupplier()->getAplId() == 69){ //mikado
