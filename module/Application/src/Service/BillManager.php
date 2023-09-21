@@ -699,7 +699,7 @@ class BillManager
                 $art_pro[1] = $art_pro[1].$art_pro[2];
                 unset($art_pro[2]);
             }
-            var_dump($art_pro); exit;
+            var_dump($art_pro);
             if (count($art_pro) > 1){
                 foreach ($art_pro as $value){
                     $producerName = $producerNameFilter->filter($value);
