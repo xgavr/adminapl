@@ -583,25 +583,25 @@ class OrderRepository extends EntityRepository{
                ;
         
             //восстановление утеряных данных
-//            if (date('N') < 7 && date('G') > 7 && date('G') < 21){    
-                $queryBuilder->andWhere('o.status != ?2')
+            if (date('N') < 7 && date('G') > 7 && date('G') < 21){    
+                $queryBuilder->andWhere('o.status = ?2')
                     ->setParameter('2', Order::STATUS_CANCELED)  
-    //            ->andWhere('o.aplId > 0')
+                    ->andWhere('o.aplId > 0')
                     ;
-//            }    
+            }    
         
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $order){
 //            var_dump($order->getId()); 
             $flag = true;
-//            $bids = $entityManager->getRepository(Bid::class)
-//                    ->findBy(['order' => $order->getId()]);
-//            foreach ($bids as $bid){
-//               if (empty($bid->getGood()->getAplId())){
-//                   $flag = false;
-//                   break;
-//               }  
-//            }
+            $bids = $entityManager->getRepository(Bid::class)
+                    ->findBy(['order' => $order->getId()]);
+            foreach ($bids as $bid){
+               if (empty($bid->getGood()->getAplId())){
+                   $flag = false;
+                   break;
+               }  
+            }
             if ($flag){
                 return $order;
             }    

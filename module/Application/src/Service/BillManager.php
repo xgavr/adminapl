@@ -732,29 +732,47 @@ class BillManager
         return;
     }
     
-    public function mikadoIid()
+    /**
+     * Разборка внутреннего кода микадо
+     * xbr-s23530;xfrk-238901;xnk-751516;xnk-929906;xpm-phb-007
+     * 
+     * @param string $iid
+     * @param float $price
+     */
+    protected function _goodFromMikadoIid($iid, $price)
     {
-        
+        $delimeters = ['-'];
+        $articleFilter = new ArticleCode();
+        $articleStr = null;
+        foreach ($delimeters as $delimetr){
+            $art_pro = explode($delimetr, $iid);
+            if (count($art_pro) > 1){
+                unset($art_pro[0]);
+                $articleStr = implode('', $art_pro);
+                if ($articleStr){
+                    $code = $articleFilter->filter($articleStr);
+                    $good = $this->_findGoodByCode($idoc, $articleStr, $price);
+                    if ($good){
+                        return $good;
+                    }                
+                }    
+            }
+        }        
+        return $iid;
     }
     
     /**
-     * Получить товар
+     * Найти подходящий товар по коду
      * @param Idoc $idoc
-     * @param array $data
-     * @return Goods
+     * @param string $articleStr
+     * @param float $price
      */
-    public function findGood($idoc, $data)
+    protected function _findGoodByCode($idoc, $articleStr, $price)
     {
-        $articleStr = empty($data['article']) ? null:$data['article'];
-        $producerStr = empty($data['producer']) ? null:$data['producer'];
-        $goodName = empty($data['good_name']) ? null:$data['good_name'];
-        $iid = empty($data['supplier_article']) ? null:$data['supplier_article'];
-        $price = empty($data['price']) ? 0:(int) $data['price'];
-        $producer = null;
         
         $articleFilter = new ArticleCode();
         $code = $articleFilter->filter($articleStr);
-        if ($code && !$producerStr){
+        if ($code){
             $goods = $this->entityManager->getRepository(Goods::class)
                     ->findByCode($code);
             if ($goods){
@@ -778,6 +796,33 @@ class BillManager
                 }    
             }
         }
+        
+        return;
+    }
+    
+    /**
+     * Получить товар
+     * @param Idoc $idoc
+     * @param array $data
+     * @return Goods
+     */
+    public function findGood($idoc, $data)
+    {
+        $articleStr = empty($data['article']) ? null:$data['article'];
+        $producerStr = empty($data['producer']) ? null:$data['producer'];
+        $goodName = empty($data['good_name']) ? null:$data['good_name'];
+        $iid = empty($data['supplier_article']) ? null:$data['supplier_article'];
+        $price = empty($data['price']) ? 0:(int) $data['price'];
+        $producer = null;
+        
+        $articleFilter = new ArticleCode();
+        $code = $articleFilter->filter($articleStr);
+        if ($code && !$producerStr){
+            $good = $this->_findGoodByCode($idoc, $articleStr, $price);
+            if ($good){
+                return $good;
+            }
+        }
             
         if ($code && $producerStr){
             $producerNameFilter = new ProducerName();
@@ -799,7 +844,13 @@ class BillManager
         }
         
         if ($iid){
-            $good = $this->_parseIid($iid, $goodName);
+            
+            if ($idoc->getSupplier()->getAplId() == 69){ //mikado
+                $good = $this->_goodFromMikadoIid($iid, $price);
+            } else {
+                $good = $this->_parseIid($iid, $goodName);                
+            }
+            
             if ($good){
                 return $good;
             }

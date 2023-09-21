@@ -191,7 +191,7 @@ class ContactManager
             $this->addEmail($contact, $data['email']);
         }    
         
-       if ($data['email'] && !empty($data['password'])){
+       if (!empty($data['email']) && !empty($data['password'])){
             $user = $this->entityManager->getRepository(User::class)
                     ->findOneByEmail($data['email']);
             if ($user == null){
