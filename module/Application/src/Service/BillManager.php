@@ -689,16 +689,14 @@ class BillManager
      */
     protected function _parseIid($iid, $goodName = null)
     {
-        $delimeters = ['^', '_', '-'];
+        $delimeters = ['^', '_'];
         $articleFilter = new ArticleCode();
         $producerNameFilter = new ProducerName();
         foreach ($delimeters as $delimetr){
+
             $articleStr = $producer = null;
             $art_pro = explode($delimetr, $iid);
-            if (count($art_pro) == 3){// у микадо может быть 3 "-" в артикуле
-                $art_pro[1] = $art_pro[1].$art_pro[2];
-                unset($art_pro[2]);
-            }
+
             if (count($art_pro) > 1){
                 $producer = null;
                 foreach ($art_pro as $value){
@@ -722,7 +720,6 @@ class BillManager
                     return $this->_newGood($articleStr, $producer, $goodName);                
                 }
                 if ($articleStr){
-                    var_dump($articleStr);
                     $code = $articleFilter->filter($articleStr);
                     $good = $this->entityManager->getRepository(Goods::class)
                             ->findOneByCode($code);
@@ -733,6 +730,11 @@ class BillManager
             }    
         }
         return;
+    }
+    
+    public function mikadoIid()
+    {
+        
     }
     
     /**
