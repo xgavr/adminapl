@@ -102,6 +102,12 @@ class Mutual {
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
      */
     private $company;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Application\Entity\Idoc", inversedBy="mutual") 
+     * @ORM\JoinColumn(name="doc_key", referencedColumnName="doc_key")
+     */
+   private $idoc;        
 
     public function __construct() {
     }
@@ -356,4 +362,7 @@ class Mutual {
         return $this->company;
     }
 
+    public function getIdoc() {
+        return $this->idoc;
+    }
 }

@@ -72,6 +72,11 @@ class Idoc {
      */
     private $supplier;    
     
+   /**
+    * @ORM\OneToOne(targetEntity="Stock\Entity\Mutual", mappedBy="idoc")
+   */
+    private $mutual;    
+
     public function getId() 
     {
         return $this->id;
@@ -640,5 +645,9 @@ class Idoc {
             $result['total'] = $total;
         }                
         return $result;
+    }
+    
+    public function getMutual() {
+        return $this->mutual;
     }
 }

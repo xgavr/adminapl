@@ -33,9 +33,10 @@ class BillRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('i, s')
+        $queryBuilder->select('i, s, m')
             ->from(Idoc::class, 'i') 
-            ->leftJoin('i.supplier', 's')    
+            ->leftJoin('i.supplier', 's')
+            ->leftJoin('i.mutual', 'm')    
             ->addOrderBy('i.id', 'DESC')    
                 ;
         if (is_array($params)){
