@@ -759,7 +759,7 @@ class BillManager
                 }    
             }
         }        
-        return $iid;
+        return;
     }
     
     /**
