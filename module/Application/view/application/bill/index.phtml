@@ -128,7 +128,7 @@ $this->pageBreadcrumbs()->setItems([
                 url: url
             })
                 .done(function (data) {
-                    refreshTable();
+                    $table.bootstrapTable('refresh');
                 })
                 .fail(function (e) {
                     console.log(e);

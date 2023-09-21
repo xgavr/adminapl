@@ -139,6 +139,7 @@ class OemManager
                     }   
                 }    
             } 
+            
             // Добавление кода поставщика для поиска при создании накладных
             if ($rawprice->getArticle()->getGood() && !empty($rawprice->getIid())){
                 $this->entityManager->getRepository(Oem::class)
