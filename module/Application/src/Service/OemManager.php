@@ -44,7 +44,7 @@ class OemManager
     public function addOem($good, $data)
     {
         $oem = $this->entityManager->getRepository(Oem::class)
-                ->addOemToGood($good->getId(), $data, Oem::SOURCE_MAN);
+                ->addOemToGood($good->getId(), $data, $data['source']);
         
         if (!$oem){
             $filter = new ArticleCode();        

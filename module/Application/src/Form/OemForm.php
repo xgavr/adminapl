@@ -1,5 +1,7 @@
 <?php
 
+use Application\Entity\Oem;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -62,6 +64,20 @@ class OemForm extends Form
                 'label' => 'Бренд',
             ],
        ]);
+
+        // Добавляем поле "status"
+        $this->add([
+            'type'  => 'select',
+            'name' => 'source',
+            'attributes' => [                
+                'id' => 'source',
+                'value' => Oem::SOURCE_MAN,
+            ],
+            'options' => [
+                'label' => 'Номер у поставщика',
+                'value_options' => Oem::getSourceList(),
+            ],
+       ]);
                 
         
         // Добавляем кнопку отправки формы
@@ -105,7 +121,7 @@ class OemForm extends Form
         
         $inputFilter->add([
                 'name'     => 'brandName',
-                'required' => true,
+                'required' => false,
                 'filters'  => [                    
                     ['name' => 'StripTags'],
                 ],                

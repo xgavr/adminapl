@@ -29,6 +29,7 @@ use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Entity\GoodSupplier;
+use Application\Entity\Oem;
 
 /**
  * Description of BillManager
@@ -845,6 +846,12 @@ class BillManager
         }
         
         if ($iid){
+            
+            $good = $this->entityManager->getRepository(Oem::class)
+                    ->findOneBy(['oe' => $articleFilter->filter($iid), 'status' => Oem::STATUS_ACTIVE, 'source' => Oem::SOURCE_IID]);
+            if ($good){
+                return $good;
+            }
             
             if ($idoc->getSupplier()->getAplId() == 69){ //mikado
                 $good = $this->_goodFromMikadoIid($iid, $idoc, $price);

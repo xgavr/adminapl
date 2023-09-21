@@ -29,6 +29,7 @@ class Oem {
     const SOURCE_CROSS    = 4; // Кросслист.
     const SOURCE_INTERSECT = 5; // Пересечение.
     const SOURCE_MY_CODE = 6; //Артикул товара
+    const SOURCE_IID = 7; //Номер у поставщика
     
     const SOURCE_TD_NAME = 'ТекДок';
     const INTERSECT_NAME = 'ОЕ кросс';
@@ -249,6 +250,7 @@ class Oem {
             self::SOURCE_CROSS => 'Кросс лист',
             self::SOURCE_INTERSECT => self::INTERSECT_NAME,
             self::SOURCE_MY_CODE => 'Свой артикул',
+            self::SOURCE_IID => 'Номер у поставщика',
         ];
     }    
     
@@ -277,6 +279,8 @@ class Oem {
             self::SOURCE_MAN => 1000,
             self::SOURCE_CROSS => 1000,
             self::SOURCE_INTERSECT => 1000,
+            self::SOURCE_MY_CODE => 1000,
+            self::SOURCE_IID => 1000,
         ];
     }    
     
@@ -305,6 +309,8 @@ class Oem {
             self::SOURCE_MAN => 1,
             self::SOURCE_CROSS => 1,
             self::SOURCE_INTERSECT => null,
+            self::SOURCE_MY_CODE => null,
+            self::SOURCE_IID => null,
         ];
     }    
     

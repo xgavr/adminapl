@@ -10,6 +10,10 @@ $form->get('brandName')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('source')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'oem-submit']);
 
@@ -30,6 +34,12 @@ $form->prepare();
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-10">
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('source')); ?>
+                            <?= $this->formElement($form->get('source')); ?>
+                            <?= $this->formElementErrors($form->get('source')); ?>                  
+                        </div>
+
                         <div class="form-group">
                             <?= $this->formLabel($form->get('oeNumber')); ?>
                             <?= $this->formElement($form->get('oeNumber')); ?>
