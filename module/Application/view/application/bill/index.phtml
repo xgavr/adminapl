@@ -218,7 +218,7 @@ $this->pageBreadcrumbs()->setItems([
             var info = Math.round(value*100)/100;
             var mutual = info;
             if (row.mutual){
-                mutual = Math.abs(Math.round(row.mutual.amount*100)/100;
+                mutual = Math.abs(Math.round(row.mutual.amount*100))/100;
             }    
             if (info != mutual){
                 return '<label class="text-danger">'.info.'</label>';
