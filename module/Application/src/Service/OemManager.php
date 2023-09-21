@@ -122,7 +122,7 @@ class OemManager
     /**
      * Добавление нового кода из прайса
      * 
-     * @param Application\Entity\Rawprice $rawprice
+     * @param \Application\Entity\Rawprice $rawprice
      * @param bool $flush
      */
     public function addNewOemRawFromRawprice($rawprice, $flush = true) 
@@ -138,7 +138,14 @@ class OemManager
                         $rawprice->addOemRaw($oem);
                     }   
                 }    
-            }    
+            } 
+            // Добавление кода поставщика для поиска при создании накладных
+            if ($rawprice->getArticle()->getGood() && !empty($rawprice->getIid())){
+                $this->entityManager->getRepository(Oem::class)
+                    ->addOemToGood($rawprice->getArticle()->getGood()->getId(), [
+                        'oeNumber' => $rawprice->getIid(),
+                    ], Oem::SOURCE_IID);                
+            }
         }    
         $rawprice->setStatusOem(Rawprice::OEM_PARSED);
         $this->entityManager->persist($rawprice);
