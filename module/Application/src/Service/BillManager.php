@@ -695,39 +695,40 @@ class BillManager
         foreach ($delimeters as $delimetr){
             $articleStr = $producer = null;
             $art_pro = explode($delimetr, $iid);
-            
             if (count($art_pro) == 3){// у микадо может быть 3 "-" в артикуле
                 $art_pro[1] = $art_pro[1].$art_pro[2];
                 unset($art_pro[2]);
             }
             
-            foreach ($art_pro as $value){
-                $producerName = $producerNameFilter->filter($value);
-                if ($producerName){
-                    $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
-                            ->findOneByName($producerName);
-                    if ($unknownProducer){
-                        if ($unknownProducer->getProducer()){
-                            $producer = $unknownProducer->getProducer();
-                            continue;
-                        }    
+            if (count($art_pro) > 1){
+                foreach ($art_pro as $value){
+                    $producerName = $producerNameFilter->filter($value);
+                    if ($producerName){
+                        $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                                ->findOneByName($producerName);
+                        if ($unknownProducer){
+                            if ($unknownProducer->getProducer()){
+                                $producer = $unknownProducer->getProducer();
+                                continue;
+                            }    
+                        }
+                    }
+                    if (!$articleStr){
+                        $articleStr = $value;
                     }
                 }
-                if (!$articleStr){
-                    $articleStr = $value;
+                if ($articleStr && $producer){
+    //                var_dump($articleStr, $producer);
+                    return $this->_newGood($articleStr, $producer, $goodName);                
                 }
-            }
-            if ($articleStr && $producer){
-//                var_dump($articleStr, $producer);
-                return $this->_newGood($articleStr, $producer, $goodName);                
-            }
-            if ($articleStr){
-                $code = $articleFilter->filter($articleStr);
-                $good = $this->entityManager->getRepository(Goods::class)
-                        ->findOneByCode($code);
-                if ($good){
-                    return $good;
-                }                
+                if ($articleStr){
+                    $code = $articleFilter->filter($articleStr);
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->findOneByCode($code);
+                    if ($good){
+                        return $good;
+                    }                
+                }    
             }    
         }
         return;
