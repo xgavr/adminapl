@@ -699,8 +699,8 @@ class BillManager
                 $art_pro[1] = $art_pro[1].$art_pro[2];
                 unset($art_pro[2]);
             }
-            var_dump($art_pro);
             if (count($art_pro) > 1){
+                $producer = null;
                 foreach ($art_pro as $value){
                     $producerName = $producerNameFilter->filter($value);
                     if ($producerName){
@@ -722,6 +722,7 @@ class BillManager
                     return $this->_newGood($articleStr, $producer, $goodName);                
                 }
                 if ($articleStr){
+                    var_dump($articleStr);
                     $code = $articleFilter->filter($articleStr);
                     $good = $this->entityManager->getRepository(Goods::class)
                             ->findOneByCode($code);
