@@ -737,9 +737,10 @@ class BillManager
      * xbr-s23530;xfrk-238901;xnk-751516;xnk-929906;xpm-phb-007
      * 
      * @param string $iid
+     * @param Idoc $idoc
      * @param float $price
      */
-    protected function _goodFromMikadoIid($iid, $price)
+    protected function _goodFromMikadoIid($iid, $idoc, $price)
     {
         $delimeters = ['-'];
         $articleFilter = new ArticleCode();
@@ -846,7 +847,7 @@ class BillManager
         if ($iid){
             
             if ($idoc->getSupplier()->getAplId() == 69){ //mikado
-                $good = $this->_goodFromMikadoIid($iid, $price);
+                $good = $this->_goodFromMikadoIid($iid, $idoc, $price);
             } else {
                 $good = $this->_parseIid($iid, $goodName);                
             }
