@@ -62,11 +62,18 @@ class OemRepository  extends EntityRepository{
      * 
      * @param integer $goodId
      * @param array $oems
+     * @param integer $source
+     * @param integer $supplierId
      */
-    public function addOemToGood($goodId, $oems, $source = Oem::SOURCE_TD)
+    public function addOemToGood($goodId, $oems, $source = Oem::SOURCE_TD, $supplierId = null)
     {
         $filter = new ArticleCode();
         $oe = $filter->filter($oems['oeNumber']);
+        
+        if (is_numeric($supplierId)){
+            $oe = $supplierId.'@'.$oe;
+        }
+        
         $oem = $this->getEntityManager()->getRepository(Oem::class)
                 ->findOneBy(['good' => $goodId, 'oe' => $oe]);
         
