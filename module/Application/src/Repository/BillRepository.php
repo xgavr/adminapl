@@ -35,10 +35,10 @@ class BillRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('i, s, m')
+        $queryBuilder->select('i, s, m.amount as mAmount')
             ->from(Idoc::class, 'i') 
             ->leftJoin('i.supplier', 's')
-            ->leftJoin(Mutual::class, 'm', Join::ON, 'i.docKey = m.docKey')    
+            ->leftJoin(Mutual::class, 'm', Join::WITH, 'i.docKey = m.docKey')    
             ->addOrderBy('i.id', 'DESC')    
                 ;
         if (is_array($params)){
@@ -69,6 +69,7 @@ class BillRepository  extends EntityRepository{
                 }    
             }
         }
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }       
     
