@@ -847,8 +847,9 @@ class BillManager
         
         if ($iid){
             
+            $iid = $idoc->getSupplier()->getId().'@'.$articleFilter->filter($iid);
             $oem = $this->entityManager->getRepository(Oem::class)
-                    ->findOneBy(['oe' => $articleFilter->filter($iid), 'status' => Oem::STATUS_ACTIVE, 'source' => Oem::SOURCE_IID]);
+                    ->findOneBy(['oe' => $iid, 'status' => Oem::STATUS_ACTIVE, 'source' => Oem::SOURCE_IID]);
             if ($oem){
                 return $oem->getGood();
             }
