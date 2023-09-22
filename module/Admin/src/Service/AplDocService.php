@@ -1830,9 +1830,10 @@ class AplDocService {
         
     /**
      * Загрузить заказы поставщикам из Апл
+     * @param bool $debug
      * @return 
      */
-    public function unloadSuppliersOrder()
+    public function unloadSuppliersOrder($debug = false)
     {
         ini_set('memory_limit', '512M');
         set_time_limit(900);
@@ -1851,7 +1852,9 @@ class AplDocService {
         $response = $client->send();
         $body = $response->getBody();
 
-//        var_dump($body); exit;
+        if ($debug){
+            var_dump($body);            
+        }
         try{
             $result = json_decode($body, true);
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
@@ -1860,6 +1863,9 @@ class AplDocService {
             return false;
         }
 //        var_dump($result); exit;
+        if ($debug){
+            var_dump($result);            
+        }
 
         if (is_array($result)){  
             $aplOrderId = null;

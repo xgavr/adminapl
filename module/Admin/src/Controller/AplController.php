@@ -938,7 +938,7 @@ class AplController extends AbstractActionController
     
     public function unloadSuppliersOrderAction()
     {                
-        $this->aplDocService->unloadSuppliersOrder();
+        $this->aplDocService->unloadSuppliersOrder(true);
         
         return new JsonModel([
             'result' => 'ok',
