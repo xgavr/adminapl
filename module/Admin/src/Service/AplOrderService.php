@@ -1286,7 +1286,7 @@ class AplOrderService {
                 $this->entityManager->flush($order);
             }
 
-            if (!$result && $debug){
+            if (!$result && $debug && $response){
                 var_dump($order->getId(), $response->getBody());                
             }
 

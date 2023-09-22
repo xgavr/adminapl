@@ -188,11 +188,17 @@ class OemManager
                     
                     // Добавление кода поставщика для поиска при создании накладных
                     if ($rawprice->getCode()->getGood() && !empty($rawprice->getIid())){
-                        $iid = $rawprice->getRaw()->getSupplier()->getId().'@'.$rawprice->getIid();
+                        
+                        //удаление ошибочных записей
+                        $this->entityManager->getConnection()->delete('oem', [
+                            'good' => $rawprice->getCode()->getGood(),
+                            'source' => 7,
+                        ]);
+                        
                         $this->entityManager->getRepository(Oem::class)
                             ->addOemToGood($rawprice->getCode()->getGood()->getId(), [
-                                'oeNumber' => $iid,
-                            ], Oem::SOURCE_IID);                
+                                'oeNumber' => $rawprice->getIid(),
+                            ], Oem::SOURCE_IID, $rawprice->getRaw()->getSupplier()->getId());                
                     }
                 }                    
                 

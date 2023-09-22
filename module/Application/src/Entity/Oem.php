@@ -29,7 +29,7 @@ class Oem {
     const SOURCE_CROSS    = 4; // Кросслист.
     const SOURCE_INTERSECT = 5; // Пересечение.
     const SOURCE_MY_CODE = 6; //Артикул товара
-    const SOURCE_IID = 7; //Номер у поставщика
+    const SOURCE_IID = 8; //Номер у поставщика
     
     const SOURCE_TD_NAME = 'ТекДок';
     const INTERSECT_NAME = 'ОЕ кросс';
