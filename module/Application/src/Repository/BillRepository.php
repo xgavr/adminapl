@@ -230,7 +230,7 @@ class BillRepository  extends EntityRepository{
 //        $queryBuilder->select('i, abs(m.amount) as mAmount')
         $queryBuilder->select('i')
             ->from(Idoc::class, 'i') 
-            ->leftJoin('i.mutual', 'm')
+            ->join('i.mutual', 'm')
             ->where('i.docKey is not null')    
             ->andWhere('round(i.info) != abs(round(m.amount))')                    
                 ;
