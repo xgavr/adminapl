@@ -23,21 +23,27 @@ class OemController extends AbstractActionController
    
     /**
     * Менеджер сущностей.
-    * @var Doctrine\ORM\EntityManager
+    * @var \Doctrine\ORM\EntityManager
     */
     private $entityManager;
     
     /**
      * Менеджер производителей.
-     * @var Application\Service\ProducerManager 
+     * @var \Application\Service\ProducerManager 
      */
     private $producerManager;    
     
     /**
      * Менеджер артикулов производителей.
-     * @var Application\Service\ArticleManager 
+     * @var \Application\Service\ArticleManager 
      */
     private $articleManager;    
+    
+    /**
+     * Менеджер oem.
+     * @var \Application\Service\OemManager 
+     */
+    private $oemManager;    
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $producerManager, $articleManager, $oemManager) 
@@ -283,11 +289,11 @@ class OemController extends AbstractActionController
         
         $suppliersList = ['нет'];
         $suppliers = $this->entityManager->getRepository(Supplier::class)
-                ->findBy();
+                ->findBy([]);
         foreach($suppliers as $supplier){
             $suppliersList[$supplier->getId()] = $supplier->getName(); 
         }
-        $form->get('supplier')->setOptions($suppliersList);
+        $form->get('supplier')->setValueOptions($suppliersList);
 
         if ($this->getRequest()->isPost()) {
             

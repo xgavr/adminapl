@@ -86,7 +86,7 @@ class OemForm extends Form
                 'id' => 'supplier',
             ],
             'options' => [
-                'label' => 'Поставщик',
+                'label' => 'Поставщик (если вводим номер поставщика)',
                 'value_options' => [],
             ],
        ]);

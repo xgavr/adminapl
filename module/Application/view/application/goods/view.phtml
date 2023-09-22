@@ -659,7 +659,10 @@
     
     function oeNumberFormatter(value, row){
         if (row.source == <?= Oem::SOURCE_INTERSECT?>){
-            return '<a href="/goods/view/'+row.intersectGoodId+'" target="_blank">'+value+'</a>'
+            return '<a href="/goods/view/'+row.intersectGoodId+'" target="_blank">'+value+'</a>';
+        } 
+        if (row.source == <?= Oem::SOURCE_IID?>){
+            return row.oe;
         } 
         return value;
     }

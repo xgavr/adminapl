@@ -1457,41 +1457,50 @@ class GoodsRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('o')
             ->from(Oem::class, 'o')
-            ->where('o.good = ?1')
-            ->andWhere('o.source != ?2')    
-            ->andWhere('o.source != ?3')    
+                
+            ->andWhere('o.source != :myCode')    
+            ->andWhere('o.source != :iid')    
             ->andWhere('o.source != 7')    
-            ->setParameter('1', $goodId)
-            ->setParameter('2', Oem::SOURCE_MY_CODE)    
-            ->setParameter('3', Oem::SOURCE_IID)    
+            ->setParameter('myCode', Oem::SOURCE_MY_CODE)    
+            ->setParameter('iid', Oem::SOURCE_IID)    
             ;
         
         if (is_array($params)){
-            if (isset($params['q'])){
+            if (!empty($params['q'])){
                 $filter = new \Application\Filter\ArticleCode();
                 $queryBuilder->andWhere('o.oe like :search')
                     ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
                         ;
             }
-            if (isset($params['limit'])){
+            if (!empty($params['limit'])){
                 if (is_numeric($params['limit'])){
                     $queryBuilder->setMaxResults($params['limit']);
                 }    
             }
-            if (isset($params['exclude_source'])){
+            if (!empty($params['exclude_source'])){
                 if (is_numeric($params['exclude_source'])){
-                    $queryBuilder->andWhere('o.source != ?3')
-                            ->setParameter('3', $params['exclude_source']);
+                    $queryBuilder->andWhere('o.source != :exc')
+                            ->setParameter('exc', $params['exclude_source']);
                 }    
             }
-            if (isset($params['source'])){
+            if (!empty($params['source'])){
                 if (is_numeric($params['source'])){
-                    $queryBuilder->andWhere('o.source = ?4')
-                            ->setParameter('4', $params['source']);
+                    
+                    $queryBuilder->resetDQLPart('where')
+                            ->setParameters([])
+                            ;
+                            
+                    $queryBuilder->andWhere('o.source = :source')
+                            ->setParameter('source', $params['source']);
                 }    
             }
         }
         
+        $queryBuilder->andWhere('o.good = :good')
+                ->setParameter('good', $goodId)
+                ;
+        
+//        var_dump($queryBuilder->getQuery()->getSql());
         return $queryBuilder->getQuery();            
     }
     
