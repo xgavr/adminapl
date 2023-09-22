@@ -289,7 +289,7 @@ class AplOrderService {
     private function findDelivery($office, $data)
     {
         $shipping = null;
-        if (!empty($data['delivery'])){
+        if (!empty($data['delivery'] && $office)){
             $shipping = $this->entityManager->getRepository(Shipping::class)
                     ->findOneBy(['office' => $office->getId(), 'aplId' => $data['delivery']]);
         }
@@ -299,7 +299,11 @@ class AplOrderService {
                     ->findDefaultShipping($office);
         }
         
-        return $shipping->getId();
+        if ($shipping){
+            return $shipping->getId();
+        }
+        
+        return;
     }
     
     /**
