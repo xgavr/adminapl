@@ -74,7 +74,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="status" data-formatter="statusFormatter" data-width="20">C</th>
                      <th data-field="docKey" data-formatter="docFormatter">ПТУ</th>
                      <th data-field="info" data-width="100" data-align="right" data-formatter="billAmountFormatter">Инфо</th>
-                     <th data-field="supplier.name" data-formatter="supplierFormatter">Поставщик</th>
+                     <th data-field="supplierName" data-formatter="supplierFormatter">Поставщик</th>
                      <th data-field="name">Файл</th>
                      <th data-field="id" data-formatter="activeFormatter" data-width="50"></th>
                  </tr>                
@@ -241,8 +241,8 @@ $this->pageBreadcrumbs()->setItems([
         } else {
             var info = Math.round(value*100)/100;
             var mutual = info;
-            if (row.mutual){
-                mutual = Math.abs(Math.round(row.mutual.amount*100))/100;
+            if (row.mutualAmount){
+                mutual = Math.abs(Math.round(row.mutualAmount*100))/100;
             }    
             if (info != mutual){
                 return '<label class="text-danger">'+info.toFixed(2)+'</label>';
@@ -306,9 +306,9 @@ $this->pageBreadcrumbs()->setItems([
         }
         return [
             '<nobr>',
-            '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.supplier.id+'" title="Перейти на сайт поставщика">',
+            '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.supplierId+'" title="Перейти на сайт поставщика">',
             '<span class="glyphicon glyphicon-link"></span></a>',
-            '<a href="/supplier/view/' + row.supplier.id + '" target="_blank">' + value + '</a>',
+            '<a href="/supplier/view/' + row.supplierId + '" target="_blank">' + value + '</a>',
             '</nobr>'
         ].join(''); 
     }    
