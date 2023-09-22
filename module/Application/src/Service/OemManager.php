@@ -138,15 +138,7 @@ class OemManager
                         $rawprice->addOemRaw($oem);
                     }   
                 }    
-            } 
-            
-            // Добавление кода поставщика для поиска при создании накладных
-            if ($rawprice->getArticle()->getGood() && !empty($rawprice->getIid())){
-                $this->entityManager->getRepository(Oem::class)
-                    ->addOemToGood($rawprice->getArticle()->getGood()->getId(), [
-                        'oeNumber' => $rawprice->getIid(),
-                    ], Oem::SOURCE_IID);                
-            }
+            }             
         }    
         $rawprice->setStatusOem(Rawprice::OEM_PARSED);
         $this->entityManager->persist($rawprice);
@@ -192,7 +184,15 @@ class OemManager
                         $this->entityManager->getRepository(Rawprice::class)
                                 ->updateRawpriceField($rawprice->getId(), ['status_oem' => Rawprice::OEM_PARSED]);
                     }    
-                }    
+                    
+                    // Добавление кода поставщика для поиска при создании накладных
+                    if ($rawprice->getCode()->getGood() && !empty($rawprice->getIid())){
+                        $this->entityManager->getRepository(Oem::class)
+                            ->addOemToGood($rawprice->getCode()->getGood()->getId(), [
+                                'oeNumber' => $rawprice->getIid(),
+                            ], Oem::SOURCE_IID);                
+                    }
+                }                    
                 
                 $this->entityManager->detach($rawprice);
             }                
