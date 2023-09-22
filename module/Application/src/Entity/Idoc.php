@@ -28,6 +28,7 @@ class Idoc {
     const STATUS_RETIRED      = 2; // Создан документ.
     const STATUS_ERROR      = 3; // Не прочитано.
     const STATUS_PROC      = 4; // Читается.
+    const STATUS_TO_CORRECT      = 9; // Читается.
         
     /**
      * @ORM\Id
@@ -127,7 +128,8 @@ class Idoc {
             self::STATUS_ACTIVE => 'Новый',
             self::STATUS_RETIRED => 'Есть документ',
             self::STATUS_ERROR => 'Нет документа',
-            self::STATUS_PROC => 'Обработка'
+            self::STATUS_PROC => 'Обработка',
+            self::STATUS_TO_CORRECT => 'Требуется исправление',
         ];
     }    
     

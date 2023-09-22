@@ -45,8 +45,14 @@ class BillRepository  extends EntityRepository{
                         ->setParameter('1', $params['supplier']);
             }
             if (is_numeric($params['status'])){
-                $queryBuilder->andWhere('i.status = ?2')
-                        ->setParameter('2', $params['status']);
+                if ($params['status'] === Idoc::STATUS_TO_CORRECT){
+                    $queryBuilder->andWhere('i.docKey is not null')
+                                ->andWhere('round(i.info) != abs(round(m.amount))')
+                            ;
+                } else {
+                    $queryBuilder->andWhere('i.status = ?2')
+                            ->setParameter('2', $params['status']);
+                }    
             }
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
@@ -87,8 +93,15 @@ class BillRepository  extends EntityRepository{
                         ->setParameter('1', $params['supplier']);
             }
             if (is_numeric($params['status'])){
-                $queryBuilder->andWhere('i.status = ?2')
-                        ->setParameter('2', $params['status']);
+                if ($params['status'] === Idoc::STATUS_TO_CORRECT){
+                    $queryBuilder->leftJoin('i.mutual', 'm')
+                            ->andWhere('i.docKey is not null')
+                            ->andWhere('round(i.info) != abs(round(m.amount))')
+                            ;
+                } else {
+                    $queryBuilder->andWhere('i.status = ?2')
+                            ->setParameter('2', $params['status']);
+                }    
             }
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
