@@ -216,4 +216,27 @@ class BillRepository  extends EntityRepository{
         }
         return;        
     }
+    
+    /**
+     * Поиск некорректных записей записей
+     * @return type
+     */
+    public function findForCorrection()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+//        $queryBuilder->select('i, abs(m.amount) as mAmount')
+        $queryBuilder->select('i')
+            ->from(Idoc::class, 'i') 
+            ->leftJoin('i.mutual', 'm')
+            ->where('i.docKey is not null')    
+            ->andWhere('round(i.info) != abs(round(m.amount))')                    
+                ;
+        
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
 }

@@ -1044,4 +1044,25 @@ class BillManager
         }
         return;
     }
+    
+    /**
+     * Перезагрузка испорченных накладных
+     */
+    public function correction()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+
+        $idocs = $this->entityManager->getRepository(Idoc::class)
+                ->findForCorrection();
+        foreach ($idocs as $idoc){
+            $this->tryPtu($idoc);
+            if (time() > $startTime + 840){
+                break;
+            }
+        }   
+        
+        return;
+    }
 }

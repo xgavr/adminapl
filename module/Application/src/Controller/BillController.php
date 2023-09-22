@@ -303,4 +303,12 @@ class BillController extends AbstractActionController
         ]);         
     }
 
+    public function correctionAction()
+    {        
+        $this->billManager->correction(); 
+        
+        return new JsonModel([
+            'ok'
+        ]);         
+    }
 }

@@ -25,6 +25,9 @@ $this->pageBreadcrumbs()->setItems([
                 <button id="tryIdocs" type="button" class="btn btn-default" title="Загрузить документы">
                     <span class="glyphicon glyphicon-download-alt"></span>
                 </button>
+                <button id="correctionIdocs" type="button" class="btn btn-warning" title="Исправить документы">
+                    <span class="glyphicon glyphicon-wrench"></span>
+                </button>
                 <div class="form-group">
                     <select id="supplierSelect" name="supplierSelect" style="width: 250px" class="form-control">
                         <option selected>поставщик</option>
@@ -161,6 +164,27 @@ $this->pageBreadcrumbs()->setItems([
             })
                 .done(function (data) {
                     refreshTable();
+                })
+                .fail(function (e) {
+                    console.log(e);
+                    alert("Ошибка при обработке документов");
+
+                });
+        });            
+
+        $(document).on('click', '#correctionIdocs', function (e) {
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: true
+            });
+            var url = '/bills/correction';
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                    dialog.modal('hide');
+                    //refreshTable();
                 })
                 .fail(function (e) {
                     console.log(e);
