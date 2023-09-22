@@ -35,7 +35,7 @@ class BillRepository  extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('i, s, m.amount as mAmount')
+        $queryBuilder->select('i, s, m')
             ->from(Idoc::class, 'i') 
             ->leftJoin('i.supplier', 's')
             ->leftJoin(Mutual::class, 'm', Join::WITH, 'i.docKey = m.docKey')    
