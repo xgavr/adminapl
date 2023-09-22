@@ -1460,6 +1460,7 @@ class GoodsRepository extends EntityRepository
             ->where('o.good = ?1')
             ->andWhere('o.source != ?2')    
             ->andWhere('o.source != ?3')    
+            ->andWhere('o.source != 7')    
             ->setParameter('1', $goodId)
             ->setParameter('2', Oem::SOURCE_MY_CODE)    
             ->setParameter('3', Oem::SOURCE_IID)    
