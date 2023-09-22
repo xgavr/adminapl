@@ -73,9 +73,10 @@ class Idoc {
      */
     private $supplier;    
     
-   /**
-    * @ORM\OneToOne(targetEntity="Stock\Entity\Mutual", mappedBy="idoc")
-   */
+    /**
+     * @ORM\OneToOne(targetEntity="Stock\Entity\Mutual", inversedBy="idoc") 
+     * @ORM\JoinColumn(name="doc_key", referencedColumnName="doc_key")
+     */
     private $mutual;    
 
     public function getId() 
