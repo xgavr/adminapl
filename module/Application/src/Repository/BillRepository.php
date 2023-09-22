@@ -45,7 +45,7 @@ class BillRepository  extends EntityRepository{
                         ->setParameter('1', $params['supplier']);
             }
             if (is_numeric($params['status'])){
-                if ($params['status'] === Idoc::STATUS_TO_CORRECT){
+                if ($params['status'] == Idoc::STATUS_TO_CORRECT){
                     $queryBuilder->andWhere('i.docKey is not null')
                                 ->andWhere('round(i.info) != abs(round(m.amount))')
                             ;
@@ -93,7 +93,7 @@ class BillRepository  extends EntityRepository{
                         ->setParameter('1', $params['supplier']);
             }
             if (is_numeric($params['status'])){
-                if ($params['status'] === Idoc::STATUS_TO_CORRECT){
+                if ($params['status'] == Idoc::STATUS_TO_CORRECT){
                     $queryBuilder->leftJoin('i.mutual', 'm')
                             ->andWhere('i.docKey is not null')
                             ->andWhere('round(i.info) != abs(round(m.amount))')
