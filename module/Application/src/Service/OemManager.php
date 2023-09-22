@@ -70,7 +70,7 @@ class OemManager
         
         if ($newOem->getId() == $oem->getId()){
             $oem->setStatus($data['status']);
-            $oem->setStatus($data['source']);
+            $oem->setSource($data['source']);
             $oem->setBrandName($data['brandName']);
 
             $this->entityManager->persist($oem);
