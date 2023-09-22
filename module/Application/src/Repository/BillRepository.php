@@ -14,6 +14,7 @@ use Application\Entity\Goods;
 use Application\Entity\Supplier;
 use Application\Entity\BillSetting;
 use Stock\Entity\Mutual;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Description of BillRepository
@@ -37,7 +38,7 @@ class BillRepository  extends EntityRepository{
         $queryBuilder->select('i, s, m')
             ->from(Idoc::class, 'i') 
             ->leftJoin('i.supplier', 's')
-            ->leftJoin(Mutual::class, 'm', 'WITH', 'i.docKey = m.docKey')    
+            ->leftJoin(Mutual::class, 'm', Join::LEFT_JOIN, 'i.docKey = m.docKey')    
             ->addOrderBy('i.id', 'DESC')    
                 ;
         if (is_array($params)){
@@ -249,7 +250,7 @@ class BillRepository  extends EntityRepository{
             ->andWhere('round(i.info) != abs(round(m.amount))')                    
                 ;
         
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();
         
     }
