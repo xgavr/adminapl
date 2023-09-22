@@ -13,6 +13,7 @@ use Application\Entity\Rawprice;
 use Application\Entity\Goods;
 use Application\Entity\Supplier;
 use Application\Entity\BillSetting;
+use Stock\Entity\Mutual;
 
 /**
  * Description of BillRepository
@@ -36,7 +37,7 @@ class BillRepository  extends EntityRepository{
         $queryBuilder->select('i, s, m')
             ->from(Idoc::class, 'i') 
             ->leftJoin('i.supplier', 's')
-            ->leftJoin('i.mutual', 'm')    
+            ->leftJoin(Mutual::class, 'm', 'WITH', 'i.docKey = m.docKey')    
             ->addOrderBy('i.id', 'DESC')    
                 ;
         if (is_array($params)){
@@ -94,7 +95,7 @@ class BillRepository  extends EntityRepository{
             }
             if (is_numeric($params['status'])){
                 if ($params['status'] == Idoc::STATUS_TO_CORRECT){
-                    $queryBuilder->leftJoin('i.mutual', 'm')
+                    $queryBuilder->leftJoin(Mutual::class, 'm', 'WITH', 'i.docKey = m.docKey')
                             ->andWhere('i.docKey is not null')
                             ->andWhere('round(i.info) != abs(round(m.amount))')
                             ;
@@ -243,12 +244,12 @@ class BillRepository  extends EntityRepository{
 //        $queryBuilder->select('i, abs(m.amount) as mAmount')
         $queryBuilder->select('i.id as iid')
             ->from(Idoc::class, 'i') 
-            ->join('i.mutual', 'm')
+            ->join(Mutual::class, 'm', 'WITH', 'i.docKey = m.docKey')
             ->where('i.docKey is not null')    
             ->andWhere('round(i.info) != abs(round(m.amount))')                    
                 ;
         
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult();
         
     }

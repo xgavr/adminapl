@@ -77,7 +77,7 @@ class Idoc {
      * @ORM\OneToOne(targetEntity="Stock\Entity\Mutual", inversedBy="idoc") 
      * @ORM\JoinColumn(name="doc_key", referencedColumnName="doc_key")
      */
-    private $mutual;    
+//    private $mutual;    
 
     public function getId() 
     {
@@ -650,7 +650,7 @@ class Idoc {
         return $result;
     }
     
-    public function getMutual() {
-        return $this->mutual;
-    }
+//    public function getMutual() {
+//        return $this->mutual;
+//    }
 }
