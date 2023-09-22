@@ -1057,7 +1057,11 @@ class BillManager
         $idocs = $this->entityManager->getRepository(Idoc::class)
                 ->findForCorrection();
         foreach ($idocs as $idoc){
-            $this->tryPtu($idoc);
+            $idoc = $this->entityManager->getRepository(Idoc::class)
+                    ->find($idoc['iid']);
+            if ($idoc){
+                $this->tryPtu($idoc);
+            }    
             if (time() > $startTime + 840){
                 break;
             }
