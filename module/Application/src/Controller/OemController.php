@@ -15,6 +15,7 @@ use Application\Entity\Oem;
 use Application\Entity\Goods;
 use Application\Form\OemForm;
 use Laminas\View\Model\JsonModel;
+use Application\Entity\Supplier;
 
 
 class OemController extends AbstractActionController
@@ -279,6 +280,14 @@ class OemController extends AbstractActionController
 
         $form = new OemForm();
         $this->layout()->setTemplate('layout/terminal');
+        
+        $suppliersList = ['нет'];
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findBy();
+        foreach($suppliers as $supplier){
+            $suppliersList[$supplier->getId()] = $supplier->getName(); 
+        }
+        $form->get('supplier')->setOptions($suppliersList);
 
         if ($this->getRequest()->isPost()) {
             

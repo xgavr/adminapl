@@ -79,6 +79,18 @@ class OemForm extends Form
             ],
        ]);
                 
+        $this->add([
+            'type'  => 'select',
+            'name' => 'supplier',
+            'attributes' => [                
+                'id' => 'supplier',
+            ],
+            'options' => [
+                'label' => 'Поставщик',
+                'value_options' => [],
+            ],
+       ]);
+                
         
         // Добавляем кнопку отправки формы
         $this->add([
@@ -133,6 +145,15 @@ class OemForm extends Form
                             'max' => 1024
                         ],
                     ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'supplier',
+                'required' => false,
+                'filters'  => [                    
+                ],                
+                'validators' => [
                 ],
             ]);          
     }    
