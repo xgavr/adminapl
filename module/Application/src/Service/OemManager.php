@@ -195,10 +195,10 @@ class OemManager
                         
                         $good = $rawprice->getCode()->getGood();
                         //удаление ошибочных записей
-                        $this->entityManager->getConnection()->delete('oem', [
-                            'good_id' => $good->getId(),
-                            'source' => 7,
-                        ]);
+//                        $this->entityManager->getConnection()->delete('oem', [
+//                            'good_id' => $good->getId(),
+//                            'source' => 7,
+//                        ]);
                         
                         $this->entityManager->getRepository(Oem::class)
                             ->addOemToGood($good->getId(), [

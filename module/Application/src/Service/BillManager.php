@@ -764,6 +764,54 @@ class BillManager
     }
     
     /**
+     * Поиск товара по внутреннему коду поставщика
+     * @param string $iid
+     * @param Supplier $supplier
+     * @return type
+     */
+    protected function _goodFromIid($iid, $supplier)
+    {
+        $articleFilter = new ArticleCode();
+
+        $oe = $supplier->getId().'@'.$articleFilter->filter($iid);
+        
+        $oem = $this->entityManager->getRepository(Oem::class)
+                ->findOneBy(['oe' => $oe, 'status' => Oem::STATUS_ACTIVE, 'source' => Oem::SOURCE_IID]);
+        
+        if ($oem){
+            return $oem->getGood();
+        }
+        
+        return;
+    }
+    
+    /**
+     * Поиск товара по внутренним кодам поставщика
+     * @param string $iid
+     * @param Idoc $idoc
+     */
+    protected function _goodFromSupplierIid($iid, $idoc)
+    {
+        $parentSupplier = $idoc->getSupplier()->getPsrent();
+        if (!$parentSupplier){
+            $parentSupplier = $idoc->getSupplier();
+        }
+
+        $good = $this->_goodFromIid($iid, $parentSupplier);
+        if ($good){
+            return $good;
+        }        
+        
+        foreach ($parentSupplier->getChildren() as $chldSupplier){
+            $good = $this->_goodFromIid($iid, $chldSupplier);
+            if ($good){
+                return $good;
+            }        
+        }
+        return;
+    }
+
+    /**
      * Найти подходящий товар по коду
      * @param Idoc $idoc
      * @param string $articleStr
@@ -847,11 +895,9 @@ class BillManager
         
         if ($iid){
             
-            $iid = $idoc->getSupplier()->getId().'@'.$articleFilter->filter($iid);
-            $oem = $this->entityManager->getRepository(Oem::class)
-                    ->findOneBy(['oe' => $iid, 'status' => Oem::STATUS_ACTIVE, 'source' => Oem::SOURCE_IID]);
-            if ($oem){
-                return $oem->getGood();
+            $good = $this->_goodFromSupplierIid($iid, $idoc);
+            if ($good){
+                return $good;
             }
             
             if ($idoc->getSupplier()->getAplId() == 69){ //mikado
