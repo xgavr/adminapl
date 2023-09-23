@@ -792,7 +792,7 @@ class BillManager
      */
     protected function _goodFromSupplierIid($iid, $idoc)
     {
-        $parentSupplier = $idoc->getSupplier()->getPsrent();
+        $parentSupplier = $idoc->getSupplier()->getParent();
         if (!$parentSupplier){
             $parentSupplier = $idoc->getSupplier();
         }
