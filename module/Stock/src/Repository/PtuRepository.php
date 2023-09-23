@@ -329,14 +329,14 @@ class PtuRepository extends EntityRepository{
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $ptu){
             $flag = true;
-//            $ptuGoods = $entityManager->getRepository(PtuGood::class)
-//                    ->findBy(['ptu' => $ptu->getId()]);
-//            foreach ($ptuGoods as $ptuGood){
-//               if (empty($ptuGood->getGood()->getAplId())){
-//                   $flag = false;
-//                   break;
-//               }  
-//            }
+            $ptuGoods = $entityManager->getRepository(PtuGood::class)
+                    ->findBy(['ptu' => $ptu->getId()]);
+            foreach ($ptuGoods as $ptuGood){
+               if (empty($ptuGood->getGood()->getAplId())){
+                   $flag = false;
+                   break;
+               }  
+            }
             if ($flag){
                 return $ptu;
             }    

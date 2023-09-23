@@ -289,21 +289,22 @@ class AplOrderService {
     private function findDelivery($office, $data)
     {
         $shipping = null;
-        if (!empty($data['delivery'] && $office)){
-            $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->findOneBy(['office' => $office->getId(), 'aplId' => $data['delivery']]);
-        }
-        
-        if (!$shipping){
-            $shipping = $this->entityManager->getRepository(Shipping::class)
-                    ->findDefaultShipping($office);
-        }
-        
-        if ($shipping){
-            return $shipping->getId();
-        }
-        
-        return;
+        if ($office){
+            if (!empty($data['delivery'])){
+                $shipping = $this->entityManager->getRepository(Shipping::class)
+                        ->findOneBy(['office' => $office->getId(), 'aplId' => $data['delivery']]);
+            }
+
+            if (!$shipping){
+                $shipping = $this->entityManager->getRepository(Shipping::class)
+                        ->findDefaultShipping($office);
+            }
+
+            if ($shipping){
+                return $shipping->getId();
+            }
+        }    
+        return $shipping;
     }
     
     /**

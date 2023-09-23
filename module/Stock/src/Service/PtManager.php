@@ -276,7 +276,6 @@ class PtManager
                 'contact_id' => $pt->getOffice2()->getLegalContact()->getId(),
                 'office_id' => $pt->getOffice()->getId(),
                 'company_id' => $pt->getCompany()->getId(),
-                'doc_info' => Encoder::encode($pt->toLog()),
             ];
 
             $this->entityManager->getRepository(Retail::class)
