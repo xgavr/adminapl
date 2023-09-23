@@ -177,7 +177,12 @@ class AplDocService {
     {
         $office = $this->entityManager->getRepository(Office::class)
                 ->findOneBy(['aplId' => $officeAplId]);
-        return $office;        
+        if ($office){
+            return $office;        
+        }
+        
+        return $this->entityManager->getRepository(Office::class)
+                ->findOneBy(['id' => 1]);
     }
     
     /**
