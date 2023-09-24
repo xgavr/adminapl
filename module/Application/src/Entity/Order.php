@@ -595,7 +595,12 @@ class Order {
     {
         if (empty($this->dateShipment)){
             return date('Y-m-d');
+        }  
+        
+        if (!empty($this->dateOper) && $this->status == self::STATUS_SHIPPED){
+            return $this->dateOper;
         }   
+        
         return $this->dateShipment;
     }
 

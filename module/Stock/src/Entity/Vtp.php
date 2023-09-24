@@ -617,6 +617,7 @@ class Vtp {
             'id' => $this->getId(),
             'amount' => $this->getAmount(),
             'aplId' => $this->getAplId(),
+            'ptu' => $this->getPtu()->getId(),
             'comment' => $this->getComment(),
             'cause' => $this->getCause(),
             'contract' => $this->getPtu()->getContract()->getId(),
