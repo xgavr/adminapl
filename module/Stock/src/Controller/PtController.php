@@ -178,8 +178,11 @@ class PtController extends AbstractActionController
 
             if ($form->isValid()) {
                 unset($data['csrf']);
-                $ptGood = $data['ptGood'];
-                unset($data['ptGood']);
+                $ptGood = [];
+                if (!empty($data['ptGood'])){
+                    $ptGood = $data['ptGood'];
+                    unset($data['ptGood']);
+                }    
                 $data['status_ex'] = Pt::STATUS_EX_NEW;
                 $data['office'] = $office;
                 $data['company'] = $company;
