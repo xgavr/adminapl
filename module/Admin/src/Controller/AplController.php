@@ -1087,4 +1087,13 @@ class AplController extends AbstractActionController
         return new JsonModel($result);
     }
     
+    public function aplDublicateAction()
+    {
+        
+        $this->aplOrderService->markDublicate();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
 }

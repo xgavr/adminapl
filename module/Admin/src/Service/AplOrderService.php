@@ -1351,5 +1351,35 @@ class AplOrderService {
     public function cancelOld()
     {
         return $this->orderManager->cancelOld();
-    }        
+    }      
+    
+    /**
+     * Пометить заказы дублями товаров на повторное обновление
+     * @return null
+     */
+    public function markDublicate()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(900);
+        $startTime = time();
+
+        $aplDublicate = Decoder::decode(file_get_contents('https://autopartslist.ru/orders/dublicate-bags'), Json::TYPE_ARRAY);
+        if (is_array($aplDublicate)){
+            foreach($aplDublicate as $key => $value){
+                $order = $this->entityManager->getRepository(Order::class)
+                        ->findOneBy(['aplId' => $value]);
+                if ($order){
+                    $order->setStatusEx(Order::STATUS_EX_NEW);
+                    $this->entityManager->persist($order);
+                }
+                if (time() > $startTime + 870){
+                    $this->entityManager->flush();
+                    break;
+                }
+            }
+            $this->entityManager->flush();
+        }        
+        
+        return;
+    }
 }
