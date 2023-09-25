@@ -181,11 +181,13 @@
     function vtpFormatter(value, row){
         var info = $.parseJSON(row.info);
         var btnClass = 'btn-default';
-        if (info.depend){
-            if (info.depend.vtp){
-                if (info.depend.vtp.length > 0){
-                    btnClass = 'btn-info';
-                }
+        if (info){
+            if (info.depend){
+                if (info.depend.vtp){
+                    if (info.depend.vtp.length > 0){
+                        btnClass = 'btn-info';
+                    }
+                }    
             }    
         }    
 
