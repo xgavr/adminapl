@@ -1363,7 +1363,7 @@ class AplOrderService {
         set_time_limit(900);
         $startTime = time();
 
-        $aplDublicate = Decoder::decode(file_get_contents('https://autopartslist.ru/orders/dublicate-bags'), Json::TYPE_ARRAY);
+        $aplDublicate = Decoder::decode(file_get_contents('https://autopartslist.ru/orders/dublicate-bags'), \Laminas\Json\Json::TYPE_ARRAY);
         if (is_array($aplDublicate)){
             foreach($aplDublicate as $key => $value){
                 $order = $this->entityManager->getRepository(Order::class)
