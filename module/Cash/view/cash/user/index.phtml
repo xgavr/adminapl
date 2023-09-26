@@ -92,7 +92,7 @@
                      <th data-field='cashDoc.kind' data-sortable="false" data-formatter="kindFormatter" data-width="200">Операция</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Приход</th>
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="outFormatter" data-width="100">Расход</th>
-                     <th data-field='rest' data-sortable="false" data-align="right" data-width="100">Остаток</th>
+                     <th data-field='rest' data-sortable="false" data-align="right" data-formatter="userRestFormatter" data-width="100">Остаток</th>
                      <th data-field='user.fullName' data-sortable="false" data-width="150">Сотрудник</th>
                      <th data-field='cashDoc.kind' data-sortable="false" data-formatter="operFormatter">Кому/от кого</th>
                      <th data-field='cashDoc.comment' data-sortable="false">Комментарий</th>
@@ -232,6 +232,10 @@
             return -Math.round(value*100)/100;
         }
         return;
+    }    
+
+    function userRestFormatter(value){
+        return Math.round(value*100)/100;
     }    
     
     function kindFormatter(value){
