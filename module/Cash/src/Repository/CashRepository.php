@@ -445,9 +445,11 @@ class CashRepository extends EntityRepository
                     ->where('ut.user = ?1')
                     ->andWhere('r.docStamp <= ?2') 
                     ->andWhere('r.docStamp > 0')
+                    ->andWhere('ut.status = :status')
                     ->setParameter('docType', Movement::DOC_CASH)
                     ->setParameter('1', $userId)
                     ->setParameter('2', $register->getDocStamp())
+                    ->setParameter('status', UserTransaction::STATUS_ACTIVE)
                     ;
 
             $result = $qb->getQuery()->getOneOrNullResult();
