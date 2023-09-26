@@ -14,6 +14,8 @@ use Cash\Entity\Cash;
 use Cash\Entity\CashTransaction;
 use Cash\Entity\UserTransaction;
 use Company\Entity\Office;
+use Stock\Entity\Movement;
+use Stock\Entity\Register;
 
 /**
  * Description of CashRepository
@@ -419,4 +421,40 @@ class CashRepository extends EntityRepository
         return $queryBuilder->getQuery()->getOneOrNullResult();                
         
     }        
+    
+    /**
+    * Остаток по if
+    * @param integer $userId
+    * @param integer $docId 
+    * @return integer
+    */
+    public function accountantRest($userId, $docId)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $register = $entityManager->getRepository(Register::class)
+                ->findOneBy(['docType' => Movement::DOC_CASH, 'docId' => $docId]);
+                
+        if ($register){
+            $qb = $entityManager->createQueryBuilder();
+            $qb->select('sum(ut.amount) as utSum')
+                    ->from(UserTransaction::class, 'ut')
+                    ->join(Register::class, 'r', 'WITH', 'ut.cashDoc = r.docId and r.docType = :docType')
+                    ->where('ut.user = ?1')
+                    ->andWhere('r.docStamp <= ?2') 
+                    ->andWhere('r.docStamp > 0')
+                    ->setParameter('docType', Movement::DOC_CASH)
+                    ->setParameter('1', $userId)
+                    ->setParameter('2', $register->getDocStamp())
+                    ;
+
+            $result = $qb->getQuery()->getOneOrNullResult();
+            if ($result){
+                return $result['utSum'];
+            }
+            
+            return 0;
+        }
+        return;
+    }                        
 }

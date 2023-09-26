@@ -17,6 +17,7 @@ use Cash\Form\UserOutForm;
 use Company\Entity\Office;
 use User\Entity\User;
 use Company\Entity\Legal;
+use Cash\Entity\UserTransaction;
 
 
 class UserController extends AbstractActionController
@@ -104,6 +105,13 @@ class UserController extends AbstractActionController
         }
 
         $result = $query->getResult(2);
+        if ($userId){
+            foreach ($result as $key=>$value){
+//                var_dump($value);
+                $result[$key]['rest'] = $this->entityManager->getRepository(UserTransaction::class)
+                    ->accountantRest($userId, $value['cashDoc']['id']);
+            }
+        }    
         
         return new JsonModel([
             'amountIn' => empty($total['amountIn']) ? 0:$total['amountIn'],
