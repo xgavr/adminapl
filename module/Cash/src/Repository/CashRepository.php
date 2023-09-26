@@ -460,5 +460,54 @@ class CashRepository extends EntityRepository
             return 0;
         }
         return;
-    }                        
+    }    
+    
+    /**
+    * Обороты за период
+    * @param date $dataStart
+    * @param date $dateEnd
+    * @param int $period month, year
+    * @param array $params
+    */        
+   public function periodTransaction($dateStart, $dateEnd, $period = 'month', $params)
+   {
+//       var_dump($dateEnd, $dateStart, $period, $params); exit;
+        $entityManager = $this->getEntityManager();
+        
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('sum(case when ut.amount > 0 then ut.amount else 0 end) as inSum, sum(case when ut.amount <= 0 then -ut.amount else 0 end) as outSum')
+                ->from(UserTransaction::class, 'ut')
+                ->andWhere('ut.dateOper <= ?2') 
+                ->andWhere('ut.dateOper >= ?1')
+                ->andWhere('ut.status = :status')
+                ->setParameter('1', $dateStart)
+                ->setParameter('2', $dateEnd)
+                ->setParameter('status', UserTransaction::STATUS_ACTIVE)
+                ->groupBy('period')
+                ;
+        switch ($period){
+            case 'number': 
+            case 'year': 
+                $qb->addSelect('Month(ut.dateOper) as period'); 
+                break;
+            default: 
+                $qb->addSelect('day(ut.dateOper) as period'); 
+                break;    
+        }
+        
+        if (is_array($params)){
+            if (!empty($params['user'])){
+                if (is_numeric($params['user'])){
+                    $qb->andWhere('ut.user = :user')
+                        ->setParameter('user', $params['user'])
+                            ;
+                }    
+            }            
+        }
+        
+
+        $result = $qb->getQuery();
+        return $result;       
+   }
+                           
 }

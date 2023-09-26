@@ -1,0 +1,139 @@
+<?php
+    $this->headTitle('Подотчет');
+
+    $this->mainMenu()->setActiveItemId('report');
+    $this->mainMenu()->setActiveUrl($this->url('report', ['action' => 'accountant']));
+
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Отчеты'=>$this->url('report'),
+                ]);
+    
+    $this->headScript()
+                ->prependFile('//cdn.plot.ly/plotly-2.12.1.min.js')
+            ;
+
+?>
+<div class="row">
+    <div class="col-md-6">
+        <div id="tester"></div>
+    </div>
+    <div class="col-md-6">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <select id="userSelect" name="user" style="width: 200px" class="form-control">
+                        <option selected>Сотрудник</option>                        
+                        <?php foreach ($users as $user):?>
+                            <option value="<?= $user->getId()?>"><?= $user->getFullName()?></option>
+                        <?php endforeach;?>
+                    </select>
+                    
+                </div>    
+                <div class="form-group">
+                    <select id="periodSelect" class="form-control" name="period">
+<!--                        <option value="date">Дата</option>
+                        <option value="week">Неделя</option>                        -->
+                        <option value="month">Месяц</option>                        
+                        <option value="number">Год</option>                        
+                    </select>
+                    <input name="dateStart" id="dateStart" style="width: 200px" class="form-control refresh-table" type="month" value="<?= date('Y-m')?>">
+                </div>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/report/accountantContent"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="true"
+            data-query-params="queryParams"
+            data-sort-name="year"
+            data-sort-order="asc"            
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-response-handler="responseHandler"
+            >
+            <thead>
+                <tr>
+                     <th data-field="period" data-align="right">Период</th>
+                     <th data-field='inSum' data-sortable="false" data-align="right">Поступило</th>
+                     <th data-field='outSum' data-sortable="false" data-align="right">Расход</th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script>
+    var $table = $('#table').bootstrapTable({
+        onLoadSuccess: function(data){
+                var x = []; var y = [];
+                $.each(data.rows, function( index, value ) {
+                    x.push(value.period);
+                    y.push(value.inSum);
+                    y.push(value.outSum);
+                });
+                plotly(x, y);
+            }                    
+        }),
+        $ok = $('#ok');
+
+    function refreshTable(){
+        $table.bootstrapTable('refresh');
+    }
+    
+    function plotly(x, y){
+	TESTER = document.getElementById('tester');
+	Plotly.newPlot( TESTER, [{
+            x: x,
+            y: y,
+            type: 'bar'
+            }], 
+            {
+                margin: { t: 30 },
+                title: 'Обороты по годам'
+            } 
+        );        
+    }
+    
+    $(function(){        
+        $(document).on('change', '#officeSelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#userSelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#dateStart', function (e) {
+            refreshTable();
+        });        
+        $(document).on('change', '#periodSelect', function (e) {
+            $('#dateStart').attr('type', $(this).val());
+        });
+    });
+
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }        
+
+    function responseHandler(res) {
+        return res;
+    }    
+</script>

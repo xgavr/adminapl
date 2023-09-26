@@ -408,6 +408,12 @@ class NavManager
                             'link' => $url('report')
                         ];
                                 
+                $reportDropdownItems[] = [
+                            'id' => 'report',
+                            'label' => 'Подотчет',
+                            'link' => $url('report', ['action' => 'accountant'])
+                        ];
+                                
                 if (count($reportDropdownItems)!=0) {
                     $items[] = [
                         'id' => 'report',

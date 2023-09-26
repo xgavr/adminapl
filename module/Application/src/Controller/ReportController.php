@@ -14,6 +14,8 @@ use Application\Entity\Comment;
 use Application\Entity\Order;
 use Application\Entity\Client;
 use Company\Entity\Office;
+use User\Entity\User;
+use Cash\Entity\CashDoc;
 
 
 class ReportController extends AbstractActionController
@@ -82,6 +84,73 @@ class ReportController extends AbstractActionController
         ]);         
     }
 
+    public function accountantAction()
+    {
+        $offices = $this->entityManager->getRepository(Office::class)
+                ->findBy([]);
+        
+        $users = $this->entityManager->getRepository(User::class)
+                ->findBy([]);
+
+        return new ViewModel([
+            'offices' => $offices,
+            'users' => $users,
+        ]);  
+    }
+
+    public function accountantContentAction()
+    {
+        
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $office = $this->params()->fromQuery('office');
+        $user = $this->params()->fromQuery('user');
+        $year = $this->params()->fromQuery('year');
+        $month = $this->params()->fromQuery('month');
+        $base = $this->params()->fromQuery('base');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period', 'date');
+
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
+        }    
+        
+        $params = ['office' => $office, 'year' => $year, 'month' => $month,
+            'base' => $base, 'user' => $user];
+        
+        $query = $this->entityManager->getRepository(CashDoc::class)
+                    ->periodTransaction($startDate, $endDate, $period, $params);            
+        
+        $total = count($query->getResult());
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult();
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);         
+    }
+    
     public function editFormAction()
     {
         $clientId = (int)$this->params()->fromQuery('client', -1);
