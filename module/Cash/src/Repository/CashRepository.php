@@ -227,6 +227,8 @@ class CashRepository extends EntityRepository
         $queryBuilder->select('ut, cd, u, cr, ur, cost, l, c, uc, cnt, clt, o, cdu')
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')
+            ->join(Register::class, 'r', 'WITH', 'cd.id = r.docId and r.docType = :docType')
+            ->setParameter('docType', Movement::DOC_CASH)    
             ->join('ut.user', 'u')
             ->leftJoin('cd.cashRefill', 'cr')    
             ->leftJoin('cd.userRefill', 'ur')    
@@ -242,7 +244,7 @@ class CashRepository extends EntityRepository
             ->setParameter('1', $dateStart)    
             ->andWhere('cd.dateOper <= ?2')
             ->setParameter('2', $dateEnd . ' 23:59:59')    
-//            ->orderBy('cd.dateOper', 'DESC')                 
+            ->orderBy('r.docStamp', 'DESC')                 
 //            ->addOrderBy('cd.id', 'DESC')                 
                 ;
         
