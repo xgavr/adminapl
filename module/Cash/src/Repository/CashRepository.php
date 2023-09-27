@@ -487,8 +487,11 @@ class CashRepository extends EntityRepository
                 ;
         switch ($period){
             case 'number': 
-            case 'year': 
+            case 'month': 
                 $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%m.%Y\') as period, Month(ut.dateOper) as periodName'); 
+                break;
+            case 'year': 
+                $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%Y\') as period, Month(ut.dateOper) as periodName'); 
                 break;
             default: 
                 $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%d.%m.%Y\') as period, Day(ut.dateOper) as periodName'); 

@@ -109,20 +109,21 @@ class ReportController extends AbstractActionController
         $month = $this->params()->fromQuery('month');
         $base = $this->params()->fromQuery('base');
         $dateStart = $this->params()->fromQuery('dateStart');
-        $period = $this->params()->fromQuery('period', 'date');
+        $period = $this->params()->fromQuery('period', 'day');
+        $periodSelect = $this->params()->fromQuery('periodSelect', 'day');
 
         $startDate = '2012-01-01';
         $endDate = '2199-01-01';
         if (!empty($dateStart)){
             $startDate = date('Y-m-d', strtotime($dateStart));
             $endDate = $startDate;
-            if ($period == 'week'){
+            if ($periodSelect == 'week'){
                 $endDate = date('Y-m-d', strtotime('+ 1 week - 1 day', strtotime($startDate)));
             }    
-            if ($period == 'month'){
+            if ($periodSelect == 'month'){
                 $endDate = date('Y-m-d', strtotime('+ 1 month - 1 day', strtotime($startDate)));
             }    
-            if ($period == 'number'){
+            if ($periodSelect == 'number'){
                 $startDate = $dateStart.'-01-01';
                 $endDate = date('Y-m-d', strtotime('+ 1 year - 1 day', strtotime($startDate)));
             }    
@@ -134,7 +135,12 @@ class ReportController extends AbstractActionController
         $query = $this->entityManager->getRepository(CashDoc::class)
                     ->periodTransaction($startDate, $endDate, $period, $params);            
         
-        $total = count($query->getResult());
+        $fullResult = $query->getResult();
+        
+        $inTotal = array_sum(array_column($fullResult, 'inSum'));
+        $outTotal = array_sum(array_column($fullResult, 'outSum'));
+        
+        $total = count($fullResult);
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -148,6 +154,8 @@ class ReportController extends AbstractActionController
         return new JsonModel([
             'total' => $total,
             'rows' => $result,
+            'inTotal' => $inTotal,
+            'outTotal' => $outTotal,
         ]);         
     }
     
