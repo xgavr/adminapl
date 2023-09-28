@@ -161,7 +161,10 @@
     }
 
     function endAmountFormatter(value, row){
-        return (Math.round(((row.bSum || 0) + (row.inSum || 0) - (row.outSum || 0))*100)/100).toFixed(2);
+        var bSum = Math.round((row.bSum || 0)*100)/100;
+        var inSum = Math.round((row.inSum || 0)*100)/100;
+        var outSum = Math.round((row.outSum || 0)*100)/100;
+        return (bSum+inSum-outSum).toFixed(2);
     }
 
     function responseHandler(res) {
