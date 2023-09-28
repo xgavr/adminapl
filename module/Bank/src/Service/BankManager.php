@@ -558,7 +558,7 @@ class BankManager
         } catch (\Exception $e){
             return $e->getMessage();
         }
-        if (is_array($tochkaStatement)){            
+        if (!empty($tochkaStatement['statements'])){            
             foreach ($tochkaStatement['statements'] as $statement){
                 if (isset($statement->accountId)){
                     list($code, $bik) = explode('/', $statement->accountId);

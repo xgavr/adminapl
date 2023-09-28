@@ -485,16 +485,27 @@ class CashRepository extends EntityRepository
                 ->setParameter('status', UserTransaction::STATUS_ACTIVE)
                 ->groupBy('period')
                 ;
+        
+        $qbb = $entityManager->createQueryBuilder();
+        $qbb->select('sum(utb.amount)')
+                ->from(UserTransaction::class, 'utb')
+                ->andWhere('utb.status = :status')
+                ->setParameter('status', UserTransaction::STATUS_ACTIVE)
+                ;
+
         switch ($period){
             case 'number': 
             case 'month': 
-                $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%m.%Y\') as period, Month(ut.dateOper) as periodName'); 
+                $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%m.%Y\') as period, Month(ut.dateOper) as periodName');
+                $qbb->andWhere('utb.dateOper < DATE_FORMAT(ut.dateOper, \'%Y-%m-01\')');
                 break;
             case 'year': 
-                $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%Y\') as period, Month(ut.dateOper) as periodName'); 
+                $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%Y\') as period, Year(ut.dateOper) as periodName'); 
+                $qbb->andWhere('utb.dateOper < DATE_FORMAT(ut.dateOper, \'%Y-01-01\')');
                 break;
             default: 
                 $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%d.%m.%Y\') as period, Day(ut.dateOper) as periodName'); 
+                $qbb->andWhere('utb.dateOper < DATE_FORMAT(ut.dateOper, \'%Y-%m-%d\')');
                 break;    
         }
         
@@ -504,11 +515,16 @@ class CashRepository extends EntityRepository
                     $qb->andWhere('ut.user = :user')
                         ->setParameter('user', $params['user'])
                             ;
+                    $qbb->andWhere('utb.user = :user')
+                        ->setParameter('user', $params['user'])
+                            ;
                 }    
             }            
         }
         
-
+        $qb->addSelect('('. $qbb->getQuery()->getDQL().') as bSum');
+        
+//        var_dump($qb->getQuery()->getSQL()); exit;
         $result = $qb->getQuery();
         return $result;       
    }
