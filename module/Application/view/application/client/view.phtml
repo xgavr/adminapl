@@ -598,7 +598,7 @@ $legalContact = $client->getLegalContact();
     function mutualRowStyle(row){
         var retired = 'default';
         switch(row.status){
-            case '<?= Reatil::STATUS_RETIRED?>': 
+            case '<?= Retail::STATUS_RETIRED?>': 
                         return {classes: 'retired '+retired}; break;
             default:break;     
         }
