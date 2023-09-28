@@ -117,7 +117,7 @@
             inTotalNode.css('text-align','right');
 
             var outTotalNode = $table.find('th[data-field="outSum"]').find('.th-inner');
-            outTotalNode.html('Расход ' + Math.round(data.outTotal).toFixed(2));
+            outTotalNode.html('Расход ' + Math.round(-data.outTotal).toFixed(2));
             outTotalNode.css('text-align','right');
         } 
     });
