@@ -54,7 +54,7 @@
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
             data-query-params="queryParams"
             data-sort-name="period"
             data-sort-order="asc"            
@@ -78,16 +78,24 @@
     var $table = $('#table').bootstrapTable({
         onLoadSuccess: function(data){
 //            console.log(data);
-                var inTotalNode = $table.find('th[data-field="inSum"]').find('.th-inner');
-                inTotalNode.html('Поступило '+data.inTotal.toFixed(2));
-                inTotalNode.css('text-align','right');
+            var bTotalNode = $table.find('th[data-field="bSum"]').find('.th-inner');
+            bTotalNode.html('На начало '+data.bTotal.toFixed(2));
+            bTotalNode.css('text-align','right');
 
-                var outTotalNode = $table.find('th[data-field="outSum"]').find('.th-inner');
-                outTotalNode.html('Расход '+data.outTotal.toFixed(2));
-                outTotalNode.css('text-align','right');
+            var inTotalNode = $table.find('th[data-field="inSum"]').find('.th-inner');
+            inTotalNode.html('Поступило '+data.inTotal.toFixed(2));
+            inTotalNode.css('text-align','right');
+
+            var outTotalNode = $table.find('th[data-field="outSum"]').find('.th-inner');
+            outTotalNode.html('Расход '+data.outTotal.toFixed(2));
+            outTotalNode.css('text-align','right');
+
+            var eTotalNode = $table.find('th[data-field="eSum"]').find('.th-inner');
+            eTotalNode.html('На конец '+data.eTotal.toFixed(2));
+            eTotalNode.css('text-align','right');
                 
-                var x = []; var y1 = []; var y2 = [];
-                $.each(data.rows, function( index, value ) {
+            var x = []; var y1 = []; var y2 = [];
+            $.each(data.rows, function( index, value ) {
                     x.push(value.period);
                     y1.push(value.inSum);
                     y2.push(value.outSum);

@@ -137,8 +137,11 @@ class ReportController extends AbstractActionController
         
         $fullResult = $query->getResult();
         
+        $bTotal = 0 + $this->entityManager->getRepository(CashDoc::class)
+                    ->balanceTransaction($startDate, $params);
         $inTotal = array_sum(array_column($fullResult, 'inSum'));
         $outTotal = array_sum(array_column($fullResult, 'outSum'));
+        $eTotal = $bTotal + $inTotal - $outTotal;
         
         $total = count($fullResult);
         
@@ -154,8 +157,10 @@ class ReportController extends AbstractActionController
         return new JsonModel([
             'total' => $total,
             'rows' => $result,
+            'bTotal' => $bTotal,
             'inTotal' => $inTotal,
             'outTotal' => $outTotal,
+            'eTotal' => $eTotal,
         ]);         
     }
     

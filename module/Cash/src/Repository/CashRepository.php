@@ -463,8 +463,48 @@ class CashRepository extends EntityRepository
     }    
     
     /**
+    * Остаток на начало периода
+    * @param date $dateStart
+    * @param array $params
+    */        
+    public function balanceTransaction($dateStart, $params)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('sum(ut.amount) as bSum')
+                ->from(UserTransaction::class, 'ut')
+                ->andWhere('ut.dateOper < ?1')
+                ->andWhere('ut.status = :status')
+                ->setParameter('1', $dateStart)
+                ->setParameter('status', UserTransaction::STATUS_ACTIVE)
+                ;
+        if (is_array($params)){
+            if (!empty($params['user'])){
+                if (is_numeric($params['user'])){
+                    $qb->andWhere('ut.user = :user')
+                        ->setParameter('user', $params['user'])
+                            ;
+                }    
+            }            
+        }
+
+        $result = $qb->getQuery()->getOneOrNullResult();
+        
+        if (empty($result)){
+            return 0;
+        }
+
+        if (empty($result['bSum'])){
+            return 0;
+        }
+        
+        return $result['bSum'];       
+    }
+    
+    /**
     * Обороты за период
-    * @param date $dataStart
+    * @param date $dateStart
     * @param date $dateEnd
     * @param int $period month, year
     * @param array $params
@@ -498,15 +538,15 @@ class CashRepository extends EntityRepository
             case 'number': 
             case 'month': 
                 $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%m.%Y\') as period, DATE_FORMAT(ut.dateOper, \'%Y-%m\') as periodSort');
-                $qbb->andWhere('utb.dateOper < DATE_FORMAT(ut.dateOper, \'%Y-%m-01\')');
+                $qbb->andWhere('utb.dateOper < DATE_FORMAT(IFNULL(ut.dateOper, now())), \'%Y-%m-01\')');
                 break;
             case 'year': 
                 $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%Y\') as period, Year(ut.dateOper) as periodSort'); 
-                $qbb->andWhere('utb.dateOper < DATE_FORMAT(ut.dateOper, \'%Y-01-01\')');
+                $qbb->andWhere('utb.dateOper < DATE_FORMAT(IFNULL(ut.dateOper, now()), \'%Y-01-01\')');
                 break;
             default: 
                 $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%d.%m.%Y\') as period, ut.dateOper as periodSort'); 
-                $qbb->andWhere('utb.dateOper < ut.dateOper');
+                $qbb->andWhere('utb.dateOper < IFNULL(ut.dateOper, now())');
                 break;    
         }
         
