@@ -114,8 +114,8 @@ class UserController extends AbstractActionController
         }    
         
         return new JsonModel([
-            'amountIn' => empty($total['amountIn']) ? 0:$total['amountIn'],
-            'amountOut' => empty($total['amountOut']) ? 0:$total['amountOut'],
+            'inTotal' => empty($total['amountIn']) ? 0:$total['amountIn'],
+            'outTotal' => empty($total['amountOut']) ? 0:$total['amountOut'],
             'total' => empty($total['countCd']) ? 0:$total['countCd'],
             'rows' => $result,
         ]);                  

@@ -90,8 +90,8 @@
                      <th data-field="cashDoc.dateOper" data-sortable="true" data-formatter="dateFormatter" data-width="80">Дата</th>
                      <th data-field="cashDoc.id" data-sortable="false" data-width="50" data-formatter="cashIdFormatter" data-align="right">Номер</th>
                      <th data-field='cashDoc.kind' data-sortable="false" data-formatter="kindFormatter" data-width="200">Операция</th>
-                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Приход</th>
-                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="outFormatter" data-width="100">Расход</th>
+                     <th data-field='inSum' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Приход</th>
+                     <th data-field='outSum' data-sortable="false" data-align="right" data-formatter="outFormatter" data-width="100">Расход</th>
                      <th data-field='rest' data-sortable="false" data-align="right" data-formatter="userRestFormatter" data-width="100">Остаток</th>
                      <th data-field='user.fullName' data-sortable="false" data-width="150">Сотрудник</th>
                      <th data-field='cashDoc.kind' data-sortable="false" data-formatter="operFormatter">Кому/от кого</th>
@@ -109,8 +109,16 @@
 
 <script type="text/javascript">
     var $table = $('#table').bootstrapTable({
-        onLoadSuccess: function() {
+        onLoadSuccess: function(data) {
             updateBalance();
+
+            var inTotalNode = $table.find('th[data-field="inSum"]').find('.th-inner');
+            inTotalNode.html('Поступило ' + Math.round(data.inTotal).toFixed(2));
+            inTotalNode.css('text-align','right');
+
+            var outTotalNode = $table.find('th[data-field="outSum"]').find('.th-inner');
+            outTotalNode.html('Расход ' + Math.round(data.outTotal).toFixed(2));
+            outTotalNode.css('text-align','right');
         } 
     });
     
@@ -220,23 +228,23 @@
         return Math.round(value*100)/100;
     }
     
-    function inFormatter(value){
-        if (value>0){
-            return Math.round(value*100)/100;
+    function inFormatter(value, row){
+        if (row.amount>0){
+            return (Math.round(row.amount*100)/100).toFixed(2);
         }
         return;
     }    
     
-    function outFormatter(value){
-        if (value<0){
-            return -Math.round(value*100)/100;
+    function outFormatter(value, row){
+        if (row.amount<0){
+            return (-Math.round(row.amount*100)/100).toFixed(2);
         }
         return;
     }    
 
     function userRestFormatter(value){
         if (value){
-            return Math.round(value*100)/100;
+            return (Math.round(value*100)/100).toFixed(2);
         }
         
         return '';
