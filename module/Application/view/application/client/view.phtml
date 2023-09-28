@@ -415,7 +415,11 @@ $legalContact = $client->getLegalContact();
 <?php echo $this->partial('/application/order/comment-partial', []); ?>
 
 <script type="text/javascript">
-    var $table = $('#table').bootstrapTable();
+    var $table = $('#table').bootstrapTable({
+        onLoadSuccess: function() {
+            setCookies('clientSaveId');
+        }         
+    });
     
     function setCookies(cookieKey){
         let expires = 30;
