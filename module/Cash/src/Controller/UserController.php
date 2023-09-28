@@ -48,9 +48,9 @@ class UserController extends AbstractActionController
     public function indexAction()
     {
         $users = $this->entityManager->getRepository(User::class)
-                ->findBy(['status' => User::STATUS_ACTIVE]);
+                ->findBy([], ['status' => 'ASC']);
         $offices = $this->entityManager->getRepository(Office::class)
-                ->findBy(['status' => Office::STATUS_ACTIVE]);
+                ->findBy([], ['status' => 'ASC']);
         return new ViewModel([
             'users' =>  $users,
             'offices' =>  $offices,

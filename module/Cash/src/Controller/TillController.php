@@ -54,7 +54,7 @@ class TillController extends AbstractActionController
         $offices = $this->entityManager->getRepository(Office::class)
                 ->findBy([]);
         $cashes = $this->entityManager->getRepository(Cash::class)
-                ->findBy(['status' => Cash::STATUS_ACTIVE, 'office' => $currentUser->getOffice()->getId()]);
+                ->findBy(['office' => $currentUser->getOffice()->getId()], ['status' => 'ASC']);
         return new ViewModel([
             'cashes' =>  $cashes,
             'offices' =>  $offices,
@@ -271,7 +271,7 @@ class TillController extends AbstractActionController
         }
         
         $cashes = $this->entityManager->getRepository(Cash::class)
-                ->findBy(['office' => $office->getId(), 'status' => Cash::STATUS_ACTIVE]);
+                ->findBy(['office' => $office->getId()], ['status' => 'ASC']);
         
         foreach ($cashes as $cash){
             $result[$cash->getId()] = [

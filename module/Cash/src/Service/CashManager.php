@@ -672,7 +672,7 @@ class CashManager {
         
         if ($form->has('cost')){
             $costs = $this->entityManager->getRepository(Cost::class)
-                    ->findBy(['status' => Supplier::STATUS_ACTIVE], ['name' => 'ASC']);
+                    ->findBy([], ['status' => 'ASC', 'name' => 'ASC']);
             $costList = ['--не выбран--'];
             foreach ($costs as $cost) {
                 $costList[$cost->getId()] = $cost->getName();
@@ -681,7 +681,7 @@ class CashManager {
         }    
 
         $suppliers = $this->entityManager->getRepository(Supplier::class)
-                ->findBy(['status' => Supplier::STATUS_ACTIVE], ['name' => 'ASC']);
+                ->findBy([], ['status' => 'ASC', 'name' => 'ASC']);
         $supplierList = ['--не выбран--'];
         foreach ($suppliers as $supplier) {
             $supplierList[$supplier->getId()] = $supplier->getName();
@@ -689,7 +689,7 @@ class CashManager {
         $form->get('supplier')->setValueOptions($supplierList);
         
         $users = $this->entityManager->getRepository(User::class)
-                ->findBy(['status' => User::STATUS_ACTIVE], ['fullName' => 'ASC']);
+                ->findBy([], ['status' => 'ASC', 'fullName' => 'ASC']);
         $userList = ['--не выбран--'];
         foreach ($users as $user) {
             $userList[$user->getId()] = $user->getFullName();
@@ -701,7 +701,7 @@ class CashManager {
 
         if ($officeId){
             $cashes = $this->entityManager->getRepository(Cash::class)
-                    ->findBy(['status' => Cash::STATUS_ACTIVE, 'office' => $officeId], ['name' => 'ASC']);
+                    ->findBy(['office' => $officeId], ['status' => 'ASC','name' => 'ASC']);
             foreach ($cashes as $cash) {
                 $cashList[$cash->getId()] = $cash->getName();
             }
@@ -709,7 +709,7 @@ class CashManager {
                 $form->get('cash')->setValueOptions($cashList);
             }    
             $refillCashes = $this->entityManager->getRepository(Cash::class)
-                    ->findBy(['status' => Cash::STATUS_ACTIVE, 'office' => $officeId, 'refillStatus' => Cash::REFILL_ACTIVE], ['name' => 'ASC']);
+                    ->findBy(['office' => $officeId, 'refillStatus' => Cash::REFILL_ACTIVE], ['status' => 'ASC','name' => 'ASC']);
             foreach ($refillCashes as $cash) {
                 $refillCashList[$cash->getId()] = $cash->getName();
             }

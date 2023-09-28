@@ -141,6 +141,8 @@
             $('#dateStart').attr('type', $(this).val());
             if (periodSelectVal == 'number'){
                $('#dateStart').val($.format.date(new Date(), "yyyy"));
+               $('#dateStart').attr('min', 2012);
+               $('#dateStart').attr('max', $.format.date(new Date(), "yyyy"));
             }
         });
     });
