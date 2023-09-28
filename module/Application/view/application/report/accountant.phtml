@@ -64,8 +64,10 @@
             <thead>
                 <tr>
                      <th data-field="period" data-width="100">Период</th>
+                     <th data-field='bSum' data-sortable="false" data-align="right" data-formatter="amountFormatter">Остаток на начало</th>
                      <th data-field='inSum' data-sortable="false" data-align="right" data-formatter="amountFormatter">Поступило</th>
                      <th data-field='outSum' data-sortable="false" data-align="right"  data-formatter="amountFormatter">Расход</th>
+                     <th data-field='eSum' data-sortable="false" data-align="right"  data-formatter="endAmountFormatter">Остаток на конец</th>
                  </tr>                
             </thead>
         </table>
@@ -156,6 +158,10 @@
 
     function amountFormatter(value){
         return (Math.round(value*100)/100).toFixed(2);
+    }
+
+    function endAmountFormatter(value, row){
+        return (Math.round(((row.bSum || 0) + (row.inSum || 0) - (row.outSum || 0))*100)/100).toFixed(2);
     }
 
     function responseHandler(res) {
