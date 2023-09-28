@@ -546,7 +546,7 @@ class CashRepository extends EntityRepository
                 break;
             default: 
                 $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%d.%m.%Y\') as period, ut.dateOper as periodSort'); 
-                $qbb->andWhere('utb.dateOper < IFNULL(ut.dateOper, now())');
+                $qbb->andWhere('utb.dateOper < ut.dateOper');
                 break;    
         }
         
