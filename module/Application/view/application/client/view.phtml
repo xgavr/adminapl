@@ -909,7 +909,7 @@ $legalContact = $client->getLegalContact();
         let docId = row.docId;        
         switch(docType){
             case '<?= Movement::DOC_ORDER?>': 
-                return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №"+docId+"</a>";
+                return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №Z-"+docId+"</a>";
             case '<?= Movement::DOC_MSR?>': 
                 return "<a href='#' class='msr-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о продажах №"+docId+"</a>";
             case '<?= Movement::DOC_VT?>': 
@@ -953,9 +953,9 @@ $legalContact = $client->getLegalContact();
                         }    
                     } 
                     if (row.cashDoc.order){
-                        var orderId = 'Z'+row.cashDoc.order.id;
+                        var orderId = 'Z-'+row.cashDoc.order.id;
                         if (row.cashDoc.order.aplId){
-                            orderId = row.cashDoc.order.aplId;
+                            orderId = '('+row.cashDoc.order.aplId+')';
                         }
                         result += " <a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+orderId+"</a>";
                     }
