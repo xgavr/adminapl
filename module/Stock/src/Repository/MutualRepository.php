@@ -208,8 +208,10 @@ class MutualRepository extends EntityRepository{
                     ->where('c.client = ?1')
                     ->andWhere('r.docStamp <= ?2') 
                     ->andWhere('r.docStamp > 0')
+                    ->andWhere('r.status = :status')
                     ->setParameter('1', $clientId)
                     ->setParameter('2', $register->getDocStamp())
+                    ->setParameter('status', Retail::STATUS_ACTIVE)
                     ;
 
             if (!empty($companyId)){

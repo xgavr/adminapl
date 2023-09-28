@@ -152,6 +152,17 @@ $legalContact = $client->getLegalContact();
             </div>
         </div>    
         <div class="tab-pane fade" role="tabpanel" id="orders" aria-labelledby="order-tab">
+            <div id="ordertoolbar">
+                <div class="form-group">
+                    <select id="clientOrderStatusSelect" style="width: 200px" class="form-control" name="status">
+                        <option>все</option>
+                        <?php foreach (Order::getStatusList() as $key=>$value):?>
+                            <option value="<?= $key?>" <?= ($value == Order::STATUS_SHIPPED) ? 'selected':'' ?>><?= $value?></option>
+                        <?php endforeach;?>
+                    </select>
+                </div>    
+                </div>
+            </div>
             <table id="table" 
                 data-toggle="table" 
                 data-side-pagination="server"
@@ -439,6 +450,9 @@ $legalContact = $client->getLegalContact();
         $('#ordertoolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
+        $('#ordertoolbar').find('select[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
         limit = $('#table .page-size').html();
         if (limit){
             params.limit = limit;
@@ -583,19 +597,11 @@ $legalContact = $client->getLegalContact();
 
     function mutualRowStyle(row){
         var retired = 'default';
-//        switch(row.status){
-//            case '<?= Vt::STATUS_TAKE_NO?>': 
-//                return {classes: 'warning '+retired};
-//            default: break;            
-//        }                
-//        switch(row.status){
-//            case '<?= Vt::STATUS_COMMISSION?>': 
-//            case '<?= Vt::STATUS_DEFECT?>': 
-//                        return {classes: 'info '+retired}; break;
-//            case '<?= Vt::STATUS_RETIRED?>': 
-//                        return {classes: 'retired '+retired}; break;
-//            default:break;     
-//        }
+        switch(row.status){
+            case '<?= Reatil::STATUS_RETIRED?>': 
+                        return {classes: 'retired '+retired}; break;
+            default:break;     
+        }
         
         return {classes: retired};
     }
