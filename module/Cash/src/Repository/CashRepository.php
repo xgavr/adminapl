@@ -484,6 +484,7 @@ class CashRepository extends EntityRepository
                 ->setParameter('2', $dateEnd)
                 ->setParameter('status', UserTransaction::STATUS_ACTIVE)
                 ->groupBy('period')
+                ->orderBy('periodSort')
                 ;
         
         $qbb = $entityManager->createQueryBuilder();
@@ -496,16 +497,16 @@ class CashRepository extends EntityRepository
         switch ($period){
             case 'number': 
             case 'month': 
-                $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%m.%Y\') as period, Month(ut.dateOper) as periodName');
+                $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%m.%Y\') as period, DATE_FORMAT(ut.dateOper, \'%Y-%m\') as periodSort');
                 $qbb->andWhere('utb.dateOper < DATE_FORMAT(ut.dateOper, \'%Y-%m-01\')');
                 break;
             case 'year': 
-                $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%Y\') as period, Year(ut.dateOper) as periodName'); 
+                $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%Y\') as period, Year(ut.dateOper) as periodSort'); 
                 $qbb->andWhere('utb.dateOper < DATE_FORMAT(ut.dateOper, \'%Y-01-01\')');
                 break;
             default: 
-                $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%d.%m.%Y\') as period, Day(ut.dateOper) as periodName'); 
-                $qbb->andWhere('utb.dateOper < DATE_FORMAT(ut.dateOper, \'%Y-%m-%d\')');
+                $qb->addSelect('DATE_FORMAT(ut.dateOper, \'%d.%m.%Y\') as period, ut.dateOper as periodSort'); 
+                $qbb->andWhere('utb.dateOper < ut.dateOper');
                 break;    
         }
         
