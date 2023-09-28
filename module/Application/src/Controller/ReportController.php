@@ -107,7 +107,7 @@ class ReportController extends AbstractActionController
         $user = $this->params()->fromQuery('user');
         $year = $this->params()->fromQuery('year');
         $month = $this->params()->fromQuery('month');
-        $base = $this->params()->fromQuery('base');
+        $order = $this->params()->fromQuery('order');
         $dateStart = $this->params()->fromQuery('dateStart');
         $period = $this->params()->fromQuery('period', 'day');
         $periodSelect = $this->params()->fromQuery('periodSelect', 'day');
@@ -130,7 +130,7 @@ class ReportController extends AbstractActionController
         }    
         
         $params = ['office' => $office, 'year' => $year, 'month' => $month,
-            'base' => $base, 'user' => $user];
+            'order' => $order, 'user' => $user];
         
         $query = $this->entityManager->getRepository(CashDoc::class)
                     ->periodTransaction($startDate, $endDate, $period, $params);            

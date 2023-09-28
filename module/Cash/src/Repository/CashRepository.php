@@ -521,6 +521,9 @@ class CashRepository extends EntityRepository
                             ;
                 }    
             }            
+            if (!empty($params['order'])){
+                $qb->orderBy('periodSort', $params['order']);
+            }            
         }
         
         $qb->addSelect('('. $qbb->getQuery()->getDQL().') as bSum');

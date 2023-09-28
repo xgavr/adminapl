@@ -56,14 +56,14 @@
             data-show-refresh="true"
             data-show-toggle="true"
             data-query-params="queryParams"
-            data-sort-name="year"
+            data-sort-name="period"
             data-sort-order="asc"            
             data-classes = "table table-bordered table-hover table-condensed"
             data-response-handler="responseHandler"
             >
             <thead>
                 <tr>
-                     <th data-field="period" data-width="100">Период</th>
+                     <th data-field="period" data-sortable="true" data-width="100">Период</th>
                      <th data-field='bSum' data-sortable="false" data-align="right" data-formatter="amountFormatter">Остаток на начало</th>
                      <th data-field='inSum' data-sortable="false" data-align="right" data-formatter="amountFormatter">Поступило</th>
                      <th data-field='outSum' data-sortable="false" data-align="right"  data-formatter="amountFormatter">Расход</th>
@@ -79,11 +79,11 @@
         onLoadSuccess: function(data){
 //            console.log(data);
                 var inTotalNode = $table.find('th[data-field="inSum"]').find('.th-inner');
-                inTotalNode.html('Поступило '+data.inTotal.toFixed(0));
+                inTotalNode.html('Поступило '+data.inTotal.toFixed(2));
                 inTotalNode.css('text-align','right');
 
                 var outTotalNode = $table.find('th[data-field="outSum"]').find('.th-inner');
-                outTotalNode.html('Расход '+data.outTotal.toFixed(0));
+                outTotalNode.html('Расход '+data.outTotal.toFixed(2));
                 outTotalNode.css('text-align','right');
                 
                 var x = []; var y1 = []; var y2 = [];
