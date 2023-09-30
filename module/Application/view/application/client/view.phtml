@@ -435,12 +435,13 @@ $legalContact = $client->getLegalContact();
                 $(this).val(cookieVal);                
             }
         });     
+        $('#table').bootstrapTable('refresh');
         var activeTab = Cookies.get('clientSaveId_tab');
         if (activeTab !== undefined){
             $('.nav-tabs #'+activeTab).tab('show');
         } else {
             $('.nav-tabs a:first').tab('show');
-        }    
+        } 
     }    
 
     $(window).on('load', function() {
@@ -654,19 +655,16 @@ $legalContact = $client->getLegalContact();
     }
 
     function docFormatter(value, row){
+        var result = '<nobr>';
         var orderId = value;
-        var idAplId = value;
+//        var idAplId = value;
+        result += "<a href='#' class='order-view-show' modal-url='/order/view/"+row.id+"'>Z"+row.id+"</a>";
+
         if (row.aplId){
-            idAplId += ' ('+row.aplId+')';
+//            idAplId += ' ('+row.aplId+')';
+            result += " <a href='https://autopartslist.ru/admin/orders/view/"+row.aplId+"' target='_blank'>"+row.aplId+"</a>";
         }
-        if (row.order){
-            orderId = row.order.id;
-            idAplId = row.order.id;
-            if (row.order.aplId){
-                idAplId += ' ('+row.order.aplId+')';
-            }
-        }
-        return "<nobr><a href='#' class='order-view-show' modal-url='/order/view/"+orderId+"'>"+idAplId+"</a></nobr>";
+        return result+"</nobr>";
     }
         
     function clientFormatter(value, row){
@@ -955,7 +953,7 @@ $legalContact = $client->getLegalContact();
                     if (row.cashDoc.order){
                         var orderId = 'Z'+row.cashDoc.order.id;
                         if (row.cashDoc.order.aplId){
-                            orderId = '('+row.cashDoc.order.aplId+')';
+                            orderId += '('+row.cashDoc.order.aplId+')';
                         }
                         result += " <a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+orderId+"</a>";
                     }
