@@ -112,12 +112,16 @@ class AplOrderService {
     /**
      * Обновить клиента
      * @param array $data
+     * @param bool $debug
      * @return AplClient
      */
-    protected function getClient($data)
+    protected function getClient($data, $debug = false)
     {
         if (empty($data['client'])){
             return;
+        }
+        if ($debug){
+            var_dump($data);
         }
         $client = $this->aplService->getClient([
             'id' => $data['client'],
@@ -125,7 +129,7 @@ class AplOrderService {
             'phone' => (empty($data['phone'])) ? null:$data['phone'],
             'name' => (empty($data['name'])) ? null:$data['name'],
             'publish' => 1,
-        ]);
+        ], $debug);
         
         return $client;
     }
@@ -436,7 +440,7 @@ class AplOrderService {
      */
     public function getOrder($data, $debug = false)
     {
-        $client = $this->getClient($data);
+        $client = $this->getClient($data, true);
         if (!$client){
             return true; // позже загрузим
         }

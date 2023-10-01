@@ -759,11 +759,14 @@ class AplService {
     /*
      * Получить клиента
      * @param array $row;
+     * @param bool $debug
      */
-    public function getClient($row)
+    public function getClient($row, $debug = false)
     {
         $contact = $client = null;
-//        var_dump($row); exit;
+        if ($debug){
+            var_dump($row);            
+        }
         if (!$client && !empty($row['phone'])){
             $phone = $this->entityManager->getRepository(Phone::class)
                     ->findOneByName($row['phone']);

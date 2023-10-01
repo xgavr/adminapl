@@ -914,7 +914,7 @@ class AplController extends AbstractActionController
         } 
         
         if ($order->getAplId()){
-            $this->aplOrderService->unloadOrder(0, $order->getAplId());
+            $this->aplOrderService->unloadOrder(0, $order->getAplId(), null, true);
         }    
         
         $query = $this->entityManager->getRepository(\Application\Entity\Order::class)
