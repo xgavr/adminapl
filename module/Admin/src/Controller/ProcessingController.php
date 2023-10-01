@@ -2004,7 +2004,7 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['ptu'] == 1){
 
-//            $this->aplDocService->unloadSuppliersOrder();            
+            $this->aplDocService->unloadSuppliersOrder();            
         }    
                 
         return new JsonModel(

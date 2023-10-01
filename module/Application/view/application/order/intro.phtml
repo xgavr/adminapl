@@ -829,7 +829,7 @@ $form->prepare();
                 if (result){
                     var dialog = bootbox.dialog({
                         message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста, подождите, пока мы что-то делаем...</p>',
-                        closeButton: false
+                        closeButton: true
                     });        
                     $.get('/apl/unload-order-id/<?= $orderId?>', function(data){
                         if (data.result == 'ok'){

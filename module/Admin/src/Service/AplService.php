@@ -765,7 +765,7 @@ class AplService {
     {
         $contact = $client = null;
         if ($debug){
-            var_dump($row);            
+            var_dump('apl client: '.$row);            
         }
         if (!$client && !empty($row['phone'])){
             $phone = $this->entityManager->getRepository(Phone::class)
