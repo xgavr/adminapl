@@ -762,22 +762,8 @@ class AplService {
      */
     public function getClient($row)
     {
-        $contact = null;
+        $contact = $client = null;
         
-        $client = $this->entityManager->getRepository(AplClient::class)
-                ->findOneBy(['aplId' => $row['id']]);
-        
-        if (!$client && !empty($row['email'])){
-            $email = $this->entityManager->getRepository(Email::class)
-                    ->findOneByName($row['email']);
-
-            if ($email){
-               $contact = $email->getContact();
-               if ($contact){
-                   $client = $contact->getClient();
-               }
-            } 
-        }    
         if (!$client && !empty($row['phone'])){
             $phone = $this->entityManager->getRepository(Phone::class)
                     ->findOneByName($row['phone']);
@@ -789,6 +775,24 @@ class AplService {
                }
             }
         }
+
+        if (!$client && !empty($row['email'])){
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneByName($row['email']);
+
+            if ($email){
+               $contact = $email->getContact();
+               if ($contact){
+                   $client = $contact->getClient();
+               }
+            } 
+        }
+        
+        if (!$client){
+            $client = $this->entityManager->getRepository(AplClient::class)
+                    ->findOneBy(['aplId' => $row['id']]);
+        }    
+        
         $digitsFilter = new Digits();
         $client_data = [
             'name' => $row['name'],
