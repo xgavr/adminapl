@@ -833,7 +833,10 @@ $form->prepare();
                     });        
                     $.get('/apl/unload-order-id/<?= $orderId?>', function(data){
                         if (data.result == 'ok'){
-                            window.location.reload();
+                            dialog.modal('hide');
+                            if (confirm('Пергрузить?')){
+                                window.location.reload();
+                            }    
                         }
                     });                                
                 }
