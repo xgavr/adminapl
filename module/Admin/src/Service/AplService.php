@@ -763,7 +763,7 @@ class AplService {
     public function getClient($row)
     {
         $contact = $client = null;
-        
+        var_dump($row); exit;
         if (!$client && !empty($row['phone'])){
             $phone = $this->entityManager->getRepository(Phone::class)
                     ->findOneByName($row['phone']);
