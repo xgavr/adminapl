@@ -307,6 +307,7 @@ class OrderController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'orderId' => ($order) ? $order->getId():null,
+            'orderAplId' => ($order) ? $order->getAplId():null,
             'comments' => $orderComments,
         ]);        
     }        

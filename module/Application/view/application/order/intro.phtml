@@ -3,7 +3,8 @@ use Application\Entity\Order;
 use Application\Entity\Shipping;
 use Application\Entity\Bid;
 
-$this->headTitle(($orderId)?$orderId:'Новый');
+$this->headTitle(($orderId) ? 'Z'. $orderId:'Новый');
+$this->headTitle(($orderAplId) ? $orderAplId.' (Z'.$orderId.')':'Новый');
 
 $this->mainMenu()->setActiveItemId('client');
 $this->mainMenu()->setActiveUrl($this->url('order'));
