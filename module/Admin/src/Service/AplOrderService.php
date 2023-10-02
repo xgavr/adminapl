@@ -121,7 +121,7 @@ class AplOrderService {
             return;
         }
         if ($debug){
-            var_dump($data);
+//            var_dump($data);
         }
         $client = $this->aplService->getClient([
             'id' => $data['client'],
