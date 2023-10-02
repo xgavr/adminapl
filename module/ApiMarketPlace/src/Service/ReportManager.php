@@ -253,7 +253,7 @@ class ReportManager
     public function ozonRealization($marketplace, $date)
     {
         $saleReport = $this->ozonService->realization($date);
-        
+        var_dump($saleReport);
         if (is_array($saleReport)){
             $report = $this->findReport($marketplace, $saleReport['header']);
             if ($report){
