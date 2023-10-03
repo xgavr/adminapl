@@ -682,6 +682,9 @@ $form->prepare();
                     <button type="button" class="btn btn-default btn-sm send-order-to-apl" title="Отправить в Апл" <?= ($orderId) ? '':'disabled'?>>
                         <span class="glyphicon glyphicon-arrow-up"></span> Отправить в Апл
                     </button>
+                    <button type="button" class="btn btn-default btn-sm history" title="История" <?= ($orderId) ? '':'disabled'?>>
+                        <span class="glyphicon glyphicon-list-alt"></span> История
+                    </button>
                 </div>    
 
             </div>
@@ -862,6 +865,19 @@ $form->prepare();
                     });            
                 }
         });
+    });
+
+    $(document).on('click', '.history', function (e) {
+        $.ajax({
+            type: "GET",
+            url: "/log/history/"+<?= $orderId?>+"?docType=ord",
+            success: function (result) {
+                bootbox.alert({
+                    size: "large",
+                    message: result
+                });
+            }
+        });                    
     });
     
     function submitForm(){

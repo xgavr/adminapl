@@ -16,6 +16,7 @@ use Application\Entity\GenericGroup;
 use Application\Entity\TokenGroup;
 use Company\Entity\Office;
 use Stock\Entity\Vtp;
+use Application\Entity\Order;
 //use User\Entity\User;
 
 
@@ -31,10 +32,11 @@ class LogRepository extends EntityRepository{
      * Текст лога
      * 
      * @param Log $log
+     * @param bool $short //сокращенный вывод
      * 
      * @return string
      */
-    private function messageText($log)
+    private function messageText($log, $short = true)
     {
         $entityManager = $this->getEntityManager();
         $ident = $log->getIdentFromLogKey();
@@ -96,6 +98,30 @@ class LogRepository extends EntityRepository{
             case 'ord':
                 if (!empty($message['comment'])){
                     $messages[] = 'Комментарий: '.$message['comment']['comment'];
+                } else {
+//                    var_dump($message['aplId']);
+                    $header = [];
+                    $header[] = 'Номер АПЛ: '.(empty($message['aplId']) ? 'нет':$message['aplId']);
+                    $header[] = 'Статус: '.(empty($message['status']) ? 'нет':Order::getStatusList()[$message['status']]);
+                    $header[] = 'Сумма: '.(empty($message['amount']) ? 'нет':$message['amount']);
+                    $header[] = 'Отгрузка: '.(empty($message['shipmentDate']) ? 'нет':$message['shipmentDate']);
+                    $header[] = 'Контакт: '.(empty($message['contact']) ? 'нет':$message['contact']);
+                    if (!empty($message['goods'])){
+                        $goods = [];
+                        if ($short){
+                            $header[] = 'Товаров: '.count($message['goods']);                            
+                        } else {
+                            foreach ($message['goods'] as $good){
+                                $goods[] = $good['rowNo'];
+                                $goods[] = $good['good'];
+                                $goods[] = 'Количество: '.$good['num'];
+                                $goods[] = 'Цена: '.$good['price'];
+                            }            
+                            $messages[] = implode('<br/> ', $goods);
+                        }    
+                    }                    
+                    $messages[] = implode('; ', $header);
+//                    $header[] = '<br/>';
                 }
 //                $messages[] = $message['comment'];
                 return implode('; ', $messages);
