@@ -1,14 +1,14 @@
 <?php
     use Admin\Entity\Log;
 
-    $this->headTitle('Лог записей');
+    $this->headTitle('Лог записей '.$id);
 
     $logs = $entityManager->getRepository(Log::class)
             ->logDescription($rows);
 ?>
 
 
-<?= $this->partial('/admin/log/log-partial.phtml', ['logs' => $logs]) ?>        
+<?= $this->partial('/admin/log/log-partial.phtml', ['logs' => $logs, 'id' => $id]) ?>        
 
 <?= $this->paginationControl($rows,
             'Sliding',

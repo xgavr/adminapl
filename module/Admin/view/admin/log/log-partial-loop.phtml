@@ -4,10 +4,10 @@
     <div class="col-xs-2">
         <nobr><small><?= date('d.m.y', strtotime($this->dateCreated)) ?> <sup><?= date('H:i', strtotime($this->dateCreated)) ?></sup> <?= $this->user ?></small></nobr>
     </div>
-    <div class="col-xs-2">
+    <div class="col-xs-1">
         <?= $this->status ?>
     </div>
-    <div class="col-xs-8">
+    <div class="col-xs-9">
         <?= $this->message ?>
     </div>
 <!--    <div class="col-xs-1">
