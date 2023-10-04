@@ -586,12 +586,14 @@ class CashRepository extends EntityRepository
         
         $queryBuiler->select('cd')
             ->from(CashDoc::class, 'cd')
-            ->join(Cash::class, 'c')    
+            ->innerJoin('cd.cash', 'c')    
             ->where('cd.dateOper > :dateOper')
             ->setParameter('dateOper', date('Y-m-d', strtotime('-1 month'))) 
             ->andWhere('c.payment = :payment')
             ->setParameter('payment', Cash::PAYMENT_CARD)    
             ;        
+        
+//        var_dump($queryBuiler->getQuery()->getSQL()); exit;
         return $queryBuiler->getQuery()->getResult();
    }
 }
