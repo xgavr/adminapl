@@ -110,4 +110,15 @@ class IndexController extends AbstractActionController
             'office' => $office,
         ]);        
     }            
+    
+    public function updateAcquiringAction()
+    {
+        
+        $this->cashManager->updateAcquiringPayments();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }
+
 }

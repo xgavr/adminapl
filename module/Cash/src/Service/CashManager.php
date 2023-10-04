@@ -35,6 +35,7 @@ use Stock\Entity\Register;
 use Stock\Entity\Movement;
 use Bank\Entity\QrCodePayment;
 use Laminas\Json\Encoder;
+use Bank\Entity\AplPayment;
 
 /**
  * Description of CashManager
@@ -936,6 +937,39 @@ class CashManager {
             }
         }
         
+        return;
+    }
+    
+    /**
+     * Обновить данные торгового эквайринга
+     */    
+    public function updateAcquiringPayments()
+    {
+        $cashDocs = $this->entityManager->getRepository(CashDoc::class)
+                ->findForAsquiring();
+        if (count($cashDocs)){        
+            foreach ($cashDocs as $cashDoc){
+                $payment = $this->entityManager->getRepository(AplPayment::class)
+                        ->findOneBy(['cashDoc' => $cashDoc->getId()]);
+                if ($payment == null && $cashDoc->getContact()){
+                    $payment = new AplPayment();
+                    $payment->setAplPaymentId($cashDoc->getAplId());
+                    $payment->setAplPaymentDate($cashDoc->getDateCreated());
+                    $payment->setAplPaymentSum($cashDoc->getAmount());
+                    if ($cashDoc->getOrder()){
+                        $payment->setAplPaymentType('Orders');
+                        $payment->setAplPaymentTypeId($cashDoc->getOrder()->getAplId());
+                    } else {
+                        $payment->setAplPaymentType('Users');
+                        $payment->setAplPaymentTypeId($cashDoc->getContact()->getClient()->getAplId());                            
+                    }   
+                    $payment->setCashDoc($cashDoc);
+
+                    $this->entityManager->persist($payment);
+                }    
+            }
+            $this->entityManager->flush();
+        }    
         return;
     }
 }

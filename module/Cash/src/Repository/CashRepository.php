@@ -573,5 +573,25 @@ class CashRepository extends EntityRepository
         $result = $qb->getQuery();
         return $result;       
    }
-                           
+          
+   /**
+    * Данные для сопостовления торгового эквайринга
+    * 
+    * @return array
+    */
+   public function findForAsquiring()
+   {
+        $entityManager = $this->getEntityManager();
+        $queryBuiler = $entityManager->createQueryBuilder();
+        
+        $queryBuiler->select('cd')
+            ->from(CashDoc::class, 'cd')
+            ->join(Cash::class, 'c')    
+            ->where('cd.dateOper > :dateOper')
+            ->setParameter('dateOper', date('Y-m-d', strtotime('-1 month'))) 
+            ->andWhere('c.payment = :payment')
+            ->setParameter('payment', Cash::PAYMENT_CARD)    
+            ;        
+        return $queryBuiler->getQuery()->getResult();
+   }
 }
