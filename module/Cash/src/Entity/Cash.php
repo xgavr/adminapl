@@ -30,8 +30,11 @@ class Cash {
     const TILL_RETIRED      = 2; // не доступно .
     
     const PAYMENT_CASH       = 1; // наличные.
-    const PAYMENT_CARD       = 2; // карта.
+    const PAYMENT_CARD       = 2; // торговый эквайринг.
     const PAYMENT_CASHLESS   = 3; // безнал.
+    const PAYMENT_I_CARD   = 4; // интернет эквайринг
+    const PAYMENT_PAY_SERVICE   = 5; // платежный сервис
+    const PAYMENT_QRCODE   = 6; // оплата по qr коду
 
     const ORDER_ACTIVE       = 1; // доступно в заказе.
     const ORDER_RETIRED      = 2; // не доступно.
@@ -338,8 +341,11 @@ class Cash {
     {
         return [
             self::PAYMENT_CASH => 'Наличные',
-            self::PAYMENT_CARD => 'Карта',
-            self::PAYMENT_CASHLESS => 'Безнал'
+            self::PAYMENT_CARD => 'Торговый эквайринг',
+            self::PAYMENT_CASHLESS => 'Безнал',
+            self::PAYMENT_I_CARD => 'Интернет эквайринг',
+            self::PAYMENT_PAY_SERVICE => 'Платежный сервис',
+            self::PAYMENT_QRCODE => 'Оплата по QR коду',
         ];
     }    
     

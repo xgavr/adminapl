@@ -59,6 +59,11 @@ class AplPayment {
      */
     protected $status = self::STATUS_NO_MATCH;
     
+    /**
+     * @ORM\OneToOne(targetEntity="Cash\Entity\CashDoc", inversedBy="aplPayment") 
+     * @ORM\JoinColumn(name="cash_doc_id", referencedColumnName="id")
+     */
+    protected $cashDoc;
     
     /**
      * @ORM\ManyToMany(targetEntity="\Bank\Entity\Acquiring", mappedBy="aplPayments")
@@ -259,4 +264,14 @@ class AplPayment {
         
         return $result;
     }
+    
+    public function getCashDoc() {
+        return $this->cashDoc;
+    }
+
+    public function setCashDoc($cashDoc) {
+        $this->cashDoc = $cashDoc;
+        return $this;
+    }
+
 }
