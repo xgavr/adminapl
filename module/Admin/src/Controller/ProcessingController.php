@@ -1491,7 +1491,7 @@ class ProcessingController extends AbstractActionController
     }    
 
     /**
-     * ОТКЛЮЧЕНО
+     * 
      * Выгрузка эквайринга из апл
      * 
      * @return JsonModel
@@ -1503,6 +1503,7 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['get_acquiring'] == 1){
             //$this->aplService->updateAcquiringPayments();
+            $this->cashManager->updateAcquiringPayments();
         }    
         
         return new JsonModel([
