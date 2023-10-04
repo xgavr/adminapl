@@ -590,7 +590,9 @@ class CashRepository extends EntityRepository
             ->where('cd.dateOper > :dateOper')
             ->setParameter('dateOper', date('Y-m-d', strtotime('-1 month'))) 
             ->andWhere('c.payment = :payment')
-            ->setParameter('payment', Cash::PAYMENT_CARD)    
+            ->setParameter('payment', Cash::PAYMENT_CARD) 
+            ->andWhere('cd.status = :status')
+            ->setParameter('status', CashDoc::STATUS_ACTIVE)    
             ;        
         
 //        var_dump($queryBuiler->getQuery()->getSQL()); exit;

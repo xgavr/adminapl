@@ -955,7 +955,7 @@ class CashManager {
                     $payment = new AplPayment();
                     $payment->setAplPaymentId($cashDoc->getAplId());
                     $payment->setAplPaymentDate($cashDoc->getDateCreated());
-                    $payment->setAplPaymentSum($cashDoc->getAmount());
+                    $payment->setAplPaymentSum(($cashDoc->getKind() == CashDoc::KIND_OUT_RETURN_CLIENT) ? -$cashDoc->getAmount():$cashDoc->getAmount());
                     if ($cashDoc->getOrder()){
                         $payment->setAplPaymentType('Orders');
                         $payment->setAplPaymentTypeId($cashDoc->getOrder()->getAplId());
