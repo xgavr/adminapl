@@ -914,7 +914,7 @@ class CashManager {
             $legals = $this->entityManager->getRepository(Legal::class)
                     ->findBy(['inn' => $legalInn], ['id' => 'DESC']);
             foreach ($legals as $legal){
-                var_dump($legal->getId(), $amount, $statement->getPaymentDate());
+                var_dump($legalInn, $legal->getId(), $amount, $statement->getPaymentDate());
                 $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getPaymentDate());
                 if ($cashDoc){
                     break;
