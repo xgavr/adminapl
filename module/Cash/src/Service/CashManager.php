@@ -913,7 +913,7 @@ class CashManager {
         $this->entityManager->persist($statement);
         
         if ($flush){
-            $this->entitManager->flush();
+            $this->entityManager->flush();
         }
         
         return;
