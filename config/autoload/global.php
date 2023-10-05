@@ -137,6 +137,7 @@ return [
                     'date_sub' => 'DoctrineExtensions\Query\Mysql\DateSub',
                     'date_add' => 'DoctrineExtensions\Query\Mysql\DateAdd',
                     'date_format' => 'DoctrineExtensions\Query\Mysql\DateFormat',
+                    'date' => 'DoctrineExtensions\Query\Mysql\Date',
                 ],
             ],
         ],
