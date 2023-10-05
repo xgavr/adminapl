@@ -747,12 +747,7 @@ class CashManager {
         } else {
             $cashDoc = $this->addCashDoc($data);
         }
-        
-        $statement->setPay(Statement::PAY_CHECK);
-        $statement->setCashDoc($cashDoc);
-        $this->entityManager->persist($statement);
-        $this->entityManager->flush();
-        
+                
         return $cashDoc;
     }
     
@@ -800,11 +795,6 @@ class CashManager {
             }            
         }
 
-        $statement->setPay(Statement::PAY_CHECK);
-        $statement->setCashDoc($cashDoc);
-        $this->entityManager->persist($statement);
-        $this->entityManager->flush();
-        
         return $cashDoc;
     }
     
@@ -814,11 +804,12 @@ class CashManager {
      * поступление/возврат от покупателя
      * 
      * @param Statement $statement
+     * @param Legal $legal Description
      * @return CashDoc
      */
-    public function cashDocFromStatement($statement)
+    public function cashDocFromStatement($statement, $legal=null)
     {
-        $legal = $legalInn = $cash = $company = null;
+        $legalInn = $cash = $company = null;
         $cashDoc = $statement->getCashDoc();
         $data = [
             'amount' => abs($statement->getAmount()),
@@ -827,44 +818,41 @@ class CashManager {
         
         $companyAccount = $this->entityManager->getRepository(BankAccount::class)
                 ->findOneBy(['rs' => $statement->getAccount()]);
-        $legalAccount = $this->entityManager->getRepository(BankAccount::class)
-                ->findOneBy(['rs' => $statement->getCounterpartyAccountNumber()]);
         
-        if ($legalAccount){
-            $legal = $legalAccount->getLegal();
-            if ($legal){
-                $legalInn = $legal->getInn();
+        if (!$legal){
+            $legalAccount = $this->entityManager->getRepository(BankAccount::class)
+                    ->findOneBy(['rs' => $statement->getCounterpartyAccountNumber()]);
+
+            if ($legalAccount){
+                $legal = $legalAccount->getLegal();
             }
+        }    
+        if ($legal){
+            $legalInn = $legal->getInn();
         }
         
         if ($companyAccount){
             $cash = $companyAccount->getCash();
             $company = $companyAccount->getLegal();
         }    
-        if ($cash && $company){
+        if ($cash && $company && $legal){
             if ($company->getInn() != $legalInn){ 
                 $data['cash'] = $cash;
                 $data['checkStatus'] = $cash->getCheckStatus();
                 $data['comment'] = $statement->getPaymentPurpose();
                 $data['company'] = $company;
                 $data['dateOper'] = $statement->getChargeDate();
-                $legalAccount = $this->entityManager->getRepository(BankAccount::class)
-                        ->findOneBy(['rs' => $statement->getCounterpartyAccountNumber()]);
-                if ($legalAccount){
-                    $data['legal'] = $legalAccount->getLegal();
-                    $supplier = $legalAccount->getLegal()->getSupplier();
-                    if ($supplier){  
-                        return; $this->supplierCashDocFromStatement($statement, $data);
-                    }                  
-                }              
-                return $this->clientCashDocFromStatement($statement, $data);
+                $data['legal'] = $legal;
+    
+                if ($legal->getSupplier()){
+                    return $this->supplierCashDocFromStatement($statement, $data);
+                }
+                
+                if ($legal->getClientContact()){
+                    return $this->clientCashDocFromStatement($statement, $data);
+                }    
             }    
         }
-
-        $statement->setPay(Statement::PAY_NEW);
-        $statement->setCashDoc($cashDoc);
-        $this->entityManager->persist($statement);
-        $this->entityManager->flush();
         
         return $cashDoc;
     }
@@ -939,11 +927,10 @@ class CashManager {
                 }
             } else {
                 if ($legal->getSupplier() || $legal->getClientContact()){
-                    $cashDoc = $this->cashDocFromStatement($statement); // новый документ в кассе
-                    if ($cashDoc){
-                        return;
+                    $cashDoc = $this->cashDocFromStatement($statement, $legal);
+                    if (!$cashDoc){
+                        $statement->setPay(Statement::PAY_WARNING);  //нет документа оплаты, а должен быть                  
                     }    
-                    $statement->setPay(Statement::PAY_WARNING);  //нет документа оплаты, а должен быть                  
                 }
                 if ($legal->isOfficeLegal()){
                     $statement->setPay(Statement::PAY_CHECK);  //                  

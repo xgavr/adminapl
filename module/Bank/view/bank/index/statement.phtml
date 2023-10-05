@@ -624,6 +624,9 @@
         if (row.pay === '<?= Statement::PAY_WARNING?>'){
             checkClass = 'btn-warning';
         }
+        if (row.swap1 === '<?= Statement::SWAP1_TRANSFERED?>' && row.pay === '<?= Statement::PAY_CHECK?>'){
+            checkClass = 'btn-success';
+        }
         var btnClass = 'btn-default';
         if (row.cashDoc){
             btnClass = 'btn-info';
