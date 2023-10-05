@@ -960,7 +960,7 @@ class CashManager {
         $startTime = time();
 
         $statements = $this->entityManager->getRepository(Statement::class)
-                ->findBy(['pay' => Statement::PAY_NEW]);
+                ->findBy(['pay' => Statement::PAY_WARNING]);
         
         foreach ($statements as $statement){
             $this->bindCashDocStatement($statement, false);
