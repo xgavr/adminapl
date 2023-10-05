@@ -839,7 +839,6 @@ class CashManager {
             if ($company->getInn() != $legalInn){ 
                 $data['cash'] = $cash;
                 $data['checkStatus'] = $cash->getCheckStatus();
-                $data['comment'] = $statement->getPaymentPurpose();
                 $data['company'] = $company;
                 $data['dateOper'] = $statement->getChargeDate();
                 $data['legal'] = $legal;
@@ -849,6 +848,7 @@ class CashManager {
                 }
                 
                 if ($legal->getClientContact()){
+                    $data['comment'] = $statement->getPaymentPurpose();
                     return $this->clientCashDocFromStatement($statement, $data);
                 }    
             }    
