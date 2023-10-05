@@ -631,7 +631,7 @@ class CashRepository extends EntityRepository
             ->setParameter('status', CashDoc::STATUS_ACTIVE)
             ->setMaxResults(1)    
             ;        
-        
+            var_dump($queryBuiler->getParameters());
 //        var_dump($queryBuiler->getQuery()->getSQL()); exit;
         return $queryBuiler->getQuery()->getOneOrNullResult();
    }
