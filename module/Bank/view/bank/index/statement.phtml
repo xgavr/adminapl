@@ -420,7 +420,7 @@
         var url = $(e.currentTarget).attr('modal-url');
         $.getJSON( url, function( data ) {
 //            refreshTable();
-            if (data.row && data.id)
+            if (data.row && data.id){
                 $table.bootstrapTable('updateByUniqueId', {id: data.id, row: data.row});
             }
             dialog.modal('hide');
