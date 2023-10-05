@@ -632,7 +632,7 @@ class CashRepository extends EntityRepository
             ->setMaxResults(1)    
             ;        
         
-//        var_dump($queryBuiler->getQuery()->getSQL()); exit;
+        var_dump($queryBuiler->getQuery()->getSQL()); exit;
         return $queryBuiler->getQuery()->getOneOrNullResult();
    }
 }
