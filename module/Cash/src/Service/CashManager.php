@@ -903,10 +903,14 @@ class CashManager {
             $statement->setPay(Statement::PAY_NEW);
             if ($cashDoc){
                 if ($cashDoc->getAplId()){
-                    $statement->getSwap1(Statement::SWAP1_TO_TRANSFER);
+                    //$statement->getSwap1(Statement::SWAP1_TO_TRANSFER);
                     $statement->setPay(Statement::PAY_CHECK);
                 }
-            }    
+            } else {
+                if ($legal->getSupplier() || $legal->getClientContact()){
+                    $statement->setPay(Statement::PAY_WARNING);  //нет документа оплаты, а должен быть                  
+                }
+            }   
         }
         
         $statement->setCashDoc($cashDoc);

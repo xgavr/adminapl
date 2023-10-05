@@ -80,6 +80,13 @@ class BankRepository extends EntityRepository
                             ;
                 }    
             }
+            if (!empty($params['pay'])){
+                if (is_numeric($params['pay'])){
+                    $queryBuilder->andWhere('s.pay = :pay')
+                            ->setParameter('pay', $params['pay'])
+                            ;
+                }    
+            }
             if (isset($params['count'])){
                 if ($params['count']){
                     $outCount = true;

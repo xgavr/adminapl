@@ -25,6 +25,7 @@ class Statement {
     
     const PAY_NEW = 1; //новый
     const PAY_CHECK = 2; //проверен
+    const PAY_WARNING = 3; // не создан док в кассе
     
     
     /**
@@ -700,7 +701,8 @@ class Statement {
     {
         return [
             self::PAY_NEW => 'Новый',
-            self::PAY_CHECK => 'Проверен'
+            self::PAY_CHECK => 'Проверен',
+            self::PAY_WARNING => 'Проверить',
         ];
     }    
     
