@@ -870,6 +870,22 @@ class CashManager {
     }
         
     /**
+     * Найти документ оплаты от юрлица
+     * @param Legal $legal
+     * @param float $amount
+     * @param date $paymentDate
+     * 
+     * @return CashDoc 
+     */
+    private function findCashDocLegal($legal, $amount, $paymentDate)
+    {
+        $cashDoc = $this->entityManager->getRepository(CashDoc::class)
+                ->findCashDocForStatement($legal, $amount, $paymentDate);        
+        
+        return $cashDoc;
+    }
+    
+    /**
      * Привязать выписку к кассовому документу
      * @param Statement $statement
      * @param bool $flush
@@ -888,7 +904,8 @@ class CashManager {
         
         foreach ($bankAccounts as $bankAccount){
             $legal = $bankAccount->getLegal();
-            if ($legal->getSupplier() || $legal->getClientContact() || $legal->isOfficeLegal()){
+            $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getPaymentDate());
+            if ($cashDoc){
                 break;
             }
         }
@@ -897,7 +914,8 @@ class CashManager {
             $legals = $this->entityManager->getRepository(Legal::class)
                     ->findBy(['inn' => $legalInn], ['id' => 'DESC']);
             foreach ($legals as $legal){
-                if ($legal->getSupplier() || $legal->getClientContact() || $legal->isOfficeLegal()){
+                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getPaymentDate());
+                if ($cashDoc){
                     break;
                 }
             }    
@@ -905,8 +923,6 @@ class CashManager {
         
         $statement->setPay(Statement::PAY_CHECK);
         if ($legal){            
-            $cashDoc = $this->entityManager->getRepository(CashDoc::class)
-                    ->findCashDocForStatement($legal, $amount, $statement->getPaymentDate());
     
             $statement->setPay(Statement::PAY_NEW);
             if ($cashDoc){
