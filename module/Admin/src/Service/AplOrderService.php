@@ -1094,8 +1094,9 @@ class AplOrderService {
      * Отправить comment в апл
      * @param Comment $comment
      * @param array $post
+     * @param bool $debug
      */
-    public function sendComment($comment = null, $post = null)
+    public function sendComment($comment = null, $post = null, $debug = false)
     {
         $url = $this->aplApi().'update-comment?api='.$this->aplApiKey();
 
@@ -1125,7 +1126,9 @@ class AplOrderService {
             $aplId = 0;
             try{
                 $response = $client->send();
-//                var_dump($response->getStatusCode()); exit;
+                if ($debug){
+                    var_dump($response->getStatusCode(), $response->getBody());                       
+                }
                 if ($response->isOk()) {                    
                     $aplId = (int) $response->getBody();
                     if ($aplId){
@@ -1154,8 +1157,10 @@ class AplOrderService {
     
     /**
      * Отправить comments в АПЛ
+     * @param int $limit
+     * @param bool $debug
      */
-    public function sendComments($limit = null)
+    public function sendComments($limit = null, $debug = false)
     {
         ini_set('memory_limit', '512M');
         set_time_limit(300);
@@ -1166,7 +1171,7 @@ class AplOrderService {
         
         $result = 0;
         foreach ($comments as $comment){
-            if ($this->sendComment($comment)) {
+            if ($this->sendComment($comment, null, $debug)) {
                 $result = $comment->getId();
                 usleep(100);
                 if (time() > $startTime + 280){

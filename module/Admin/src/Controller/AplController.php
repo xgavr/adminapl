@@ -830,7 +830,7 @@ class AplController extends AbstractActionController
 
     public function sendCommentAction()
     {                
-        $result = $this->aplOrderService->sendComments(1);
+        $result = $this->aplOrderService->sendComments(1, true);
         
         return new JsonModel([
             'result' => $result,
@@ -839,7 +839,7 @@ class AplController extends AbstractActionController
     
     public function sendCommentsAction()
     {                
-        $this->aplOrderService->sendComments();
+        $this->aplOrderService->sendComments(null, true);
         
         return new JsonModel([
             'result' => 'ok',
