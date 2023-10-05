@@ -907,7 +907,7 @@ class CashManager {
                     $statement->setPay(Statement::PAY_CHECK);
                 }
             } else {
-                if ($legal->getSupplier() || $legal->getClientContact()){
+                if (($legal->getSupplier() || $legal->getClientContact()) && !$legal->isOfficeLegal()){
                     $statement->setPay(Statement::PAY_WARNING);  //нет документа оплаты, а должен быть                  
                 }
             }   
