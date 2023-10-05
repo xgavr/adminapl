@@ -118,6 +118,13 @@ class CashRepository extends EntityRepository
                             ;
                 }            
             }    
+            if (!empty($params['cashDocId'])){
+                if (is_numeric($params['cashDocId'])){
+                    $queryBuilder->andWhere('cd.id = :id')
+                        ->setParameter('id', $params['cashDocId'])
+                            ;
+                }            
+            }    
             if (isset($params['sort'])){
                 if ($params['sort'] == 'cashDoc.id'){
                     $queryBuilder->addOrderBy('cd.id', $params['order']);                    
@@ -597,5 +604,35 @@ class CashRepository extends EntityRepository
         
 //        var_dump($queryBuiler->getQuery()->getSQL()); exit;
         return $queryBuiler->getQuery()->getResult();
+   }
+
+   /**
+    * Найти документ для выписки
+    * @param Legal $legal
+    * @param float $amount
+    * @param date $paymentDate
+    * @return CashDoc
+    */
+   public function findCashDocForStatement($legal, $amount, $paymentDate)
+   {
+        $entityManager = $this->getEntityManager();
+        $queryBuiler = $entityManager->createQueryBuilder();
+        
+        $queryBuiler->select('cd')
+            ->from(CashDoc::class, 'cd')
+            ->innerJoin('cd.cash', 'c')    
+            ->where('date(cd.dateOper) = date(:dateOper)')
+            ->setParameter('dateOper', $paymentDate) 
+            ->andWhere('cd.amount = :amount')
+            ->setParameter('amount', $amount) 
+            ->andWhere('cd.legal = :legal')
+            ->setParameter('legal', $legal->getId()) 
+            ->andWhere('cd.status = :status')
+            ->setParameter('status', CashDoc::STATUS_ACTIVE)
+            ->setMaxResults(1)    
+            ;        
+        
+//        var_dump($queryBuiler->getQuery()->getSQL()); exit;
+        return $queryBuiler->getQuery()->getOneOrNullResult();
    }
 }

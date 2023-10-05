@@ -877,6 +877,15 @@ class CashDoc {
     {
         return $this->order;
     }
+
+    public function getOrderAplId()
+    {
+        if ($this->order){
+            return $this->order->getAplId();
+        }
+        
+        return;
+    }
     
     /**
      * Add order
@@ -939,6 +948,15 @@ class CashDoc {
         $supplier = $this->getDefaultSupplier();
         if ($supplier){
             return $supplier->getId();
+        }
+        return;
+    }
+
+    public function getDefaultSupplierAplId()
+    {
+        $supplier = $this->getDefaultSupplier();
+        if ($supplier){
+            return $supplier->getAplId();
         }
         return;
     }

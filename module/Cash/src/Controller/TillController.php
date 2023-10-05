@@ -417,9 +417,21 @@ class TillController extends AbstractActionController
             $statement = $this->entityManager->getRepository(Statement::class)
                     ->find($statementId);
             if ($statement){
-                $this->cashManager->cashDocFromStatement($statement);
+//                $this->cashManager->cashDocFromStatement($statement);
+                $this->cashManager->bindCashDocStatement($statement);
+
+                $query = $this->entityManager->getRepository(Statement::class)
+                                ->findStatement(null, null, ['statementId' => $statementId]);
+                
+                $result = $query->getOneOrNullResult(2);
+                return new JsonModel([
+                    'id' => $statement->getId(),
+                    'row' => $result,
+                ]);
             }
         }
+        
+        
         return new JsonModel(
            ['ok']
         );                   

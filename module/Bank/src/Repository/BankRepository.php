@@ -73,6 +73,13 @@ class BankRepository extends EntityRepository
                             ;
                 }    
             }
+            if (isset($params['statementId'])){
+                if ($params['statementId']){
+                    $queryBuilder->andWhere('s.id = :id')
+                            ->setParameter('id', $params['statementId'])
+                            ;
+                }    
+            }
             if (isset($params['count'])){
                 if ($params['count']){
                     $outCount = true;

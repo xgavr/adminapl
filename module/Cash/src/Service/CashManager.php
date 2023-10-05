@@ -868,6 +868,56 @@ class CashManager {
         
         return $cashDoc;
     }
+        
+    /**
+     * Привязать выписку к кассовому документу
+     * @param Statement $statement
+     * @param bool $flush
+     * @return CashDoc
+     */
+    public function bindCashDocStatement($statement, $flush = true)
+    {
+        $legalRs = $statement->getCounterpartyAccountNumber();
+        $legalInn = $statement->getСounterpartyInn();
+        $amount = abs($statement->getAmount());
+        
+        $legal = $cashDoc = null;
+        
+        $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                ->findOneBy(['rs' => $legalRs]);
+        
+        if ($bankAccount){
+            $legal = $bankAccount->getLegal();
+        }
+        
+        if (!$legal){
+            $legal = $this->entityManager->getRepository(Legal::class)
+                    ->findOneBy(['inn' => $legalInn]);
+        }
+        
+        $statement->setPay(Statement::PAY_CHECK);
+        if ($legal){            
+            $cashDoc = $this->entityManager->getRepository(CashDoc::class)
+                    ->findCashDocForStatement($legal, $amount, $statement->getPaymentDate());
+    
+            $statement->setPay(Statement::PAY_NEW);
+            if ($cashDoc){
+                if ($cashDoc->getAplId()){
+                    $statement->getSwap1(Statement::SWAP1_TO_TRANSFER);
+                    $statement->setPay(Statement::PAY_CHECK);
+                }
+            }    
+        }
+        
+        $statement->setCashDoc($cashDoc);
+        $this->entityManager->persist($statement);
+        
+        if ($flush){
+            $this->entitManager->flush();
+        }
+        
+        return;
+    }
     
     /**
      * Создать платеж из оплаты по qr коду

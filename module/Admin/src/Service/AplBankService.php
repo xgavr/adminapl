@@ -11,6 +11,7 @@ namespace Admin\Service;
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
 use Laminas\Http\Client;
+use Cash\Entity\CashDoc;
 
 
 /**
@@ -110,7 +111,25 @@ class AplBankService {
             $result['payerBankBic']      = $statement->getBik();                //ПолучательБИК
             $result['payerBankCorrAcc']  = $bankAccount->getKs();               //ПолучательКорсчет
             
-        }            
+        }     
+        
+        if ($statement->getCashDoc()){
+            if ($statement->getCashDoc()->getAplId()){
+                $result['parent'] = $statement->getCashDoc()->getAplId();
+                switch($statement->getCashDoc()->getKind()){
+                    case CashDoc::KIND_IN_RETURN_SUPPLIER:
+                    case CashDoc::KIND_OUT_SUPPLIER:
+                        $result['name'] = 'Suppliers';
+                        $result['publish'] = $statement->getCashDoc()->getDefaultSupplierAplId();
+                        break;
+                    case CashDoc::KIND_IN_PAYMENT_CLIENT:
+                    case CashDoc::KIND_OUT_RETURN_CLIENT:
+                    default:
+                        $result['name'] = 'Orders';
+                        $result['publish'] = $statement->getCashDoc()->getOrderAplId();                        
+                }
+            }
+        }
         return ['statement' => $result];
     }
     

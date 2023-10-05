@@ -52,6 +52,7 @@
                     data-query-params="statementQueryParams"
                     data-response-handler="responseHandler"
                     data-classes = "table table-bordered table-hover table-condensed"
+                    data-unique-id="id"
                     >
                     <thead>
                         <tr>
@@ -418,7 +419,10 @@
         });
         var url = $(e.currentTarget).attr('modal-url');
         $.getJSON( url, function( data ) {
-            refreshTable();
+//            refreshTable();
+            if (data.row && data.id)
+                $table.bootstrapTable('updateByUniqueId', {id: data.id, row: data.row});
+            }
             dialog.modal('hide');
         });            
     });      
@@ -602,7 +606,7 @@
         if (row.cashDoc){
             btnClass = 'btn-info';
         }
-        btn = '<button';
+        btn = '<nobr><button';
         btn += ' type="button"';
         btn += ' class="btn '+checkClass+' btn-xs statement-to-cash-doc"';
         btn += ' aria-label="Left Align"'; 
@@ -612,27 +616,28 @@
         var cashDocId = '';
         if (row.cashDoc){
             cashDocId = row.cashDoc.id;
+            if (row.amount>0){
+                var url = '/till/edit-cash-in/'+cashDocId+'?statement='+row.id;
+                btn += ' <button';
+                btn += ' type="button"';
+                btn += ' class="btn '+btnClass+' btn-xs cash-in-modal-show"';
+                btn += ' aria-label="Left Align"'; 
+                btn += ' modal-url="'+url+'">';
+                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+                btn += '</button>';
+            }    
+            if (row.amount<0){
+                var url = '/till/edit-cash-out/'+cashDocId+'?statement='+row.id;
+                btn += ' <button';
+                btn += ' type="button"';
+                btn += ' class="btn '+btnClass+' btn-xs cash-out-modal-show"';
+                btn += ' aria-label="Left Align"'; 
+                btn += ' modal-url="'+url+'">';
+                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+                btn += '</button>';
+            }    
         }
-        if (row.amount>0){
-            var url = '/till/edit-cash-in/'+cashDocId+'?statement='+row.id;
-            btn += '<button';
-            btn += ' type="button"';
-            btn += ' class="btn '+btnClass+' btn-xs cash-in-modal-show"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'">';
-            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-            btn += '</button>';
-        }    
-        if (row.amount<0){
-            var url = '/till/edit-cash-out/'+cashDocId+'?statement='+row.id;
-            btn += '<button';
-            btn += ' type="button"';
-            btn += ' class="btn '+btnClass+' btn-xs cash-out-modal-show"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'">';
-            btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-            btn += '</button>';
-        }    
+        btn += '</nobr>';
         return btn;
     }    
 
