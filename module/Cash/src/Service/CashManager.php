@@ -847,7 +847,7 @@ class CashManager {
                 $data['checkStatus'] = $cash->getCheckStatus();
                 $data['comment'] = $statement->getPaymentPurpose();
                 $data['company'] = $company;
-                $data['dateOper'] = $statement->getPaymentDate();
+                $data['dateOper'] = $statement->getChargeDate();
                 $legalAccount = $this->entityManager->getRepository(BankAccount::class)
                         ->findOneBy(['rs' => $statement->getCounterpartyAccountNumber()]);
                 if ($legalAccount){
@@ -861,7 +861,7 @@ class CashManager {
             }    
         }
 
-        $statement->setPay(Statement::PAY_CHECK);
+        $statement->setPay(Statement::PAY_NEW);
         $statement->setCashDoc($cashDoc);
         $this->entityManager->persist($statement);
         $this->entityManager->flush();
@@ -899,16 +899,23 @@ class CashManager {
         
         $legal = $cashDoc = null;
         
-        $bankAccounts = $this->entityManager->getRepository(BankAccount::class)
-                ->findBy(['rs' => $legalRs], ['id' => 'DESC']);
-        
-        foreach ($bankAccounts as $bankAccount){
-            $legal = $bankAccount->getLegal();
-            $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getChargeDate());
-            if ($cashDoc){
-                break;
-            }
+        if ($statement->getCashDoc()){
+            $cashDoc = $statement->getCashDoc();
+            $legal = $cashDoc->getLegal();
         }
+        
+        if (!$legal){
+            $bankAccounts = $this->entityManager->getRepository(BankAccount::class)
+                    ->findBy(['rs' => $legalRs], ['id' => 'DESC']);
+
+            foreach ($bankAccounts as $bankAccount){
+                $legal = $bankAccount->getLegal();
+                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getChargeDate());
+                if ($cashDoc){
+                    break;
+                }
+            }
+        }    
         
         if (!$legal){
             $legals = $this->entityManager->getRepository(Legal::class)
@@ -927,12 +934,15 @@ class CashManager {
             $statement->setPay(Statement::PAY_NEW);
             if ($cashDoc){
                 if ($cashDoc->getAplId()){
-                    //$statement->getSwap1(Statement::SWAP1_TO_TRANSFER);
+                    $statement->getSwap1(Statement::SWAP1_TO_TRANSFER);
                     $statement->setPay(Statement::PAY_CHECK);
                 }
             } else {
                 if ($legal->getSupplier() || $legal->getClientContact()){
-                    $statement->setPay(Statement::PAY_WARNING);  //нет документа оплаты, а должен быть                  
+                    $cashDoc = $this->cashDocFromStatement($statement); // новый документ в кассе
+                    if (!$cashDoc){
+                        $statement->setPay(Statement::PAY_WARNING);  //нет документа оплаты, а должен быть                  
+                    }    
                 }
                 if ($legal->isOfficeLegal()){
                     $statement->setPay(Statement::PAY_CHECK);  //                  
@@ -960,7 +970,7 @@ class CashManager {
         $startTime = time();
 
         $statements = $this->entityManager->getRepository(Statement::class)
-                ->findBy(['pay' => Statement::PAY_WARNING]);
+                ->findBy(['pay' => Statement::PAY_NEW]);
         
         foreach ($statements as $statement){
             $this->bindCashDocStatement($statement, false);
