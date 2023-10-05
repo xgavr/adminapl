@@ -884,7 +884,7 @@ class CashManager {
         $legal = $cashDoc = null;
         
         $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                ->findOneBy(['rs' => $legalRs]);
+                ->findOneBy(['rs' => $legalRs], ['id' => 'DESC']);
         
         if ($bankAccount){
             $legal = $bankAccount->getLegal();
@@ -892,7 +892,7 @@ class CashManager {
         
         if (!$legal){
             $legal = $this->entityManager->getRepository(Legal::class)
-                    ->findOneBy(['inn' => $legalInn]);
+                    ->findOneBy(['inn' => $legalInn, ['id' => 'DESC']]);
         }
         
         $statement->setPay(Statement::PAY_CHECK);
