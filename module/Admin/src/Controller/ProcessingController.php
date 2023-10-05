@@ -1597,8 +1597,8 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getAplExchangeSettings();
         
         if ($settings['order'] == 1){
-//            $this->aplOrderService->uploadComments();
-//            $this->aplOrderService->sendComments();
+            $this->aplOrderService->uploadComments();
+            $this->aplOrderService->sendComments();
         }    
         
         return new JsonModel([
