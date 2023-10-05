@@ -940,9 +940,10 @@ class CashManager {
             } else {
                 if ($legal->getSupplier() || $legal->getClientContact()){
                     $cashDoc = $this->cashDocFromStatement($statement); // новый документ в кассе
-                    if (!$cashDoc){
-                        $statement->setPay(Statement::PAY_WARNING);  //нет документа оплаты, а должен быть                  
+                    if ($cashDoc){
+                        return;
                     }    
+                    $statement->setPay(Statement::PAY_WARNING);  //нет документа оплаты, а должен быть                  
                 }
                 if ($legal->isOfficeLegal()){
                     $statement->setPay(Statement::PAY_CHECK);  //                  
