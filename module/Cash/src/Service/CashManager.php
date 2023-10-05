@@ -927,6 +927,29 @@ class CashManager {
     }
     
     /**
+     * Привязать все строки выписки к кассовым документам
+     */
+    public function bindCashDocStatements()
+    {
+        set_time_limit(900);
+        $startTime = time();
+
+        $statements = $this->entityManager->getRepository(Statement::class)
+                ->findBy(['pay' => Statement::PAY_NEW]);
+        
+        foreach ($statements as $statement){
+            $this->bindCashDocStatement($statement, false);
+            if (time() >= $startTime + 800){
+                break;
+            }
+        }
+        
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
      * Создать платеж из оплаты по qr коду
      * поступление/возврат от покупателя
      * 

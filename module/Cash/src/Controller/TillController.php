@@ -437,6 +437,15 @@ class TillController extends AbstractActionController
         );                   
     }
 
+    public function statementToCashDocsAction()
+    {
+        $this->cashManager->bindCashDocStatements();        
+        
+        return new JsonModel(
+           ['result' => 'ok']
+        );                   
+    }
+
     public function qrcodePaymentToCashDocAction()
     {
         $qrCodePaymentId = $this->params()->fromRoute('id', -1);
