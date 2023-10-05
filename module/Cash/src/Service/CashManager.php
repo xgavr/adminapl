@@ -883,16 +883,24 @@ class CashManager {
         
         $legal = $cashDoc = null;
         
-        $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                ->findOneBy(['rs' => $legalRs], ['id' => 'DESC']);
+        $bankAccounts = $this->entityManager->getRepository(BankAccount::class)
+                ->findBy(['rs' => $legalRs], ['id' => 'DESC']);
         
-        if ($bankAccount){
+        foreach ($bankAccounts as $bankAccount){
             $legal = $bankAccount->getLegal();
+            if ($legal->getSupplier() || $legal->getClientContact() || $legal->isOfficeLegal()){
+                break;
+            }
         }
         
         if (!$legal){
-            $legal = $this->entityManager->getRepository(Legal::class)
-                    ->findOneBy(['inn' => $legalInn], ['id' => 'DESC']);
+            $legals = $this->entityManager->getRepository(Legal::class)
+                    ->findBy(['inn' => $legalInn], ['id' => 'DESC']);
+            foreach ($legals as $legal){
+                if ($legal->getSupplier() || $legal->getClientContact() || $legal->isOfficeLegal()){
+                    break;
+                }
+            }    
         }
         
         $statement->setPay(Statement::PAY_CHECK);
