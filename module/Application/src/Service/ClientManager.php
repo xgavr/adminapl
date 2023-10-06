@@ -131,7 +131,7 @@ class ClientManager
     {
         $upd = [
             'apl_id' => $data['aplId'],
-            'name' => empty($data['name']) ? '':$data['name'],
+            'name' => empty($data['name']) ? 'Nan':$data['name'],
             'status' => $data['status'],
             'pricecol' => empty($data['pricecol']) ? Client::PRICE_0: $data['pricecol'],
         ];

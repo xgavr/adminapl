@@ -45,7 +45,7 @@
                         <th data-field="good.code" data-type="numeric" data-filter-control="select" data-formatter="goodFormatter">Артикул</th>
                         <th data-field="good.producer.name" data-type="numeric">Производитель</th>
                         <th data-field="good.name" data-type="numeric">Наименование</th>
-                        <th data-field='priceSale' data-align="right" data-formatter="amountFormatter">Цена</th>
+                        <th data-field='priceSale' data-align="right" data-footer-formatter="totalFooterFormatter" data-formatter="amountFormatter">Цена</th>
                         <th data-field='saleQty' data-align="right" data-footer-formatter="footerFormatter">Количество</th>
                         <th data-field='returnQty' data-align="right" data-footer-formatter="footerFormatter">Возврат</th>
                         <th data-field='salePriceSeller' data-align="right" data-footer-formatter="saleFooterFormatter" data-formatter="saleFormatter">Сумма</th>
@@ -127,6 +127,9 @@
         return (Math.round((value - row.returnPriceSeller)*100)/100).toFixed(2);
     }        
     
+    function totalFooterFormatter() {
+        return 'Итого:';
+    }
     function footerFormatter(data){
         var field = this.field;
         return (data.map(function (row) {

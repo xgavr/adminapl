@@ -247,15 +247,15 @@ class Client {
      * Returns possible pricecols as array.
      * @return array
      */
-    public static function getPricecilList() 
+    public static function getPricecolList() 
     {
         return [
-            self::PRICE_0 => 'Розница',
-            self::PRICE_1 => 'VIP',
-            self::PRICE_2 => 'Опт2',
-            self::PRICE_3 => 'Опт3',
-            self::PRICE_4 => 'Опт4',
-            self::PRICE_5 => 'Опт5',
+            self::PRICE_0 => '0-Розница',
+            self::PRICE_1 => '1-VIP',
+            self::PRICE_2 => '2-Опт2',
+            self::PRICE_3 => '3-Опт3',
+            self::PRICE_4 => '4-Опт4',
+            self::PRICE_5 => '5-Опт5',
         ];
     }    
     

@@ -56,6 +56,17 @@ class ClientForm extends Form
                 'label' => 'Наименование',
             ],
         ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'aplId',
+            'attributes' => [
+                'id' => 'aplId'
+            ],
+            'options' => [
+                'label' => 'Код АПЛ',
+            ],
+        ]);
         
         // Добавляем поле "address"
         $this->add([           
@@ -75,10 +86,16 @@ class ClientForm extends Form
             'name' => 'status',
             'options' => [
                 'label' => 'Status',
-                'value_options' => [
-                    1 => 'Active',
-                    2 => 'Retired',                    
-                ]
+                'value_options' => Client::getStatusList(),
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'pricecol',
+            'options' => [
+                'label' => 'Колонка цен',
+                'value_options' => Client::getPricecolList(),
             ],
         ]);
         

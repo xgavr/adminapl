@@ -204,6 +204,64 @@ class ClientController extends AbstractActionController
         ]);  
     }    
     
+    public function editFormAction()
+    {
+        $id = (int)$this->params()->fromRoute('id', -1);
+        if ($id<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $client = $this->entityManager->getRepository(Client::class)
+                ->find($id);
+        
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+                
+
+        // Create form
+        $form = new ClientForm($this->entityManager);
+                
+        // Check if user has submitted the form
+        if ($this->getRequest()->isPost()) {
+            // Fill in the form with POST data
+            $data = $this->params()->fromPost();            
+            
+            $form->setData($data);
+            
+            // Validate form
+            if($form->isValid()) {
+                
+                // Get filtered and validated data
+                $data = $form->getData();
+                
+                $this->clientManager->updateClient($client, $data);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }               
+        } else {
+            if ($client){
+                $form->setData(array(
+                        'name'=>$client->getName(),
+                        'aplId'=>$client->getAplId(),     
+                        'status'=>$client->getStatus(),     
+                        'pricecol' => $client->getPricecol(),
+                    ));
+            }    
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+                'form' => $form,
+                'client' => $client
+            ]);
+    }    
+    
     public function deleteAction()
     {
         $clientId = $this->params()->fromRoute('id', -1);
