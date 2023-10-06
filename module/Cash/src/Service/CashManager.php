@@ -886,18 +886,21 @@ class CashManager {
         $amount = abs($statement->getAmount());
         
         $legal = $cashDoc = null;
+        $legalsToCheck = [];
         
         if ($statement->getCashDoc()){
             $cashDoc = $statement->getCashDoc();
             $legal = $cashDoc->getLegal();
+            $legalsToCheck[$legal->getId()] = $legal;
         }
         
         if (!$legal){
             $bankAccounts = $this->entityManager->getRepository(BankAccount::class)
-                    ->findBy(['rs' => $legalRs], ['id' => 'DESC']);
+                    ->findBy(['rs' => $legalRs]);
 
             foreach ($bankAccounts as $bankAccount){
                 $legal = $bankAccount->getLegal();
+                $legalsToCheck[$legal->getId()] = $legal;
                 $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getChargeDate());
                 if ($cashDoc){
                     break;
@@ -907,9 +910,10 @@ class CashManager {
         
         if (!$legal){
             $legals = $this->entityManager->getRepository(Legal::class)
-                    ->findBy(['inn' => $legalInn], ['id' => 'DESC']);
+                    ->findBy(['inn' => $legalInn]);
             foreach ($legals as $legal){
                 $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getChargeDate());
+                $legalsToCheck[$legal->getId()] = $legal;
                 if ($cashDoc){
                     break;
                 }
@@ -917,25 +921,29 @@ class CashManager {
         }
         
         $statement->setPay(Statement::PAY_CHECK);
-        if ($legal){            
+        foreach ($legalsToCheck as $legal){            
     
             $statement->setPay(Statement::PAY_NEW);
             if ($cashDoc){
                 if ($cashDoc->getAplId()){
                     $statement->getSwap1(Statement::SWAP1_TO_TRANSFER);
                     $statement->setPay(Statement::PAY_CHECK);
+                    break;
                 }
             } else {
                 if ($legal->getSupplier() || $legal->getClientContact()){
                     $cashDoc = $this->cashDocFromStatement($statement, $legal);
                     if (!$cashDoc){
                         $statement->setPay(Statement::PAY_WARNING);  //нет документа оплаты, а должен быть                  
-                    }    
+                    }  
+                    break;
                 }
                 if ($legal->isOfficeLegal()){
                     $statement->setPay(Statement::PAY_CHECK);  //                  
+                    break;
                 }
-            }   
+            }
+            
         }
         
         $statement->setCashDoc($cashDoc);

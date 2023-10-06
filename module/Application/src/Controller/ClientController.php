@@ -420,7 +420,7 @@ class ClientController extends AbstractActionController
         
         return new JsonModel([
             'result' => 'ok-reload',
-            'message' => $deleted.' удалено!',
+//            'message' => $deleted.' удалено!',
         ]);          
     }
     

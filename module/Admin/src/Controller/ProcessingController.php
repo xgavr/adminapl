@@ -505,7 +505,7 @@ class ProcessingController extends AbstractActionController
         if ($settings['statement_by_api'] == 1){
         
             $this->bankManager->tochkaStatementV2(date('Y-m-d', strtotime("-1 days")), date('Y-m-d'));
-            
+            $this->cashManager->bindCashDocStatements();
         }    
         
         return new JsonModel([
