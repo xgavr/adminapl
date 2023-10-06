@@ -819,12 +819,12 @@ $legalContact = $client->getLegalContact();
     function inFormatter(value, row){
         switch(row.docType){
             case '<?= Movement::DOC_VT?>':
-                return Math.round(value*100)/100;
+                return (Math.round(value*100)/100).toFixed(2);
             case '<?= Movement::DOC_CASH?>':
                 return;
             default:
                 if (value>0){
-                    return Math.round(value*100)/100;
+                    return (Math.round(value*100)/100).toFixed(2);
                 }
         }
         return;
@@ -835,10 +835,10 @@ $legalContact = $client->getLegalContact();
             case '<?= Movement::DOC_VT?>':
                 return;
             case '<?= Movement::DOC_CASH?>':
-                return -Math.round(value*100)/100;
+                return (-Math.round(value*100)/100).toFixed(2);
             default:
                 if (value<0){
-                    return -Math.round(value*100)/100;
+                    return (-Math.round(value*100)/100).toFixed(2);
                 }
         }
         return;
