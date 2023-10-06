@@ -173,6 +173,11 @@ class ComissBalance {
         return $this->contact;
     }
 
+    public function setContact($contact) {
+        $this->contact = $contact;
+        return $this;
+    }
+
     /**
      * Returns the base.
      * @return Register     

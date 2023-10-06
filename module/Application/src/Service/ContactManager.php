@@ -16,6 +16,20 @@ use Application\Entity\Messenger;
 use Company\Entity\Office;
 use User\Entity\User;
 use User\Filter\PhoneFilter;
+use Company\Entity\Legal;
+use Stock\Entity\Comiss;
+use Application\Entity\ContactCar;
+use Application\Entity\Order;
+use Stock\Entity\Retail;
+use Application\Entity\Ring;
+use Cash\Entity\CashDoc;
+use Stock\Entity\Revise;
+use ApiMarketPlace\Entity\Marketplace;
+use Stock\Entity\ComissBalance;
+use Bank\Entity\QrCode;
+use Bank\Entity\QrCodePayment;
+use Stock\Entity\Ot;
+
 
 /**
  * Description of ContactService
@@ -352,17 +366,77 @@ class ContactManager
         if ($rows){
             return false;
         }
-        $rows = $this->entityManager->getRepository(\Stock\Entity\Ot::class)
+        $rows = $this->entityManager->getRepository(Ot::class)
                 ->count(['comiss' => $contact->getId()]);
         if ($rows){
             return false;
         }
-        $rows = $this->entityManager->getRepository(\Application\Entity\Order::class)
+        $rows = $this->entityManager->getRepository(Order::class)
                 ->count(['contact' => $contact->getId()]);
         if ($rows){
             return false;
         }
         if (!$contact->getLegals()->isEmpty()){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(Address::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(Messenger::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(Comiss::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(ContactCar::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(Retail::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(Ring::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(CashDoc::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(Revise::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(Marketplace::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(ComissBalance::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(QrCode::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
+            return false;
+        }
+        $rows = $this->entityManager->getRepository(QrCodePayment::class)
+                ->count(['contact' => $contact->getId()]);
+        if ($rows){
             return false;
         }
         return true;
@@ -520,37 +594,170 @@ class ContactManager
     
     /**
      * Объеденить контакты
-     * @param Contact $contact1
-     * @param Contact $contact2
+     * @param Contact $contact
+     * @param Contact $oldContact
+     * @param bool $flush
      */
-    public function unite($contact1, $contact2)
+    public function unite($contact, $oldContact, $flush = true)
     {
-        if ($contact1->getUser() && empty($contact2->getUser())){
-            $contact2->setUser($contact1->getUser());
-        } elseif ($contact2->getUser() && empty($contact1->getUser())){
-            $contact1->setUser($contact2->getUser());            
+        if ($contact->getUser() && empty($oldContact->getUser())){
+            $oldContact->setUser($contact->getUser());
+        } elseif ($oldContact->getUser() && empty($contact->getUser())){
+            $contact->setUser($oldContact->getUser());            
         }
         
-        if ($contact1->getClient() && empty($contact2->getClient())){
-            $contact2->setClient($contact1->getClient());
-        } elseif ($contact2->getClient() && empty($contact1->getClient())){
-            $contact1->setClient($contact2->getClient());            
+        if ($contact->getClient() && empty($oldContact->getClient())){
+            $oldContact->setClient($contact->getClient());
+        } elseif ($oldContact->getClient() && empty($contact->getClient())){
+            $contact->setClient($oldContact->getClient());            
         }
         
-        if ($contact1->getSupplier() && empty($contact2->getSupplier())){
-            $contact2->setSupplier($contact1->getSupplier());
-        } elseif ($contact2->getSupplier() && empty($contact1->getSupplier())){
-            $contact1->setSupplier($contact2->getSupplier());            
+        if ($contact->getSupplier() && empty($oldContact->getSupplier())){
+            $oldContact->setSupplier($contact->getSupplier());
+        } elseif ($oldContact->getSupplier() && empty($contact->getSupplier())){
+            $contact->setSupplier($oldContact->getSupplier());            
         }
 
-        if ($contact1->getOffice() && empty($contact2->getOffice())){
-            $contact2->setOffice($contact1->getOffice());
-        } elseif ($contact2->getOffice() && empty($contact1->getOffice())){
-            $contact1->setOffice($contact2->getOffice());            
+        if ($contact->getOffice() && empty($oldContact->getOffice())){
+            $oldContact->setOffice($contact->getOffice());
+        } elseif ($oldContact->getOffice() && empty($contact->getOffice())){
+            $contact->setOffice($oldContact->getOffice());            
         }
         
-        $this->entityManager->persist($contact1);
-        $this->entityManager->persist($contact2);
+        $this->entityManager->persist($contact);
+        $this->entityManager->persist($oldContact);
+        
+        if ($flush){
+            $this->entityManager->flush();
+        }    
+        
+        return;
+    }
+    
+    /**
+     * Объеденить контакты
+     * 
+     * @param Contact $contact
+     * @param Contact $oldContact
+     */
+    public function union($contact, $oldContact)
+    {
+        $this->unite($contact, $oldContact, false);
+        
+        foreach ($oldContact->getPhones() as $phone){
+            $phone->setContact($contact);
+            $this->entityManager->persist($phone);
+        }
+
+        foreach ($oldContact->getEmails() as $email){
+            $email->setContact($contact);
+            $this->entityManager->persist($email);
+        }
+
+        foreach ($oldContact->getLegals() as $legal){
+            $oldContact->removeLegalAssociation($legal);
+            $legal->addContact($contact);
+            $this->entityManager->persist($legal);
+        }
+
+        $addresses = $this->entityManager->getRepository(Address::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($addresses as $address){
+            $address->setContact($contact);
+            $this->entityManager->persist($address);
+        }
+
+        $messengers = $this->entityManager->getRepository(Messenger::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($messengers as $messenger){
+            $messenger->setContact($contact);
+            $this->entityManager->persist($messenger);
+        }
+
+        $comisses = $this->entityManager->getRepository(Comiss::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($comisses as $comiss){
+            $comiss->setContact($contact);
+            $this->entityManager->persist($comiss);
+        }
+
+        $contactCars = $this->entityManager->getRepository(ContactCar::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($contactCars as $contactCar){
+            $contactCar->setContact($contact);
+            $this->entityManager->persist($contactCar);
+        }
+
+        $orders = $this->entityManager->getRepository(Order::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($orders as $order){
+            $order->setContact($contact);
+            $this->entityManager->persist($order);
+        }
+
+        $ots = $this->entityManager->getRepository(Ot::class)
+                ->findBy(['comiss' => $oldContact->getId()]);
+        foreach ($ots as $ot){
+            $ot->setComiss($contact);
+            $this->entityManager->persist($ot);
+        }
+
+        $retails = $this->entityManager->getRepository(Retail::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($retails as $retail){
+            $retail->setContact($contact);
+            $this->entityManager->persist($retail);
+        }
+
+        $rings = $this->entityManager->getRepository(Ring::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($rings as $ring){
+            $ring->setContact($contact);
+            $this->entityManager->persist($ring);
+        }
+
+        $cashDocs = $this->entityManager->getRepository(CashDoc::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($cashDocs as $cashDoc){
+            $cashDoc->setContact($contact);
+            $this->entityManager->persist($cashDoc);
+        }
+
+        $revises = $this->entityManager->getRepository(Revise::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($revises as $revise){
+            $revise->setContact($contact);
+            $this->entityManager->persist($revise);
+        }
+
+        $marketplaces = $this->entityManager->getRepository(Marketplace::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($marketplaces as $marketplace){
+            $marketplace->setContact($contact);
+            $this->entityManager->persist($marketplace);
+        }
+
+        $comissBalances = $this->entityManager->getRepository(ComissBalance::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($comissBalances as $comissBalance){
+            $comissBalance->setContact($contact);
+            $this->entityManager->persist($comissBalance);
+        }
+
+        $qrcodes = $this->entityManager->getRepository(QrCode::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($qrcodes as $qrcode){
+            $qrcode->setContact($contact);
+            $this->entityManager->persist($qrcode);
+        }
+
+        $qrcodePayments = $this->entityManager->getRepository(QrCodePayment::class)
+                ->findBy(['contact' => $oldContact->getId()]);
+        foreach ($qrcodePayments as $qrcodePayment){
+            $qrcodePayment->setContact($contact);
+            $this->entityManager->persist($qrcodePayment);
+        }
+
         $this->entityManager->flush();
         
         return;

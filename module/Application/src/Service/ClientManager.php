@@ -262,12 +262,32 @@ class ClientManager
     }
     
     /**
+     * Объеденить клинтов
+     * @param Client $client
+     * @param Client $oldClient
+     */
+    public function union($client, $oldClient)
+    {
+        $comments = $this->entityManager->getRepository(Comment::class)
+                ->findBy(['client' => $oldClient->getId()]);
+        foreach ($comments as $comment){
+            $comment->setClient($client);
+            $this->entityManager->persist($comment);
+        }        
+        
+        $this->entityManager->flush();
+    }
+    
+    /**
      * Объеденить с одинаковым aplId
      * @param Client $client
      * @return 
      */
     public function aplUnion($client)
     {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(1800);
+        
         if ($client->getAplId()){
             $clients = $this->entityManager->getRepository(Client::class)
                     ->findBy(['aplId' => $client->getAplId()]);
@@ -277,30 +297,23 @@ class ClientManager
                         $contact = $client->getLegalContact();
                         if ($contact){
                             foreach ($oldClient->getContacts() as $oldContact){
-                                foreach ($oldContact->getPhones() as $phone){
-//                                    $this->entityManager->getConnection()
-//                                            ->update('phone', ['contact_id' => $contact->getId()], ['id' => $phone->getId()]);
-                                    $phone->setContact($contact);
-                                    $this->entityManager->persist($phone);
-                                }
-                                foreach ($oldContact->getEmails() as $email){
-//                                    $this->entityManager->getConnection()
-//                                            ->update('email', ['contact_id' => $contact->getId()], ['id' => $email->getId()]);
-                                    $email->setContact($contact);
-                                    $this->entityManager->persist($email);
-                                }
-                                $this->entityManager->flush();
+                                                                
+                                $this->contactManager->union($contact, $oldContact);
                                 
                                 $this->entityManager->refresh($oldContact);
                                 if ($this->contactManager->isRemoveContact($oldContact)){
                                     $this->contactManager->removeContact($oldContact);
                                 }
-                            }
-                            $this->entityManager->refresh($oldClient);
-                            if ($this->isRemoveClient($oldClient)){
-                               $this->removeClient($oldClient);
-                            }            
+                            }                            
                         }
+                        
+                        $this->union($client, $oldClient);
+
+                        $this->entityManager->refresh($oldClient);
+
+                        if ($this->isRemoveClient($oldClient)){
+                           $this->removeClient($oldClient);
+                        }            
                     }
                 }
             }
