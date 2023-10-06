@@ -131,9 +131,10 @@ class MarketplaceRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('i, g, p')
+        $queryBuilder->select('i, g, p, tg')
             ->from(MarketSaleReportItem::class, 'i')
-            ->leftJoin('i.good', 'g')    
+            ->leftJoin('i.good', 'g')
+            ->leftJoin('g.tokenGroup', 'tg')    
             ->leftJoin('g.producer', 'p')    
             ->where('i.marketSaleReport = ?1')
             ->setParameter('1', $mspId)    
