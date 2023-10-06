@@ -44,7 +44,7 @@
                         <th data-field="offerId" data-type="numeric" >Apl Id</th>
                         <th data-field="good.code" data-type="numeric" data-filter-control="select" data-formatter="goodFormatter">Артикул</th>
                         <th data-field="good.producer.name" data-type="numeric">Производитель</th>
-                        <th data-field="good.name" data-type="numeric">Наименование</th>
+                        <th data-field="good.name" data-formatter="goodNameFormatter">Наименование</th>
                         <th data-field='priceSale' data-align="right" data-footer-formatter="totalFooterFormatter" data-formatter="amountFormatter">Цена</th>
                         <th data-field='saleQty' data-align="right" data-footer-formatter="footerFormatter">Количество</th>
                         <th data-field='returnQty' data-align="right" data-footer-formatter="footerFormatter">Возврат</th>
@@ -117,6 +117,14 @@
         
         return;
     }    
+    
+    function goodNameFormatter(value, row){
+        if (row.good.tokenGroup){
+            return row.good.tokenGroup.name;
+        }
+        
+        return value;
+    }
     
     function amountFormatter(value, row){
         return (Math.round(value*100)/100).toFixed(2);
