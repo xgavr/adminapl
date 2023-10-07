@@ -71,6 +71,8 @@ class VtpManager
     public function updateVtpMutuals($vtp)
     {
         
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->vtpRegister($vtp);
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($vtp->getLogKey());
         
@@ -87,6 +89,7 @@ class VtpManager
                 'contract_id' => $vtp->getPtu()->getContract()->getId(),
                 'office_id' => $vtp->getPtu()->getOffice()->getId(),
                 'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
+                'doc_stamp' => $docStamp,
             ];
 
             $this->entityManager->getRepository(Mutual::class)
