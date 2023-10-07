@@ -83,7 +83,7 @@ class SupplierRepository extends EntityRepository{
                 $mutualQb->andWhere('mcn.supplier = s.id')
                         ;
                 
-                $queryBuilder->addSelect('('. $mutualQb->getQuery()->getDQL().') as supplierTotal');
+                $queryBuilder->addSelect('ifnull(('. $mutualQb->getQuery()->getDQL().'), 0) as supplierTotal');
             }
             if (isset($params['sort'])){
                 $queryBuilder->addOrderBy($params['sort'], $params['order']);                
