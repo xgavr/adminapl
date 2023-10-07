@@ -81,6 +81,8 @@ class PtuManager
     public function updatePtuMutuals($ptu)
     {
         
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->ptuRegister($ptu);
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($ptu->getLogKey());
         
@@ -97,6 +99,7 @@ class PtuManager
                 'contract_id' => $ptu->getContract()->getId(),
                 'office_id' => $ptu->getOffice()->getId(),
                 'company_id' => $ptu->getContract()->getCompany()->getId(),
+                'doc_stamp' => $docStamp,
             ];
 
             $this->entityManager->getRepository(Mutual::class)
