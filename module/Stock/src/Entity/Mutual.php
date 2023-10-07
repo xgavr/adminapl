@@ -104,6 +104,18 @@ class Mutual {
     private $company;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Cash\Entity\CashDoc", inversedBy="mutuals") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $cashDoc;    
+        
+    /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Revise", inversedBy="mutuals") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $reviseDoc;    
+    
+    /**
      * @ORM\OneToOne(targetEntity="Application\Entity\Idoc", inversedBy="mutual") 
      * @ORM\JoinColumn(name="doc_key", referencedColumnName="doc_key")
      */
@@ -362,6 +374,38 @@ class Mutual {
         return $this->company;
     }
 
+    /*
+     * @return CashDoc
+     */    
+    public function getCashDoc() 
+    {
+        return $this->cashDoc;
+    }
+
+    /**
+     * @param CashDoc $cashDoc
+     */    
+    public function setCashDoc($cashDoc) 
+    {
+        $this->cashDoc = $cashDoc;
+    }                         
+
+    /*
+     * @return Revise
+     */    
+    public function getReviseDoc() 
+    {
+        return $this->reviseDoc;
+    }
+
+    /**
+     * @param Revise $reviseDoc
+     */    
+    public function setReviseDoc($reviseDoc) 
+    {
+        $this->reviseDoc = $reviseDoc;
+    }                         
+    
 //    public function getIdoc() {
 //        return $this->idoc;
 //    }

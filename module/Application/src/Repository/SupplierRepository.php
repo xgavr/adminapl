@@ -79,8 +79,8 @@ class SupplierRepository extends EntityRepository{
             }
             if (!empty($params['mutualBalance'])){
                 $mutualQb = $entityManager->getRepository(Mutual::class)
-                        ->mutualBalanceQb();
-                $mutualQb->andWhere('mcn.supplier = s.id')
+                        ->mutualBalanceQb(null, 'mm');
+                $mutualQb->andWhere('mmmcn.supplier = s.id')
                         ;
                 
                 $queryBuilder->addSelect('ifnull(('. $mutualQb->getQuery()->getDQL().'), 0) as supplierTotal');

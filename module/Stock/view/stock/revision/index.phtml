@@ -1,5 +1,8 @@
 <?php
     use Stock\Entity\Revise;
+    use Stock\Entity\Movement;
+    use Cash\Entity\CashDoc;
+    use Stock\Entity\Mutual;
     
     $this->headTitle('Сверка долгов');    
 
@@ -19,69 +22,57 @@
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
-                <button class="btn btn-default revise-modal-show" type="button" modal-url="/revise/edit-form?kind=<?= $kind?>">
+                <button class="btn btn-default base-search-modal" type="button" 
+                        modal-url="/revise/edit-form/" title="Добавить корректировку">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>                
-                <?php if ($kind == Revise::KIND_REVISE_CLIENT):?>
-                    <div class="form-group">
-                        <input name="search" style="width: 150px" class="form-control" type="text" placeholder="Поиск">
-                        <button id="ok" type="submit" class="btn btn-default">OK</button>
-                    </div>
-                <?php endif; ?>                
-                <?php if ($kind == Revise::KIND_REVISE_SUPPLIER):?>
-                    <div class="form-group">
-                        <select id="supplierSelect" style="width: 250px" class="form-control">
-                            <option selected>поставщик</option>
-                            <?php foreach ($suppliers as $supplier):?>
-                                <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
-                            <?php endforeach;?>
-                        </select>
-
-                    </div>    
-                <?php endif; ?>
                 <div class="form-group">
-                    <select id="officeSelect" style="width: 100px" class="form-control">
-                        <option selected>офис</option>
-                        <?php foreach ($offices as $office):?>
-                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                    <select id="supplierSelect" name="supplier" style="width: 250px" class="form-control cookie-control">
+                        <option selected>все поставщики</option>
+                        <?php foreach ($suppliers as $supplier):?>
+                            <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
                         <?php endforeach;?>
                     </select>
                     
                 </div>    
                 <div class="form-group">
-                    <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
+                    <select id="periodSelect" class="form-control" name="period">
+                        <option value="date">Дата</option>
+                        <option value="week">Неделя</option>                        
+                        <option value="month" selected="">Месяц</option>                        
+                        <option value="number">Год</option>                        
+                    </select>
+                    <input name="dateStart" id="dateStart" style="width: 200px" class="form-control refresh-table" type="month" value="<?= date('Y-m')?>">
                 </div>
             </div>
-        </div>
+        </div>    
         <table id="table" 
             data-toggle="table" 
-            data-url="/revise/content"
+            data-url="/revision/content"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
             data-query-params="queryParams"
             data-sort-name="id"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
+            data-show-footer="true"
             >
             <thead>
                 <tr>
-                     <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="80">Дата</th>
-                     <th data-field="id" data-type="numeric" data-sortable="true" data-align="right" data-formatter="idFormatter" data-width="80">Id</th>
-                     <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
-                     <?php if ($kind == Revise::KIND_REVISE_SUPPLIER):?>
-                        <th data-field='legal.name' data-sortable="false">Поставщик</th>
-                        <th data-field='contract.name' data-sortable="false">Договор</th>
-                     <?php endif;?>   
-                     <?php if ($kind == Revise::KIND_REVISE_CLIENT):?>
-                        <th data-field='contact.name' data-sortable="false">Покупатель</th>
-                     <?php endif;?>   
-                     <th data-field='office.name' data-sortable="false">Офис</th>
-                     <th data-field='comment' data-sortable="false">Примечание</th>
-                     <th data-field="" data-formatter="activeFormatter"></th>
+                     <th data-field="dateOper" data-sortable="true" data-formatter="dateFormatter" data-width="80">Дата</th>
+                     <th data-field="docKey" data-footer-formatter="totalFooterFormatter" data-formatter="docFormatter">Документ</th>
+                     <th data-field='amount' data-width="80" data-footer-formatter="footerDebitFormatter" data-align="right" data-formatter="debitFormatter">Поступление</th>
+                     <th data-field='amount' data-width="80" data-footer-formatter="footerCreditFormatter" data-align="right" data-formatter="creditFormatter">Оплата</th>
+                     <th data-field='rest.total' data-width="80" data-footer-formatter="footerStartFormatter" data-align="right" data-formatter="amountFormatter">Долг</th>
+                     <th data-field="revise" data-checkbox="true" data-formatter="reviseFormatter" data-width="5"></th>
+                     <th data-field="legal.name" >Юр. лицо</th>
+                     <th data-field="contract.name" >Договор</th>
+                     <th data-field="company.name" >Компания</th>
+                     <!--<th data-field="" data-width="10" data-formatter="activeFormatter"></th>-->
                  </tr>                
             </thead>
         </table>
@@ -91,11 +82,34 @@
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
-    var $table = $('#table'),
+    var $table = $('#table').bootstrapTable({
+            onLoadSuccess: function(res){
+                var inTotal = (res.turnover.inTotal) ? res.turnover.inTotal:0;
+                var outTotal = (res.turnover.outTotal) ? -res.turnover.outTotal:0;
+                var endTotal = (res.turnover.endTotal) ? res.turnover.endTotal:0;
+                $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
+                $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
+                $('#startTotalFooter').html((Math.round((endTotal-inTotal+outTotal)*100)/100).toFixed(2));
+            }
+        });
         $ok = $('#ok');
     
     function refreshTable(){
         $table.bootstrapTable('refresh');
+    }
+    
+    function changeRevise(mutualId, check){
+        
+        var url = "/revision/change-revise/"+mutualId+'?check='+check;
+        $.ajax({
+            type: 'GET',
+            url: url
+        })
+            .done(function (data) {
+            })
+            .fail(function () {
+                bootbox.alert("Произошла ошибка при выполнении операции.");
+            });                
     }
 
     $(function () {
@@ -106,16 +120,51 @@
         $(document).on('change', '#supplierSelect', function (e) {
             refreshTable();
         });
-        $(document).on('change', '#officeSelect', function (e) {
+        $(document).on('change', '#dateStart', function (e) {
             refreshTable();
         });
-        $(document).on('change', '#monthSelect', function (e) {
-            refreshTable();
+        $(document).on('change', '#periodSelect', function (e) {
+            var selectType = $(this).val();
+            $('#dateStart').attr('type', selectType);
+            switch(selectType){
+                case 'number':
+                    $('#dateStart').val(new Date().getFullYear());
+                    $('#dateStart').attr('min', 2012);
+                    break;
+                case 'month':    
+//                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM"));
+//                    break;
+                default:
+                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
+            }
         });
-    });
+        
+        $table.on('check.bs.table', function (e, row) {
+            changeRevise(row.id, '<?= Mutual::REVISE_OK?>');
+        });
+        
+        $table.on('uncheck.bs.table', function (e, row) {
+            changeRevise(row.id, '<?= Mutual::REVISE_NOT?>');
+        });
+        
+        $table.on('check-all.bs.table', function (e, rows) {
+            $.each( rows, function( key, value ) {
+                changeRevise(value.id, '<?= Mutual::REVISE_OK?>');
+            });            
+        });
+        
+        $table.on('uncheck-all.bs.table', function (e, rowsDefore, rows) {
+            $.each( rows, function( key, value ) {
+                changeRevise(value.id, '<?= Mutual::REVISE_NOT?>');
+            });            
+        });
+    });    
     
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         limit = $('#table .page-size').html();
@@ -126,10 +175,6 @@
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
-        params.supplier = $('#supplierSelect').val();
-        params.office = $('#officeSelect').val();
-        params.month = $('#monthSelect').val();
-        params.kind = <?= $kind?>
         
         return params;
     }
@@ -137,6 +182,72 @@
     function dateFormatter(value){
         var date = new Date(value);
         return $.format.date(date, "dd.MM.yyyy");
+    }
+    
+    function typeFormatter(docType, docId, docKey, row){
+        switch(docType){
+            case '<?= Movement::DOC_ORDER?>': 
+//                        return "<a href='/order/intro/"+docId+"' target='_blank'>Заказ №"+docId+"</a>";
+                        return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №"+docId+"</a>";
+            case '<?= Movement::DOC_MSR?>': 
+                return "<a href='#' class='msr-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о продажах №"+docId+"</a>";
+            case '<?= Movement::DOC_VT?>': 
+                        return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
+            case '<?= Movement::DOC_PTU?>': 
+                        return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a>";
+            case '<?= Movement::DOC_OT?>': 
+                        return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
+            case '<?= Movement::DOC_PT?>': 
+                        return "<a href='#' class='pt-modal-show' modal-url='/pt/edit-form/"+docId+"'>Перемещение №"+docId+"</a>";
+            case '<?= Movement::DOC_ST?>': 
+                        return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
+            case '<?= Movement::DOC_VTP?>': 
+                        return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
+            case '<?= Movement::DOC_REVISE?>':
+                if (row.reviseDoc){        
+                    var comment = row.reviseDoc.comment;        
+                    return "<a href='#' class='revise-modal-show' modal-url='/revise/edit-form/"+docId+"'>Корректировка №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
+                } else {
+                    return '!Документ не найден!';
+                }    
+            case '<?= Movement::DOC_CASH?>':
+                var cashName = '';
+                var result = '';
+                var kindName = '';
+                var kindNames = <?= CashDoc::getKindListAsJavascriptArray()?>;
+                if (row.cashDoc){
+                    if (row.cashDoc.cash){
+                        kindName = kindNames[row.cashDoc.kind];
+                        cashName = kindName +' '+ row.cashDoc.cash.name;
+                        if (row.amount < 0){
+                            result = "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        } else {   
+                            result = "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        }    
+                    }    
+                    if (row.cashDoc.user){
+                        cashName = kindName +' '+ row.cashDoc.user.fullName;
+                        if (row.amount < 0){
+                            result = "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        } else {    
+                            result = "<a href='#' class='cash-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        }    
+                    } 
+                    if (row.cashDoc.order){
+                        var orderId = 'Z'+row.cashDoc.order.id;
+                        if (row.cashDoc.order.aplId){
+                            orderId += '('+row.cashDoc.order.aplId+')';
+                        }
+                        result += " <a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+orderId+"</a>";
+                    }
+                    return result;
+                }    
+            default: return docKey;            
+        }
+    }
+        
+    function docFormatter(value, row){
+        return typeFormatter(row.docType, row.docId, value, row);
     }
     
     function idFormatter(value, row){
@@ -147,8 +258,41 @@
     }    
 
     function amountFormatter(value){
-        return Math.round(value*100)/100;
+        return (Math.round(value*100)/100).toFixed(2);
     }    
+    
+    function creditFormatter(value){
+        if (value<0){
+            return (-Math.round(value*100)/100).toFixed(2);
+        }
+        return '';
+    }
+    function debitFormatter(value){
+        if (value>0){
+            return (Math.round(value*100)/100).toFixed(2);
+        }
+        return '';
+    }
+    
+    function totalFooterFormatter() {
+        return 'Всего за период:';
+    }
+    
+    function footerDebitFormatter(data){
+        return '<span id="inTotalFooter"></span>';
+    }
+
+    function footerCreditFormatter(data){
+        return '<span id="outTotalFooter"></span>';
+    }
+
+    function footerStartFormatter(data){
+        return '<span id="startTotalFooter"></span>';
+    }
+
+    function reviseFormatter(value){
+        return value==='<?= Mutual::REVISE_OK?>';
+    }
     
     function activeFormatter(value, row){
         var url = '/revise/edit-form/'+row.id;

@@ -231,52 +231,202 @@ class MutualRepository extends EntityRepository{
     /**
      * Текущий баланс контрагентов
      * @param array $params
+     * @param string $alias
      */
-    public function mutualBalanceQb($params = null) 
+    public function mutualBalanceQb($params = null, $alias = 'mm') 
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('sum(mm.amount) as total')
-                ->from(Mutual::class, 'mm')
-                ->join('mm.company', 'mc')
-                ->join('mm.legal', 'ml')
-                ->join('mm.contract', 'mct')
-                ->join('ml.contacts', 'mcn')
-                ->andWhere('mm.status = '.Mutual::STATUS_ACTIVE)
+        $queryBuilder->select("sum($alias.amount) as total")
+                ->from(Mutual::class, $alias)
+                ->join("$alias.company", $alias.'mc')
+                ->join("$alias.legal", $alias.'ml')
+                ->join("$alias.contract", $alias.'mct')
+                ->join($alias.'ml.contacts', $alias.'mcn')
+                ->andWhere("$alias.status = ".Mutual::STATUS_ACTIVE)
                 //->setParameter('status', Mutual::STATUS_ACTIVE)
                 
                 ;
         
         if (is_array($params)){            
             if (!empty($params['supplierBalance'])){
-                $queryBuilder->addSelect('ms')
-                        ->join('mcn.supplier', 'ms')
-                        ->addGroupBy('mcn.supplier')
+                $queryBuilder->addSelect($alias.'ms')
+                        ->join($alias.'mcn.supplier', $alias.'ms')
+                        ->addGroupBy($alias.'mcn.supplier')
                         ;
             }
             if (!empty($params['supplierId'])){
-                $queryBuilder->andWhere('mcn.supplier = :supplier')
+                $queryBuilder->andWhere($alias.'mcn.supplier = :supplier')
                         ->setParameter('supplier', $params['supplierId'])
                         ;
             }
+            if (!empty($params['docStamp'])){
+                $queryBuilder->andWhere("$alias.docStamp <= :docStamp")
+                        ->setParameter('docStamp', $params['docStamp'])
+                        ;
+            }
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere("$alias.dateOper >= :startDate")
+                        ->setParameter('startDate', $params['startDate'])
+                        ;
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere("$alias.dateOper <= :endDate")
+                        ->setParameter('endDate', $params['endDate'])
+                        ;
+            }
+            if (!empty($params['turnover'])){
+                $queryBuilder
+                    ->addSelect("sum(case when $alias.amount > 0 then $alias.amount else 0 end) as inTotal")
+                    ->addSelect("sum(case when $alias.amount < 0 then $alias.amount else 0 end) as outTotal")
+                        ;                
+            }
+            if (!empty($params['endBalance'])){
+                
+                $qbParams = $params;
+                unset($qbParams['endBalance']);
+                unset($qbParams['startDate']);
+                $qbb = $this->mutualBalanceQb($qbParams, 'mmm');
+                $qbb->resetDQLPart('select');
+                $qbb->addSelect('sum(mmm.amount) as sumTotal');
+                
+                $queryBuilder->addSelect('('. $qbb->getQuery()->getDQL().') as endTotal');
+            }
             if (!empty($params['groupContract'])){
-                $queryBuilder->addSelect('mct')
-                        ->addGroupBy('mm.contract')
+                $queryBuilder->addSelect($alias.'mct')
+                        ->addGroupBy("$alias.contract")
                         ;
             }
             if (!empty($params['groupLegal'])){
-                $queryBuilder->addSelect('ml')
-                        ->addGroupBy('mm.legal')
+                $queryBuilder->addSelect($alias.'ml')
+                        ->addGroupBy("$alias.legal")
                         ;
             }
             if (!empty($params['groupCompany'])){
-                $queryBuilder->addSelect('mc')
-                        ->addGroupBy('mm.company')
+                $queryBuilder->addSelect($alias.'mc')
+                        ->addGroupBy("$alias.company")
                         ;
             }
         }
         
         return $queryBuilder;                        
     }    
+    
+    
+    /**
+     * Текущий баланс контрагентов
+     * @param array $params
+     */
+    public function mutualBalance($params = null)
+    {
+        $qb = $this->mutualBalanceQb($params);        
+        
+        return $qb->getQuery();
+    }
+
+    /**
+     * Движение контрагентов
+     * @param array $params
+     */
+    public function mutuals($params = null) 
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('m, l, c, ct, cd, rv, cash')
+            ->from(Mutual::class, 'm')
+            ->join('m.company', 'c')
+            ->join('m.legal', 'l')
+            ->join('m.contract', 'ct')
+            ->join('l.contacts', 'cn')
+            ->leftJoin('m.cashDoc', 'cd')
+            ->leftJoin('cd.cash', 'cash')
+            ->leftJoin('m.reviseDoc', 'rv')
+            ->orderBy('m.docStamp', 'DESC')                 
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere('m.dateOper >= :startDate')
+                        ->setParameter('startDate', $params['startDate']);
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere('m.dateOper <= :endDate')
+                        ->setParameter('endDate', $params['endDate']);
+            }
+            if (!empty($params['supplierId'])){
+                if (is_numeric($params['supplierId'])){
+                    $queryBuilder
+                        ->andWhere('cn.supplier = :supplier')
+                        ->setParameter('supplier', $params['supplierId'])
+                            ;
+                }    
+            }            
+        }
+
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery();
+    }
+
+    
+    /**
+     * Движение контрагентов
+     * @param array $params
+     */
+    public function mutualsCount($params = null) 
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('count(m.id) as mutualCount')
+            ->from(Mutual::class, 'm')
+            ->join('m.company', 'c')
+            ->join('m.legal', 'l')
+            ->join('m.contract', 'ct')
+            ->join('l.contacts', 'cn')
+            ->orderBy('m.docStamp', 'DESC')                 
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere('m.dateOper >= :startDate')
+                        ->setParameter('startDate', $params['startDate']);
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere('m.dateOper <= :endDate')
+                        ->setParameter('endDate', $params['endDate']);
+            }
+            if (!empty($params['supplierId'])){
+                if (is_numeric($params['supplierId'])){
+                    $queryBuilder
+                        ->andWhere('cn.supplier = :supplier')
+                        ->setParameter('supplier', $params['supplierId'])
+                            ;
+                }    
+            }            
+        }
+
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result['mutualCount'];        
+    }    
+    
+    /**
+     * Сменить флаг сверки
+     * @param Mutual $mutual
+     * @param int $check
+     */
+    public function changeRevise($mutual, $check)
+    {
+        $mutual->setRevise($check);        
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($mutual);
+        $entityManager->flush();
+        
+        return;
+    }
 }
