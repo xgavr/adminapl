@@ -262,6 +262,8 @@ class PtManager
      */
     public function updatePtRetails($pt)
     {
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->ptRegister($pt);
         $this->entityManager->getRepository(Retail::class)
                 ->removeOrderRetails($pt->getLogKey());
         if ($pt->getCompany()->getInn() != $pt->getCompany2()->getInn()){
@@ -276,6 +278,7 @@ class PtManager
                 'contact_id' => $pt->getOffice2()->getLegalContact()->getId(),
                 'office_id' => $pt->getOffice()->getId(),
                 'company_id' => $pt->getCompany()->getId(),
+                'doc_stamp' => $docStamp,
             ];
 
             $this->entityManager->getRepository(Retail::class)
@@ -292,6 +295,8 @@ class PtManager
      */
     public function updatePtMutuals($pt)
     {
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->ptRegister($pt);
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($pt->getLogKey());                        
         if ($pt->getCompany()->getInn() != $pt->getCompany2()->getInn()){        
@@ -308,6 +313,7 @@ class PtManager
                 'contract_id' => $contract->getId(),
                 'office_id' => $pt->getOffice()->getId(),
                 'company_id' => $pt->getCompany()->getId(),
+                'doc_stamp' => $docStamp,
             ];
 
             $this->entityManager->getRepository(Mutual::class)

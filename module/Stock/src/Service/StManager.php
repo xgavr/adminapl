@@ -174,9 +174,9 @@ class StManager
                                         'contact_id' => $comiss->getContact()->getId(),
                                         'office_id' => $st->getOffice()->getId(),
                                         'company_id' => $st->getCompany()->getId(),
-                                        'doc_stamp' => $docStamp,
                                         'legal_id' => $legalId,
                                         'contract_id' => $contractId,
+                                        'doc_stamp' => $docStamp,
                                     ];
 
                                     $this->entityManager->getRepository(Retail::class)

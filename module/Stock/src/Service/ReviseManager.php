@@ -119,9 +119,9 @@ class ReviseManager
                 'contact_id' => $revise->getContact()->getId(),
                 'office_id' => $revise->getOffice()->getId(),
                 'company_id' => $revise->getCompany()->getId(),
-                'doc_stamp' => $docStamp,
                 'legal_id' => $legalId,
                 'contract_id' => $contractId,                
+                'doc_stamp' => $docStamp,
             ];
 
             $this->entityManager->getRepository(Retail::class)

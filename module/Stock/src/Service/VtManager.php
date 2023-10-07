@@ -171,9 +171,9 @@ class VtManager
             'contact_id' => $vt->getOrder()->getContact()->getId(),
             'office_id' => $vt->getOffice()->getId(),
             'company_id' => $vt->getOrder()->getCompany()->getId(),
-            'doc_stamp' => $docStamp,
             'legal_id' => $legalId,
             'contract_id' => $contractId,
+            'doc_stamp' => $docStamp,
         ];
 
         $this->entityManager->getRepository(Retail::class)
@@ -306,9 +306,9 @@ class VtManager
                                     'contact_id' => $comiss->getContact()->getId(),
                                     'office_id' => $vt->getOffice()->getId(),
                                     'company_id' => $vt->getOrder()->getCompany()->getId(),
-                                    'doc_stamp' => $docStamp,
                                     'legal_id' => $legalId,
                                     'contract_id' => $contractId,
+                                    'doc_stamp' => $docStamp,
                                 ];
                                 $this->entityManager->getRepository(Retail::class)
                                         ->insertRetail($data);                                
