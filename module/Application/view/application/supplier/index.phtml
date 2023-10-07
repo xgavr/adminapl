@@ -170,9 +170,11 @@
     
     function linkFormatter(value, row){
         return [
-            '<div class="pull-left">',
+            '<nobr>',
+            '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.id+'" title="Перейти на сайт поставщика">',
+            '<span class="glyphicon glyphicon-link"></span></a>',
             '<a href="/supplier/view/' + row.id + '" target="_blank">' + value + '</a>',
-            '</div>'
+            '</nobr>'
         ].join(''); 
     }    
 
