@@ -121,6 +121,25 @@ return [
                     // route defined above here.
                 ],
             ],    
+            'revision' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/revision[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\RevisionController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    // You can place additional routes that match under the
+                    // route defined above here.
+                ],
+            ],    
             'st' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -219,6 +238,9 @@ return [
             Controller\ReviseController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
+            Controller\RevisionController::class => [
+                ['actions' => '*', 'allow' => '@'],
+            ],
             Controller\StController::class => [
                 ['actions' => '*', 'allow' => '@'],
             ],
@@ -241,6 +263,7 @@ return [
             Controller\PtController::class => Controller\Factory\PtControllerFactory::class,
             Controller\PtuController::class => Controller\Factory\PtuControllerFactory::class,
             Controller\ReviseController::class => Controller\Factory\ReviseControllerFactory::class,
+            Controller\RevisionController::class => Controller\Factory\RevisionControllerFactory::class,
             Controller\SoapController::class => Controller\Factory\SoapControllerFactory::class,
             Controller\StController::class => Controller\Factory\StControllerFactory::class,
             Controller\VtController::class => Controller\Factory\VtControllerFactory::class,

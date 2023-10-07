@@ -110,6 +110,7 @@ class SupplierController extends AbstractActionController
                             'order' => $order,
                             'status' => $status,
                             'office' => $office,
+                            'mutualBalance' => 1,
                         ]);
         
         $total = count($query->getResult(2));

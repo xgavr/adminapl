@@ -226,5 +226,57 @@ class MutualRepository extends EntityRepository{
             return $result['rSum'];
         }
         return;
-    }                
+    }     
+    
+    /**
+     * Текущий баланс контрагентов
+     * @param array $params
+     */
+    public function mutualBalanceQb($params = null) 
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('sum(mm.amount) as total')
+                ->from(Mutual::class, 'mm')
+                ->join('mm.company', 'mc')
+                ->join('mm.legal', 'ml')
+                ->join('mm.contract', 'mct')
+                ->join('ml.contacts', 'mcn')
+                ->andWhere('mm.status = '.Mutual::STATUS_ACTIVE)
+                //->setParameter('status', Mutual::STATUS_ACTIVE)
+                
+                ;
+        
+        if (is_array($params)){            
+            if (!empty($params['supplierBalance'])){
+                $queryBuilder->addSelect('ms')
+                        ->join('mcn.supplier', 'ms')
+                        ->addGroupBy('mcn.supplier')
+                        ;
+            }
+            if (!empty($params['supplierId'])){
+                $queryBuilder->andWhere('mcn.supplier = :supplier')
+                        ->setParameter('supplier', $params['supplierId'])
+                        ;
+            }
+            if (!empty($params['groupContract'])){
+                $queryBuilder->addSelect('mct')
+                        ->addGroupBy('mm.contract')
+                        ;
+            }
+            if (!empty($params['groupLegal'])){
+                $queryBuilder->addSelect('ml')
+                        ->addGroupBy('mm.legal')
+                        ;
+            }
+            if (!empty($params['groupCompany'])){
+                $queryBuilder->addSelect('mc')
+                        ->addGroupBy('mm.company')
+                        ;
+            }
+        }
+        
+        return $queryBuilder;                        
+    }    
 }

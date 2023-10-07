@@ -18,6 +18,7 @@ use Application\Entity\MarketPriceSetting;
 use Application\Entity\SupplySetting;
 use Company\Entity\Office;
 use Company\Entity\Region;
+use Stock\Entity\Mutual;
 
 /**
  * Description of SupplierRepository
@@ -38,7 +39,8 @@ class SupplierRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('s, o')
+//        $queryBuilder->select('s, o')
+        $queryBuilder->select('s.id as id, s.aplId as aplId, s.name as name, o.name as officeName, s.amount as amount')
             ->from(Supplier::class, 's')
             ->join('s.office', 'o')    
             ->orderBy('s.status')
@@ -75,8 +77,16 @@ class SupplierRepository extends EntityRepository{
                     ->setMaxResults(1)    
                  ;
             }
+            if (!empty($params['mutualBalance'])){
+                $mutualQb = $entityManager->getRepository(Mutual::class)
+                        ->mutualBalanceQb();
+                $mutualQb->andWhere('mcn.supplier = s.id')
+                        ;
+                
+                $queryBuilder->addSelect('('. $mutualQb->getQuery()->getDQL().') as supplierTotal');
+            }
             if (isset($params['sort'])){
-                $queryBuilder->addOrderBy('s.'.$params['sort'], $params['order']);                
+                $queryBuilder->addOrderBy($params['sort'], $params['order']);                
             }            
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -460,4 +470,5 @@ class SupplierRepository extends EntityRepository{
         return $entityManager->getRepository(GoodSupplier::class)
                 ->findOneBy(['good' => $good->getId(), 'supplier' => 7, 'update' => date('Y-m-d')]);
     }
+    
 }
