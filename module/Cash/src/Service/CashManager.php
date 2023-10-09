@@ -931,15 +931,15 @@ class CashManager {
                     break;
                 }
             } else {
+                if ($legal->isOfficeLegal()){
+                    $statement->setPay(Statement::PAY_CHECK);  // внутренние транзакции                 
+                    break;
+                }
                 if ($legal->getSupplier() || $legal->getClientContact()){
                     $cashDoc = $this->cashDocFromStatement($statement, $legal);
                     if (!$cashDoc){
                         $statement->setPay(Statement::PAY_WARNING);  //нет документа оплаты, а должен быть                  
                     }  
-                    break;
-                }
-                if ($legal->isOfficeLegal()){
-                    $statement->setPay(Statement::PAY_CHECK);  //                  
                     break;
                 }
             }
