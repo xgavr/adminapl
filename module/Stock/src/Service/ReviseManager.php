@@ -35,17 +35,42 @@ class ReviseManager
     private $logManager;
         
     /**
+     * Admin manager
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+    
+    /**
+     * Дата запрета
+     * @var string
+     */
+    private $allowDate;
+    
+    /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager) 
+    public function __construct($entityManager, $logManager, $adminManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
+        $this->adminManager = $adminManager;
+
+        $setting = $this->adminManager->getSettings();
+        $this->allowDate = $setting['allow_date'];
     }
     
     public function currentUser()
     {
         return $this->logManager->currentUser();
+    }
+    
+    /**
+     * Получить дату запрета
+     * @return date
+     */
+    public function getAllowDate()
+    {
+        return $this->allowDate; 
     }
     
     /**

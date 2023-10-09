@@ -5,6 +5,7 @@ $form = $this->form;
 
 $form->get('docDate')->setAttributes([
     'class'=>'form-control', 
+    'min' => date('Y-m-d', strtotime($allowDate.' + 1 day')),
     ]);
 
 $form->get('amount')->setAttributes([

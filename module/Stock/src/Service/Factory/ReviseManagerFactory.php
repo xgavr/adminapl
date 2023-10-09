@@ -4,6 +4,7 @@ namespace Stock\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Stock\Service\ReviseManager;
 use Admin\Service\LogManager;
+use Admin\Service\AdminManager;
 
 /**
  * This is the factory class for ReviseManager service. The purpose of the factory
@@ -18,7 +19,8 @@ class ReviseManagerFactory
     {        
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
+        $adminManager = $container->get(AdminManager::class);
                         
-        return new ReviseManager($entityManager, $logManager);
+        return new ReviseManager($entityManager, $logManager, $adminManager);
     }
 }

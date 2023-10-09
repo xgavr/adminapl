@@ -254,6 +254,7 @@ class ReviseController extends AbstractActionController
             'revise' => $revise,
             'kind' => $kind,
             'contactName' => $contactName,
+            'allowDate' => $this->reviseManager->getAllowDate(),
         ]);        
     }    
         
