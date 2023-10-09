@@ -100,7 +100,7 @@ class LegalRepository extends EntityRepository
      * 
      * @param array $params
      */
-    public function companies($params)
+    public function companies($params = null)
     {
 
         $entityManager = $this->getEntityManager();
