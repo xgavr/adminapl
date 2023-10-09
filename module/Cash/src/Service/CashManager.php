@@ -661,7 +661,6 @@ class CashManager {
             } else {
                 $officeId = $this->currentUser()->getOffice()->getId();
             }    
-        var_dump($officeId);
         }    
         if ($form->has('user')){
             if ($cashDoc){
@@ -670,6 +669,7 @@ class CashManager {
                 $form->get('user')->setValue($user->getId());
             }           
             $officeId = $user->getOffice()->getId();            
+            var_dump($officeId);
         }
         
         if ($form->has('cost')){
