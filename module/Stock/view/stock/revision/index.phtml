@@ -7,9 +7,9 @@
     $this->headTitle('Сверка долгов');    
 
     $this->mainMenu()->setActiveItemId('raw');
-    if ($kind == Revise::KIND_REVISE_CLIENT){
-        $this->mainMenu()->setActiveItemId('client');
-    }
+//    if ($kind == Revise::KIND_REVISE_CLIENT){
+//        $this->mainMenu()->setActiveItemId('client');
+//    }
 
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),
@@ -22,8 +22,7 @@
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
-                <button class="btn btn-default base-search-modal" type="button" 
-                        modal-url="/revise/edit-form/" title="Добавить корректировку">
+                <button class="btn btn-default btn-sm revise-modal-show" type="button" modal-url="/revise/edit-form?kind=<?= Revise::KIND_REVISE_SUPPLIER?>">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button>                
                 <div class="form-group">
@@ -67,7 +66,7 @@
                      <th data-field="docKey" data-footer-formatter="totalFooterFormatter" data-formatter="docFormatter">Документ</th>
                      <th data-field='amount' data-width="100" data-footer-formatter="footerDebitFormatter" data-align="right" data-formatter="debitFormatter">Поступление</th>
                      <th data-field='amount' data-width="100" data-footer-formatter="footerCreditFormatter" data-align="right" data-formatter="creditFormatter">Оплата</th>
-                     <th data-field='rest.total' data-width="100" data-footer-formatter="footerStartFormatter" data-align="right" data-formatter="amountFormatter">Долг</th>
+                     <th data-field='rest.total' data-width="100" data-footer-formatter="footerStartFormatter" data-align="right" data-formatter="balanceFormatter">Долг</th>
                      <th data-field="revise" data-checkbox="true" data-formatter="reviseFormatter" data-width="5"></th>
                      <th data-field="legal.name" >Юр. лицо</th>
                      <th data-field="contract.name" >Договор</th>
@@ -255,6 +254,10 @@
             return '<nobr>' + value + ' (' + row.aplId + ')</nobr>';
         }
         return value;
+    }    
+
+    function balanceFormatter(value){
+        return (-Math.round(value*100)/100).toFixed(2);
     }    
 
     function amountFormatter(value){

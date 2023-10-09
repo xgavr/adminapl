@@ -213,12 +213,12 @@ class ReviseController extends AbstractActionController
                     ->find($reviseId);
             $kind = $revise->getKind();
             $supplier = $revise->getSupplier();
-            $client = $revise->getContact()->getClient();
             $contact = $revise->getContact();
         }    
         
         if ($contact){
             $contactName = $contact->getName();
+            $client = $revise->getContact()->getClient();
         }    
         
         $form = new ReviseForm($this->entityManager);
