@@ -276,13 +276,14 @@ $form->prepare();
     $( document ).ready(function() {
         
         showKindOutGroup();
+        userChange();
         //cashChange();
 
         $('#kind').on('change', function(){
             showKindOutGroup();
         });
         $('#user').on('change', function(){
-            userChange()
+            userChange();
         });
         
         
