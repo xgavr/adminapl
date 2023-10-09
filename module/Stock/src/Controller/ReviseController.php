@@ -179,7 +179,7 @@ class ReviseController extends AbstractActionController
         
         if ($kind == Revise::KIND_REVISE_SUPPLIER){
             $suppliers = $this->entityManager->getRepository(Supplier::class)
-                    ->findBy(['status' => Supplier::STATUS_ACTIVE], ['name' => 'ASC']);
+                    ->findBy([], ['status' => 'ASC', 'name' => 'ASC']);
             $supplierList = ['--не выбран--'];
             foreach ($suppliers as $supplier) {
                 $supplierList[$supplier->getId()] = $supplier->getName();
