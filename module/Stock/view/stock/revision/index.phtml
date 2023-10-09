@@ -216,8 +216,8 @@
                 var kindName = '';
                 var kindNames = <?= CashDoc::getKindListAsJavascriptArray()?>;
                 if (row.cashDoc){
+                    kindName = kindNames[row.cashDoc.kind];
                     if (row.cashDoc.cash){
-                        kindName = kindNames[row.cashDoc.kind];
                         cashName = kindName +' '+ row.cashDoc.cash.name;
                         if (row.amount < 0){
                             result = "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
