@@ -181,6 +181,7 @@ $form->prepare();
         if ($('#supplierSelect')){
             if ($.isNumeric($('#supplierSelect').val())){
                 $('#supplier').val($('#supplierSelect').val());
+                supplierChange();
             }    
         }
         
@@ -234,6 +235,16 @@ $form->prepare();
         });    
     }
     
+    function supplierChange(){
+        $.getJSON( '/supplier/legals/'+$('#supplier').val(), function( data ) {
+            $('#legal').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#legal').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+            contractList();            
+        });    
+    }
+    
     $('#office').on('change', function(){
         $.getJSON( '/offices/legals/'+$('#office').val(), function( data ) {
             $('#company').empty();
@@ -249,13 +260,7 @@ $form->prepare();
     });    
     
     $('#supplier').on('change', function(){
-        $.getJSON( '/supplier/legals/'+$('#supplier').val(), function( data ) {
-            $('#legal').empty();
-            $.each( data.rows, function( key, value ) {
-                $('#legal').append('<option value="' + key + '">' + value.name + '</option>');
-            });
-            contractList();            
-        });    
+        supplierChange();
     });
     
     $('#legal').on('change', function(){
