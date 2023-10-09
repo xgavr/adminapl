@@ -86,10 +86,10 @@
             onLoadSuccess: function(res){
                 var inTotal = (res.turnover.inTotal) ? res.turnover.inTotal:0;
                 var outTotal = (res.turnover.outTotal) ? -res.turnover.outTotal:0;
-//                var endTotal = (res.turnover.endTotal) ? res.turnover.endTotal:0;
+                var endTotal = (res.turnover.endTotal) ? res.turnover.endTotal:0;
                 $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
                 $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
-//                $('#startTotalFooter').html((Math.round((endTotal-inTotal+outTotal)*100)/100).toFixed(2));
+                $('#startTotalFooter').html((Math.round((endTotal-inTotal+outTotal)*100)/100).toFixed(2));
             }
         });
         $ok = $('#ok');
@@ -279,11 +279,11 @@
     }
     
     function footerDebitFormatter(data){
-        return '<span id="inTotalFooter"></span>';
+        return '<span id="outTotalFooter"></span>';
     }
 
     function footerCreditFormatter(data){
-        return '<span id="outTotalFooter"></span>';
+        return '<span id="inTotalFooter"></span>';
     }
 
     function footerStartFormatter(data){
