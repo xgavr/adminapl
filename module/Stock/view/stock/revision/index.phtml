@@ -272,7 +272,7 @@
         }
         return '';
     }
-    function creditFormatter(value){
+    function creditFormatter(value, row){
         switch(row.docType){
             case '<?= Movement::DOC_PTU?>': 
             case '<?= Movement::DOC_OT?>': 
