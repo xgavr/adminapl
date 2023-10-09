@@ -335,7 +335,7 @@ class MutualRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('m, l, c, ct, cd, rv, cash')
+        $queryBuilder->select('m, l, c, ct, cd, rv, cash, user')
             ->from(Mutual::class, 'm')
             ->join('m.company', 'c')
             ->join('m.legal', 'l')
@@ -343,6 +343,7 @@ class MutualRepository extends EntityRepository{
             ->join('l.contacts', 'cn')
             ->leftJoin('m.cashDoc', 'cd')
             ->leftJoin('cd.cash', 'cash')
+            ->leftJoin('cd.user', 'user')
             ->leftJoin('m.reviseDoc', 'rv')
             ->orderBy('m.docStamp', 'DESC')                 
                 ;
