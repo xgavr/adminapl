@@ -277,7 +277,9 @@ $form->prepare();
     $( document ).ready(function() {
         
         showKindOutGroup();
-        userChange();
+        <?php if (!$cashDoc): ?>
+            userChange();   
+        <?php endif; ?>    
         //cashChange();
 
         $('#kind').on('change', function(){

@@ -227,9 +227,9 @@
                     if (row.cashDoc.user){
                         cashName = kindName +' '+ row.cashDoc.user.fullName;
                         if (row.amount < 0){
-                            result = "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                            result = "<a href='#' class='user-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
                         } else {    
-                            result = "<a href='#' class='cash-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                            result = "<a href='#' class='user-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
                         }    
                     } 
                     if (row.cashDoc.order){
