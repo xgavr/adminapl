@@ -17,6 +17,7 @@ use Stock\Entity\Ptu;
 use Stock\Entity\Vtp;
 use Stock\Entity\Register;
 use Stock\Entity\Movement;
+use Application\Entity\Contact;
 
 /**
  * Description of MutualRepository
@@ -246,6 +247,7 @@ class MutualRepository extends EntityRepository{
                 ->join("$alias.contract", $alias.'mct')
                 ->join($alias.'ml.contacts', $alias.'mcn')
                 ->andWhere("$alias.status = ".Mutual::STATUS_ACTIVE)
+                ->andWhere($alias."mcn.status = ".Contact::STATUS_LEGAL)
                 //->setParameter('status', Mutual::STATUS_ACTIVE)
                 
                 ;
@@ -352,7 +354,9 @@ class MutualRepository extends EntityRepository{
             ->leftJoin('cd.cash', 'cash')
             ->leftJoin('cd.user', 'user')
             ->leftJoin('m.reviseDoc', 'rv')
-            ->orderBy('m.docStamp', 'DESC')                 
+            ->orderBy('m.docStamp', 'DESC')
+            ->andWhere('cn.status = :contactStatus')
+            ->setParameter(':contactStatus', Contact::STATUS_LEGAL)    
                 ;
         
         if (is_array($params)){
