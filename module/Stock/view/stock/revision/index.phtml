@@ -79,6 +79,7 @@
             data-cookie="true"
             data-cookie-id-table="revisionSaveId"
             data-cookie-expire="1m"
+            data-row-style="rowStyle"
             >
             <thead>
                 <tr>
@@ -214,6 +215,15 @@
             });            
         });
     });    
+    
+    function rowStyle(row){
+        var retired = 'tablerow';
+        if (row.status == '<?= Mutual::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }
+        
+        return {classes: retired};
+    }
     
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
