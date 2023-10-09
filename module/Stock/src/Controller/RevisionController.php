@@ -108,7 +108,8 @@ class RevisionController extends AbstractActionController
         if ($limit) {
             $query->setMaxResults($limit);
         }
-
+        
+//        var_dump($query->getSql()); exit;
         $result = $query->getResult(2);
         foreach ($result as $key=>$value){
 //                var_dump($value);

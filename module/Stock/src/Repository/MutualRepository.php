@@ -346,6 +346,7 @@ class MutualRepository extends EntityRepository{
     {
         $qb = $this->mutualBalanceQb($params);        
         
+//        var_dump($qb->getQuery()->getSQL());
         return $qb->getQuery();
     }
 
