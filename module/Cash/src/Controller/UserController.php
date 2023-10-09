@@ -217,7 +217,7 @@ class UserController extends AbstractActionController
         }    
         
         $form = new UserInForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form);
+        $this->cashManager->cashFormOptions($form, $cashDoc);
         
         if ($this->getRequest()->isPost()) {
             
@@ -264,7 +264,7 @@ class UserController extends AbstractActionController
         }    
         
         $form = new UserOutForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form);
+        $this->cashManager->cashFormOptions($form, $cashDoc);
         
         if ($this->getRequest()->isPost()) {
             

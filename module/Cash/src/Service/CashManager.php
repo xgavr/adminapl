@@ -668,7 +668,6 @@ class CashManager {
             } else {
                 $form->get('user')->setValue($user->getId());
             }    
-            var_dump($user->getId());
             $officeId = $user->getOffice()->getId();            
         }
         
