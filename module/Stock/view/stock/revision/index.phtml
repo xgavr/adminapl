@@ -161,6 +161,7 @@
             supplierChange();
         });
         $(document).on('change', '#companySelect', function (e) {
+            contractList();
             refreshTable();
         });
         $(document).on('change', '#legalSelect', function (e) {
