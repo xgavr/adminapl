@@ -65,8 +65,8 @@
                 <tr>
                      <th data-field="dateOper" data-sortable="true" data-formatter="dateFormatter" data-width="80">Дата</th>
                      <th data-field="docKey" data-footer-formatter="totalFooterFormatter" data-formatter="docFormatter">Документ</th>
-                     <th data-field='amount' data-width="80" data-footer-formatter="footerCreditFormatter" data-align="right" data-formatter="debitFormatter">Поступление</th>
-                     <th data-field='amount' data-width="80" data-footer-formatter="footerDebitFormatter" data-align="right" data-formatter="creditFormatter">Оплата</th>
+                     <th data-field='amount' data-width="80" data-footer-formatter="footerDebitFormatter" data-align="right" data-formatter="debitFormatter">Поступление</th>
+                     <th data-field='amount' data-width="80" data-footer-formatter="footerCreditFormatter" data-align="right" data-formatter="creditFormatter">Оплата</th>
                      <th data-field='rest.total' data-width="80" data-footer-formatter="footerStartFormatter" data-align="right" data-formatter="amountFormatter">Долг</th>
                      <th data-field="revise" data-checkbox="true" data-formatter="reviseFormatter" data-width="5"></th>
                      <th data-field="legal.name" >Юр. лицо</th>
@@ -279,11 +279,11 @@
     }
     
     function footerDebitFormatter(data){
-        return '<span id="outTotalFooter"></span>';
+        return '<span id="inTotalFooter"></span>';
     }
 
     function footerCreditFormatter(data){
-        return '<span id="inTotalFooter"></span>';
+        return '<span id="outTotalFooter"></span>';
     }
 
     function footerStartFormatter(data){
