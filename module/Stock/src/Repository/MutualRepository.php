@@ -275,7 +275,7 @@ class MutualRepository extends EntityRepository{
                         ;
             }
             if (!empty($params['contractId'])){
-                $queryBuilder->andWhere("$alias.legal = :contract")
+                $queryBuilder->andWhere("$alias.contract = :contract")
                         ->setParameter('contract', $params['contractId'])
                         ;
             }
