@@ -178,6 +178,12 @@ $form->prepare();
     
     function showGroup()
     {
+        if ($('#supplierSelect')){
+            if ($.isNumeric($('#supplierSelect').val())){
+                $('#supplier').val($('#supplierSelect').val());
+            }    
+        }
+        
         $('#supplierRevise').hide();
         $('#clientRevise').hide();
         $('#phone').attr('required', false);
