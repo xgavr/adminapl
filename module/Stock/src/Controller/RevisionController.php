@@ -116,7 +116,7 @@ class RevisionController extends AbstractActionController
                     'startDate' => $startDate,
                     'endDate' => $endDate,
                     'turnover' => true,
-                    'endBalance' => true,
+//                    'endBalance' => true,
                 ])->getOneOrNullResult();
 
         return new JsonModel([
