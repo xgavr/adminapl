@@ -161,7 +161,7 @@ class ReviseController extends AbstractActionController
         $form->get('contract')->setValueOptions($contractList); 
                     
         $offices = $this->entityManager->getRepository(Office::class)
-                ->findBy(['status' => Office::STATUS_ACTIVE], ['name' => 'ASC']);
+                ->findBy([], ['status' => 'ASC', 'name' => 'ASC']);
         $officeList = ['--не выбран--'];
         foreach ($offices as $bo) {
             $officeList[$bo->getId()] = $bo->getName();
