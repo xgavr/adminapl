@@ -108,7 +108,7 @@
                 var endTotal = (res.turnover.endTotal) ? res.turnover.endTotal:0;
                 $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
                 $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
-                $('#startTotalFooter').html((Math.round((endTotal-inTotal+outTotal)*100)/100).toFixed(2));
+                $('#startTotalFooter').html((Math.round((inTotal-outTotal-endTotal)*100)/100).toFixed(2));
             }
         });
         $ok = $('#ok');
