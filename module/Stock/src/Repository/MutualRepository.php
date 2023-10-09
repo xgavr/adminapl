@@ -372,6 +372,9 @@ class MutualRepository extends EntityRepository{
                             ;
                 }    
             }            
+            if (!empty($params['order'])){
+                $queryBuilder->orderBy('m.docStamp', $params['order']);
+            }
         }
 
 //        var_dump($queryBuilder->getQuery()->getSQL());
