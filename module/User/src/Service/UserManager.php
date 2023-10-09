@@ -244,7 +244,8 @@ class UserManager
         $this->entityManager->persist($email);
         
         // Apply changes to database.
-        $this->entityManager->flush();                
+        $this->entityManager->flush();   
+        $this->entityManager->refresh($user);
         
         return $flag;
     }
