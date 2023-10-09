@@ -376,6 +376,30 @@ class MutualRepository extends EntityRepository{
                             ;
                 }    
             }            
+            if (!empty($params['companyId'])){
+                if (is_numeric($params['companyId'])){
+                    $queryBuilder
+                        ->andWhere('m.company = :company')
+                        ->setParameter('company', $params['companyId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['legalId'])){
+                if (is_numeric($params['legalId'])){
+                    $queryBuilder
+                        ->andWhere('m.legal = :legal')
+                        ->setParameter('legal', $params['legalId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['contractId'])){
+                if (is_numeric($params['contractId'])){
+                    $queryBuilder
+                        ->andWhere('m.contract = :contract')
+                        ->setParameter('contract', $params['contractId'])
+                            ;
+                }    
+            }            
             if (!empty($params['order'])){
                 $queryBuilder->orderBy('m.docStamp', $params['order']);
             }
@@ -402,7 +426,8 @@ class MutualRepository extends EntityRepository{
             ->join('m.legal', 'l')
             ->join('m.contract', 'ct')
             ->join('l.contacts', 'cn')
-            ->orderBy('m.docStamp', 'DESC')                 
+            ->andWhere('cn.status = :contactStatus')
+            ->setParameter(':contactStatus', Contact::STATUS_LEGAL)    
                 ;
         
         if (is_array($params)){
@@ -419,6 +444,30 @@ class MutualRepository extends EntityRepository{
                     $queryBuilder
                         ->andWhere('cn.supplier = :supplier')
                         ->setParameter('supplier', $params['supplierId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['companyId'])){
+                if (is_numeric($params['companyId'])){
+                    $queryBuilder
+                        ->andWhere('m.company = :company')
+                        ->setParameter('company', $params['companyId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['legalId'])){
+                if (is_numeric($params['legalId'])){
+                    $queryBuilder
+                        ->andWhere('m.legal = :legal')
+                        ->setParameter('legal', $params['legalId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['contractId'])){
+                if (is_numeric($params['contractId'])){
+                    $queryBuilder
+                        ->andWhere('m.contract = :contract')
+                        ->setParameter('contract', $params['contractId'])
                             ;
                 }    
             }            

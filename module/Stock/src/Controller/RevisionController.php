@@ -12,6 +12,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Entity\Supplier;
 use Stock\Entity\Mutual;
+use Company\Entity\Legal;
 
 class RevisionController extends AbstractActionController
 {
@@ -43,10 +44,14 @@ class RevisionController extends AbstractActionController
         
         $suppliers = $this->entityManager->getRepository(Supplier::class)
                 ->findAll(null, ['status' => 'ASC', 'name' => 'ASC']);
+
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
         
         return new ViewModel([
                 'supplier' => $supplier,
                 'suppliers' => $suppliers,
+                'companies' => $companies,
             ]);
     }
     
@@ -59,6 +64,9 @@ class RevisionController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort', 'docDate');
         $order = $this->params()->fromQuery('order', 'DESC');
         $supplierId = $this->params()->fromQuery('supplier');
+        $companyId = $this->params()->fromQuery('company');
+        $legalId = $this->params()->fromQuery('legal');
+        $contractId = $this->params()->fromQuery('contract');
         $officeId = $this->params()->fromQuery('office');
         $dateStart = $this->params()->fromQuery('dateStart');
         $period = $this->params()->fromQuery('period');
@@ -85,6 +93,7 @@ class RevisionController extends AbstractActionController
             'q' => trim($q), 'sort' => $sort, 'order' => $order, 
             'supplierId' => $supplierId, 'officeId' => $officeId,
             'startDate' => $startDate, 'endDate' => $endDate, 'status' => $status,
+            'companyId' => $companyId, 'legalId' => $legalId, 'contractId' => $contractId,
         ];
                 
         $query = $this->entityManager->getRepository(Mutual::class)

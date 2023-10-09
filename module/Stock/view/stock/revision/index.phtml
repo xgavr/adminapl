@@ -31,8 +31,7 @@
                         <?php foreach ($suppliers as $supplier):?>
                             <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
                         <?php endforeach;?>
-                    </select>
-                    
+                    </select>                    
                 </div>    
                 <div class="form-group">
                     <select id="periodSelect" class="form-control" name="period">
@@ -43,6 +42,24 @@
                     </select>
                     <input name="dateStart" id="dateStart" style="width: 200px" class="form-control refresh-table" type="month" value="<?= date('Y-m')?>">
                 </div>
+                <div class="form-group">
+                    <select id="companySelect" name="company" style="width: 200px" class="form-control cookie-control">
+                        <option selected>все компании</option>
+                        <?php foreach ($companies as $company):?>
+                            <option value="<?= $company->getId()?>"><?= $company->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="legalSelect" name="legal" style="width: 200px" class="form-control">
+                        <option selected>все юр.лица</option>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="contractSelect" name="contract" style="width: 200px" class="form-control cookie-control">
+                        <option selected>все договоры</option>
+                    </select>                    
+                </div>    
             </div>
         </div>    
         <table id="table" 
@@ -111,12 +128,46 @@
             });                
     }
 
+    function contractList(){
+        $('#contractSelect').empty();
+        $('#contractSelect').append('<option>все договоры</option>');
+        $.getJSON( '/contracts/select/?company='+$('#companySelect').val()+'&legal='+$('#legalSelect').val(), function( data ) {
+            if (Object.keys(data.rows).length){
+                $.each( data.rows, function( key, value ) {
+                    $('#contractSelect').append('<option value="' + key + '">' + value.name + '</option>');
+                });
+            }    
+        });    
+    }
+    
+    function supplierChange(){
+        $('#legalSelect').empty();
+        $('#legalSelect').append('<option>все юр.лица</option>');        
+        $.getJSON( '/supplier/legals/'+$('#supplierSelect').val(), function( data ) {
+            if (Object.keys(data.rows).length){
+                $.each( data.rows, function( key, value ) {
+                    $('#legalSelect').append('<option value="' + key + '">' + value.name + '</option>');
+                });
+            }    
+        });    
+    }    
+
     $(function () {
         $ok.click(function () {
-            refreshTable;
+            refreshTable();
         });
         
         $(document).on('change', '#supplierSelect', function (e) {
+            supplierChange();
+        });
+        $(document).on('change', '#companySelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#legalSelect', function (e) {
+            contractList();
+            refreshTable();
+        });
+        $(document).on('change', '#contractSelect', function (e) {
             refreshTable();
         });
         $(document).on('change', '#dateStart', function (e) {

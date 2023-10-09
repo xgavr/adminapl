@@ -197,15 +197,24 @@ class ContractController extends AbstractActionController
     
     public function selectAction()
     {
-        $companyId = (int)$this->params()->fromQuery('company', -1);
+        $companyId = (int)$this->params()->fromQuery('company');
         $legalId = (int)$this->params()->fromQuery('legal', -1);
         $officeId = (int)$this->params()->fromQuery('office', -1);
 
         $result = [];
-        if ($companyId>0 && $legalId>0) {
-
+        if ($legalId>0) {
+            $params = [
+                'legal' => $legalId,
+            ];
+            
+            if (!empty($companyId)){
+                if (is_numeric($companyId)){
+                    $params['company'] = $companyId;
+                }    
+            }
+            
             $contracts = $this->entityManager->getRepository(Contract::class)
-                    ->findBy(['company' => $companyId, 'legal' => $legalId]);
+                    ->findBy($params);
 
             if ($contracts){
                 foreach ($contracts as $contract){
