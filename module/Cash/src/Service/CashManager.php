@@ -699,7 +699,7 @@ class CashManager {
             $form->get('user')->setValueOptions($userList);
         }    
         $form->get('userRefill')->setValueOptions($userList);
-
+        var_dump($officeId);
         if ($officeId){
             $cashes = $this->entityManager->getRepository(Cash::class)
                     ->findBy(['office' => $officeId], ['status' => 'ASC','name' => 'ASC']);
