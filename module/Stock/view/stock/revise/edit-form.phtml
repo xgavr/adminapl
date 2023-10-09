@@ -6,6 +6,7 @@ $form = $this->form;
 $form->get('docDate')->setAttributes([
     'class'=>'form-control', 
     'min' => date('Y-m-d', strtotime($allowDate.' + 1 day')),
+    'disabled' => $disabled,
     ]);
 
 $form->get('amount')->setAttributes([
@@ -140,7 +141,7 @@ $form->prepare();
 
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-    <button type="submit" class="btn btn-primary" id="revise-submit">Сохранить</button>
+    <button type="submit" class="btn btn-primary" id="revise-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
 </div>
 <?= $this->form()->closeTag(); ?>
             

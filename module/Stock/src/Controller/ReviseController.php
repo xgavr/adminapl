@@ -196,6 +196,7 @@ class ReviseController extends AbstractActionController
         $clientId = (int) $this->params()->fromQuery('client', -1);
         
         $revise = $contactName = $client = $supplier = $contact = null;
+        $notDisabled = true;
         
         if ($supplierId > 0){
             $supplier = $this->entityManager->getRepository(Supplier::class)
@@ -245,6 +246,7 @@ class ReviseController extends AbstractActionController
         } else {
             if ($revise){
                 $form->setData($revise->toArray());
+                $notDisabled = $revise->getDocDate() > $this->reviseManager->getAllowDate();
             }    
         }
         $this->layout()->setTemplate('layout/terminal');
@@ -255,6 +257,7 @@ class ReviseController extends AbstractActionController
             'kind' => $kind,
             'contactName' => $contactName,
             'allowDate' => $this->reviseManager->getAllowDate(),
+            'disabled' => !$notDisabled,
         ]);        
     }    
         
