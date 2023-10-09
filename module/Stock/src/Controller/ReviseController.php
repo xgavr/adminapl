@@ -170,7 +170,7 @@ class ReviseController extends AbstractActionController
         $form->get('office')->setValue($office->getId());
 
         $companies = $this->entityManager->getRepository(Legal::class)
-                ->formOfficeLegals(['officeId' => $office->getId()]);
+                ->companies();
         $companyList = [];
         foreach ($companies as $company) {
             $companyList[$company->getId()] = $company->getName();
@@ -230,7 +230,7 @@ class ReviseController extends AbstractActionController
             $data = $this->params()->fromPost();
             $data['kind'] = $kind;
             $form->setData($data);
-
+            
             if ($form->isValid()) {
                 
                 if ($revise){

@@ -94,6 +94,28 @@ class LegalRepository extends EntityRepository
 
         return $queryBuilder->getQuery()->getResult();        
     }
+
+    /**
+     * Получить юрлица офисов
+     * 
+     * @param array $params
+     */
+    public function companies($params)
+    {
+
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('l')
+            ->from(Legal::class, 'l')
+            ->join('l.contacts', 'c')
+            ->where('c.office > 0')    
+            ->andWhere('c.status = ?2')
+            ->setParameter('2', Contact::STATUS_LEGAL)    
+                ;
+
+        return $queryBuilder->getQuery()->getResult();        
+    }
     
     /**
      * Получить юрлица поставщика
