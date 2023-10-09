@@ -115,6 +115,9 @@ class RevisionController extends AbstractActionController
             $result[$key]['rest'] = $this->entityManager->getRepository(Mutual::class)
                 ->mutualBalance([
                     'supplierId' => (is_numeric($supplierId)) ? $supplierId:null, 
+                    'companyId' => (is_numeric($companyId)) ? $companyId:null, 
+                    'legalId' => (is_numeric($legalId)) ? $legalId:null, 
+                    'contractId' => (is_numeric($contractId)) ? $contractId:null, 
                     'docStamp' => $value['docStamp']
                 ])->getOneOrNullResult();            
         }
@@ -122,6 +125,9 @@ class RevisionController extends AbstractActionController
         $turnover = $this->entityManager->getRepository(Mutual::class)
                 ->mutualBalance([
                     'supplierId' => (is_numeric($supplierId)) ? $supplierId:null, 
+                    'companyId' => (is_numeric($companyId)) ? $companyId:null, 
+                    'legalId' => (is_numeric($legalId)) ? $legalId:null, 
+                    'contractId' => (is_numeric($contractId)) ? $contractId:null, 
                     'startDate' => $startDate,
                     'endDate' => $endDate,
                     'turnover' => true,

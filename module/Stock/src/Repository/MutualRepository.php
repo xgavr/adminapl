@@ -264,6 +264,21 @@ class MutualRepository extends EntityRepository{
                         ->setParameter('supplier', $params['supplierId'])
                         ;
             }
+            if (!empty($params['companyId'])){
+                $queryBuilder->andWhere("$alias.company = :company")
+                        ->setParameter('company', $params['companyId'])
+                        ;
+            }
+            if (!empty($params['legalId'])){
+                $queryBuilder->andWhere("$alias.legal = :legal")
+                        ->setParameter('legal', $params['legalId'])
+                        ;
+            }
+            if (!empty($params['contractId'])){
+                $queryBuilder->andWhere("$alias.legal = :contract")
+                        ->setParameter('contract', $params['contractId'])
+                        ;
+            }
             if (!empty($params['docStamp'])){
                 $queryBuilder->andWhere("$alias.docStamp <= :docStamp")
                         ->setParameter('docStamp', $params['docStamp'])
