@@ -16,6 +16,7 @@ use Company\Entity\Legal;
 use Stock\Entity\Ptu;
 use Stock\Entity\Vtp;
 use Stock\Entity\Register;
+use Stock\Entity\Movement;
 
 /**
  * Description of MutualRepository
@@ -278,8 +279,14 @@ class MutualRepository extends EntityRepository{
             }
             if (!empty($params['turnover'])){
                 $queryBuilder
-                    ->addSelect("sum(case when $alias.amount > 0 then $alias.amount else 0 end) as inTotal")
-                    ->addSelect("sum(case when $alias.amount < 0 then $alias.amount else 0 end) as outTotal")
+                    ->addSelect("sum(case "
+                            . "when $alias.docType=".Movement::DOC_PTU." then $alias.amount "
+                            . "when $alias.docType=".Movement::DOC_VTP." then $alias.amount "
+                            . "else 0 end) as outTotal")
+                    ->addSelect("sum(case "
+                            . "when $alias.docType=".Movement::DOC_PTU." then 0 "
+                            . "when $alias.docType=".Movement::DOC_VTP." then 0 "
+                            . "else $alias.amount end) as inTotal")
                         ;                
             }
             if (!empty($params['endBalance'])){
