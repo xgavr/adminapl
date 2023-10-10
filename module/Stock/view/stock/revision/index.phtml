@@ -132,7 +132,7 @@
             });                
     }
 
-    function contractList(){
+    function reviseContractList(){
         $('#contractSelect').empty();
         $('#contractSelect').append('<option>все договоры</option>');
         $.getJSON( '/contracts/select/?company='+$('#companySelect').val()+'&legal='+$('#legalSelect').val(), function( data ) {
@@ -163,14 +163,14 @@
         
         $(document).on('change', '#supplierSelect', function (e) {
             reviseSupplierChange();
-            contractList();
+            reviseContractList();
         });
         $(document).on('change', '#companySelect', function (e) {
-            contractList();
+            reviseContractList();
             refreshTable();
         });
         $(document).on('change', '#legalSelect', function (e) {
-            contractList();
+            reviseContractList();
             refreshTable();
         });
         $(document).on('change', '#contractSelect', function (e) {
