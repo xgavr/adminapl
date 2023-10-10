@@ -178,7 +178,7 @@ $form->prepare();
     
     function showGroup()
     {
-        <?php if ($revise): ?>
+        <?php if (!$revise): ?>
             if ($('#supplierSelect')){
                 if ($.isNumeric($('#supplierSelect').val())){
                     $('#supplier').val($('#supplierSelect').val());
