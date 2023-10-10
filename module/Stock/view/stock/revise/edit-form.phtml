@@ -178,12 +178,14 @@ $form->prepare();
     
     function showGroup()
     {
-        if ($('#supplierSelect')){
-            if ($.isNumeric($('#supplierSelect').val())){
-                $('#supplier').val($('#supplierSelect').val());
-                supplierChange();
-            }    
-        }
+        <?php if ($revise): ?>
+            if ($('#supplierSelect')){
+                if ($.isNumeric($('#supplierSelect').val())){
+                    $('#supplier').val($('#supplierSelect').val());
+                    supplierChange();
+                }    
+            }
+        <?php endif; ?>    
         
         $('#supplierRevise').hide();
         $('#clientRevise').hide();
