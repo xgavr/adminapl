@@ -295,6 +295,9 @@ $form->prepare();
         
         showKindGroup();
         contactName();
+        <?php if (!$cashDoc): ?>
+            cashChange();   
+        <?php endif; ?>    
 
         $('#kind').on('change', function(){
             showKindGroup();

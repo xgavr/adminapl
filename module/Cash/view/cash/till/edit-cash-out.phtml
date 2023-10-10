@@ -324,13 +324,16 @@ $form->prepare();
         
         showKindOutGroup();
         contactName();
+        <?php if (!$cashDoc): ?>
+            cashChange();   
+        <?php endif; ?>    
         //cashChange();
 
         $('#kind').on('change', function(){
             showKindOutGroup();
         });
         $('#cash').on('change', function(){
-            cashChange()
+            cashChange();
         });
         
         $('#phone').on('change', function(){
