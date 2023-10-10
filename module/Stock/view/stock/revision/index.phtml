@@ -144,7 +144,7 @@
         });    
     }
     
-    function supplierChange(){
+    function reviseSupplierChange(){
         $('#legalSelect').empty();
         $('#legalSelect').append('<option>все юр.лица</option>');        
         $.getJSON( '/supplier/legals/'+$('#supplierSelect').val(), function( data ) {
@@ -162,7 +162,7 @@
         });
         
         $(document).on('change', '#supplierSelect', function (e) {
-            supplierChange();
+            reviseSupplierChange();
             contractList();
         });
         $(document).on('change', '#companySelect', function (e) {
