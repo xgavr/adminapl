@@ -149,7 +149,7 @@
     function contractFormatter(value, row){
         var date = new Date(row.dateStart);
         var pays = <?= Encoder::encode(Contract::getPayList())?>;
-        return pays[row.pay]+' №'+row.act+' от '+$.format.date(date, "dd.MM.yyyy")+;
+        return pays[row.pay]+' №'+row.act+' от '+$.format.date(date, "dd.MM.yyyy");
     }
     
     function linkFormatter(value, row){
