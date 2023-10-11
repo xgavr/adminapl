@@ -90,6 +90,8 @@ class MutualRepository extends EntityRepository{
                         ->from(Mutual::class, 'm')
                         ->where('m.contract = :contract')
                         ->setParameter('contract', $data['contract_id'])
+                        ->andWhere('m.status = :status')
+                        ->setParameter('status', Mutual::STATUS_ACTIVE)
                         ;
 
                 $result = $queryBuilder->getQuery()->getOneOrNullResult();
