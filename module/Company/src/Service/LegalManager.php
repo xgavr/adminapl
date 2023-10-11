@@ -12,6 +12,10 @@ use Bank\Entity\Statement;
 use Stock\Entity\Retail;
 use Company\Entity\EdoOperator;
 use Company\Entity\LegalLocation;
+use Application\Entity\Order;
+use Bank\Entity\Payment;
+use Bank\Entity\QrCode;
+use Bank\Entity\QrCodePayment;
 
 /**
  * This service legal.
@@ -334,22 +338,55 @@ class LegalManager
     }
     
     /**
+     * Можно ли удалить счет
+     * @param BankAccount $bankAccount
+     * @return bool
+     */
+    public function allowRemoveBankAccount($bankAccount)
+    {
+        $orderCount = $this->entityManager->getRepository(Order::class)
+                ->count(['bankAccount' => $bankAccount->getId()]);
+        if (!empty($orderCount)){
+            return false;
+        }
+        $paymentCount = $this->entityManager->getRepository(Payment::class)
+                ->count(['bankAccount' => $bankAccount->getId()]);
+        if (!empty($paymentCount)){
+            return false;
+        }
+        $qrcodeCount = $this->entityManager->getRepository(QrCode::class)
+                ->count(['bankAccount' => $bankAccount->getId()]);
+        if (!empty($qrcodeCount)){
+            return false;
+        }
+        $qrcodePaymentCount = $this->entityManager->getRepository(QrCodePayment::class)
+                ->count(['bankAccount' => $bankAccount->getId()]);
+        if (!empty($qrcodePaymentCount)){
+            return false;
+        }
+        $statementCount = $this->entityManager->getRepository(Statement::class)
+                ->count(['counterpartyAccountNumber' => $bankAccount->getRs()]);
+        $statementCount1 = $this->entityManager->getRepository(Statement::class)
+                ->count(['account' => $bankAccount->getRs()]);
+        if ($statementCount > 0 || $statementCount1 > 0){
+            return false;
+        }    
+        
+        return true;
+    }
+    
+    /**
      * Удалить банковский счет
      * 
      * @param BankAccount $bankAccount
      */
     public function removeBankAccount($bankAccount)
-    {
-        $statementCount = $this->entityManager->getRepository(Statement::class)
-                ->count(['counterpartyAccountNumber' => $bankAccount->getRs()]);
-        $statementCount1 = $this->entityManager->getRepository(Statement::class)
-                ->count(['account' => $bankAccount->getRs()]);
-        
-        if ($statementCount > 0 || $statementCount1 > 0){
+    {        
+        if ($this->allowRemoveBankAccount($bankAccount)){
+            $this->entityManager->remove($bankAccount);            
+        } else {
             $bankAccount->setStatus(BankAccount::STATUS_RETIRED);
             $this->entityManager->persist($bankAccount);
-        } else {
-            $this->entityManager->remove($bankAccount);            
         }
         
         $this->entityManager->flush();        

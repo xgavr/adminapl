@@ -882,6 +882,7 @@ class CashManager {
     {
         $legalRs = $statement->getCounterpartyAccountNumber();
         $legalInn = $statement->getСounterpartyInn();
+        $legalKpp = $statement->getСounterpartyKpp();
         $amount = abs($statement->getAmount());
         
         $legal = $cashDoc = null;
@@ -893,6 +894,30 @@ class CashManager {
             $legalsToCheck[$legal->getId()] = $legal;
         }
         
+        if (!$legal){
+            $legals = $this->entityManager->getRepository(Legal::class)
+                    ->findBy(['inn' => $legalInn, 'kpp' => $legalKpp]);
+            foreach ($legals as $legal){
+                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getChargeDate());
+                $legalsToCheck[$legal->getId()] = $legal;
+                if ($cashDoc){
+                    break;
+                }
+            }    
+        }
+
+        if (!$legal){
+            $legals = $this->entityManager->getRepository(Legal::class)
+                    ->findBy(['inn' => $legalInn]);
+            foreach ($legals as $legal){
+                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getChargeDate());
+                $legalsToCheck[$legal->getId()] = $legal;
+                if ($cashDoc){
+                    break;
+                }
+            }    
+        }
+
         if (!$legal){
             $bankAccounts = $this->entityManager->getRepository(BankAccount::class)
                     ->findBy(['rs' => $legalRs]);
@@ -907,17 +932,6 @@ class CashManager {
             }
         }    
         
-        if (!$legal){
-            $legals = $this->entityManager->getRepository(Legal::class)
-                    ->findBy(['inn' => $legalInn]);
-            foreach ($legals as $legal){
-                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getChargeDate());
-                $legalsToCheck[$legal->getId()] = $legal;
-                if ($cashDoc){
-                    break;
-                }
-            }    
-        }
         
         $statement->setPay(Statement::PAY_CHECK);
         foreach ($legalsToCheck as $legal){            
