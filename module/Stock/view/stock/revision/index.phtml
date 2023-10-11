@@ -28,8 +28,8 @@
                 <div class="form-group">
                     <select id="supplierSelect" name="supplier" style="width: 250px" class="form-control cookie-control">
                         <option selected>все поставщики</option>
-                        <?php foreach ($suppliers as $supplier):?>
-                            <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
+                        <?php foreach ($suppliers as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
@@ -45,24 +45,24 @@
                 <div class="form-group">
                     <select id="companySelect" name="company" style="width: 200px" class="form-control cookie-control">
                         <option selected>все компании</option>
-                        <?php foreach ($companies as $company):?>
-                            <option value="<?= $company->getId()?>"><?= $company->getName()?></option>
+                        <?php foreach ($companies as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
                 <div class="form-group">
                     <select id="legalSelect" name="legal" style="width: 200px" class="form-control">
                         <option selected>все юр.лица</option>
-                        <?php foreach ($legals as $legal):?>
-                            <option value="<?= $legal->getId()?>"><?= $legal->getName()?></option>
+                        <?php foreach ($legals as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
                 <div class="form-group">
                     <select id="contractSelect" name="contract" style="width: 200px" class="form-control cookie-control">
                         <option selected>все договоры</option>
-                        <?php foreach ($contracts as $contract):?>
-                            <option value="<?= $contract->getId()?>"><?= $contract->getName()?></option>
+                        <?php foreach ($contracts as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
