@@ -171,7 +171,7 @@ class RevisionController extends AbstractActionController
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
         $suppliers = $this->entityManager->getRepository(Supplier::class)
-                ->findAll(null, ['status' => 'ASC', 'name' => 'ASC']);
+                ->findBy([], ['status' => 'ASC', 'name' => 'ASC']);
         
         return new ViewModel([
                 'companies' => $companies,
