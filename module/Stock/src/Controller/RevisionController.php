@@ -193,12 +193,13 @@ class RevisionController extends AbstractActionController
         $contractId = $this->params()->fromQuery('contract');
         $officeId = $this->params()->fromQuery('office');
         $status = $this->params()->fromQuery('status');
+        $pay = $this->params()->fromQuery('pay');
         
         $params = [
             'q' => trim($q), 'sort' => $sort, 'order' => $order, 
             'supplierId' => $supplierId, 'officeId' => $officeId,
             'status' => $status, 'companyId' => $companyId, 'legalId' => $legalId,
-            'contractId' => $contractId,
+            'contractId' => $contractId, 'pay' => $pay,
         ];
                 
         $query = $this->entityManager->getRepository(Mutual::class)
