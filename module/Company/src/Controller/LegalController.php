@@ -972,4 +972,14 @@ class LegalController extends AbstractActionController
         
         exit;
     }    
+    
+    public function updateBalancesAction()
+    {
+        $this->legalManager->contractsBalance();        
+        
+        return new JsonModel(
+           ['result' => 'ok']
+        );                   
+    }
+    
 }

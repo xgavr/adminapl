@@ -1,0 +1,232 @@
+<?php
+    use Company\Entity\Contract;
+    
+    $this->headTitle('Сверка поставщиков');
+
+    $this->mainMenu()->setActiveItemId('raw');
+    $this->mainMenu()->setActiveUrl($this->url('supplier-revision'));
+
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Сверка поставщиков'=>$this->url('supplier-revision'),
+                ]);
+
+?>
+<style>
+    .panel-height {
+      height: 100px;
+    }    
+</style>
+
+<div class="row">
+    <div class="col-md-9">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <select id="supplierSelect" name="supplier" style="width: 150px" class="form-control cookie-control">
+                        <option selected>все поставщики</option>
+                        <?php foreach ($suppliers as $supplier):?>
+                            <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="companySelect" name="company" style="width: 150px" class="form-control cookie-control">
+                        <option selected>все компании</option>
+                        <?php foreach ($companies as $company):?>
+                            <option value="<?= $company->getId()?>"><?= $company->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="legalSelect" name="legal" style="width: 150px" class="form-control">
+                        <option selected>все юр.лица</option>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="paySelect" name="contract" style="width: 150px" class="form-control cookie-control">
+                        <option selected>все виды</option>
+                        <?php foreach (Contract::getPayList() as $key => $value):?>
+                            <option value="<?= $key ?>"><?= $value ?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <button value="/legals/update-balances/" class="btn btn-default refresh-table-button"
+                        title="Обновить суммы долгов">
+                    <span class="glyphicon glyphicon-rub" ></span>
+                </button>                         
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/revision/supplier-revision-content"
+            data-cookie="true"
+            data-cookie-id-table="supplierRevisionSaveId"
+            data-cookie-expire="1m"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            data-sort-name="name"
+            data-sort-order="asc"
+            data-classes = "table table-bordered table-hover table-condensed"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-type="numeric" data-sortable="true" data-width="80">Id</th>
+                     <th data-field="company.name">Компания</th>
+                     <th data-field="supplier.name" data-formatter="linkFormatter">Поставщик</th>
+                     <th data-field="legal.name" >Юр. лицо</th>
+                     <th data-field="name">Договор</th>
+                     <th data-field="balance" data-formatter="creditFormatter" data-align="right" data-width="80" data-original-title="Мы должны" data-sortable="true">Мы должны</th>
+                     <th data-field="balance" data-formatter="debitFormatter" data-align="right" data-width="80" data-original-title="Нам должны" data-sortable="true">Нам должны</th>
+                     <th data-field="id" data-formatter="activeFormatter" data-width="5"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>    
+</div>
+<script type="text/javascript">
+
+    var $table = $('#table').bootstrapTable({
+        onLoadSuccess: function(res){
+            $("[data-toggle='tooltip']").tooltip();
+            $('.editableCheckBox').change(function() {
+                $.ajax({
+                    type: "POST",
+                    url: $(this).attr('data-url'),
+                    data: "pk="+$(this).attr('data-pk'),
+                    success: function(msg){
+//                      alert( "Прибыли данные: " + msg );
+                    }
+                });
+            });        
+        }
+    });
+
+    function refreshTable(){
+        $table.bootstrapTable('refresh');
+    }
+
+    var ok = $('#ok');
+
+    $(function () {
+        ok.click(function () {
+            refreshTable();
+        });
+        $('#legalSelect').change(function () {
+            refreshTable();
+        });
+        $('#supplierSelect').change(function () {
+            refreshTable();
+        });
+        $('#companySelect').change(function () {
+            refreshTable();
+        });
+        $('#paySelect').change(function () {
+            refreshTable();
+        });
+    });
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+
+        return params;
+    }
+    
+    function linkFormatter(value, row){
+        if (row.supplier){
+            return [
+                '<nobr>',
+                '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.supplier.id+'" title="Перейти на сайт поставщика">',
+                '<span class="glyphicon glyphicon-link"></span></a>',
+                '<a href="/supplier/view/' + row.supplier.id + '" target="_blank">' + value + '</a>',
+                '</nobr>'
+            ].join(''); 
+        }    
+        return value;    
+    }    
+
+    function creditFormatter(value){
+        if (value<0){
+            return (-Math.round(value*100)/100).toFixed(2);
+        }
+        return '';
+    }
+    function debitFormatter(value){
+        if (value>0){
+            return (Math.round(value*100)/100).toFixed(2);
+        }
+        return '';
+    }
+    
+    function activeFormatter(value, row){
+        var btn = '<nobr>';
+//        var url = '/supplier/request-as-text/'+value;
+//        btn = '<button';
+//        btn += ' type="button"';
+//        btn += ' class="btn btn-default btn-xs"';
+//        btn += ' aria-label="Left Align"'; 
+//        btn += ' title="Как заказать?"'; 
+//        btn += ' onclick="requestAsText(\''+url+'\')">';
+//        btn += '<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>';
+//        btn += '</button>';
+        
+        var url = '/revision?contract='+row.id;
+        if (row.supplier){
+            url += '&supplier='+row.supplier.id;
+        }    
+        btn += ' <a';
+        btn += ' type="button"';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-default btn-xs"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Сверка"'; 
+        btn += ' target="_blank">'; 
+        btn += '<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>';
+        btn += '</a>';
+        
+        btn += '</nobr>';        
+        return btn;
+    }    
+    
+    function responseHandler(res) {
+        return res;
+    }    
+    
+    function requestAsText(url) {        
+        $.ajax({
+            type: 'POST',
+            url: url
+        })
+            .done(function (data) {
+                bootbox.alert({
+                    title: data.title,
+                    message: data.text,
+                    size: 'large'
+                });
+            })
+            .fail(function () {
+                bootbox.alert("Произошла ошибка при выполнении операции.");
+            });
+    }    
+    
+</script>
+

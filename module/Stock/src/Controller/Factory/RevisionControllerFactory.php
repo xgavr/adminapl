@@ -10,7 +10,7 @@ namespace Stock\Controller\Factory;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Stock\Controller\RevisionController;
-//use Stock\Service\RevisionManager;
+use Admin\Service\LogManager;
 
 
 /**
@@ -24,9 +24,9 @@ class RevisionControllerFactory implements FactoryInterface {
                      $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-//        $reviseManager = $container->get(ReviseManager::class);
+        $logManager = $container->get(LogManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new RevisionController($entityManager);
+        return new RevisionController($entityManager, $logManager);
     }
 }

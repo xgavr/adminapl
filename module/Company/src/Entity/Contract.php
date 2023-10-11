@@ -70,6 +70,11 @@ class Contract {
     protected $dateStart;    
     
     /** 
+     * @ORM\Column(name="balance")  
+     */
+    protected $balance;
+
+    /** 
      * @ORM\Column(name="status")  
      */
     protected $status;    
@@ -177,6 +182,15 @@ class Contract {
         return trim("$ContractName №".$this->act.' от '.date('d.m.Y', strtotime($this->dateStart)).' г.');
     }
 
+    public function getBalance() {
+        return $this->balance;
+    }
+
+    public function setBalance($balance) {
+        $this->balance = $balance;
+        return $this;
+    }
+    
     /**
      * Returns status.
      * @return int     

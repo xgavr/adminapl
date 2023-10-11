@@ -113,8 +113,9 @@ class RegisterRepository extends EntityRepository
      * @param date $dateOper
      * @param integer $docType
      * @param integer $docId
+     * @param string $docKey
      */
-    private function register($dateOper, $docType, $docId)
+    private function register($dateOper, $docType, $docId, $docKey)
     {
         $entityManager = $this->getEntityManager();
         $reg = $entityManager->getRepository(Register::class)
@@ -127,7 +128,8 @@ class RegisterRepository extends EntityRepository
         if (!$reg){    
             $docStamp = $this->findMaxDocStamp($dateOper);
             $entityManager->getConnection()
-                    ->insert('register', ['doc_id' => $docId, 'doc_type' => $docType, 'date_oper' => $dateOper, 'doc_stamp' => $docStamp]);            
+                    ->insert('register', ['doc_id' => $docId, 'doc_type' => $docType, 
+                        'date_oper' => $dateOper, 'doc_stamp' => $docStamp, 'doc_key' => $docKey]);            
             $reg = $entityManager->getRepository(Register::class)
                     ->findOneBy(['docId' => $docId, 'docType' => $docType]);
         }
@@ -194,7 +196,7 @@ class RegisterRepository extends EntityRepository
     public function ptRegister($pt)
     {
         $dateOper = date('Y-m-d 12:00:00', strtotime($pt->getDocDate()));        
-        return $this->register($dateOper, Movement::DOC_PT, $pt->getId());
+        return $this->register($dateOper, Movement::DOC_PT, $pt->getId(), $pt->getLogKey());
     }
     
     /**
@@ -206,7 +208,7 @@ class RegisterRepository extends EntityRepository
     public function ptuRegister($ptu)
     {
         $dateOper = date('Y-m-d 00:01:00', strtotime($ptu->getDocDate()));
-        return $this->register($dateOper, Movement::DOC_PTU, $ptu->getId());
+        return $this->register($dateOper, Movement::DOC_PTU, $ptu->getId(), $ptu->getLogKey());
     }    
     
     /**
@@ -218,7 +220,7 @@ class RegisterRepository extends EntityRepository
     public function vtpRegister($vtp)
     {
         $dateOper = date('Y-m-d 22:01:00', strtotime($vtp->getDocDate()));
-        return $this->register($dateOper, Movement::DOC_VTP, $vtp->getId());
+        return $this->register($dateOper, Movement::DOC_VTP, $vtp->getId(), $vtp->getLogKey());
     }    
 
     /**
@@ -230,7 +232,7 @@ class RegisterRepository extends EntityRepository
     public function otRegister($ot)
     {
         $dateOper = date('Y-m-d 00:01:00', strtotime($ot->getDocDate()));
-        return $this->register($dateOper, Movement::DOC_OT, $ot->getId());
+        return $this->register($dateOper, Movement::DOC_OT, $ot->getId(), $ot->getLogKey());
     }    
 
     /**
@@ -242,7 +244,7 @@ class RegisterRepository extends EntityRepository
     public function stRegister($st)
     {
         $dateOper = date('Y-m-d 23:01:00', strtotime($st->getDocDate()));
-        return $this->register($dateOper, Movement::DOC_ST, $st->getId());
+        return $this->register($dateOper, Movement::DOC_ST, $st->getId(), $st->getLogKey());
     }    
 
     /**
@@ -254,7 +256,7 @@ class RegisterRepository extends EntityRepository
     public function vtRegister($vt)
     {
         $dateOper = date('Y-m-d 16:00:00', strtotime($vt->getDocDate()));
-        return $this->register($dateOper, Movement::DOC_VT, $vt->getId());
+        return $this->register($dateOper, Movement::DOC_VT, $vt->getId(), $vt->getLogKey());
     }    
 
     /**
@@ -270,7 +272,7 @@ class RegisterRepository extends EntityRepository
         } else {
             $dateOper = date('Y-m-d 21:01:00', strtotime($order->getDocDate()));            
         }    
-        return $this->register($dateOper, Movement::DOC_ORDER, $order->getId());
+        return $this->register($dateOper, Movement::DOC_ORDER, $order->getId(), $order->getLogKey());
     } 
     
     /**
@@ -278,12 +280,13 @@ class RegisterRepository extends EntityRepository
      * 
      * @param integer $cashDocId
      * @param date $cashDocDateOper
+     * @param string $logKey
      * @return float
      */
-    private function cashDocIdRegister($cashDocId, $cashDocDateOper)
+    private function cashDocIdRegister($cashDocId, $cashDocDateOper, $logKey)
     {
         $dateOper = date('Y-m-d H:i:s', strtotime($cashDocDateOper));
-        return $this->register($dateOper, Movement::DOC_CASH, $cashDocId);
+        return $this->register($dateOper, Movement::DOC_CASH, $cashDocId, $logKey);
     } 
 
     /**
@@ -294,7 +297,7 @@ class RegisterRepository extends EntityRepository
      */
     public function cashDocRegister($cashDoc)
     {
-        return $this->cashDocIdRegister($cashDoc->getId(), $cashDoc->getDateOper());
+        return $this->cashDocIdRegister($cashDoc->getId(), $cashDoc->getDateOper(), $cashDoc->getLogKey());
     } 
 
     /**
@@ -306,7 +309,7 @@ class RegisterRepository extends EntityRepository
     public function reviseRegister($revise)
     {
         $dateOper = date('Y-m-d 23:00:00', strtotime($revise->getDocDate()));
-        return $this->register($dateOper, Movement::DOC_REVISE, $revise->getId());
+        return $this->register($dateOper, Movement::DOC_REVISE, $revise->getId(), $revise->getLogKey());
     } 
     
     /**
@@ -318,7 +321,7 @@ class RegisterRepository extends EntityRepository
     public function msrRegister($marketSaleReport)
     {
         $dateOper = date('Y-m-d 23:00:00', strtotime($marketSaleReport->getDocDate()));
-        return $this->register($dateOper, Movement::DOC_MSR, $marketSaleReport->getId());
+        return $this->register($dateOper, Movement::DOC_MSR, $marketSaleReport->getId(), $marketSaleReport->getLogKey());
     } 
 
     public function allRegister()
@@ -376,19 +379,19 @@ class RegisterRepository extends EntityRepository
 //            }    
 //        }
 
-        $cdQuery = $this->getEntityManager()->getRepository(CashDoc::class)
-                ->cashDocQuery();
-        $iterator = $cdQuery->iterate();
-        foreach ($iterator as $cd){
-            foreach ($cd as $cashDoc){
-                $reg = $this->getEntityManager()->getRepository(Register::class)
-                        ->findOneBy(['docType' => Movement::DOC_CASH, 'docId' => $cashDoc['id']]);
-                if (date('Ymd', strtotime($reg->getDateOper())) != date('Ymd', strtotime($cashDoc['dateOper']))){
-                    $this->cashDocIdRegister($cashDoc['id'], $cashDoc['dateOper']);
-                }    
-            }    
-        }
-
+//        $cdQuery = $this->getEntityManager()->getRepository(CashDoc::class)
+//                ->cashDocQuery();
+//        $iterator = $cdQuery->iterate();
+//        foreach ($iterator as $cd){
+//            foreach ($cd as $cashDoc){
+//                $reg = $this->getEntityManager()->getRepository(Register::class)
+//                        ->findOneBy(['docType' => Movement::DOC_CASH, 'docId' => $cashDoc['id']]);
+//                if (date('Ymd', strtotime($reg->getDateOper())) != date('Ymd', strtotime($cashDoc['dateOper']))){
+//                    $this->cashDocIdRegister($cashDoc['id'], $cashDoc['dateOper']);
+//                }    
+//            }    
+//        }
+//
     }
     
     /**

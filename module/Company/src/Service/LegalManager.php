@@ -450,6 +450,7 @@ class LegalManager
         $contract->setKind($data['kind']);
         $contract->setPay($data['pay']);
         $contract->setNds(($data['nds']));
+        $contract->setBalance(0);
         
         $office = $this->entityManager->getRepository(Office::class)
                 ->findOneById($data['office']);
@@ -538,6 +539,36 @@ class LegalManager
         }
 
         $this->entityManager->flush();
+        return;
+    }
+    
+    /**
+     * Обновить баланс договора
+     * @param Contract $contract
+     */
+    public function updateContractBalance($contract)
+    {
+        $data = ['contract_id' => $contract->getId()];
+        $this->entityManager->getRepository(Mutual::class)
+                ->updateContractBalance($data);
+        return;
+    }
+    
+    /**
+     * Обновить балансы всех договоров
+     * @return null
+     */
+    public function contractsBalance()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        
+        $contracts = $this->entityManager->getRepository(Contract::class)
+                ->findAll();
+        foreach ($contracts as $contract){
+            $this->updateContractBalance($contract);
+        }
+        
         return;
     }
     

@@ -303,8 +303,9 @@ class CashManager {
      * @param CashDoc $cashDoc
      * @param float $amount
      * @param Cash $cash
+     * @param float $docStamp
      */
-    protected function addTransaction($cashDoc, $amount, $cash)
+    protected function addTransaction($cashDoc, $amount, $cash, $docStamp)
     {
         $cashTransaction = new CashTransaction();
         $cashTransaction->setAmount($amount);
@@ -313,6 +314,7 @@ class CashManager {
         $cashTransaction->setDateOper($cashDoc->getDateOper());
         $cashTransaction->setStatus(($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE) ? CashTransaction::STATUS_ACTIVE:CashTransaction::STATUS_RETIRED);
         $cashTransaction->setCash($cash);
+        $cashTransaction->setDocStamp($docStamp);
         
         $this->entityManager->persist($cashTransaction);        
     }
@@ -334,8 +336,9 @@ class CashManager {
      * @param CashDoc $cashDoc
      * @param float $amount
      * @param User $user
+     * @param float $docStamp
      */
-    protected function addUserTransaction($cashDoc, $amount, $user)
+    protected function addUserTransaction($cashDoc, $amount, $user, $docStamp)
     {
         $userTransaction = new UserTransaction();
         $userTransaction->setAmount($amount);
@@ -344,6 +347,7 @@ class CashManager {
         $userTransaction->setDateOper($cashDoc->getDateOper());
         $userTransaction->setStatus(($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE) ? UserTransaction::STATUS_ACTIVE:UserTransaction::STATUS_RETIRED);
         $userTransaction->setUser($user);
+        $userTransaction->setDocStamp($docStamp);
         
         $this->entityManager->persist($userTransaction);        
     }
@@ -363,24 +367,24 @@ class CashManager {
         $this->removeUserTransactions($cashDoc);
         
         if ($cashDoc->getCash()){
-            $this->addTransaction($cashDoc, $cashDoc->getKindAmount(), $cashDoc->getCash());
+            $this->addTransaction($cashDoc, $cashDoc->getKindAmount(), $cashDoc->getCash(), $docStamp);
         }    
         if ($cashDoc->getUser()){
-            $this->addUserTransaction($cashDoc, $cashDoc->getKindAmount(), $cashDoc->getUser());
+            $this->addUserTransaction($cashDoc, $cashDoc->getKindAmount(), $cashDoc->getUser(), $docStamp);
         }    
         
         switch ($cashDoc->getKind()){
             case CashDoc::KIND_IN_REFILL:
-                $this->addTransaction($cashDoc, -$cashDoc->getAmount(), $cashDoc->getCashRefill());
+                $this->addTransaction($cashDoc, -$cashDoc->getAmount(), $cashDoc->getCashRefill(), $docStamp);
                 break;
             case CashDoc::KIND_IN_RETURN_USER:
-                $this->addUserTransaction($cashDoc, -$cashDoc->getAmount(), $cashDoc->getUserRefill());
+                $this->addUserTransaction($cashDoc, -$cashDoc->getAmount(), $cashDoc->getUserRefill(), $docStamp);
                 break;
             case CashDoc::KIND_OUT_USER:
-                $this->addUserTransaction($cashDoc, $cashDoc->getAmount(), $cashDoc->getUserRefill());
+                $this->addUserTransaction($cashDoc, $cashDoc->getAmount(), $cashDoc->getUserRefill(), $docStamp);
                 break;
             case CashDoc::KIND_OUT_REFILL:
-                $this->addTransaction($cashDoc, $cashDoc->getAmount(), $cashDoc->getCashRefill());
+                $this->addTransaction($cashDoc, $cashDoc->getAmount(), $cashDoc->getCashRefill(), $docStamp);
                 break;
         }
         

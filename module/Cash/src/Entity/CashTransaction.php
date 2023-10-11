@@ -44,6 +44,11 @@ class CashTransaction {
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;  
+
+    /** 
+     * @ORM\Column(name="doc_stamp")  
+     */
+    protected $docStamp;  
             
     /**
      * @ORM\Column(name="status")   
@@ -127,6 +132,15 @@ class CashTransaction {
         $this->dateCreated = $dateCreated;
     }     
     
+    public function getDocStamp() {
+        return $this->docStamp;
+    }
+
+    public function setDocStamp($docStamp) {
+        $this->docStamp = $docStamp;
+        return $this;
+    }
+
     /**
      * Returns status.
      * @return int     

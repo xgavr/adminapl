@@ -31,6 +31,7 @@ use Cash\Entity\CashDoc;
 use Application\Entity\Comment;
 use Application\Entity\Goods;
 use Application\Entity\Email;
+use Stock\Entity\Mutual;
 
 /**
  * Description of LogManager
@@ -473,6 +474,34 @@ class LogManager {
         
         return;
     }          
+    
+    /**
+     * Лог ревизии 
+     * @param Mutual $mutual
+     * @param int $status
+     * @return null
+     */
+    public function infoMutual($mutual, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            $mutualLog = ['revision' => $mutual->getRevise(), 'revisionName' => $mutual->getReviseAsString()];
+
+            $data = [
+                'log_key' => $mutual->getDocKey(),
+                'message' => Json::encode($mutualLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;        
+    }
     
     /**
      * Получить последние строки error.log

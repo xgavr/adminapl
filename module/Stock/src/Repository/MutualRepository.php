@@ -18,6 +18,7 @@ use Stock\Entity\Vtp;
 use Stock\Entity\Register;
 use Stock\Entity\Movement;
 use Application\Entity\Contact;
+use Company\Entity\Contract;
 
 /**
  * Description of MutualRepository
@@ -75,6 +76,33 @@ class MutualRepository extends EntityRepository{
     }
 
     /**
+     * Обновить баланс договора
+     * @param array $data
+     */
+    public function  updateContractBalance($data)
+    {
+        if (!empty($data['contract_id'])){
+            if (is_numeric($data['contract_id'])){
+                $entityManager = $this->getEntityManager();
+                $queryBuilder = $entityManager->createQueryBuilder();
+
+                $queryBuilder->select("sum(m.amount) as total")
+                        ->from(Mutual::class, 'm')
+                        ->where('m.contract = :contract')
+                        ->setParameter('contract', $data['contract_id'])
+                        ;
+
+                $result = $queryBuilder->getQuery()->getOneOrNullResult();
+                
+                $entityManager->getConnection()
+                        ->update('contract', ['balance' => (float) $result['total']], ['id' => $data['contract_id']]);
+            }    
+        }    
+        
+        return;
+    }
+    
+    /**
      * Добавление записей взаиморасчетов
      * 
      * @param array $data
@@ -84,6 +112,9 @@ class MutualRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
         $connection->insert('mutual', $data);
+        
+        $this->updateContractBalance($data);
+        
         return;
     }
     
@@ -508,5 +539,71 @@ class MutualRepository extends EntityRepository{
         $entityManager->flush();
         
         return;
+    }
+    
+    /**
+     * Текущие остатки по договрам
+     * @param array $params
+     */
+    public function contractBalances($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c, l, cm, cn, s')
+            ->from(Contract::class, 'c')
+            ->join('c.company', 'cm')
+            ->join('c.legal', 'l')
+            ->join('l.contacts', 'cn')
+            ->join('cn.supplier', 's')    
+            ->andWhere('cn.status = :contactStatus')
+            ->setParameter(':contactStatus', Contact::STATUS_LEGAL)    
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['supplierId'])){
+                if (is_numeric($params['supplierId'])){
+                    $queryBuilder
+                        ->andWhere('cn.supplier = :supplier')
+                        ->setParameter('supplier', $params['supplierId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['companyId'])){
+                if (is_numeric($params['companyId'])){
+                    $queryBuilder
+                        ->andWhere('c.company = :company')
+                        ->setParameter('company', $params['companyId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['legalId'])){
+                if (is_numeric($params['legalId'])){
+                    $queryBuilder
+                        ->andWhere('c.legal = :legal')
+                        ->setParameter('legal', $params['legalId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['contractId'])){
+                if (is_numeric($params['contractId'])){
+                    $queryBuilder
+                        ->andWhere('c.id = :contract')
+                        ->setParameter('contract', $params['contractId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['pay'])){
+                if (is_numeric($params['pay'])){
+                    $queryBuilder
+                        ->andWhere('c.pay = :pay')
+                        ->setParameter('pay', $params['pay'])
+                            ;
+                }    
+            }            
+        }
+        
+        return $queryBuilder->getQuery();
     }
 }

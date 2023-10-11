@@ -2,6 +2,8 @@
 namespace Stock;
 
 use Laminas\Router\Http\Segment;
+use Laminas\Router\Http\Literal;
+
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 
 return [
@@ -132,6 +134,21 @@ return [
                     'defaults' => [
                         'controller'    => Controller\RevisionController::class,
                         'action'        => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    // You can place additional routes that match under the
+                    // route defined above here.
+                ],
+            ],    
+            'supplier-revision' => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/supplier-revision',
+                    'defaults' => [
+                        'controller'    => Controller\RevisionController::class,
+                        'action'        => 'supplierRevision',
                     ],
                 ],
                 'may_terminate' => true,

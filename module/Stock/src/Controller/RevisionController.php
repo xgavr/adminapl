@@ -13,6 +13,8 @@ use Laminas\View\Model\JsonModel;
 use Application\Entity\Supplier;
 use Stock\Entity\Mutual;
 use Company\Entity\Legal;
+use Admin\Entity\Log;
+use Company\Entity\Contract;
 
 class RevisionController extends AbstractActionController
 {
@@ -25,23 +27,41 @@ class RevisionController extends AbstractActionController
 
     /**
      * Менеджер банк.
-     * @var \Bank\Service\BankManager
+     * @var \Admin\Service\LogManager
      */
-//    private $bankManager;
+    private $logManager;
 
-    public function __construct($entityManager) 
+    public function __construct($entityManager, $logManager) 
     {
         $this->entityManager = $entityManager;
-//        $this->bankManager = $bankManager;
+        $this->logManager = $logManager;
     }   
 
     public function indexAction()
     {
-        $supplierid = (int)$this->params()->fromQuery('supplier', -1);
+        $supplierId = (int)$this->params()->fromQuery('supplier', -1);
+        $contractId = (int)$this->params()->fromQuery('contract', -1);
         
+        $legals=[]; $contracts=[];
+
         $supplier = $this->entityManager->getRepository(Supplier::class)
-                ->find($supplierid);
+                ->find($supplierId);
+        if ($supplier){
+            $legals = $supplier->getLegalContact()->getLegals();
+        }
         
+        $contract = $this->entityManager->getRepository(Contract::class)
+                ->find($contractId);
+        if ($contract){
+            $params = [
+                'legal' => $contract->getLegal()->getId(),
+                'company' => $contract->getCompany()->getId(),
+            ];
+            
+            $contracts = $this->entityManager->getRepository(Contract::class)
+                    ->findBy($params);            
+        }
+
         $suppliers = $this->entityManager->getRepository(Supplier::class)
                 ->findAll(null, ['status' => 'ASC', 'name' => 'ASC']);
 
@@ -50,8 +70,11 @@ class RevisionController extends AbstractActionController
         
         return new ViewModel([
                 'supplier' => $supplier,
+                'contract' => $contract,
                 'suppliers' => $suppliers,
                 'companies' => $companies,
+                'legals' => $legals,
+                'contracts' => $contracts,
             ]);
     }
     
@@ -142,6 +165,62 @@ class RevisionController extends AbstractActionController
         ]);          
     } 
     
+    public function supplierRevisionAction()
+    {
+
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findAll(null, ['status' => 'ASC', 'name' => 'ASC']);
+        
+        return new ViewModel([
+                'companies' => $companies,
+                'suppliers' => $suppliers,
+            ]);
+    }
+    
+    public function supplierRevisionContentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order', 'DESC');
+        $supplierId = $this->params()->fromQuery('supplier');
+        $companyId = $this->params()->fromQuery('company');
+        $legalId = $this->params()->fromQuery('legal');
+        $contractId = $this->params()->fromQuery('contract');
+        $officeId = $this->params()->fromQuery('office');
+        $status = $this->params()->fromQuery('status');
+        
+        $params = [
+            'q' => trim($q), 'sort' => $sort, 'order' => $order, 
+            'supplierId' => $supplierId, 'officeId' => $officeId,
+            'status' => $status, 'companyId' => $companyId, 'legalId' => $legalId,
+            'contractId' => $contractId,
+        ];
+                
+        $query = $this->entityManager->getRepository(Mutual::class)
+                        ->contractBalances($params);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+        
+        $result = $query->getResult(2);
+
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    } 
+    
     public function changeReviseAction()
     {
         $mutualId = (int)$this->params()->fromRoute('id', -1);
@@ -153,6 +232,8 @@ class RevisionController extends AbstractActionController
         if ($mutual){
             $this->entityManager->getRepository(Mutual::class)
                     ->changeRevise($mutual, $check);
+            
+            $this->logManager->infoMutual($mutual, Log::STATUS_INFO);
         }
         
         return new JsonModel([

@@ -157,10 +157,16 @@ class NavManager
                 ];
 
                 $priceDropdownItems[] = [
-                    'id' => 'revise',
-                    'label' => 'Корректировка долга',
-                    'link'  => $url('revise')
+                    'id' => 'supplier',
+                    'label' => 'Сверка',
+                    'link'  => $url('supplier-revision')
                 ];
+
+//                $priceDropdownItems[] = [
+//                    'id' => 'revise',
+//                    'label' => 'Корректировка долга',
+//                    'link'  => $url('revise')
+//                ];
 
 //                $priceDropdownItems[] = [
 //                    'id' => 'raw_queue',

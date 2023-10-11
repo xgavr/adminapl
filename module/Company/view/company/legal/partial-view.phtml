@@ -191,6 +191,7 @@
                             <th>Тип</th>
                             <th>Оплата</th>
                             <th>НДС</th>
+                            <th>Долг</th>
                             <th colspan="3"></th>
                         </tr>
                         <?php foreach ($legal->getOrderContracts() as $contract): ?>
@@ -215,6 +216,9 @@
                                 </td>
                                 <td>
                                     <?= $contract->getNdsPercentAsString() ?>
+                                </td>
+                                <td>
+                                    <?= round($contract->getBalance(), 2) ?>
                                 </td>
                                 <td width="2">
                                    <button value="/legals/contract-form/<?= $legal->getId() ?>?contract=<?= $contract->getId() ?>" class="btn btn-default btn-xs"

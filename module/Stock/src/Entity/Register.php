@@ -59,6 +59,11 @@ class Register {
      * @ORM\Column(name="doc_stamp")   
      */
     protected $docStamp;
+
+    /**
+     * @ORM\Column(name="doc_key")   
+     */
+    protected $docKey;
     
     /**
      * @ORM\OneToOne(targetEntity="Stock\Entity\Ptu") 
@@ -151,6 +156,15 @@ class Register {
     {
         $this->docStamp = $docStamp;
     }     
+
+    public function getDocKey() {
+        return $this->docKey;
+    }
+
+    public function setDocKey($docKey) {
+        $this->docKey = $docKey;
+        return $this;
+    }
 
     /**
      * Returns the date of oper.
