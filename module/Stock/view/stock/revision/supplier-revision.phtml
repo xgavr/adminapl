@@ -191,8 +191,8 @@
 //        btn += '</button>';
         
         var url = '/revision?contract='+row.id;
-        if (row.supplier){
-            url += '&supplier='+row.supplier.id;
+        if (row.legal.contacts[0]){
+            url += '&supplier='+row.legal.contacts[0].supplier.id;
         }    
         btn += ' <a';
         btn += ' type="button"';
