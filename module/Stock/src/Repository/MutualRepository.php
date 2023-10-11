@@ -616,7 +616,7 @@ class MutualRepository extends EntityRepository{
             }            
         }
         if ($notnull){
-            $queryBuilder->andWhere('c.balance != 0');
+            $queryBuilder->andWhere('round(c.balance) != 0');
         }
         
         return $queryBuilder->getQuery();
