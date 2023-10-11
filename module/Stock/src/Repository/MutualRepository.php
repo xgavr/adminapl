@@ -602,6 +602,11 @@ class MutualRepository extends EntityRepository{
                             ;
                 }    
             }            
+            if (!empty($params['sort'])){
+                $queryBuilder
+                    ->orderBy('c.'.$params['sort'], $params['order'])
+                        ;
+            }            
         }
         
         return $queryBuilder->getQuery();

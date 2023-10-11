@@ -19,7 +19,7 @@
 </style>
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
@@ -71,19 +71,19 @@
             data-show-toggle="false"
             data-query-params="queryParams"
             data-response-handler="responseHandler"
-            data-sort-name="name"
-            data-sort-order="asc"
+            data-sort-name="balance"
+            data-sort-order="desc"
             data-classes = "table table-bordered table-hover table-condensed"
             >
             <thead>
                 <tr>
                      <th data-field="id" data-type="numeric" data-sortable="true" data-width="80">Id</th>
                      <th data-field="company.name">Компания</th>
-                     <th data-field="supplier.name" data-formatter="linkFormatter">Поставщик</th>
+                     <th data-field="supplier" data-formatter="linkFormatter">Поставщик</th>
                      <th data-field="legal.name" >Юр. лицо</th>
                      <th data-field="name">Договор</th>
-                     <th data-field="balance" data-formatter="creditFormatter" data-align="right" data-width="80" data-original-title="Мы должны" data-sortable="true">Мы должны</th>
-                     <th data-field="balance" data-formatter="debitFormatter" data-align="right" data-width="80" data-original-title="Нам должны" data-sortable="true">Нам должны</th>
+                     <th data-field="balance" data-formatter="creditFormatter" data-align="right" data-width="100" data-original-title="Мы должны" data-sortable="true">Мы должны</th>
+                     <th data-field="balance" data-formatter="debitFormatter" data-align="right" data-width="100" data-original-title="Нам должны" data-sortable="true">Нам должны</th>
                      <th data-field="id" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
             </thead>
@@ -152,16 +152,17 @@
     }
     
     function linkFormatter(value, row){
-        if (row.supplier){
+        if (row.legal.contacts[0]){
+            var supplier = row.legal.contacts[0].supplier;
             return [
                 '<nobr>',
-                '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.supplier.id+'" title="Перейти на сайт поставщика">',
+                '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+supplier.id+'" title="Перейти на сайт поставщика">',
                 '<span class="glyphicon glyphicon-link"></span></a>',
-                '<a href="/supplier/view/' + row.supplier.id + '" target="_blank">' + value + '</a>',
+                '<a href="/supplier/view/' + supplier.id + '" target="_blank">' + supplier.name + '</a>',
                 '</nobr>'
             ].join(''); 
         }    
-        return value;    
+        return '';    
     }    
 
     function creditFormatter(value){
