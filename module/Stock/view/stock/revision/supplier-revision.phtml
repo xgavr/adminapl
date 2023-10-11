@@ -1,5 +1,6 @@
 <?php
     use Company\Entity\Contract;
+    use Laminas\Json\Encoder;
     
     $this->headTitle('Сверка поставщиков');
 
@@ -82,7 +83,7 @@
                      <th data-field="company.name">Компания</th>
                      <th data-field="supplier" data-formatter="linkFormatter">Поставщик</th>
                      <th data-field="legal.name" >Юр. лицо</th>
-                     <th data-field="name" data-footer-formatter="totalFooterFormatter">Договор</th>
+                     <th data-field="name" data-formatter="contractFormatter" data-footer-formatter="totalFooterFormatter">Договор</th>
                      <th data-field="balance" data-footer-formatter="footerCreditFormatter" data-formatter="creditFormatter" data-align="right" data-width="100" data-original-title="Мы должны" data-sortable="true">Мы должны</th>
                      <th data-field="balance" data-footer-formatter="footerDebitFormatter" data-formatter="debitFormatter" data-align="right" data-width="100" data-original-title="Нам должны" data-sortable="true">Нам должны</th>
                      <th data-field="id" data-formatter="activeFormatter" data-width="5"></th>
@@ -143,6 +144,12 @@
         }    
 
         return params;
+    }
+    
+    function contractFormatter(value, row){
+        var date = new Date(row.dateStart);
+        var pays = <?= Encoder::encode(Contract::getPayList())?>;
+        return '№'+row.act+' от '+$.format.date(date, "dd.MM.yyyy")+' ('+pays[row.pay]+')';
     }
     
     function linkFormatter(value, row){
