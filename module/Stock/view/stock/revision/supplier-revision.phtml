@@ -52,7 +52,7 @@
                     </select>                    
                 </div>    
                 <button value="/legals/update-balances/" class="btn btn-default refresh-table-button"
-                        title="Обновить суммы долгов">
+                        title="Пересчитать суммы долгов">
                     <span class="glyphicon glyphicon-rub" ></span>
                 </button>                         
             </div>
@@ -74,6 +74,7 @@
             data-sort-name="balance"
             data-sort-order="desc"
             data-classes = "table table-bordered table-hover table-condensed"
+            data-show-footer="true"
             >
             <thead>
                 <tr>
@@ -81,9 +82,9 @@
                      <th data-field="company.name">Компания</th>
                      <th data-field="supplier" data-formatter="linkFormatter">Поставщик</th>
                      <th data-field="legal.name" >Юр. лицо</th>
-                     <th data-field="name">Договор</th>
-                     <th data-field="balance" data-formatter="creditFormatter" data-align="right" data-width="100" data-original-title="Мы должны" data-sortable="true">Мы должны</th>
-                     <th data-field="balance" data-formatter="debitFormatter" data-align="right" data-width="100" data-original-title="Нам должны" data-sortable="true">Нам должны</th>
+                     <th data-field="name" data-footer-formatter="totalFooterFormatter">Договор</th>
+                     <th data-field="balance" data-footer-formatter="footerCreditFormatter" data-formatter="creditFormatter" data-align="right" data-width="100" data-original-title="Мы должны" data-sortable="true">Мы должны</th>
+                     <th data-field="balance" data-footer-formatter="footerDebitFormatter" data-formatter="debitFormatter" data-align="right" data-width="100" data-original-title="Нам должны" data-sortable="true">Нам должны</th>
                      <th data-field="id" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
             </thead>
@@ -94,17 +95,10 @@
 
     var $table = $('#table').bootstrapTable({
         onLoadSuccess: function(res){
-            $("[data-toggle='tooltip']").tooltip();
-            $('.editableCheckBox').change(function() {
-                $.ajax({
-                    type: "POST",
-                    url: $(this).attr('data-url'),
-                    data: "pk="+$(this).attr('data-pk'),
-                    success: function(msg){
-//                      alert( "Прибыли данные: " + msg );
-                    }
-                });
-            });        
+            var inTotal = (res.balanceIn) ? res.balanceIn:0;
+            var outTotal = (res.balanceOut) ? -res.balanceOut:0;
+            $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
+            $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
         }
     });
 
@@ -178,17 +172,20 @@
         return '';
     }
     
+    function totalFooterFormatter() {
+        return 'Всего:';
+    }
+    
+    function footerDebitFormatter(data){
+        return '<span id="inTotalFooter"></span>';
+    }
+
+    function footerCreditFormatter(data){
+        return '<span id="outTotalFooter"></span>';
+    }
+    
     function activeFormatter(value, row){
         var btn = '<nobr>';
-//        var url = '/supplier/request-as-text/'+value;
-//        btn = '<button';
-//        btn += ' type="button"';
-//        btn += ' class="btn btn-default btn-xs"';
-//        btn += ' aria-label="Left Align"'; 
-//        btn += ' title="Как заказать?"'; 
-//        btn += ' onclick="requestAsText(\''+url+'\')">';
-//        btn += '<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>';
-//        btn += '</button>';
         
         var url = '/revision?contract='+row.id;
         if (row.legal.contacts[0]){
@@ -203,6 +200,15 @@
         btn += ' target="_blank">'; 
         btn += '<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>';
         btn += '</a>';
+        
+//        var url = '/legals/update-balance/'+row.id;
+//        btn += ' <button';
+//        btn += ' type="button"';
+//        btn += ' class="btn btn-default btn-xs"';
+//        btn += ' aria-label="Left Align"'; 
+//        btn += ' title="Пересчитать долг">'; 
+//        btn += '<span class="glyphicon glyphicon-rub" aria-hidden="true"></span>';
+//        btn += '</button>';
         
         btn += '</nobr>';        
         return btn;

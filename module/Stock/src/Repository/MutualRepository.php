@@ -544,7 +544,7 @@ class MutualRepository extends EntityRepository{
     }
     
     /**
-     * Текущие остатки по договрам
+     * Текущие остатки по договорам
      * @param array $params
      */
     public function contractBalances($params = null)
@@ -560,7 +560,87 @@ class MutualRepository extends EntityRepository{
             ->join('l.contacts', 'cn')
             ->join('cn.supplier', 's')    
             ->andWhere('cn.status = :contactStatus')
-            ->setParameter(':contactStatus', Contact::STATUS_LEGAL)    
+            ->setParameter(':contactStatus', Contact::STATUS_LEGAL)
+                ;
+        
+        $notnull = true;
+        if (is_array($params)){
+            if (!empty($params['supplierId'])){
+                if (is_numeric($params['supplierId'])){
+                    $notnull = false;
+                    $queryBuilder
+                        ->andWhere('cn.supplier = :supplier')
+                        ->setParameter('supplier', $params['supplierId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['companyId'])){
+                if (is_numeric($params['companyId'])){
+                    $notnull = false;
+                    $queryBuilder
+                        ->andWhere('c.company = :company')
+                        ->setParameter('company', $params['companyId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['legalId'])){
+                if (is_numeric($params['legalId'])){
+                    $notnull = false;
+                    $queryBuilder
+                        ->andWhere('c.legal = :legal')
+                        ->setParameter('legal', $params['legalId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['contractId'])){
+                if (is_numeric($params['contractId'])){
+                    $notnull = false;
+                    $queryBuilder
+                        ->andWhere('c.id = :contract')
+                        ->setParameter('contract', $params['contractId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['pay'])){
+                if (is_numeric($params['pay'])){
+                    $queryBuilder
+                        ->andWhere('c.pay = :pay')
+                        ->setParameter('pay', $params['pay'])
+                            ;
+                }    
+            }            
+            if (!empty($params['sort'])){
+                $queryBuilder
+                    ->orderBy('c.'.$params['sort'], $params['order'])
+                        ;
+            }            
+        }
+        if ($notnull){
+            $queryBuilder->andWhere('c.balance != 0');
+        }
+        
+        return $queryBuilder->getQuery();
+    }
+    
+    /**
+     * Текущие итоги по договорам
+     * @param array $params
+     */
+    public function contractBalancesTotal($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('count(c.id) as countC, '
+                . 'sum(CASE WHEN c.balance >= 0 THEN c.balance ELSE 0 END) as balanceIn, '
+                . 'sum(CASE WHEN c.balance < 0 THEN c.balance ELSE 0 END) as balanceOut')
+            ->from(Contract::class, 'c')
+            ->join('c.legal', 'l')
+            ->join('l.contacts', 'cn')
+            ->join('cn.supplier', 's')    
+            ->andWhere('cn.status = :contactStatus')
+            ->setParameter(':contactStatus', Contact::STATUS_LEGAL)
                 ;
         
         if (is_array($params)){
@@ -603,11 +683,6 @@ class MutualRepository extends EntityRepository{
                         ->setParameter('pay', $params['pay'])
                             ;
                 }    
-            }            
-            if (!empty($params['sort'])){
-                $queryBuilder
-                    ->orderBy('c.'.$params['sort'], $params['order'])
-                        ;
             }            
         }
         

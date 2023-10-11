@@ -205,8 +205,6 @@ class RevisionController extends AbstractActionController
         $query = $this->entityManager->getRepository(Mutual::class)
                         ->contractBalances($params);
         
-        $total = count($query->getResult(2));
-        
         if ($offset) {
             $query->setFirstResult($offset);
         }
@@ -216,9 +214,15 @@ class RevisionController extends AbstractActionController
         
         $result = $query->getResult(2);
 
+        $queryTotal = $this->entityManager->getRepository(Mutual::class)
+                        ->contractBalancesTotal($params);
+        $resultTotal = $queryTotal->getOneOrNullResult();
+        
         return new JsonModel([
-            'total' => $total,
+            'total' => $resultTotal['countC'],
             'rows' => $result,
+            'balanceIn' => $resultTotal['balanceIn'],
+            'balanceOut' => $resultTotal['balanceOut'],
         ]);          
     } 
     
