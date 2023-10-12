@@ -156,7 +156,7 @@ class ReviseController extends AbstractActionController
         $form->get('legal')->setValueOptions($legalList);
 
         foreach ($contracts as $contract){
-            $contractList[$contract->getId()] = $contract->getName();                
+            $contractList[$contract->getId()] = $contract->getContractPresentPay();                
         }            
         $form->get('contract')->setValueOptions($contractList); 
                     
