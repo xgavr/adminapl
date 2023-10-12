@@ -220,7 +220,7 @@ class ContractController extends AbstractActionController
                 foreach ($contracts as $contract){
                     $result[$contract->getId()] = [
                         'id' => $contract->getId(),
-                        'name' => $contract->getName(),                
+                        'name' => $contract->getContractPresentPay(),                
                     ];
                 }
             }    

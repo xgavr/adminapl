@@ -182,6 +182,16 @@ class Contract {
         return trim("$ContractName №".$this->act.' от '.date('d.m.Y', strtotime($this->dateStart)).' г.');
     }
 
+    /**
+     * Представление договора c нал/безнал
+     * @param string $ContractName
+     * @return string
+     */
+    public function getContractPresentPay($ContractName = 'Договор') 
+    {
+        return $this->getPayAsString()." №".$this->act.' от '.date('d.m.Y', strtotime($this->dateStart));
+    }
+
     public function getBalance() {
         return $this->balance;
     }

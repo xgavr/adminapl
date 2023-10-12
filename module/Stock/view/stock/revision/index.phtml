@@ -3,6 +3,8 @@
     use Stock\Entity\Movement;
     use Cash\Entity\CashDoc;
     use Stock\Entity\Mutual;
+    use Company\Entity\Contract;
+    use Laminas\Json\Encoder;
     
     $this->headTitle('Сверка долгов');    
 
@@ -62,7 +64,7 @@
                     <select id="contractSelect" name="contract" style="width: 200px" class="form-control cookie-control">
                         <option selected>все договоры</option>
                         <?php foreach ($contracts as $value):?>
-                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                            <option value="<?= $value->getId()?>"><?= $value->getContractPresentPay()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
@@ -97,7 +99,7 @@
                      <th data-field='rest.total' data-width="100" data-footer-formatter="footerStartFormatter" data-align="right" data-formatter="balanceFormatter">Долг</th>
                      <th data-field="revise" data-checkbox="true" data-formatter="reviseFormatter" data-width="5"></th>
                      <th data-field="legal.name" >Юр. лицо</th>
-                     <th data-field="contract.name" >Договор</th>
+                     <th data-field="contract.name" data-formatter="contractFormatter">Договор</th>
                      <th data-field="company.name" >Компания</th>
                      <!--<th data-field="" data-width="10" data-formatter="activeFormatter"></th>-->
                  </tr>                
@@ -338,6 +340,12 @@
         }
         return value;
     }    
+
+    function contractFormatter(value, row){
+        var date = new Date(row.contract.dateStart);
+        var pays = <?= Encoder::encode(Contract::getPayList())?>;
+        return pays[row.contract.pay]+' №'+row.contract.act+' от '+$.format.date(date, "dd.MM.yyyy");
+    }
 
     function balanceFormatter(value){
         return (-Math.round(value*100)/100).toFixed(2);
