@@ -237,12 +237,28 @@ class RevisionController extends AbstractActionController
                 ->find($mutualId);
         
         if ($mutual){
+            
+            $currentUser = $this->logManager->currentUser();
+            
             $this->entityManager->getRepository(Mutual::class)
-                    ->changeRevise($mutual, $check);
+                    ->changeRevise($mutual, $check, $currentUser);
             
             $this->logManager->infoMutual($mutual, Log::STATUS_INFO);
         }
         
+        return new JsonModel([
+                'result' => 'ok',
+            ]);
+        
+    }
+
+    public function fillRevisionAction()
+    {
+        $currentUser = $this->logManager->currentUser();
+            
+        $this->entityManager->getRepository(Mutual::class)
+                ->fillRevision($currentUser);
+            
         return new JsonModel([
                 'result' => 'ok',
             ]);

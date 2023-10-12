@@ -15,6 +15,7 @@ use Company\Entity\Contract;
 use Stock\Entity\Pt;
 use Stock\Entity\Vt;
 use Application\Entity\Order;
+use Stock\Entity\Revision;
 
 
 /**
@@ -116,10 +117,10 @@ class Mutual {
     private $reviseDoc;    
     
     /**
-     * @ORM\OneToOne(targetEntity="Application\Entity\Idoc", inversedBy="mutual") 
-     * @ORM\JoinColumn(name="doc_key", referencedColumnName="doc_key")
+     * @ORM\OneToOne(targetEntity="Stock\Entity\Revision", inversedBy="mutual") 
+     * @ORM\JoinColumn(name="revision_id", referencedColumnName="id")
      */
-//   private $idoc;        
+   private $revision;        
 
     public function __construct() {
     }
@@ -406,7 +407,21 @@ class Mutual {
         $this->reviseDoc = $reviseDoc;
     }                         
     
-//    public function getIdoc() {
-//        return $this->idoc;
-//    }
+    /**
+     * 
+     * @return Revision
+     */
+    public function getRevision() {
+        return $this->revision;
+    }
+
+    /**
+     * 
+     * @param Revision $revision
+     * @return $this
+     */
+    public function setRevision($revision) {
+        $this->revision = $revision;
+        return $this;
+    }
 }

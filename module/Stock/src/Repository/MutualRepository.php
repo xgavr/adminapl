@@ -19,6 +19,8 @@ use Stock\Entity\Register;
 use Stock\Entity\Movement;
 use Application\Entity\Contact;
 use Company\Entity\Contract;
+use Stock\Entity\Revision;
+use User\Entity\User;
 
 /**
  * Description of MutualRepository
@@ -112,6 +114,16 @@ class MutualRepository extends EntityRepository{
     public function insertMutual($data)
     {
         $entityManager = $this->getEntityManager();
+        
+        $revision = $entityManager->getRepository(Revision::class)
+                ->findOneBy(['docKey' => $data['doc_key']]);
+        if ($revision){
+            if ($data['amount'] == $revision->getAmount()){
+                $data['revise'] = Mutual::REVISE_OK;
+                $data['revision_id'] = $revision->getId();
+            }            
+        }
+        
         $connection = $entityManager->getConnection();
         $connection->insert('mutual', $data);
         
@@ -532,13 +544,54 @@ class MutualRepository extends EntityRepository{
      * Сменить флаг сверки
      * @param Mutual $mutual
      * @param int $check
+     * @param User $currentUser
      */
-    public function changeRevise($mutual, $check)
+    public function changeRevise($mutual, $check, $currentUser)
     {
-        $mutual->setRevise($check);        
         $entityManager = $this->getEntityManager();
+        
+        $mutual->setRevision(null);        
+        $mutual->setRevise($check);        
         $entityManager->persist($mutual);
         $entityManager->flush();
+        
+        $entityManager->getConnection()->delete('revision', ['doc_key' => $mutual->getDocKey()]);
+        
+        if ($check == Mutual::REVISE_OK){
+            $revision = new Revision();
+            $revision->setDateCreated(date('Y-m-d H:i:s'));
+            $revision->setDocKey($mutual->getDocKey());
+            $revision->setUser($currentUser);
+            $revision->setAmount($mutual->getAmount());
+            $revision->setDocId($mutual->getDocId());
+            $revision->setDocStamp($mutual->getDocStamp());
+            $revision->setDocType($mutual->getDocType());
+            
+            $entityManager->persist($revision);
+//            $entityManager->flush();
+
+            $mutual->setRevision($revision);
+            $entityManager->persist($mutual);
+            $entityManager->flush();
+        }
+        
+        return;
+    }
+    
+    /**
+     * Заполнить ревизии
+     */
+    public function fillRevision($currentUser)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $mutuals = $entityManager->getRepository(Mutual::class)
+                ->findBy(['revise' => Mutual::REVISE_OK]);
+        
+        
+        foreach ($mutuals as $mutual){
+            $this->changeRevise($mutual, $mutual->getRevise(), $currentUser);
+        }
         
         return;
     }
