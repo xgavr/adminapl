@@ -212,7 +212,7 @@ class RevisionController extends AbstractActionController
             if ($row['balance'] > 0){
                 $balanceIn += $row['balance'];
             } else {
-                $balanceOut += -$row['balance'];
+                $balanceOut += $row['balance'];
             }            
         }
         
