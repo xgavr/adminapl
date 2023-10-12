@@ -99,7 +99,7 @@ class MutualRepository extends EntityRepository{
                 $result = $queryBuilder->getQuery()->getOneOrNullResult();
                 
                 $entityManager->getConnection()
-                        ->update('contract', ['balance' => (float) $result['total']], ['id' => $data['contract_id']]);
+                        ->update('contract', ['balance' => round($result['total'], 2)], ['id' => $data['contract_id']]);
             }    
         }    
         
