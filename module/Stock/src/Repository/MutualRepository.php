@@ -692,7 +692,6 @@ class MutualRepository extends EntityRepository{
             ->join('c.legal', 'l')
             ->join('l.contacts', 'cn')
             ->join('cn.supplier', 's')    
-            ->andWhere('cn.supplier is not null')    
             ->andWhere('cn.status = :contactStatus')
             ->setParameter(':contactStatus', Contact::STATUS_LEGAL)
                 ;
@@ -739,7 +738,7 @@ class MutualRepository extends EntityRepository{
                 }    
             }            
         }
-        
+//        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }
 }
