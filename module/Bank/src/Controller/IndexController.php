@@ -124,7 +124,7 @@ class IndexController extends AbstractActionController
         
         $startTotal = 0;
         $balanceQuery = $this->entityManager->getRepository(Statement::class)
-                        ->findBalance($q, $rs, ($date) ? $data:'2012-01-01');
+                        ->findBalance($q, $rs, ($date) ? $date:'2012-01-01');
         $balanceResult = $balanceQuery->getResult();
         foreach ($balanceResult as $balance){
             $startTotal += $balance->getBalance();

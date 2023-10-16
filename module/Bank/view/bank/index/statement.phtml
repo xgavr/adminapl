@@ -328,12 +328,12 @@
 
     var $table = $('#table').bootstrapTable({
             onLoadSuccess: function(res){
-                var inTotal = (res.inTotal) ? res.inTotal:0;
-                var outTotal = (res.outTotal) ? -res.outTotal:0;
-                var startTotal = (res.startTotal) ? res.startTotal:0;
-                $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
-                $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
-                $('#startTotalFooter').html((Math.round(startTotal*100)/100).toFixed(2));
+                var inTotal = (res.inTotal) ? Math.round(res.inTotal*100)/100:0;
+                var outTotal = (res.outTotal) ? -Math.round(res.outTotal*100)/100:0;
+                var startTotal = (res.startTotal) ? Math.round(res.startTotal*100)/100:0;
+                $('#inTotalFooter').html(inTotal.toFixed(2));
+                $('#outTotalFooter').html(outTotal.toFixed(2));
+                $('#startTotalFooter').html(startTotal.toFixed(2));
                 $('#endTotalFooter').html((Math.round((startTotal+inTotal-outTotal)*100)/100).toFixed(2));
             }
         }),
