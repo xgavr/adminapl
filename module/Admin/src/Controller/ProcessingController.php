@@ -1986,7 +1986,7 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['market_unload'] == 1){
 
-            $markets = $this->marketManager->unloadNext();             
+            $markets = $this->marketManager->unloadNext(4);             
             $this->ozonManager->updateMarkets($markets);
         }    
                 

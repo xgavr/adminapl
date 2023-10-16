@@ -110,7 +110,7 @@ class IndexController extends AbstractActionController
                         ->findStatement($q, $rs, ['date' => $date, 'pay' => $pay]);
         
 //        $total = count($query->getResult());
-        $total = $this->entityManager->getRepository(Statement::class)
+        $totalResult = $this->entityManager->getRepository(Statement::class)
                         ->findStatement($q, $rs, ['date' => $date, 'count' => true, 'pay' => $pay]);
         
         if ($offset) {
@@ -122,8 +122,19 @@ class IndexController extends AbstractActionController
 
         $result = $query->getResult(2);
         
+        $startTotal = 0;
+        $balanceQuery = $this->entityManager->getRepository(Statement::class)
+                        ->findBalance($q, $rs, ($date) ? $data:'2012-01-01');
+        $balanceResult = $balanceQuery->getResult();
+        foreach ($balanceResult as $balance){
+            $startTotal += $balance->getBalance();
+        }
+        
         return new JsonModel([
-            'total' => $total,
+            'total' => $totalResult['totalCount'],
+            'inTotal' => $totalResult['inTotal'],
+            'outTotal' => $totalResult['outTotal'],
+            'startTotal' => $startTotal,
             'rows' => $result,
         ]);          
     }

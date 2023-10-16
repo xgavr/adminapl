@@ -296,9 +296,10 @@ class MarketRepository extends EntityRepository{
     
     /**
      * Найти настройку для запуска выгрузки
+     * @param int $delay
      * @return MarketPriceSetting
      */
-    public function findNext()
+    public function findNext($delay = 24)
     {
         $entityManager = $this->getEntityManager();
 
@@ -307,7 +308,7 @@ class MarketRepository extends EntityRepository{
                 ->from(MarketPriceSetting::class, 'm')
                 ->where('m.dateUnload < ?1')
                 ->andWhere('m.status = ?2')
-                ->setParameter('1', date('Y-m-d'))
+                ->setParameter('1', date('Y-m-d H:i:s', strtotime("-$delay hours")))
                 ->setParameter('2', MarketPriceSetting::STATUS_ACTIVE)
                 ->setMaxResults(1)
                 ->orderBy('rand()')

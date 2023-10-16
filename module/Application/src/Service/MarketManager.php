@@ -873,16 +873,17 @@ class MarketManager
     
     /**
      * Запуск выгрузки очередного прайса
+     * @param int $delay
      * @return array
      * 
      */
-    public function unloadNext()
+    public function unloadNext($delay = 24)
     {
         set_time_limit(900);
         $startTime = time();
         
         $markets = $this->entityManager->getRepository(MarketPriceSetting::class)
-                ->findNext();
+                ->findNext($delay);
         foreach ($markets as $market){
             $this->unload($market);
             if (time() > $startTime + 840){

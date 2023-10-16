@@ -90,13 +90,16 @@ class BankRepository extends EntityRepository
             if (isset($params['count'])){
                 if ($params['count']){
                     $outCount = true;
-                    $queryBuilder->select('count(s.id)');
+                    $queryBuilder->select('count(s.id) as totalCount')
+                            ->addSelect('sum(case when s.amount > 0 then s.amount else 0 end) as inTotal')
+                            ->addSelect('sum(case when s.amount < 0 then s.amount else 0 end) as outTotal')
+                            ;
                 }    
             }
         }
         
         if ($outCount){
-            return $queryBuilder->getQuery()->getSingleScalarResult();
+            return $queryBuilder->getQuery()->getOneOrNullResult();
         } else {
             return $queryBuilder->getQuery();            
         }
@@ -108,9 +111,10 @@ class BankRepository extends EntityRepository
      * 
      * @param string $q поисковый запрос
      * @param string $rs счет
+     * @param date $dateBalance
      * @return object
      */
-    public function findBalance($q = null, $rs = null)
+    public function findBalance($q = null, $rs = null, $dateBalance = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -128,6 +132,11 @@ class BankRepository extends EntityRepository
                 $or->add($queryBuilder->expr()->eq('b.account', trim($account)));
             }
             $queryBuilder->where($or);
+        }
+        
+        if ($dateBalance){
+            $queryBuilder->andWhere('b.dateBalance = :dateBalance')
+                    ->setParameter('dateBalance', $dateBalance);
         }
         
         if ($q){

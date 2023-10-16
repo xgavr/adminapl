@@ -65,15 +65,16 @@
                     data-response-handler="responseHandler"
                     data-classes = "table table-bordered table-hover table-condensed"
                     data-unique-id="id"
+                    data-show-footer="true"
                     >
                     <thead>
                         <tr>
                              <th data-field="id" data-formatter="swapFormatter"></th>
                              <th data-field="id" data-formatter="avatar"></th>
-                             <th data-field="chargeDate" data-formatter="formatDateId">Дата/ID</th>
-                             <th data-field="amount" data-formatter="amountIn" data-align='right'>Поступило</th>             
-                             <th data-field="amount" data-formatter="amountOut" data-align='right'>Списано</th>             
-                             <th data-field="purpose">Назначение платежа</th>
+                             <th data-field="chargeDate" data-footer-formatter="footerStartFormatter" data-formatter="formatDateId">Дата/ID</th>
+                             <th data-field="amount" data-footer-formatter="footerDebitFormatter" data-formatter="amountIn" data-align='right'>Поступило</th>             
+                             <th data-field="amount" data-footer-formatter="footerCreditFormatter" data-formatter="amountOut" data-align='right'>Списано</th>             
+                             <th data-field="purpose"data-footer-formatter="footerEndFormatter" >Назначение платежа</th>
                              <th data-field='counterpartyBankBik' data-sortable="false" data-formatter="formatAccount">БИК/счет</th>
                              <th data-field="counterpartyName" data-formatter="formatCounterparty">Контрагент</th>
                              <th data-field="paymentDate" data-formatter="formatDateNumber">Дата/Номер ПП</th>
@@ -325,7 +326,17 @@
         $(this).tab('show');
     });
 
-    var $table = $('#table'),
+    var $table = $('#table').bootstrapTable({
+            onLoadSuccess: function(res){
+                var inTotal = (res.inTotal) ? res.inTotal:0;
+                var outTotal = (res.outTotal) ? -res.outTotal:0;
+                var startTotal = (res.startTotal) ? res.startTotal:0;
+                $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
+                $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
+                $('#startTotalFooter').html((Math.round(startTotal*100)/100).toFixed(2));
+                $('#endTotalFooter').html((Math.round((startTotal+inTotal-outTotal)*100)/100).toFixed(2));
+            }
+        }),
         $qrCodeTable = $('#table_qrcode'),    
         $ok = $('#ok'), 
         $okStatementDate = $('#okStatementDate'),
@@ -803,6 +814,26 @@
             return numberFormat(-value);
         } else
             return '';
+    }
+    
+    function totalFooterFormatter() {
+        return 'Всего за период:';
+    }
+    
+    function footerDebitFormatter(data){
+        return '<span id="inTotalFooter"></span>';
+    }
+
+    function footerCreditFormatter(data){
+        return '<span id="outTotalFooter"></span>';
+    }
+
+    function footerStartFormatter(data){
+        return '<span id="startTotalFooter"></span>';
+    }
+
+    function footerEndFormatter(data){
+        return '<span id="endTotalFooter"></span>';
     }
     
     function sbpAmount(value, row){
