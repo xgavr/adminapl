@@ -199,6 +199,11 @@ class BankAccount {
         return '('.$this->getAccountTypeAsChar().')***'.substr($this->rs, -4);
     }
     
+    public function getLongRs() 
+    {
+        return '('.$this->getAccountTypeAsChar().') '.$this->rs;
+    }
+    
     public function getSbpAccountId()
     {
         return $this->rs.'/'.$this->bik;

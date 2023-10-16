@@ -282,7 +282,7 @@
                                    value="<?= $bankAccount->getRs() ?>" 
                                    <?= ($bankAccount->getRs() == $account) ? 'checked':'' ?>>                                
                             <label class="" for="a<?= $bankAccount->getId() ?>">
-                                <?= $this->escapeHtml($bankAccount->getName());?>                                                   
+                                <?= $this->escapeHtml($bankAccount->getLongRs());?>                                                   
                             </label>
                         </div>
                         <div class="panel-body">
