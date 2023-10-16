@@ -68,18 +68,18 @@ class IndexController extends AbstractActionController
         $account = $this->params()->fromRoute('id');
         $imageSize = $this->params()->fromQuery('size', 24);
 
-        $name = 'NoName';
+        $name = '--';
         if ($account){
             $bankAccount = $this->entityManager->getRepository(BankAccount::class)
                     ->findOneBy(['rs' => $account]);
             if ($bankAccount){
-                $name = $bankAccount->getName();
+                $name = substr($bankAccount->getRs(), -2);
             }
         }
         
         $avatar = new \LasseRafn\InitialAvatarGenerator\InitialAvatar();
         $colorFilter = new \Application\Filter\GenerateColorFromText();
-        $inverseColorFilter = new \Application\Filter\InverseColor();
+//        $inverseColorFilter = new \Application\Filter\InverseColor();
         $background = $colorFilter->filter($name);
         $color = \InvertColor\Color::fromHex($background)->invert(true);
         $image = $avatar->name($name)
