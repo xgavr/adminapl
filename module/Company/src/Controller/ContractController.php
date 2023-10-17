@@ -214,7 +214,7 @@ class ContractController extends AbstractActionController
             }
             
             $contracts = $this->entityManager->getRepository(Contract::class)
-                    ->findBy($params);
+                    ->findBy($params, ['dateStart' => 'DESC']);
 
             if ($contracts){
                 foreach ($contracts as $contract){

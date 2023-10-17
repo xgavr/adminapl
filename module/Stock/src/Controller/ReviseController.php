@@ -132,7 +132,7 @@ class ReviseController extends AbstractActionController
             $office = $revise->getOffice();
             if ($revise->getLegal()){
                 $contracts = $this->entityManager->getRepository(Contract::class)
-                        ->findBy(['company' => $revise->getCompany()->getId(), 'legal' => $revise->getLegal()->getId()]);                                
+                        ->findBy(['company' => $revise->getCompany()->getId(), 'legal' => $revise->getLegal()->getId()], ['dateStart' => 'desc']);                                
             }
         } else {
             $office = $currentUser->getOffice();

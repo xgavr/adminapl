@@ -211,6 +211,16 @@ class PtuController extends AbstractActionController
         }
         $form->get('supplier')->setValueOptions($supplierList);
 
+        $contractList = ['--выбререте договор--'];
+        if ($company && $legal){
+            $contracts = $this->entityManager->getRepository(Contract::class)
+                    ->findBy(['company' => $company->getId(), 'legal' => $legal->getId()], ['dateStart' => 'desc']);                                
+            foreach ($contracts as $row){
+                $contractList[$row->getId()] = $row->getContractPresentPay();
+            }
+        }    
+        $form->get('contract_id')->setValueOptions($contractList);
+
 
         if ($this->getRequest()->isPost()) {
             

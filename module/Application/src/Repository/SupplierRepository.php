@@ -200,8 +200,7 @@ class SupplierRepository extends EntityRepository{
         
         $queryBuilder->select('s')
                 ->from(Supplier::class, 's')
-                ->where('s.amount > ?1')
-                ->setParameter('1', 0)
+                ->where('s.parent is null')
                 ->orderBy('s.status')
                 ->addOrderBy('s.name')
                 ;

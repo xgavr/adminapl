@@ -167,7 +167,8 @@ class LegalRepository extends EntityRepository
             ->where('c.company = ?1')    
             ->setParameter('1', $companyId)    
             ->andWhere('c.legal = ?2')
-            ->setParameter('2', $legalId)    
+            ->setParameter('2', $legalId)  
+            ->addOrderBy('c.dateStart', 'DESC')    
                 ;
 
         return $queryBuilder->getQuery()->getResult();        

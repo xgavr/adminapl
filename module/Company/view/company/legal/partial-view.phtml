@@ -206,7 +206,7 @@
                                     <?= $contract->getAct() ?> от <?= date('d.m.Y', strtotime($contract->getDateStart())) ?>
                                 </td>
                                 <td>
-                                    <?= $contract->getName() ?>
+                                    <?= $contract->getContractPresentPay() ?>
                                 </td>
                                 <td>
                                     <?= $contract->getKindAsString() ?>
