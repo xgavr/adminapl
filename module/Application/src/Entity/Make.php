@@ -116,6 +116,11 @@ class Make {
         return $filter->filter($this->name);
     }
 
+    public function getFileName() 
+    {
+        return $this->getTdId();
+    }
+    
     public function setName($name) 
     {
         $this->name = $name;

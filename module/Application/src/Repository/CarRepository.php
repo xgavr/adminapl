@@ -15,6 +15,7 @@ use Application\Entity\Car;
 use Application\Entity\VehicleDetail;
 use Application\Entity\VehicleDetailValue;
 use Application\Entity\VehicleDetailCar;
+use Application\Entity\Goods;
 
 /**
  * Description of CarRepository
@@ -390,5 +391,42 @@ class CarRepository extends EntityRepository
             return $row['name'];
         }    
         return;
+    }
+    
+    /**
+     * Выгрузить товары машины
+     * @param Make $make
+     * @param Model $model
+     * @param Car $car
+     */
+    public function carGoods($make, $model = null, $car = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('d.id as goodId, g.code as article, p.name as producer, '
+                . 'mk.name as make, m.name as model, c.name as car')
+                ->from(Goods::class, 'g')
+                ->join('g.producer', 'p')
+                ->join('g.cars', 'c')
+                ->join('c.model', 'm')
+                ->join('m.make', 'mk')
+                ->where('mk.id = :make')
+                ->setParameter('make', $make->getId())
+            ;
+        
+        if ($model){
+            $queryBuilder->andWhere('m.id = :model')
+                ->setParameter('model', $model->getId())
+                    ;
+        }
+
+        if ($car){
+            $queryBuilder->andWhere('c.id = :car')
+                ->setParameter('car', $car->getId())
+                    ;
+        }
+        
+        $row = $queryBuilder->getQuery();
+        
     }
 }

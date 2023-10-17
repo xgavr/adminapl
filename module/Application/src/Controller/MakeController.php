@@ -325,7 +325,7 @@ class MakeController extends AbstractActionController
         return new ViewModel([
             'model' => $model,
             'totalCar' => $totalCar,
-            'totalGoods' => $totalGoods,
+            'totalGoods' => 0,
             'prev' => $prevQuery->getResult(), 
             'next' => $nextQuery->getResult(),
         ]);

@@ -172,6 +172,11 @@ class Car {
         return $filter->filter($this->name);
     }
 
+    public function getFileName() 
+    {
+        return $this->getModel()->getMake()->getTdId().'_'.$this->getModel()->getTdId().'_'.$this->getTdId();
+    }
+
     public function setName($name) 
     {
         $this->name = $name;

@@ -331,4 +331,32 @@ class CarManager
         return;
     }    
     
+    /**
+     * Выгрузить товары машины
+     * 
+     * @param Make $make
+     * @param Model $model
+     * @param Car $car
+     */
+    public function carGoods($make, $model = null, $car = null)
+    {
+        ini_set('memory_limit', '4096M');
+        set_time_limit(0);
+        
+        $carGoodsQuery = $this->entityManager->getRepository(Car::class)
+                ->carGoods($make, $model, $car);
+        
+        $data = $carGoodsQuery->getResult(2);
+        
+        $filename = tmpfile();
+        $fp = fopen($filename, 'w');
+
+        foreach ($data as $row) {
+            fputcsv($fp, $row, ';', '"');
+        }
+
+        fclose($fp);        
+
+        return $filename;
+    }    
 }

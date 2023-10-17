@@ -458,4 +458,63 @@ class CarController extends AbstractActionController
         ]);                  
     }
 
+    public function downloadCarGoodsAction()
+    {
+        $makeId = (int)$this->params()->fromQuery('make', -1);
+        $modelId = (int)$this->params()->fromQuery('model', -1);
+        $carId = (int)$this->params()->fromQuery('car', -1);
+        
+        $make = $model = $car = $filename = null;
+        
+        if ($makeId > 0){
+            $make = $this->entityManager->getRepository(Make::class)
+                    ->find($makeId);
+            $filename = $make->getFileName();
+        }    
+        
+        if ($modelId > 0){
+            $model = $this->entityManager->getRepository(Model::class)
+                    ->find($modelId);
+            if ($model){
+                $make = $model->getMake();
+                $filename = $model->getFileName();
+            }
+        }
+
+        if ($carId > 0){
+            $car = $this->entityManager->getRepository(Car::class)
+                    ->find($carId);
+            if ($car){
+                $model = $car->getModel();
+                $make = $model->getMake();
+                $filename = $car->getFileName();
+            }
+        }
+        
+        if ($make == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $file = $this->carManager->carGoods($make, $model, $car);
+        
+        
+        if (file_exists($file)){
+            if (ob_get_level()) {
+              ob_end_clean();
+            }
+            // заставляем браузер показать окно сохранения файла
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename=' . $filename.'.csv');
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            // читаем файл и отправляем его пользователю
+            readfile($file);
+        }
+        exit;          
+    }          
 }

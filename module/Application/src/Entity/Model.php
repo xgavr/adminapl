@@ -149,6 +149,11 @@ class Model {
         return $filter->filter($this->name);
     }
 
+    public function getFileName() 
+    {
+        return $this->getMake()->getTdId().'_'.$this->getTdId();
+    }
+    
     public function setName($name) 
     {
         $this->name = $name;
