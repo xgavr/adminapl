@@ -348,15 +348,17 @@ class CarManager
         
         $data = $carGoodsQuery->getResult(2);
         
-        $file = tmpfile();
-        $fp = fopen($file, 'w');
+        $fp = tmpfile();
+//        $fp = fopen($file, 'w');
 
-        foreach ($data as $row) {
-            fputcsv($fp, $row, ';', '"');
-        }
+        if ($fp){
+            foreach ($data as $row) {
+                fputcsv($fp, $row, ';', '"');
+            }
 
-        fclose($fp);        
+//            fclose($fp);        
+        }    
 
-        return stream_get_meta_data($file)['uri'];
+        return stream_get_meta_data($fp)['uri'];
     }    
 }
