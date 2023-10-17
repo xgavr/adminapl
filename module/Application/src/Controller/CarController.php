@@ -498,7 +498,7 @@ class CarController extends AbstractActionController
         
         $file = $this->carManager->carGoods($make, $model, $car);
         
-        
+        var_dump($file);
         if (file_exists($file)){
             if (ob_get_level()) {
               ob_end_clean();
