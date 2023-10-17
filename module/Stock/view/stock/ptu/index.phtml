@@ -1,5 +1,7 @@
 <?php
     use Stock\Entity\Ptu;
+    use Company\Entity\Contract;
+    use Laminas\Json\Encoder;
 
     $this->headTitle('Поступление товаров');
 
@@ -83,7 +85,7 @@
                      <th data-field='amount' data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
                      <th data-field='supplier.name' data-sortable="false" data-formatter="linkFormatter">Поставщик</th>
                      <th data-field='legal.name' data-sortable="false">ЮЛ</th>
-                     <th data-field='contract.name' data-sortable="false">Договор</th>
+                     <th data-field='contract.name' data-sortable="false" data-formatter="contractFormatter">Договор</th>
                      <th data-field='office.name' data-sortable="false">Офис</th>
                      <th data-field='comment' data-sortable="false">Примечание</th>
 <!--                     <th data-field='status' data-sortable="false">П</th>
@@ -165,6 +167,12 @@
     function amountFormatter(value){
         return (Math.round(value*100)/100).toFixed(2);
     }    
+
+    function contractFormatter(value, row){
+        var date = new Date(row.contract.dateStart);
+        var pays = <?= Encoder::encode(Contract::getPayList())?>;
+        return pays[row.contract.pay]+' №'+row.contract.act+' от '+$.format.date(date, "dd.MM.yyyy");
+    }
     
     function activeFormatter(value, row){
         var url = '/ptu/edit-form/'+row.id;
