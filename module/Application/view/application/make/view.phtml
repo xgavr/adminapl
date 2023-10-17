@@ -139,10 +139,10 @@ $this->headScript()
                             Выгрузить товары
                         </div>
                         <div class="pull-right">
-                            <button value="/car/download-car-goods?make=<?= $make->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                            <a type="button" href="/car/download-car-goods?make=<?= $make->getId()?>" class="btn btn-info btn-xs"
                                     title="Выгрузить товары">
                                 <span class="glyphicon glyphicon-download" ></span>
-                            </button>                             
+                            </a>                             
                         </div>
                     </div>
                 </div>    
