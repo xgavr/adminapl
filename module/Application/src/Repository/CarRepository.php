@@ -403,7 +403,7 @@ class CarRepository extends EntityRepository
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('d.id as goodId, g.code as article, p.name as producer, '
+        $queryBuilder->select('g.id as goodId, g.code as article, p.name as producer, '
                 . 'mk.name as make, m.name as model, c.name as car')
                 ->from(Goods::class, 'g')
                 ->join('g.producer', 'p')
