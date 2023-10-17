@@ -117,7 +117,7 @@ class ClientRepository extends EntityRepository{
             ->leftJoin('r.contract', 'contract')    
             ->leftJoin('r.reviseDoc', 'rd', 'WITH', 'r.docType = '.Movement::DOC_REVISE) 
             ->leftJoin('r.cashDoc', 'cd', 'WITH', 'r.docType = '.Movement::DOC_CASH) 
-            ->leftJoin('cd.order', 'ord') 
+//            ->leftJoin('cd.order', 'ord') 
             ->leftJoin('cd.cash', 'cash') 
             ->leftJoin('cd.user', 'user') 
             ->where('ct.client = ?1')
