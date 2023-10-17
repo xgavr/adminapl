@@ -426,7 +426,7 @@ class CarRepository extends EntityRepository
                     ;
         }
         
-        $row = $queryBuilder->getQuery();
+        return $queryBuilder->getQuery();
         
     }
 }
