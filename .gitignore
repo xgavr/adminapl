@@ -39,3 +39,4 @@ phpunit.xml
 /data/DoctrineORMModule/
 /data/session_10/
 /public/doc/
+/data/tmp/
