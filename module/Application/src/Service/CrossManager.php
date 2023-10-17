@@ -620,7 +620,7 @@ class CrossManager {
             }    
         }
         
-        if ($articleCode){
+        if (!empty($articleCode)){
             $articles = $this->entityManager->getRepository(Article::class)
                     ->findBy(['code' => $articleCode]);
             foreach ($articles as $article){
@@ -642,7 +642,7 @@ class CrossManager {
             }        
         }
 
-        if ($brandArticleCode){
+        if (!empty($brandArticleCode)){
             $articles = $this->entityManager->getRepository(Article::class)
                     ->findBy(['code' => $brandArticleCode]);
             foreach ($articles as $article){
@@ -928,7 +928,7 @@ class CrossManager {
         }
 
         $this->entityManager->getRepository(Cross::class)
-                ->updateCross($cross, ['status'=> Cross::STATUS_ACTIVE]);
+                ->updateCross($cross, ['status'=> Cross::STATUS_ACTIVE, 'description' => '']);
 
         unset($iterator);
         return;
