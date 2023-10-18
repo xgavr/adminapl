@@ -148,7 +148,7 @@ $this->headScript()
                             </button>                             
                         </div>
                     </div>
-                    <div class="panel-body">
+<!--                    <div class="panel-body">
                         <div class="pull-left">
                             Исправить модель
                         </div>
@@ -158,8 +158,8 @@ $this->headScript()
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
                         </div>
-                    </div>
-                    <div class="panel-body">
+                    </div>-->
+<!--                    <div class="panel-body">
                         <div class="pull-left">
                             Автонормы
                         </div>
@@ -171,6 +171,18 @@ $this->headScript()
                             <button value="/apl/send-fill-volumes/<?= $car->getId()?>" class="btn btn-download btn-xs refresh-table-button"
                                     title="Обновить автонормы в АПЛ">
                                 <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>-->
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Выгрузить товары
+                        </div>
+                        <div class="pull-right">
+                            <button value="/car/download-car-goods?car=<?= $car->getId()?>" 
+                                    class="btn btn-info btn-xs download-csv"
+                                    title="Выгрузить товары">
+                                <span class="glyphicon glyphicon-download" ></span>
                             </button>                             
                         </div>
                     </div>
@@ -211,5 +223,27 @@ $this->headScript()
                     bootbox.alert("Произошла ошибка при выполнении операции.");
                 });        
         }        
-    })        
+    });
+    
+    $('.download-csv').on('click', function(){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: true
+        });
+        $.ajax({
+            url: $(this).attr('value'),
+            dataType: 'binary',
+            xhrFields: {
+                'responseType': 'blob'
+            },
+            success: function(data, status, xhr) {
+                var blob = new Blob([data], {type: xhr.getResponseHeader('Content-Type')});
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = '<?= $car->getFileName()?>.csv';
+                link.click();
+                dialog.modal('hide');
+            }
+        });
+    });        
 </script>
