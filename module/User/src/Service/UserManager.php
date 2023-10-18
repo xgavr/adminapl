@@ -11,6 +11,7 @@ use User\Validator\TokenNoExistsValidator;
 use Company\Entity\Office;
 use User\Filter\Rudate;
 use Application\Entity\Order;
+use Application\Entity\Client;
 
 /**
  * This service is responsible for adding/editing users
@@ -116,6 +117,15 @@ class UserManager
         // Assign roles to user.
         $this->assignRoles($user, $data['roles']);        
         
+        //as client
+        $client = new Client();
+        $client->setName($data['full_name']);
+        $client->setAplId(0);
+        $client->setStatus(Client::STATUS_ACTIVE);
+        $client->setPricecol(Client::PRICE_5);
+        $client->setDateCreated(date('Y-m-d H:i:s'));
+        $this->entityManager->persist($client);
+        
         //Legal contact
         $contact = new Contact();
         $contact->setName($data['full_name']);        
@@ -125,6 +135,7 @@ class UserManager
 
         $contact->setDateCreated($currentDate);
         $contact->setUser($user);         
+        $contact->setClient($client);         
         $this->entityManager->persist($contact);
         
         $email = $this->entityManager->getRepository(Email::class)
@@ -227,6 +238,21 @@ class UserManager
         } else {
             $legalContact->setSignature(empty($data['sign']) ? null:$data['sign']);            
         }
+        
+        $client = $legalContact->getClient();
+        if (!$client){
+                    //as client
+            $client = new Client();
+            $client->setName($data['full_name']);
+            $client->setAplId(0);
+            $client->setStatus(Client::STATUS_ACTIVE);
+            $client->setPricecol(Client::PRICE_5);
+            $client->setDateCreated(date('Y-m-d H:i:s'));
+            $this->entityManager->persist($client);
+            
+            $legalContact->setClient($client);
+        }
+        
         $this->entityManager->persist($legalContact);
         
         $email = $this->entityManager->getRepository(Email::class)
