@@ -96,11 +96,16 @@ class ClientController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit', 10);
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'ASC');
+        $pricecol = $this->params()->fromQuery('pricecol', 'ASC');
+        
+        $params = ['search' => $q, 'sort' => $sort, 'order' => $order,
+                            'pricecol' => $pricecol];
         
         $query = $this->entityManager->getRepository(Client::class)
-                        ->findAllClient(['search' => $q, 'sort' => $sort, 'order' => $order]);
+                        ->findAllClient($params);
         
-        $total = $limit;
+        $totalResult = $this->entityManager->getRepository(Client::class)
+                        ->totalAllClient($params);
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -112,7 +117,7 @@ class ClientController extends AbstractActionController
         $result = $query->getResult(2);
         
         return new JsonModel([
-            'total' => $total,
+            'total' => $totalResult['countC'],
             'rows' => $result,
         ]);          
     }    
@@ -626,5 +631,15 @@ class ClientController extends AbstractActionController
         return new JsonModel([
             'rows' => $result,
         ]);                  
-    }    
+    }
+
+    public function updateBalancesAction()
+    {
+        $this->clientManager->updateBalances();        
+        
+        return new JsonModel(
+           ['result' => 'ok']
+        );                   
+    }
+    
 }

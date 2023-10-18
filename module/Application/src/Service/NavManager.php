@@ -90,11 +90,11 @@ class NavManager
                     'link'  => $url('vt')
                 ];
 
-                $clientDropdownItems[] = [
-                    'id' => 'revise',
-                    'label' => 'Корректировка долга',
-                    'link'  => $url('revise', ['action' => 'index'], ['query' => ['kind' => Revise::KIND_REVISE_CLIENT]]),
-                ];
+//                $clientDropdownItems[] = [
+//                    'id' => 'revise',
+//                    'label' => 'Корректировка долга',
+//                    'link'  => $url('revise', ['action' => 'index'], ['query' => ['kind' => Revise::KIND_REVISE_CLIENT]]),
+//                ];
                 
                 $clientDropdownItems[] = [
                     'id' => 'client',

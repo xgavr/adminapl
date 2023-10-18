@@ -45,10 +45,19 @@ class ClientRepository extends EntityRepository{
             ->orderBy('c.id', 'DESC')
                 ;
         
+        $balanceFlag = true;
+        
         if (isset($params['sort'])){
             $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);
         }
+        if (!empty($params['pricecol'])){
+            if (is_numeric($params['pricecol'])){
+                $queryBuilder->andWhere('c.pricecol = :pricecol')
+                        ->setParameter('pricecol', $params['pricecol']);
+            }    
+        }    
         if (!empty($params['search'])){
+            $balanceFlag = false;
             $orX = $queryBuilder->expr()->orX();
             $search = trim($params['search']);
             if (is_numeric($search)){//aplId
@@ -75,7 +84,65 @@ class ClientRepository extends EntityRepository{
             $queryBuilder->where($orX);
         }
         
+        if ($balanceFlag){
+            $queryBuilder->andWhere('round(c.balance) != 0');
+        }
+        
         return $queryBuilder->getQuery();
+    }   
+    
+    /**
+     * @param array $params
+     */
+    public function totalAllClient($params)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('count(c.id) as countC')
+            ->from(Client::class, 'c')
+                ;
+        $balanceFlag = true;
+        
+        if (!empty($params['pricecol'])){
+            if (is_numeric($params['pricecol'])){
+                $queryBuilder->andWhere('c.pricecol = :pricecol')
+                        ->setParameter('pricecol', $params['pricecol']);
+            }    
+        }    
+        if (!empty($params['search'])){
+            $balanceFlag = false;
+            $orX = $queryBuilder->expr()->orX();
+            $search = trim($params['search']);
+            if (is_numeric($search)){//aplId
+                $orX->add($queryBuilder->expr()->eq('c.aplId', $search));
+            }            
+            $emailValidator = new EmailAddress();
+            if ($emailValidator->isValid($search)){
+                $queryBuilder->join('c.contacts', 'cs')
+                        ->join('cs.emails', 'es');
+                $orX->add($queryBuilder->expr()->eq('es.name', ':search'));
+                $queryBuilder->setParameter(':search', $search);
+            } else {    
+                if (strlen($search) > 9){
+                    $phoneFilter = new PhoneFilter();
+                    $phone = $phoneFilter->filter($params['search']);
+    //                var_dump($phone); exit;
+                    if ($phone){
+                        $queryBuilder->join('c.contacts', 'cs')
+                                ->join('cs.phones', 'ps');
+                        $orX->add($queryBuilder->expr()->eq('ps.name', $phone));                        
+                    }
+                }
+            }    
+            $queryBuilder->where($orX);
+        }
+        if ($balanceFlag){
+            $queryBuilder->andWhere('round(c.balance) != 0');
+        }
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }        
     
     /**
@@ -252,4 +319,29 @@ class ClientRepository extends EntityRepository{
         
         return $queryBuilder->getQuery()->getResult(2);
     }
+    
+    /**
+     * Обновить баланс клиента
+     * @param Client $client
+     */
+    public function  updateBalance($client)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select("sum(r.amount) as total")
+                ->from(Retail::class, 'r')
+                ->join('r.contact', 'c')
+                ->where('c.client = :client')
+                ->setParameter('client', $client->getId())
+                ->andWhere('r.status = :status')
+                ->setParameter('status', Retail::STATUS_ACTIVE)
+                ;
+
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        $entityManager->getConnection()
+                ->update('client', ['balance' => round($result['total'], 2)], ['id' => $client->getId()]);
+        return;
+    }    
 }

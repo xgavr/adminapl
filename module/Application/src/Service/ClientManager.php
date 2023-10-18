@@ -348,4 +348,33 @@ class ClientManager
         
         return;
     }
+    
+    /**
+     * Обновить баланс клиента
+     * @param Client $client
+     */
+    public function updateBalance($client)
+    {
+        $this->entityManager->getRepository(Client::class)
+                ->updateBalance($client);
+        return;
+    }
+    
+    /**
+     * Обновить балансы всех клиентов
+     * @return null
+     */
+    public function updateBalances()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(900);
+        
+        $clients = $this->entityManager->getRepository(Client::class)
+                ->findAll();
+        foreach ($clients as $client){
+            $this->updateBalance($client);
+        }
+        
+        return;
+    }    
 }

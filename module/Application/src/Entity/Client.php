@@ -80,6 +80,11 @@ class Client {
     protected $pricecol = self::PRICE_0;
     
     /**
+     * @ORM\Column(name="balance")   
+     */
+    protected $balance = 0;
+
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Contact", mappedBy="client")
     * @ORM\JoinColumn(name="id", referencedColumnName="client_id")
      */
@@ -190,6 +195,15 @@ class Client {
     {
         $this->salesGood = $salesGood;
     }     
+    
+    public function getBalance() {
+        return $this->balance;
+    }
+
+    public function setBalance($balance) {
+        $this->balance = $balance;
+        return $this;
+    }
     
     /**
      * Returns status.

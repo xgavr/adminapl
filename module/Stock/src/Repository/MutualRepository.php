@@ -21,6 +21,7 @@ use Application\Entity\Contact;
 use Company\Entity\Contract;
 use Stock\Entity\Revision;
 use User\Entity\User;
+use Application\Entity\Client;
 
 /**
  * Description of MutualRepository
@@ -142,6 +143,16 @@ class MutualRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
         $connection->insert('retail', $data);
+
+        $contact = $entityManager->getRepository(Contact::class)
+                ->find($data['contact_id']);
+        if ($contact){
+            if ($contact->getClient()){
+                $entityManager->getRepository(Client::class)
+                        ->updateBalance($contact->getClient());
+            }    
+        }    
+
         return;
     }
     
