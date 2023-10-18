@@ -422,6 +422,7 @@ class ClientController extends AbstractActionController
         }
         
         $this->clientManager->aplUnion($client);
+        $this->clientManager->updateBalance($client);
         
         return new JsonModel([
             'result' => 'ok-reload',
@@ -631,6 +632,29 @@ class ClientController extends AbstractActionController
         return new JsonModel([
             'rows' => $result,
         ]);                  
+    }
+
+    public function updateBalanceAction()
+    {
+        $clientId = (int)$this->params()->fromRoute('id', -1);
+        if ($clientId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $client = $this->entityManager->getRepository(Client::class)
+                ->find($clientId);
+        
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $this->clientManager->updateBalance($client);
+        
+        return new JsonModel(
+           ['result' => 'ok-reload']
+        );                  
     }
 
     public function updateBalancesAction()
