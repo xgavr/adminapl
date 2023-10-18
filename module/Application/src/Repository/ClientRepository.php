@@ -84,6 +84,35 @@ class ClientRepository extends EntityRepository{
          
         return $result;
     }
+
+    /**
+     * Контакты по ИНН
+     * @param string $strInn
+     * @return type
+     */
+    public function contactByInn($strInn)
+    {
+        $result = [];
+        if ($strInn){
+            
+            $entityManager = $this->getEntityManager();
+
+            $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder->select('c.id as contactId')
+                    ->from(Legal::class, 'l')
+                    ->join('l.contacts', 'c')
+                    ->where('l.inn = :inn')
+                    ->setParameter('inn', $strInn)
+                    ;
+            
+            $data = $queryBuilder->getQuery()->getResult();
+            foreach ($data as $row){
+                $result[] = $row['contactId'];
+            }
+        }            
+         
+        return $result;
+    }
     
     /**
      * @param array $params
@@ -121,7 +150,9 @@ class ClientRepository extends EntityRepository{
                 $orX->add($queryBuilder->expr()->eq('c.aplId', $search));
             }            
 
-            $contacts = $this->contactByPhone($search) + $this->contactByEmail($search);                
+            $contacts = $this->contactByPhone($search) + $this->contactByEmail($search) 
+                    + $this->contactByInn($search);
+            
             if (count($contacts)){
                 
                 $queryBuilder->join('c.contacts', 'cnt');
