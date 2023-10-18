@@ -113,6 +113,34 @@ class ClientRepository extends EntityRepository{
          
         return $result;
     }
+
+    /**
+     * Контакты по заказу
+     * @param string $strOrder
+     * @return type
+     */
+    public function contactByOrder($strOrder)
+    {
+        $result = [];
+        if (is_numeric($strOrder)){
+            
+            $entityManager = $this->getEntityManager();
+
+            $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder->select('identity(o.contact) as contactId')
+                    ->from(Order::class, 'o')
+                    ->where('o.id = :order')
+                    ->setParameter('order', $strOrder)
+                    ;
+            
+            $data = $queryBuilder->getQuery()->getResult();
+            foreach ($data as $row){
+                $result[] = $row['contactId'];
+            }
+        }            
+         
+        return $result;
+    }
     
     /**
      * @param array $params
@@ -151,7 +179,7 @@ class ClientRepository extends EntityRepository{
             }            
 
             $contacts = $this->contactByPhone($search) + $this->contactByEmail($search) 
-                    + $this->contactByInn($search);
+                    + $this->contactByInn($search) + $this->contactByOrder($search);
             
             if (count($contacts)){
                 
@@ -205,7 +233,7 @@ class ClientRepository extends EntityRepository{
             }            
 
             $contacts = $this->contactByPhone($search) + $this->contactByEmail($search) 
-                    + $this->contactByInn($search);
+                    + $this->contactByInn($search) + $this->contactByOrder($search);
             
             if (count($contacts)){
                 
