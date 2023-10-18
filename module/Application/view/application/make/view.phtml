@@ -139,14 +139,14 @@ $this->headScript()
                             Выгрузить товары
                         </div>
                         <div class="pull-right">
-<!--                            <button value="/car/download-car-goods?make=<?= $make->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                            <button value="/car/download-car-goods?make=<?= $make->getId()?>" class="btn btn-info btn-xs download-csv"
                                     title="Выгрузить товары">
                                 <span class="glyphicon glyphicon-download" ></span>
-                            </button>                             -->
-                            <a type="button" href="/car/download-car-goods?make=<?= $make->getId()?>" class="btn btn-info btn-xs"
+                            </button>                             
+<!--                            <a type="button" href="/car/download-car-goods?make=<?= $make->getId()?>" class="btn btn-info btn-xs"
                                     title="Выгрузить товары">
                                 <span class="glyphicon glyphicon-download" ></span>
-                            </a>                             
+                            </a>                             -->
                         </div>
                     </div>
                 </div>    
@@ -194,9 +194,31 @@ $this->headScript()
                     bootbox.alert("Произошла ошибка при выполнении операции.");
                 });        
         }        
-    })        
+    });
+    
+    $('.download-csv').on('click', function(){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: true
+        });
+        $.ajax({
+            url: $(this).attr('value'),
+            dataType: 'binary',
+            xhrFields: {
+                'responseType': 'blob'
+            },
+            success: function(data, status, xhr) {
+                var blob = new Blob([data], {type: xhr.getResponseHeader('Content-Type')});
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = '<?= $make->getFileName()?>.csv';
+                link.click();
+                dialog.modal('hide');
+            }
+        });
+    });    
 
-function refreshTable(){
+    function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
 

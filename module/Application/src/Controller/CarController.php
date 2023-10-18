@@ -496,25 +496,35 @@ class CarController extends AbstractActionController
             return;
         }
         
-        $file = $this->carManager->carGoods($make, $model, $car);
+        $file = realpath($this->carManager->carGoods($make, $model, $car));
         
-//        var_dump($file);
-        if (file_exists($file)){
-            if (ob_get_level()) {
-              ob_end_clean();
-            }
-            // заставляем браузер показать окно сохранения файла
-            header('Content-Description: File Transfer');
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename=' . $filename.'.csv');
-            header('Content-Transfer-Encoding: binary');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . filesize($file));
-            // читаем файл и отправляем его пользователю
-            readfile($file);
+        if (!file_exists($file)){
+            $this->getResponse()->setStatusCode(404);
+            return;
         }
-        exit;          
+//        var_dump($file);
+        $response = $this->getResponse();
+        $headers = $response->getHeaders();
+        $headers->addHeaderLine(
+                 "Content-type: application/octet-stream");
+        $headers->addHeaderLine(
+                 "Content-Disposition: attachment; filename=\"" . 
+                $filename.'.csv' . "\"");
+        $headers->addHeaderLine("Content-length: ".filesize($file));
+        $headers->addHeaderLine("Cache-control: private"); 
+        
+        // Write file content        
+        $fileContent = file_get_contents($file);
+        if($fileContent!=false) {                
+            $response->setContent($fileContent);
+        } else {        
+            // Set 500 Server Error status code
+            $this->getResponse()->setStatusCode(500);
+            return;
+        }
+        
+        unlink($file);
+        // Return Response to avoid default view rendering
+        return $this->getResponse(); 
     }          
 }
