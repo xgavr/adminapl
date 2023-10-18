@@ -136,7 +136,7 @@ class ClientRepository extends EntityRepository{
             $queryBuilder->andWhere('round(c.balance) != 0');
         }
         
-//        var_dump($queryBuilder->getQuery()->getSQL());
+        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }   
     
