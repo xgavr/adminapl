@@ -17,7 +17,10 @@ $this->pageBreadcrumbs()->setItems([
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="Поиск по телефону, email, aplId">
+                    <div class='btn-group'>
+                        <input name="search" style="width: 400px" class="form-control enter-search" type="text" placeholder="Поиск по телефону, email, aplId">
+                        <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                    </div>    
                 </div>
                 <button id="ok" type="submit" class="btn btn-default">OK</button>
                 <div class="form-group">
@@ -104,11 +107,16 @@ $this->pageBreadcrumbs()->setItems([
         }
     });
 
-    ok = $('#ok');
+    $ok = $('#ok');
 
     $(function () {
-        ok.click(function () {
-            table.bootstrapTable('refresh');
+        $ok.click(function () {
+            refreshTable();
+        });
+
+        $(".inputclear").click(function(){
+            $(".enter-search").val('');
+            refreshTable();
         });
 
         $(document).on('change', '#pricecolSelect', function (e) {

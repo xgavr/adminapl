@@ -17,6 +17,8 @@ use Application\Entity\Order;
 use Stock\Entity\Movement;
 use Stock\Entity\Comiss;
 use Company\Entity\Legal;
+use Application\Entity\Phone;
+use Application\Entity\Email;
 
 /**
  * Description of ClientRepository
@@ -25,10 +27,62 @@ use Company\Entity\Legal;
  */
 class ClientRepository extends EntityRepository{
 
-    
-    public function clientByPhone($phone)
+    /**
+     * Контакты по телефону
+     * @param string $strPhone
+     * @return type
+     */
+    public function contactByPhone($strPhone)
     {
-        
+        $phoneFilter = new PhoneFilter();
+        $phoneName = $phoneFilter->filter($strPhone);
+
+        $result = [];
+        if ($phoneName){
+            $entityManager = $this->getEntityManager();
+
+            $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder->select('identity(p.contact) as contactId')
+                    ->from(Phone::class, 'p')
+                    ->where('p.name = :phoneName')
+                    ->setParameter('phoneName', $phoneName)
+                    ;
+            
+            $data = $queryBuilder->getQuery()->getResult();
+            foreach ($data as $row){
+                $result[] = $row['contactId'];
+            }
+        }            
+         
+        return $result;
+    }
+
+    /**
+     * Контакты по почте
+     * @param string $strEmail
+     * @return type
+     */
+    public function contactByEmail($strEmail)
+    {
+        $result = [];
+        if ($strEmail){
+            
+            $entityManager = $this->getEntityManager();
+
+            $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder->select('identity(e.contact) as contactId')
+                    ->from(Email::class, 'e')
+                    ->where('e.name = :emailName')
+                    ->setParameter('emailName', $strEmail)
+                    ;
+            
+            $data = $queryBuilder->getQuery()->getResult();
+            foreach ($data as $row){
+                $result[] = $row['contactId'];
+            }
+        }            
+         
+        return $result;
     }
     
     /**
@@ -56,38 +110,33 @@ class ClientRepository extends EntityRepository{
                         ->setParameter('pricecol', $params['pricecol']);
             }    
         }    
-        if (!empty($params['search'])){
+        if (!empty(trim($params['search']))){
             $balanceFlag = false;
-            $orX = $queryBuilder->expr()->orX();
+            
             $search = trim($params['search']);
+
+            $orX = $queryBuilder->expr()->orX();
+
             if (is_numeric($search)){//aplId
                 $orX->add($queryBuilder->expr()->eq('c.aplId', $search));
             }            
-            $emailValidator = new EmailAddress();
-            if ($emailValidator->isValid($search)){
-                $queryBuilder->join('c.contacts', 'cs')
-                        ->join('cs.emails', 'es');
-                $orX->add($queryBuilder->expr()->eq('es.name', ':search'));
-                $queryBuilder->setParameter(':search', $search);
-            } else {    
-                if (strlen($search) > 9){
-                    $phoneFilter = new PhoneFilter();
-                    $phone = $phoneFilter->filter($params['search']);
-    //                var_dump($phone); exit;
-                    if ($phone){
-                        $queryBuilder->join('c.contacts', 'cs')
-                                ->join('cs.phones', 'ps');
-                        $orX->add($queryBuilder->expr()->eq('ps.name', $phone));                        
-                    }
-                }
-            }    
-            $queryBuilder->where($orX);
+
+            $contacts = $this->contactByPhone($search) + $this->contactByEmail($search);                
+            if (count($contacts)){
+                
+                $queryBuilder->join('c.contacts', 'cnt');
+                
+                $orX->add($queryBuilder->expr()->in('cnt.id', $contacts));                    
+            }
+
+            $queryBuilder->andWhere($orX);
         }
         
         if ($balanceFlag){
             $queryBuilder->andWhere('round(c.balance) != 0');
         }
         
+//        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }   
     
@@ -113,30 +162,24 @@ class ClientRepository extends EntityRepository{
         }    
         if (!empty($params['search'])){
             $balanceFlag = false;
-            $orX = $queryBuilder->expr()->orX();
+            
             $search = trim($params['search']);
+
+            $orX = $queryBuilder->expr()->orX();
+
             if (is_numeric($search)){//aplId
                 $orX->add($queryBuilder->expr()->eq('c.aplId', $search));
             }            
-            $emailValidator = new EmailAddress();
-            if ($emailValidator->isValid($search)){
-                $queryBuilder->join('c.contacts', 'cs')
-                        ->join('cs.emails', 'es');
-                $orX->add($queryBuilder->expr()->eq('es.name', ':search'));
-                $queryBuilder->setParameter(':search', $search);
-            } else {    
-                if (strlen($search) > 9){
-                    $phoneFilter = new PhoneFilter();
-                    $phone = $phoneFilter->filter($params['search']);
-    //                var_dump($phone); exit;
-                    if ($phone){
-                        $queryBuilder->join('c.contacts', 'cs')
-                                ->join('cs.phones', 'ps');
-                        $orX->add($queryBuilder->expr()->eq('ps.name', $phone));                        
-                    }
-                }
-            }    
-            $queryBuilder->where($orX);
+
+            $contacts = $this->contactByPhone($search) + $this->contactByEmail($search);                
+            if (count($contacts)){
+                
+                $queryBuilder->join('c.contacts', 'cnt');
+                
+                $orX->add($queryBuilder->expr()->in('cnt.id', $contacts));                    
+            }
+
+            $queryBuilder->andWhere($orX);
         }
         if ($balanceFlag){
             $queryBuilder->andWhere('round(c.balance) != 0');
