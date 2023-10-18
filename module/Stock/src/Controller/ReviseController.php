@@ -219,7 +219,7 @@ class ReviseController extends AbstractActionController
         
         if ($contact){
             $contactName = $contact->getName();
-            $client = $revise->getContact()->getClient();
+            $client = $contact->getClient();
         }    
         
         $form = new ReviseForm($this->entityManager);
