@@ -154,6 +154,16 @@ $legalContact = $client->getLegalContact();
                             <tr>
                                 <td>
                                     <div class="pull-left">
+                                        Долг                                    
+                                    </div>    
+                                    <div class="pull-right">
+                                        <strong><?= round($client->getBalance(), 2)?></strong>
+                                    </div>    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="pull-left">
                                         Колонка цен                                    
                                     </div>    
                                     <div class="pull-right">
