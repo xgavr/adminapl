@@ -189,7 +189,7 @@ class ClientRepository extends EntityRepository{
                 $orX->add($queryBuilder->expr()->in('cnt.id', $contacts));                    
             }
 
-            if (count($orX)){
+            if ($orX->count()){
                 $queryBuilder->andWhere($orX);
             }    
         }
@@ -243,7 +243,7 @@ class ClientRepository extends EntityRepository{
                 $orX->add($queryBuilder->expr()->in('cnt.id', $contacts));                    
             }
 
-            if (count($orX)){
+            if ($orX->count()){
                 $queryBuilder->andWhere($orX);
             }    
         }

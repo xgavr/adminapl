@@ -847,6 +847,11 @@ class ExternalManager
         $notSimilar = true;
         $change = false;
         
+        // пока отключено из-за санкций
+        $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_SUP_CROSS], ['id' => $goodId]);
+        
+        return;
+
         try{
             $info = $this->zetasoftManager->getDirectInfo($goodId, $code);
             if (!is_array($info)){
