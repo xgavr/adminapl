@@ -144,7 +144,7 @@ class ClientRepository extends EntityRepository{
             
             $search = trim($params['search']);
 
-            $orX = $queryBuilder->expr()->orX();
+            $orX = $queryBuilder->expr()->orX()->add($queryBuilder->expr()->eq('c.id', 0));
 
             if (is_numeric($search)){//aplId
                 $orX->add($queryBuilder->expr()->eq('c.aplId', $search));
@@ -160,7 +160,9 @@ class ClientRepository extends EntityRepository{
                 $orX->add($queryBuilder->expr()->in('cnt.id', $contacts));                    
             }
 
-            $queryBuilder->andWhere($orX);
+            if (count($orX)){
+                $queryBuilder->andWhere($orX);
+            }    
         }
         
         if ($balanceFlag){
