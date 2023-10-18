@@ -130,7 +130,7 @@ $legalContact = $client->getLegalContact();
                                                 data-toggle="modal" data-target="#modal-dialog" title="Изменить">
                                             <span class="glyphicon glyphicon-edit" ></span>
                                         </button>                                                    
-                                        <button value="/client/update-balances/" class="btn btn-default btn-xs refresh-table-button"
+                                        <button value="/client/update-balance/<?= $client->getId() ?>" class="btn btn-default btn-xs refresh-table-button"
                                                 title="Пересчитать сумму долга">
                                             <span class="glyphicon glyphicon-rub" ></span>
                                         </button>                         
