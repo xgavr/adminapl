@@ -130,6 +130,7 @@ class ClientRepository extends EntityRepository{
             $queryBuilder->select('identity(o.contact) as contactId')
                     ->from(Order::class, 'o')
                     ->where('o.id = :order')
+                    ->orWhere('o.aplId = :order')
                     ->setParameter('order', $strOrder)
                     ;
             
