@@ -13,6 +13,10 @@ $form->get('upload_raw')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('remove_raw')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('parse_raw')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -88,6 +92,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('upload_raw')); ?>
             <?= $this->formElement($form->get('upload_raw')); ?>
             <?= $this->formElementErrors($form->get('upload_raw')); ?>                  
+        </div>
+                        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('remove_raw')); ?>
+            <?= $this->formElement($form->get('remove_raw')); ?>
+            <?= $this->formElementErrors($form->get('remove_raw')); ?>                  
         </div>
                         
         <div class="form-group">

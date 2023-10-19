@@ -76,6 +76,18 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
                 ]
             ],
         ]);
+
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'remove_raw',
+            'options' => [
+                'label' => 'Удалять прайсы из БД',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Остановить',                    
+                ]
+            ],
+        ]);
                 
         $this->add([            
             'type'  => 'select',
@@ -341,6 +353,17 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
         
         $inputFilter->add([
                 'name'     => 'upload_raw',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+
+        $inputFilter->add([
+                'name'     => 'remove_raw',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

@@ -484,7 +484,7 @@ class ProcessingController extends AbstractActionController
     public function deleteOldPricesAction()
     {        
         $settings = $this->adminManager->getPriceSettings();
-        if ($settings['upload_raw'] == 1){
+        if ($settings['remove_raw'] == 1){
             $this->rawManager->removeOldRaws();
         }    
         
