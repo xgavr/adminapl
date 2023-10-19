@@ -655,16 +655,20 @@ class RawRepository extends EntityRepository
     
     /**
      * Поиск прайсов для удаления
+     * @param int $days
      */
-    public function findRawForRemove()
+    public function findRawForRemove($days = 7)
     {
+        if ($days < 3){
+            $days = 3; //не меньше 3х дней
+        }
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $queryBuilder->select('r')
                 ->from(Raw::class, 'r')
                 ->where('r.dateCreated <= ?1')
-                ->setParameter('1', date('Y-m-d', strtotime('-5 days')))
+                ->setParameter('1', date('Y-m-d', strtotime("-$days days")))
                 ->setMaxResults(50)
                 ;
         

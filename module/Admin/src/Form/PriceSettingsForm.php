@@ -78,6 +78,19 @@ class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([            
+            'type'  => 'number',
+            'name' => 'remove_day',
+            'attributes' => [
+                'min' => 3,
+                'max' => 10,
+                'value' => 7,
+            ],
+            'options' => [
+                'label' => 'Прайс хранить дней',
+            ],
+        ]);
+
+        $this->add([            
             'type'  => 'select',
             'name' => 'remove_raw',
             'options' => [

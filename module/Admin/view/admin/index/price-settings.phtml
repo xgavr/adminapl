@@ -33,6 +33,10 @@ $form->get('remove_raw')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('remove_day')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('uploading_raw')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -142,9 +146,18 @@ $form->prepare();
         </div>        
 
         <div class="form-group">
-            <?= $this->formLabel($form->get('remove_raw')); ?>
-            <?= $this->formElement($form->get('remove_raw')); ?>
-            <?= $this->formElementErrors($form->get('remove_raw')); ?>                  
+            <div class='row'>
+                <div class="col-md-6">
+                    <?= $this->formLabel($form->get('remove_raw')); ?>
+                    <?= $this->formElement($form->get('remove_raw')); ?>
+                    <?= $this->formElementErrors($form->get('remove_raw')); ?>                    
+                </div>
+                <div class="col-md-6">
+                    <?= $this->formLabel($form->get('remove_day')); ?>
+                    <?= $this->formElement($form->get('remove_day')); ?>
+                    <?= $this->formElementErrors($form->get('remove_day')); ?>                                      
+                </div>
+            </div>            
         </div>        
 
         <div class="form-group">

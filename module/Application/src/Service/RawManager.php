@@ -566,16 +566,17 @@ class RawManager {
     
     /**
      * Удаление старых прайсов
+     * @param int $days
      * 
      */
-    public function removeOldRaws()
+    public function removeOldRaws($days = 7)
     {
         ini_set('memory_limit', '1024M');
         set_time_limit(1800);
         $startTime = time();        
         
         $raws = $this->entityManager->getRepository(Raw::class)
-                ->findRawForRemove();
+                ->findRawForRemove($days);
 
         foreach ($raws as $raw){
             $rawpriceQuery = $this->entityManager->getRepository(Rawprice::class)
