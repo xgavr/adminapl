@@ -485,7 +485,7 @@ class ProcessingController extends AbstractActionController
     {        
         $settings = $this->adminManager->getPriceSettings();
         if ($settings['remove_raw'] == 1){
-            $this->rawManager->removeOldRaws();
+            $this->rawManager->removeOldRaws($settings['remove_day']);
         }    
         
         return new JsonModel(
