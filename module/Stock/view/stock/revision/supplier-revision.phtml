@@ -157,13 +157,14 @@
             $.each(row.legal.contacts, function( index, row ) {
                 if (row){
                     if (row.supplier){
-                       return [
+                       value = [
                            '<nobr>',
                            '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.supplier.id+'" title="Перейти на сайт поставщика">',
                            '<span class="glyphicon glyphicon-link"></span></a>',
                            '<a href="/supplier/view/' + row.supplier.id + '" target="_blank">' + row.supplier.name + '</a>',
                            '</nobr>'
-                       ].join(''); 
+                       ].join('');
+                       return false;
                    }    
                 }   
             });
