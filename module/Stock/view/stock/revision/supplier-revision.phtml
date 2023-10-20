@@ -154,13 +154,14 @@
     
     function linkFormatter(value, row){
         if (row.legal.contacts){
-            $.each(row.legal.contacts, function( index, value ) {
-                if (value.supplier){
+            $.each(row.legal.contacts, function( index, row ) {
+                console.log(row);
+                if (row.supplier){
                    return [
                        '<nobr>',
-                       '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+value.supplier.id+'" title="Перейти на сайт поставщика">',
+                       '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.supplier.id+'" title="Перейти на сайт поставщика">',
                        '<span class="glyphicon glyphicon-link"></span></a>',
-                       '<a href="/supplier/view/' + value.supplier.id + '" target="_blank">' + value.supplier.name + '</a>',
+                       '<a href="/supplier/view/' + row.supplier.id + '" target="_blank">' + row.supplier.name + '</a>',
                        '</nobr>'
                    ].join(''); 
                }    
