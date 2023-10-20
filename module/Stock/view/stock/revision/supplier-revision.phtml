@@ -205,7 +205,7 @@
                 if (row){
                     if (row.supplier){
                         url += '&supplier='+row.supplier.id;
-                        break;
+                        return false;
                    }    
                 }   
             });
