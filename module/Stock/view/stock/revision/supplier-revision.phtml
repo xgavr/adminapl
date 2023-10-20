@@ -155,16 +155,17 @@
     function linkFormatter(value, row){
         if (row.legal.contacts){
             $.each(row.legal.contacts, function( index, value ) {
-             if (value.supplier){
-                return [
-                    '<nobr>',
-                    '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+value.supplier.id+'" title="Перейти на сайт поставщика">',
-                    '<span class="glyphicon glyphicon-link"></span></a>',
-                    '<a href="/supplier/view/' + value.supplier.id + '" target="_blank">' + value.supplier.name + '</a>',
-                    '</nobr>'
-                ].join(''); 
-            }    
-        });
+                if (value.supplier){
+                   return [
+                       '<nobr>',
+                       '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+value.supplier.id+'" title="Перейти на сайт поставщика">',
+                       '<span class="glyphicon glyphicon-link"></span></a>',
+                       '<a href="/supplier/view/' + value.supplier.id + '" target="_blank">' + value.supplier.name + '</a>',
+                       '</nobr>'
+                   ].join(''); 
+               }    
+            });
+        }
         return value;    
     }    
 
