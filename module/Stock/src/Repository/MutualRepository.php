@@ -618,6 +618,7 @@ class MutualRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('c, l, cm, cn, s')
+            ->distinct()    
             ->from(Contract::class, 'c')
             ->join('c.company', 'cm')
             ->join('c.legal', 'l')
