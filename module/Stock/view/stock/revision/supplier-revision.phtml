@@ -155,7 +155,7 @@
     function linkFormatter(value, row){
         if (row.legal.contacts){
             $.each(row.legal.contacts, function( index, row ) {
-                value = '';
+                value = false;
                 if (row){
                     if (row.supplier){
                        value = [
