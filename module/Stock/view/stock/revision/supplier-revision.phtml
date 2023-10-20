@@ -200,8 +200,15 @@
         var btn = '<nobr>';
         
         var url = '/revision?contract='+row.id;
-        if (row.legal.contacts[0]){
-            url += '&supplier='+row.legal.contacts[0].supplier.id;
+        if (row.legal.contacts){
+            $.each(row.legal.contacts, function( index, row ) {
+                if (row){
+                    if (row.supplier){
+                        url += '&supplier='+row.supplier.id;
+                        break;
+                   }    
+                }   
+            });
         }    
         btn += ' <a';
         btn += ' type="button"';
