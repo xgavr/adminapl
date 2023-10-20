@@ -206,9 +206,9 @@
                 if (row){
                     if (row.supplier){
                         url += '&supplier='+row.supplier.id;
-                        return false;
                    }    
                 }   
+                return false;
             });
         }    
         btn += ' <a';
