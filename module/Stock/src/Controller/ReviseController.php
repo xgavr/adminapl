@@ -117,10 +117,13 @@ class ReviseController extends AbstractActionController
      * @param Revise $revise
      * @param Supplier $supplier
      * @param Client $client
+     * @param Legal $legal
+     * @param Contract $contract
      * @param int $kind
      * @return null
      */
-    protected function prepareForm($form, $revise = null, $supplier= null, $client= null, $kind = Revise::KIND_REVISE_SUPPLIER)
+    protected function prepareForm($form, $revise = null, $supplier= null, $client= null,
+            $legal = null, $contract=null, $kind = Revise::KIND_REVISE_SUPPLIER)
     {
         $currentUser = $this->reviseManager->currentUser();
         $legals = [];
@@ -172,8 +175,8 @@ class ReviseController extends AbstractActionController
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
         $companyList = [];
-        foreach ($companies as $company) {
-            $companyList[$company->getId()] = $company->getName();
+        foreach ($companies as $row) {
+            $companyList[$row->getId()] = $row->getName();
         }
         $form->get('company')->setValueOptions($companyList);
         
@@ -181,8 +184,8 @@ class ReviseController extends AbstractActionController
             $suppliers = $this->entityManager->getRepository(Supplier::class)
                     ->findBy([], ['status' => 'ASC', 'name' => 'ASC']);
             $supplierList = ['--не выбран--'];
-            foreach ($suppliers as $supplier) {
-                $supplierList[$supplier->getId()] = $supplier->getName();
+            foreach ($suppliers as $row) {
+                $supplierList[$row->getId()] = $row->getName();
             }
             $form->get('supplier')->setValueOptions($supplierList);
         }    
@@ -194,8 +197,10 @@ class ReviseController extends AbstractActionController
         $kind = (int)$this->params()->fromQuery('kind');
         $supplierId = (int) $this->params()->fromQuery('supplier', -1);
         $clientId = (int) $this->params()->fromQuery('client', -1);
+        $legalId = (int) $this->params()->fromQuery('legal', -1);
+        $contractId = (int) $this->params()->fromQuery('contract', -1);
         
-        $revise = $contactName = $client = $supplier = $contact = null;
+        $revise = $contactName = $client = $supplier = $contact = $contract = null;
         $notDisabled = true;
         
         if ($supplierId > 0){
@@ -208,6 +213,17 @@ class ReviseController extends AbstractActionController
                     ->find($clientId);
             $contact = $client->getContact();
         }
+
+        if ($legalId > 0){
+            $legal = $this->entityManager->getRepository(Legal::class)
+                    ->find($legalId);
+        }
+
+        if ($contractId > 0){
+            $contract = $this->entityManager->getRepository(Contract::class)
+                    ->find($contractId);
+            $legal = $contract->getLegal();
+        }
         
         if ($reviseId > 0){
             $revise = $this->entityManager->getRepository(Revise::class)
@@ -215,6 +231,8 @@ class ReviseController extends AbstractActionController
             $kind = $revise->getKind();
             $supplier = $revise->getSupplier();
             $contact = $revise->getContact();
+            $legal = $revise->getLegal();
+            $contract = $revise->getContract();
         }    
         
         if ($contact){
@@ -223,7 +241,7 @@ class ReviseController extends AbstractActionController
         }    
         
         $form = new ReviseForm($this->entityManager);
-        $this->prepareForm($form, $revise, $supplier, $client, $kind);
+        $this->prepareForm($form, $revise, $supplier, $client, $legal, $contract, $kind);
         
         if ($this->getRequest()->isPost()) {
             

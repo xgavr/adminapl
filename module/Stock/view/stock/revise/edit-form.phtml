@@ -234,6 +234,13 @@ $form->prepare();
             $.each( data.rows, function( key, value ) {
                 $('#contract').append('<option value="' + key + '">' + value.name + '</option>');
             });
+            <?php if (!$revise): ?>
+                if ($('#contractSelect')){
+                    if ($.isNumeric($('#contractSelect').val())){
+                        $('#contract').val($('#contractSelect').val());
+                    }    
+                }            
+            <?php endif; ?>        
         });    
     }
     
@@ -243,6 +250,13 @@ $form->prepare();
             $.each( data.rows, function( key, value ) {
                 $('#legal').append('<option value="' + key + '">' + value.name + '</option>');
             });
+            <?php if (!$revise): ?>
+                if ($('#legalSelect')){
+                    if ($.isNumeric($('#legalSelect').val())){
+                        $('#legal').val($('#legalSelect').val());
+                    }    
+                }            
+            <?php endif; ?>        
             contractList();            
         });    
     }
