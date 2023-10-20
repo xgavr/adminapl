@@ -155,7 +155,7 @@
     function linkFormatter(value, row){
         if (row.legal.contacts){
             $.each(row.legal.contacts, function( index, row ) {
-                console.log(index);
+                value = '';
                 if (row){
                     if (row.supplier){
                        value = [
@@ -165,9 +165,11 @@
                            '<a href="/supplier/view/' + row.supplier.id + '" target="_blank">' + row.supplier.name + '</a>',
                            '</nobr>'
                        ].join('');
-                       return false;
                    }    
                 }   
+                if (value){
+                    return false;
+                }
             });
         }
         return value;    
