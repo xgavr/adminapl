@@ -155,7 +155,6 @@
     function linkFormatter(value, row){
         if (row.legal.contacts){
             $.each(row.legal.contacts, function( index, row ) {
-                value = false;
                 if (row){
                     if (row.supplier){
                        value = [
@@ -167,7 +166,7 @@
                        ].join('');
                    }    
                 }   
-                if (value){
+                if (index > 0){
                     return false;
                 }
             });
