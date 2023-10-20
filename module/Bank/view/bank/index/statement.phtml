@@ -34,9 +34,14 @@
                         </div>
                         <button id="ok" type="submit" class="btn btn-default">OK</button>
                         <div class="form-group">
-                            <input name="date" class="form-control" type="date">
+                            <select id="periodSelect" class="form-control" name="period">
+                                <option value="date">Дата</option>
+                                <option value="week">Неделя</option>                        
+                                <option value="month" selected="">Месяц</option>                        
+                                <option value="number">Год</option>                        
+                            </select>
+                            <input name="dateStart" id="dateStart" style="width: 200px" class="form-control refresh-table" type="month" value="<?= date('Y-m')?>">
                         </div>
-                        <button id="okStatementDate" type="submit" class="btn btn-default">OK</button>
                         <div class="form-group">
                             <select id="paySelect" name="pay" class="form-control">
                                 <option selected>--все--</option>
@@ -339,7 +344,7 @@
         }),
         $qrCodeTable = $('#table_qrcode'),    
         $ok = $('#ok'), 
-        $okStatementDate = $('#okStatementDate'),
+        $okStatementDate = $('#dateStart'),
         $okAcquiring = $('#okAcquiring'), 
         $okAcquiringDate = $('#okAcquiringDate'),
         $okAplPayment = $('#okAplPayment'), 
@@ -370,7 +375,7 @@
         $ok.click(function () {
             $table.bootstrapTable('refresh');
         });
-        $okStatementDate.click(function () {
+        $okStatementDate.change(function () {
             $table.bootstrapTable('refresh');
         });
         $okAcquiring.click(function () {
@@ -384,6 +389,22 @@
         });
         $okAplPaymentDate.click(function () {
             $('#table_apl').bootstrapTable('refresh');
+        });
+
+        $(document).on('change', '#periodSelect', function (e) {
+            var selectType = $(this).val();
+            $('#dateStart').attr('type', selectType);
+            switch(selectType){
+                case 'number':
+                    $('#dateStart').val(new Date().getFullYear());
+                    $('#dateStart').attr('min', 2012);
+                    break;
+                case 'month':    
+//                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
+//                    break;
+                default:
+                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
+            }
         });
 
         $qrCodeTable.bootstrapTable('refreshOptions', {

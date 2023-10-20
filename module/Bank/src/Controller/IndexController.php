@@ -105,13 +105,32 @@ class IndexController extends AbstractActionController
         $pay = $this->params()->fromQuery('pay');        
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period');
+        
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
+        }    
         
         $query = $this->entityManager->getRepository(Statement::class)
-                        ->findStatement($q, $rs, ['date' => $date, 'pay' => $pay]);
+                        ->findStatement($q, $rs, ['start' => $startDate, 'end' => $endDate, 'pay' => $pay]);
         
 //        $total = count($query->getResult());
         $totalResult = $this->entityManager->getRepository(Statement::class)
-                        ->findStatement($q, $rs, ['date' => $date, 'count' => true, 'pay' => $pay]);
+                        ->findStatement($q, $rs, ['start' => $startDate, 'end' => $endDate, 'count' => true, 'pay' => $pay]);
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -124,7 +143,7 @@ class IndexController extends AbstractActionController
         
         $startTotal = 0;
         $balanceQuery = $this->entityManager->getRepository(Statement::class)
-                        ->findBalance($q, $rs, ($date) ? $date:'2012-01-01');
+                        ->findBalance($q, $rs, $startDate);
         $balanceResult = $balanceQuery->getResult();
         foreach ($balanceResult as $balance){
             $startTotal += $balance->getBalance();

@@ -66,10 +66,17 @@ class BankRepository extends EntityRepository
         }
         
         if (is_array($params)){
-            if (isset($params['date'])){
-                if ($params['date']){
-                    $queryBuilder->andWhere('s.chargeDate = ?2')
-                            ->setParameter('2', $params['date'])
+            if (isset($params['start'])){
+                if ($params['start']){
+                    $queryBuilder->andWhere('s.chargeDate >= ?2')
+                            ->setParameter('2', $params['start'])
+                            ;
+                }    
+            }
+            if (isset($params['end'])){
+                if ($params['end']){
+                    $queryBuilder->andWhere('s.chargeDate <= ?3')
+                            ->setParameter('3', $params['end'])
                             ;
                 }    
             }
