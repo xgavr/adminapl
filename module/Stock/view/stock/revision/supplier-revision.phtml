@@ -153,17 +153,19 @@
     }
     
     function linkFormatter(value, row){
-        if (row.legal.contacts[0]){
-            var supplier = row.legal.contacts[0].supplier;
-            return [
-                '<nobr>',
-                '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+supplier.id+'" title="Перейти на сайт поставщика">',
-                '<span class="glyphicon glyphicon-link"></span></a>',
-                '<a href="/supplier/view/' + supplier.id + '" target="_blank">' + supplier.name + '</a>',
-                '</nobr>'
-            ].join(''); 
-        }    
-        return '';    
+        if (row.legal.contacts){
+            $.each(row.legal.contacts, function( index, value ) {
+             if (value.supplier){
+                return [
+                    '<nobr>',
+                    '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+value.supplier.id+'" title="Перейти на сайт поставщика">',
+                    '<span class="glyphicon glyphicon-link"></span></a>',
+                    '<a href="/supplier/view/' + value.supplier.id + '" target="_blank">' + value.supplier.name + '</a>',
+                    '</nobr>'
+                ].join(''); 
+            }    
+        });
+        return value;    
     }    
 
     function creditFormatter(value){
