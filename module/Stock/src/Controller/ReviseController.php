@@ -200,7 +200,7 @@ class ReviseController extends AbstractActionController
         $legalId = (int) $this->params()->fromQuery('legal', -1);
         $contractId = (int) $this->params()->fromQuery('contract', -1);
         
-        $revise = $contactName = $client = $supplier = $contact = $contract = null;
+        $revise = $contactName = $client = $supplier = $contact = $legal = $contract = null;
         $notDisabled = true;
         
         if ($supplierId > 0){
