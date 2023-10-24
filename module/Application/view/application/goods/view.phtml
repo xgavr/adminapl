@@ -262,8 +262,17 @@
                                 <option value="<?= $office->getId()?>" <?//= ($office->getId() == $currentUser->getOffice()->getId()) ? 'selected':''?>><?= $office->getName()?></option>
                             <?php endforeach;?>
                         </select>                    
-                        <div class="form-group">
+<!--                        <div class="form-group">
                             <input id="monthSelect" class="form-control" type="month" placeholder="Период">
+                        </div>-->
+                        <div class="form-group">
+                            <select id="periodSelect" class="form-control" name="period">
+                                <option value="date">Дата</option>
+                                <option value="week">Неделя</option>                        
+                                <option value="month">Месяц</option>                        
+                                <option value="number"  selected="true">Год</option>                        
+                            </select>
+                            <input name="dateStart" id="dateStart" style="width: 200px" class="form-control" type="number" value="<?= date('Y')?>">
                         </div>
                         <button class="btn btn-default pt-combined-modal-show" 
                                 type="button" 
@@ -273,7 +282,7 @@
                         <button class="btn btn-default vtp-modal-show" 
                                 type="button" title="Возврат поставщику" <?= ($base) ? '':'disabled'?>                                
                                 modal-url="/vtp/edit-form?good=<?= $goods->getId()?>">
-                            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+                            <span class="glyphicon" aria-hidden="true"></span> В
                         </button>                
                         <button class="btn btn-default ot-modal-show" 
                                 type="button" title="Оприходовать" 
@@ -557,6 +566,9 @@
         $('#monthSelect').change(function (){
             $('#movementTable').bootstrapTable('refresh', {silent: true});
         })
+        $('#dateStart').change(function (){
+            $('#movementTable').bootstrapTable('refresh', {silent: true});
+        })
     });
 
     function tabQueryParams(tab, params) {
@@ -587,6 +599,8 @@
     function movementsQueryParams(params) {
         params.office = $('select[name="office"]').val();
         params.month = $('#monthSelect').val();
+        params.dateStart = $('#dateStart').val();
+        params.period = $('#periodSelect').val();
         return tabQueryParams('#movements', params);
     }
     

@@ -835,13 +835,25 @@ class GoodsController extends AbstractActionController
         $office = $this->params()->fromQuery('office', $this->logManager->currentUser()->getOffice()->getId());
         $sort = $this->params()->fromQuery('sort', 'docStamp');
         $order = $this->params()->fromQuery('order', 'ASC');
-        $year_month = $this->params()->fromQuery('month');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period');
         
-        $year = $month = null;
-        if ($year_month){
-            $year = date('Y', strtotime($year_month));
-            $month = date('m', strtotime($year_month));
-        }        
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
+        }    
         
         // Validate input parameter
         if ($goodsId<0) {
@@ -860,7 +872,7 @@ class GoodsController extends AbstractActionController
         $query = $this->entityManager->getRepository(Goods::class)
                         ->movements($goods, ['q' => $search, 'source' => $source, 
                             'sort' => $sort, 'order' => $order, 'office' => $office,
-                            'month' => $month, 'year' => $year]);
+                            'startDate' => $startDate, 'endDate' => $endDate]);
 
         $total = count($query->getResult(2));
         
