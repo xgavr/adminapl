@@ -124,4 +124,48 @@ return [
             ],
         ],
     ],
+    'Api\\V1\\Rest\\ApiClientInfo\\Controller' => [
+        'description' => 'Получить информацию о покупателе',
+        'collection' => [
+            'GET' => [
+                'response' => '{
+   "_links": {
+       "self": {
+           "href": "/api-client-info"
+       },
+       "first": {
+           "href": "/api-client-info?page={page}"
+       },
+       "prev": {
+           "href": "/api-client-info?page={page}"
+       },
+       "next": {
+           "href": "/api-client-info?page={page}"
+       },
+       "last": {
+           "href": "/api-client-info?page={page}"
+       }
+   }
+   "_embedded": {
+       "api_client_info": [
+           {
+               "_links": {
+                   "self": {
+                       "href": "/api-client-info[/:api_client_info_id]"
+                   }
+               }
+              "phone": "Номер телефона покупателя",
+              "orderStatus": "выгружать заказы с указанным статусом, либо все, если не указан
+STATUS_PROCESSED   = 20; // Обработа
+STATUS_CONFIRMED   = 30; // Подтвержден.
+STATUS_DELIVERY   = 40; // Доставка.
+STATUS_SHIPPED   = 50; // Отгружен.
+STATUS_CANCELED  = -10; // Отменен."
+           }
+       ]
+   }
+}',
+            ],
+        ],
+    ],
 ];

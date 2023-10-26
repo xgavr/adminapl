@@ -351,5 +351,20 @@ class Bid {
             'rowNo' => $this->getRowNo(),
         ];
     }    
+
+    /**
+     * Для апи
+     * 
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'price' => $this->getPrice(),
+            'good' => $this->getGood()->toArray(),
+            'num' => $this->getNum(),
+            'rowNo' => $this->getRowNo(),
+        ];
+    }    
     
 }

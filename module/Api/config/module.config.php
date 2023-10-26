@@ -98,6 +98,15 @@ return [
                     ],
                 ],
             ],
+            'api.rest.api-client-info' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api-client-info[/:api_client_info_id]',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\ApiClientInfo\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -132,6 +141,7 @@ return [
             \Api\V1\Rest\ApiQrcode\ApiQrcodeResource::class => \Api\V1\Rest\ApiQrcode\ApiQrcodeResourceFactory::class,
             \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookResource::class => \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookResourceFactory::class,
             \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoResource::class => \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoResourceFactory::class,
+            \Api\V1\Rest\ApiClientInfo\ApiClientInfoResource::class => \Api\V1\Rest\ApiClientInfo\ApiClientInfoResourceFactory::class,
         ],
     ],
     'view_manager' => [
@@ -166,6 +176,7 @@ return [
             6 => 'api.rest.api-qrcode',
             7 => 'api.rest.api-tochka-webhook',
             8 => 'api.rest.api-order-info',
+            9 => 'api.rest.api-client-info',
         ],
     ],
     'api-tools-rpc' => [
@@ -188,6 +199,7 @@ return [
             'Api\\V1\\Rest\\ApiQrcode\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiTochkaWebhook\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiOrderInfo\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\ApiClientInfo\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -235,6 +247,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiClientInfo\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -273,6 +290,10 @@ return [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiClientInfo\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
         ],
     ],
     'api-tools-content-validation' => [
@@ -290,6 +311,9 @@ return [
         ],
         'Api\\V1\\Rest\\ApiOrderInfo\\Controller' => [
             'input_filter' => 'Api\\V1\\Rest\\ApiOrderInfo\\Validator',
+        ],
+        'Api\\V1\\Rest\\ApiClientInfo\\Controller' => [
+            'input_filter' => 'Api\\V1\\Rest\\ApiClientInfo\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -585,6 +609,40 @@ return [
                 'error_message' => 'Не верный id поставщика',
             ],
         ],
+        'Api\\V1\\Rest\\ApiClientInfo\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'phone',
+                'description' => 'Номер телефона покупателя',
+                'field_type' => 'string',
+                'error_message' => 'Номер не найден',
+            ],
+            1 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'orderStatus',
+                'description' => 'выгружать заказы с указанным статусом, либо все, если не указан
+STATUS_PROCESSED   = 20; // Обработа
+STATUS_CONFIRMED   = 30; // Подтвержден.
+STATUS_DELIVERY   = 40; // Доставка.
+STATUS_SHIPPED   = 50; // Отгружен.
+STATUS_CANCELED  = -10; // Отменен.',
+                'field_type' => 'int',
+            ],
+        ],
     ],
     'api-tools-rest' => [
         'Api\\V1\\Rest\\Good\\Controller' => [
@@ -763,6 +821,31 @@ return [
             'collection_class' => \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoCollection::class,
             'service_name' => 'apiOrderInfo',
         ],
+        'Api\\V1\\Rest\\ApiClientInfo\\Controller' => [
+            'listener' => \Api\V1\Rest\ApiClientInfo\ApiClientInfoResource::class,
+            'route_name' => 'api.rest.api-client-info',
+            'route_identifier_name' => 'api_client_info_id',
+            'collection_name' => 'api_client_info',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [
+                0 => 'phone',
+                1 => 'orderStatus',
+            ],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Api\V1\Rest\ApiClientInfo\ApiClientInfoEntity::class,
+            'collection_class' => \Api\V1\Rest\ApiClientInfo\ApiClientInfoCollection::class,
+            'service_name' => 'ApiClientInfo',
+        ],
     ],
     'api-tools-hal' => [
         'metadata_map' => [
@@ -860,6 +943,18 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.api-order-info',
                 'route_identifier_name' => 'api_order_info_id',
+                'is_collection' => true,
+            ],
+            \Api\V1\Rest\ApiClientInfo\ApiClientInfoEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-client-info',
+                'route_identifier_name' => 'api_client_info_id',
+                'hydrator' => \Laminas\Hydrator\ArraySerializable::class,
+            ],
+            \Api\V1\Rest\ApiClientInfo\ApiClientInfoCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-client-info',
+                'route_identifier_name' => 'api_client_info_id',
                 'is_collection' => true,
             ],
         ],

@@ -429,4 +429,25 @@ class Client {
         $user->addClient($this);
     }     
         
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'id' => $this->getId(),
+            'aplId' => $this->getAplId(),
+            'name' => $this->getNameOrNan(),
+            'balance' => $this->getBalance(),
+            'phone' => $this->getContactPhone(),
+            'pricecol' => $this->getPricecol(),
+            'pricecolName' => $this->getPriceColAsString(),
+            'status' => $this->getStatus(),
+            'statusName' => $this->getStatusAsString(),
+            'orders' => [],
+        ];
+        
+        return $result;
+    }        
 }

@@ -20,6 +20,7 @@ use Company\Entity\Office;
 use Application\Entity\SupplierOrder;
 use Application\Entity\SupplySetting;
 use Stock\Entity\Retail;
+use Application\Entity\Client;
 
 /**
  * Description of OrderRepository
@@ -49,20 +50,37 @@ class OrderRepository extends EntityRepository{
     }       
     
     /**
-     * @param Apllication\Entity\Client $client
+     * Заказы клиента
+     * 
+     * @param Client $client
+     * @param array $params
+     * 
+     * 
      */
-    public function findClientOrder($client)
+    public function findClientOrder($client, $params=null)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('c')
-            ->from(Order::class, 'c')
-            ->where('c.client = ?1')    
-            ->orderBy('c.id')
-            ->setParameter('1', $client->getId())    
+        $queryBuilder->select('o')
+            ->distinct()    
+            ->from(Order::class, 'o')
+            ->join('o.contact', 'c')    
+            ->where('c.client = :client')    
+            ->orderBy('o.id', 'desc')
+            ->setParameter('client', $client->getId())    
                 ;
+        
+        if (is_array($params)){
+            if (!empty($params['orderStatus'])){
+                if (is_numeric($params['orderStatus'])){
+                    $queryBuilder->andWhere('o.status = :status')
+                            ->setParameter('status', $params['orderStatus'])
+                            ;
+                }
+            }
+        }
 
         return $queryBuilder->getQuery();
     }       

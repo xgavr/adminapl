@@ -252,7 +252,7 @@ class MarketplaceOrder {
         $result = [
             'id' => $this->getId(),
             'status' => $this->getStatus(),
-            'orderId' => $this->getOrder(),
+            'orderId' => $this->getOrder()->getId(),
             'orderNumber' => $this->getOrderNumber(),
             'postingNumber' => $this->getPostingNumber(),
             'marketplaceId' => $this->getMarketplace()->getId(),
