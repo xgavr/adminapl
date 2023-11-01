@@ -722,7 +722,7 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'name' => 'need',
                 'description' => 'Что нужно?',
                 'field_type' => 'string',
-                'error_message' => 'Укажите, что нужно',
+                'error_message' => 'Ничего не заказано',
             ],
             3 => [
                 'required' => false,
