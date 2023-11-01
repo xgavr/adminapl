@@ -691,7 +691,8 @@ STATUS_CANCELED  = -10; // Отменен.',
                     0 => [
                         'name' => \Laminas\I18n\Validator\PhoneNumber::class,
                         'options' => [
-                            'country' => 'RU',
+                            'allow_possible' => true,
+                            'country' => 'DE',
                         ],
                     ],
                 ],
@@ -702,6 +703,10 @@ STATUS_CANCELED  = -10; // Отменен.',
                     ],
                     1 => [
                         'name' => \Laminas\I18n\Filter\Alnum::class,
+                        'options' => [],
+                    ],
+                    2 => [
+                        'name' => \Laminas\Filter\Digits::class,
                         'options' => [],
                     ],
                 ],
