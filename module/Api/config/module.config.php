@@ -716,7 +716,7 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'error_message' => 'Номер телефона не указан или не верный',
             ],
             2 => [
-                'required' => true,
+                'required' => false,
                 'validators' => [],
                 'filters' => [
                     0 => [
