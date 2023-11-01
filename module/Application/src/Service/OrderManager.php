@@ -874,6 +874,7 @@ class OrderManager
                 $shipping = $this->entityManager->getRepository(Shipping::class)
                         ->findOneBy(['office' => $office->getId(), 'status' => Shipping::STATUS_ACTIVE]);
             }
+            $order->setShipping($shipping);
 
             $order->setSkiper(null);
             if (!empty($data['skiper'])){

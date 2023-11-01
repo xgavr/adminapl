@@ -45,6 +45,7 @@ class Order {
     const MODE_ORDER  = 3; // Заказ с сайта
     const MODE_FAST  = 4; // Быстрый заказ
     const MODE_INNER  = 5; // Внутренний заказ
+    const MODE_LANDING  = 6; // Заказ с лендинга
     
     const STATUS_EX_OK  = 1;// обновлено 
     const STATUS_EX_NO  = 2;// не обновлено

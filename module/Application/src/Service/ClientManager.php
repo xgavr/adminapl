@@ -142,17 +142,35 @@ class ClientManager
     /**
      * Поиск клиента по телефону
      * @param string $phoneName
-     * @return Client 
+     * @return Contact 
      */
     public function findByPhoneName($phoneName)
     {
+        $contact = null;
+        
         $phoneFilter = new PhoneFilter(['format' => PhoneFilter::PHONE_FORMAT_DB]);
         $phone = $this->entityManager->getRepository(Phone::class)
                 ->findByName($phoneFilter->filter($phoneName));
         if ($phone){
             $contact = $phone->getContact();
         }
-        return;        
+        return $contact;        
+    }
+
+    /**
+     * Поиск клиента по email
+     * @param string $emailName
+     * @return Contact 
+     */
+    public function findByEmailName($emailName)
+    {
+        $contact = null;
+        $email = $this->entityManager->getRepository(Email::class)
+                ->findBy(['name' => $emailName]);
+        if ($email){
+            $contact = $email->getContact();
+        }
+        return $contact;        
     }
     
     /**

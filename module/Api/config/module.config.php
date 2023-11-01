@@ -107,6 +107,15 @@ return [
                     ],
                 ],
             ],
+            'api.rest.api-landing' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api-landing[/:api_landing_id]',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\ApiLanding\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -142,6 +151,7 @@ return [
             \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookResource::class => \Api\V1\Rest\ApiTochkaWebhook\ApiTochkaWebhookResourceFactory::class,
             \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoResource::class => \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoResourceFactory::class,
             \Api\V1\Rest\ApiClientInfo\ApiClientInfoResource::class => \Api\V1\Rest\ApiClientInfo\ApiClientInfoResourceFactory::class,
+            \Api\V1\Rest\ApiLanding\ApiLandingResource::class => \Api\V1\Rest\ApiLanding\ApiLandingResourceFactory::class,
         ],
     ],
     'view_manager' => [
@@ -177,6 +187,7 @@ return [
             7 => 'api.rest.api-tochka-webhook',
             8 => 'api.rest.api-order-info',
             9 => 'api.rest.api-client-info',
+            10 => 'api.rest.api-landing',
         ],
     ],
     'api-tools-rpc' => [
@@ -200,6 +211,7 @@ return [
             'Api\\V1\\Rest\\ApiTochkaWebhook\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiOrderInfo\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiClientInfo\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\ApiLanding\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -252,6 +264,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiLanding\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -294,6 +311,10 @@ return [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiLanding\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
         ],
     ],
     'api-tools-content-validation' => [
@@ -314,6 +335,9 @@ return [
         ],
         'Api\\V1\\Rest\\ApiClientInfo\\Controller' => [
             'input_filter' => 'Api\\V1\\Rest\\ApiClientInfo\\Validator',
+        ],
+        'Api\\V1\\Rest\\ApiLanding\\Controller' => [
+            'input_filter' => 'Api\\V1\\Rest\\ApiLanding\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -643,6 +667,124 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'field_type' => 'int',
             ],
         ],
+        'Api\\V1\\Rest\\ApiLanding\\Validator' => [
+            0 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\UpperCaseWords::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'name',
+                'description' => 'Имя покупателя',
+                'field_type' => 'string',
+            ],
+            1 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\PhoneNumber::class,
+                        'options' => [
+                            'country' => 'RU',
+                        ],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'phone',
+                'description' => 'Телефон',
+                'field_type' => 'string',
+                'error_message' => 'Номер телефона не указан или не верный',
+            ],
+            2 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'need',
+                'description' => 'Что нужно?',
+                'field_type' => 'string',
+                'error_message' => 'Укажите, что нужно',
+            ],
+            3 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'address',
+                'description' => 'Самовывоз или куда доставить',
+            ],
+            4 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'email',
+                'description' => 'Электропочта',
+                'field_type' => 'string',
+            ],
+            5 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'geo',
+                'description' => 'ip покупателя',
+                'field_type' => 'string',
+            ],
+            6 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'office',
+                'description' => 'Офис самовывоза',
+                'field_type' => 'int',
+            ],
+            7 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'vin',
+                'description' => 'VIN номер',
+                'field_type' => 'string',
+            ],
+        ],
     ],
     'api-tools-rest' => [
         'Api\\V1\\Rest\\Good\\Controller' => [
@@ -846,6 +988,28 @@ STATUS_CANCELED  = -10; // Отменен.',
             'collection_class' => \Api\V1\Rest\ApiClientInfo\ApiClientInfoCollection::class,
             'service_name' => 'ApiClientInfo',
         ],
+        'Api\\V1\\Rest\\ApiLanding\\Controller' => [
+            'listener' => \Api\V1\Rest\ApiLanding\ApiLandingResource::class,
+            'route_name' => 'api.rest.api-landing',
+            'route_identifier_name' => 'api_landing_id',
+            'collection_name' => 'api_landing',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Api\V1\Rest\ApiLanding\ApiLandingEntity::class,
+            'collection_class' => \Api\V1\Rest\ApiLanding\ApiLandingCollection::class,
+            'service_name' => 'ApiLanding',
+        ],
     ],
     'api-tools-hal' => [
         'metadata_map' => [
@@ -955,6 +1119,18 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.api-client-info',
                 'route_identifier_name' => 'api_client_info_id',
+                'is_collection' => true,
+            ],
+            \Api\V1\Rest\ApiLanding\ApiLandingEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-landing',
+                'route_identifier_name' => 'api_landing_id',
+                'hydrator' => \Laminas\Hydrator\ArraySerializable::class,
+            ],
+            \Api\V1\Rest\ApiLanding\ApiLandingCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-landing',
+                'route_identifier_name' => 'api_landing_id',
                 'is_collection' => true,
             ],
         ],
