@@ -65,8 +65,7 @@ class ApiLandingResource extends AbstractResourceListener
 //            ]);
 //            
 //            return ['result' => 'Z'.$order->getId()];
-            
-            return ['result' => $data];
+            return ['result' => $data];            
         }    
         
         return new ApiProblem(404, 'Заказ не создан :(');
