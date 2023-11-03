@@ -66,12 +66,13 @@ class PtuRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('p, l, o, c, s')
+        $queryBuilder->select('p, l, o, c, s, i')
             ->from(Ptu::class, 'p')
             ->join('p.legal', 'l')
             ->join('p.office', 'o')    
             ->join('p.contract', 'c')    
             ->join('p.supplier', 's')    
+            ->leftJoin('p.idoc', 'i')    
                 ;
         
         if (is_array($params)){
@@ -105,6 +106,12 @@ class PtuRepository extends EntityRepository{
                 if (is_numeric($params['month'])){
                     $queryBuilder->andWhere('MONTH(p.docDate) = :month')
                             ->setParameter('month', $params['month']);
+                }    
+            }
+            if (!empty($params['ptuId'])){
+                if (is_numeric($params['ptuId'])){
+                    $queryBuilder->andWhere('p.id = :ptuId')
+                            ->setParameter('ptuId', $params['ptuId']);
                 }    
             }
             if (!empty($params['q'])){     

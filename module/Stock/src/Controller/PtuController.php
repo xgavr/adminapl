@@ -482,4 +482,46 @@ class PtuController extends AbstractActionController
         exit;
     }
     
+    public function repostExAction()
+    {
+        $ptuId = $this->params()->fromRoute('id', -1);
+        $ptu = $this->entityManager->getRepository(Ptu::class)
+                ->find($ptuId);        
+
+        if ($ptu == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->ptuManager->repostEx($ptu);
+        $query = $this->entityManager->getRepository(Ptu::class)
+                ->findAllPtu(['ptuId' => $ptu->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
+        return new JsonModel(
+           $result
+        );           
+    }     
+    
+    public function statusAction()
+    {
+        $ptuId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', Ptu::STATUS_ACTIVE);
+        $ptu = $this->entityManager->getRepository(Ptu::class)
+                ->find($ptuId);        
+
+        if ($ptu == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->ptuManager->updatePtuStatus($ptu, $status);
+        $query = $this->entityManager->getRepository(Ptu::class)
+                ->findAllPtu(['ptuId' => $ptu->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
+        return new JsonModel(
+           $result
+        );           
+    }            
 }

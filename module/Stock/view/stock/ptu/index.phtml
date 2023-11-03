@@ -76,6 +76,7 @@
             data-row-style="rowStyle"
             data-show-columns="true"
             data-minimum-count-columns="3"
+            data-unique-id="id"
             >
             <thead>
                 <tr>
@@ -93,6 +94,7 @@
                      <th data-field='statusEx' data-sortable="false">О</th>-->
                      <th data-field="id2" data-formatter="activeFormatter" data-width="5"></th>
                      <th data-field="id3" data-formatter="vtpFormatter" data-width="5"></th>
+                     <th data-field="id4" data-formatter="idocFormatter" data-width="5"></th>
                  </tr>                
             </thead>
         </table>
@@ -104,6 +106,15 @@
 <script type="text/javascript">
     var $table = $('#table'),
         $ok = $('#ok');
+    var curentRowIndex = -1;
+    
+    function setCurrentIndex(index){
+        curentRowIndex = index;
+    }
+    
+    function getCurrentIndex(){
+        return curentRowIndex;
+    }
         
     function refreshTable(){
         $table.bootstrapTable('selectPage', 1);
@@ -185,6 +196,21 @@
         btn += '</button>';
         return btn;
     }    
+
+    function idocFormatter(value, row){
+        if (row.idoc){
+            var url = '/bills/bill-setting-form/'+row.idoc.id;
+            btn = '<button';
+            btn += ' modal-url="'+url+'"';
+            btn += ' class="btn btn-default btn-xs bill-setting-modal-show"';
+            btn += ' title="Электронный документ">'; 
+            btn += '<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>';
+            btn += '</button>';
+            return btn;
+        }    
+        
+        return '';
+    }    
     
     function vtpFormatter(value, row){
         var info = $.parseJSON(row.info);
@@ -214,5 +240,87 @@
     function responseHandler(res) {
         return res;
     }    
+    
+    function changeStatus(ptuId, status){
+        $.get( "/ptu/status/"+ptuId+'?status='+status, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: ptuId, row: data});
+        });        
+    }
+
+    function repostEx(ptuId){
+        $.get( "/ptu/repost-ex/"+ptuId, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: ptuId, row: data});
+        });        
+    }
+
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            setCurrentIndex($(rowElem).attr('data-index'));
+            return $table.bootstrapTable('getData')[getCurrentIndex()];
+        },
+        actionsGroups: [
+           ['statusActiv', 'statusRetired', 'repostEx'], ['history']
+        ],      
+        actions: {
+            statusActiv: {
+                name: 'Сделать активным',
+                iconClass: 'glyphicon glyphicon-ok',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Ptu::STATUS_ACTIVE?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Ptu::STATUS_RETIRED?>;
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
+            }, 
+            statusRetired: {
+                name: 'Сделать не активным',
+                iconClass: 'glyphicon glyphicon-remove',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Ptu::STATUS_RETIRED?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Ptu::STATUS_ACTIVE?>;
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>' || row.status != <?= Ptu::STATUS_ACTIVE?>;
+                }                
+            },
+            repostEx: {
+                name: 'Обновить',
+                iconClass: 'glyphicon glyphicon-refresh',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    repostEx(row.id);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Ptu::STATUS_ACTIVE?>;
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
+            },
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.id+"?docType=ptu",
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
+                }
+            }
+        }
+    });        
 </script>
 

@@ -178,6 +178,33 @@ class PtuManager
     }    
     
     /**
+     * Update ptu status.
+     * @param Ptu $ptu
+     * @param integer $status
+     * @return integer
+     */
+    public function updatePtuStatus($ptu, $status)            
+    {
+
+        if ($ptu->getDocDate() > $this->allowDate || $ptu->getStatus() != Ptu::STATUS_ACTIVE){
+            $ptu->setStatus($status);
+            $ptu->setStatusEx(Ptu::STATUS_EX_NEW);
+            
+            if ($ptu->getDocDate() < $this->getAllowDate() && $status == Ptu::STATUS_RETIRED){
+                $ptu->setDocDate(date('Y-m-d', strtotime($this->getAllowDate().' + 1 day')));
+            }
+
+            $this->entityManager->persist($ptu);
+            $this->entityManager->flush($ptu);
+
+            $this->repostPtu($ptu);
+            $this->logManager->infoPtu($ptu, Log::STATUS_UPDATE);
+        }    
+        
+        return;
+    }
+    
+    /**
      * Перепроведение ПТУ
      * @param Ptu $ptu
      */
@@ -191,6 +218,21 @@ class PtuManager
         return;
     }
 
+    /**
+     * Перепровести и обновить
+     * @param Ptu $ptu
+     */
+    public function repostEx($ptu)
+    {
+        $this->repostPtu($ptu);
+        
+        $ptu->setStatusEx(Ptu::STATUS_EX_NEW);
+        $this->entityManager->persist($ptu);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
     /**
      * Перепроведение всех ПТУ
      * @param Ptu $ptu
