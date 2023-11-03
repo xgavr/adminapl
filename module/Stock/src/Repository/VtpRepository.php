@@ -165,6 +165,11 @@ class VtpRepository extends EntityRepository{
                 }    
 
                 $or->add($queryBuilder->expr()->like('g.code', '\''.$q.'%\''));
+
+                if (is_numeric($params['q'])){
+                    $or->add($queryBuilder->expr()->eq('v.id', $params['q']));                    
+                    $or->add($queryBuilder->expr()->eq('v.aplId', $params['q']));                    
+                }
                 
                 $queryBuilder->andWhere($or);        
             }
@@ -319,6 +324,11 @@ class VtpRepository extends EntityRepository{
 
                 $or->add($queryBuilder->expr()->like('g.code', '\''.$q.'%\''));
                 
+                if (is_numeric($params['q'])){
+                    $or->add($queryBuilder->expr()->eq('v.id', $params['q']));                    
+                    $or->add($queryBuilder->expr()->eq('v.aplId', $params['q']));                    
+                }
+
                 $queryBuilder->andWhere($or);        
             }
         }
