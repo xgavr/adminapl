@@ -151,19 +151,19 @@ if ($ptu){
         return res;
     }    
     
-    function changeStatus(vtpId, status){
+    function vtpChangeStatus(vtpId, status){
         $.get( "/vtp/status/"+vtpId+'?status='+status, function(data){
             $vtptable.bootstrapTable('updateByUniqueId', {id: vtpId, row: data});
         });        
     }
 
-    function changeStatusDoc(row, statusDoc, docDate){
+    function vtpChangeStatusDoc(row, statusDoc, docDate){
         $.get( "/vtp/status-doc/"+row.id+'?status='+statusDoc + '&docDate='+docDate, function(data){
             $vtptable.bootstrapTable('updateByUniqueId', {id: row.id, row: data});
         });        
     }
     
-    var menu = new BootstrapMenu('.vtptablerow', {
+    var vtpmenu = new BootstrapMenu('.vtptablerow', {
         fetchElementData: function(rowElem) {
             var rowId = $(rowElem).attr('data-index');
             return $vtptable.bootstrapTable('getData')[rowId];
@@ -188,7 +188,7 @@ if ($ptu){
                 name: 'Отправлен',
                 classNames: 'bg-warning',
                 onClick: function(row) {
-                    changeStatusDoc(row, <?= Vtp::STATUS_DOC_RECD?>);
+                    vtpChangeStatusDoc(row, <?= Vtp::STATUS_DOC_RECD?>);
                 },
                 isShown: function(row) {
                   return row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>';
@@ -210,7 +210,7 @@ if ($ptu){
                         min: (row.ptu.docDate > '<?= $allowDate?>') ? row.ptu.docDate:'<?= $allowDate?>',
                         callback: function (result) {
                             if (result){
-                                changeStatusDoc(row, <?= Vtp::STATUS_DOC_NOT_RECD?>, result);
+                                vtpChangeStatusDoc(row, <?= Vtp::STATUS_DOC_NOT_RECD?>, result);
                             }    
                         }
                     });                    
@@ -235,13 +235,13 @@ if ($ptu){
                             min: (row.ptu.docDate > '<?= $allowDate?>') ? row.ptu.docDate:'<?= $allowDate?>',
                             callback: function (result) {
                                 if (result){
-                                    changeStatusDoc(row, <?= Vtp::STATUS_DOC_NOT_RECD?>, result);
-                                    changeStatus(row.id, <?= Vtp::STATUS_ACTIVE?>);
+                                    vtpChangeStatusDoc(row, <?= Vtp::STATUS_DOC_NOT_RECD?>, result);
+                                    vtpChangeStatus(row.id, <?= Vtp::STATUS_ACTIVE?>);
                                 }    
                             }
                         });                                            
                     } else {    
-                        changeStatus(row.id, <?= Vtp::STATUS_ACTIVE?>);
+                        vtpChangeStatus(row.id, <?= Vtp::STATUS_ACTIVE?>);
                     }    
                 },
                 isShown: function(row) {
@@ -256,7 +256,7 @@ if ($ptu){
                 iconClass: 'glyphicon glyphicon-remove',
 //                classNames: 'bg-danger',
                 onClick: function(row) {
-                    changeStatus(row.id, <?= Vtp::STATUS_RETIRED?>);
+                    vtpChangeStatus(row.id, <?= Vtp::STATUS_RETIRED?>);
                 },
                 isShown: function(row) {
                   return row.status == <?= Vtp::STATUS_ACTIVE?>;
