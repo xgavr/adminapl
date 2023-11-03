@@ -16,6 +16,7 @@ use Company\Entity\Office;
 use Application\Filter\ArticleCode;
 use Application\Entity\SupplierOrder;
 use Application\Entity\Order;
+use Laminas\Filter\Digits;
 
 /**
  * Description of PtuRepository
@@ -23,6 +24,7 @@ use Application\Entity\Order;
  * @author Daddy
  */
 class PtuRepository extends EntityRepository{
+        
     
     /**
      * Сумма ПТУ
@@ -113,15 +115,13 @@ class PtuRepository extends EntityRepository{
                         ->join('p.ptuGoods', 'pg')
                         ->join('pg.good', 'g')
                         ;
-//                        ->andWhere('g.code like :q')
-//                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
                 
                 $orX->add($queryBuilder->expr()->like('g.code', $queryBuilder->expr()->literal($articleCodeFilter->filter($params['q']).'%')));
-                
-//                if (is_numeric($params['q'])){
-//                    $orX->add($queryBuilder->expr()->eq('p.id', $params['q']));                    
-//                    $orX->add($queryBuilder->expr()->eq('p.aplId', $params['q']));                    
-//                }
+                                
+                if (is_numeric($params['q'])){
+                    $orX->add($queryBuilder->expr()->eq('p.id', $params['q']));                    
+                    $orX->add($queryBuilder->expr()->eq('p.aplId', $params['q']));                    
+                }
                 
                 $queryBuilder->andWhere($orX);
             }
@@ -230,12 +230,22 @@ class PtuRepository extends EntityRepository{
                 }    
             }
             if (!empty($params['q'])){     
+                $orX = $queryBuilder->expr()->orX();
+
                 $articleCodeFilter = new ArticleCode(); 
                 $queryBuilder->distinct()
                         ->join('p.ptuGoods', 'pg')
                         ->join('pg.good', 'g')
-                        ->andWhere('g.code like :q')
-                        ->setParameter('q', $articleCodeFilter->filter($params['q']).'%');
+                        ;
+                
+                $orX->add($queryBuilder->expr()->like('g.code', $queryBuilder->expr()->literal($articleCodeFilter->filter($params['q']).'%')));
+                                
+                if (is_numeric($params['q'])){
+                    $orX->add($queryBuilder->expr()->eq('p.id', $params['q']));                    
+                    $orX->add($queryBuilder->expr()->eq('p.aplId', $params['q']));                    
+                }
+                
+                $queryBuilder->andWhere($orX);
             }
         }
         

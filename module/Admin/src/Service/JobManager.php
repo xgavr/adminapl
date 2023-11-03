@@ -154,6 +154,7 @@ class JobManager
 
     /**
      * Обработка данных, ежедневные
+     * (Не использовать 3 часа - запуск резервного копирования)
      * @return array
      */
     private function updateJobList()
@@ -174,7 +175,7 @@ class JobManager
           513 => ['command' => 'update-supplier-amount',            'shedule' => '14 0 * * *',  'description' => 'Обновление сумм поставок поставщиков'],
           514 => ['command' => 'update-good-car-count',             'shedule' => '14 1 * * *',  'description' => 'Обновление количества машин у товаров'],
           515 => ['command' => 'delete-producer',                   'shedule' => '14 2 * * *',  'description' => 'Удаление пустых производителей'],
-          516 => ['command' => 'delete-article',                    'shedule' => '14 3 * * *',  'description' => 'Удаление пустых артикулов производителей'],
+          516 => ['command' => 'delete-article',                    'shedule' => '44 2 * * *',  'description' => 'Удаление пустых артикулов производителей'],
           517 => ['command' => 'delete-unknown-producer',           'shedule' => '14 4 * * *',  'description' => 'Удаление пустых неизвестных производителей'],
           518 => ['command' => 'delete-token',                      'shedule' => '14 5 * * *',  'description' => 'Удаление пустых токенов'],
           523 => ['command' => 'update-apl-acquiring',              'shedule' => '14 6 * * *',  'description' => 'Загрузить эквайринг с АПЛ'],
@@ -188,7 +189,7 @@ class JobManager
           527 => ['command' => 'update-model-apl-id',               'shedule' => '44 14 * * *', 'description' => 'Обновление aplId моделей машин'],
           528 => ['command' => 'update-producer-apl-id',            'shedule' => '44 15 * * *', 'description' => 'Обновление производителей APL ID'],
           529 => ['command' => 'update-user',                       'shedule' => '44 16 * * *', 'description' => 'Обновление сотрудников'],
-          529 => ['command' => 'market-place-reports',              'shedule' => '40 3 * * *',  'description' => 'Загрузка отчетов ТП'],
+          529 => ['command' => 'market-place-reports',              'shedule' => '40 2 * * *',  'description' => 'Загрузка отчетов ТП'],
         ];
     }
 
