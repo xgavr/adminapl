@@ -54,6 +54,7 @@ class PtuController extends AbstractActionController
         return new ViewModel([
             'suppliers' => $suppliers,
             'offices' => $offices,
+            'allowDate' => date('Y-m-d', strtotime($this->ptuManager->getAllowDate().' + 1 day')),
         ]);  
     }
         
