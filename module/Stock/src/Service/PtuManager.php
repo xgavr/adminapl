@@ -92,7 +92,7 @@ class PtuManager
                 'doc_type' => Movement::DOC_PTU,
                 'doc_id' => $ptu->getId(),
                 'date_oper' => $ptu->getDocDate(),
-                'status' => $ptu->getStatus(),
+                'status' => Mutual::getStatusFromPtu($ptu),
                 'revise' => Mutual::REVISE_NOT,
                 'amount' => -$ptu->getAmount(),
                 'legal_id' => $ptu->getLegal()->getId(),

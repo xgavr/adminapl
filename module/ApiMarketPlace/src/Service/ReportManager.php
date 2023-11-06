@@ -316,25 +316,23 @@ class ReportManager
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($marketSaleReport->getLogKey());
         
-        if ($marketSaleReport->getStatus() == MarketSaleReport::STATUS_ACTIVE){
-            $data = [
-                'doc_key' => $marketSaleReport->getLogKey(),
-                'doc_type' => Movement::DOC_MSR,
-                'doc_id' => $marketSaleReport->getId(),
-                'date_oper' => $marketSaleReport->getDocDate(),
-                'status' => $marketSaleReport->getStatus(),
-                'revise' => Mutual::REVISE_NOT,
-                'amount' => $marketSaleReport->getDocAmount(),
-                'legal_id' => $marketSaleReport->getContract()->getLegal()->getId(),
-                'contract_id' => $marketSaleReport->getContract()->getId(),
-                'office_id' => $marketSaleReport->getContract()->getOffice()->getId(),
-                'company_id' => $marketSaleReport->getContract()->getCompany()->getId(),
-                'doc_stamp' => $docStamp,
-            ];
+        $data = [
+            'doc_key' => $marketSaleReport->getLogKey(),
+            'doc_type' => Movement::DOC_MSR,
+            'doc_id' => $marketSaleReport->getId(),
+            'date_oper' => $marketSaleReport->getDocDate(),
+            'status' => Mutual::getStatusFromReport($marketSaleReport),
+            'revise' => Mutual::REVISE_NOT,
+            'amount' => $marketSaleReport->getDocAmount(),
+            'legal_id' => $marketSaleReport->getContract()->getLegal()->getId(),
+            'contract_id' => $marketSaleReport->getContract()->getId(),
+            'office_id' => $marketSaleReport->getContract()->getOffice()->getId(),
+            'company_id' => $marketSaleReport->getContract()->getCompany()->getId(),
+            'doc_stamp' => $docStamp,
+        ];
 
-            $this->entityManager->getRepository(Mutual::class)
-                    ->insertMutual($data);
-        }    
+        $this->entityManager->getRepository(Mutual::class)
+                ->insertMutual($data);
          
         return;
     }    

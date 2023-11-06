@@ -111,7 +111,7 @@ class PtManager
         $this->entityManager->getRepository(Comiss::class)
                 ->removeDocComiss($pt->getLogKey());
                 
-        $ptTake = Pt::STATUS_ACCOUNT_NO;
+        $ptTake = $pt->getStatusAccount();
         
             $ptGoods = $this->entityManager->getRepository(PtGood::class)
                     ->findByPt($pt->getId());

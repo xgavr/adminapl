@@ -268,6 +268,7 @@ class ReviseManager
         $revise->setContact(empty($data['contact']) ? null:$data['contact']);
         $revise->setInfo(empty($data['info']) ? null:$data['info']);
         $revise->setKind($data['kind']);
+        $revise->setStatusAccount(Revise::STATUS_ACCOUNT_NO);
         
         $revise->setDateCreated(date('Y-m-d H:i:s'));
         $creator = $this->logManager->currentUser();
@@ -311,6 +312,7 @@ class ReviseManager
         $revise->setContact(empty($data['contact']) ? null:$data['contact']);
         $revise->setInfo(empty($data['info']) ? null:$data['info']);
         $revise->setKind($data['kind']);
+        $revise->setStatusAccount(Revise::STATUS_ACCOUNT_NO);
         
         $this->entityManager->persist($revise);
         $this->entityManager->flush($revise);

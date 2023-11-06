@@ -398,7 +398,7 @@ class OrderManager
         $bids = $this->entityManager->getRepository(Bid::class)
                 ->findByOrder($order->getId());
         
-        $orderTake = Order::STATUS_ACCOUNT_NO;
+        $orderTake = $order->getStatusAccount();
         
         foreach ($bids as $bid){
             if ($this->insertMovement($order, $docStamp, $bid) > 0){

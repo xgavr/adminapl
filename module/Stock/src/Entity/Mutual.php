@@ -16,6 +16,9 @@ use Stock\Entity\Pt;
 use Stock\Entity\Vt;
 use Application\Entity\Order;
 use Stock\Entity\Revision;
+use ApiMarketPlace\Entity\MarketSaleReport;
+use Stock\Entity\Ptu;
+use Stock\Entity\Vtp;
 
 
 /**
@@ -235,6 +238,20 @@ class Mutual {
     }    
     
     /**
+     * Returns possible ptu status.
+     * @param Ptu $ptu
+     * @return integer
+     */
+    public static function getStatusFromPtu($ptu) 
+    {
+        switch ($ptu->getStatus()){
+            case Ptu::STATUS_RETIRED: return self::STATUS_RETIRED;
+            case Ptu::STATUS_COMMISSION: return self::STATUS_COMMISSION;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+    
+    /**
      * Returns possible pt status.
      * @param Pt $pt
      * @return integer
@@ -249,7 +266,7 @@ class Mutual {
     
     /**
      * Returns possible vt status.
-     * @param Vt $pt
+     * @param Vt $vt
      * @return integer
      */
     public static function getStatusFromVt($vt) 
@@ -257,6 +274,42 @@ class Mutual {
         switch ($vt->getStatus()){
             case Vt::STATUS_RETIRED: return self::STATUS_RETIRED;
             case Vt::STATUS_COMMISSION: return self::STATUS_COMMISSION;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+
+    /**
+     * Returns possible vtp status.
+     * @param Vtp $vtp
+     * @return integer
+     */
+    public static function getStatusFromVtp($vtp) 
+    {
+        if ($vtp->getStatusDoc() == Vtp::STATUS_DOC_NOT_RECD){
+            switch ($vtp->getStatus()){
+                case Vtp::STATUS_RETIRED: 
+                    return self::STATUS_RETIRED;
+                case Vtp::STATUS_COMMISSION:
+                case Vtp::STATUS_DEFECT: 
+                case Vtp::STATUS_WAIT: 
+                    return self::STATUS_COMMISSION;
+                default: 
+                        return self::STATUS_ACTIVE;    
+            }
+        }    
+        
+        return self::STATUS_RETIRED;
+    }    
+
+    /**
+     * Returns possible report status.
+     * @param MarketSaleReport $report
+     * @return integer
+     */
+    public static function getStatusFromReport($report) 
+    {
+        switch ($report->getStatus()){
+            case MarketSaleReport::STATUS_RETIRED: return self::STATUS_RETIRED;
             default: return self::STATUS_ACTIVE;    
         }
     }    

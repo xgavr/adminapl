@@ -76,25 +76,23 @@ class VtpManager
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($vtp->getLogKey());
         
-        if ($vtp->getStatus() == Vtp::STATUS_ACTIVE && $vtp->getStatusDoc() == Vtp::STATUS_DOC_NOT_RECD){
-            $data = [
-                'doc_key' => $vtp->getLogKey(),
-                'doc_type' => Movement::DOC_VTP,
-                'doc_id' => $vtp->getId(),
-                'date_oper' => $vtp->getDocDate(),
-                'status' => $vtp->getStatus(),
-                'revise' => Mutual::REVISE_NOT,
-                'amount' => $vtp->getAmount(),
-                'legal_id' => $vtp->getPtu()->getLegal()->getId(),
-                'contract_id' => $vtp->getPtu()->getContract()->getId(),
-                'office_id' => $vtp->getPtu()->getOffice()->getId(),
-                'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
-                'doc_stamp' => $docStamp,
-            ];
+        $data = [
+            'doc_key' => $vtp->getLogKey(),
+            'doc_type' => Movement::DOC_VTP,
+            'doc_id' => $vtp->getId(),
+            'date_oper' => $vtp->getDocDate(),
+            'status' => Mutual::getStatusFromVtp($vtp),
+            'revise' => Mutual::REVISE_NOT,
+            'amount' => $vtp->getAmount(),
+            'legal_id' => $vtp->getPtu()->getLegal()->getId(),
+            'contract_id' => $vtp->getPtu()->getContract()->getId(),
+            'office_id' => $vtp->getPtu()->getOffice()->getId(),
+            'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
+            'doc_stamp' => $docStamp,
+        ];
 
-            $this->entityManager->getRepository(Mutual::class)
-                    ->insertMutual($data);
-        }    
+        $this->entityManager->getRepository(Mutual::class)
+                ->insertMutual($data);
          
         return;
     }    
@@ -111,7 +109,7 @@ class VtpManager
                 ->vtpRegister($vtp);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($vtp->getLogKey());
-        $vtpTake = Vtp::STATUS_ACCOUNT_NO;
+        $vtpTake = $vtp->getStatusAccount();
 
         $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
                     ->findByVtp($vtp->getId());

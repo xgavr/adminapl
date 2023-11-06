@@ -201,7 +201,7 @@ class VtManager
         $vtGoods = $this->entityManager->getRepository(VtGood::class)
                 ->findByVt($vt->getId());
         
-        $vtTake = Vt::STATUS_ACCOUNT_NO;
+        $vtTake = $vt->getStatusAccount();
         foreach ($vtGoods as $vtGood){
             if ($vt->getStatus() != Vt::STATUS_RETIRED){
                 
