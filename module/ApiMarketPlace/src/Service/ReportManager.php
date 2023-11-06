@@ -386,7 +386,8 @@ class ReportManager
     {
         $this->clearComitent($marketSaleReport);
         
-        $msrTake = MarketSaleReport::STATUS_ACCOUNT_NO;
+        $msrTake = $marketSaleReport->getStatusAccount();
+        
         $contract = $marketSaleReport->getMarketplace()->getContract();
         $reportBaseTotal = 0;
         if ($marketSaleReport->getStatus() == MarketSaleReport::STATUS_ACTIVE){
