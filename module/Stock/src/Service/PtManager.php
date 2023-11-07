@@ -112,9 +112,12 @@ class PtManager
                 ->removeDocComiss($pt->getLogKey());
                 
         $ptTake = $pt->getStatusAccount();
+        if ($pt->getStatusAccount() == Pt::STATUS_TAKE_NO){
+            $ptTake = Pt::STATUS_ACCOUNT_NO;
+        }
         
-            $ptGoods = $this->entityManager->getRepository(PtGood::class)
-                    ->findByPt($pt->getId());
+        $ptGoods = $this->entityManager->getRepository(PtGood::class)
+                ->findByPt($pt->getId());
 
         foreach ($ptGoods as $ptGood){
 

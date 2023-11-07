@@ -399,6 +399,9 @@ class OrderManager
                 ->findByOrder($order->getId());
         
         $orderTake = $order->getStatusAccount();
+        if ($order->getStatusAccount() == Order::STATUS_TAKE_NO){
+            $orderTake = Order::STATUS_ACCOUNT_NO;
+        }
         
         foreach ($bids as $bid){
             if ($this->insertMovement($order, $docStamp, $bid) > 0){

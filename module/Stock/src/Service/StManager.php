@@ -94,7 +94,12 @@ class StManager
                 ->removeDocComiss($st->getLogKey());
         $this->entityManager->getRepository(Retail::class)
                 ->removeOrderRetails($st->getLogKey());
-        $stTake = St::STATUS_ACCOUNT_NO;
+        
+        $stTake = $st->getStatusAccount();
+        if ($st->getStatusAccount() == St::STATUS_TAKE_NO){
+            $stTake = St::STATUS_ACCOUNT_NO;
+        }
+
         $stGoods = $this->entityManager->getRepository(StGood::class)
                 ->findBySt($st->getId());
 

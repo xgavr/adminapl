@@ -109,7 +109,11 @@ class VtpManager
                 ->vtpRegister($vtp);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($vtp->getLogKey());
+        
         $vtpTake = $vtp->getStatusAccount();
+        if ($vtp->getStatusAccount() == Vtp::STATUS_TAKE_NO){
+            $vtpTake = Vtp::STATUS_ACCOUNT_NO;
+        }
 
         $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
                     ->findByVtp($vtp->getId());

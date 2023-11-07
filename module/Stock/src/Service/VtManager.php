@@ -202,6 +202,10 @@ class VtManager
                 ->findByVt($vt->getId());
         
         $vtTake = $vt->getStatusAccount();
+        if ($vt->getStatusAccount() == Vt::STATUS_TAKE_NO){
+            $vtTake = Vt::STATUS_ACCOUNT_NO;
+        }
+
         foreach ($vtGoods as $vtGood){
             if ($vt->getStatus() != Vt::STATUS_RETIRED){
                 
