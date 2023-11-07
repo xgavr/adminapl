@@ -17,6 +17,18 @@ $form->get('good')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('saleQty')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('salePriceSeller')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('priceSale')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'msr-good-submit']);
 
 $form->prepare();
@@ -58,6 +70,27 @@ $docName = 'Новый';
         </div>    
     </div>
     <div class="row">
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('saleQty')); ?>
+                <?= $this->formElement($form->get('saleQty')); ?>
+                <?= $this->formElementErrors($form->get('saleQty')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('salePriceSeller')); ?>
+                <?= $this->formElement($form->get('salePriceSeller')); ?>
+                <?= $this->formElementErrors($form->get('salePriceSeller')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('priceSale')); ?>
+                <?= $this->formElement($form->get('priceSale')); ?>
+                <?= $this->formElementErrors($form->get('priceSale')); ?>                  
+            </div>
+        </div>
     </div>    
 
     <?= $this->formElement($form->get('good')); ?>

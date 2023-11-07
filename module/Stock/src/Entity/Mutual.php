@@ -273,7 +273,10 @@ class Mutual {
     {
         switch ($vt->getStatus()){
             case Vt::STATUS_RETIRED: return self::STATUS_RETIRED;
-            case Vt::STATUS_COMMISSION: return self::STATUS_COMMISSION;
+            case Vt::STATUS_COMMISSION: 
+            case Vt::STATUS_DEFECT: 
+            case Vt::STATUS_WAIT: 
+                return self::STATUS_COMMISSION;
             default: return self::STATUS_ACTIVE;    
         }
     }    
@@ -289,12 +292,8 @@ class Mutual {
             switch ($vtp->getStatus()){
                 case Vtp::STATUS_RETIRED: 
                     return self::STATUS_RETIRED;
-                case Vtp::STATUS_COMMISSION:
-                case Vtp::STATUS_DEFECT: 
-                case Vtp::STATUS_WAIT: 
-                    return self::STATUS_COMMISSION;
                 default: 
-                        return self::STATUS_ACTIVE;    
+                    return self::STATUS_ACTIVE;    
             }
         }    
         

@@ -91,13 +91,17 @@ class ReportManager
      * Добавить/обновить отчет по реализации
      * @param Marketplace $marketplace
      * @param array $header
+     * @param int $reportType
+     * 
+     * @return MarketSaleReport
      */
-    private function findReport($marketplace, $header)
+    private function findReport($marketplace, $header, $reportType = MarketSaleReport::TYPE_REPORT)
     {
         $report = null;
         if (isset($header['num'])){
             $report = $this->entityManager->getRepository(MarketSaleReport::class)
-                    ->findOneBy(['marketplace' => $marketplace->getId(), 'num' => $header['num']]);
+                    ->findOneBy(['marketplace' => $marketplace->getId(), 
+                        'num' => $header['num'], 'reportType' => $reportType]);
             if (!$report){                
                 if ($marketplace->getContact()){
                     $report = new MarketSaleReport();
@@ -108,7 +112,7 @@ class ReportManager
                     $report->setBaseAmount(0);
                     $report->setCostAmount(0);
                     $report->setComment('');
-                    $report->setReportType(MarketSaleReport::TYPE_REPORT);
+                    $report->setReportType($reportType);
                 }    
             }
         }
@@ -255,7 +259,7 @@ class ReportManager
         $saleReport = $this->ozonService->realization($date);
 //        var_dump($saleReport);
         if (is_array($saleReport)){
-            $report = $this->findReport($marketplace, $saleReport['header']);
+            $report = $this->findReport($marketplace, $saleReport['header'], MarketSaleReport::TYPE_REPORT);
             if ($report){
                 $this->clearReport($report);
                 $this->addReportItems($report, $saleReport['rows']);

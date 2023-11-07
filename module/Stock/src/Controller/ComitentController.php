@@ -139,6 +139,15 @@ class ComitentController extends AbstractActionController
         
         $form = new MarketSaleReportForm($this->entityManager);
         
+        $marketplaceList = [];
+        $marketplaces = $this->entityManager->getRepository(Marketplace::class)
+                ->findBy([]);
+        foreach ($marketplaces as $row){
+            $marketplaceList[$row->getId()] = $row->getName();
+        }
+        $form->get('marketplace')->setValueOptions($marketplaceList);
+        
+        
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
@@ -161,7 +170,7 @@ class ComitentController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'marketSaleReport' => $report,
+            'report' => $report,
         ]);        
     }        
     

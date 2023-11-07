@@ -139,7 +139,7 @@ $form->prepare();
         //console.log(data);
         $.ajax({
             type: 'POST',
-            url: '/comitent/compensation-edit-form/<?= ($revise) ? $revise->getId():"" ?>?kind=<?= $kind?>',
+            url: '/comitent/compensation-edit-form/<?= ($report) ? $report->getId():"" ?>',
             data: $.param(data)
         })
             .done(function (data) {

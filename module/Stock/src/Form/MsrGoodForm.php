@@ -82,6 +82,39 @@ class MsrGoodForm extends Form implements ObjectManagerAwareInterface
             ],
        ]);        
 
+        $this->add([
+            'type'  => 'number',
+            'name' => 'saleQty',
+            'attributes' => [                
+                'id' => 'saleQty'
+            ],
+            'options' => [
+                'label' => 'Количество',
+            ],
+       ]);        
+
+        $this->add([
+            'type'  => 'text',
+            'name' => 'priceSale',
+            'attributes' => [                
+                'id' => 'priceSale'
+            ],
+            'options' => [
+                'label' => 'Цена',
+            ],
+       ]);        
+
+        $this->add([
+            'type'  => 'text',
+            'name' => 'salePriceSeller',
+            'attributes' => [                
+                'id' => 'salePriceSeller'
+            ],
+            'options' => [
+                'label' => 'Сумма',
+            ],
+       ]);        
+
 
         // Добавляем кнопку отправки формы
         $this->add([

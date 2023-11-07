@@ -488,6 +488,31 @@ class MarketSaleReport {
         return $this->reportType;
     }
 
+    /**
+     * Returns possible report type as array.
+     * @return array
+     */
+    public static function getReportTypeList() 
+    {
+        return [
+            self::TYPE_REPORT => 'Реализация',
+            self::TYPE_COMPENSATION => 'Компенсация',
+        ];
+    }    
+    
+    /**
+     * Returns report type as string.
+     * @return string
+     */
+    public function getReportTypeAsString()
+    {
+        $list = self::getReportTypeList();
+        if (isset($list[$this->reportType]))
+            return $list[$this->reportType];
+        
+        return 'Unknown';
+    }    
+    
     public function setReportType($reportType) {
         $this->reportType = $reportType;
         return $this;
