@@ -185,12 +185,15 @@ class ReportManager
     public function addReportItems($report, $data)
     {
         foreach ($data as $row){
-            $good = null;
+            $good = $offerId = null;
             $complect = 1;
             if (!empty($row['good_id'])){
                 if (is_numeric($row['good_id'])){
                     $good = $this->entityManager->getRepository(Goods::class)
-                            ->find($row['good_id']);                    
+                            ->find($row['good_id']);
+                    if ($good){
+                        $offerId = $good->getAplId();
+                    }        
                 }
             }
 
