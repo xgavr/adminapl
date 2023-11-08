@@ -163,26 +163,28 @@ class MarketplaceRepository extends EntityRepository
     {
         $cost = 0;
         
-        $entityManager = $this->getEntityManager();
+        if ($marketSaleReport->getReportType() == MarketSaleReport::TYPE_REPORT){
+            $entityManager = $this->getEntityManager();
 
-        $queryBuilder = $entityManager->createQueryBuilder();
+            $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('sum(r.amount) as cost')
-            ->from(Revise::class, 'r')
-            ->where('r.contract = :contractId')
-            ->setParameter('contractId', $marketSaleReport->getContract()->getId())    
-            ->andWhere('r.docDate >= :date1')
-            ->setParameter('date1', date('Y-m-01', strtotime($marketSaleReport->getDocDate())))    
-            ->andWhere('r.docDate <= :date2')
-            ->setParameter('date2', date('Y-m-t', strtotime($marketSaleReport->getDocDate())))
-            ->setMaxResults(1)    
-                ;
-                
-        $row = $queryBuilder->getQuery()->getOneOrNullResult();   
-        
-        if ($row){
-            $cost = abs($row['cost']);
-        }
+            $queryBuilder->select('sum(r.amount) as cost')
+                ->from(Revise::class, 'r')
+                ->where('r.contract = :contractId')
+                ->setParameter('contractId', $marketSaleReport->getContract()->getId())    
+                ->andWhere('r.docDate >= :date1')
+                ->setParameter('date1', date('Y-m-01', strtotime($marketSaleReport->getDocDate())))    
+                ->andWhere('r.docDate <= :date2')
+                ->setParameter('date2', date('Y-m-t', strtotime($marketSaleReport->getDocDate())))
+                ->setMaxResults(1)    
+                    ;
+
+            $row = $queryBuilder->getQuery()->getOneOrNullResult();   
+
+            if ($row){
+                $cost = abs($row['cost']);
+            }
+        }    
         
         $entityManager->getConnection()->update('market_sale_report', ['cost_amount' => $cost], ['id' => $marketSaleReport->getId()]);
         

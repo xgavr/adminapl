@@ -171,5 +171,15 @@ $docName = 'Новый';
             }
         });        
         
-    });    
+        $("#priceSale").on('input', function(){
+            var value = $(this).val();
+            $(this).val(value.replace(",","."));
+        });
+        
+        $("#salePriceSeller").on('input', function(){
+            var value = $(this).val();
+            $(this).val(parseFloat(value.replace(",",".").replace(/\s/g, '')));
+        });
+        
+    });            
 </script>
