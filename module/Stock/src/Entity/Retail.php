@@ -123,6 +123,12 @@ class Retail {
      * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
      */
     private $reviseDoc;    
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ApiMarketPlace\Entity\MarketSaleReport", inversedBy="retails") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $marketSaleReport;    
         
     public function __construct() {
     }
@@ -447,5 +453,24 @@ class Retail {
     public function setReviseDoc($reviseDoc) 
     {
         $this->reviseDoc = $reviseDoc;
-    }                         
+    }     
+    
+    /**
+     * 
+     * @return MarketSaleReport
+     */
+    public function getMarketSaleReport() {
+        return $this->marketSaleReport;
+    }
+
+    /**
+     * 
+     * @param MarketSaleReport $marketSaleReport
+     * @return $this
+     */
+    public function setMarketSaleReport($marketSaleReport) {
+        $this->marketSaleReport = $marketSaleReport;
+        return $this;
+    }
+
 }

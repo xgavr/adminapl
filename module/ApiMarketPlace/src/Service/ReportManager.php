@@ -111,7 +111,6 @@ class ReportManager
                     $report->setContract($marketplace->getContract());
                     $report->setBaseAmount(0);
                     $report->setCostAmount(0);
-                    $report->setComment('');
                     $report->setReportType($reportType);
                 }    
             }
@@ -119,6 +118,7 @@ class ReportManager
         
         if ($report){
             $report->setCurrencyCode(empty($header['currency_code']) ? 'RUR':$header['currency_code']);
+            $report->setComment(empty($header['comment']) ? null:$header['comment']);
             $report->setDocAmount(empty($header['doc_amount']) ? 0:$header['doc_amount']);
             $report->setDocDate(empty($header['doc_date']) ? null:$header['doc_date']);
             $report->setStartDate(empty($header['start_date']) ? $header['doc_date']:$header['start_date']);

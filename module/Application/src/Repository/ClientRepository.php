@@ -285,7 +285,7 @@ class ClientRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r, o, c, contract, rd, cd, cash, user')
+        $queryBuilder->select('r, o, c, contract, rd, cd, cash, user, msr')
             ->from(Retail::class, 'r')
             ->join('r.contact', 'ct')
             ->join('r.company', 'c')
@@ -293,6 +293,7 @@ class ClientRepository extends EntityRepository{
             ->leftJoin('r.contract', 'contract')    
             ->leftJoin('r.reviseDoc', 'rd', 'WITH', 'r.docType = '.Movement::DOC_REVISE) 
             ->leftJoin('r.cashDoc', 'cd', 'WITH', 'r.docType = '.Movement::DOC_CASH) 
+            ->leftJoin('r.marketSaleReport', 'msr', 'WITH', 'r.docType = '.Movement::DOC_MSR) 
 //            ->leftJoin('cd.order', 'ord') 
             ->leftJoin('cd.cash', 'cash') 
             ->leftJoin('cd.user', 'user') 
