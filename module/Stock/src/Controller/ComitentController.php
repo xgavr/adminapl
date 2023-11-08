@@ -17,6 +17,7 @@ use ApiMarketPlace\Entity\MarketSaleReportItem;
 use Stock\Form\MsrGoodForm;
 use Application\Entity\Goods;
 use Stock\Form\MarketSaleReportForm;
+use Admin\Filter\ArrayKeysCamelCase;
 
 class ComitentController extends AbstractActionController
 {
@@ -123,15 +124,9 @@ class ComitentController extends AbstractActionController
     public function reportFormAction()
     {
         $reportId = (int)$this->params()->fromRoute('id', -1);
-        $marketplaceId = (int) $this->params()->fromQuery('marketplace', -1);
         
         $report = null;
-        
-        if ($marketplaceId > 0){
-            $marketplace = $this->entityManager->getRepository(Marketplace::class)
-                    ->find($marketplaceId);
-        }
-        
+                
         if ($reportId > 0){
             $report = $this->entityManager->getRepository(MarketSaleReport::class)
                     ->find($reportId);
@@ -145,8 +140,7 @@ class ComitentController extends AbstractActionController
         foreach ($marketplaces as $row){
             $marketplaceList[$row->getId()] = $row->getName();
         }
-        $form->get('marketplace')->setValueOptions($marketplaceList);
-        
+        $form->get('marketplace')->setValueOptions($marketplaceList);        
         
         if ($this->getRequest()->isPost()) {
             
@@ -155,7 +149,16 @@ class ComitentController extends AbstractActionController
 
             if ($form->isValid()) {
                 
-                $this->reportManager->ozonRealization($revise, $data);
+                $marketplace = $this->entityManager->getRepository(Marketplace::class)
+                        ->find($data['marketplace']);
+                
+                $filter = new ArrayKeysCamelCase();
+                $filteredData = $filter->filter($data);
+                
+                $report = $this->reportManager->findReport($marketplace, $filteredData, MarketSaleReport::TYPE_COMPENSATION);
+                $this->reportManager->clearReport($report);
+                $this->reportManager->addReportItems($report, $filteredData['report_good']);
+                $this->reportManager->repostMarketSaleReport($report);
                 
                 return new JsonModel(
                    ['ok']
@@ -163,7 +166,7 @@ class ComitentController extends AbstractActionController
             }
         } else {
             if ($report){
-                $form->setData($revise->toArray());
+                $form->setData($report->toLog());
             }    
         }
         $this->layout()->setTemplate('layout/terminal');
@@ -173,6 +176,65 @@ class ComitentController extends AbstractActionController
             'report' => $report,
         ]);        
     }        
+    
+    public function reportGoodEditFormAction()
+    {        
+        $params = $this->params()->fromQuery();
+//        var_dump($params); exit;
+        $good = $rowNo = $result = null;        
+        if (isset($params['good'])){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($params['good']['id']);            
+        }
+        if (isset($params['rowNumber'])){
+            $rowNo = $params['rowNumber'];
+        }
+        
+        $form = new MsrGoodForm($this->entityManager, $good);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+            if (isset($data['good'])){
+                $good = $this->entityManager->getRepository(Goods::class)
+                        ->find($data['good']);            
+            }
+
+            if ($form->isValid()) {
+                $result = 'ok';
+                return new JsonModel([
+                    'result' => $result,
+                    'good' => [
+                        'id' => $good->getId(),
+                        'code' => $good->getCode(),
+                        'name' => $good->getNameShort(),
+                        'producer' => $good->getProducer()->getName(),
+                    ],
+                ]);        
+            }
+        } else {
+            if ($good){
+                $data = [
+                    'good' => $good->getId(),
+                    'code' => $good->getCode(),
+                    'goodInputName' => $good->getInputName(),
+                    'saleQty' => $params['saleQty'],
+                    'salePriceSeller' => $params['salePriceSeller'],
+                    'priceSale' => $params['priceSale'],
+                ];
+                $form->setData($data);
+            }    
+        }        
+
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'rowNo' => $rowNo,
+            'good' => $good,
+        ]);        
+    }
     
     public function goodContentAction()
     {

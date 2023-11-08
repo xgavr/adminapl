@@ -86,7 +86,9 @@ class MsrGoodForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'number',
             'name' => 'saleQty',
             'attributes' => [                
-                'id' => 'saleQty'
+                'id' => 'saleQty',
+                'min' => 1,
+                'value' => 1,
             ],
             'options' => [
                 'label' => 'Количество',

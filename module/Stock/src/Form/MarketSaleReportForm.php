@@ -110,18 +110,18 @@ class MarketSaleReportForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
         
-        $this->add([            
-            'type'  => 'select',
-            'name' => 'reportType',
-            'value' => MarketSaleReport::TYPE_COMPENSATION,
-            'attributes' => [                
-                'required' => 'required',                
-            ],
-            'options' => [
-                'label' => 'Тип отчета',
-                'value_options' => MarketSaleReport::getReportTypeList(),
-            ],
-        ]);
+//        $this->add([            
+//            'type'  => 'select',
+//            'name' => 'reportType',
+//            'value' => MarketSaleReport::TYPE_COMPENSATION,
+//            'attributes' => [                
+//                'required' => 'required',                
+//            ],
+//            'options' => [
+//                'label' => 'Тип отчета',
+//                'value_options' => MarketSaleReport::getReportTypeList(),
+//            ],
+//        ]);
         
         // Добавляем кнопку отправки формы
         $this->add([

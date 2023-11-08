@@ -173,8 +173,8 @@ if ($ptu){
                          <th data-field='country.code' data-visible="false">Страна</th>
                          <th data-field='country.name' data-visible="false">Страна</th>
                          <th data-field='ntd.ntd' data-visible="false">НТД</th>
-                         <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
-                         <th data-field="rowNo" data-formatter="pgRemoveFormatter" data-width="10"></th>
+                         <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="5"></th>
+                         <th data-field="rowNo" data-formatter="pgRemoveFormatter" data-width="5"></th>
                      </tr>                
                 </thead>
             </table>
@@ -424,11 +424,11 @@ if ($ptu){
     function pgRemoveFormatter(value, row){
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs table-row-remove"';
+        btn += ' class="btn btn-default btn-xs table-row-remove"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
         btn += ' onclick="removeTableRowByUniqueId('+value+')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
     }    

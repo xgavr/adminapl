@@ -1,4 +1,5 @@
 <?php
+//var_dump($rowNo);
 
 $form = $this->form;
 
@@ -40,7 +41,7 @@ $docName = 'Новый';
 <?= $this->form()->openTag($form); ?>
             
 <div class="modal-header">
-    <h5 class="modal-title" id="msrGoodModalLabel">Замена товара в отчете по реализации</h5>
+    <h5 class="modal-title" id="msrcGoodModalLabel">Добавление товара в отчете по реализации</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -70,6 +71,27 @@ $docName = 'Новый';
         </div>    
     </div>
     <div class="row">
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('saleQty')); ?>
+                <?= $this->formElement($form->get('saleQty')); ?>
+                <?= $this->formElementErrors($form->get('saleQty')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('salePriceSeller')); ?>
+                <?= $this->formElement($form->get('salePriceSeller')); ?>
+                <?= $this->formElementErrors($form->get('salePriceSeller')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('priceSale')); ?>
+                <?= $this->formElement($form->get('priceSale')); ?>
+                <?= $this->formElementErrors($form->get('priceSale')); ?>                  
+            </div>
+        </div>
     </div>    
 
     <?= $this->formElement($form->get('good')); ?>
@@ -78,28 +100,51 @@ $docName = 'Новый';
                 
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-    <button type="button" class="btn btn-primary" id="msr-good-submit">Сохранить</button>
+    <button type="button" class="btn btn-primary" id="msrc-good-submit">Сохранить</button>
 </div>
             
 <?= $this->form()->closeTag(); ?>
             
 <script  type="text/javascript">
-    $('#msr-good-submit').on('click', function() {
+    $('#msrc-good-submit').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: '/comitent/good-edit-form/<?= ($item) ? $item->getId():''?>',
+            url: '/comitent/report-good-edit-form/',
             data: $('#msr-good-form').serialize()
         })
-            .done(function (data) {
+            .done(function (answer) {
 //                console.log(answer);
-                if (data.result == 'ok'){
-                    <?php if($item): ?>
-                        $('#msrgoodtable').bootstrapTable('updateByUniqueId', {id: <?= $item->getId() ?>, row: data.row});
+                if (answer.result == 'ok'){
+                    var data = serializeForm('#msr-good-form');
+                    var good = {
+                        id: answer.good.id,
+                        code: answer.good.code,
+                        name: answer.good.name,
+                        producer: {name: answer.good.producer}
+                    };
+                    var row = {
+                        good: good,
+                        salePriceSeller: data.salePriceSeller,
+                        saleQty: data.saleQty,
+                        priceSale: data.priceSale,
+                        returnQty: 0,
+                        baseAmount: 0
+                    };
+
+                    <?php if($rowNo): ?>
+                        $('#msrgoodtable').bootstrapTable('updateByUniqueId', {id: <?= $rowNo ?>, row: row});
+                    <?php else:?>
+                        var newRowNo = getNewTableUniqueId('msrgoodtable', 'rowNumber');
+                        row.rowNumber = newRowNo;
+                        var rows = [];
+                        rows.push(row);
+                        $('#msrgoodtable').bootstrapTable('prepend', rows);                        
                     <?php endif; ?>        
+                    //ptuUpdateTotal();    
                     
-                    $('#msrGoodModal').modal('hide');
+                    $('#msrcGoodModal').modal('hide');
                 } else {
-                    $('#msrGoodModal .modal-content').html(answer);
+                    $('#msrcGoodModal .modal-content').html(answer);
                 }    
             })
             .fail(function () {

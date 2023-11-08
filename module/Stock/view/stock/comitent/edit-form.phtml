@@ -119,10 +119,11 @@
     }    
     
     function goodNameFormatter(value, row){
-        if (row.good.tokenGroup){
-            return row.good.tokenGroup.name;
-        }
-        
+        if (row.good){
+            if (row.good.tokenGroup){
+                return row.good.tokenGroup.name;
+            }
+        }    
         return value;
     }
     
@@ -138,6 +139,7 @@
     function totalFooterFormatter() {
         return 'Итого:';
     }
+    
     function footerFormatter(data){
         var field = this.field;
         return (data.map(function (row) {

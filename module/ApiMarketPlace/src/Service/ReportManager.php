@@ -95,7 +95,7 @@ class ReportManager
      * 
      * @return MarketSaleReport
      */
-    private function findReport($marketplace, $header, $reportType = MarketSaleReport::TYPE_REPORT)
+    public function findReport($marketplace, $header, $reportType = MarketSaleReport::TYPE_REPORT)
     {
         $report = null;
         if (isset($header['num'])){
@@ -118,12 +118,12 @@ class ReportManager
         }
         
         if ($report){
-            $report->setCurrencyCode(empty($header['currency_code']) ? null:$header['currency_code']);
+            $report->setCurrencyCode(empty($header['currency_code']) ? 'RUR':$header['currency_code']);
             $report->setDocAmount(empty($header['doc_amount']) ? 0:$header['doc_amount']);
             $report->setDocDate(empty($header['doc_date']) ? null:$header['doc_date']);
-            $report->setStartDate(empty($header['start_date']) ? null:$header['start_date']);
+            $report->setStartDate(empty($header['start_date']) ? $header['doc_date']:$header['start_date']);
             $report->setStatus(MarketSaleReport::STATUS_ACTIVE);
-            $report->setStopDate(empty($header['stop_date']) ? null:$header['stop_date']);
+            $report->setStopDate(empty($header['stop_date']) ? $header['doc_date']:$header['stop_date']);
             $report->setVatAmount(empty($header['vat_amount']) ? 0:$header['vat_amount']);
             $report->setTotalAmount(0);
             $report->setStatusDoc(MarketSaleReport::STATUS_DOC_NOT_RECD);
@@ -161,7 +161,7 @@ class ReportManager
      * Очистить отчет
      * @param MarketSaleReport $report
      */
-    private function clearReport($report)
+    public function clearReport($report)
     {
         $items = $this->entityManager->getRepository(MarketSaleReportItem::class)
                 ->findBy(['marketSaleReport' => $report->getId()]);
@@ -182,13 +182,27 @@ class ReportManager
      * @param array $data
      * @return void
      */
-    private function addReportItems($report, $data)
+    public function addReportItems($report, $data)
     {
         foreach ($data as $row){
-            
-            $offer_complect = explode('_', str_replace(['-'], '_', empty($row['offer_id']) ? 0:$row['offer_id']));
-            $offerId = $offer_complect[0];
+            $good = null;
             $complect = 1;
+            if (!empty($row['good_id'])){
+                if (is_numeric($row['good_id'])){
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->find($row['good_id']);                    
+                }
+            }
+
+            if (!$good){
+                $offer_complect = explode('_', str_replace(['-'], '_', empty($row['offer_id']) ? 0:$row['offer_id']));
+                $offerId = $offer_complect[0];
+                if ($offerId){
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->findOneBy(['aplId' => $offerId]);
+                }
+            }    
+
             if (!empty($offer_complect[1])){
                 $complect = max(1, (int) $offer_complect[1]);
             }
@@ -197,8 +211,6 @@ class ReportManager
             $price = empty($row['price']) ? 0:$row['price']/$complect;
             $priceSale = empty($row['price_sale']) ? 0:$row['price_sale']/$complect;
                                 
-            $good = $this->entityManager->getRepository(Goods::class)
-                    ->findOneBy(['aplId' => $offerId]);
 //            var_dump($row['offer_id']);
             $item = new MarketSaleReportItem();
             $item->setBarcode(empty($row['barcode']) ? null:$row['barcode']);

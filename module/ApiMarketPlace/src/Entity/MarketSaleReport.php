@@ -531,6 +531,33 @@ class MarketSaleReport {
      * Массив для формы
      * @return array 
      */
+    public function toLog()
+    {
+        $result = [
+            'status' => $this->getStatus(),
+            'num' => $this->getNum(),
+            'contract' => $this->getContract()->toArray(),
+            'currencyCode' => $this->getCurrencyCode(),
+            'docAmount' => $this->getDocAmount(),
+            'docDate' => $this->getDocDate(),
+            'marketplace' => $this->getMarketplace()->getId(),
+            'startDate' => $this->getStartDateAtomFormat(),
+            'stopDate' => $this->getStopDateAtomFormat(),
+            'vatAmount' => $this->getVatAmount(),
+            'baseAmount' => $this->getBaseAmount(),
+            'costAmount' => $this->getCostAmount(),
+            'id' => $this->getId(),
+            'legal' => $this->getContract()->getLegal()->toArray(),
+            'items' => $this->itemsToArray(),
+        ];
+        
+        return $result;
+    }    
+
+    /**
+     * Массив для формы
+     * @return array 
+     */
     public function toArray()
     {
         $result = [

@@ -19,7 +19,7 @@
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <button class="btn btn-default msr-modal-show" type="button" modal-url="/comitent/report-form" title="Добавить отчет">
+                    <button class="btn btn-default msrc-modal-show" type="button" modal-url="/comitent/report-form" title="Добавить отчет">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
                 </div>    
@@ -172,11 +172,16 @@
         return (Math.round((row.docAmount - row.baseAmount - row.costAmount)*100)/100).toFixed(2);
     }    
     
-    function activeFormatter(value, row){
+    function activeFormatter(value, row){        
         var url = '/comitent/edit-form/'+row.id;
+        var openClass = 'msr-modal-show';
+        if (row.reportType == '<?= MarketSaleReport::TYPE_COMPENSATION?>'){
+            url = '/comitent/report-form/'+row.id;
+            openClass = 'msrc-modal-show';
+        }
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs msr-modal-show"';
+        btn += ' class="btn btn-default btn-xs ' + openClass + '"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';

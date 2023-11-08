@@ -72,14 +72,14 @@ $form->prepare();
         <div class="col-xs-12">
             <div id="msrgoodtoolbar">
                 <div class="form-inline" role="form">
-                    <button type="button" class="btn btn-default btn-sm pt-good-modal-show" modal-url="/comitent/good-edit-form">
+                    <button type="button" class="btn btn-default btn-sm report-good-modal-show" modal-url="/comitent/report-good-edit-form">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
             <table id="msrgoodtable" 
                 data-toggle="msrgoodtable" 
-                data-url="/comitent/good-content/<?= ($marketSaleReport) ? $marketSaleReport->getId():'' ?>"
+                data-url="/comitent/good-content/<?= ($report) ? $report->getId():'' ?>"
                 data-side-pagination="client"
                 data-pagination="true"
                 data-cookie="true"
@@ -94,8 +94,9 @@ $form->prepare();
                 data-show-columns="true"
                 data-query-params="msrgoodQueryParams"
                 data-response-handler="msrgoodResponseHandler"
-                data-unique-id = "id"
+                data-unique-id = "rowNumber"
                 data-row-style="takeStyle"
+                data-show-footer="true"
                 >
                 <thead>
                     <tr>
@@ -104,12 +105,15 @@ $form->prepare();
                         <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
                         <th data-field="good.producer.name" data-type="numeric">Производитель</th>
                         <th data-field="good.name" data-type="numeric">Наименование</th>
-                        <th data-field='priceSale' data-align="right" data-formatter="amountFormatter">Цена</th>
-                        <th data-field='saleQty' data-align="right">Количество</th>
-                        <th data-field='returnQty' data-align="right">Возврат</th>
-                        <th data-field='saleAmount' data-align="right" data-formatter="amountFormatter">Сумма</th>
-                        <th data-field='baseAmount' data-align="right" data-formatter="amountFormatter">Закупка</th>
-                        <th data-field="button" data-formatter="msrActiveFormatter" data-width="20"></th>
+                        
+                        <th data-field='priceSale' data-align="right" data-footer-formatter="totalFooterFormatter" data-formatter="amountFormatter">Цена</th>
+                        <th data-field='saleQty' data-align="right" data-footer-formatter="footerFormatter">Количество</th>
+                        <th data-field='returnQty' data-align="right" data-footer-formatter="footerFormatter">Возврат</th>
+                        <th data-field='salePriceSeller' data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Сумма</th>
+                        <th data-field='baseAmount' data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Закупка</th>
+                        
+                        <th data-field="rowNumber" data-formatter="msrcActiveFormatter" data-width="5"></th>
+                         <th data-field="rowNumber" data-formatter="msrcRemoveFormatter" data-width="5"></th>
                      </tr>                
                 </thead>
             </table>
@@ -133,18 +137,29 @@ $form->prepare();
 <?= $this->form()->closeTag(); ?>
             
 <script>             
+    var report_total = 0;
+    
+    function getReportTotal(){
+        return report_total;
+    }
+    
+    function setReportTotal(reportTotal){
+        report_total = reportTotal;
+    }
+    
     function submitForm(){
-        var data = serializeForm('#compensation-form');
+        var data = serializeForm('#market-sale-report-form');
+        data['doc_amount'] = getReportTotal();
          $('#compensation-submit').prop('disabled', true);
-        //console.log(data);
+        data.reportGood = getFormatedReportGood();
         $.ajax({
             type: 'POST',
-            url: '/comitent/compensation-edit-form/<?= ($report) ? $report->getId():"" ?>',
+            url: '/comitent/report-form/<?= ($report) ? $report->getId():"" ?>',
             data: $.param(data)
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#compensationModal').modal('hide');
+                    $('#msrcModal').modal('hide');
                     if ($('#table')){
                         $('#table').bootstrapTable('refresh');
                     }    
@@ -152,7 +167,7 @@ $form->prepare();
                         $('#mutualtable').bootstrapTable('refresh');
                     }    
                 } else {
-                    $('#compensationModal .modal-content').html(data);                    
+                    $('#msrcModal .modal-content').html(data);                    
                 }    
             })
             .fail(function () {
@@ -160,6 +175,28 @@ $form->prepare();
 
             });    
     };
+    
+    function getFormatedReportGood(){
+        var data = $('#msrgoodtable').bootstrapTable('getData');
+        var result = [];
+        $.each( data, function( index, row ) {
+            var newRow = {
+                good_id: row.good.id,
+                saleQty: row.saleQty,
+                salePriceSeller: row.salePriceSeller,
+                priceSale: row.priceSale,
+                rowNumber: row.rowNumber
+            };
+            result.push(newRow);
+        });   
+        return result;
+    }
+    
+    //удаление строки из таблицы
+    function removeTableRowByUniqueId(index){
+        $('#msrgoodtable').bootstrapTable('removeByUniqueId', index);
+    }
+    
     
     $( document ).ready(function() {
         
@@ -179,11 +216,11 @@ $form->prepare();
         $('#msrgoodtoolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('#mspgoodtable .page-size').html();
+        limit = $('#msrgoodtable .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('#mspgoodtable li.page-number.active a').html();
+        offset = $('#msrgoodtable li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
@@ -209,13 +246,30 @@ $form->prepare();
         return (Math.round(value*100)/100).toFixed(2);
     }        
         
-    function msrActiveFormatter(value, row){
-        var url = '/comitent/good-edit-form/';
+    function totalFooterFormatter() {
+        return 'Итого:';
+    }
+
+    function footerFormatter(data){
+        var field = this.field;
+        return (data.map(function (row) {
+            return +row[field];
+        }).reduce(function (sum, i) {
+            var total = sum + i;
+            if (field == 'salePriceSeller'){
+                setReportTotal(total);
+            }
+            return (Math.round((total)*100)/100);
+        }, 0)).toFixed(2);
+    }
+
+    function msrcActiveFormatter(value, row){
+        var url = '/comitent/report-good-edit-form/';
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs msr-good-modal-show"';
+        btn += ' class="btn btn-default btn-xs report-good-modal-show"';
         btn += ' aria-label="Left Align"'; 
-        btn += ' unique-id="'+row.id+'"';
+        btn += ' unique-id="'+value+'"';
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
@@ -223,17 +277,25 @@ $form->prepare();
         return btn;
     }    
         
-    function pgPriceFormatter(value, row){
-        return Math.round(value*100/row.quantity)/100;
-    }        
-    
+    function msrcRemoveFormatter(value, row){
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs table-row-remove"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+        
     function msrgoodResponseHandler(res) {
         return res;
     }     
 
-$( document ).ready(function() {
+    $( document ).ready(function() {
                 
-        var forms = $('#compensation-form');
+        var forms = $('#market-sale-report-form');
         
         forms.submit(function() {
             submitForm();

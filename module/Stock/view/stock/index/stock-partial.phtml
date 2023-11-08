@@ -290,7 +290,7 @@
             var url = $(this).attr('modal-url');
             showFormDialog({
                 id: 'producerUnionModal',
-                url: url,
+                url: url
     //            width: '500px'
             });
         });  
@@ -298,7 +298,7 @@
         $(document).on('click', '.msr-modal-show', function (e) {
             var url = $(this).attr('modal-url');
             showFormDialog({
-                id: 'mspModal',
+                id: 'msrModal',
                 url: url,
                 width: '1440px'
             });
@@ -312,6 +312,29 @@
             }    
             showFormDialog({
                 id: 'msrGoodModal',
+                url: url,
+                zIndex: 9999
+            });
+        });  
+
+        $(document).on('click', '.msrc-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'msrcModal',
+                url: url,
+                width: '1440px'
+            });
+        });          
+
+        $(document).on('click', '.report-good-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            var uniqueId = $(this).attr('unique-id');
+            if (uniqueId){
+                var row = $('#msrgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
+                url = url+'?'+$.param(row);
+            }    
+            showFormDialog({
+                id: 'msrcGoodModal',
                 url: url,
                 zIndex: 9999
             });
