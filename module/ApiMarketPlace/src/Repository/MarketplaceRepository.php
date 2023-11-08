@@ -163,8 +163,9 @@ class MarketplaceRepository extends EntityRepository
     {
         $cost = 0;
         
+        $entityManager = $this->getEntityManager();
+
         if ($marketSaleReport->getReportType() == MarketSaleReport::TYPE_REPORT){
-            $entityManager = $this->getEntityManager();
 
             $queryBuilder = $entityManager->createQueryBuilder();
 
