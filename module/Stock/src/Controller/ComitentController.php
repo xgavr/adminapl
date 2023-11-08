@@ -220,7 +220,7 @@ class ComitentController extends AbstractActionController
                     'code' => $good->getCode(),
                     'goodInputName' => $good->getInputName(),
                     'saleQty' => $params['saleQty'],
-                    'salePriceSeller' => $params['salePriceSeller'],
+                    'saleAmount' => $params['saleAmount'],
                     'priceSale' => $params['priceSale'],
                 ];
                 $form->setData($data);

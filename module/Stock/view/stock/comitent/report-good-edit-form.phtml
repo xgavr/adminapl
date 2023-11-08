@@ -22,7 +22,7 @@ $form->get('saleQty')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('salePriceSeller')->setAttributes([
+$form->get('saleAmount')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -80,9 +80,9 @@ $docName = 'Новый';
         </div>    
         <div class="col-xs-3">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('salePriceSeller')); ?>
-                <?= $this->formElement($form->get('salePriceSeller')); ?>
-                <?= $this->formElementErrors($form->get('salePriceSeller')); ?>                  
+                <?= $this->formLabel($form->get('saleAmount')); ?>
+                <?= $this->formElement($form->get('saleAmount')); ?>
+                <?= $this->formElementErrors($form->get('saleAmount')); ?>                  
             </div>
         </div>
         <div class="col-xs-3">                        
@@ -124,7 +124,7 @@ $docName = 'Новый';
                     };
                     var row = {
                         good: good,
-                        salePriceSeller: data.salePriceSeller,
+                        saleAmount: data.saleAmount,
                         saleQty: data.saleQty,
                         priceSale: data.priceSale,
                         returnQty: 0,
@@ -176,7 +176,7 @@ $docName = 'Новый';
             $(this).val(value.replace(",","."));
         });
         
-        $("#salePriceSeller").on('input', function(){
+        $("#saleAmount").on('input', function(){
             var value = $(this).val();
             $(this).val(parseFloat(value.replace(",",".").replace(/\s/g, '')));
         });

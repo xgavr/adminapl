@@ -109,7 +109,7 @@ $form->prepare();
                         <th data-field='priceSale' data-align="right" data-footer-formatter="totalFooterFormatter" data-formatter="amountFormatter">Цена</th>
                         <th data-field='saleQty' data-align="right" data-footer-formatter="footerFormatter">Количество</th>
                         <th data-field='returnQty' data-align="right" data-footer-formatter="footerFormatter">Возврат</th>
-                        <th data-field='salePriceSeller' data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Сумма</th>
+                        <th data-field='saleAmount' data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Сумма</th>
                         <th data-field='baseAmount' data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Закупка</th>
                         
                         <th data-field="rowNumber" data-formatter="msrcActiveFormatter" data-width="5"></th>
@@ -183,7 +183,7 @@ $form->prepare();
             var newRow = {
                 good_id: row.good.id,
                 saleQty: row.saleQty,
-                salePriceSeller: row.salePriceSeller,
+                saleAmount: row.saleAmount,
                 priceSale: row.priceSale,
                 rowNumber: row.rowNumber
             };
@@ -256,7 +256,7 @@ $form->prepare();
             return +row[field];
         }).reduce(function (sum, i) {
             var total = sum + i;
-            if (field == 'salePriceSeller'){
+            if (field == 'saleAmount'){
                 setReportTotal(total);
             }
             return (Math.round((total)*100)/100);
