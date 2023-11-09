@@ -123,6 +123,10 @@ body {
   background-color: #d6d8db;
 } 
 
+.retired-muted{
+  color: #6c757d!important;
+} 
+
 /*
 * Крестик в инпуте
 */

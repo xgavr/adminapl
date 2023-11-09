@@ -915,6 +915,25 @@ class OrderController extends AbstractActionController
             $result
         );                   
     }
+
+    public function duplicateAction()
+    {
+        $orderId = $this->params()->fromRoute('id', -1);
+        
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);        
+
+        if ($order == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $newOrder = $this->orderManager->duplicate($order);
+        
+        return new JsonModel(
+            ['result' => $newOrder->getId()]
+        );                   
+    }
     
     public function cancelOldAction()
     {

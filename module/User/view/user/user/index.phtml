@@ -107,7 +107,7 @@ $this->pageBreadcrumbs()->setItems([
     function rowStyle(row){
         var retired = 'tablerow';
         if (row.status == '<?= User::STATUS_RETIRED?>'){
-           retired += ' retired-secondary';
+           retired += ' retired-muted';
         }
         
         return {classes: retired};

@@ -561,6 +561,7 @@ class OrderManager
         $currentDate = date('Y-m-d H:i:s');        
         $bid->setDateCreated($currentDate);
         $bid->setBaseKey((empty($data['baseKey'])) ? null:$data['baseKey']);
+        $bid->setTake(Bid::TAKE_NO);
         
         if ($data['good'] instanceof Goods){
             $bid->setGood($data['good']);            
@@ -1518,7 +1519,48 @@ class OrderManager
         return;
     }    
     
-        /**
+    /**
+     * Сдклать копию заказа
+     * @param Order $order
+     */
+    public function duplicate($order)
+    {
+        $data = $order->toArray();
+        
+        unset($data['aplId']);
+        unset($data['dateMod']);
+        unset($data['geo']);
+        unset($data['mode']);
+        unset($data['status']);
+        unset($data['trackNumber']);
+        unset($data['infoShipping']);
+        unset($data['statusEx']);
+        unset($data['courier']);
+        unset($data['skiper']);
+        unset($data['user']);
+        unset($data['dateShipment']);
+        unset($data['timeShipment']);
+        
+        $newOrder = $this->addNewOrder($order->getOffice(), $order->getContact(), $data);
+        
+        foreach ($order->getSelections() as $selection){
+            $this->addNewSelection($newOrder, [
+                'oem' => $selection->getOe(),
+                'comment' => $selection->getComment(),
+            ]);
+        }
+        
+        foreach ($order->getBids() as $bid){
+            $newBid = $bid->toLog();
+            $this->addNewBid($newOrder, $newBid, false);
+        }
+        
+        $this->entityManager->flush();
+        
+        return $newOrder;
+    }
+    
+    /**
      * Обновить ЮЛ заказа
      * @param Order $order
      * @param array $data

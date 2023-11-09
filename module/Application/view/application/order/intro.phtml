@@ -682,6 +682,9 @@ $form->prepare();
                     <button type="button" class="btn btn-default btn-sm send-order-to-apl" title="Отправить в Апл" <?= ($orderId) ? '':'disabled'?>>
                         <span class="glyphicon glyphicon-arrow-up"></span> Отправить в Апл
                     </button>
+                    <button type="button" class="btn btn-default btn-sm duplicate-order" title="Скопировать заказ" <?= ($orderId) ? '':'disabled'?>>
+                        <span class="glyphicon glyphicon-duplicate"></span> Скопировать
+                    </button>
                     <button type="button" class="btn btn-default btn-sm history" title="История" <?= ($orderId) ? '':'disabled'?>>
                         <span class="glyphicon glyphicon-list-alt"></span> История
                     </button>
@@ -852,7 +855,7 @@ $form->prepare();
                 if (result){
                     var dialog = bootbox.dialog({
                         message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста, подождите, пока мы что-то делаем...</p>',
-                        closeButton: false
+                        closeButton: true
                     });        
                     $.get('/apl/send-order-id/<?= $orderId?>', function(data){
                         dialog.modal('hide');
@@ -861,6 +864,25 @@ $form->prepare();
                             enableExAplNodes();
                         } else {
                             
+                        }
+                    });            
+                }
+        });
+    });
+
+    $(document).on('click', '.duplicate-order', function (e) {
+        bootbox.confirm('Скопировать заказ?',
+            function(result) {
+                if (result){
+                    var dialog = bootbox.dialog({
+                        message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста, подождите, пока мы что-то делаем...</p>',
+                        closeButton: true
+                    });        
+                    $.get('/order/duplicate/<?= $orderId?>', function(data){
+                        dialog.modal('hide');
+                        if (data.result > 0){
+                            window.open('/order/intro/'+data.result);
+                        } else {                            
                         }
                     });            
                 }

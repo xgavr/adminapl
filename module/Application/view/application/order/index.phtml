@@ -167,6 +167,25 @@ $this->pageBreadcrumbs()->setItems([
             dialog.modal('hide');
         });
     }
+
+    function duplicate(id, url){
+        bootbox.confirm('Скопировать заказ?',
+            function(result) {
+                if (result){
+                    var dialog = bootbox.dialog({
+                        message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста, подождите, пока мы что-то делаем...</p>',
+                        closeButton: true
+                    });        
+                    $.get('/order/duplicate/'+id, function(data){
+                        dialog.modal('hide');
+                        if (data.result > 0){
+                            window.open('/order/intro/'+data.result);
+                        } else {                            
+                        }
+                    });            
+                }
+        });
+    }
     
 
     $(function () {       
@@ -499,7 +518,7 @@ $this->pageBreadcrumbs()->setItems([
         actionsGroups: [
            ['selection'],
            ['addComment', 'comments', 'history'],
-           ['addLegal', 'updateFromApl', 'sendToApl'],
+           ['addLegal', 'updateFromApl', 'sendToApl', 'duplicate'],
            ['vt', 'cash']
         ],      
         actions: {
@@ -686,6 +705,16 @@ $this->pageBreadcrumbs()->setItems([
                 iconClass: 'glyphicon glyphicon-arrow-up',
                 onClick: function (row){
                     updateApl(row.id, '/apl/send-order-id/'+row.id);
+                },
+                isEnabled: function(row) {
+                    return row.id > 0;
+                }                
+            },    
+            duplicate: {
+                name: 'Скопировать',
+                iconClass: 'glyphicon glyphicon-duplicate',
+                onClick: function (row){
+                    duplicate(row.id, '/order/duplicate/'+row.id);
                 },
                 isEnabled: function(row) {
                     return row.id > 0;

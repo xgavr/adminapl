@@ -68,8 +68,11 @@ $tag = md5(time());
                 <button class="btn btn-default btn-sm bid-row-copy" type="button" title="Копировать выделенные строки">
                     <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
                 </button>                
+                <button class="btn btn-default btn-sm duplicate-order" type="button" title="Скопировать заказ">
+                    <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span> Скопировать заказ
+                </button>                
                 <button type="button" class="btn btn-default btn-sm supplier-order-<?= $tag?>">
-                    <span class="glyphicon" aria-hidden="true">Заказано</span>
+                    <span class="glyphicon" aria-hidden="true"></span> Заказано
                 </button>
             </div>
         </div>
@@ -268,6 +271,25 @@ $tag = md5(time());
                 } 
             }
             updateBids(<?= $order->getId()?>);
+        });        
+        
+        $(document).on('click', '.duplicate-order', function (e) {
+            bootbox.confirm('Скопировать заказ?',
+                function(result) {
+                    if (result){
+                        var dialog = bootbox.dialog({
+                            message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста, подождите, пока мы что-то делаем...</p>',
+                            closeButton: true
+                        });        
+                        $.get('/order/duplicate/<?= $order->getId()?>', function(data){
+                            dialog.modal('hide');
+                            if (data.result > 0){
+                                window.open('/order/intro/'+data.result);
+                            } else {                            
+                            }
+                        });            
+                    }
+            });
         });        
         
         $(document).on('click', '.supplier-order-<?= $tag?>', function (e) {

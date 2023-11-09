@@ -349,6 +349,8 @@ class Bid {
             'good' => $this->getGood()->getId(),
             'num' => $this->getNum(),
             'rowNo' => $this->getRowNo(),
+            'displayName' => $this->getDisplayName(),
+            'oem' => $this->getOe(),
         ];
     }    
 
