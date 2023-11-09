@@ -74,7 +74,7 @@ $legalContact = $user->getLegalContact();
                 <td>
                     <?php foreach ($user->getContacts() as $contact): ?>
                         <?php if ($contact->getClient()): ?>
-                            <?= $client->getLink();?> - <?= $client->getBalance();?><br/>
+                            <?= $contact->getClient()->getLink();?> - <?= $contact->getClient()->getBalance();?><br/>
                         <?php endif;?>
                     <?php endforeach;?>    
                 </td>
