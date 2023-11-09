@@ -74,7 +74,7 @@ $legalContact = $user->getLegalContact();
                 <td>
                     <?php foreach ($user->getContacts() as $contact): ?>
                         <?php if ($contact->getClient()): ?>
-                            <?= $contact->getClient()->getLink();?> - <?= $contact->getClient()->getBalance();?><br/>
+                            <?= $contact->getClient()->getLink();?> - <?= round($contact->getClient()->getBalance(), 2);?><br/>
                         <?php endif;?>
                     <?php endforeach;?>    
                 </td>
@@ -82,7 +82,7 @@ $legalContact = $user->getLegalContact();
             <tr>
                 <th>В подотчете:</th>
                 <td>
-                    <?= $balance?>
+                    <?= round($balance, 2) ?>
                 </td>
             </tr>
             <tr>
