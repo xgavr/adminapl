@@ -411,7 +411,7 @@
                 var table = $('#'+table);
                 var dialog = bootbox.dialog({
                     message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-                    closeButton: false
+                    closeButton: true
                 });
 
                 $.ajax({
@@ -419,8 +419,8 @@
                     url: url
                 })
                     .done(function (data) {
+                        dialog.modal('hide');
                         if (data == 'ok'){
-                            dialog.modal('hide');
                             table.bootstrapTable('refresh');
                         } else if (data == 'ok-reload'){
                             window.location.reload();
@@ -429,6 +429,7 @@
                         }    
                     })
                     .fail(function (e) {
+                        dialog.modal('hide');
                         alert("Не удалось удалить.");
 
                     });

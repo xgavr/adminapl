@@ -89,9 +89,9 @@ class UserRepository  extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('u, o')
+        $queryBuilder->select('u')
             ->from(User::class, 'u')
-            ->leftJoin('u.office', 'o')    
+//            ->leftJoin('u.office', 'o')    
                 ;
         
         if (is_array($params)){
@@ -113,8 +113,14 @@ class UserRepository  extends EntityRepository
                             ->setParameter('status', $params['status']);
                 }    
             }
+            if (!empty($params['userId'])){
+                if (is_numeric($params['userId'])){
+                    $queryBuilder->andWhere('u.id = :userId')
+                            ->setParameter('userId', $params['userId']);
+                }    
+            }
         }
-
+//        var_dump($queryBuilder->getQuery()->getSql()); 
         return $queryBuilder->getQuery();
     }      
     

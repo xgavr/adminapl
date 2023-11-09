@@ -14,6 +14,7 @@ use User\Filter\PhoneFilter;
 use Laminas\View\Model\JsonModel;
 use Company\Entity\Office;
 use Application\Entity\Email;
+use Cash\Entity\Cash;
 
 /**
  * This controller is responsible for user management (adding, editing, 
@@ -182,8 +183,12 @@ class UserController extends AbstractActionController
             return;
         }
                 
+        $balance = $this->entityManager->getRepository(Cash::class)
+                ->userBalance($user->getId(), date('Y-m-d'));
+        
         return new ViewModel([
             'user' => $user,
+            'balance' => $balance,
         ]);
     }
     
@@ -570,6 +575,46 @@ class UserController extends AbstractActionController
             'ok'
         ]);          
     }    
+    
+    public function statusAction()
+    {
+        $userId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', User::STATUS_ACTIVE);
+        $user = $this->entityManager->getRepository(User::class)
+                ->find($userId);        
+
+        if ($user == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->userManager->changeStatus($user, $status);
+        
+        return new JsonModel(
+           $user->toArray()
+        );           
+    }                
+
+    public function deleteAction()
+    {
+        $userId = $this->params()->fromRoute('id', -1);
+        $user = $this->entityManager->getRepository(User::class)
+                ->find($userId);        
+
+        if ($user == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $result = 'false';
+        if ($this->userManager->remove($user)){
+            $result = 'ok';
+        }
+        
+        return new JsonModel(
+           [$result]
+        );           
+    }                
 }
 
 

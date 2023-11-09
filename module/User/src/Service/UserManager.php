@@ -537,6 +537,22 @@ class UserManager
     } 
     
     /**
+     * Сменить статус
+     * 
+     * @param User $user
+     * @param integer $status
+     * @return boolean
+     */
+    public function changeStatus($user, $status)
+    {
+        $user->setStatus($status);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        $this->entityManager->refresh($user);
+        return true;
+    }
+    
+    /**
      * Обновить количество заказов
      * @param User $user
      */
@@ -671,6 +687,135 @@ class UserManager
         
         $result['report'] = $report;	
         return $result;
-    }    
+    }
+
+    /**
+     * Возможность удаления пользователя
+     * @param User $user
+     * @return bool
+     */
+    private function isRemove($user)
+    {
+        $result = true;
+        
+        $carts = $this->entityManager->getRepository(\Application\Entity\Cart::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($carts)){
+            return false;
+        }
+
+        $orders = $this->entityManager->getRepository(Order::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($orders)){
+            return false;
+        }
+
+        $orders = $this->entityManager->getRepository(Order::class)
+                ->findBy(['skiper' => $user->getId()]);
+        if (count($orders)){
+            return false;
+        }
+
+        $bids = $this->entityManager->getRepository(\Application\Entity\Bid::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($bids)){
+            return false;
+        }
+
+        $logs = $this->entityManager->getRepository(\Admin\Entity\Log::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($logs)){
+            return false;
+        }
+
+        $sts = $this->entityManager->getRepository(\Stock\Entity\St::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($sts)){
+            return false;
+        }
+
+        $comments = $this->entityManager->getRepository(\Application\Entity\Comment::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($comments)){
+            return false;
+        }
+
+        $rings = $this->entityManager->getRepository(\Application\Entity\Ring::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($rings)){
+            return false;
+        }
+
+        $rings = $this->entityManager->getRepository(\Application\Entity\Ring::class)
+                ->findBy(['manager' => $user->getId()]);
+        if (count($rings)){
+            return false;
+        }
+
+        $cashDocs = $this->entityManager->getRepository(\Cash\Entity\CashDoc::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($cashDocs)){
+            return false;
+        }
+
+        $cashDocs = $this->entityManager->getRepository(\Cash\Entity\CashDoc::class)
+                ->findBy(['userRefill' => $user->getId()]);
+        if (count($cashDocs)){
+            return false;
+        }
+
+        $transactions = $this->entityManager->getRepository(\Cash\Entity\UserTransaction::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($transactions)){
+            return false;
+        }
+
+        $revises = $this->entityManager->getRepository(\Stock\Entity\Revise::class)
+                ->findBy(['userCreator' => $user->getId()]);
+        if (count($revises)){
+            return false;
+        }
+
+        $reserves = $this->entityManager->getRepository(\Stock\Entity\Reserve::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($reserves)){
+            return false;
+        }
+
+        $payments = $this->entityManager->getRepository(\Bank\Entity\Payment::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($payments)){
+            return false;
+        }
+
+        $revisions = $this->entityManager->getRepository(\Stock\Entity\Revision::class)
+                ->findBy(['user' => $user->getId()]);
+        if (count($revisions)){
+            return false;
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Удаление пользователя
+     * @param User $user
+     */
+    public function remove($user)
+    {
+        $result = false;
+        if ($this->isRemove($user)){
+            foreach ($user->getContacts() as $contact){
+                $contact->setUser(null);
+                $this->entityManager->persist($contact);
+            }
+            
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+            $result = true;
+        }
+        
+        return $result;
+    }
 }
 

@@ -4,15 +4,14 @@ use User\Entity\User;
 $this->headTitle('Сотрудники');
 
 $this->mainMenu()->setActiveItemId('users');
-$this->mainMenu()->setActiveUrl('users');
+$this->mainMenu()->setActiveUrl($this->url('users'));
 
 $this->pageBreadcrumbs()->setItems([
             'Home'=>$this->url('home'),
-            'Manage Users'=>$this->url('users'),
+            'Сотрудники'=>$this->url('users'),
             ]);
-?>
 
-<h1>Сотрудники</h1>
+?>
 
 <div class="row">
     <div class="col-md-12">
@@ -33,7 +32,7 @@ $this->pageBreadcrumbs()->setItems([
                     <select id="statusSelect" style="width: 200px" class="form-control refresh-table" name="status">
                         <option>Все</option>
                         <?php foreach (User::getStatusList() as $status=>$value):?>
-                            <option value="<?= $status?>"><?= $value?></option>
+                            <option value="<?= $status?>" <?= ($status == User::STATUS_ACTIVE) ? 'selected':'' ?>><?= $value?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
@@ -42,6 +41,9 @@ $this->pageBreadcrumbs()->setItems([
         <table id="table" 
             data-toggle="table" 
             data-url="/users/content"
+            data-cookie="true"
+            data-cookie-id-table="usersSaveId"
+            data-cookie-expire="1m"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
@@ -53,6 +55,8 @@ $this->pageBreadcrumbs()->setItems([
             data-sort-order="desc"            
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
+            data-unique-id="id"
+            data-row-style="rowStyle"
             >
             <thead>
                 <tr>
@@ -75,6 +79,16 @@ $this->pageBreadcrumbs()->setItems([
     var $table = $('#table');        
     var $ok = $('#ok');
     
+    var curentRowIndex = -1;
+    
+    function setCurrentIndex(index){
+        curentRowIndex = index;
+    }
+
+    function getCurrentIndex(){
+        return curentRowIndex;
+    }    
+    
     function refreshTable(){
         $table.bootstrapTable('selectPage', 1);
     }
@@ -89,6 +103,15 @@ $this->pageBreadcrumbs()->setItems([
         });
         
     });
+    
+    function rowStyle(row){
+        var retired = 'tablerow';
+        if (row.status == '<?= User::STATUS_RETIRED?>'){
+           retired += ' retired-secondary';
+        }
+        
+        return {classes: retired};
+    }
     
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
@@ -152,6 +175,16 @@ $this->pageBreadcrumbs()->setItems([
         btn += ' href="'+url+'" target="_blank" title="Сменить пароль">';
         btn += '<span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>';
         btn += '</a>';
+
+        var url = '/users/delete/'+row.id;
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs this-delete"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
+        btn += '</button>';
         
         btn += '</nobr>';
         return btn;
@@ -159,5 +192,44 @@ $this->pageBreadcrumbs()->setItems([
     
     function responseHandler(res) {
         return res;
-    }    
+    }
+    
+    function changeStatus(userId, status){
+        $.get( "/users/status/"+userId+'?status='+status, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: userId, row: data});
+        });        
+    }
+    
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            setCurrentIndex($(rowElem).attr('data-index'));
+            return $table.bootstrapTable('getData')[getCurrentIndex()];
+        },
+        actionsGroups: [
+           ['statusActiv', 'statusRetired']
+        ],      
+        actions: {
+            statusActiv: {
+                name: 'Сделать активным',
+                iconClass: 'glyphicon glyphicon-ok',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= User::STATUS_ACTIVE?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= User::STATUS_RETIRED?>;
+                }
+            }, 
+            statusRetired: {
+                name: 'Сделать не активным',
+                iconClass: 'glyphicon glyphicon-remove',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= User::STATUS_RETIRED?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= User::STATUS_ACTIVE?>;
+                }
+            }
+        }
+    });            
 </script>

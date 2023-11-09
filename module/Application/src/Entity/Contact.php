@@ -409,7 +409,9 @@ class Contact {
     public function setUser($user) 
     {
         $this->user = $user;
-        $user->addContact($this);
+        if ($user){
+            $user->addContact($this);
+        }    
     }     
     
     /*
