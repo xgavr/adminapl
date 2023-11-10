@@ -1149,7 +1149,7 @@ class CashManager {
     public function updateAllCashBalance()
     {
         $cashes = $this->entityManager->getRepository(Cash::class)
-                ->findBy([]);
+                ->findBy(['restStatus' => Cash::REST_ACTIVE]);
         
         foreach ($cashes as $cash){
             $balance = $this->entityManager->getRepository(Cash::class)
