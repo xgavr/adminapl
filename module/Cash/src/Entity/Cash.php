@@ -603,6 +603,7 @@ class Cash {
             'refillStatus' => $this->getRefillStatus(),
             'supplierStatus' => $this->getSupplierStatus(),
             'payment' => $this->getPayment(),
+            'balance' => $this->getBalance(),
         ];
         
         return $result;

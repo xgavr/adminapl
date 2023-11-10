@@ -101,6 +101,14 @@
     </div>
     <div class="col-md-2" id="side-nav" >
         <!--<div class="nav nav-stacked nav-list affix">-->
+            <div id="balancetoolbar">
+                <div class="form-inline" role="form">
+                    <button value="/till/update-balances/" class="btn btn-default refresh-table-button"
+                            title="Пересчитать остатки">
+                        <span class="glyphicon glyphicon-rub" ></span>
+                    </button>                         
+                </div>
+            </div>
             <table id="balancetable" 
                 data-toggle="balancetable" 
                 data-url="/till/balances"
@@ -156,7 +164,6 @@
     
     function refreshTable(){
         $table.bootstrapTable('refresh');
-        $balanceTable.bootstrapTable('refresh');
     }
 
     function officeChange(){
@@ -183,6 +190,7 @@
         });
         $(document).on('change', '#tillOfficeSelect', function (e) {
             officeChange();
+            $balanceTable.bootstrapTable('refresh');
         });
         $(document).on('change', '#cashSelect', function (e) {
             $table.bootstrapTable('selectPage', 1);

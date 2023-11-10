@@ -1172,8 +1172,8 @@ class CashManager {
                 ->findBy([]);
         
         foreach ($users as $user){
-            $balance = $this->entityManager->getRepository(User::class)
-                    ->cashBalance($user->getId(), date('Y-m-d 23:59:59'));
+            $balance = $this->entityManager->getRepository(Cash::class)
+                    ->userBalance($user->getId(), date('Y-m-d 23:59:59'));
             $user->setBalance($balance);
             $this->entityManager->persist($user);            
         }

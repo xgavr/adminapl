@@ -126,7 +126,7 @@ class TillController extends AbstractActionController
         ];
         
         $data = $this->entityManager->getRepository(Cash::class)
-                    ->findBy(['office' => $officeId]);
+                    ->findBy(['office' => $officeId, 'restStatus' => Cash::REST_ACTIVE]);
         
         $result = [];
         
@@ -493,7 +493,7 @@ class TillController extends AbstractActionController
         $this->cashManager->updateAllUserBalance();
         
         return new JsonModel(
-           ['ok']
+           ['result' => 'ok']
         );                   
     }
 }
