@@ -170,20 +170,9 @@
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
-    var $balanceTable = $('#balancetable').bootstrapTable();
-    var $userBalanceTable = $('#userbalancetable').bootstrapTable();
-    var $table = $('#table').bootstrapTable({
-        onLoadSuccess: function(res) {
-//            $balanceTable.bootstrapTable('refresh');
-            tableRowClick();        
-            var inTotal = (res.inTotal) ? res.inTotal:0;
-            var outTotal = (res.outTotal) ? -res.outTotal:0;
-//            var endTotal = (res.turnover.endTotal) ? res.turnover.endTotal:0;
-            $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
-            $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
-//            $('#startTotalFooter').html((Math.round((inTotal-outTotal-endTotal)*100)/100).toFixed(2));
-        } 
-    });
+    var $balanceTable = $('#balancetable');
+    var $userBalanceTable = $('#userbalancetable');
+    var $table = $('#table');
     
     function updateBalance(){
         var current = $.format.date(new Date(), "yyyy-MM-dd");
@@ -193,7 +182,7 @@
     }
     
     function refreshTable(){
-        $table.bootstrapTable('refresh');
+        $table.bootstrapTable('selectPage', 1);
     }
 
     function officeChange(){
@@ -208,12 +197,24 @@
         });    
     }
 
-    $(function () {        
+    $(function () {   
+        $balanceTable.bootstrapTable();
+        $userBalanceTable.bootstrapTable();
+        //$table.bootstrapTable();
 
         $('#tillOfficeSelect').val("<?= $currentUser->getOffice()->getId()?>");
 
         $('#ok').click(function () {
             refreshTable();
+        });        
+        $table.on('load-success.bs.table', function (e, res) {
+            tableRowClick();        
+            var inTotal = (res.inTotal) ? res.inTotal:0;
+            var outTotal = (res.outTotal) ? -res.outTotal:0;
+//            var endTotal = (res.turnover.endTotal) ? res.turnover.endTotal:0;
+            $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
+            $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
+//            $('#startTotalFooter').html((Math.round((inTotal-outTotal-endTotal)*100)/100).toFixed(2));
         });
         $(document).on('change', '.refresh-table', function (e) {
             refreshTable();
@@ -224,7 +225,7 @@
             $userBalanceTable.bootstrapTable('refresh');
         });
         $(document).on('change', '#cashSelect', function (e) {
-            $table.bootstrapTable('selectPage', 1);
+            refreshTable();
         });
         $(document).on('change', '#periodSelect', function (e) {
             $('#dateStart').attr('type', $(this).val());
