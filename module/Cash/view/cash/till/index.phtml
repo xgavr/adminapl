@@ -4,6 +4,7 @@
     $this->headTitle('Касса');
 
     $this->mainMenu()->setActiveItemId('company');
+    $this->mainMenu()->setActiveUrl($this->url('till'));
 
     $this->pageBreadcrumbs()->setItems([
                 'Главная'=>$this->url('home'),
@@ -13,14 +14,8 @@
 
 
 ?>
-<style>
-    .retired {
-        text-decoration: line-through;
-    }
-</style>
-
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-10">
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <button class="btn btn-default cash-in-modal-show" type="button" modal-url="/till/edit-cash-in">
@@ -103,6 +98,10 @@
             </thead>
         </table>
     </div>
+    <div class="col-md-2" id="side-nav" >
+        <div class="nav nav-stacked nav-list affix">
+        </div>
+    </div>    
 </div>    
 
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
@@ -111,6 +110,7 @@
     var $table = $('#table').bootstrapTable({
         onLoadSuccess: function() {
             updateBalance();
+            tableRowClick();        
         } 
     });
     
@@ -307,16 +307,11 @@
     }    
     
     function rowStyle(row, index) {
-        if (row.cashDoc.status == <?= CashDoc::STATUS_RETIRED?>) {
-            return {               
-                classes: 'retired'
-            };   
-        }
-        return {
-          css: {
-//            color: 'blue'
-          }
-        };   
+        var retired = 'tablerow';
+        if (row.status == '<?= CashDoc::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }        
+        return {classes: retired};    
     }
     
     function responseHandler(res) {

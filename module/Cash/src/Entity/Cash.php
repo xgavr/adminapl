@@ -77,6 +77,11 @@ class Cash {
     protected $status;
 
     /**
+     * @ORM\Column(name="balance")   
+     */
+    protected $balance;
+
+    /**
      * @ORM\Column(name="rest_status")   
      */
     protected $restStatus;
@@ -177,6 +182,15 @@ class Cash {
         $this->commission = $comission;
     }     
 
+    public function getBalance() {
+        return $this->balance;
+    }
+
+    public function setBalance($balance) {
+        $this->balance = $balance;
+        return $this;
+    }
+        
     /**
      * Returns the date of cash creation.
      * @return string     

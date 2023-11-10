@@ -106,10 +106,7 @@
 <script type="text/javascript">
     var $table = $('#table').bootstrapTable({
         onLoadSuccess: function(){
-            $('.tablerow').on('click', function(e){
-                $('.tablerow').removeClass('active-click');
-                $(this).addClass('active-click');
-            });        
+            tableRowClick();        
         }
     }),
         $ok = $('#ok');

@@ -100,6 +100,7 @@ class CashManager {
         $cash->setRefillStatus($data['refillStatus']);
         $cash->setSupplierStatus($data['supplierStatus']);
         $cash->setPayment($data['payment']);
+        $cash->setBalance(0);
         
         $cash->setOffice($office);
         $this->entityManager->persist($cash);
