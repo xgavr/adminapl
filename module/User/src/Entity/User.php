@@ -66,6 +66,11 @@ class User
     protected $orderCount;
 
     /**
+     * @ORM\Column(name="balance")   
+     */
+    protected $balance;
+    
+    /**
      * @ORM\Column(name="pwd_reset_token")  
      */
     protected $passwordResetToken;
@@ -313,6 +318,24 @@ class User
         $this->orderCount = $orderCount;
     }    
 
+    /**
+     * 
+     * @return float
+     */
+    public function getBalance() {
+        return $this->balance;
+    }
+
+    /**
+     * 
+     * @param float $balance
+     * @return $this
+     */
+    public function setBalance($balance) {
+        $this->balance = $balance;
+        return $this;
+    }
+    
     /**
      * Returns password reset token.
      * @return string

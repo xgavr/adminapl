@@ -770,6 +770,10 @@ class CashDoc {
         $this->kind = $kind;
     }   
     
+    /**
+     * 
+     * @return Cash
+     */
     public function getCash()
     {
         return $this->cash;

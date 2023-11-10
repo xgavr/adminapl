@@ -108,11 +108,37 @@ class TillController extends AbstractActionController
         $result = $query->getResult(2);
         
         return new JsonModel([
-            'total' => $total,
+            'total' => $total['countCd'],
+            'inTotal' => $total['inTotal'],
+            'outTotal' => $total['outTotal'],
             'rows' => $result,
         ]);                  
     }
 
+    public function balancesAction()
+    {       
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order', 'DESC');
+        $officeId = $this->params()->fromQuery('office');
+                
+        $params = [
+            'sort' => $sort, 'order' => $order, 'office' => $officeId,
+        ];
+        
+        $data = $this->entityManager->getRepository(Cash::class)
+                    ->findBy(['office' => $officeId]);
+        
+        $result = [];
+        
+        foreach ($data as $row){
+            $result[] = $row->toArray();
+        }                        
+        
+        return new JsonModel([
+            'total' => count($result),
+            'rows' => $result,
+        ]);                  
+    }
     
     public function legalsAction()
     {
@@ -456,6 +482,16 @@ class TillController extends AbstractActionController
                 $this->cashManager->cashDocFromQrCodePayment($qrCodePayment);
             }
         }
+        return new JsonModel(
+           ['ok']
+        );                   
+    }
+
+    public function updateBalancesAction()
+    {
+        $this->cashManager->updateAllCashBalance();
+        $this->cashManager->updateAllUserBalance();
+        
         return new JsonModel(
            ['ok']
         );                   

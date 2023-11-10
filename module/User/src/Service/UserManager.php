@@ -103,6 +103,7 @@ class UserManager
         $user->setAplId($data['aplId']);
         $user->setBirthday(null);
         $user->setOrderCount(0);
+        $user->setBalance(0);
         if (!empty($data['birthday'])){
             $user->setBirthday($data['birthday']);
         }    

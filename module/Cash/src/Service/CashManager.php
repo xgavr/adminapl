@@ -354,6 +354,47 @@ class CashManager {
     }
     
     /**
+     * Обновить тeкущие остатки
+     * @param CashDoc $cashDoc
+     */
+    protected function updateBalance($cashDoc)
+    {
+        $cash = $cashDoc->getCash();
+        $cashRefill = $cashDoc->getCashRefill();
+        $user = $cashDoc->getUser();
+        $userRefill = $cashDoc->getUserRefill();
+        
+        if ($cash){
+            $balance = $this->entityManager->getRepository(Cash::class)
+                    ->cashBalance($cash->getId(), date('Y-m-d 23:59:59'));
+            $cash->setBalance($balance);
+            $this->entityManager->persist($cash);
+        }    
+        if ($cashRefill){
+            $balance = $this->entityManager->getRepository(Cash::class)
+                    ->cashBalance($cashRefill->getId(), date('Y-m-d 23:59:59'));
+            $cashRefill->setBalance($balance);
+            $this->entityManager->persist($cashRefill);
+        }    
+        if ($user){
+            $balance = $this->entityManager->getRepository(Cash::class)
+                    ->userBalance($user->getId(), date('Y-m-d 23:59:59'));
+            $user->setBalance($balance);
+            $this->entityManager->persist($user);
+        }    
+        if ($userRefill){
+            $balance = $this->entityManager->getRepository(Cash::class)
+                    ->userBalance($userRefill->getId(), date('Y-m-d 23:59:59'));
+            $userRefill->setBalance($balance);
+            $this->entityManager->persist($userRefill);
+        }    
+        
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
      * Добавить запись о кассовой операции
      * @param CashDoc $cashDoc
      */
@@ -391,10 +432,10 @@ class CashManager {
         
         $this->entityManager->flush();
         
-        if ($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE){
-            $this->addMutuals($cashDoc, $docStamp);
-            $this->addRetails($cashDoc, $docStamp);
-        }    
+        $this->addMutuals($cashDoc, $docStamp);
+        $this->addRetails($cashDoc, $docStamp);
+        
+        $this->updateBalance($cashDoc);
             
         return;
     }
@@ -1099,6 +1140,46 @@ class CashManager {
             }
             $this->entityManager->flush();
         }    
+        return;
+    }
+    
+    /**
+     * Обновить текущие остатки в кассах
+     */
+    public function updateAllCashBalance()
+    {
+        $cashes = $this->entityManager->getRepository(Cash::class)
+                ->findBy([]);
+        
+        foreach ($cashes as $cash){
+            $balance = $this->entityManager->getRepository(Cash::class)
+                    ->cashBalance($cash->getId(), date('Y-m-d 23:59:59'));
+            $cash->setBalance($balance);
+            $this->entityManager->persist($cash);            
+        }
+        
+        $this->entityManager->flush();
+        
+        return;
+    }
+
+    /**
+     * Обновить текущие остатки в подотчете
+     */
+    public function updateAllUserBalance()
+    {
+        $users = $this->entityManager->getRepository(User::class)
+                ->findBy([]);
+        
+        foreach ($users as $user){
+            $balance = $this->entityManager->getRepository(User::class)
+                    ->cashBalance($user->getId(), date('Y-m-d 23:59:59'));
+            $user->setBalance($balance);
+            $this->entityManager->persist($user);            
+        }
+        
+        $this->entityManager->flush();
+        
         return;
     }
 }

@@ -126,8 +126,8 @@ class CashRepository extends EntityRepository
                 }            
             }    
             if (isset($params['sort'])){
-                if ($params['sort'] == 'cashDoc.id'){
-                    $queryBuilder->addOrderBy('cd.id', $params['order']);                    
+                if ($params['sort'] == 'cashDoc.dateOper'){
+                    $queryBuilder->addOrderBy('ct.docStamp', $params['order']);                    
                 } else {
                     $queryBuilder->addOrderBy('ct.'.$params['sort'], $params['order']);
                 }    
@@ -152,7 +152,9 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('count(ct.id) as countCd')
+        $queryBuilder->select('count(ct.id) as countCd,'
+                . 'sum(CASE WHEN ct.amount >= 0 and ct.status = :status THEN ct.amount ELSE 0 END) as inTotal, '
+                . 'sum(CASE WHEN ct.amount < 0 and ct.status = :status THEN ct.amount ELSE 0 END) as outTotal')
             ->from(CashTransaction::class, 'ct')
             ->join('ct.cashDoc', 'cd')
             ->join('cd.cash', 'c')
@@ -160,6 +162,7 @@ class CashRepository extends EntityRepository
             ->setParameter('1', $dateStart)    
             ->andWhere('ct.dateOper <= ?2')
             ->setParameter('2', $dateEnd . ' 23:59:59')    
+            ->setParameter('status', CashTransaction::STATUS_ACTIVE)    
                 ;
         
         if (is_array($params)){
@@ -188,7 +191,7 @@ class CashRepository extends EntityRepository
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
 
-        return $result['countCd'];
+        return $result;
     }    
 
     /**

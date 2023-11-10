@@ -193,9 +193,6 @@ $this->pageBreadcrumbs()->setItems([
     
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status == '<?= Idoc::STATUS_RETIRED?>'){
-           retired += ' retired';
-        }
         if (row.status == '<?= Idoc::STATUS_TO_CORRECT?>'){
            retired += ' warning';
         }
