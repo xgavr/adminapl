@@ -127,6 +127,11 @@ body {
   color: #6c757d!important;
 } 
 
+.active-click{
+  /* background-color: #6c757d!important; */
+  font-weight: bold;
+} 
+
 /*
 * Крестик в инпуте
 */

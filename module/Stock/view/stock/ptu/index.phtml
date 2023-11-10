@@ -104,7 +104,14 @@
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
-    var $table = $('#table'),
+    var $table = $('#table').bootstrapTable({
+        onLoadSuccess: function(){
+            $('.tablerow').on('click', function(e){
+                $('.tablerow').removeClass('active-click');
+                $(this).addClass('active-click');
+            });        
+        }
+    }),
         $ok = $('#ok');
     var curentRowIndex = -1;
     

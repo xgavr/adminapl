@@ -66,6 +66,7 @@ $this->pageBreadcrumbs()->setItems([
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
             data-auto-refresh ="true"
+            data-row-style="rowStyle"
             >
             <thead>
                 <tr>
@@ -87,7 +88,14 @@ $this->pageBreadcrumbs()->setItems([
 
 <script type="text/javascript">
 
-    var $table = $('#billTable').bootstrapTable();
+    var $table = $('#billTable').bootstrapTable({
+        onLoadSuccess: function(){
+            $('.tablerow').on('click', function(e){
+                $('.tablerow').removeClass('active-click');
+                $(this).addClass('active-click');
+            });                    
+        }
+    });
     var ok = $('#ok');
 
     function refreshTable(){
@@ -185,6 +193,18 @@ $this->pageBreadcrumbs()->setItems([
                 });
         });            
     });
+    
+    function rowStyle(row){
+        var retired = 'tablerow';
+        if (row.status == '<?= Idoc::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }
+        if (row.status == '<?= Idoc::STATUS_TO_CORRECT?>'){
+           retired += ' warning';
+        }
+        
+        return {classes: retired};
+    }
     
     function billQueryParams(params) {
         $('#billtoolbar').find('input[name]').each(function () {
