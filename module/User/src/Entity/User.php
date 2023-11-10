@@ -548,6 +548,7 @@ class User
             'phones' => $this->getPhones(),
             'roles' => $this->getRolesAsString(),
             'status' => $this->getStatus(),
+            'balance' => $this->getBalance(),
             'statusAsString' => $this->getStatusAsString(),
         ];
     }

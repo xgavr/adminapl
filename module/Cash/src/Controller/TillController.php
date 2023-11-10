@@ -21,6 +21,7 @@ use User\Filter\PhoneFilter;
 use Application\Entity\Order;
 use Bank\Entity\Statement;
 use Bank\Entity\QrCodePayment;
+use User\Entity\User;
 
 
 class TillController extends AbstractActionController
@@ -117,21 +118,38 @@ class TillController extends AbstractActionController
 
     public function balancesAction()
     {       
-        $sort = $this->params()->fromQuery('sort');
-        $order = $this->params()->fromQuery('order', 'DESC');
         $officeId = $this->params()->fromQuery('office');
                 
-        $params = [
-            'sort' => $sort, 'order' => $order, 'office' => $officeId,
-        ];
-        
         $data = $this->entityManager->getRepository(Cash::class)
                     ->findBy(['office' => $officeId, 'restStatus' => Cash::REST_ACTIVE]);
         
         $result = [];
         
         foreach ($data as $row){
-            $result[] = $row->toArray();
+            if (round($row->getBalance(), 2) != 0){
+                $result[] = $row->toArray();
+            }    
+        }                        
+        
+        return new JsonModel([
+            'total' => count($result),
+            'rows' => $result,
+        ]);                  
+    }
+
+    public function userBalancesAction()
+    {       
+        $officeId = $this->params()->fromQuery('office');
+                
+        $data = $this->entityManager->getRepository(User::class)
+                    ->findBy(['office' => $officeId]);
+        
+        $result = [];
+        
+        foreach ($data as $row){
+            if (round($row->getBalance(), 2) != 0){
+                $result[] = $row->toArray();
+            }    
         }                        
         
         return new JsonModel([

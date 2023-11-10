@@ -134,6 +134,32 @@
                      </tr>                
                 </thead>
             </table>
+        
+            <table id="userbalancetable" 
+                data-toggle="userbalancetable" 
+                data-url="/till/user-balances"
+                data-side-pagination="server"
+                data-pagination="false" 
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#userbalancetoolbar"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-undefined-text=''
+                data-query-params="queryParams"
+                data-response-handler="responseHandler"
+                data-row-style="balanceRowStyle"
+                data-classes = "table table-bordered table-hover table-condensed"
+                data-show-footer="true"
+                data-auto-refresh="true"
+                data-show-refresh="false"
+            >
+                <thead>
+                    <tr>
+                         <th data-field="name" data-footer-formatter="totalFooterFormatter" data-sortable="false">Подотчет</th>
+                         <th data-field="balance" data-footer-formatter="footerFormatter" data-sortable="false" data-align="right" data-formatter="amountFormatter">Остаток</th>
+                     </tr>                
+                </thead>
+            </table>
         <!--</div>-->
     </div>    
 </div>    
@@ -142,6 +168,7 @@
 
 <script type="text/javascript">
     var $balanceTable = $('#balancetable').bootstrapTable();
+    var $userBalanceTable = $('#userbalancetable').bootstrapTable();
     var $table = $('#table').bootstrapTable({
         onLoadSuccess: function(res) {
 //            $balanceTable.bootstrapTable('refresh');
@@ -191,6 +218,7 @@
         $(document).on('change', '#tillOfficeSelect', function (e) {
             officeChange();
             $balanceTable.bootstrapTable('refresh');
+            $userbalanceTable.bootstrapTable('refresh');
         });
         $(document).on('change', '#cashSelect', function (e) {
             $table.bootstrapTable('selectPage', 1);
