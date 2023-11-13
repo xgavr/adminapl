@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <select id="tillOfficeSelect" style="width: 100px" class="form-control" name="office">
                         <?php foreach ($offices as $office):?>
-                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                            <option value="<?= $office->getId()?>" <?= ($office->getId() == $currentUser->getOffice()->getId()) ? 'selected':'' ?>><?= $office->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
@@ -51,7 +51,7 @@
                     <select id="userSelect" style="width: 200px" class="form-control refresh-table" name="user">
                         <option value="0">все</option>
                         <?php foreach ($users as $user):?>
-                            <option value="<?= $user->getId()?>"><?= $user->getName()?></option>
+                            <option value="<?= $user->getId()?>" <?= ($user->getId() == $currentUser->getId()) ? 'selected':'' ?>><?= $user->getName()?></option>
                         <?php endforeach;?>
                     </select>
                 </div>    
@@ -87,8 +87,8 @@
                      <th data-field="cashDoc.dateOper" data-sortable="true" data-formatter="dateFormatter" data-width="80">Дата</th>
                      <th data-field="cashDoc.id" data-sortable="false" data-width="50" data-formatter="cashIdFormatter" data-align="right">Номер</th>
                      <th data-field='cashDoc.kind' data-sortable="false" data-formatter="kindFormatter" data-width="200">Операция</th>
-                     <th data-field='inSum' data-sortable="false" data-align="right" data-formatter="inFormatter" data-width="100">Приход</th>
-                     <th data-field='outSum' data-sortable="false" data-align="right" data-formatter="outFormatter" data-width="100">Расход</th>
+                     <th data-field='inSum' data-sortable="false" data-align="right" data-footer-formatter="footerDebitFormatter" data-formatter="inFormatter" data-width="100">Приход</th>
+                     <th data-field='outSum' data-sortable="false" data-align="right" data-footer-formatter="footerCreditFormatter" data-formatter="outFormatter" data-width="100">Расход</th>
                      <th data-field='rest' data-sortable="false" data-align="right" data-formatter="userRestFormatter" data-width="100">Остаток</th>
                      <th data-field='user.fullName' data-sortable="false" data-width="150">Сотрудник</th>
                      <th data-field='cashDoc.kind' data-sortable="false" data-formatter="operFormatter">Кому/от кого</th>
@@ -171,15 +171,13 @@
         });
 
         $table.on('load-success.bs.table', function (e, res) {
-            tableRowClick();        
+            tableRowClick();     
+            
+            var inTotal = (res.inTotal) ? res.inTotal:0;
+            var outTotal = (res.outTotal) ? -res.outTotal:0;
 
-            var inTotalNode = $table.find('th[data-field="inSum"]').find('.th-inner');
-            inTotalNode.html('Поступило ' + Math.round(res.inTotal).toFixed(2));
-            inTotalNode.css('text-align','right');
-
-            var outTotalNode = $table.find('th[data-field="outSum"]').find('.th-inner');
-            outTotalNode.html('Расход ' + Math.round(-res.outTotal).toFixed(2));
-            outTotalNode.css('text-align','right');
+            $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
+            $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
         });
 
         $(document).on('change', '.refresh-table', function (e) {
