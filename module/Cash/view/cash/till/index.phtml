@@ -45,7 +45,7 @@
                 <div class="form-group">
                     <select id="tillOfficeSelect" style="width: 100px" class="form-control" name="office">
                         <?php foreach ($offices as $office):?>
-                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                            <option value="<?= $office->getId()?>" <?= ($office->getId() == $currentUser->getOffice()->getId()) ? 'selected':'' ?>><?= $office->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
@@ -201,8 +201,6 @@
         $balanceTable.bootstrapTable();
         $userBalanceTable.bootstrapTable();
         //$table.bootstrapTable();
-
-        $('#tillOfficeSelect').val("<?= $currentUser->getOffice()->getId()?>");
 
         $('#ok').click(function () {
             refreshTable();
