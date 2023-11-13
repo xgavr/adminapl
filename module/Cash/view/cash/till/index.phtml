@@ -405,6 +405,9 @@
         if (row.status == '<?= CashDoc::STATUS_RETIRED?>'){
            retired += ' retired';
         }        
+        if (row.status == '<?= CashDoc::STATUS_CORRECT?>'){
+           retired += ' retired-secondary';
+        }        
         return {classes: retired};    
     }
     
