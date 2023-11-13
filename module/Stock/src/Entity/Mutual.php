@@ -19,7 +19,7 @@ use Stock\Entity\Revision;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Stock\Entity\Ptu;
 use Stock\Entity\Vtp;
-
+use Cash\Entity\CashDoc;
 
 /**
  * Description of Mutual
@@ -309,6 +309,19 @@ class Mutual {
     {
         switch ($report->getStatus()){
             case MarketSaleReport::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+
+    /**
+     * Returns possible cashdoc status.
+     * @param CashDoc $cashDoc
+     * @return integer
+     */
+    public static function getStatusFromCashdoc($cashDoc) 
+    {
+        switch ($cashDoc->getStatus()){
+            case CashDoc::STATUS_RETIRED: return self::STATUS_RETIRED;
             default: return self::STATUS_ACTIVE;    
         }
     }    

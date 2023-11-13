@@ -219,7 +219,7 @@ class CashManager {
                 'doc_type' => Movement::DOC_CASH,
                 'doc_id' => $cashDoc->getId(),
                 'date_oper' => $cashDoc->getDateOper(),
-                'status' => ($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
+                'status' => Mutual::getStatusFromCashdoc($cashDoc),
                 'revise' => Mutual::REVISE_NOT,
                 'amount' => $cashDoc->getMutualAmount(),
                 'legal_id' => $cashDoc->getLegal()->getId(),
@@ -269,7 +269,7 @@ class CashManager {
                 'doc_type' => Movement::DOC_CASH,
                 'doc_id' => $cashDoc->getId(),
                 'date_oper' => $cashDoc->getDateOper(),
-                'status' => ($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE) ? Retail::STATUS_ACTIVE: Retail::STATUS_RETIRED,
+                'status' => Retail::getStatusFromCashdoc($cashDoc),
                 'revise' => Retail::REVISE_NOT,
                 'amount' => $cashDoc->getMutualAmount(),
                 'contact_id' => $cashDoc->getContact()->getId(),
@@ -313,7 +313,7 @@ class CashManager {
         $cashTransaction->setCashDoc($cashDoc);
         $cashTransaction->setDateCreated(date('Y-m-d H:i:s'));
         $cashTransaction->setDateOper($cashDoc->getDateOper());
-        $cashTransaction->setStatus(($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE) ? CashTransaction::STATUS_ACTIVE:CashTransaction::STATUS_RETIRED);
+        $cashTransaction->setStatus(CashTransaction::getStatusFromCashdoc($cashDoc));
         $cashTransaction->setCash($cash);
         $cashTransaction->setDocStamp($docStamp);
         
@@ -543,6 +543,10 @@ class CashManager {
         $cashDoc->setUserRefill(empty($data['userRefill']) ? null:$data['userRefill']);
         $cashDoc->setVt(empty($data['vt']) ? null:$data['vt']);
         
+        if ($inData['status'] == CashDoc::STATUS_CORRECT){
+            $cashDoc->setStatusEx(CashDoc::STATUS_EX_APL);
+        }
+        
         $cashDoc->setUserCreator($this->logManager->currentUser());
         
         $this->entityManager->persist($cashDoc);
@@ -590,6 +594,10 @@ class CashManager {
         $cashDoc->setUser(empty($data['user']) ? null:$data['user']);
         $cashDoc->setUserRefill(empty($data['userRefill']) ? null:$data['userRefill']);
         $cashDoc->setVt(empty($data['vt']) ? null:$data['vt']);
+
+        if ($inData['status'] == CashDoc::STATUS_CORRECT){
+            $cashDoc->setStatusEx(CashDoc::STATUS_EX_APL);
+        }
         
         $this->entityManager->persist($cashDoc);
         $this->entityManager->flush($cashDoc);

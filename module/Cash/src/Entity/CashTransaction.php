@@ -11,6 +11,7 @@ namespace Cash\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Cash\Entity\Cash;
+use Cash\Entity\CashDoc;
 
 /**
  * Description of CashTransaction
@@ -141,6 +142,19 @@ class CashTransaction {
         return $this;
     }
 
+    /**
+     * Returns possible cashdoc status.
+     * @param CashDoc $cashDoc
+     * @return integer
+     */
+    public static function getStatusFromCashdoc($cashDoc) 
+    {
+        switch ($cashDoc->getStatus()){
+            case CashDoc::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+    
     /**
      * Returns status.
      * @return int     

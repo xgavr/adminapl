@@ -33,6 +33,7 @@ class CashDoc {
     
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
+    const STATUS_CORRECT      = 3; // Корректировка.
     
     const CHECK_ACTIVE     = 1; // чек печатать.
     const CHECK_RETIRED    = 2; // не печатать.
@@ -347,7 +348,8 @@ class CashDoc {
     {
         return [
             self::STATUS_ACTIVE => 'Используется',
-            self::STATUS_RETIRED => 'Не используется'
+            self::STATUS_RETIRED => 'Не используется',
+            self::STATUS_CORRECT => 'Коректировка'
         ];
     }    
     

@@ -296,6 +296,19 @@ class Retail {
     }    
     
     /**
+     * Returns possible cashdoc status.
+     * @param CashDoc $cashDoc
+     * @return integer
+     */
+    public static function getStatusFromCashdoc($cashDoc) 
+    {
+        switch ($cashDoc->getStatus()){
+            case CashDoc::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+    
+    /**
      * Returns possible statuses as array.
      * @return array
      */
