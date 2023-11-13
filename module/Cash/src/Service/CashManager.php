@@ -346,7 +346,7 @@ class CashManager {
         $userTransaction->setCashDoc($cashDoc);
         $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
         $userTransaction->setDateOper($cashDoc->getDateOper());
-        $userTransaction->setStatus(($cashDoc->getStatus() == CashDoc::STATUS_ACTIVE) ? UserTransaction::STATUS_ACTIVE:UserTransaction::STATUS_RETIRED);
+        $userTransaction->setStatus(UserTransaction::getStatusFromCashdoc($cashDoc));
         $userTransaction->setUser($user);
         $userTransaction->setDocStamp($docStamp);
         
