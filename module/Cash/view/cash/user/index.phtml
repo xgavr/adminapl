@@ -13,14 +13,8 @@
 
 
 ?>
-<style>
-    .retired {
-        text-decoration: line-through;
-    }
-</style>
-
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-10">
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <button class="btn btn-default user-in-modal-show" type="button" modal-url="/accountant/edit-user-in">
@@ -60,7 +54,6 @@
                             <option value="<?= $user->getId()?>"><?= $user->getName()?></option>
                         <?php endforeach;?>
                     </select>
-                    <label for="userSelect" id="userBalance">0</label>
                 </div>    
             </div>
         </div>
@@ -83,6 +76,10 @@
             data-response-handler="responseHandler"
             data-row-style="rowStyle"
             data-classes = "table table-bordered table-hover table-condensed"
+            data-show-footer="true"
+            data-auto-refresh="true"
+            data-show-refresh="false"
+            data-buttons-class='xs'
             >
             <thead>
                 <tr>
@@ -103,24 +100,42 @@
             </thead>
         </table>
     </div>
+    <div class="col-md-2" id="side-nav" >        
+        <table id="userbalancetable" 
+            data-toggle="userbalancetable" 
+            data-url="/till/user-balances"
+            data-side-pagination="client"
+            data-pagination="true" 
+            data-page-list="[5, 10]"
+            data-pagination-parts="['pageList']"
+            data-toolbar="#userbalancetoolbar"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-undefined-text=''
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            data-row-style="balanceRowStyle"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-show-footer="true"
+            data-auto-refresh="true"
+            data-show-refresh="false"
+            data-buttons-class='xs'
+        >
+            <thead>
+                <tr>
+                     <th data-field="name" data-footer-formatter="totalFooterFormatter" data-sortable="false">Подотчет</th>
+                     <th data-field="balance" data-footer-formatter="footerFormatter" data-sortable="false" data-align="right" data-formatter="amountFormatter">Остаток</th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>    
 </div>    
 
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
-    var $table = $('#table').bootstrapTable({
-        onLoadSuccess: function(data) {
-            updateBalance();
-
-            var inTotalNode = $table.find('th[data-field="inSum"]').find('.th-inner');
-            inTotalNode.html('Поступило ' + Math.round(data.inTotal).toFixed(2));
-            inTotalNode.css('text-align','right');
-
-            var outTotalNode = $table.find('th[data-field="outSum"]').find('.th-inner');
-            outTotalNode.html('Расход ' + Math.round(-data.outTotal).toFixed(2));
-            outTotalNode.css('text-align','right');
-        } 
-    });
+    var $userBalanceTable = $('#userbalancetable');
+    var $table = $('#table');
     
     function updateBalance(){
         var current = $.format.date(new Date(), "yyyy-MM-dd");
@@ -133,7 +148,7 @@
     }
     
     function refreshTable(){
-        $table.bootstrapTable('refresh');
+        $table.bootstrapTable('selectPage', 1);
     }
 
     function officeChange(){
@@ -149,8 +164,22 @@
     }
 
     $(function () {
+        $userBalanceTable.bootstrapTable();
+
         $('#ok').click(function () {
-            refreshTable()
+            refreshTable();
+        });
+
+        $table.on('load-success.bs.table', function (e, res) {
+            tableRowClick();        
+
+            var inTotalNode = $table.find('th[data-field="inSum"]').find('.th-inner');
+            inTotalNode.html('Поступило ' + Math.round(res.inTotal).toFixed(2));
+            inTotalNode.css('text-align','right');
+
+            var outTotalNode = $table.find('th[data-field="outSum"]').find('.th-inner');
+            outTotalNode.html('Расход ' + Math.round(-res.outTotal).toFixed(2));
+            outTotalNode.css('text-align','right');
         });
 
         $(document).on('change', '.refresh-table', function (e) {
@@ -159,6 +188,7 @@
         
         $(document).on('change', '#tillOfficeSelect', function (e) {
             officeChange();
+            $userBalanceTable.bootstrapTable('refresh');
         });
         
         $(document).on('change', '#userSelect', function (e) {
@@ -241,6 +271,28 @@
         }
         return;
     }    
+
+    function footerDebitFormatter(data){
+        return '<span id="inTotalFooter"></span>';
+    }
+
+    function footerCreditFormatter(data){
+        return '<span id="outTotalFooter"></span>';
+    }
+    
+    function totalFooterFormatter() {
+        return 'Всего:';
+    }
+
+    function footerFormatter(data){
+        var field = this.field;
+        return (data.map(function (row) {
+            return +row[field];
+        }).reduce(function (sum, i) {
+            var total = sum + i;
+            return (Math.round((total)*100)/100);
+        }, 0)).toFixed(2);
+    }
 
     function userRestFormatter(value){
         if (value){
@@ -342,16 +394,11 @@
     }    
     
     function rowStyle(row, index) {
-        if (row.cashDoc.status == <?= CashDoc::STATUS_RETIRED?>) {
-            return {               
-                classes: 'retired'
-            }   
-        }
-        return {
-          css: {
-//            color: 'blue'
-          }
-        }   
+        var retired = 'tablerow';
+        if (row.status == '<?= CashDoc::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }        
+        return {classes: retired};    
     }
     
     function responseHandler(res) {
