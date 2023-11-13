@@ -406,7 +406,7 @@
            retired += ' retired';
         }        
         if (row.status == '<?= CashDoc::STATUS_CORRECT?>'){
-           retired += ' retired-secondary';
+           retired += ' retired-muted';
         }        
         return {classes: retired};    
     }
