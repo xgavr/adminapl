@@ -125,6 +125,7 @@ body {
 
 .retired-muted{
   color: #6c757d!important;
+  font-style: italic;
 } 
 
 .active-click{
