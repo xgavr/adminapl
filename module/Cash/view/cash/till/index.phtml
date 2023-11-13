@@ -402,7 +402,7 @@
     
     function rowStyle(row, index) {
         var retired = 'tablerow';
-        if (row.casDoc){
+        if (row.cashDoc){
             if (row.cashDoc.status == '<?= CashDoc::STATUS_RETIRED?>'){
                retired += ' retired';
             }        
