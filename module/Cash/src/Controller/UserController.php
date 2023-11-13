@@ -55,6 +55,7 @@ class UserController extends AbstractActionController
         return new ViewModel([
             'users' =>  $users,
             'offices' =>  $offices,
+            'currentUser' => $currentUser,
         ]);
     }
     
