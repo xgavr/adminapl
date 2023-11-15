@@ -1321,7 +1321,7 @@ class AplDocService {
             $post = [
                 'parent' => $st->getOffice()->getAplId(),
                 'type' =>   'Writings',
-                'sort' =>   $st->getAmount(),
+                'sort' =>   round($st->getAmount(), 2),
                 'publish' => $st->getAplStatusAsString(),
                 'name' =>   $st->getOffice()->getAplId(),
                 'comment' => 'Stores',
