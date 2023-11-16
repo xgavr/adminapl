@@ -151,7 +151,68 @@ class GigaManager {
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
-             'Authorization: Bearer '. urlencode($accessToken['access_token']),
+             'Authorization: Bearer '.$accessToken['access_token'],
+        ]);      
+        
+//        var_dump($headers); exit;
+        
+        $response = $client->send();
+                
+        if ($response->isOk()){
+            $result = Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);
+            return $result;
+        }
+        
+        return $this->exception($response);        
+    }
+    
+    
+    /**
+     * Возвращает ответ модели с учетом переданных сообщений
+     * 
+     * @param string $messages
+     * @param string $uuid
+     * @param array $accessToken
+     * 
+     * @return array
+     */
+    public function completions($messages = null, $uuid = null, $accessToken = null)
+    {
+        if (empty($accessToken)){
+            $accessToken = $this->accessToken($uuid);
+        }
+        
+        if (empty($accessToken['expires_at'])){
+            return [];
+        }
+        
+        $expire = $accessToken['expires_at'];
+        
+        if ($expire <= time()){
+            $accessToken = $this->accessToken($uuid);            
+        }
+        
+        if (empty($accessToken['access_token'])){
+            return [];
+        }
+
+//        var_dump($accessToken); exit;
+        $postParameters = [
+            'model' => 'GigaChat:latest',
+            'messages' => $messages,
+        ];
+        
+        $client = new Client();
+        $client->setUri('https://gigachat.devices.sberbank.ru/api/v1/chat/completions');
+        $client->setAdapter($this::HTTPS_ADAPTER);
+        $client->setMethod('POST');
+        $client->setOptions(['timeout' => 30]);
+        $client->setRawBody(Encoder::encode($postParameters));
+        
+        $headers = $client->getRequest()->getHeaders();
+        $headers->addHeaders([
+             'Content-Type: application/json',
+             'Authorization: Bearer '.$accessToken['access_token'],
         ]);      
         
 //        var_dump($headers); exit;
