@@ -133,6 +133,8 @@ class GigaManager {
             $accessToken = $this->accessToken($uuid);            
         }
         
+        var_dump($accessToken); exit;
+        
         $client = new Client();
         $client->setUri('https://gigachat.devices.sberbank.ru/api/v1/models'.($model) ? '/'.$model:'');
         $client->setAdapter($this::HTTPS_ADAPTER);
