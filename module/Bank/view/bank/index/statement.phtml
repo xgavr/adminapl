@@ -384,10 +384,6 @@
     }
 
     function payDoc(modal, url){
-        var dialog = bootbox.dialog({
-            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-            closeButton: false
-        });
         showFormDialog({
             id: modal,
             url: url,
@@ -851,7 +847,7 @@
                     }
                 },
                 isEnabled: function(row) {
-                    return row.cashDoc;
+                    return row.cashDoc !== null;
                 }                
             },
             returnPay: {
@@ -870,7 +866,7 @@
                     }
                 },
                 isEnabled: function(row) {
-                    return row.cashDoc && row.amount>0;
+                    return row.cashDoc !== null && row.amount>0;
                 }                
             }
         }
