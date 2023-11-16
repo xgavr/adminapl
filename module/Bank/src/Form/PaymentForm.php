@@ -167,6 +167,16 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([
             'type'  => 'text',
+            'name' => 'supplierBillId',
+            'attributes' => [                
+            ],
+            'options' => [
+                'label' => 'Код УИН',
+            ],
+       ]);
+
+        $this->add([
+            'type'  => 'text',
             'name' => 'taxInfoDocumentDate',
             'attributes' => [                
             ],

@@ -47,6 +47,10 @@ $form->get('nds')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('supplierBillId')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('taxInfoDocumentDate')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -274,6 +278,13 @@ $form->prepare();
                 <?= $this->formLabel($form->get('taxInfoStatus')); ?>
                 <?= $this->formElement($form->get('taxInfoStatus')); ?>
                 <?= $this->formElementErrors($form->get('taxInfoStatus')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('supplierBillId')); ?>
+                <?= $this->formElement($form->get('supplierBillId')); ?>
+                <?= $this->formElementErrors($form->get('supplierBillId')); ?>                  
             </div>
         </div>    
     </div>        
