@@ -127,14 +127,20 @@ class GigaManager {
             $accessToken = $this->accessToken($uuid);
         }
         
+        if (empty($accessToken['expires_at'])){
+            return;
+        }
+        
         $expire = $accessToken['expires_at'];
         
         if ($expire <= time()){
             $accessToken = $this->accessToken($uuid);            
         }
         
-        var_dump($accessToken); exit;
-        
+        if (empty($accessToken['access_token'])){
+            return;
+        }
+
         $client = new Client();
         $client->setUri('https://gigachat.devices.sberbank.ru/api/v1/models'.($model) ? '/'.$model:'');
         $client->setAdapter($this::HTTPS_ADAPTER);
