@@ -141,7 +141,7 @@ class GigaManager {
             return [];
         }
 
-        var_dump($accessToken); exit;
+//        var_dump($accessToken); exit;
         
         $client = new Client();
         $client->setUri('https://gigachat.devices.sberbank.ru/api/v1/models'.($model) ? '/'.$model:'');
