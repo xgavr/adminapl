@@ -55,6 +55,7 @@ class GigaManager {
             case 403: //Unauthorized
             case 500: //Internal Server Error
             default:
+                var_dump($response->getContent()); exit;
                 $error = Decoder::decode($response->getContent(), \Laminas\Json\Json::TYPE_ARRAY);
                 $error_msg = $response->getStatusCode().' '.$response->getReasonPhrase();
                 if (isset($error['code'])){
