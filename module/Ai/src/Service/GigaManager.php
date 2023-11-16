@@ -151,7 +151,7 @@ class GigaManager {
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
-             'Authorization: Bearer '.urldecode($accessToken['access_token']),
+             'Authorization: Bearer '. urlencode($accessToken['access_token']),
         ]);      
         
 //        var_dump($headers); exit;
