@@ -15,6 +15,7 @@ use Bank\Form\PaymentForm;
 use Company\Entity\BankAccount;
 use Application\Entity\Supplier;
 use Bank\Form\SuppliersPayForm;
+use Bank\Entity\Statement;
 
 class PaymentController extends AbstractActionController
 {
@@ -104,12 +105,17 @@ class PaymentController extends AbstractActionController
     public function editFormAction()
     {
         $paymentId = (int)$this->params()->fromRoute('id', -1);
+        $statementId = (int)$this->params()->fromQuery('statement', -1);
         $copy = $this->params()->fromQuery('copy');
         
-        $payment = null;
+        $payment = $statement = null;
         if ($paymentId > 0){
             $payment = $this->entityManager->getRepository(Payment::class)
                     ->find($paymentId);
+        }    
+        if ($statementId > 0){
+            $statement = $this->entityManager->getRepository(Statement::class)
+                    ->find($statementId);
         }    
         
         $form = new PaymentForm($this->entityManager);
@@ -171,6 +177,11 @@ class PaymentController extends AbstractActionController
                     $form->get('paymentDate')->setValue(date('Y-m-d'));
                     $form->get('status')->setValue(Payment::STATUS_ACTIVE);
                 }
+            }    
+            if ($statement){
+                $form->setData($statement->toReturnPayment());
+                $form->get('paymentDate')->setValue(date('Y-m-d'));
+                $form->get('status')->setValue(Payment::STATUS_ACTIVE);
             }    
         }
         $this->layout()->setTemplate('layout/terminal');

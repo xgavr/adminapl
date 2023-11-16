@@ -71,6 +71,7 @@
                     data-classes = "table table-bordered table-hover table-condensed"
                     data-unique-id="id"
                     data-show-footer="true"
+                    data-row-style="rowStyle"
                     >
                     <thead>
                         <tr>
@@ -83,7 +84,7 @@
                              <th data-field='counterpartyBankBik' data-sortable="false" data-formatter="formatAccount">БИК/счет</th>
                              <th data-field="counterpartyName" data-formatter="formatCounterparty">Контрагент</th>
                              <th data-field="paymentDate" data-formatter="formatDateNumber">Дата/Номер ПП</th>
-                             <th data-field="pay" data-formatter="payFormatter" data-width="5" data-valign="top"></th>             
+                             <!--<th data-field="pay" data-formatter="payFormatter" data-width="5" data-valign="top"></th>-->             
         <!--                     <th data-field="bik">Счет</th>
                              <th data-field="account">Счет</th>-->
                          </tr>                
@@ -331,6 +332,16 @@
         $(this).tab('show');
     });
 
+    var curentRowIndex = -1;
+    
+    function setCurrentIndex(index){
+        curentRowIndex = index;
+    }
+    
+    function getCurrentIndex(){
+        return curentRowIndex;
+    }
+
     var $table = $('#table').bootstrapTable({
             onLoadSuccess: function(res){
                 var inTotal = (res.inTotal) ? Math.round(res.inTotal*100)/100:0;
@@ -358,6 +369,43 @@
         $qrCodeTable.bootstrapTable('refresh');
     }
 
+    function payCheck(url){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: true
+        });
+        $.getJSON( url, function( data ) {
+//            refreshTable();
+            if (data.row && data.id){
+                $table.bootstrapTable('updateByUniqueId', {id: data.id, row: data.row});
+            }
+            dialog.modal('hide');
+        });                    
+    }
+
+    function payDoc(modal, url){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: false
+        });
+        showFormDialog({
+            id: modal,
+            url: url,
+            width: '1440px'
+        });
+    }
+
+    function returnPay(url){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: false
+        });
+        $.getJSON( url, function( data ) {
+            $qrCodeTable.bootstrapTable('refresh');
+            dialog.modal('hide');
+        });            
+    }
+    
     $(function () {
         $(".inputclear").click(function(){
             $(".enter-search").val('');
@@ -461,25 +509,14 @@
     });
 
     $(document).on('click', '.statement-to-cash-doc', function (e) {
-        var dialog = bootbox.dialog({
-            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-            closeButton: true
-        });
-        var url = $(e.currentTarget).attr('modal-url');
-        $.getJSON( url, function( data ) {
-//            refreshTable();
-            if (data.row && data.id){
-                $table.bootstrapTable('updateByUniqueId', {id: data.id, row: data.row});
-            }
-            dialog.modal('hide');
-        });            
+        payCheck($(this).attr('modal-url'));
     });      
 
     $(document).on('click', '.qrcode-payment-to-cash-doc', function (e) {
         var dialog = bootbox.dialog({
             message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
             closeButton: false
-        });
+        });      
         var url = $(this).attr('modal-url');
         $.getJSON( url, function( data ) {
             $qrCodeTable.bootstrapTable('refresh');
@@ -646,7 +683,7 @@
         
         return '';
     }
-
+    
     function payFormatter(value, row){
         var url = '/till/statement-to-cash-doc/'+row.id;
         var checkClass = 'btn-default';
@@ -777,6 +814,68 @@
         return value;
     }
 
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            setCurrentIndex($(rowElem).attr('data-index'));
+            return $table.bootstrapTable('getData')[getCurrentIndex()];
+        },
+        actionsGroups: [
+           ['paycheck', 'paydoc'], ['returnPay']
+        ],      
+        actions: {
+            paycheck: {
+                name: 'Связать с кассой',
+                iconClass: 'glyphicon glyphicon-check',
+                onClick: function(row) {
+                    payCheck('/till/statement-to-cash-doc/'+row.id);
+                },
+                isEnabled: function(row) {
+                    return true;
+                }                
+            }, 
+            paydoc: {
+                name: 'Кассовый документ',
+                iconClass: 'glyphicon glyphicon-edit',
+                onClick: function(row) {
+                    var cashDocId = '';
+                    if (row.cashDoc){
+                        cashDocId = row.cashDoc.id;
+                        if (row.amount>0){
+                            var url = '/till/edit-cash-in/'+cashDocId+'?statement='+row.id;
+                            payDoc('cashInModal', url);
+                        }    
+                        if (row.amount<0){
+                            var url = '/till/edit-cash-out/'+cashDocId+'?statement='+row.id;
+                            payDoc('cashOutModal', url);
+                        }    
+                    }
+                },
+                isEnabled: function(row) {
+                    return row.cashDoc;
+                }                
+            },
+            returnPay: {
+                name: 'Ответный платеж',
+                iconClass: 'glyphicon glyphicon-return',
+                onClick: function(row) {
+                    if (row.cashDoc){
+                        if (row.amount>0){
+                            var url = '/payment/edit-form?statement='+row.id;
+                            showFormDialog({
+                                id: 'paymentModal',
+                                url: url,
+                                width: '1440px'
+                            });
+                        }    
+                    }
+                },
+                isEnabled: function(row) {
+                    return row.cashDoc && row.amount>0;
+                }                
+            }
+        }
+    });        
+
     function qrcodePaymentStatusFormatter(value, row){
         var statuses = <?= Encoder::encode(QrCode::getPaymentStatusList())?>;
         return statuses[value];
@@ -860,6 +959,12 @@
     function sbpAmount(value, row){
         return numberFormat(Math.round(value/100));
     }
+    
+    function rowStyle(row, index) {
+        var retired = 'tablerow';
+        return {classes: retired};    
+    }
+    
     
     function responseHandler(res) {
         return res;

@@ -10,6 +10,7 @@ namespace Bank\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Cash\Entity\CashDoc;
+use Bank\Entity\Payment;
 
 /**
  * Description of Bank
@@ -743,5 +744,26 @@ class Statement {
     public function setCashDoc($cashDoc)
     {
         $this->cashDoc = $cashDoc;
+    }
+    
+    /**
+     * Данные для ответной платежки
+     */
+    public function toReturnPayment()
+    {
+        return [
+            'counterpartyAccountNumber' => $this->getCounterpartyAccountNumber(),
+            'counterpartyBankBik' => $this->getCounterpartyBankBik(),
+            'counterpartyInn' => $this->getСounterpartyInn(),
+            'counterpartyKpp' => $this->getСounterpartyKpp(),
+            'counterpartyName' => $this->getCounterpartyName(),
+            'amount' => $this->getAmount(),
+            'paymentDate' => date('Y-m-d'),
+            'purpose' => $this->getPaymentPurpose(),
+            'nds' => Payment::NDS_NO,
+            'supplierBillId' => 0,
+            'status' => Payment::STATUS_ACTIVE,
+            'paymentType' => $this->getPaymentType(),            
+        ];        
     }
 }
