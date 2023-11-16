@@ -763,7 +763,6 @@ class Statement {
             'nds' => Payment::NDS_NO,
             'supplierBillId' => 0,
             'status' => Payment::STATUS_ACTIVE,
-            'paymentType' => $this->getPaymentType(),            
         ];        
     }
 }
