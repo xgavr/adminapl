@@ -516,7 +516,7 @@ class Payment {
      */
     public function getTaxInfoReasonCode() 
     {
-        return ($this->taxInfoReasonCode) ? $this->taxInfoReasonCode:'';
+        return ($this->taxInfoReasonCode) ? $this->taxInfoReasonCode:'0';
     }
 
     /**

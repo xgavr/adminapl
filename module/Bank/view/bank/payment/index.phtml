@@ -296,7 +296,7 @@
     
     function purposeFormatter(value, row){
         if (row.statusMessage){
-            return value + '<br/><span class="label label-danger">!</span><h5>'+row.statusMessage+'</h5>';
+            return value + '<br/><h5><span class="label label-danger">!</span>'+row.statusMessage+'</h5>';
         }
         return value;
     }
