@@ -513,7 +513,7 @@ class AplDocService {
             $post = [
                 'parent' => $ptu->getOffice()->getAplId(),
                 'type' =>   'Suppliersorders',
-                'sort' =>   $ptu->getAmount(),
+                'sort' =>   round($ptu->getAmount(), 2),
                 'publish' => $ptu->getAplStatusAsString(),
                 'name' =>   $ptu->getSupplier()->getAplId(),
                 'comment' => $ptu->getComment(),
@@ -732,7 +732,7 @@ class AplDocService {
             $post = [
                 'parent' => $vtp->getPtu()->getOffice()->getAplId(),
                 'type' =>   'Resup',
-                'sort' =>   $vtp->getAmount(),
+                'sort' =>   round($vtp->getAmount(), 2),
                 'publish' => $vtp->getAplStatus(),
                 'name' =>   $vtp->getPtu()->getSupplier()->getAplId(),
                 'comment' => 'Suppliers',
@@ -895,7 +895,7 @@ class AplDocService {
             $post = [
                 'parent' => $vt->getOffice()->getAplId(),
                 'type' =>   'Returns',
-                'sort' =>   $vt->getAmount(),
+                'sort' =>   round($vt->getAmount(), 2),
                 'publish' => $vt->getAplStatusAsString(),
                 'name' =>   $vt->getOrder()->getAplId(),
                 'comment' => 'Orders',
@@ -1519,7 +1519,7 @@ class AplDocService {
             $post = [
                 'parent' => $pt->getOffice()->getAplId(),
                 'type' =>   'Relocations',
-                'sort' =>   $pt->getAmount(),
+                'sort' =>   round($pt->getAmount(), 2),
                 'publish' => $pt->getAplStatusAsString(),
                 'name' =>   $pt->getOffice2()->getAplId(),
                 'comment' => 'Stores',

@@ -32,6 +32,7 @@ class AdminManager {
     const PARTS_API_SETTINGS_FILE      = './data/settings/parts_api_config.php'; //файл с настройками abcp
     const API_MARKET_PLACES      = './data/settings/api_market_places.php'; //файл с настройками апи тп
     const SBP_SETTINGS      = './data/settings/sbp_settings.php'; //файл с настройками сбп
+    const AI_SETTINGS      = './data/settings/ai_settings.php'; //файл с настройками gigachat
     
     /**
      * Doctrine entity manager.
@@ -712,6 +713,55 @@ class AdminManager {
         $writer = new PhpArray();
         
         $writer->toFile(self::SBP_SETTINGS, $config);
+        
+        return;
+    }
+    
+    /**
+     * Получить настройки ИИ
+     * 
+     * @return array
+     */
+    public function getAiSettings()
+    {
+        if (file_exists(self::AI_SETTINGS)){
+            $config = new Config(include self::AI_SETTINGS);
+        }  else {
+            $config = new Config([], true);
+            $config->ai_settings = [];
+        }   
+        
+        return $config->ai_settings;
+    }
+
+    
+    /**
+     * Настройки AI
+     * @param array $data
+     */
+    public function setAiSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::AI_SETTINGS)){
+            $config = new Config(include self::AI_SETTINGS, true);
+        }  else {
+            $config = new Config([], true);
+            $config->ai_settings = [];
+        }
+        
+        if (!isset($config->ai_settings)){
+            $config->ai_settings = [];
+        }
+        
+        $config->ai_settings->gigachat_client_id = $data['gigachat_client_id'];
+        $config->ai_settings->gigachat_client_secret = $data['gigachat_client_secret'];
+        $config->ai_settings->gigachat_score = $data['gigachat_score'];
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::AI_SETTINGS, $config);
         
         return;
     }

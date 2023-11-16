@@ -55,4 +55,5 @@ return [
     'ApiSupplier',
     'Cash',
     'Api',
+    'Ai',
 ];

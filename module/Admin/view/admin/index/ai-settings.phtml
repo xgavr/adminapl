@@ -1,12 +1,12 @@
 <?php
-$this->headTitle('Настройки оплат по СБП');
+$this->headTitle('Настройки доступа к Ai');
 
 $this->mainMenu()->setActiveItemId('settings');
-$this->mainMenu()->setActiveUrl($this->url('admin', ['action' => 'sbp-settings']));
+$this->mainMenu()->setActiveUrl($this->url('admin', ['action' => 'ai-settings']));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Настройки оплат по СБП'=>$this->url('admin', ['action' => 'sbp-settings']),
+            'Настройки доступа к ИИ'=>$this->url('settings', ['action' => 'ai-settings']),
             ]);
 ?>
 
@@ -17,23 +17,15 @@ $this->pageBreadcrumbs()->setItems([
 <?php
 $form = $this->form;
 
-$form->get('account')->setAttributes([
+$form->get('gigachat_client_id')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('legal_id')->setAttributes([
+$form->get('gigachat_client_secret')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('customer_code')->setAttributes([
-    'class'=>'form-control', 
-    ]);
-
-$form->get('merchant_id')->setAttributes([
-    'class'=>'form-control', 
-    ]);
-
-$form->get('qrcode_check')->setAttributes([
+$form->get('gigachat_score')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -44,28 +36,13 @@ $form->prepare();
 
 <div class="row">
     <div class="col-xs-12">
-        <button class="btn btn-default test-button" value="/sbp/legal-info">
-            <span class="glyphicon glyphicon-refresh" ></span> Инфо
-        </button>                
-        <button class="btn btn-default test-button" value="/sbp/payment-statuses">
-            <span class="glyphicon glyphicon-refresh" ></span> Статусы
-        </button>                
-        <button class="btn btn-default test-button" value="/bankapi/webhooks">
-            <span class="glyphicon glyphicon-list" ></span> Вебхуки Точки
-        </button>                
-        <button class="btn btn-default test-button" value="/bankapi/create-webhook">
-            <span class="glyphicon glyphicon-edit" ></span> Создать вебхуки Точки
-        </button>                
-        <button class="btn btn-default test-button" value="/bankapi/delete-webhook">
-            <span class="glyphicon glyphicon-trash" ></span> Удалить вебхуки Точки
-        </button>                
-        <button class="btn btn-default test-button" value="/bankapi/test-webhook">
-            <span class="glyphicon glyphicon-signal" ></span> Проверить вебхуки Точки
+        <button class="btn btn-default test-button" value="/ai/gigachat-models">
+            <span class="glyphicon glyphicon-tag" ></span> Gigachat Models
         </button>                
     </div>
 </div>
 
-<h1>Настройки оплат по СБП</h1>
+<h1>Настройки подключения к ИИ</h1>
 
 <p>
     Заполните форму и нажмите <i>Сохранить</i>.
@@ -76,29 +53,19 @@ $form->prepare();
     <div class="col-md-5">
         
         <div class="form-group">
-            <?= $this->formLabel($form->get('legal_id')); ?>
-            <?= $this->formElement($form->get('legal_id')); ?>
-            <?= $this->formElementErrors($form->get('legal_id')); ?>                  
+            <?= $this->formLabel($form->get('gigachat_client_id')); ?>
+            <?= $this->formElement($form->get('gigachat_client_id')); ?>
+            <?= $this->formElementErrors($form->get('gigachat_client_id')); ?>                  
         </div>
         <div class="form-group">
-            <?= $this->formLabel($form->get('customer_code')); ?>
-            <?= $this->formElement($form->get('customer_code')); ?>
-            <?= $this->formElementErrors($form->get('customer_code')); ?>                  
+            <?= $this->formLabel($form->get('gigachat_client_secret')); ?>
+            <?= $this->formElement($form->get('gigachat_client_secret')); ?>
+            <?= $this->formElementErrors($form->get('gigachat_client_secret')); ?>                  
         </div>
         <div class="form-group">
-            <?= $this->formLabel($form->get('merchant_id')); ?>
-            <?= $this->formElement($form->get('merchant_id')); ?>
-            <?= $this->formElementErrors($form->get('merchant_id')); ?>                  
-        </div>
-        <div class="form-group">
-            <?= $this->formLabel($form->get('account')); ?>
-            <?= $this->formElement($form->get('account')); ?>
-            <?= $this->formElementErrors($form->get('account')); ?>                  
-        </div>
-        <div class="form-group">
-            <?= $this->formLabel($form->get('qrcode_check')); ?>
-            <?= $this->formElement($form->get('qrcode_check')); ?>
-            <?= $this->formElementErrors($form->get('qrcode_check')); ?>                  
+            <?= $this->formLabel($form->get('gigachat_score')); ?>
+            <?= $this->formElement($form->get('gigachat_score')); ?>
+            <?= $this->formElementErrors($form->get('gigachat_score')); ?>                  
         </div>
                         
         <?= $this->formElement($form->get('submit')); ?>
@@ -119,12 +86,12 @@ $form->prepare();
 
 <script async="false">
     $('.test-button').on('click', function(e) {
-        var url = e.currentTarget.value;
+        var url = $(this).attr('value');
 //        console.log(url);
         if (url){
             var dialog = bootbox.dialog({
                 message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-                closeButton: false
+                closeButton: true
             });
 
             $.ajax({

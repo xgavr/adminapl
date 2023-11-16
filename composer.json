@@ -66,7 +66,8 @@
         "nyholm/psr7": "^1.5",
         "laminas/laminas-soap": "^2.8",
         "lee-to/php-tochka-api-v2-sdk": "^1.0",
-        "laminas-api-tools/api-tools": "~1.0"
+        "laminas-api-tools/api-tools": "~1.0",
+        "ramsey/uuid": "^4.2"
     },
     "autoload": {
         "psr-4": {
@@ -80,7 +81,8 @@
             "ApiMarketPlace\\": "module/ApiMarketPlace/src/",
             "ApiSupplier\\": "module/ApiSupplier/src/",
             "Cash\\": "module/Cash/src/",
-            "Api\\": "module/Api/src/"
+            "Api\\": "module/Api/src/",
+            "Ai\\": "module/Ai/src/"
         }
     },
     "autoload-dev": {

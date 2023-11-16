@@ -534,6 +534,12 @@ class NavManager
                     'link'  => $url('admin', ['action' => 'sbp-settings'])                    
                 ];
 
+                $settingsDropDownItems[] = [
+                    'id' => 'aiSettings',
+                    'label' => 'Настройи подключения ИИ',
+                    'link'  => $url('admin', ['action' => 'ai-settings'])                    
+                ];
+
                 if (count($settingsDropDownItems)!=0) {
                     $items[] = [
                         'id' => 'settings',
