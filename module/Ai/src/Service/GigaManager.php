@@ -154,6 +154,8 @@ class GigaManager {
              'Authorization: Bearer '.$accessToken['access_token'],
         ]);
         
+        var_dump($headers); exit;
+        
         $response = $client->send();
                 
         if ($response->isOk()){
