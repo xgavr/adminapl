@@ -48,4 +48,16 @@ class IndexController extends AbstractActionController
 
         return new JsonModel($result);
     }
+
+    public function gigachatTestAction()
+    {
+        $message = [
+            'role' => 'user',
+            'content' => 'Когда уже ИИ захватит этот мир?',
+        ];
+        
+        $result = $this->gigaManager->completions($message);
+
+        return new JsonModel($result);
+    }
 }

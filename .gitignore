@@ -40,3 +40,4 @@ phpunit.xml
 /data/session_10/
 /public/doc/
 /data/tmp/
+/module/Admin/src/Form/AiSettings.php
