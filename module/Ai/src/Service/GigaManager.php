@@ -86,7 +86,7 @@ class GigaManager {
         if (empty($uuid)){
             $uuid4 = Uuid::uuid4();
             $uuid = $uuid4->toString();
-            var_dump($uuid); exit;
+//            var_dump($uuid); exit;
         }
         
         $client = new Client();
