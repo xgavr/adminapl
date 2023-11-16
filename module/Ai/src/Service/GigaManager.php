@@ -152,9 +152,10 @@ class GigaManager {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
              'Authorization: Bearer '.$accessToken['access_token'],
-        ]);
+             'Content-Type: application/json',
+        ]);      
         
-        var_dump($headers); exit;
+//        var_dump($headers); exit;
         
         $response = $client->send();
                 
