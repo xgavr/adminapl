@@ -365,7 +365,7 @@ $form->prepare();
     }
     
     $('select[name="bankAccount"]').on('change', function(){
-        clearDetails();
+//        clearDetails();
         changeBankAccount();
     });
 
@@ -379,7 +379,7 @@ $form->prepare();
 
     $('select[name="supplier"]').on('change', function(){
         $.getJSON( '/payment/supplier-current-details/'+$(this).val()+'?account='+$('select[name="bankAccount"]').val(), function( data ) {
-            clearDetails();
+//            clearDetails();
             $('input[name="counterpartyInn"]').val(data['inn']);
             $('input[name="counterpartyKpp"]').val(data['kpp']);
             $('input[name="counterpartyName"]').val(data['name']);
