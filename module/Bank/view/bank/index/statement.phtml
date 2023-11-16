@@ -851,12 +851,12 @@
                     }
                 },
                 isEnabled: function(row) {
-                    return row.cashDoc;
+                    return row.cashDoc > 0;
                 }                
             },
             returnPay: {
                 name: 'Ответный платеж',
-                iconClass: 'glyphicon glyphicon-return',
+                iconClass: 'glyphicon glyphicon-duplicate',
                 onClick: function(row) {
                     if (row.cashDoc){
                         if (row.amount>0){
@@ -870,7 +870,7 @@
                     }
                 },
                 isEnabled: function(row) {
-                    return row.cashDoc && row.amount>0;
+                    return row.cashDoc > 0 && row.amount>0;
                 }                
             }
         }
