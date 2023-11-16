@@ -851,7 +851,7 @@
                     }
                 },
                 isEnabled: function(row) {
-                    return row.cashDoc > 0;
+                    return row.cashDoc;
                 }                
             },
             returnPay: {
@@ -870,7 +870,7 @@
                     }
                 },
                 isEnabled: function(row) {
-                    return row.cashDoc > 0 && row.amount>0;
+                    return row.cashDoc && row.amount>0;
                 }                
             }
         }
