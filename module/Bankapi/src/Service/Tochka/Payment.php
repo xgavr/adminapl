@@ -174,7 +174,7 @@ class Payment {
         if ($response->isOk()){
             return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
         }
-        var_dump($response->getContent());
+//        var_dump($response->getContent());
         return $this->auth->exception($response);
         
     }
