@@ -107,7 +107,7 @@ class GigaManager {
         $response = $client->send();
                 
         if ($response->isOk()){
-            $result = Decoder::decode($response->getBody());
+            $result = Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);
             return $result;
         }
         
@@ -128,7 +128,7 @@ class GigaManager {
         }
         
         if (empty($accessToken['expires_at'])){
-            return;
+            return [];
         }
         
         $expire = $accessToken['expires_at'];
@@ -138,7 +138,7 @@ class GigaManager {
         }
         
         if (empty($accessToken['access_token'])){
-            return;
+            return [];
         }
 
         $client = new Client();
@@ -155,7 +155,7 @@ class GigaManager {
         $response = $client->send();
                 
         if ($response->isOk()){
-            $result = Decoder::decode($response->getBody());
+            $result = Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);
             return $result;
         }
         
