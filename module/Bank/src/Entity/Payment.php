@@ -516,7 +516,7 @@ class Payment {
      */
     public function getTaxInfoReasonCode() 
     {
-        return ($this->taxInfoReasonCode) ? $this->taxInfoReasonCode:'ТП';
+        return ($this->taxInfoReasonCode) ? $this->taxInfoReasonCode:'';
     }
 
     /**
@@ -534,7 +534,7 @@ class Payment {
      */
     public function getTaxInfoStatus() 
     {
-        return ($this->taxInfoStatus) ? $this->taxInfoStatus:'08';
+        return ($this->taxInfoStatus) ? $this->taxInfoStatus:'';
     }
 
     /**
