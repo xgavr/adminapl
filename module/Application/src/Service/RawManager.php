@@ -497,7 +497,11 @@ class RawManager {
                 }
 
                 if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
-                    return $this->uploadRawpriceXls($supplier, $filename);
+                    try {
+                        return $this->uploadRawpriceXls($supplier, $filename);
+                    } catch (\PhpOffice\PhpSpreadsheet\Exception $e){
+                        return $this->uploadRawpriceXls2($supplier, $filename);                        
+                    }    
                 }
                 if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
                     return $this->uploadRawpriceCsv($supplier, $filename);
