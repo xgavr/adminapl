@@ -69,6 +69,7 @@ class PaymentManager
         $payment = new Payment();
         $payment->setAmount($data['amount']);
         $payment->setCounterpartyAccountNumber($data['counterpartyAccountNumber']);
+        $payment->setCounterpartyBankCorrAccount($data['counterpartyBankCorrAccount']);
         $payment->setCounterpartyBankBik($data['counterpartyBankBik']);
         $payment->setCounterpartyInn($data['counterpartyInn']);
         $payment->setCounterpartyKpp($data['counterpartyKpp']);
@@ -110,6 +111,7 @@ class PaymentManager
     {
         $payment->setAmount($data['amount']);
         $payment->setCounterpartyAccountNumber($data['counterpartyAccountNumber']);
+        $payment->setCounterpartyBankCorrAccount($data['counterpartyBankCorrAccount']);
         $payment->setCounterpartyBankBik($data['counterpartyBankBik']);
         $payment->setCounterpartyInn($data['counterpartyInn']);
         $payment->setCounterpartyKpp($data['counterpartyKpp']);
@@ -363,7 +365,7 @@ class PaymentManager
             "accountCode" => $payment->getBankAccount()->getRs(),
             "bankCode" =>  $payment->getBankAccount()->getBik(),
             "counterpartyAccountNumber" => $payment->getCounterpartyAccountNumber(),
-            "counterpartyBankCorrAccount" => $payment->getCounterpartyBankCorrAccount(),
+//            "counterpartyBankCorrAccount" => $payment->getCounterpartyBankCorrAccount(),
             "counterpartyBankBic" => $payment->getCounterpartyBankBik(),
             "counterpartyINN" => $payment->getСounterpartyInn(),
             "counterpartyKPP" => $payment->getСounterpartyKpp(),
@@ -383,6 +385,10 @@ class PaymentManager
             "taxInfoReasonCode" => $payment->getTaxInfoReasonCode(),
             "taxInfoStatus" => $payment->getTaxInfoStatus(),        
         ];
+        
+        if ($payment->getCounterpartyBankCorrAccount()){
+            $data['Data']['counterpartyBankCorrAccount'] = $payment->getCounterpartyBankCorrAccount();
+        }
         
 //        var_dump($data); exit;
         $result = $this->tochkaPayment->paymentV2($data);
