@@ -105,7 +105,9 @@
                         $('input[name="bankName"]').val($('<div/>').html(data.name).text());
                         $('input[name="bankCity"]').val('г. '+data.city);
                         $('input[name="ks"]').val(data.ks);
-                        $('input[name="counterpartyBankCorrAccount"]').val(data.ks);
+                        if (data.ks){
+                            $('input[name="counterpartyBankCorrAccount"]').val(data.ks);
+                        }    
                         $('.bank-info').html(data.name + ' г. ' + data.city + ' к/с '+data.ks);
                     }
                 })
