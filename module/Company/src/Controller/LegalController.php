@@ -668,8 +668,6 @@ class LegalController extends AbstractActionController
         
         exit;
     }
-        
-    
     
     public function bikInfoAction()
     {
@@ -686,6 +684,37 @@ class LegalController extends AbstractActionController
         }
         return new JsonModel(
            $data
+        );           
+    }
+    
+    public function bankInfoAction()
+    {
+        $bik = $this->params()->fromQuery('bik', '');
+        
+        $result = [];
+        
+        if ($bik){
+            $data = $this->legalManager->bankInfo($bik);
+        } else {
+            $data = [];
+        }    
+        
+        if (!is_array($data)){
+            $data = [];
+        }
+        
+        if (is_array($data)){
+            foreach ($data as $row){
+                $result['data'] = $row;
+                $result['name'] = $row['value'];
+                $result['city'] = $row['data']['payment_city'];
+                $result['ks'] = $row['data']['correspondent_account'];
+                break;
+            }
+        }    
+        
+        return new JsonModel(
+           $result
         );           
     }
     

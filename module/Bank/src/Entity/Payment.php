@@ -38,6 +38,14 @@ class Payment {
     const NDS_10 = 10; // НДС 20%
     const NDS_20 = 20; // НДС 20%
     
+    const TAX_STATUS_01 = '01'; // КБК ЕНП
+    const TAX_STATUS_02 = '02'; // Платежка-уведомление
+    const TAX_STATUS_06 = '06'; // ВЭД
+    const TAX_STATUS_08 = '08'; // В бюджет, кроме ФНС
+    const TAX_STATUS_13 = '13'; // Иностранец
+    const TAX_STATUS_17 = '17'; // ИП ВЭД
+    const TAX_STATUS_31 = '31'; // Алименты, исполнительный лист
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -548,8 +556,25 @@ class Payment {
      */
     public function getTaxInfoStatus() 
     {
-        return ($this->taxInfoStatus) ? $this->taxInfoStatus:'01';
+        return ($this->taxInfoStatus) ? $this->taxInfoStatus:self::TAX_STATUS_01;
     }
+    
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getTaxInfoStatusList() 
+    {
+        return [
+            self::TAX_STATUS_01 => '01 ЕНП',
+            self::TAX_STATUS_08 => '08 В бюджет, кроме ЕНП',
+            self::TAX_STATUS_31 => '31 Исполнительный лист',
+            self::TAX_STATUS_02 => '02 ИП',
+            self::TAX_STATUS_06 => '06 ВЭД',
+            self::TAX_STATUS_13 => '13 Не резидент',
+            self::TAX_STATUS_17 => '13 ИП ВЭД',
+        ];
+    }        
 
     /**
      * Устанавливает taxInfoStatus

@@ -246,13 +246,14 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
        ]);
         
         $this->add([
-            'type'  => 'text',
+            'type'  => 'select',
             'name' => 'taxInfoStatus',
             'attributes' => [
-                
+                'value' => Payment::TAX_STATUS_01,
             ],
             'options' => [
                 'label' => 'Статус плательщика',
+                'value_options' => Payment::getTaxInfoStatusList(),
             ],
        ]);
         

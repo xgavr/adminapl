@@ -410,6 +410,30 @@ class LegalManager
         return;
     }
    
+    /**
+     * Получение информации о банке по БИК
+     * @param string $bik
+     * @return array 
+     */
+    public function bankInfo($bik)
+    {
+        $bikId = preg_replace('/[^0-9]/', '', $bik);
+        if (!empty($bikId)){
+            $setting = $this->adminManager->getSettings();
+            $token = $setting['dadata_api_key'];
+            $secret = $setting['dadata_standart_key'];
+            $dadata = new \Dadata\DadataClient($token, $secret);
+
+            $data = $dadata->findById("bank", $bikId, 1);
+//            var_dump($data); exit;
+            if (is_array($data)){
+                return $data;
+            }    
+        }    
+        
+        return;
+    }
+
     /*
      * Получение информации о предприятии по ИНН
      * @var $inn string

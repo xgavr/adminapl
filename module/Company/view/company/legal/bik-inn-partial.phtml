@@ -98,7 +98,7 @@
         if (bik){
             $.ajax({
                 type: 'GET',
-                url: '/legals/bik-info/'+bik
+                url: '/legals/bank-info?bik='+bik
             })
                 .done(function (data) {
                     if (data){
@@ -108,7 +108,7 @@
                         if (data.ks){
                             $('input[name="counterpartyBankCorrAccount"]').val(data.ks);
                         }    
-                        $('.bank-info').html(data.name + ' г. ' + data.city + ' к/с '+data.ks);
+                        $('.bank-info').html(data.name + ' ' + data.city + ' к/с '+data.ks);
                     }
                 })
                 .fail(function (e) {
