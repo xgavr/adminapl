@@ -709,6 +709,14 @@ class LegalController extends AbstractActionController
                 $result['name'] = $row['value'];
                 $result['city'] = $row['data']['payment_city'];
                 $result['ks'] = $row['data']['correspondent_account'];
+                if (empty($result['ks'])){
+                    if (!empty($row['data']['treasury_accounts'])){
+                        foreach ($row['data']['treasury_accounts'] as $ts){
+                            $result['ks'] = $ts;
+                            break;
+                        }
+                    }
+                }    
                 break;
             }
         }    
