@@ -548,7 +548,7 @@ class Payment {
      */
     public function getTaxInfoStatus() 
     {
-        return ($this->taxInfoStatus) ? $this->taxInfoStatus:'';
+        return ($this->taxInfoStatus) ? $this->taxInfoStatus:'01';
     }
 
     /**
