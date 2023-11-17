@@ -69,7 +69,7 @@ class PaymentManager
         $payment = new Payment();
         $payment->setAmount($data['amount']);
         $payment->setCounterpartyAccountNumber($data['counterpartyAccountNumber']);
-        $payment->setCounterpartyBankCorrAccount($data['counterpartyBankCorrAccount']);
+        $payment->setCounterpartyBankCorrAccount(empty($data['counterpartyBankCorrAccount']) ? '':$data['counterpartyBankCorrAccount']);
         $payment->setCounterpartyBankBik($data['counterpartyBankBik']);
         $payment->setCounterpartyInn($data['counterpartyInn']);
         $payment->setCounterpartyKpp($data['counterpartyKpp']);
