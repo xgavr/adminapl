@@ -872,7 +872,7 @@ class Payment {
             'bankAccount' => $this->getBankAccount()->getId(),
             'supplier' => $this->getSupplierId(),
             'counterpartyAccountNumber' => $this->getCounterpartyAccountNumber(),
-            'counterpartyBankCorrAccount' => $this->counterpartyBankCorrAccount(),
+            'counterpartyBankCorrAccount' => $this->getCounterpartyBankCorrAccount(),
             'counterpartyBankBik' => $this->getCounterpartyBankBik(),
             'counterpartyInn' => $this->getСounterpartyInn(),
             'counterpartyKpp' => $this->getСounterpartyKpp(),
