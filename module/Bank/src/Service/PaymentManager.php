@@ -363,6 +363,7 @@ class PaymentManager
             "accountCode" => $payment->getBankAccount()->getRs(),
             "bankCode" =>  $payment->getBankAccount()->getBik(),
             "counterpartyAccountNumber" => $payment->getCounterpartyAccountNumber(),
+            "counterpartyBankCorrAccount" => $payment->getCounterpartyBankCorrAccount(),
             "counterpartyBankBic" => $payment->getCounterpartyBankBik(),
             "counterpartyINN" => $payment->getСounterpartyInn(),
             "counterpartyKPP" => $payment->getСounterpartyKpp(),
@@ -386,7 +387,7 @@ class PaymentManager
 //        var_dump($data); exit;
         $result = $this->tochkaPayment->paymentV2($data);
 
-        var_dump($result); 
+//        var_dump($result); 
         
         $payment->setStatusMessage(empty($result['message']) ? null:$result['message']);
                

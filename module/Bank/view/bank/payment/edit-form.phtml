@@ -15,6 +15,10 @@ $form->get('counterpartyAccountNumber')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('counterpartyBankCorrAccount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('counterpartyBankBik')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -208,10 +212,21 @@ $form->prepare();
                 <?= $this->formElementErrors($form->get('counterpartyBankBik')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-4 align-text-bottom">
-            <span class="bank-info"></span>
-        </div>
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('counterpartyBankCorrAccount')); ?>
+                <?= $this->formElement($form->get('counterpartyBankCorrAccount')); ?>
+                <?= $this->formElementErrors($form->get('counterpartyBankCorrAccount')); ?>                  
+            </div>
+        </div>    
     </div>        
+    <div class="row">
+        <div class="col-xs-4">
+        </div>
+        <div class="col-xs-6 align-text-bottom">
+            <span class="bank-info"></span>
+        </div>    
+    </div>
     <div class="row">
         <div class="col-xs-10">
             <div class="form-group">

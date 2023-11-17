@@ -79,6 +79,16 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([
             'type'  => 'text',
+            'name' => 'counterpartyBankCorrAccount',
+            'attributes' => [                
+            ],
+            'options' => [
+                'label' => 'Кор. счёт банка получателя',
+            ],
+        ]);
+
+        $this->add([
+            'type'  => 'text',
             'name' => 'counterpartyBankBik',
             'attributes' => [                
             ],

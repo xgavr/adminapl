@@ -56,6 +56,12 @@ class Payment {
     protected $counterpartyBankBik;
 
     /**
+     * Кор. счёт банка получателя
+     * @ORM\Column(name="counterparty_bank_corr_account")   
+     */
+    protected $counterpartyBankCorrAccount;
+
+    /**
      * @ORM\Column(name="counterparty_inn")   
      */
     protected $counterpartyInn;
@@ -238,7 +244,15 @@ class Payment {
         $this->counterpartyBankBik = $counterpartyBankBik;
     }     
 
+    public function getCounterpartyBankCorrAccount() {
+        return $this->counterpartyBankCorrAccount;
+    }
 
+    public function setCounterpartyBankCorrAccount($counterpartyBankCorrAccount) {
+        $this->counterpartyBankCorrAccount = $counterpartyBankCorrAccount;
+        return $this;
+    }
+        
     /**
      * Возвращает инн.
      * @return string
@@ -858,6 +872,7 @@ class Payment {
             'bankAccount' => $this->getBankAccount()->getId(),
             'supplier' => $this->getSupplierId(),
             'counterpartyAccountNumber' => $this->getCounterpartyAccountNumber(),
+            'counterpartyBankCorrAccount' => $this->counterpartyBankCorrAccount(),
             'counterpartyBankBik' => $this->getCounterpartyBankBik(),
             'counterpartyInn' => $this->getСounterpartyInn(),
             'counterpartyKpp' => $this->getСounterpartyKpp(),
