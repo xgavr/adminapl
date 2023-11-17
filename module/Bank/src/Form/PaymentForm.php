@@ -179,6 +179,7 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'text',
             'name' => 'supplierBillId',
             'attributes' => [                
+                'value' => 0,
             ],
             'options' => [
                 'label' => 'Код УИН',
@@ -189,6 +190,7 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'text',
             'name' => 'taxInfoDocumentDate',
             'attributes' => [                
+                'value' => 0,
             ],
             'options' => [
                 'label' => 'Дата бюджетного документа',
@@ -199,6 +201,7 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'text',
             'name' => 'taxInfoDocumentNumber',
             'attributes' => [                
+                'value' => 0,
             ],
             'options' => [
                 'label' => 'Номер документа',
@@ -209,6 +212,7 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'text',
             'name' => 'taxInfoKbk',
             'attributes' => [                
+                'value' => 0,
             ],
             'options' => [
                 'label' => 'КБК',
@@ -228,7 +232,8 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
         $this->add([
             'type'  => 'text',
             'name' => 'taxInfoPeriod',
-            'attributes' => [                
+            'attributes' => [   
+                'value' => 0,
             ],
             'options' => [
                 'label' => 'Налоговый период',
@@ -239,6 +244,7 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
             'type'  => 'text',
             'name' => 'taxInfoReasonCode',
             'attributes' => [                
+                'value' => 0,
             ],
             'options' => [
                 'label' => 'Основание платежа',
