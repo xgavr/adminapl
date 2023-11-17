@@ -484,7 +484,7 @@ class Payment {
      */
     public function getTaxInfoKbk() 
     {
-        return ($this->taxInfoKbk) ? $this->taxInfoKbk:'';
+        return ($this->taxInfoKbk) ? $this->taxInfoKbk:0;
     }
 
     /**
@@ -520,7 +520,7 @@ class Payment {
      */
     public function getTaxInfoPeriod() 
     {
-        return ($this->taxInfoPeriod) ? $this->taxInfoPeriod:'';
+        return ($this->taxInfoPeriod) ? $this->taxInfoPeriod:0;
     }
 
     /**
