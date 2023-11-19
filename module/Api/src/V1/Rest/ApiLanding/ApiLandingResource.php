@@ -56,16 +56,16 @@ class ApiLandingResource extends AbstractResourceListener
                         ->find($data->office);
             }
             
-//            $order = $this->orderManager->addNewOrder($office, $contact, [
-//                'mode' => Order::MODE_LANDING,
-//                'info' => (empty($data->need)) ? null:$data->need,
-//                'address' => (empty($data->address)) ? null:$data->address,
-//                'geo' => (empty($data->geo)) ? null:$data->geo,                
-//                'vin' => (empty($data->vin)) ? null:$data->vin,
-//            ]);
-//            
-//            return ['result' => 'Z'.$order->getId()];
-            return ['result' => $data];            
+            $order = $this->orderManager->addNewOrder($office, $contact, [
+                'mode' => Order::MODE_LANDING,
+                'info' => (empty($data->need)) ? null:$data->need,
+                'address' => (empty($data->address)) ? null:$data->address,
+                'geo' => (empty($data->geo)) ? null:$data->geo,                
+                'vin' => (empty($data->vin)) ? null:$data->vin,
+            ]);
+            
+            return ['result' => 'Z'.$order->getId()];
+//            return ['result' => $data];            
         }    
         
         return new ApiProblem(404, 'Заказ не создан :(');

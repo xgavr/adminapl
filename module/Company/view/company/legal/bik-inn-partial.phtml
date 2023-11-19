@@ -107,8 +107,9 @@
                         $('input[name="ks"]').val(data.ks);
                         if (data.ks){
                             $('input[name="counterpartyBankCorrAccount"]').val(data.ks);
-                        }    
+                        }
                         $('.bank-info').html(data.name + ' ' + data.city + ' к/с '+data.ks);
+                        $('input[name="counterpartyBank"]').val(data.name + ' ' + data.city);
                     }
                 })
                 .fail(function (e) {

@@ -46,6 +46,10 @@ class Payment {
     const TAX_STATUS_17 = '17'; // ИП ВЭД
     const TAX_STATUS_31 = '31'; // Алименты, исполнительный лист
     
+    const PAYMENT_AUTO_ONE = 1; // разовый платеж
+    const PAYMENT_AUTO_WEEK = 2;// авто платеж еженедельный
+    const PAYMENT_AUTO_MONTH = 3;// авто платеж ежемесячный
+        
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -178,6 +182,21 @@ class Payment {
      * @ORM\Column(name="date_created")  
      */
     protected $dateCreated;
+
+    /** 
+     * @ORM\Column(name="payment_auto")  
+     */
+    protected $paymentAuto;
+
+    /** 
+     * @ORM\Column(name="payment_auto_day")  
+     */
+    protected $paymentAutoDay;
+
+    /** 
+     * @ORM\Column(name="payment_auto_stop_date")  
+     */
+    protected $paymentAutoStopDate;
     
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\BankAccount", inversedBy="payments") 
@@ -887,6 +906,60 @@ class Payment {
         $this->user = $user;
     }     
     
+    public function getPaymentAuto() {
+        return $this->paymentAuto;
+    }
+
+    /**
+     * Returns possible payment auto as array.
+     * @return array
+     */
+    public static function getPaymentAutoList() 
+    {
+        return [
+            self::PAYMENT_AUTO_ONE => 'Нет',
+            self::PAYMENT_AUTO_MONTH => 'Ежемесячно',
+            self::PAYMENT_AUTO_WEEK => 'Еженедельно',
+        ];
+    }    
+    
+    /**
+     * Returns payment auto as string.
+     * @return string
+     */
+    public function getPaymentAutoAsString()
+    {
+        $list = self::getPaymentAutoList();
+        if (isset($list[$this->paymentAuto]))
+            return $list[$this->paymentAuto];
+        
+        return 'Unknown';
+    }    
+    
+    public function setPaymentAuto($paymentAuto) {
+        $this->paymentAuto = $paymentAuto;
+        return $this;
+    }
+
+    public function getPaymentAutoDay() {
+        return $this->paymentAutoDay;
+    }
+
+    public function setPaymentAutoDay($paymentAutoDay) {
+        $this->paymentAutoDay = $paymentAutoDay;
+        return $this;
+    }
+
+    public function getPaymentAutoStopDate() {
+        return $this->paymentAutoStopDate;
+    }
+
+    public function setPaymentAutoStopDate($paymentAutoStopDate) {
+        $this->paymentAutoStopDate = $paymentAutoStopDate;
+        return $this;
+    }
+
+        
     /**
      * Данные в форму
      * @return array 

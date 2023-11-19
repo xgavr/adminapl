@@ -23,6 +23,11 @@ $form->get('counterpartyBankBik')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('counterpartyBank')->setAttributes([
+    'class'=>'form-control',
+    'readonly' => true,
+    ]);
+
 $form->get('counterpartyInn')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -89,6 +94,20 @@ $form->get('paymentType')->setAttributes([
 
 $form->get('status')->setAttributes([
     'class'=>'form-control', 
+    ]);
+
+$form->get('paymentAuto')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('paymentAutoDay')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => true,
+    ]);
+
+$form->get('paymentAutoStopDate')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => true,
     ]);
 
 
@@ -212,6 +231,13 @@ $form->prepare();
                 <?= $this->formElementErrors($form->get('counterpartyBankBik')); ?>                  
             </div>
         </div>    
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('counterpartyBank')); ?>
+                <?= $this->formElement($form->get('counterpartyBank')); ?>
+                <?= $this->formElementErrors($form->get('counterpartyBank')); ?>                  
+            </div>
+        </div>    
         <div class="col-xs-2">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('counterpartyBankCorrAccount')); ?>
@@ -220,13 +246,13 @@ $form->prepare();
             </div>
         </div>    
     </div>        
-    <div class="row">
+<!--    <div class="row">
         <div class="col-xs-4">
         </div>
         <div class="col-xs-6 align-text-bottom">
             <span class="bank-info"></span>
         </div>    
-    </div>
+    </div>-->
     <div class="row">
         <div class="col-xs-10">
             <div class="form-group">
@@ -300,6 +326,29 @@ $form->prepare();
                 <?= $this->formLabel($form->get('supplierBillId')); ?>
                 <?= $this->formElement($form->get('supplierBillId')); ?>
                 <?= $this->formElementErrors($form->get('supplierBillId')); ?>                  
+            </div>
+        </div>    
+    </div>        
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('paymentAuto')); ?>
+                <?= $this->formElement($form->get('paymentAuto')); ?>
+                <?= $this->formElementErrors($form->get('paymentAuto')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('paymentAutoDay')); ?>
+                <?= $this->formElement($form->get('paymentAutoDay')); ?>
+                <?= $this->formElementErrors($form->get('paymentAutoDay')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('paymentAutoStopDate')); ?>
+                <?= $this->formElement($form->get('paymentAutoStopDate')); ?>
+                <?= $this->formElementErrors($form->get('paymentAutoStopDate')); ?>                  
             </div>
         </div>    
     </div>        
@@ -390,6 +439,13 @@ $form->prepare();
         });            
     }
     
+    function changePaymentAuto(){
+        $('select[name="paymentAutoStopDate"]').prop('disabled', true);
+        if ($('select[name="paymentAuto"]').val() != '<?= Payment::PAYMENT_AUTO_ONE?>'){
+            $('select[name="paymentAutoStopDate"]').prop('disabled', false);            
+        }
+    }
+    
     $('select[name="bankAccount"]').on('change', function(){
 //        clearDetails();
         changeBankAccount();
@@ -401,6 +457,10 @@ $form->prepare();
 
     $('input[name="amount"]').on('input', function(){
         changeNds();
+    });
+
+    $('input[name="paymentAuto"]').on('change', function(){
+        changePaymentAuto();
     });
 
     $('select[name="supplier"]').on('change', function(){

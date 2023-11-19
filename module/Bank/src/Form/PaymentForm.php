@@ -99,6 +99,16 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
 
         $this->add([
             'type'  => 'text',
+            'name' => 'counterpartyBank',
+            'attributes' => [                
+            ],
+            'options' => [
+                'label' => 'Банка получателя',
+            ],
+        ]);
+
+        $this->add([
+            'type'  => 'text',
             'name' => 'counterpartyInn',
             'attributes' => [                
             ],
@@ -288,7 +298,41 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
         
-        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'paymentAuto',
+            'attributes' => [                
+                'value' => Payment::PAYMENT_AUTO_ONE,
+            ],
+            'options' => [
+                'label' => 'Включить автоплатеж',
+                'value_options' => Payment::getPaymentAutoList(),
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'number',
+            'name' => 'paymentAutoDay',
+            'attributes' => [                
+                'value' => 1,
+                'min' => 1,
+                'max' => 28
+            ],
+            'options' => [
+                'label' => 'День платежа',
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'date',
+            'name' => 'paymentAutoStopDate',
+            'attributes' => [                
+            ],
+            'options' => [
+                'label' => 'Дата окончания автоплатежа',
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',

@@ -93,6 +93,9 @@ class PaymentManager
         $payment->setNds($data['nds']);
         $payment->setBankAccount($data['bankAccount']);
         $payment->setSupplier($data['supplier']);
+        $payment->setPaymentAuto(empty($data['paymentAuto']) ? Payment::PAYMENT_AUTO_ONE:$data['paymentAuto']);
+        $payment->setPaymentAutoDay(empty($data['paymentAutoDay']) ? 1:$data['paymentAutoDay']);
+        $payment->setPaymentAutoStopDate(empty($data['paymentAutoStopDate']) ? null:$data['paymentAutoStopDate']);
         
         $this->entityManager->persist($payment);
         $this->entityManager->flush();
@@ -133,6 +136,9 @@ class PaymentManager
         $payment->setNds($data['nds']);
         $payment->setBankAccount($data['bankAccount']);
         $payment->setSupplier($data['supplier']);
+        $payment->setPaymentAuto(empty($data['paymentAuto']) ? Payment::PAYMENT_AUTO_ONE:$data['paymentAuto']);
+        $payment->setPaymentAutoDay(empty($data['paymentAutoDay']) ? 1:$data['paymentAutoDay']);
+        $payment->setPaymentAutoStopDate(empty($data['paymentAutoStopDate']) ? null:$data['paymentAutoStopDate']);
         
         $this->entityManager->persist($payment);
         $this->entityManager->flush();
