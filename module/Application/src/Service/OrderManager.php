@@ -1394,7 +1394,7 @@ class OrderManager
                 'geo' =>  (!empty($data['geo'])) ? $data['geo'] : null,
                 'info' =>  (!empty($data['info'])) ? $data['info'] : null,
                 'invoice_info' =>  (!empty($data['invoiceInfo'])) ? $data['invoiceInfo'] : null,
-                'mode' =>  (!empty($data['mode'])) ? $data['mode'] : Order::MODE_MAN,
+                //'mode' =>  (!empty($data['mode'])) ? $data['mode'] : Order::MODE_MAN,
                 'shipment_distance' =>  (!empty($data['shipmentDistance'])) ? $data['shipmentDistance'] : 0,
                 'shipment_rate' =>  (!empty($data['shipmentRate'])) ? $data['shipmentRate'] : 0,
                 'shipment_add_rate' =>  (!empty($data['shipmentAddRate'])) ? $data['shipmentAddRate'] : 0,

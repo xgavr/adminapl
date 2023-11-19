@@ -807,6 +807,7 @@ class Order {
             self::MODE_VIN => 'vin',
             self::MODE_FAST => 'fast',
             self::MODE_INNER => 'inner',
+            self::MODE_LANDING => 'vin',
         ];
     }    
     
