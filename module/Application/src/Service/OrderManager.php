@@ -1256,7 +1256,7 @@ class OrderManager
             $order->setGeo(!empty($data['geo']) ? $data['geo'] : null);
             $order->setInfo(!empty($data['info']) ? $data['info'] : null);
             $order->setInvoiceInfo(!empty($data['invoiceInfo']) ? $data['invoiceInfo'] : null);
-            $order->setMode(!empty($data['mode']) ? $data['mode'] : Order::MODE_MAN);
+            //$order->setMode(!empty($data['mode']) ? $data['mode'] : Order::MODE_MAN);
             $order->setShipmentDistance(!empty($data['shipmentDistance']) ? $data['shipmentDistance'] : 0);
             $order->setShipmentRate(!empty($data['shipmentRate']) ? $data['shipmentRate'] : 0);
             $order->setShipmetAddRate(!empty($data['shipmentAddRate']) ? $data['shipmentAddRate'] : 0);
