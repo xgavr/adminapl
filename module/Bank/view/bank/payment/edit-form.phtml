@@ -440,9 +440,27 @@ $form->prepare();
     }
     
     function changePaymentAuto(){
-        $('select[name="paymentAutoStopDate"]').prop('disabled', true);
-        if ($('select[name="paymentAuto"]').val() != '<?= Payment::PAYMENT_AUTO_ONE?>'){
-            $('select[name="paymentAutoStopDate"]').prop('disabled', false);            
+        $('select[name="paymentAutoDay"]').prop('disabled', true);
+        $('select[name="paymentAutoDay"]').empty();
+        $('input[name="paymentAutoStopDate"]').prop('disabled', true);
+        if ($('select[name="paymentAuto"]').val() !== '<?= Payment::PAYMENT_AUTO_ONE?>'){
+            $('input[name="paymentAutoStopDate"]').prop('disabled', false);            
+        }
+        if ($('select[name="paymentAuto"]').val() === '<?= Payment::PAYMENT_AUTO_WEEK?>'){
+            $('select[name="paymentAutoDay"]').prop('disabled', false);            
+            $('select[name="paymentAutoDay"]').append('<option value="1">Понедельник</option>');
+            $('select[name="paymentAutoDay"]').append('<option value="2">Вторник</option>');
+            $('select[name="paymentAutoDay"]').append('<option value="3">Среда</option>');
+            $('select[name="paymentAutoDay"]').append('<option value="4">Четверг</option>');
+            $('select[name="paymentAutoDay"]').append('<option value="5">Пятница</option>');
+        }
+        if ($('select[name="paymentAuto"]').val() === '<?= Payment::PAYMENT_AUTO_MONTH?>'){
+            $('select[name="paymentAutoDay"]').prop('disabled', false);            
+            let i = 1;
+            while (i <= 28) {
+                $('select[name="paymentAutoDay"]').append('<option value="'+i+'">'+i+'</option>');
+                i = i + 1;
+            }
         }
     }
     
@@ -459,7 +477,7 @@ $form->prepare();
         changeNds();
     });
 
-    $('input[name="paymentAuto"]').on('change', function(){
+    $('select[name="paymentAuto"]').on('change', function(){
         changePaymentAuto();
     });
 

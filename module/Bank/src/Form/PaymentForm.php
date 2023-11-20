@@ -311,12 +311,10 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([            
-            'type'  => 'number',
+            'type'  => 'select',
             'name' => 'paymentAutoDay',
             'attributes' => [                
                 'value' => 1,
-                'min' => 1,
-                'max' => 28
             ],
             'options' => [
                 'label' => 'День платежа',
