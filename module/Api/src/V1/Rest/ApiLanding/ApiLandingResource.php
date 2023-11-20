@@ -64,6 +64,8 @@ class ApiLandingResource extends AbstractResourceListener
                 'vin' => (empty($data->vin)) ? null:$data->vin,
             ]);
             
+            $this->orderManager->updateDependInfo($order, true);
+            
             return ['result' => 'Z'.$order->getId()];
 //            return ['result' => $data];            
         }    
