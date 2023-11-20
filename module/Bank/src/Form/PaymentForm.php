@@ -372,6 +372,15 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
                 'validators' => [
                 ],
             ]); 
+
+        $inputFilter->add([
+                'name'     => 'paymentAutoStopDate',
+                'required' => false,
+                'filters'  => [                    
+                ],                
+                'validators' => [
+                ],
+            ]); 
     }    
     
     public function setObjectManager(ObjectManager $objectManager)
