@@ -156,7 +156,8 @@ return [
     ],
     'view_manager' => [
         'template_path_stack' => [
-            'Api' => 'C:\\OpenServer\\domains\\adminapl\\module\\Api\\config/../view',
+//            'Api' => 'C:\\OpenServer\\domains\\adminapl\\module\\Api\\config/../view',
+            'Api' => __DIR__ . '/../view',
         ],
     ],
     'doctrine' => [
@@ -165,7 +166,8 @@ return [
                 'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
                 'cache' => 'array',
                 'paths' => [
-                    0 => 'C:\\OpenServer\\domains\\adminapl\\module\\Api\\config/../src/Entity',
+//                    0 => 'C:\\OpenServer\\domains\\adminapl\\module\\Api\\config/../src/Entity',
+                    0 => __DIR__ . '/../src/Entity',
                 ],
             ],
             'orm_default' => [
