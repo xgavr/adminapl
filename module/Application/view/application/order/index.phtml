@@ -311,7 +311,7 @@ $this->pageBreadcrumbs()->setItems([
     function createdFormatter(value, row){
         return [
             '<nobr>',
-            $.format.date(value, "dd.MM.yy HH:MM:ss"),
+            $.format.date(value, "dd.MM.yy HH:mm:ss"),
             '</nobr><br/>',
             (row.dateShipment) ? $.format.date(row.dateShipment, "dd.MM.yy"):''
         ].join('');
