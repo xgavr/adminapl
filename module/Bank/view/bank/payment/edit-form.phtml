@@ -448,6 +448,7 @@ $form->prepare();
         }
         if ($('select[name="paymentAuto"]').val() === '<?= Payment::PAYMENT_AUTO_WEEK?>'){
             $('select[name="paymentAutoDay"]').prop('disabled', false);            
+            $('label[for="paymentAutoDay"]').html('День недели');            
             $('select[name="paymentAutoDay"]').append('<option value="1">Понедельник</option>');
             $('select[name="paymentAutoDay"]').append('<option value="2">Вторник</option>');
             $('select[name="paymentAutoDay"]').append('<option value="3">Среда</option>');
@@ -456,6 +457,7 @@ $form->prepare();
         }
         if ($('select[name="paymentAuto"]').val() === '<?= Payment::PAYMENT_AUTO_MONTH?>'){
             $('select[name="paymentAutoDay"]').prop('disabled', false);            
+            $('label[for="paymentAutoDay"]').html('День месяца');            
             let i = 1;
             while (i <= 28) {
                 $('select[name="paymentAutoDay"]').append('<option value="'+i+'">'+i+'</option>');

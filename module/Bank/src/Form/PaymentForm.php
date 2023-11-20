@@ -384,8 +384,10 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
                 'name'     => 'paymentAutoDay',
                 'required' => false,
                 'filters'  => [                    
+                    ['name' => 'ToInt'],
                 ],                
                 'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=> range(1, 31)]]
                 ],
             ]); 
     }    
