@@ -1,5 +1,6 @@
 <?php
     use Bank\Entity\Payment;
+    use Laminas\Json\Encoder;
 
     $this->headTitle('Платежные поручения');
 
@@ -131,12 +132,6 @@
     var $table = $('#table'),
             $ok = $('#ok');
     
-    $table.bootstrapTable({
-        onLoadSuccess: function(res){
-            updateTotal();
-        }            
-    }); 
-    
     function refreshTable(){
         $table.bootstrapTable('refresh');
     }
@@ -148,9 +143,14 @@
     }    
 
     $(function () {
+        $table.on('load-success.bs.table', function (e, res) {
+            updateTotal();
+        });
+
         $('input[name="month"]').change(function (){
             refreshTable();
         });
+        
         $('select').change(function (){
             refreshTable();
         });
@@ -295,8 +295,15 @@
     }
     
     function purposeFormatter(value, row){
+        if (row.paymentAuto === '<?= Payment::PAYMENT_AUTO_WEEK ?>'){
+            var days = <?= Encoder::encode(Payment::getPaymentWeekDayList()) ?>;
+            return value + '<br/><h5 class="retired-muted"><span class="label label-success">!</span> Автоплатеж. Каждую неделю в '+days[row.paymentAutoDay]+' до '+$.format.date(new Date(row.paymentAutoStopDate), "dd.MM.yyyy")+'</h5>';
+        }
+        if (row.paymentAuto === '<?= Payment::PAYMENT_AUTO_MONTH ?>'){
+            return value + '<br/><h5 class="retired-muted"><span class="label label-success">!</span> Автоплатеж. Каждый месяц, '+row.paymentAutoDay+' числа до '+$.format.date(new Date(row.paymentAutoStopDate), "dd.MM.yyyy")+'</h5>';
+        }
         if (row.statusMessage){
-            return value + '<br/><h5><span class="label label-danger">!</span>'+row.statusMessage+'</h5>';
+            return value + '<br/><h5 class="retired-muted"><span class="label label-danger">!</span>'+row.statusMessage+'</h5>';
         }
         return value;
     }
@@ -331,15 +338,6 @@
             disabled = 'disabled = "true"';
         }
         if (!row.requestId){
-//            var url = '/payment/send/'+row.id;
-//            btn = '<button ' + disabled;
-//            btn += ' type="button"';
-//            btn += ' class="btn btn-default btn-xs send-payment"';
-//            btn += ' aria-label="Left Align"'; 
-//            btn += ' modal-url="'+url+'" title="Отправить в банк">';
-//            btn += '<span class="glyphicon glyphicon-send" aria-hidden="true"></span>';
-//            btn += '</button>';
-            //return btn;
 
             var url = '/payment/send/'+row.id+'?version=2';
             btn = ' <button ' + disabled;
@@ -352,14 +350,6 @@
             
             return btn;
         } else {
-//            var url = '/payment/status/'+row.id;
-//            btn = '<button ' + disabled;
-//            btn += ' type="button"';
-//            btn += ' class="btn btn-default btn-xs status-payment"';
-//            btn += ' aria-label="Left Align"'; 
-//            btn += ' modal-url="'+url+'" title="Проверить статус платежа">';
-//            btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span>';
-//            btn += '</button>';
 
             var url = '/payment/status/'+row.id+'?version=2';
             btn = ' <button ' + disabled;

@@ -318,6 +318,7 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
             ],
             'options' => [
                 'label' => 'День платежа',
+                'value_options' => range(1, 31),
             ],
         ]);
 

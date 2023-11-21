@@ -138,9 +138,16 @@ class PaymentController extends AbstractActionController
                     $supplierList[$supplier->getId()] = $supplier->getName();
                 }    
             }
+            if ($payment->getPaymentAuto() == Payment::PAYMENT_AUTO_WEEK){
+                $form->get('paymentAutoDay')->setValueOptions(Payment::getPaymentWeekDayList());
+            }    
+            if ($payment->getPaymentAuto() == Payment::PAYMENT_AUTO_MONTH){
+                $form->get('paymentAutoDay')->setValueOptions(Payment::getPaymentMonthDayList());
+            }    
         }    
         $form->get('supplier')->setValueOptions($supplierList);
         $form->get('supplier')->setDisableInArrayValidator(true);
+        $form->get('paymentAutoDay')->setDisableInArrayValidator(true);
 
         if ($this->getRequest()->isPost()) {
             

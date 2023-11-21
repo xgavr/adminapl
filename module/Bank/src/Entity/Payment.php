@@ -945,6 +945,30 @@ class Payment {
         return $this->paymentAutoDay;
     }
 
+    /**
+     * Returns possible payment week day as array.
+     * @return array
+     */
+    public static function getPaymentWeekDayList() 
+    {
+        return [
+            1 => 'Понедельник',
+            2 => 'Вторник',
+            3 => 'Среда',
+            4 => 'Четверг',
+            5 => 'Пятница',
+        ];
+    }    
+
+    /**
+     * Returns possible payment month day as array.
+     * @return array
+     */
+    public static function getPaymentMonthDayList() 
+    {
+        return array_combine(range(1, 28), range(1, 28));
+    }    
+    
     public function setPaymentAutoDay($paymentAutoDay) {
         $this->paymentAutoDay = $paymentAutoDay;
         return $this;
@@ -989,6 +1013,9 @@ class Payment {
             'taxInfoStatus' => $this->getTaxInfoStatus(),
             'status' => $this->getStatus(),
             'paymentType' => $this->getPaymentType(),            
+            'paymentAuto' => $this->getPaymentAuto(),            
+            'paymentAutoDay' => $this->getPaymentAutoDay(),            
+            'paymentAutoStopDate' => $this->getPaymentAutoStopDate(),            
         ];
     }
 }

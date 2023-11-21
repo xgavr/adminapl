@@ -95,7 +95,7 @@ class PaymentManager
         $payment->setSupplier($data['supplier']);
         $payment->setPaymentAuto(empty($data['paymentAuto']) ? Payment::PAYMENT_AUTO_ONE:$data['paymentAuto']);
         $payment->setPaymentAutoDay(empty($data['paymentAutoDay']) ? 1:$data['paymentAutoDay']);
-        $payment->setPaymentAutoStopDate(empty($data['paymentAutoStopDate']) ? null:$data['paymentAutoStopDate']);
+        $payment->setPaymentAutoStopDate(empty($data['paymentAutoStopDate']) ? date('2099-12-31'):$data['paymentAutoStopDate']);
         
         $this->entityManager->persist($payment);
         $this->entityManager->flush();
@@ -138,7 +138,7 @@ class PaymentManager
         $payment->setSupplier($data['supplier']);
         $payment->setPaymentAuto(empty($data['paymentAuto']) ? Payment::PAYMENT_AUTO_ONE:$data['paymentAuto']);
         $payment->setPaymentAutoDay(empty($data['paymentAutoDay']) ? 1:$data['paymentAutoDay']);
-        $payment->setPaymentAutoStopDate(empty($data['paymentAutoStopDate']) ? null:$data['paymentAutoStopDate']);
+        $payment->setPaymentAutoStopDate(empty($data['paymentAutoStopDate']) ? date('2099-12-31'):$data['paymentAutoStopDate']);
         
         $this->entityManager->persist($payment);
         $this->entityManager->flush();
@@ -456,6 +456,57 @@ class PaymentManager
             if (time() > $startTime + 840){
                 break;
             }
+        }
+        
+        return;
+    }
+    
+    /**
+     * Создать автоплатеж
+     * @param Payment $payment
+     */
+    public function createAutoPayment($payment)
+    {
+        $newPayment = null;
+        if ($payment->getPaymentAuto() == Payment::PAYMENT_AUTO_MONTH){
+            if (date('j') == $payment->getPaymentAutoDay() && $payment->getPaymentAutoStopDate() >= date('Y-m-d')){
+                $newPayment = $this->addPayment($payment->toLog());                
+            }
+        }
+        if ($payment->getPaymentAuto() == Payment::PAYMENT_AUTO_WEEK){
+            if (date('w') == $payment->getPaymentAutoDay() && $payment->getPaymentAutoStopDate() >= date('Y-m-d')){
+                $newPayment = $this->addPayment($payment->toLog());                
+            }
+        }
+        if ($newPayment){
+
+            $payment->setPaymentAuto(Payment::PAYMENT_AUTO_ONE);
+            $this->entityManager->persist($payment);
+            $this->entityManager->flush();
+
+            return $newPayment;
+        }    
+        
+        return;
+    }
+    
+    /**
+     * Создать автоплатежи
+     * 
+     * @return null
+     */
+    public function findPaymentAutos()
+    {
+        $payments = $this->entityManager->getRepository(Payment::class)
+                ->findBy(['paymentAuto' => Payment::PAYMENT_AUTO_WEEK, 'status' => Payment::STATUS_SUCCESS]);
+        foreach ($payments as $payment){
+            $this->createAutoPayment($payment);
+        }
+
+        $payments = $this->entityManager->getRepository(Payment::class)
+                ->findBy(['paymentAuto' => Payment::PAYMENT_AUTO_MONTH, 'status' => Payment::STATUS_SUCCESS]);
+        foreach ($payments as $payment){
+            $this->createAutoPayment($payment);
         }
         
         return;

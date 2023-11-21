@@ -1,5 +1,6 @@
 <?php
 use Bank\Entity\Payment;
+use Laminas\Json\Encoder;
 
 $form = $this->form;
 
@@ -102,12 +103,12 @@ $form->get('paymentAuto')->setAttributes([
 
 $form->get('paymentAutoDay')->setAttributes([
     'class'=>'form-control', 
-    'disabled' => true,
+    'disabled' => ($payment) ? $payment->getPaymentAuto() == Payment::PAYMENT_AUTO_ONE:true,
     ]);
 
 $form->get('paymentAutoStopDate')->setAttributes([
     'class'=>'form-control', 
-    'disabled' => true,
+    'disabled' => ($payment) ? $payment->getPaymentAuto() == Payment::PAYMENT_AUTO_ONE:true,
     ]);
 
 
@@ -428,8 +429,7 @@ $form->prepare();
         }    
     }
     
-    function changeBankAccount()
-    {
+    function changeBankAccount(){
         $('select[name="supplier"]').empty();
         $('select[name="supplier"]').append('<option>нет</option>');
         $.getJSON( '/payment/account-available-suppliers/'+$('select[name="bankAccount"]').val(), function( data ) {
@@ -449,56 +449,63 @@ $form->prepare();
         if ($('select[name="paymentAuto"]').val() === '<?= Payment::PAYMENT_AUTO_WEEK?>'){
             $('select[name="paymentAutoDay"]').prop('disabled', false);            
             $('label[for="paymentAutoDay"]').html('День недели');            
-            $('select[name="paymentAutoDay"]').append('<option value="1">Понедельник</option>');
-            $('select[name="paymentAutoDay"]').append('<option value="2">Вторник</option>');
-            $('select[name="paymentAutoDay"]').append('<option value="3">Среда</option>');
-            $('select[name="paymentAutoDay"]').append('<option value="4">Четверг</option>');
-            $('select[name="paymentAutoDay"]').append('<option value="5">Пятница</option>');
+            $.each( <?= Encoder::encode(Payment::getPaymentWeekDayList()) ?>, function( key, value ) {
+                $('select[name="paymentAutoDay"]').append('<option value="' + key + '">' + value + '</option>');
+            });
+//            $('select[name="paymentAutoDay"]').append('<option value="1">Понедельник</option>');
+//            $('select[name="paymentAutoDay"]').append('<option value="2">Вторник</option>');
+//            $('select[name="paymentAutoDay"]').append('<option value="3">Среда</option>');
+//            $('select[name="paymentAutoDay"]').append('<option value="4">Четверг</option>');
+//            $('select[name="paymentAutoDay"]').append('<option value="5">Пятница</option>');
         }
         if ($('select[name="paymentAuto"]').val() === '<?= Payment::PAYMENT_AUTO_MONTH?>'){
             $('select[name="paymentAutoDay"]').prop('disabled', false);            
             $('label[for="paymentAutoDay"]').html('День месяца');            
-            let i = 1;
-            while (i <= 28) {
-                $('select[name="paymentAutoDay"]').append('<option value="'+i+'">'+i+'</option>');
-                i = i + 1;
-            }
+            $.each( <?= Encoder::encode(Payment::getPaymentMonthDayList()) ?>, function( key, value ) {
+                $('select[name="paymentAutoDay"]').append('<option value="' + key + '">' + value + '</option>');
+            });
+//            let i = 1;
+//            while (i <= 28) {
+//                $('select[name="paymentAutoDay"]').append('<option value="'+i+'">'+i+'</option>');
+//                i = i + 1;
+//            }
         }
     }
-    
-    $('select[name="bankAccount"]').on('change', function(){
-//        clearDetails();
-        changeBankAccount();
-    });
-
-    $('select[name="nds"]').on('change', function(){
-        changeNds();
-    });
-
-    $('input[name="amount"]').on('input', function(){
-        changeNds();
-    });
-
-    $('select[name="paymentAuto"]').on('change', function(){
-        changePaymentAuto();
-    });
-
-    $('select[name="supplier"]').on('change', function(){
-        $.getJSON( '/payment/supplier-current-details/'+$(this).val()+'?account='+$('select[name="bankAccount"]').val(), function( data ) {
-//            clearDetails();
-            $('input[name="counterpartyInn"]').val(data['inn']);
-            $('input[name="counterpartyKpp"]').val(data['kpp']);
-            $('input[name="counterpartyName"]').val(data['name']);
-            $('input[name="counterpartyAccountNumber"]').val(data['rs']);
-            $('input[name="counterpartyBankBik"]').val(data['bik']);
-            $('input[name="purpose"]').val(data['purpose']);
-            $('select[name="nds"]').val(data['nds']);
-            changeNds();
-            bikInfo(data['bik']); // company/legal/bik-inn-partial.phtml
-        });    
-    });
-        
+            
     $( document ).ready(function() {        
+    
+        $('select[name="bankAccount"]').on('change', function(){
+//        clearDetails();
+            changeBankAccount();
+        });
+
+        $('select[name="nds"]').on('change', function(){
+            changeNds();
+        });
+
+        $('input[name="amount"]').on('input', function(){
+            changeNds();
+        });
+
+        $('select[name="paymentAuto"]').on('change', function(){
+            changePaymentAuto();
+        });
+
+        $('select[name="supplier"]').on('change', function(){
+            $.getJSON( '/payment/supplier-current-details/'+$(this).val()+'?account='+$('select[name="bankAccount"]').val(), function( data ) {
+    //            clearDetails();
+                $('input[name="counterpartyInn"]').val(data['inn']);
+                $('input[name="counterpartyKpp"]').val(data['kpp']);
+                $('input[name="counterpartyName"]').val(data['name']);
+                $('input[name="counterpartyAccountNumber"]').val(data['rs']);
+                $('input[name="counterpartyBankBik"]').val(data['bik']);
+                $('input[name="purpose"]').val(data['purpose']);
+                $('select[name="nds"]').val(data['nds']);
+                changeNds();
+                bikInfo(data['bik']); // company/legal/bik-inn-partial.phtml
+            });    
+        });
+
         if ($('input[name="counterpartyBankBik"]').val()){
             bikInfo($('input[name="counterpartyBankBik"]').val()); // company/legal/bik-inn-partial.phtml
         }
