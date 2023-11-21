@@ -190,7 +190,7 @@ class JobManager
           528 => ['command' => 'update-producer-apl-id',            'shedule' => '44 15 * * *', 'description' => 'Обновление производителей APL ID'],
           529 => ['command' => 'update-user',                       'shedule' => '44 16 * * *', 'description' => 'Обновление сотрудников'],
           529 => ['command' => 'market-place-reports',              'shedule' => '40 2 * * *',  'description' => 'Загрузка отчетов ТП'],
-//          530 => ['command' => 'auto-payments',                     'shedule' => '40 4 * * *',  'description' => 'Автоплатежки'],
+          530 => ['command' => 'payment-auto',                      'shedule' => '40 4 * * *',  'description' => 'Автоплатежки'],
         ];
     }
 

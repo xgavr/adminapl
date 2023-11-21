@@ -76,6 +76,18 @@ class BankSettingsForm extends Form implements ObjectManagerAwareInterface
                 ]
             ],
         ]);
+
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'payment_auto',
+            'options' => [
+                'label' => 'Автоплатежи',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
                                 
         $this->add([            
             'type'  => 'email',

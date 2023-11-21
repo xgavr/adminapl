@@ -2,11 +2,11 @@
 $this->headTitle('Настройки обмена с банком');
 
 $this->mainMenu()->setActiveItemId('settings');
-$this->mainMenu()->setActiveUrl($this->url('settings', ['action' => 'bank-settings']));
+$this->mainMenu()->setActiveUrl($this->url('admin', ['action' => 'bank-settings']));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Настройки обмена с банком'=>$this->url('settings', ['action' => 'bank-settings']),
+            'Настройки обмена с банком'=>$this->url('admin', ['action' => 'bank-settings']),
             ]);
 ?>
 
@@ -41,6 +41,10 @@ $form->get('statement_app_password')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('payment_auto')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -72,6 +76,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('doc_by_api')); ?>
             <?= $this->formElement($form->get('doc_by_api')); ?>
             <?= $this->formElementErrors($form->get('doc_by_api')); ?>                  
+        </div>        
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('payment_auto')); ?>
+            <?= $this->formElement($form->get('payment_auto')); ?>
+            <?= $this->formElementErrors($form->get('payment_auto')); ?>                  
         </div>        
 
     </div>   

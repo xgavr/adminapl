@@ -266,6 +266,7 @@ class AdminManager {
         $config->bank->statement_email = $data['statement_email']; //Email для получения выписок
         $config->bank->statement_email_password = $data['statement_email_password']; //Пароль на email для выписок
         $config->bank->statement_app_password = $data['statement_app_password']; //Пароль app на email для выписок
+        $config->bank->payment_auto = $data['payment_auto']; //автоплатежи делать
         
         $writer = new PhpArray();
         

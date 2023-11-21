@@ -219,6 +219,12 @@ class ProcessingController extends AbstractActionController
     private $sbpManager;    
 
     /**
+     * Payment manager.
+     * @var \Bank\Service\PaymentManager
+     */
+    private $paymentManager;    
+
+    /**
      * Cash manager.
      * @var \Cash\Service\CashManager
      */
@@ -238,7 +244,7 @@ class ProcessingController extends AbstractActionController
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
             $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
             $ozonService, $userManager, $smsManager, $sbpManager, $cashManager,
-            $ampReportManager) 
+            $ampReportManager, $paymentManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -275,6 +281,7 @@ class ProcessingController extends AbstractActionController
         $this->sbpManager = $sbpManager;
         $this->cashManager = $cashManager;
         $this->ampReportManager = $ampReportManager;
+        $this->paymentManager = $paymentManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -531,6 +538,24 @@ class ProcessingController extends AbstractActionController
         if ($aplExSettings['bank'] == 1){
             $this->aplBankService->sendBankStatement(); //трансфер выписки в АПЛ
         }    
+        
+        return new JsonModel(
+            ['ok']
+        );
+    }
+
+    /**
+     * Делать автоплатежи
+     * 
+     */
+    public function paymentAutoAction()
+    {
+        $settings = $this->adminManager->getBankTransferSettings();
+
+        if ($settings['payment_auto'] == 1){
+            $this->paymentManager->findPaymentAutos();
+        }
+        
         
         return new JsonModel(
             ['ok']

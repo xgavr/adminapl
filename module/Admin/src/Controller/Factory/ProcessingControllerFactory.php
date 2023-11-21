@@ -44,6 +44,7 @@ use Admin\Service\SmsManager;
 use Bank\Service\SbpManager;
 use Cash\Service\CashManager;
 use ApiMarketPlace\Service\ReportManager;
+use Bank\Service\PaymentManager;
 
 /**
  * Description of ClientControllerFactory
@@ -90,6 +91,7 @@ class ProcessingControllerFactory implements FactoryInterface {
         $sbpManager = $container->get(SbpManager::class);
         $cashManager = $container->get(CashManager::class);
         $ampReportManager = $container->get(ReportManager::class);
+        $paymentManager = $container->get(PaymentManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new ProcessingController($entityManager, $postManager, $autoruManager, 
@@ -99,6 +101,6 @@ class ProcessingControllerFactory implements FactoryInterface {
                 $settingManager, $aplDocService, $marketManager, $carManager, $helloManager,
                 $aplOrderService, $aplCashService, $billManager, $registerManager,
                 $ptManager, $jobManager, $ozonService, $userManager, $smsManager,
-                $sbpManager, $cashManager, $ampReportManager);
+                $sbpManager, $cashManager, $ampReportManager, $paymentManager);
     }
 }

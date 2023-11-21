@@ -1018,4 +1018,39 @@ class Payment {
             'paymentAutoStopDate' => $this->getPaymentAutoStopDate(),            
         ];
     }
+    
+    /**
+     * Данные для копии
+     * @return array 
+     */
+    public function toArray()
+    {
+        return [
+            'bankAccount' => $this->getBankAccount(),
+            'supplier' => $this->getSupplier(),
+            'counterpartyAccountNumber' => $this->getCounterpartyAccountNumber(),
+            'counterpartyBankCorrAccount' => $this->getCounterpartyBankCorrAccount(),
+            'counterpartyBankBik' => $this->getCounterpartyBankBik(),
+            'counterpartyInn' => $this->getСounterpartyInn(),
+            'counterpartyKpp' => $this->getСounterpartyKpp(),
+            'counterpartyName' => $this->getCounterpartyName(),
+            'amount' => $this->getAmount(),
+            'paymentDate' => $this->getPaymentDate(),
+            'purpose' => $this->getPaymentPurpose(),
+            'nds' => $this->getNds(),
+            'supplierBillId' => $this->getSupplierBillId(),
+            'taxInfoDocumentDate' => $this->getTaxInfoDocumentDate(),
+            'taxInfoDocumentNumber' => $this->getTaxInfoDocumentNumber(),
+            'taxInfoKbk' => $this->getTaxInfoKbk(),
+            'taxInfoOkato' => $this->getTaxInfoOkato(),
+            'taxInfoPeriod' => $this->getTaxInfoPeriod(),
+            'taxInfoReasonCode' => $this->getTaxInfoReasonCode(),
+            'taxInfoStatus' => $this->getTaxInfoStatus(),
+            'status' => $this->getStatus(),
+            'paymentType' => $this->getPaymentType(),            
+            'paymentAuto' => $this->getPaymentAuto(),            
+            'paymentAutoDay' => $this->getPaymentAutoDay(),            
+            'paymentAutoStopDate' => $this->getPaymentAutoStopDate(),            
+        ];
+    }
 }

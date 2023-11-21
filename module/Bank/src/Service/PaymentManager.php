@@ -468,18 +468,18 @@ class PaymentManager
     public function createAutoPayment($payment)
     {
         $newPayment = null;
-        if ($payment->getPaymentAuto() == Payment::PAYMENT_AUTO_MONTH){
+        if ($payment->getPaymentAuto() == Payment::PAYMENT_AUTO_MONTH){    
             if (date('j') == $payment->getPaymentAutoDay() && $payment->getPaymentAutoStopDate() >= date('Y-m-d')){
-                $newPayment = $this->addPayment($payment->toLog());                
+                $newPayment = $this->addPayment($payment->toArray());                
             }
         }
         if ($payment->getPaymentAuto() == Payment::PAYMENT_AUTO_WEEK){
             if (date('w') == $payment->getPaymentAutoDay() && $payment->getPaymentAutoStopDate() >= date('Y-m-d')){
-                $newPayment = $this->addPayment($payment->toLog());                
+                $newPayment = $this->addPayment($payment->toArray());                
             }
         }
         if ($newPayment){
-
+            
             $payment->setPaymentAuto(Payment::PAYMENT_AUTO_ONE);
             $this->entityManager->persist($payment);
             $this->entityManager->flush();
