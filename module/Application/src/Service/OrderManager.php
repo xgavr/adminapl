@@ -42,6 +42,7 @@ use Stock\Entity\ComissBalance;
 use Stock\Entity\ComitentBalance;
 use Stock\Entity\Comitent;
 use Application\Entity\Comment;
+use User\Filter\PhoneFilter;
 
 /**
  * Description of OrderService
@@ -429,23 +430,32 @@ class OrderManager
      */
     public function findContactByOrderData($data)
     {
-        $contact = $client = null;
+        
+        $contact = $client = $namePhone = $namePhone2 = null;
+        $phoneFilter = new PhoneFilter();
+        if (!empty($data['phone'])){
+            $namePhone = $phoneFilter->filter($data['phone']);
+        }
+        if (!empty($data['phone2'])){
+            $namePhone2 = $phoneFilter->filter($data['phone2']);
+        }
+        
         if (!empty($data['contact'])){
             $contact = $this->entityManager->getRepository(Contact::class)
                     ->find($data['contact']);
 //            var_dump(1);
         }
-        if (!$contact && !empty($data['phone'])){
+        if (!$contact && !empty($namePhone)){
             $phone = $this->entityManager->getRepository(Phone::class)
-                    ->findOneByName($data['phone']);
+                    ->findOneByName($namePhone);
             if ($phone){
                 $contact = $phone->getContact();
 //                var_dump(2);
             }
         }      
-        if (!$contact && !empty($data['phone2'])){
+        if (!$contact && !empty($namePhone2)){
             $phone2 = $this->entityManager->getRepository(Phone::class)
-                    ->findOneByName($data['phone2']);
+                    ->findOneByName($namePhone2);
             if ($phone2){
                 $contact = $phone->getContact();
 //                var_dump(3);
@@ -468,10 +478,10 @@ class OrderManager
         
         if ($contact){
             if (!empty($data['phone'])){
-                $this->contactManager->addPhone($contact, ['phone' => $data['phone']], true);
+                $this->contactManager->addPhone($contact, ['phone' => $namePhone], true);
             }    
             if (!empty($data['phone2'])){
-                $this->contactManager->addPhone($contact, ['phone' => $data['phone2']], true);
+                $this->contactManager->addPhone($contact, ['phone' => $namePhone2], true);
             }    
             if (!empty($data['email'])){
                 $this->contactManager->addEmail($contact, $data['email'], true);
