@@ -104,7 +104,7 @@ class LogRepository extends EntityRepository{
                     $header = [];
                     $header[] = 'Номер АПЛ: '.(empty($message['aplId']) ? 'нет':$message['aplId']);
                     $header[] = 'Статус: '.(empty($message['status']) ? 'нет':Order::getStatusList()[$message['status']]);
-                    $header[] = 'Сумма: '.(empty($message['amount']) ? 'нет':$message['amount']);
+                    $header[] = 'Сумма: '.(empty($message['amount']) ? 'нет':round($message['amount'], 2));
                     $header[] = 'Отгрузка: '.(empty($message['shipmentDate']) ? 'нет':$message['shipmentDate']);
                     $header[] = 'Контакт: '.(empty($message['contact']) ? 'нет':$message['contact']);
                     if (!empty($message['goods'])){
@@ -131,7 +131,7 @@ class LogRepository extends EntityRepository{
                 $header = [];
                 $header[] = 'Номер АПЛ: '.(empty($message['aplId']) ? 'нет':$message['aplId']);
                 $header[] = 'Статус: '.(empty($message['status']) ? 'нет':Pt::getStatusList()[$message['status']]);
-                $header[] = 'Сумма: '.(empty($message['amount']) ? 'нет':$message['amount']);
+                $header[] = 'Сумма: '.(empty($message['amount']) ? 'нет':round($message['amount'], 2));
                 $header[] = 'Товаров: '.count($message['goods']);                            
 
                 if (!$short){
