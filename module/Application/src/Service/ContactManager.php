@@ -600,28 +600,52 @@ class ContactManager
      */
     public function unite($contact, $oldContact, $flush = true)
     {
-        if ($contact->getUser() && empty($oldContact->getUser())){
-            $oldContact->setUser($contact->getUser());
-        } elseif ($oldContact->getUser() && empty($contact->getUser())){
-            $contact->setUser($oldContact->getUser());            
-        }
-        
-        if ($contact->getClient() && empty($oldContact->getClient())){
-            $oldContact->setClient($contact->getClient());
-        } elseif ($oldContact->getClient() && empty($contact->getClient())){
-            $contact->setClient($oldContact->getClient());            
-        }
-        
-        if ($contact->getSupplier() && empty($oldContact->getSupplier())){
-            $oldContact->setSupplier($contact->getSupplier());
-        } elseif ($oldContact->getSupplier() && empty($contact->getSupplier())){
-            $contact->setSupplier($oldContact->getSupplier());            
+        if ($oldContact->getUser()){
+            if (empty($contact->getUser())){
+                $contact->setUser($oldContact->getUser());
+                $oldContact->setUser(null);
+            }
+            if ($contact->getUser()){
+                if ($contact->getUser()->getId() == $oldContact->getUser()->getId()){
+                    $oldContact->setUser(null);
+                }
+            }
         }
 
-        if ($contact->getOffice() && empty($oldContact->getOffice())){
-            $oldContact->setOffice($contact->getOffice());
-        } elseif ($oldContact->getOffice() && empty($contact->getOffice())){
-            $contact->setOffice($oldContact->getOffice());            
+        if ($oldContact->getClient()){
+            if (empty($contact->getClient())){
+                $contact->setClient($oldContact->getClient());
+                $oldContact->setClient(null);
+            }
+            if ($contact->getClient()){
+                if ($contact->getClient()->getId() == $oldContact->getClient()->getId()){
+                    $oldContact->setClient(null);
+                }
+            }
+        }
+
+        if ($oldContact->getSupplier()){
+            if (empty($contact->getSupplier())){
+                $contact->setSupplier($oldContact->getSupplier());
+                $oldContact->setSupplier(null);
+            }
+            if ($contact->getClient()){
+                if ($contact->getSupplier()->getId() == $oldContact->getSupplier()->getId()){
+                    $oldContact->setSupplier(null);
+                }
+            }
+        }
+
+        if ($oldContact->getOffice()){
+            if (empty($contact->getOffice())){
+                $contact->setOffice($oldContact->getOffice());
+                $oldContact->setOffice(null);
+            }
+            if ($contact->getOffice()){
+                if ($contact->getOffice()->getId() == $oldContact->getOffice()->getId()){
+                    $oldContact->setOffice(null);
+                }
+            }
         }
         
         $this->entityManager->persist($contact);
