@@ -356,6 +356,9 @@ class ContactManager
         if ($contact->getUser()){
             return false;
         }
+        if ($contact->getClient()){
+            return false;
+        }
         $rows = $this->entityManager->getRepository(Phone::class)
                 ->count(['contact' => $contact->getId()]);
         if ($rows){
@@ -488,7 +491,7 @@ class ContactManager
         $finishTime = $startTime + 1740;
         
         $contactsForCleaninig = $this->entityManager->getRepository(Contact::class)
-                ->findAllContact();
+                ->findContactsForClean();
         
         $iterable = $contactsForCleaninig->iterate();
         

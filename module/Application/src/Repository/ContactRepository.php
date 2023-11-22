@@ -155,6 +155,28 @@ class ContactRepository extends EntityRepository
 //var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }        
+
+    /**
+     * Выборка контактов 
+     * @return type
+     */
+    public function findContactsForClean()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select("c")
+            ->from(Contact::class, 'c')
+            ->andWhere('c.user is null')    
+            ->andWhere('c.office is null')    
+            ->andWhere('c.client is null')    
+            ->andWhere('c.supplier is null')    
+                ;
+                
+//var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }        
     
     /**
      * Найти по телефону
