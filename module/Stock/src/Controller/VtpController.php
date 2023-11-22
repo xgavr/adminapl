@@ -20,6 +20,7 @@ use Company\Entity\Office;
 use Application\Entity\Supplier;
 use Stock\Entity\Movement;
 use Application\Entity\Order;
+use Company\Entity\Contract;
 
 class VtpController extends AbstractActionController
 {
@@ -288,12 +289,20 @@ class VtpController extends AbstractActionController
                 $ptuList[$aptu->getId()] = $aptu->getDocIdPresent();
             }
         }    
+        $contractList = ['--выбререте договор--'];
         if ($ptu){
             $supplier = $ptu->getSupplier();
             $office = $ptu->getOffice();
             $contract = $ptu->getContract();
             $company = $contract->getCompany();
             $legal = $ptu->getLegal();            
+            if ($company && $legal){
+                $contracts = $this->entityManager->getRepository(Contract::class)
+                        ->findBy(['company' => $company->getId(), 'legal' => $legal->getId()], ['dateStart' => 'desc']);                                
+                foreach ($contracts as $row){
+                    $contractList[$row->getId()] = $row->getContractPresentPay();
+                }
+            }    
         }    
         
         if ($this->getRequest()->isPost()){
@@ -302,6 +311,7 @@ class VtpController extends AbstractActionController
                 
         $form = new VtpForm($this->entityManager, $office, $supplier, $company, $legal);        
         $form->get('ptu')->setValueOptions($ptuList);
+        $form->get('contract_id')->setValueOptions($contractList);
 
 
         if ($this->getRequest()->isPost()) {
