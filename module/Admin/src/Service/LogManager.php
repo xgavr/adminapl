@@ -201,14 +201,16 @@ class LogManager {
      * Добавить запись в лог pt
      * @param Pt $pt
      * @param integer $status 
+     * @param bool $nullUser 
      */
-    public function infoPt($pt, $status)
+    public function infoPt($pt, $status, $nullUser = false)
     {
         $currentUser = $this->currentUser();
         
-        if ($currentUser){
+        if ($currentUser || $nullUser){
             
             $ptLog = $pt->toLog();
+            $ptLog['goods'] = [];
             $ptGoods = $this->entityManager->getRepository(PtGood::class)
                     ->findByPt($pt->getId());
             foreach ($ptGoods as $ptGood){
@@ -221,7 +223,7 @@ class LogManager {
                 'date_created' => date('Y-m-d H:i:s'),
                 'status' => $status,
                 'priority' => Log::PRIORITY_INFO,
-                'user_id' => $currentUser->getId(),
+                'user_id' => ($currentUser) ? $currentUser->getId():null,
             ];
 
             $this->entityManager->getConnection()->insert('log', $data);

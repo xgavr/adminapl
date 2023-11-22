@@ -475,8 +475,9 @@ class PtManager
     /**
      * Обновить сумму ПТ
      * @param Pt $pt
+     * @param bool $nullUser
      */
-    public function updatePtAmount($pt)
+    public function updatePtAmount($pt, $nullUser = false)
     {
         $preLog = $this->entityManager->getRepository(Log::class)
                 ->findOneByLogKey($pt->getLogKey());
@@ -492,7 +493,7 @@ class PtManager
         
         $this->entityManager->refresh($pt);
         $this->repostPt($pt);
-        $this->logManager->infoPt($pt, Log::STATUS_UPDATE);
+        $this->logManager->infoPt($pt, Log::STATUS_UPDATE, $nullUser);
         return;
     }
     
@@ -616,7 +617,7 @@ class PtManager
         $pts = $this->entityManager->getRepository(Pt::class)
                 ->findBy(['docDate' => $ptDate, 'docNo' => $this->autoPtDocNo]);
         foreach ($pts as $pt){            
-            $this->updatePtAmount($pt);            
+            $this->updatePtAmount($pt, true);            
         }
         return;
     }

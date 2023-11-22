@@ -17,6 +17,7 @@ use Application\Entity\TokenGroup;
 use Company\Entity\Office;
 use Stock\Entity\Vtp;
 use Application\Entity\Order;
+use Stock\Entity\Pt;
 //use User\Entity\User;
 
 
@@ -125,6 +126,24 @@ class LogRepository extends EntityRepository{
                 }
 //                $messages[] = $message['comment'];
                 return implode('; ', $messages);
+                
+            case 'pt':
+                $header = [];
+                $header[] = 'Номер АПЛ: '.(empty($message['aplId']) ? 'нет':$message['aplId']);
+                $header[] = 'Статус: '.(empty($message['status']) ? 'нет':Pt::getStatusList()[$message['status']]);
+                $header[] = 'Сумма: '.(empty($message['amount']) ? 'нет':$message['amount']);
+                $header[] = 'Товаров: '.count($message['goods']);                            
+
+                if (!$short){
+                    $goods = [];
+                    foreach ($message['goods'] as $row){
+                        $goods[] = implode(';', ['<b>'.$row['rowNo'].'</b>', $row['good'], $row['quantity']]);
+                    }   
+                    $header[] = '<br/><small class="retired-muted">'.implode('; ', $goods).'</small>';
+                }    
+                $messages[] = implode('; ', $header);
+
+                return implode('; ', $messages);
 
             default: break;
         }
@@ -167,10 +186,11 @@ class LogRepository extends EntityRepository{
      * Подготовить описание логов
      * 
      * @param array $data
+     * @param bool $short //сокращенный вывод
      * 
      * @return array
      */
-    public function logDescription($data)
+    public function logDescription($data, $short = true)
     {        
         $result = [];
         foreach ($data as $row){
@@ -180,7 +200,7 @@ class LogRepository extends EntityRepository{
                 'status' => $row->getStatusAsString(),                
                 'dateCreated' => date('Y-m-d H:i:s', strtotime($row->getDateCreated())),                
                 'user' => $row->getUser()->getFullName(),
-                'message' => $this->messageText($row),
+                'message' => $this->messageText($row, $short),
             ];
         }
                 
@@ -199,8 +219,7 @@ class LogRepository extends EntityRepository{
         $query = $this->queryByDocType($docType, $options);
         $data = $query->getResult();        
         
-        return $this->logDescription($data);
-        
+        return $this->logDescription($data);        
     }
     
 }

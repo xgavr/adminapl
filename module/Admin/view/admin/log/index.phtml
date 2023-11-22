@@ -4,7 +4,7 @@
     $this->headTitle('Лог записей '.$id);
 
     $logs = $entityManager->getRepository(Log::class)
-            ->logDescription($rows);
+            ->logDescription($rows, false);
 ?>
 
 
