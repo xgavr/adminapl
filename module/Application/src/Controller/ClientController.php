@@ -334,7 +334,7 @@ class ClientController extends AbstractActionController
         
         if (!$client->getLegalContact()){
             $data = [
-                'name' => $client->getFullName(),
+                'name' => $client->getName(),
                 'status' => Contact::STATUS_LEGAL,
             ];
             $this->contactManager->addNewContact($client, $data);
