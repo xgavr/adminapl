@@ -475,7 +475,7 @@ class BankManager
                     $statement = $convetFilter->filter($fileInfo->getPathname());
 
                     $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                        ->findOneByRs($statement['РасчСчет']);
+                        ->findOneBy(['rs' => $statement['РасчСчет']]);
             
                     if ($bankAccount){
                         $this->saveBalanceFromStatement1c($bankAccount, $statement);
