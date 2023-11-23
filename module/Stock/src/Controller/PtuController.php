@@ -60,6 +60,7 @@ class PtuController extends AbstractActionController
         
     public function contentAction()
     {
+        ini_set('memory_limit', '1024M');
         	        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
