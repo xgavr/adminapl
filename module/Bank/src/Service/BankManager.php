@@ -471,22 +471,22 @@ class BankManager
             }
             if ($fileInfo->isFile()){
                 if (strtolower($fileInfo->getExtension()) == 'txt'){
-                    $convetFilter = new Statement1cToArray();
-                    $statement = $convetFilter->filter($fileInfo->getPathname());
-
-                    $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                        ->findOneBy(['rs' => $statement['РасчСчет']]);
-            
-                    if ($bankAccount){
-                        $this->saveBalanceFromStatement1c($bankAccount, $statement);
-                        $this->saveStatementFromStatement1c($bankAccount, $statement);
-                        
-                    }
-                    if (is_dir(self::STAEMENTS_ARCH_DIR)){
-                        if (copy($fileInfo->getPathname(), self::STAEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
-                            unlink($fileInfo->getPathname());
-                        }
-                    }
+//                    $convetFilter = new Statement1cToArray();
+//                    $statement = $convetFilter->filter($fileInfo->getPathname());
+//
+//                    $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+//                        ->findOneBy(['rs' => $statement['РасчСчет']]);
+//            
+//                    if ($bankAccount){
+//                        $this->saveBalanceFromStatement1c($bankAccount, $statement);
+//                        $this->saveStatementFromStatement1c($bankAccount, $statement);
+//                        
+//                    }
+//                    if (is_dir(self::STAEMENTS_ARCH_DIR)){
+//                        if (copy($fileInfo->getPathname(), self::STAEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
+//                            unlink($fileInfo->getPathname());
+//                        }
+//                    }
                 }
                 if (strtolower($fileInfo->getExtension()) == 'csv'){
 
