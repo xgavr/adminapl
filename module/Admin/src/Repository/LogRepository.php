@@ -199,7 +199,7 @@ class LogRepository extends EntityRepository{
                 'priority' => $row->getPriorityAsString(),                
                 'status' => $row->getStatusAsString(),                
                 'dateCreated' => date('Y-m-d H:i:s', strtotime($row->getDateCreated())),                
-                'user' => $row->getUser()->getFullName(),
+                'user' => ($row->getUser()) ?  $row->getUser()->getFullName():'Генератор',
                 'message' => $this->messageText($row, $short),
             ];
         }
