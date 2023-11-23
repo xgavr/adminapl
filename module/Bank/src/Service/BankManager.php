@@ -92,7 +92,7 @@ class BankManager
         }    
         
         $this->entityManager->persist($balance);
-        $this->entityManager->flush($balance);
+        $this->entityManager->flush();
         
         return $balance;
     }
