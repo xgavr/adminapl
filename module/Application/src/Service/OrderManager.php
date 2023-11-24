@@ -1255,7 +1255,7 @@ class OrderManager
     {
         $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
         $dateShipment = $this->_shipmentDateTime($data);
-        $dateOper = !empty($dateShipment) ? $dateShipment : $dateMod;
+        $dateOper = !empty($dateShipment) ? $dateShipment : $order->getDateOper();
 
         if ($dateOper > $this->allowDate){
             $order->setAddress(!empty($data['address']) ? $data['address'] : null);
@@ -1391,7 +1391,7 @@ class OrderManager
     {
         $dateMod = !empty($data['dateMod']) ? $data['dateMod'] : date('Y-m-d H:i:s');
         $dateShipment = $this->_shipmentDateTime($data);
-        $dateOper = !empty($dateShipment) ? $dateShipment : $dateMod;
+        $dateOper = !empty($dateShipment) ? $dateShipment : $order->getDateOper();
         
         if ($dateOper > $this->allowDate){
 
