@@ -466,8 +466,8 @@ class ClientRepository extends EntityRepository{
 
         $queryBuilder->select('c')
                 ->from(Client::class, 'c')
-                ->where('c.balanceDate <= :year')
-                ->setParameter('year', $year)
+                ->where('c.balanceDate < :year')
+                ->setParameter('year', $year.'-01-01')
                 ->andWhere('c.balance != 0')
                 ;
 
