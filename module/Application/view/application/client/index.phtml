@@ -175,7 +175,11 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function dateFormatter(value, row){
-        return '<nobr>'+$.format.date(value+' 00:00:00', "dd.MM.yy")+'</nobr>';        
+        if (value){
+            return '<nobr>'+$.format.date(value+' 00:00:00', "dd.MM.yy")+'</nobr>';        
+        }
+        
+        return '';
     }
     
     function pricecolFormatter(value, row){
