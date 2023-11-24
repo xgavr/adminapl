@@ -376,11 +376,11 @@ $legalContact = $client->getLegalContact();
                     <button class="btn btn-default btn-sm revise-modal-show" type="button" modal-url="/revise/edit-form?client=<?= $client->getId()?>&kind=<?= Revise::KIND_REVISE_CLIENT?>">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>                
+                    <button value="/revise/reset-client-balance/<?= $client->getId() ?>" class="btn btn-default btn-sm refresh-table-button"
+                            data-table="mutualtable" title="Обнулить долг">
+                        <span class="glyphicon" ></span>0
+                    </button>                         
                 </div>
-                <button value="/revise/reset-client-balance/<?= $client->getId() ?>" class="btn btn-default btn-sm refresh-table-button"
-                        data-table="mutualtable" title="Обнулить долг">
-                    <span class="glyphicon" ></span>0
-                </button>                         
             </div>
             <table id="mutualtable" 
                 data-toggle="table" 
