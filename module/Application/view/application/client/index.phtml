@@ -63,6 +63,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="aplId" data-formatter="aplFormatter" data-type="numeric" data-width="100" data-sortable="true">AplId</th>
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Имя</th>
                      <th data-field="balance" data-sortable="true" data-align="right" data-width="150" data-formatter="amountFormatter">Долг</th>
+                     <th data-field="balanceDate" data-sortable="true" data-align="center" data-width="80" data-formatter="dateFormatter">Дата долга</th>
                      <th data-field="pricecol" data-sortable="false" data-width="10" data-formatter="pricecolFormatter">Цены</th>
                      <th data-field="" data-width="5" data-formatter="activeFormatter" data-widtn="5"></th>
                  </tr>                
@@ -172,6 +173,10 @@ $this->pageBreadcrumbs()->setItems([
     function amountFormatter(value){
         return (Math.round(value*100)/100).toFixed(2);
     }    
+    
+    function dateFormatter(value, row){
+        return '<nobr>'+$.format.date(value+' 00:00:00', "dd.MM.yy")+'</nobr>';        
+    }
     
     function pricecolFormatter(value, row){
         var pricecols = <?= Encoder::encode(Client::getPricecolList())?>;

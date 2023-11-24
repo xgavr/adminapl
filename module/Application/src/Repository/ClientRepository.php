@@ -439,7 +439,7 @@ class ClientRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select("sum(r.amount) as total")
+        $queryBuilder->select("sum(r.amount) as total, max(r.dateOper) as balanceDate")
                 ->from(Retail::class, 'r')
                 ->join('r.contact', 'c')
                 ->where('c.client = :client')
@@ -451,7 +451,7 @@ class ClientRepository extends EntityRepository{
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
 
         $entityManager->getConnection()
-                ->update('client', ['balance' => round($result['total'], 2)], ['id' => $client->getId()]);
+                ->update('client', ['balance' => round($result['total'], 2), 'balance_date' => $result['balanceDate']], ['id' => $client->getId()]);
         return;
     }    
 }

@@ -85,6 +85,12 @@ class Client {
     protected $balance = 0;
 
     /**
+     * Дата последней операции
+     * @ORM\Column(name="balance_date")   
+     */
+    protected $balanceDate = null;
+
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\Contact", mappedBy="client")
     * @ORM\JoinColumn(name="id", referencedColumnName="client_id")
      */
@@ -205,6 +211,23 @@ class Client {
         return $this;
     }
     
+    public function getBalanceDate() {
+        return $this->balanceDate;
+    }
+
+    public function getFormatedBalanceDate() {
+        if ($this->balanceDate){
+            return date('d.m.Y', strtotime($this->balanceDate));
+        }
+        
+        return;
+    }
+
+    public function setBalanceDate($balanceDate) {
+        $this->balanceDate = $balanceDate;
+        return $this;
+    }
+        
     /**
      * Returns status.
      * @return int     

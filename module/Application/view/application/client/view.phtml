@@ -154,10 +154,10 @@ $legalContact = $client->getLegalContact();
                             <tr>
                                 <td>
                                     <div class="pull-left">
-                                        Долг                                    
+                                        АПЛ id                                    
                                     </div>    
                                     <div class="pull-right">
-                                        <strong><?= round($client->getBalance(), 2)?></strong>
+                                        <a href="https://autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank"><?= $client->getAplId()?></a>                                    
                                     </div>    
                                 </td>
                             </tr>
@@ -174,10 +174,20 @@ $legalContact = $client->getLegalContact();
                             <tr>
                                 <td>
                                     <div class="pull-left">
-                                        АПЛ id                                    
+                                        Долг                                    
                                     </div>    
                                     <div class="pull-right">
-                                        <a href="https://autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank"><?= $client->getAplId()?></a>                                    
+                                        <strong><?= round($client->getBalance(), 2)?></strong>
+                                    </div>    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="pull-left">
+                                        Дата долга                                    
+                                    </div>    
+                                    <div class="pull-right">
+                                        <strong><?= $client->getFormatedBalanceDate() ?></strong>
                                     </div>    
                                 </td>
                             </tr>
