@@ -380,8 +380,12 @@ class ReviseManager
                     'company' => $retail->getCompany()->getId(),
                     'kind' => Revise::KIND_REVISE_CLIENT,
                 ];
-
-                $revise = $this->addRevise($data);
+                
+                try{
+                    $revise = $this->addRevise($data);
+                } catch (\Doctrine\DBAL\Exception\NotNullConstraintViolationException $e){
+                    var_dump($data);
+                }    
 
                 return $revise;
             }    
