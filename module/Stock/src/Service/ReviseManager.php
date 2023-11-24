@@ -277,9 +277,12 @@ class ReviseManager
         
         $this->entityManager->persist($revise);
         $this->entityManager->flush($revise);
-        $this->entityManager->refresh($revise);
         
-        $this->repostRevise($revise);
+        usleep(100);
+        
+        if ($revise){
+            $this->repostRevise($revise);
+        }    
         
         return $revise;        
     }
