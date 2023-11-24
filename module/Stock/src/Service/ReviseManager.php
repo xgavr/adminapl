@@ -277,12 +277,8 @@ class ReviseManager
         
         $this->entityManager->persist($revise);
         $this->entityManager->flush($revise);
-        
-        usleep(100);
-        
-        if ($revise){
-            $this->repostRevise($revise);
-        }    
+
+        $this->repostRevise($revise);
         
         return $revise;        
     }
@@ -379,9 +375,9 @@ class ReviseManager
                     'comment' => 'Обнуление баланса по сроку давности',
                     'status' => Revise::STATUS_ACTIVE,
                     'amount' => -$client->getBalance(),
-                    'contact' => $client->getContact(),
-                    'office' => $retail->getOffice(),
-                    'company' => $retail->getCompany(),
+                    'contact' => $client->getContact()->getId(),
+                    'office' => $retail->getOffice()->getId(),
+                    'company' => $retail->getCompany()->getId(),
                     'kind' => Revise::KIND_REVISE_CLIENT,
                 ];
 
