@@ -317,7 +317,8 @@ class ReviseController extends AbstractActionController
     
     public function resetClientBalancesAction()
     {
-        $this->reviseManager->resetClientBalances();
+        $year = $this->params()->fromQuery('year');
+        $this->reviseManager->resetClientBalances($year);
         
         return new JsonModel(
            ['result' => 'ok']
