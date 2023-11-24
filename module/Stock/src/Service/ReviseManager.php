@@ -380,7 +380,7 @@ class ReviseManager
                     'company' => $retail->getCompany()->getId(),
                     'kind' => Revise::KIND_REVISE_CLIENT,
                 ];
-                sleep(1);
+
                 $revise = $this->addRevise($data);
 
                 return $revise;
@@ -396,11 +396,19 @@ class ReviseManager
      */
     public function resetClientBalances($year = 2014)
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(1800);
+        $startTime = time();
+        $finishTime = $startTime + 1740;
+
         $clients = $this->entityManager->getRepository(Client::class)
                 ->findClientsForReset($year);
         
         foreach ($clients as $client){
             $this->resetClientBalance($client);
+            if (time() >= $finishTime){
+                break;
+            }
         }
         
         return;
