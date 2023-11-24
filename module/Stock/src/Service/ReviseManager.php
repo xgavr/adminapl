@@ -383,12 +383,13 @@ class ReviseManager
                 
                 try{
                     $revise = $this->addRevise($data);
+                    return $revise;
                 } catch (\Doctrine\DBAL\Exception\NotNullConstraintViolationException $e){
-                    var_dump($client->getId(), $data);
+                    var_dump($client->getId());
                 }    
-
-                return $revise;
             }    
+            
+            return;
         }
         
         return;
