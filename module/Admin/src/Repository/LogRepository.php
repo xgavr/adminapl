@@ -137,7 +137,7 @@ class LogRepository extends EntityRepository{
                 if (!$short){
                     $goods = [];
                     foreach ($message['goods'] as $row){
-                        $goods[] = implode(';', ['<b>'.$row['rowNo'].'</b>', $row['good'], $row['quantity']]);
+                        $goods[] = implode(';', ['<b>'.$row['rowNo'].'</b>', $row['good'], $row['quantity'], $row['comment']]);
                     }   
                     $header[] = '<br/><small class="retired-muted">'.implode('; ', $goods).'</small>';
                 }    
