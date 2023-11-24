@@ -388,8 +388,6 @@ class ReviseManager
                     var_dump($client->getId());
                 }    
             }    
-            
-            return;
         }
         
         return;
