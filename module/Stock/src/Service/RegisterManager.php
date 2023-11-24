@@ -340,7 +340,8 @@ class RegisterManager
                     ->find($register->getDocId());
                 if ($order){
                     $flag = true;
-                    $this->orderManager->repostOrder($order);
+//                    $this->orderManager->repostOrder($order);
+                    $this->orderManager->updOrderTotal($order);
                     if ($order->getStatus() == Order::STATUS_SHIPPED){
                         $takeNo = $this->entityManager->getRepository(Bid::class)
                                 ->count(['order' => $order->getId(), 'take' => Bid::TAKE_NO]);
