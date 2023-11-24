@@ -134,6 +134,10 @@ $legalContact = $client->getLegalContact();
                                                 title="Пересчитать сумму долга">
                                             <span class="glyphicon glyphicon-rub" ></span>
                                         </button>                         
+                                        <button value="/revise/reset-client-balance/<?= $client->getId() ?>" class="btn btn-default btn-xs refresh-table-button"
+                                                title="Обнулить долг">
+                                            <span class="glyphicon" ></span>0
+                                        </button>                         
                                         <button value="/client/apl-union/<?= $client->getId()?>" class="btn btn-warning btn-xs refresh-table-button"
                                                 title="Объеденить по коду Апл">
                                             <span class="glyphicon glyphicon-refresh" ></span>

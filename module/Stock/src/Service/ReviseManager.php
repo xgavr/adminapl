@@ -16,6 +16,7 @@ use Stock\Entity\Movement;
 use Stock\Entity\Register;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Laminas\Json\Encoder;
+use Application\Entity\Client;
 
 /**
  * This service is responsible for adding/editing revise.
@@ -323,7 +324,7 @@ class ReviseManager
     }
     
     /**
-     * Ужаление Revise
+     * Удаление Revise
      * 
      * @param Revise $revise
      */
@@ -334,6 +335,73 @@ class ReviseManager
                 ->removeDocMutuals($revise->getLogKey());
         
         $this->entityManager->getConnection()->delete('revise', ['id' => $revise->getId()]);
+        
+        return;
+    }
+    
+    /**
+     * Последняя операция клиента
+     * @param Client $client
+     * @return Retail
+     */
+    private function lastClientRetail($client)
+    {
+        foreach ($client->getContacts() as $contact){
+            $retail = $this->entityManager->getRepository(Retail::class)
+                    ->findOneBy(['contact' => $contact->getId(), 'status' => Retail::STATUS_ACTIVE], 
+                            ['docStamp' => 'Desc']);
+            if ($retail){
+                return $retail;
+            }
+        }
+        
+        return;
+    }
+    
+    /**
+     *  Списание долга клиентов
+     * @param Client $client
+     * @return Revise $revise
+     */
+    public function resetClientBalance($client)
+    {
+        if ($client->getBalance()){
+            
+            $retail = $this->lastClientRetail($client);
+            if ($retail){
+                $data = [
+                    'docNo' => 'Nавто',
+                    'docDate' => date('Y-m-d'),
+                    'comment' => 'Обнуление баланса по сроку давности',
+                    'status' => Revise::STATUS_ACTIVE,
+                    'amount' => -$client->getBalance(),
+                    'contact' => $client->getContact(),
+                    'office' => $retail->getOffice(),
+                    'company' => $retail->getCompany(),
+                    'kind' => Revise::KIND_REVISE_CLIENT,
+                ];
+
+                $revise = $this->addRevise($data);
+
+                return $revise;
+            }    
+        }
+        
+        return;
+    }
+    
+    /**
+     * Обнуление старых долгов клиентов
+     * @param integer $year
+     */
+    public function resetClientBalances($year = 2014)
+    {
+        $clients = $this->entityManager->getRepository(Client::class)
+                ->findClientsForReset($year);
+        
+        foreach ($clients as $client){
+            $this->resetClientBalance($client);
+        }
         
         return;
     }

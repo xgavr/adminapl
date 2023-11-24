@@ -453,5 +453,26 @@ class ClientRepository extends EntityRepository{
         $entityManager->getConnection()
                 ->update('client', ['balance' => round($result['total'], 2), 'balance_date' => $result['balanceDate']], ['id' => $client->getId()]);
         return;
-    }    
+    }  
+    
+    /**
+     * Посиск клиентов для обнуления
+     * @param int $year
+     */
+    public function findClientsForReset($year = 2014)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+                ->from(Client::class, 'c')
+                ->where('c.balanceDate <= :year')
+                ->setParameter('year', $year)
+                ->andWhere('c.balance != 0')
+                ;
+
+        $result = $queryBuilder->getQuery()->getResult();
+
+        return $result;        
+    }
 }

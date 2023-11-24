@@ -297,4 +297,31 @@ class ReviseController extends AbstractActionController
         );           
     }
     
+    public function resetClientBalanceAction()
+    {
+        $clientId = $this->params()->fromRoute('id', -1);
+        $client = $this->entityManager->getRepository(Client::class)
+                ->find($clientId);        
+
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->reviseManager->resetClientBalance($client);
+        
+        return new JsonModel(
+           ['result' => 'ok-reload']
+        );           
+    }
+    
+    public function resetClientBalancesAction()
+    {
+        $this->reviseManager->resetClientBalances();
+        
+        return new JsonModel(
+           ['result' => 'ok']
+        );           
+    }
+    
 }
