@@ -384,7 +384,7 @@ class ReviseManager
                 try{
                     $revise = $this->addRevise($data);
                 } catch (\Doctrine\DBAL\Exception\NotNullConstraintViolationException $e){
-                    var_dump($data);
+                    var_dump($client->getId(), $data);
                 }    
 
                 return $revise;
