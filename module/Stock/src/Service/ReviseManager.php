@@ -277,6 +277,7 @@ class ReviseManager
         
         $this->entityManager->persist($revise);
         $this->entityManager->flush($revise);
+        $this->entityManager->refresh($revise);
         
         $this->repostRevise($revise);
         
