@@ -380,7 +380,7 @@ class ReviseManager
                     'company' => $retail->getCompany()->getId(),
                     'kind' => Revise::KIND_REVISE_CLIENT,
                 ];
-
+                sleep(1);
                 $revise = $this->addRevise($data);
 
                 return $revise;
