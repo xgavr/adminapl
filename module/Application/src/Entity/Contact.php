@@ -390,7 +390,9 @@ class Contact {
     public function setClient($client) 
     {
         $this->client = $client;
-        $client->addContact($this);
+        if ($client){
+            $client->addContact($this);
+        }    
     }     
     
     /*

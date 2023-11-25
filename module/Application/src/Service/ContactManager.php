@@ -621,6 +621,7 @@ class ContactManager
                 $oldContact->setClient(null);
             }
             if ($contact->getClient()){
+                var_dump($contact->getClient()->getId(), $oldContact->getClient()->getId());
                 if ($contact->getClient()->getId() == $oldContact->getClient()->getId()){
                     $oldContact->setClient(null);
                 }
