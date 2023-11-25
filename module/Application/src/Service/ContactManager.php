@@ -609,7 +609,7 @@ class ContactManager
                 $oldContact->setUser(null);
             }
             if ($contact->getUser()){
-                if ($contact->getUser()->getId() == $oldContact->getUser()->getId()){
+                if ($contact->getUser()->getAplId() == $oldContact->getUser()->getAplId()){
                     $oldContact->setUser(null);
                 }
             }
@@ -621,8 +621,7 @@ class ContactManager
                 $oldContact->setClient(null);
             }
             if ($contact->getClient()){
-                var_dump($contact->getClient()->getId(), $oldContact->getClient()->getId());
-                if ($contact->getClient()->getId() == $oldContact->getClient()->getId()){
+                if ($contact->getClient()->getAplId() == $oldContact->getClient()->getAplId()){
                     $oldContact->setClient(null);
                 }
             }
@@ -634,7 +633,7 @@ class ContactManager
                 $oldContact->setSupplier(null);
             }
             if ($contact->getClient()){
-                if ($contact->getSupplier()->getId() == $oldContact->getSupplier()->getId()){
+                if ($contact->getSupplier()->getAplId() == $oldContact->getSupplier()->getAplId()){
                     $oldContact->setSupplier(null);
                 }
             }
@@ -646,7 +645,7 @@ class ContactManager
                 $oldContact->setOffice(null);
             }
             if ($contact->getOffice()){
-                if ($contact->getOffice()->getId() == $oldContact->getOffice()->getId()){
+                if ($contact->getOffice()->getAplId() == $oldContact->getOffice()->getAplId()){
                     $oldContact->setOffice(null);
                 }
             }
