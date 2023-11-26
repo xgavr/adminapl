@@ -1651,7 +1651,7 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
-     * ОТМЕНЕНО
+     * 
      * Выгрузка клентов из апл
      * 
      * @return JsonModel
@@ -1662,7 +1662,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getAplExchangeSettings();
 
         if ($settings['order'] == 1){
-            //$this->aplService->uploadUsers();
+            $this->aplService->uploadUsers();
         }    
         
         return new JsonModel([
