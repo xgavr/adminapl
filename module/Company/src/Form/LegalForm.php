@@ -105,12 +105,12 @@ class LegalForm extends Form
         
         $this->add([           
             'type'  => 'text',
-            'name' => 'okato',
+            'name' => 'oktmo',
             'attributes' => [
-                'id' => 'okpo'
+                'id' => 'oktmo'
             ],
             'options' => [
-                'label' => 'ОКАТО',
+                'label' => 'ОКТМО',
             ],
         ]);
         
@@ -334,7 +334,7 @@ class LegalForm extends Form
             ]);                          
 
         $inputFilter->add([
-                'name'     => 'okato',
+                'name'     => 'oktmo',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],                    

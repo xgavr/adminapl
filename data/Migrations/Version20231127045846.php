@@ -15,6 +15,8 @@ final class Version20231127045846 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('legal');
         $table->addColumn('okato', 'string', ['notnull' => false, 'length' => 12, 'comment' => 'ОКАТО']);
+        $table->addColumn('oktmo', 'string', ['notnull' => false, 'length' => 12, 'comment' => 'ОКТМО']);
+        
     }
 
     public function down(Schema $schema) : void
@@ -22,5 +24,6 @@ final class Version20231127045846 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('legal');
         $table->dropColumn('okato');
+        $table->dropColumn('oktmo');
     }
 }

@@ -41,6 +41,7 @@ class Revise {
     
     const KIND_REVISE_SUPPLIER       = 1; // Корректировка поставщика.
     const KIND_REVISE_CLIENT         = 2; // Корректировка клиента.
+    const KIND_REVISE_SERVICE         = 3; // Поступоение услуг.
 
     /**
      * @ORM\Id
@@ -240,6 +241,7 @@ class Revise {
         return [
             self::KIND_REVISE_SUPPLIER => 'Корректировка поставщика',
             self::KIND_REVISE_CLIENT => 'Корректировка клиента',
+            self::KIND_REVISE_SERVICE => 'Поступление услуг',
         ];
     }    
     

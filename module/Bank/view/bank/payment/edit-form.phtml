@@ -433,9 +433,10 @@ $form->prepare();
         $('select[name="supplier"]').empty();
         $('select[name="supplier"]').append('<option>нет</option>');
         $.getJSON( '/payment/account-available-suppliers/'+$('select[name="bankAccount"]').val(), function( data ) {
-            $.each( data, function( key, value ) {
+            $.each( data.suppliers, function( key, value ) {
                 $('select[name="supplier"]').append('<option value="' + value.id + '">' + value.name + '</option>');
             });
+            $('input[name="taxInfoOkato"]').val(data.company.oktmo);            
         });            
     }
     

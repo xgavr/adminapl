@@ -22,11 +22,7 @@ $form->get('okpo')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('okato')->setAttributes([
-    'class'=>'form-control', 
-    ]);
-
-$form->get('ogrn')->setAttributes([
+$form->get('oktmo')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -132,9 +128,9 @@ $form->prepare();
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <?= $this->formLabel($form->get('okato')); ?>
-                <?= $this->formElement($form->get('okato')); ?>
-                <?= $this->formElementErrors($form->get('okato')); ?>                  
+                <?= $this->formLabel($form->get('oktmo')); ?>
+                <?= $this->formElement($form->get('oktmo')); ?>
+                <?= $this->formElementErrors($form->get('oktmo')); ?>                  
             </div>
         </div>
     </div>    
@@ -263,6 +259,7 @@ $form->prepare();
             $('#kpp').val(row.data.kpp);
             $('#ogrn').val(row.data.ogrn);
             $('#okpo').val(row.data.okpo);
+            $('#oktmo').val(row.data.oktmo);
             $('#address').val(row.data.address.data.source);
             if (row.data.management){
                 $('#head').val(row.data.management.name);

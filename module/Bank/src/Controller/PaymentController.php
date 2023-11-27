@@ -160,7 +160,7 @@ class PaymentController extends AbstractActionController
                 $data['bankAccount'] = $bankAccount;
                 
                 if (empty($data['taxInfoOkato'])){
-                    $data['taxInfoOkato'] = $bankAccount->getLegal()->getOkato();
+                    $data['taxInfoOkato'] = $bankAccount->getLegal()->getOktmo();
                 }
                 
                 if (is_numeric($data['supplier'])){
@@ -206,17 +206,21 @@ class PaymentController extends AbstractActionController
     public function accountAvailableSuppliersAction()
     {
         $bankAccountId = $this->params()->fromRoute('id', -1);
-        $data = [];
+        $data = [
+            'company' => [],
+            'suppliers' => [],
+        ];
         if ($bankAccountId > 0){
             $bankAccount = $this->entityManager->getRepository(BankAccount::class)
                     ->find($bankAccountId);
             if ($bankAccount){
+                $data['company'] = $bankAccount->getLegal()->toArray();
                 $supplierAccounts = $this->entityManager->getRepository(Payment::class)
                         ->supplierAccounts($bankAccount->getLegal());
                 foreach ($supplierAccounts as $supplierAccount){
                     $supplier = $supplierAccount->getLegal()->getSupplier();
                     if ($supplier){
-                        $data[$supplier->getId()] = ['id' => $supplier->getId(), 'name' => $supplier->getName()];
+                        $data['suppliers'][$supplier->getId()] = ['id' => $supplier->getId(), 'name' => $supplier->getName()];
                     }    
                 }
             }

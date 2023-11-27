@@ -31,7 +31,7 @@
                 <div class="panel-body">
                     <div class="pull-left <?= ($legal->getStatus() == Legal::STATUS_RETIRED) ? 'retired':''?>">
                         <b><?= $legal->getName() ?></b><br/>
-                        ИНН/КПП: <?= $legal->getInnKpp()?> <?= $legal->getOgrnPresent() ?> <?= $legal->getOkpoPresent() ?><br/>
+                        ИНН/КПП: <?= $legal->getInnKpp()?> <?= $legal->getOgrnPresent() ?> <?= $legal->getOkpoPresent() ?> <?= $legal->getOktmoPresent() ?><br/>
                         Местонахождение: <?= $legal->getAddress() ?><br/>
                         Руководитель: <?= $legal->getHead() ?> <?= $legal->getChiefAccountPresent() ?><br/>
                         Дата начала деятельности: <?= date('d.m.Y', strtotime($legal->getDateStart())); ?><br/>
