@@ -53,7 +53,7 @@ class LegalManager
      */
     public function updateLegal($legal, $data)
     {                
-//        var_dump($data);
+        var_dump($data);
         $inn = (empty($data['inn'])) ? null:$data['inn']; 
         $kpp = (empty($data['kpp'])) ? null:$data['kpp']; 
         $name = (empty($data['name'])) ? null:$data['name']; 
