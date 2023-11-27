@@ -159,6 +159,10 @@ class PaymentController extends AbstractActionController
                         ->find($data['bankAccount']);
                 $data['bankAccount'] = $bankAccount;
                 
+                if (empty($data['taxInfoOkato'])){
+                    $data['taxInfoOkato'] = $bankAccount->getLegal()->getOkato();
+                }
+                
                 if (is_numeric($data['supplier'])){
                     $supplier = $this->entityManager->getRepository(Supplier::class)
                             ->find($data['supplier']);

@@ -22,6 +22,10 @@ $form->get('okpo')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('okato')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('ogrn')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -102,11 +106,6 @@ $form->prepare();
                 </div>    
                 <?= $this->formElementErrors($form->get('inn')); ?>                  
             </div>
-            <div class="form-group">
-                <?= $this->formLabel($form->get('ogrn')); ?>
-                <?= $this->formElement($form->get('ogrn')); ?>
-                <?= $this->formElementErrors($form->get('ogrn')); ?>                  
-            </div>
         </div>                
         <div class="col-md-6">
             <div class="form-group">
@@ -114,10 +113,28 @@ $form->prepare();
                 <?= $this->formElement($form->get('kpp')); ?>
                 <?= $this->formElementErrors($form->get('kpp')); ?>                  
             </div>
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('ogrn')); ?>
+                <?= $this->formElement($form->get('ogrn')); ?>
+                <?= $this->formElementErrors($form->get('ogrn')); ?>                  
+            </div>
+        </div>
+        <div class="col-md-4">
             <div class="form-group">
                 <?= $this->formLabel($form->get('okpo')); ?>
                 <?= $this->formElement($form->get('okpo')); ?>
                 <?= $this->formElementErrors($form->get('okpo')); ?>                  
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('okato')); ?>
+                <?= $this->formElement($form->get('okato')); ?>
+                <?= $this->formElementErrors($form->get('okato')); ?>                  
             </div>
         </div>
     </div>    

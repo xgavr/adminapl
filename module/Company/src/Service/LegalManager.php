@@ -63,6 +63,7 @@ class LegalManager
         $legal->setKpp($kpp);            
         $legal->setOgrn((empty($data['ogrn'])) ? null:$data['ogrn']);            
         $legal->setOkpo((empty($data['okpo'])) ? null:$data['okpo']);            
+        $legal->setOkato((empty($data['okato'])) ? null:$data['okato']);            
         $legal->setHead((empty($data['head'])) ? null:$data['head']);            
         $legal->setAddress((empty($data['address'])) ? null:$data['address']); 
         $legal->setInfo((empty($data['info'])) ? null:$data['info']);            
@@ -139,6 +140,7 @@ class LegalManager
             $legal->setKpp($kpp);            
             $legal->setOgrn((empty($data['ogrn'])) ? null:$data['ogrn']);            
             $legal->setOkpo((empty($data['okpo'])) ? null:$data['okpo']);            
+            $legal->setOkato((empty($data['okato'])) ? null:$data['okato']);            
             $legal->setHead((empty($data['head'])) ? null:$data['head']);            
             $legal->setChiefAccount((empty($data['chiefAccount'])) ? null:$data['chiefAccount']);            
             $legal->setInfo((empty($data['info'])) ? null:$data['info']);            

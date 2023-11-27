@@ -395,6 +395,7 @@ class LegalController extends AbstractActionController
                         'kpp' => $legal->getKpp(),  
                         'ogrn' => $legal->getOgrn(),  
                         'okpo' => $legal->getOkpo(),  
+                        'okato' => $legal->getOkato(),  
                         'head' => $legal->getHead(),  
                         'chiefAccount' => $legal->getChiefAccount(),  
                         'info' => $legal->getInfo(),  

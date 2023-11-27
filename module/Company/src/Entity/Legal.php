@@ -59,6 +59,11 @@ class Legal {
     protected $okpo;
 
     /**
+     * @ORM\Column(name="okato")   
+     */
+    protected $okato;
+
+    /**
      * @ORM\Column(name="head")   
      */
     protected $head;
@@ -251,7 +256,16 @@ class Legal {
         $this->okpo = $okpo;
     }     
     
-    public function getHead() 
+    public function getOkato() {
+        return $this->okato;
+    }
+
+    public function setOkato($okato) {
+        $this->okato = $okato;
+        return $this;
+    }
+
+        public function getHead() 
     {
         return $this->head;
     }
@@ -910,6 +924,7 @@ class Legal {
             'kpp' => $this->getKpp(),
             'ogrn' => $this->getOgrn(),
             'okpo' => $this->getOkpo(),
+            'okato' => $this->getOkato(),
             'name' => $this->getName(),
             'id' => $this->getId(),
         ];
