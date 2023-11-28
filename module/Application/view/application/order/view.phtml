@@ -187,7 +187,8 @@ $tag = md5(time());
                 num: row.num,
                 price: row.price,
                 oem: row.oem,
-                baseKey: row.baseKey
+                baseKey: row.baseKey,
+                rowNo: row.rowNo
             };
             result.push(newRow);
         });   
@@ -397,7 +398,7 @@ $tag = md5(time());
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
         btn += ' value="'+row.id+'">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
     }    
