@@ -16,6 +16,7 @@ use Stock\Entity\PtuGood;
 use Application\Entity\Goods;
 use Stock\Form\PtuForm;
 use Stock\Form\PtuGoodForm;
+use Stock\Form\PtuCostForm;
 use Company\Entity\Office;
 use Stock\Entity\Unit;
 use Stock\Entity\Ntd;
@@ -23,6 +24,7 @@ use Company\Entity\Country;
 use Application\Entity\Supplier;
 use Company\Entity\Legal;
 use Company\Entity\Contract;
+use Company\Entity\Cost;
 
 class PtuController extends AbstractActionController
 {
@@ -130,6 +132,26 @@ class PtuController extends AbstractActionController
         
         return new JsonModel($result);          
     }        
+
+    public function costContentAction()
+    {
+        	        
+        $ptuId = $this->params()->fromRoute('id', -1);
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        $query = $this->entityManager->getRepository(Ptu::class)
+                        ->findPtuCosts($ptuId, ['q' => $q, 'sort' => $sort, 'order' => $order]);
+        
+        $total = count($query->getResult(2));
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel($result);          
+    }        
     
     public function fillContentAction()
     {
@@ -233,6 +255,7 @@ class PtuController extends AbstractActionController
                 unset($data['company']);
 //                unset($data['csrf']);
                 $ptuGood = empty($data['ptuGood']) ? []:$data['ptuGood'];
+                $ptuCost = empty($data['ptuCost']) ? []:$data['ptuCost'];
                 unset($data['ptuGood']);
                 $data['status_ex'] = Ptu::STATUS_EX_NEW;
                 $data['contract'] = $contract;
@@ -250,7 +273,7 @@ class PtuController extends AbstractActionController
                 }    
                 
 //                var_dump($ptuGood); exit;
-                $this->ptuManager->updatePtuGoods($ptu, $ptuGood);
+                $this->ptuManager->updatePtuGoods($ptu, $ptuGood, $ptuCost);
                 
 //                $this->ptuManager->repostPtu($ptu);
                 
@@ -353,6 +376,69 @@ class PtuController extends AbstractActionController
             'form' => $form,
             'rowNo' => $rowNo,
             'good' => $good,
+        ]);        
+    }
+    
+    public function costEditFormAction()
+    {        
+        $params = $this->params()->fromQuery();
+//        var_dump($params); exit;
+        $cost = $rowNo = $result = null;        
+        if (isset($params['cost'])){
+            $cost = $this->entityManager->getRepository(Cost::class)
+                    ->find($params['cost']['id']);            
+        }
+        if (isset($params['rowNo'])){
+            $rowNo = $params['rowNo'];
+        }
+        
+        $form = new PtuCostForm($this->entityManager, $cost);
+        
+        $costList = ['--выберете услугу--'];
+        $costs = $this->entityManager->getRepository(Cost::class)
+                ->findBy([]);
+        foreach ($costs as $row){
+            $costList[$row->getId()] = $row->getName();
+        }
+        $form->get('cost')->setValueOptions($costList);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+            if (isset($data['cost'])){
+                $cost = $this->entityManager->getRepository(Cost::class)
+                        ->find($data['cost']);            
+            }
+
+            if ($form->isValid()) {
+                $result = 'ok';
+                return new JsonModel([
+                    'result' => $result,
+                    'cost' => [
+                        'id' => $cost->getId(),
+                        'name' => $cost->getName(),
+                    ],
+                ]);        
+            }
+        } else {
+            if ($cost){
+                $data = [
+                    'cost' => $cost->getId(),
+                    'quantity' => $params['quantity'],
+                    'amount' => $params['amount'],
+                    'price' => $params['amount']/$params['quantity'],
+                ];
+                $form->setData($data);
+            }    
+        }        
+
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'rowNo' => $rowNo,
+            'cost' => $cost,
         ]);        
     }
     

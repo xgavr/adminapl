@@ -130,54 +130,112 @@ if ($ptu){
         <div class="col-xs-4 text-right">
         </div>    
     </div>        
-    <div class="row">
-        <div class="col-xs-12">
-            <div id="ptugoodtoolbar">
-                <div class="form-inline" role="form">
-                    <button type="button" class="btn btn-default ptu-good-modal-show" modal-url="/ptu/good-edit-form">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    </button>
-                    <button type="button" class="btn btn-default" onclick="ptuFill()" id="fillPtu" disabled>
-                        <span aria-hidden="true">Заполнить из заказов</span>
-                    </button>
-                </div>
+    <div class="col-md-12">
+        <ul class="nav nav-tabs" id="featureTab" role="tablist">
+            <li role="presentation"><a href="#ptugoods" role="tab" id="good-tab" data-toggle="tab" aria-controls="ptugoods" aria-expanded="true">Товары <span id="goodBadge" class="badge">0</span></a></li>
+            <li role="presentation"><a href="#ptucosts" role="tab" id="cost-tab" data-toggle="tab" aria-controls="ptucosts" aria-expanded="true">Услуги <span id="costBadge" class="badge">0</span></a></li>
+        </ul>        
+    </div>
+    <div class="tab-content" id="featureTabContent">
+        <div class="tab-pane fade" role="tabpanel" id="ptugoods" aria-labelledby="good-tab">
+            <div class="clearfix"></div>
+            <div class="panel panel-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="ptugoodtoolbar">
+                            <div class="form-inline" role="form">
+                                <button type="button" class="btn btn-default ptu-good-modal-show" modal-url="/ptu/good-edit-form">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-default" onclick="ptuFill()" id="fillPtu" disabled>
+                                    <span aria-hidden="true">Заполнить из заказов</span>
+                                </button>
+                            </div>
+                        </div>
+                        <table id="ptugoodtable" 
+                            data-toggle="ptugoodtable" 
+                            data-url="/ptu/good-content/<?= ($ptu) ? $ptu->getId():"" ?>"
+                            data-cookie-id-table="ptugoodSaveId"
+                            data-cookie-expire="1m"
+                            data-side-pagination="client"
+                            data-pagination="true"
+                            data-page-size = "5"
+                            data-page-list="[5, 10, 20, 50]"
+                            data-toolbar="#ptugoodtoolbar"
+                            data-show-refresh="true"
+                            data-show-toggle="false"
+                            data-query-params="ptugoodQueryParams"
+                            data-response-handler="ptugoodResponseHandler"
+                            data-unique-id = "rowNo"
+                            data-classes = "table table-bordered table-hover table-condensed"
+                            data-show-footer="true"
+                            >
+                            <thead>
+                                <tr>
+                                     <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                                     <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
+                                     <th data-field="good.producer.name" data-type="numeric">Производитель</th>
+                                     <th data-field="good.name" data-type="numeric">Наименование</th>
+                                     <th data-field='amount' data-footer-formatter="totalFooterFormatter" data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                                     <th data-field='quantity' data-align="right" data-footer-formatter="footerFormatter">Количество</th>
+                                     <th data-field='unit.code' data-visible="false">ЕИ</th>
+                                     <th data-field='unit.name' data-visible="true" data-width="10">ЕИ</th>
+                                     <th data-field='amount' data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Сумма</th>
+                                     <th data-field='country.code' data-visible="false">Страна</th>
+                                     <th data-field='country.name' data-visible="false">Страна</th>
+                                     <th data-field='ntd.ntd' data-visible="false">НТД</th>
+                                     <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="5"></th>
+                                     <th data-field="rowNo" data-formatter="pgRemoveFormatter" data-width="5"></th>
+                                 </tr>                
+                            </thead>
+                        </table>
+                    </div>
+                </div>    
             </div>
-            <table id="ptugoodtable" 
-                data-toggle="ptugoodtable" 
-                data-url="/ptu/good-content/<?= ($ptu) ? $ptu->getId():"" ?>"
-                data-cookie-id-table="ptugoodSaveId"
-                data-cookie-expire="1m"
-                data-side-pagination="client"
-                data-pagination="true"
-                data-page-size = "5"
-                data-page-list="[5, 10, 20, 50]"
-                data-toolbar="#ptugoodtoolbar"
-                data-show-refresh="true"
-                data-show-toggle="false"
-                data-query-params="ptugoodQueryParams"
-                data-response-handler="ptugoodResponseHandler"
-                data-unique-id = "rowNo"
-                data-classes = "table table-bordered table-hover table-condensed"
-                >
-                <thead>
-                    <tr>
-                         <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                         <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
-                         <th data-field="good.producer.name" data-type="numeric">Производитель</th>
-                         <th data-field="good.name" data-type="numeric">Наименование</th>
-                         <th data-field='amount' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
-                         <th data-field='quantity' data-align="right">Количество</th>
-                         <th data-field='unit.code' data-visible="false">ЕИ</th>
-                         <th data-field='unit.name' data-visible="true" data-width="10">ЕИ</th>
-                         <th data-field='amount' data-align="right" data-formatter="amountFormatter">Сумма</th>
-                         <th data-field='country.code' data-visible="false">Страна</th>
-                         <th data-field='country.name' data-visible="false">Страна</th>
-                         <th data-field='ntd.ntd' data-visible="false">НТД</th>
-                         <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="5"></th>
-                         <th data-field="rowNo" data-formatter="pgRemoveFormatter" data-width="5"></th>
-                     </tr>                
-                </thead>
-            </table>
+        </div>
+        <div class="tab-pane fade" role="tabpanel" id="ptucosts" aria-labelledby="cost-tab">
+            <div class="clearfix"></div>
+            <div class="panel panel-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="ptucosttoolbar">
+                            <div class="form-inline" role="form">
+                                <button type="button" class="btn btn-default ptu-cost-modal-show" modal-url="/ptu/cost-edit-form">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <table id="ptucosttable" 
+                            data-toggle="ptucosttable" 
+                            data-url="/ptu/cost-content/<?= ($ptu) ? $ptu->getId():"" ?>"
+                            data-side-pagination="client"
+                            data-pagination="true"
+                            data-page-size = "5"
+                            data-page-list="[5, 10, 20, 50]"
+                            data-toolbar="#ptucosttoolbar"
+                            data-show-refresh="true"
+                            data-show-toggle="false"
+                            data-query-params="ptucostQueryParams"
+                            data-response-handler="ptucostResponseHandler"
+                            data-unique-id = "rowNo"
+                            data-classes = "table table-bordered table-hover table-condensed"
+                            data-show-footer="true"
+                            >
+                            <thead>
+                                <tr>
+                                     <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                                     <th data-field="cost.name" data-type="numeric">Наименование</th>
+                                     <th data-field='amount' data-footer-formatter="totalFooterFormatter" data-formatter="pgPriceFormatter" data-align="right">Цена</th>
+                                     <th data-field='quantity' data-align="right" data-footer-formatter="footerFormatter">Количество</th>
+                                     <th data-field='amount' data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Сумма</th>
+                                     <th data-field="rowNo" data-formatter="pcActiveFormatter" data-width="5"></th>
+                                     <th data-field="rowNo" data-formatter="pcRemoveFormatter" data-width="5"></th>
+                                 </tr>                
+                            </thead>
+                        </table>
+                    </div>
+                </div>    
+            </div>
         </div>
     </div>    
     <div class="row">
@@ -202,6 +260,7 @@ if ($ptu){
     function submitForm(){
         var data = serializeForm('#ptu-form');
         data.ptuGood = getFormatedPtuGood();
+        data.ptuCost = getFormatedPtuCost();
         $.ajax({
             type: 'POST',
             url: '/ptu/edit-form/<?= ($ptu) ? $ptu->getId():"" ?>',
@@ -241,11 +300,32 @@ if ($ptu){
         });   
         return result;
     }
+
+    function getFormatedPtuCost(){
+        var data = $('#ptucosttable').bootstrapTable('getData');
+        var result = [];
+        $.each( data, function( index, row ) {
+            var newRow = {
+                cost_id: row.cost.id,
+                quantity: row.quantity,
+                amount: row.amount
+            };
+            result.push(newRow);
+        });   
+        return result;
+    }
     
     function ptuUpdateTotal(){
-        var data = $('#ptugoodtable').bootstrapTable('getData');
+        var goods = $('#ptugoodtable').bootstrapTable('getData');
+        var costs = $('#ptucosttable').bootstrapTable('getData');        
+        $('#goodBadge').html(goods.length);
+        $('#costBadge').html(costs.length);
         var amount = 0; var quantity = 0;
-        $.each(data, function( index, value ) {
+        $.each(goods, function( index, value ) {
+            amount += Math.round(value.amount*100)/100;
+            quantity += Math.round(value.quantity*100)/100; 
+        });
+        $.each(costs, function( index, value ) {
             amount += Math.round(value.amount*100)/100;
             quantity += Math.round(value.quantity*100)/100; 
         });
@@ -254,8 +334,8 @@ if ($ptu){
     }
     
     //удаление строки из таблицы
-    function removeTableRowByUniqueId(index){
-        $('#ptugoodtable').bootstrapTable('removeByUniqueId', index);
+    function removeTableRowByUniqueId(index, table){
+        $('#'+table).bootstrapTable('removeByUniqueId', index);
         ptuUpdateTotal();
     }
         
@@ -273,16 +353,16 @@ if ($ptu){
                         code: row.good.code,
                         name: row.good.name,
                         producer: {name: row.good.producer.name}
-                    }
+                    };
                     var unit = {
                         name: ''
-                    }
+                    };
                     var country = {
                         name: ''
-                    }
+                    };
                     var ntd = {
                         ntd: ''
-                    }
+                    };
                     var row = {
                         good: good,
                         amount: row.good.meanPrice*row.quantity,
@@ -351,8 +431,15 @@ if ($ptu){
     });
     
     $( document ).ready(function() {
-        
+        $('.nav-tabs a:first').tab('show');
+
         $('#ptugoodtable').bootstrapTable({
+            onLoadSuccess: function(res){
+                ptuUpdateTotal();
+            }            
+        }); 
+
+        $('#ptucosttable').bootstrapTable({
             onLoadSuccess: function(res){
                 ptuUpdateTotal();
             }            
@@ -397,6 +484,57 @@ if ($ptu){
         return params;
     }
     
+    function ptucostQueryParams(params) {
+        $('#ptucosttoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#ptucosttoolbar .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#ptucosttoolbar li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function goodFormatter(value, row){
+        var url = '/goods/view/'+row.good.id;
+        btn = '<nobr><a';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-link btn-xs" target="_blank">';
+        btn += '<span class="glyphicon glyphicon-link"></span>';
+        btn += '</a>'+value+'</nobr>';
+        return btn;
+    }    
+    
+    function pgPriceFormatter(value, row){
+        return (Math.round(value*100/row.quantity)/100).toFixed(2);
+    }        
+    
+    function amountFormatter(value){
+        return (Math.round(value*100)/100).toFixed(2);
+    }    
+    
+    function totalFooterFormatter() {
+        return 'Итого:';
+    }
+    
+    function footerFormatter(data){
+        var field = this.field;
+        var precission = 2;
+        if (field === 'quantity'){
+            precission = 0;
+        }
+        return (data.map(function (row) {
+            return +row[field];
+        }).reduce(function (sum, i) {
+            return (Math.round((sum + i)*100)/100);
+        }, 0)).toFixed(precission);
+    }    
+    
     function pgActiveFormatter(value, row){
         var url = '/ptu/good-edit-form/';
         btn = '<button';
@@ -411,37 +549,49 @@ if ($ptu){
         return btn;
     }    
     
-    function goodFormatter(value, row){
-        var url = '/goods/view/'+row.good.id;
-        btn = '<nobr><a';
-        btn += ' href="'+url+'"';
-        btn += ' class="btn btn-link btn-xs" target="_blank">';
-        btn += '<span class="glyphicon glyphicon-link"></span>';
-        btn += '</a>'+value+'</nobr>';
-        return btn;
-    }    
-    
     function pgRemoveFormatter(value, row){
         btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs table-row-remove"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
-        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
+        btn += ' onclick="removeTableRowByUniqueId('+value+', \'ptugoodtable\')">';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+    
+    function pcActiveFormatter(value, row){
+        var url = '/ptu/cost-edit-form/';
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs ptu-cost-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' unique-id="'+value+'"';
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        return btn;
+    }    
+    
+    function pcRemoveFormatter(value, row){
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs table-row-remove"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="removeTableRowByUniqueId('+value+', \'ptucosttable\')">';
         btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
     }    
 
-    function pgPriceFormatter(value, row){
-        return (Math.round(value*100/row.quantity)/100).toFixed(2);
-    }        
-    
-    function amountFormatter(value){
-        return (Math.round(value*100)/100).toFixed(2);
-    }    
-    
     function ptugoodResponseHandler(res) {
+        return res;
+    }     
+
+    function ptucostResponseHandler(res) {
         return res;
     }     
 </script>

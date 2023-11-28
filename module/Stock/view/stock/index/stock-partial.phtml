@@ -99,6 +99,20 @@
                 zIndex: 9999
             });
         });  
+
+        $(document).on('click', '.ptu-cost-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            var uniqueId = $(this).attr('unique-id');
+            if (uniqueId){
+                var row = $('#ptucosttable').bootstrapTable('getRowByUniqueId', uniqueId);
+                url = url+'?'+$.param(row);
+            }    
+            showFormDialog({
+                id: 'ptuCostModal',
+                url: url,
+                zIndex: 9999
+            });
+        });  
         
         $(document).on('click', '.bill-setting-modal-show', function (e) {
             var url = $(this).attr('modal-url');

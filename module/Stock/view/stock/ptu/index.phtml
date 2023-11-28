@@ -104,12 +104,9 @@
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
-    var $table = $('#table').bootstrapTable({
-        onLoadSuccess: function(){
-            tableRowClick();        
-        }
-    }),
+    var $table = $('#table'),
         $ok = $('#ok');
+
     var curentRowIndex = -1;
     
     function setCurrentIndex(index){
@@ -124,6 +121,12 @@
         $table.bootstrapTable('selectPage', 1);
 //        $stable.bootstrapTable('refresh');
     }
+    
+    $(function () {
+        $table.on('load-success.bs.table', function (e, res) {
+            tableRowClick();        
+        });        
+    });
 
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {

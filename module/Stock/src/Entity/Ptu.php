@@ -140,6 +140,12 @@ class Ptu {
     private $ptuGoods;
     
     /**
+     * @ORM\OneToMany(targetEntity="Stock\Entity\PtuGood", mappedBy="ptu") 
+     * @ORM\JoinColumn(name="id", referencedColumnName="ptu_id")
+     */
+    private $ptuCosts;
+    
+    /**
      * @ORM\OneToMany(targetEntity="Stock\Entity\Vtp", mappedBy="ptu") 
      * @ORM\JoinColumn(name="id", referencedColumnName="ptu_id")
      */
@@ -159,6 +165,7 @@ class Ptu {
     {
        $this->vtp = new ArrayCollection();
        $this->ptuGoods = new ArrayCollection();
+       $this->ptuCosts = new ArrayCollection();
     }
     
     
@@ -650,6 +657,19 @@ class Ptu {
     }
     
     /**
+     * @return array 
+     */
+    public function getPtuCosts()
+    {
+        return $this->ptuCosts;
+    }
+
+    public function addPtuCosts($ptuCost)
+    {
+        $this->ptuCosts[] = $ptuCost;
+    }
+    
+    /**
      * 
      * @return array
      */
@@ -701,6 +721,7 @@ class Ptu {
             'statusDoc' => $this->getStatusDoc(),
             'statusEx' => $this->getStatusEx(),
             'goods' => [],
+            'costs' => [],
         ];
     }
 }

@@ -17,6 +17,7 @@ use Application\Filter\ArticleCode;
 use Application\Entity\SupplierOrder;
 use Application\Entity\Order;
 use Laminas\Filter\Digits;
+use Stock\Entity\PtuCost;
 
 /**
  * Description of PtuRepository
@@ -34,9 +35,12 @@ class PtuRepository extends EntityRepository{
      */
     public function ptuAmountTotal($ptu)
     {
+        $result = 0;
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
+        $qbCost = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('sum(pg.amount) as total')
                 ->from(PtuGood::class, 'pg')
@@ -45,13 +49,26 @@ class PtuRepository extends EntityRepository{
                 ->setMaxResults(1)
                 ;
         
-        $result = $queryBuilder->getQuery()->getOneOrNullResult();
-        
-        if (!empty($result['total'])){
-            return $result['total'];
+        $goodTotal = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        if (!empty($goodTotal['total'])){
+            $result += $goodTotal['total'];
         }
         
-        return 0;
+        $qbCost->select('sum(pc.amount) as total')
+                ->from(PtuCost::class, 'pc')
+                ->where('pc.ptu = ?1')
+                ->setParameter('1', $ptu->getId())
+                ->setMaxResults(1)
+                ;
+        
+        $costTotal = $qbCost->getQuery()->getOneOrNullResult();
+        
+        if (!empty($costTotal['total'])){
+            $result += $costTotal['total'];
+        }
+        
+        return $result;
     }
 
     /**
@@ -282,6 +299,34 @@ class PtuRepository extends EntityRepository{
             ->join('pg.unit', 'u')    
             ->join('pg.country', 'c')    
             ->where('pg.ptu = ?1')
+            ->setParameter('1', $ptuId)    
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['sort'])){
+            }            
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery();
+    }  
+    
+    /**
+     * Запрос услуг по пту
+     * 
+     * @param integer $ptuId
+     * @param array $params
+     * @return query
+     */
+    public function findPtuCosts($ptuId, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('pc, c')
+            ->from(PtuCost::class, 'pc')
+            ->join('pc.cost', 'c')    
+            ->where('pc.ptu = ?1')
             ->setParameter('1', $ptuId)    
                 ;
         

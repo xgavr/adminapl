@@ -11,6 +11,8 @@ use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
 use Stock\Entity\Register;
 use Laminas\Json\Encoder;
+use Stock\Entity\PtuCost;
+use Company\Entity\Cost;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -505,6 +507,98 @@ class PtuManager
     }
     
     /**
+     * Удаление строк ПТУ
+     * @param Ptu $ptu
+     */
+    public function removePtuGood($ptu)
+    {
+        $this->entityManager->getConnection()
+                ->delete('ptu_good', ['ptu_id' => $ptu->getId()]);
+        return;
+    }
+        
+    /**
+     * Обновление строк ПТУ
+     * 
+     * @param Ptu $ptu
+     * @param array $data
+     * @param array $dataCost
+     */
+    public function updatePtuGoods($ptu, $data, $dataCost = null)
+    {
+        $this->removePtuGood($ptu);
+        $this->removePtuCost($ptu);
+        
+        $rowNo = 1;
+        foreach ($data as $row){
+            $this->addPtuGood($ptu->getId(), $row, $rowNo);
+            $rowNo++;
+        }
+
+        if (is_array($dataCost)){
+            $rowNo = 1;
+            foreach ($dataCost as $row){
+                $this->addPtuCost($ptu->getId(), $row, $rowNo);
+                $rowNo++;
+            }
+        }    
+        
+        $this->updatePtuAmount($ptu);
+        return;
+    }
+    
+    /**
+     * Adds a new ptu-cost.
+     * @param integer $ptuId
+     * @param array $data
+     * @param integer $rowNo
+     * 
+     * @return integer
+     */
+    public function addPtuCost($ptuId, $data, $rowNo)
+    {
+//        var_dump($data); exit;
+        $ptuCost = [
+            'ptu_id' => $ptuId,
+            'quantity' => $data['quantity'],
+            'amount' => $data['amount'],
+            'cost_id' => $data['cost_id'],
+            'comment' => (isset($data['comment'])) ? $data['comment']:'',
+//            'info' => $data['info'],
+            'row_no' => $rowNo,
+        ];
+        
+        $connection = $this->entityManager->getConnection(); 
+        $connection->insert('ptu_cost', $ptuCost);
+        return;
+    }
+    
+    /**
+     * Update ptu_cost.
+     * @param PtuCost $ptuCost
+     * @param array $data
+     * @return integer
+     */
+    public function updatePtuCost($ptuCost, $data)            
+    {
+        
+        $connection = $this->entityManager->getConnection(); 
+        $connection->update('ptu_cost', $data, ['id' => $ptuCost->getId()]);
+        return;
+    }
+    
+    /**
+     * Удаление строк ПТУ
+     * @param Ptu $ptu
+     */
+    public function removePtuCost($ptu)
+    {
+        $this->entityManager->getConnection()
+                ->delete('ptu_cost', ['ptu_id' => $ptu->getId()]);
+        return;
+    }
+    
+    /**
      * Обновить сумму ПТУ
      * @param Ptu $ptu
      */
@@ -530,38 +624,6 @@ class PtuManager
     }
     
     /**
-     * Удаление строк ПТУ
-     * @param Ptu $ptu
-     */
-    public function removePtuGood($ptu)
-    {
-        $this->entityManager->getConnection()
-                ->delete('ptu_good', ['ptu_id' => $ptu->getId()]);
-        return;
-    }
-    
-    /**
-     * Обновление строк ПТУ
-     * 
-     * @param Ptu $ptu
-     * @param array $data
-     */
-    public function updatePtuGoods($ptu, $data)
-    {
-        $this->removePtuGood($ptu);
-        
-        $rowNo = 1;
-        foreach ($data as $row){
-            $this->addPtuGood($ptu->getId(), $row, $rowNo);
-            $rowNo++;
-        }
-        
-        $this->updatePtuAmount($ptu);
-        return;
-    }   
-    
-    
-    /**
      * Ужаление ПТУ
      * 
      * @param Ptu $ptu
@@ -575,6 +637,7 @@ class PtuManager
             $this->entityManager->getRepository(Movement::class)
                     ->removeDocMovements($ptu->getLogKey());
             $this->removePtuGood($ptu);
+            $this->removePtuCost($ptu);
 
             $this->entityManager->getConnection()->delete('ptu', ['id' => $ptu->getId()]);
         }    

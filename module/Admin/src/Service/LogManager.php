@@ -12,6 +12,7 @@ use Laminas\Json\Json;
 use User\Entity\User;
 use Stock\Entity\Ptu;
 use Stock\Entity\PtuGood;
+use Stock\Entity\PtuCost;
 use Stock\Entity\Vtp;
 use Stock\Entity\VtpGood;
 use Stock\Entity\Ot;
@@ -114,6 +115,12 @@ class LogManager {
                     ->findByPtu($ptu->getId());
             foreach ($ptuGoods as $ptuGood){
                 $ptuLog['goods'][$ptuGood->getRowNo()] = $ptuGood->toLog();
+            }
+
+            $ptuCosts = $this->entityManager->getRepository(PtuCost::class)
+                    ->findByPtu($ptu->getId());
+            foreach ($ptuCosts as $ptuCost){
+                $ptuLog['costs'][$ptuCost->getRowNo()] = $ptuCost->toLog();
             }
             
             $data = [

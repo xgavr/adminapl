@@ -91,14 +91,7 @@ $this->pageBreadcrumbs()->setItems([
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
-    var $table = $('#table').bootstrapTable({
-        onLoadSuccess: function() {
-            setCookies('transactionSaveId');
-        }, 
-        onExpandRow: function (index, row, $detail) {
-            $detail.html('Идет загрузка...');
-        }
-    });
+    var $table = $('#table');
     
     function setCookies(cookieKey){
         let expires = 30;
@@ -113,7 +106,7 @@ $this->pageBreadcrumbs()->setItems([
             if (cookieVal !== undefined){
                 $(this).val(cookieVal);                
             }
-        });                        
+        });           
         $table.bootstrapTable('refresh', {
             url: '/admin/transactions-content'
         });
@@ -121,6 +114,14 @@ $this->pageBreadcrumbs()->setItems([
     
     $(function () {       
         getCookies('transactionSaveId');
+        
+        $table.on('load-success.bs.table', function (e, res) {
+            setCookies('transactionSaveId');
+        });        
+
+        $table.on('expand-row.bs.table', function (e, res, $detail) {
+            $detail.html('Идет загрузка...');
+        });        
         
         $(".inputclear").click(function(){
             $("#searchinput").val('');
