@@ -218,7 +218,7 @@ $legalContact = $client->getLegalContact();
                     </div>    
                 </div>    
             </div>
-            <table id="table" 
+            <table id="ordertable" 
                 data-toggle="table" 
                 data-side-pagination="server"
                 data-pagination="true" 
@@ -473,11 +473,6 @@ $legalContact = $client->getLegalContact();
 <?php echo $this->partial('/application/order/comment-partial', []); ?>
 
 <script type="text/javascript">
-    var $table = $('#table').bootstrapTable({
-        onLoadSuccess: function() {
-            setCookies('clientSaveId');
-        }         
-    });
     
     function setCookies(cookieKey){
         let expires = 30;
@@ -493,7 +488,7 @@ $legalContact = $client->getLegalContact();
                 $(this).val(cookieVal);                
             }
         });     
-        $('#table').bootstrapTable('refresh');
+        $('#ordertable').bootstrapTable('refresh');
         var activeTab = Cookies.get('clientSaveId_tab');
         if (activeTab !== undefined){
             $('.nav-tabs #'+activeTab).tab('show');
@@ -502,7 +497,11 @@ $legalContact = $client->getLegalContact();
         } 
     }    
 
-    $(window).on('load', function() {
+    $(function () {        
+        $('#ordertable').on('load-success.bs.table', function (e, res) {
+            setCookies('clientSaveId');
+        });        
+        
         getCookies('clientSaveId');
         
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -510,7 +509,7 @@ $legalContact = $client->getLegalContact();
         });        
 
         $(document).on('change', '#clientOrderStatusSelect', function (e) {
-            $('#table').bootstrapTable('refresh');
+            $('#ordertable').bootstrapTable('refresh');
         });        
     });
 
@@ -521,11 +520,11 @@ $legalContact = $client->getLegalContact();
         $('#ordertoolbar').find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('#table .page-size').html();
+        limit = $('#ordertable .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('#table li.page-number.active a').html();
+        offset = $('#ordertable li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
@@ -1039,7 +1038,7 @@ $legalContact = $client->getLegalContact();
     function changeOrderStatus(orderId, status){
         $.get( "/order/status/"+orderId+'?status='+status, function(data){
 //            refreshTable();
-            $table.bootstrapTable('updateByUniqueId', {id: orderId, row: data});
+            $('#ordertable').bootstrapTable('updateByUniqueId', {id: orderId, row: data});
         });        
     }
     
@@ -1065,7 +1064,7 @@ $legalContact = $client->getLegalContact();
     var menu = new BootstrapMenu('.tablerow', {
         fetchElementData: function(rowElem) {
             var rowId = $(rowElem).attr('data-index');
-            return $table.bootstrapTable('getData')[rowId];
+            return $('#ordertable').bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
            ['addComment', 'comments', 'history'],

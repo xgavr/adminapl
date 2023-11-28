@@ -223,26 +223,20 @@ $tag = md5(time());
     }
     
     $( document ).ready(function() {        
-        $('#ordergoodtable').bootstrapTable({
-            onLoadSuccess: function(res){
-//                bidTotal();
-                orderUpdateTotal();
-            }            
-        }); 
+        $ordegoodtable = $('#ordergoodtable').bootstrapTable();        
+        $vttable = $('#vttable').bootstrapTable();         
         
-        $('#vttable').bootstrapTable({
-            onLoadSuccess: function(res){
-                
-            }            
-        });         
-        
+        $ordegoodtable.on('load-success.bs.table', function (e, res) {
+            orderUpdateTotal();
+        });
+
         $(document).on('editable-save.bs.table', '#ordergoodtable', function (e, field, row, old, $el) {
             orderUpdateTotal();
         });        
         
         $(document).on('click', '.order-view-close', function (e) {
-            $('#ordergoodtable').bootstrapTable('destroy');
-            $('#vttable').bootstrapTable('destroy');
+            $ordegoodtable.bootstrapTable('destroy');
+            $vttable.bootstrapTable('destroy');
             $('#ordergoodtoolbar').remove();
             $('#vttoolbar').remove();
 //            $('#orderViewModal').modal('hide');
@@ -253,12 +247,12 @@ $tag = md5(time());
         });        
         
         $(document).on('click', '.bid-row-copy', function (e) {
-            var selections = $('#ordergoodtable').bootstrapTable('getSelections');
+            var selections = $ordegoodtable.bootstrapTable('getSelections');
             if (selections.length){
                 $.each( selections, function( index, row ) {
-                    $('#ordergoodtable').bootstrapTable('insertRow', {index: 1, row: row});
+                    $ordegoodtable.bootstrapTable('insertRow', {index: 1, row: row});
                 });  
-                $('#ordergoodtable').bootstrapTable('uncheckAll');
+                $ordegoodtable.bootstrapTable('uncheckAll');
                 updateBids(<?= $order->getId()?>);
             }    
         });      
@@ -266,9 +260,9 @@ $tag = md5(time());
         $(document).on('click', '.bid-row-delete', function (e) {
             var id = $(this).attr('value');
             if (id){
-                var row = $('#ordergoodtable').bootstrapTable('getRowByUniqueId', id);
+                var row = $ordegoodtable.bootstrapTable('getRowByUniqueId', id);
                 if (confirm('Удалить '+row.good.code+'?')){
-                    $('#ordergoodtable').bootstrapTable('removeByUniqueId', id);
+                    $ordegoodtable.bootstrapTable('removeByUniqueId', id);
                 } 
             }
             updateBids(<?= $order->getId()?>);
