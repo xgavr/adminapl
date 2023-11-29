@@ -663,10 +663,10 @@ $legalContact = $client->getLegalContact();
     }
 
     function mutualRowStyle(row){
-        var retired = 'default';
+        var retired = 'default tablerow-mutual';
         switch(row.status){
             case '<?= Retail::STATUS_RETIRED?>': 
-                        return {classes: 'retired '+retired}; break;
+                return {classes: 'retired '+retired}; break;
             default:break;     
         }
         
@@ -675,20 +675,6 @@ $legalContact = $client->getLegalContact();
 
     function comissRowStyle(row){
         var retired = 'default';
-//        switch(row.status){
-//            case '<?= Vt::STATUS_TAKE_NO?>': 
-//                return {classes: 'warning '+retired};
-//            default: break;            
-//        }                
-//        switch(row.status){
-//            case '<?= Vt::STATUS_COMMISSION?>': 
-//            case '<?= Vt::STATUS_DEFECT?>': 
-//                        return {classes: 'info '+retired}; break;
-//            case '<?= Vt::STATUS_RETIRED?>': 
-//                        return {classes: 'retired '+retired}; break;
-//            default:break;     
-//        }
-        
         return {classes: retired};
     }
 
@@ -1192,29 +1178,6 @@ $legalContact = $client->getLegalContact();
                     });                    
                 }
             },
-//            addMarketplaceNumber: {
-//                name: 'Номер заказа в ТП',
-//                iconClass: 'glyphicon glyphicon-plus',
-//                onClick: function (row){
-//                    var depend = $.parseJSON(row.dependInfo);
-//                    var dialogId = 'marketplaceOrderModal';
-//                    var url = '/market-place/marketplace-order-form?order='+row.id;
-//                    var zIndex = 9999;
-//                    if (depend.marketplaceOrders){
-//                        if (depend.marketplaceOrders.length){
-//                            var url = '/market-place/order-form/'+row.id;
-//                            var dialogId = 'marketplaceOrdersModal';
-//                            var zIndex = 8888;
-//                        }    
-//                    }
-//                    
-//                    showFormDialog({
-//                        id: dialogId,
-//                        url: url,
-//                        zIndex: zIndex
-//                    });
-//                }
-//            },    
             addLegal: {
                 name: 'Юр. лицо',
                 iconClass: 'glyphicon glyphicon-plus',
@@ -1264,6 +1227,87 @@ $legalContact = $client->getLegalContact();
                         url: url,
                         zIndex: 8888
                     });
+                }
+            }
+        }
+    });    
+        
+        
+    function changeDocStatus(mutualRow){
+        if (mutualRow.reviseDoc){
+            var status = <?= Revise::STATUS_ACTIVE?>;
+            if (mutualRow.reviseDoc.status === '<?= Revise::STATUS_ACTIVE?>'){
+                status = <?= Revise::STATUS_RETIRED?>;
+            }
+            $.get( "/revise/status/"+mutualRow.reviseDoc.id+'?status='+status, function(data){
+//                $('#mutualtable').bootstrapTable('updateByUniqueId', {id: mutualRow.id, row: data});
+                $('#mutualtable').bootstrapTable('refresh', {silent: true});
+            });        
+        }         
+    }
+        
+    var menuMutual = new BootstrapMenu('.tablerow-mutual', {
+        fetchElementData: function(rowElem) {
+            var rowId = $(rowElem).attr('data-index');
+            return $('#mutualtable').bootstrapTable('getData')[rowId];
+        },
+        actionsGroups: [
+           ['addComment', 'comments', 'history'],
+           ['addLegal', 'duplicate'],
+           ['vt', 'cash']
+        ],      
+        actions: {
+            statusActive: {
+                name: 'Учитывать',
+                iconClass: 'glyphicon glyphicon-check',
+                onClick: function(row) {
+                    changeDocStatus(row);
+                },
+                isShown: function(row) {
+                  return true;
+                },
+                isEnabled: function(row) {
+                    if (row.reviseDoc){
+                        if (row.reviseDoc.docDate > '<?= $allowDate?>' && row.reviseDoc.status === '<?= Revise::STATUS_RETIRED?>'){
+                            return true;
+                        }
+                    }
+                    return false;
+                }                
+            }, 
+            statusRetired: {
+                name: 'Не учитывать',
+                iconClass: 'glyphicon glyphicon-unchecked',
+                onClick: function(row) {
+                    changeDocStatus(row);
+                },
+                isShown: function(row) {
+                  return true;
+                },
+                isEnabled: function(row) {
+                    if (row.reviseDoc){
+                        if (row.reviseDoc.docDate > '<?= $allowDate?>' && row.reviseDoc.status === '<?= Revise::STATUS_ACTIVE?>'){
+                            return true;
+                        }
+                    }
+                    return false;
+                }                
+            }, 
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.docId+"?docType="+row.docType,
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
                 }
             }
         }

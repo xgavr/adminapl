@@ -325,6 +325,10 @@ class ClientRepository extends EntityRepository{
                             ->setParameter('year', $params['year']);
                 }    
             }
+            if (!empty($params['docKey'])){
+                $queryBuilder->andWhere('r.docKey = :docKey')
+                        ->setParameter('docKey', $params['docKey']);
+            }
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();            

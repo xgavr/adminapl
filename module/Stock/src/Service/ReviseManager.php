@@ -324,6 +324,32 @@ class ReviseManager
     }
     
     /**
+     * Update revise status.
+     * @param Revise $revise
+     * @param int $status
+     * @return integer
+     */
+    public function updateReviseStatus($revise, $status)            
+    {
+        $preLog = $this->entityManager->getRepository(Log::class)
+                ->findOneByLogKey($revise->getLogKey());
+        if (!$preLog){
+            $this->logManager->infoRevise($revise, Log::STATUS_INFO);            
+        }
+
+        $revise->setStatusEx(Revise::STATUS_EX_NEW);
+        $revise->setStatus($status);
+        $revise->setStatusAccount(Revise::STATUS_ACCOUNT_NO);
+        
+        $this->entityManager->persist($revise);
+        $this->entityManager->flush($revise);
+        
+        $this->repostRevise($revise);
+        
+        return;
+    }
+    
+    /**
      * Удаление Revise
      * 
      * @param Revise $revise

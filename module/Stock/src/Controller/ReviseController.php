@@ -325,4 +325,34 @@ class ReviseController extends AbstractActionController
         );           
     }
     
+    public function statusAction()
+    {
+        $reviseId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', Revise::STATUS_ACTIVE);
+        
+        $revise = $this->entityManager->getRepository(Revise::class)
+                ->find($reviseId);        
+
+        if ($revise == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->reviseManager->updateReviseStatus($revise, $status);
+        
+        $result = [];
+        
+//        if ($revise->getKind() == Revise::KIND_REVISE_CLIENT){
+//            $query = $this->entityManager->getRepository(Client::class)
+//                            ->retails($revise->getContact()->getClient(), [
+//                                'docKey' => $revise->getLogKey(),
+//                            ]);            
+//            $result = $query->getOneOrNullResult(2);
+//        }
+                
+        return new JsonModel(
+           $result
+        );           
+    }            
+    
 }
