@@ -494,5 +494,15 @@ class MakeController extends AbstractActionController
         }    
         
         return new JsonModel($result);
-    }            
+    }     
+    
+    public function fillNameRuAction()
+    {
+        $this->makeManager->fillNameRu();
+
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                  
+    }
+
 }

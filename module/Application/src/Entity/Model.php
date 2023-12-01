@@ -51,6 +51,11 @@ class Model {
     protected $name;
         
     /**
+     * @ORM\Column(name="name_ru")   
+     */
+    protected $nameRu;
+        
+    /**
      * @ORM\Column(name="td_id")   
      */
     protected $tdId;
@@ -143,6 +148,15 @@ class Model {
         return $this->name;
     }
 
+    public function getNameRu() {
+        return $this->nameRu;
+    }
+
+    public function setNameRu($nameRu) {
+        $this->nameRu = $nameRu;
+        return $this;
+    }
+        
     public function getTransferName() 
     {
         $filter = new \Admin\Filter\TransferName();

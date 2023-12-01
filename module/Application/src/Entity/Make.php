@@ -44,6 +44,11 @@ class Make {
      * @ORM\Column(name="name")   
      */
     protected $name;
+
+    /**
+     * @ORM\Column(name="name_ru")   
+     */
+    protected $nameRu;
         
     /**
      * @ORM\Column(name="td_id")   
@@ -126,6 +131,15 @@ class Make {
         $this->name = $name;
     }     
 
+    public function getNameRu() {
+        return $this->nameRu;
+    }
+
+    public function setNameRu($nameRu) {
+        $this->nameRu = $nameRu;
+        return $this;
+    }
+        
     public function getFullName() 
     {
         return $this->fullName;

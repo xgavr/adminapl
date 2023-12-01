@@ -108,4 +108,30 @@ class MakeManager
         return;
     }
     
+    /**
+     * Получить данные с https://cars-base.ru/#api
+     * @param type $make
+     */
+    private function findMakeBase($make)
+    {
+        $result = file_get_contents('https://cars-base.ru/api/cars/'.$make->getName());
+        
+        return $result;
+    }
+    
+    /**
+     * Заполнить name Ru 
+     */
+    public function fillNameRu()
+    {
+        $makes = $this->entityManager->getRepository(Make::class)
+                ->findPopularMakes();
+        
+        foreach ($makes as $make){
+            $data = $this->findMakeBase($make);
+            var_dump($data);
+        }
+        
+        return;
+    }
 }

@@ -332,5 +332,21 @@ class MakeRepository extends EntityRepository{
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
-    }        
+    }       
+    
+    /**
+     * Выбрать популярные модели
+     */
+    public function findPopularMakes()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('m')
+            ->from(Make::class, 'm')
+            ->where('m.goodCount > 0')
+                ;
+        return $queryBuilder->getQuery()->getResult();        
+    }
 }

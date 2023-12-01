@@ -56,4 +56,5 @@ return [
     'Cash',
     'Api',
     'Ai',
+    'Search',
 ];

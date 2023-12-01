@@ -82,7 +82,8 @@
             "ApiSupplier\\": "module/ApiSupplier/src/",
             "Cash\\": "module/Cash/src/",
             "Api\\": "module/Api/src/",
-            "Ai\\": "module/Ai/src/"
+            "Ai\\": "module/Ai/src/",
+            "Search\\": "module/Search/src/"
         }
     },
     "autoload-dev": {
