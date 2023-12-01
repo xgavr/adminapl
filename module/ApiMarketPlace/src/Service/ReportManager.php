@@ -185,62 +185,61 @@ class ReportManager
     public function addReportItems($report, $data)
     {
         foreach ($data as $row){
-            $good = $offerId = null;
-            $complect = 1;
-            if (!empty($row['good_id'])){
-                if (is_numeric($row['good_id'])){
-                    $good = $this->entityManager->getRepository(Goods::class)
-                            ->find($row['good_id']);
-                    if ($good){
-                        $offerId = $good->getAplId();
-                    }        
-                }
-            }
+            
+            $offers = explode('+', empty($row['offer_id']) ? 0:$row['offer_id']);
+            $offerCount = count($offers);
+            
+            foreach ($offers as $offer){
+            
+                $complect = 1;
 
-            if (!$good){
-                $offer_complect = explode('_', str_replace(['-'], '_', empty($row['offer_id']) ? 0:$row['offer_id']));
-                $offerId = $offer_complect[0];
-                if ($offerId){
+                $good = $this->entityManager->getRepository(Goods::class)
+                        ->find($offer);
+
+                if (!$good){
+                    $offer_complect = explode('_', str_replace(['-'], '_', $offer));
+                    
                     $good = $this->entityManager->getRepository(Goods::class)
-                            ->findOneBy(['aplId' => $offerId]);
-                }
+                            ->findOneBy(['aplId' => $offer_complect[0]]);
+                    
+                    if (!empty($offer_complect[1])){
+                        $complect = max(1, (int) $offer_complect[1]);
+                    }
+                }    
+
+                $saleQty = empty($row['sale_qty']) ? 0:$row['sale_qty']*$complect/$offerCount;
+                $returnQty = empty($row['return_qty']) ? 0:$row['return_qty']*$complect/$offerCount;
+                $price = empty($row['price']) ? 0:$row['price']/$complect/$offerCount;
+                $priceSale = empty($row['price_sale']) ? 0:$row['price_sale']/$complect/$offerCount;
+                
+    //            var_dump($row['offer_id']);
+                $item = new MarketSaleReportItem();
+                $item->setBarcode(empty($row['barcode']) ? null:$row['barcode']);
+                $item->setCommissionPercent(empty($row['commission_percent']) ? 0:$row['commission_percent']);
+                $item->setGood($good);
+                $item->setMarketSaleReport($report);
+                $item->setPrice($price);
+                $item->setPriceSale($priceSale);
+                $item->setProductId(empty($row['product_id']) ? 0:$row['product_id']);
+                $item->setOfferId($row['offer_id']);
+                $item->setProductName(empty($row['product_name']) ? 0:$row['product_name']);
+                $item->setReturnAmount(empty($row['return_amount']) ? 0:$row['return_amount']/$offerCount);
+                $item->setReturnCommission(empty($row['return_commission']) ? 0:$row['return_commission']);
+                $item->setReturnDiscount(empty($row['return_discount']) ? 0:$row['return_discount']/$offerCount);
+                $item->setReturnPriceSeller(empty($row['return_price_seller']) ? 0:$row['return_price_seller']/$offerCount);
+                $item->setReturnQty($returnQty);
+                $item->setReturnSale(empty($row['return_sale']) ? 0:$row['return_sale']/$offerCount);
+                $item->setSaleAmount(empty($row['sale_amount']) ? 0:$row['sale_amount']/$offerCount);
+                $item->setSaleCommission(empty($row['sale_commission']) ? 0:$row['sale_commission']/$offerCount);
+                $item->setSaleDiscount(empty($row['sale_discount']) ? 0:$row['sale_discount']/$offerCount);
+                $item->setSalePriceSeller(empty($row['sale_price_seller']) ? 0:$row['sale_price_seller']/$offerCount);
+                $item->setSaleQty($saleQty); 
+                $item->setTake(MarketSaleReportItem::TAKE_NO);
+                $item->setRowNumber(empty($row['row_number']) ? 0:$row['row_number']);
+                $item->setBaseAmount(0);
+
+                $this->entityManager->persist($item);                  
             }    
-
-            if (!empty($offer_complect[1])){
-                $complect = max(1, (int) $offer_complect[1]);
-            }
-            $saleQty = empty($row['sale_qty']) ? 0:$row['sale_qty']*$complect;
-            $returnQty = empty($row['return_qty']) ? 0:$row['return_qty']*$complect;
-            $price = empty($row['price']) ? 0:$row['price']/$complect;
-            $priceSale = empty($row['price_sale']) ? 0:$row['price_sale']/$complect;
-                                
-//            var_dump($row['offer_id']);
-            $item = new MarketSaleReportItem();
-            $item->setBarcode(empty($row['barcode']) ? null:$row['barcode']);
-            $item->setCommissionPercent(empty($row['commission_percent']) ? 0:$row['commission_percent']);
-            $item->setGood($good);
-            $item->setMarketSaleReport($report);
-            $item->setPrice($price);
-            $item->setPriceSale($priceSale);
-            $item->setProductId(empty($row['product_id']) ? 0:$row['product_id']);
-            $item->setOfferId($offerId);
-            $item->setProductName(empty($row['product_name']) ? 0:$row['product_name']);
-            $item->setReturnAmount(empty($row['return_amount']) ? 0:$row['return_amount']);
-            $item->setReturnCommission(empty($row['return_commission']) ? 0:$row['return_commission']);
-            $item->setReturnDiscount(empty($row['return_discount']) ? 0:$row['return_discount']);
-            $item->setReturnPriceSeller(empty($row['return_price_seller']) ? 0:$row['return_price_seller']);
-            $item->setReturnQty($returnQty);
-            $item->setReturnSale(empty($row['return_sale']) ? 0:$row['return_sale']);
-            $item->setSaleAmount(empty($row['sale_amount']) ? 0:$row['sale_amount']);
-            $item->setSaleCommission(empty($row['sale_commission']) ? 0:$row['sale_commission']);
-            $item->setSaleDiscount(empty($row['sale_discount']) ? 0:$row['sale_discount']);
-            $item->setSalePriceSeller(empty($row['sale_price_seller']) ? 0:$row['sale_price_seller']);
-            $item->setSaleQty($saleQty); 
-            $item->setTake(MarketSaleReportItem::TAKE_NO);
-            $item->setRowNumber(empty($row['row_number']) ? 0:$row['row_number']);
-            $item->setBaseAmount(0);
-
-            $this->entityManager->persist($item);            
         }
         
         if ($report->getDocDate() > $this->getAllowDate()){
