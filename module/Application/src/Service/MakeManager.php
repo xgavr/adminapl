@@ -10,6 +10,8 @@ namespace Application\Service;
 use Laminas\ServiceManager\ServiceManager;
 use Application\Entity\Make;
 use Application\Entity\Model;
+use Laminas\Json\Decoder;
+use Laminas\Json\Json;
 
 /**
  * Description of MakeService
@@ -116,7 +118,7 @@ class MakeManager
     {
         $result = file_get_contents('https://cars-base.ru/api/cars/'.$make->getName());
         
-        return $result;
+        return Decoder::decode($result, Json::TYPE_ARRAY);
     }
     
     /**
@@ -130,6 +132,7 @@ class MakeManager
         foreach ($makes as $make){
             $data = $this->findMakeBase($make);
             var_dump($data);
+            exit;
         }
         
         return;
