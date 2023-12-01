@@ -43,7 +43,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="aplId" data-sortable="true">АПЛ</th>
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>           
                      <th data-field="fullName" data-formatter="fullNameFormatter" data-sortable="true">Выводимое</th>
-                     <th data-field="nameRu" data-sortable="true">RU</th>
+                     <th data-field="nameRu" data-sortable="true" data-formatter="ruNameFormatter">RU</th>
                      <th data-field="goodCount" data-sortable="true">Товаров</th>           
                      <!--<th data-field="activity" data-width='5'></th>-->           
                  </tr>                
@@ -284,6 +284,18 @@ $this->pageBreadcrumbs()->setItems([
             ' data-name="fullName"',
             ' data-emptyText="'+row.name+'"',
             ' data-url="/make/edit-full-name">'+value,
+            '</a>',
+        ].join(''); 
+    }    
+    
+    function ruNameFormatter(value, row){
+        return [
+            '<a href="#"',
+            ' class="bootstrapEdit" data-type="text"',
+            ' data-pk="'+row.id+'"',
+            ' data-name="nameRu"',
+            ' data-emptyText="'+row.name+'"',
+            ' data-url="/make/edit-ru-name">'+value,
             '</a>',
         ].join(''); 
     }    

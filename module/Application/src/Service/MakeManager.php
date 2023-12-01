@@ -94,6 +94,21 @@ class MakeManager
         
         return;
     }
+
+    /**
+     * Обновить наименование ru
+     * 
+     * @param Make $make
+     * @param string $nameRu
+     */
+    public function updateRuName($make, $nameRu)
+    {
+        $make->setNameRu($nameRu);
+        $this->entityManager->persist($make);
+        $this->entityManager->flush();
+        
+        return;
+    }
     
     /**
      * Обновить полное наименование модели
