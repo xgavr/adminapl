@@ -188,13 +188,13 @@ class ReportManager
             
             $offers = explode('+', empty($row['offer_id']) ? 0:$row['offer_id']);
             $offerCount = count($offers);
-            
+            $k = 1;
             foreach ($offers as $offer){
             
                 $complect = 1;
 
                 $offer_complect = explode('_', str_replace(['-'], '_', $offer));
-
+                var_dump($offer_complect);
                 $good = $this->entityManager->getRepository(Goods::class)
                         ->find($offer_complect[0]);
 
@@ -207,6 +207,8 @@ class ReportManager
                 $price = empty($row['price']) ? 0:$row['price']/$complect/$offerCount;
                 $priceSale = empty($row['price_sale']) ? 0:$row['price_sale']/$complect/$offerCount;
                 
+                $offerIdDisp = $row['offer_id'].($offerCount > 1) ? "($k)":''; //показать количество в комплекте
+                
     //            var_dump($row['offer_id']);
                 $item = new MarketSaleReportItem();
                 $item->setBarcode(empty($row['barcode']) ? null:$row['barcode']);
@@ -216,7 +218,7 @@ class ReportManager
                 $item->setPrice($price);
                 $item->setPriceSale($priceSale);
                 $item->setProductId(empty($row['product_id']) ? 0:$row['product_id']);
-                $item->setOfferId($row['offer_id']);
+                $item->setOfferId($offerIdDisp);
                 $item->setProductName(empty($row['product_name']) ? 0:$row['product_name']);
                 $item->setReturnAmount(empty($row['return_amount']) ? 0:$row['return_amount']/$offerCount);
                 $item->setReturnCommission(empty($row['return_commission']) ? 0:$row['return_commission']);
@@ -233,7 +235,9 @@ class ReportManager
                 $item->setRowNumber(empty($row['row_number']) ? 0:$row['row_number']);
                 $item->setBaseAmount(0);
 
-                $this->entityManager->persist($item);                  
+                $this->entityManager->persist($item);  
+
+                $k++;
             }    
         }
         
