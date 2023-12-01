@@ -42,8 +42,8 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="tdId" data-sortable="true">TD</th>
                      <th data-field="aplId" data-sortable="true">АПЛ</th>
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>           
-                     <th data-field="fullName" data-formatter="fullNameFormatter" data-sortable="true">Выводимое</th>
-                     <th data-field="nameRu" data-sortable="true" data-formatter="ruNameFormatter">RU</th>
+                     <th data-field="fullName" data-formatter="fullNameFormatter" data-sortable="false">Выводимое</th>
+                     <th data-field="nameRu" data-sortable="false" data-formatter="ruNameFormatter">RU</th>
                      <th data-field="goodCount" data-sortable="true">Товаров</th>           
                      <!--<th data-field="activity" data-width='5'></th>-->           
                  </tr>                
@@ -289,6 +289,7 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function ruNameFormatter(value, row){
+        if (!value) value = '';
         return [
             '<a href="#"',
             ' class="bootstrapEdit" data-type="text"',
