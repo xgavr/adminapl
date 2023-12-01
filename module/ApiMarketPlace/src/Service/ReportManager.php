@@ -194,9 +194,9 @@ class ReportManager
                 $complect = 1;
 
                 $offer_complect = explode('_', str_replace(['-'], '_', $offer));
-                var_dump($offer_complect);
+
                 $good = $this->entityManager->getRepository(Goods::class)
-                        ->find($offer_complect[0]);
+                        ->findOneBy(['aplId' => $offer_complect[0]]);
 
                 if (!empty($offer_complect[1])){
                     $complect = max(1, (int) $offer_complect[1]);
