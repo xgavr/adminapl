@@ -2,6 +2,7 @@
 $this->headTitle('Машины');
 
 $this->mainMenu()->setActiveItemId('rb');
+$this->mainMenu()->setActiveUrl($this->url('make'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),

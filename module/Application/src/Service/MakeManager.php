@@ -124,6 +124,21 @@ class MakeManager
         
         return;
     }
+
+    /**
+     * Обновить наименование ru
+     * 
+     * @param Model $model
+     * @param string $nameRu
+     */
+    public function updateModelRuName($model, $nameRu)
+    {
+        $model->setNameRu($nameRu);
+        $this->entityManager->persist($model);
+        $this->entityManager->flush();
+        
+        return;
+    }
     
     /**
      * Получить данные с https://cars-base.ru/#api
@@ -134,6 +149,18 @@ class MakeManager
         $result = file_get_contents('https://cars-base.ru/api/cars/'.$make->getName());
         
         return Decoder::decode($result, Json::TYPE_ARRAY);
+    }
+    
+    /**
+     * Заполнить наименование рус моделей марки
+     * 
+     * @param Make $make
+     */
+    public function fillMakeModelsNameRu($make)
+    {
+        $data = $this->findMakeBase($make);
+        var_dump($data);
+        exit;        
     }
     
     /**

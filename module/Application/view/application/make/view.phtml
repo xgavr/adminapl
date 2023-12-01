@@ -4,24 +4,13 @@ use Application\Entity\Make;
 $this->headTitle($make->getName());
 
 $this->mainMenu()->setActiveItemId('rb');
+$this->mainMenu()->setActiveUrl($this->url('make'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'Машины'=>$this->url('make'),
             $make->getName()=>$this->url('make', ['action'=>'view', 'id'=>$make->getId()])
             ]);
-
-$this->headLink()
-//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css')        
-        ;
-
-$this->headScript()
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
-            ;    
 
 ?>
 
@@ -75,7 +64,8 @@ $this->headScript()
                      <th data-field="tdId" data-sortable="true">TD</th>
                      <th data-field="aplId" data-sortable="true">АПЛ</th>
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>             
-                     <th data-field="fullName" data-formatter="fullNameFormatter" data-sortable="true">Выводимое</th>
+                     <th data-field="fullName" data-formatter="fullNameFormatter">Выводимое</th>
+                     <th data-field="nameRu" data-formatter="ruNameFormatter">RU</th>
                      <th data-field="interval" data-sortable="true">Период</th>             
                      <th data-field="goodCount" data-sortable="true">Товаров</th>             
                  </tr>                
@@ -130,6 +120,17 @@ $this->headScript()
                         <div class="pull-right">
                             <button value="/make/update-available-make/<?= $make->getId()?>" class="btn btn-info btn-xs refresh-table-button"
                                     title="Обновить доступность">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Обновить RU
+                        </div>
+                        <div class="pull-right">
+                            <button value="/make/fill-models-name-ru/<?= $make->getId()?>" class="btn btn-info btn-xs refresh-table-button"
+                                    title="Обновить наименования РУС">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
                         </div>
@@ -260,6 +261,18 @@ $this->headScript()
             ' data-name="fullName"',
             ' data-emptyText="'+row.name+'"',
             ' data-url="/make/edit-model-full-name">'+value,
+            '</a>',
+        ].join(''); 
+    }    
+
+    function ruNameFormatter(value, row){
+        return [
+            '<a href="#"',
+            ' class="bootstrapTableEdit" data-type="text"',
+            ' data-pk="'+row.id+'"',
+            ' data-name="nameRu"',
+            ' data-emptyText="'+row.name+'"',
+            ' data-url="/make/edit-model-ru-name">'+value,
             '</a>',
         ].join(''); 
     }    

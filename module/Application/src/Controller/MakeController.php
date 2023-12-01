@@ -430,6 +430,23 @@ class MakeController extends AbstractActionController
         exit;
     }
     
+    public function editModelRuNameAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $modelId = $data['pk'];
+            $model = $this->entityManager->getRepository(Model::class)
+                    ->findOneById($modelId);
+                    
+            if ($model){
+                $this->makeManager->updateModelRuName($model, $data['value']);
+            }    
+        }
+        
+        exit;
+    }
+    
     public function modelsAction()
     {
         $makeId = (int)$this->params()->fromRoute('id', -1);
@@ -516,6 +533,29 @@ class MakeController extends AbstractActionController
     public function fillNameRuAction()
     {
         $this->makeManager->fillNameRu();
+
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                  
+    }
+
+    public function fillModelsNameRuAction()
+    {
+        $makeId = (int)$this->params()->fromRoute('id', -1);
+        if ($makeId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $make = $this->entityManager->getRepository(Make::class)
+                ->find($makeId);
+        
+        if ($make == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $this->makeManager->fillMakeModelsNameRu($make);
 
         return new JsonModel([
             'result' => 'ok',

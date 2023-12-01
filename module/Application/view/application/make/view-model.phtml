@@ -4,6 +4,7 @@ use Application\Entity\Model;
 $this->headTitle($model->getMake()->getName().' '.$model->getName());
 
 $this->mainMenu()->setActiveItemId('rb');
+$this->mainMenu()->setActiveUrl($this->url('make'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
