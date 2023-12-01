@@ -193,22 +193,17 @@ class ReportManager
             
                 $complect = 1;
 
+                $offer_complect = explode('_', str_replace(['-'], '_', $offer));
+
                 $good = $this->entityManager->getRepository(Goods::class)
-                        ->find($offer);
+                        ->find($offer_complect[0]);
 
-                if (!$good){
-                    $offer_complect = explode('_', str_replace(['-'], '_', $offer));
-                    
-                    $good = $this->entityManager->getRepository(Goods::class)
-                            ->findOneBy(['aplId' => $offer_complect[0]]);
-                    
-                    if (!empty($offer_complect[1])){
-                        $complect = max(1, (int) $offer_complect[1]);
-                    }
-                }    
+                if (!empty($offer_complect[1])){
+                    $complect = max(1, (int) $offer_complect[1]);
+                }
 
-                $saleQty = empty($row['sale_qty']) ? 0:$row['sale_qty']*$complect/$offerCount;
-                $returnQty = empty($row['return_qty']) ? 0:$row['return_qty']*$complect/$offerCount;
+                $saleQty = empty($row['sale_qty']) ? 0:$row['sale_qty']*$complect;
+                $returnQty = empty($row['return_qty']) ? 0:$row['return_qty']*$complect;
                 $price = empty($row['price']) ? 0:$row['price']/$complect/$offerCount;
                 $priceSale = empty($row['price_sale']) ? 0:$row['price_sale']/$complect/$offerCount;
                 
