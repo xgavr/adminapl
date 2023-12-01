@@ -207,7 +207,7 @@ class ReportManager
                 $price = empty($row['price']) ? 0:$row['price']/$complect/$offerCount;
                 $priceSale = empty($row['price_sale']) ? 0:$row['price_sale']/$complect/$offerCount;
                 
-                $offerIdDisp = $row['offer_id'].($offerCount > 1) ? "($k)":''; //показать количество в комплекте
+                $offerIdDisp = $row['offer_id'].(($offerCount > 1) ? "($k)":''); //показать количество в комплекте
                 
     //            var_dump($row['offer_id']);
                 $item = new MarketSaleReportItem();
