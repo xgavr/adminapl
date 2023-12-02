@@ -365,9 +365,11 @@ class MakeRepository extends EntityRepository{
             ->from(Model::class, 'm')
             ->where('m.make = :make')
             ->setParameter('make', $make->getId())
-            ->andWhere('m.name like ":name%"')
-            ->setParameter('name', $modelName)    
                 ;
+        
+        $like = $queryBuilder->expr()->like('m.name', $modelName.'%');
+        $queryBuilder->andWhere($like);
+        
         return $queryBuilder->getQuery()->getResult();        
         
     }
