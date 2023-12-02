@@ -163,8 +163,12 @@ class MakeManager
     {
         $data = $this->findMakeBase($make);
         foreach ($data as $row){
-            $models = $this->entityManager->getRepository(Model::class)
-                    ->findMakeModelByName($make, $row['name']);
+            try{
+                $models = $this->entityManager->getRepository(Model::class)
+                        ->findMakeModelByName($make, $row['name']);
+            } catch(\Doctrine\ORM\Query\QueryException $e){
+                $models = [];
+            }    
 //            var_dump($row['name'], count($models));
             foreach ($models as $model){
                 $nameRu = str_replace(strtoupper($row['name']), $row['cyrillic-name'], $model->getName());
