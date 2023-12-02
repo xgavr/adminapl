@@ -148,7 +148,7 @@ class MakeManager
     {
         $result = Decoder::decode(file_get_contents('https://cars-base.ru/api/cars/'.$make->getName()), Json::TYPE_ARRAY);
         if (!empty($result['error'])){
-            $result = Decoder::decode(file_get_contents('https://cars-base.ru/api/cars/'.$make->getFullName()), Json::TYPE_ARRAY);            
+            $result = Decoder::decode(file_get_contents('https://cars-base.ru/api/cars/'. strtoupper($make->getFullName())), Json::TYPE_ARRAY);            
         }
         
         return $result;
