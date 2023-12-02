@@ -349,4 +349,26 @@ class MakeRepository extends EntityRepository{
                 ;
         return $queryBuilder->getQuery()->getResult();        
     }
+    
+    /**
+     * Найти модели по наименованию
+     * @param Make $make
+     * @param string $modelName
+     */
+    public function findMakeModelByName($make, $modelName)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('m')
+            ->from(Model::class, 'm')
+            ->where('m.make = :make')
+            ->setParameter('make', $make->getId())
+            ->andWhere('m.name like ":name%"')
+            ->setParameter('name', $modelName)    
+                ;
+        return $queryBuilder->getQuery()->getResult();        
+        
+    }
 }

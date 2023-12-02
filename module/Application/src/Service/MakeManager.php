@@ -162,8 +162,15 @@ class MakeManager
     public function fillMakeModelsNameRu($make)
     {
         $data = $this->findMakeBase($make);
-        var_dump($data);
-        exit;        
+        foreach ($data as $row){
+            $models = $this->entityManager->getRepository(Model::class)
+                    ->findMakeModelByName($make, $row['name']);
+            var_dump($row['name'], count($models));
+            foreach ($models as $model){
+                
+            }
+        }
+        return;        
     }
     
     /**

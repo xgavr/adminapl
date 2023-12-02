@@ -266,6 +266,7 @@ $this->pageBreadcrumbs()->setItems([
     }    
 
     function ruNameFormatter(value, row){
+        if (!value) value = '';
         return [
             '<a href="#"',
             ' class="bootstrapTableEdit" data-type="text"',
