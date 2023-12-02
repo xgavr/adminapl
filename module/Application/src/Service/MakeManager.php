@@ -142,13 +142,16 @@ class MakeManager
     
     /**
      * Получить данные с https://cars-base.ru/#api
-     * @param type $make
+     * @param Make $make
      */
     private function findMakeBase($make)
     {
-        $result = file_get_contents('https://cars-base.ru/api/cars/'.$make->getName());
+        $result = Decoder::decode(file_get_contents('https://cars-base.ru/api/cars/'.$make->getName()), Json::TYPE_ARRAY);
+        if (!empty($result['error'])){
+            $result = Decoder::decode(file_get_contents('https://cars-base.ru/api/cars/'.$make->getFullName()), Json::TYPE_ARRAY);            
+        }
         
-        return Decoder::decode($result, Json::TYPE_ARRAY);
+        return $result;
     }
     
     /**
