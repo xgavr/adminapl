@@ -367,7 +367,7 @@ class MakeRepository extends EntityRepository{
             ->setParameter('make', $make->getId())
                 ;
         
-        $like = $queryBuilder->expr()->like('m.name', '\''.addslashes($modelName).' %\'');
+        $like = $queryBuilder->expr()->like('m.name', '\''.htmlspecialchars($modelName).' %\'');
         $queryBuilder->andWhere($like);
         
         return $queryBuilder->getQuery()->getResult();        
