@@ -162,6 +162,9 @@ class PaymentController extends AbstractActionController
                 if (empty($data['taxInfoOkato'])){
                     $data['taxInfoOkato'] = $bankAccount->getLegal()->getOktmo();
                 }
+                if (!empty($data['taxInfoOkato']) && $data['supplierBillId'] != Payment::PAYMENT_TYPE_TAX){
+                    $data['taxInfoOkato'] = '';
+                }
                 
                 if (is_numeric($data['supplier'])){
                     $supplier = $this->entityManager->getRepository(Supplier::class)
