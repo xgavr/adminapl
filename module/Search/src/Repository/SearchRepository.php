@@ -78,7 +78,7 @@ class SearchRepository extends EntityRepository
         
         if (is_array($params)){
             if (!empty($params['sort'])){
-                $queryBuilder->orderBy('g.'.$params['sort'], $params['order']);                
+                $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);                
             }            
         }
         
