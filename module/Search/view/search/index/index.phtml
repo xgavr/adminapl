@@ -1,3 +1,143 @@
-<strong>Module:</strong>        Search &raquo;
-<strong>Controller:</strong>    Index &raquo;
-<strong>Action:</strong>        index
+<?php
+use Application\Entity\Goods;
+
+$this->headTitle('Поиск для лендинга');
+
+$this->mainMenu()->setActiveItemId('search');
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('application'),
+            'Поиск'=>$this->url('search')
+            ]);
+
+?>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <div class="btn-group">
+                        <input id="searchinput" name="search" style="width: 600px" 
+                               class="form-control good-toolbar enter-search" 
+                               onfocus="this.select();" type="text" placeholder="Колодки тормозные форд фокус">
+                        <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                    </div>
+                    <button id="ok" type="submit" class="btn btn-default" title="Поиск">
+                        <span class="glyphicon glyphicon-search"></span> Поиск
+                    </button>
+                </div>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-url = "/search/content"
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            >
+            <thead>
+                <tr>
+                     <!--<th data-field="id" data-type="numeric" data-sortable="true" data-width="100">ID</th>-->
+                     <!--<th data-field="aplId" data-type="numeric" data-formatter="aplFormatter" data-sortable="true" data-width="100">AplId</th>-->
+                     <th data-field="producerName" data-formatter="producerFormatter"data-width="100">Производитель</th>             
+                     <th data-field="code" data-formatter="linkFormatter" data-sortable="true" data-width="100">Артикул</th>
+                     <th data-field="name" >Наименование</th>             
+                     <th data-field="price" data-width="50" data-align="right">Цена</th>             
+<!--                     <th data-field="reserve" data-width="50" data-align="right">Резерв</th>             
+                     <th data-field="delivery" data-width="50" data-align="right">Доставка</th>             
+                     <th data-field="vozvrat" data-width="50" data-align="right">Возврат</th>             
+                     <th data-field="available" data-width="50" data-align="right" data-formatter="availableFormatter">Доступно</th>             
+                     <th data-field="retailCount" data-width="50" data-align="right">Продаж</th>             
+                     <th data-field="officeName" data-width="100">Офис</th>             
+                     <th data-field="id" data-width="10" data-formatter="activeFormatter"></th>
+                     <th data-field="aplRest"  data-width="5" data-align="right" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle">А</th>-->
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<script type="text/javascript">
+    
+    var $table = $('#table'),
+        $ok = $('#ok');
+
+    function refreshTable(){
+        $table.bootstrapTable('selectPage', 1);
+    }
+    
+    $(function () {        
+        $ok.click(function () {
+            refreshTable();
+        });
+
+        $(".inputclear").click(function(){
+            $("#searchinput").val('');
+            refreshTable();
+        });
+        
+    });
+    
+    function queryParams(params) {
+        $('.good-toolbar').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }            
+        
+        return params;
+    }
+    
+    function linkFormatter(value, row){
+        return [
+            '<div class="pull-left">',
+            '<a href="/goods/view/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function producerFormatter(value, row){
+//        return [
+//            '<div class="pull-left">',
+//            '<a href="/producer/view/' + row.producerId + '" target="_blank">' + value + '</a>',
+//            '</div>'
+//        ].join(''); 
+        return value;
+    }    
+    
+    
+    function statusExFormatter(value, row) {
+        return value ;
+    }  
+    
+    function availableFormatter(value) {
+        return  (value > 0) ? value:0;
+    }  
+    
+    function cellStatusExStyle(value, row, index) {
+        var result = 'default';
+        if (value){
+            result = 'info';
+        }
+        return {
+          classes: result
+        };
+    }        
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>

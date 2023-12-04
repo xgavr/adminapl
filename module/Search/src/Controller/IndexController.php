@@ -10,6 +10,7 @@ namespace Search\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
+use Application\Entity\Goods;
 
 
 class IndexController extends AbstractActionController
@@ -42,4 +43,50 @@ class IndexController extends AbstractActionController
         ]);
     }
 
+    public function contentAction()
+    {
+        	        
+        ini_set('memory_limit', '512M');
+        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        $producer = $this->params()->fromQuery('producer');
+        $group = $this->params()->fromQuery('group');
+        $accurate = $this->params()->fromQuery('accurate');
+        $opts = $this->params()->fromQuery('opts', false);
+        
+        $query = $this->entityManager->getRepository(Goods::class)
+                        ->findAllGoods([
+                            'q' => $q, 
+                            'sort' => $sort, 
+                            'order' => $order, 
+                            'producerId' => $producer,
+                            'groupId' => $group,
+                            'groupId' => $group,
+                            'accurate' => $accurate,
+                            ]);
+        
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        if ($opts){
+            foreach ($result as $key => $value){
+                $result[$key]['opts'] = Goods::optPrices($value['price'], empty($value['meanPrice']) ? 0:$value['meanPrice']);
+            }
+        }
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);          
+    }    
 }

@@ -366,9 +366,15 @@ class MakeRepository extends EntityRepository{
             ->where('m.make = :make')
             ->setParameter('make', $make->getId())
                 ;
+        $orX = $queryBuilder->expr()->orX();
         
         $like = $queryBuilder->expr()->like('m.name', '\''.$modelName.' %\'');
-        $queryBuilder->andWhere($like);
+        $orX->add($like);
+
+        $eq = $queryBuilder->expr()->eq('m.name', $modelName);
+        $orX->add($eq);
+        
+        $queryBuilder->andWhere($orX);
         
         return $queryBuilder->getQuery()->getResult();        
         
