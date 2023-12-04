@@ -159,10 +159,10 @@ class PaymentController extends AbstractActionController
                         ->find($data['bankAccount']);
                 $data['bankAccount'] = $bankAccount;
                 
-                if (empty($data['taxInfoOkato'])){
+                if (empty($data['taxInfoOkato']) && $data['paymentType'] == Payment::PAYMENT_TYPE_TAX){
                     $data['taxInfoOkato'] = $bankAccount->getLegal()->getOktmo();
                 }
-                if (!empty($data['taxInfoOkato']) && $data['supplierBillId'] != Payment::PAYMENT_TYPE_TAX){
+                if (!empty($data['taxInfoOkato']) && $data['paymentType'] != Payment::PAYMENT_TYPE_TAX){
                     $data['taxInfoOkato'] = '';
                 }
                 
