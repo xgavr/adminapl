@@ -57,11 +57,11 @@ class SearchRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('g.id, g.code, p.name as producerName, g.name, g.price, count(gt.id) as gtCount')
-            ->addSelect('concat(\'http:://adminapl.ru/\', i.path) as image')    
+            ->addSelect('min(concat(\'http:://adminapl.ru/\', i.path)) as image')    
             ->from(GoodToken::class, 'gt')
             ->join('gt.good', 'g')    
             ->join('g.producer', 'p')
-            ->join('g.images', 'i')    
+            ->leftJoin('g.images', 'i')    
             ->groupBy('g.id')
             ->orderBy('gtCount', 'DESC')
             ->where('gt.id = 0')   
