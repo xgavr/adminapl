@@ -64,7 +64,7 @@ class SearchRepository extends EntityRepository
             ->orderBy('gtCount', 'DESC')
             ->where('gt.id = 0')   
             ->having('gtCount > :lemmsCount')
-            ->setParameter('lemmsCount', count($lemms)/2)    
+            ->setParameter('lemmsCount', count($lemms)*2/3)    
             ;
         
         $orX = $queryBuilder->expr()->orX();
