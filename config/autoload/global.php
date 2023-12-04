@@ -123,6 +123,7 @@ return [
                     'group_concat' => 'DoctrineExtensions\Query\Mysql\GroupConcat',
                     'match_against' => 'DoctrineExtensions\Query\Mysql\MatchAgainst',
                     'ifnull' => 'DoctrineExtensions\Query\Mysql\IfNull',
+                    'replace' => 'DoctrineExtensions\Query\Mysql\Replace',
                 ],
                 'numeric_functions' => [
                     'floor' => 'DoctrineExtensions\Query\Mysql\Floor',
