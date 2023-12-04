@@ -155,7 +155,7 @@ class SearchManager {
         $query = $this->entityManager->getRepository(SearchTitle::class)
                 ->queryGoodsBySearchStr($searchStr, $params);
         
-        $page = 1; $limit = 20; $maxLimit = 50;
+        $page = 1; $limit = 20; $maxLimit = 50; $total = 0;
         
         if (!empty($params['page'])){
             if (is_numeric($params['page'])){
@@ -175,6 +175,13 @@ class SearchManager {
         }
         
         
-        return $query->getResult(2);
+//        return $query->getResult(2);
+        
+        return [
+            'data' => [
+                'rows' => $query->getResult(2),
+                'total' => $total,
+            ]    
+        ];
     }
 }

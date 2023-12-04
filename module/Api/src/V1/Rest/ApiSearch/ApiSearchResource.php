@@ -78,7 +78,6 @@ class ApiSearchResource extends AbstractResourceListener
     public function fetchAll($params = [])
     {
 //        var_dump($params);
-        
         return $this->searchManager->searchFromStr($params['search'], $params);
         
         //return new ApiProblem(405, 'The GET method has not been defined for collections');

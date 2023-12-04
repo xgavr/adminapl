@@ -1309,7 +1309,7 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.api-search',
                 'route_identifier_name' => 'api_search_id',
-                'hydrator' => \Laminas\Hydrator\ArraySerializable::class,
+                'hydrator' => \Laminas\Hydrator\ObjectProperty::class,
             ],
             \Api\V1\Rest\ApiSearch\ApiSearchCollection::class => [
                 'entity_identifier_name' => 'id',
