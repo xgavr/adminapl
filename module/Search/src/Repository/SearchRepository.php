@@ -13,6 +13,7 @@ use Application\Filter\Lemma;
 use Application\Filter\Tokenizer;
 use Application\Entity\GoodToken;
 use Application\Entity\Token;
+use Application\Entity\Goods;
 
 /**
  * Description of SearchRepository
@@ -75,8 +76,15 @@ class SearchRepository extends EntityRepository
         }
                 
         if ($orX->count()){
-            $queryBuilder->where($orX);
+            $andX = $queryBuilder->expr()->andX();
+    
+            $andX->add($orX);
+            
+            $andX->add($queryBuilder->expr()->eq('g.available', Goods::AVAILABLE_TRUE));        
+
+            $queryBuilder->where($andX);
         }
+        
         
         if (is_array($params)){
             if (!empty($params['sort'])){
@@ -84,6 +92,7 @@ class SearchRepository extends EntityRepository
             }            
             if (!empty($params['total'])){
                 $queryBuilder->resetDQLPart('join')                        
+                        ->join('gt.good', 'g')    
                         ->resetDQLPart('orderBy')                        
                         ->resetDQLPart('select')
                         ->addSelect('identity(gt.good) as goodId, count(gt.id) as gtCount')
