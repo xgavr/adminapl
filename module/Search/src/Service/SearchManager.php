@@ -152,9 +152,29 @@ class SearchManager {
      */
     public function searchFromStr($searchStr, $params = null)
     {
-        $result = $this->entityManager->getRepository(SearchTitle::class)
-                ->queryGoodsBySearchStr($searchStr);
+        $query = $this->entityManager->getRepository(SearchTitle::class)
+                ->queryGoodsBySearchStr($searchStr, $params);
         
-        return $result;
+        $page = 1; $limit = 25;
+        
+        if (!empty($params['page'])){
+            if (is_numeric($params['page'])){
+                $page = $params['page']; 
+            }
+        }
+        if (!empty($params['limit'])){
+            if (is_numeric($params['limit'])){
+                $limit = $params['limit']; 
+            }
+        }
+        if ($page) {
+            $query->setFirstResult(($page-1) * $limit);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+        
+        
+        return $query->getResult(2);
     }
 }

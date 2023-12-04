@@ -116,6 +116,15 @@ return [
                     ],
                 ],
             ],
+            'api.rest.api-search' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api-search[/:api_search_id]',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\ApiSearch\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -152,12 +161,12 @@ return [
             \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoResource::class => \Api\V1\Rest\ApiOrderInfo\ApiOrderInfoResourceFactory::class,
             \Api\V1\Rest\ApiClientInfo\ApiClientInfoResource::class => \Api\V1\Rest\ApiClientInfo\ApiClientInfoResourceFactory::class,
             \Api\V1\Rest\ApiLanding\ApiLandingResource::class => \Api\V1\Rest\ApiLanding\ApiLandingResourceFactory::class,
+            \Api\V1\Rest\ApiSearch\ApiSearchResource::class => \Api\V1\Rest\ApiSearch\ApiSearchResourceFactory::class,
         ],
     ],
     'view_manager' => [
         'template_path_stack' => [
-//            'Api' => 'C:\\OpenServer\\domains\\adminapl\\module\\Api\\config/../view',
-            'Api' => __DIR__ . '/../view',
+            'Api' => 'C:\\OpenServer\\domains\\adminapl\\module\\Api\\config/../view',
         ],
     ],
     'doctrine' => [
@@ -166,8 +175,7 @@ return [
                 'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
                 'cache' => 'array',
                 'paths' => [
-//                    0 => 'C:\\OpenServer\\domains\\adminapl\\module\\Api\\config/../src/Entity',
-                    0 => __DIR__ . '/../src/Entity',
+                    0 => 'C:\\OpenServer\\domains\\adminapl\\module\\Api\\config/../src/Entity',
                 ],
             ],
             'orm_default' => [
@@ -190,6 +198,7 @@ return [
             8 => 'api.rest.api-order-info',
             9 => 'api.rest.api-client-info',
             10 => 'api.rest.api-landing',
+            11 => 'api.rest.api-search',
         ],
     ],
     'api-tools-rpc' => [
@@ -214,6 +223,7 @@ return [
             'Api\\V1\\Rest\\ApiOrderInfo\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiClientInfo\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiLanding\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\ApiSearch\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -271,6 +281,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiSearch\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -317,6 +332,10 @@ return [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiSearch\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
         ],
     ],
     'api-tools-content-validation' => [
@@ -340,6 +359,9 @@ return [
         ],
         'Api\\V1\\Rest\\ApiLanding\\Controller' => [
             'input_filter' => 'Api\\V1\\Rest\\ApiLanding\\Validator',
+        ],
+        'Api\\V1\\Rest\\ApiSearch\\Controller' => [
+            'input_filter' => 'Api\\V1\\Rest\\ApiSearch\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -796,6 +818,117 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'field_type' => 'string',
             ],
         ],
+        'Api\\V1\\Rest\\ApiSearch\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\StripTags::class,
+                        'options' => [],
+                    ],
+                ],
+                'field_type' => 'string',
+                'description' => 'Строка поиска',
+                'name' => 'search',
+                'error_message' => 'Укажите наименование детали и марку машины',
+            ],
+            1 => [
+                'required' => false,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\InArray::class,
+                        'options' => [
+                            'haystack' => [
+                                0 => 'price',
+                            ],
+                        ],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'sort',
+                'description' => 'Поле сортировки (price)',
+            ],
+            2 => [
+                'required' => false,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\InArray::class,
+                        'options' => [
+                            'haystack' => [
+                                0 => 'asc',
+                                1 => 'desc',
+                            ],
+                        ],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'order',
+                'description' => 'Порядок сортировки (\'acs\', \'desc\')',
+            ],
+            3 => [
+                'required' => false,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                    1 => [
+                        'name' => \Laminas\Validator\GreaterThan::class,
+                        'options' => [
+                            'min' => '1',
+                        ],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'limit',
+                'description' => 'Размер страницы (25, макс 50)',
+                'field_type' => 'integer',
+            ],
+            4 => [
+                'required' => false,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                    1 => [
+                        'name' => \Laminas\Validator\GreaterThan::class,
+                        'options' => [
+                            'min' => '1',
+                        ],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'page',
+                'description' => 'Номер страницы',
+                'field_type' => 'integer',
+            ],
+        ],
     ],
     'api-tools-rest' => [
         'Api\\V1\\Rest\\Good\\Controller' => [
@@ -1021,6 +1154,34 @@ STATUS_CANCELED  = -10; // Отменен.',
             'collection_class' => \Api\V1\Rest\ApiLanding\ApiLandingCollection::class,
             'service_name' => 'ApiLanding',
         ],
+        'Api\\V1\\Rest\\ApiSearch\\Controller' => [
+            'listener' => \Api\V1\Rest\ApiSearch\ApiSearchResource::class,
+            'route_name' => 'api.rest.api-search',
+            'route_identifier_name' => 'api_search_id',
+            'collection_name' => 'api_search',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [
+                0 => 'search',
+                1 => 'sort',
+                2 => 'order',
+                3 => 'limit',
+                4 => 'page',
+            ],
+            'page_size' => 25,
+            'page_size_param' => 'limit',
+            'entity_class' => \Api\V1\Rest\ApiSearch\ApiSearchEntity::class,
+            'collection_class' => \Api\V1\Rest\ApiSearch\ApiSearchCollection::class,
+            'service_name' => 'ApiSearch',
+        ],
     ],
     'api-tools-hal' => [
         'metadata_map' => [
@@ -1142,6 +1303,18 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.api-landing',
                 'route_identifier_name' => 'api_landing_id',
+                'is_collection' => true,
+            ],
+            \Api\V1\Rest\ApiSearch\ApiSearchEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-search',
+                'route_identifier_name' => 'api_search_id',
+                'hydrator' => \Laminas\Hydrator\ArraySerializable::class,
+            ],
+            \Api\V1\Rest\ApiSearch\ApiSearchCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-search',
+                'route_identifier_name' => 'api_search_id',
                 'is_collection' => true,
             ],
         ],
