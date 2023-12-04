@@ -901,7 +901,7 @@ STATUS_CANCELED  = -10; // Отменен.',
                     ],
                 ],
                 'name' => 'limit',
-                'description' => 'Размер страницы (25, макс 50)',
+                'description' => 'Размер страницы (20, макс 50)',
                 'field_type' => 'integer',
             ],
             4 => [

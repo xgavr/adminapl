@@ -155,7 +155,7 @@ class SearchManager {
         $query = $this->entityManager->getRepository(SearchTitle::class)
                 ->queryGoodsBySearchStr($searchStr, $params);
         
-        $page = 1; $limit = 25;
+        $page = 1; $limit = 20; $maxLimit = 50;
         
         if (!empty($params['page'])){
             if (is_numeric($params['page'])){
@@ -164,7 +164,7 @@ class SearchManager {
         }
         if (!empty($params['limit'])){
             if (is_numeric($params['limit'])){
-                $limit = $params['limit']; 
+                $limit = min($maxLimit, $params['limit']); 
             }
         }
         if ($page) {

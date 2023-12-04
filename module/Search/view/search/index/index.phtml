@@ -4,6 +4,7 @@ use Application\Entity\Goods;
 $this->headTitle('Поиск для лендинга');
 
 $this->mainMenu()->setActiveItemId('search');
+$this->mainMenu()->setActiveUrl($this->url('search'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('application'),
@@ -20,11 +21,14 @@ $this->pageBreadcrumbs()->setItems([
                     <div class="btn-group">
                         <input id="searchinput" name="search" style="width: 600px" 
                                class="form-control good-toolbar enter-search" 
-                               onfocus="this.select();" type="text" placeholder="Колодки тормозные форд фокус" value="<?= $search ?>">
+                               type="text" placeholder="Колодки тормозные форд фокус" value="<?= $search ?>">
                         <span class="glyphicon glyphicon-remove-circle inputclear"></span>
                     </div>
                     <button id="ok" type="submit" class="btn btn-default" title="Поиск">
                         <span class="glyphicon glyphicon-search"></span> Поиск
+                    </button>
+                    <button id="link" type="button" class="btn btn-default" title="Копировать ссылку">
+                        <span class="glyphicon glyphicon-link"></span> 
                     </button>
                 </div>
             </div>
@@ -77,6 +81,13 @@ $this->pageBreadcrumbs()->setItems([
     $(function () {        
         $ok.click(function () {
             refreshTable();
+        });
+        $('#link').click(function () {
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val('https::/adminapl.ru/search?search='+$('#searchinput').val()).select();
+            document.execCommand("copy");
+            $temp.remove();
         });
 
         $(".inputclear").click(function(){

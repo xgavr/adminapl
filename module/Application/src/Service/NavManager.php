@@ -404,6 +404,25 @@ class NavManager
                 }
             }
             
+            //Поиск
+            if ($this->rbacManager->isGranted(null, 'rb.manage')) {
+                $searchDropdownItems = [];
+    
+                $searchDropdownItems[] = [
+                            'id' => 'search',
+                            'label' => 'Поиск тест',
+                            'link' => $url('search')
+                        ];
+                                                                
+                if (count($searchDropdownItems)!=0) {
+                    $items[] = [
+                        'id' => 'search',
+                        'label' => 'Поиск',
+                        'dropdown' => $searchDropdownItems
+                    ];
+                }
+            }
+
             //Отчеты
             if ($this->rbacManager->isGranted(null, 'client.manage')) {
                 $reportDropdownItems = [];
