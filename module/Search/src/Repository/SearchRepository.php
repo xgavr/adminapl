@@ -88,6 +88,7 @@ class SearchRepository extends EntityRepository
                         ->resetDQLPart('select')
                         ->addSelect('identity(gt.good) as goodId, count(gt.id) as gtCount')
                         ;
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
             }            
         }
         

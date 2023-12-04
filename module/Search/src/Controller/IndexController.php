@@ -76,7 +76,7 @@ class IndexController extends AbstractActionController
         $params['total'] = 1;
         $totalQuery = $this->entityManager->getRepository(SearchTitle::class)
                         ->queryGoodsBySearchStr($q, $params);
-        $total = count($totalQuery->getResult());
+        $total = count($totalQuery->getResult(2));
         
         if ($offset) {
             $query->setFirstResult($offset);
