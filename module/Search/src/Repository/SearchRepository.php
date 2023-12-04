@@ -56,13 +56,13 @@ class SearchRepository extends EntityRepository
         }    
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g.id, g.code, p.name as producerName, g.name, g.price, count(gt.id) as gtCount')
+        $queryBuilder->select('identity(gt.good) as goodId, g.code, p.name as producerName, g.name, g.price, count(gt.id) as gtCount')
             ->addSelect('min(replace(i.path, \'./public/\', \'http:://adminapl.ru/\')) as image')    
             ->from(GoodToken::class, 'gt')
             ->join('gt.good', 'g')    
             ->join('g.producer', 'p')
             ->leftJoin('g.images', 'i')    
-            ->groupBy('g.id')
+            ->groupBy('goodId')
             ->orderBy('gtCount', 'DESC')
             ->where('gt.id = 0')   
             ->having('gtCount > :lemmsCount')
@@ -81,6 +81,13 @@ class SearchRepository extends EntityRepository
         if (is_array($params)){
             if (!empty($params['sort'])){
                 $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);                
+            }            
+            if (!empty($params['total'])){
+                $queryBuilder->resetDQLPart('join')                        
+                        ->resetDQLPart('orderBy')                        
+                        ->resetDQLPart('select')
+                        ->addSelect('identity(gt.good) as goodId, count(gt.id) as gtCount')
+                        ;
             }            
         }
         

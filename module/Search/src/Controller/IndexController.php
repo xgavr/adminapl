@@ -61,18 +61,22 @@ class IndexController extends AbstractActionController
         $group = $this->params()->fromQuery('group');
         $accurate = $this->params()->fromQuery('accurate');
         
-        $query = $this->entityManager->getRepository(SearchTitle::class)
-                        ->queryGoodsBySearchStr($q, 
-                                [
-                                    'sort' => $sort, 
-                                    'order' => $order, 
-                                    'producerId' => $producer,
-                                    'groupId' => $group,
-                                    'groupId' => $group,
-                                    'accurate' => $accurate,
-                            ]);
+        $params = [
+            'sort' => $sort, 
+            'order' => $order, 
+            'producerId' => $producer,
+            'groupId' => $group,
+            'groupId' => $group,
+            'accurate' => $accurate,            
+        ];
         
-        $total = count($query->getResult(2));
+        $query = $this->entityManager->getRepository(SearchTitle::class)
+                        ->queryGoodsBySearchStr($q, $params);
+        
+        $params['total'] = 1;
+        $totalQuery = $this->entityManager->getRepository(SearchTitle::class)
+                        ->queryGoodsBySearchStr($q, $params);
+        $total = count($totalQuery->getResult());
         
         if ($offset) {
             $query->setFirstResult($offset);
