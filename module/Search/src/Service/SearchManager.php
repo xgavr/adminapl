@@ -183,7 +183,9 @@ class SearchManager {
         return [
             'data' => [
                 'rows' => $query->getResult(2),
-                'total' => count($totalQuery->getResult(2)),
+                'page' => $page,
+                'page_size' => $limit,
+                'total_size' => count($totalQuery->getResult(2)),
             ]    
         ];
     }
