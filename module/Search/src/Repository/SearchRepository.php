@@ -11,6 +11,9 @@ namespace Search\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Filter\Lemma;
 use Application\Filter\Tokenizer;
+use Application\Entity\GoodToken;
+use Application\Entity\Token;
+
 /**
  * Description of SearchRepository
  *
@@ -23,51 +26,63 @@ class SearchRepository extends EntityRepository
      * Найди товары по строке поиска
      * 
      * @param string $searchStr
+     * @param array $params
      * 
      * @return Goods|null
      */
-    public function findGoodsBySearchStr($searchStr)
+    public function queryGoodsBySearchStr($searchStr, $params = null)
     {
 //        var_dump($phrase); exit;
         $entityManager = $this->getEntityManager();
         $lemmaFilter = new Lemma($entityManager);
         $tokenFilter = new Tokenizer();
-        $result = [0];
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('g')
-            ->distinct()    
-            ->from(Goods::class, 'g')
-            ->where('tg.movement > 0')
-            ->orderBy('tg.movement', 'DESC')
-//            ->setMaxResults(5)    
-            ;
-        $orX = $queryBuilder->expr()->orX();
-                
-        $andX = $queryBuilder->expr()->andX();
-        $lemms = $lemmaFilter->filter($tokenFilter->filter($phrase));
+        
+        $lemms = $lemmaFilter->filter($tokenFilter->filter($searchStr));
+//        var_dump($lemms);
+        $lemmsIn = [];
         if (count($lemms)){                                                
             foreach ($lemms as $k => $words){
                 foreach ($words as $key => $word){
                     if ($word){
-                        $andX->add($queryBuilder->expr()->like('tg.lemms', '\'%'.$word.'%\''));
+                        $lemmsIn[] = $word;
+                        $token = $entityManager->getRepository(Token::class)
+                                ->findOneBy(['lemma' => $word]);
+                        if ($token){
+                            $lemmsIn[] = $token->getCorrect();
+                        }
                     }    
                 }
             }    
         }    
-        if ($andX->count()){
-            $orX->add($andX);
-        }    
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g.id, g.code, p.name as producerName, g.name, g.price, count(gt.id) as gtCount')
+            ->from(GoodToken::class, 'gt')
+            ->join('gt.good', 'g')    
+            ->join('g.producer', 'p')
+            ->groupBy('g.id')
+            ->orderBy('gtCount', 'DESC')
+            ->where('gt.id = 0')   
+            ->having('gtCount > :lemmsCount')
+            ->setParameter('lemmsCount', count($lemms)/2)    
+            ;
         
+        $orX = $queryBuilder->expr()->orX();
+        if (count($lemmsIn)){
+            $orX->add($queryBuilder->expr()->in('gt.lemma', $lemmsIn));
+        }
+                
         if ($orX->count()){
-            $queryBuilder->andWhere($orX);
-//                            var_dump($queryBuilder->getQuery()->getSQL()); exit;
-            $data = $queryBuilder->getQuery()->getResult();
-            foreach ($data as $row){
-                $result[] = $row['id'];
-            }                                
+            $queryBuilder->where($orX);
         }
         
-        return $result;
+        if (is_array($params)){
+            if (!empty($params['sort'])){
+                $queryBuilder->orderBy('g.'.$params['sort'], $params['order']);                
+            }            
+        }
+        
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
     }        
 }

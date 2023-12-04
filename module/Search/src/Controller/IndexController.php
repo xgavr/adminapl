@@ -11,6 +11,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Entity\Goods;
+use Search\Entity\SearchTitle;
 
 
 class IndexController extends AbstractActionController
@@ -39,7 +40,10 @@ class IndexController extends AbstractActionController
     
     public function indexAction()
     {
+        $q = $this->params()->fromQuery('search');
+        
         return new ViewModel([
+            'search' => $q,
         ]);
     }
 
@@ -56,17 +60,16 @@ class IndexController extends AbstractActionController
         $producer = $this->params()->fromQuery('producer');
         $group = $this->params()->fromQuery('group');
         $accurate = $this->params()->fromQuery('accurate');
-        $opts = $this->params()->fromQuery('opts', false);
         
-        $query = $this->entityManager->getRepository(Goods::class)
-                        ->findAllGoods([
-                            'q' => $q, 
-                            'sort' => $sort, 
-                            'order' => $order, 
-                            'producerId' => $producer,
-                            'groupId' => $group,
-                            'groupId' => $group,
-                            'accurate' => $accurate,
+        $query = $this->entityManager->getRepository(SearchTitle::class)
+                        ->queryGoodsBySearchStr($q, 
+                                [
+                                    'sort' => $sort, 
+                                    'order' => $order, 
+                                    'producerId' => $producer,
+                                    'groupId' => $group,
+                                    'groupId' => $group,
+                                    'accurate' => $accurate,
                             ]);
         
         $total = count($query->getResult(2));
@@ -79,11 +82,7 @@ class IndexController extends AbstractActionController
         }
 
         $result = $query->getResult(2);
-        if ($opts){
-            foreach ($result as $key => $value){
-                $result[$key]['opts'] = Goods::optPrices($value['price'], empty($value['meanPrice']) ? 0:$value['meanPrice']);
-            }
-        }
+
         return new JsonModel([
             'total' => $total,
             'rows' => $result,

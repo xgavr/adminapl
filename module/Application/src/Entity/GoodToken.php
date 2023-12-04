@@ -27,7 +27,7 @@ class GoodToken {
     /**
      * @ORM\Column(name="lemma")  
      */
-    protected $lemma;        
+//    protected $lemma;        
 
     /**
      * @ORM\Column(name="status")  
@@ -49,6 +49,12 @@ class GoodToken {
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
     protected $good;    
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Token", inversedBy="goodTokens") 
+     * @ORM\JoinColumn(name="lemma", referencedColumnName="lemma")
+     */
+    protected $lemma;    
     
 
     public function getId() 

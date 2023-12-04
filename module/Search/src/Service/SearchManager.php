@@ -141,5 +141,20 @@ class SearchManager {
         }
         
         return $searchTitle;
-    }    
+    }
+
+    /**
+     * Поиск по строке
+     * @param string $searchStr
+     * @param array $params
+     * 
+     * @return array
+     */
+    public function searchFromStr($searchStr, $params = null)
+    {
+        $result = $this->entityManager->getRepository(SearchTitle::class)
+                ->queryGoodsBySearchStr($searchStr);
+        
+        return $result;
+    }
 }
