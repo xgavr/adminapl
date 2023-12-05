@@ -169,8 +169,8 @@ class MakeManager
             
 //            var_dump($row['name'], count($models));
             foreach ($models as $model){
-                $nameRu = str_replace(strtoupper($row['name']), $row['cyrillic-name'], $model->TransferName());
-                if ($nameRu != $model->TransferName()){
+                $nameRu = str_replace(strtoupper($row['name']), $row['cyrillic-name'], $model->getTransferName());
+                if ($nameRu != $model->getTransferName()){
                     $model->setNameRu($nameRu);
                     $this->entityManager->persist($model);
                     continue;
