@@ -232,7 +232,7 @@ $form->prepare();
                 if (data == 'ok'){
                     $('#cashOutModal').modal('hide');
                     //window.location.reload();
-                    $('#table').bootstrapTable('refresh');
+                    $('#table').bootstrapTable('refresh', {'silent':true});
                 } else {
                     $('#cashOutModal .modal-content').html(data);                    
                 }    
