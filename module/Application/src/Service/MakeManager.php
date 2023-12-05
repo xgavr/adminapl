@@ -146,7 +146,7 @@ class MakeManager
      */
     private function findMakeBase($make)
     {
-        $result = Decoder::decode(file_get_contents('https://cars-base.ru/api/cars/'.$make->getName()), Json::TYPE_ARRAY);
+        $result = Decoder::decode(file_get_contents('https://cars-base.ru/api/cars/'.$make->getTransferName()), Json::TYPE_ARRAY);
         if (!empty($result['error'])){
             $result = Decoder::decode(file_get_contents('https://cars-base.ru/api/cars/'. strtoupper($make->getFullName())), Json::TYPE_ARRAY);            
         }

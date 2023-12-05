@@ -370,8 +370,12 @@ class MakeRepository extends EntityRepository{
         
         $like = $queryBuilder->expr()->like('m.name', '\''.$modelName.' %\'');
         $orX->add($like);
+        $like = $queryBuilder->expr()->like('m.fullName', '\''.$modelName.' %\'');
+        $orX->add($like);
 
         $eq = $queryBuilder->expr()->eq('m.name', $modelName);
+        $orX->add($eq);
+        $eq = $queryBuilder->expr()->eq('m.fullName', $modelName);
         $orX->add($eq);
         
         $queryBuilder->andWhere($orX);
