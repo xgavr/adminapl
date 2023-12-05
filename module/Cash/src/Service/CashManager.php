@@ -504,6 +504,10 @@ class CashManager {
             if ($supplier){
                 $data['legal'] = $this->entityManager->getRepository(Legal::class)
                         ->formContactLegal($supplier->getLegalContact());
+                if (empty($data['legal']) && $supplier->getParent()){
+                    $data['legal'] = $this->entityManager->getRepository(Legal::class)
+                            ->formContactLegal($supplier->getParent()->getLegalContact());                    
+                }
             }    
         }
         
