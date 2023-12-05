@@ -168,7 +168,7 @@ class MakeManager
                 $models = $this->entityManager->getRepository(Model::class)
                         ->findMakeModelByName($make, $row['name']);
             } catch(\Doctrine\ORM\Query\QueryException $e){
-                var_dump($row['name']);
+                var_dump($row['name'], $e->getMessage());
                 $models = [];
             }    
 //            var_dump($row['name'], count($models));
