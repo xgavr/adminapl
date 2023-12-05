@@ -12,6 +12,7 @@ use Application\Entity\Make;
 use Application\Entity\Model;
 use Laminas\Json\Decoder;
 use Laminas\Json\Json;
+use Admin\Filter\TransferName;
 
 /**
  * Description of MakeService
@@ -163,20 +164,24 @@ class MakeManager
     public function fillMakeModelsNameRu($make)
     {
         $data = $this->findMakeBase($make);
+        $transferFilter = new TransferName();
         foreach ($data as $row){
+            
+            $nameEn = $transferFilter->filter($row['name']);
+            
             $models = $this->entityManager->getRepository(Model::class)
-                    ->findMakeModelByName($make, $row['name']);
+                    ->findMakeModelByName($make, $nameEn);
             
 //            var_dump($row['name'], count($models));
             foreach ($models as $model){
-                $nameRu = str_replace(strtoupper($row['name']), $row['cyrillic-name'], $model->getTransferName());
+                $nameRu = str_replace(strtoupper($nameEn), $row['cyrillic-name'], $model->getTransferName());
                 if ($nameRu != $model->getTransferName()){
                     $model->setNameRu($nameRu);
                     $this->entityManager->persist($model);
                     continue;
                 }    
                 
-                $nameRu = str_replace(strtoupper($row['name']), $row['cyrillic-name'], $model->getFullName());
+                $nameRu = str_replace(strtoupper($nameEn), $row['cyrillic-name'], $model->getFullName());
                 if ($nameRu != $model->getFullName()){
                     $model->setNameRu($nameRu);
                     $this->entityManager->persist($model);
