@@ -86,7 +86,7 @@ $this->pageBreadcrumbs()->setItems([
         $('#link').click(function () {
             var $temp = $("<input>");
             $("body").append($temp);
-            $temp.val('https::/adminapl.ru/search?search='+$('#searchinput').val()).select();
+            $temp.val('https://adminapl.ru/search?search='+$('#searchinput').val()).select();
             document.execCommand("copy");
             $temp.remove();
         });

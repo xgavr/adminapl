@@ -358,7 +358,11 @@
                         return row.cashDoc.cost.name;
             case '<?= CashDoc::KIND_IN_RETURN_SUPPLIER ?>': 
             case '<?= CashDoc::KIND_OUT_SUPPLIER ?>': 
-                        return row.cashDoc.legal.name;
+                if (row.cashDoc.legal){
+                    return row.cashDoc.legal.name;
+                }
+                
+                return '!Поставщик не указан';
         }
         return;
     }    
