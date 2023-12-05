@@ -360,8 +360,7 @@
             case '<?= CashDoc::KIND_OUT_SUPPLIER ?>': 
                 if (row.cashDoc.legal){
                     return row.cashDoc.legal.name;
-                }
-                
+                }                
                 return '<span class="text-warning">!Поставщик не указан!</span>';
         }
         return;

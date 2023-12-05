@@ -209,7 +209,7 @@ $form->prepare();
                 if (data == 'ok'){
                     $('#userOutModal').modal('hide');
                     //window.location.reload();
-                    $('#table').bootstrapTable('refresh');
+                    $('#table').bootstrapTable('refresh', {'silent':true});
                 } else {
                     $('#userOutModal .modal-content').html(data);                    
                      $('#user-out-submit').prop('disabled', false);

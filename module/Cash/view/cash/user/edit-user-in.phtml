@@ -185,7 +185,7 @@ $form->prepare();
                 if (data == 'ok'){
                     $('#userInModal').modal('hide');
                     //window.location.reload();
-                    $('#table').bootstrapTable('refresh');
+                    $('#table').bootstrapTable('refresh', {'silent':true});
                 } else {
                     $('#userInModal .modal-content').html(data);                    
                 }    
