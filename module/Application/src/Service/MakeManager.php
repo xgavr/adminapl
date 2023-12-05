@@ -146,10 +146,10 @@ class MakeManager
      */
     private function findMakeBase($make)
     {
-        var_dump($make->getTransferName(), strtoupper($make->getFullName()));
+//        var_dump($make->getTransferName(), strtoupper($make->getFullName()));
         
         $result = Decoder::decode(file_get_contents('https://cars-base.ru/api/cars/'.$make->getTransferName()), Json::TYPE_ARRAY);
-        if (!empty($result['error'])){
+        if (!empty($result['error']) && $make->getFullName()){
             $result = Decoder::decode(file_get_contents('https://cars-base.ru/api/cars/'. strtoupper($make->getFullName())), Json::TYPE_ARRAY);            
         }
         return $result;
@@ -168,6 +168,7 @@ class MakeManager
                 $models = $this->entityManager->getRepository(Model::class)
                         ->findMakeModelByName($make, $row['name']);
             } catch(\Doctrine\ORM\Query\QueryException $e){
+                var_dump($row['name']);
                 $models = [];
             }    
 //            var_dump($row['name'], count($models));
