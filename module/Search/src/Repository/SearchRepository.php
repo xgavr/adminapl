@@ -47,7 +47,13 @@ class SearchRepository extends EntityRepository
                         $token = $entityManager->getRepository(Token::class)
                                 ->findOneBy(['lemma' => $word]);
                         if ($token){
-                            $result[$i] = $token->getCorrect();
+                            if ($token->getCorrect()){
+                                $corrects = $token->getCorrectAsArray();
+                                foreach ($corrects as $correct){
+                                    $result[$i] = $correct;
+                                    $i++;
+                                }    
+                            }    
                         }
                         $i++;
                     }    
@@ -73,7 +79,7 @@ class SearchRepository extends EntityRepository
 
         $lemms = $this->lemmsFromSearchStr($searchStr);
         
-        var_dump($lemms);
+//        var_dump($lemms);
         
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('identity(gt.good) as goodId, g.id, g.code, p.name as producerName, g.name, g.price, count(gt.id) as gtCount')
