@@ -73,6 +73,8 @@ class SearchRepository extends EntityRepository
 
         $lemms = $this->lemmsFromSearchStr($searchStr);
         
+        var_dump($lemms);
+        
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('identity(gt.good) as goodId, g.id, g.code, p.name as producerName, g.name, g.price, count(gt.id) as gtCount')
             //->addSelect('min(replace(i.path, \'./public/\', \'http://adminapl.ru/\')) as image')    
