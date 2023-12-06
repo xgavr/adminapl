@@ -27,6 +27,7 @@ use Company\Entity\Office;
 use Stock\Entity\GoodBalance;
 use Application\Entity\GoodSupplier;
 use Stock\Entity\Reserve;
+use Application\Entity\GoodToken;
 
 class GoodsController extends AbstractActionController
 {
@@ -712,7 +713,9 @@ class GoodsController extends AbstractActionController
         
         $base = $this->entityManager->getRepository(Movement::class)
                 ->availableBasePtu($goods->getId());
-                
+        
+        $tokens = $this->entityManager->getRepository(GoodToken::class)
+                ->findBy(['good' => $goods->getId()]);
 
         // Render the view template.
         return new ViewModel([
@@ -732,6 +735,7 @@ class GoodsController extends AbstractActionController
             'isApl' => $isApl,
             'base' => $base,    
             'entityManager' => $this->entityManager,
+            'tokens' => $tokens,
         ]);
     }      
 
@@ -1102,6 +1106,26 @@ class GoodsController extends AbstractActionController
         }        
 
         $bestname = $this->nameManager->findBestName($goods, true);
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);           
+    }  
+
+    public function updateGoodTokenAction()
+    {
+        $goodsId = $this->params()->fromRoute('id', -1);
+        
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findOneById($goodsId);        
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->entityManager->getRepository(Goods::class)
+                ->updateGoodToken($goods);
         
         // Перенаправляем пользователя на страницу "goods".
         return new JsonModel([

@@ -22,6 +22,9 @@ use Stock\Entity\Comiss;
 use Application\Filter\Lemma;
 use Application\Filter\Tokenizer;
 use Application\Entity\TokenGroup;
+use Application\Entity\Article;
+use Application\Entity\ArticleToken;
+use Application\Entity\GoodToken;
 
 
 /**
@@ -2251,5 +2254,35 @@ class GoodsRepository extends EntityRepository
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
-    }          
+    } 
+    
+    /**
+     * Обновление токенов товара
+     * @param Goods $good
+     */
+    public function updateGoodToken($good)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $articles = $entityManager->getRepository(Article::class)
+                ->findBy(['good' => $good->getId()]);
+        foreach ($articles as $article){
+            $articleTokens = $entityManager->getRepository(ArticleToken::class)
+                    ->findBy(['article' => $article->getId()]);
+            foreach ($articleTokens as $articleToken){
+                $goodToken = $entityManager->getRepository(GoodToken::class)
+                        ->findOneBy(['good' => $good->getId(), 'lemma' => $articleToken->getLemma()]);
+                if (empty($goodToken)){
+                    $entityManager->getConnection()
+                            ->insert('good_token', [
+                                'good_id' => $good->getId(),
+                                'lemma' => $articleToken->getLemma(),
+                                'status' => 0,
+                            ]);
+                }
+            }
+        }
+        
+        return;
+    }
 }

@@ -173,6 +173,19 @@
                                 </button>
                             </td>
                         </tr>    
+                        <tr>
+                            <td colspan="2">
+                                <?php foreach ($tokens as $token):?>
+                                    <span><?= $token->getLemma();?></span>
+                                <?php endforeach;?>
+                            </td> 
+                            <td>
+                                <button value="/goods/update-good-token/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                        title="Обновить токены">
+                                    <span class="glyphicon glyphicon-refresh" ></span>
+                                </button>
+                            </td>
+                        </tr>    
                 </table>                    
                 <table class="table table-bordered">
                     <p>

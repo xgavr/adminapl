@@ -1197,27 +1197,11 @@ class NameManager
         
         foreach ($iterable as $row){
             foreach ($row as $rawprice){
-//                $good = $rawprice->getGood();
-//                if ($good){
-//                    $goodTitleStr = $this->goodTitlesIds($good);
-//                    $goodTitleStrMd5 = md5($goodTitleStr);
-//
-//                    if ($goodTitleStr){ 
-//                        $goodTitle = $this->entityManager->getRepository(GoodTitle::class)
-//                                ->findOneBy(['good' => $good->getId(), 'titleMd5' => $goodTitleStrMd5]);
-//
-//                        if ($goodTitle == null){
-//                            
-//                            $this->entityManager->getRepository(Goods::class)
-//                                    ->removeGoodTitles($good);
-//                            
-//                            $this->addGoodTokenFromGood($good, $avgD);
-//
-//                            $this->entityManager->getRepository(Goods::class)
-//                                    ->insertGoodTitle(['good_id' => $good->getId(), 'title' => $goodTitleStr, 'title_md5' => $goodTitleStrMd5]);
-//                        }    
-//                    }    
-//                }    
+                $good = $rawprice->getGood();
+                if ($good){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->updateGoodToken($good);
+                }    
 
                 $this->entityManager->getRepository(Rawprice::class)
                         ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_GOOD_PARSED]);
