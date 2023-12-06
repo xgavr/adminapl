@@ -666,6 +666,7 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
+     * Не используется
      * Заполнение дерева токенов
      */
     public function fillFpTreeAction()
@@ -683,6 +684,7 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
+     * Не используется
      * Пересчет поддержки дерева токенов
      */
     public function supportFpTreeAction()

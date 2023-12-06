@@ -14,6 +14,10 @@ $form->get('code')->setAttributes([
     'autocomplete' => 'off',
     ]);
 
+$form->get('aplId')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('good')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -59,7 +63,17 @@ $docName = 'Новый';
         </div>    
     </div>
     <div class="row">
-        <div class="col-xs-8">                        
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('aplId')); ?>
+                <div class="btn-group">
+                    <?= $this->formElement($form->get('aplId')); ?>
+                    <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                </div>
+                <?= $this->formElementErrors($form->get('aplId')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-5">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('code')); ?>
                 <div class="btn-group">
@@ -124,6 +138,7 @@ $docName = 'Новый';
                     };
                     var row = {
                         good: good,
+                        offerId: answer.good.aplId,
                         saleAmount: data.saleAmount,
                         saleQty: data.saleQty,
                         priceSale: data.priceSale,
@@ -157,6 +172,7 @@ $docName = 'Новый';
         $('#code').on('input', function(){
             $('#code').val($.trim($('#code').val()));
         });
+        
         $('#code').typeahead({
             source: function(query, process) {
                 return $.get("/ptu/autocomplete-good?q="+query, function (data) {
@@ -167,10 +183,20 @@ $docName = 'Новый';
             afterSelect: function(data) {
                 $('#good').val(data.id);
                 $('#code').val(data.code);
+                $('#aplId').val(data.aplId);
                 $('#goodInputName').val(data.name);
             }
         });        
         
+        $('#aplId').on('change', function(){
+            $.get("/ptu/autocomplete-good?aplId="+$(this).val(), function (data){
+                $('#good').val(data.id);
+                $('#code').val(data.code);
+                $('#aplId').val(data.aplId);
+                $('#goodInputName').val(data.name);
+            });        
+        });
+
         $("#priceSale").on('input', function(){
             var value = $(this).val();
             $(this).val(value.replace(",","."));

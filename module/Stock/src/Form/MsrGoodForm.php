@@ -62,6 +62,17 @@ class MsrGoodForm extends Form implements ObjectManagerAwareInterface
         
         $this->add([
             'type'  => 'text',
+            'name' => 'aplId',
+            'attributes' => [                
+                'id' => 'aplId'
+            ],
+            'options' => [
+                'label' => 'Апл Id',
+            ],
+        ]);        
+
+        $this->add([
+            'type'  => 'text',
             'name' => 'code',
             'attributes' => [                
                 'id' => 'code'

@@ -208,6 +208,7 @@ class ComitentController extends AbstractActionController
                     'good' => [
                         'id' => $good->getId(),
                         'code' => $good->getCode(),
+                        'aplId' => $good->getAplId(),
                         'name' => $good->getNameShort(),
                         'producer' => $good->getProducer()->getName(),
                     ],
@@ -217,6 +218,7 @@ class ComitentController extends AbstractActionController
             if ($good){
                 $data = [
                     'good' => $good->getId(),
+                    'aplId' => $good->getAplId(),
                     'code' => $good->getCode(),
                     'goodInputName' => $good->getInputName(),
                     'saleQty' => $params['saleQty'],

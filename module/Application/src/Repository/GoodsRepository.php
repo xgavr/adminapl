@@ -2232,6 +2232,7 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder->select('g')
             ->from(Goods::class, 'g')
+            ->where('g.id = 0')                           
                 ;
         
         if (is_array($params)){

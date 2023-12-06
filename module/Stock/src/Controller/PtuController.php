@@ -464,20 +464,35 @@ class PtuController extends AbstractActionController
     {
         $result = [];
         $q = $this->params()->fromQuery('q');
+        $aplId = $this->params()->fromQuery('aplId');
         
         if ($q){
             $query = $this->entityManager->getRepository(Goods::class)
                             ->autocompleteGood(['search' => $q]);
-
             $data = $query->getResult();
             foreach ($data as $row){
                 $result[] = [
                     'id' => $row->getId(), 
                     'name' => $row->getInputName(), 
                     'code' => $row->getCode(),
+                    'aplId' => $row->getAplId(),
                     'price' => $row->getFormatMeanPrice(),
                 ];
             }
+        }    
+        
+        if ($aplId){
+            $good = $this->entityManager->getRepository(Goods::class)
+                            ->findOneBy(['aplId' => $aplId]);
+            if ($good){
+                $result = [
+                    'id' => $good->getId(), 
+                    'name' => $good->getInputName(), 
+                    'code' => $good->getCode(),
+                    'aplId' => $good->getAplId(),
+                    'price' => $good->getFormatMeanPrice(),
+                ];
+            }    
         }    
         
         return new JsonModel($result);

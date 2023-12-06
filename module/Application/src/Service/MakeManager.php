@@ -167,27 +167,29 @@ class MakeManager
         $transferFilter = new TransferName();
         foreach ($data as $row){
             
-            $nameEn = $transferFilter->filter($row['name']);
-            
-            $models = $this->entityManager->getRepository(Model::class)
-                    ->findMakeModelByName($make, $nameEn);
-            
-//            var_dump($row['name'], count($models));
-            foreach ($models as $model){
-                $nameRu = str_replace(strtoupper($nameEn), $row['cyrillic-name'], $model->getTransferName());
-                if ($nameRu != $model->getTransferName()){
-                    $model->setNameRu($nameRu);
-                    $this->entityManager->persist($model);
-                    continue;
-                }    
-                
-                $nameRu = str_replace(strtoupper($nameEn), $row['cyrillic-name'], $model->getFullName());
-                if ($nameRu != $model->getFullName()){
-                    $model->setNameRu($nameRu);
-                    $this->entityManager->persist($model);
-                    continue;
-                }    
-            }
+            if (!empty($row['name'])){
+                $nameEn = $transferFilter->filter($row['name']);
+
+                $models = $this->entityManager->getRepository(Model::class)
+                        ->findMakeModelByName($make, $nameEn);
+
+    //            var_dump($row['name'], count($models));
+                foreach ($models as $model){
+                    $nameRu = str_replace(strtoupper($nameEn), $row['cyrillic-name'], $model->getTransferName());
+                    if ($nameRu != $model->getTransferName()){
+                        $model->setNameRu($nameRu);
+                        $this->entityManager->persist($model);
+                        continue;
+                    }    
+
+                    $nameRu = str_replace(strtoupper($nameEn), $row['cyrillic-name'], $model->getFullName());
+                    if ($nameRu != $model->getFullName()){
+                        $model->setNameRu($nameRu);
+                        $this->entityManager->persist($model);
+                        continue;
+                    }    
+                }
+            }    
         }
         
         $this->entityManager->flush();
