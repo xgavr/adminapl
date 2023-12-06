@@ -714,9 +714,9 @@ class GoodsController extends AbstractActionController
         $base = $this->entityManager->getRepository(Movement::class)
                 ->availableBasePtu($goods->getId());
         
-//        $tokens = $this->entityManager->getRepository(GoodToken::class)
-//                ->findBy(['good' => $goods->getId()]);
-        $tokens = [];
+        $tokens = $this->entityManager->getRepository(GoodToken::class)
+                ->findBy(['good' => $goods->getId()]);
+//        $tokens = [];
 
         // Render the view template.
         return new ViewModel([
