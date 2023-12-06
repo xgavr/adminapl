@@ -2334,6 +2334,10 @@ class NameManager
                     ->find($row['goodId']);
             if ($good){
                 $this->findBestName($good, true);
+                
+                //Обновление токенов товаров
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGoodToken($good);
             }    
 
             $this->entityManager->getRepository(Rawprice::class)
