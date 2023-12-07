@@ -44,6 +44,7 @@ return [
     'Laminas\\DevelopmentMode',
     'Laminas\\ApiTools\\Configuration',
     'Laminas\\ApiTools\\Admin',
+    'LmcCors',
     'Admin',
     'Company',
     'User',
