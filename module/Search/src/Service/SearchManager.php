@@ -14,6 +14,7 @@ use Application\Filter\Lemma;
 use Application\Filter\Tokenizer;
 use Application\Entity\Bigram;
 use Application\Entity\Token;
+use Search\Entity\SearchLog;
 
 /**
  * Description of SearchManager
@@ -43,6 +44,26 @@ class SearchManager {
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
+    }
+    
+    /**
+     * Добавить строку лога
+     * @param array $data
+     */
+    public function addSearchLog($data)
+    {
+        $searchLog = new SearchLog();
+        $searchLog->setContent($data['content']);
+        $searchLog->setDateCreated(date('Y-m-d H:i:s'));
+        $searchLog->setDevice(empty($data['device']) ? null:$data['device']);
+        $searchLog->setIpAddress(empty($data['ipAddress']) ? null:$data['ipAddress']);
+        $searchLog->setFound($data['found']);
+        $searchLog->setSearchTitle(null);
+        
+        $this->entityManager->persist($searchLog);
+        $this->entityManager->flush();
+        
+        return $searchLog;
     }
     
     /**
@@ -178,6 +199,14 @@ class SearchManager {
         $totalQuery = $this->entityManager->getRepository(SearchTitle::class)
                 ->queryGoodsBySearchStr($searchStr, $params);
         
+        $totalSize = count($totalQuery->getResult(2));
+        
+        $this->addSearchLog([
+            'content' => $searchStr,
+            'device' => empty($params['device']) ? null:$params['device'],
+            'ipAddress' => empty($params['ip_address']) ? null:$params['ip_address'],
+            'found' => $totalSize,
+        ]);
 //        return $query->getResult(2);
         
         return [
@@ -185,7 +214,7 @@ class SearchManager {
                 'rows' => $query->getResult(2),
                 'page' => $page,
                 'page_size' => $limit,
-                'total_size' => count($totalQuery->getResult(2)),
+                'total_size' => $totalSize,
             ]    
         ];
     }
