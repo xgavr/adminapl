@@ -101,6 +101,7 @@ class SupplierController extends AbstractActionController
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
         $status = $this->params()->fromQuery('status', Supplier::STATUS_ACTIVE);
+        $priceListStatus = $this->params()->fromQuery('priceListStatus', Supplier::PRICE_LIST_ON);
         $office = $this->params()->fromQuery('office');
         
         $query = $this->entityManager->getRepository(Supplier::class)
@@ -109,6 +110,7 @@ class SupplierController extends AbstractActionController
                             'sort' => $sort, 
                             'order' => $order,
                             'status' => $status,
+                            'priceListStatus' => $priceListStatus,
                             'office' => $office,
 //                            'mutualBalance' => 1,
                         ]);

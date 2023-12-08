@@ -1,4 +1,6 @@
 <?php
+    use Application\Entity\Supplier;
+
     $this->headTitle('Поставщики');
 
     $this->mainMenu()->setActiveItemId('raw');
@@ -37,6 +39,11 @@
                     <option selected>--все--</option>
                     <?php foreach ($offices as $office):?>
                         <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                    <?php endforeach;?>
+                </select>
+                <select id="typeSelect" style="width: 200px" class="form-control">
+                    <?php foreach (Supplier::getPriceListStatusList() as $key => $type):?>
+                        <option value="<?= $key?>"><?= $type?></option>
                     <?php endforeach;?>
                 </select>
             </div>
@@ -116,12 +123,15 @@
     </div>    
 </div>
 <script type="text/javascript">
+    var ok = $('#ok');
+    var $table = $('#table');
+
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
 
-    var $table = $('#table').bootstrapTable({
-        onLoadSuccess: function(res){
+    $(function () {        
+        $table.on('load-success.bs.table', function (e, res) {
             $("[data-toggle='tooltip']").tooltip();
             $('.editableCheckBox').change(function() {
                 $.ajax({
@@ -129,24 +139,23 @@
                     url: $(this).attr('data-url'),
                     data: "pk="+$(this).attr('data-pk'),
                     success: function(msg){
-//                      alert( "Прибыли данные: " + msg );
+    //                      alert( "Прибыли данные: " + msg );
                     }
                 });
-            });        
-        }
-    });
-
-    var ok = $('#ok');
-
-    $(function () {
+            });
+        });
+        
         ok.click(function () {
-            $table.bootstrapTable('refresh');
+            refreshTable();
         });
         $('#officeSelect').change(function () {
-            $table.bootstrapTable('refresh');
+            refreshTable();
         });
         $('#statusSelect').change(function () {
-            $table.bootstrapTable('refresh');
+            refreshTable();
+        });
+        $('#typeSelect').change(function () {
+            refreshTable();
         });
     });
     
@@ -165,6 +174,7 @@
 
         params.status = $('#statusSelect').val();        
         params.office = $('#officeSelect').val();        
+        params.priceListStatus = $('#typeSelect').val();        
         return params;
     }
     

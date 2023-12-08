@@ -63,7 +63,7 @@ final class Version20221005084909 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('ptu');
-        $table->addColumn('supplier_id', 'integer', ['notnull' => true, 'default' => 1]);
+        $table->addColumn('supplier_id', 'integer', ['notnull' => false]);
         $table->addForeignKeyConstraint('supplier', ['supplier_id'], ['id'], 
                 ['onUpdate'=>'CASCADE'], 'ptu_supplier_id_supplier_id_fk');
 

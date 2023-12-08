@@ -466,8 +466,8 @@ class Supplier {
     public static function getPriceListStatusList() 
     {
         return [
-            self::PRICE_LIST_ON => 'Учитывать',
-            self::PRICE_LIST_OFF => 'Не учитывать'
+            self::PRICE_LIST_ON => 'Поставщик товаров',
+            self::PRICE_LIST_OFF => 'Постащик услуг, материалов'
         ];
     }    
     

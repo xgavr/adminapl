@@ -133,11 +133,8 @@ class SupplierForm extends Form
             'type'  => 'select',
             'name' => 'priceListStatus',
             'options' => [
-                'label' => 'Выгружать в прайс-листы (Маркет)',
-                'value_options' => [
-                    2 => 'Не выгружать в прайс листы',                    
-                    1 => 'Выгружать в прайс листы',
-                ]
+                'label' => 'Тип',
+                'value_options' => Supplier::getPriceListStatusList(),
             ],
         ]);
         
