@@ -101,11 +101,10 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 $result[] = $ptu->toArray(); 
             }
         }    
-        if (count($result)){
-            return ['reports' => $result];
-        }    
+
+        return ['reports' => $result];
         
-        return new ApiProblem(404, 'Нет отчетов для выгрузки!');
+//        return new ApiProblem(404, 'Нет отчетов для выгрузки!');
     }
 
     /**
