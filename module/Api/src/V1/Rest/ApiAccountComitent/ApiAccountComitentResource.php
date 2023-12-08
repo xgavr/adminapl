@@ -4,6 +4,7 @@ namespace Api\V1\Rest\ApiAccountComitent;
 use Laminas\ApiTools\ApiProblem\ApiProblem;
 use Laminas\ApiTools\Rest\AbstractResourceListener;
 use ApiMarketPlace\Entity\MarketSaleReport;
+use Stock\Entity\Ptu;
 
 class ApiAccountComitentResource extends AbstractResourceListener
 {
@@ -86,11 +87,20 @@ class ApiAccountComitentResource extends AbstractResourceListener
     public function fetchAll($params = [])
     {
         $result = [];
-        $reports = $this->entityManager->getRepository(MarketSaleReport::class)
-                ->findBy(['statusAccount' => MarketSaleReport::STATUS_ACCOUNT_NO]);
-        foreach ($reports as $report){
-            $result[] = $report->toArray(); 
-        }
+        if ($params['docType'] == 'MarketSaleReport'){
+            $reports = $this->entityManager->getRepository(MarketSaleReport::class)
+                    ->findBy(['statusAccount' => MarketSaleReport::STATUS_ACCOUNT_NO]);
+            foreach ($reports as $report){
+                $result[] = $report->toArray(); 
+            }
+        }    
+        if ($params['docType'] == 'Ptu'){
+            $ptus = $this->entityManager->getRepository(Ptu::class)
+                    ->findBy(['statusAccount' => Ptu::STATUS_ACCOUNT_NO]);
+            foreach ($ptus as $ptu){
+                $result[] = $ptu->toArray(); 
+            }
+        }    
         if (count($result)){
             return ['reports' => $result];
         }    
@@ -108,15 +118,22 @@ class ApiAccountComitentResource extends AbstractResourceListener
     public function patch($id, $data)
     {
         if (is_object($data)){
-            if (!empty($data->statusAccount)){
-                $error = 'statusAccount not in array';
-                if ($data->statusAccount == MarketSaleReport::STATUS_ACCOUNT_OK || $data->statusAccount == MarketSaleReport::STATUS_ACCOUNT_NO){
-                    $report = $this->entityManager->getRepository(MarketSaleReport::class)
-                            ->find($id);
-                    if ($report){
-                        $report = $this->reportManager->updateReportSatusAccount($report, $data->statusAccount);
-                        return ['statusAccount' => $report->getStatusAccount()];
-                    }
+            if ($data->docType == 'MarketSaleReport'){
+                $report = $this->entityManager->getRepository(MarketSaleReport::class)
+                        ->find($id);
+                if ($report){
+                    $report = $this->reportManager->updateReportSatusAccount($report, $data->statusAccount);
+                    return ['statusAccount' => $report->getStatusAccount()];
+                }
+            }
+            if ($data->docType == 'Ptu'){
+                $ptu = $this->entityManager->getRepository(Ptu::class)
+                        ->find($id);
+                if ($ptu){
+                    $ptu->setStatusAccount($data->statusAccount);
+                    $this->entityManager->persist($ptu);
+                    $this->entityManager->flush();
+                    return ['statusAccount' => $ptu->getStatusAccount()];
                 }
             }
         }

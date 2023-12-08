@@ -399,6 +399,33 @@ return [
                 'description' => 'Статус проведения документа в бухгалтерии',
                 'error_message' => 'Не верный статус',
             ],
+            1 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'docType',
+                'description' => 'Тип документа',
+                'field_type' => 'string',
+                'error_message' => 'Не верный тип документа',
+            ],
+            2 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'docId',
+                'description' => 'Id документа',
+                'field_type' => 'integer',
+            ],
         ],
         'Api\\V1\\Rest\\ApiCommentToApl\\Validator' => [
             0 => [
@@ -1016,7 +1043,10 @@ STATUS_CANCELED  = -10; // Отменен.',
                 0 => 'GET',
                 1 => 'POST',
             ],
-            'collection_query_whitelist' => [],
+            'collection_query_whitelist' => [
+                0 => 'docType',
+                1 => 'docId',
+            ],
             'page_size' => 25,
             'page_size_param' => null,
             'entity_class' => \Api\V1\Rest\ApiAccountComitent\ApiAccountComitentEntity::class,
