@@ -52,8 +52,8 @@ class SupplierRepository extends EntityRepository{
                         ->setParameter('1', $params['status']);
             }
             if (isset($params['priceListStatus'])){
-                $queryBuilder->andWhere('s.priceListStatus = ?1')
-                        ->setParameter('1', $params['priceListStatus']);
+                $queryBuilder->andWhere('s.priceListStatus = :priceListStatus')
+                        ->setParameter('priceListStatus', $params['priceListStatus']);
             }
             if (isset($params['office'])){
                 if (is_numeric($params['office'])){
