@@ -19,6 +19,7 @@ use Stock\Entity\Comiss;
 use Company\Entity\Legal;
 use Application\Entity\Phone;
 use Application\Entity\Email;
+use Company\Entity\Contract;
 
 /**
  * Description of ClientRepository
@@ -285,11 +286,12 @@ class ClientRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('r, o, c, contract, rd, cd, cash, user, msr')
+        $queryBuilder->select('r, o, c, contract, rd, cd, cash, user, msr, legal')
             ->from(Retail::class, 'r')
             ->join('r.contact', 'ct')
             ->join('r.company', 'c')
             ->join('r.office', 'o')    
+            ->leftJoin('r.legal', 'legal')    
             ->leftJoin('r.contract', 'contract')    
             ->leftJoin('r.reviseDoc', 'rd', 'WITH', 'r.docType = '.Movement::DOC_REVISE) 
             ->leftJoin('r.cashDoc', 'cd', 'WITH', 'r.docType = '.Movement::DOC_CASH) 
@@ -474,5 +476,57 @@ class ClientRepository extends EntityRepository{
         $result = $queryBuilder->getQuery()->getResult();
 
         return $result;        
+    }
+    
+    /**
+     * Юр лица клиента
+     * @param Client $client
+     * @return array
+     */
+    public function clientLegals($client)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('l')
+                ->from(Legal::class, 'l')
+                ->join('l.contact', 'c')
+                ->where('c.client = :client')
+                ->setParameter('client', $client->getId())
+                ;
+
+        $result = $queryBuilder->getQuery()->getResult();
+
+        return $result;                
+    }
+    
+    /**
+     * Договоры клиента
+     * @param Client $client
+     * @param Legal $legal
+     * @return array
+     */
+    public function clientContracts($client, $legal = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+                ->from(Contract::class, 'c')
+                ->join('c.legal', 'l')
+                ->join('l.contact', 'contact')
+                ->where('contact.client = :client')
+                ->setParameter('client', $client->getId())
+                ;
+        
+        if ($legal){
+            $queryBuilder->andWhere('c.legal = :legal')
+                    ->setParameter('legal', $legal->getId())
+                    ;
+        }
+
+        $result = $queryBuilder->getQuery()->getResult();
+
+        return $result;                
     }
 }
