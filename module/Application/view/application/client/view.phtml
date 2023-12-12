@@ -1297,7 +1297,7 @@ $legalContact = $client->getLegalContact();
             if (mutualRow.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
                 status = <?= CashDoc::STATUS_RETIRED?>;
             }
-            $.get( "/till/status/"+mutualRow.CashDoc.id+'?status='+status, function(data){
+            $.get( "/till/status/"+mutualRow.cashDoc.id+'?status='+status, function(data){
                 $('#mutualtable').bootstrapTable('refresh', {silent: true});
             });        
         }         
