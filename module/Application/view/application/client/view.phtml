@@ -1324,8 +1324,13 @@ $legalContact = $client->getLegalContact();
                   return true;
                 },
                 isEnabled: function(row) {
-                    if (row.reviseDoc || row.cashDoc){
+                    if (row.reviseDoc){
                         if (row.reviseDoc.docDate > '<?= $allowDate?>' && row.reviseDoc.status === '<?= Revise::STATUS_RETIRED?>'){
+                            return true;
+                        }
+                    }
+                    if (row.cashDoc){
+                        if (row.cashDoc.dateOper > '<?= $allowDate?>' && row.cashDoc.status === '<?= CashDoc::STATUS_RETIRED?>'){
                             return true;
                         }
                     }
@@ -1342,8 +1347,13 @@ $legalContact = $client->getLegalContact();
                   return true;
                 },
                 isEnabled: function(row) {
-                    if (row.reviseDoc || row.cashDoc){
+                    if (row.reviseDoc){
                         if (row.reviseDoc.docDate > '<?= $allowDate?>' && row.reviseDoc.status === '<?= Revise::STATUS_ACTIVE?>'){
+                            return true;
+                        }
+                    }
+                    if (row.cashDoc){
+                        if (row.cashDoc.dateOper > '<?= $allowDate?>' && row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
                             return true;
                         }
                     }
