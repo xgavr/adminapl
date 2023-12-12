@@ -249,9 +249,12 @@ class MutualRepository extends EntityRepository{
      *@param integer $docType 
      *@param integer $docId 
      * @param integer $companyId
+     * @param integer $legalId
+     * @param integer $contractId
     * @return integer
     */
-    public function clientStampRest($clientId, $docType, $docId, $companyId = null)
+    public function clientStampRest($clientId, $docType, $docId, $companyId = null, 
+            $legalId = null, $contractId = null)
     {
         $entityManager = $this->getEntityManager();
         
@@ -276,6 +279,21 @@ class MutualRepository extends EntityRepository{
                 if (is_numeric($companyId)){
                     $qb->andWhere('r.company = ?4');
                     $qb->setParameter('4', $companyId);
+                }    
+            }
+            if (!empty($legalId)){
+                if (is_numeric($legalId)){
+                    $qb->andWhere('r.legal = :legal');
+                    $qb->setParameter('legal', $legalId);
+                }    
+                if ($legalId == Client::RETAIL_ID){
+                    $qb->andWhere('r.legal is null');
+                }    
+            }
+            if (!empty($contractId)){
+                if (is_numeric($contractId)){
+                    $qb->andWhere('r.contract = :contract');
+                    $qb->setParameter('contract', $contractId);
                 }    
             }
 
