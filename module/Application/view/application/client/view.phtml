@@ -1289,7 +1289,15 @@ $legalContact = $client->getLegalContact();
                 status = <?= Revise::STATUS_RETIRED?>;
             }
             $.get( "/revise/status/"+mutualRow.reviseDoc.id+'?status='+status, function(data){
-//                $('#mutualtable').bootstrapTable('updateByUniqueId', {id: mutualRow.id, row: data});
+                $('#mutualtable').bootstrapTable('refresh', {silent: true});
+            });        
+        }         
+        if (mutualRow.cashDoc){
+            var status = <?= CashDoc::STATUS_ACTIVE?>;
+            if (mutualRow.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
+                status = <?= CashDoc::STATUS_RETIRED?>;
+            }
+            $.get( "/revise/status/"+mutualRow.reviseDoc.id+'?status='+status, function(data){
                 $('#mutualtable').bootstrapTable('refresh', {silent: true});
             });        
         }         
@@ -1316,7 +1324,7 @@ $legalContact = $client->getLegalContact();
                   return true;
                 },
                 isEnabled: function(row) {
-                    if (row.reviseDoc){
+                    if (row.reviseDoc || row.cashDoc){
                         if (row.reviseDoc.docDate > '<?= $allowDate?>' && row.reviseDoc.status === '<?= Revise::STATUS_RETIRED?>'){
                             return true;
                         }
@@ -1334,7 +1342,7 @@ $legalContact = $client->getLegalContact();
                   return true;
                 },
                 isEnabled: function(row) {
-                    if (row.reviseDoc){
+                    if (row.reviseDoc || row.cashDoc){
                         if (row.reviseDoc.docDate > '<?= $allowDate?>' && row.reviseDoc.status === '<?= Revise::STATUS_ACTIVE?>'){
                             return true;
                         }

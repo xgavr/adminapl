@@ -514,4 +514,26 @@ class TillController extends AbstractActionController
            ['result' => 'ok']
         );                   
     }
+    
+    public function statusAction()
+    {
+        $cashDocId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', CashDoc::STATUS_ACTIVE);
+        
+        $cashDoc = $this->entityManager->getRepository(CashDoc::class)
+                ->find($cashDocId);        
+
+        if ($cashDoc == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->cashManager->updateCashDocStatus($cashDoc, $status);
+        
+        $result = [];
+        
+        return new JsonModel(
+           $result
+        );           
+    }                
 }

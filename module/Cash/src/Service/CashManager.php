@@ -611,7 +611,25 @@ class CashManager {
         
         return $cashDoc;
     }
+    
+    /**
+     * Обновить статус документа
+     * @param CashDoc $cashDoc
+     * @param integer $status
+     */    
+    public function updateCashDocStatus($cashDoc, $status)
+    {
+        $cashDoc->setStatus($status);
+        $cashDoc->setStatusEx(CashDoc::STATUS_EX_NEW);
+
+        $this->entityManager->persist($cashDoc);
+        $this->entityManager->flush($cashDoc);
         
+        $this->updateCashTransaction($cashDoc);
+        $this->logManager->infoCash($cashDoc, Log::STATUS_UPDATE);
+        
+        return $cashDoc;
+    }
     
     /**
      * Удалить кассовый документ
