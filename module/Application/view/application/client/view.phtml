@@ -398,6 +398,14 @@ $legalContact = $client->getLegalContact();
                         </select>
                         <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control" type="number" value="<?= date('Y')?>">
                     </div>
+                    <div class="form-group">
+                        <select id="mutualLegalSelect" class="form-control" name="legal">
+                            <option>все</option>
+                            <?php foreach ($legals as $key => $value):?>
+                                <option value="<?= $key?>"><?= $value?></option>                            
+                            <?php endforeach;?>
+                        </select>
+                    </div>
                 </div>
             </div>
             <table id="mutualtable" 
@@ -537,10 +545,13 @@ $legalContact = $client->getLegalContact();
             $('#mutualDateStart').attr('type', $(this).val());
         });
         $('#orderDateStart').change(function (){
-            $('#ordertable').bootstrapTable('refresh', {silent: true});
+            $('#ordertable').bootstrapTable('refresh');
         });
         $('#mutualDateStart').change(function (){
-            $('#mutualtable').bootstrapTable('refresh', {silent: true});
+            $('#mutualtable').bootstrapTable('refresh');
+        });
+        $('#mutualLegalSelect').change(function (){
+            $('#mutualtable').bootstrapTable('refresh');
         });
     });
 

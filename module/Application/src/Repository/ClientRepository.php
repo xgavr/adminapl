@@ -327,6 +327,17 @@ class ClientRepository extends EntityRepository{
                 $queryBuilder->andWhere('r.docKey = :docKey')
                         ->setParameter('docKey', $params['docKey']);
             }
+            if (!empty($params['legal'])){
+                if ($params['legal'] == Client::RETAIL_ID){
+                    $queryBuilder->andWhere('r.legal is null')
+                            ;
+                }    
+                if (is_numeric($params['legal'])){
+                    $queryBuilder->andWhere('r.legal = :legal')
+                            ->setParameter('legal', $params['legal'])
+                            ;
+                }    
+            }
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();            
@@ -490,7 +501,7 @@ class ClientRepository extends EntityRepository{
 
         $queryBuilder->select('l')
                 ->from(Legal::class, 'l')
-                ->join('l.contact', 'c')
+                ->join('l.contacts', 'c')
                 ->where('c.client = :client')
                 ->setParameter('client', $client->getId())
                 ;

@@ -340,12 +340,22 @@ class ClientController extends AbstractActionController
             $this->contactManager->addNewContact($client, $data);
             $this->entityManager->refresh($client);
         }
-                
+        
+        $legalList = [
+            Client::RETAIL_ID => 'Розничная покупка',            
+            ];        
+        $legals = $this->entityManager->getRepository(Client::class)
+                ->clientLegals($client);
+        foreach ($legals as $legal){
+            $legalList[$legal->getId()] = $legal->getName();
+        }
+        
 //        var_dump($client->getLegalContact()->getId());
         // Render the view template.
         return new ViewModel([
             'client' => $client,
             'allowDate' => $this->adminManager->getAllowDate(),
+            'legals' => $legalList,
         ]);
     }      
     
@@ -449,6 +459,8 @@ class ClientController extends AbstractActionController
         $search = $this->params()->fromQuery('search');
         $source = $this->params()->fromQuery('source');
         $company = $this->params()->fromQuery('company');
+        $legal = $this->params()->fromQuery('legal');
+        $contract = $this->params()->fromQuery('contract');
         $sort = $this->params()->fromQuery('sort', 'dateOper');
         $order = $this->params()->fromQuery('order', 'ASC');
         $dateStart = $this->params()->fromQuery('dateStart');
@@ -488,6 +500,7 @@ class ClientController extends AbstractActionController
         $query = $this->entityManager->getRepository(Client::class)
                         ->retails($client, ['q' => $search, 'source' => $source, 
                             'sort' => $sort, 'order' => $order, 'company' => $company,
+                            'legal' => $legal, 'contract' => $contract,
                             'startDate' => $startDate, 'endDate' => $endDate]);
 
         $total = count($query->getResult(2));

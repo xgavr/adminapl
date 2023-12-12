@@ -31,6 +31,8 @@ class Client {
     const PRICE_4   = 4; // опт4
     const PRICE_5   = 5; // опт5
     
+    const RETAIL_ID = 'retail'; //код розницы
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
