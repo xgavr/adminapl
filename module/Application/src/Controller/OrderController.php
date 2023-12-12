@@ -131,7 +131,7 @@ class OrderController extends AbstractActionController
         $params = [
             'sort' => $sort, 'order' => $order, 'officeId' => $officeId,
             'userId' => $userId, 'status' => $status, 'search' => $search,
-            'clientId' => $clientId, 'startDate' => $startDate, $endDate => $endDate
+            'clientId' => $clientId, 'startDate' => $startDate, 'endDate' => $endDate
         ];
         
         $query = $this->entityManager->getRepository(Order::class)
