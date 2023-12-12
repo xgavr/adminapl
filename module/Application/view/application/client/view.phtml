@@ -216,6 +216,15 @@ $legalContact = $client->getLegalContact();
                             <?php endforeach;?>
                         </select>
                     </div>    
+                    <div class="form-group">
+                        <select id="orderPeriodSelect" class="form-control" name="period">
+                            <option value="date">Дата</option>
+                            <option value="week">Неделя</option>                        
+                            <option value="month">Месяц</option>                        
+                            <option value="number"  selected="true">Год</option>                        
+                        </select>
+                        <input name="dateStart" id="orderDateStart" style="width: 200px" class="form-control" type="number" value="<?= date('Y')?>">
+                    </div>
                 </div>    
             </div>
             <table id="ordertable" 
@@ -380,6 +389,15 @@ $legalContact = $client->getLegalContact();
                             data-table="mutualtable" title="Обнулить долг">
                         <span class="glyphicon" ></span>0
                     </button>                         
+                    <div class="form-group">
+                        <select id="mutualPeriodSelect" class="form-control" name="period">
+                            <option value="date">Дата</option>
+                            <option value="week">Неделя</option>                        
+                            <option value="month">Месяц</option>                        
+                            <option value="number"  selected="true">Год</option>                        
+                        </select>
+                        <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control" type="number" value="<?= date('Y')?>">
+                    </div>
                 </div>
             </div>
             <table id="mutualtable" 
@@ -508,9 +526,21 @@ $legalContact = $client->getLegalContact();
             Cookies.set('clientSaveId_tab', $(this).attr('id'), { expires: 30});
         });        
 
-        $(document).on('change', '#clientOrderStatusSelect', function (e) {
+        $('#clientOrderStatusSelect').change(function (e) {
             $('#ordertable').bootstrapTable('refresh');
         });        
+        $('#orderPeriodSelect').change(function (e) {
+            $('#orderDateStart').attr('type', $(this).val());
+        });
+        $('#mutualPeriodSelect').change(function (e) {
+            $('#mutualDateStart').attr('type', $(this).val());
+        });
+        $('#orderDateStart').change(function (){
+            $('#ordertable').bootstrapTable('refresh', {silent: true});
+        });
+        $('#mutualDateStart').change(function (){
+            $('#mutualtable').bootstrapTable('refresh', {silent: true});
+        });
     });
 
     function orderQueryParams(params) {
@@ -586,6 +616,9 @@ $legalContact = $client->getLegalContact();
 
     function mutualsQueryParams(params) {
         $('#mutualtoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#mutualtoolbar').find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         limit = $('#mutualtable .page-size').html();

@@ -582,6 +582,9 @@
         $('#dateStart').change(function (){
             $('#movementTable').bootstrapTable('refresh', {silent: true});
         })
+        $('#periodSelect').change(function (e) {
+            $('#dateStart').attr('type', $(this).val());
+        });
     });
 
     function tabQueryParams(tab, params) {

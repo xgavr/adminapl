@@ -313,17 +313,13 @@ class ClientRepository extends EntityRepository{
                         ->setParameter('2', $params['office']);
                 }    
             }
-            if (!empty($params['month'])){
-                if (is_numeric($params['month'])){
-                    $queryBuilder->andWhere('MONTH(r.dateOper) = :month')
-                            ->setParameter('month', $params['month']);
-                }    
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere('r.dateOper >= :startDate')
+                        ->setParameter('startDate', $params['startDate']);
             }
-            if (!empty($params['year'])){
-                if (is_numeric($params['year'])){
-                    $queryBuilder->andWhere('YEAR(r.dateOper) = :year')
-                            ->setParameter('year', $params['year']);
-                }    
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere('r.dateOper <= :endDate')
+                        ->setParameter('endDate', $params['endDate']);
             }
             if (!empty($params['docKey'])){
                 $queryBuilder->andWhere('r.docKey = :docKey')

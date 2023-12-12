@@ -294,6 +294,14 @@ class OrderRepository extends EntityRepository{
                             ->setParameter('orderId', $params['orderId']);
                 }    
             }
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere('o.dateOper >= :startDate')
+                        ->setParameter('startDate', $params['startDate']);
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere('o.dateOper <= :endDate')
+                        ->setParameter('endDate', $params['endDate']);
+            }
             
             if (!empty($params['search'])){
                 $orX = $queryBuilder->expr()->orX();
@@ -356,6 +364,14 @@ class OrderRepository extends EntityRepository{
                     ->setParameter('3', $params['status'])
                         ;
             }            
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere('o.dateOper >= :startDate')
+                        ->setParameter('startDate', $params['startDate']);
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere('o.dateOper <= :endDate')
+                        ->setParameter('endDate', $params['endDate']);
+            }
             if (!empty($params['search'])){
                 return self::MAX_ORDER_SEARCH_RESULT;
             }

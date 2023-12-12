@@ -108,11 +108,30 @@ class OrderController extends AbstractActionController
         $status = $this->params()->fromQuery('status');
         $dateOper = $this->params()->fromQuery('dateOper');
         $search = $this->params()->fromQuery('search');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period');
+        
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
+        }    
         
         $params = [
             'sort' => $sort, 'order' => $order, 'officeId' => $officeId,
             'userId' => $userId, 'status' => $status, 'search' => $search,
-            'clientId' => $clientId,
+            'clientId' => $clientId, 'startDate' => $startDate, $endDate => $endDate
         ];
         
         $query = $this->entityManager->getRepository(Order::class)
