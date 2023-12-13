@@ -18,6 +18,8 @@ use Laminas\View\Model\JsonModel;
 use Stock\Entity\Retail;
 use Application\Entity\Order;
 use Stock\Entity\Comiss;
+use Company\Entity\Legal;
+use Company\Entity\Contract;
 
 class ClientController extends AbstractActionController
 {
@@ -653,6 +655,46 @@ class ClientController extends AbstractActionController
                 'id' => $legal->getId(),
                 'name' => $legal->getName(),                
             ];
+        }
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }
+
+    public function clientContractsAction()
+    {
+        $clientId = (int)$this->params()->fromRoute('id', -1);
+        $legalId = (int)$this->params()->fromQuery('legal', -1);
+        
+        if ($clientId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $client = $this->entityManager->getRepository(Client::class)
+                ->find($clientId);
+        
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $result = [];
+        
+        if ($legalId > 0){
+            $legal = $this->entityManager->getRepository(Legal::class)
+                    ->find($legalId);
+            if ($legal){
+                $contracts = $this->entityManager->getRepository(Client::class)
+                        ->clientContracts($client, $legal);
+                foreach ($contracts as $contract){
+                    $result[$contract->getId()] = [
+                        'id' => $contract->getId(),
+                        'name' => $contract->getContractPresentPay(),                
+                    ];
+                }
+            }    
         }
         
         return new JsonModel([

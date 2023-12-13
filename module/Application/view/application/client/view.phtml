@@ -396,7 +396,7 @@ $legalContact = $client->getLegalContact();
                             <option value="month">Месяц</option>                        
                             <option value="number"  selected="true">Год</option>                        
                         </select>
-                        <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control" type="number" value="<?= date('Y')?>">
+                        <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control" min="2012" type="number" value="<?= date('Y')?>">
                     </div>
                     <div class="form-group">
                         <select id="mutualLegalSelect" class="form-control" name="legal">
@@ -404,6 +404,11 @@ $legalContact = $client->getLegalContact();
                             <?php foreach ($legals as $key => $value):?>
                                 <option value="<?= $key?>"><?= $value?></option>                            
                             <?php endforeach;?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="mutualContractSelect" class="form-control" name="contract">
+                            <option>все договоры</option>
                         </select>
                     </div>
                 </div>
@@ -524,6 +529,18 @@ $legalContact = $client->getLegalContact();
         } 
     }    
 
+    function mutualContractList(){
+        $('#mutualContractSelect').empty();
+        $('#mutualContractSelect').append('<option>все договоры</option>');
+        $.getJSON( '/client/client-contracts/<?= $client->getId()?>?legal='+$('#mutualLegalSelect').val(), function( data ) {
+            if (Object.keys(data.rows).length){
+                $.each( data.rows, function( key, value ) {
+                    $('#mutualContractSelect').append('<option value="' + key + '">' + value.name + '</option>');
+                });
+            }    
+        });    
+    }
+
     $(function () {        
         $('#ordertable').on('load-success.bs.table', function (e, res) {
             setCookies('clientSaveId');
@@ -551,6 +568,10 @@ $legalContact = $client->getLegalContact();
             $('#mutualtable').bootstrapTable('refresh');
         });
         $('#mutualLegalSelect').change(function (){
+            mutualContractList();
+            $('#mutualtable').bootstrapTable('refresh');
+        });
+        $('#mutualContractSelect').change(function (){
             $('#mutualtable').bootstrapTable('refresh');
         });
     });

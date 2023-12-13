@@ -338,6 +338,13 @@ class ClientRepository extends EntityRepository{
                             ;
                 }    
             }
+            if (!empty($params['contract'])){
+                if (is_numeric($params['contract'])){
+                    $queryBuilder->andWhere('r.contract = :contract')
+                            ->setParameter('contract', $params['contract'])
+                            ;
+                }    
+            }
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();            
@@ -517,7 +524,7 @@ class ClientRepository extends EntityRepository{
      * @param Legal $legal
      * @return array
      */
-    public function clientContracts($client, $legal = null)
+    public function clientContracts($client, $legal)
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -525,17 +532,13 @@ class ClientRepository extends EntityRepository{
         $queryBuilder->select('c')
                 ->from(Contract::class, 'c')
                 ->join('c.legal', 'l')
-                ->join('l.contact', 'contact')
+                ->join('l.contacts', 'contact')
                 ->where('contact.client = :client')
                 ->setParameter('client', $client->getId())
+                ->andWhere('c.legal = :legal')
+                ->setParameter('legal', $legal->getId())
                 ;
         
-        if ($legal){
-            $queryBuilder->andWhere('c.legal = :legal')
-                    ->setParameter('legal', $legal->getId())
-                    ;
-        }
-
         $result = $queryBuilder->getQuery()->getResult();
 
         return $result;                
