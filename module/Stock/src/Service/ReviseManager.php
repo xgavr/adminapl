@@ -399,7 +399,7 @@ class ReviseManager
                 $data = [
                     'docNo' => 'Nавто',
                     'docDate' => date('Y-m-d'),
-                    'comment' => 'Обнуление баланса по сроку давности',
+                    'comment' => 'Обнуление розничного баланса',
                     'status' => Revise::STATUS_ACTIVE,
                     'amount' => -$retailBalance,
                     'contact' => $client->getContact()->getId(),
