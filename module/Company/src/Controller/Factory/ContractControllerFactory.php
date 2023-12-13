@@ -5,6 +5,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Company\Controller\ContractController;
 use Company\Service\ContractManager;
+use Company\Service\LegalManager;
 
 /**
  * This is the factory for ContractController. Its purpose is to instantiate the
@@ -16,9 +17,10 @@ class ContractControllerFactory implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $contractManager = $container->get(ContractManager::class);
+        $legalManager = $container->get(LegalManager::class);
         
         // Instantiate the controller and inject dependencies
-        return new ContractController($entityManager, $contractManager);
+        return new ContractController($entityManager, $contractManager, $legalManager);
     }
 }
 

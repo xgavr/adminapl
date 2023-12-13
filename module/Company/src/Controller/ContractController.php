@@ -31,12 +31,19 @@ class ContractController extends AbstractActionController
     private $contractManager;
 
     /**
+     * Legal manager.
+     * @var \Company\Service\LegalManager
+     */
+    private $legalManager;
+
+    /**
      * Constructor. 
      */
-    public function __construct($entityManager, $contractManager)
+    public function __construct($entityManager, $contractManager, $legalManager)
     {
         $this->entityManager = $entityManager;
         $this->contractManager = $contractManager;
+        $this->legalManager = $legalManager;
     }
     
     public function indexAction()
@@ -44,157 +51,7 @@ class ContractController extends AbstractActionController
         return new ViewModel([
         ]);
     }
-    
-    /**
-     * This action displays a page allowing to add a new role.
-     */
-    public function addAction()
-    {
-        // Create form
-        $form = new RegionForm();
-                
-        // Check if user has submitted the form
-        if ($this->getRequest()->isPost()) {
-            
-            // Fill in the form with POST data
-            $data = $this->params()->fromPost();            
-            
-            $form->setData($data);
-            
-            // Validate form
-            if($form->isValid()) {
-                
-                // Get filtered and validated data
-                $data = $form->getData();
-                
-                // Add role.
-                $this->regionManager->addRegion($data);
-                
-                // Add a flash message.
-                $this->flashMessenger()->addSuccessMessage('Добавлен новй регион.');
-                
-                // Redirect to "index" page
-                return $this->redirect()->toRoute('regions', ['action'=>'index']);                
-            }               
-        } 
         
-        return new ViewModel([
-                'form' => $form
-            ]);
-    }    
-    
-    /**
-     * The "view" action displays a page allowing to view role's details.
-     */
-    public function viewAction() 
-    {
-        $id = (int)$this->params()->fromRoute('id', -1);
-        if ($id<1) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        // Find a role with such ID.
-        $region = $this->entityManager->getRepository(Region::class)
-                ->find($id);
-        
-        if ($region == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-                        
-        return new ViewModel([
-            'region' => $region,
-        ]);
-    }
-    
-    /**
-     * This action displays a page allowing to edit an existing region.
-     */
-    public function editAction()
-    {
-        $id = (int)$this->params()->fromRoute('id', -1);
-        if ($id<1) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        $region = $this->entityManager->getRepository(Region::class)
-                ->find($id);
-        
-        if ($region == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        // Create form
-        $form = new RegionForm();
-        
-        // Check if user has submitted the form
-        if ($this->getRequest()->isPost()) {
-            
-            // Fill in the form with POST data
-            $data = $this->params()->fromPost();            
-            
-            $form->setData($data);
-            
-            // Validate form
-            if($form->isValid()) {
-                
-                // Get filtered and validated data
-                $data = $form->getData();
-                
-                // Update permission.
-                $this->regionManager->updateRegion($region, $data);
-                
-                // Add a flash message.
-                $this->flashMessenger()->addSuccessMessage('Регион изменен.');
-                
-                // Redirect to "index" page
-                return $this->redirect()->toRoute('regions', ['action'=>'index']);                
-            }               
-        } else {
-            $form->setData(array(
-                    'name'=>$region->getName(),
-                    'fullName'=>$region->getFullName()     
-                ));
-        }
-        
-        return new ViewModel([
-                'form' => $form,
-                'region' => $region
-            ]);
-    }
-    
-    /**
-     * This action deletes a region.
-     */
-    public function deleteAction()
-    {
-        $id = (int)$this->params()->fromRoute('id', -1);
-        if ($id<1) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        $region = $this->entityManager->getRepository(Region::class)
-                ->find($id);
-        
-        if ($region == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
-        // Delete role.
-        $this->regionManager->deleteRegion($region);
-        
-        // Add a flash message.
-        $this->flashMessenger()->addSuccessMessage('Регион удален.');
-
-        // Redirect to "index" region
-        return $this->redirect()->toRoute('regions', ['action'=>'index']); 
-    }
-    
     public function selectAction()
     {
         $companyId = (int)$this->params()->fromQuery('company');
@@ -254,5 +111,20 @@ class ContractController extends AbstractActionController
         return new JsonModel([
             'rows' => $result,
         ]);                  
+    }
+    
+    public function unionAction()
+    {
+        $contactId = (int) $this->params()->fromRoute('id', -1);
+        if ($contactId>0) {
+            $contact = $this->entityManager->getRepository(Contract::class)
+                    ->find($contactId);            
+            
+            $this->legalManager->contractUnion($contact);
+        }    
+        
+        return new JsonModel(
+           ['ok']
+        );                          
     }
 }

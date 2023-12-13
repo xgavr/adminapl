@@ -16,6 +16,12 @@ use Application\Entity\Order;
 use Bank\Entity\Payment;
 use Bank\Entity\QrCode;
 use Bank\Entity\QrCodePayment;
+use Stock\Entity\Ptu;
+use Stock\Entity\Revise;
+use ApiMarketPlace\Entity\Marketplace;
+use Stock\Entity\Comitent;
+use Stock\Entity\ComitentBalance;
+use ApiMarketPlace\Entity\MarketSaleReport;
 
 /**
  * This service legal.
@@ -548,8 +554,64 @@ class LegalManager
             $contractCount = $this->entityManager->getRepository(Retail::class)
                     ->count(['contract' => $contract->getId()]);            
         }
+        if (empty($contractCount)){
+            $contractCount = $this->entityManager->getRepository(Ptu::class)
+                    ->count(['contract' => $contract->getId()]);            
+        }
+        if (empty($contractCount)){
+            $contractCount = $this->entityManager->getRepository(Revise::class)
+                    ->count(['contract' => $contract->getId()]);            
+        }
+        if (empty($contractCount)){
+            $contractCount = $this->entityManager->getRepository(Comitent::class)
+                    ->count(['contract' => $contract->getId()]);            
+        }
+        if (empty($contractCount)){
+            $contractCount = $this->entityManager->getRepository(ComitentBalance::class)
+                    ->count(['contract' => $contract->getId()]);            
+        }
+        if (empty($contractCount)){
+            $contractCount = $this->entityManager->getRepository(MarketSaleReport::class)
+                    ->count(['contract' => $contract->getId()]);            
+        }
+        if (empty($contractCount)){
+            $contractCount = $this->entityManager->getRepository(Marketplace::class)
+                    ->count(['contract' => $contract->getId()]);            
+        }
+        if (empty($contractCount)){
+            $contractCount = $this->entityManager->getRepository(Order::class)
+                    ->count(['contract' => $contract->getId()]);            
+        }
         
         return empty($contractCount);
+    }
+    
+    /**
+     * Замена договора
+     * 
+     * @param Contrcat $contract
+     * @param Contract $oldContract
+     */
+    private function changeContract($contract, $oldContract)
+    {
+        $this->entityManager->getConnection()
+                ->update('mutual', ['contract_id' => $contract->getId()], ['contract_id' => $oldContract->getId()]);
+        $this->entityManager->getConnection()
+                ->update('retail', ['contract_id' => $contract->getId()], ['contract_id' => $oldContract->getId()]);
+        $this->entityManager->getConnection()
+                ->update('ptu', ['contract_id' => $contract->getId()], ['contract_id' => $oldContract->getId()]);
+        $this->entityManager->getConnection()
+                ->update('revise', ['contract_id' => $contract->getId()], ['contract_id' => $oldContract->getId()]);
+        $this->entityManager->getConnection()
+                ->update('comitent', ['contract_id' => $contract->getId()], ['contract_id' => $oldContract->getId()]);
+        $this->entityManager->getConnection()
+                ->update('comitent_balance', ['contract_id' => $contract->getId()], ['contract_id' => $oldContract->getId()]);
+        $this->entityManager->getConnection()
+                ->update('market_sale_report', ['contract_id' => $contract->getId()], ['contract_id' => $oldContract->getId()]);
+        $this->entityManager->getConnection()
+                ->update('marketplace', ['contract_id' => $contract->getId()], ['contract_id' => $oldContract->getId()]);
+        $this->entityManager->getConnection()
+                ->update('orders', ['contract_id' => $contract->getId()], ['contract_id' => $oldContract->getId()]);
     }
     
     /**
@@ -580,6 +642,35 @@ class LegalManager
         $this->entityManager->getRepository(Mutual::class)
                 ->updateContractBalance($data);
         return;
+    }
+    
+    /**
+     * Слияние договоров одного тпа в один выбранный
+     * 
+     * @param Contract $selectedContract
+     */
+    public function contractUnion($selectedContract)
+    {
+       $contracts = $this->entityManager->getRepository(Contract::class)
+               ->findBy([
+                   'legal' => $selectedContract->getLegal()->getId(),
+                   'office' => $selectedContract->getOffice()->getId(),
+                   'company' => $selectedContract->getCompany()->getId(),
+                   'kind' => $selectedContract->getKind(),
+                   'pay' => $selectedContract->getPay(),
+                   'status' => $selectedContract->getStatus(),
+                ]);
+       
+       foreach ($contracts as $oldContract){
+           if ($selectedContract->getId() != $oldContract->getId()){
+                $this->changeContract($selectedContract, $oldContract);
+                $this->removeContract($oldContract);
+           }
+       }
+       
+       $this->updateContractBalance($selectedContract);
+       
+       return;
     }
     
     /**

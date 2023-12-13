@@ -227,9 +227,15 @@
                                    </button>                                                        
                                 </td>
                                 <td width="2">
+                                   <button value="/contracts/union/<?= $contract->getId() ?>" class="btn btn-default btn-xs refresh-button"
+                                           title="Объеденить">
+                                       <span class="glyphicon glyphicon-compressed" ></span>
+                                   </button>                                     
+                                </td>
+                                <td width="2">
                                    <button value="/legals/delete-contract-form/<?= $contract->getId() ?>" class="btn btn-default btn-xs this-delete"
                                            title="Удалить">
-                                       <span class="glyphicon glyphicon-remove" ></span>
+                                       <span class="glyphicon glyphicon-trash" ></span>
                                    </button>                                     
                                 </td>
                                 <td width="2">
