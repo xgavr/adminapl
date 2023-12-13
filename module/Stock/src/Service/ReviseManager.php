@@ -392,15 +392,16 @@ class ReviseManager
     public function resetClientBalance($client)
     {
         if ($client->getBalance()){
-            
+            $retailBalance = $this->entityManager->getRepository(Client::class)
+                    ->getRetailBalance($client);
             $retail = $this->lastClientRetail($client);
-            if ($retail){
+            if ($retail && $retailBalance){
                 $data = [
                     'docNo' => 'Nавто',
                     'docDate' => date('Y-m-d'),
                     'comment' => 'Обнуление баланса по сроку давности',
                     'status' => Revise::STATUS_ACTIVE,
-                    'amount' => -$client->getBalance(),
+                    'amount' => -$retailBalance,
                     'contact' => $client->getContact()->getId(),
                     'office' => $retail->getOffice()->getId(),
                     'company' => $retail->getCompany()->getId(),

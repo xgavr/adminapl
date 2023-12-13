@@ -451,6 +451,30 @@ class ClientRepository extends EntityRepository{
     }
     
     /**
+     * Получить розничный баланс клиента
+     * @param Client $client
+     */
+    public function  getRetailBalance($client)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select("sum(r.amount) as total")
+                ->from(Retail::class, 'r')
+                ->join('r.contact', 'c')
+                ->where('c.client = :client')
+                ->setParameter('client', $client->getId())
+                ->andWhere('r.status = :status')
+                ->setParameter('status', Retail::STATUS_ACTIVE)
+                ->andWhere('r.contract is null')
+                ;
+
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $result['total'];
+    }  
+
+    /**
      * Обновить баланс клиента
      * @param Client $client
      */
