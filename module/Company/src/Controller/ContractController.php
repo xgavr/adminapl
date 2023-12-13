@@ -127,4 +127,19 @@ class ContractController extends AbstractActionController
            ['ok']
         );                          
     }
+    
+    public function updateBalanceAction()
+    {
+        $contactId = (int) $this->params()->fromRoute('id', -1);
+        if ($contactId>0) {
+            $contact = $this->entityManager->getRepository(Contract::class)
+                    ->find($contactId);            
+            
+            $this->legalManager->updateContractBalance($contact);
+        }    
+        
+        return new JsonModel(
+           ['ok']
+        );                          
+    }
 }
