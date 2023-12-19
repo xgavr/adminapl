@@ -19,6 +19,7 @@ use Application\Filter\Basename;
 use Bank\Entity\Acquiring;
 use Bank\Entity\AplPayment;
 use Application\Filter\ToFloat;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 /**
  * Description of BankManager
@@ -27,8 +28,8 @@ use Application\Filter\ToFloat;
  */
 class BankManager 
 {
-    const STAEMENTS_DIR       = './data/statements/'; // папка с файлами выписок
-    const STAEMENTS_ARCH_DIR       = './data/statements/arch'; // папка с архивом файлами выписок
+    const STATEMENTS_DIR       = './data/statements/'; // папка с файлами выписок
+    const STATEMENTS_ARCH_DIR       = './data/statements/arch'; // папка с архивом файлами выписок
     
     /**
      * Doctrine entity manager.
@@ -61,12 +62,12 @@ class BankManager
         $this->adminManager = $adminManager;
         $this->postManager = $postManager;
         
-        if (!is_dir(self::STAEMENTS_DIR)){
-            mkdir(self::STAEMENTS_DIR);
+        if (!is_dir(self::STATEMENTS_DIR)){
+            mkdir(self::STATEMENTS_DIR);
         }
 
-        if (!is_dir(self::STAEMENTS_ARCH_DIR)){
-            mkdir(self::STAEMENTS_ARCH_DIR);
+        if (!is_dir(self::STATEMENTS_ARCH_DIR)){
+            mkdir(self::STATEMENTS_ARCH_DIR);
         }
     }
 
@@ -191,6 +192,76 @@ class BankManager
             $basenameFilter = new Basename();
 
             $lines = fopen($filename, 'r');
+
+            if($lines) {
+
+                $detector = new CsvDetectDelimiterFilter();
+                $delimiter = $detector->filter($filename);
+                $filter = new RawToStr();
+                $floatFilter = new ToFloat();
+                
+                while (($line = fgetcsv($lines, 4096, $delimiter)) !== false) {
+                    
+                    $row = explode(';', $filter->filter($line));
+
+                    if ($floatFilter->filter($row[10])){
+                        
+                        $acq = $this->entityManager->getRepository(Acquiring::class)
+                                ->findOneBy(['rrn' => $row[14], 'output' => $floatFilter->filter($row[10])]);
+
+                        if ($acq == null){
+                            $acq = new Acquiring();
+                            $acq->setInn($row[0]);
+                            $acq->setPoint($row[3]);
+                            $acq->setCart($row[5]);
+                            $acq->setAcode($row[6]);
+                            $acq->setCartType($row[7]);
+                            $acq->setAmount($floatFilter->filter($row[8]));
+                            $acq->setComiss($floatFilter->filter($row[9]));
+                            $acq->setOutput($floatFilter->filter($row[10]));
+                            $acq->setOperType($row[11]);
+                            $acq->setOperDate($row[12]);
+                            $acq->setTransDate($row[13]);
+                            $acq->setRrn($row[14]);
+                            $acq->setIdent($row[15]);
+    
+                            $this->entityManager->persist($acq);
+                        }    
+
+                    }    
+                }
+                    
+                $this->entityManager->flush();                    
+
+                fclose($lines);                
+            }    
+        }
+        
+        return;
+    }
+    
+    /**
+     * Загруза выписки эквайринга xlsx
+     * 
+     * @param string $filename
+     * @return null
+     */
+    public function uploadStatementXlsx($filename)
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(0);
+        $i = 0;
+        
+        if (file_exists($filename)){
+            
+            if (!filesize($filename)){
+                return;
+            }
+
+            $reader = IOFactory::createReaderForFile($filename);
+            $filterSubset = new \Application\Filter\ExcelColumn();
+            $reader->setReadFilter($filterSubset);
+            $spreadsheet = $reader->load($filename);
 
             if($lines) {
 
@@ -408,7 +479,7 @@ class BankManager
                     if (isset($mail['attachment'])){
                         foreach($mail['attachment'] as $attachment){
                             if ($attachment['filename'] && file_exists($attachment['temp_file'])){
-                                $target = self::STAEMENTS_DIR.'/'.rand().'_'.$attachment['filename'];
+                                $target = self::STATEMENTS_DIR.'/'.rand().'_'.$attachment['filename'];
                                 if (copy($attachment['temp_file'], $target)){
                                     unlink($attachment['temp_file']);
                                 }
@@ -465,7 +536,7 @@ class BankManager
     {            
         setlocale(LC_ALL,'ru_RU.UTF-8');
         
-        foreach (new \DirectoryIterator(self::STAEMENTS_DIR) as $fileInfo) {
+        foreach (new \DirectoryIterator(self::STATEMENTS_DIR) as $fileInfo) {
             if ($fileInfo->isDot()) {
                 continue;
             }
@@ -482,8 +553,8 @@ class BankManager
 //                        $this->saveStatementFromStatement1c($bankAccount, $statement);
 //                        
 //                    }
-//                    if (is_dir(self::STAEMENTS_ARCH_DIR)){
-//                        if (copy($fileInfo->getPathname(), self::STAEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
+//                    if (is_dir(self::STATEMENTS_ARCH_DIR)){
+//                        if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
 //                            unlink($fileInfo->getPathname());
 //                        }
 //                    }
@@ -496,8 +567,22 @@ class BankManager
                     $this->findAcquiringIntersect();
                     $this->findAcquiringIntersectSum();
 
-                    if (is_dir(self::STAEMENTS_ARCH_DIR)){
-                        if (copy($fileInfo->getPathname(), self::STAEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
+                    if (is_dir(self::STATEMENTS_ARCH_DIR)){
+                        if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
+                            unlink($fileInfo->getPathname());
+                        }
+                    }
+                }
+                if (strtolower($fileInfo->getExtension()) == 'xlsx'){
+
+                    $this->uploadStatementXlsx($fileInfo->getPathname());
+                    $this->compressAcquiring();
+                    $this->compressAplPayment();
+                    $this->findAcquiringIntersect();
+                    $this->findAcquiringIntersectSum();
+
+                    if (is_dir(self::STATEMENTS_ARCH_DIR)){
+                        if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
                             unlink($fileInfo->getPathname());
                         }
                     }
