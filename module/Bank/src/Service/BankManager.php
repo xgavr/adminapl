@@ -573,20 +573,20 @@ class BankManager
                         }
                     }
                 }
-                if (strtolower($fileInfo->getExtension()) == 'xlsx'){
-
-                    $this->uploadStatementXlsx($fileInfo->getPathname());
-                    $this->compressAcquiring();
-                    $this->compressAplPayment();
-                    $this->findAcquiringIntersect();
-                    $this->findAcquiringIntersectSum();
-
-                    if (is_dir(self::STATEMENTS_ARCH_DIR)){
-                        if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
-                            unlink($fileInfo->getPathname());
-                        }
-                    }
-                }
+//                if (strtolower($fileInfo->getExtension()) == 'xlsx'){
+//
+//                    $this->uploadStatementXlsx($fileInfo->getPathname());
+//                    $this->compressAcquiring();
+//                    $this->compressAplPayment();
+//                    $this->findAcquiringIntersect();
+//                    $this->findAcquiringIntersectSum();
+//
+//                    if (is_dir(self::STATEMENTS_ARCH_DIR)){
+//                        if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
+//                            unlink($fileInfo->getPathname());
+//                        }
+//                    }
+//                }
             }
         }
 
