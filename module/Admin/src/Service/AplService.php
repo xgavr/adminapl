@@ -1615,7 +1615,7 @@ class AplService {
                 ->findForRawpriceEx();
         
         $iterable = $goodsQuery->iterate();
-        $k = 1; $border = 100;
+        $k = 1; $border = 50;
         $goods = [];
         foreach($iterable as $item){
             foreach ($item as $good){
@@ -1757,7 +1757,7 @@ class AplService {
 
             $oemsQuery = $this->entityManager->getRepository(Goods::class)
                     ->findOems($good->getId());
-            $oemsQuery->setMaxResults(500);
+            $oemsQuery->setMaxResults(200);
             $oems = $oemsQuery->getResult();
             
             foreach ($oems as $oem){
