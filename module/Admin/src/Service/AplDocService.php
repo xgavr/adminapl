@@ -881,16 +881,17 @@ class AplDocService {
 
     /**
      * Отправить вт
+     * @param integer $vtId
      * 
      */
-    public function sendVt()
+    public function sendVt($vtId = null)
     {
         $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
 
         $result = false;
 
         $vt = $this->entityManager->getRepository(Vt::class)
-                ->findForUpdateApl();
+                ->findForUpdateApl($vtId);
         if ($vt){
             $post = [
                 'parent' => $vt->getOffice()->getAplId(),

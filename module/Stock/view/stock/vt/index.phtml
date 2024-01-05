@@ -163,6 +163,15 @@
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
         btn += '</button>';
 
+        var url = '/apl/send-vt/'+row.id;
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-info btn-xs send-cash-doc"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>';
+        btn += '</button>';
+
         return btn;
     }    
     

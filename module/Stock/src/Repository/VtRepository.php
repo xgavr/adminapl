@@ -240,8 +240,9 @@ class VtRepository extends EntityRepository{
     
     /**
      * Найти записи для отправки в АПЛ
+     * @param integer $vtId 
      */
-    public function findForUpdateApl()
+    public function findForUpdateApl($vtId = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -253,9 +254,15 @@ class VtRepository extends EntityRepository{
             ->setParameter('1', Vt::STATUS_EX_NEW)    
                 
 //            ->andWhere('v.aplId > 0')  
-            ->setMaxResults(1)    
-                
+            ->setMaxResults(1)                    
                 ;
+        
+        if ($vtId){
+            $queryBuilder->resetDQLPart('where')
+                    ->andWhere('v.id = ?1')
+                    ->setParameter('1', $vtId)
+                    ;
+        }
         
         $data = $queryBuilder->getQuery()->getResult();
         foreach ($data as $vt){
