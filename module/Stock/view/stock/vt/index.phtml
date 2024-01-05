@@ -155,7 +155,7 @@
     
     function activeFormatter(value, row){
         var url = '/vt/edit-form/'+row.id;
-        btn = '<button';
+        btn = '<nobr><button';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs vt-modal-show"';
         btn += ' aria-label="Left Align"'; 
@@ -170,7 +170,7 @@
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>';
-        btn += '</button>';
+        btn += '</button></nobr>';
 
         return btn;
     }    
