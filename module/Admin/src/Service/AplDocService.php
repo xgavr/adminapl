@@ -893,7 +893,7 @@ class AplDocService {
 
         $vt = $this->entityManager->getRepository(Vt::class)
                 ->findForUpdateApl($vtId);
-        var_dump($vtId);
+//        var_dump($vtId);
         if ($vt){
             $post = [
                 'parent' => $vt->getOffice()->getAplId(),
