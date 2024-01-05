@@ -81,6 +81,19 @@
     var $table = $('#table'),
         $ok = $('#ok');
     
+    $(function () {   
+        $(document).on('click', '.send-vt-doc', function (e) {
+            var url = $(this).attr('modal-url');
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: true
+            });
+            $.get( url, function(data){
+                dialog.modal('hide');
+            });
+        });
+    });
+    
     function rowStyle(row){
         var retired = 'tablerow';
         if (row.status === '<?= Vt::STATUS_RETIRED?>'){
@@ -166,7 +179,7 @@
         var url = '/apl/send-vt/'+row.id;
         btn += ' <button';
         btn += ' type="button"';
-        btn += ' class="btn btn-info btn-xs send-cash-doc"';
+        btn += ' class="btn btn-info btn-xs send-vt-doc"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>';
