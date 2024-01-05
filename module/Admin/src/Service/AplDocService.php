@@ -882,9 +882,10 @@ class AplDocService {
     /**
      * Отправить вт
      * @param integer $vtId
+     * @param bool $debug
      * 
      */
-    public function sendVt($vtId = null)
+    public function sendVt($vtId = null, $debug = false)
     {
         $url = $this->aplApi().'update-doc?api='.$this->aplApiKey();
 
@@ -933,7 +934,9 @@ class AplDocService {
             }
             $post['tp'] = $so;
             
-//            var_dump($post); exit;
+            if ($debug){
+                var_dump($post);
+            }    
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
@@ -943,7 +946,9 @@ class AplDocService {
             $ok = $result = $aplId = false;
             try{
                 $response = $client->send();
-//                var_dump($response->getBody()); exit;
+                if ($debug){
+                    var_dump($response->getBody());
+                }
                 if ($response->isOk()) {                    
                     $aplId = (int) $response->getBody();
                     if ($aplId){

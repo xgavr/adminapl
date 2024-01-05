@@ -752,7 +752,7 @@ class AplController extends AbstractActionController
     {                
         $vtId = $this->params()->fromQuery('vtId');
         
-        $this->aplDocService->sendVt($vtId);
+        $this->aplDocService->sendVt($vtId, true);
         
         return new JsonModel([
             'result' => 'ok',
