@@ -258,6 +258,8 @@ class BankManager
                 return;
             }
 
+            $floatFilter = new ToFloat();
+
             $reader = IOFactory::createReaderForFile($filename);
             $filterSubset = new \Application\Filter\ExcelColumn();
             $reader->setReadFilter($filterSubset);
