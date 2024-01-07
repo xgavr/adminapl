@@ -271,7 +271,7 @@ class BankManager
                 if (count($excel_sheet_content)){
                     foreach ($excel_sheet_content as $row){ 
                         
-                        var_dump($row); exit;
+//                        var_dump($row); exit;
                         
                         $ident = $row[0];
                         $dateOper = $row[3];
@@ -558,7 +558,11 @@ class BankManager
                     $this->compressAplPayment();
                     $this->findAcquiringIntersect();
                     $this->findAcquiringIntersectSum();
-
+                    if (is_dir(self::STATEMENTS_ARCH_DIR)){
+                        if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
+                            unlink($fileInfo->getPathname());
+                        }
+                    }
                 }
                 if (strtolower($fileInfo->getExtension()) == 'xlsx'){
 
@@ -567,15 +571,16 @@ class BankManager
                     $this->compressAplPayment();
                     $this->findAcquiringIntersect();
                     $this->findAcquiringIntersectSum();
-
-                }
-                
-                if (is_dir(self::STATEMENTS_ARCH_DIR)){
-                    if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
-                        unlink($fileInfo->getPathname());
+                    if (is_dir(self::STATEMENTS_ARCH_DIR)){
+                        if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
+                            unlink($fileInfo->getPathname());
+                        }
                     }
                 }
+                
             }
+            
+            break;
         }
 
         return;
