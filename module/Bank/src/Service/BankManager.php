@@ -262,49 +262,46 @@ class BankManager
             $filterSubset = new \Application\Filter\ExcelColumn();
             $reader->setReadFilter($filterSubset);
             $spreadsheet = $reader->load($filename);
+            $sheets = $spreadsheet->getAllSheets();
+            
+            foreach ($sheets as $sheet) { // PHPExcel_Worksheet
 
-            if($lines) {
+                $excel_sheet_content = $sheet->toArray();
 
-                $detector = new CsvDetectDelimiterFilter();
-                $delimiter = $detector->filter($filename);
-                $filter = new RawToStr();
-                $floatFilter = new ToFloat();
-                
-                while (($line = fgetcsv($lines, 4096, $delimiter)) !== false) {
-                    
-                    $row = explode(';', $filter->filter($line));
-
-                    if ($floatFilter->filter($row[10])){
+                if (count($excel_sheet_content)){
+                    foreach ($excel_sheet_content as $row){ 
                         
-                        $acq = $this->entityManager->getRepository(Acquiring::class)
-                                ->findOneBy(['rrn' => $row[14], 'output' => $floatFilter->filter($row[10])]);
+                        var_dump($row); exit;
+                        
+                        $ident = $row[0];
+                        $dateOper = $row[3];
+                        $operType = $row[4];
+                        $amount = $floatFilter->filter($row[5]);
+                        $cart = $row[6];
+                        $rrn = $row[8];
+                        
+                        if ($ident && $rrn && $amount){
+                            $acq = $this->entityManager->getRepository(Acquiring::class)
+                                    ->findOneBy(['rrn' => $rrn, 'output' => $amount]);
 
-                        if ($acq == null){
-                            $acq = new Acquiring();
-                            $acq->setInn($row[0]);
-                            $acq->setPoint($row[3]);
-                            $acq->setCart($row[5]);
-                            $acq->setAcode($row[6]);
-                            $acq->setCartType($row[7]);
-                            $acq->setAmount($floatFilter->filter($row[8]));
-                            $acq->setComiss($floatFilter->filter($row[9]));
-                            $acq->setOutput($floatFilter->filter($row[10]));
-                            $acq->setOperType($row[11]);
-                            $acq->setOperDate($row[12]);
-                            $acq->setTransDate($row[13]);
-                            $acq->setRrn($row[14]);
-                            $acq->setIdent($row[15]);
-    
-                            $this->entityManager->persist($acq);
+                            if ($acq == null){
+                                $acq = new Acquiring();
+                                $acq->setCart($cart);
+                                $acq->setAmount($amount);
+                                $acq->setOutput($amount);
+                                $acq->setOperType($operType);
+                                $acq->setOperDate($dateOper);
+                                $acq->setTransDate($dateOper);
+                                $acq->setRrn($rrn);
+                                $acq->setIdent($ident);
+
+                                $this->entityManager->persist($acq);
+                            }    
                         }    
-
-                    }    
+                    }                    
+                    $this->entityManager->flush();                    
                 }
-                    
-                $this->entityManager->flush();                    
-
-                fclose($lines);                
-            }    
+            }            
         }
         
         return;
@@ -553,11 +550,6 @@ class BankManager
 //                        $this->saveStatementFromStatement1c($bankAccount, $statement);
 //                        
 //                    }
-//                    if (is_dir(self::STATEMENTS_ARCH_DIR)){
-//                        if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
-//                            unlink($fileInfo->getPathname());
-//                        }
-//                    }
                 }
                 if (strtolower($fileInfo->getExtension()) == 'csv'){
 
@@ -567,26 +559,22 @@ class BankManager
                     $this->findAcquiringIntersect();
                     $this->findAcquiringIntersectSum();
 
-                    if (is_dir(self::STATEMENTS_ARCH_DIR)){
-                        if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
-                            unlink($fileInfo->getPathname());
-                        }
+                }
+                if (strtolower($fileInfo->getExtension()) == 'xlsx'){
+
+                    $this->uploadStatementXlsx($fileInfo->getPathname());
+                    $this->compressAcquiring();
+                    $this->compressAplPayment();
+                    $this->findAcquiringIntersect();
+                    $this->findAcquiringIntersectSum();
+
+                }
+                
+                if (is_dir(self::STATEMENTS_ARCH_DIR)){
+                    if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
+                        unlink($fileInfo->getPathname());
                     }
                 }
-//                if (strtolower($fileInfo->getExtension()) == 'xlsx'){
-//
-//                    $this->uploadStatementXlsx($fileInfo->getPathname());
-//                    $this->compressAcquiring();
-//                    $this->compressAplPayment();
-//                    $this->findAcquiringIntersect();
-//                    $this->findAcquiringIntersectSum();
-//
-//                    if (is_dir(self::STATEMENTS_ARCH_DIR)){
-//                        if (copy($fileInfo->getPathname(), self::STATEMENTS_ARCH_DIR.'/'.$fileInfo->getFilename())){
-//                            unlink($fileInfo->getPathname());
-//                        }
-//                    }
-//                }
             }
         }
 
