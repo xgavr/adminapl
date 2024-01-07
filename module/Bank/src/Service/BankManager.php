@@ -291,6 +291,7 @@ class BankManager
                                 $acq->setCart($cart);
                                 $acq->setAmount($amount);
                                 $acq->setOutput($amount);
+                                $acq->setComiss(0);
                                 $acq->setOperType($operType);
                                 $acq->setOperDate($dateOper);
                                 $acq->setTransDate($dateOper);
