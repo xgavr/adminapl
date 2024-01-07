@@ -579,10 +579,9 @@ class BankManager
                             unlink($fileInfo->getPathname());
                         }
                     }
-                }
-                
+                    break;
+                }                
             }            
-            break;
         }
 
         return;
