@@ -582,7 +582,7 @@ class BankManager
                 }
                 
             }            
-//            break;
+            break;
         }
 
         return;
