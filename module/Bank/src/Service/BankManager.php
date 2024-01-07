@@ -282,6 +282,14 @@ class BankManager
                         $cart = !empty($row[6]) ? $row[6]:null;
                         $rrn = !empty($row[8]) ? $row[8]:null;
                         
+                        if (empty($rrn) && !empty($cart) && $amount < 0){//возврат
+                            $acq = $this->entityManager->getRepository(Acquiring::class)
+                                    ->findOneBy(['cart' => $cart], ['transDate' => 'desc']);
+                            if ($acq){
+                                $rrn = $acq->getRrn();
+                            }        
+                        }
+                        
                         if ($point && $rrn && $amount){
                             $acq = $this->entityManager->getRepository(Acquiring::class)
                                     ->findOneBy(['rrn' => $rrn, 'output' => $amount]);
