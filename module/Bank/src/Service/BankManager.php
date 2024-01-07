@@ -275,12 +275,12 @@ class BankManager
                         
 //                        var_dump($row); exit;
                         
-                        $point = $row[0];
-                        $dateOper = $row[3];
-                        $operType = $row[4];
-                        $amount = $floatFilter->filter($row[5]);
-                        $cart = $row[6];
-                        $rrn = $row[8];
+                        $point = !empty($row[0]) ? $row[0]:null;
+                        $dateOper = !empty($row[3]) ? $row[3]:null;
+                        $operType = !empty($row[4]) ? $row[4]:null;
+                        $amount = $floatFilter->filter(!empty($row[5]) ? $row[5]:null);
+                        $cart = !empty($row[6]) ? $row[6]:null;
+                        $rrn = !empty($row[8]) ? $row[8]:null;
                         
                         if ($point && $rrn && $amount){
                             $acq = $this->entityManager->getRepository(Acquiring::class)
