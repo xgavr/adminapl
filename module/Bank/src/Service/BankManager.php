@@ -275,14 +275,14 @@ class BankManager
                         
 //                        var_dump($row); exit;
                         
-                        $ident = $row[0];
+                        $point = $row[0];
                         $dateOper = $row[3];
                         $operType = $row[4];
                         $amount = $floatFilter->filter($row[5]);
                         $cart = $row[6];
                         $rrn = $row[8];
                         
-                        if ($ident && $rrn && $amount){
+                        if ($point && $rrn && $amount){
                             $acq = $this->entityManager->getRepository(Acquiring::class)
                                     ->findOneBy(['rrn' => $rrn, 'output' => $amount]);
 
@@ -296,7 +296,7 @@ class BankManager
                                 $acq->setOperDate($dateOper);
                                 $acq->setTransDate($dateOper);
                                 $acq->setRrn($rrn);
-                                $acq->setIdent($ident);
+                                $acq->setPoint($point);
 
                                 $this->entityManager->persist($acq);
                             }    

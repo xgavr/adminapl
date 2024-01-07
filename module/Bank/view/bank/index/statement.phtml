@@ -743,6 +743,10 @@
             var result = value+'<br/>'+row.cart;
             return result;
         }
+        if (row.cart){
+            var result = row.cart;
+            return result;
+        }
         
         return '';
     }
@@ -750,6 +754,10 @@
     function acodeFormatter(value, row){
         if (value){
             var result = value+'<br/>'+row.rrn;
+            return result;
+        }
+        if (row.rrn){
+            var result = row.rrn;
             return result;
         }
         
