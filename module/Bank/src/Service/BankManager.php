@@ -307,10 +307,10 @@ class BankManager
                                 $acq->setPoint($point);
 
                                 $this->entityManager->persist($acq);
+                                $this->entityManager->flush();                    
                             }    
                         }    
                     }                    
-                    $this->entityManager->flush();                    
                 }
             }            
         }
