@@ -301,6 +301,8 @@ class ComitentController extends AbstractActionController
                     'result' => $result,
                     'row' => $row,
                 ]);        
+            } else {
+                var_dump($form->getMessages());
             }
         } else {
             if ($good){
