@@ -284,7 +284,8 @@ class ComitentController extends AbstractActionController
             
             $data = $this->params()->fromPost();
             $form->setData($data);
-
+            $form->remove('saleQty');
+            
             if ($form->isValid()) {
                 if (isset($data['good'])){
                     $good = $this->entityManager->getRepository(Goods::class)
