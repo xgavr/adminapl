@@ -1297,6 +1297,7 @@ class Goods {
             'code' => $this->getCode(),
             'name' => $this->getName(),
             'nameShort' => $this->getNameShort(),
+            'nameInput' => $this->getInputName(),
             'producer' => $this->getProducer()->toArray(),
             'group' => $this->getGenericGroup()->toArray(),
         ];
