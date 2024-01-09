@@ -140,7 +140,7 @@ class Ptu {
     private $ptuGoods;
     
     /**
-     * @ORM\OneToMany(targetEntity="Stock\Entity\PtuGood", mappedBy="ptu") 
+     * @ORM\OneToMany(targetEntity="Stock\Entity\PtuCost", mappedBy="ptu") 
      * @ORM\JoinColumn(name="id", referencedColumnName="ptu_id")
      */
     private $ptuCosts;
