@@ -178,7 +178,7 @@ class JobManager
           516 => ['command' => 'delete-article',                    'shedule' => '44 2 * * *',  'description' => 'Удаление пустых артикулов производителей'],
           517 => ['command' => 'delete-unknown-producer',           'shedule' => '14 4 * * *',  'description' => 'Удаление пустых неизвестных производителей'],
           518 => ['command' => 'delete-token',                      'shedule' => '14 5 * * *',  'description' => 'Удаление пустых токенов'],
-          523 => ['command' => 'update-apl-acquiring',              'shedule' => '14 6 * * *',  'description' => 'Загрузить эквайринг с АПЛ'],
+          523 => ['command' => 'update-apl-acquiring',              'shedule' => '14 2 * * *',  'description' => 'Загрузить эквайринг с АПЛ'],
           519 => ['command' => 'delete-bigram',                     'shedule' => '14 7 * * *',  'description' => 'Удаление пустых биграм'],
           520 => ['command' => 'delete-goods',                      'shedule' => '14 8 * * *',  'description' => 'Удаление пустых карточек товаров'],
           521 => ['command' => 'prices-by-link',                    'shedule' => '14 9 * * *',  'description' => 'Скачивание прайсов по ссылке'],

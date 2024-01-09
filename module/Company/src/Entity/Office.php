@@ -751,4 +751,21 @@ class Office {
         $this->linkReview = $linkReview;
         return $this;
     }
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'aplId' => $this->getAplId(),
+            'fullName' => $this->getFullName(),
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'status' => $this->getStatus(),
+        ];
+        
+        return $result;
+    }                
 }

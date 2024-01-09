@@ -235,4 +235,22 @@ class PtuCost {
             'rowNo' => $this->getRowNo(),
         ];
     }    
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'amount' => $this->getAmount(),
+            'comment' => $this->getComment(),
+            'cost' => $this->getCost()->toArray(),
+            'price' => $this->getPrice(),
+            'quantity' => $this->getQuantity(),
+            'rowNo' => $this->getRowNo(),
+        ];
+        
+        return $result;
+    }                
 }

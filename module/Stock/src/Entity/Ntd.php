@@ -60,4 +60,18 @@ class Ntd {
     {
         $this->ntd = $ntd;
     }     
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'id' => $this->getId(),
+            'ntd' => $this->getNtd(),
+        ];
+        
+        return $result;
+    }                
 }

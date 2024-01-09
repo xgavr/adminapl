@@ -138,4 +138,22 @@ class Country {
     {
         $this->producer[] = $producer;
     }   
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'id' => $this->getId(),
+            'a2' => $this->getAlpha2(),
+            'a3' => $this->getAlpha3(),
+            'code' => $this->getCode(),
+            'fullName' => $this->getFullName(),
+            'name' => $this->getName(),
+        ];
+        
+        return $result;
+    }                    
 }

@@ -75,4 +75,19 @@ class Unit {
     {
         $this->code = $code;
     }     
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'code' => $this->getCode(),
+        ];
+        
+        return $result;
+    }                    
 }

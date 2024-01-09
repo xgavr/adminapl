@@ -542,6 +542,7 @@ class Contract {
             'date' => $this->getDateStartAtomFormat(),
             'name' => $this->getName(),
             'kind' => $this->getKind(),
+            'pay' => $this->getPay(),
             'id' => $this->getId(),
         ];
         

@@ -383,4 +383,28 @@ class PtuGood {
             'unit' => $this->getUnit()->getId(),
         ];
     }    
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'amount' => $this->getAmount(),
+            'price' => $this->getPrice(),
+            'comment' => $this->getComment(),
+            'country' => $this->getCountry()->toArray(),
+            'good' => $this->getGood()->toArray(),
+            'info' => $this->getInfo(),
+            'ntd' => $this->getNtd()->toArray(),
+            'quantity' => $this->getQuantity(),
+            'rowNo' => $this->getRowNo(),
+            'status' => $this->getStatus(),
+            'statusDoc' => $this->getStatusDoc(),
+            'unit' => $this->getUnit()->toArray(),            
+        ];
+        
+        return $result;
+    }            
 }

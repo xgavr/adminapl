@@ -486,6 +486,11 @@ class Ptu {
         return $this->docDate;
     }
     
+    public function getDocDateAtomFormat() {
+        $datetime = new \DateTime($this->docDate);
+        return $datetime->format(\DateTime::ATOM);
+    }
+    
     /**
      * Sets the date when doc.
      * @param date $docDate     
@@ -722,6 +727,59 @@ class Ptu {
             'statusEx' => $this->getStatusEx(),
             'goods' => [],
             'costs' => [],
+        ];
+    }
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function goodsToArray()
+    {
+        $result = [];
+        foreach ($this->ptuGoods as $item){
+            $result[] = $item->toArray();
+        }    
+        
+        return $result;
+    }    
+
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function costsToArray()
+    {
+        $result = [];
+        foreach ($this->ptuCosts as $item){
+            $result[] = $item->toArray();
+        }    
+        
+        return $result;
+    }    
+    
+    /**
+     * Массив для формы
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'amount' => $this->getAmount(),
+            'aplId' => $this->getAplId(),
+            'comment' => $this->getComment(),
+            'contract' => $this->getContract()->toArray(),
+            'docDate' => $this->getDocDateAtomFormat(),
+            'docNo' => $this->getDocNo(),
+            'info' => $this->getInfo(),
+            'legal' => $this->getLegal()->toArray(),
+            'office' => $this->getOffice()->toArray(),
+            'status' => $this->getStatus(),
+            'statusDoc' => $this->getStatusDoc(),
+            'statusEx' => $this->getStatusEx(),
+            'id' => $this->getId(),
+            'goods' => $this->goodsToArray(),
+            'costs' => $this->costsToArray(),
         ];
     }
 }
