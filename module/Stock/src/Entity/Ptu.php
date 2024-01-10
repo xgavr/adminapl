@@ -772,6 +772,7 @@ class Ptu {
             'docDate' => $this->getDocDateAtomFormat(),
             'docNo' => $this->getDocNo(),
             'info' => $this->getInfo(),
+            'supplier' => $this->getSupplier()->toArray(),
             'legal' => $this->getLegal()->toArray(),
             'office' => $this->getOffice()->toArray(),
             'status' => $this->getStatus(),

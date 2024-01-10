@@ -922,5 +922,21 @@ class Supplier {
     public function getSupplierOrders()
     {
         return $this->supplierOrders;
-    }            
+    }      
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'aplId' => $this->getAplId(),
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'status' => $this->getStatus(),
+        ];
+        
+        return $result;
+    }        
 }
