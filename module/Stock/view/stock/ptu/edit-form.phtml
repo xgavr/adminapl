@@ -441,6 +441,7 @@ if ($ptu && !$copy){
                 $('.nav-tabs #good-tab').tab('show');
             <?php endif;?>    
         <?php else:?>        
+            $('.nav-tabs a:first').tab('show');
         <?php endif; ?>        
 
         $('#ptugoodtable').bootstrapTable({
