@@ -46,7 +46,7 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'С�
 $form->prepare();
 
 $docName = 'Новый';
-if ($ptu){
+if ($ptu && !$copy){
     $docName = '№ '.$ptu->getDocNo().' от  '.date('d.m.Y', strtotime($ptu->getDocDate()));
 }
 
@@ -264,7 +264,7 @@ if ($ptu){
         data.ptuCost = getFormatedPtuCost();
         $.ajax({
             type: 'POST',
-            url: '/ptu/edit-form/<?= ($ptu) ? $ptu->getId():"" ?>',
+            url: '/ptu/edit-form/<?= ($ptu && !$copy) ? $ptu->getId():"" ?>',
             data: $.param(data)
         })
             .done(function (data) {
@@ -433,7 +433,15 @@ if ($ptu){
     });
     
     $( document ).ready(function() {
-        $('.nav-tabs a:first').tab('show');
+        <?php if ($ptu):?>
+            <?php if ($ptu->getPtuCosts()->count()):?>
+                $('.nav-tabs #cost-tab').tab('show');
+            <?php endif;?>    
+            <?php if ($ptu->getPtuGoods()->count()):?>
+                $('.nav-tabs #good-tab').tab('show');
+            <?php endif;?>    
+        <?php else:?>        
+        <?php endif; ?>        
 
         $('#ptugoodtable').bootstrapTable({
             onLoadSuccess: function(res){

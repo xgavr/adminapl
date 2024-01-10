@@ -266,7 +266,9 @@
             return $table.bootstrapTable('getData')[getCurrentIndex()];
         },
         actionsGroups: [
-           ['statusActiv', 'statusRetired', 'repostEx'], ['history']
+           ['statusActiv', 'statusRetired', 'repostEx'], 
+           ['duplicate'],
+           ['history']
         ],      
         actions: {
             statusActiv: {
@@ -308,6 +310,25 @@
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';
+                }                
+            },
+            duplicate: {
+                name: 'Скопировать',
+                iconClass: 'glyphicon glyphicon-',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    var url = '/ptu/edit-form/'+row.id+'?copy=1';
+                    showFormDialog({
+                        id: 'ptuModal',
+                        url: url,
+                        width: '1440px'
+                    });
+                },
+                isShown: function(row) {
+                  return true;
+                },
+                isEnabled: function(row) {
+                    return true;
                 }                
             },
             history: {

@@ -179,6 +179,7 @@ class PtuController extends AbstractActionController
     {
         $ptuId = (int)$this->params()->fromRoute('id', -1);
         $supplierId = (int) $this->params()->fromQuery('supplier', -1);
+        $copy = (int) $this->params()->fromQuery('copy', false);
         
         $ptu = $supplier = $legal = $company = $contract = null;
         $notDisabled = true;
@@ -298,7 +299,7 @@ class PtuController extends AbstractActionController
                     'supplier' => $ptu->getSupplier()->getId(),
                     'legal_id' => $ptu->getLegal()->getId(),  
                     'contract_id' => $ptu->getContract()->getId(),  
-                    'doc_date' => $ptu->getDocDate(),  
+                    'doc_date' => ($copy) ? date('Y-m-d'):$ptu->getDocDate(),  
                     'doc_no' => $ptu->getDocNo(),
                     'comment' => $ptu->getComment(),
                     'status' => $ptu->getStatus(),
@@ -312,6 +313,7 @@ class PtuController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'ptu' => $ptu,
+            'copy' => $copy,
             'allowDate' => $this->ptuManager->getAllowDate(),
             'disabled' => !$notDisabled,
         ]);        
