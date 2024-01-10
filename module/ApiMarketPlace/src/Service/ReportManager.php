@@ -299,7 +299,7 @@ class ReportManager
                         'marketplace' => $marketplace->getId(), 'docDate' => $reportDate,
                         'reportType' => MarketSaleReport::TYPE_REPORT]);
             
-            if (!empty($marketplaceReport) && $marketplaceReport->getTotalAmount()){
+            if (!empty($marketplaceReport) && $marketplaceReport->getDocAmount()){
                 break;
             }
             
