@@ -112,6 +112,8 @@ class SupplierRepository extends EntityRepository{
                 ->where('s.status = ?1')
                 ->setParameter('1', Supplier::STATUS_ACTIVE)
                 ->leftJoin(\Application\Entity\PriceDescription::class, 'pd', 'WITH', 'pd.supplier = s.id')
+                ->andWhere('s.priceListStatus = :priceListStatus')
+                ->setParameter('priceListStatus', Supplier::PRICE_LIST_ON)
                 ->having('price_description_count = 0')
                 ;
         
@@ -134,6 +136,8 @@ class SupplierRepository extends EntityRepository{
                 ->setParameter('1', Supplier::STATUS_ACTIVE)
                 ->leftJoin(\Application\Entity\Raw::class, 'r', 'WITH', 'r.supplier = s.id and r.status = ?2')
                 ->setParameter('2', \Application\Entity\Raw::STATUS_PARSED)
+                ->andWhere('s.priceListStatus = :priceListStatus')
+                ->setParameter('priceListStatus', Supplier::PRICE_LIST_ON)
                 ->having('raw_count = 0')
                 ;
         
