@@ -425,7 +425,7 @@ class PtuController extends AbstractActionController
             if ($cost){
                 $data = [
                     'cost' => $cost->getId(),
-                    'comment' => $cost->getComment(),
+                    'comment' => $params['comment'],
                     'quantity' => $params['quantity'],
                     'amount' => $params['amount'],
                     'price' => $params['amount']/$params['quantity'],
