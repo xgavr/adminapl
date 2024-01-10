@@ -18,6 +18,8 @@ use Application\Entity\SupplierOrder;
 use Application\Entity\Order;
 use Laminas\Filter\Digits;
 use Stock\Entity\PtuCost;
+use Company\Entity\Legal;
+use Company\Entity\Contract;
 
 /**
  * Description of PtuRepository
@@ -113,6 +115,32 @@ class PtuRepository extends EntityRepository{
                             ->setParameter('supplier', $supplier->getId());
                 }
             }            
+            if (!empty($params['companyId'])){
+                $company = $entityManager->getRepository(Legal::class)
+                        ->find($params['companyId']);
+                if ($company){
+                    $queryBuilder
+                            ->join('p.contract', 'contract')
+                            ->andWhere('contract.company = :company')
+                            ->setParameter('company', $company->getId());
+                }
+            }            
+            if (!empty($params['legalId'])){
+                $legal = $entityManager->getRepository(Legal::class)
+                        ->find($params['legalId']);
+                if ($legal){
+                    $queryBuilder->andWhere('p.legal = :legal')
+                            ->setParameter('legal', $legal->getId());
+                }
+            }            
+            if (!empty($params['contractId'])){
+                $contract = $entityManager->getRepository(Contract::class)
+                        ->find($params['contractId']);
+                if ($contract){
+                    $queryBuilder->andWhere('p.contract = :contract')
+                            ->setParameter('contract', $contract->getId());
+                }
+            }            
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
                     $queryBuilder->andWhere('YEAR(p.docDate) = :year')
@@ -188,6 +216,32 @@ class PtuRepository extends EntityRepository{
                             ->setParameter('supplier', $supplier->getId());
                 }
             }            
+            if (!empty($params['companyId'])){
+                $company = $entityManager->getRepository(Legal::class)
+                        ->find($params['companyId']);
+                if ($company){
+                    $queryBuilder
+                            ->join('p.contract', 'contract')
+                            ->andWhere('contract.company = :company')
+                            ->setParameter('company', $company->getId());
+                }
+            }            
+            if (!empty($params['legalId'])){
+                $legal = $entityManager->getRepository(Legal::class)
+                        ->find($params['legalId']);
+                if ($legal){
+                    $queryBuilder->andWhere('p.legal = :legal')
+                            ->setParameter('legal', $legal->getId());
+                }
+            }            
+            if (!empty($params['contractId'])){
+                $contract = $entityManager->getRepository(Contract::class)
+                        ->find($params['contractId']);
+                if ($contract){
+                    $queryBuilder->andWhere('p.contract = :contract')
+                            ->setParameter('contract', $contract->getId());
+                }
+            }            
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){
                     $queryBuilder->andWhere('YEAR(p.docDate) = :year')
@@ -240,6 +294,32 @@ class PtuRepository extends EntityRepository{
                     }    
                     $queryBuilder->andWhere($orX);
                 }    
+            }            
+            if (!empty($params['companyId'])){
+                $company = $entityManager->getRepository(Legal::class)
+                        ->find($params['companyId']);
+                if ($company){
+                    $queryBuilder
+                            ->join('p.contract', 'contract')
+                            ->andWhere('contract.company = :company')
+                            ->setParameter('company', $company->getId());
+                }
+            }            
+            if (!empty($params['legalId'])){
+                $legal = $entityManager->getRepository(Legal::class)
+                        ->find($params['legalId']);
+                if ($legal){
+                    $queryBuilder->andWhere('p.legal = :legal')
+                            ->setParameter('legal', $legal->getId());
+                }
+            }            
+            if (!empty($params['contractId'])){
+                $contract = $entityManager->getRepository(Contract::class)
+                        ->find($params['contractId']);
+                if ($contract){
+                    $queryBuilder->andWhere('p.contract = :contract')
+                            ->setParameter('contract', $contract->getId());
+                }
             }            
             if (!empty($params['year'])){
                 if (is_numeric($params['year'])){

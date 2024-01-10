@@ -53,9 +53,12 @@ class PtuController extends AbstractActionController
                 ->findForFormPtu();
         $offices = $this->entityManager->getRepository(Office::class)
                 ->findAll();
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
         return new ViewModel([
             'suppliers' => $suppliers,
             'offices' => $offices,
+            'companies' => $companies,
             'allowDate' => date('Y-m-d', strtotime($this->ptuManager->getAllowDate().' + 1 day')),
         ]);  
     }
@@ -71,6 +74,9 @@ class PtuController extends AbstractActionController
         $order = $this->params()->fromQuery('order', 'DESC');
         $supplierId = $this->params()->fromQuery('supplier');
         $officeId = $this->params()->fromQuery('office');
+        $companyId = $this->params()->fromQuery('company');
+        $legalId = $this->params()->fromQuery('legal');
+        $contractId = $this->params()->fromQuery('contract');
         $year_month = $this->params()->fromQuery('month');
         
         $year = $month = null;
@@ -82,6 +88,8 @@ class PtuController extends AbstractActionController
         $params = [
             'q' => $q, 'sort' => $sort, 'order' => $order, 
             'supplierId' => $supplierId, 'officeId' => $officeId,
+            'companyId' => $companyId, 'legalId' => $legalId,
+            'contractId' => $contractId,
             'year' => $year, 'month' => $month,
         ];
         $query = $this->entityManager->getRepository(Ptu::class)
@@ -179,6 +187,8 @@ class PtuController extends AbstractActionController
     {
         $ptuId = (int)$this->params()->fromRoute('id', -1);
         $supplierId = (int) $this->params()->fromQuery('supplier', -1);
+        $legalId = (int) $this->params()->fromQuery('legal', -1);
+        $contractId = (int) $this->params()->fromQuery('contract', -1);
         $copy = (int) $this->params()->fromQuery('copy', false);
         
         $ptu = $supplier = $legal = $company = $contract = null;
@@ -192,16 +202,24 @@ class PtuController extends AbstractActionController
             $supplier = $this->entityManager->getRepository(Supplier::class)
                     ->find($supplierId);
         }
+        if ($legalId > 0){
+            $legal = $this->entityManager->getRepository(Legal::class)
+                    ->find($legalId);
+        }
+        if ($contractId > 0){
+            $contract = $this->entityManager->getRepository(Contract::class)
+                    ->find($contractId);
+        }
         
         if ($ptu == null) {
             $officeId = (int)$this->params()->fromQuery('office', $this->ptuManager->currentUser()->getOffice()->getId());
             $office = $this->entityManager->getRepository(Office::class)
                     ->findOneById($officeId);
             $company = $this->entityManager->getRepository(Office::class)->findDefaultCompany($office);
-            if ($supplier){
+            if ($supplier && !$legal){
                 $legal = $this->entityManager->getRepository(Supplier::class)
                         ->findDefaultSupplierLegal($supplier);
-                if ($legal){
+                if ($legal && !$contract){
                     $contract = $this->entityManager->getRepository(Office::class)
                             ->findDefaultContract($office, $legal, null, Contract::PAY_CASHLESS);
                 }    

@@ -27,7 +27,7 @@
                 </div>    
                 <div class="form-group">
                     <div class="btn-group">
-                        <input id="searchinput" name="search" style="width: 250px" class="form-control enter-search" type="text" placeholder="Артикул, номер">
+                        <input id="searchinput" name="search" style="width: 150px" class="form-control enter-search" type="text" placeholder="Артикул, номер">
                         <span class="glyphicon glyphicon-remove-circle inputclear"></span>
                     </div>
                     <button id="ok" type="submit" class="btn btn-default" title="Поиск">
@@ -35,7 +35,7 @@
                     </button>
                 </div>    
                 <div class="form-group">
-                    <select id="supplierSelect" style="width: 250px" class="form-control">
+                    <select id="ptuSupplierSelect" style="width: 250px" class="form-control">
                         <option selected>поставщик</option>
                         <?php foreach ($suppliers as $supplier):?>
                             <option value="<?= $supplier->getId()?>"><?= $supplier->getName()?></option>
@@ -48,12 +48,29 @@
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
                         <?php endforeach;?>
-                    </select>
-                    
+                    </select>                    
                 </div>    
                 <div class="form-group">
                     <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
                 </div>
+                <div class="form-group">
+                    <select id="companySelect" name="company" style="width: 200px" class="form-control cookie-control">
+                        <!--<option selected>все компании</option>-->
+                        <?php foreach ($companies as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="legalSelect" name="legal" style="width: 200px" class="form-control">
+                        <option selected>все юр.лица</option>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="contractSelect" name="contract" style="width: 200px" class="form-control cookie-control">
+                        <option selected>все договоры</option>
+                    </select>                    
+                </div>    
             </div>
         </div>
         <table id="table" 
@@ -122,14 +139,57 @@
 //        $stable.bootstrapTable('refresh');
     }
     
+    function ptuIndexSupplierChange(){
+        $('#legalSelect').empty();
+        $('#legalSelect').append('<option>все юр.лица</option>');        
+        $.getJSON( '/supplier/legals/'+$('#ptuSupplierSelect').val(), function( data ) {
+            if (Object.keys(data.rows).length){
+                $.each( data.rows, function( key, value ) {
+                    $('#legalSelect').append('<option value="' + key + '">' + value.name + '</option>');
+                });
+            }    
+        });    
+    }        
+    
+    function ptuIndexContractList(){
+        $('#contractSelect').empty();
+        $('#contractSelect').append('<option>все договоры</option>');
+        $.getJSON( '/contracts/select/?company='+$('#companySelect').val()+'&legal='+$('#legalSelect').val(), function( data ) {
+            if (Object.keys(data.rows).length){
+                $.each( data.rows, function( key, value ) {
+                    $('#contractSelect').append('<option value="' + key + '">' + value.name + '</option>');
+                });
+            }    
+        });    
+    }
+    
     $(function () {
         $table.on('load-success.bs.table', function (e, res) {
             tableRowClick();        
         });        
+        $(document).on('change', '#ptuSupplierSelect', function (e) {
+            ptuIndexSupplierChange();
+            ptuIndexContractList();
+            refreshTable();
+        });
+        $(document).on('change', '#companySelect', function (e) {
+            ptuIndexContractList();
+            refreshTable();
+        });
+        $(document).on('change', '#legalSelect', function (e) {
+            ptuIndexContractList();
+            refreshTable();
+        });
+        $(document).on('change', '#contractSelect', function (e) {
+            refreshTable();
+        });
     });
 
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         limit = $('#table .page-size').html();
@@ -140,7 +200,7 @@
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
-        params.supplier = $('#supplierSelect').val();
+        params.supplier = $('#ptuSupplierSelect').val();
         params.office = $('#officeSelect').val();
 //        params.year = $('#yearSelect').val();
         params.month = $('#monthSelect').val();
