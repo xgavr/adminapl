@@ -224,7 +224,8 @@ if ($ptu){
                             <thead>
                                 <tr>
                                      <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
-                                     <th data-field="cost.name" data-type="numeric">Наименование</th>
+                                     <th data-field="comment" data-type="numeric">Содержание</th>
+                                     <th data-field="cost.name" data-type="numeric">Статья затрат</th>
                                      <th data-field='amount' data-footer-formatter="totalFooterFormatter" data-formatter="pgPriceFormatter" data-align="right">Цена</th>
                                      <th data-field='quantity' data-align="right" data-footer-formatter="footerFormatter">Количество</th>
                                      <th data-field='amount' data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Сумма</th>
@@ -307,6 +308,7 @@ if ($ptu){
         $.each( data, function( index, row ) {
             var newRow = {
                 cost_id: row.cost.id,
+                comment: row.comment,
                 quantity: row.quantity,
                 amount: row.amount
             };

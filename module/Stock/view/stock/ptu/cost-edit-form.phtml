@@ -18,6 +18,10 @@ $form->get('price')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('comment')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'ptu-cost-submit']);
 
 $form->prepare();
@@ -36,6 +40,15 @@ $docName = 'Новый';
 </div>
             
 <div class="modal-body">
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('comment')); ?>
+                <?= $this->formElement($form->get('comment')); ?>
+                <?= $this->formElementErrors($form->get('comment')); ?>                  
+            </div>
+        </div>    
+    </div>
     <div class="row">
         <div class="col-xs-12">                        
             <div class="form-group">
@@ -97,6 +110,7 @@ $docName = 'Новый';
                     };
                     var row = {
                         cost: cost,
+                        comment: data.comment,
                         amount: data.amount,
                         quantity: data.quantity,
                         price: Math.round(data.amount*100/data.quantity)/100

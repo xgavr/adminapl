@@ -57,10 +57,21 @@ class PtuCostForm extends Form implements ObjectManagerAwareInterface
                 'id' => 'cost'
             ],
             'options' => [
-                'label' => 'Услуга',
+                'label' => 'Статья затрат',
             ],
        ]);
         
+        $this->add([
+            'type'  => 'text',
+            'name' => 'comment',
+            'attributes' => [                
+                'id' => 'comment'
+            ],
+            'options' => [
+                'label' => 'Содержание',
+            ],
+       ]);
+
         $this->add([
             'type'  => 'number',
             'name' => 'quantity',
@@ -165,6 +176,18 @@ class PtuCostForm extends Form implements ObjectManagerAwareInterface
                             'inclusive' => false
                         ],
                     ],
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'comment',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
                 ],
             ]);
         
