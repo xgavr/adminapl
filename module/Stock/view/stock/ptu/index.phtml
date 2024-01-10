@@ -156,6 +156,9 @@
         if (row.status == '<?= Ptu::STATUS_COMMISSION?>'){
            retired += ' warning';
         }
+        if (row.statusAccount == '<?= Ptu::STATUS_ACCOUNT_NO?>'){
+           retired += ' status-account-no';
+        }
         
         return {classes: retired};
     }
