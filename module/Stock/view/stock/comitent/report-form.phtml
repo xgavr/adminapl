@@ -225,10 +225,19 @@ $form->prepare();
             var selections = $('#msrgoodtable').bootstrapTable('getSelections');
             if (selections.length){
                 $.each( selections, function( index, row ) {
-                    var newRow = row;
-                    newRow.rowNumber = getNewTableUniqueId('msrgoodtable', 'rowNumber'); 
-                    
-                    $('#msrgoodtable').bootstrapTable('insertRow', {index: 1, row: newRow});
+                    var newRowNumber = getNewTableUniqueId('msrgoodtable', 'rowNumber'); 
+                    var newRow = {
+                        baseAmount: row.baseAmount,
+                        priceSale: row.priceSale,
+                        returnQty: row.returnQty,
+                        good: row.good,
+                        offerId: row.offerId,
+                        rowNumber: newRowNumber,
+                        saleAmount: row.saleAmount,
+                        salePriceSeller: row.salePriceSeller,
+                        saleQty: row.saleQty
+                    };                    
+                    $('#msrgoodtable').bootstrapTable('insertRow', {index: 0, row: newRow});
                 });  
                 $('#msrgoodtable').bootstrapTable('uncheckAll');
             }    
