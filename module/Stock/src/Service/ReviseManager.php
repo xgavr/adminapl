@@ -86,25 +86,23 @@ class ReviseManager
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($revise->getLogKey());
         
-        if ($revise->getKind() == Revise::KIND_REVISE_SUPPLIER){
-            $data = [
-                'doc_key' => $revise->getLogKey(),
-                'doc_type' => Movement::DOC_REVISE,
-                'doc_id' => $revise->getId(),
-                'date_oper' => $revise->getDocDate(),
-                'status' => ($revise->getStatus() == Revise::STATUS_ACTIVE) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
-                'revise' => Mutual::REVISE_NOT,
-                'amount' => $revise->getAmount(),
-                'legal_id' => $revise->getLegal()->getId(),
-                'contract_id' => $revise->getContract()->getId(),
-                'office_id' => $revise->getOffice()->getId(),
-                'company_id' => $revise->getContract()->getCompany()->getId(),
-                'doc_stamp' => $docStamp,
-            ];
+        $data = [
+            'doc_key' => $revise->getLogKey(),
+            'doc_type' => Movement::DOC_REVISE,
+            'doc_id' => $revise->getId(),
+            'date_oper' => $revise->getDocDate(),
+            'status' => ($revise->getStatus() == Revise::STATUS_ACTIVE) ? Mutual::STATUS_ACTIVE: Mutual::STATUS_RETIRED,
+            'revise' => Mutual::REVISE_NOT,
+            'amount' => $revise->getAmount(),
+            'legal_id' => $revise->getLegal()->getId(),
+            'contract_id' => $revise->getContract()->getId(),
+            'office_id' => $revise->getOffice()->getId(),
+            'company_id' => $revise->getContract()->getCompany()->getId(),
+            'doc_stamp' => $docStamp,
+        ];
 
-            $this->entityManager->getRepository(Mutual::class)
-                    ->insertMutual($data);
-        }    
+        $this->entityManager->getRepository(Mutual::class)
+                ->insertMutual($data);
         
         return;
     }    
