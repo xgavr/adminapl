@@ -67,7 +67,9 @@ class MarketplaceRepository extends EntityRepository
                 }    
             }
             if (isset($params['sort'])){
-                $queryBuilder->addOrderBy('m.'.$params['sort'], $params['order']);
+                $queryBuilder->addOrderBy('m.'.$params['sort'], $params['order'])
+                        ->addOrderBy('m.id', $params['order'] )
+                        ;
             }        
             
         }
