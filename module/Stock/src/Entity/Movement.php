@@ -348,6 +348,7 @@ class Movement {
             self::DOC_PTU => 'Поступления',
             self::DOC_REVISE => 'Корректировки',
             self::DOC_MSR => 'Отчет комитента',
+            self::DOC_CASH => 'Оплата',
         ];
     }        
 
@@ -367,6 +368,7 @@ class Movement {
             self::DOC_PTU => 'Поступление',
             self::DOC_REVISE => 'Корректировка',
             self::DOC_MSR => 'Отчет комитента',
+            self::DOC_CASH => 'Оплата',
         ];
     }        
 

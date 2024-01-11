@@ -1250,9 +1250,9 @@ class PrintManager {
                 ->setCellValue('B7', "По данным ".$company->getName().", руб.")
                 ->setCellValue('J7', "По данным ".$legal->getName().", руб.")                
                 ->setCellValue('B14', "По данным ".$company->getName())
-                ->setCellValue('J14', "По данным ".$legal->getName())                
+                ->setCellValue('I14', "По данным ".$legal->getName())                
                 ->setCellValue('B17', "От ".$company->getName())
-                ->setCellValue('J17', "От ".$legal->getName())                
+                ->setCellValue('I17', "От ".$legal->getName())                
                 ->setCellValue('D21', "(".$company->getHead().")")                
                 ;
                 
@@ -1305,10 +1305,10 @@ class PrintManager {
         $dTotal = $cTotal = 0;
         foreach ($result as $data){
             $sheet->setCellValue("B$row", date('d.m.Y', strtotime($data->getDateOper())));                
-            $sheet->setCellValue("C$row", Movement::getReviseDocList()[(int) $data->getDocType()]." №".$data->getDocId());                
+            $sheet->setCellValue("C$row", Movement::getReviseDocList()[$data->getDocType()]." №".$data->getDocId());                
             $sheet->setCellValue("E$row", "");                              
             $sheet->setCellValue("G$row", "");
-            switch((int) $data->getDocType()){
+            switch($data->getDocType()){
                 case Movement::DOC_ORDER:
                     $sheet->setCellValue("E$row", number_format(abs($data->getAmount()), 2, ',', ' '));
                     $dTotal += abs($data->getAmount());
@@ -1336,17 +1336,17 @@ class PrintManager {
         
         $row++;
         $resumeRow = $row+3;
-        $sheet->setCellValue("E$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность отсутствует.");
+        $sheet->setCellValue("B$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность отсутствует.");
         
         if ($endTotal > 0){
             $sheet->setCellValue("E$row", number_format(abs($endTotal), 2, ',', ' '));
-            $sheet->setCellValue("E$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность в пользу".
+            $sheet->setCellValue("B$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность в пользу".
                     $company->getName()." ".number_format(abs($endTotal), 2, ',', ' ').
                     "(".$numToStrFilter->filter(abs($endTotal)).")");
         }
         if ($endTotal < 0){
             $sheet->setCellValue("G$row", number_format(abs($endTotal), 2, ',', ' '));
-            $sheet->setCellValue("E$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность в пользу".
+            $sheet->setCellValue("B$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность в пользу".
                     $legal->getName()." ".number_format(abs($endTotal), 2, ',', ' ').
                     "(".$numToStrFilter->filter(abs($endTotal)).")");
         }    
