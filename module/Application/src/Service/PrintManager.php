@@ -1310,6 +1310,7 @@ class PrintManager {
             $sheet->setCellValue("G$row", "");
             switch($data->getDocType()){
                 case Movement::DOC_ORDER:
+                case Movement::DOC_MSR:
                     $sheet->setCellValue("E$row", number_format(abs($data->getAmount()), 2, ',', ' '));
                     $dTotal += abs($data->getAmount());
                     break;
