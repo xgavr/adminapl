@@ -75,6 +75,9 @@ $form->prepare();
                     <button type="button" class="btn btn-default btn-sm report-good-modal-show" modal-url="/comitent/report-good-edit-form">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
+                    <button type="button" class="btn btn-default btn-sm duplicate-item">
+                        <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+                    </button>
                 </div>
             </div>
             <table id="msrgoodtable" 
@@ -100,6 +103,7 @@ $form->prepare();
                 >
                 <thead>
                     <tr>
+                        <th data-checkbox="true"></th>
                         <th data-field="rowNumber" data-type="numeric" data-align="right" data-width="20">N</th>
                         <th data-field="offerId" data-type="numeric" >Apl Id</th>
                         <th data-field="good.code" data-type="numeric" data-formatter="goodFormatter">Артикул</th>
@@ -145,6 +149,17 @@ $form->prepare();
     
     function setReportTotal(reportTotal){
         report_total = reportTotal;
+    }
+    
+    function msrUpdateTotal(){
+        var data = $('#msrgoodtable').bootstrapTable('getData');
+        var amount = 0; var quantity = 0;
+        $.each(data, function( index, value ) {
+            amount += Math.round(value.amount*100)/100;
+            quantity += Math.round(value.quantity*100)/100; 
+        });
+        $('#msrAmount').html(Math.round(amount*100)/100);
+        $('#msrQuantity').html(Math.round(quantity*100)/100);
     }
     
     function submitForm(){
@@ -200,13 +215,22 @@ $form->prepare();
     }
     
     
-    $( document ).ready(function() {
-        
+    $( document ).ready(function() {        
         $('#msrgoodtable').bootstrapTable({
             onLoadSuccess: function(res){
                 //mspUpdateTotal();
             }            
         }); 
+        $(document).on('click', '.duplicate-item', function (e) {
+            var selections = $('#msrgoodtable').bootstrapTable('getSelections');
+            if (selections.length){
+                $.each( selections, function( index, row ) {
+                    $('#msrgoodtable').bootstrapTable('insertRow', {index: 1, row: row});
+                });  
+                $('#msrgoodtable').bootstrapTable('uncheckAll');
+                msrUpdateTotal();
+            }    
+        });        
         
     });    
     

@@ -14,6 +14,8 @@ use Application\Entity\Comment;
 use Application\Entity\Order;
 use Application\Entity\Client;
 use Stock\Entity\Vtp;
+use Company\Entity\Legal;
+use Company\Entity\Contract;
 
 class PrintController extends AbstractActionController
 {
@@ -338,5 +340,54 @@ class PrintController extends AbstractActionController
                 @readfile($updfile);
         }
     }              
+    
+    public function reviseAction() 
+    {       
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $dateEnd = $this->params()->fromQuery('dateEnd');
+        $companyId = $this->params()->fromQuery('company', -1);
+        $legalId = $this->params()->fromQuery('legal', -1);
+        $contractId = $this->params()->fromQuery('contract', -1);
+        $ext = $this->params()->fromQuery('ext', 'Pdf');
+        $stamp = $this->params()->fromQuery('stamp');
+
+        if ($companyId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $company = $this->entityManager->getRepository(Legal::class)
+                ->find($companyId);
+
+        if ($legalId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $legal = $this->entityManager->getRepository(Legal::class)
+                ->find($legalId);
+        
+        if ($legal == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }        
+        
+        $contract = null;
+        if ($contractId > 0){
+            $contract = $this->entityManager->getRepository(Contract::class)
+                    ->find($contractId);
+        }
+        
+        $updfile = $this->printManager->revise($dateStart, $dateEnd, $company, $legal, $contract, $ext, $stamp);
+        
+        // Render the view template.
+        header('Content-type: application/'. strtolower($ext));
+        header('Content-Disposition: inline; filename="' . basename($updfile) . '"');
+        header('Content-Transfer-Encoding: binary');  
+        header('Accept-Ranges: bytes');
+  
+        // Read the file
+        @readfile($updfile);
+    }          
     
 }

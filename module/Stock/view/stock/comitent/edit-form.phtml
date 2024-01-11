@@ -63,16 +63,6 @@
 </div>
 
 <script>    
-    function msrUpdateTotal(){
-        var data = $('#msrgoodtable').bootstrapTable('getData');
-        var amount = 0; var quantity = 0;
-        $.each(data, function( index, value ) {
-            amount += Math.round(value.amount*100)/100;
-            quantity += Math.round(value.quantity*100)/100; 
-        });
-        $('#msrAmount').html(Math.round(amount*100)/100);
-        $('#msrQuantity').html(Math.round(quantity*100)/100);
-    }
     
     $( document ).ready(function() {
         

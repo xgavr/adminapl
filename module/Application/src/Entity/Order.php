@@ -63,6 +63,7 @@ class Order {
     const TEMPLATE_ACT         = './data/template/act.xls';
     const TEMPLATE_PREORDER    = './data/template/preorder.xls';
     const TEMPLATE_OFFER       = './data/template/offer.xls';
+    const TEMPLATE_REVISE       = './data/template/revise.xls';
     const TEMPLATE_CHECK       = './data/template/check.html';
     
     /**

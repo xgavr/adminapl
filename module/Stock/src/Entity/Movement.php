@@ -355,6 +355,25 @@ class Movement {
      * Returns possible doc as array.
      * @return array
      */
+    public static function getReviseDocList() 
+    {
+        return [
+            self::DOC_ORDER => 'Продажа',
+            self::DOC_VTP => 'Возврат',
+            self::DOC_ST => 'Списание',
+            self::DOC_VT => 'Возврат',
+            self::DOC_OT => 'Оприходование',
+            self::DOC_PT => 'Перемещение',
+            self::DOC_PTU => 'Поступление',
+            self::DOC_REVISE => 'Корректировка',
+            self::DOC_MSR => 'Отчет комитента',
+        ];
+    }        
+
+    /**
+     * Returns possible doc as array.
+     * @return array
+     */
     public static function getKeyDocList() 
     {
         return [

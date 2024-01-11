@@ -8,25 +8,14 @@
 
 namespace Application\Service;
 
-use Laminas\ServiceManager\ServiceManager;
-use Application\Entity\Supplier;
-use Application\Entity\Raw;
-use Application\Entity\Rawprice;
-use Application\Filter\RawToStr;
-use Application\Filter\CsvDetectDelimiterFilter;
-use MvlabsPHPExcel\Service;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-use Laminas\Validator\File\IsCompressed;
-use Laminas\Filter\Decompress;
-use Application\Filter\Basename;
 use Stock\Entity\Vtp;
 use Company\Entity\Legal;
+use Company\Entity\Contract;
 use Mpdf\Mpdf;
-use Company\Entity\Office;
-use Stock\Entity\Ptu;
 use Stock\Entity\VtpGood;
 use Stock\Entity\PtuGood;
 use Company\Entity\Commission;
@@ -36,6 +25,8 @@ use Application\Filter\NumToStr;
 use Application\Entity\Shipping;
 use Company\Entity\LegalLocation;
 use Bank\Entity\QrCode;
+use Stock\Entity\Mutual;
+use Stock\Entity\Movement;
 
 
 /**
@@ -1205,6 +1196,167 @@ class PrintManager {
             case 'Xlsx':
                 $writer = IOFactory::createWriter($spreadsheet, $writerType);
                 $outFilename = $order->getPrintName($writerType, 'Коммерческое предложение');
+//                $writer->writeAllSheets();
+                $writer->save($outFilename);
+                break;
+            default: 
+                $outFilename = null;
+        } 
+        
+        
+        return $outFilename;
+    }    
+    
+    /**
+     * Акт сверки
+     * @param date $dateStart
+     * @param date $dateEnd
+     * @param Legal $company
+     * @param Legal $legal
+     * @param Contract $contract
+     * @param string $writerType
+     * @param bool $stamp
+     * @return string 
+     */
+    public function revise($dateStart, $dateEnd, $company, $legal, $contract = null, $writerType = 'Pdf', $stamp = false)
+    {
+        ini_set("pcre.backtrack_limit", "5000000");
+        setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
+//        echo strftime("%B %d, %Y", time()); exit;
+
+        $folder_name = Order::PRINT_FOLDER;
+        if (!is_dir($folder_name)){
+            mkdir($folder_name);
+        }        
+        
+        $numToStrFilter = new NumToStr();
+        
+        $inputFileType = 'Xls';
+        $reader = IOFactory::createReader($inputFileType);
+        $spreadsheet = $reader->load(Order::TEMPLATE_REVISE);
+        $spreadsheet->getProperties()
+                ->setTitle('Акт сверки')
+                ;
+        $sheet = $spreadsheet->setActiveSheetIndex(0)
+                ->setCellValue('B3', "взатимных расчетов за период ".
+                        date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd)).
+                        " между ".$company->getName()." и ".$legal->getName())
+                ->setCellValue('B5', "Мы, нижеподписавшиеся, Генеральный директор ".
+                        $company->getName()." ".$company->getHead().
+                        ", с одной стороны, и ____________________________ ".
+                        $legal->getName()." ______________________________,".
+                        "с другой стороны, составили настоящий акт сверки в том,".
+                        "что состояние взаимных расчетов по данным учета следующее:")
+                ->setCellValue('B7', "По данным ".$company->getName().", руб.")
+                ->setCellValue('J7', "По данным ".$legal->getName().", руб.")                
+                ->setCellValue('B14', "По данным ".$company->getName())
+                ->setCellValue('J14', "По данным ".$legal->getName())                
+                ->setCellValue('B17', "От ".$company->getName())
+                ->setCellValue('J17', "От ".$legal->getName())                
+                ->setCellValue('D21', "(".$company->getHead().")")                
+                ;
+                
+        $params = [
+            'sort' => 'dateOper', 'order' => 'acs', 
+            'startDate' => $dateStart, 'endDate' => $dateEnd,
+            'companyId' => $company->getId(), 'legalId' => $legal->getId(),
+        ];
+        
+        if ($contract){
+            $params['contractId'] = $contract->getId();
+        }
+        
+        $startTotal = 0;
+        $startBalance = $this->entityManager->getRepository(Mutual::class)
+                ->mutualBalance([
+                    'companyId' => $company->getId(), 
+                    'legalId' => $legal->getId(), 
+                    'contractId' => ($contract) ? $contract->getId():null, 
+                    'endDate' => date('Y-m-d', strtotime($dateStart)),
+                    'endBalance' => true,
+                ])->getOneOrNullResult();
+        
+        if (!empty($startBalance['total'])){
+            $startTotal = $startBalance['total'];
+            if ($startTotal>0){
+                $sheet->setCellValue("E9", number_format(abs($startTotal), 2, ',', ' ')); 
+            }    
+            if ($startTotal<0){
+                $sheet->setCellValue("G9", number_format(abs($startTotal), 2, ',', ' ')); 
+            }    
+        }
+                
+        $query = $this->entityManager->getRepository(Mutual::class)
+                        ->mutuals($params);
+        
+        $result = $query->getResul();
+        
+        $row = 10;
+        
+        $sheet->setCellValue("B$row", "");                
+        $sheet->setCellValue("C$row", "");                
+        $sheet->setCellValue("E$row", "");                              
+        $sheet->setCellValue("G$row", "");    
+        
+        $dTotal = $cTotal = 0;
+        foreach ($result as $data){
+            $sheet->setCellValue("B$row", date('d.m.Y', strtotime($data['dateOper'])));                
+            $sheet->setCellValue("C$row", Movement::getReviseDocList()[$data['docType']]." №".$data['docId']);                
+            $sheet->setCellValue("E$row", "");                              
+            $sheet->setCellValue("G$row", "");
+            switch($data['docType']){
+                case Movement::DOC_ORDER:
+                    $sheet->setCellValue("E$row", number_format(abs($data['amount']), 2, ',', ' '));
+                    $dTotal += abs($data['amount']);
+                    break;
+                case Movement::DOC_VT:
+                    $sheet->setCellValue("E$row", number_format($data['amount'], 2, ',', ' '));
+                    $dTotal += $data['amount'];
+                    break;
+                case Movement::DOC_REVISE:
+                    $sheet->setCellValue("G$row", number_format($data['amount'], 2, ',', ' '));
+                    $cTotal += $data['amount'];
+                    break;
+                default:    
+                    $sheet->setCellValue("G$row", number_format(abs($data['amount']), 2, ',', ' '));
+                    $cTotal += abs($data['amount']);
+                    break;
+            }
+            $row++;
+        }
+
+        $sheet->setCellValue("E$row", number_format($dTotal, 2, ',', ' '));
+        $sheet->setCellValue("G$row", number_format($cTotal, 2, ',', ' '));
+        
+        $endTotal = round($startTotal + $dTotal - $cTotal, 2);
+        
+        $row++;
+        $resumeRow = $row+3;
+        $sheet->setCellValue("E$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность отсутствует.");
+        
+        if ($endTotal > 0){
+            $sheet->setCellValue("E$row", number_format(abs($endTotal), 2, ',', ' '));
+            $sheet->setCellValue("E$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность в пользу".
+                    $company->getName()." ".number_format(abs($endTotal), 2, ',', ' ').
+                    "(".$numToStrFilter->filter(abs($endTotal)).")");
+        }
+        if ($endTotal < 0){
+            $sheet->setCellValue("G$row", number_format(abs($endTotal), 2, ',', ' '));
+            $sheet->setCellValue("E$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность в пользу".
+                    $legal->getName()." ".number_format(abs($endTotal), 2, ',', ' ').
+                    "(".$numToStrFilter->filter(abs($endTotal)).")");
+        }    
+        
+        switch ($writerType){
+            case 'Pdf':
+                $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
+                $outFilename = 'Акт сверки с '.$legal->getName();
+                $writer->save($outFilename);
+                break;
+            case 'Xls':
+            case 'Xlsx':
+                $writer = IOFactory::createWriter($spreadsheet, $writerType);
+                $outFilename = 'Акт сверки с '.$legal->getName();
 //                $writer->writeAllSheets();
                 $writer->save($outFilename);
                 break;
