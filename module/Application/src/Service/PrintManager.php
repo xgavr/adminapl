@@ -1299,7 +1299,7 @@ class PrintManager {
         $sheet->setCellValue("G$row", "");    
         
         if (count($result) - 1 > 0){
-            $sheet->insertNewRowBefore($row-1, count($result) - 1);            
+            $sheet->insertNewRowBefore($row+1, count($result) - 1);            
         }    
         
         $dTotal = $cTotal = 0;
