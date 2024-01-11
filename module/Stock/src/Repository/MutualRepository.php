@@ -490,6 +490,14 @@ class MutualRepository extends EntityRepository{
                             ;
                 }    
             }            
+            if (!empty($params['status'])){
+                if (is_numeric($params['status'])){
+                    $queryBuilder
+                        ->andWhere('m.status = :status')
+                        ->setParameter('status', $params['status'])
+                            ;
+                }    
+            }            
             if (!empty($params['order'])){
                 $queryBuilder->orderBy('m.docStamp', $params['order']);
             }
@@ -558,6 +566,14 @@ class MutualRepository extends EntityRepository{
                     $queryBuilder
                         ->andWhere('m.contract = :contract')
                         ->setParameter('contract', $params['contractId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['status'])){
+                if (is_numeric($params['status'])){
+                    $queryBuilder
+                        ->andWhere('m.status = :status')
+                        ->setParameter('status', $params['status'])
                             ;
                 }    
             }            

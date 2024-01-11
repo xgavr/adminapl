@@ -1257,7 +1257,7 @@ class PrintManager {
                 ;
                 
         $params = [
-            'sort' => 'dateOper', 'order' => 'asc', 
+            'sort' => 'dateOper', 'order' => 'asc', 'status' => Mutual::STATUS_ACTIVE,
             'startDate' => $dateStart, 'endDate' => $dateEnd,
             'companyId' => $company->getId(), 'legalId' => $legal->getId(),
         ];
@@ -1305,10 +1305,10 @@ class PrintManager {
         $dTotal = $cTotal = 0;
         foreach ($result as $data){
             $sheet->setCellValue("B$row", date('d.m.Y', strtotime($data->getDateOper())));                
-            $sheet->setCellValue("C$row", Movement::getReviseDocList()[$data->getDocType()]." №".$data->getDocId());                
+            $sheet->setCellValue("C$row", Movement::getReviseDocList()[(int) $data->getDocType()]." №".$data->getDocId());                
             $sheet->setCellValue("E$row", "");                              
             $sheet->setCellValue("G$row", "");
-            switch($data->getDocType()){
+            switch((int) $data->getDocType()){
                 case Movement::DOC_ORDER:
                     $sheet->setCellValue("E$row", number_format(abs($data->getAmount()), 2, ',', ' '));
                     $dTotal += abs($data->getAmount());
