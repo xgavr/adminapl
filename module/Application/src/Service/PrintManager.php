@@ -1311,19 +1311,19 @@ class PrintManager {
             switch($data->getDocType()){
                 case Movement::DOC_ORDER:
                     $sheet->setCellValue("E$row", number_format(abs($data->getAmount()), 2, ',', ' '));
-                    $dTotal += abs($data['amount']);
+                    $dTotal += abs($data->getAmount());
                     break;
                 case Movement::DOC_VT:
                     $sheet->setCellValue("E$row", number_format($data->getAmount(), 2, ',', ' '));
-                    $dTotal += $data['amount'];
+                    $dTotal += $data->getAmount();
                     break;
                 case Movement::DOC_REVISE:
                     $sheet->setCellValue("G$row", number_format($data->getAmount(), 2, ',', ' '));
-                    $cTotal += $data['amount'];
+                    $cTotal += $data->getAmount();
                     break;
                 default:    
                     $sheet->setCellValue("G$row", number_format(abs($data->getAmount()), 2, ',', ' '));
-                    $cTotal += abs($data['amount']);
+                    $cTotal += abs($data->getAmount());
                     break;
             }
             $row++;
