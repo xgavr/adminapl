@@ -1304,25 +1304,25 @@ class PrintManager {
         
         $dTotal = $cTotal = 0;
         foreach ($result as $data){
-            $sheet->setCellValue("B$row", date('d.m.Y', strtotime($data['dateOper'])));                
-            $sheet->setCellValue("C$row", Movement::getReviseDocList()[$data['docType']]." №".$data['docId']);                
+            $sheet->setCellValue("B$row", date('d.m.Y', strtotime($data->getDateOper())));                
+            $sheet->setCellValue("C$row", Movement::getReviseDocList()[$data->getDocType()]." №".$data->getDocId());                
             $sheet->setCellValue("E$row", "");                              
             $sheet->setCellValue("G$row", "");
-            switch($data['docType']){
+            switch($data->getDocType()){
                 case Movement::DOC_ORDER:
-                    $sheet->setCellValue("E$row", number_format(abs($data['amount']), 2, ',', ' '));
+                    $sheet->setCellValue("E$row", number_format(abs($data->getAmount()), 2, ',', ' '));
                     $dTotal += abs($data['amount']);
                     break;
                 case Movement::DOC_VT:
-                    $sheet->setCellValue("E$row", number_format($data['amount'], 2, ',', ' '));
+                    $sheet->setCellValue("E$row", number_format($data->getAmount(), 2, ',', ' '));
                     $dTotal += $data['amount'];
                     break;
                 case Movement::DOC_REVISE:
-                    $sheet->setCellValue("G$row", number_format($data['amount'], 2, ',', ' '));
+                    $sheet->setCellValue("G$row", number_format($data->getAmount(), 2, ',', ' '));
                     $cTotal += $data['amount'];
                     break;
                 default:    
-                    $sheet->setCellValue("G$row", number_format(abs($data['amount']), 2, ',', ' '));
+                    $sheet->setCellValue("G$row", number_format(abs($data->getAmount()), 2, ',', ' '));
                     $cTotal += abs($data['amount']);
                     break;
             }
