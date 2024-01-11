@@ -1257,7 +1257,7 @@ class PrintManager {
                 ;
                 
         $params = [
-            'sort' => 'dateOper', 'order' => 'acs', 
+            'sort' => 'dateOper', 'order' => 'asc', 
             'startDate' => $dateStart, 'endDate' => $dateEnd,
             'companyId' => $company->getId(), 'legalId' => $legal->getId(),
         ];
@@ -1289,7 +1289,7 @@ class PrintManager {
         $query = $this->entityManager->getRepository(Mutual::class)
                         ->mutuals($params);
         
-        $result = $query->getResul();
+        $result = $query->getResult();
         
         $row = 10;
         
@@ -1297,6 +1297,10 @@ class PrintManager {
         $sheet->setCellValue("C$row", "");                
         $sheet->setCellValue("E$row", "");                              
         $sheet->setCellValue("G$row", "");    
+        
+        if (count($result)){
+            $sheet->insertNewRowBefore($row, count($result));            
+        }    
         
         $dTotal = $cTotal = 0;
         foreach ($result as $data){
@@ -1350,13 +1354,13 @@ class PrintManager {
         switch ($writerType){
             case 'Pdf':
                 $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
-                $outFilename = 'Акт сверки с '.$legal->getName();
+                $outFilename = 'Акт сверки';
                 $writer->save($outFilename);
                 break;
             case 'Xls':
             case 'Xlsx':
                 $writer = IOFactory::createWriter($spreadsheet, $writerType);
-                $outFilename = 'Акт сверки с '.$legal->getName();
+                $outFilename = 'Акт сверки';
 //                $writer->writeAllSheets();
                 $writer->save($outFilename);
                 break;

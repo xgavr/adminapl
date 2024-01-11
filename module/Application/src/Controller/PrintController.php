@@ -345,11 +345,29 @@ class PrintController extends AbstractActionController
     {       
         $dateStart = $this->params()->fromQuery('dateStart');
         $dateEnd = $this->params()->fromQuery('dateEnd');
+        $period = $this->params()->fromQuery('period');
         $companyId = $this->params()->fromQuery('company', -1);
         $legalId = $this->params()->fromQuery('legal', -1);
         $contractId = $this->params()->fromQuery('contract', -1);
         $ext = $this->params()->fromQuery('ext', 'Pdf');
         $stamp = $this->params()->fromQuery('stamp');
+        
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
+        }    
 
         if ($companyId<0) {
             $this->getResponse()->setStatusCode(404);
@@ -378,7 +396,7 @@ class PrintController extends AbstractActionController
                     ->find($contractId);
         }
         
-        $updfile = $this->printManager->revise($dateStart, $dateEnd, $company, $legal, $contract, $ext, $stamp);
+        $updfile = $this->printManager->revise($startDate, $endDate, $company, $legal, $contract, $ext, $stamp);
         
         // Render the view template.
         header('Content-type: application/'. strtolower($ext));

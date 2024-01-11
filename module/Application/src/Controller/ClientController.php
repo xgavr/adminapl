@@ -352,12 +352,16 @@ class ClientController extends AbstractActionController
             $legalList[$legal->getId()] = $legal->getName();
         }
         
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
+        
 //        var_dump($client->getLegalContact()->getId());
         // Render the view template.
         return new ViewModel([
             'client' => $client,
             'allowDate' => $this->adminManager->getAllowDate(),
             'legals' => $legalList,
+            'companies' => $companies,
         ]);
     }      
     

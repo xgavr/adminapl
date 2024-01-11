@@ -74,6 +74,7 @@
 
         <!-- Scripts -->
         <?= $this->headScript()
+//            ->prependFile($this->basePath('js/QuarterInDatepicker-master/src/js/calendar/calendar.js'))
             ->prependFile($this->basePath('js/control-modal.min.js'))
             ->prependFile($this->basePath('js/jquery.mask.min.js'))
             ->prependFile($this->basePath('js/bootstrap3-typeahead.min.js'))
@@ -113,6 +114,7 @@
                 'crossorigin' => 'anonymous',
             ])
         
+//            ->prependFile('//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js')
             ->prependFile('//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js')
 
         ?>

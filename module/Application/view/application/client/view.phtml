@@ -394,9 +394,17 @@ $legalContact = $client->getLegalContact();
                             <option value="date">Дата</option>
                             <option value="week">Неделя</option>                        
                             <option value="month">Месяц</option>                        
+                            <option value="qv">Квартал</option>                        
                             <option value="number"  selected="true">Год</option>                        
                         </select>
                         <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control" min="2012" type="number" value="<?= date('Y')?>">
+                    </div>
+                    <div class="form-group">
+                        <select id="mutualCompanySelect" class="form-control" name="company">
+                            <?php foreach ($companies as $value):?>
+                                <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                            <?php endforeach;?>
+                        </select>
                     </div>
                     <div class="form-group">
                         <select id="mutualLegalSelect" class="form-control" name="legal">
@@ -411,6 +419,9 @@ $legalContact = $client->getLegalContact();
                             <option>все договоры</option>
                         </select>
                     </div>
+                    <button class="btn btn-default btn-sm revise-print" type="button" disabled>
+                        <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Акт сверки
+                    </button>                
                 </div>
             </div>
             <table id="mutualtable" 
@@ -540,6 +551,14 @@ $legalContact = $client->getLegalContact();
             }    
         });    
     }
+    
+    function revisePrintDisable(){
+        $(".revise-print").prop('disabled', true);
+        if ($.isNumeric($('#mutualCompanySelect').val()) && $.isNumeric($('#mutualLegalSelect').val())){
+            $(".revise-print").prop('disabled', false);
+        }        
+        return;
+    }
 
     $(function () {        
         $('#ordertable').on('load-success.bs.table', function (e, res) {
@@ -559,7 +578,12 @@ $legalContact = $client->getLegalContact();
             $('#orderDateStart').attr('type', $(this).val());
         });
         $('#mutualPeriodSelect').change(function (e) {
-            $('#mutualDateStart').attr('type', $(this).val());
+            if ($(this).val() === 'qv'){
+                $('#mutualDateStart').attr('type', 'text');                
+//                $('#mutualDateStart').dateQMY();                
+            } else {
+                $('#mutualDateStart').attr('type', $(this).val());
+            }    
         });
         $('#orderDateStart').change(function (){
             $('#ordertable').bootstrapTable('refresh');
@@ -569,10 +593,20 @@ $legalContact = $client->getLegalContact();
         });
         $('#mutualLegalSelect').change(function (){
             mutualContractList();
+            revisePrintDisable();
             $('#mutualtable').bootstrapTable('refresh');
         });
         $('#mutualContractSelect').change(function (){
             $('#mutualtable').bootstrapTable('refresh');
+        });
+        $('.revise-print').click(function (){
+            var company = $("#mutualCompanySelect").val();
+            var legal = $("#mutualLegalSelect").val();
+            var contract = $("#mutualContractSelect").val();
+            var period = $("#mutualPeriodSelect").val();
+            var dateStart = $("#mutualDateStart").val();
+            var url = '/print/revise?ext=Pdf&company='+company+'&legal='+legal+'&contract='+contract+'&period='+period+'&dateStart='+dateStart;
+            window.open(url, 'windowObject');
         });
     });
 
