@@ -1250,9 +1250,9 @@ class PrintManager {
                 ->setCellValue('B7', "По данным ".$company->getName().", руб.")
                 ->setCellValue('J7', "По данным ".$legal->getName().", руб.")                
                 ->setCellValue('B14', "По данным ".$company->getName())
-                ->setCellValue('I14', "По данным ".$legal->getName())                
+                ->setCellValue('J14', "По данным ".$legal->getName())                
                 ->setCellValue('B17', "От ".$company->getName())
-                ->setCellValue('I17', "От ".$legal->getName())                
+                ->setCellValue('J17', "От ".$legal->getName())                
                 ->setCellValue('D21', "(".$company->getHead().")")                
                 ;
                 
