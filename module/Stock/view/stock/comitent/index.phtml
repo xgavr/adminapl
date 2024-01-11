@@ -139,6 +139,9 @@
         if (row.statusAccount == '<?= MarketSaleReport::STATUS_TAKE_NO?>'){
            retired += ' warning';
         }
+        if (row.statusAccount == '<?= MarketSaleReport::STATUS_ACCOUNT_NO?>'){
+           retired += ' status-account-no';
+        }
         
         return {classes: retired};
     }
