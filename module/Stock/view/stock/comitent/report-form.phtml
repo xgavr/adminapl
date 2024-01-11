@@ -224,9 +224,9 @@ $form->prepare();
         $(document).on('click', '.duplicate-item', function (e) {
             var selections = $('#msrgoodtable').bootstrapTable('getSelections');
             if (selections.length){
-                var newRowNo = getNewTableUniqueId('msrgoodtable', 'rowNumber');
-                row.rowNumber = newRowNo;                
                 $.each( selections, function( index, row ) {
+                    var newRowNo = getNewTableUniqueId('msrgoodtable', 'rowNumber');
+                    row.rowNumber = newRowNo;                
                     $('#msrgoodtable').bootstrapTable('insertRow', {index: 1, row: row});
                 });  
                 $('#msrgoodtable').bootstrapTable('uncheckAll');
