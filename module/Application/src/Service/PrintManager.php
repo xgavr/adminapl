@@ -1319,8 +1319,8 @@ class PrintManager {
                     $dTotal += $data->getAmount();
                     break;
                 case Movement::DOC_REVISE:
-                    $sheet->setCellValue("G$row", number_format($data->getAmount(), 2, ',', ' '));
-                    $cTotal += $data->getAmount();
+                    $sheet->setCellValue("E$row", number_format($data->getAmount(), 2, ',', ' '));
+                    $dTotal += $data->getAmount();
                     break;
                 default:    
                     $sheet->setCellValue("G$row", number_format(abs($data->getAmount()), 2, ',', ' '));
