@@ -1304,6 +1304,11 @@ class PrintManager {
         
         $dTotal = $cTotal = 0;
         foreach ($result as $data){
+            
+            $sheet->mergeCells("C$row:D$row");
+            $sheet->mergeCells("E$row:F$row");
+            $sheet->mergeCells("G$row:H$row");
+            
             $sheet->setCellValue("B$row", date('d.m.Y', strtotime($data->getDateOper())));                
             $sheet->setCellValue("C$row", Movement::getReviseDocList()[$data->getDocType()]." №".$data->getDocId());                
             $sheet->setCellValue("E$row", "");                              
