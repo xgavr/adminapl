@@ -1298,8 +1298,8 @@ class PrintManager {
         $sheet->setCellValue("E$row", "");                              
         $sheet->setCellValue("G$row", "");    
         
-        if (count($result)){
-            $sheet->insertNewRowBefore($row, count($result));            
+        if (count($result) - 1 > 0){
+            $sheet->insertNewRowBefore($row, count($result) - 1);            
         }    
         
         $dTotal = $cTotal = 0;
