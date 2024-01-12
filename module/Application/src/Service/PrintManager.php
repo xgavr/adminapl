@@ -1346,13 +1346,13 @@ class PrintManager {
         
         if ($endTotal > 0){
             $sheet->setCellValue("E$row", number_format(abs($endTotal), 2, ',', ' '));
-            $sheet->setCellValue("B$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность в пользу".
+            $sheet->setCellValue("B$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность в пользу ".
                     $company->getName()." ".number_format(abs($endTotal), 2, ',', ' ').
                     "(".$numToStrFilter->filter(abs($endTotal)).")");
         }
         if ($endTotal < 0){
             $sheet->setCellValue("G$row", number_format(abs($endTotal), 2, ',', ' '));
-            $sheet->setCellValue("B$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность в пользу".
+            $sheet->setCellValue("B$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность в пользу ".
                     $legal->getName()." ".number_format(abs($endTotal), 2, ',', ' ').
                     "(".$numToStrFilter->filter(abs($endTotal)).")");
         }    

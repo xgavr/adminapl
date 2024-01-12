@@ -398,6 +398,7 @@ $legalContact = $client->getLegalContact();
                             <option value="number"  selected="true">Год</option>                        
                         </select>
                         <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control" min="2012" type="number" value="<?= date('Y')?>">
+                        <!--<input name="dateStart" id="airDateStart" style="" class="form-control" min="2012" type="number" value="<?= date('Y')?>">-->
                     </div>
                     <div class="form-group">
                         <select id="mutualCompanySelect" class="form-control" name="company">
@@ -515,6 +516,13 @@ $legalContact = $client->getLegalContact();
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 <?php echo $this->partial('/application/order/comment-partial', []); ?>
 
+
+<script type="module">
+//    import AirDatepicker from './node-modules/air-datepicker';
+//    import './node-modules/air-datepicker/air-datepicker.css';
+//    
+//    new AirDatepicker('#airDateStart');
+</script>    
 <script type="text/javascript">
     
     function setCookies(cookieKey){
