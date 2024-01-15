@@ -469,25 +469,34 @@ class ClientController extends AbstractActionController
         $contract = $this->params()->fromQuery('contract');
         $sort = $this->params()->fromQuery('sort', 'dateOper');
         $order = $this->params()->fromQuery('order', 'ASC');
-        $dateStart = $this->params()->fromQuery('dateStart');
-        $period = $this->params()->fromQuery('period');
+//        $dateStart = $this->params()->fromQuery('dateStart');
+//        $period = $this->params()->fromQuery('period');
+        $range = $this->params()->fromQuery('dateRange');
         
-        $startDate = '2012-01-01';
+//        $startDate = '2012-01-01';
+//        $endDate = '2199-01-01';
+//        if (!empty($dateStart)){
+//            $startDate = date('Y-m-d', strtotime($dateStart));
+//            $endDate = $startDate;
+//            if ($period == 'week'){
+//                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+//            }    
+//            if ($period == 'month'){
+//                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+//            }    
+//            if ($period == 'number'){
+//                $startDate = $dateStart.'-01-01';
+//                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+//            }    
+//        }    
+        
         $endDate = '2199-01-01';
-        if (!empty($dateStart)){
-            $startDate = date('Y-m-d', strtotime($dateStart));
-            $endDate = $startDate;
-            if ($period == 'week'){
-                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
-            }    
-            if ($period == 'month'){
-                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
-            }    
-            if ($period == 'number'){
-                $startDate = $dateStart.'-01-01';
-                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
-            }    
-        }    
+        list($start, $end) = explode(' - ', $range);
+        $startDate = date('Y-m-d', strtotime($start));
+        if (!empty($end)){
+            $endDate = date('Y-m-d 23:59:59', strtotime($end));
+        }
+//        var_dump($startDate, $endDate);
         
         // Validate input parameter
         if ($clientId<0) {

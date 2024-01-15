@@ -23,6 +23,12 @@ $this->pageBreadcrumbs()->setItems([
 
 $legalContact = $client->getLegalContact();
 
+$this->headScript()
+    ->prependFile('//cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.min.js')
+                ;
+$this->headLink()
+    ->prependStylesheet('//cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.min.css')
+        ;
 ?>
 
 <!--<h1 style="text-transform: capitalize">
@@ -397,8 +403,8 @@ $legalContact = $client->getLegalContact();
                             <option value="qv">Квартал</option>                        
                             <option value="number"  selected="true">Год</option>                        
                         </select>
-                        <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control" min="2012" type="number" value="<?= date('Y')?>">
-                        <!--<input name="dateStart" id="airDateStart" style="" class="form-control" min="2012" type="number" value="<?= date('Y')?>">-->
+                        <!--<input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control" min="2012" type="number" value="<?= date('Y')?>">-->
+                        <input type="text" class="form-control" id="rangeDateStart" name="dateRange" value="<?= date('Y-m-01').' - '.date('Y-m-d')?>">
                     </div>
                     <div class="form-group">
                         <select id="mutualCompanySelect" class="form-control" name="company">
@@ -517,14 +523,7 @@ $legalContact = $client->getLegalContact();
 <?php echo $this->partial('/application/order/comment-partial', []); ?>
 
 
-<script type="module">
-//    import AirDatepicker from './node-modules/air-datepicker';
-//    import './node-modules/air-datepicker/air-datepicker.css';
-//    
-//    new AirDatepicker('#airDateStart');
-</script>    
-<script type="text/javascript">
-    
+<script type="text/javascript">    
     function setCookies(cookieKey){
         let expires = 30;
         $('.cookie-control').each(function () {
@@ -547,6 +546,13 @@ $legalContact = $client->getLegalContact();
             $('.nav-tabs a:first').tab('show');
         } 
     }    
+    
+    function rangeDatePickerInit(){
+        var startDate = new Date(new Date().getFullYear(), 0, 1);
+        var endDate = new Date();
+        var picker = new AirDatepicker('#rangeDateStart', {autoClose: true, range: true, multipleDatesSeparator: ' - '});
+        picker.selectDate([startDate, endDate]);
+    }
 
     function mutualContractList(){
         $('#mutualContractSelect').empty();
@@ -569,6 +575,8 @@ $legalContact = $client->getLegalContact();
     }
 
     $(function () {        
+        rangeDatePickerInit();
+        
         $('#ordertable').on('load-success.bs.table', function (e, res) {
             setCookies('clientSaveId');
         });        
@@ -611,9 +619,10 @@ $legalContact = $client->getLegalContact();
             var company = $("#mutualCompanySelect").val();
             var legal = $("#mutualLegalSelect").val();
             var contract = $("#mutualContractSelect").val();
-            var period = $("#mutualPeriodSelect").val();
-            var dateStart = $("#mutualDateStart").val();
-            var url = '/print/revise?ext=Pdf&company='+company+'&legal='+legal+'&contract='+contract+'&period='+period+'&dateStart='+dateStart;
+//            var period = $("#mutualPeriodSelect").val();
+//            var dateStart = $("#mutualDateStart").val();
+            var dateRange = $("#rangeDateStart").val();
+            var url = '/print/revise?ext=Pdf&company='+company+'&legal='+legal+'&contract='+contract+'&dateRange='+dateRange;
             window.open(url, 'windowObject');
         });
     });
