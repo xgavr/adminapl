@@ -441,7 +441,7 @@ class Order {
      */
     public static function getRevisePrintName($inn, $kpp, $docDate, $ext, $docName = 'Акт сверки') 
     {
-        return self::PRINT_FOLDER.'/'.$this->getReviseDocPresent($inn, $kpp, $docDate, $docName).'.'.strtolower($ext);
+        return self::PRINT_FOLDER.'/'.self::getReviseDocPresent($inn, $kpp, $docDate, $docName).'.'.strtolower($ext);
     }
 
     /**
@@ -449,7 +449,7 @@ class Order {
      * @param string $docName
      * @return string     
      */
-    public function getReviseDocPresent($inn, $kpp, $docDate, $docName = 'Акт сверки') 
+    public static function getReviseDocPresent($inn, $kpp, $docDate, $docName = 'Акт сверки') 
     {
         return "$docName $inn на $docDate";
     }
@@ -465,7 +465,7 @@ class Order {
      */
     public static function getReviseEdoName($inn, $kpp, $docDate, $docName = 'АКТС', $ext = 'xml') 
     {
-        return self::PRINT_FOLDER.'/'.$this->getReviseEdoPresent($inn, $kpp, $docDate, $docName).'.'.$ext;
+        return self::PRINT_FOLDER.'/'.self::getReviseEdoPresent($inn, $kpp, $docDate, $docName).'.'.$ext;
     }
 
     /**
@@ -476,7 +476,7 @@ class Order {
      * @param string $docName
      * @return string     
      */
-    public function getReviseEdoPresent($inn, $kpp, $docDate, $docName = 'АКТС') 
+    public static function getReviseEdoPresent($inn, $kpp, $docDate, $docName = 'АКТС') 
     {
         return $docName.'_'.$inn.'_'.$kpp.'_'.$docDate;
     }
