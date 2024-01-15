@@ -432,6 +432,7 @@ class Order {
     
     /**
      * Returns the revise namefile.
+     * @param string $printFolder
      * @param string $inn
      * @param string $kpp
      * @param date $docDate
@@ -439,9 +440,9 @@ class Order {
      * @param string $docName
      * @return string     
      */
-    public static function getRevisePrintName($inn, $kpp, $docDate, $ext, $docName = 'Акт сверки') 
+    public static function getRevisePrintName($printFolder, $inn, $kpp, $docDate, $ext, $docName = 'Акт сверки') 
     {
-        return self::PRINT_FOLDER.'/'.$this->getReviseDocPresent($inn, $kpp, $docDate, $docName).'.'.strtolower($ext);
+        return $printFolder.'/'.$this->getReviseDocPresent($inn, $kpp, $docDate, $docName).'.'.strtolower($ext);
     }
 
     /**
@@ -456,6 +457,7 @@ class Order {
     
     /**
      * Returns the revise edo namefile.
+     * @param string $printFolder
      * @param string $inn
      * @param string $kpp
      * @param date $docDate
@@ -463,9 +465,9 @@ class Order {
      * @param string $ext
      * @return string     
      */
-    public static function getReviseEdoName($inn, $kpp, $docDate, $docName = 'АКТС', $ext = 'xml') 
+    public static function getReviseEdoName($printFolder, $inn, $kpp, $docDate, $docName = 'АКТС', $ext = 'xml') 
     {
-        return self::PRINT_FOLDER.'/'.$this->getReviseEdoPresent($inn, $kpp, $docDate, $docName).'.'.$ext;
+        return $printFolder.'/'.$this->getReviseEdoPresent($inn, $kpp, $docDate, $docName).'.'.$ext;
     }
 
     /**
