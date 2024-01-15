@@ -1208,6 +1208,26 @@ class PrintManager {
     }    
     
     /**
+     * Получить номер Апл
+     * @param Mutual $mutual
+     */
+    private function getAplDocNum($mutual)
+    {        
+        switch($mutual->getDocType()){
+            case Movement::DOC_ORDER:
+                $order = $this->entityManager->getRepository(Order::class)
+                    ->find($mutual->getDocId());
+                if ($order){
+                    return $order->getAplId();
+                }    
+            default:
+                return $mutual->getDocId();
+        }
+
+        return $mutual->getDocId();
+    }
+    
+    /**
      * Акт сверки
      * @param date $dateStart
      * @param date $dateEnd
@@ -1311,7 +1331,7 @@ class PrintManager {
             $sheet->mergeCells("G$row:H$row");
             
             $sheet->setCellValue("B$row", date('d.m.Y', strtotime($data->getDateOper())));                
-            $sheet->setCellValue("C$row", Movement::getReviseDocList()[$data->getDocType()]." №".$data->getDocId());                
+            $sheet->setCellValue("C$row", Movement::getReviseDocList()[$data->getDocType()]." №".$this->getAplDocNum($data).' от '.date('d.m.Y', strtotime($data->getDateOper())));                
             $sheet->setCellValue("E$row", "");                              
             $sheet->setCellValue("G$row", "");
             switch($data->getDocType()){
@@ -1361,13 +1381,13 @@ class PrintManager {
         switch ($writerType){
             case 'Pdf':
                 $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
-                $outFilename = Order::getReviseEdoName($company->getInn(), $company->getKpp(), date('dmY', strtotime($dateEnd)), $writerType);
+                $outFilename = Order::getReviseEdoName($company->getInn(), $company->getKpp(), date('dmY', strtotime($dateEnd)), null, $writerType);
                 $writer->save($outFilename);
                 break;
             case 'Xls':
             case 'Xlsx':
                 $writer = IOFactory::createWriter($spreadsheet, $writerType);
-                $outFilename = Order::getReviseEdoName($company->getInn(), $company->getKpp(), date('dmY', strtotime($dateEnd)), $writerType);
+                $outFilename = Order::getReviseEdoName($company->getInn(), $company->getKpp(), date('dmY', strtotime($dateEnd)), null, $writerType);
                 $writer->save($outFilename);
                 break;
             default: 
