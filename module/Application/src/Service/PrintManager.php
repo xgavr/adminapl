@@ -1216,9 +1216,10 @@ class PrintManager {
      * @param Contract $contract
      * @param string $writerType
      * @param bool $stamp
+     * @param bool $edo
      * @return string 
      */
-    public function revise($dateStart, $dateEnd, $company, $legal, $contract = null, $writerType = 'Pdf', $stamp = false)
+    public function revise($dateStart, $dateEnd, $company, $legal, $contract = null, $writerType = 'Pdf', $stamp = false, $edo = true)
     {
         ini_set("pcre.backtrack_limit", "5000000");
         setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
@@ -1360,14 +1361,13 @@ class PrintManager {
         switch ($writerType){
             case 'Pdf':
                 $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
-                $outFilename = 'Акт сверки';
+                $outFilename = Order::getReviseEdoName($company->getInn(), $company->getKpp(), date('dmY', strtotime($dateEnd)), $writerType);
                 $writer->save($outFilename);
                 break;
             case 'Xls':
             case 'Xlsx':
                 $writer = IOFactory::createWriter($spreadsheet, $writerType);
-                $outFilename = 'Акт сверки';
-//                $writer->writeAllSheets();
+                $outFilename = Order::getReviseEdoName($company->getInn(), $company->getKpp(), date('dmY', strtotime($dateEnd)), $writerType);
                 $writer->save($outFilename);
                 break;
             default: 

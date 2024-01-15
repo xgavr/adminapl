@@ -429,6 +429,57 @@ class Order {
         }    
         return $docName.'_'.$contractNo.'_'.$docDate.'_'.$docNo;
     }
+    
+    /**
+     * Returns the revise namefile.
+     * @param string $inn
+     * @param string $kpp
+     * @param date $docDate
+     * @param string $ext
+     * @param string $docName
+     * @return string     
+     */
+    public static function getRevisePrintName($inn, $kpp, $docDate, $ext, $docName = 'Акт сверки') 
+    {
+        return self::PRINT_FOLDER.'/'.$this->getReviseDocPresent($inn, $kpp, $docDate, $docName).'.'.strtolower($ext);
+    }
+
+    /**
+     * Returns the present of revise of doc.
+     * @param string $docName
+     * @return string     
+     */
+    public static function getReviseDocPresent($inn, $kpp, $docDate, $docName = 'Акт сверки') 
+    {
+        return "$docName $inn на $docDate";
+    }
+    
+    /**
+     * Returns the revise edo namefile.
+     * @param string $inn
+     * @param string $kpp
+     * @param date $docDate
+     * @param string $docName
+     * @param string $ext
+     * @return string     
+     */
+    public static function getReviseEdoName($inn, $kpp, $docDate, $docName = 'АКТС', $ext = 'xml') 
+    {
+        return self::PRINT_FOLDER.'/'.$this->getReviseEdoName($inn, $kpp, $docDate, $docName).'.'.$ext;
+    }
+
+    /**
+     * Returns the present of revise of edo.
+     * @param string $inn
+     * @param string $kpp
+     * @param date $docDate
+     * @param string $docName
+     * @return string     
+     */
+    public static function getReviseEdoPresent($inn, $kpp, $docDate, $docName = 'АКТС') 
+    {
+        return $docName.'_'.$inn.'_'.$kpp.'_'.$docDate;
+    }
 
     public function getLogKey() 
     {
