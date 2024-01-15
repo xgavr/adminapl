@@ -465,7 +465,7 @@ class Order {
      */
     public static function getReviseEdoName($inn, $kpp, $docDate, $docName = 'АКТС', $ext = 'xml') 
     {
-        return self::PRINT_FOLDER.'/'.$this->getReviseEdoName($inn, $kpp, $docDate, $docName).'.'.$ext;
+        return self::PRINT_FOLDER.'/'.$this->getReviseEdoPresent($inn, $kpp, $docDate, $docName).'.'.$ext;
     }
 
     /**
