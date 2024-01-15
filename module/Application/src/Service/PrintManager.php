@@ -1381,13 +1381,13 @@ class PrintManager {
         switch ($writerType){
             case 'Pdf':
                 $writer = IOFactory::createWriter($spreadsheet, 'Mpdf');
-                $outFilename = Order::getReviseEdoName($company->getInn(), $company->getKpp(), date('dmY', strtotime($dateEnd)), null, $writerType);
+                $outFilename = Order::getReviseEdoName($company->getInn(), $company->getKpp(), date('dmY', strtotime($dateEnd)), 'АКТС', $writerType);
                 $writer->save($outFilename);
                 break;
             case 'Xls':
             case 'Xlsx':
                 $writer = IOFactory::createWriter($spreadsheet, $writerType);
-                $outFilename = Order::getReviseEdoName($company->getInn(), $company->getKpp(), date('dmY', strtotime($dateEnd)), null, $writerType);
+                $outFilename = Order::getReviseEdoName($company->getInn(), $company->getKpp(), date('dmY', strtotime($dateEnd)), 'АКТС', $writerType);
                 $writer->save($outFilename);
                 break;
             default: 
