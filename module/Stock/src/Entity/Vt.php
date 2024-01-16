@@ -27,18 +27,18 @@ use Laminas\Json\Encoder;
  */
 class Vt {
         
-     // Ptu status constants.
+     // Vt status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     const STATUS_COMMISSION   = 3; // commission.
     const STATUS_DEFECT       = 4; // брак.
     const STATUS_WAIT         = 5; // ожидает поставки.
    
-     // Ptu status doc constants.
+     // Vt status doc constants.
     const STATUS_DOC_RECD       = 1; // Получено.
     const STATUS_DOC_NOT_RECD  = 2; // Не получено.
 
-     // Ptu status doc constants.
+     // Vt status doc constants.
     const STATUS_EX_NEW  = 1; // Не отправлено.
     const STATUS_EX_RECD  = 2; // Получено из АПЛ.
     const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
