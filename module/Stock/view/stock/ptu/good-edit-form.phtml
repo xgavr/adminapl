@@ -19,10 +19,12 @@ $form->get('quantity')->setAttributes([
 
 $form->get('amount')->setAttributes([
     'class'=>'form-control', 
+    'data-inputmask' => "'alias': 'currency', 'min': 0, 'groupSeparator': ''"
     ]);
 
 $form->get('price')->setAttributes([
     'class'=>'form-control', 
+    'data-inputmask' => "'alias': 'currency', 'min': 0, 'groupSeparator': ''"
     ]);
 
 $form->get('unit')->setAttributes([
@@ -212,6 +214,9 @@ $docName = 'Новый';
     });    
     
     $( document ).ready(function() {
+        $("#amount").inputmask();
+        $("#price").inputmask();
+    
         $('#code').typeahead({
             source: function(query, process) {
                 query = query.replace(/[^A-Za-z0-9]/g,"");
@@ -259,18 +264,27 @@ $docName = 'Новый';
         });
 
         $("#price").on('input', function(){
-            var value = $(this).val();
-            $(this).val(value.replace(",","."));
+//            var value = $(this).val();
+//            $(this).val(value.replace(",","."));
             $("#amount").val(Math.round($(this).val()*$("#quantity").val()*100)/100);
         });
         
         $("#amount").on('input', function(){
-            var value = $(this).val();
-            $(this).val(parseFloat(value.replace(",",".").replace(/\s/g, '')));
+//            var value = $(this).val();
+//            $(this).val(value.replace(",","."));
             if ($("#quantity").val()){
                 $("#price").val(Math.round($(this).val()*100/$("#quantity").val())/100);
             }    
         });
+
+        $("#amount").on('paste', function(e){
+            var pastedData = e.originalEvent.clipboardData.getData('text').replace(",",".");
+            $(this).val(pastedData);
+            if ($("#quantity").val()){
+                $("#price").val(Math.round($(this).val()*100/$("#quantity").val())/100);
+            }    
+        });
+        
         
         $("#quantity").on('input', function(){
             if ($("#price").val()){
