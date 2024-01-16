@@ -6,6 +6,8 @@ use Laminas\ApiTools\Rest\AbstractResourceListener;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Stock\Entity\Ptu;
 use Stock\Entity\St;
+use Stock\Entity\Pt;
+use Stock\Entity\Ot;
 
 class ApiAccountComitentResource extends AbstractResourceListener
 {
@@ -109,6 +111,20 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 $result[] = $st->toArray(); 
             }
         }    
+        if ($params['docType'] == 'Ot'){
+            $ots = $this->entityManager->getRepository(Ot::class)
+                    ->findBy(['statusAccount' => Ot::STATUS_ACCOUNT_NO]);
+            foreach ($ots as $ot){
+                $result[] = $ot->toArray(); 
+            }
+        }    
+        if ($params['docType'] == 'Pt'){
+            $pts = $this->entityManager->getRepository(Pt::class)
+                    ->findBy(['statusAccount' => Pt::STATUS_ACCOUNT_NO]);
+            foreach ($pts as $pt){
+                $result[] = $pt->toArray(); 
+            }
+        }    
 
         return ['reports' => $result];
         
@@ -151,6 +167,26 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     $this->entityManager->persist($st);
                     $this->entityManager->flush();
                     return ['statusAccount' => $st->getStatusAccount()];
+                }
+            }
+            if ($data->docType == 'Ot'){
+                $ot = $this->entityManager->getRepository(Ot::class)
+                        ->find($id);
+                if ($ot){
+                    $ot->setStatusAccount($data->statusAccount);
+                    $this->entityManager->persist($ot);
+                    $this->entityManager->flush();
+                    return ['statusAccount' => $ot->getStatusAccount()];
+                }
+            }
+            if ($data->docType == 'Pt'){
+                $pt = $this->entityManager->getRepository(Pt::class)
+                        ->find($id);
+                if ($pt){
+                    $pt->setStatusAccount($data->statusAccount);
+                    $this->entityManager->persist($pt);
+                    $this->entityManager->flush();
+                    return ['statusAccount' => $pt->getStatusAccount()];
                 }
             }
         }

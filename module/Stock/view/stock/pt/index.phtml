@@ -102,6 +102,9 @@
         if (row.statusAccount === '<?= Pt::STATUS_TAKE_NO?>'){
            retired += ' warning';
         }
+        if (row.statusAccount === '<?= Pt::STATUS_ACCOUNT_NO?>'){
+           retired += ' status-account-no';
+        }
         return {classes: retired};
     }
 

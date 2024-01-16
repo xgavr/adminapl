@@ -428,6 +428,11 @@ class Pt {
         return $this->docDate;
     }
     
+    public function getDocDateAtomFormat() {
+        $datetime = new \DateTime($this->docDate);
+        return $datetime->format(\DateTime::ATOM);
+    }
+    
     /**
      * Sets the date when doc.
      * @param date $docDate     
@@ -562,6 +567,20 @@ class Pt {
     }    
     
     /**
+     * Массив для формы
+     * @return array 
+     */
+    public function goodsToArray()
+    {
+        $result = [];
+        foreach ($this->ptGoods as $item){
+            $result[] = $item->toArray();
+        }    
+        
+        return $result;
+    }    
+    
+    /**
      * Лог
      * @return array
      */
@@ -582,4 +601,29 @@ class Pt {
             'goods' => [],
         ];
     }
+    
+    /**
+     * Массив для формы
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'amount' => $this->getAmount(),
+            'aplId' => $this->getAplId(),
+            'comment' => $this->getComment(),
+            'docDate' => $this->getDocDateAtomFormat(),
+            'docNo' => $this->getDocNo(),
+            'info' => $this->getInfo(),
+            'company' => $this->getCompany()->toArray(),
+            'company2' => $this->getCompany2()->toArray(),
+            'office' => $this->getOffice()->toArray(),
+            'office2' => $this->getOffice2()->toArray(),
+            'status' => $this->getStatus(),
+            'statusDoc' => $this->getStatusDoc(),
+            'statusEx' => $this->getStatusEx(),
+            'id' => $this->getId(),
+            'goods' => $this->goodsToArray(),
+        ];
+    }            
 }

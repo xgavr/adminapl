@@ -96,6 +96,9 @@
         if (row.status === '<?= Ot::STATUS_COMMISSION?>'){
            retired += ' info';
         }
+        if (row.statusAccount === '<?= Ot::STATUS_ACCOUNT_NO?>'){
+           retired += ' status-account-no';
+        }
         
         return {classes: retired};
     }

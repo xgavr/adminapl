@@ -333,4 +333,25 @@ class OtGood {
             'statusDoc' => $this->getStatusDoc(),
         ];
     }    
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'amount' => $this->getAmount(),
+            'price' => $this->getPrice(),
+            'comment' => $this->getComment(),
+            'good' => $this->getGood()->toArray(),
+            'info' => $this->getInfo(),
+            'quantity' => $this->getQuantity(),
+            'rowNo' => $this->getRowNo(),
+            'status' => $this->getStatus(),
+            'statusDoc' => $this->getStatusDoc(),
+        ];
+        
+        return $result;
+    }                
 }
