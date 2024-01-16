@@ -201,6 +201,7 @@ class OtManager
             $ot->setStatusEx($data['status_ex']);
             $ot->setStatus($data['status']);
             $ot->setStatusDoc(Ot::STATUS_DOC_NOT_RECD);
+            $ot->setStatusAccount(Ot::STATUS_ACCOUNT_NO);
             $ot->setOffice($data['office']);
             $ot->setCompany($data['company']);
             $ot->setAmount(0);
@@ -235,6 +236,7 @@ class OtManager
             $ot->setComment($data['comment']);
             $ot->setStatusEx($data['status_ex']);
             $ot->setStatus($data['status']);
+            $ot->setStatusAccount(Ot::STATUS_ACCOUNT_NO);
             $ot->setOffice($data['office']);
             $ot->setCompany($data['company']);
             $ot->setComiss(null);
