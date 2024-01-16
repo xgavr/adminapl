@@ -5,6 +5,7 @@ use Laminas\ApiTools\ApiProblem\ApiProblem;
 use Laminas\ApiTools\Rest\AbstractResourceListener;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Stock\Entity\Ptu;
+use Stock\Entity\St;
 
 class ApiAccountComitentResource extends AbstractResourceListener
 {
@@ -101,6 +102,13 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 $result[] = $ptu->toArray(); 
             }
         }    
+        if ($params['docType'] == 'St'){
+            $sts = $this->entityManager->getRepository(St::class)
+                    ->findBy(['statusAccount' => St::STATUS_ACCOUNT_NO]);
+            foreach ($sts as $st){
+                $result[] = $st->toArray(); 
+            }
+        }    
 
         return ['reports' => $result];
         
@@ -133,6 +141,16 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     $this->entityManager->persist($ptu);
                     $this->entityManager->flush();
                     return ['statusAccount' => $ptu->getStatusAccount()];
+                }
+            }
+            if ($data->docType == 'St'){
+                $st = $this->entityManager->getRepository(St::class)
+                        ->find($id);
+                if ($st){
+                    $st->setStatusAccount($data->statusAccount);
+                    $this->entityManager->persist($st);
+                    $this->entityManager->flush();
+                    return ['statusAccount' => $st->getStatusAccount()];
                 }
             }
         }
