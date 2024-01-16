@@ -691,8 +691,8 @@ class St {
             'statusDoc' => $this->getStatusDoc(),
             'statusEx' => $this->getStatusEx(),
             'id' => $this->getId(),
-            'user' => $this->getUser()->toArray(),
-            'cost' => $this->getCost()->toArray(),
+            'user' => ($this->getUser()) ? $this->getUser()->toArray():null,
+            'cost' => ($this->getCost()) ? $this->getCost()->toArray():null,
             'write' => $this->getWriteOff(),
             'goods' => $this->goodsToArray(),
         ];
