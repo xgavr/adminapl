@@ -299,6 +299,9 @@
            retired += ' warning';
            return {classes: retired};
         }
+        if (row.statusAccount === '<?= Vtp::STATUS_ACCOUNT_NO?>'){
+           retired += ' status-account-no';
+        }
         switch(row.statusDoc){
             case '<?= Vtp::STATUS_DOC_NOT_RECD?>': 
                         return {classes: 'success '+retired}; break;

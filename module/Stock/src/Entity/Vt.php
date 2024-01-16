@@ -457,6 +457,11 @@ class Vt {
         return $this->docDate;
     }
     
+    public function getDocDateAtomFormat() {
+        $datetime = new \DateTime($this->docDate);
+        return $datetime->format(\DateTime::ATOM);
+    }
+    
     /**
      * Sets the date when doc.
      * @param date $docDate     
@@ -551,6 +556,20 @@ class Vt {
     }    
     
     /**
+     * Массив для формы
+     * @return array 
+     */
+    public function goodsToArray()
+    {
+        $result = [];
+        foreach ($this->vtGoods as $item){
+            $result[] = $item->toArray();
+        }    
+        
+        return $result;
+    }    
+    
+    /**
      * Лог
      * @return array
      */
@@ -572,4 +591,28 @@ class Vt {
             'goods' => [],
         ];
     }
+    
+    /**
+     * Массив для формы
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'amount' => $this->getAmount(),
+            'aplId' => $this->getAplId(),
+            'comment' => $this->getComment(),
+            'docDate' => $this->getDocDateAtomFormat(),
+            'docNo' => $this->getDocNo(),
+            'info' => $this->getInfo(),
+            'company' => $this->getCompany()->toArray(),
+            'office' => $this->getOffice()->toArray(),
+            'status' => $this->getStatus(),
+            'statusDoc' => $this->getStatusDoc(),
+            'statusEx' => $this->getStatusEx(),
+            'id' => $this->getId(),
+            'order' => $this->getOrder()->toArray(),
+            'goods' => $this->goodsToArray(),
+        ];
+    }                
 }

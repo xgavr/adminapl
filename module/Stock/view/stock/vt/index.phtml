@@ -111,6 +111,9 @@
         if (row.statusAccount === '<?= Vt::STATUS_TAKE_NO?>'){
            retired = ' warning';
         }
+        if (row.statusAccount === '<?= Vt::STATUS_ACCOUNT_NO?>'){
+           retired += ' status-account-no';
+        }
         
         return {classes: retired};
     }

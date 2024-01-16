@@ -8,6 +8,8 @@ use Stock\Entity\Ptu;
 use Stock\Entity\St;
 use Stock\Entity\Pt;
 use Stock\Entity\Ot;
+use Stock\Entity\Vt;
+use Stock\Entity\Vtp;
 
 class ApiAccountComitentResource extends AbstractResourceListener
 {
@@ -125,6 +127,20 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 $result[] = $pt->toArray(); 
             }
         }    
+        if ($params['docType'] == 'Vt'){
+            $vts = $this->entityManager->getRepository(Vt::class)
+                    ->findBy(['statusAccount' => Vt::STATUS_ACCOUNT_NO]);
+            foreach ($vts as $vt){
+                $result[] = $vt->toArray(); 
+            }
+        }    
+        if ($params['docType'] == 'Vtp'){
+            $vtps = $this->entityManager->getRepository(Vtp::class)
+                    ->findBy(['statusAccount' => Vtp::STATUS_ACCOUNT_NO]);
+            foreach ($vtps as $vtp){
+                $result[] = $vtp->toArray(); 
+            }
+        }    
 
         return ['reports' => $result];
         
@@ -187,6 +203,26 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     $this->entityManager->persist($pt);
                     $this->entityManager->flush();
                     return ['statusAccount' => $pt->getStatusAccount()];
+                }
+            }
+            if ($data->docType == 'Vt'){
+                $vt = $this->entityManager->getRepository(Vt::class)
+                        ->find($id);
+                if ($vt){
+                    $vt->setStatusAccount($data->statusAccount);
+                    $this->entityManager->persist($vt);
+                    $this->entityManager->flush();
+                    return ['statusAccount' => $vt->getStatusAccount()];
+                }
+            }
+            if ($data->docType == 'Vtp'){
+                $vtp = $this->entityManager->getRepository(Vtp::class)
+                        ->find($id);
+                if ($vtp){
+                    $vtp->setStatusAccount($data->statusAccount);
+                    $this->entityManager->persist($vtp);
+                    $this->entityManager->flush();
+                    return ['statusAccount' => $vtp->getStatusAccount()];
                 }
             }
         }
