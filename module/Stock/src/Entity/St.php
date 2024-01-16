@@ -494,6 +494,11 @@ class St {
         return $this->docDate;
     }
     
+    public function getDocDateAtomFormat() {
+        $datetime = new \DateTime($this->docDate);
+        return $datetime->format(\DateTime::ATOM);
+    }
+    
     /**
      * Sets the date when doc.
      * @param date $docDate     
