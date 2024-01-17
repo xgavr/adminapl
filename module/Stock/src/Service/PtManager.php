@@ -569,6 +569,7 @@ class PtManager
         if ($pt->getDocDate() > $this->allowDate || $pt->getStatus() != Pt::STATUS_ACTIVE){
             $pt->setStatus($status);
             $pt->setStatusEx(Pt::STATUS_EX_NEW);
+            $pt->setStatusAccount(Pt::STATUS_ACCOUNT_NO);
             
             if ($pt->getDocDate() < $this->getAllowDate() && $status == Pt::STATUS_RETIRED){
                 $pt->setDocDate(date('Y-m-d', strtotime($this->getAllowDate().' + 1 day')));

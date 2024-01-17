@@ -191,6 +191,7 @@ class PtuManager
         if ($ptu->getDocDate() > $this->allowDate || $ptu->getStatus() != Ptu::STATUS_ACTIVE){
             $ptu->setStatus($status);
             $ptu->setStatusEx(Ptu::STATUS_EX_NEW);
+            $ptu->setStatusAccount(Ptu::STATUS_ACCOUNT_NO);
             
             if ($ptu->getDocDate() < $this->getAllowDate() && $status == Ptu::STATUS_RETIRED){
                 $ptu->setDocDate(date('Y-m-d', strtotime($this->getAllowDate().' + 1 day')));

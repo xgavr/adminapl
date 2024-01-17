@@ -341,7 +341,7 @@ class VtpManager
         if ($vtp->getDocDate() > $this->allowDate || $vtp->getStatus() != Vtp::STATUS_ACTIVE || $vtp->getStatusDoc() != Vtp::STATUS_DOC_NOT_RECD){
             $vtp->setStatus($status);
             $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
-            $vtp->setStatusEx(Vtp::STATUS_ACCOUNT_NO);
+            $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
             
             if ($vtp->getDocDate() < $this->getAllowDate() && $status == Vtp::STATUS_RETIRED){
                 $vtp->setDocDate(date('Y-m-d', strtotime($this->getAllowDate().' + 1 day')));
@@ -370,7 +370,7 @@ class VtpManager
         if ($vtp->getDocDate() > $this->allowDate){
             $vtp->setStatusDoc($statusDoc);
             $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
-            $vtp->setStatusEx(Vtp::STATUS_ACCOUNT_NO);
+            $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
             
             if ($statusDoc == Vtp::STATUS_DOC_NOT_RECD && $docDate && $docDate > $this->allowDate){
                 $vtp->setDocDate($docDate);
@@ -423,7 +423,7 @@ class VtpManager
         if ($vtp->getDocDate() > $this->allowDate){
             $vtp->setVtpType($vtpType);
             $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
-            $vtp->setStatusEx(Vtp::STATUS_ACCOUNT_NO);
+            $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
 
             $this->entityManager->persist($vtp);
             $this->entityManager->flush($vtp);
