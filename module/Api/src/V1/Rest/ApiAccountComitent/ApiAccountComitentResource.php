@@ -10,6 +10,7 @@ use Stock\Entity\Pt;
 use Stock\Entity\Ot;
 use Stock\Entity\Vt;
 use Stock\Entity\Vtp;
+use Application\Entity\Order;
 
 class ApiAccountComitentResource extends AbstractResourceListener
 {
@@ -141,6 +142,16 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 $result[] = $vtp->toArray(); 
             }
         }    
+        if ($params['docType'] == 'Order'){
+            $orders = $this->entityManager->getRepository(Order::class)
+                    ->findBy(['statusAccount' => Order::STATUS_ACCOUNT_NO]);
+            foreach ($orders as $order){
+                $row = $order->toArray();
+                $row['goods'] = $order->goodsToArray();
+                $result[] = $row;
+                
+            }
+        }    
 
         return ['reports' => $result];
         
@@ -223,6 +234,16 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     $this->entityManager->persist($vtp);
                     $this->entityManager->flush();
                     return ['statusAccount' => $vtp->getStatusAccount()];
+                }
+            }
+            if ($data->docType == 'Order'){
+                $order = $this->entityManager->getRepository(Order::class)
+                        ->find($id);
+                if ($order){
+                    $order->setStatusAccount($data->statusAccount);
+                    $this->entityManager->persist($order);
+                    $this->entityManager->flush();
+                    return ['statusAccount' => $order->getStatusAccount()];
                 }
             }
         }

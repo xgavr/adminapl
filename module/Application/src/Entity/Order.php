@@ -691,6 +691,11 @@ class Order {
         return $this->dateCreated;
     }
 
+    public function getDocDateAtomFormat() {
+        $datetime = new \DateTime($this->getDocDate());
+        return $datetime->format(\DateTime::ATOM);
+    }
+    
     public function getTotal() 
     {
         return $this->total;
@@ -1720,6 +1725,20 @@ class Order {
     }
     
     /**
+     * Массив для формы
+     * @return array 
+     */
+    public function goodsToArray()
+    {
+        $result = [];
+        foreach ($this->bids as $item){
+            $result[] = $item->toArray();
+        }    
+        
+        return $result;
+    }    
+    
+    /**
      * Лог
      * @return array
      */
@@ -1727,6 +1746,7 @@ class Order {
     {
         return [
             'orderId' => $this->getId(),
+            'id' => $this->getId(),
             'aplId' => $this->getAplId(),
             'phone' => $this->_getContactPhone(),
             'email' => $this->_getContactEmail(),
@@ -1738,12 +1758,14 @@ class Order {
             'company' => $this->getCompany()->getId(),
             'contact' => $this->getContact()->getId(),
             'operDate' => (string) $this->getDateOper(),
+            'docDate' => $this->getDocDateAtomFormat(),
             'dateShipment' => date('Y-m-d', strtotime($this->getDateShipment())),
             'timeShipment' => date('H', strtotime($this->getDateShipment())),
             'courier' => ($this->getCourier()) ? $this->getCourier()->getId():null,
             'courierName' => ($this->getCourier()) ? $this->getCourierName():null,
             'office' => $this->getOffice()->getId(),
             'officeName' => $this->getOffice()->getName(),
+            'officeAplId' => $this->getOffice()->getAplId(),
             'status' => $this->getStatus(),
             'statusName' => $this->getStatusAsString(),
             'info' => $this->getInfo(),
@@ -1753,6 +1775,7 @@ class Order {
             'trackNumber' => $this->getTrackNumber(),
             'user' => ($this->getUser()) ? $this->getUser()->getId():null,
             'userName' => ($this->getUser()) ? $this->getUser()->getFullName():null,
+            'userAplId' => ($this->getUser()) ? $this->getUser()->getAplId():null,
             'skiper' => ($this->getSkiper()) ? $this->getSkiper()->getId():null,
             'skiperName' => ($this->getSkiper()) ? $this->getSkiper()->getFullName():null,
             'shipping' => ($this->getShipping()) ? $this->getShipping()->getId():null,
@@ -1766,6 +1789,7 @@ class Order {
             'shipmentDistance' => $this->getShipmentDistance(),
             'rateDistance' => ($this->getShipping()) ? $this->getShipping()->getRateDistance():null,
             'infoShipping' => $this->getInfoShipping(),
+            'legalData' => ($this->getLegal()) ? $this->getLegal()->toArray():null,
             'legal' => ($this->getLegal()) ? $this->getLegal()->getId():null,
             'legalName' => ($this->getLegal()) ? $this->getLegal()->getName():null,
             'legalInn' => ($this->getLegal()) ? $this->getLegal()->getInn():null,
