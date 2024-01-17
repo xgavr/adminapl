@@ -370,6 +370,7 @@ class VtpManager
         if ($vtp->getDocDate() > $this->allowDate){
             $vtp->setStatusDoc($statusDoc);
             $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
+            $vtp->setStatusEx(Vtp::STATUS_ACCOUNT_NO);
             
             if ($statusDoc == Vtp::STATUS_DOC_NOT_RECD && $docDate && $docDate > $this->allowDate){
                 $vtp->setDocDate($docDate);
