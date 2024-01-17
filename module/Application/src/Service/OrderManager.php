@@ -1654,6 +1654,7 @@ class OrderManager
         if ($order->getDateOper() > $this->allowDate){
             $order->setStatus($status);
             $order->setStatusEx(Order::STATUS_EX_NEW);
+            $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
             
             if (empty($order->getUser()) && $this->currentUser()){
                 $order->setUser($this->currentUser());
@@ -1677,6 +1678,7 @@ class OrderManager
     public function updateOrderContact($order, $newContact)
     {
         $order->setContact($newContact);
+        $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
         $this->entityManager->persist($order);
         
         $contactCar = $order->getContactCar();
