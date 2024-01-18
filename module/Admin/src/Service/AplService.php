@@ -1781,8 +1781,10 @@ class AplService {
             $client->setOptions(['timeout' => 60]);
             $client->setParameterPost($post);
             
-            $headers = $client->getRequest()->getHeaders();
-            $headers->addHeaderLine('Content-Type: application/octet-stream');
+            $client->setHeaders([
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                'Accept'       => '*/*',
+            ]);
 
             $ok = $result = false;
             try{
