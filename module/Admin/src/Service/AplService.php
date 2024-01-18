@@ -1564,6 +1564,10 @@ class AplService {
             $client->setMethod('POST');
             $client->setOptions(['timeout' => 60]);
             $client->setParameterPost($post);
+            $client->setHeaders([
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                'Accept'       => '*/*',
+            ]);
 
             $ok = $result = false;
             try{
