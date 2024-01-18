@@ -1782,7 +1782,7 @@ class AplService {
             $client->setParameterPost($post);
             
             $headers = $client->getRequest()->getHeaders();
-            $headers->addHeaderLine('Content-Type: application/php-serialized; charset=UTF-8');
+            $headers->addHeaderLine('Content-Type: application/php-serialized');
 
             $ok = $result = false;
             try{
