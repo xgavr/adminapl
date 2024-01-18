@@ -1780,6 +1780,9 @@ class AplService {
             $client->setMethod('POST');
             $client->setOptions(['timeout' => 60]);
             $client->setParameterPost($post);
+            
+            $headers = $client->getRequest()->getHeaders();
+            $headers->addHeaderLine('Content-Type: application/php-serialized; charset=UTF-8');
 
             $ok = $result = false;
             try{
