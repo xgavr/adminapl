@@ -1782,7 +1782,7 @@ class AplService {
             $client->setParameterPost($post);
             
             $headers = $client->getRequest()->getHeaders();
-            $headers->addHeaderLine('Content-Type: application/php-serialized');
+            $headers->addHeaderLine('Content-Type: application/octet-stream');
 
             $ok = $result = false;
             try{
