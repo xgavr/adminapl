@@ -2373,7 +2373,7 @@ class AplService {
                 $client = new Client();
                 $client->setUri($url);
                 $client->setMethod('POST');
-                $client->setOptions(['timeout' => 60]);
+                $client->setOptions(['timeout' => 120]);
                 $client->setParameterPost($post);
 
                 $ok = $result = false;
