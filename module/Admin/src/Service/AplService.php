@@ -1615,7 +1615,7 @@ class AplService {
                 ->findForRawpriceEx();
         
         $iterable = $goodsQuery->iterate();
-        $k = 1; $border = 50;
+        $k = 1; $border = 100;
         $goods = [];
         foreach($iterable as $item){
             foreach ($item as $good){
@@ -2415,7 +2415,7 @@ class AplService {
                 ->findGoodsForUpdatePrice();
         
         $iterable = $goodsQuery->iterate();
-        $k = 1; $border = 200; $rows = 0;
+        $k = 1; $border = 50; $rows = 0;
         $goods = [];        
         foreach ($iterable as $row){
             foreach ($row as $good){
