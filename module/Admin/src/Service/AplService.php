@@ -1761,7 +1761,7 @@ class AplService {
 
             $oemsQuery = $this->entityManager->getRepository(Goods::class)
                     ->findOems($good->getId());
-            $oemsQuery->setMaxResults(200);
+            $oemsQuery->setMaxResults(500);
             $oems = $oemsQuery->getResult();
             
             foreach ($oems as $oem){
