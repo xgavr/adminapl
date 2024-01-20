@@ -13,6 +13,7 @@ use Company\Entity\Cost;
 use Stock\Entity\Movement;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Fin\Entity\FinOpu;
+use Company\Entity\Legal;
 
 /**
  * Description of FinRepository
@@ -26,9 +27,10 @@ class FinRepository extends EntityRepository
      * Получить Опу
      * @param date $startDate
      * @param date $endDate
+     * @param Legal $company
      * @return array
      */
-    public function findOpu($startDate, $endDate)
+    public function findOpu($startDate, $endDate, $company)
     {
         $entityManager = $this->getEntityManager();
 
@@ -40,6 +42,8 @@ class FinRepository extends EntityRepository
             ->setParameter('startDate', $startDate)    
             ->andWhere('f.period <= :endDate')    
             ->setParameter('endDate', $endDate)
+            ->andWhere('f.company = :company')    
+            ->setParameter('company', $company->getId())
             ->orderBy('f.period') 
             ->addOrderBy('f.status')    
                 ;

@@ -53,14 +53,17 @@ class OpuController extends AbstractActionController
     public function contentAction()
     {
         $year = $this->params()->fromQuery('year', date('Y'));
+        $companyId = $this->params()->fromQuery('company');
         $status = $this->params()->fromQuery('status');
         
         $startDate = "$year-01-01";
         $endDate = "$year-12-31";
 
+        $company = $this->entityManager->getRepository(Legal::class)
+                ->find($companyId);
                 
         $data = $this->entityManager->getRepository(FinOpu::class)
-                        ->findOpu($startDate, $endDate);
+                        ->findOpu($startDate, $endDate, $company);
         
         $result = FinOpu::emptyOpuYear();
         foreach ($data as $row){
