@@ -150,8 +150,9 @@ class FinManager {
             $company = $this->entityManager->getRepository(Legal::class)
                     ->find($row['companyId']);
             $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
-            $finOpu->setRevenueRetail($row['revenue']);
-            $finOpu->setPurchaseRetail($row['purchase']);
+            $finOpu->setRevenueRetail(abs($row['revenue']));
+            $finOpu->setPurchaseRetail(abs($row['purchase']));
+            $finOpu->setIncomeRetail(abs($row['revenue']) - abs($row['purchase']));
             
             $this->entityManager->persist($finOpu);
         }
@@ -175,9 +176,10 @@ class FinManager {
             $company = $this->entityManager->getRepository(Legal::class)
                     ->find($row['companyId']);
             $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
-            $finOpu->setRevenueTp($row['revenue']);
-            $finOpu->setPurchaseTp($row['purchase']);
-            $finOpu->setCostTp($row['cost']);
+            $finOpu->setRevenueTp(abs($row['revenue']));
+            $finOpu->setPurchaseTp(abs($row['purchase']));
+            $finOpu->setCostTp(abs($row['cost']));
+            $finOpu->setIncomeTp(abs($row['revenue']) - abs($row['purchase']) - abs($row['cost']));
             
             $this->entityManager->persist($finOpu);
         }

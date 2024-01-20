@@ -19,11 +19,14 @@ final class Version20240119091825 extends AbstractMigration
         $table->addColumn('company_id', 'integer', ['notnull'=>true, 'comment' => 'Компания']);
         $table->addColumn('status', 'integer', ['notnull'=>true, 'comment' => 'Тип план-факт']);
         $table->addColumn('revenue_retail', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Выручка розничная']);
+        $table->addColumn('income_retail', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Доход розничный']);
         $table->addColumn('revenue_tp', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Выручка ТП']);
+        $table->addColumn('income_tp', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Доход ТП']);
         $table->addColumn('revenue_total', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Выручка общая']);
         $table->addColumn('purchase_retail', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Закупка розничная']);
         $table->addColumn('purchase_tp', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Закупка ТП']);
         $table->addColumn('purchase_total', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Закупка общая']);
+        $table->addColumn('income_total', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Доход общий']);
         $table->addColumn('cost_retail', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Расходы розничные']);
         $table->addColumn('cost_tp', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Расходы ТП']);
         $table->addColumn('cost_fix', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Расходы постоянные']);

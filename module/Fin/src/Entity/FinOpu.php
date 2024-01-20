@@ -63,6 +63,21 @@ class FinOpu
     protected $purchaseTotal;
 
     /** 
+     * @ORM\Column(name="income_retail")  
+     */
+    protected $incomeRetail;
+
+    /** 
+     * @ORM\Column(name="income_tp")  
+     */
+    protected $incomeTp;
+
+    /** 
+     * @ORM\Column(name="income_total")  
+     */
+    protected $incomeTotal;
+
+    /** 
      * @ORM\Column(name="cost_retail")  
      */
     protected $costRetail;
@@ -332,6 +347,33 @@ class FinOpu
 
     public function setFund($fund) {
         $this->fund = $fund;
+        return $this;
+    }
+    
+    public function getIncomeRetail() {
+        return $this->incomeRetail;
+    }
+
+    public function getIncomeTp() {
+        return $this->incomeTp;
+    }
+
+    public function getIncomeTotal() {
+        return $this->incomeTotal;
+    }
+
+    public function setIncomeRetail($incomeRetail) {
+        $this->incomeRetail = $incomeRetail;
+        return $this;
+    }
+
+    public function setIncomeTp($incomeTp) {
+        $this->incomeTp = $incomeTp;
+        return $this;
+    }
+
+    public function setIncomeTotal($incomeTotal) {
+        $this->incomeTotal = $incomeTotal;
         return $this;
     }
     
