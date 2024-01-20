@@ -47,6 +47,9 @@ class FinManager {
         $opu->setCostTotal(empty($data['costTotal']) ? 0:$data['costTotal']);
         $opu->setCostTp(empty($data['costTp']) ? 0:$data['costTp']);
         $opu->setFund(empty($data['fund']) ? 0:$data['fund']);
+        $opu->setIncomeRetail(empty($data['incomeRetail']) ? 0:$data['incomeRetail']);
+        $opu->setIncomeTp(empty($data['incomeTp']) ? 0:$data['incomeTp']);
+        $opu->setIncomeTotal(empty($data['incomeTotal']) ? 0:$data['incomeTotal']);
         $opu->setPeriod($data['period']);
         $opu->setProfit(empty($data['profit']) ? 0:$data['profit']);
         $opu->setPurchaseRetail(empty($data['purchaseRetail']) ? 0:$data['purchaseRetail']);
@@ -101,6 +104,9 @@ class FinManager {
         $opu->setCostTotal($data['costTotal']);
         $opu->setCostTp($data['costTp']);
         $opu->setFund($data['fund']);
+        $opu->setIncomeRetail($data['incomeRetail']);
+        $opu->setIncomeTp($data['incomeTp']);
+        $opu->setIncomeTotal($data['incomeTotal']);
         $opu->setPeriod($data['period']);
         $opu->setProfit($data['profit']);
         $opu->setPurchaseRetail($data['purchaseRetail']);
