@@ -139,6 +139,7 @@ return [
                     'date_add' => 'DoctrineExtensions\Query\Mysql\DateAdd',
                     'date_format' => 'DoctrineExtensions\Query\Mysql\DateFormat',
                     'date' => 'DoctrineExtensions\Query\Mysql\Date',
+                    'last_day' => 'DoctrineExtensions\Query\Mysql\LastDay',
                 ],
             ],
         ],

@@ -66,7 +66,7 @@ class FinRepository extends EntityRepository
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
         
-        $queryBuilder->select('identity(m.company) as companyId, sum(m.amount) as revenue, sum(m.baseAmount) as purchase')
+        $queryBuilder->select('identity(m.company) as companyId, LAST_DAY(m.dateOper) as period, sum(m.amount) as revenue, sum(m.baseAmount) as purchase')
             ->from(Movement::class, 'm')
             ->where('m.status = :status')
             ->setParameter('status', Movement::STATUS_ACTIVE)    
@@ -76,6 +76,7 @@ class FinRepository extends EntityRepository
             ->andWhere('m.dateOper <= :endDate')    
             ->setParameter('endDate', $endDate) 
             ->groupBy('companyId')    
+            ->addGroupBy('period')    
                 ;
         
         return $queryBuilder->getQuery()->getResult();       
@@ -95,7 +96,7 @@ class FinRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('identity(c.company) as companyId, sum(m.docAmount) as revenue, sum(m.baseAmount) as purchase, sum(m.costAmount) as cost')
+        $queryBuilder->select('identity(c.company) as companyId, LAST_DAY(m.docDate) as period, sum(m.docAmount) as revenue, sum(m.baseAmount) as purchase, sum(m.costAmount) as cost')
             ->from(MarketSaleReport::class, 'm')
             ->join('m.contract', 'c')    
             ->where('m.status = :status')
@@ -105,6 +106,7 @@ class FinRepository extends EntityRepository
             ->andWhere('m.docDate <= :endDate')    
             ->setParameter('endDate', $endDate) 
             ->groupBy('companyId')    
+            ->addGroupBy('period')    
                 ;
         
         return $queryBuilder->getQuery()->getResult();       

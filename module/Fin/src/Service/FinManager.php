@@ -10,6 +10,7 @@ namespace Fin\Service;
 
 use Fin\Entity\FinOpu;
 use ApiMarketPlace\Entity\MarketSaleReport;
+use Company\Entity\Legal;
 
 /**
  * Description of FinManager
@@ -78,7 +79,7 @@ class FinManager {
     private function getFinOpu($period, $companyId, $status)
     {
         $result = $this->entityManager->getRepository(FinOpu::class)
-                ->findBy(['period' => $period, 'company' => $companyId, 'status' => $status]);
+                ->findOneBy(['period' => $period, 'company' => $companyId, 'status' => $status]);
         if (empty($result)){
             $result = $this->addOpu(['period' => $period, 'company' => $companyId, 'status' => $status]);
         }
@@ -139,14 +140,16 @@ class FinManager {
      */
     public function incomeRetail($period)
     {
-        $startDate = date('y-m-01', strtotime($period));
-        $endDate = date('y-m-d 23:59:59', strtotime($period.' last day of month'));
-        
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+//        var_dump($startDate, $endDate); exit;
         $retailIncomes = $this->entityManager->getRepository(FinOpu::class)
                 ->retailIncome($startDate, $endDate);
         
         foreach ($retailIncomes as $row){
-            $finOpu = $this->getFinOpu($period, $row['companyId'], FinOpu::STATUS_FACT);
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($row['companyId']);
+            $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
             $finOpu->setRevenueRetail($row['revenue']);
             $finOpu->setPurchaseRetail($row['purchase']);
             
@@ -162,14 +165,16 @@ class FinManager {
      */
     public function incomeTp($period)
     {
-        $startDate = date('y-m-01', strtotime($period));
-        $endDate = date('y-m-d 23:59:59', strtotime($period.' last day of month'));
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
         
         $tpIncomes = $this->entityManager->getRepository(FinOpu::class)
                 ->tpIncome($startDate, $endDate);
         
         foreach ($tpIncomes as $row){
-            $finOpu = $this->getFinOpu($period, $row['companyId'], FinOpu::STATUS_FACT);
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($row['companyId']);
+            $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
             $finOpu->setRevenueTp($row['revenue']);
             $finOpu->setPurchaseTp($row['purchase']);
             $finOpu->setCostTp($row['cost']);
