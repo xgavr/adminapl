@@ -1,7 +1,8 @@
 <?php
 $this->headTitle('Прибыли и убытки');
 
-$this->mainMenu()->setActiveItemId('opu');
+$this->mainMenu()->setActiveItemId('report');
+$this->mainMenu()->setActiveUrl($this->url('opu'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
