@@ -58,4 +58,5 @@ return [
     'Api',
     'Ai',
     'Search',
+    'Fin',
 ];

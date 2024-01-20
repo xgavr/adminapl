@@ -84,7 +84,8 @@
             "Cash\\": "module/Cash/src/",
             "Api\\": "module/Api/src/",
             "Ai\\": "module/Ai/src/",
-            "Search\\": "module/Search/src/"
+            "Search\\": "module/Search/src/",
+            "Fin\\": "module/Fin/src/"
         }
     },
     "autoload-dev": {

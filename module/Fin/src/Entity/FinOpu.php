@@ -1,0 +1,413 @@
+<?php
+namespace Fin\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Company\Entity\Legal;
+
+/**
+ * This class represents a finopy.
+ * @ORM\Entity(repositoryClass="\Fin\Repository\FinRepository")
+ * @ORM\Table(name="fin_opu")
+ */
+class FinOpu
+{
+    const STATUS_FACT       = 1; // fact.
+    const STATUS_PLAN      = 2; // plan.
+    
+    /**
+     * @ORM\Id
+     * @ORM\Column(name="id")
+     * @ORM\GeneratedValue
+     */
+    protected $id;
+
+    /** 
+     * @ORM\Column(name="period")  
+     */
+    protected $period;
+    
+    /** 
+     * @ORM\Column(name="status")  
+     */
+    protected $status;
+
+    /** 
+     * @ORM\Column(name="revenue_retail")  
+     */
+    protected $revenueRetail;
+
+    /** 
+     * @ORM\Column(name="revenue_tp")  
+     */
+    protected $revenueTp;
+
+    /** 
+     * @ORM\Column(name="revenue_total")  
+     */
+    protected $revenueTotal;
+
+    /** 
+     * @ORM\Column(name="purchase_retail")  
+     */
+    protected $purchaseRetail;
+
+    /** 
+     * @ORM\Column(name="purchase_tp")  
+     */
+    protected $purchaseTp;
+
+    /** 
+     * @ORM\Column(name="purchase_total")  
+     */
+    protected $purchaseTotal;
+
+    /** 
+     * @ORM\Column(name="cost_retail")  
+     */
+    protected $costRetail;
+
+    /** 
+     * @ORM\Column(name="cost_tp")  
+     */
+    protected $costTp;
+
+    /** 
+     * @ORM\Column(name="cost_fix")  
+     */
+    protected $costFix;
+
+    /** 
+     * @ORM\Column(name="cost_total")  
+     */
+    protected $costTotal;
+
+    /** 
+     * @ORM\Column(name="zp_retail")  
+     */
+    protected $zpRetail;
+
+    /** 
+     * @ORM\Column(name="zp_tp")  
+     */
+    protected $zpTp;
+
+    /** 
+     * @ORM\Column(name="zp_adm")  
+     */
+    protected $zpAdm;
+
+    /** 
+     * @ORM\Column(name="zp_total")  
+     */
+    protected $zpTotal;
+
+    /** 
+     * @ORM\Column(name="profit")  
+     */
+    protected $profit;
+
+    /** 
+     * @ORM\Column(name="tax")  
+     */
+    protected $tax;
+
+    /** 
+     * @ORM\Column(name="fund")  
+     */
+    protected $fund;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="finOpus") 
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
+    private $company;
+    
+    /**
+     * Constructor.
+     */
+    public function __construct() 
+    {
+    }
+    
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getPeriod() {
+        return $this->period;
+    }
+
+    public function getStatus() {
+        return $this->status;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_FACT => 'Факт',
+            self::STATUS_PLAN => 'План'
+        ];
+    }    
+    
+    /**
+     * Returns contract status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
+    public function getRevenueRetail() {
+        return $this->revenueRetail;
+    }
+
+    public function getRevenueTp() {
+        return $this->revenueTp;
+    }
+
+    public function getRevenueTotal() {
+        return $this->revenueTotal;
+    }
+
+    public function getPurchaseRetail() {
+        return $this->purchaseRetail;
+    }
+
+    public function getPurchaseTp() {
+        return $this->purchaseTp;
+    }
+
+    public function getPurchaseTotal() {
+        return $this->purchaseTotal;
+    }
+
+    public function getCostRetail() {
+        return $this->costRetail;
+    }
+
+    public function getCostTp() {
+        return $this->costTp;
+    }
+
+    public function getCostFix() {
+        return $this->costFix;
+    }
+
+    public function getCostTotal() {
+        return $this->costTotal;
+    }
+
+    public function getZpRetail() {
+        return $this->zpRetail;
+    }
+
+    public function getZpTp() {
+        return $this->zpTp;
+    }
+
+    public function getZpAdm() {
+        return $this->zpAdm;
+    }
+
+    public function getZpTotal() {
+        return $this->zpTotal;
+    }
+
+    public function getProfit() {
+        return $this->profit;
+    }
+
+    public function getTax() {
+        return $this->tax;
+    }
+
+    public function getFund() {
+        return $this->fund;
+    }
+
+    public function setId($id) {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function setPeriod($period) {
+        $this->period = $period;
+        return $this;
+    }
+
+    public function setStatus($status) {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function setRevenueRetail($revenueRetail) {
+        $this->revenueRetail = $revenueRetail;
+        return $this;
+    }
+
+    public function setRevenueTp($revenueTp) {
+        $this->revenueTp = $revenueTp;
+        return $this;
+    }
+
+    public function setRevenueTotal($revenueTotal) {
+        $this->revenueTotal = $revenueTotal;
+        return $this;
+    }
+
+    public function setPurchaseRetail($purchaseRetail) {
+        $this->purchaseRetail = $purchaseRetail;
+        return $this;
+    }
+
+    public function setPurchaseTp($purchaseTp) {
+        $this->purchaseTp = $purchaseTp;
+        return $this;
+    }
+
+    public function setPurchaseTotal($purchaseTotal) {
+        $this->purchaseTotal = $purchaseTotal;
+        return $this;
+    }
+
+    public function setCostRetail($costRetail) {
+        $this->costRetail = $costRetail;
+        return $this;
+    }
+
+    public function setCostTp($costTp) {
+        $this->costTp = $costTp;
+        return $this;
+    }
+
+    public function setCostFix($costFix) {
+        $this->costFix = $costFix;
+        return $this;
+    }
+
+    public function setCostTotal($costTotal) {
+        $this->costTotal = $costTotal;
+        return $this;
+    }
+
+    public function setZpRetail($zpRetail) {
+        $this->zpRetail = $zpRetail;
+        return $this;
+    }
+
+    public function setZpTp($zpTp) {
+        $this->zpTp = $zpTp;
+        return $this;
+    }
+
+    public function setZpAdm($zpAdm) {
+        $this->zpAdm = $zpAdm;
+        return $this;
+    }
+
+    public function setZpTotal($zpTotal) {
+        $this->zpTotal = $zpTotal;
+        return $this;
+    }
+
+    public function setProfit($profit) {
+        $this->profit = $profit;
+        return $this;
+    }
+
+    public function setTax($tax) {
+        $this->tax = $tax;
+        return $this;
+    }
+
+    public function setFund($fund) {
+        $this->fund = $fund;
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return Legal
+     */
+    public function getCompany() {
+        return $this->company;
+    }
+
+    /**
+     * 
+     * @param Legal $company
+     * @return $this
+     */
+    public function setCompany($company) {
+        $this->company = $company;
+        return $this;
+    }
+
+    public static function getMarkList()
+    {
+        return [
+            'revenueRetail' => 'Оборот розница',
+            'purchaseRetail' => 'Закупка розница',
+            'incomeRetail' => 'Доход розница',
+            'incomeRetail_' => '',
+            'revenueTp' => 'Оборот ТП',
+            'purchaseTp' => 'Закупка ТП',
+            'costTp' => 'Расходы ТП',
+            'incomeTp' => 'Доход ТП',
+            'incomeTp_' => '',
+            'incomeTotal' => 'Доход всего',
+            'incomeTotal_' => '',
+            'costRetail' => 'Расходы розница',
+            'costFix' => 'Расходы постоянные',
+            'zp_' => '',
+            'zpRetail' => 'Зарплата розница',
+            'zpTp' => 'Зарплата ТП',
+            'zpAdm' => 'Зарплата администрации',
+            'profit_' => '',
+            'profit' => 'Прибыль',
+            'tax' => 'Налог',
+            'fund' => 'Фонды',
+        ];    
+    }
+    
+    /**
+     * Массив для отчета
+     * @return array
+     */
+    public static function emptyOpuYear()
+    {
+        $result = [];
+        foreach (self::getMarkList() as $key=>$value){
+             $resultRow['key'] = $key;
+             $resultRow['mark'] = $value;
+             $resultRow['01'] = '';
+             $resultRow['02'] = '';
+             $resultRow['03'] = '';
+             $resultRow['04'] = '';
+             $resultRow['05'] = '';
+             $resultRow['06'] = '';
+             $resultRow['07'] = '';
+             $resultRow['08'] = '';
+             $resultRow['09'] = '';
+             $resultRow['10'] = '';
+             $resultRow['11'] = '';
+             $resultRow['12'] = '';
+             $result[$key] = $resultRow;
+        }
+        
+        return $result;
+    }
+}
+
+
+
