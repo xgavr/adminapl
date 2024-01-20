@@ -61,7 +61,7 @@ class OpuController extends AbstractActionController
                 
         $data = $this->entityManager->getRepository(FinOpu::class)
                         ->findOpu($startDate, $endDate);
-                var_dump($data); exit;
+        
         $result = FinOpu::emptyOpuYear();
         foreach ($data as $row){
             foreach ($row as $key => $value){
