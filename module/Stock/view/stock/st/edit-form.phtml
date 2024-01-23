@@ -446,10 +446,10 @@ if ($st){
     function pgActiveFormatter(value, row){
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs table-row-remove"';
+        btn += ' class="btn btn-xs table-row-remove"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
-        btn += ' onclick="removeTableRowByUniqueId('+value+', \'stgoodtable\')">';
+        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
         btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
