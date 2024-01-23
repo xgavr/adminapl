@@ -605,7 +605,7 @@ class Vt {
             'docDate' => $this->getDocDateAtomFormat(),
             'docNo' => $this->getDocNo(),
             'info' => $this->getInfo(),
-            'company' => $this->getCompany()->toArray(),
+            //'company' => $this->getCompany()->toArray(),
             'office' => $this->getOffice()->toArray(),
             'status' => $this->getStatus(),
             'statusDoc' => $this->getStatusDoc(),

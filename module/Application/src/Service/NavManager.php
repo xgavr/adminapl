@@ -453,6 +453,31 @@ class NavManager
                     ];
                 }
             }
+            
+            //Zp
+            if ($this->rbacManager->isGranted(null, 'zp.manage')) {
+                $zpDropdownItems = [];
+    
+                $zpDropdownItems[] = [
+                            'id' => 'zp',
+                            'label' => 'Виды начислений',
+                            'link' => $url('accrual')
+                        ];
+                                
+                $zpDropdownItems[] = [
+                            'id' => 'zp',
+                            'label' => 'Штатное расписание',
+                            'link' => $url('position')
+                        ];
+                                
+                if (count($zpDropdownItems)!=0) {
+                    $items[] = [
+                        'id' => 'zp',
+                        'label' => 'Зарплата',
+                        'dropdown' => $zpDropdownItems
+                    ];
+                }
+            }
 
             // Determine which items must be displayed in Admin dropdown.
             $useradminDropdownItems = [];

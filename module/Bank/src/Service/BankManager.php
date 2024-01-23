@@ -283,32 +283,38 @@ class BankManager
                         $rrn = !empty($row[8]) ? $row[8]:null;
                         
                         if (empty($rrn) && !empty($cart) && $amount < 0){//возврат
-                            $acq = $this->entityManager->getRepository(Acquiring::class)
+                            $foundAcq = $this->entityManager->getRepository(Acquiring::class)
                                     ->findOneBy(['cart' => $cart], ['transDate' => 'desc']);
-                            if ($acq){
-                                $rrn = $acq->getRrn();
+                            if ($foundAcq){
+                                $rrn = $foundAcq->getRrn();
                             }        
+                        }
+                        
+                        if (empty($rrn) && !empty($cart) && $amount > 0){//оплата без rrn почемуто
+                            $acq = $this->entityManager->getRepository(Acquiring::class)
+                                    ->findOneBy(['cart' => $cart, 'output' => $amount]);
+                            $rrn = 'не указан';
                         }
                         
                         if ($point && $rrn && $amount){
                             $acq = $this->entityManager->getRepository(Acquiring::class)
                                     ->findOneBy(['rrn' => $rrn, 'output' => $amount]);
+                        }    
+                        
+                        if ($acq == null && $rrn && !empty($cart)){
+                            $acq = new Acquiring();
+                            $acq->setCart($cart);
+                            $acq->setAmount($amount);
+                            $acq->setOutput($amount);
+                            $acq->setComiss(0);
+                            $acq->setOperType($operType);
+                            $acq->setOperDate($dateOper);
+                            $acq->setTransDate($dateOper);
+                            $acq->setRrn($rrn);
+                            $acq->setPoint($point);
 
-                            if ($acq == null){
-                                $acq = new Acquiring();
-                                $acq->setCart($cart);
-                                $acq->setAmount($amount);
-                                $acq->setOutput($amount);
-                                $acq->setComiss(0);
-                                $acq->setOperType($operType);
-                                $acq->setOperDate($dateOper);
-                                $acq->setTransDate($dateOper);
-                                $acq->setRrn($rrn);
-                                $acq->setPoint($point);
-
-                                $this->entityManager->persist($acq);
-                                $this->entityManager->flush();                    
-                            }    
+                            $this->entityManager->persist($acq);
+                            $this->entityManager->flush();                    
                         }    
                     }                    
                 }

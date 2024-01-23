@@ -85,7 +85,8 @@
             "Api\\": "module/Api/src/",
             "Ai\\": "module/Ai/src/",
             "Search\\": "module/Search/src/",
-            "Fin\\": "module/Fin/src/"
+            "Fin\\": "module/Fin/src/",
+            "Zp\\": "module/Zp/src/"
         }
     },
     "autoload-dev": {

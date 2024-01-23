@@ -1,0 +1,48 @@
+<script>
+   //формы zp
+   
+    $(function () {
+        $('#ok').click(function () {
+            refreshTable();
+        });
+        
+        $(".inputclear").click(function(){
+            $(".enter-search").val('');
+            refreshTable();
+        });
+
+        $(document).on('click', '.accrual-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'accrualModal',
+                url: url
+                //width: '1440px'
+            });
+        });  
+
+        $(document).on('click', '.position-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'positionModal',
+                url: url
+                //width: '1440px'
+            });
+        });  
+
+        $(document).on('click', '.ot-good-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            var uniqueId = $(this).attr('unique-id');
+            if (uniqueId){
+                var row = $('#otgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
+                url = url+'?'+$.param(row);
+            }    
+            showFormDialog({
+                id: 'otGoodModal',
+                url: url,
+                zIndex: 9999
+            });
+        });  
+        
+    });
+    
+</script>

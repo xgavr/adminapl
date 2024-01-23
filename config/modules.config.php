@@ -59,4 +59,5 @@ return [
     'Ai',
     'Search',
     'Fin',
+    'Zp',
 ];

@@ -45,7 +45,7 @@ class OpuController extends AbstractActionController
                 ->companies();
         
         return new ViewModel([
-            'years' => range(date('Y'), 2012),
+            'years' => range(date('Y'), 2024),
             'companies' => $companies,
         ]);
     }
