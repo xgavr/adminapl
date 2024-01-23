@@ -365,8 +365,8 @@ if ($ot){
         btn += ' class="btn btn-danger btn-xs table-row-remove"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
-        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += ' onclick="removeTableRowByUniqueId('+value+', \'otgoodtable\')">';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
     }    

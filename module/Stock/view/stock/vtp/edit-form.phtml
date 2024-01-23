@@ -456,8 +456,8 @@ if ($vtp){
         btn += ' class="btn btn-default btn-xs table-row-remove"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
-        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += ' onclick="removeTableRowByUniqueId('+value+', \'vtpgoodtable\')">';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
     }    
