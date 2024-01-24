@@ -281,6 +281,7 @@ class BankManager
                         $amount = $floatFilter->filter(!empty($row[5]) ? $row[5]:null);
                         $cart = !empty($row[6]) ? $row[6]:null;
                         $rrn = !empty($row[8]) ? $row[8]:null;
+                        $acq = null;
                         
                         if (empty($rrn) && !empty($cart) && $amount < 0){//возврат
                             $foundAcq = $this->entityManager->getRepository(Acquiring::class)
