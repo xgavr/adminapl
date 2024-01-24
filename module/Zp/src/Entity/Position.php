@@ -42,16 +42,23 @@ class Position
     protected $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Zp\Entity\Position", inversedBy="positions") 
+     * @ORM\ManyToOne(targetEntity="Zp\Entity\Position", inversedBy="childPositions") 
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
     private $parentPosition;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Zp\Entity\Position", mappedBy="parentPosition") 
+     * @ORM\JoinColumn(name="id", referencedColumnName="parent_id")
+     */
+    private $childPositions;
     
     /**
      * Constructor.
      */
     public function __construct() 
     {
+       $this->childPositions = new ArrayCollection();
     }
     
     public function getId() {
@@ -142,6 +149,22 @@ class Position
         return $this;
     }
 
+    /**
+     * 
+     * @return array
+     */
+    public function getChildPositions() {
+        return $this->childPositions;
+    }
+
+    /**
+     * 
+     * @param Position $position
+     */
+    public function addChildPosition($position)
+    {
+        $this->childPositions[] = $position;
+    }
 }
 
 
