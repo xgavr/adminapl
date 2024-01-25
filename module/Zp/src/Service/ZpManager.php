@@ -104,7 +104,7 @@ class ZpManager {
         $position->setName($data['name']);
         $position->setStatus(empty($data['status']) ? Position::STATUS_ACTIVE:$data['status']);
         $position->setParentPosition(empty($data['parentPosition']) ? null:$data['parentPosition']);
-        $position->setNum($data['num']);
+        $position->setNum(empty($data['num']) ? 0:$data['num']);
         
         $parentPosition = $data['parentPosition'];
 
@@ -154,7 +154,7 @@ class ZpManager {
         $position->setName($data['name']);
         $position->setStatus(empty($data['status']) ? Position::STATUS_ACTIVE:$data['status']);
         $position->setParentPosition(empty($data['parentPosition']) ? null:$data['parentPosition']);
-        $position->setNum($data['num']);
+        $position->setNum(empty($data['num']) ? 0:$data['num']);
         
         $parentPosition = $data['parentPosition'];
         
