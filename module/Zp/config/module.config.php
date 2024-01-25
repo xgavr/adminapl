@@ -102,7 +102,7 @@ return [
     ],    
     'view_manager' => [
         'template_path_stack' => [
-            'Fin' => __DIR__ . '/../view',
+            'Zp' => __DIR__ . '/../view',
         ],
     ],
     'doctrine' => [
