@@ -71,11 +71,18 @@ class Position
     private $childPositions;
     
     /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\Personal", mappedBy="position")
+    * @ORM\JoinColumn(name="id", referencedColumnName="position_id")
+     */
+    private $personal;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
        $this->childPositions = new ArrayCollection();
+       $this->personal = new ArrayCollection();
     }
     
     public function getId() {
@@ -209,7 +216,7 @@ class Position
         $this->company = $company;
         return $this;
     }
-
+    
     public function getNum() {
         return $this->num;
     }
@@ -218,6 +225,15 @@ class Position
         $this->num = $num;
         return $this;
     }
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getPersonal() {
+        return $this->personal;
+    }
+    
 }
 
 

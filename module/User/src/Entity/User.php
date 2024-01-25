@@ -108,6 +108,12 @@ class User
     private $office;    
     
     /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\Personal", mappedBy="user")
+    * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
+     */
+    private $personal;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -115,6 +121,7 @@ class User
         $this->roles = new ArrayCollection();
         $this->contacts = new ArrayCollection();
         $this->clients = new ArrayCollection();
+        $this->personal = new ArrayCollection();
     }
     
     /**
@@ -519,6 +526,14 @@ class User
         return $this->office;
     }
     
+    /**
+     * 
+     * @return array
+     */
+    public function getPersonal() {
+        return $this->personal;
+    }
+
     /**
      * Sets  office.
      * @param Office $office     

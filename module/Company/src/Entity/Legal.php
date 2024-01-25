@@ -157,6 +157,12 @@ class Legal {
     private $orders;
     
     /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\Personal", mappedBy="company")
+    * @ORM\JoinColumn(name="id", referencedColumnName="company_id")
+     */
+    private $personal;
+    
+    /**
     * @ORM\OneToMany(targetEntity="Company\Entity\LegalLocation", mappedBy="legal")
     * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
      * @ORM\OrderBy({"status" = "ASC", "id" = "DESC"})
@@ -172,6 +178,7 @@ class Legal {
         $this->contracts = new ArrayCollection();
         $this->contacts = new ArrayCollection();
         $this->locations = new ArrayCollection();
+        $this->personal = new ArrayCollection();
     }
     
     
@@ -861,6 +868,14 @@ class Legal {
         return $this->orders;
     }    
     
+    /**
+     * 
+     * @return array
+     */
+    public function getPersonal() {
+        return $this->personal;
+    }
+
     /*
      * Возвращает связанный location на дату.
      * @param integer $locationStatus
