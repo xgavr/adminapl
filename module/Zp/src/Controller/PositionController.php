@@ -112,6 +112,7 @@ class PositionController extends AbstractActionController
         if ($positionId > 0){
             $position = $this->entityManager->getRepository(Position::class)
                     ->find($positionId);
+            $companyId = $position->getCompany()->getId();
         }    
         
         $parentPositionList = ['это группа'];

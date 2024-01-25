@@ -121,7 +121,7 @@ $form->prepare();
         var data = serializeForm('#position-form');
         $.ajax({
             type: 'POST',
-            url: '/position/edit-form/<?= ($position) ? $position->getId():"" ?>,
+            url: '/position/edit-form/<?= ($position) ? $position->getId():"" ?>?company='+$('#companySelectForm').val(),
             data: $.param(data)
         })
             .done(function (data) {
