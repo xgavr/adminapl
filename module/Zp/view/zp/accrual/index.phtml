@@ -46,6 +46,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="aplId" data-sortable="false" data-align="right" data-width="10">Apl Id</th>
                      <th data-field="name" data-sortable="false" >Наименование</th>
                      <th data-field="basis" data-sortable="false" data-formatter="basisFormatter">База</th>
+                     <th data-field="kind" data-sortable="false" data-formatter="kindFormatter">Способ расчета</th>
                      <th data-field="comment" data-sortable="false">Комментарий</th>
                      <th data-field="active" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
@@ -104,6 +105,11 @@ $this->pageBreadcrumbs()->setItems([
     
     function basisFormatter(value, row){
         var basises = <?= Encoder::encode(Accrual::getBasisList())?>;
+        return basises[value];
+    }    
+    
+    function kindFormatter(value, row){
+        var basises = <?= Encoder::encode(Accrual::getKindList())?>;
         return basises[value];
     }    
     

@@ -3,6 +3,9 @@ namespace Zp\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Zp\Entity\PersonalAccrual;
+use Zp\Entity\Position;
+use User\Entity\User;
 
 /**
  * This class represents a personal.
@@ -11,8 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Personal
 {
-    const STATUS_ACTIVE       = 1; //.
-    const STATUS_RETIRED      = 2; // .
+    const STATUS_ACTIVE       = 1; //принят
+    const STATUS_RETIRED      = 2; //уволен
+    const STATUS_UPDATE      = 3; //изменение
     
     /**
      * @ORM\Id
@@ -46,6 +50,11 @@ class Personal
      */
     protected $status;
 
+    /** 
+     * @ORM\Column(name="position_num")  
+     */
+    protected $positionNum;
+
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="personal") 
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
@@ -53,10 +62,29 @@ class Personal
     private $company;
     
     /**
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="personal") 
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Zp\Entity\Position", inversedBy="personal") 
+     * @ORM\JoinColumn(name="position_id", referencedColumnName="id")
+     */
+    private $position;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalAccrual", mappedBy="personal") 
+     * @ORM\JoinColumn(name="id", referencedColumnName="personal_id")
+     */
+    private $personalAccruals;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
+        $personalAccruals = new ArrayCollection();
     }
     
     public function getId() {
@@ -65,10 +93,6 @@ class Personal
     
     public function getAplId() {
         return $this->aplId;
-    }
-    
-    public function getName() {
-        return $this->name;
     }
     
     public function getComment() {
@@ -86,8 +110,9 @@ class Personal
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Активный',
-            self::STATUS_RETIRED => 'Удален',
+            self::STATUS_ACTIVE => 'Принят',
+            self::STATUS_UPDATE => 'Изменение',
+            self::STATUS_RETIRED => 'Увольнение',
         ];
     }    
 
@@ -121,11 +146,6 @@ class Personal
         return $this;
     }
 
-    public function setName($name) {
-        $this->name = $name;
-        return $this;
-    }
-
     public function setComment($comment) {
         $this->comment = $comment;
         return $this;
@@ -138,6 +158,15 @@ class Personal
     
     public function setAplId($aplId) {
         $this->aplId = $aplId;
+        return $this;
+    }
+    
+    public function getPositionNum() {
+        return $this->positionNum;
+    }
+
+    public function setPositionNum($positionNum) {
+        $this->positionNum = $positionNum;
         return $this;
     }
     
@@ -156,7 +185,58 @@ class Personal
         return $this;
     }
 
+    /**
+     * 
+     * @return User
+     */
+    public function getUser() {
+        return $this->user;
+    }
 
+    /**
+     * 
+     * @param User $user
+     * @return $this
+     */
+    public function setUser($user) {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * 
+     * @return Position
+     */
+    public function getPosition() {
+        return $this->position;
+    }
+
+    /**
+     * 
+     * @param Position $position
+     * @return $this
+     */
+    public function setPosition($position) {
+        $this->position = $position;
+        return $this;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function getPersonalAccruals() {
+        return $this->personalAccruals;
+    }
+
+    /**
+     * 
+     * @param PersonalAccrual $personalAccrual
+     */
+    public function addPersonalAccrual($personalAccrual)
+    {
+        $this->personalAccruals[] = $personalAccrual;
+    }
 }
 
 

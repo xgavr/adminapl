@@ -1,0 +1,117 @@
+<?php
+use Zp\Entity\PersonalAccrual;
+
+$form = $this->form;
+
+$form->get('rate')->setAttributes([
+    'class'=>'form-control', 
+    'data-inputmask' => "'alias': 'currency', 'min': 0, 'groupSeparator': ''"
+    ]);
+
+$form->get('accrual')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'personal-accrual-submit']);
+
+$form->prepare();
+
+?>
+
+
+<?= $this->form()->openTag($form); ?>
+            
+<div class="modal-header">
+    <h5 class="modal-title" id="stModalLabel">Плановое начисление</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('accrual')); ?>
+                <?= $this->formElement($form->get('accrual')); ?>
+                <?= $this->formElementErrors($form->get('accrual')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-6">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-6">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('rate')); ?>
+                <?= $this->formElement($form->get('rate')); ?>
+                <?= $this->formElementErrors($form->get('rate')); ?>                  
+            </div>                        
+        </div>                                            
+    </div>        
+
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="personal-accrual-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+            
+<script>
+    $('#personal-accrual-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/personal/accrual-edit-form/',
+            data: $('#personal-accrual-form').serialize()
+        })
+            .done(function (answer) {
+//                console.log(answer);
+                if (answer.result == 'ok'){
+                    var data = serializeForm('#personal-accrual-form');
+                    var accrual = {
+                        id: answer.accrual.id,
+                        name: answer.accrual.name
+                    };
+                    var row = {
+                        accrual: accrual,
+                        status: data.status,
+                        rate: data.rate
+                    };
+
+                    <?php if($rowNo): ?>
+                        $('#accrualtable').bootstrapTable('updateByUniqueId', {id: <?= $rowNo ?>, row: row});
+                    <?php else:?>
+                        var newRowNo = getNewTableUniqueId('accrualtable', 'rowNo');
+                        row.rowNo = newRowNo;
+                        var rows = [];
+                        rows.push(row);
+                        $('#accrualtable').bootstrapTable('prepend', rows);                        
+                    <?php endif; ?>        
+                    
+                    $('#personalAccrualModal').modal('hide');
+                } else {
+                    $('#personalAccrualModal .modal-content').html(answer);
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });
+    });    
+    
+    $( document ).ready(function() {
+        $("#rate").inputmask();
+    });
+</script>

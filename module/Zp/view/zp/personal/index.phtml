@@ -1,15 +1,15 @@
 <?php
-use Zp\Entity\Accrual;
+use Zp\Entity\Personal;
 use Laminas\Json\Encoder;
 
-$this->headTitle('Виды начислений');
+$this->headTitle('Плановые начисления');
 
 $this->mainMenu()->setActiveItemId('zp');
-$this->mainMenu()->setActiveUrl($this->url('accrual'));
+$this->mainMenu()->setActiveUrl($this->url('personal'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Виды начислений' => $this->url('accrual')
+            'Плановые начисления' => $this->url('personal')
             ]);  
 
 ?>
@@ -19,15 +19,32 @@ $this->pageBreadcrumbs()->setItems([
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <button class="btn btn-default accrual-modal-show" type="button" modal-url="/accrual/edit-form">
+                    <button class="btn btn-default personal-modal-show" type="button" modal-url="/personal/edit-form">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
+                </div>    
+                <div class="form-group">
+                    <select id="companySelect" name="company" style="width: 200px" class="form-control cookie-control">
+                        <!--<option selected>все компании</option>-->
+                        <?php foreach ($companies as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="userSelect" name="user" style="width: 200px" class="form-control cookie-control">
+                        <!--<option selected>все компании</option>-->
+                        <option>все сотрудники</option>
+                        <?php foreach ($users as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
                 </div>    
             </div>
         </div>    
         <table id="table" 
             data-toggle="table" 
-            data-url="/accrual/content"
+            data-url="/personal/content"
             data-side-pagination="server"
             data-pagination="false" 
             data-page-list="[5, 10, 20, 50]"
@@ -43,9 +60,11 @@ $this->pageBreadcrumbs()->setItems([
             <thead>
                 <tr>
                      <th data-field="id" data-sortable="true" data-align="right" data-width="10">Id</th>
-                     <th data-field="aplId" data-sortable="false" data-align="right" data-width="10">Apl Id</th>
-                     <th data-field="name" data-sortable="false" >Наименование</th>
-                     <th data-field="basis" data-sortable="false" data-formatter="basisFormatter">База</th>
+                     <th data-field="docDate" data-sortable="true" data-width="10" data-formatter="dateFormatter">Дата</th>
+                     <th data-field="user.fullName">Сотрудник</th>
+                     <th data-field="position.name">Должность</th>
+                     <th data-field="positionNum" data-sortable="false" data-width="10">Ставка</th>
+                     <th data-field="status" data-sortable="false" data-width="10" data-formatter="statusFormatter">Статус</th>
                      <th data-field="comment" data-sortable="false">Комментарий</th>
                      <th data-field="active" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
@@ -71,12 +90,18 @@ $this->pageBreadcrumbs()->setItems([
         });
         $table.on('load-success.bs.table', function (e, res) {
         });                
+        $(document).on('change', '#companySelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#userSelect', function (e) {
+            refreshTable();
+        });
     });    
     
     function rowStyle(row){
         var retired = 'tablerow';
 
-        if (row.status === '<?= Accrual::STATUS_RETIRED?>'){
+        if (row.status === '<?= Personal::STATUS_RETIRED?>'){
            retired += ' retired';
         }
         
@@ -102,16 +127,21 @@ $this->pageBreadcrumbs()->setItems([
         return params;
     }
     
-    function basisFormatter(value, row){
-        var basises = <?= Encoder::encode(Accrual::getBasisList())?>;
-        return basises[value];
+    function dateFormatter(value){
+        var date = new Date(value);
+        return $.format.date(date, "dd.MM.yyyy");
+    }    
+    
+    function statusFormatter(value, row){
+        var statuses = <?= Encoder::encode(Personal::getStatusList())?>;
+        return statuses[value];
     }    
     
     function activeFormatter(value, row){
-        var url = '/accrual/edit-form/'+row.id;
+        var url = '/personal/edit-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs accrual-modal-show"';
+        btn += ' class="btn btn-default btn-xs personal-modal-show"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';

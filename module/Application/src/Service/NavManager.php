@@ -469,6 +469,11 @@ class NavManager
                             'label' => 'Штатное расписание',
                             'link' => $url('position')
                         ];
+                $zpDropdownItems[] = [
+                            'id' => 'zp',
+                            'label' => 'Плановые начисления',
+                            'link' => $url('personal')
+                        ];
                                 
                 if (count($zpDropdownItems)!=0) {
                     $items[] = [

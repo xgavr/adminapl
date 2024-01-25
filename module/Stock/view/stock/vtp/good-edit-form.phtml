@@ -94,13 +94,13 @@ $docName = 'Новый';
                         id: answer.good.id,
                         code: answer.good.code,
                         name: answer.good.name,
-                        producer: {name: answer.good.producer},
-                    }
+                        producer: {name: answer.good.producer}
+                    };
                     var row = {
                         good: good,
                         amount: data.amount,
                         quantity: data.quantity,
-                        price: Math.round(data.amount*100/data.quantity)/100,
+                        price: Math.round(data.amount*100/data.quantity)/100
                     };
 
                     <?php if($rowNo): ?>

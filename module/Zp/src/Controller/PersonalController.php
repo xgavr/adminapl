@@ -12,6 +12,11 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Zp\Entity\Personal;
 use Zp\Form\PersonalForm;
+use Company\Entity\Legal;
+use User\Entity\User;
+use Zp\Entity\Accrual;
+use Zp\Form\PersonalAccrualForm;
+use Zp\Entity\Position;
 
 
 class PersonalController extends AbstractActionController
@@ -41,7 +46,14 @@ class PersonalController extends AbstractActionController
     
     public function indexAction()
     {
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
+        $users = $this->entityManager->getRepository(User::class)
+                ->findBy(['status' => User::STATUS_ACTIVE]);
+        
         return new ViewModel([
+            'companies' => $companies,
+            'users' => $users,
         ]);
     }
     
@@ -49,13 +61,18 @@ class PersonalController extends AbstractActionController
     {
         	        
         $q = $this->params()->fromQuery('search');
+        $company = $this->params()->fromQuery('company');
+        $user = $this->params()->fromQuery('user');
+        $position = $this->params()->fromQuery('position');
+        $status = $this->params()->fromQuery('status');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
         
         $params = [
-            'q' => $q, 'sort' => $sort, 'order' => $order, 
+            'q' => $q, 'company' => $company, 'sort' => $sort, 'order' => $order, 
+            'user' => $user, 'position' => $position, 'status' => $status, 
         ];
         
         $query = $this->entityManager->getRepository(Personal::class)
@@ -80,15 +97,31 @@ class PersonalController extends AbstractActionController
     
     public function editFormAction()
     {
-        $accrualId = (int)$this->params()->fromRoute('id', -1);
+        $personalId = (int)$this->params()->fromRoute('id', -1);
+        $companyId = $this->params()->fromQuery('company');
+        $userId = $this->params()->fromQuery('user');
         
-        $accrual = null;
-        if ($accrualId > 0){
-            $accrual = $this->entityManager->getRepository(Accrual::class)
-                    ->find($accrualId);
+        $personal = null;
+        if ($personalId > 0){
+            $personal = $this->entityManager->getRepository(Personal::class)
+                    ->find($personalId);
         }    
                 
-        $form = new AccrualForm();
+        $companyList = [];
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
+        foreach ($companies as $company){
+            $companyList[$company->getId()] = $company->getname();
+        }    
+        
+        $form = new PersonalForm();
+        $form->get('company')->setValueOptions($companyList);
+        $form->get('company')->setValue($companyId);
+        $form->get('user')->setValueOptions($this->entityManager->
+                getRepository(User::class)->userListForm(['status' => User::STATUS_ACTIVE, 'all' => 'веберете сотрудника']));
+        $form->get('position')->setValueOptions($this->entityManager->
+                getRepository(Position::class)->positionListForm(['status' => Position::STATUS_ACTIVE, 'company' => $companyId, 'all' => 'веберете должность']));
+        $form->get('user')->setValue($userId);
 
         if ($this->getRequest()->isPost()) {
             
@@ -96,11 +129,24 @@ class PersonalController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
+                
+                if (is_numeric($data['company'])){
+                    $data['company'] = $this->entityManager->getRepository(Legal::class)
+                            ->find($data['company']);
+                }
+                if (is_numeric($data['user'])){
+                    $data['user'] = $this->entityManager->getRepository(User::class)
+                            ->find($data['user']);
+                }
+                if (is_numeric($data['position'])){
+                    $data['position'] = $this->entityManager->getRepository(Position::class)
+                            ->find($data['position']);
+                }
 
-                if ($accrual){
-                    $this->zpManager->updateAccrual($accrual, $data);
+                if ($personal){
+                    $this->zpManager->updatePersonal($personal, $data);
                 } else {
-                    $accrual = $this->zpManager->addAccrual($data);
+                    $personal = $this->zpManager->addPersonal($data);
                 }    
                                 
                 return new JsonModel(
@@ -108,12 +154,14 @@ class PersonalController extends AbstractActionController
                 );           
             }
         } else {
-            if ($accrual){
+            if ($personal){
                 $data = [
-                    'aplId' => $accrual->getAplId(),
-                    'basis' => $accrual->getBasis(),
-                    'name' => $accrual->getName(),
-                    'status' => $accrual->getStatus(),
+                    'aplId' => $personal->getAplId(),
+                    'company' => $personal->getCompany()->getId(),
+                    'user' => $personal->getUser()->getId(),
+                    'position' => $personal->getPosition()->getId(),
+                    'docDate' => $personal->getDocDate(),
+                    'status' => $personal->getStatus(),
                 ];
                 $form->setData($data);
             }    
@@ -122,8 +170,91 @@ class PersonalController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
-            'accrual' => $accrual,
+            'personal' => $personal,
         ]);        
     }    
+    
+    public function accrualContentAction()
+    {
+        	        
+        $personalId = $this->params()->fromRoute('id', -1);
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order');
+        
+        $query = $this->entityManager->getRepository(Accrual::class)
+                        ->findPersonalAccruals($personalId, ['q' => $q, 'sort' => $sort, 'order' => $order]);
+        
+        //$total = count($query->getResult(2));
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel($result);          
+    }            
+    
+    public function accrualEditFormAction()
+    {        
+        $params = $this->params()->fromQuery();
+//        var_dump($params); exit;
+        $accrual = $rowNo = $result = null;
+        
+        if (isset($params['accrual'])){
+            $accrual = $this->entityManager->getRepository(Accrual::class)
+                    ->find($params['accrual']['id']);            
+        }
+        
+        if (isset($params['rowNo'])){
+            $rowNo = $params['rowNo'];
+        }
+        
+        $form = new PersonalAccrualForm();
+                
+        $form->get('accrual')->setValueOptions($this->entityManager->
+                getRepository(Accrual::class)->accrualListForm(['status' => Accrual::STATUS_ACTIVE]))
+                ->setValue(($accrual) ? $accrual->getId():null);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+
+            $form->setData($data);
+            
+            if (isset($data['accrual'])){
+                $accrual = $this->entityManager->getRepository(Accrual::class)
+                        ->find($data['accrual']);            
+            }
+
+            if ($form->isValid()) {
+                $result = 'ok';
+                return new JsonModel([
+                    'result' => $result,
+                    'accrual' => [
+                        'id' => $accrual->getId(),
+                        'name' => $accrual->getName(),
+                    ],
+                ]);        
+            }
+        } else {
+            if ($user && $accrual){
+                $data = [
+                    'accrual' => $accrual->getId(),
+                    'status' => $params['status'],
+                    'rate' => $params['rate'],
+                ];
+                $form->setData($data);
+            }    
+        }        
+
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'rowNo' => $rowNo,
+            'user' => $user,
+            'accrual' => $accrual,
+        ]);        
+    }
     
 }

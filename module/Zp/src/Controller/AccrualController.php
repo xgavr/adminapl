@@ -112,6 +112,7 @@ class AccrualController extends AbstractActionController
                 $data = [
                     'aplId' => $accrual->getAplId(),
                     'basis' => $accrual->getBasis(),
+                    'kind' => $accrual->getKind(),
                     'name' => $accrual->getName(),
                     'status' => $accrual->getStatus(),
                 ];

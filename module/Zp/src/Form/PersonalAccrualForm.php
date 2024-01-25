@@ -9,14 +9,14 @@ namespace Zp\Form;
 
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
-use Zp\Entity\Personal;
+use Zp\Entity\PersonalAccrual;
 
 /**
- * Description of Personal
+ * Description of PersonalAccrual
  *
  * @author Daddy
  */
-class PersonalForm extends Form
+class PersonalAccrualForm extends Form
 {
     
     /**
@@ -26,7 +26,7 @@ class PersonalForm extends Form
     {
                 
         // Определяем имя формы.
-        parent::__construct('personal-form');
+        parent::__construct('personal-accrual-form');
      
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
@@ -41,74 +41,19 @@ class PersonalForm extends Form
     protected function addElements() 
     {
                 
+        // Добавляем поле "rate"
         $this->add([           
             'type'  => 'text',
-            'name' => 'aplId',
+            'name' => 'rate',
             'attributes' => [
+                'id' => 'rate',
+                'value' => 0,
             ],
             'options' => [
-                'label' => 'Apl Id',
-            ],
-        ]);
-        
-        $this->add([           
-            'type'  => 'text',
-            'name' => 'positionNum',
-            'attributes' => [
-                'id' => 'positionNum',
-                'value' => 1,
-                'min' => 0,
-                'max' => 1,
-            ],
-            'options' => [
-                'label' => 'Ставка',
-            ],
-        ]);
-        
-        $this->add([           
-            'type'  => 'date',
-            'name' => 'docDate',
-            'attributes' => [
-                'value' => date('Y-m-d'),
-            ],
-            'options' => [
-                'label' => 'Дата',
-            ],
-        ]);
-        
-        $this->add([           
-            'type'  => 'textarea',
-            'name' => 'comment',
-            'attributes' => [
-                'rows' => 1,
-            ],
-            'options' => [
-                'label' => 'Комментарий',
+                'label' => 'Размер',
             ],
         ]);
 
-        $this->add([           
-            'type'  => 'select',
-            'name' => 'user',
-            'attributes' => [
-                'id' => 'userSelectForm'
-            ],
-            'options' => [
-                'label' => 'Сотрудник',
-            ],
-        ]);
-        
-        $this->add([           
-            'type'  => 'select',
-            'name' => 'position',
-            'attributes' => [
-                'id' => 'positionSelectForm'
-            ],
-            'options' => [
-                'label' => 'Должность',
-            ],
-        ]);
-        
         $this->add([           
             'type'  => 'select',
             'name' => 'status',
@@ -116,18 +61,29 @@ class PersonalForm extends Form
             ],
             'options' => [
                 'label' => 'Статус',
-                'value_options' => Personal::getStatusList(),
+                'value_options' => PersonalAccrual::getStatusList(),
             ],
         ]);
         
+//        $this->add([           
+//            'type'  => 'select',
+//            'name' => 'user',
+//            'attributes' => [
+//                'id' => 'userSelectForm'
+//            ],
+//            'options' => [
+//                'label' => 'Сотрудник',
+//            ],
+//        ]);
+//        
         $this->add([           
             'type'  => 'select',
-            'name' => 'company',
+            'name' => 'accrual',
             'attributes' => [
-                'id' => 'companySelectForm'
+                'id' => 'accrualSelectForm'
             ],
             'options' => [
-                'label' => 'Компания',
+                'label' => 'Вид начисления',
             ],
         ]);
         
@@ -152,8 +108,8 @@ class PersonalForm extends Form
         $this->setInputFilter($inputFilter);
         
         $inputFilter->add([
-                'name'     => 'comment',
-                'required' => false,
+                'name'     => 'rate',
+                'required' => true,
                 'filters'  => [
                     ['name' => 'StringTrim'],                    
                 ],                
@@ -161,14 +117,5 @@ class PersonalForm extends Form
                 ],
             ]);        
 
-        $inputFilter->add([
-                'name'     => 'aplId',
-                'required' => false,
-                'filters'  => [
-                    ['name' => 'StringTrim'],                    
-                ],                
-                'validators' => [
-                ],
-            ]);        
     }    
 }

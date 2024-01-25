@@ -1,9 +1,11 @@
 <?php
-use Zp\Entity\Accrual;
+use Zp\Entity\Personal;
+use Zp\Entity\PersonalAccrual;
+use Laminas\Json\Encoder;
 
 $form = $this->form;
 
-$form->get('name')->setAttributes([
+$form->get('docDate')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -15,16 +17,29 @@ $form->get('comment')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('company')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
-$form->get('basis')->setAttributes([
+$form->get('positionNum')->setAttributes([
+    'class'=>'form-control', 
+    'data-inputmask' => "'alias': 'currency', 'min': 0, 'max': 1, 'groupSeparator': ''"
+    ]);
+
+$form->get('position')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('user')->setAttributes([
     'class'=>'form-control', 
     ]);
 
 
-$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'accrual-submit']);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'personal-submit']);
 
 $form->prepare();
 
@@ -34,7 +49,7 @@ $form->prepare();
 <?= $this->form()->openTag($form); ?>
             
 <div class="modal-header">
-    <h5 class="modal-title" id="stModalLabel">Вид начисления ЗП</h5>
+    <h5 class="modal-title" id="stModalLabel">Плановое начисление</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -42,27 +57,18 @@ $form->prepare();
             
 <div class="modal-body">
     <div class="row">
-        <div class="col-xs-8">                        
+        <div class="col-xs-4">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('name')); ?>
-                <?= $this->formElement($form->get('name')); ?>
-                <?= $this->formElementErrors($form->get('name')); ?>                  
+                <?= $this->formLabel($form->get('docDate')); ?>
+                <?= $this->formElement($form->get('docDate')); ?>
+                <?= $this->formElementErrors($form->get('docDate')); ?>                  
             </div>
         </div>    
         <div class="col-xs-4">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('aplId')); ?>
-                <?= $this->formElement($form->get('aplId')); ?>
-                <?= $this->formElementErrors($form->get('aplId')); ?>                  
-            </div>
-        </div>    
-    </div>    
-    <div class="row">
-        <div class="col-xs-8">                        
-            <div class="form-group">
-                <?= $this->formLabel($form->get('basis')); ?>
-                <?= $this->formElement($form->get('basis')); ?>
-                <?= $this->formElementErrors($form->get('basis')); ?>                  
+                <?= $this->formLabel($form->get('company')); ?>
+                <?= $this->formElement($form->get('company')); ?>
+                <?= $this->formElementErrors($form->get('company')); ?>                  
             </div>
         </div>    
         <div class="col-xs-4">                        
@@ -72,7 +78,68 @@ $form->prepare();
                 <?= $this->formElementErrors($form->get('status')); ?>                  
             </div>
         </div>    
-    </div>        
+    </div>    
+    <div class="row">
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('user')); ?>
+                <?= $this->formElement($form->get('user')); ?>
+                <?= $this->formElementErrors($form->get('user')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-6">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('position')); ?>
+                <?= $this->formElement($form->get('position')); ?>
+                <?= $this->formElementErrors($form->get('position')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('positionNum')); ?>
+                <?= $this->formElement($form->get('positionNum')); ?>
+                <?= $this->formElementErrors($form->get('positionNum')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="accrualtoolbar">
+                <div class="form-inline" role="form">
+                    <button type="button" class="btn btn-default personal-accrual-modal-show" modal-url="/personal/accrual-edit-form">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>    
+            </div>
+            <table id="accrualtable" 
+                data-toggle="accrualtable" 
+                data-url="/personal/accrual-content/<?= ($personal) ? $personal->getId():"" ?>"
+                data-side-pagination="client"
+                data-pagination="true"
+                data-page-size = "50"
+                data-page-list="[5, 10, 20, 50]"
+                data-toolbar="#accrualtoolbar"
+                data-show-refresh="true"
+                data-show-toggle="false"
+                data-query-params="accrualQueryParams"
+                data-response-handler="accrualResponseHandler"
+                data-unique-id = "rowNo"
+                data-classes = "table table-bordered table-hover table-condensed"
+                data-click-to-select="true"
+                >
+                <thead>
+                    <tr>
+                        <th data-checkbox="true"></th>
+                        <th data-field="rowNo" data-type="numeric" data-align="right">N</th>
+                        <th data-field="accrual.name">Начисление</th>
+                        <th data-field="status" data-formatter="statusFormatter">Статус</th>
+                        <th data-field='rate' data-type="numeric" data-always-use-formatter="true" data-editable="true" data-formatter="rateFormatter" data-align="right">Размер</th>
+                        <th data-field="rowNo" data-formatter="accrualActiveFormatter" data-width="10"></th>
+                     </tr>                
+                </thead>
+            </table>
+        </div>
+    </div>    
     <div class="row">
         <div class="col-xs-12">
             <div class="form-group">
@@ -87,27 +154,47 @@ $form->prepare();
 
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-    <button type="submit" class="btn btn-primary" id="accrual-submit">Сохранить</button>
+    <button type="submit" class="btn btn-primary" id="personal-submit">Сохранить</button>
 </div>
 
 <?= $this->form()->closeTag(); ?>
             
 <script>
+    function getFormatedAccrualGood(){
+        var data = $('#accrualtable').bootstrapTable('getData');
+        var result = [];
+        $.each( data, function( index, row ) {
+            var newRow = {
+                accrual: row.accrual.id,
+                status: row.status,
+                rate: row.rate
+            };
+            result.push(newRow);
+        });   
+        return result;
+    }
+
+    //удаление строки из таблицы
+    function removeTableRowByUniqueId(index){
+        $('#accrualtable').bootstrapTable('removeByUniqueId', index);
+    }
+
     function submitForm(){
-        var data = serializeForm('#accrual-form');
+        var data = serializeForm('#personal-form');
+        data.accruals = getFormatedAccrualGood();
         $.ajax({
             type: 'POST',
-            url: '/accrual/edit-form/<?= ($accrual) ? $accrual->getId():"" ?>',
+            url: '/personal/edit-form/<?= ($personal) ? $personal->getId():"" ?>?company='+$('#companySelectForm').val()+'&user='+$('#userSelectForm').val(),
             data: $.param(data)
         })
             .done(function (data) {
                 if (data == 'ok'){
-                    $('#accrualModal').modal('hide');
+                    $('#personalModal').modal('hide');
                     if ($('#table').length){
                         $('#table').bootstrapTable('refresh');
                     }    
                 } else {
-                    $('#accrualModal .modal-content').html(data);                    
+                    $('#personalModal .modal-content').html(data);                    
                 }    
             })
             .fail(function () {
@@ -117,8 +204,14 @@ $form->prepare();
     };
     
     $( document ).ready(function() {
+        $("#positionNum").inputmask();
         
-        var forms = $('#accrual-form');
+        $('#accrualtable').bootstrapTable({
+            onLoadSuccess: function(res){
+            }            
+        }); 
+        
+        var forms = $('#personal-form');
         
         forms.submit(function() {
             submitForm();
@@ -126,7 +219,7 @@ $form->prepare();
         });
         // Loop over them and prevent submission
         var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('accrual-submit', function(event) {
+            form.addEventListener('personal-submit', function(event) {
                 if (form.checkValidity() === false) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -136,4 +229,58 @@ $form->prepare();
             }, false);    
         });        
     });        
+    
+    function accrualQueryParams(params) {
+        $('#accrualtoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#accrualtoolbar').find('select[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#accrualtable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#accrualtable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function statusFormatter(value, row){
+        var statuses = <?= Encoder::encode(PersonalAccrual::getStatusList())?>;
+        return statuses[value];
+    }        
+    
+    function rateFormatter(value, row){
+        return value;
+    }        
+    
+    function accrualActiveFormatter(value, row){
+        var url = '/personal/accrual-edit-form/';
+        btn = '<nobr><button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs personal-accrual-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' unique-id="'+value+'"';
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs table-row-remove"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Удалить"'; 
+        btn += ' onclick="removeTableRowByUniqueId('+value+')">';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
+        btn += '</button></nobr>';
+        return btn;
+    }    
+    
+    function accrualResponseHandler(res) {
+        return res;
+    }         
 </script>

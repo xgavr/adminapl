@@ -15,8 +15,17 @@ $form->get('comment')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('company')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('status')->setAttributes([
     'class'=>'form-control', 
+    ]);
+
+$form->get('num')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => ($position) ? empty($position->getParentPosition()):true,
     ]);
 
 $form->get('parentPosition')->setAttributes([
@@ -43,9 +52,9 @@ $form->prepare();
     <div class="row">
         <div class="col-xs-8">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('name')); ?>
-                <?= $this->formElement($form->get('name')); ?>
-                <?= $this->formElementErrors($form->get('name')); ?>                  
+                <?= $this->formLabel($form->get('company')); ?>
+                <?= $this->formElement($form->get('company')); ?>
+                <?= $this->formElementErrors($form->get('company')); ?>                  
             </div>
         </div>    
         <div class="col-xs-4">                        
@@ -59,9 +68,9 @@ $form->prepare();
     <div class="row">
         <div class="col-xs-8">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('parentPosition')); ?>
-                <?= $this->formElement($form->get('parentPosition')); ?>
-                <?= $this->formElementErrors($form->get('parentPosition')); ?>                  
+                <?= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
             </div>
         </div>    
         <div class="col-xs-4">                        
@@ -69,6 +78,22 @@ $form->prepare();
                 <?= $this->formLabel($form->get('status')); ?>
                 <?= $this->formElement($form->get('status')); ?>
                 <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-8">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('parentPosition')); ?>
+                <?= $this->formElement($form->get('parentPosition')); ?>
+                <?= $this->formElementErrors($form->get('parentPosition')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('num')); ?>
+                <?= $this->formElement($form->get('num')); ?>
+                <?= $this->formElementErrors($form->get('num')); ?>                  
             </div>
         </div>    
     </div>        
@@ -96,10 +121,11 @@ $form->prepare();
         var data = serializeForm('#position-form');
         $.ajax({
             type: 'POST',
-            url: '/position/edit-form/<?= ($position) ? $position->getId():"" ?>',
+            url: '/position/edit-form/<?= ($position) ? $position->getId():"" ?>?company='+$('#companySelectForm').val(),
             data: $.param(data)
         })
             .done(function (data) {
+//                console.log(data);
                 if (data == 'ok'){
                     $('#positionModal').modal('hide');
                     if ($('#table').length){
@@ -114,8 +140,27 @@ $form->prepare();
 
             });    
     };
-    
+
+    function positionList(){
+        //alert(11);
+        $.getJSON( '/position/select/?company='+$('#companySelectForm').val(), function( data ) {
+            $('#positionSelectForm').empty();
+            $('#positionSelectForm').append('<option>это группа</option>');
+            $.each( data.rows, function( key, value ) {
+                $('#positionSelectForm').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    }
+
     $( document ).ready(function() {
+        
+        $(document).on('change', '#positionSelectForm', function (e) {
+            positionList();
+        });
+        
+        $(document).on('change', '#positionSelectForm', function (e) {
+            $('#num').prop('disabled', !$.isNumeric($('#positionSelectForm').val()));
+        });
         
         var forms = $('#position-form');
         

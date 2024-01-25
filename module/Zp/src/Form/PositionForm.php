@@ -63,6 +63,18 @@ class PositionForm extends Form
         ]);
         
         $this->add([           
+            'type'  => 'number',
+            'name' => 'num',
+            'attributes' => [
+                'id' => 'num',
+                'min' => 0,
+            ],
+            'options' => [
+                'label' => 'Количество ставок',
+            ],
+        ]);
+        
+        $this->add([           
             'type'  => 'textarea',
             'name' => 'comment',
             'attributes' => [
@@ -86,8 +98,20 @@ class PositionForm extends Form
         
         $this->add([           
             'type'  => 'select',
+            'name' => 'company',
+            'attributes' => [
+                'id' => 'companySelectForm'
+            ],
+            'options' => [
+                'label' => 'Компания',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'select',
             'name' => 'parentPosition',
             'attributes' => [
+                'id' => 'positionSelectForm'
             ],
             'options' => [
                 'label' => 'Входит в группу',

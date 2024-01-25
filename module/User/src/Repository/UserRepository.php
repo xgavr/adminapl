@@ -250,5 +250,27 @@ class UserRepository  extends EntityRepository
         }
         
         return;
-    }    
+    }  
+    
+    /**
+     * Список для формы
+     * @param array $params
+     * @return array
+     */
+    public function userListForm($params)
+    {
+        $result = [];
+        
+        if (!empty($params['all'])){
+            $result[] = $params['all'];
+        }
+        
+        $data = $this->findAllUser($params)->getResult();
+        
+        foreach ($data as $row){
+            $result[$row->getId()] = $row->getFullName();
+        }
+        
+        return $result;
+    }
 }

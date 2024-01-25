@@ -12,6 +12,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Zp\Entity\Position;
 use Zp\Form\PositionForm;
+use Company\Entity\Legal;
 
 
 class PositionController extends AbstractActionController
@@ -41,7 +42,11 @@ class PositionController extends AbstractActionController
     
     public function indexAction()
     {
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
+        
         return new ViewModel([
+            'companies' => $companies,
         ]);
     }
     
@@ -50,12 +55,13 @@ class PositionController extends AbstractActionController
         	        
         $q = $this->params()->fromQuery('search');
         $offset = $this->params()->fromQuery('offset');
+        $company = $this->params()->fromQuery('company');
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
         
         $params = [
-            'q' => $q, 'sort' => $sort, 'order' => $order, 
+            'q' => $q, 'company' => $company, 'sort' => $sort, 'order' => $order, 
         ];
         
         $query = $this->entityManager->getRepository(Position::class)
@@ -78,9 +84,29 @@ class PositionController extends AbstractActionController
         ]);          
     }        
     
+    public function selectAction()
+    {
+        $companyId = (int)$this->params()->fromQuery('company');
+
+        $result = [];
+        $parentPositions = $this->entityManager->getRepository(Position::class)
+                ->findParentPositions(['company' => $companyId]);
+        foreach ($parentPositions as $parentPosition){
+            $result[$parentPosition->getId()] = [
+                'id' => $parentPosition->getId(),
+                'name' => $parentPosition->getName(),                
+            ];
+        }                
+
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }
+    
     public function editFormAction()
     {
         $positionId = (int)$this->params()->fromRoute('id', -1);
+        $companyId = $this->params()->fromQuery('company');
         
         $position = null;
         if ($positionId > 0){
@@ -90,13 +116,22 @@ class PositionController extends AbstractActionController
         
         $parentPositionList = ['это группа'];
         $parentPositions = $this->entityManager->getRepository(Position::class)
-                ->findParentPositions();
+                ->findParentPositions(['company' => $companyId]);
         foreach ($parentPositions as $parentPosition){
             $parentPositionList[$parentPosition->getId()] = $parentPosition->getname();
         }                
         
+        $companyList = [];
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
+        foreach ($companies as $company){
+            $companyList[$company->getId()] = $company->getname();
+        }                
+        
         $form = new PositionForm();
         $form->get('parentPosition')->setValueOptions($parentPositionList);
+        $form->get('company')->setValueOptions($companyList);
+        $form->get('company')->setValue($companyId);
         
         if ($this->getRequest()->isPost()) {
             
@@ -107,6 +142,10 @@ class PositionController extends AbstractActionController
                 if (is_numeric($data['parentPosition'])){
                     $data['parentPosition'] = $this->entityManager->getRepository(Position::class)
                             ->find($data['parentPosition']);
+                }
+                if (is_numeric($data['company'])){
+                    $data['company'] = $this->entityManager->getRepository(Legal::class)
+                            ->find($data['company']);
                 }
                 if ($position){
                     $this->zpManager->updatePosition($position, $data);
@@ -123,7 +162,10 @@ class PositionController extends AbstractActionController
                 $data = [
                     'aplId' => $position->getAplId(),
                     'name' => $position->getName(),
+                    'num' => $position->getNum(),
                     'status' => $position->getStatus(),
+                    'parentPosition' => ($position->getParentPosition()) ? $position->getParentPosition()->getId():null,
+                    'company' => $position->getCompany()->getId(),
                 ];
                 $form->setData($data);
             }    

@@ -23,6 +23,14 @@ $this->pageBreadcrumbs()->setItems([
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
                 </div>    
+                <div class="form-group">
+                    <select id="companySelect" name="company" style="width: 200px" class="form-control cookie-control">
+                        <!--<option selected>все компании</option>-->
+                        <?php foreach ($companies as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
             </div>
         </div>    
         <table id="table" 
@@ -42,10 +50,11 @@ $this->pageBreadcrumbs()->setItems([
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-sortable="true" data-align="right" data-width="10">Id</th>
+                     <th data-field="id" data-sortable="false" data-align="right" data-width="10">Id</th>
                      <th data-field="aplId" data-sortable="false" data-align="right" data-width="10">Apl Id</th>
                      <th data-field="parentPosition.name" data-sortable="false" >Подразделение</th>
                      <th data-field="name" data-sortable="false" >Наименование</th>
+                     <th data-field="num" data-sortable="false" data-align="right" data-width="10">Ставок</th>
                      <th data-field="comment" data-sortable="false">Комментарий</th>
                      <th data-field="active" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
@@ -71,6 +80,9 @@ $this->pageBreadcrumbs()->setItems([
         });
         $table.on('load-success.bs.table', function (e, res) {
         });                
+        $(document).on('change', '#companySelect', function (e) {
+            refreshTable();
+        });
     });    
     
     function rowStyle(row){
@@ -106,7 +118,7 @@ $this->pageBreadcrumbs()->setItems([
         var url = '/position/edit-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs accrual-modal-show"';
+        btn += ' class="btn btn-default btn-xs position-modal-show"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';

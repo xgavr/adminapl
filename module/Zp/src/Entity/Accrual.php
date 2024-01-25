@@ -20,6 +20,9 @@ class Accrual
     const BASE_INCOME_TP     = 4; // доход ТП.
     const BASE_INCOME_ORDER  = 5; // доход по заказам.
     
+    const KIND_PERCENT       = 1; // процент от базы
+    const KIND_FIX           = 2; // сумма.
+    
     /**
      * @ORM\Id
      * @ORM\Column(name="id")
@@ -51,6 +54,11 @@ class Accrual
      * @ORM\Column(name="basis")  
      */
     protected $basis;
+
+    /** 
+     * @ORM\Column(name="oper_kind")  
+     */
+    protected $kind;
 
     /**
      * Constructor.
@@ -163,6 +171,40 @@ class Accrual
     
     public function setBasis($basis) {
         $this->basis = $basis;
+        return $this;
+    }
+
+    public function getKind() {
+        return $this->kind;
+    }
+
+    /**
+     * Returns possible kinds as array.
+     * @return array
+     */
+    public static function getKindList() 
+    {
+        return [
+            self::KIND_PERCENT => '% от базы',
+            self::KIND_FIX => 'Фиксированная сумма',
+        ];
+    }    
+
+    /**
+     * Returns user kind as string.
+     * @return string
+     */
+    public function getKindAsString()
+    {
+        $list = self::getKindList();
+        if (isset($list[$this->kind]))
+            return $list[$this->kind];
+        
+        return 'Unknown';
+    }    
+    
+    public function setKind($kind) {
+        $this->kind = $kind;
         return $this;
     }
 

@@ -5,6 +5,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use User\Entity\User;
 use Zp\Entity\Accrual;
+use Zp\Entity\Personal;
+use Company\Entity\Legal;
 
 /**
  * This class represents a position accrual.
@@ -33,6 +35,16 @@ class PersonalAccrual
      */
     protected $status;
 
+    /** 
+     * @ORM\Column(name="date_oper")  
+     */
+    protected $dateOper;
+
+    /** 
+     * @ORM\Column(name="row_no")  
+     */
+    protected $rowNo;
+
     /**
      * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="personalAccruals") 
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -44,6 +56,18 @@ class PersonalAccrual
      * @ORM\JoinColumn(name="accrual_id", referencedColumnName="id")
      */
     private $accrual;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Zp\Entity\Personal", inversedBy="personalAccruals") 
+     * @ORM\JoinColumn(name="personal_id", referencedColumnName="id")
+     */
+    private $personal;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="personalAccruals") 
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
+    private $company;
 
     /**
      * Constructor.
@@ -70,8 +94,8 @@ class PersonalAccrual
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Активный',
-            self::STATUS_RETIRED => 'Удален',
+            self::STATUS_ACTIVE => 'Начать',
+            self::STATUS_RETIRED => 'Прекратить',
         ];
     }    
 
@@ -136,6 +160,61 @@ class PersonalAccrual
      */
     public function setAccrual($accrual) {
         $this->accrual = $accrual;
+        return $this;
+    }
+
+    public function getDateOper() {
+        return $this->dateOper;
+    }
+
+    /**
+     * 
+     * @return Personal
+     */
+    public function getPersonal() {
+        return $this->personal;
+    }
+
+    /**
+     * 
+     * @return Legal
+     */
+    public function getCompany() {
+        return $this->company;
+    }
+
+    public function setDateOper($dateOper) {
+        $this->dateOper = $dateOper;
+        return $this;
+    }
+
+    /**
+     * 
+     * @param Personal $personal
+     * @return $this
+     */
+    public function setPersonal($personal) {
+        $this->personal = $personal;
+        $personal->addPersonalAccrual($this);
+        return $this;
+    }
+
+    /**
+     * 
+     * @param Legal $company
+     * @return $this
+     */
+    public function setCompany($company) {
+        $this->company = $company;
+        return $this;
+    }
+
+    public function getRowNo() {
+        return $this->rowNo;
+    }
+
+    public function setRowNo($rowNo) {
+        $this->rowNo = $rowNo;
         return $this;
     }
 

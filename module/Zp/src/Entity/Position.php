@@ -3,6 +3,7 @@ namespace Zp\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Company\Entity\Legal;
 
 /**
  * This class represents a zp.
@@ -37,10 +38,26 @@ class Position
     protected $comment;
     
     /** 
+     * @ORM\Column(name="sort")  
+     */
+    protected $sort;
+    
+    /** 
+     * @ORM\Column(name="num")  
+     */
+    protected $num;
+    
+    /** 
      * @ORM\Column(name="status")  
      */
     protected $status;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="positions") 
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
+    private $company;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Zp\Entity\Position", inversedBy="childPositions") 
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
@@ -131,6 +148,15 @@ class Position
         return $this;
     }
  
+    public function getSort() {
+        return $this->sort;
+    }
+
+    public function setSort($sort) {
+        $this->sort = $sort;
+        return $this;
+    }
+
     /**
      * 
      * @return Position
@@ -164,6 +190,33 @@ class Position
     public function addChildPosition($position)
     {
         $this->childPositions[] = $position;
+    }
+    
+    /**
+     * 
+     * @return Legal
+     */
+    public function getCompany() {
+        return $this->company;
+    }
+
+    /**
+     * 
+     * @param Legal $company
+     * @return $this
+     */
+    public function setCompany($company) {
+        $this->company = $company;
+        return $this;
+    }
+
+    public function getNum() {
+        return $this->num;
+    }
+
+    public function setNum($num) {
+        $this->num = $num;
+        return $this;
     }
 }
 

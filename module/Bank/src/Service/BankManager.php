@@ -302,7 +302,7 @@ class BankManager
                                     ->findOneBy(['rrn' => $rrn, 'output' => $amount]);
                         }    
                         
-                        if ($acq == null && $rrn && !empty($cart)){
+                        if ($acq == null && $rrn && !empty($cart) && !empty($amount)){
                             $acq = new Acquiring();
                             $acq->setCart($cart);
                             $acq->setAmount($amount);

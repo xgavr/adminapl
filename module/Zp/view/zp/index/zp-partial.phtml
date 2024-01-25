@@ -22,6 +22,9 @@
 
         $(document).on('click', '.position-modal-show', function (e) {
             var url = $(this).attr('modal-url');
+            if ($("#companySelect").length){
+                url += '?company='+$("#companySelect").val();
+            }
             showFormDialog({
                 id: 'positionModal',
                 url: url
@@ -29,15 +32,30 @@
             });
         });  
 
-        $(document).on('click', '.ot-good-modal-show', function (e) {
+        $(document).on('click', '.personal-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            if ($("#companySelect").length){
+                url += '?company='+$("#companySelect").val();
+            }
+            if ($("#userSelect").length){
+                url += '&user='+$("#userSelect").val();
+            }
+            showFormDialog({
+                id: 'personalModal',
+                url: url,
+                width: '1000px'
+            });
+        });  
+
+        $(document).on('click', '.personal-accrual-modal-show', function (e) {
             var url = $(this).attr('modal-url');
             var uniqueId = $(this).attr('unique-id');
             if (uniqueId){
-                var row = $('#otgoodtable').bootstrapTable('getRowByUniqueId', uniqueId);
+                var row = $('#accrualtable').bootstrapTable('getRowByUniqueId', uniqueId);
                 url = url+'?'+$.param(row);
             }    
             showFormDialog({
-                id: 'otGoodModal',
+                id: 'personalAccrualModal',
                 url: url,
                 zIndex: 9999
             });

@@ -95,6 +95,17 @@ class AccrualForm extends Form
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'select',
+            'name' => 'kind',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Способ расчета',
+                'value_options' => Accrual::getKindList(),
+            ],
+        ]);
+        
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',

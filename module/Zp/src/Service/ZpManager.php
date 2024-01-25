@@ -11,6 +11,9 @@ namespace Zp\Service;
 use Zp\Entity\Accrual;
 use Company\Entity\Legal;
 use Zp\Entity\Position;
+use Zp\Entity\Personal;
+use Zp\Entity\PersonalAccrual;
+use User\Entity\User;
 
 /**
  * Description of ZpManager
@@ -43,6 +46,7 @@ class ZpManager {
         $accrual = new Accrual();
         $accrual->setAplId($data['aplId']);
         $accrual->setBasis($data['basis']);
+        $accrual->setKind($data['kind']);
         $accrual->setComment(empty($data['comment']) ? null:$data['comment']);
         $accrual->setName($data['name']);
         $accrual->setStatus(empty($data['status']) ? Accrual::STATUS_ACTIVE:$data['status']);
@@ -63,6 +67,7 @@ class ZpManager {
     {
         $accrual->setAplId($data['aplId']);
         $accrual->setBasis($data['basis']);
+        $accrual->setKind($data['kind']);
         $accrual->setComment(empty($data['comment']) ? null:$data['comment']);
         $accrual->setName($data['name']);
         $accrual->setStatus(empty($data['status']) ? Accrual::STATUS_ACTIVE:$data['status']);
@@ -94,15 +99,38 @@ class ZpManager {
     {
         $position = new Position();
         $position->setAplId($data['aplId']);
+        $position->setCompany($data['company']);
         $position->setComment(empty($data['comment']) ? null:$data['comment']);
         $position->setName($data['name']);
         $position->setStatus(empty($data['status']) ? Position::STATUS_ACTIVE:$data['status']);
         $position->setParentPosition(empty($data['parentPosition']) ? null:$data['parentPosition']);
+        $position->setNum($data['num']);
+        
+        $parentPosition = $data['parentPosition'];
+
+        $maxSort = $this->entityManager->getRepository(Position::class)
+                ->findMaxSortPosition(['company' => $data['company']->getId(), 'parentPosition' => empty($parentPosition) ? null:$parentPosition->getId()]);
+        
+        list($parentSort, $sort) = explode('_', $maxSort);
+        if (empty($sort)){
+            $sort = 0;
+        }
+        if (empty($parentSort)){
+            $parentSort = 0;
+        }
+        if (empty($parentPosition)){
+            $position->setSort($parentSort + 1000);
+        } else {
+            $position->setSort($parentPosition->getSort().'_'.($sort + 1000));
+        }   
         
         $this->entityManager->persist($position);
         $this->entityManager->flush();
         
-        return $accrual;
+        $this->entityManager->getRepository(Position::class)
+                ->updateParentPositionNum($position);
+        
+        return $position;
     }
     
     /**
@@ -113,14 +141,53 @@ class ZpManager {
      */
     public function updatePosition($position, $data)
     {
+        $position->setStatus(Position::STATUS_RETIRED);
+        $this->entityManager->persist($position);
+        $this->entityManager->flush();
+        
+        $this->entityManager->getRepository(Position::class)
+                ->updateParentPositionNum($position);
+        
         $position->setAplId($data['aplId']);
+        $position->setCompany($data['company']);
         $position->setComment(empty($data['comment']) ? null:$data['comment']);
         $position->setName($data['name']);
         $position->setStatus(empty($data['status']) ? Position::STATUS_ACTIVE:$data['status']);
         $position->setParentPosition(empty($data['parentPosition']) ? null:$data['parentPosition']);
+        $position->setNum($data['num']);
+        
+        $parentPosition = $data['parentPosition'];
+        
+        $maxSort = $this->entityManager->getRepository(Position::class)
+                ->findMaxSortPosition(['company' => $data['company']->getId(), 'parentPosition' => empty($parentPosition) ? null:$parentPosition->getId()]);
+        list($parentSortMax, $sortMax) = explode('_', $maxSort);
+        if (empty($sortMax)){
+            $sortMax = 0;
+        }
+        if (empty($parentSortMax)){
+            $parentSortMax = 0;
+        }
+
+        list($parentSort, $sort) = explode('_', $position->getSort());
+        if (empty($sort)){
+            $sort = 0;
+        }
+        if (empty($parentSort)){
+            $parentSort = 0;
+        }
+                
+        if (empty($parentPosition)){
+            $position->setSort(empty($parentSort) ? ($parentSortMax+1000):$parentSort);
+        } else {
+            $position->setSort($parentPosition->getSort().'_'.(empty($sort) ? ($sortMax + 1000):$sort));
+        }   
+
         
         $this->entityManager->persist($position);
         $this->entityManager->flush();
+        
+        $this->entityManager->getRepository(Position::class)
+                ->updateParentPositionNum($position);
         
         return $position;
     }
@@ -137,4 +204,128 @@ class ZpManager {
         return;
     }
     
+    /**
+     * Добавить плановое начисление
+     * @param array $data
+     * @return Personal
+     */
+    public function addPersonal($data)
+    {
+        $personal = new Personal();
+        $personal->setAplId(empty($data['aplId']) ? null:$data['aplId']);
+        $personal->setComment(empty($data['comment']) ? null:$data['comment']);
+        $personal->setCompany($data['company']);
+        $personal->setUser($data['user']);
+        $personal->setPosition($data['position']);
+        $personal->setPositionNum($data['positionNum']);
+        $personal->setDateCreated(date('Y-m-d'));
+        $personal->setDocDate($data['docDate']);
+        $personal->setStatus($data['status']);
+        
+        $this->entityManager->persist($personal);
+        
+        $rowNo = 1;
+        if (!empty($data['accruals'])){
+            foreach ($data['accruals'] as $accrualData){
+                $accrualData['accrual'] = $this->entityManager->getRepository(Accrual::class)
+                        ->find($accrualData['accrual']);
+
+                $personalAccrual = new PersonalAccrual();
+                $personalAccrual->setAccrual($accrualData['accrual']);
+                $personalAccrual->setCompany($data['company']);
+                $personalAccrual->setDateOper($data['docDate']);
+                $personalAccrual->setPersonal($personal);
+                $personalAccrual->setRate($accrualData['rate']);
+                $personalAccrual->setRowNo($rowNo);
+                $personalAccrual->setStatus($accrualData['status']);
+                $personalAccrual->setUser($data['user']);
+
+                $this->entityManager->persist($personalAccrual);
+                
+                $rowNo++;
+            }
+        }
+        
+        $this->entityManager->flush();
+        
+        return $personal;
+    }
+    
+    /**
+     * Удалить строки планового начисления
+     * @param Personal $personal
+     * @return type
+     */
+    public function removePersonalAccurals($personal)
+    {
+        foreach ($personal->getPersonalAccruals() as $personalAccrual){
+            $this->entityManager->remove($personalAccrual);
+        }
+        
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
+     * Обновить плановое начисление
+     * @param Personal $personal
+     * @param array $data
+     * @return Personal
+     */
+    public function updatePersonal($personal, $data)
+    {
+        $this->removePersonalAccurals($personal);
+        
+        $personal->setAplId(empty($data['aplId']) ? null:$data['aplId']);
+        $personal->setComment(empty($data['comment']) ? null:$data['comment']);
+        $personal->setCompany($data['company']);
+        $personal->setUser($data['user']);
+        $personal->setPosition($data['position']);
+        $personal->setPositionNum($data['positionNum']);
+        $personal->setDocDate($data['docDate']);
+        $personal->setStatus($data['status']);
+        
+        $this->entityManager->persist($personal);
+        
+        $rowNo = 1;
+        if (!empty($data['accruals'])){
+            foreach ($data['accruals'] as $accrualData){
+                $accrualData['accrual'] = $this->entityManager->getRepository(Accrual::class)
+                        ->find($accrualData['accrual']);
+
+                $personalAccrual = new PersonalAccrual();
+                $personalAccrual->setAccrual($accrualData['accrual']);
+                $personalAccrual->setCompany($data['company']);
+                $personalAccrual->setDateOper($data['docDate']);
+                $personalAccrual->setPersonal($personal);
+                $personalAccrual->setRate($accrualData['rate']);
+                $personalAccrual->setRowNo($rowNo);
+                $personalAccrual->setStatus($accrualData['status']);
+                $personalAccrual->setUser($data['user']);
+
+                $this->entityManager->persist($personalAccrual);
+                
+                $rowNo++;
+            }
+        }
+        
+        $this->entityManager->flush();
+        
+        return $personal;
+    }
+    
+    /**
+     * Удалить плановое начисление
+     * @param Personal $personal
+     */
+    public function removePersonal($personal) 
+    {
+        $this->removePersonalAccurals($personal);
+        $this->entityManager->remove($personal);
+        
+        $this->entityManager->flush();
+        
+        return;
+    }
 }
