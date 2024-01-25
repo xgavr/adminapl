@@ -68,6 +68,7 @@ class PositionForm extends Form
             'attributes' => [
                 'id' => 'num',
                 'min' => 0,
+                'value' => 1,
             ],
             'options' => [
                 'label' => 'Количество ставок',
