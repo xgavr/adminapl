@@ -183,6 +183,16 @@ class PositionForm extends Form
                 ],                
                 'validators' => [
                 ],
+            ]);  
+        
+        $inputFilter->add([
+                'name'     => 'num',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                ],
             ]);        
     }    
 }
