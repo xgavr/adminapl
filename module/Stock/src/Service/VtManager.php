@@ -47,6 +47,12 @@ class VtManager
     private $adminManager;
 
     /**
+     * Zp manager
+     * @var \Zp\Service\ZpCalculator
+     */
+    private $zpManager;
+
+    /**
      * Дата запрета
      * @var string
      */
@@ -55,12 +61,14 @@ class VtManager
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager, $orderManager, $adminManager) 
+    public function __construct($entityManager, $logManager, $orderManager, $adminManager,
+            $zpManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->orderManager = $orderManager;
         $this->adminManager = $adminManager;
+        $this->zpManager = $zpManager;
 
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];        
@@ -373,6 +381,8 @@ class VtManager
                     ->removeDocMutuals($vt->getLogKey());            
         }    
         $this->updateVtMovement($vt, $docStamp);
+        
+        $this->zpManager->addVtCalculator($vt);
         
         return;
     }

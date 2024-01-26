@@ -237,7 +237,7 @@ class PersonalController extends AbstractActionController
                 ]);        
             }
         } else {
-            if ($user && $accrual){
+            if ($accrual){
                 $data = [
                     'accrual' => $accrual->getId(),
                     'status' => $params['status'],
@@ -252,7 +252,6 @@ class PersonalController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'rowNo' => $rowNo,
-            'user' => $user,
             'accrual' => $accrual,
         ]);        
     }

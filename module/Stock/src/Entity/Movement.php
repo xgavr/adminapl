@@ -42,6 +42,7 @@ class Movement {
     const DOC_REVISE = 8;
     const DOC_CASH = 9;
     const DOC_MSR = 10; //MarketSaleReport
+    const DOC_ZP = 11; // zp calculator
     
     
     /**

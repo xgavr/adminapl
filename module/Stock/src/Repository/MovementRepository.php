@@ -708,4 +708,63 @@ class MovementRepository extends EntityRepository{
         
         return;
     }
+    
+    
+    /**
+     * Себестоимость заказа
+     * @param Order $order
+     * @return float
+     */
+    public function orderBaseAmount($order)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('sum(m.baseAmount) as baseAmount')
+                ->from(Movement::class, 'm')
+                ->andWhere('m.docType = :docType')
+                ->setParameter('docType', Movement::DOC_ORDER)
+                ->andWhere('m.docId = :docId')
+                ->setParameter('docId', $order->getId())
+                ->setMaxResults(1)
+                ;
+                
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();  
+        if (!empty($result)){
+            return $result['baseAmount'];
+        }
+        
+        return 0;
+        
+    }
+    
+    /**
+     * Себестоимость возврата
+     * @param Vt $vt
+     * @return float
+     */
+    public function orderVtAmount($vt)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('sum(m.baseAmount) as baseAmount')
+                ->from(Movement::class, 'm')
+                ->andWhere('m.docType = :docType')
+                ->setParameter('docType', Movement::DOC_VT)
+                ->andWhere('m.docId = :docId')
+                ->setParameter('docId', $vt->getId())
+                ->setMaxResults(1)
+                ;
+                
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();  
+        if (!empty($result)){
+            return $result['baseAmount'];
+        }
+        
+        return 0;
+        
+    }
 }

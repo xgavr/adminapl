@@ -101,6 +101,12 @@ class OrderManager
     private $clientManager;
 
     /**
+     * Zp manager
+     * @var \Zp\Service\ZpCalculator
+     */
+    private $zpManager;
+
+    /**
      * Дата запрета
      * @var string
      */
@@ -108,7 +114,8 @@ class OrderManager
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
     public function __construct($entityManager, $authService, $logManager,
-            $legalManager, $adminManager, $contactManager, $clientManager, $aplManager)
+            $legalManager, $adminManager, $contactManager, $clientManager, 
+            $aplManager, $zpManager)
     {
         $this->entityManager = $entityManager;
         $this->authService = $authService;
@@ -118,6 +125,7 @@ class OrderManager
         $this->contactManager= $contactManager;
         $this->clientManager = $clientManager;
         $this->aplManager = $aplManager;
+        $this->zpManager = $zpManager;
 
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];
@@ -1116,6 +1124,8 @@ class OrderManager
                 $this->updateOrderMutuals($order, $docStamp);
             }
         }
+        
+        $this->zpManager->addOrderCalculator($order);
         
         return;
     }

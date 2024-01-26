@@ -98,6 +98,7 @@ return [
     'service_manager' => [
         'factories' => [
             Service\ZpManager::class => Service\Factory\ZpManagerFactory::class,
+            Service\ZpCalculator::class => Service\Factory\ZpCalculatorFactory::class,
         ],
     ],    
     'view_manager' => [
