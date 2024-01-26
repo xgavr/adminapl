@@ -58,20 +58,21 @@ class ZpCalculator {
         
         if ($order->getStatus() == Order::STATUS_SHIPPED){
             
-            $baseAmount = $this->entityManager->getRepository(Movement::class)
-                    ->orderBaseAmount($order);
+            $base = $this->entityManager->getRepository(Movement::class)
+                    ->orderVtAmount(Movement::DOC_ORDER, $order->getId());
+            
             if (!$orderCalculator){
                 $orderCalculator = new OrderCalculator();
+                $orderCalculator->setDateCreated(date('Y-m-d H:i:s'));
             }    
             
-            $orderCalculator->setAmount($order->getTotal());
-            $orderCalculator->setBaseAmount(abs($baseAmount));
+            $orderCalculator->setAmount($base['amount']);
+            $orderCalculator->setBaseAmount(abs($base['baseAmount']));
             $orderCalculator->setCompany($order->getCompany());
             $orderCalculator->setCourier($order->getSkiper());
             $orderCalculator->setDateOper($order->getDateOper());
             $orderCalculator->setDocType(Movement::DOC_ORDER);
             $orderCalculator->setDocId($order->getId());
-            $orderCalculator->setDateCreated(date('Y-m-d H:i:s'));
             $orderCalculator->setDeliveryAmount($order->getShipmentTotal());
             $orderCalculator->setOffice($order->getOffice());
             $orderCalculator->setOrder($order);
@@ -105,20 +106,21 @@ class ZpCalculator {
         
         if ($vt->getStatus() == Vt::STATUS_ACTIVE){
             
-            $baseAmount = $this->entityManager->getRepository(Movement::class)
-                    ->orderVtAmount($vt);
+            $base = $this->entityManager->getRepository(Movement::class)
+                    ->orderVtAmount(Movement::DOC_VT, $vt->getId());
+
             if (!$orderCalculator){
                 $orderCalculator = new OrderCalculator();
+                $orderCalculator->setDateCreated(date('Y-m-d H:i:s'));
             }    
             
-            $orderCalculator->setAmount(-$vt->getAmount());
-            $orderCalculator->setBaseAmount(-abs($baseAmount));
+            $orderCalculator->setAmount(-$base['amount']);
+            $orderCalculator->setBaseAmount(-abs($base['baseAmount']));
             $orderCalculator->setCompany($vt->getOrder()->getCompany());
             $orderCalculator->setCourier(null);
             $orderCalculator->setDateOper($vt->getDocDate());
             $orderCalculator->setDocType(Movement::DOC_VT);
             $orderCalculator->setDocId($vt->getId());
-            $orderCalculator->setDateCreated(date('Y-m-d H:i:s'));
             $orderCalculator->setDeliveryAmount(0);
             $orderCalculator->setOffice($vt->getOffice());
             $orderCalculator->setOrder($vt->getOrder());

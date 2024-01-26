@@ -711,60 +711,37 @@ class MovementRepository extends EntityRepository{
     
     
     /**
-     * Себестоимость заказа
-     * @param Order $order
+     * Себестоимость документа
+     * @param integer $docType
+     * @param integer $docId
      * @return float
      */
-    public function orderBaseAmount($order)
+    public function findBaseAmount($docType, $docId)
     {
+        $result = ['baseAmount' => 0, 'amount' => 0];
+        
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('sum(m.baseAmount) as baseAmount')
+        $queryBuilder->select('sum(m.baseAmount) as baseAmount, sum(m.amount) as amount')
                 ->from(Movement::class, 'm')
                 ->andWhere('m.docType = :docType')
-                ->setParameter('docType', Movement::DOC_ORDER)
+                ->setParameter('docType', $docType)
                 ->andWhere('m.docId = :docId')
-                ->setParameter('docId', $order->getId())
+                ->setParameter('docId', $docId)
+                ->andWhere('m.status = :status')
+                ->setParameter('status', Movement::STATUS_ACTIVE)
                 ->setMaxResults(1)
                 ;
                 
-        $result = $queryBuilder->getQuery()->getOneOrNullResult();  
-        if (!empty($result)){
-            return $result['baseAmount'];
+        $data = $queryBuilder->getQuery()->getOneOrNullResult();  
+        if (!empty($data)){
+            $result['baseAmount'] = empty($data['baseAmount']) ? 0:$data['baseAmount'];
+            $result['amount'] = empty($data['amount']) ? 0:$data['amount'];
         }
         
-        return 0;
+        return $result;
         
-    }
-    
-    /**
-     * Себестоимость возврата
-     * @param Vt $vt
-     * @return float
-     */
-    public function orderVtAmount($vt)
-    {
-        $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-        
-        $queryBuilder->select('sum(m.baseAmount) as baseAmount')
-                ->from(Movement::class, 'm')
-                ->andWhere('m.docType = :docType')
-                ->setParameter('docType', Movement::DOC_VT)
-                ->andWhere('m.docId = :docId')
-                ->setParameter('docId', $vt->getId())
-                ->setMaxResults(1)
-                ;
-                
-        $result = $queryBuilder->getQuery()->getOneOrNullResult();  
-        if (!empty($result)){
-            return $result['baseAmount'];
-        }
-        
-        return 0;
-        
-    }
+    }    
 }
