@@ -59,7 +59,7 @@ class ZpCalculator {
         if ($order->getStatus() == Order::STATUS_SHIPPED){
             
             $base = $this->entityManager->getRepository(Movement::class)
-                    ->orderVtAmount(Movement::DOC_ORDER, $order->getId());
+                    ->findBaseAmount(Movement::DOC_ORDER, $order->getId());
             
             if (!$orderCalculator){
                 $orderCalculator = new OrderCalculator();
@@ -107,7 +107,7 @@ class ZpCalculator {
         if ($vt->getStatus() == Vt::STATUS_ACTIVE){
             
             $base = $this->entityManager->getRepository(Movement::class)
-                    ->orderVtAmount(Movement::DOC_VT, $vt->getId());
+                    ->findBaseAmount(Movement::DOC_VT, $vt->getId());
 
             if (!$orderCalculator){
                 $orderCalculator = new OrderCalculator();
