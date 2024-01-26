@@ -66,7 +66,7 @@ class ZpCalculator {
                 $orderCalculator->setDateCreated(date('Y-m-d H:i:s'));
             }    
             
-            $orderCalculator->setAmount($base['amount']);
+            $orderCalculator->setAmount(abs($base['amount']));
             $orderCalculator->setBaseAmount(abs($base['baseAmount']));
             $orderCalculator->setCompany($order->getCompany());
             $orderCalculator->setCourier($order->getSkiper());
@@ -114,7 +114,7 @@ class ZpCalculator {
                 $orderCalculator->setDateCreated(date('Y-m-d H:i:s'));
             }    
             
-            $orderCalculator->setAmount(-$base['amount']);
+            $orderCalculator->setAmount(-abs($base['amount']));
             $orderCalculator->setBaseAmount(-abs($base['baseAmount']));
             $orderCalculator->setCompany($vt->getOrder()->getCompany());
             $orderCalculator->setCourier(null);
