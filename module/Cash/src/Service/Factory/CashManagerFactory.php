@@ -13,6 +13,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Cash\Service\CashManager;
 use Admin\Service\LogManager;
 use Company\Service\LegalManager;
+use Zp\Service\ZpCalculator;
 
 /**
  * Description of CashManagerFactory
@@ -28,8 +29,9 @@ class CashManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
         $legalManager = $container->get(LegalManager::class);
+        $zpManager = $container->get(ZpCalculator::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new CashManager($entityManager, $logManager, $legalManager);
+        return new CashManager($entityManager, $logManager, $legalManager, $zpManager);
     }
 }

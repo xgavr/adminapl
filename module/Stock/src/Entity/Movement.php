@@ -350,6 +350,7 @@ class Movement {
             self::DOC_REVISE => 'Корректировки',
             self::DOC_MSR => 'Отчет комитента',
             self::DOC_CASH => 'Оплата',
+            self::DOC_ZP => 'Расчет ЗП',
         ];
     }        
 
@@ -370,6 +371,7 @@ class Movement {
             self::DOC_REVISE => 'Корректировка',
             self::DOC_MSR => 'Отчет комитента',
             self::DOC_CASH => 'Оплата',
+            self::DOC_ZP => 'Расчет ЗП',
         ];
     }        
 
@@ -389,6 +391,7 @@ class Movement {
             self::DOC_PTU => 'ptu',
             self::DOC_REVISE => 'rvs',
             self::DOC_MSR => 'msr',
+            self::DOC_ZP => 'zpdc',
         ];
     }        
     

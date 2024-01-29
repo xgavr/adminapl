@@ -5,6 +5,7 @@ use Interop\Container\ContainerInterface;
 use Stock\Service\StManager;
 use Admin\Service\LogManager;
 use Admin\Service\AdminManager;
+use Zp\Service\ZpCalculator;
 
 /**
  * This is the factory class for StManager service. The purpose of the factory
@@ -20,7 +21,8 @@ class StManagerFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
         $adminManager = $container->get(AdminManager::class);
+        $zpManager = $container->get(ZpCalculator::class);
                         
-        return new StManager($entityManager, $logManager, $adminManager);
+        return new StManager($entityManager, $logManager, $adminManager, $zpManager);
     }
 }

@@ -35,6 +35,12 @@ class StManager
     private $adminManager;
         
     /**
+     * Zp manager
+     * @var \Zp\Service\ZpCalculator
+     */
+    private $zpManager;
+        
+    /**
      * Дата запрета
      * @var string
      */
@@ -49,11 +55,12 @@ class StManager
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager, $adminManager) 
+    public function __construct($entityManager, $logManager, $adminManager, $zpManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->adminManager = $adminManager;
+        $this->zpManager = $zpManager;
     
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];        
@@ -213,7 +220,9 @@ class StManager
         }
 
         $this->entityManager->getConnection()
-                ->update('st', ['status_account' => $stTake], ['id' => $st->getId()]);        
+                ->update('st', ['status_account' => $stTake], ['id' => $st->getId()]);  
+        
+        $this->zpManager->repostSt($st, $docStamp);
         
         return;
     }    

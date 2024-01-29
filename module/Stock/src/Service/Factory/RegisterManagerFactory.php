@@ -14,6 +14,7 @@ use Application\Service\OrderManager;
 use Cash\Service\CashManager;
 use Stock\Service\ReviseManager;
 use ApiMarketPlace\Service\ReportManager;
+use Zp\Service\ZpCalculator;
 
 /**
  * This is the factory class for RegisterManager service. The purpose of the factory
@@ -38,9 +39,11 @@ class RegisterManagerFactory
         $cashManager = $container->get(CashManager::class);
         $reviseManager = $container->get(ReviseManager::class);
         $reportManager = $container->get(ReportManager::class);
+        $zpManager = $container->get(ZpCalculator::class);
                         
         return new RegisterManager($entityManager, $logManager, $otManager,
                 $ptManager, $ptuManager, $stManager, $vtManager, $vtpManager,
-                $orderManager, $cashManager, $reviseManager, $reportManager);
+                $orderManager, $cashManager, $reviseManager, $reportManager,
+                $zpManager);
     }
 }

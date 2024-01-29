@@ -62,11 +62,18 @@ class CashManager {
      */
     private $legalManager;
 
-    public function __construct($entityManager, $logManager, $legalManager)
+    /**
+     * Zp manager.
+     * @var \Zp\Service\ZpCalculator
+     */
+    private $zpManager;
+
+    public function __construct($entityManager, $logManager, $legalManager, $zpManager)
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->legalManager = $legalManager;
+        $this->zpManager = $zpManager;
     }
     
     /**
@@ -434,6 +441,7 @@ class CashManager {
         
         $this->addMutuals($cashDoc, $docStamp);
         $this->addRetails($cashDoc, $docStamp);
+        $this->zpManager->repostCashDoc($cashDoc, $docStamp);
         
         $this->updateBalance($cashDoc);
             

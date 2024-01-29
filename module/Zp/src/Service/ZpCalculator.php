@@ -19,6 +19,11 @@ use Zp\Entity\DocCalculator;
 use Application\Entity\Order;
 use Stock\Entity\Movement;
 use Stock\Entity\Vt;
+use Zp\Entity\PersonalMutual;
+use Company\Entity\Contract;
+use Stock\Entity\Register;
+use Cash\Entity\CashDoc;
+use Stock\Entity\St;
 
 /**
  * Description of ZpCalculator
@@ -42,6 +47,26 @@ class ZpCalculator {
     }
     
     /**
+     * Удалить расчет
+     * @param integer $docType
+     * @param integer $docId
+     * @return null
+     */
+    public function removeOrderCalculator($docType, $docId)
+    {
+        $orderCalculators = $this->entityManager->getRepository(OrderCalculator::class)
+                ->findBy(['docType' => $docType, 'docId' => $docId]);
+        foreach ($orderCalculators as $orderCalculator){
+            $this->entityManager->remove($orderCalculator);
+        }
+        
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    
+    /**
      * Добавить расчет заказа
      * @param Order $order
      * @return OrderCalculator
@@ -56,7 +81,7 @@ class ZpCalculator {
             $this->entityManager->persist($orderCalculator);
         }    
         
-        if ($order->getStatus() == Order::STATUS_SHIPPED){
+        if ($order->getStatus() == Order::STATUS_SHIPPED && $order->getContract()->getKind() == Contract::KIND_CUSTOMER){
             
             $base = $this->entityManager->getRepository(Movement::class)
                     ->findBaseAmount(Movement::DOC_ORDER, $order->getId());
@@ -104,7 +129,7 @@ class ZpCalculator {
             $this->entityManager->persist($orderCalculator);
         }    
         
-        if ($vt->getStatus() == Vt::STATUS_ACTIVE){
+        if ($vt->getStatus() == Vt::STATUS_ACTIVE && $vt->getOrder()->getContract()->getKind() == Contract::KIND_CUSTOMER){
             
             $base = $this->entityManager->getRepository(Movement::class)
                     ->findBaseAmount(Movement::DOC_VT, $vt->getId());
@@ -138,30 +163,259 @@ class ZpCalculator {
     }
     
     /**
-     * Удалить расчет
-     * @param Order $order
-     * @return null
+     * Ужадить расчет
+     * 
+     * @param integer $docType
+     * @param integer $docId
      */
-    public function removeOrderCalculator($order)
+    public function removePersonalMutual($docType, $docId)
     {
-        $orderCalculators = $this->entityManager->getRepository(OrderCalculator::class)
-                ->findBy(['order' => $order->getId()]);
-        foreach ($orderCalculators as $orderCalculator){
-            $this->entityManager->remove($orderCalculator);
-        }
+       $personalMutuals = $this->entityManager->getRepository(PersonalMutual::class)
+               ->findBy(['docType' => $docType, 'docId' => $docId]);
+       
+       foreach ($personalMutuals as $personalMutual){
+           $this->entityManager->remove($personalMutual);
+       }
+       
+       $this->entityManager->flush();
+       
+       return;
+    }
+        
+    /**
+     * Провести расчет
+     * @param DocCalculator $docCalculator
+     * 
+     * @return PersonalMutual
+     */
+    public function repostDocCalculator($docCalculator)
+    {
+        $this->removePersonalMutual(Movement::DOC_ZP, $docCalculator->getId());
+        
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->zpDocRegister($docCalculator);
+        
+        $personalMutual = new PersonalMutual();
+        $personalMutual->setAmount(-$docCalculator->getAmount());
+        $personalMutual->setCompany($docCalculator->getCompany());
+        $personalMutual->setDateOper($docCalculator->getDateOper());
+        $personalMutual->setDocId($docCalculator->getId());
+        $personalMutual->setDocKey($docCalculator->getLogKey());
+        $personalMutual->setDocStamp($docStamp);
+        $personalMutual->setDocType(Movement::DOC_ZP);
+        $personalMutual->setStatus(PersonalMutual::getStatusFromDocCalculator($docCalculator));
+        $personalMutual->setUser($docCalculator->getUser());
+        
+        $this->entityManager->persist($personalMutual);
         
         $this->entityManager->flush();
         
-        return;
+        return $personalMutual;
+    }
+    
+    /**
+     * Провести расчет
+     * @param CashDoc $cashDoc
+     * @param float $docStamp
+     * 
+     * @return PersonalMutual
+     */
+    public function repostCashDoc($cashDoc, $docStamp)
+    {
+        $this->removePersonalMutual(Movement::DOC_CASH, $cashDoc->getId());
+        
+        if ($cashDoc->getDateOper() >= date('2024-01-01')){
+            switch ($cashDoc->getKind()){
+
+                case CashDoc::KIND_OUT_SALARY:
+                    $personalMutual = new PersonalMutual();
+                    $personalMutual->setAmount($cashDoc->getAmount());
+                    $personalMutual->setCompany($cashDoc->getCompany());
+                    $personalMutual->setDateOper($cashDoc->getDateOper());
+                    $personalMutual->setDocId($cashDoc->getId());
+                    $personalMutual->setDocKey($cashDoc->getLogKey());
+                    $personalMutual->setDocStamp($docStamp);
+                    $personalMutual->setDocType(Movement::DOC_CASH);
+                    $personalMutual->setStatus(PersonalMutual::getStatusFromCashDoc($cashDoc));
+                    $personalMutual->setUser($cashDoc->getUserRefill());
+
+                    $this->entityManager->persist($personalMutual);
+                    break;
+            }    
+        }    
+        
+        $this->entityManager->flush();
+        
+        return $personalMutual;
+    }
+    
+    /**
+     * Провести расчет
+     * @param St $st
+     * @param float $docStamp
+     * 
+     * @return PersonalMutual
+     */
+    public function repostSt($st, $docStamp)
+    {
+        $this->removePersonalMutual(Movement::DOC_ST, $st->getId());
+        
+        if ($st->getDateOper() >= date('2024-01-01')){
+            switch ($st->getWriteOff()){
+
+                case St::WRITE_PAY:
+                    
+                    $amount = $this->entityManager->getRepository(St::class)
+                        ->findMovementBaseAmount($st);
+                    
+                    $personalMutual = new PersonalMutual();
+                    $personalMutual->setAmount(abs($amount));
+                    $personalMutual->setCompany($st->getCompany());
+                    $personalMutual->setDateOper($st->getDocDate());
+                    $personalMutual->setDocId($st->getId());
+                    $personalMutual->setDocKey($st->getLogKey());
+                    $personalMutual->setDocStamp($docStamp);
+                    $personalMutual->setDocType(Movement::DOC_ST);
+                    $personalMutual->setStatus(PersonalMutual::getStatusFromSt($st));
+                    $personalMutual->setUser($st->getUser());
+
+                    $this->entityManager->persist($personalMutual);
+                    break;
+            }    
+        }    
+        
+        $this->entityManager->flush();
+        
+        return $personalMutual;
+    }
+    
+    /**
+     * Расчитать оклад за день
+     * 
+     * @param PersonalAccrual $personalAccrual
+     * @param date $dateCalculation
+     * @param float $calcResult
+     * @param float $base
+     * 
+     * @return DocCalculator
+     */
+    private function addDocCalculator($personalAccrual, $dateCalculation, $calcResult, $base)
+    {
+        $docCalculator = $this->entityManager->getRepository(DocCalculator::class)
+                ->findOneBy(['peronalAccrual' => $personalAccrual->getId(), 'dateOper' => $dateCalculation]);
+        
+        if ($docCalculator){
+            $docCalculator->setStatus(DocCalculator::STATUS_RETIRED);
+            $this->entityManager->persist($docCalculator);
+        }
+        
+        if (!$docCalculator){
+            $docCalculator = new DocCalculator();
+            $docCalculator->setDateCreated(date('Y-m-d H:i:s'));
+        }
+
+        $docCalculator->setAccrual($personalAccrual->getAccrual());
+        $docCalculator->setAmount($calcResult);
+        $docCalculator->setBase($base);
+        $docCalculator->setCompany($personalAccrual->getCompany());
+        $docCalculator->setDateOper($dateCalculation);
+        $docCalculator->setNum($personalAccrual->getPersonal()->getPositionNum());
+        $docCalculator->setPersonalAccrual($personalAccrual);
+        $docCalculator->setPosition($personalAccrual->getPersonal()->getPosition());
+        $docCalculator->setRate($personalAccrual->getRate());
+        $docCalculator->setStatus(DocCalculator::STATUS_ACTIVE);
+        $docCalculator->setUser($personalAccrual->getUser());
+
+        $this->entityManager->persist($docCalculator);
+        
+        $this->entityManager->flush();
+        
+        $this->repostDocCalculator($docCalculator);
+        
+        return $docCalculator;
     }
     
     /**
      * Рассчитать за день
-     * @param PersonalAccrual $personalAccrual
-     * @param date $calcDate
+     * @param date $dateCalculation
      */
-    public function dateCalculation($personalAccrual, $calcDate)
+    public function dateCalculation($dateCalculation)
     {
+        $personalAccruals = $this->entityManager->getRepository(PersonalAccrual::class)
+                ->findActualPersonalAccrual($dateCalculation);        
         
+        foreach ($personalAccruals as $personalAccrual){
+            
+            $calcResult = $base = 0;
+                    
+            if ($personalAccrual->getStatus() == PersonalAccrual::STATUS_RETIRED){
+                continue;
+            }
+            switch ($personalAccrual->getAccrual()->getKind()){
+                case Accrual::KIND_FIX:
+                    $base = 0;
+                    $dayCount = cal_days_in_month(CAL_GREGORIAN, date('m', strtotime($dateCalculation)), date('Y', strtotime($dateCalculation)));
+                    $calcResult = $personalAccrual->getRate()*$personalAccrual->getPersonal()->getPositionNum()/$dayCount; 
+                    break;
+                case Accrual::KIND_PERCENT:
+                    switch ($personalAccrual->getAccrual()->getBasis()){
+                        case Accrual::BASE_INCOME_ORDER:
+                            $base = $this->entityManager->getRepository(PersonalAccrual::class)
+                                ->baseRetail($dateCalculation, [
+                                    'company' => $personalAccrual->getCompany()->getId(),
+                                    'user' => $personalAccrual->getUser()->getId(),
+                                ]);
+                            break;
+                        case Accrual::BASE_INCOME_RETAIL:
+                            $base = $this->entityManager->getRepository(PersonalAccrual::class)
+                                ->baseRetail($dateCalculation, [
+                                    'company' => $personalAccrual->getCompany()->getId(),
+                                ]);
+                            break;
+                        case Accrual::BASE_INCOME_TP:
+                            $base = $this->entityManager->getRepository(PersonalAccrual::class)
+                                ->baseTp($dateCalculation, [
+                                    'company' => $personalAccrual->getCompany()->getId(),
+                                ]);
+                            break;
+                        case Accrual::BASE_INCOME_TOTAL:
+                            $base = $this->entityManager->getRepository(PersonalAccrual::class)
+                                ->baseTp($dateCalculation, [
+                                    'company' => $personalAccrual->getCompany()->getId(),
+                                ]) +                                
+                                $this->entityManager->getRepository(PersonalAccrual::class)
+                                    ->baseRetail($dateCalculation, [
+                                        'company' => $personalAccrual->getCompany()->getId(),
+                                    ]);
+                            break;
+                    }
+                    $calcResult = $base*$personalAccrual->getRate()*$personalAccrual->getPersonal()->getPositionNum(); 
+                    break;
+            }
+            
+            $this->addDocCalculator($personalAccrual, $dateCalculation, $calcResult, $base);
+        }
+        
+        return;
+    }    
+    
+    /**
+     * Рассчитать за период
+     */
+    public function periodCalculator()
+    {
+        $dateCalculation = date('Y-m-d', strtotime('first day of previous month'));
+        
+        while ($dateCalculation <= date('Y-m-d')){
+            if ($dateCalculation < date('2024-01-01')){
+                continue;
+            }
+            
+            $this->dateCalculation($dateCalculation);
+            
+            $dateCalculation = date('Y-m-d', strtotime($dateCalculation .' +1 day'));
+        }
+        
+        return;
     }
 }

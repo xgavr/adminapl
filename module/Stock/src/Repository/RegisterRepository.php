@@ -22,11 +22,10 @@ use Application\Entity\Order;
 use Application\Entity\Goods;
 use Stock\Entity\PtuGood;
 use Company\Entity\Office;
-use Company\Entity\Legal;
-use User\Entity\User;
 use Stock\Entity\Revise;
 use Cash\Entity\CashDoc;
 use ApiMarketPlace\Entity\MarketSaleReport;
+use Zp\Entity\DocCalculator;
 
 
 /**
@@ -322,6 +321,18 @@ class RegisterRepository extends EntityRepository
     {
         $dateOper = date('Y-m-d 23:00:00', strtotime($marketSaleReport->getDocDate()));
         return $this->register($dateOper, Movement::DOC_MSR, $marketSaleReport->getId(), $marketSaleReport->getLogKey());
+    } 
+
+    /**
+     * Регистриция документа расчета ЗП
+     * 
+     * @param  DocCalculator $docCalculator
+     * @return float
+     */
+    public function zpDocRegister($docCalculator)
+    {
+        $dateOper = date('Y-m-d 23:59:59', strtotime($docCalculator->getDateOper()));
+        return $this->register($dateOper, Movement::DOC_ZP, $docCalculator->getId(), $docCalculator->getLogKey());
     } 
 
     public function allRegister()

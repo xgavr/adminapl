@@ -21,6 +21,7 @@ use Laminas\Json\Encoder;
 use Laminas\Json\Decoder;
 use Company\Entity\Legal;
 use User\Entity\User;
+use Company\Entity\Contract;
 
 
 /**
@@ -1227,7 +1228,7 @@ class Order {
  
     /*
      * Возвращает связанный contract.
-     * @return \Company\Entity\Contract
+     * @return Contract
      */    
     public function getContract() 
     {
@@ -1236,7 +1237,7 @@ class Order {
 
     /**
      * Задает связанный contract.
-     * @param \Company\Entity\Contract $contract
+     * @param Contract $contract
      */    
     public function setContract($contract) 
     {

@@ -7,6 +7,7 @@ use Zp\Entity\Position;
 use Zp\Entity\Accrual;
 use User\Entity\User;
 use Company\Entity\Legal;
+use Zp\Entity\PersonalAccrual;
 
 /**
  * This class represents a position accrual.
@@ -83,6 +84,12 @@ class DocCalculator
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Zp\Entity\PersonalAccrual", inversedBy="docCalculators") 
+     * @ORM\JoinColumn(name="personal_accrual_id", referencedColumnName="id")
+     */
+    private $personalAccrual;
     
     /**
      * Constructor.
@@ -95,6 +102,11 @@ class DocCalculator
         return $this->id;
     }
 
+    public function getLogKey() 
+    {
+        return 'zpdc:'.$this->id;
+    }
+    
     public function setId($id) {
         $this->id = $id;
         return $this;
@@ -260,6 +272,24 @@ class DocCalculator
         return $this;
     }
 
+    /**
+     * 
+     * @return PersonalAccrual
+     */
+    public function getPersonalAccrual() {
+        return $this->personalAccrual;
+    }
+
+    /**
+     * 
+     * @param PersonalAccrual $personalAccrual
+     * @return $this
+     */
+    public function setPersonalAccrual($personalAccrual) {
+        $this->personalAccrual = $personalAccrual;
+        return $this;
+    }
+    
 }
 
 

@@ -13,6 +13,7 @@ use Company\Entity\Office;
 use Stock\Entity\St;
 use Stock\Entity\StGood;
 use Application\Filter\ArticleCode;
+use Stock\Entity\Movement;
 
 /**
  * Description of StRepository
@@ -265,7 +266,41 @@ class StRepository extends EntityRepository{
             }    
         }
         
-        return;                
+        return;                        
+    }   
+    
+    /**
+     * Найти сумму списания
+     * @param St $st
+     * 
+     * @return float 
+     */
+    public function findMovementBaseAmount($st)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('sum(m.baseAmount) as baseAmount')
+            ->from(Movement::class, 'm')
+            ->where('m.status = ?1')
+            ->setParameter('1', Movement::STATUS_ACTIVE)    
+            ->andWhere('m.docType = :docType')
+            ->setParameter('docType', Movement::DOC_ST)    
+            ->andWhere('m.docId = :docId')
+            ->setParameter('docId', $st->getId())    
+            ->setMaxResults(1)    
+                
+                ;
         
-    }                
+        $data = $queryBuilder->getQuery()->getOneOrNullResult();
+        
+        if (!empty($data['baseAmount'])){
+            return $data['baseAmount'];
+        }
+        
+        return 0;                        
+    }   
+    
+    
 }

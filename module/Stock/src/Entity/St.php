@@ -39,8 +39,8 @@ class St {
     const STATUS_EX_APL  = 3; // Отправлено в АПЛ.
 
       // St write constants.
-    const WRITE_COST       = 1; // Списать в зп.
-    const WRITE_PAY        = 2; // Списать на расходы.
+    const WRITE_COST       = 1; // Списать в расходы.
+    const WRITE_PAY        = 2; // Списать на зп .
     const WRITE_INVENTORY  = 3; // инвентаризация
     const WRITE_COMMISSION  = 4; // вернуть комиссару
     //const WRITE_STORNO      = 5; // отмена списания

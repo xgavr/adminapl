@@ -5,6 +5,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use User\Entity\User;
 use Company\Entity\Legal;
+use Zp\Entity\DocCalculator;
+use Cash\Entity\CashDoc;
+use Stock\Entity\St;
 
 /**
  * This class represents a position accrual.
@@ -168,6 +171,45 @@ class PersonalMutual
             return $list[$this->status];
         
         return 'Unknown';
+    }    
+    
+    /**
+     * Returns possible docCalculator status.
+     * @param DocCalculator $docCalculator
+     * @return integer
+     */
+    public static function getStatusFromDocCalculator($docCalculator) 
+    {
+        switch ($docCalculator->getStatus()){
+            case DocCalculator::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+
+    /**
+     * Returns possible cashDoc status.
+     * @param CashDoc $cashDoc
+     * @return integer
+     */
+    public static function getStatusFromCashDoc($cashDoc) 
+    {
+        switch ($cashDoc->getStatus()){
+            case CashDoc::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+
+    /**
+     * Returns possible st status.
+     * @param St $st
+     * @return integer
+     */
+    public static function getStatusFromSt($st) 
+    {
+        switch ($st->getStatus()){
+            case St::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
     }    
 
     public function setStatus($status) {

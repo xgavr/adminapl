@@ -26,6 +26,7 @@ use Application\Entity\Oem;
 use Cash\Entity\CashDoc;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use ApiMarketPlace\Entity\MarketSaleReportItem;
+use Zp\Entity\DocCalculator;
 
 /**
  * This service register.
@@ -104,6 +105,12 @@ class RegisterManager
      */
     private $reportManager;
     
+    /**
+     * Zp manager
+     * @var \Zp\Service\ZpCalculator
+     */
+    private $zpManager;
+    
     private $meDate = '2016-10-30';
 
     /**
@@ -111,7 +118,7 @@ class RegisterManager
      */
     public function __construct($entityManager, $logManager, $otManager, $ptManager,
             $ptuManager, $stManager, $vtManager, $vtpManager, $orderManager, 
-            $cashMananger, $reviseManager, $reportManager) 
+            $cashMananger, $reviseManager, $reportManager, $zpManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
@@ -125,6 +132,7 @@ class RegisterManager
         $this->cashManager = $cashMananger;
         $this->reviseManager = $reviseManager;
         $this->reportManager = $reportManager;
+        $this->zpManager = $zpManager;
     }
     
     public function currentUser()
@@ -516,6 +524,14 @@ class RegisterManager
                                 ->count(['marketSaleReport' => $marketSaleReport->getId(), 'take' => MarketSaleReportItem::TAKE_NO]);
                         $flag = $takeNo == 0;
                     }   
+                }
+                break;
+            case Movement::DOC_ZP:
+                $docCalculator = $this->entityManager->getRepository(DocCalculator::class)
+                    ->find($register->getDocId());
+                if ($docCalculator){
+                    $this->zpManager->repostDocCalculator($docCalculator);
+                    $flag = true;
                 }
                 break;
             default: $flag = false;    

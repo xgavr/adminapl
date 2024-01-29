@@ -13,6 +13,8 @@ use Zp\Entity\Accrual;
 use Zp\Entity\Personal;
 use Zp\Entity\Position;
 use Zp\Entity\PersonalAccrual;
+use Zp\Entity\OrderCalculator;
+use ApiMarketPlace\Entity\MarketSaleReport;
         
 /**
  * Description of ZpRepository
@@ -173,9 +175,7 @@ class ZpRepository extends EntityRepository
         
         return;       
     }
-    
-    
-    
+            
     /**
      * Получить Штат
      * @param array $params
@@ -323,4 +323,151 @@ class ZpRepository extends EntityRepository
         return $result;
     }
     
+    /**
+     * Найти начисления
+     * 
+     * @param type $dateCalculation
+     * 
+     * @return type Description
+     */    
+    public function findUniquePersonalAccrual($dateCalculation)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('pa.company, pa.personal, pa.accrual, pa.user')
+                ->distinct()
+                ->from(PersonalAccrual::class, 'pa')
+                ->where('pa.dateOper <= :dateOper')
+                ->setParameter('dateOper', $dateCalculation)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
+
+    /**
+     * Найти актуальные начисления
+     * 
+     * @param type $dateCalculation
+     * 
+     * @return type Description
+     */    
+    public function findActualPersonalAccrual($dateCalculation)
+    {
+        $result = [];
+
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $uniquePersonalAccrualData = $this->findUniquePersonalAccrual($dateCalculation);
+        
+        foreach ($uniquePersonalAccrualData as $personalAccrualRow){
+
+            $queryBuilder->resetDQLParts();
+            $queryBuilder->select('pa')
+                    ->from(PersonalAccrual::class, 'pa')
+                    ->where('pa.dateOper <= :dateOper')
+                    ->setParameter('dateOper', $dateCalculation)
+                    ->orderBy('pa.dateOper', 'Desc')
+                    ->andWhere('pa.user = :user')
+                    ->setParameter('user', $personalAccrualRow['user'])
+                    ->andWhere('pa.accrual = :accrual')
+                    ->setParameter('accrual', $personalAccrualRow['accrual'])
+                    ->andWhere('pa.company = :company')
+                    ->setParameter('company', $personalAccrualRow['company'])
+                    ->andWhere('pa.personal = :personal')
+                    ->setParameter('personal', $personalAccrualRow['personal'])
+                    ;
+        
+            $result[] = $queryBuilder->getQuery()->getResult();
+        }     
+
+        return $result;
+    }
+    
+    /**
+     * База Tp
+     * @param date $dateCalculation
+     * @param array $params
+     * @return int
+     */
+    public function baseTp($dateCalculation, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('sum(msr.docAmount-msr.baseAmount-msr.costAmount) as base')
+                ->from(MarketSaleReport::class, 'msr')
+                ->where('msr.docDate = :dateOper')
+                ->setParameter('dateOper', $dateCalculation)
+                ->andWhere('msr.status = :status')
+                ->setParameter('status', MarketSaleReport::STATUS_ACTIVE)
+                ->setMaxResults(1)
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['company'])){
+                if (is_numeric($params['company'])){
+                    $queryBuilder
+                            ->join('msr.contract', 'c')
+                            ->andWhere('c.company = :company')
+                            ->setParameter('company', $params['company'])
+                            ;
+                }
+            }
+        }
+        
+        $data = $queryBuilder->getQuery()->getOneOrNullResult();
+        if (!empty($data)){
+            return $data['base'];
+        }
+        
+        return 0;
+    }
+    
+    /**
+     * База Retail
+     * @param date $dateCalculation
+     * @param array $params
+     * @return int
+     */
+    public function baseRetail($dateCalculation, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('sum(oc.amount-oc.baseAmount) as base')
+                ->from(OrderCalculator::class, 'oc')
+                ->where('oc.dateOper = :dateOper')
+                ->setParameter('dateOper', $dateCalculation)
+                ->andWhere('oc.status = :status')
+                ->setParameter('status', OrderCalculator::STATUS_ACTIVE)
+                ->setMaxResults(1)
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['company'])){
+                if (is_numeric($params['company'])){
+                    $queryBuilder->andWhere('oc.company = :company')
+                            ->setParameter('company', $params['company'])
+                            ;
+                }
+            }
+            if (!empty($params['user'])){
+                if (is_numeric($params['user'])){
+                    $queryBuilder->andWhere('oc.user = :user')
+                            ->setParameter('user', $params['user'])
+                            ;
+                }
+            }
+        }
+        
+        $data = $queryBuilder->getQuery()->getOneOrNullResult();
+        if (!empty($data)){
+            return $data['base'];
+        }
+        
+        return 0;
+    }
 }
