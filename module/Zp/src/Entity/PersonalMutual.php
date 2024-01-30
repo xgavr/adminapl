@@ -8,6 +8,7 @@ use Company\Entity\Legal;
 use Zp\Entity\DocCalculator;
 use Cash\Entity\CashDoc;
 use Stock\Entity\St;
+use Zp\Entity\Accrual;
 
 /**
  * This class represents a position accrual.
@@ -18,6 +19,10 @@ class PersonalMutual
 {
     const STATUS_ACTIVE       = 1; //.
     const STATUS_RETIRED      = 2; // .
+    
+    const KIND_ACCRUAL       = 1; // начисление
+    const KIND_DEDUCTION     = 2; // удержание
+    const KIND_PAYMENT       = 3; // выплата
     
     /**
      * @ORM\Id
@@ -61,6 +66,11 @@ class PersonalMutual
      */
     protected $status;
 
+    /** 
+     * @ORM\Column(name="kind")  
+     */
+    protected $kind;
+
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="personalMutuals") 
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
@@ -72,6 +82,12 @@ class PersonalMutual
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Zp\Entity\Accrual", inversedBy="personalMutuals") 
+     * @ORM\JoinColumn(name="accrual_id", referencedColumnName="id")
+     */
+    private $accrual;
 
 
     /**
@@ -161,7 +177,7 @@ class PersonalMutual
     }    
 
     /**
-     * Returns user status as string.
+     * Returns status as string.
      * @return string
      */
     public function getStatusAsString()
@@ -217,6 +233,41 @@ class PersonalMutual
         return $this;
     }
 
+    public function getKind() {
+        return $this->kind;
+    }
+
+    /**
+     * Returns possible kinds as array.
+     * @return array
+     */
+    public static function getKindList() 
+    {
+        return [
+            self::KIND_ACCRUAL => 'Начсиление',
+            self::KIND_DEDUCTION => 'Удержание',
+            self::KIND_PAYMENT => 'Выплата',
+        ];
+    }    
+
+    /**
+     * Returns kind as string.
+     * @return string
+     */
+    public function getKindAsString()
+    {
+        $list = self::getKindList();
+        if (isset($list[$this->kind]))
+            return $list[$this->kind];
+        
+        return 'Unknown';
+    }    
+    
+    public function setKind($kind) {
+        $this->kind = $kind;
+        return $this;
+    }    
+    
     /**
      * 
      * @return Legal
@@ -252,7 +303,25 @@ class PersonalMutual
         $this->user = $user;
         return $this;
     }
+    
+    /**
+     * 
+     * @return Accrual
+     */
+    public function getAccrual() {
+        return $this->accrual;
+    }
 
+    /**
+     * 
+     * @param Accrual $accrual
+     * @return $this
+     */
+    public function setAccrual($accrual) {
+        $this->accrual = $accrual;
+        return $this;
+    }
+   
 }
 
 

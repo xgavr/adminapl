@@ -106,6 +106,17 @@ class AccrualForm extends Form
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'select',
+            'name' => 'payment',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Тип начисления/удержания',
+                'value_options' => Accrual::getPaymentList(),
+            ],
+        ]);
+        
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',

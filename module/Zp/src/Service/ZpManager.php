@@ -47,6 +47,7 @@ class ZpManager {
         $accrual->setAplId($data['aplId']);
         $accrual->setBasis($data['basis']);
         $accrual->setKind($data['kind']);
+        $accrual->setPayment($data['payment']);
         $accrual->setComment(empty($data['comment']) ? null:$data['comment']);
         $accrual->setName($data['name']);
         $accrual->setStatus(empty($data['status']) ? Accrual::STATUS_ACTIVE:$data['status']);
@@ -68,6 +69,7 @@ class ZpManager {
         $accrual->setAplId($data['aplId']);
         $accrual->setBasis($data['basis']);
         $accrual->setKind($data['kind']);
+        $accrual->setPayment($data['payment']);
         $accrual->setComment(empty($data['comment']) ? null:$data['comment']);
         $accrual->setName($data['name']);
         $accrual->setStatus(empty($data['status']) ? Accrual::STATUS_ACTIVE:$data['status']);

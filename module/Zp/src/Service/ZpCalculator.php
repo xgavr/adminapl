@@ -205,6 +205,8 @@ class ZpCalculator {
         $personalMutual->setDocType(Movement::DOC_ZP);
         $personalMutual->setStatus(PersonalMutual::getStatusFromDocCalculator($docCalculator));
         $personalMutual->setUser($docCalculator->getUser());
+        $personalMutual->setKind(PersonalMutual::KIND_ACCRUAL);
+        $personalMutual->setAccrual($docCalculator->getAccrual());
         
         $this->entityManager->persist($personalMutual);
         
@@ -227,7 +229,26 @@ class ZpCalculator {
         if ($cashDoc->getDateOper() >= date('2024-01-01')){
             switch ($cashDoc->getKind()){
 
+                case CashDoc::KIND_OUT_COURIER:
+                    // начисление за доставку
+                    $personalMutual = new PersonalMutual();
+                    $personalMutual->setAmount(-$cashDoc->getAmount());
+                    $personalMutual->setCompany($cashDoc->getCompany());
+                    $personalMutual->setDateOper($cashDoc->getDateOper());
+                    $personalMutual->setDocId($cashDoc->getId());
+                    $personalMutual->setDocKey($cashDoc->getLogKey());
+                    $personalMutual->setDocStamp($docStamp);
+                    $personalMutual->setDocType(Movement::DOC_CASH);
+                    $personalMutual->setStatus(PersonalMutual::getStatusFromCashDoc($cashDoc));
+                    $personalMutual->setUser($cashDoc->getUserRefill());
+                    $personalMutual->setKind(PersonalMutual::KIND_ACCRUAL);
+                    $personalMutual->setAccrual($this->entityManager->getRepository(Accrual::class)
+                            ->findOneBy(['payment' => Accrual::PAYMENT_COURIER]));
+
+                    $this->entityManager->persist($personalMutual);
+                    
                 case CashDoc::KIND_OUT_SALARY:
+                    // выплата
                     $personalMutual = new PersonalMutual();
                     $personalMutual->setAmount($cashDoc->getAmount());
                     $personalMutual->setCompany($cashDoc->getCompany());
@@ -238,9 +259,13 @@ class ZpCalculator {
                     $personalMutual->setDocType(Movement::DOC_CASH);
                     $personalMutual->setStatus(PersonalMutual::getStatusFromCashDoc($cashDoc));
                     $personalMutual->setUser($cashDoc->getUserRefill());
+                    $personalMutual->setKind(PersonalMutual::KIND_PAYMENT);
+                    $personalMutual->setAccrual($this->entityManager->getRepository(Accrual::class)
+                            ->findOneBy(['payment' => Accrual::PAYMENT_PAYMENT]));
 
                     $this->entityManager->persist($personalMutual);
-                    break;
+
+                    break;                
             }    
         }    
         
@@ -278,6 +303,9 @@ class ZpCalculator {
                     $personalMutual->setDocType(Movement::DOC_ST);
                     $personalMutual->setStatus(PersonalMutual::getStatusFromSt($st));
                     $personalMutual->setUser($st->getUser());
+                    $personalMutual->setKind(PersonalMutual::KIND_PAYMENT);
+                    $personalMutual->setAccrual($this->entityManager->getRepository(Accrual::class)
+                            ->findOneBy(['payment' => Accrual::PAYMENT_PAYMENT]));
 
                     $this->entityManager->persist($personalMutual);
                     break;

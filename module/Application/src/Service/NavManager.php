@@ -460,6 +460,12 @@ class NavManager
     
                 $zpDropdownItems[] = [
                             'id' => 'zp',
+                            'label' => 'Операции ЗП',
+                            'link' => $url('zp')
+                        ];
+                                
+                $zpDropdownItems[] = [
+                            'id' => 'zp',
                             'label' => 'Виды начислений',
                             'link' => $url('accrual')
                         ];

@@ -23,6 +23,15 @@ class Accrual
     const KIND_PERCENT       = 1; // процент от базы
     const KIND_FIX           = 2; // сумма.
     
+    const PAYMENT_WORK_TIME  = 1; // повременная оплата, оклад
+    const PAYMENT_WORK       = 2; // сдельная оплата.
+    const PAYMENT_AVERAGE    = 3; // оплата по среднему, отпуск.
+    const PAYMENT_ONE_TIME   = 4; // разовая оплата.
+    const PAYMENT_COURIER    = 5; // оплата доставки.
+    const PAYMENT_OTHER      = 6; // прочая оплата.
+    const PAYMENT_TAX        = 7; // налог.
+    const PAYMENT_PAYMENT    = 99; // выплата на руки.
+    
     /**
      * @ORM\Id
      * @ORM\Column(name="id")
@@ -60,6 +69,11 @@ class Accrual
      */
     protected $kind;
 
+    /** 
+     * @ORM\Column(name="payment")  
+     */
+    protected $payment;
+
     /**
      * Constructor.
      */
@@ -94,7 +108,7 @@ class Accrual
     public static function getBasisList() 
     {
         return [
-            self::BASE_NONE => 'Оклад',
+            self::BASE_NONE => 'Не установлен',
             self::BASE_INCOME_RETAIL => 'Доход розницы',
             self::BASE_INCOME_TP => 'Доход ТП',
             self::BASE_INCOME_TOTAL => 'Доход общий',
@@ -132,7 +146,7 @@ class Accrual
     }    
 
     /**
-     * Returns user status as string.
+     * Returns status as string.
      * @return string
      */
     public function getStatusAsString()
@@ -191,7 +205,7 @@ class Accrual
     }    
 
     /**
-     * Returns user kind as string.
+     * Returns kind as string.
      * @return string
      */
     public function getKindAsString()
@@ -205,6 +219,45 @@ class Accrual
     
     public function setKind($kind) {
         $this->kind = $kind;
+        return $this;
+    }
+
+    public function getPayment() {
+        return $this->payment;
+    }
+
+    /**
+     * Returns possible payments as array.
+     * @return array
+     */
+    public static function getPaymentList() 
+    {
+        return [
+            self::PAYMENT_WORK => 'Сдельная оплата',
+            self::PAYMENT_WORK_TIME => 'Оклад',
+            self::PAYMENT_ONE_TIME => 'Разовая оплата',
+            self::PAYMENT_AVERAGE => 'По среднему, отпуск',
+            self::PAYMENT_OTHER => 'Прочие выплаты',
+            self::PAYMENT_TAX => 'Налог',
+            self::PAYMENT_PAYMENT => 'Выплата ЗП',
+        ];
+    }    
+
+    /**
+     * Returns payment as string.
+     * @return string
+     */
+    public function getPaymentAsString()
+    {
+        $list = self::getPaymentList();
+        if (isset($list[$this->payment]))
+            return $list[$this->payment];
+        
+        return 'Unknown';
+    }    
+    
+    public function setPayment($payment) {
+        $this->payment = $payment;
         return $this;
     }
 

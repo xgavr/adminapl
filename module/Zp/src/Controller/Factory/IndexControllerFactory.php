@@ -5,6 +5,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Zp\Controller\IndexController;
 use Zp\Service\ZpManager;
+use Zp\Service\ZpCalculator;
 
 /**
  * This is the factory for IndexController. Its purpose is to instantiate the
@@ -16,8 +17,9 @@ class IndexControllerFactory implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $zpManager = $container->get(ZpManager::class);
+        $zpCalculator = $container->get(ZpCalculator::class);
         
         // Instantiate the controller and inject dependencies
-        return new IndexController($entityManager, $zpManager);
+        return new IndexController($entityManager, $zpManager, $zpCalculator);
     }
 }
