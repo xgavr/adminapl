@@ -112,7 +112,7 @@ class AccrualForm extends Form
             'attributes' => [
             ],
             'options' => [
-                'label' => 'Тип начисления/удержания',
+                'label' => 'Тип начисления',
                 'value_options' => Accrual::getPaymentList(),
             ],
         ]);
