@@ -419,7 +419,7 @@ class ZpCalculator {
                                     ]);
                             break;
                     }
-                    $calcResult = $base*$personalAccrual->getRate()*$personalAccrual->getPersonal()->getPositionNum(); 
+                    $calcResult = $base*($personalAccrual->getRate()/100)*$personalAccrual->getPersonal()->getPositionNum(); 
                     break;
             }
             
