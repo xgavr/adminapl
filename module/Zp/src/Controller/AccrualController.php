@@ -113,7 +113,7 @@ class AccrualController extends AbstractActionController
                     'aplId' => $accrual->getAplId(),
                     'basis' => $accrual->getBasis(),
                     'kind' => $accrual->getKind(),
-                    'kind' => $accrual->getPayment(),
+                    'payment' => $accrual->getPayment(),
                     'name' => $accrual->getName(),
                     'status' => $accrual->getStatus(),
                 ];

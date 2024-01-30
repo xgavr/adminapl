@@ -247,6 +247,7 @@ class Accrual
             self::PAYMENT_OTHER => 'Прочие выплаты',
             self::PAYMENT_TAX => 'Налог',
             self::PAYMENT_PAYMENT => 'Выплата ЗП',
+            self::PAYMENT_COURIER => 'Оплата доставки',
         ];
     }    
 
