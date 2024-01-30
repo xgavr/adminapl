@@ -106,6 +106,8 @@ class AccrualController extends AbstractActionController
                 return new JsonModel(
                    ['ok']
                 );           
+            } else {
+                var_dump($form->getMessages());
             }
         } else {
             if ($accrual){
@@ -116,6 +118,7 @@ class AccrualController extends AbstractActionController
                     'payment' => $accrual->getPayment(),
                     'name' => $accrual->getName(),
                     'status' => $accrual->getStatus(),
+                    'comment' => $accrual->getComment(),
                 ];
                 $form->setData($data);
             }    
