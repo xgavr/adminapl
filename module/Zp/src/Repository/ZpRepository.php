@@ -393,7 +393,8 @@ class ZpRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('pa.company, pa.personal, pa.accrual, pa.user')
+        $queryBuilder->select('identity(pa.company) as company, identity(pa.personal) as personal, '
+                . 'identity(pa.accrual) as accrual, identity(pa.user) as user')
                 ->distinct()
                 ->from(PersonalAccrual::class, 'pa')
                 ->where('pa.dateOper <= :dateOper')
@@ -435,9 +436,14 @@ class ZpRepository extends EntityRepository
                     ->setParameter('company', $personalAccrualRow['company'])
                     ->andWhere('pa.personal = :personal')
                     ->setParameter('personal', $personalAccrualRow['personal'])
+                    ->setMaxResults(1)
                     ;
         
-            $result[] = $queryBuilder->getQuery()->getResult();
+            $data = $queryBuilder->getQuery()->getOneOrNullResult();
+            
+            if (!empty($data)){
+                $result[] = $data;
+            }            
         }     
 
         return $result;

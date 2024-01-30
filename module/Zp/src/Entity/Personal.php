@@ -84,7 +84,7 @@ class Personal
      */
     public function __construct() 
     {
-        $personalAccruals = new ArrayCollection();
+        $this->personalAccruals = new ArrayCollection();
     }
     
     public function getId() {

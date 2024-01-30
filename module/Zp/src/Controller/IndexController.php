@@ -72,6 +72,7 @@ class IndexController extends AbstractActionController
         $user = $this->params()->fromQuery('user');
         $accrual = $this->params()->fromQuery('accrual');
         $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period');
         $limit = $this->params()->fromQuery('limit');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');

@@ -114,6 +114,12 @@ class User
     private $personal;
     
     /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalAccrual", mappedBy="user")
+    * @ORM\JoinColumn(name="id", referencedColumnName="company_id")
+     */
+    private $personalAccruals;
+    
+    /**
     * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalMutual", mappedBy="user")
     * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
      */
@@ -129,6 +135,7 @@ class User
         $this->clients = new ArrayCollection();
         $this->personal = new ArrayCollection();
         $this->personalMutuals = new ArrayCollection();
+        $this->personalAccruals = new ArrayCollection();
     }
     
     /**
@@ -543,6 +550,10 @@ class User
 
     public function getPersonalMutuals() {
         return $this->personalMutuals;
+    }
+    
+    public function getPersonalAccruals() {
+        return $this->personalAccruals;
     }
     
     /**

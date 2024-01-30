@@ -75,6 +75,12 @@ class Accrual
     protected $payment;
 
     /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalAccrual", mappedBy="accrual")
+    * @ORM\JoinColumn(name="id", referencedColumnName="company_id")
+     */
+    private $personalAccruals;
+    
+    /**
     * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalMutual", mappedBy="accrual")
     * @ORM\JoinColumn(name="id", referencedColumnName="accrual_id")
      */
@@ -85,6 +91,7 @@ class Accrual
      */
     public function __construct() 
     {
+        $this->personalAccruals = new ArrayCollection();
         $this->personalMutuals = new ArrayCollection();
     }
     
@@ -271,6 +278,10 @@ class Accrual
 
     public function getPersonalMutuals() {
         return $this->personalMutuals;
+    }
+
+    public function getPersonalAccruals() {
+        return $this->personalAccruals;
     }
 
 }

@@ -170,6 +170,12 @@ class Legal {
     private $locations;
 
     /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalAccrual", mappedBy="company")
+    * @ORM\JoinColumn(name="id", referencedColumnName="company_id")
+     */
+    private $personalAccruals;
+    
+    /**
     * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalMutual", mappedBy="company")
     * @ORM\JoinColumn(name="id", referencedColumnName="company_id")
      */
@@ -186,6 +192,7 @@ class Legal {
         $this->locations = new ArrayCollection();
         $this->personal = new ArrayCollection();
         $this->personalMutuals = new ArrayCollection();
+        $this->personalAccruals = new ArrayCollection();
     }
     
     
@@ -969,6 +976,10 @@ class Legal {
 
     public function getPersonalMutuals() {
         return $this->personalMutuals;
+    }
+    
+    public function getPersonalAccruals() {
+        return $this->personalAccruals;
     }
     
     /**

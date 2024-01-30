@@ -332,7 +332,7 @@ class ZpCalculator {
     private function addDocCalculator($personalAccrual, $dateCalculation, $calcResult, $base)
     {
         $docCalculator = $this->entityManager->getRepository(DocCalculator::class)
-                ->findOneBy(['peronalAccrual' => $personalAccrual->getId(), 'dateOper' => $dateCalculation]);
+                ->findOneBy(['personalAccrual' => $personalAccrual->getId(), 'dateOper' => $dateCalculation]);
         
         if ($docCalculator){
             $docCalculator->setStatus(DocCalculator::STATUS_RETIRED);
@@ -377,7 +377,7 @@ class ZpCalculator {
         foreach ($personalAccruals as $personalAccrual){
             
             $calcResult = $base = 0;
-                    
+            
             if ($personalAccrual->getStatus() == PersonalAccrual::STATUS_RETIRED){
                 continue;
             }
@@ -435,14 +435,11 @@ class ZpCalculator {
     public function periodCalculator()
     {
         $dateCalculation = date('Y-m-d', strtotime('first day of previous month'));
-        
         while ($dateCalculation <= date('Y-m-d')){
-            if ($dateCalculation < date('2024-01-01')){
-                continue;
+            if ($dateCalculation >= date('2024-01-01')){
+                $this->dateCalculation($dateCalculation);                
             }
-            
-            $this->dateCalculation($dateCalculation);
-            
+                        
             $dateCalculation = date('Y-m-d', strtotime($dateCalculation .' +1 day'));
         }
         
