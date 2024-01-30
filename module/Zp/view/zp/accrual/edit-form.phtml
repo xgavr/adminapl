@@ -57,7 +57,14 @@ $form->prepare();
                 <?= $this->formElementErrors($form->get('name')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-4">                        
+        <div class="col-xs-3">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-1">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('aplId')); ?>
                 <?= $this->formElement($form->get('aplId')); ?>
@@ -66,32 +73,25 @@ $form->prepare();
         </div>    
     </div>    
     <div class="row">
-        <div class="col-xs-3">                        
+        <div class="col-xs-4">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('payment')); ?>
                 <?= $this->formElement($form->get('payment')); ?>
                 <?= $this->formElementErrors($form->get('payment')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-3">                        
+        <div class="col-xs-4">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('basis')); ?>
                 <?= $this->formElement($form->get('basis')); ?>
                 <?= $this->formElementErrors($form->get('basis')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-3">                        
+        <div class="col-xs-4">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('kind')); ?>
                 <?= $this->formElement($form->get('kind')); ?>
                 <?= $this->formElementErrors($form->get('kind')); ?>                  
-            </div>
-        </div>    
-        <div class="col-xs-3">                        
-            <div class="form-group">
-                <?= $this->formLabel($form->get('status')); ?>
-                <?= $this->formElement($form->get('status')); ?>
-                <?= $this->formElementErrors($form->get('status')); ?>                  
             </div>
         </div>    
     </div>        

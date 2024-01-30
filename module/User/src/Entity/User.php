@@ -114,6 +114,12 @@ class User
     private $personal;
     
     /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalMutual", mappedBy="user")
+    * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
+     */
+    private $personalMutuals;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -122,6 +128,7 @@ class User
         $this->contacts = new ArrayCollection();
         $this->clients = new ArrayCollection();
         $this->personal = new ArrayCollection();
+        $this->personalMutuals = new ArrayCollection();
     }
     
     /**
@@ -534,6 +541,10 @@ class User
         return $this->personal;
     }
 
+    public function getPersonalMutuals() {
+        return $this->personalMutuals;
+    }
+    
     /**
      * Sets  office.
      * @param Office $office     

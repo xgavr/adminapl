@@ -75,10 +75,17 @@ class Accrual
     protected $payment;
 
     /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalMutual", mappedBy="accrual")
+    * @ORM\JoinColumn(name="id", referencedColumnName="accrual_id")
+     */
+    private $personalMutuals;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
+        $this->personalMutuals = new ArrayCollection();
     }
     
     public function getId() {
@@ -259,6 +266,10 @@ class Accrual
     public function setPayment($payment) {
         $this->payment = $payment;
         return $this;
+    }
+
+    public function getPersonalMutuals() {
+        return $this->personalMutuals;
     }
 
 }

@@ -170,6 +170,12 @@ class Legal {
     private $locations;
 
     /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalMutual", mappedBy="company")
+    * @ORM\JoinColumn(name="id", referencedColumnName="company_id")
+     */
+    private $personalMutuals;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -179,6 +185,7 @@ class Legal {
         $this->contacts = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->personal = new ArrayCollection();
+        $this->personalMutuals = new ArrayCollection();
     }
     
     
@@ -960,6 +967,10 @@ class Legal {
         $this->locations[] = $location;
     }
 
+    public function getPersonalMutuals() {
+        return $this->personalMutuals;
+    }
+    
     /**
      * Массив для формы
      * @return array 

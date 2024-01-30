@@ -226,6 +226,8 @@ class ZpCalculator {
     {
         $this->removePersonalMutual(Movement::DOC_CASH, $cashDoc->getId());
         
+        $personalMutual = null;
+        
         if ($cashDoc->getDateOper() >= date('2024-01-01')){
             switch ($cashDoc->getKind()){
 
