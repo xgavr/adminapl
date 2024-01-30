@@ -49,11 +49,18 @@ $form->prepare();
             
 <div class="modal-body">
     <div class="row">
-        <div class="col-xs-12">                        
+        <div class="col-xs-10">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('name')); ?>
                 <?= $this->formElement($form->get('name')); ?>
                 <?= $this->formElementErrors($form->get('name')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
             </div>
         </div>    
     </div>    
