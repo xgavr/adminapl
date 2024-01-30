@@ -85,8 +85,8 @@ final class Version20240122093551 extends AbstractMigration
         $table->addColumn('company_id', 'integer', ['notnull'=>true, 'comment' => 'Компания']);
         $table->addColumn('user_id', 'integer', ['notnull'=>true, 'comment' => 'Сотрудник']);
         $table->addColumn('doc_id', 'integer', ['notnull'=>true, 'comment' => 'Номер документа']);
-        $table->addColumn('doc_type', 'integer', ['notnull'=>true, 'comment' => 'Дата документа']);
-        $table->addColumn('date_oper', 'integer', ['notnull'=>true, 'comment' => 'Дата операции']);
+        $table->addColumn('doc_type', 'integer', ['notnull'=>true, 'comment' => 'Тип документа']);
+        $table->addColumn('date_oper', 'date', ['notnull'=>true, 'comment' => 'Дата операции']);
         $table->addColumn('doc_key', 'integer', ['notnull'=>true, 'comment' => 'Код документа']);
         $table->addColumn('doc_stamp', 'integer', ['notnull'=>true, 'comment' => 'Метка документа']);
         $table->addColumn('amount', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Сумма']);

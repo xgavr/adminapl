@@ -67,7 +67,7 @@ $this->pageBreadcrumbs()->setItems([
             data-toggle="table" 
             data-url="/zp/content"
             data-side-pagination="server"
-            data-pagination="false" 
+            data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
@@ -77,6 +77,9 @@ $this->pageBreadcrumbs()->setItems([
             data-show-footer="false"
             data-row-style="rowStyle"
             data-classes = "table table-bordered table-hover table-condensed"
+            data-cookie="true"
+            data-cookie-id-table="zpSaveId"
+            data-cookie-expire="1m"            
             >
             <thead>
                 <tr>
