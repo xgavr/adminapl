@@ -423,7 +423,9 @@ class ZpCalculator {
                     break;
             }
             
-            $this->addDocCalculator($personalAccrual, $dateCalculation, $calcResult, $base);
+            if ($calcResult){
+                $this->addDocCalculator($personalAccrual, $dateCalculation, $calcResult, $base);
+            }    
         }
         
         return;
