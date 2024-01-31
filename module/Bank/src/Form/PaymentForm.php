@@ -289,7 +289,8 @@ class PaymentForm extends Form implements ObjectManagerAwareInterface
         $this->add([            
             'type'  => 'select',
             'name' => 'paymentType',
-            'attributes' => [                
+            'attributes' => [ 
+                'id' => 'paymentType',
                 'value' => Payment::PAYMENT_TYPE_NORMAL,
             ],
             'options' => [
