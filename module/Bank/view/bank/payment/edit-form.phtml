@@ -397,39 +397,39 @@ $form->prepare();
         
     function changeNds(){
         
-        if ($('input[name="paymentType"]').val() == <?= Payment::PAYMENT_TYPE_NORMAL?>){
-        
-            let amount = $('input[name="amount"]').val();
-            var purpose = $('input[name="purpose"]').val();
-            let ndsStr1 = 'в т.ч. НДС';
-            let ndsStr0 = 'без НДС';
-            var beg = Math.max(purpose.indexOf(ndsStr1), purpose.indexOf(ndsStr0));
-            if (beg>0){
-                purpose = purpose.substring(0, beg).trim();
-            }    
-            var ndsStr = '';
-            if (amount){            
-                switch ($('select[name="nds"]').val()){
-                    case '<?= Payment::NDS_20?>': 
-                        var nds = Math.round(amount*20*100/120)/100; 
-                        ndsStr = ndsStr1 + ' 20% ' + nds;
-                        break
-                    case '<?= Payment::NDS_10?>': 
-                        var nds = Math.round(amount*10*100/110)/100; 
-                        ndsStr = ndsStr1 + ' 10% ' + nds;
-                        break
-                    case '<?= Payment::NDS_NO?>': 
-                        ndsStr = ndsStr0;
-                        break
-                    default: return;            
-                }
+        let amount = $('input[name="amount"]').val();
+        var purpose = $('input[name="purpose"]').val();
+        let ndsStr1 = 'в т.ч. НДС';
+        let ndsStr0 = 'без НДС';
+        var beg = Math.max(purpose.indexOf(ndsStr1), purpose.indexOf(ndsStr0));
+        if (beg>0){
+            purpose = purpose.substring(0, beg).trim();
+        }    
+        var ndsStr = '';
+        if (amount){            
+            switch ($('select[name="nds"]').val()){
+                case '<?= Payment::NDS_20?>': 
+                    var nds = Math.round(amount*20*100/120)/100; 
+                    ndsStr = ndsStr1 + ' 20% ' + nds;
+                    break
+                case '<?= Payment::NDS_10?>': 
+                    var nds = Math.round(amount*10*100/110)/100; 
+                    ndsStr = ndsStr1 + ' 10% ' + nds;
+                    break
+                case '<?= Payment::NDS_NO?>': 
+                    ndsStr = ndsStr0;
+                    break
+                default: return;            
+            }
 
-                if (ndsStr){
-                    if (purpose){
-                        $('input[name="purpose"]').val(purpose + ' ' + ndsStr);
-                    }                
-                }
-            }    
+            if (ndsStr){
+                if (purpose){
+                    $('input[name="purpose"]').val(purpose + ' ' + ndsStr);
+                }                
+            }
+        }    
+        if ($('select[name="paymentType"]').val() === '<?= Payment::PAYMENT_TYPE_TAX?>'){
+            $('input[name="purpose"]').val(purpose);
         }    
     }
     
@@ -489,6 +489,10 @@ $form->prepare();
         });
 
         $('input[name="amount"]').on('input', function(){
+            changeNds();
+        });
+
+        $('select[name="paymentType"]').on('input', function(){
             changeNds();
         });
 
