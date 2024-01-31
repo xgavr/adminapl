@@ -397,7 +397,7 @@ $form->prepare();
         
     function changeNds(){
         
-        if ($('input[name="paymentType"]').val() === <?= Payment::PAYMENT_TYPE_NORMAL?>){
+        if ($('input[name="paymentType"]').val() === '<?= Payment::PAYMENT_TYPE_NORMAL?>'){
         
             let amount = $('input[name="amount"]').val();
             var purpose = $('input[name="purpose"]').val();
