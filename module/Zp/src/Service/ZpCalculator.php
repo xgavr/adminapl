@@ -287,7 +287,7 @@ class ZpCalculator {
     {
         $this->removePersonalMutual(Movement::DOC_ST, $st->getId());
         
-        if ($st->getDateOper() >= date('2024-01-01')){
+        if ($st->getDocDate() >= date('2024-01-01')){
             switch ($st->getWriteOff()){
 
                 case St::WRITE_PAY:

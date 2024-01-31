@@ -193,6 +193,7 @@ class CashDoc {
     
    /**
     * @ORM\OneToOne(targetEntity="Bank\Entity\Statement", mappedBy="cashDoc")
+    * @ORM\JoinColumn(name="statement_id", referencedColumnName="id")
    */
    private $statement;    
 
@@ -1025,6 +1026,16 @@ class CashDoc {
     public function getStatement()
     {
         return $this->statement;
+    }
+    
+    /**
+     * 
+     * @param Statement $statement
+     * @return $this
+     */
+    public function setStatement($statement) {
+        $this->statement = $statement;
+        return $this;
     }
     
     /**
