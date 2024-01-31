@@ -990,6 +990,19 @@ class Order {
         return $this->contact;
     }
     
+    /**
+     * Это передача в комиссию
+     * @return boolean
+     */
+    public function isComissuionerContract()
+    {
+        if ($this->contact){
+            return $this->contract->getKind() == Contract::KIND_COMISSIONER;
+        }
+        
+        return false;
+    }
+    
     public function getAplLogin()
     {
         if ($this->contact){

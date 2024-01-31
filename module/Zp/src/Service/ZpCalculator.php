@@ -80,8 +80,8 @@ class ZpCalculator {
             $orderCalculator->setStatus(OrderCalculator::STATUS_RETIRED);
             $this->entityManager->persist($orderCalculator);
         }    
-        
-        if ($order->getStatus() == Order::STATUS_SHIPPED && $order->getContract()->getKind() == Contract::KIND_CUSTOMER){
+                
+        if ($order->getStatus() == Order::STATUS_SHIPPED && !$order->isComissuionerContract()){
             
             $base = $this->entityManager->getRepository(Movement::class)
                     ->findBaseAmount(Movement::DOC_ORDER, $order->getId());
@@ -129,7 +129,7 @@ class ZpCalculator {
             $this->entityManager->persist($orderCalculator);
         }    
         
-        if ($vt->getStatus() == Vt::STATUS_ACTIVE && $vt->getOrder()->getContract()->getKind() == Contract::KIND_CUSTOMER){
+        if ($vt->getStatus() == Vt::STATUS_ACTIVE && !$vt->getOrder()->isComissuionerContract()){
             
             $base = $this->entityManager->getRepository(Movement::class)
                     ->findBaseAmount(Movement::DOC_VT, $vt->getId());

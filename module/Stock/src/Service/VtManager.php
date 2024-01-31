@@ -233,6 +233,14 @@ class VtManager
                     $quantity = min($posting, -$movement->getQuantity());
                     $amount = $quantity*$vtGood->getAmount()/$vtGood->getQuantity();
                     $basePrice = abs($movement->getBaseAmount()/$movement->getQuantity());
+                    $baseAmount = -$basePrice*$movement->getQuantity();
+                    
+                    if ($order->isComissuionerContract()){ //если передача на комиссию
+                        $amount = $baseAmount;
+                    }           
+                    if ($vt->getStatus() == Vt::STATUS_COMMISSION){
+                        $baseAmount = $amount;
+                    }
 
                     $data = [
                         'doc_key' => $vt->getLogKey(),
@@ -247,7 +255,7 @@ class VtManager
                         'status' => Movement::getStatusFromVt($vt),
                         'quantity' => $quantity,
                         'amount' => $amount,
-                        'base_amount' => ($vt->getStatus() == Vt::STATUS_COMMISSION) ? $amount:-$basePrice*$movement->getQuantity(),
+                        'base_amount' => $baseAmount,
                         'good_id' => $vtGood->getGood()->getId(),
                         'office_id' => $vt->getOffice()->getId(),
                         'company_id' => $vt->getOrder()->getCompany()->getId(),
