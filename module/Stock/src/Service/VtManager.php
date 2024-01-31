@@ -235,7 +235,7 @@ class VtManager
                     $basePrice = abs($movement->getBaseAmount()/$movement->getQuantity());
                     $baseAmount = -$basePrice*$movement->getQuantity();
                     
-                    if ($order->isComissuionerContract()){ //если передача на комиссию
+                    if ($vt->getOrder()->isComissuionerContract()){ //если передача на комиссию
                         $amount = $baseAmount;
                     }           
                     if ($vt->getStatus() == Vt::STATUS_COMMISSION){

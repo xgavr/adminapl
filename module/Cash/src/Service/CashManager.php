@@ -818,7 +818,7 @@ class CashManager {
     private function supplierCashDocFromStatement($statement, $data)
     {
         $cashDoc = $statement->getCashDoc();
-
+        
         if ($statement->getAmount() > 0){
             $data['kind'] = CashDoc::KIND_IN_RETURN_SUPPLIER;
         } else {
