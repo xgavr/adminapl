@@ -6,6 +6,7 @@ use Stock\Service\StManager;
 use Admin\Service\LogManager;
 use Admin\Service\AdminManager;
 use Zp\Service\ZpCalculator;
+use Company\Service\CostManager;
 
 /**
  * This is the factory class for StManager service. The purpose of the factory
@@ -22,7 +23,9 @@ class StManagerFactory
         $logManager = $container->get(LogManager::class);
         $adminManager = $container->get(AdminManager::class);
         $zpManager = $container->get(ZpCalculator::class);
+        $costManager = $container->get(CostManager::class);
                         
-        return new StManager($entityManager, $logManager, $adminManager, $zpManager);
+        return new StManager($entityManager, $logManager, $adminManager, $zpManager,
+                $costManager);
     }
 }

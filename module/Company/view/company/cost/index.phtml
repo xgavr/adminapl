@@ -28,6 +28,7 @@ $this->pageBreadcrumbs()->setItems([
         <th>ID</th>
         <th>Апл Id</th>
         <th>Наименование</th>
+        <th>Тип</th>
         <th>Статус</th>
         <th>Действие</th>        
     </tr>
@@ -42,6 +43,8 @@ $this->pageBreadcrumbs()->setItems([
             <a href="<?= $this->url('cost', ['action'=>'view', 'id'=>$cost->getId()]); ?>">
                 <?= $this->escapeHtml($cost->getName()); ?>
             </a> 
+        </td>
+        <td><?= $this->escapeHtml($cost->getKindAsString()); ?> 
         </td>
         <td><?= $this->escapeHtml($cost->getStatusAsString()); ?> 
         </td>

@@ -38,6 +38,12 @@ class PtuManager
     private $adminManager;
         
     /**
+     * Cost manager
+     * @var \Company\Service\CostManager
+     */
+    private $costManager;
+        
+    /**
      * Дата запрета
      * @var string
      */
@@ -46,11 +52,12 @@ class PtuManager
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager, $adminManager) 
+    public function __construct($entityManager, $logManager, $adminManager, $costManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->adminManager = $adminManager;
+        $this->costManager = $costManager;
 
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];
@@ -107,6 +114,8 @@ class PtuManager
             $this->entityManager->getRepository(Mutual::class)
                     ->insertMutual($data);
         }    
+        
+        $this->costManager->repostPtu($ptu, $docStamp);
         
         return;
     }    

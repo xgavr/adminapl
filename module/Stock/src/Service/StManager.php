@@ -41,6 +41,12 @@ class StManager
     private $zpManager;
         
     /**
+     * Cost manager
+     * @var \Company\Service\CostManager
+     */
+    private $costManager;
+        
+    /**
      * Дата запрета
      * @var string
      */
@@ -55,12 +61,14 @@ class StManager
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager, $adminManager, $zpManager) 
+    public function __construct($entityManager, $logManager, $adminManager, $zpManager,
+            $costManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->adminManager = $adminManager;
         $this->zpManager = $zpManager;
+        $this->costManager = $costManager;
     
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];        
@@ -223,6 +231,7 @@ class StManager
                 ->update('st', ['status_account' => $stTake], ['id' => $st->getId()]);  
         
         $this->zpManager->repostSt($st, $docStamp);
+        $this->costManager->repostSt($st, $docStamp);
         
         return;
     }    

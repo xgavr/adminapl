@@ -1,28 +1,23 @@
 <?php
-namespace Zp\Entity;
+namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use User\Entity\User;
+//use Doctrine\Common\Collections\ArrayCollection;
 use Company\Entity\Legal;
-use Zp\Entity\DocCalculator;
 use Cash\Entity\CashDoc;
 use Stock\Entity\St;
-use Zp\Entity\Accrual;
+use Company\Entity\Cost;
+use Stock\Entity\Ptu;
 
 /**
  * This class represents a position accrual.
- * @ORM\Entity(repositoryClass="\Zp\Repository\ZpRepository")
- * @ORM\Table(name="personal_mutual")
+ * @ORM\Entity(repositoryClass="\Company\Repository\CostRepository")
+ * @ORM\Table(name="cost_mutual")
  */
-class PersonalMutual
+class CostMutual
 {
     const STATUS_ACTIVE       = 1; //.
     const STATUS_RETIRED      = 2; // .
-    
-    const KIND_ACCRUAL       = 1; // начисление
-    const KIND_DEDUCTION     = 2; // удержание
-    const KIND_PAYMENT       = 3; // выплата
     
     /**
      * @ORM\Id
@@ -66,29 +61,17 @@ class PersonalMutual
      */
     protected $status;
 
-    /** 
-     * @ORM\Column(name="kind")  
-     */
-    protected $kind;
-
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="personalMutuals") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="costMutuals") 
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
      */
     private $company;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="personalMutuals") 
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Cost", inversedBy="costMutuals") 
+     * @ORM\JoinColumn(name="cost_id", referencedColumnName="id")
      */
-    private $user;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Zp\Entity\Accrual", inversedBy="personalMutuals") 
-     * @ORM\JoinColumn(name="accrual_id", referencedColumnName="id")
-     */
-    private $accrual;
-
+    private $cost;
 
     /**
      * Constructor.
@@ -190,19 +173,6 @@ class PersonalMutual
     }    
     
     /**
-     * Returns possible docCalculator status.
-     * @param DocCalculator $docCalculator
-     * @return integer
-     */
-    public static function getStatusFromDocCalculator($docCalculator) 
-    {
-        switch ($docCalculator->getStatus()){
-            case DocCalculator::STATUS_ACTIVE: return self::STATUS_ACTIVE;
-            default: return self::STATUS_RETIRED;    
-        }
-    }    
-
-    /**
      * Returns possible cashDoc status.
      * @param CashDoc $cashDoc
      * @return integer
@@ -228,46 +198,24 @@ class PersonalMutual
         }
     }    
 
+    /**
+     * Returns possible ptu status.
+     * @param Ptu $ptu
+     * @return integer
+     */
+    public static function getStatusFromPtu($ptu) 
+    {
+        switch ($ptu->getStatus()){
+            case Ptu::STATUS_ACTIVE: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }    
+
     public function setStatus($status) {
         $this->status = $status;
         return $this;
     }
 
-    public function getKind() {
-        return $this->kind;
-    }
-
-    /**
-     * Returns possible kinds as array.
-     * @return array
-     */
-    public static function getKindList() 
-    {
-        return [
-            self::KIND_ACCRUAL => 'Начисление',
-            self::KIND_DEDUCTION => 'Удержание',
-            self::KIND_PAYMENT => 'Выплата',
-        ];
-    }    
-
-    /**
-     * Returns kind as string.
-     * @return string
-     */
-    public function getKindAsString()
-    {
-        $list = self::getKindList();
-        if (isset($list[$this->kind]))
-            return $list[$this->kind];
-        
-        return 'Unknown';
-    }    
-    
-    public function setKind($kind) {
-        $this->kind = $kind;
-        return $this;
-    }    
-    
     /**
      * 
      * @return Legal
@@ -288,40 +236,21 @@ class PersonalMutual
 
     /**
      * 
-     * @return User
+     * @return Cost
      */
-    public function getUser() {
-        return $this->user;
+    public function getCost() {
+        return $this->cost;
     }
 
     /**
      * 
-     * @param User $user
+     * @param Cost $cost
      * @return $this
      */
-    public function setUser($user) {
-        $this->user = $user;
+    public function setCost($cost) {
+        $this->cost = $cost;
         return $this;
-    }
-    
-    /**
-     * 
-     * @return Accrual
-     */
-    public function getAccrual() {
-        return $this->accrual;
-    }
-
-    /**
-     * 
-     * @param Accrual $accrual
-     * @return $this
-     */
-    public function setAccrual($accrual) {
-        $this->accrual = $accrual;
-        return $this;
-    }
-   
+    }    
 }
 
 

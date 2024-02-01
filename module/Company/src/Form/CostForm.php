@@ -58,14 +58,28 @@ class CostForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'status',
-            'value' => Cost::STATUS_ACTIVE,
             'attributes' => [                
                 'required' => 'required',
                 'id' => 'status',
+                'value' => Cost::STATUS_ACTIVE,
             ],
             'options' => [
                 'label' => 'Статус',
                 'value_options' => Cost::getStatusList(),
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'kind',
+            'attributes' => [                
+                'required' => 'required',
+                'id' => 'kind',
+                'value' => Cost::KIND_EXP,
+            ],
+            'options' => [
+                'label' => 'Статус',
+                'value_options' => Cost::getKindList(),
             ],
         ]);
                 
@@ -126,6 +140,17 @@ class CostForm extends Form
                 ],                
                 'validators' => [
                     ['name'=>'InArray', 'options'=>['haystack'=> array_keys(Cost::getStatusList())]]
+                ],
+            ]); 
+
+        $inputFilter->add([
+                'name'     => 'kind',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(Cost::getKindList())]]
                 ],
             ]); 
 

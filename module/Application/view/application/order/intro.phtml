@@ -392,6 +392,7 @@ $form->prepare();
                     data-use-row-attr-func="true"
                     data-reorderable-rows="true"   
                     data-row-style="takeStyle"
+                    data-show-footer="true"
                     >
                     <thead>
                         <tr>
@@ -409,8 +410,8 @@ $form->prepare();
                                  <button type="button" class="btn btn-default btn-xs price-select-btn">4</button>
                                  <button type="button" class="btn btn-default btn-xs price-select-btn">5</button>
                              </th>
-                             <th data-field='num' data-align="right" data-editable="true" data-type="numeric" data-always-use-formatter="true" data-width="50">Кол-во</th>
-                             <th data-field='amount' data-align="right" data-formatter="geAmountFormatter" data-always-use-formatter="true" data-type="numeric" data-width="100">Сумма</th>
+                             <th data-field='num' data-align="right" data-editable="true" data-footer-formatter="footerFormatter" data-type="numeric" data-always-use-formatter="true" data-width="50">Кол-во</th>
+                             <th data-field='amount' data-align="right" data-footer-formatter="footerFormatter" data-formatter="geAmountFormatter" data-always-use-formatter="true" data-type="numeric" data-width="100">Сумма</th>
                              <th data-field="rowNo" data-formatter="geActiveFormatter" data-width="10"></th>
                              <th data-field="rowNo" data-formatter="grActiveFormatter" data-width="10"></th>
                              <th data-field="oem" data-visible="false"></th>
@@ -1324,6 +1325,21 @@ $form->prepare();
     function geAmountFormatter(value, row){
         return (Math.round(row.price*row.num*100)/100).toFixed(0);
     }        
+    
+    function footerFormatter(data){
+        var field = this.field;
+        var precission = 0;
+
+        return (data.map(function (row) {
+            if (field === 'amount'){
+                return +(row['num']*row['price'])
+            } else {
+                return +row[field];
+            }    
+        }).reduce(function (sum, i) {
+            return (Math.round((sum + i)*100)/100);
+        }, 0)).toFixed(precission);
+    }    
     
     function soFormatter(value, row){
         btn = '<span class="text-nowrap">';

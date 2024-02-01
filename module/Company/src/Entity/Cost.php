@@ -22,6 +22,10 @@ class Cost {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     
+    const KIND_EXP       = 1; // текущие расходы
+    const KIND_FIX       = 2; // постоянные расходы
+    const KIND_OTH       = 3; // прочие расходы
+        
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -43,6 +47,11 @@ class Cost {
      * @ORM\Column(name="status")  
      */
     protected $status;
+    
+    /** 
+     * @ORM\Column(name="kind")  
+     */
+    protected $kind;
     
     
     public function getId() 
@@ -117,6 +126,41 @@ class Cost {
     {
         $this->status = $status;
     }   
+        
+    public function getKind() {
+        return $this->kind;
+    }
+
+    /**
+     * Returns possible kinds as array.
+     * @return array
+     */
+    public static function getKindList() 
+    {
+        return [
+            self::KIND_EXP => 'Текщие',
+            self::KIND_FIX => 'Постоянные',
+            self::KIND_OTH => 'Прочие',
+        ];
+    }    
+
+    /**
+     * Returns kind as string.
+     * @return string
+     */
+    public function getKindAsString()
+    {
+        $list = self::getKindList();
+        if (isset($list[$this->kind]))
+            return $list[$this->kind];
+        
+        return 'Unknown';
+    }    
+    
+    public function setKind($kind) {
+        $this->kind = $kind;
+        return $this;
+    }    
         
     /**
      * Массив для формы

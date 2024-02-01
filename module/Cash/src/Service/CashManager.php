@@ -68,12 +68,20 @@ class CashManager {
      */
     private $zpManager;
 
-    public function __construct($entityManager, $logManager, $legalManager, $zpManager)
+    /**
+     * Cost manager.
+     * @var \Company\Service\CostManager
+     */
+    private $costManager;
+
+    public function __construct($entityManager, $logManager, $legalManager, $zpManager,
+            $costManager)
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->legalManager = $legalManager;
         $this->zpManager = $zpManager;
+        $this->costManager = $costManager;
     }
     
     /**
@@ -441,7 +449,9 @@ class CashManager {
         
         $this->addMutuals($cashDoc, $docStamp);
         $this->addRetails($cashDoc, $docStamp);
+        
         $this->zpManager->repostCashDoc($cashDoc, $docStamp);
+        $this->costManager->repostCashDoc($cashDoc, $docStamp);
         
         $this->updateBalance($cashDoc);
             

@@ -159,6 +159,7 @@ class CostController extends AbstractActionController
                     'name'=>$cost->getName(),
                     'aplId'=>$cost->getAplId(),
                     'status' => $cost->getStatus(),
+                    'kind' => $cost->getKind(),
                 ));
         }
         
