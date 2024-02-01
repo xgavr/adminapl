@@ -299,7 +299,7 @@ class OrderManager
                 if ($movement){
                     $quantity = min($base['rest'], $write);
                     $amount = $quantity*$bid->getPrice();
-                    $baseAmount = $base['price']*$quantity;
+                    $baseAmount = $base['basePrice']*$quantity;
                     
                     if ($order->isComissuionerContract()){ //если передача на комиссию
                         $amount = $baseAmount;
@@ -343,7 +343,7 @@ class OrderManager
                             'date_oper' => $order->getDateOper(),
                             'status' => Movement::getStatusFromOrder($order),
                             'quantity' => -$quantity,
-                            'amount' => -$base['price']*$quantity,
+                            'amount' => -$base['basePrice']*$quantity,
                             'good_id' => $bid->getGood()->getId(),
                             'office_id' => $order->getOffice()->getId(),
                             'company_id' => $order->getCompany()->getId(),
@@ -362,7 +362,7 @@ class OrderManager
                             'date_oper' => $order->getDateOper(),
                             'status' => Retail::getStatusFromOrder($order),
                             'revise' => Retail::REVISE_NOT,
-                            'amount' => -$base['price']*$quantity,
+                            'amount' => -$base['basePrice']*$quantity,
                             'contact_id' => $comiss->getContact()->getId(),
                             'office_id' => $order->getOffice()->getId(),
                             'company_id' => $order->getCompany()->getId(),

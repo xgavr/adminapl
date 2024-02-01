@@ -136,7 +136,7 @@ class PtManager
                             ->findOneByDocKey($base['baseKey']);
                     if ($movement){
                         $quantity = min($base['rest'], $write);
-                        $amount = $base['price']*$quantity;
+                        $baseAmount = $base['basePrice']*$quantity;
 
                         $data = [
                             'doc_key' => $pt->getLogKey(),
@@ -150,8 +150,8 @@ class PtManager
                             'date_oper' => date('Y-m-d 12:00:00', strtotime($pt->getDocDate())),
                             'status' => $movement->getStatus(),
                             'quantity' => -$quantity,
-                            'amount' => -$amount,
-                            'base_amount' => -$amount,
+                            'amount' => -$baseAmount,
+                            'base_amount' => -$baseAmount,
                             'good_id' => $ptGood->getGood()->getId(),
                             'office_id' => $pt->getOffice()->getId(),
                             'company_id' => $pt->getCompany()->getId(),
@@ -173,7 +173,7 @@ class PtManager
                                 'date_oper' => $pt->getDocDate(),
                                 'status' => $movement->getStatus(),
                                 'quantity' => -$quantity,
-                                'amount' => -$amount,
+                                'amount' => -$baseAmount,
                                 'good_id' => $ptGood->getGood()->getId(),
                                 'office_id' => $pt->getOffice()->getId(),
                                 'company_id' => $pt->getCompany()->getId(),
@@ -196,8 +196,8 @@ class PtManager
                             'date_oper' => date('Y-m-d 12:00:00', strtotime($pt->getDocDate())),
                             'status' => $movement->getStatus(),
                             'quantity' => $quantity,
-                            'amount' => $amount,
-                            'base_amount' => $amount,
+                            'amount' => $baseAmount,
+                            'base_amount' => $baseAmount,
                             'good_id' => $ptGood->getGood()->getId(),
                             'office_id' => $pt->getOffice2()->getId(),
                             'company_id' => $pt->getCompany2()->getId(),
@@ -220,7 +220,7 @@ class PtManager
                                     'date_oper' => $pt->getDocDate(),
                                     'status' => $movement->getStatus(),
                                     'quantity' => $quantity,
-                                    'amount' => $amount,
+                                    'amount' => $baseAmount,
                                     'good_id' => $ptGood->getGood()->getId(),
                                     'office_id' => $pt->getOffice2()->getId(),
                                     'company_id' => $pt->getCompany2()->getId(),

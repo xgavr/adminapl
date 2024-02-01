@@ -132,7 +132,7 @@ class VtpManager
                     
                     $quantity = min($base['rest'], $write);
                     $amount = $quantity*$vtpGood->getAmount()/$vtpGood->getQuantity();
-                    $baseAmount = $base['price']*$quantity;
+                    $baseAmount = $base['basePrice']*$quantity;
                     
                     $data = [
                         'doc_key' => $vtp->getLogKey(),

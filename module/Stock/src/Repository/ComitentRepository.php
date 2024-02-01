@@ -146,7 +146,8 @@ class ComitentRepository extends EntityRepository{
         $method = 'ASC';
         $entityManager = $this->getEntityManager();
         $qb = $entityManager->createQueryBuilder();
-        $qb->select('sum(c.quantity) as rest, c.baseKey, c.baseType, c.baseId, c.docStamp, sum(c.amount)/sum(c.quantity) as price, sum(c.baseAmount)/sum(c.quantity) as basePrice')
+        $qb->select('sum(c.quantity) as rest, c.baseKey, c.baseType, c.baseId, c.docStamp, sum(c.amount)/sum(c.quantity) as price, '
+                . 'sum(c.baseAmount)/sum(c.quantity) as basePrice')
                 ->from(Comitent::class, 'c')
                 ->distinct()
                 ->where('c.good = ?1')
