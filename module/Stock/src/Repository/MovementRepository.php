@@ -93,7 +93,8 @@ class MovementRepository extends EntityRepository{
         }
         $entityManager = $this->getEntityManager();
         $qb = $entityManager->createQueryBuilder();
-        $qb->select('sum(m.quantity) as rest, m.baseKey, m.docStamp, sum(m.amount)/sum(m.quantity) as price')
+        $qb->select('sum(m.quantity) as rest, m.baseKey, m.docStamp, sum(m.amount)/sum(m.quantity) as price,'
+                . 'sum(m.baseAmount)/sum(m.quantity) as basePrice')
                 ->from(Movement::class, 'm')
                 ->distinct()
                 ->where('m.good = ?1')

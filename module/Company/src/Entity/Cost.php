@@ -138,7 +138,7 @@ class Cost {
     public static function getKindList() 
     {
         return [
-            self::KIND_EXP => 'Текщие',
+            self::KIND_EXP => 'Текущие',
             self::KIND_FIX => 'Постоянные',
             self::KIND_OTH => 'Прочие',
         ];

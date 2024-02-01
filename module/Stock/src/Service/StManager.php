@@ -133,7 +133,7 @@ class StManager
                     
                     if ($movement){
                         $quantity = min($base['rest'], $write);
-                        $amount = $base['price']*$quantity;
+                        $baseAmount = $base['basePrice']*$quantity;
 
                         $data = [
                             'doc_key' => $st->getLogKey(),
@@ -147,8 +147,8 @@ class StManager
                             'date_oper' => date('Y-m-d 23:00:00', strtotime($st->getDocDate())),
                             'status' => Movement::getStatusFromSt($st),
                             'quantity' => -$quantity,
-                            'amount' => -$amount,
-                            'base_amount' => -$amount,
+                            'amount' => -$baseAmount,
+                            'base_amount' => -$baseAmount,
                             'good_id' => $stGood->getGood()->getId(),
                             'office_id' => $st->getOffice()->getId(),
                             'company_id' => $st->getCompany()->getId(), //компания базы
