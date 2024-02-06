@@ -104,7 +104,7 @@ class PtuManager
                 'date_oper' => $ptu->getDocDate(),
                 'status' => Retail::getStatusFromPtu($ptu),
                 'revise' => Retail::REVISE_NOT,
-                'amount' => $ptu->getAmount(),
+                'amount' => -$ptu->getAmount(),
                 'contact_id' => $ptu->getLegal()->getClientContact()->getId(),
                 'legal_id' => $ptu->getLegal()->getId(),
                 'contract_id' => $ptu->getContract()->getId(),
