@@ -11,6 +11,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Bank\Controller\IndexController;
 use Bank\Service\BankManager;
+use Bank\Service\MlManager;
 
 
 /**
@@ -25,8 +26,9 @@ class IndexControllerFactory implements FactoryInterface {
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $bankManager = $container->get(BankManager::class);
+        $mlManager = $container->get(MlManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new IndexController($entityManager, $bankManager);
+        return new IndexController($entityManager, $bankManager, $mlManager);
     }
 }

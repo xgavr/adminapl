@@ -401,6 +401,16 @@
             dialog.modal('hide');
         });            
     }
+
+    function tokens(url){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: false
+        });
+        $.getJSON( url, function( data ) {
+            dialog.modal('hide');
+        });            
+    }
     
     $(function () {
         $(".inputclear").click(function(){
@@ -824,7 +834,7 @@
             return $table.bootstrapTable('getData')[getCurrentIndex()];
         },
         actionsGroups: [
-           ['paycheck', 'paydoc'], ['returnPay']
+           ['paycheck', 'paydoc'], ['returnPay'], ['tokens']
         ],      
         actions: {
             paycheck: {
@@ -832,6 +842,16 @@
                 iconClass: 'glyphicon glyphicon-check',
                 onClick: function(row) {
                     payCheck('/till/statement-to-cash-doc/'+row.id);
+                },
+                isEnabled: function(row) {
+                    return true;
+                }                
+            }, 
+            tokens: {
+                name: 'Токены',
+                iconClass: 'glyphicon glyphicon-check',
+                onClick: function(row) {
+                    tokens('/bank/purpose-tokens/'+row.id);
                 },
                 isEnabled: function(row) {
                     return true;

@@ -97,6 +97,7 @@ return [
     'service_manager' => [
         'factories' => [
             Service\BankManager::class => Service\Factory\BankManagerFactory::class,
+            Service\MlManager::class => Service\Factory\MlManagerFactory::class,
             Service\PaymentManager::class => Service\Factory\PaymentManagerFactory::class,
             Service\SbpManager::class => Service\Factory\SbpManagerFactory::class,
         ],

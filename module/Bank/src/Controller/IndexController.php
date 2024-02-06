@@ -30,10 +30,17 @@ class IndexController extends AbstractActionController
      */
     private $bankManager;
 
-    public function __construct($entityManager, $bankManager) 
+    /**
+     * Менеджер ml.
+     * @var \Bank\Service\MlManager
+     */
+    private $mlManager;
+
+    public function __construct($entityManager, $bankManager, $mlManager) 
     {
         $this->entityManager = $entityManager;
         $this->bankManager = $bankManager;
+        $this->mlManager = $mlManager;
     }   
 
     public function indexAction()
@@ -418,5 +425,36 @@ class IndexController extends AbstractActionController
         $result = $this->bankManager->accountListV2();
         
         return new JsonModel($result);                  
+    }
+
+    public function statementTokensAction()
+    {
+        $date = $this->params()->fromQuery('date', date('Y-m-d'));
+        
+        $result = $this->bankManager->tochkaStatementV2($date, $date);
+
+        $message = 'ok!';
+        $ok = 'ok-reload';
+//        if ($result !== true){
+//            $message = '<p>'.$result.'</p><p><a href="/bankapi/tochka-access">Проверить доступ к api</a></p>';
+//            $ok = 'error';
+//        }
+        
+        return new JsonModel([
+            'result' => $ok,
+            'message' => $message,
+        ]);          
+    }    
+    
+    public function purposeTokensAction()
+    {
+        $statementId = $this->params()->fromRoute('id');
+        
+        $statement = $this->entityManager->getRepository(Statement::class)
+                ->find($statementId);
+        
+        $this->mlManager->statementLemms($statement);
+        
+        return new JsonModel([ 'result' => 'ok']);                  
     }
 }
