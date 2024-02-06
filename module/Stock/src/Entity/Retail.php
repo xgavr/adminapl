@@ -18,6 +18,7 @@ use Stock\Entity\St;
 use Cash\Entity\CashDoc;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Stock\Entity\Revise;
+use Stock\Entity\Ptu;
 
 
 /**
@@ -304,6 +305,19 @@ class Retail {
     {
         switch ($cashDoc->getStatus()){
             case CashDoc::STATUS_RETIRED: return self::STATUS_RETIRED;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+    
+    /**
+     * Returns possible ptu status.
+     * @param Ptu $ptu
+     * @return integer
+     */
+    public static function getStatusFromPtu($ptu) 
+    {
+        switch ($ptu->getStatus()){
+            case Ptu::STATUS_RETIRED: return self::STATUS_RETIRED;
             default: return self::STATUS_ACTIVE;    
         }
     }    

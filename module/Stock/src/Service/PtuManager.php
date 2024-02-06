@@ -13,6 +13,8 @@ use Stock\Entity\Register;
 use Laminas\Json\Encoder;
 use Stock\Entity\PtuCost;
 use Company\Entity\Cost;
+use Stock\Entity\Retail;
+use Company\Entity\Contract;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -86,12 +88,49 @@ class PtuManager
      * Обновить взаиморасчеты документа
      * 
      * @param Ptu $ptu
+     * @param float $docStamp
      */
-    public function updatePtuMutuals($ptu)
+    public function updatePtuRetail($ptu, $docStamp)
     {
         
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->ptuRegister($ptu);
+        $this->entityManager->getRepository(Retail::class)
+                ->removeOrderRetails($ptu->getLogKey());
+        
+        if ($ptu->getStatus() == Ptu::STATUS_ACTIVE && $ptu->getContract()->getKind() == Contract::KIND_COMISSIONER){        
+            $data = [
+                'doc_key' => $ptu->getLogKey(),
+                'doc_type' => Movement::DOC_PTU,
+                'doc_id' => $ptu->getId(),
+                'date_oper' => $ptu->getDocDate(),
+                'status' => Retail::getStatusFromPtu($ptu),
+                'revise' => Retail::REVISE_NOT,
+                'amount' => $ptu->getAmount(),
+                'contact_id' => $ptu->getLegal()->getClientContact()->getId(),
+                'legal_id' => $ptu->getLegal()->getId(),
+                'contract_id' => $ptu->getContract()->getId(),
+                'office_id' => $ptu->getOffice()->getId(),
+                'company_id' => $ptu->getContract()->getCompany()->getId(),
+                'doc_stamp' => $docStamp,
+                
+            'status' => Retail::getStatusFromVt($vt),
+            ];
+
+            $this->entityManager->getRepository(Retail::class)
+                    ->insertRetail($data);
+        }    
+        
+        return;
+    }    
+    
+    /**
+     * Обновить взаиморасчеты документа
+     * 
+     * @param Ptu $ptu
+     * @param float $docStamp 
+     */
+    public function updatePtuMutuals($ptu, $docStamp)
+    {
+        
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($ptu->getLogKey());
         
@@ -115,8 +154,6 @@ class PtuManager
                     ->insertMutual($data);
         }    
         
-        $this->costManager->repostPtu($ptu, $docStamp);
-        
         return;
     }    
     
@@ -124,11 +161,10 @@ class PtuManager
      * Обновить движения документа
      * 
      * @param Ptu $ptu
+     * @param float $docStamp
      */
-    public function updatePtuMovement($ptu)
+    public function updatePtuMovement($ptu, $docStamp)
     {
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->ptuRegister($ptu);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($ptu->getLogKey());
         
@@ -224,8 +260,15 @@ class PtuManager
     {
         $this->updateInfo($ptu, true);
         if ($ptu->getDocDate() > $this->getAllowDate()){
-            $this->updatePtuMovement($ptu);
-            $this->updatePtuMutuals($ptu);
+            
+            $docStamp = $this->entityManager->getRepository(Register::class)
+                    ->ptuRegister($ptu);
+            
+            $this->updatePtuMovement($ptu, $docStamp);
+            $this->updatePtuMutuals($ptu, $docStamp);
+            $this->updatePtuRetail($ptu, $docStamp);
+            $this->costManager->repostPtu($ptu, $docStamp);
+        
         }    
         return;
     }
