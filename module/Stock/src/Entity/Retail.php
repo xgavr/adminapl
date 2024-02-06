@@ -126,6 +126,12 @@ class Retail {
     private $reviseDoc;    
 
     /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Ptu", inversedBy="retails") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $ptu;    
+
+    /**
      * @ORM\ManyToOne(targetEntity="ApiMarketPlace\Entity\MarketSaleReport", inversedBy="retails") 
      * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
      */
@@ -481,6 +487,24 @@ class Retail {
     {
         $this->reviseDoc = $reviseDoc;
     }     
+    
+    /**
+     * 
+     * @return Ptu
+     */
+    public function getPtu() {
+        return $this->ptu;
+    }
+
+    /**
+     * 
+     * @param Ptu $ptu
+     * @return $this
+     */
+    public function setPtu($ptu) {
+        $this->ptu = $ptu;
+        return $this;
+    }
     
     /**
      * 

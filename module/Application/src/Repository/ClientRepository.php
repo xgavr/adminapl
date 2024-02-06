@@ -294,6 +294,7 @@ class ClientRepository extends EntityRepository{
             ->leftJoin('r.legal', 'legal')    
             ->leftJoin('r.contract', 'contract')    
             ->leftJoin('r.reviseDoc', 'rd', 'WITH', 'r.docType = '.Movement::DOC_REVISE) 
+            ->leftJoin('r.ptu', 'p', 'WITH', 'r.docType = '.Movement::DOC_PTU) 
             ->leftJoin('r.cashDoc', 'cd', 'WITH', 'r.docType = '.Movement::DOC_CASH) 
             ->leftJoin('r.marketSaleReport', 'msr', 'WITH', 'r.docType = '.Movement::DOC_MSR) 
 //            ->leftJoin('cd.order', 'ord') 

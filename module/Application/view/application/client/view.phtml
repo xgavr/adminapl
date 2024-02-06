@@ -1074,7 +1074,8 @@ $this->headLink()
             case '<?= Movement::DOC_VT?>': 
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
             case '<?= Movement::DOC_PTU?>': 
-                return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a>";
+                var comment = row.ptu.comment;        
+                return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
             case '<?= Movement::DOC_OT?>': 
                 return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
             case '<?= Movement::DOC_ST?>': 
