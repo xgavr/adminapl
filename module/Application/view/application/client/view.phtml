@@ -1064,17 +1064,20 @@ $this->headLink()
     
     function docKeyFormatter(value, row){
         let docType = row.docType;        
-        let docId = row.docId;        
+        let docId = row.docId;  
+        var comment = '';
         switch(docType){
             case '<?= Movement::DOC_ORDER?>': 
                 return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №Z"+docId+"</a>";
             case '<?= Movement::DOC_MSR?>': 
-                var comment = row.marketSaleReport.comment;        
+                comment = row.marketSaleReport.comment;        
                 return "<a href='#' class='msr-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о продажах №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
             case '<?= Movement::DOC_VT?>': 
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
             case '<?= Movement::DOC_PTU?>': 
-                var comment = row.ptu.comment;        
+                if (row.ptu){        
+                    comment = row.ptu.comment;        
+                }    
                 return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
             case '<?= Movement::DOC_OT?>': 
                 return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
@@ -1084,7 +1087,7 @@ $this->headLink()
                 return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
             case '<?= Movement::DOC_REVISE?>':
                 if (row.reviseDoc){        
-                    var comment = row.reviseDoc.comment;        
+                    comment = row.reviseDoc.comment;        
                     return "<a href='#' class='revise-modal-show' modal-url='/revise/edit-form/"+docId+"'>Корректировка №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
                 } else {
                     return '!Документ не найден!';
