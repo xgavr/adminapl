@@ -13,6 +13,9 @@ use ApiMarketPlace\Entity\MarketplaceUpdate;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use ApiMarketPlace\Entity\MarketSaleReportItem;
 use Stock\Entity\Revise;
+use Stock\Entity\Ptu;
+use Stock\Entity\Movement;
+use Stock\Entity\Retail;
 
 /**
  * Description of MarketplaceRepository
@@ -170,15 +173,22 @@ class MarketplaceRepository extends EntityRepository
         if ($marketSaleReport->getReportType() == MarketSaleReport::TYPE_REPORT){
 
             $queryBuilder = $entityManager->createQueryBuilder();
+            
+            $orX = $queryBuilder->expr()->orX();
+            $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_PTU));
+            $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_REVISE));
 
             $queryBuilder->select('sum(r.amount) as cost')
-                ->from(Revise::class, 'r')
+                ->from(Retail::class, 'r')
                 ->where('r.contract = :contractId')
                 ->setParameter('contractId', $marketSaleReport->getContract()->getId())    
                 ->andWhere('r.docDate >= :date1')
                 ->setParameter('date1', date('Y-m-01', strtotime($marketSaleReport->getDocDate())))    
                 ->andWhere('r.docDate <= :date2')
                 ->setParameter('date2', date('Y-m-t', strtotime($marketSaleReport->getDocDate())))
+                ->andWhere('r.status = :status')
+                ->setParameter('status', Retail::STATUS_ACTIVE)    
+                ->andWhere($orX)    
                 ->setMaxResults(1)    
                     ;
 
@@ -186,7 +196,7 @@ class MarketplaceRepository extends EntityRepository
 
             if ($row){
                 $cost = abs($row['cost']);
-            }
+            }            
         }    
         
         $entityManager->getConnection()->update('market_sale_report', ['cost_amount' => $cost], ['id' => $marketSaleReport->getId()]);
