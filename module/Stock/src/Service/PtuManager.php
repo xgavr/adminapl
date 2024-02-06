@@ -96,7 +96,7 @@ class PtuManager
         $this->entityManager->getRepository(Retail::class)
                 ->removeOrderRetails($ptu->getLogKey());
         
-        if ($ptu->getStatus() == Ptu::STATUS_ACTIVE && $ptu->getContract()->getKind() == Contract::KIND_COMISSIONER){        
+        if ($ptu->getStatus() == Ptu::STATUS_ACTIVE && $ptu->getContract()->getKind() == Contract::KIND_COMITENT){        
             $data = [
                 'doc_key' => $ptu->getLogKey(),
                 'doc_type' => Movement::DOC_PTU,
@@ -110,9 +110,7 @@ class PtuManager
                 'contract_id' => $ptu->getContract()->getId(),
                 'office_id' => $ptu->getOffice()->getId(),
                 'company_id' => $ptu->getContract()->getCompany()->getId(),
-                'doc_stamp' => $docStamp,
-                
-            'status' => Retail::getStatusFromVt($vt),
+                'doc_stamp' => $docStamp,                
             ];
 
             $this->entityManager->getRepository(Retail::class)
