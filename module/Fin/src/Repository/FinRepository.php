@@ -14,6 +14,7 @@ use Stock\Entity\Movement;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Fin\Entity\FinOpu;
 use Company\Entity\Legal;
+use Company\Entity\CostMutual;
 
 /**
  * Description of FinRepository
@@ -108,6 +109,38 @@ class FinRepository extends EntityRepository
             ->andWhere('m.docDate >= :startDate')    
             ->setParameter('startDate', $startDate)    
             ->andWhere('m.docDate <= :endDate')    
+            ->setParameter('endDate', $endDate) 
+            ->groupBy('companyId')    
+            ->addGroupBy('period')    
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();       
+    }
+    
+    /**
+     * Расходы
+     * 
+     * @param date $startDate
+     * @param date $endDate
+     * 
+     * @return array 
+     */
+    public function costs($startDate, $endDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('identity(cm.company) as companyId, LAST_DAY(cm.dateOper) as period, sum(m.amount) as amount')
+            ->from(CostMutual::class, 'cm')
+            ->join('cm.cost', 'c')    
+            ->where('cm.status = :status')
+            ->setParameter('status', CostMutual::STATUS_ACTIVE)    
+            ->andWhere('c.kind = :kind')
+            ->setParameter('kind', $costKind)    
+            ->andWhere('cm.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('cm.dateOper <= :endDate')    
             ->setParameter('endDate', $endDate) 
             ->groupBy('companyId')    
             ->addGroupBy('period')    

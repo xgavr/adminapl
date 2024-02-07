@@ -67,10 +67,10 @@ class JobManager
           3 => ['command' => 'prices-by-mail',      'shedule' => self::CRON_EVERY_MIN_6,    'description' => 'Получение писем с прайсами'],
           5 => ['command' => 'statement-from-post', 'shedule' => self::CRON_EVERY_MIN_10,    'description' => 'Получение писем с выписками банка'],
           6 => ['command' => 'statement-update',    'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление выписки банка'],
-          6 => ['command' => 'bank-tokens',         'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление токенов выписки'],
-          7 => ['command' => 'update-mail-tokens',  'shedule' => '23 * * * *',              'description' => 'Обработка токенов писем'],
-          8 => ['command' => 'read-wamm',           'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Чтение сообщений WAMM'],
-          9 => ['command' => 'sbp-check',           'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Проверка оплат по СБП'],
+          7 => ['command' => 'bank-tokens',         'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление токенов выписки'],
+          8 => ['command' => 'update-mail-tokens',  'shedule' => '23 * * * *',              'description' => 'Обработка токенов писем'],
+          9 => ['command' => 'read-wamm',           'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Чтение сообщений WAMM'],
+          10 => ['command' => 'sbp-check',           'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Проверка оплат по СБП'],
         ];
     }
 

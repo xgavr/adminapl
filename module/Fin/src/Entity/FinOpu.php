@@ -409,7 +409,7 @@ class FinOpu
             'incomeTp_' => '',
             'incomeTotal' => 'Доход всего',
             'incomeTotal_' => '',
-            'costRetail' => 'Расходы розница',
+            'costRetail' => 'Расходы текущие',
             'costFix' => 'Расходы постоянные',
             'zp_' => '',
             'zpRetail' => 'Зарплата розница',

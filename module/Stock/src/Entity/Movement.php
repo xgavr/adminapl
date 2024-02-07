@@ -438,7 +438,11 @@ class Movement {
     public static function getStatusFromOrder($order) 
     {
         switch ($order->getStatus()){
-            case Order::STATUS_SHIPPED: return self::STATUS_ACTIVE;
+            case Order::STATUS_SHIPPED: 
+                if ($order->isComissuionerContract()){
+                    return self::STATUS_COMMISSION;
+                }
+                return self::STATUS_ACTIVE;
             default: return self::STATUS_RETIRED;    
         }
     }    
@@ -468,7 +472,11 @@ class Movement {
             case Vt::STATUS_COMMISSION: return self::STATUS_COMMISSION;    
             case Vt::STATUS_DEFECT: return self::STATUS_COMMISSION;    
             case Vt::STATUS_WAIT: return self::STATUS_COMMISSION;    
-            default: return self::STATUS_ACTIVE;    
+            default: 
+                if ($vt->getOrder()->isComissuionerContract()){
+                    return self::STATUS_COMMISSION;
+                }
+                return self::STATUS_ACTIVE;    
         }
     }    
 

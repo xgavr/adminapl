@@ -155,10 +155,14 @@ class FinManager {
         foreach ($retailIncomes as $row){
             $company = $this->entityManager->getRepository(Legal::class)
                     ->find($row['companyId']);
+            
             $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
+            
             $finOpu->setRevenueRetail(abs($row['revenue']));
             $finOpu->setPurchaseRetail(abs($row['purchase']));
             $finOpu->setIncomeRetail(abs($row['revenue']) - abs($row['purchase']));
+            
+            $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
             
             $this->entityManager->persist($finOpu);
         }
@@ -181,12 +185,47 @@ class FinManager {
         foreach ($tpIncomes as $row){
             $company = $this->entityManager->getRepository(Legal::class)
                     ->find($row['companyId']);
+            
             $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
+            
             $finOpu->setRevenueTp(abs($row['revenue']));
             $finOpu->setPurchaseTp(abs($row['purchase']));
             $finOpu->setCostTp(abs($row['cost']));
             $finOpu->setIncomeTp(abs($row['revenue']) - abs($row['purchase']) - abs($row['cost']));
             
+            $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
+
+            $this->entityManager->persist($finOpu);
+        }
+        
+        $this->entityManager->flush();
+    }
+    
+    /**
+     * Рассчитать расходы за период
+     * @param date $period
+     */
+    public function costs($period)
+    {
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+        
+        $costs = $this->entityManager->getRepository(FinOpu::class)
+                ->costs($startDate, $endDate);
+        
+        foreach ($tpIncomes as $row){
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($row['companyId']);
+            
+            $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
+            
+            $finOpu->setRevenueTp(abs($row['revenue']));
+            $finOpu->setPurchaseTp(abs($row['purchase']));
+            $finOpu->setCostTp(abs($row['cost']));
+            $finOpu->setIncomeTp(abs($row['revenue']) - abs($row['purchase']) - abs($row['cost']));
+            
+            $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
+
             $this->entityManager->persist($finOpu);
         }
         
