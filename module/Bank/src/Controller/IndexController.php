@@ -457,4 +457,18 @@ class IndexController extends AbstractActionController
         
         return new JsonModel([ 'result' => 'ok']);                  
     }
+    
+    public function addStatementTokensAction()
+    {
+        $this->mlManager->statementTokens();
+        
+        return new JsonModel([ 'result' => 'ok']);                  
+    }
+    
+    public function statementTokensCountAction()
+    {
+        $this->mlManager->updateStatementTokensCount();
+        
+        return new JsonModel([ 'result' => 'ok']);                  
+    }
 }

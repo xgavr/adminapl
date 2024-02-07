@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Laminas\Config\Config;
+use Application\Entity\Token;
 
 /**
  * Description of Producer
@@ -22,10 +23,6 @@ use Laminas\Config\Config;
 class StatementToken {
     
 
-    const STATUS_WHITE_LIST   = 1; // белый список 
-    const STATUS_GRAY_LIST    = 8; // серый список 
-    const STATUS_BLACK_LIST   = 9; // черный список 
-    
     const MIN_DF = 5; // минимальная частота
     const MAX_TOKENS_FOR_GROUP = 6; // максимальное количество токенов для группы
     const MIN_TFIDF_FOR_GROUP = 0.003; // максимальный tfidf для группы
@@ -55,13 +52,29 @@ class StatementToken {
     /**
      * @ORM\Column(name="status")  
      */
-    protected $status = self::STATUS_WHITE_LIST;        
+    protected $status = Token::IS_RU;        
 
     /**
      * @ORM\Column(name="frequency")  
      */
     protected $frequency = 9999;        
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Bank\Entity\Statement")
+     * @ORM\JoinTable(name="statement_token_token",
+     *      joinColumns={@ORM\JoinColumn(name="statement_token_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="statement_id", referencedColumnName="id")}
+     *      )
+     */
+    private $statements;    
+    
+    /**
+     * Constructor.
+     */
+    public function __construct() 
+    {
+        $this->statements = new ArrayCollection();
+    }    
 
     public function getId() 
     {
@@ -137,10 +150,22 @@ class StatementToken {
      */
     public static function getStatusList() 
     {
+        return Token::getStatusList();
+    }    
+
+    /**
+     * Returns use statuses as array.
+     * @return array
+     */
+    public static function getUseStatusList() 
+    {
         return [
-            self::STATUS_WHITE_LIST => 'Белый список',
-            self::STATUS_GRAY_LIST  => 'Серый список',
-            self::STATUS_BLACK_LIST => 'Черный список',
+            Token::IS_DICT,
+            Token::IS_EN,
+            Token::IS_EN_ABBR,
+            Token::IS_EN_DICT,
+            Token::IS_RU,
+            Token::IS_RU_ABBR,
         ];
     }    
     
@@ -173,5 +198,14 @@ class StatementToken {
     public function setStatus($status) 
     {
         $this->status = $status;
-    }           
+    }    
+
+    /**
+     * 
+     * @return ArrayCollection
+     */
+    public function getStatements() {
+        return $this->statements;
+    }
+    
 }

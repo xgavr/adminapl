@@ -9,6 +9,7 @@
 namespace Bank\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Cash\Entity\CashDoc;
 use Bank\Entity\Payment;
 
@@ -171,6 +172,23 @@ class Statement {
     * @ORM\JoinColumn(name="cash_doc_id", referencedColumnName="id")
      */
     private $cashDoc;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Bank\Entity\StatementToken")
+     * @ORM\JoinTable(name="statement_token_token",
+     *      joinColumns={@ORM\JoinColumn(name="statement_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="statement_token_id", referencedColumnName="id")}
+     *      )
+     */
+    private $statementTokens;
+    
+    /**
+     * Constructor.
+     */
+    public function __construct() 
+    {
+        $this->statementTokens = new ArrayCollection();
+    }
     
     /**
      * Возвращает Id
@@ -744,6 +762,14 @@ class Statement {
     public function setCashDoc($cashDoc)
     {
         $this->cashDoc = $cashDoc;
+    }
+    
+    /**
+     * 
+     * @return ArrayCollection
+     */
+    public function getStatementTokens() {
+        return $this->statementTokens;
     }
     
     /**

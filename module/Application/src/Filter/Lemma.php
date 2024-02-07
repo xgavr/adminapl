@@ -16,6 +16,7 @@ use Application\Validator\IsRU;
 use Application\Validator\IsEN;
 use Application\Validator\IsNUM;
 use phpMorphy;
+use Bank\Entity\StatementToken;
 
 /**
  * Вспомогательный класс
@@ -92,6 +93,9 @@ class Lemma extends AbstractFilter
     {
         if (!empty($this->options['useMailToken'])){
             $token = $this->entityManager->getRepository(MailToken::class)
+                    ->findOneByLemma($word);            
+        } elseif (!empty($this->options['useStatementToken'])){
+            $token = $this->entityManager->getRepository(StatementToken::class)
                     ->findOneByLemma($word);            
         } else {
             $token = $this->entityManager->getRepository(Token::class)
@@ -276,7 +280,7 @@ class Lemma extends AbstractFilter
             }             
         }    
         ksort($result);
-        if (empty($this->options['useMailToken'])){
+        if (empty($this->options['useMailToken']) && empty($this->options['useStatementToken'])){
             $result = $this->_correctBigram($result);
         }    
         return $result;
