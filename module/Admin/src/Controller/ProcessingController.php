@@ -236,6 +236,12 @@ class ProcessingController extends AbstractActionController
      */
     private $ampReportManager;    
 
+    /**
+     * Bank Ml manager.
+     * @var \Bank\Service\MlManager
+     */
+    private $bankMlManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
@@ -244,7 +250,7 @@ class ProcessingController extends AbstractActionController
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
             $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
             $ozonService, $userManager, $smsManager, $sbpManager, $cashManager,
-            $ampReportManager, $paymentManager) 
+            $ampReportManager, $paymentManager, $bankMlManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -282,6 +288,7 @@ class ProcessingController extends AbstractActionController
         $this->cashManager = $cashManager;
         $this->ampReportManager = $ampReportManager;
         $this->paymentManager = $paymentManager;
+        $this->bankMlManager = $bankMlManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -2140,6 +2147,23 @@ class ProcessingController extends AbstractActionController
         if ($settings['get_report'] == 1){
 
             $this->ampReportManager->monthReports();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    /**
+     * Токены выписок
+     */
+    public function bankTokensAction()
+    {
+        $settings = $this->adminManager->getBankTransferSettings();
+
+        if ($settings['statement_by_api'] == 1){
+
+            $this->bankMlManager->statementTokens();
         }    
                 
         return new JsonModel(

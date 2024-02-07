@@ -44,6 +44,8 @@ class MlManager
             $statement->getStatementTokens()->add($statementToken);            
         }
         
+        $statement->setStatusToken(Statement::STATUS_TOKEN_TOKEN);
+        $this->entityManager->persist($statement);
         // Apply changes to database.
         $this->entityManager->flush();        
     }
@@ -120,13 +122,17 @@ class MlManager
     public function statementTokens()
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(0);
+        set_time_limit(900);
+        $startTime = time();
                 
         $statements = $this->entityManager->getRepository(Statement::class)
-                ->findBy([]);
+                ->findBy(['statusToken' => Statement::STATUS_TOKEN_NO]);
         
         foreach ($statements as $statement){
             $this->statementLemms($statement);
+            if (time() > $startTime + 840){
+                break;
+            }
         }
         
         return;
@@ -135,7 +141,8 @@ class MlManager
     public function updateStatementTokensCount()
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(0);
+        set_time_limit(900);
+        $startTime = time();
         
         $statementCount = $this->entityManager->getRepository(Statement::class)
                 ->count([]);
@@ -145,6 +152,9 @@ class MlManager
         
         foreach ($statementTokens as $statementToken){
             $this->updateStatementTokenCount($statementToken, $statementCount);
+            if (time() > $startTime + 840){
+                break;
+            }
         }
         
         return;

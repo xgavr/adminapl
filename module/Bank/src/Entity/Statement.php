@@ -29,6 +29,14 @@ class Statement {
     const PAY_CHECK = 2; //проверен
     const PAY_WARNING = 3; // не создан док в кассе
     
+    const STATUS_ACCOUNT_OK  = 1;// обновлено 
+    const STATUS_ACCOUNT_NO  = 2;// не обновлено
+    const STATUS_TAKE_NO  = 3;// не проведено    
+    
+    const STATUS_TOKEN_NO    = 1;// токены не получены 
+    const STATUS_TOKEN_TOKEN    = 2;// токены получены 
+    const STATUS_TOKEN_COUNT  = 3;// токены посчитаны
+    const STATUS_TOKEN_GROUP  = 4;// группа присвоена
     
     /**
      * @ORM\Id
@@ -166,6 +174,16 @@ class Statement {
      * @ORM\Column(name="pay")  
      */
     protected $pay = self::PAY_NEW;
+
+    /** 
+     * @ORM\Column(name="status_account")  
+     */
+    protected $statusAccount = self::STATUS_ACCOUNT_NO;
+
+    /** 
+     * @ORM\Column(name="status_token")  
+     */
+    protected $statusToken = self::STATUS_TOKEN_NO;
 
     /**
     * @ORM\OneToOne(targetEntity="Cash\Entity\CashDoc", inversedBy="statement")
@@ -746,6 +764,95 @@ class Statement {
     {
         $this->pay = $pay;
     }     
+    
+    /**
+     * Returns statusAccount.
+     * @return int     
+     */
+    public function getStatusAccount() 
+    {
+        return $this->statusAccount;
+    }
+
+    /**
+     * Returns possible statusAccount as array.
+     * @return array
+     */
+    public static function getStatusAccountList() 
+    {
+        return [
+            self::STATUS_ACCOUNT_OK => 'Обновлено',
+            self::STATUS_ACCOUNT_NO=> 'Не обновлено',
+            self::STATUS_TAKE_NO=> 'Не проведено',
+        ];
+    }    
+    
+    /**
+     * Returns statusAccount as string.
+     * @return string
+     */
+    public function getStatusAccountAsString()
+    {
+        $list = self::getStatusAccountList();
+        if (isset($list[$this->statusAccount]))
+            return $list[$this->statusAccount];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets statusAccount.
+     * @param int $statusAccount     
+     */
+    public function setStatusAccount($statusAccount) 
+    {
+        $this->statusAccount = $statusAccount;
+    }   
+
+    /**
+     * Returns statusToken.
+     * @return int     
+     */
+    public function getStatusToken() 
+    {
+        return $this->statusToken;
+    }
+
+    /**
+     * Returns possible statusToken as array.
+     * @return array
+     */
+    public static function getStatusTokenList() 
+    {
+        return [
+            self::STATUS_TOKEN_NO => 'Токены не получены',
+            self::STATUS_TOKEN_TOKEN => 'Токены получены',
+            self::STATUS_TOKEN_COUNT => 'Токены посчитаны',
+            self::STATUS_TOKEN_GROUP => 'Группа присвоена',
+        ];
+    }    
+    
+    /**
+     * Returns statusToken as string.
+     * @return string
+     */
+    public function getStatusTokenAsString()
+    {
+        $list = self::getStatusTokenList();
+        if (isset($list[$this->statusToken]))
+            return $list[$this->statusToken];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets statusToken.
+     * @param int $statusToken     
+     */
+    public function setStatusToken($statusToken) 
+    {
+        $this->statusToken = $statusToken;
+    }   
     
     /**
      * 
