@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Description of Tax
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\Company\Repository\TaxRepository")
  * @ORM\Table(name="tax")
  * @author Daddy
  */

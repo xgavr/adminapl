@@ -19,6 +19,7 @@ class Accrual
     const BASE_INCOME_RETAIL = 3; // доход розницы.
     const BASE_INCOME_TP     = 4; // доход ТП.
     const BASE_INCOME_ORDER  = 5; // доход по заказам.
+    const BASE_ACCRUAL       = 6; // Начисленная ЗП.
     
     const KIND_PERCENT       = 1; // процент от базы
     const KIND_FIX           = 2; // сумма.
@@ -127,6 +128,7 @@ class Accrual
             self::BASE_INCOME_TP => 'Доход ТП',
             self::BASE_INCOME_TOTAL => 'Доход общий',
             self::BASE_INCOME_ORDER => 'Доход по заказам',
+            self::BASE_ACCRUAL => 'Начисленная ЗП',
         ];
     }    
 

@@ -24,6 +24,7 @@ use Company\Entity\Contract;
 use Stock\Entity\Register;
 use Cash\Entity\CashDoc;
 use Stock\Entity\St;
+use Company\Entity\TaxMutual;
 
 /**
  * Description of ZpCalculator
@@ -38,12 +39,32 @@ class ZpCalculator {
      */
     private $entityManager;
     
+    /**
+     * Admin Manager
+     * @var \Admin\Service\AdminManager
+     */
     private $adminManager;
 
-    public function __construct($entityManager, $adminManager)
+    /**
+     * Tax Manager
+     * @var \Company\Service\TaxManager
+     */
+    private $taxManager;
+    
+    /**
+     * 
+     * @var Accrual
+     */
+    private $incomeTaxAccrual;
+
+    public function __construct($entityManager, $adminManager, $taxManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
+        $this->taxManager = $taxManager;
+        
+        $this->incomeTaxAccrual = $this->entityManager->getRepository(Accrual::class)
+                ->findOneBy(['payment' => Accrual::PAYMENT_TAX]);
     }
     
     /**
@@ -212,6 +233,23 @@ class ZpCalculator {
         
         $this->entityManager->flush();
         
+        $incomeTax = $this->taxManager->repostDocCalculatorIncomeTax($docCalculator, $docStamp);
+        
+        $personalMutual = new PersonalMutual();
+        $personalMutual->setAmount(abs($incomeTax->getAmount()));
+        $personalMutual->setCompany($docCalculator->getCompany());
+        $personalMutual->setDateOper($docCalculator->getDateOper());
+        $personalMutual->setDocId($docCalculator->getId());
+        $personalMutual->setDocKey($docCalculator->getLogKey());
+        $personalMutual->setDocStamp($docStamp);
+        $personalMutual->setDocType(Movement::DOC_ZP);
+        $personalMutual->setStatus(PersonalMutual::getStatusFromDocCalculator($docCalculator));
+        $personalMutual->setUser($docCalculator->getUser());
+        $personalMutual->setKind(PersonalMutual::KIND_DEDUCTION);
+        $personalMutual->setAccrual($this->incomeTaxAccrual);
+
+        $this->taxManager->repostDocCalculatorEsn($docCalculator, $docStamp);
+        
         return $personalMutual;
     }
     
@@ -321,6 +359,7 @@ class ZpCalculator {
         return $personalMutual;
     }
     
+    
     /**
      * Расчитать оклад за день
      * 
@@ -363,7 +402,7 @@ class ZpCalculator {
         $this->entityManager->flush();
         
         $this->repostDocCalculator($docCalculator);
-        
+                
         return $docCalculator;
     }
     

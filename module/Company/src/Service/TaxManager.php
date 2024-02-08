@@ -2,6 +2,9 @@
 namespace Company\Service;
 
 use Company\Entity\Tax;
+use Company\Entity\TaxMutual;
+use Zp\Entity\DocCalculator;
+use Stock\Entity\Movement;
 
 /**
  * This service is responsible for adding/editing roles.
@@ -10,7 +13,7 @@ class TaxManager
 {
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;  
         
@@ -73,5 +76,91 @@ class TaxManager
         $this->entityManager->flush();
         
     }    
+    
+    /**
+     * Удалить расчет
+     * 
+     * @param integer $docType
+     * @param integer $docId
+     */
+    public function removeTaxMutual($docType, $docId)
+    {
+       $taxMutuals = $this->entityManager->getRepository(TaxMutual::class)
+               ->findBy(['docType' => $docType, 'docId' => $docId]);
+       
+       foreach ($taxMutuals as $taxMutual){
+           $this->entityManager->remove($taxMutual);
+       }
+       
+       $this->entityManager->flush();
+       
+       return;
+    }
+    
+    /**
+     * Провести расчет подоходного налога
+     * @param DocCalculator $docCalculator
+     * @param float $docStamp
+     * 
+     * @return TaxMutual
+     */
+    public function repostDocCalculatorIncomeTax($docCalculator, $docStamp)
+    {
+        $this->removeTaxMutual(Movement::DOC_ZP, $docCalculator->getId());
+        
+        $tax = $this->entityManager->getRepository(Tax::class)
+                ->currentTax(Tax::KIND_INC, $docCalculator->getDateOper());
+        $amount = abs($docCalculator->getAmount())*$tax->getAmount()/100;
+        
+        $taxMutual = new TaxMutual();
+        $taxMutual->setAmount(-$amount);
+        $taxMutual->setCompany($docCalculator->getCompany());
+        $taxMutual->setDateOper($docCalculator->getDocDate());
+        $taxMutual->setDocId($docCalculator->getId());
+        $taxMutual->setDocKey($docCalculator->getLogKey());
+        $taxMutual->setDocStamp($docStamp);
+        $taxMutual->setDocType(Movement::DOC_ZP);
+        $taxMutual->setStatus(TaxMutual::getStatusFromDocCalculator($docCalculator));
+        $taxMutual->setTax($tax);
+
+        $this->entityManager->persist($taxMutual);
+        
+        $this->entityManager->flush();
+        
+        return $taxMutual;
+    }   
+    
+    /**
+     * Провести расчет ЕСН
+     * @param DocCalculator $docCalculator
+     * @param float $docStamp
+     * 
+     * @return TaxMutual
+     */
+    public function repostDocCalculatorEsn($docCalculator, $docStamp)
+    {
+        $this->removeTaxMutual(Movement::DOC_ZP, $docCalculator->getId());
+        
+        $tax = $this->entityManager->getRepository(Tax::class)
+                ->currentTax(Tax::KIND_ESN, $docCalculator->getDateOper());
+        $amount = abs($docCalculator->getAmount())*$tax->getAmount()/100;
+        
+        $taxMutual = new TaxMutual();
+        $taxMutual->setAmount(-$amount);
+        $taxMutual->setCompany($docCalculator->getCompany());
+        $taxMutual->setDateOper($docCalculator->getDocDate());
+        $taxMutual->setDocId($docCalculator->getId());
+        $taxMutual->setDocKey($docCalculator->getLogKey());
+        $taxMutual->setDocStamp($docStamp);
+        $taxMutual->setDocType(Movement::DOC_ZP);
+        $taxMutual->setStatus(TaxMutual::getStatusFromDocCalculator($docCalculator));
+        $taxMutual->setTax($tax);
+
+        $this->entityManager->persist($taxMutual);
+        
+        $this->entityManager->flush();
+        
+        return $taxMutual;
+    }        
 }
 

@@ -233,7 +233,7 @@ class VtManager
                     $quantity = min($posting, -$movement->getQuantity());
                     $amount = $quantity*$vtGood->getAmount()/$vtGood->getQuantity();
                     $basePrice = abs($movement->getBaseAmount()/$movement->getQuantity());
-                    $baseAmount = -$basePrice*$movement->getQuantity();
+                    $baseAmount = $basePrice*$quantity;
                     
                     if ($vt->getOrder()->isComissuionerContract()){ //если передача на комиссию
                         $amount = $baseAmount;
