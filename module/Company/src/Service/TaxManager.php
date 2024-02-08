@@ -5,6 +5,7 @@ use Company\Entity\Tax;
 use Company\Entity\TaxMutual;
 use Zp\Entity\DocCalculator;
 use Stock\Entity\Movement;
+use Cash\Entity\CashDoc;
 
 /**
  * This service is responsible for adding/editing roles.
@@ -131,6 +132,40 @@ class TaxManager
         
         return $taxMutual;
     }   
+
+    /**
+     * Провести расчет подоходного налога
+     * @param CashDoc $cashDoc
+     * @param float $docStamp
+     * 
+     * @return TaxMutual
+     */
+    public function repostCashDocIncomeTax($cashDoc, $docStamp)
+    {
+        $tax = $this->entityManager->getRepository(Tax::class)
+                ->currentTax(Tax::KIND_INC, $cashDoc->getDateOper());
+
+        $this->removeTaxMutual(Movement::DOC_ZP, $cashDoc->getId(), $tax->getId());
+        
+        $amount = abs($cashDoc->getAmount())*$tax->getAmount()/100;
+        
+        $taxMutual = new TaxMutual();
+        $taxMutual->setAmount(-$amount);
+        $taxMutual->setCompany($cashDoc->getCompany());
+        $taxMutual->setDateOper($cashDoc->getDateOper());
+        $taxMutual->setDocId($cashDoc->getId());
+        $taxMutual->setDocKey($cashDoc->getLogKey());
+        $taxMutual->setDocStamp($docStamp);
+        $taxMutual->setDocType(Movement::DOC_CASH);
+        $taxMutual->setStatus(TaxMutual::getStatusFromCashDoc($cashDoc));
+        $taxMutual->setTax($tax);
+
+        $this->entityManager->persist($taxMutual);
+        
+        $this->entityManager->flush();
+        
+        return $taxMutual;
+    }   
     
     /**
      * Провести расчет ЕСН
@@ -157,6 +192,40 @@ class TaxManager
         $taxMutual->setDocStamp($docStamp);
         $taxMutual->setDocType(Movement::DOC_ZP);
         $taxMutual->setStatus(TaxMutual::getStatusFromDocCalculator($docCalculator));
+        $taxMutual->setTax($tax);
+
+        $this->entityManager->persist($taxMutual);
+        
+        $this->entityManager->flush();
+        
+        return $taxMutual;
+    }   
+    
+    /**
+     * Провести расчет ЕСН
+     * @param CashDoc $cashDoc
+     * @param float $docStamp
+     * 
+     * @return TaxMutual
+     */
+    public function repostCashDocEsn($cashDoc, $docStamp)
+    {
+        $tax = $this->entityManager->getRepository(Tax::class)
+                ->currentTax(Tax::KIND_ESN, $cashDoc->getDateOper());
+
+        $this->removeTaxMutual(Movement::DOC_ZP, $cashDoc->getId(), $tax->getId());
+        
+        $amount = abs($cashDoc->getAmount())*$tax->getAmount()/100;
+        
+        $taxMutual = new TaxMutual();
+        $taxMutual->setAmount(-$amount);
+        $taxMutual->setCompany($cashDoc->getCompany());
+        $taxMutual->setDateOper($cashDoc->getDateOper());
+        $taxMutual->setDocId($cashDoc->getId());
+        $taxMutual->setDocKey($cashDoc->getLogKey());
+        $taxMutual->setDocStamp($docStamp);
+        $taxMutual->setDocType(Movement::DOC_CASH);
+        $taxMutual->setStatus(TaxMutual::getStatusFromCashDoc($cashDoc));
         $taxMutual->setTax($tax);
 
         $this->entityManager->persist($taxMutual);

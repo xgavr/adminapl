@@ -230,9 +230,7 @@ class ZpCalculator {
         $personalMutual->setAccrual($docCalculator->getAccrual());
         
         $this->entityManager->persist($personalMutual);
-        
-        $this->entityManager->flush();
-        
+                
         $incomeTax = $this->taxManager->repostDocCalculatorIncomeTax($docCalculator, $docStamp);
         
         $personalMutual = new PersonalMutual();
@@ -247,6 +245,9 @@ class ZpCalculator {
         $personalMutual->setUser($docCalculator->getUser());
         $personalMutual->setKind(PersonalMutual::KIND_DEDUCTION);
         $personalMutual->setAccrual($this->incomeTaxAccrual);
+
+        $this->entityManager->persist($personalMutual);
+        $this->entityManager->flush();
 
         $this->taxManager->repostDocCalculatorEsn($docCalculator, $docStamp);
         
@@ -286,6 +287,25 @@ class ZpCalculator {
                             ->findOneBy(['payment' => Accrual::PAYMENT_COURIER]));
 
                     $this->entityManager->persist($personalMutual);
+                    
+                    $incomeTax = $this->taxManager->repostCashDocIncomeTax($cashDoc, $docStamp);
+
+                    $personalMutual = new PersonalMutual();
+                    $personalMutual->setAmount(abs($incomeTax->getAmount()));
+                    $personalMutual->setCompany($cashDoc->getCompany());
+                    $personalMutual->setDateOper($cashDoc->getDateOper());
+                    $personalMutual->setDocId($cashDoc->getId());
+                    $personalMutual->setDocKey($cashDoc->getLogKey());
+                    $personalMutual->setDocStamp($docStamp);
+                    $personalMutual->setDocType(Movement::DOC_CASH);
+                    $personalMutual->setStatus(PersonalMutual::getStatusFromCashDoc($cashDoc));
+                    $personalMutual->setUser($cashDoc->getUser());
+                    $personalMutual->setKind(PersonalMutual::KIND_DEDUCTION);
+                    $personalMutual->setAccrual($this->incomeTaxAccrual);
+
+                    $this->entityManager->persist($personalMutual);
+
+                    $this->taxManager->repostCashDocEsn($cashDoc, $docStamp);
                     
                 case CashDoc::KIND_OUT_SALARY:
                     // выплата
