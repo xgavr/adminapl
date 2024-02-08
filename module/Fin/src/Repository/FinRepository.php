@@ -136,8 +136,6 @@ class FinRepository extends EntityRepository
             ->join('cm.cost', 'c')    
             ->where('cm.status = :status')
             ->setParameter('status', CostMutual::STATUS_ACTIVE)    
-            ->andWhere('c.kind = :kind')
-            ->setParameter('kind', $costKind)    
             ->andWhere('cm.dateOper >= :startDate')    
             ->setParameter('startDate', $startDate)    
             ->andWhere('cm.dateOper <= :endDate')    

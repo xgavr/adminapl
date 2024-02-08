@@ -213,7 +213,7 @@ class FinManager {
         
         $costs = $this->entityManager->getRepository(FinOpu::class)
                 ->costs($startDate, $endDate);
-        var_dump($costs);
+
         foreach ($costs as $row){
             $company = $this->entityManager->getRepository(Legal::class)
                     ->find($row['companyId']);
