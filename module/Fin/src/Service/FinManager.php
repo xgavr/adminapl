@@ -11,6 +11,7 @@ namespace Fin\Service;
 use Fin\Entity\FinOpu;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Company\Entity\Legal;
+use Company\Entity\Cost;
 
 /**
  * Description of FinManager
@@ -213,19 +214,23 @@ class FinManager {
         $costs = $this->entityManager->getRepository(FinOpu::class)
                 ->costs($startDate, $endDate);
         
-        foreach ($tpIncomes as $row){
+        foreach ($costs as $row){
             $company = $this->entityManager->getRepository(Legal::class)
                     ->find($row['companyId']);
             
             $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
             
-            $finOpu->setRevenueTp(abs($row['revenue']));
-            $finOpu->setPurchaseTp(abs($row['purchase']));
-            $finOpu->setCostTp(abs($row['cost']));
-            $finOpu->setIncomeTp(abs($row['revenue']) - abs($row['purchase']) - abs($row['cost']));
+            switch ($row['kind']){
+                case Cost::KIND_FIX:
+                    $finOpu->setCostFix(abs($row['amount']));
+                    break;
+                case Cost::KIND_EXP:
+                    $finOpu->setCostRetail(abs($row['amount']));
+                    break;
+                default:     
+            }
             
-            $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
-
+            $finOpu->setCostTotal($finOpu->getCostFix() + $finOpu->getCostRetail());
             $this->entityManager->persist($finOpu);
         }
         
@@ -240,6 +245,7 @@ class FinManager {
     {
         $this->incomeRetail($period);
         $this->incomeTp($period);
+        $this->costs($period);
         
         return;
     }

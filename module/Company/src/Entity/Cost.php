@@ -24,7 +24,7 @@ class Cost {
     
     const KIND_EXP       = 1; // текущие расходы
     const KIND_FIX       = 2; // постоянные расходы
-    const KIND_OTH       = 3; // прочие расходы
+//    const KIND_OTH       = 3; // прочие расходы
     const KIND_MP       = 4; // расходы ТП
         
     /**
@@ -142,7 +142,7 @@ class Cost {
             self::KIND_EXP => 'Текущие',
             self::KIND_FIX => 'Постоянные',
             self::KIND_MP => 'Расходы ТП',
-            self::KIND_OTH => 'Прочие',
+//            self::KIND_OTH => 'Прочие',
         ];
     }    
 

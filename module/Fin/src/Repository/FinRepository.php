@@ -131,7 +131,7 @@ class FinRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('identity(cm.company) as companyId, LAST_DAY(cm.dateOper) as period, sum(m.amount) as amount')
+        $queryBuilder->select('identity(cm.company) as companyId, c.kind as kind, LAST_DAY(cm.dateOper) as period, sum(cm.amount) as amount')
             ->from(CostMutual::class, 'cm')
             ->join('cm.cost', 'c')    
             ->where('cm.status = :status')
@@ -143,6 +143,7 @@ class FinRepository extends EntityRepository
             ->andWhere('cm.dateOper <= :endDate')    
             ->setParameter('endDate', $endDate) 
             ->groupBy('companyId')    
+            ->groupBy('kind')    
             ->addGroupBy('period')    
                 ;
         
