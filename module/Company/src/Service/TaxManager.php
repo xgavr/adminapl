@@ -115,7 +115,7 @@ class TaxManager
         $taxMutual = new TaxMutual();
         $taxMutual->setAmount(-$amount);
         $taxMutual->setCompany($docCalculator->getCompany());
-        $taxMutual->setDateOper($docCalculator->getDocDate());
+        $taxMutual->setDateOper($docCalculator->getDateOper());
         $taxMutual->setDocId($docCalculator->getId());
         $taxMutual->setDocKey($docCalculator->getLogKey());
         $taxMutual->setDocStamp($docStamp);
@@ -148,7 +148,7 @@ class TaxManager
         $taxMutual = new TaxMutual();
         $taxMutual->setAmount(-$amount);
         $taxMutual->setCompany($docCalculator->getCompany());
-        $taxMutual->setDateOper($docCalculator->getDocDate());
+        $taxMutual->setDateOper($docCalculator->getDateOper());
         $taxMutual->setDocId($docCalculator->getId());
         $taxMutual->setDocKey($docCalculator->getLogKey());
         $taxMutual->setDocStamp($docStamp);
