@@ -98,6 +98,20 @@ return [
                     ],
                 ],
             ],
+            'tax' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/tax[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9_-]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\TaxController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -126,6 +140,10 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '+company.manage']
             ],
+            Controller\TaxController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+company.manage']
+            ],
         ],
     ],    
     'controllers' => [
@@ -135,6 +153,7 @@ return [
             Controller\LegalController::class => Controller\Factory\LegalControllerFactory::class,
             Controller\OfficeController::class => Controller\Factory\OfficeControllerFactory::class,
             Controller\RegionController::class => Controller\Factory\RegionControllerFactory::class,
+            Controller\TaxController::class => Controller\Factory\taxControllerFactory::class,
         ],
     ],
     'service_manager' => [
@@ -144,6 +163,7 @@ return [
             Service\LegalManager::class => Service\Factory\LegalManagerFactory::class,
             Service\OfficeManager::class => Service\Factory\OfficeManagerFactory::class,
             Service\RegionManager::class => Service\Factory\RegionManagerFactory::class,
+            Service\TaxManager::class => Service\Factory\TaxManagerFactory::class,
         ],
     ],
     'view_manager' => [

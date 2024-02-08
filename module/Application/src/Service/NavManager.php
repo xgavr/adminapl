@@ -385,7 +385,7 @@ class NavManager
                 $companyDropdownItems[] = [
                             'id' => 'tax',
                             'label' => 'Налоги',
-                            'link' => $url('rb', ['action'=>'tax'])
+                            'link' => $url('tax')
                         ];
                 $companyDropdownItems[] = [
                             'id' => 'edoOperators',

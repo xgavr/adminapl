@@ -12,10 +12,12 @@ $form->get('quantity')->setAttributes([
 
 $form->get('amount')->setAttributes([
     'class'=>'form-control', 
+    'data-inputmask' => "'alias': 'currency', 'min': 0, 'groupSeparator': ''"
     ]);
 
 $form->get('price')->setAttributes([
     'class'=>'form-control', 
+    'data-inputmask' => "'alias': 'currency', 'min': 0, 'groupSeparator': ''"
     ]);
 
 $form->get('comment')->setAttributes([
@@ -139,6 +141,9 @@ $docName = 'Новый';
     });    
     
     $( document ).ready(function() {        
+        $("#amount").inputmask();
+        $("#price").inputmask();
+
         $("#price").on('input', function(){
             var value = $(this).val();
             $(this).val(value.replace(",","."));

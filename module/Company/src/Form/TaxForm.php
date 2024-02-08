@@ -58,7 +58,43 @@ class TaxForm extends Form
                 'id' => 'taxamount'
             ],
             'options' => [
-                'label' => 'Размер',
+                'label' => 'Размер, %',
+            ],
+       ]);
+                
+        $this->add([
+            'type'  => 'select',
+            'name' => 'status',
+            'attributes' => [                
+                'id' => 'status'
+            ],
+            'options' => [
+                'label' => 'Статус',
+                'value_options' => Tax::getStatusList(),
+            ],
+       ]);
+                
+        $this->add([
+            'type'  => 'select',
+            'name' => 'kind',
+            'attributes' => [                
+                'id' => 'kind'
+            ],
+            'options' => [
+                'label' => 'Вид',
+                'value_options' => Tax::getKindList(),
+            ],
+       ]);
+                
+        $this->add([
+            'type'  => 'date',
+            'name' => 'dateStart',
+            'attributes' => [                
+                'id' => 'dateStart',
+                'value' => date('Y-m-d'),
+            ],
+            'options' => [
+                'label' => 'С даты',
             ],
        ]);
                 
@@ -113,7 +149,7 @@ class TaxForm extends Form
                         'name'    => 'Float',
                         'options' => [
                         'min' => 0,
-                        'locale' => 'ru-Ru'
+                        'locale' => 'en_US'
                         ],
                     ],
                 ],

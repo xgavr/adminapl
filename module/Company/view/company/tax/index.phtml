@@ -1,0 +1,67 @@
+<?php
+$this->headTitle('Налоги');
+
+$this->mainMenu()->setActiveItemId('company');
+$this->mainMenu()->setActiveUrl($this->url('tax'));
+?>
+
+<h1>Налоги</h1>
+
+<?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+<?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+<?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+<p>
+<a class="btn btn-default" href="
+    <?= $this->url('tax', ['action'=>'add']); ?>">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Новый налог
+</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Наименование</th>
+        <th>Размер</th>
+        <th>Тип</th>        
+        <th>Дата</th>        
+        <th></th>        
+    </tr>
+    
+    <?php foreach ($taxes as $tax): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($tax->getId()); ?></td>
+        <td>
+            <a href="<?= $this->url('tax', ['action'=>'view', 'id'=>$tax->getId()]); ?>">
+                <?= $this->escapeHtml($tax->getName()); ?>
+            </a> 
+        </td>
+        <td><?= $this->escapeHtml($tax->getAmount()); ?></a> 
+        </td>
+        <td><?= $this->escapeHtml($tax->getKindAsString()); ?></a> 
+        </td>
+        <td><?= $this->escapeHtml($tax->getDateStart()); ?></a> 
+        </td>
+        <td>
+            </nobr>
+            <a class="btn btn-info" href="<?= $this->url('tax', 
+                    ['action'=>'edit', 'id'=>$tax->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> Изменить
+            </a>
+            <a class="btn btn-danger" href="<?= $this->url('tax',
+                    ['action'=>'delete', 'id'=>$tax->getId()]); ?>">
+                <span class="glyphicon glyphicon-remove"></span> Удалить
+            </a>
+            </nobr>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+
+
+
+

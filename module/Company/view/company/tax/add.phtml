@@ -1,0 +1,84 @@
+<?php
+$this->headTitle('Добавить налог');
+
+$this->mainMenu()->setActiveItemId('company');
+$this->mainMenu()->setActiveUrl($this->url('tax'));
+
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Наименование налоги'
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('kind')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('amount')->setAttributes([
+    'class'=>'form-control', 
+    'data-inputmask' => "'alias': 'currency', 'min': 0, 'groupSeparator': ''"
+    ]);
+
+$form->get('dateStart')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+
+$form->prepare();
+?>
+
+<h1>Добавить налог</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('name')); ?>
+            <?= $this->formElement($form->get('name')); ?>
+            <?= $this->formElementErrors($form->get('name')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('kind')); ?>
+            <?= $this->formElement($form->get('kind')); ?>
+            <?= $this->formElementErrors($form->get('kind')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('amount')); ?>
+            <?= $this->formElement($form->get('amount')); ?>
+            <?= $this->formElementErrors($form->get('amount')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('dateStart')); ?>
+            <?= $this->formElement($form->get('dateStart')); ?>
+            <?= $this->formElementErrors($form->get('dateStart')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('status')); ?>
+            <?= $this->formElement($form->get('status')); ?>
+            <?= $this->formElementErrors($form->get('status')); ?>                  
+        </div>
+        
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   
+
+<script  type="text/javascript">
+    $( document ).ready(function() {        
+        $("#taxamount").inputmask();
+    });
+</script>
+
+
