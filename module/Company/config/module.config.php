@@ -153,7 +153,7 @@ return [
             Controller\LegalController::class => Controller\Factory\LegalControllerFactory::class,
             Controller\OfficeController::class => Controller\Factory\OfficeControllerFactory::class,
             Controller\RegionController::class => Controller\Factory\RegionControllerFactory::class,
-            Controller\TaxController::class => Controller\Factory\taxControllerFactory::class,
+            Controller\TaxController::class => Controller\Factory\TaxControllerFactory::class,
         ],
     ],
     'service_manager' => [
