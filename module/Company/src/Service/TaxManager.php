@@ -82,11 +82,12 @@ class TaxManager
      * 
      * @param integer $docType
      * @param integer $docId
+     * @param integer $taxId
      */
-    public function removeTaxMutual($docType, $docId)
+    public function removeTaxMutual($docType, $docId, $taxId)
     {
        $taxMutuals = $this->entityManager->getRepository(TaxMutual::class)
-               ->findBy(['docType' => $docType, 'docId' => $docId]);
+               ->findBy(['docType' => $docType, 'docId' => $docId, 'tax' => $taxId]);
        
        foreach ($taxMutuals as $taxMutual){
            $this->entityManager->remove($taxMutual);
@@ -106,10 +107,11 @@ class TaxManager
      */
     public function repostDocCalculatorIncomeTax($docCalculator, $docStamp)
     {
-        $this->removeTaxMutual(Movement::DOC_ZP, $docCalculator->getId());
-        
         $tax = $this->entityManager->getRepository(Tax::class)
                 ->currentTax(Tax::KIND_INC, $docCalculator->getDateOper());
+
+        $this->removeTaxMutual(Movement::DOC_ZP, $docCalculator->getId(), $tax->getId());
+        
         $amount = abs($docCalculator->getAmount())*$tax->getAmount()/100;
         
         $taxMutual = new TaxMutual();
@@ -139,10 +141,11 @@ class TaxManager
      */
     public function repostDocCalculatorEsn($docCalculator, $docStamp)
     {
-        $this->removeTaxMutual(Movement::DOC_ZP, $docCalculator->getId());
-        
         $tax = $this->entityManager->getRepository(Tax::class)
                 ->currentTax(Tax::KIND_ESN, $docCalculator->getDateOper());
+
+        $this->removeTaxMutual(Movement::DOC_ZP, $docCalculator->getId(), $tax->getId());
+        
         $amount = abs($docCalculator->getAmount())*$tax->getAmount()/100;
         
         $taxMutual = new TaxMutual();

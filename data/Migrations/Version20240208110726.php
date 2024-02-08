@@ -17,7 +17,7 @@ final class Version20240208110726 extends AbstractMigration
         $table = $schema->createTable('tax_mutual');
         $table->addColumn('id', 'integer', ['autoincrement'=>true]);        
         $table->addColumn('company_id', 'integer', ['notnull'=>true, 'comment' => 'Компания']);
-        $table->addColumn('tax_id', 'integer', ['notnull'=>true, 'comment' => 'Сотрудник']);
+        $table->addColumn('tax_id', 'integer', ['notnull'=>true, 'comment' => 'Налог']);
         $table->addColumn('doc_id', 'integer', ['notnull'=>true, 'comment' => 'Номер документа']);
         $table->addColumn('doc_type', 'integer', ['notnull'=>true, 'comment' => 'Тип документа']);
         $table->addColumn('date_oper', 'date', ['notnull'=>true, 'comment' => 'Дата операции']);
