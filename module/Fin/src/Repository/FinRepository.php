@@ -166,6 +166,7 @@ class FinRepository extends EntityRepository
         $queryBuilder->select('identity(pm.company) as companyId, pm.kind as kind, LAST_DAY(pm.dateOper) as period, sum(pm.amount) as amount')
             ->from(PersonalMutual::class, 'pm')
             ->where('pm.status = :status')
+            ->andWhere('pm.amount < 0')    
             ->setParameter('status', PersonalMutual::STATUS_ACTIVE)    
 //            ->andWhere('pm.kind = :kind')
 //            ->setParameter('kind', PersonalMutual::KIND_ACCRUAL)    
