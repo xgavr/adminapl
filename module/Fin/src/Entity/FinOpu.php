@@ -446,7 +446,7 @@ class FinOpu
             'profit_' => '',
             'zpTotal' => 'Зарплата всего',
             'esn' => 'ЕСН',
-            'profit_' => '',
+            'esn_' => '',
             'profit' => 'Прибыль',
             'tax' => 'Налог',
             'profitNet' => 'Чистая пибыль',
