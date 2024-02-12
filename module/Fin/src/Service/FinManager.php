@@ -277,6 +277,35 @@ class FinManager {
     }
     
     /**
+     * Рассчитать ЕСН за период
+     * @param date $period
+     */
+    public function esn($period)
+    {
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+        
+        $esn = $this->entityManager->getRepository(FinOpu::class)
+                ->esn($startDate, $endDate);
+        
+        foreach ($esn as $row){
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($row['companyId']);
+            
+            $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
+            
+            $finOpu->setEsn(abs($row['amount']));
+            
+            $finOpu->setProfit($finOpu->getIncomeTotal() - $finOpu->getCostTotal() - $finOpu->getZpTotal() - $finOpu->getEsn());
+            $finOpu->setProfitNet($finOpu->getProfit() - $finOpu->getTax());
+
+            $this->entityManager->persist($finOpu);
+        }
+        
+        $this->entityManager->flush();
+    }
+        
+    /**
      * Посчитать опу за период
      * @param date $period
      */
@@ -286,6 +315,7 @@ class FinManager {
         $this->incomeTp($period);
         $this->costs($period);
         $this->zp($period);
+        $this->esn($period);
         
         return;
     }

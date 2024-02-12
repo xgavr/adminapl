@@ -16,6 +16,8 @@ use Fin\Entity\FinOpu;
 use Company\Entity\Legal;
 use Company\Entity\CostMutual;
 use Zp\Entity\PersonalMutual;
+use Company\Entity\TaxMutual;
+use Company\Entity\Tax;
 
 /**
  * Description of FinRepository
@@ -176,6 +178,38 @@ class FinRepository extends EntityRepository
             ->setParameter('endDate', $endDate) 
             ->groupBy('companyId')    
             ->groupBy('kind')    
+            ->addGroupBy('period')    
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();       
+    }
+    
+    /**
+     * ЕСН
+     * 
+     * @param date $startDate
+     * @param date $endDate
+     * 
+     * @return array 
+     */
+    public function esn($startDate, $endDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('identity(tm.company) as companyId, LAST_DAY(tm.dateOper) as period, sum(tm.amount) as amount')
+            ->from(TaxMutual::class, 'tm')
+            ->join('tm.tax', 't')    
+            ->where('tm.status = :status')
+            ->setParameter('status', TaxMutual::STATUS_ACTIVE)    
+            ->andWhere('t.kind = :kind')
+            ->setParameter('kind', Tax::KIND_ESN)    
+            ->andWhere('pm.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('pm.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate) 
+            ->groupBy('companyId')    
             ->addGroupBy('period')    
                 ;
         

@@ -128,6 +128,16 @@ class FinOpu
     protected $tax;
 
     /** 
+     * @ORM\Column(name="esn")  
+     */
+    protected $esn;
+
+    /** 
+     * @ORM\Column(name="profit_net")  
+     */
+    protected $profitNet;
+
+    /** 
      * @ORM\Column(name="fund")  
      */
     protected $fund;
@@ -377,6 +387,24 @@ class FinOpu
         return $this;
     }
     
+    public function getEsn() {
+        return $this->esn;
+    }
+
+    public function setEsn($esn) {
+        $this->esn = $esn;
+        return $this;
+    }
+    
+    public function getProfitNet() {
+        return $this->profitNet;
+    }
+
+    public function setProfitNet($profitNet) {
+        $this->profitNet = $profitNet;
+        return $this;
+    }
+    
     /**
      * 
      * @return Legal
@@ -416,8 +444,11 @@ class FinOpu
             'zpTp' => 'Зарплата ТП',
             'zpAdm' => 'Зарплата администрации',
             'profit_' => '',
+            'esn' => 'ЕСН',
+            'profit_' => '',
             'profit' => 'Прибыль',
             'tax' => 'Налог',
+            'profitNet' => 'Чистая пибыль',
             'fund' => 'Фонды',
         ];    
     }
