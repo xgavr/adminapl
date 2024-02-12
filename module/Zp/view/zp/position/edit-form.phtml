@@ -172,7 +172,7 @@ $form->prepare();
         
         $(document).on('change', '#positionSelectForm', function (e) {
             $('#num').prop('disabled', !$.isNumeric($('#positionSelectForm').val()));
-            $('#kind').prop('disabled', !$.isNumeric($('#positionSelectForm').val()));
+            $('#kind').prop('disabled', $.isNumeric($('#positionSelectForm').val()));
         });
         
         var forms = $('#position-form');
