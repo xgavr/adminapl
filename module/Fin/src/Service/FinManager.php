@@ -12,6 +12,8 @@ use Fin\Entity\FinOpu;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Company\Entity\Legal;
 use Company\Entity\Cost;
+use Zp\Entity\Position;
+use Zp\Entity\PersonalMutual;
 
 /**
  * Description of FinManager
@@ -238,6 +240,43 @@ class FinManager {
     }
     
     /**
+     * Рассчитать зп за период
+     * @param date $period
+     */
+    public function zp($period)
+    {
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+        
+        $zps = $this->entityManager->getRepository(FinOpu::class)
+                ->zp($startDate, $endDate);
+        
+        foreach ($zps as $row){
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($row['companyId']);            
+            $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
+            
+            switch ($row['kind']){
+                case PersonalMutual::KIND_ACCRUAL_ADM:
+                    $finOpu->setZpAdm(abs($row['amount']));
+                    break;
+                case PersonalMutual::KIND_ACCRUAL_RETAIL:
+                    $finOpu->setZpRetail(abs($row['amount']));
+                    break;
+                case PersonalMutual::KIND_ACCRUAL_TP:
+                    $finOpu->setZpTp(abs($row['amount']));
+                    break;
+                default:     
+            }
+            
+            $finOpu->setZpTotal($finOpu->getZpAdm() + $finOpu->getZpRetail() + $finOpu->getZpTp());
+            $this->entityManager->persist($finOpu);
+        }
+        
+        $this->entityManager->flush();
+    }
+    
+    /**
      * Посчитать опу за период
      * @param date $period
      */
@@ -246,6 +285,7 @@ class FinManager {
         $this->incomeRetail($period);
         $this->incomeTp($period);
         $this->costs($period);
+        $this->zp($period);
         
         return;
     }

@@ -23,6 +23,11 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('kind')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => ($position) ? empty($position->getParentPosition()):true,
+    ]);
+
 $form->get('num')->setAttributes([
     'class'=>'form-control', 
     'disabled' => ($position) ? empty($position->getParentPosition()):true,
@@ -50,7 +55,14 @@ $form->prepare();
             
 <div class="modal-body">
     <div class="row">
-        <div class="col-xs-8">                        
+        <div class="col-xs-2">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('aplId')); ?>
+                <?= $this->formElement($form->get('aplId')); ?>
+                <?= $this->formElementErrors($form->get('aplId')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-6">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('company')); ?>
                 <?= $this->formElement($form->get('company')); ?>
@@ -59,9 +71,9 @@ $form->prepare();
         </div>    
         <div class="col-xs-4">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('aplId')); ?>
-                <?= $this->formElement($form->get('aplId')); ?>
-                <?= $this->formElementErrors($form->get('aplId')); ?>                  
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
             </div>
         </div>    
     </div>    
@@ -75,9 +87,9 @@ $form->prepare();
         </div>    
         <div class="col-xs-4">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('status')); ?>
-                <?= $this->formElement($form->get('status')); ?>
-                <?= $this->formElementErrors($form->get('status')); ?>                  
+                <?= $this->formLabel($form->get('kind')); ?>
+                <?= $this->formElement($form->get('kind')); ?>
+                <?= $this->formElementErrors($form->get('kind')); ?>                  
             </div>
         </div>    
     </div>    
@@ -160,6 +172,7 @@ $form->prepare();
         
         $(document).on('change', '#positionSelectForm', function (e) {
             $('#num').prop('disabled', !$.isNumeric($('#positionSelectForm').val()));
+            $('#kind').prop('disabled', !$.isNumeric($('#positionSelectForm').val()));
         });
         
         var forms = $('#position-form');

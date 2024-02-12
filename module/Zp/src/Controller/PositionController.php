@@ -165,6 +165,7 @@ class PositionController extends AbstractActionController
                     'name' => $position->getName(),
                     'num' => $position->getNum(),
                     'status' => $position->getStatus(),
+                    'kind' => $position->getKind(),
                     'parentPosition' => ($position->getParentPosition()) ? $position->getParentPosition()->getId():null,
                     'company' => $position->getCompany()->getId(),
                 ];

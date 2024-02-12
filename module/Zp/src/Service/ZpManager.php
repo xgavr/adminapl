@@ -105,6 +105,7 @@ class ZpManager {
         $position->setComment(empty($data['comment']) ? null:$data['comment']);
         $position->setName($data['name']);
         $position->setStatus(empty($data['status']) ? Position::STATUS_ACTIVE:$data['status']);
+        $position->setKind(empty($data['kind']) ? Position::KIND_ADM:$data['kind']);
         $position->setParentPosition(empty($data['parentPosition']) ? null:$data['parentPosition']);
         $position->setNum(empty($data['num']) ? 0:$data['num']);
         
@@ -155,6 +156,7 @@ class ZpManager {
         $position->setComment(empty($data['comment']) ? null:$data['comment']);
         $position->setName($data['name']);
         $position->setStatus(empty($data['status']) ? Position::STATUS_ACTIVE:$data['status']);
+        $position->setKind(empty($data['kind']) ? Position::KIND_ADM:$data['kind']);
         $position->setParentPosition(empty($data['parentPosition']) ? null:$data['parentPosition']);
         $position->setNum(empty($data['num']) ? 0:$data['num']);
         
@@ -180,8 +182,11 @@ class ZpManager {
                 
         if (empty($parentPosition)){
             $position->setSort(empty($parentSort) ? ($parentSortMax+1000):$parentSort);
+            $this->entityManager->getConnection()->update('position', ['kind' => $position->getKind()], 
+                    ['parentPosition' => $position->getId()]);
         } else {
             $position->setSort($parentPosition->getSort().'_'.(empty($sort) ? ($sortMax + 1000):$sort));
+            $position->setKind($parentPosition->getKind());
         }   
 
         

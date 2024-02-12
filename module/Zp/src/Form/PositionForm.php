@@ -99,6 +99,18 @@ class PositionForm extends Form
         
         $this->add([           
             'type'  => 'select',
+            'name' => 'kind',
+            'attributes' => [
+                'id' => 'kind'
+            ],
+            'options' => [
+                'label' => 'Раздел',
+                'value_options' => Position::getKindList(),
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'select',
             'name' => 'company',
             'attributes' => [
                 'id' => 'companySelectForm'

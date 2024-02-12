@@ -15,6 +15,7 @@ use ApiMarketPlace\Entity\MarketSaleReport;
 use Fin\Entity\FinOpu;
 use Company\Entity\Legal;
 use Company\Entity\CostMutual;
+use Zp\Entity\PersonalMutual;
 
 /**
  * Description of FinRepository
@@ -139,6 +140,38 @@ class FinRepository extends EntityRepository
             ->andWhere('cm.dateOper >= :startDate')    
             ->setParameter('startDate', $startDate)    
             ->andWhere('cm.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate) 
+            ->groupBy('companyId')    
+            ->groupBy('kind')    
+            ->addGroupBy('period')    
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();       
+    }
+    
+    /**
+     * Зарплата
+     * 
+     * @param date $startDate
+     * @param date $endDate
+     * 
+     * @return array 
+     */
+    public function zp($startDate, $endDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('identity(pm.company) as companyId, pm.kind as kind, LAST_DAY(pm.dateOper) as period, sum(pm.amount) as amount')
+            ->from(PersonalMutual::class, 'pm')
+            ->where('pm.status = :status')
+            ->setParameter('status', PersonalMutual::STATUS_ACTIVE)    
+            ->andWhere('pm.kind = :kind')
+            ->setParameter('kind', PersonalMutual::KIND_ACCRUAL)    
+            ->andWhere('pm.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('pm.dateOper <= :endDate')    
             ->setParameter('endDate', $endDate) 
             ->groupBy('companyId')    
             ->groupBy('kind')    

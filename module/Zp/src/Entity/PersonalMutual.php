@@ -9,6 +9,7 @@ use Zp\Entity\DocCalculator;
 use Cash\Entity\CashDoc;
 use Stock\Entity\St;
 use Zp\Entity\Accrual;
+use Zp\Entity\Position;
 
 /**
  * This class represents a position accrual.
@@ -20,9 +21,11 @@ class PersonalMutual
     const STATUS_ACTIVE       = 1; //.
     const STATUS_RETIRED      = 2; // .
     
-    const KIND_ACCRUAL       = 1; // начисление
-    const KIND_DEDUCTION     = 2; // удержание
-    const KIND_PAYMENT       = 3; // выплата
+    const KIND_ACCRUAL_ADM       = 1; // начисление adm
+    const KIND_ACCRUAL_RETAIL       = 2; // начисление retail
+    const KIND_ACCRUAL_TP       = 3; // начисление tp
+    const KIND_DEDUCTION     = 10; // удержание
+    const KIND_PAYMENT       = 20; // выплата
     
     /**
      * @ORM\Id
@@ -88,7 +91,6 @@ class PersonalMutual
      * @ORM\JoinColumn(name="accrual_id", referencedColumnName="id")
      */
     private $accrual;
-
 
     /**
      * Constructor.
@@ -200,8 +202,8 @@ class PersonalMutual
             case DocCalculator::STATUS_ACTIVE: return self::STATUS_ACTIVE;
             default: return self::STATUS_RETIRED;    
         }
-    }    
-
+    }  
+    
     /**
      * Returns possible cashDoc status.
      * @param CashDoc $cashDoc
@@ -238,13 +240,30 @@ class PersonalMutual
     }
 
     /**
+     * Returns possible docCalculator kind.
+     * @param DocCalculator $docCalculator
+     * @return integer
+     */
+    public static function getKindFromDocCalculator($docCalculator) 
+    {
+        switch ($docCalculator->getPosition()->getKind()){
+            case Position::KIND_ADM: return self::KIND_ACCRUAL_ADM;
+            case Position::KIND_RETAIL: return self::KIND_ACCRUAL_RETAIL;
+            case Position::KIND_TP: return self::KIND_ACCRUAL_TP;
+            default: return self::KIND_ACCRUAL_ADM;    
+        }
+    }    
+    
+    /**
      * Returns possible kinds as array.
      * @return array
      */
     public static function getKindList() 
     {
         return [
-            self::KIND_ACCRUAL => 'Начисление',
+            self::KIND_ACCRUAL_ADM => 'Начисление Администрация',
+            self::KIND_ACCRUAL_Retail => 'Начисление Розница',
+            self::KIND_ACCRUAL_TP => 'Начисление ТП',
             self::KIND_DEDUCTION => 'Удержание',
             self::KIND_PAYMENT => 'Выплата',
         ];

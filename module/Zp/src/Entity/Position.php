@@ -15,6 +15,10 @@ class Position
     const STATUS_ACTIVE       = 1; //.
     const STATUS_RETIRED      = 2; // .
     
+    const KIND_ADM       = 1; // администрация
+    const KIND_RETAIL       = 2; // розница
+    const KIND_TP   = 3; // тп
+    
     /**
      * @ORM\Id
      * @ORM\Column(name="id")
@@ -52,6 +56,11 @@ class Position
      */
     protected $status;
 
+    /**
+     * @ORM\Column(name="kind")   
+     */
+    protected $kind;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="positions") 
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
@@ -225,6 +234,41 @@ class Position
         $this->num = $num;
         return $this;
     }
+    
+    public function getKind() {
+        return $this->kind;
+    }
+
+    /**
+     * Returns possible kinds as array.
+     * @return array
+     */
+    public static function getKindList() 
+    {
+        return [
+            self::KIND_ADM => 'Администрация',
+            self::KIND_RETAIL => 'Розница',
+            self::KIND_TP => 'ТП',
+        ];
+    }    
+
+    /**
+     * Returns kind as string.
+     * @return string
+     */
+    public function getKindAsString()
+    {
+        $list = self::getKindList();
+        if (isset($list[$this->kind]))
+            return $list[$this->kind];
+        
+        return 'Unknown';
+    }    
+    
+    public function setKind($kind) {
+        $this->kind = $kind;
+        return $this;
+    }    
     
     /**
      * 
