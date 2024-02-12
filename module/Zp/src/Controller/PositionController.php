@@ -140,7 +140,7 @@ class PositionController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
-                if (is_numeric($data['parentPosition'])){
+                if (!empty($data['parentPosition'])){
                     $data['parentPosition'] = $this->entityManager->getRepository(Position::class)
                             ->find($data['parentPosition']);
                     $data['kind'] = $data['parentPosition']->getKind();
