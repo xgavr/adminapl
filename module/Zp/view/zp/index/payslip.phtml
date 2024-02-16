@@ -87,8 +87,8 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="company.name" data-sortable="false" data-width="200">Организация</th>
                      <th data-field="user.fullName" data-sortable="false" data-width="200">Сотрудник</th>
                      <th data-field="accrual.name" data-footer-formatter="totalFooterFormatter" data-sortable="false">Вид начисления/удержания</th>
-                     <th data-field="amountAccrual" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="accrualFormatter">Начислено</th>
-                     <th data-field="amountPay" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Получено</th>
+                     <th data-field="amount" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="accrualFormatter">Начислено</th>
+                     <th data-field="amount" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Получено</th>
                      <th data-field="active" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
             </thead>
@@ -196,10 +196,25 @@ $this->pageBreadcrumbs()->setItems([
         return 'Итого:';
     }
     
-    function footerFormatter(data){
+    function footerAccrualFormatter(data){
         var field = this.field;
         return (data.map(function (row) {
-            return +row[field];
+            if (row[field] < 0){
+                return +row[field];
+            }            
+            return +0;
+        }).reduce(function (sum, i) {
+            return (Math.round((sum + i)*100)/100);
+        }, 0)).toFixed(2);
+    }    
+    
+    function footerPayFormatter(data){
+        var field = this.field;
+        return (data.map(function (row) {
+            if (row[field] > 0){
+                return +row[field];
+            }            
+            return +0;
         }).reduce(function (sum, i) {
             return (Math.round((sum + i)*100)/100);
         }, 0)).toFixed(2);
