@@ -84,9 +84,9 @@ $this->pageBreadcrumbs()->setItems([
             <thead>
                 <tr>
                      <th data-field="id" data-sortable="true" data-align="right" data-width="10">Id</th>
-                     <th data-field="company.name" data-sortable="false" data-width="200">Организация</th>
-                     <th data-field="user.fullName" data-sortable="false" data-width="200">Сотрудник</th>
-                     <th data-field="accrual.name" data-footer-formatter="totalFooterFormatter" data-sortable="false">Вид начисления/удержания</th>
+                     <th data-field="company.name" data-sortable="true" data-width="200">Организация</th>
+                     <th data-field="user.fullName" data-sortable="true" data-width="200">Сотрудник</th>
+                     <th data-field="accrual.name" data-footer-formatter="totalFooterFormatter" data-sortable="true">Вид начисления/удержания</th>
                      <th data-field="amountOut" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="accrualFormatter">Начислено</th>
                      <th data-field="amountIn" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Получено</th>
                      <th data-field="active" data-formatter="activeFormatter" data-width="5"></th>
@@ -178,7 +178,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function accrualFormatter(value, row){
         if (row.amount<0){
-            return (-Math.round(row.amount*100)/100).toFixed(2);
+            return (-Math.round(row.amount*100)/100).toFixed(0);
         }
         
         return '';
@@ -202,7 +202,7 @@ $this->pageBreadcrumbs()->setItems([
             return +row[field];
         }).reduce(function (sum, i) {
             return (Math.round((sum + i)*100)/100);
-        }, 0)).toFixed(2);
+        }, 0)).toFixed(0);
     }    
     
     function statusFormatter(value, row){

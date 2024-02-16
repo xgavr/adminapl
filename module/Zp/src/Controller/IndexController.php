@@ -178,7 +178,7 @@ class IndexController extends AbstractActionController
         
         $params = [
             'q' => $q, 'company' => $company, 'user' => $user, 'accrual' => $accrual,
-            'startDate' => $startDate, 'endDate' => $endDate,             
+            'startDate' => $startDate, 'endDate' => $endDate, 'summary' => false,             
             'sort' => $sort, 'order' => $order, 
         ];
         
@@ -206,8 +206,6 @@ class IndexController extends AbstractActionController
                 'accrual' => $this->entityManager->getRepository(Accrual::class)
                     ->find($rows['accrual'])->toArray(),
                 'amount' => $rows['amount'],
-                'amountIn' => ($rows['amount'] > 0) ? $rows['amount']:0,
-                'amountOut' => ($rows['amount'] < 0) ? abs($rows['amount']):0,
             ];
             
             $data[] = $row;        

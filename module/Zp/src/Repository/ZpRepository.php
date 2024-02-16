@@ -545,21 +545,30 @@ class ZpRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $queryBuilder->select('identity(pm.company) as company, identity(pm.user) as user, '
-                . 'identity(pm.accrual) as accrual, sum(pm.amount) as amount')
+                . 'sum(pm.amount) as amount,'
+                . 'sum(case when pm.amount > 0 then pm.amount else 0) as amountOut,'
+                . 'sum(case when pm.amount < 0 then -pm.amount else 0) as amountIn')
                 ->from(PersonalMutual::class, 'pm')
                 ->andWhere('pm.status = :status')
                 ->setParameter('status', PersonalMutual::STATUS_ACTIVE)
                 ->groupBy('company')
-                ->addGroupBy('user')
-                ->addGroupBy('accrual')
-                ->orderBy('amount')
+                ->addGroupBy('user')                
                 ;    
         
         if (is_array($params)){
+            if (!empty($params['summary'])){
+                if ($params['summary'] == false){
+                    $queryBuilder->addSelect('identity(pm.accrual) as accrual')
+                            ->addGroupBy('accrual')
+                            ;
+                }    
+            }            
             if (!empty($params['company'])){
-                $queryBuilder->andWhere('pm.company = :company')
-                        ->setParameter('company', $params['company'])
-                        ;
+                if (is_numeric($params['company'])){
+                    $queryBuilder->andWhere('pm.company = :company')
+                            ->setParameter('company', $params['company'])
+                            ;
+                }    
             }            
             if (!empty($params['user'])){
                 if (is_numeric($params['user'])){
@@ -586,8 +595,9 @@ class ZpRepository extends EntityRepository
                         ;
             }
             if (isset($params['sort'])){
-                $queryBuilder->orderBy('pm.'.$params['sort'], $params['order']);
-            }            
+                $queryBuilder->orderBy($params['sort'], $params['order']);
+            }                        
+            $queryBuilder->addOrderBy('amount');
         }    
         
         return $queryBuilder->getQuery();
