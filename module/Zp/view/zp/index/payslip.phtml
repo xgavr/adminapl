@@ -185,7 +185,12 @@ $this->pageBreadcrumbs()->setItems([
     }        
 
     function amountFormatter(value, row){
-        return (Math.round(value*100)/100).toFixed(0);
+        var result = (Math.round(value*100)/100).toFixed(0);
+        if (result){
+            return result;
+        }
+        
+        return '';
     }        
     
     function totalFooterFormatter() {

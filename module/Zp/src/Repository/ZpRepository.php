@@ -546,8 +546,8 @@ class ZpRepository extends EntityRepository
         
         $queryBuilder->select('identity(pm.company) as company, identity(pm.user) as user, '
                 . 'sum(pm.amount) as amount,'
-                . 'sum(case when pm.amount > 0 then pm.amount else 0 end) as amountOut,'
-                . 'sum(case when pm.amount < 0 then -pm.amount else 0 end) as amountIn')
+                . 'sum(case when pm.amount > 0 then pm.amount else 0 end) as amountIn,'
+                . 'sum(case when pm.amount < 0 then -pm.amount else 0 end) as amountOut')
                 ->from(PersonalMutual::class, 'pm')
                 ->andWhere('pm.status = :status')
                 ->setParameter('status', PersonalMutual::STATUS_ACTIVE)
