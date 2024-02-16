@@ -206,6 +206,8 @@ class IndexController extends AbstractActionController
                 'accrual' => $this->entityManager->getRepository(Accrual::class)
                     ->find($rows['accrual'])->toArray(),
                 'amount' => $rows['amount'],
+                'amountIn' => ($rows['amount'] > 0) ? $rows['amount']:0,
+                'amountOut' => ($rows['amount'] < 0) ? abs($rows['amount']):0,
             ];
             
             $data[] = $row;        
