@@ -196,9 +196,24 @@ class IndexController extends AbstractActionController
 
         $result = $query->getResult(2);
         
+        $data = [];
+        foreach ($result as $rows){
+            $row = [
+                'company' => $this->entityManager->getRepository(Legal::class)
+                    ->find($rows['company']),
+                'user' => $this->entityManager->getRepository(User::class)
+                    ->find($rows['user']),
+                'accrual' => $this->entityManager->getRepository(Accrual::class)
+                    ->find($rows['accrual']),
+                'amount' => $rows['amount'],
+            ];
+            
+            $data[] = $row;        
+        } 
+        
         return new JsonModel([
             'total' => $total,
-            'rows' => $result,
+            'rows' => $data,
         ]);          
     }            
     

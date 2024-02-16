@@ -84,9 +84,9 @@ $this->pageBreadcrumbs()->setItems([
             <thead>
                 <tr>
                      <th data-field="id" data-sortable="true" data-align="right" data-width="10">Id</th>
-                     <th data-field="company" data-sortable="false" data-formatter="dateFormatter">Организация</th>
-                     <th data-field="user" data-sortable="false">Сотрудник</th>
-                     <th data-field="accrual" data-sortable="false">Вид начисления/удержания</th>
+                     <th data-field="company.name" data-sortable="false">Организация</th>
+                     <th data-field="user.fullName" data-sortable="false">Сотрудник</th>
+                     <th data-field="accrual.name" data-sortable="false">Вид начисления/удержания</th>
                      <th data-field="amount" data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
                      <th data-field="active" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                

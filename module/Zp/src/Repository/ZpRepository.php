@@ -552,6 +552,7 @@ class ZpRepository extends EntityRepository
                 ->groupBy('company')
                 ->addGroupBy('user')
                 ->addGroupBy('accrual')
+                ->orderBy('amount')
                 ;    
         
         if (is_array($params)){
