@@ -198,6 +198,7 @@ class IndexController extends AbstractActionController
         
         $data = [];
         foreach ($result as $rows){
+            var_dump($rows);
             $row = [
                 'company' => $this->entityManager->getRepository(Legal::class)
                     ->find($rows['company']),
