@@ -111,7 +111,7 @@ class MlManager
             $statementToken->setIdf(log10($statementCount/$statementTokenCount));
             $this->entityManager->persist($statementToken);
         } else {
-            $this->entityManager->remove($statementToken);
+           // $this->entityManager->remove($statementToken);
         }   
         
         $this->entityManager->flush();
