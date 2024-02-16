@@ -80,14 +80,16 @@ $this->pageBreadcrumbs()->setItems([
             data-cookie="true"
             data-cookie-id-table="zpPayslipSaveId"
             data-cookie-expire="1m"            
+            data-show-footer="true"
             >
             <thead>
                 <tr>
                      <th data-field="id" data-sortable="true" data-align="right" data-width="10">Id</th>
-                     <th data-field="company.name" data-sortable="false">Организация</th>
-                     <th data-field="user.fullName" data-sortable="false">Сотрудник</th>
+                     <th data-field="company.name" data-sortable="false" data-width="100">Организация</th>
+                     <th data-field="user.fullName" data-sortable="false" data-width="100">Сотрудник</th>
                      <th data-field="accrual.name" data-sortable="false">Вид начисления/удержания</th>
-                     <th data-field="amount" data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                     <th data-field="amount" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="accualFormatter">Начислено</th>
+                     <th data-field="amount" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Получено</th>
                      <th data-field="active" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
             </thead>
@@ -175,9 +177,30 @@ $this->pageBreadcrumbs()->setItems([
         return $.format.date(date, "dd.MM.yyyy");
     }    
     
-    function amountFormatter(value){
-        return (Math.round(value*100)/100).toFixed(2);
+    function accrualFormatter(value){
+        if (value<0){
+            return (-Math.round(value*100)/100).toFixed(2);
+        }
+        
+        return '';
     }        
+
+    function amountFormatter(value){
+        if (value>0){
+            return (Math.round(value*100)/100).toFixed(2);
+        }
+        
+        return '';
+    }        
+    
+    function footerFormatter(data){
+        var field = this.field;
+        return (data.map(function (row) {
+            return +row[field];
+        }).reduce(function (sum, i) {
+            return (Math.round((sum + i)*100)/100);
+        }, 0)).toFixed(2);
+    }    
     
     function statusFormatter(value, row){
         var statuses = <?= Encoder::encode(Personal::getStatusList())?>;
