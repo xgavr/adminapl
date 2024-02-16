@@ -14,6 +14,7 @@ use Company\Entity\Legal;
 use Company\Entity\Cost;
 use Zp\Entity\Position;
 use Zp\Entity\PersonalMutual;
+use Company\Entity\Tax;
 
 /**
  * Description of FinManager
@@ -277,10 +278,10 @@ class FinManager {
     }
     
     /**
-     * Рассчитать ЕСН за период
+     * Рассчитать ЕСН и налог на прибыль за период
      * @param date $period
      */
-    public function esn($period)
+    public function taxes($period)
     {
         $startDate = date('Y-01-01', strtotime($period));
         $endDate = date('Y-12-31 23:59:59', strtotime($period));
@@ -297,6 +298,15 @@ class FinManager {
             $finOpu->setEsn(abs($row['amount']));
             
             $finOpu->setProfit($finOpu->getIncomeTotal() - $finOpu->getCostTotal() - $finOpu->getZpTotal() - $finOpu->getEsn());
+            
+            $taxInc = $this->entityManager->getRepository(Tax::class)
+                    ->currentTax(Tax::KIND_PROFIT, $row['period']);
+            
+            $taxMin = $this->entityManager->getRepository(Tax::class)
+                    ->currentTax(Tax::KIND_PROGIT_MIN, $row['period']);
+            
+            $finOpu->setTax(max($finOpu->getProfit() * $taxInc/100, $finOpu->getIncomeTotal() * $taxMin/100));
+
             $finOpu->setProfitNet($finOpu->getProfit() - $finOpu->getTax());
 
             $this->entityManager->persist($finOpu);
@@ -315,7 +325,7 @@ class FinManager {
         $this->incomeTp($period);
         $this->costs($period);
         $this->zp($period);
-        $this->esn($period);
+        $this->taxes($period);
         
         return;
     }

@@ -533,4 +533,62 @@ class ZpRepository extends EntityRepository
         
         return 0;
     }
+    
+    /**
+     * Расчетный лист
+     * 
+     * @param array $params
+     */
+    public function payslip($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('identity(pm.company) as company, identity(pm.user) as user, '
+                . 'identity(pm.accrual) as accrual, sum(pm.amount) as amount')
+                ->from(PersonalMutual::class, 'pm')
+                ->andWhere('pm.status = :status')
+                ->setParameter('status', PersonalMutual::STATUS_ACTIVE)
+                ->groupBy('company')
+                ->addGroupBy('user')
+                ->addGroupBy('accrual')
+                ;    
+        
+        if (is_array($params)){
+            if (!empty($params['company'])){
+                $queryBuilder->andWhere('pm.company = :company')
+                        ->setParameter('company', $params['company'])
+                        ;
+            }            
+            if (!empty($params['user'])){
+                if (is_numeric($params['user'])){
+                    $queryBuilder->andWhere('pm.user = :user')
+                            ->setParameter('user', $params['user'])
+                            ;
+                }    
+            }            
+            if (!empty($params['accrual'])){
+                if (is_numeric($params['accrual'])){
+                    $queryBuilder->andWhere('pm.accrual = :accrual')
+                            ->setParameter('accrual', $params['accrual'])
+                            ;
+                }    
+            }            
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere("pm.dateOper >= :startDate")
+                        ->setParameter('startDate', $params['startDate'])
+                        ;
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere("pm.dateOper <= :endDate")
+                        ->setParameter('endDate', $params['endDate'])
+                        ;
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('pm.'.$params['sort'], $params['order']);
+            }            
+        }    
+        
+        return $queryBuilder->getQuery();
+    }
 }

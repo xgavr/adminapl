@@ -95,11 +95,11 @@ class TaxController extends AbstractActionController
             return;
         }
         
-        // Find a role with such ID.
-        $region = $this->entityManager->getRepository(Tax::class)
+        // Find a tax with such ID.
+        $tax = $this->entityManager->getRepository(Tax::class)
                 ->find($id);
         
-        if ($region == null) {
+        if ($tax == null) {
             $this->getResponse()->setStatusCode(404);
             return;
         }
