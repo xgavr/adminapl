@@ -188,10 +188,10 @@ class IndexController extends AbstractActionController
         $total = count($query->getResult());
         
         if ($offset) {
-            $query->setFirstResult($offset);
+            //$query->setFirstResult($offset);
         }
         if ($limit) {
-            $query->setMaxResults($limit);
+            //$query->setMaxResults($limit);
         }
 
         $result = $query->getResult(2);
