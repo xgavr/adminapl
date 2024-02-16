@@ -285,7 +285,30 @@ class Accrual
     public function getPersonalAccruals() {
         return $this->personalAccruals;
     }
-
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'aplId' => $this->getAplId(),
+            'basisName' => $this->getBasisAsString(),
+            'basis' => $this->getBasis(),
+            'comment' => $this->getComment(),
+            'kindName' => $this->getKindAsString(),
+            'kind' => $this->getKind(),
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'paymentName' => $this->getPaymentAsString(),
+            'payment' => $this->getPayment(),
+            'statusName' => $this->getStatusAsString(),
+            'status' => $this->getStatus(),
+        ];
+        
+        return $result;
+    }        
 }
 
 

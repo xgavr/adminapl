@@ -198,14 +198,13 @@ class IndexController extends AbstractActionController
         
         $data = [];
         foreach ($result as $rows){
-            var_dump($rows);
             $row = [
                 'company' => $this->entityManager->getRepository(Legal::class)
-                    ->find($rows['company']),
+                    ->find($rows['company'])->toArray(),
                 'user' => $this->entityManager->getRepository(User::class)
-                    ->find($rows['user']),
+                    ->find($rows['user'])->toArray(),
                 'accrual' => $this->entityManager->getRepository(Accrual::class)
-                    ->find($rows['accrual']),
+                    ->find($rows['accrual'])->toArray(),
                 'amount' => $rows['amount'],
             ];
             
