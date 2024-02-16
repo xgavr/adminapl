@@ -556,12 +556,10 @@ class ZpRepository extends EntityRepository
                 ;    
         
         if (is_array($params)){
-            if (!empty($params['summary'])){
-                if ($params['summary'] == false){
-                    $queryBuilder->addSelect('identity(pm.accrual) as accrual')
-                            ->addGroupBy('accrual')
-                            ;
-                }    
+            if ($params['summary'] == false){
+                $queryBuilder->addSelect('identity(pm.accrual) as accrual')
+                        ->addGroupBy('accrual')
+                        ;
             }            
             if (!empty($params['company'])){
                 if (is_numeric($params['company'])){
