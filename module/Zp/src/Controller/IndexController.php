@@ -203,10 +203,15 @@ class IndexController extends AbstractActionController
                     ->find($rows['company'])->toArray(),
                 'user' => $this->entityManager->getRepository(User::class)
                     ->find($rows['user'])->toArray(),
-                'accrual' => $this->entityManager->getRepository(Accrual::class)
-                    ->find($rows['accrual'])->toArray(),
                 'amount' => $rows['amount'],
+                'amountIn' => $rows['amountIn'],
+                'amountOut' => $rows['amountOut'],
             ];
+            
+            if (!empty($rows['accrual'])){
+                $row['accrual'] = $this->entityManager->getRepository(Accrual::class)
+                    ->find($rows['accrual'])->toArray();
+            }
             
             $data[] = $row;        
         } 
