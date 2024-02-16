@@ -87,7 +87,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="company.name" data-sortable="true" data-width="200">Организация</th>
                      <th data-field="user.fullName" data-sortable="true" data-width="200">Сотрудник</th>
                      <th data-field="accrual.name" data-footer-formatter="totalFooterFormatter" data-sortable="true">Вид начисления/удержания</th>
-                     <th data-field="amountOut" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="accrualFormatter">Начислено</th>
+                     <th data-field="amountOut" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Начислено</th>
                      <th data-field="amountIn" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Получено</th>
                      <th data-field="active" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
@@ -185,11 +185,7 @@ $this->pageBreadcrumbs()->setItems([
     }        
 
     function amountFormatter(value, row){
-        if (row.amount>0){
-            return (Math.round(row.amount*100)/100).toFixed(2);
-        }
-        
-        return '';
+        return (Math.round(row.amount*100)/100).toFixed(0);
     }        
     
     function totalFooterFormatter() {
