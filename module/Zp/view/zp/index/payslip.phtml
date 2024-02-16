@@ -204,7 +204,7 @@ $this->pageBreadcrumbs()->setItems([
             }            
             return +0;
         }).reduce(function (sum, i) {
-            return (Math.round((sum + i)*100)/100);
+            return (-Math.round((sum + i)*100)/100);
         }, 0)).toFixed(2);
     }    
     
