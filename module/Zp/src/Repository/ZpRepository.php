@@ -593,7 +593,7 @@ class ZpRepository extends EntityRepository
                         ;
             }
             if (isset($params['sort'])){
-                $queryBuilder->orderBy($params['sort'], $params['order']);
+                //$queryBuilder->orderBy($params['sort'], $params['order']);
             }                        
             $queryBuilder->addOrderBy('amount');
         }    
