@@ -107,14 +107,18 @@ class MlManager
         $statementTokenCount = $statementToken->getStatements()->count();
         
         if (!empty($statementTokenCount)){
-            $statementToken->setFrequency($statementTokenCount);
-            $statementToken->setIdf(log10($statementCount/$statementTokenCount));
-            $this->entityManager->persist($statementToken);
+//            $statementToken->setFrequency($statementTokenCount);
+//            $statementToken->setIdf(log10($statementCount/$statementTokenCount));
+//            $this->entityManager->persist($statementToken);
+            $this->entityManager->getConnection()->update('statement_token', [
+                'frequency' => $statementTokenCount,
+                'idf' => log10($statementCount/$statementTokenCount),
+            ], ['id' => $statementToken->getId()]);
         } else {
-           // $this->entityManager->remove($statementToken);
+            $this->entityManager->remove($statementToken);
+            $this->entityManager->flush();
         }   
         
-        $this->entityManager->flush();
         
         return;
     }
@@ -122,7 +126,7 @@ class MlManager
     public function statementTokens()
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(900);
+        set_time_limit(1800);
         $startTime = time();
                 
         $statements = $this->entityManager->getRepository(Statement::class)
@@ -130,7 +134,7 @@ class MlManager
         
         foreach ($statements as $statement){
             $this->statementLemms($statement);
-            if (time() > $startTime + 840){
+            if (time() > $startTime + 1740){
                 break;
             }
         }
