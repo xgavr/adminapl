@@ -26,6 +26,7 @@ use Stock\Entity\Revise;
 use Cash\Entity\CashDoc;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Zp\Entity\DocCalculator;
+use Bank\Entity\Statement;
 
 
 /**
@@ -333,6 +334,18 @@ class RegisterRepository extends EntityRepository
     {
         $dateOper = date('Y-m-d 23:59:59', strtotime($docCalculator->getDateOper()));
         return $this->register($dateOper, Movement::DOC_ZP, $docCalculator->getId(), $docCalculator->getLogKey());
+    } 
+
+    /**
+     * Регистриция выписки
+     * 
+     * @param  Statement $statement
+     * @return float
+     */
+    public function statementRegister($statement)
+    {
+        $dateOper = date('Y-m-d 12:00:00', strtotime($statement->getChargeDate()));
+        return $this->register($dateOper, Movement::DOC_BANK, $statement->getId(), $statement->getLogKey());
     } 
 
     public function allRegister()

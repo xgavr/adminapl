@@ -471,4 +471,27 @@ class IndexController extends AbstractActionController
         
         return new JsonModel([ 'result' => 'ok']);                  
     }
+    
+    public function updateKindAction()
+    {
+        $statementId = $this->params()->fromRoute('id', -1);
+        $kind = $this->params()->fromQuery('kind', Statement::KIND_UNKNOWN);
+        
+        if ($statementId > 0){
+            $statement = $this->entityManager->getRepository(Statement::class)
+                    ->find($statementId);
+            if ($statement){
+                $this->bankManager->updateStatementKind($statement, $kind);
+
+                $query = $this->entityManager->getRepository(Statement::class)
+                                ->findStatement(null, null, ['statementId' => $statementId]);
+                
+                $result = $query->getOneOrNullResult(2);
+                return new JsonModel([
+                    'id' => $statement->getId(),
+                    'row' => $result,
+                ]);
+            }
+        }
+    }    
 }

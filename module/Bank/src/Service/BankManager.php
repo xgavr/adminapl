@@ -55,12 +55,27 @@ class BankManager
      */
     private $postManager;
 
-    public function __construct($entityManager, $tochkaStatement, $adminManager, $postManager)
+    /**
+     * CostManager manager
+     * @var \Company\Service\CostManager
+     */
+    private $costManager;
+
+    /**
+     * GigaManager manager
+     * @var \Ai\Service\GigaManager
+     */
+    private $gigaManager;
+
+    public function __construct($entityManager, $tochkaStatement, $adminManager, 
+            $postManager, $costManager, $gigaManager)
     {
         $this->entityManager = $entityManager;
         $this->tochkaStatement = $tochkaStatement;    
         $this->adminManager = $adminManager;
         $this->postManager = $postManager;
+        $this->costManager = $costManager;
+        $this->gigaManager = $gigaManager;
         
         if (!is_dir(self::STATEMENTS_DIR)){
             mkdir(self::STATEMENTS_DIR);
@@ -158,6 +173,22 @@ class BankManager
         $statement->setSwap1($swap);
         $this->entityManager->persist($statement);
         $this->entityManager->flush();
+        return;
+    }
+    
+    /**
+     * Обновление вида операции
+     * 
+     * @param Statement $statement
+     * @param integer $kind
+     */
+    public function updateStatementKind($statement, $kind)
+    {
+        $statement->setKind($kind);
+        $this->entityManager->flush();
+        
+        $this->costManager->repostStatement($statement);
+        
         return;
     }
     

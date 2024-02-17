@@ -61,4 +61,19 @@ class IndexController extends AbstractActionController
 
         return new JsonModel($result);
     }
+
+    public function purposeTestAction()
+    {
+        $messages = [];
+        $messages[] = [
+            'role' => 'system',
+            'content' => 'Ты калькулятор',
+            'role' => 'user',
+            'content' => 'Зачисление денежных средств по договору об обслуживании держателей платежных карт по терминалу TID 30019734 за 2024-02-14. Сумма комиссии 401.58. НДС не предусмотрен, без НДС',
+        ];
+        
+        $result = $this->gigaManager->completions($messages);
+
+        return new JsonModel($result);
+    }
 }

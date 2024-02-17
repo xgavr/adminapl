@@ -26,6 +26,9 @@ class Cost {
     const KIND_FIX       = 2; // постоянные расходы
 //    const KIND_OTH       = 3; // прочие расходы
     const KIND_MP       = 4; // расходы ТП
+    const KIND_BANK_COMMISSION       = 5; // Комиссия банка
+    const KIND_BANK_ACQUIRING       = 6; // эквайринг 
+    const KIND_BANK_CART       = 7; // оплата расходов корп картой 
         
     /**
      * @ORM\Id

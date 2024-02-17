@@ -7,6 +7,8 @@ use Stock\Entity\Movement;
 use Stock\Entity\St;
 use Cash\Entity\CashDoc;
 use Stock\Entity\Ptu;
+use Bank\Entity\Statement;
+use Company\Entity\BankAccount;
 
 /**
  * This service is responsible for adding/editing roles.
@@ -214,6 +216,63 @@ class CostManager
         
         $this->entityManager->flush();
         
+        return $costMutual;
+    }   
+    
+    /**
+     * Провести расчет
+     * @param Statement $statement
+     * @param float $docStamp
+     * 
+     * @return CostMutual
+     */
+    public function repostStatement($statement)
+    {
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->statementRegister($statement);
+
+        $this->removeCostMutual(Movement::DOC_BANK, $statement->getId());
+        
+        $costMutual = null;
+        
+        $cost = null; $amount = 0;
+        switch ($statement->getKind()){
+
+            case Statement::KIND_OUT_BANK_COMMISSION:
+                $cost = $this->entityManager->getRepository(Cost::class)
+                        ->findOneBy(['kind' => Cost::KIND_BANK_COMMISSION]);
+                $amount = abs($statement->getAmount());                
+                break;
+            
+            case Statement::KIND_OUT_CART_PAY:
+                $cost = $this->entityManager->getRepository(Cost::class)
+                        ->findOneBy(['kind' => Cost::KIND_BANK_CART]);
+                $amount = abs($statement->getAmount());                
+                break;
+            case Statement::KIND_IN_CART:
+                $cost = $this->entityManager->getRepository(Cost::class)
+                        ->findOneBy(['kind' => Cost::KIND_BANK_ACQUIRING]);
+                $amount = abs($statement->getAmountService());                
+                break;
+        }    
+        
+        if ($cost && $amount){
+            $companyAccount = $this->entityManager->getRepository(BankAccount::class)
+                    ->findOneBy(['rs' => $statement->getAccount()]);
+            $costMutual = new CostMutual();
+            $costMutual->setAmount($amount);
+            $costMutual->setCompany($companyAccount->getLegal());
+            $costMutual->setDateOper($statement->getChargeDate());
+            $costMutual->setDocId($statement->getId());
+            $costMutual->setDocKey($statement->getLogKey());
+            $costMutual->setDocStamp($docStamp);
+            $costMutual->setDocType(Movement::DOC_BANK);
+            $costMutual->setStatus(CostMutual::getStatusFromStatement($statement));
+            $costMutual->setCost($cost);
+            
+            $this->entityManager->flush();
+        }
+                
         return $costMutual;
     }    
 }

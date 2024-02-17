@@ -14,6 +14,8 @@ use Bank\Service\BankManager;
 use Bankapi\Service\Tochka\Statement;
 use Admin\Service\AdminManager;
 use Admin\Service\PostManager;
+use Company\Service\CostManager;
+use Ai\Service\GigaManager;
 
 
 /**
@@ -30,8 +32,11 @@ class BankManagerFactory implements FactoryInterface
         $tochkaStatement = $container->get(Statement::class);
         $adminManager = $container->get(AdminManager::class);
         $postManager = $container->get(PostManager::class);
+        $costManager = $container->get(CostManager::class);
+        $gigaManager = $container->get(GigaManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new BankManager($entityManager, $tochkaStatement, $adminManager, $postManager);
+        return new BankManager($entityManager, $tochkaStatement, $adminManager,
+                $postManager, $costManager, $gigaManager);
     }
 }

@@ -38,6 +38,52 @@ class Statement {
     const STATUS_TOKEN_COUNT  = 3;// токены посчитаны
     const STATUS_TOKEN_GROUP  = 4;// группа присвоена
     
+    const KIND_IN_BAYER = 1; //оплата от покупателя
+    const KIND_IN_SUPPLIER = 2; //возврат от поставщика 
+    const KIND_IN_LOAN = 3; //займ от контрагента 
+    const KIND_IN_CREDIT = 4; //кредит 
+    const KIND_IN_LOAN_RETURN = 5; //возврат займа 
+    const KIND_IN_USER_RETURN = 6; //возврат с подотчета 
+    const KIND_IN_TAX_RETURN = 7; //возврат с налога 
+    const KIND_IN_OTHER_CALC = 8; //прочие расчеты 
+    const KIND_IN_FACTORING = 9; //факторинг 
+    const KIND_IN_DEPOSIT = 10; //депозит 
+    const KIND_IN_CASH = 11; //инкасация 
+    const KIND_IN_COLLECTION = 12; //инкасация 
+    const KIND_IN_CART = 13; //поступление по картам 
+    const KIND_IN_LOAN_USER = 14; //займ от работника 
+    const KIND_IN_CAPITAL = 15; //взнос в капитал 
+    const KIND_IN_OTHER = 16; //прочее 
+    const KIND_IN_SELF = 17; //перевод на другой счет
+    
+    const KIND_OUT_SUPPLIER = 101; //оплата поставщику
+    const KIND_OUT_BAYER = 102; //возврат покупателю
+    const KIND_OUT_TAX = 103; //уплата налога
+    const KIND_OUT_LOAN_RETURN = 104; //возврат займа
+    const KIND_OUT_CREDIT_RETURN = 105; //возврат кредита
+    const KIND_OUT_LOAN = 106; //выдача займа
+    const KIND_OUT_OTHER_CALC = 107; //прочие расчеты
+    const KIND_OUT_DEPO = 108; //депозит
+    const KIND_OUT_CASH = 109; //снятие наличных
+    const KIND_OUT_USER = 110; //подотчет
+    const KIND_OUT_ZP = 111; //зп
+    const KIND_OUT_ZP_USER = 112; //зп
+    const KIND_OUT_CONTRACT_USER = 113; //зп
+    const KIND_OUT_ZP_DEPO = 114; //зп
+    const KIND_OUT_DIVIDENT = 115; //дивиденты
+    const KIND_OUT_LOAN_USER = 116; //займ работнику
+    const KIND_OUT_OTHER = 117; //прочее
+    const KIND_OUT_BANK_COMMISSION = 118; //комиссия банка
+    const KIND_OUT_TAX_OTHER = 119; //чужие налоги
+    const KIND_OUT_SELF_EMPL_REEST = 120; //самозанятым
+    const KIND_OUT_SELF_EMPL = 121; //самозанятым
+    const KIND_OUT_ALIMONY = 122; //исп лист
+    const KIND_OUT_CART_PAY = 123; //оплата по платежной карте
+    const KIND_OUT_SELF = 124; //перевод на другой счет
+    
+    const KIND_UNKNOWN = 299; //неизвестно 
+    
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -185,6 +231,16 @@ class Statement {
      */
     protected $statusToken = self::STATUS_TOKEN_NO;
 
+    /** 
+     * @ORM\Column(name="kind")  
+     */
+    protected $kind = self::KIND_UNKNOWN;
+
+    /** 
+     * @ORM\Column(name="amount_service")  
+     */
+    protected $amountService = 0;
+
     /**
     * @ORM\OneToOne(targetEntity="Cash\Entity\CashDoc", inversedBy="statement")
     * @ORM\JoinColumn(name="cash_doc_id", referencedColumnName="id")
@@ -217,6 +273,11 @@ class Statement {
         return $this->id;
     }
 
+    public function getLogKey() 
+    {
+        return 'bank:'.$this->id;
+    }
+    
     /**
      * Устанавливает Id
      * @param int $id
@@ -852,7 +913,121 @@ class Statement {
     public function setStatusToken($statusToken) 
     {
         $this->statusToken = $statusToken;
-    }   
+    } 
+    
+    /**
+     * Returns kind.
+     * @return int     
+     */
+    public function getKind() 
+    {
+        return $this->kind;
+    }
+
+    /**
+     * Returns possible kind as array.
+     * @return array
+     */
+    public static function getKindInList() 
+    {
+        return [
+            self::KIND_IN_CART => 'Поступление по платежным картам',
+            self::KIND_IN_SELF => 'Перевод со своего счета',
+            self::KIND_IN_BAYER => 'Оплата от покупателя',
+            self::KIND_IN_SUPPLIER => 'Возврат от поставщика',
+            self::KIND_IN_LOAN => 'Получение займа от контрагента',
+            self::KIND_IN_CREDIT => 'Получение кредита в банке',
+            self::KIND_IN_LOAN_RETURN => 'Возврат займа контрагентом',
+            self::KIND_IN_USER_RETURN => 'Возврат от подотчетного лица',
+            self::KIND_IN_TAX_RETURN => 'Возврат налога',
+            self::KIND_IN_OTHER_CALC => 'Прочие расчеты с контрагентами',
+            self::KIND_IN_FACTORING => 'Оплата от факторинговой компании',
+            self::KIND_IN_DEPOSIT => 'Депозит',
+            self::KIND_IN_CASH => 'Взнос наличными из кассы',
+            self::KIND_IN_COLLECTION => 'Инкассация',
+            self::KIND_IN_LOAN_USER => 'Возврат займа работником',
+            self::KIND_IN_CAPITAL => 'Взнос в уставный капитал',
+            self::KIND_IN_OTHER => 'Прочее поступление',
+            
+            self::KIND_UNKNOWN => 'Не определено',
+        ];
+    }    
+    
+    /**
+     * Returns possible kind as array.
+     * @return array
+     */
+    public static function getKindOutList() 
+    {
+        return [
+            self::KIND_OUT_SUPPLIER => 'Оплата постащику',
+            self::KIND_OUT_BAYER => 'Возврат покупателю',
+            self::KIND_OUT_TAX => 'Уплата налога',
+            self::KIND_OUT_LOAN_RETURN => 'Возврат займа контрагенту',
+            self::KIND_OUT_CREDIT_RETURN => 'Возврат кредита банку',
+            self::KIND_OUT_LOAN => 'Выдача займа контрагенту',
+            self::KIND_OUT_OTHER_CALC => 'Прочие расчеты с контрагентами',
+            self::KIND_OUT_DEPO => 'Депозит',
+            self::KIND_OUT_CASH => 'Снятие наличных в кассу',
+            self::KIND_OUT_USER => 'Перечисление подотчетному лицу',
+            self::KIND_OUT_ZP => 'Перечисление заработной платы по ведомостям',
+            self::KIND_OUT_ZP_USER => 'Перечисление заработной платы работнику',
+            self::KIND_OUT_CONTRACT_USER => 'Перечисление сотруднику по договору подряда',
+            self::KIND_OUT_ZP_DEPO => 'Перечисление депонированной заработной платы',
+            self::KIND_OUT_DIVIDENT => 'Перечисление дивидендов',
+            self::KIND_OUT_LOAN_USER => 'Выдача займа работнику',
+            self::KIND_OUT_OTHER => 'Прочее списание',
+            self::KIND_OUT_BANK_COMMISSION => 'Комиссия банка',
+            self::KIND_OUT_TAX_OTHER => 'Уплата налога за третьих лиц',
+            self::KIND_OUT_SELF_EMPL_REEST => 'Выплаты самозанятым по реестру',
+            self::KIND_OUT_SELF_EMPL => 'Выплата самозанятому',
+            self::KIND_OUT_ALIMONY => 'Перечисление по исполнительному листу работника',
+            self::KIND_OUT_CART_PAY => 'Оплата корпоративной картой',
+            self::KIND_OUT_SELF => 'Перевод на другой счет',
+            
+            self::KIND_UNKNOWN => 'Не определено',
+        ];
+    }    
+    
+    /**
+     * 
+     * @return array
+     */    
+    public static function getKindList()
+    {
+        return self::getKindInList() + self::getKindOutList();
+    }
+    
+    /**
+     * Returns kind as string.
+     * @return string
+     */
+    public function getKindAsString()
+    {
+        $list = self::getKindList();
+        if (isset($list[$this->kind]))
+            return $list[$this->kind];
+        
+        return 'Не указано';
+    }    
+        
+    /**
+     * Sets kind.
+     * @param int $kind     
+     */
+    public function setKind($kind) 
+    {
+        $this->kind = $kind;
+    }  
+        
+    public function getAmountService() {
+        return $this->amountService;
+    }
+
+    public function setAmountService($amountService) {
+        $this->amountService = $amountService;
+        return $this;
+    }
     
     /**
      * 
