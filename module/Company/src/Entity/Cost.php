@@ -145,6 +145,9 @@ class Cost {
             self::KIND_EXP => 'Текущие',
             self::KIND_FIX => 'Постоянные',
             self::KIND_MP => 'Расходы ТП',
+            self::KIND_BANK_ACQUIRING => 'Эквайринг',
+            self::KIND_BANK_CART => 'Расходы по корп. картам',
+            self::KIND_BANK_COMMISSION => 'Комиссия банка',
 //            self::KIND_OTH => 'Прочие',
         ];
     }    
