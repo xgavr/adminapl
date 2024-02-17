@@ -67,7 +67,9 @@ class IndexController extends AbstractActionController
         $messages = [];
         $messages[] = [
             'role' => 'system',
-            'content' => 'Ты калькулятор',
+            'content' => 'Ответь числом',
+        ];
+        $messages[] = [
             'role' => 'user',
             'content' => 'Зачисление денежных средств по договору об обслуживании держателей платежных карт по терминалу TID 30019734 за 2024-02-14. Сумма комиссии 401.58. НДС не предусмотрен, без НДС',
         ];

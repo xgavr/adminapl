@@ -961,8 +961,10 @@ class Statement {
     {
         return [
             self::KIND_OUT_SUPPLIER => 'Оплата постащику',
-            self::KIND_OUT_BAYER => 'Возврат покупателю',
+            self::KIND_OUT_SELF => 'Перевод на другой счет',
+            self::KIND_OUT_CART_PAY => 'Оплата корпоративной картой',
             self::KIND_OUT_TAX => 'Уплата налога',
+            self::KIND_OUT_BAYER => 'Возврат покупателю',
             self::KIND_OUT_LOAN_RETURN => 'Возврат займа контрагенту',
             self::KIND_OUT_CREDIT_RETURN => 'Возврат кредита банку',
             self::KIND_OUT_LOAN => 'Выдача займа контрагенту',
@@ -982,8 +984,6 @@ class Statement {
             self::KIND_OUT_SELF_EMPL_REEST => 'Выплаты самозанятым по реестру',
             self::KIND_OUT_SELF_EMPL => 'Выплата самозанятому',
             self::KIND_OUT_ALIMONY => 'Перечисление по исполнительному листу работника',
-            self::KIND_OUT_CART_PAY => 'Оплата корпоративной картой',
-            self::KIND_OUT_SELF => 'Перевод на другой счет',
             
             self::KIND_UNKNOWN => 'Не определено',
         ];
