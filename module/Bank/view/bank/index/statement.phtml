@@ -1015,6 +1015,9 @@
         if (value<0){
             return numberFormat(-value);
         } else
+            if (row.amountService > 0){
+                return '<small class="text-mute">('+Math.round(row.amountService*100)/100).toFixed(2)+')</small>';
+            }
             return '';
     }
     

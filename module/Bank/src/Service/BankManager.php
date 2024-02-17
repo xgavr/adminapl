@@ -177,6 +177,34 @@ class BankManager
     }
     
     /**
+     * Получить комиссию из назначения
+     * @param Statement $statement
+     */
+    public function acquiringCommissionFromPurpose($statement)
+    {
+        $messages[] = [
+            'role' => 'system',
+            'content' => 'Какова сумма комиссии? Ответь числом',
+        ];
+        $messages[] = [
+            'role' => 'user',
+            'content' => $statement->getPaymentPurpose(),
+        ];
+        
+        $result = $this->gigaManager->completions($messages);
+        var_dump($result);
+        if (!empty($result['choices'])){
+            foreach ($result['choices'] as $choice){
+                if (!empty($choice['message']['content'])){
+                    return (float) $choice['message']['content'];
+                }    
+            }
+        }
+        
+        return 0;
+    }
+    
+    /**
      * Обновление вида операции
      * 
      * @param Statement $statement
@@ -185,6 +213,11 @@ class BankManager
     public function updateStatementKind($statement, $kind)
     {
         $statement->setKind($kind);
+        
+        if ($kind == Statement::KIND_IN_CART){
+            $statement->setAmountService($this->acquiringCommissionFromPurpose($statement));
+        }
+        
         $this->entityManager->flush();
         
         $this->costManager->repostStatement($statement);
