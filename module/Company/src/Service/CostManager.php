@@ -9,6 +9,7 @@ use Cash\Entity\CashDoc;
 use Stock\Entity\Ptu;
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
+use Stock\Entity\Register;
 
 /**
  * This service is responsible for adding/editing roles.
