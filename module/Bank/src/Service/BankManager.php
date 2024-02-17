@@ -214,7 +214,7 @@ class BankManager
     {
         $statement->setKind($kind);
         
-        if ($kind == Statement::KIND_IN_CART){
+        if ($kind == Statement::KIND_IN_CART && empty($statement->getAmountService())){
             $statement->setAmountService($this->acquiringCommissionFromPurpose($statement));
         }
         
