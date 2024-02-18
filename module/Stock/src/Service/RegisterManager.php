@@ -27,6 +27,7 @@ use Cash\Entity\CashDoc;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use ApiMarketPlace\Entity\MarketSaleReportItem;
 use Zp\Entity\DocCalculator;
+use Bank\Entity\Statement;
 
 /**
  * This service register.
@@ -111,6 +112,12 @@ class RegisterManager
      */
     private $zpManager;
     
+    /**
+     * Bank manager
+     * @var \Bank\Service\BankManager
+     */
+    private $bankManager;
+    
     private $meDate = '2016-10-30';
 
     /**
@@ -118,7 +125,7 @@ class RegisterManager
      */
     public function __construct($entityManager, $logManager, $otManager, $ptManager,
             $ptuManager, $stManager, $vtManager, $vtpManager, $orderManager, 
-            $cashMananger, $reviseManager, $reportManager, $zpManager) 
+            $cashMananger, $reviseManager, $reportManager, $zpManager, $bankManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
@@ -133,6 +140,7 @@ class RegisterManager
         $this->reviseManager = $reviseManager;
         $this->reportManager = $reportManager;
         $this->zpManager = $zpManager;
+        $this->bankManager = $bankManager;
     }
     
     public function currentUser()
@@ -531,6 +539,14 @@ class RegisterManager
                     ->find($register->getDocId());
                 if ($docCalculator){
                     $this->zpManager->repostDocCalculator($docCalculator);
+                    $flag = true;
+                }
+                break;
+            case Movement::DOC_BANK:
+                $statement = $this->entityManager->getRepository(Statement::class)
+                    ->find($register->getDocId());
+                if ($statement){
+                    $this->bankManager->repostStatement($statement);
                     $flag = true;
                 }
                 break;

@@ -204,6 +204,20 @@ class BankManager
         return 0;
     }
     
+    
+    /**
+     * Провести
+     * 
+     * @param Statement $statement
+     * 
+     */
+    public function repostStatement($statement)
+    {
+        $this->costManager->repostStatement($statement);
+
+        return;
+    }
+    
     /**
      * Обновление вида операции
      * 
@@ -220,7 +234,7 @@ class BankManager
         
         $this->entityManager->flush();
         
-        $this->costManager->repostStatement($statement);
+        $this->repostStatement($statement);
         
         return;
     }
