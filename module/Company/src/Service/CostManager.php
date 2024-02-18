@@ -271,6 +271,7 @@ class CostManager
             $costMutual->setStatus(CostMutual::getStatusFromStatement($statement));
             $costMutual->setCost($cost);
             
+            $this->entityManager->persist($costMutual);
             $this->entityManager->flush();
         }
                 
