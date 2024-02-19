@@ -344,6 +344,10 @@ class Register {
                 return "Корректировка №{$docId}";
             case Movement::DOC_CASH:
                 return "Оплата №{$docId}";
+            case Movement::DOC_ZP:
+                return "Расчет ЗП №{$docId}";
+            case Movement::DOC_BANK:
+                return "Выписка №{$docId}";
         }
         return;
     }
