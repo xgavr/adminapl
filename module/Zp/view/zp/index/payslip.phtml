@@ -45,7 +45,7 @@ $this->pageBreadcrumbs()->setItems([
                     <select id="userSelect" name="user" style="width: 200px" disabled value="<?= $currentUser->getId()?>" class="form-control cookie-control">
                         <option>все сотрудники</option>
                         <?php foreach ($users as $value):?>
-                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                            <option value="<?= $value->getId()?>" <?= ($currentUser->getId() == $value->getId()) ? 'selected':'' ?>><?= $value->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
@@ -112,7 +112,7 @@ $this->pageBreadcrumbs()->setItems([
             refreshTable();
         });
         
-        $('#userSelect').val(<?= $currentUser->getId()?>);
+        //$('#userSelect').val(<?= $currentUser->getId()  ?>);
         
         $table.on('load-success.bs.table', function (e, res) {
         });                
