@@ -166,6 +166,7 @@ class FinManager {
             $finOpu->setPurchaseRetail(abs($row['purchase']));
             $finOpu->setIncomeRetail(abs($row['revenue']) - abs($row['purchase']));
             
+            $finOpu->setRevenueTotal($finOpu->getRevenueRetail() + $finOpu->getRevenueTp());
             $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
             
             $this->entityManager->persist($finOpu);
@@ -197,6 +198,7 @@ class FinManager {
             $finOpu->setCostTp(abs($row['cost']));
             $finOpu->setIncomeTp(abs($row['revenue']) - abs($row['purchase']) - abs($row['cost']));
             
+            $finOpu->setRevenueTotal($finOpu->getRevenueRetail() + $finOpu->getRevenueTp());
             $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
 
             $this->entityManager->persist($finOpu);
@@ -305,7 +307,7 @@ class FinManager {
             $taxMin = $this->entityManager->getRepository(Tax::class)
                     ->currentTax(Tax::KIND_PROGIT_MIN, $row['period']);
             
-            $finOpu->setTax(max($finOpu->getProfit() * $taxInc/100, $finOpu->getIncomeTotal() * $taxMin/100));
+            $finOpu->setTax(max($finOpu->getProfit() * $taxInc/100, $finOpu->getRevenueTotal() * $taxMin/100));
 
             $finOpu->setProfitNet($finOpu->getProfit() - $finOpu->getTax());
 
