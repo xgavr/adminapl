@@ -688,17 +688,22 @@ class NavManager
                 'float' => 'right',
                 'dropdown' => [
                     [
-                        'id' => 'settings',
+                        'id' => 'personalSettings',
+                        'label' => 'Расчетный лист (новый)',
+                        'link' => $url('payslip')
+                    ],
+                    [
+                        'id' => 'personalSettings',
                         'label' => 'Расчетный листок',
                         'link' => $url('users', ['action'=>'dd-report'])
                     ],
                     [
-                        'id' => 'settings',
+                        'id' => 'personalSettings',
                         'label' => 'Настройки',
                         'link' => $url('application', ['action'=>'settings'])
                     ],
                     [
-                        'id' => 'logout',
+                        'id' => 'personalSettings',
                         'label' => 'Выход',
                         'link' => $url('logout')
                     ],

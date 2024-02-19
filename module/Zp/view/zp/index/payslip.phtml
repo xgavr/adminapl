@@ -5,7 +5,7 @@ use Zp\Entity\Personal;
 
 $this->headTitle('Расчетный листок');
 
-$this->mainMenu()->setActiveItemId('zp');
+$this->mainMenu()->setActiveItemId('personalSettings');
 $this->mainMenu()->setActiveUrl($this->url('payslip'));
 
 $this->pageBreadcrumbs()->setItems([
@@ -42,7 +42,7 @@ $this->pageBreadcrumbs()->setItems([
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="userSelect" name="user" style="width: 200px" class="form-control cookie-control">
+                    <select id="userSelect" name="user" style="width: 200px" disabled class="form-control cookie-control">
                         <option>все сотрудники</option>
                         <?php foreach ($users as $value):?>
                             <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
@@ -111,6 +111,9 @@ $this->pageBreadcrumbs()->setItems([
         $ok.click(function () {
             refreshTable();
         });
+        
+        $('#userSelect').val(<?= $currentUser->getId()?>);
+        
         $table.on('load-success.bs.table', function (e, res) {
         });                
         $(document).on('change', '#companySelect', function (e) {

@@ -37,13 +37,20 @@ class IndexController extends AbstractActionController
     private $zpCalculator;
         
     /**
+     * Log manager.
+     * @var \Admin\Service\LogManager
+     */
+    private $logManager;
+        
+    /**
      * Constructor. Its purpose is to inject dependencies into the controller.
      */
-    public function __construct($entityManager, $zpManager, $zpCalculator) 
+    public function __construct($entityManager, $zpManager, $zpCalculator, $logManager) 
     {
        $this->entityManager = $entityManager;
        $this->zpManager = $zpManager;
        $this->zpCalculator = $zpCalculator;
+       $this->logManager = $logManager;
     }
 
     
@@ -142,6 +149,7 @@ class IndexController extends AbstractActionController
             'companies' => $companies,
             'users' => $users,
             'accruals' => $accruals,
+            'currentUser' => $this->logManager->currentUser(),
         ]);
     }
     
