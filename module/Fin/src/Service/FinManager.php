@@ -225,14 +225,11 @@ class FinManager {
             
             $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
             
-            switch ($row['kind']){
-                case Cost::KIND_BANK_CART:
-                case Cost::KIND_BANK_COMMISSION:
-                case Cost::KIND_FIX:
+            switch ($row['kindFin']){
+                case Cost::KIND_FIN_FIX:
                     $finOpu->setCostFix(abs($row['amount']));
                     break;
-                case Cost::KIND_BANK_ACQUIRING:
-                case Cost::KIND_EXP:
+                case Cost::KIND_FIN_EXP:
                     $finOpu->setCostRetail(abs($row['amount']));
                     break;
                 default:     

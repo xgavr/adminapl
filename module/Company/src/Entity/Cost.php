@@ -30,6 +30,9 @@ class Cost {
     const KIND_BANK_ACQUIRING       = 6; // эквайринг 
     const KIND_BANK_CART       = 7; // оплата расходов корп картой 
         
+    const KIND_FIN_EXP       = 1; // текущие расходы
+    const KIND_FIN_FIX       = 2; // постоянные расходы
+        
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -56,6 +59,11 @@ class Cost {
      * @ORM\Column(name="kind")  
      */
     protected $kind;
+    
+    /** 
+     * @ORM\Column(name="kind_fin")  
+     */
+    protected $kindFin;
     
     
     public function getId() 
@@ -168,6 +176,40 @@ class Cost {
     public function setKind($kind) {
         $this->kind = $kind;
         return $this;
+    }  
+    
+    public function getKindFin() {
+        return $this->kindFin;
+    }
+
+    /**
+     * Returns possible kinds as array.
+     * @return array
+     */
+    public static function getKindFinList() 
+    {
+        return [
+            self::KIND_FIN_EXP => 'Текущие',
+            self::KIND_FIN_FIX => 'Постоянные',
+        ];
+    }    
+
+    /**
+     * Returns kind as string.
+     * @return string
+     */
+    public function getKindFinAsString()
+    {
+        $list = self::getKindFinList();
+        if (isset($list[$this->kindFin]))
+            return $list[$this->kindFin];
+        
+        return 'Unknown';
+    }    
+    
+    public function setKindFin($kindFin) {
+        $this->kindFin = $kindFin;
+        return $this;
     }    
         
     /**
@@ -181,6 +223,8 @@ class Cost {
             'id' => $this->getId(),
             'name' => $this->getName(),
             'status' => $this->getStatus(),
+            'kind' => $this->getKind(),
+            'kindFin' => $this->getKindFin(),
         ];
         
         return $result;

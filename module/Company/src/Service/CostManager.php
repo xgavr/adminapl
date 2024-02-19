@@ -47,6 +47,7 @@ class CostManager
         $cost->setAplId($data['aplId']);
         $cost->setStatus($data['status']);
         $cost->setKind($data['kind']);
+        $cost->setKindFin($data['kindFin']);
         
         $this->entityManager->persist($cost);
         
@@ -72,6 +73,7 @@ class CostManager
         $cost->setAplId($data['aplId']);
         $cost->setStatus($data['status']);
         $cost->setKind($data['kind']);
+        $cost->setKindFin($data['kindFin']);
         
         $this->entityManager->persist($cost);
         $this->entityManager->flush();
