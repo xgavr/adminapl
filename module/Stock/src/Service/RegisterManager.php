@@ -537,7 +537,7 @@ class RegisterManager
             case Movement::DOC_ZP:
                 $docCalculator = $this->entityManager->getRepository(DocCalculator::class)
                     ->find($register->getDocId());
-                if ($docCalculator){
+                if (!empty($docCalculator)){
                     $this->zpManager->repostDocCalculator($docCalculator);
                     $flag = true;
                 }
