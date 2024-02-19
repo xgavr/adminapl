@@ -85,10 +85,15 @@ class TaxManager
      * @param integer $docId
      * @param integer $taxId
      */
-    public function removeTaxMutual($docType, $docId, $taxId)
+    public function removeTaxMutual($docType, $docId, $taxId = null)
     {
-       $taxMutuals = $this->entityManager->getRepository(TaxMutual::class)
-               ->findBy(['docType' => $docType, 'docId' => $docId, 'tax' => $taxId]);
+        if ($taxId){
+            $taxMutuals = $this->entityManager->getRepository(TaxMutual::class)
+                    ->findBy(['docType' => $docType, 'docId' => $docId, 'tax' => $taxId]);
+        } else {    
+            $taxMutuals = $this->entityManager->getRepository(TaxMutual::class)
+                    ->findBy(['docType' => $docType, 'docId' => $docId]);
+        }    
        
        foreach ($taxMutuals as $taxMutual){
            $this->entityManager->remove($taxMutual);

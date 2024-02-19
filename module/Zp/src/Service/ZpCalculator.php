@@ -381,6 +381,34 @@ class ZpCalculator {
     
     
     /**
+     * Удалить расчет за день
+     * 
+     * @param PersonalAccrual $personalAccrual
+     * @param date $dateCalculation
+     * 
+     * @return DocCalculator
+     */
+    private function removeDocCalculator($personalAccrual, $dateCalculation)
+    {
+        $docCalculator = $this->entityManager->getRepository(DocCalculator::class)
+                ->findOneBy(['personalAccrual' => $personalAccrual->getId(), 'dateOper' => $dateCalculation]);
+        
+        if ($docCalculator){
+            $docCalculator->setStatus(DocCalculator::STATUS_RETIRED);
+
+            $this->entityManager->persist($docCalculator);
+
+            $this->entityManager->flush();
+
+            $this->removePersonalMutual(Movement::DOC_ZP, $docCalculator->getId());
+            
+            $this->taxManager->removeTaxMutual(Movement::DOC_ZP, $docCalculator->getId());
+        }
+                
+        return $docCalculator;
+    }
+    
+    /**
      * Расчитать оклад за день
      * 
      * @param PersonalAccrual $personalAccrual
@@ -440,6 +468,7 @@ class ZpCalculator {
             $calcResult = $base = 0;
             
             if ($personalAccrual->getStatus() == PersonalAccrual::STATUS_RETIRED){
+                $this->removeDocCalculator($personalAccrual, $dateCalculation);
                 continue;
             }
             switch ($personalAccrual->getAccrual()->getKind()){
