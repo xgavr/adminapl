@@ -184,7 +184,7 @@ class ZpCalculator {
     }
     
     /**
-     * Ужадить расчет
+     * Удалить расчет
      * 
      * @param integer $docType
      * @param integer $docId
@@ -390,10 +390,11 @@ class ZpCalculator {
      */
     private function removeDocCalculator($personalAccrual, $dateCalculation)
     {
-        $docCalculator = $this->entityManager->getRepository(DocCalculator::class)
-                ->findOneBy(['personalAccrual' => $personalAccrual->getId(), 'dateOper' => $dateCalculation]);
+        $docCalculators = $this->entityManager->getRepository(DocCalculator::class)
+                ->findBy(['dateOper' => $dateCalculation]);
         
-        if ($docCalculator){
+        foreach ($docCalculators as $docCalculator){
+            
             $docCalculator->setStatus(DocCalculator::STATUS_RETIRED);
 
             $this->entityManager->persist($docCalculator);
@@ -460,6 +461,8 @@ class ZpCalculator {
      */
     public function dateCalculation($dateCalculation)
     {
+        $this->removeDocCalculator($dateCalculation);
+        
         $personalAccruals = $this->entityManager->getRepository(PersonalAccrual::class)
                 ->findActualPersonalAccrual($dateCalculation);        
         
@@ -468,7 +471,6 @@ class ZpCalculator {
             $calcResult = $base = 0;
             
             if ($personalAccrual->getStatus() == PersonalAccrual::STATUS_RETIRED){
-                $this->removeDocCalculator($personalAccrual, $dateCalculation);
                 continue;
             }
             switch ($personalAccrual->getAccrual()->getKind()){
