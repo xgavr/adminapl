@@ -682,7 +682,7 @@ class NavManager
             
             
             $items[] = [
-                'id' => 'logout',
+                'id' => 'personalSettings',
 //                'labelHTML' => '<span class="glyphicon glyphicon-user"></span><strong>'.$this->rbacManager->navUserName().'</strong>',
                 'labelHTML' => '<strong>'.$this->rbacManager->navUserName().'</strong>',
                 'float' => 'right',
