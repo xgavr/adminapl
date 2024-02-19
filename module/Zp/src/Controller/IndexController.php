@@ -43,14 +43,22 @@ class IndexController extends AbstractActionController
     private $logManager;
         
     /**
+     * Rbac manager.
+     * @var \User\Service\RbacManager
+     */
+    private $rbacManager;
+        
+    /**
      * Constructor. Its purpose is to inject dependencies into the controller.
      */
-    public function __construct($entityManager, $zpManager, $zpCalculator, $logManager) 
+    public function __construct($entityManager, $zpManager, $zpCalculator, 
+            $logManager, $rbacManager) 
     {
        $this->entityManager = $entityManager;
        $this->zpManager = $zpManager;
        $this->zpCalculator = $zpCalculator;
        $this->logManager = $logManager;
+       $this->rbacManager = $rbacManager;
     }
 
     
@@ -150,6 +158,7 @@ class IndexController extends AbstractActionController
             'users' => $users,
             'accruals' => $accruals,
             'currentUser' => $this->logManager->currentUser(),
+            'rbacManager' => $this->rbacManager,
         ]);
     }
     
