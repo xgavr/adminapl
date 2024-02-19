@@ -145,7 +145,7 @@ class TaxManager
         $tax = $this->entityManager->getRepository(Tax::class)
                 ->currentTax(Tax::KIND_INC, $cashDoc->getDateOper());
 
-        $this->removeTaxMutual(Movement::DOC_ZP, $cashDoc->getId(), $tax->getId());
+        $this->removeTaxMutual(Movement::DOC_CASH, $cashDoc->getId(), $tax->getId());
         
         $amount = abs($cashDoc->getAmount())*$tax->getAmount()/100;
         
@@ -213,7 +213,7 @@ class TaxManager
         $tax = $this->entityManager->getRepository(Tax::class)
                 ->currentTax(Tax::KIND_ESN, $cashDoc->getDateOper());
 
-        $this->removeTaxMutual(Movement::DOC_ZP, $cashDoc->getId(), $tax->getId());
+        $this->removeTaxMutual(Movement::DOC_CASH, $cashDoc->getId(), $tax->getId());
         
         $amount = abs($cashDoc->getAmount())*$tax->getAmount()/100;
         
