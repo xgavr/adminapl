@@ -307,7 +307,7 @@ class FinManager {
             $taxMin = $this->entityManager->getRepository(Tax::class)
                     ->currentTax(Tax::KIND_PROGIT_MIN, $row['period']);
             
-            $finOpu->setTax(max($finOpu->getProfit() * $taxInc/100, $finOpu->getRevenueTotal() * $taxMin/100));
+            $finOpu->setTax(max($finOpu->getProfit() * $taxInc->getAmount()/100, $finOpu->getRevenueTotal() * $taxMin->getAmount()/100));
 
             $finOpu->setProfitNet($finOpu->getProfit() - $finOpu->getTax());
 
