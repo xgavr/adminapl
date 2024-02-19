@@ -388,7 +388,7 @@ class ZpCalculator {
      * 
      * @return DocCalculator
      */
-    private function removeDocCalculator($personalAccrual, $dateCalculation)
+    private function removeDocCalculator($dateCalculation)
     {
         $docCalculators = $this->entityManager->getRepository(DocCalculator::class)
                 ->findBy(['dateOper' => $dateCalculation]);
