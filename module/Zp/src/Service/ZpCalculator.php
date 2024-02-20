@@ -406,7 +406,7 @@ class ZpCalculator {
             $this->taxManager->removeTaxMutual(Movement::DOC_ZP, $docCalculator->getId());
         }
                 
-        return $docCalculator;
+        return;
     }
     
     /**

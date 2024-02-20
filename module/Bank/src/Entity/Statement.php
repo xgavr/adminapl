@@ -55,6 +55,7 @@ class Statement {
     const KIND_IN_CAPITAL = 15; //взнос в капитал 
     const KIND_IN_OTHER = 16; //прочее 
     const KIND_IN_SELF = 17; //перевод на другой счет
+    const KIND_IN_FIN_SERVICE = 18; //поступление от фин сервисов
     
     const KIND_OUT_SUPPLIER = 101; //оплата поставщику
     const KIND_OUT_BAYER = 102; //возврат покупателю
@@ -932,7 +933,8 @@ class Statement {
     {
         return [
             self::KIND_IN_CART => 'Поступление по платежным картам',
-            self::KIND_IN_SELF => 'Перевод со своего счета',
+            self::KIND_IN_FIN_SERVICE => 'Поступление от финансовых сервисов',
+            self::KIND_IN_SELF => 'Перевод на свой счет',
             self::KIND_IN_BAYER => 'Оплата от покупателя',
             self::KIND_IN_SUPPLIER => 'Возврат от поставщика',
             self::KIND_IN_LOAN => 'Получение займа от контрагента',
@@ -961,7 +963,7 @@ class Statement {
     {
         return [
             self::KIND_OUT_SUPPLIER => 'Оплата постащику',
-            self::KIND_OUT_SELF => 'Перевод на другой счет',
+            self::KIND_OUT_SELF => 'Перевод на свой счет',
             self::KIND_OUT_CART_PAY => 'Оплата корпоративной картой',
             self::KIND_OUT_TAX => 'Уплата налога',
             self::KIND_OUT_BAYER => 'Возврат покупателю',
