@@ -608,7 +608,7 @@ class ContactManager
                 $contact->setUser($oldContact->getUser());
                 $oldContact->setUser(null);
             }
-            if ($contact->getUser()){
+            if ($contact->getUser() && $oldContact->getUser()){
                 if ($contact->getUser()->getAplId() == $oldContact->getUser()->getAplId()){
                     $oldContact->setUser(null);
                 }
