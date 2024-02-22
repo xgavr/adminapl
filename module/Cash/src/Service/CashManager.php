@@ -573,7 +573,13 @@ class CashManager {
         $cashDoc->setUserCreator($this->logManager->currentUser());
         
         $this->entityManager->persist($cashDoc);
-        $this->entityManager->flush($cashDoc);
+
+        if (!empty($data['statement'])){
+            $data['statement']->setCashDoc($cashDoc);
+            $this->entityManager->persist($data['statement']);
+        }
+        
+        $this->entityManager->flush();
         
         $this->updateCashTransaction($cashDoc);
         $this->logManager->infoCash($cashDoc, Log::STATUS_NEW);
@@ -624,7 +630,13 @@ class CashManager {
         }
         
         $this->entityManager->persist($cashDoc);
-        $this->entityManager->flush($cashDoc);
+        
+        if (!empty($data['statement'])){
+            $data['statement']->setCashDoc($cashDoc);
+            $this->entityManager->persist($data['statement']);
+        }
+        
+        $this->entityManager->flush();
         
         $this->updateCashTransaction($cashDoc);
         $this->logManager->infoCash($cashDoc, Log::STATUS_UPDATE);

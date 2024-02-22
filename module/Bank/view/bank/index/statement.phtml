@@ -83,7 +83,7 @@
                     >
                     <thead>
                         <tr>
-                             <th data-field="id" data-formatter="swapFormatter"></th>
+                             <!--<th data-field="id" data-formatter="swapFormatter"></th>-->
                              <th data-field="id" data-formatter="avatar"></th>
                              <th data-field="chargeDate" data-footer-formatter="footerStartFormatter" data-formatter="formatDateId">Дата/ID</th>
                              <th data-field="amount" data-footer-formatter="footerDebitFormatter" data-formatter="amountIn" data-align='right'>Поступило</th>             
@@ -436,8 +436,7 @@
             value: rowKind,        
             inputOptions: inputOptions,
             callback: function (result) {
-//                console.log(result);
-                
+//                console.log(result);                
                 if (result){
                     $.getJSON('/bank/update-kind/'+rowId+'?kind='+result, function( data ) {
                         if (data.row && data.id){
@@ -922,6 +921,9 @@
                     var cashDocId = '';
                     if (row.cashDoc){
                         cashDocId = row.cashDoc.id;
+                    }    
+                    if (cashDocId || row.kind === '<?= Statement::KIND_OUT_SUPPLIER?>'){
+                        
                         if (row.amount>0){
                             var url = '/till/edit-cash-in/'+cashDocId+'?statement='+row.id;
                             payDoc('cashInModal', url);
@@ -933,7 +935,7 @@
                     }
                 },
                 isEnabled: function(row) {
-                    return row.cashDoc !== null;
+                    return row.cashDoc !== null || row.kind === '<?= Statement::KIND_OUT_SUPPLIER?>';
                 }                
             },
             returnPay: {

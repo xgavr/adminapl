@@ -356,12 +356,17 @@ class TillController extends AbstractActionController
         $cashId = (int)$this->params()->fromQuery('cash', -1);
         $statementId = (int)$this->params()->fromQuery('statement', -1);
         
-        $cashDoc = null;
+        $cashDoc = $statement = null;
         
         if ($cashDocId > 0){
             $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                     ->find($cashDocId);
         }
+        
+        if ($statementId > 0){
+            $statement = $this->entityManager->getRepository(Statement::class)
+                    ->find($statementId);
+        }    
         
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
@@ -402,6 +407,7 @@ class TillController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'cashDoc' => $cashDoc,
+            'statement' => $statement,
         ]);        
     }        
     
@@ -411,11 +417,16 @@ class TillController extends AbstractActionController
         $cashId = (int)$this->params()->fromQuery('cash', -1);
         $statementId = (int)$this->params()->fromQuery('statement', -1);
         
-        $cashDoc = null;
+        $cashDoc = $statement = null;
         
         if ($cashDocId > 0){
             $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                     ->find($cashDocId);
+        }    
+        
+        if ($statementId > 0){
+            $statement = $this->entityManager->getRepository(Statement::class)
+                    ->find($statementId);
         }    
         
         $form = new CashOutForm($this->entityManager);
@@ -427,6 +438,10 @@ class TillController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
+                
+                if ($statement){
+                    $data['statement'] = $statement;
+                }    
                 
                 if ($cashDoc){
                     $this->cashManager->updateCashDoc($cashDoc, $data);
@@ -451,6 +466,7 @@ class TillController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'cashDoc' => $cashDoc,
+            'statement' => $statement,
         ]);        
     }     
     

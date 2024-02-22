@@ -204,7 +204,7 @@ $form->prepare();
         //console.log(data);
         $.ajax({
             type: 'POST',
-            url: '/till/edit-cash-in/<?= ($cashDoc) ? $cashDoc->getId():"" ?>',
+            url: '/till/edit-cash-in/<?= ($cashDoc) ? $cashDoc->getId():"" ?>?statement=<?= ($statement) ? $statement->getId():"" ?>',
             data: $.param(data)
         })
             .done(function (data) {
