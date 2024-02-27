@@ -14,6 +14,10 @@ use Zp\Entity\Position;
 use Zp\Entity\Personal;
 use Zp\Entity\PersonalAccrual;
 use User\Entity\User;
+use Zp\Entity\DocCalculator;
+use Zp\Entity\PersonalMutual;
+use Company\Entity\TaxMutual;
+use Stock\Entity\Movement;
 
 /**
  * Description of ZpManager
@@ -259,6 +263,29 @@ class ZpManager {
     }
     
     /**
+     * Удалить расчеты
+     * @param DocCalculator $docCalculator
+     */
+    private function removeDocCalculator($docCalculator)
+    {
+        $personalMutuals = $this->entityManager->getRepository(PersonalMutual::class)
+                ->findBy(['docType' => Movement::DOC_ZP, 'docId' => $docCalculator->getId()]);
+        foreach ($personalMutuals as $personalMutual){
+            $this->entityManager->remove($personalMutual);
+        }
+        
+        $taxMutuals = $this->entityManager->getRepository(TaxMutual::class)
+                ->findBy(['docType' => Movement::DOC_ZP, 'docId' => $docCalculator->getId()]);
+        foreach ($taxMutuals as $taxMutual){
+            $this->entityManager->remove($taxMutual);
+        }
+        
+        $this->entityManager->remove($docCalculator);
+        
+        return;
+    }
+
+    /**
      * Удалить строки планового начисления
      * @param Personal $personal
      * @return type
@@ -266,6 +293,13 @@ class ZpManager {
     public function removePersonalAccurals($personal)
     {
         foreach ($personal->getPersonalAccruals() as $personalAccrual){
+            
+            $docCalculators = $this->entityManager->getRepository(DocCalculator::class)
+                    ->findBy(['personalAccrual' => $personalAccrual->getId()]);
+            foreach ($docCalculators as $docCalculator){
+                $this->removeDocCalculator($docCalculator);
+            }
+            
             $this->entityManager->remove($personalAccrual);
         }
         
