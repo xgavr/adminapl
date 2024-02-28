@@ -138,17 +138,19 @@ class PositionController extends AbstractActionController
             
             $data = $this->params()->fromPost();
             $form->setData($data);
+            
+            if (!empty($data['parentPosition'])){
+                $data['parentPosition'] = $this->entityManager->getRepository(Position::class)
+                        ->find($data['parentPosition']);
+                $data['kind'] = $data['parentPosition']->getKind();
+            }
 
             if ($form->isValid()) {
-                if (!empty($data['parentPosition'])){
-                    $data['parentPosition'] = $this->entityManager->getRepository(Position::class)
-                            ->find($data['parentPosition']);
-                    $data['kind'] = $data['parentPosition']->getKind();
-                }
                 if (is_numeric($data['company'])){
                     $data['company'] = $this->entityManager->getRepository(Legal::class)
                             ->find($data['company']);
                 }
+            
                 if ($position){
                     $this->zpManager->updatePosition($position, $data);
                 } else {
@@ -166,7 +168,7 @@ class PositionController extends AbstractActionController
                     'name' => $position->getName(),
                     'num' => $position->getNum(),
                     'status' => $position->getStatus(),
-                    'kind' => $position->getKind(),
+                    'kind' => ($position->getParentPosition()) ? $position->getParentPosition()->getKind():$position->getKind(),
                     'parentPosition' => ($position->getParentPosition()) ? $position->getParentPosition()->getId():null,
                     'company' => $position->getCompany()->getId(),
                 ];

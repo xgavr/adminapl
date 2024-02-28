@@ -162,6 +162,7 @@ class PersonalController extends AbstractActionController
                     'position' => $personal->getPosition()->getId(),
                     'docDate' => $personal->getDocDate(),
                     'status' => $personal->getStatus(),
+                    'positionNum' => $personal->getPositionNum(),
                 ];
                 $form->setData($data);
             }    
