@@ -25,6 +25,7 @@ use Stock\Entity\Register;
 use Cash\Entity\CashDoc;
 use Stock\Entity\St;
 use Company\Entity\TaxMutual;
+use Zp\Entity\PersonalRevise;
 
 /**
  * Description of ZpCalculator
@@ -536,6 +537,101 @@ class ZpCalculator {
                         
             $dateCalculation = date('Y-m-d', strtotime($dateCalculation .' +1 day'));
         }
+        
+        return;
+    }
+    
+    /**
+     * Проведение корректировка ЗП
+     * @param PersonalRevise $personalRevise
+     */
+    public function repostPersonalRevise($personalRevise)
+    {
+        $this->removePersonalMutual(Movement::DOC_ZPRV, $personalRevise->getId());
+        
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->zpReviseRegister($personalRevise);
+        
+        $personalMutual = new PersonalMutual();
+        $personalMutual->setAmount($personalRevise->getAmount());
+        $personalMutual->setCompany($personalRevise->getCompany());
+        $personalMutual->setDateOper($personalRevise->getDocDate());
+        $personalMutual->setDocId($personalRevise->getId());
+        $personalMutual->setDocKey($personalRevise->getLogKey());
+        $personalMutual->setDocStamp($docStamp);
+        $personalMutual->setDocType(Movement::DOC_ZPRV);
+        $personalMutual->setStatus(PersonalMutual::getStatusFromPersonalRevise($personalRevise));
+        $personalMutual->setUser($personalRevise->getUser());
+        $personalMutual->setKind(PersonalMutual::KIND_PAYMENT);
+        $personalMutual->setAccrual($personalRevise->getAccrual());
+        
+        $this->entityManager->persist($personalMutual);
+        $this->entityManager->flush();
+                
+        return $personalMutual;
+        
+    }
+    
+    /**
+     * Добавить корректировку ЗП
+     * @param array $data
+     */
+    public function addPersonalRevise($data)
+    {
+        $personalRevise = new PersonalRevise();
+        $personalRevise->setAccrual($data['accrual']);
+        $personalRevise->setAmount($data['amount']);
+        $personalRevise->setComment(empty($data['comment']) ? null:$data['comment']);
+        $personalRevise->setCompany($data['company']);
+        $personalRevise->setDateCreated(date('Y-m-d H:i:s'));
+        $personalRevise->setDocDate($data['docDate']);
+        $personalRevise->setDocNum(empty($data['docNum']) ? null:$data['docNum']);
+        $personalRevise->setUser($data['user']);
+        $personalRevise->setStatus($data['status']);
+        
+        $this->entityManager->persist($personalRevise);
+        $this->entityManager->flush();
+        
+        $this->repostPersonalRevise($personalRevise);
+        
+        return $personalRevise;
+    }
+    
+    /**
+     * Изменить корректировку ЗП
+     * @param PersonalRevise $personalRevise
+     * @param array $data
+     */
+    public function updatePersonalRevise($personalRevise, $data)
+    {
+        $personalRevise->setAccrual($data['accrual']);
+        $personalRevise->setAmount($data['amount']);
+        $personalRevise->setComment(empty($data['comment']) ? null:$data['comment']);
+        $personalRevise->setCompany($data['company']);
+        $personalRevise->setDocDate($data['docDate']);
+        $personalRevise->setDocNum(empty($data['docNum']) ? null:$data['docNum']);
+        $personalRevise->setUser($data['user']);
+        $personalRevise->setStatus($data['status']);
+        
+        $this->entityManager->persist($personalRevise);
+        $this->entityManager->flush();
+        
+        $this->repostPersonalRevise($personalRevise);
+        
+        return $personalRevise;
+    }
+    
+    /**
+     * Удалить корректировку ЗП
+     * @param PersonalRevise $personalRevise
+     * @return null
+     */
+    public function removePersonalRevise($personalRevise)
+    {
+        $this->removePersonalMutual(Movement::DOC_ZPRV, $personalRevise->getId());
+        
+        $this->entityManager->remove($personalRevise);
+        $this->entityManager->flush();
         
         return;
     }

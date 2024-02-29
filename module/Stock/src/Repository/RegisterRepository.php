@@ -27,6 +27,7 @@ use Cash\Entity\CashDoc;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Zp\Entity\DocCalculator;
 use Bank\Entity\Statement;
+use Zp\Entity\PersonalRevise;
 
 
 /**
@@ -334,6 +335,18 @@ class RegisterRepository extends EntityRepository
     {
         $dateOper = date('Y-m-d 23:59:59', strtotime($docCalculator->getDateOper()));
         return $this->register($dateOper, Movement::DOC_ZP, $docCalculator->getId(), $docCalculator->getLogKey());
+    } 
+
+    /**
+     * Регистриция документа корректировки ЗП
+     * 
+     * @param  PersonalRevise $personalRevise
+     * @return float
+     */
+    public function zpReviseRegister($personalRevise)
+    {
+        $dateOper = date('Y-m-d 23:59:59', strtotime($personalRevise->getDocDate()));
+        return $this->register($dateOper, Movement::DOC_ZPRV, $personalRevise->getId(), $personalRevise->getLogKey());
     } 
 
     /**

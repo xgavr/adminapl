@@ -79,6 +79,20 @@ return [
                     ],
                 ],
             ],
+            'personal-revise' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/personal-revise[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\ReviseController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -99,6 +113,10 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
+            Controller\ReviseController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '+zp.manage']
+            ],
         ],
     ],    
     'controllers' => [
@@ -107,6 +125,7 @@ return [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\PersonalController::class => Controller\Factory\PersonalControllerFactory::class,
             Controller\PositionController::class => Controller\Factory\PositionControllerFactory::class,
+            Controller\ReviseController::class => Controller\Factory\ReviseControllerFactory::class,
         ],
     ],
     'service_manager' => [

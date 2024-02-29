@@ -16,6 +16,7 @@ use Zp\Entity\PersonalAccrual;
 use Zp\Entity\OrderCalculator;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Zp\Entity\PersonalMutual;
+use Zp\Entity\PersonalRevise;
         
 /**
  * Description of ZpRepository
@@ -280,6 +281,72 @@ class ZpRepository extends EntityRepository
             }            
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('p.'.$params['sort'], $params['order']);
+            }            
+        }    
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();       
+    }   
+
+    /**
+     * Получить корректировки
+     * @param array $params
+     * @return query
+     */
+    public function findPersonalRevise($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('pr, u, a')
+            ->from(PersonalRevise::class, 'pr')
+            ->join('pr.user', 'u')
+            ->join('pr.accrual', 'a')
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['company'])){
+                if (is_numeric($params['company'])){
+                    $queryBuilder->andWhere('pr.company = :company')
+                            ->setParameter('company', $params['company'])
+                            ;
+                }    
+            }            
+            if (!empty($params['user'])){
+                if (is_numeric($params['user'])){
+                    $queryBuilder->andWhere('pr.user = :user')
+                            ->setParameter('user', $params['user'])
+                            ;
+                }    
+            }            
+            if (!empty($params['status'])){
+                if (is_numeric($params['status'])){
+                    $queryBuilder->andWhere('p.status = :status')
+                            ->setParameter('status', $params['status'])
+                            ;
+                }    
+            }            
+            if (!empty($params['accrual'])){
+                if (is_numeric($params['accrual'])){
+                    $queryBuilder->andWhere('pr.accrual = :accrual')
+                            ->setParameter('accrual', $params['accrual'])
+                            ;
+                }
+            }            
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(pr.docDate) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(pr.docDate) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('pr.'.$params['sort'], $params['order']);
             }            
         }    
 //                var_dump($queryBuilder->getQuery()->getSQL()); exit;

@@ -463,6 +463,12 @@ class NavManager
                             'label' => 'Расчетный листок',
                             'link' => $url('payslip')
                         ];
+                
+                $zpDropdownItems[] = [
+                            'id' => 'zp',
+                            'label' => 'Корректировки ЗП',
+                            'link' => $url('personal-revise')
+                        ];
                                 
                 $zpDropdownItems[] = [
                             'id' => 'zp',

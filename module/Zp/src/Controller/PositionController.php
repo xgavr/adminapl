@@ -108,7 +108,7 @@ class PositionController extends AbstractActionController
         $positionId = (int)$this->params()->fromRoute('id', -1);
         $companyId = $this->params()->fromQuery('company');
         
-        $position = null;
+        $position = $parentPosition = null;
         if ($positionId > 0){
             $position = $this->entityManager->getRepository(Position::class)
                     ->find($positionId);
@@ -118,8 +118,8 @@ class PositionController extends AbstractActionController
         $parentPositionList = ['это группа'];
         $parentPositions = $this->entityManager->getRepository(Position::class)
                 ->findParentPositions(['company' => $companyId]);
-        foreach ($parentPositions as $parentPosition){
-            $parentPositionList[$parentPosition->getId()] = $parentPosition->getname();
+        foreach ($parentPositions as $pp){
+            $parentPositionList[$pp->getId()] = $pp->getname();
         }                
         
         $companyList = [];
@@ -137,19 +137,22 @@ class PositionController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
-            $form->setData($data);
             
             if (!empty($data['parentPosition'])){
-                $data['parentPosition'] = $this->entityManager->getRepository(Position::class)
+                $parentPosition = $this->entityManager->getRepository(Position::class)
                         ->find($data['parentPosition']);
-                $data['kind'] = $data['parentPosition']->getKind();
+                $data['kind'] = $parentPosition->getKind();
             }
+            
+            $form->setData($data);
 
             if ($form->isValid()) {
                 if (is_numeric($data['company'])){
                     $data['company'] = $this->entityManager->getRepository(Legal::class)
                             ->find($data['company']);
                 }
+                
+                $data['parentPosition'] = $parentPosition;
             
                 if ($position){
                     $this->zpManager->updatePosition($position, $data);

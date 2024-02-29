@@ -44,6 +44,7 @@ class Movement {
     const DOC_MSR = 10; //MarketSaleReport
     const DOC_ZP = 11; // zp calculator
     const DOC_BANK = 12; // выписка
+    const DOC_ZPRV = 13; // корректировка зп
     
     
     /**
@@ -353,6 +354,7 @@ class Movement {
             self::DOC_CASH => 'Оплата',
             self::DOC_ZP => 'Расчет ЗП',
             self::DOC_BANK => 'Выписка',
+            self::DOC_ZPRV => 'Корректировка ЗП',
         ];
     }        
 
@@ -375,6 +377,7 @@ class Movement {
             self::DOC_CASH => 'Оплата',
             self::DOC_ZP => 'Расчет ЗП',
             self::DOC_BANK => 'Выписка',
+            self::DOC_ZPRV => 'Корректировка ЗП',
         ];
     }        
 
@@ -396,6 +399,7 @@ class Movement {
             self::DOC_MSR => 'msr',
             self::DOC_ZP => 'zpdc',
             self::DOC_BANK => 'bank',
+            self::DOC_ZPRV => 'zprv',
         ];
     }        
     

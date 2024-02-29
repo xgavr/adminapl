@@ -61,6 +61,21 @@
             });
         });  
         
+        $(document).on('click', '.personal-revise-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            if ($("#companySelect").length){
+                url += '?company='+$("#companySelect").val();
+            }
+            if ($("#userSelect").length){
+                url += '&user='+$("#userSelect").val();
+            }
+            showFormDialog({
+                id: 'personalReviseModal',
+                url: url,
+                width: '1000px'
+            });
+        });  
+        
     });
     
 </script>

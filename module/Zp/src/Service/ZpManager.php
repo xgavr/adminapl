@@ -162,7 +162,7 @@ class ZpManager {
         $position->setStatus(empty($data['status']) ? Position::STATUS_ACTIVE:$data['status']);
         $position->setKind(empty($data['kind']) ? Position::KIND_ADM:$data['kind']);
         $position->setParentPosition(empty($data['parentPosition']) ? null:$data['parentPosition']);
-        $position->setNum(empty($data['num']) ? 0:$data['num']);
+        $position->setNum(empty($data['num']) ? $position->getNum():$data['num']);
         
         $parentPosition = $data['parentPosition'];
         

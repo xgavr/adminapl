@@ -28,6 +28,7 @@ use ApiMarketPlace\Entity\MarketSaleReport;
 use ApiMarketPlace\Entity\MarketSaleReportItem;
 use Zp\Entity\DocCalculator;
 use Bank\Entity\Statement;
+use Zp\Entity\PersonalRevise;
 
 /**
  * This service register.
@@ -550,6 +551,14 @@ class RegisterManager
                     ->find($register->getDocId());
                 if ($statement){
                     $this->bankManager->repostStatement($statement);
+                    $flag = true;
+                }
+                break;
+            case Movement::DOC_ZPRV:
+                $personalRevise = $this->entityManager->getRepository(PersonalRevise::class)
+                    ->find($register->getDocId());
+                if ($personalRevise){
+                    $this->zpManager->repostPersonalRevise($personalRevise);
                     $flag = true;
                 }
                 break;

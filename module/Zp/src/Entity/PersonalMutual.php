@@ -10,6 +10,7 @@ use Cash\Entity\CashDoc;
 use Stock\Entity\St;
 use Zp\Entity\Accrual;
 use Zp\Entity\Position;
+use Zp\Entity\PersonalRevise;
 
 /**
  * This class represents a position accrual.
@@ -200,6 +201,19 @@ class PersonalMutual
     {
         switch ($docCalculator->getStatus()){
             case DocCalculator::STATUS_ACTIVE: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }  
+    
+    /**
+     * Returns possible personal revise status.
+     * @param PersonalRevise $personalRevise
+     * @return integer
+     */
+    public static function getStatusFromPersonalRevise($personalRevise) 
+    {
+        switch ($personalRevise->getStatus()){
+            case PersonalRevise::STATUS_ACTIVE: return self::STATUS_ACTIVE;
             default: return self::STATUS_RETIRED;    
         }
     }  
