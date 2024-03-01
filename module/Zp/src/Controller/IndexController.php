@@ -239,13 +239,13 @@ class IndexController extends AbstractActionController
         
         $params['startDate'] = date('2012-01-01');        
         $params['endDate'] = date('Y-m-d 23:59:59', strtotime($startDate.' -1 day'));
-        unset($params['accrual']);
+        $params['summary'] = true;
         
         $balaceQuery = $this->entityManager->getRepository(PersonalMutual::class)
                         ->payslip($params);
-        $balanceResult = $balaceQuery->getResult(2);
+        $balanceResult = $balaceQuery->getOneOrNullResult(2);
         $startBalance = empty($balanceResult['amount']) ? 0:$balanceResult['amount'];
-        var_dump($params, $balanceResult);
+//        var_dump($params, $balanceResult);
         
         return new JsonModel([
             'total' => $total,
