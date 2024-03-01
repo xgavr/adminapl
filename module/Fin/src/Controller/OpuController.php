@@ -151,7 +151,7 @@ class OpuController extends AbstractActionController
         $result = $this->finManager->emptyZpYear($startDate, $endDate, $company);
         
         foreach ($data as $row){
-            $result[$row['userId']][date('m', strtotime($row['period']))] = round($row['amount']);
+            $result[$row['userId']][date('m', strtotime($row['period']))] = abs(round($row['amount']));
         }
         
         return new JsonModel([
