@@ -250,10 +250,10 @@ class IndexController extends AbstractActionController
         return new JsonModel([
             'total' => $total,
             'rows' => $data,
-            'startBalance' => $startBalance,
-            'totalIn' => $totalIn,
-            'totalOut' => $totalOut,
-            'endBalance' => $startBalance + $totalIn - $totalOut,
+            'startBalance' => round($startBalance),
+            'totalIn' => round($totalIn),
+            'totalOut' => round($totalOut),
+            'endBalance' => round($startBalance + $totalIn - $totalOut),
         ]);          
     }            
     
