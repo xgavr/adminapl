@@ -55,6 +55,36 @@ class FinRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult(2);       
     }
     
+    /**
+     * Получить сводные расходы
+     * @param date $startDate
+     * @param date $endDate
+     * @param Legal $company
+     * @return array
+     */
+    public function findCosts($startDate, $endDate, $company)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('LAST_DAY(cm.dateOper) as period, c.id as costId, sum(cm.amount) as amount')
+            ->from(CostMutual::class, 'cm')
+            ->join('cm.cost', 'c')
+            ->andWhere('cm.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('cm.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate)
+            ->andWhere('cm.company = :company')    
+            ->setParameter('company', $company->getId())
+            ->groupBy('period')    
+            ->addGroupBy('costId')    
+            ->orderBy('period') 
+                ;
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);       
+    }
+    
     
     /**
      * Обороты розницы

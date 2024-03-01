@@ -67,7 +67,7 @@ class OpuController extends AbstractActionController
         
         $result = FinOpu::emptyOpuYear();
         foreach ($data as $row){
-            foreach ($row as $key => $value){
+            foreach ($row as $key => $value){                
                 if (!isset($result[$key])) {
                     continue;
                 }
@@ -76,6 +76,44 @@ class OpuController extends AbstractActionController
                 }
                 $result[$key][date('m', strtotime($row['period']))] = $value;
             }    
+        }
+        
+        return new JsonModel([
+            'total' => count($result),
+            'rows' => array_values($result),
+        ]);                  
+    }
+    
+    public function costAction()
+    {
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
+        
+        return new ViewModel([
+            'years' => range(date('Y'), 2024),
+            'companies' => $companies,
+        ]);
+    }
+
+    public function costContentAction()
+    {
+        $year = $this->params()->fromQuery('year', date('Y'));
+        $companyId = $this->params()->fromQuery('company');
+        $status = $this->params()->fromQuery('status');
+        
+        $startDate = "$year-01-01";
+        $endDate = "$year-12-31";
+
+        $company = $this->entityManager->getRepository(Legal::class)
+                ->find($companyId);
+                
+        $data = $this->entityManager->getRepository(FinOpu::class)
+                        ->findCosts($startDate, $endDate, $company);
+        
+        $result = $this->finManager->emptyCostYear();
+
+        foreach ($data as $row){
+            $result[$row['costId']][date('m', strtotime($row['period']))] = $row['amount'];
         }
         
         return new JsonModel([

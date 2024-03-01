@@ -209,6 +209,33 @@ class FinManager {
         $this->entityManager->flush();
     }
     
+    public function emptyCostYear()
+    {
+        $result = [];
+        $costs = $this->entityManager->getRepository(Cost::class)
+                ->findAll();
+        
+        foreach ($costs as $cost){
+             $resultRow['key'] = $cost->getId();
+             $resultRow['mark'] = $cost->getName();
+             $resultRow['01'] = '';
+             $resultRow['02'] = '';
+             $resultRow['03'] = '';
+             $resultRow['04'] = '';
+             $resultRow['05'] = '';
+             $resultRow['06'] = '';
+             $resultRow['07'] = '';
+             $resultRow['08'] = '';
+             $resultRow['09'] = '';
+             $resultRow['10'] = '';
+             $resultRow['11'] = '';
+             $resultRow['12'] = '';
+             $result[$cost->getId()] = $resultRow;
+        }
+        
+        return $result;        
+    }
+    
     /**
      * Рассчитать расходы за период
      * @param date $period
