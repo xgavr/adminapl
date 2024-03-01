@@ -253,7 +253,7 @@ class IndexController extends AbstractActionController
             'startBalance' => round(-$startBalance),
             'totalIn' => round(abs($totalOut)),
             'totalOut' => round(abs($totalIn)),
-            'endBalance' => round(-$startBalance + $totalIn - $totalOut),
+            'endBalance' => round(-$startBalance - $totalIn + $totalOut),
         ]);          
     }            
     
