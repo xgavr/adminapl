@@ -182,6 +182,12 @@ class Legal {
     private $personalMutuals;
     
     /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalRevise", mappedBy="company")
+    * @ORM\JoinColumn(name="id", referencedColumnName="company_id")
+     */
+    private $personalRevises;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -193,6 +199,7 @@ class Legal {
         $this->personal = new ArrayCollection();
         $this->personalMutuals = new ArrayCollection();
         $this->personalAccruals = new ArrayCollection();
+        $this->personalRevises = new ArrayCollection();
     }
     
     
@@ -980,6 +987,10 @@ class Legal {
     
     public function getPersonalAccruals() {
         return $this->personalAccruals;
+    }
+    
+    public function getPersonalRevises() {
+        return $this->personalRevises;
     }
     
     /**

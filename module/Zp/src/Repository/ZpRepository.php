@@ -298,10 +298,9 @@ class ZpRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('pr, u, a')
+        $queryBuilder->select('pr, u')
             ->from(PersonalRevise::class, 'pr')
             ->join('pr.user', 'u')
-            ->join('pr.accrual', 'a')
                 ;
         
         if (is_array($params)){
@@ -323,6 +322,13 @@ class ZpRepository extends EntityRepository
                 if (is_numeric($params['status'])){
                     $queryBuilder->andWhere('p.status = :status')
                             ->setParameter('status', $params['status'])
+                            ;
+                }    
+            }            
+            if (!empty($params['kind'])){
+                if (is_numeric($params['kind'])){
+                    $queryBuilder->andWhere('p.kind = :kind')
+                            ->setParameter('kind', $params['kind'])
                             ;
                 }    
             }            

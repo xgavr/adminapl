@@ -88,12 +88,19 @@ class Accrual
     private $personalMutuals;
     
     /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalRevise", mappedBy="accrual")
+    * @ORM\JoinColumn(name="id", referencedColumnName="accrual_id")
+     */
+    private $personalRevises;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->personalAccruals = new ArrayCollection();
         $this->personalMutuals = new ArrayCollection();
+        $this->personalRevises = new ArrayCollection();
     }
     
     public function getId() {
@@ -284,6 +291,10 @@ class Accrual
 
     public function getPersonalAccruals() {
         return $this->personalAccruals;
+    }
+    
+    public function getPersonalRevises() {
+        return $this->personalRevises;
     }
     
     /**

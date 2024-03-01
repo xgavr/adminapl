@@ -124,6 +124,12 @@ class User
     * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
      */
     private $personalMutuals;
+
+    /**
+    * @ORM\OneToMany(targetEntity="Zp\Entity\PersonalRevise", mappedBy="user")
+    * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
+     */
+    private $personalRevises;
     
     /**
      * Constructor.
@@ -136,6 +142,7 @@ class User
         $this->personal = new ArrayCollection();
         $this->personalMutuals = new ArrayCollection();
         $this->personalAccruals = new ArrayCollection();
+        $this->personalRevises = new ArrayCollection();
     }
     
     /**
@@ -554,6 +561,10 @@ class User
     
     public function getPersonalAccruals() {
         return $this->personalAccruals;
+    }
+    
+    public function getPersonalRevises() {
+        return $this->personalRevises;
     }
     
     /**

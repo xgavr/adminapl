@@ -66,6 +66,7 @@ class ReviseController extends AbstractActionController
         $user = $this->params()->fromQuery('user');
         $accrual = $this->params()->fromQuery('accrual');
         $status = $this->params()->fromQuery('status');
+        $kind = $this->params()->fromQuery('kind');
         $year_month = $this->params()->fromQuery('month');
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
@@ -80,7 +81,7 @@ class ReviseController extends AbstractActionController
 
         $params = [
             'q' => $q, 'company' => $company, 'sort' => $sort, 'order' => $order, 
-            'user' => $user, 'accrual' => $accrual, 'status' => $status, 
+            'user' => $user, 'accrual' => $accrual, 'status' => $status, 'kind' => $kind, 
             'year' => $year, 'month' => $month,
         ];
         
@@ -128,8 +129,6 @@ class ReviseController extends AbstractActionController
         $form->get('company')->setValue($companyId);
         $form->get('user')->setValueOptions($this->entityManager->
                 getRepository(User::class)->userListForm(['status' => User::STATUS_ACTIVE, 'all' => 'веберете сотрудника']));
-        $form->get('accrual')->setValueOptions($this->entityManager->
-                getRepository(Accrual::class)->accrualListForm(['status' => Accrual::STATUS_ACTIVE, 'company' => $companyId, 'all' => 'веберете должность']));
         $form->get('user')->setValue($userId);
 
         if ($this->getRequest()->isPost()) {
@@ -146,10 +145,6 @@ class ReviseController extends AbstractActionController
                 if (is_numeric($data['user'])){
                     $data['user'] = $this->entityManager->getRepository(User::class)
                             ->find($data['user']);
-                }
-                if (is_numeric($data['accrual'])){
-                    $data['accrual'] = $this->entityManager->getRepository(Accrual::class)
-                            ->find($data['accrual']);
                 }
 
                 if ($revise){
@@ -170,6 +165,7 @@ class ReviseController extends AbstractActionController
                     'accrual' => $revise->getAccrual()->getId(),
                     'docDate' => $revise->getDocDate(),
                     'status' => $revise->getStatus(),
+                    'kind' => $revise->getKind(),
                     'docNum' => $revise->getDocNum(),
                     'amount' => $revise->getAmount(),
                     'comment' => $revise->getComment(),

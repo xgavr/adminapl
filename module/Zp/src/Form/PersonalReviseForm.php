@@ -90,10 +90,23 @@ class PersonalReviseForm extends Form
             'type'  => 'select',
             'name' => 'status',
             'attributes' => [
+                'id' => 'status',
             ],
             'options' => [
                 'label' => 'Статус',
                 'value_options' => PersonalRevise::getStatusList(),
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'select',
+            'name' => 'kind',
+            'attributes' => [
+                'id' => 'kind',
+            ],
+            'options' => [
+                'label' => 'Операция',
+                'value_options' => PersonalRevise::getKindList(),
             ],
         ]);
         
@@ -119,17 +132,17 @@ class PersonalReviseForm extends Form
             ],
         ]);
         
-        $this->add([           
-            'type'  => 'select',
-            'name' => 'accrual',
-            'attributes' => [
-                'id' => 'accrualSelectForm'
-            ],
-            'options' => [
-                'label' => 'Вид начисления',
-            ],
-        ]);
-        
+//        $this->add([           
+//            'type'  => 'select',
+//            'name' => 'accrual',
+//            'attributes' => [
+//                'id' => 'accrualSelectForm'
+//            ],
+//            'options' => [
+//                'label' => 'Вид начисления',
+//            ],
+//        ]);
+//        
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',

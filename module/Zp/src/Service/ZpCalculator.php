@@ -573,13 +573,33 @@ class ZpCalculator {
     }
     
     /**
+     * Получить начисление 
+     * @param integer $kind
+     * @return Accrual
+     */
+    private function accuralFromPersonalRiviseKind($kind)
+    {
+        switch ($kind){
+            case PersonalRevise::KIND_VACATION:
+            case PersonalRevise::KIND_FINE:
+            case PersonalRevise::KIND_OPEN_BALANCE:
+            default:
+                $accrual = $this->entityManager->getRepository(Accrual::class)
+                    ->findOneBy(['payment' => Accrual::PAYMENT_PAYMENT]);
+                return $accrual;
+        }
+        
+        return;
+    }
+    
+    /**
      * Добавить корректировку ЗП
      * @param array $data
      */
     public function addPersonalRevise($data)
     {
         $personalRevise = new PersonalRevise();
-        $personalRevise->setAccrual($data['accrual']);
+        $personalRevise->setAccrual($this->accuralFromPersonalRiviseKind($data['kind']));
         $personalRevise->setAmount($data['amount']);
         $personalRevise->setComment(empty($data['comment']) ? null:$data['comment']);
         $personalRevise->setCompany($data['company']);
@@ -588,6 +608,7 @@ class ZpCalculator {
         $personalRevise->setDocNum(empty($data['docNum']) ? null:$data['docNum']);
         $personalRevise->setUser($data['user']);
         $personalRevise->setStatus($data['status']);
+        $personalRevise->setKind($data['kind']);
         
         $this->entityManager->persist($personalRevise);
         $this->entityManager->flush();
@@ -604,7 +625,7 @@ class ZpCalculator {
      */
     public function updatePersonalRevise($personalRevise, $data)
     {
-        $personalRevise->setAccrual($data['accrual']);
+        $personalRevise->setAccrual($this->accuralFromPersonalRiviseKind($data['kind']));
         $personalRevise->setAmount($data['amount']);
         $personalRevise->setComment(empty($data['comment']) ? null:$data['comment']);
         $personalRevise->setCompany($data['company']);
@@ -612,6 +633,7 @@ class ZpCalculator {
         $personalRevise->setDocNum(empty($data['docNum']) ? null:$data['docNum']);
         $personalRevise->setUser($data['user']);
         $personalRevise->setStatus($data['status']);
+        $personalRevise->setKind($data['kind']);
         
         $this->entityManager->persist($personalRevise);
         $this->entityManager->flush();

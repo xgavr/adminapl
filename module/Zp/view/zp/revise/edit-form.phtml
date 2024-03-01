@@ -27,10 +27,10 @@ $form->get('status')->setAttributes([
 
 $form->get('amount')->setAttributes([
     'class'=>'form-control', 
-    'data-inputmask' => "'alias': 'currency', 'min': 0, 'groupSeparator': ''"
+    'data-inputmask' => "'alias': 'currency', 'groupSeparator': ''"
     ]);
 
-$form->get('accrual')->setAttributes([
+$form->get('kind')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -96,9 +96,9 @@ $form->prepare();
         </div>    
         <div class="col-xs-4">                        
             <div class="form-group">
-                <?= $this->formLabel($form->get('accrual')); ?>
-                <?= $this->formElement($form->get('accrual')); ?>
-                <?= $this->formElementErrors($form->get('accrual')); ?>                  
+                <?= $this->formLabel($form->get('kind')); ?>
+                <?= $this->formElement($form->get('kind')); ?>
+                <?= $this->formElementErrors($form->get('kind')); ?>                  
             </div>
         </div>    
         <div class="col-xs-4">                        

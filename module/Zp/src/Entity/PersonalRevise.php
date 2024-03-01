@@ -5,11 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use User\Entity\User;
 use Company\Entity\Legal;
-use Zp\Entity\DocCalculator;
-use Cash\Entity\CashDoc;
-use Stock\Entity\St;
 use Zp\Entity\Accrual;
-use Zp\Entity\Position;
 
 /**
  * This class represents a position accrual.
@@ -20,6 +16,10 @@ class PersonalRevise
 {
     const STATUS_ACTIVE       = 1; //.
     const STATUS_RETIRED      = 2; // .
+    
+    const KIND_OPEN_BALANCE = 1; //начальный остаток
+    const KIND_VACATION = 2; //отпуск
+    const KIND_FINE = 3; //штраф
     
     /**
      * @ORM\Id
@@ -57,6 +57,11 @@ class PersonalRevise
      * @ORM\Column(name="status")  
      */
     protected $status;
+
+    /** 
+     * @ORM\Column(name="kind")  
+     */
+    protected $kind;
 
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="personalRevises") 
@@ -146,8 +151,7 @@ class PersonalRevise
         $this->status = $status;
         return $this;
     }
-    
-        
+            
     /**
      * Returns possible statuses as array.
      * @return array
@@ -175,6 +179,41 @@ class PersonalRevise
         
     public function getStatus() {
         return $this->status;
+    }
+    
+    public function setKind($kind) {
+        $this->kind = $kind;
+        return $this;
+    }
+            
+    /**
+     * Returns possible kind as array.
+     * @return array
+     */
+    public static function getKindList() 
+    {
+        return [
+            self::KIND_FINE => 'Штраф',
+            self::KIND_OPEN_BALANCE => 'Начальный остаток',
+            self::KIND_VACATION => 'Отпуск',
+        ];
+    }    
+
+    /**
+     * Returns kind as string.
+     * @return string
+     */
+    public function getKindAsString()
+    {
+        $list = self::getKindList();
+        if (isset($list[$this->kind]))
+            return $list[$this->kind];
+        
+        return 'Unknown';
+    }    
+        
+    public function getKind() {
+        return $this->kind;
     }
     
     /**

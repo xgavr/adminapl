@@ -25,6 +25,7 @@ final class Version20240228095946 extends AbstractMigration
         $table->addColumn('amount', 'float', ['notnull'=>true, 'default' => 0, 'comment' => 'Сумма']);
         $table->addColumn('comment', 'string', ['notnull'=>false, 'length' => 120, 'comment' => 'Комментарий']);
         $table->addColumn('status', 'integer', ['notnull'=>true,'default' => PersonalRevise::STATUS_ACTIVE, 'comment' => 'Статус']);
+        $table->addColumn('kind', 'integer', ['notnull'=>true,'default' => PersonalRevise::KIND_OPEN_BALANCE, 'comment' => 'Вид']);
         $table->setPrimaryKey(['id']);
         $table->addForeignKeyConstraint('legal', ['company_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'personal_revise_company_id_company_id_fk');
