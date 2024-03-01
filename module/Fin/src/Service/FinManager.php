@@ -9,10 +9,8 @@
 namespace Fin\Service;
 
 use Fin\Entity\FinOpu;
-use ApiMarketPlace\Entity\MarketSaleReport;
 use Company\Entity\Legal;
 use Company\Entity\Cost;
-use Zp\Entity\Position;
 use Zp\Entity\PersonalMutual;
 use Company\Entity\Tax;
 
@@ -209,15 +207,24 @@ class FinManager {
         $this->entityManager->flush();
     }
     
-    public function emptyCostYear()
+    /**
+     * Шаблон на сводных расходов
+     * 
+     * @param date $startDate
+     * @param date $endDate
+     * @param Legal $company
+     * 
+     * @return array
+     */
+    public function emptyCostYear($startDate, $endDate, $company)
     {
         $result = [];
-        $costs = $this->entityManager->getRepository(Cost::class)
-                ->findAll();
+        $costs = $this->entityManager->getRepository(FinOpu::class)
+                ->findActiveCosts($startDate, $endDate, $company);
         
         foreach ($costs as $cost){
-             $resultRow['key'] = $cost->getId();
-             $resultRow['mark'] = $cost->getName();
+             $resultRow['key'] = $cost['costId'];
+             $resultRow['mark'] = $cost['costName'];
              $resultRow['01'] = '';
              $resultRow['02'] = '';
              $resultRow['03'] = '';
@@ -230,7 +237,7 @@ class FinManager {
              $resultRow['10'] = '';
              $resultRow['11'] = '';
              $resultRow['12'] = '';
-             $result[$cost->getId()] = $resultRow;
+             $result[$cost['costId']] = $resultRow;
         }
         
         return $result;        

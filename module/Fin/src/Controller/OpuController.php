@@ -110,8 +110,8 @@ class OpuController extends AbstractActionController
         $data = $this->entityManager->getRepository(FinOpu::class)
                         ->findCosts($startDate, $endDate, $company);
         
-        $result = $this->finManager->emptyCostYear();
-
+        $result = $this->finManager->emptyCostYear($startDate, $endDate, $company);
+        
         foreach ($data as $row){
             $result[$row['costId']][date('m', strtotime($row['period']))] = round($row['amount']);
         }
