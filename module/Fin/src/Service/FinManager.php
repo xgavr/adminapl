@@ -279,6 +279,42 @@ class FinManager {
     }
     
     /**
+     * Шаблон на сводных zp
+     * 
+     * @param date $startDate
+     * @param date $endDate
+     * @param Legal $company
+     * 
+     * @return array
+     */
+    public function emptyZpYear($startDate, $endDate, $company)
+    {
+        $result = [];
+        $zps = $this->entityManager->getRepository(FinOpu::class)
+                ->findActiveZp($startDate, $endDate, $company);
+        
+        foreach ($zps as $zp){
+             $resultRow['key'] = $zp['userId'];
+             $resultRow['mark'] = $zp['userName'];
+             $resultRow['01'] = '';
+             $resultRow['02'] = '';
+             $resultRow['03'] = '';
+             $resultRow['04'] = '';
+             $resultRow['05'] = '';
+             $resultRow['06'] = '';
+             $resultRow['07'] = '';
+             $resultRow['08'] = '';
+             $resultRow['09'] = '';
+             $resultRow['10'] = '';
+             $resultRow['11'] = '';
+             $resultRow['12'] = '';
+             $result[$zp['userId']] = $resultRow;
+        }
+        
+        return $result;        
+    }
+    
+    /**
      * Рассчитать зп за период
      * @param date $period
      */

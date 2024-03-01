@@ -7,7 +7,7 @@ $this->mainMenu()->setActiveUrl($this->url('opu'));
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'ОПиУ' => $this->url('opu'),
-            'Расходы' => $this->url('opu', ['action' => 'cost'])
+            'Зарплата' => $this->url('opu', ['action' => 'zp'])
             ]);  
 
 ?>
@@ -34,7 +34,7 @@ $this->pageBreadcrumbs()->setItems([
         </div>    
         <table id="table" 
             data-toggle="table" 
-            data-url="/opu/cost-content"
+            data-url="/opu/zp-content"
             data-side-pagination="server"
             data-pagination="false" 
             data-page-list="[5, 10, 20, 50]"

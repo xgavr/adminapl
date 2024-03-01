@@ -117,6 +117,66 @@ class FinRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult(2);       
     }
     
+    /**
+     * Получить активные zp
+     * @param date $startDate
+     * @param date $endDate
+     * @param Legal $company
+     * @return array
+     */
+    public function findActiveZp($startDate, $endDate, $company)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('u.id as userId, u.fullName as userName, sum(pm.amount) as amount')
+            ->from(PersonalMutual::class, 'pm')
+            ->join('pm.user', 'u')
+            ->andWhere('pm.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('pm.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate)
+            ->andWhere('pm.company = :company')    
+            ->setParameter('company', $company->getId())
+            ->andWhere('pm.amount < 0')    
+            ->addGroupBy('userId')    
+                ;
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);       
+    }
+    
+    /**
+     * Получить сводные zp
+     * @param date $startDate
+     * @param date $endDate
+     * @param Legal $company
+     * @return array
+     */
+    public function findZp($startDate, $endDate, $company)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('LAST_DAY(pm.dateOper) as period, u.id as userId, u.fullName as userName, sum(pm.amount) as amount')
+            ->from(PersonalMutual::class, 'pm')
+            ->join('pm.user', 'u')
+            ->andWhere('pm.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('pm.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate)
+            ->andWhere('pm.company = :company')    
+            ->setParameter('company', $company->getId())
+            ->andWhere('pm.amount < 0')    
+            ->groupBy('period')    
+            ->addGroupBy('userId')    
+            ->orderBy('period') 
+                ;
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);       
+    }
+    
     
     /**
      * Обороты розницы
