@@ -243,9 +243,9 @@ class IndexController extends AbstractActionController
         
         $balaceQuery = $this->entityManager->getRepository(PersonalMutual::class)
                         ->payslip($params);
-        $balanceResult = $balaceQuery->getOneOrNullResult(2);
+        $balanceResult = $balaceQuery->getResult(2);
         $startBalance = empty($balanceResult['amount']) ? 0:$balanceResult['amount'];
-//        var_dump($params, $balanceResult);
+        var_dump($params, $balanceResult);
         
         return new JsonModel([
             'total' => $total,
