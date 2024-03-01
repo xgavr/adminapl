@@ -68,6 +68,7 @@ class FinManager {
         $opu->setZpRetail(empty($data['zpRetail']) ? 0:$data['zpRetail']);
         $opu->setZpTotal(empty($data['zpTotal']) ? 0:$data['zpTotal']);
         $opu->setZpTp(empty($data['zpTp']) ? 0:$data['zpTp']);
+        $opu->setEsn(empty($data['esn']) ? 0:$data['esn']);
         
         $this->entityManager->persist($opu);
         $this->entityManager->flush();
