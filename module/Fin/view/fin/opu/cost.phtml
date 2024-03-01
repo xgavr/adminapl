@@ -145,16 +145,16 @@ $this->pageBreadcrumbs()->setItems([
     
     function footerFormatter(data){
         var field = this.field;
-        return (data.map(function (row) {
+        return $.number((data.map(function (row) {
             return +row[field];
         }).reduce(function (sum, i) {
             return (Math.round((sum + i)*100)/100);
-        }, 0)).toFixed(0);
+        }, 0)), 0, ',', ' ');
     }        
     
     function amountFormatter(value){
         if (value){
-            return (Math.round(value*100)/100).toFixed(2);
+            return $.number(value, 0, ',', ' ' );
         }
         
         return '';
