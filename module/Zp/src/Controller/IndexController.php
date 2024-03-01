@@ -214,6 +214,7 @@ class IndexController extends AbstractActionController
         $result = $query->getResult(2);
         
         $data = [];
+        $totalIn = $totalOut = $startBalance = 0;
         foreach ($result as $rows){
             $row = [
                 'company' => $this->entityManager->getRepository(Legal::class)
@@ -225,6 +226,9 @@ class IndexController extends AbstractActionController
                 'amountOut' => $rows['amountOut'],
             ];
             
+            $totalIn += $rows['amountIn'];
+            $totalOut += $rows['amountOut'];
+            
             if (!empty($rows['accrual'])){
                 $row['accrual'] = $this->entityManager->getRepository(Accrual::class)
                     ->find($rows['accrual'])->toArray();
@@ -233,9 +237,22 @@ class IndexController extends AbstractActionController
             $data[] = $row;        
         } 
         
+        $params['startDate'] = date('2012-01-01');        
+        $params['endDate'] = date('Y-m-d 23:59:59', strtotime($startDate.' -1 day'));
+        
+        $balaceQuery = $this->entityManager->getRepository(PersonalMutual::class)
+                        ->payslip($params);
+        $balanceResult = $balaceQuery->getOneOrNullResult(2);
+        $startBalance = empty($balanceResult['amount']) ? 0:$balanceResult['amount'];
+//        var_dump($params, $balanceResult);
+        
         return new JsonModel([
             'total' => $total,
             'rows' => $data,
+            'startBalance' => $startBalance,
+            'totalIn' => $totalIn,
+            'totalOut' => $totalOut,
+            'endBalance' => $startBalance + $totalIn - $totalOut,
         ]);          
     }            
     

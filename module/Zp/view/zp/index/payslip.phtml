@@ -95,6 +95,50 @@ $this->pageBreadcrumbs()->setItems([
         </table>
     </div>
 </div>    
+<div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-3">
+        <table>
+            <tr>
+                <td>
+                   Долг на начало  
+                </td>
+                <td align="right">
+                    <span class="text-danger" id="startBalance"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                   Начислено  
+                </td>
+                <td align="right">
+                    <span class="text-danger" id="totalIn"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                   Удеражно/получено  
+                </td>
+                <td align="right">
+                    <span class="text-danger" id="totalOut"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                   Долг на конец  
+                </td>
+                <td align="right">
+                    <span class="text-danger" id="endBalance"></span>
+                </td>
+            </tr>
+        </table>             
+    </div>
+</div>
 
 <?php echo $this->partial('/zp/index/zp-partial', []); ?>
 
@@ -115,6 +159,10 @@ $this->pageBreadcrumbs()->setItems([
         //$('#userSelect').val(<?= $currentUser->getId()  ?>);
         
         $table.on('load-success.bs.table', function (e, res) {
+            $('#startBalance').html(res.startBalance);
+            $('#endBalance').html(res.endBalance);
+            $('#totalIn').html(res.totalIn);
+            $('#totalOut').html(res.totalOut);
         });                
         $(document).on('change', '#companySelect', function (e) {
             refreshTable();
@@ -218,7 +266,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function activeFormatter(value, row){
         var url = '/personal/edit-form/'+row.id;
-        btn = '<button';
+        btn = '<button disabled';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs personal-modal-show"';
         btn += ' aria-label="Left Align"'; 
