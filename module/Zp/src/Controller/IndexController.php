@@ -239,6 +239,7 @@ class IndexController extends AbstractActionController
         
         $params['startDate'] = date('2012-01-01');        
         $params['endDate'] = date('Y-m-d 23:59:59', strtotime($startDate.' -1 day'));
+        unset($params['accrual']);
         
         $balaceQuery = $this->entityManager->getRepository(PersonalMutual::class)
                         ->payslip($params);
