@@ -79,6 +79,8 @@ class FinRepository extends EntityRepository
             ->setParameter('company', $company->getId())
             ->andWhere('c.kind != :excKind')    
             ->setParameter('excKind', Cost::KIND_MP) 
+            ->andWhere('cm.status = :status')
+            ->setParameter('status', CostMutual::STATUS_ACTIVE)    
             ->addGroupBy('costId')    
                 ;
 //                var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -109,6 +111,8 @@ class FinRepository extends EntityRepository
             ->setParameter('company', $company->getId())
             ->andWhere('c.kind != :excKind')    
             ->setParameter('excKind', Cost::KIND_MP) 
+            ->andWhere('cm.status = :status')
+            ->setParameter('status', CostMutual::STATUS_ACTIVE)    
             ->groupBy('period')    
             ->addGroupBy('costId')    
             ->orderBy('period') 
@@ -140,6 +144,8 @@ class FinRepository extends EntityRepository
             ->andWhere('pm.company = :company')    
             ->setParameter('company', $company->getId())
             ->andWhere('pm.amount < 0')    
+            ->andWhere('pm.status = :status')
+            ->setParameter('status', PersonalMutual::STATUS_ACTIVE)    
             ->addGroupBy('userId')    
                 ;
 //                var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -169,6 +175,8 @@ class FinRepository extends EntityRepository
             ->andWhere('pm.company = :company')    
             ->setParameter('company', $company->getId())
             ->andWhere('pm.amount < 0')    
+            ->andWhere('pm.status = :status')
+            ->setParameter('status', PersonalMutual::STATUS_ACTIVE)    
             ->groupBy('period')    
             ->addGroupBy('userId')    
             ->orderBy('period') 
@@ -292,8 +300,8 @@ class FinRepository extends EntityRepository
         $queryBuilder->select('identity(pm.company) as companyId, pm.kind as kind, LAST_DAY(pm.dateOper) as period, sum(pm.amount) as amount')
             ->from(PersonalMutual::class, 'pm')
             ->where('pm.status = :status')
-            ->andWhere('pm.amount < 0')    
             ->setParameter('status', PersonalMutual::STATUS_ACTIVE)    
+            ->andWhere('pm.amount < 0')    
 //            ->andWhere('pm.kind = :kind')
 //            ->setParameter('kind', PersonalMutual::KIND_ACCRUAL)    
             ->andWhere('pm.dateOper >= :startDate')    
