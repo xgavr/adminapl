@@ -997,7 +997,7 @@ class Order {
     public function isComissuionerContract()
     {
         if ($this->contract){
-            return $this->contract->getKind() == Contract::KIND_COMISSIONER;
+            return $this->contract->getKind() == Contract::KIND_COMITENT;
         }
         
         return false;
