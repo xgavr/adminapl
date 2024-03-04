@@ -151,7 +151,7 @@ class ZpCalculator {
             $this->entityManager->persist($orderCalculator);
         }    
         
-        if ($vt->getStatus() == Vt::STATUS_ACTIVE && !$vt->getOrder()->isComissuionerContract()){
+        if ($vt->getStatus() == Vt::STATUS_ACTIVE && !$vt->getOrder()->isComitentContract()){
             
             $base = $this->entityManager->getRepository(Movement::class)
                     ->findBaseAmount(Movement::DOC_VT, $vt->getId());

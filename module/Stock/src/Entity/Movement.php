@@ -482,8 +482,8 @@ class Movement {
             case Vt::STATUS_DEFECT: return self::STATUS_COMMISSION;    
             case Vt::STATUS_WAIT: return self::STATUS_COMMISSION;    
             default: 
-                if ($vt->getOrder()->isComissuionerContract()){
-                    return self::STATUS_COMMISSION;
+                if ($vt->getOrder()->isComitentContract()){
+                    return self::STATUS_COMITENT;
                 }
                 return self::STATUS_ACTIVE;    
         }
