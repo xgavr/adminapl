@@ -31,6 +31,7 @@ class Movement {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     const STATUS_COMMISSION    = 3; // commission.
+    const STATUS_COMITENT    = 4; // comitent.
     
     const DOC_PTU = 1;
     const DOC_OT = 2;
@@ -447,8 +448,8 @@ class Movement {
     {
         switch ($order->getStatus()){
             case Order::STATUS_SHIPPED: 
-                if ($order->isComissuionerContract()){
-                    return self::STATUS_COMMISSION;
+                if ($order->isComitentContract()){
+                    return self::STATUS_COMITENT;
                 }
                 return self::STATUS_ACTIVE;
             default: return self::STATUS_RETIRED;    
