@@ -18,6 +18,7 @@ use Company\Entity\CostMutual;
 use Zp\Entity\PersonalMutual;
 use Company\Entity\TaxMutual;
 use Company\Entity\Tax;
+use Stock\Entity\Retail;
 
 /**
  * Description of FinRepository
@@ -187,6 +188,40 @@ class FinRepository extends EntityRepository
     
     
     /**
+     * Выручка розницы
+     * 
+     * @param date $startDate
+     * @param date $endDate
+     * 
+     * @return array 
+     */
+    public function retailRevenue($startDate, $endDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('identity(r.company) as companyId, LAST_DAY(r.dateOper) as period, sum(r.amount) as revenue')
+            ->from(Retail::class, 'r')
+            ->where('r.status = :status')
+            ->setParameter('status', Retail::STATUS_ACTIVE)    
+            ->andWhere($orX)
+            ->andWhere('r.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('r.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate) 
+            ->groupBy('companyId')    
+            ->addGroupBy('period')  
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();       
+    }
+        
+    /**
      * Обороты розницы
      * 
      * @param date $startDate
@@ -214,7 +249,8 @@ class FinRepository extends EntityRepository
             ->andWhere('m.dateOper <= :endDate')    
             ->setParameter('endDate', $endDate) 
             ->groupBy('companyId')    
-            ->addGroupBy('period')    
+            ->addGroupBy('period')  
+            ->having('abs(revenue - purchase) > 0')    
                 ;
         
         return $queryBuilder->getQuery()->getResult();       

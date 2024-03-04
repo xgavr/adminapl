@@ -301,7 +301,7 @@ class OrderManager
                     $amount = $quantity*$bid->getPrice();
                     $baseAmount = $base['basePrice']*$quantity;
                     
-                    if ($order->isComissuionerContract()){ //если передача на комиссию
+                    if ($order->isComitentContract()){ //если передача на комиссию
                         $amount = $baseAmount;
                     }
 

@@ -994,7 +994,7 @@ class Order {
      * Это передача в комиссию
      * @return boolean
      */
-    public function isComissuionerContract()
+    public function isComitentContract()
     {
         if ($this->contract){
             return $this->contract->getKind() == Contract::KIND_COMITENT;

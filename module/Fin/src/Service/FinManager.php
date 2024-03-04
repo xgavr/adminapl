@@ -145,6 +145,33 @@ class FinManager {
     }
     
     /**
+     * Рассчитать розничную выручку за период
+     * @param date $period
+     */
+    public function incomeRetailRevenue($period)
+    {
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+//        var_dump($startDate, $endDate); exit;
+        $retailRevenues = $this->entityManager->getRepository(FinOpu::class)
+                ->retailRevenue($startDate, $endDate);
+        
+        foreach ($retailRevenues as $row){
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($row['companyId']);
+            
+            $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
+            
+            $finOpu->setRevenueRetail(abs($row['revenue']));            
+            $finOpu->setRevenueTotal($finOpu->getRevenueRetail() + $finOpu->getRevenueTp());
+            
+            $this->entityManager->persist($finOpu);
+        }
+        
+        $this->entityManager->flush();
+    }
+
+    /**
      * Рассчитать розничный доход за период
      * @param date $period
      */
@@ -162,11 +189,9 @@ class FinManager {
             
             $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
             
-            $finOpu->setRevenueRetail(abs($row['revenue']));
             $finOpu->setPurchaseRetail(abs($row['purchase']));
             $finOpu->setIncomeRetail(abs($row['revenue']) - abs($row['purchase']));
             
-            $finOpu->setRevenueTotal($finOpu->getRevenueRetail() + $finOpu->getRevenueTp());
             $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
             
             $this->entityManager->persist($finOpu);
@@ -325,7 +350,7 @@ class FinManager {
         
         $zps = $this->entityManager->getRepository(FinOpu::class)
                 ->zp($startDate, $endDate);
-        
+
         foreach ($zps as $row){
             $company = $this->entityManager->getRepository(Legal::class)
                     ->find($row['companyId']);            
@@ -395,6 +420,7 @@ class FinManager {
      */
     public function calculate($period)
     {
+        $this->incomeRetailRevenue($period);
         $this->incomeRetail($period);
         $this->incomeTp($period);
         $this->costs($period);
