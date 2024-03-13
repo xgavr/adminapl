@@ -843,6 +843,12 @@ class CashManager {
     {
         $cashDoc = $statement->getCashDoc();
         
+        if ($cashDoc->getStatement()){
+            if ($cashDoc->getStatement()->getId() != $statement->getId()){
+                $cashDoc = null;
+            }
+        }
+        
         if ($statement->getAmount() > 0){
             $data['kind'] = CashDoc::KIND_IN_RETURN_SUPPLIER;
         } else {
@@ -868,6 +874,13 @@ class CashManager {
     private function clientCashDocFromStatement($statement, $data)
     {
         $cashDoc = $statement->getCashDoc();
+        
+        if ($cashDoc->getStatement()){
+            if ($cashDoc->getStatement()->getId() != $statement->getId()){
+                $cashDoc = null;
+            }
+        }
+        
         $legal = null;
         $legalAccount = $this->entityManager->getRepository(BankAccount::class)
                 ->findOneBy(['rs' => $statement->getCounterpartyAccountNumber()]);
@@ -951,14 +964,14 @@ class CashManager {
                 $data['legal'] = $legal;
                 $data['statement'] = $statement;
 
-                if ($legal->getSupplier()){
-                    return $this->supplierCashDocFromStatement($statement, $data);
-                }
-                
                 if ($legal->getClientContact()){
                     $data['comment'] = $statement->getPaymentPurpose();
                     return $this->clientCashDocFromStatement($statement, $data);
                 }    
+                
+                if ($legal->getSupplier()){
+                    return $this->supplierCashDocFromStatement($statement, $data);
+                }                
             }    
         }
         
