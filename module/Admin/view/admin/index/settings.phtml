@@ -119,6 +119,14 @@ $form->get('job')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('zp')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('fin')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -304,6 +312,18 @@ $form->prepare();
             <?= $this->formLabel($form->get('doc_actualize')); ?>
             <?= $this->formElement($form->get('doc_actualize')); ?>
             <?= $this->formElementErrors($form->get('doc_actualize')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('zp')); ?>
+            <?= $this->formElement($form->get('zp')); ?>
+            <?= $this->formElementErrors($form->get('zp')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('fin')); ?>
+            <?= $this->formElement($form->get('fin')); ?>
+            <?= $this->formElementErrors($form->get('fin')); ?>                  
         </div>
 
         <ul class="nav nav-stacked nav-list affix">

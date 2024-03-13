@@ -140,6 +140,9 @@ class AdminManager {
         $config->admin->mail_token = $data['mail_token'];
         $config->admin->turbo_passphrase = $data['turbo_passphrase'];
         
+        $config->admin->zp = $data['zp'];
+        $config->admin->fin = $data['fin'];
+
         $config->admin->job = $data['job'];
         
         $writer = new PhpArray();

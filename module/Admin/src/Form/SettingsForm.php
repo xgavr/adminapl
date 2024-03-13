@@ -327,6 +327,30 @@ class SettingsForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'zp',
+            'options' => [
+                'label' => 'Зарплата',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'fin',
+            'options' => [
+                'label' => 'Фин. отчеты',
+                'value_options' => [
+                    1 => 'Делать',
+                    2 => 'Не делать',                    
+                ]
+            ],
+        ]);
+                
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',

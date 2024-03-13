@@ -242,6 +242,18 @@ class ProcessingController extends AbstractActionController
      */
     private $bankMlManager;    
 
+    /**
+     * Fin manager.
+     * @var \Fin\Service\FinManager
+     */
+    private $finManager;    
+
+    /**
+     * Zp manager.
+     * @var \Zp\Service\ZpCalculator
+     */
+    private $zpManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
@@ -250,7 +262,7 @@ class ProcessingController extends AbstractActionController
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
             $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
             $ozonService, $userManager, $smsManager, $sbpManager, $cashManager,
-            $ampReportManager, $paymentManager, $bankMlManager) 
+            $ampReportManager, $paymentManager, $bankMlManager, $finManager, $zpManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -289,6 +301,8 @@ class ProcessingController extends AbstractActionController
         $this->ampReportManager = $ampReportManager;
         $this->paymentManager = $paymentManager;
         $this->bankMlManager = $bankMlManager;
+        $this->finManager = $finManager;
+        $this->zpManager = $zpManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -2164,6 +2178,42 @@ class ProcessingController extends AbstractActionController
         if ($settings['statement_by_api'] == 1){
 
             $this->bankMlManager->statementTokens();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    /**
+     * Зарплата
+     */
+    public function zpAction()
+    {
+        $settings = $this->adminManager->getSettings();
+
+        if ($settings['zp'] == 1){
+
+            $this->zpManager->periodCalculator();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    /**
+     * Фин отчеты
+     */
+    public function finAction()
+    {
+        $settings = $this->adminManager->getSettings();
+
+        if ($settings['fin'] == 1){
+
+            $period = date('Y')."-12-31";
+
+            $this->finManager->calculate($period);
         }    
                 
         return new JsonModel(

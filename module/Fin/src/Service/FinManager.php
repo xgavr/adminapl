@@ -191,7 +191,9 @@ class FinManager {
             
             $finOpu->setPurchaseRetail(abs($row['purchase']));
             $finOpu->setIncomeRetail($finOpu->getRevenueRetail() - abs($row['purchase']));
-            $finOpu->setMarginRetail((abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']));
+            if (abs($row['revenue'])){
+                $finOpu->setMarginRetail((abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']));
+            }    
             
             $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
             
@@ -223,7 +225,9 @@ class FinManager {
             $finOpu->setPurchaseTp(abs($row['purchase']));
             $finOpu->setCostTp(abs($row['cost']));
             $finOpu->setIncomeTp(abs($row['revenue']) - abs($row['purchase']) - abs($row['cost']));
-            $finOpu->setMarginTp((abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']));
+            if (abs($row['revenue'])){
+                $finOpu->setMarginTp((abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']));
+            }    
             
             $finOpu->setRevenueTotal($finOpu->getRevenueRetail() + $finOpu->getRevenueTp());
             $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
