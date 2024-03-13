@@ -67,7 +67,7 @@ class OpuController extends AbstractActionController
         
         $result = FinOpu::emptyOpuYear();
         foreach ($data as $row){
-            foreach ($row as $key => $value){                
+            foreach ($row as $key => $value){  
                 if (!isset($result[$key])) {
                     continue;
                 }
@@ -75,6 +75,12 @@ class OpuController extends AbstractActionController
                     continue;
                 }
                 $result[$key][date('m', strtotime($row['period']))] = $value;
+                
+                if ($key == 'incomeRetail'){
+                    $result[$key][date('m', strtotime($row['period']))] = '('.$result['marginRetail'][date('m', strtotime($row['period']))].') '.$value;                    
+                }
+                
+                $result[$key]['13'] += (float) $value;
             }    
         }
         
@@ -114,6 +120,7 @@ class OpuController extends AbstractActionController
         
         foreach ($data as $row){
             $result[$row['costId']][date('m', strtotime($row['period']))] = round($row['amount']);
+            $result[$row['costId']][13] += round($row['amount']);
         }
         
         return new JsonModel([
@@ -152,6 +159,7 @@ class OpuController extends AbstractActionController
         
         foreach ($data as $row){
             $result[$row['userId']][date('m', strtotime($row['period']))] = abs(round($row['amount']));
+            $result[$row['userId']][13] += abs(round($row['amount']));
         }
         
         return new JsonModel([

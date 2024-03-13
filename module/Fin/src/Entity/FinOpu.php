@@ -53,6 +53,11 @@ class FinOpu
     protected $purchaseRetail;
 
     /** 
+     * @ORM\Column(name="margin_retail")  
+     */
+    protected $marginRetail;
+
+    /** 
      * @ORM\Column(name="purchase_tp")  
      */
     protected $purchaseTp;
@@ -72,6 +77,12 @@ class FinOpu
      */
     protected $incomeTp;
 
+    /** 
+     * @ORM\Column(name="margin_tp")  
+     */
+    protected $marginTp;
+
+    
     /** 
      * @ORM\Column(name="income_total")  
      */
@@ -216,6 +227,14 @@ class FinOpu
         return $this->purchaseTotal;
     }
 
+    public function getMarginRetail() {
+        return $this->marginRetail;
+    }
+
+    public function getMarginTp() {
+        return $this->marginTp;
+    }
+    
     public function getCostRetail() {
         return $this->costRetail;
     }
@@ -305,6 +324,16 @@ class FinOpu
         return $this;
     }
 
+    public function setMarginRetail($marginRetail) {
+        $this->marginRetail = $marginRetail;
+        return $this;
+    }
+
+    public function setMarginTp($marginTp) {
+        $this->marginTp = $marginTp;
+        return $this;
+    }
+    
     public function setCostRetail($costRetail) {
         $this->costRetail = $costRetail;
         return $this;
@@ -455,6 +484,38 @@ class FinOpu
         ];    
     }
     
+    public static function getSuccessList()
+    {
+        return [
+            'revenueRetail' => 'Оборот розница',
+            'revenueTp' => 'Оборот ТП',
+        ];    
+    }
+    
+    public static function getWaringList()
+    {
+        return [
+            'purchaseRetail' => 'Закупка розница',
+            'purchaseTp' => 'Закупка ТП',
+            'costTp' => 'Расходы ТП',
+            'costTotal' => '<a href="/opu/cost" target="_blank">Расходы</a>',
+            'zpTotal' => '<a href="/opu/zp" target="_blank">Зарплата</a>',
+            'esn' => 'ЕСН',
+            'tax' => 'Налог',
+        ];    
+    }
+    
+    public static function getInfoList()
+    {
+        return [
+            'incomeRetail' => 'Доход розница',
+            'incomeTp' => 'Доход ТП',
+            'incomeTotal' => 'Доход всего',
+            'profit' => 'Прибыль',
+            'profitNet' => 'Чистая пибыль',
+        ];    
+    }
+    
     /**
      * Массив для отчета
      * @return array
@@ -465,18 +526,19 @@ class FinOpu
         foreach (self::getMarkList() as $key=>$value){
              $resultRow['key'] = $key;
              $resultRow['mark'] = $value;
-             $resultRow['01'] = '';
-             $resultRow['02'] = '';
-             $resultRow['03'] = '';
-             $resultRow['04'] = '';
-             $resultRow['05'] = '';
-             $resultRow['06'] = '';
-             $resultRow['07'] = '';
-             $resultRow['08'] = '';
-             $resultRow['09'] = '';
-             $resultRow['10'] = '';
-             $resultRow['11'] = '';
-             $resultRow['12'] = '';
+             $resultRow['01'] = 0;
+             $resultRow['02'] = 0;
+             $resultRow['03'] = 0;
+             $resultRow['04'] = 0;
+             $resultRow['05'] = 0;
+             $resultRow['06'] = 0;
+             $resultRow['07'] = 0;
+             $resultRow['08'] = 0;
+             $resultRow['09'] = 0;
+             $resultRow['10'] = 0;
+             $resultRow['11'] = 0;
+             $resultRow['12'] = 0;
+             $resultRow['13'] = 0;
              $result[$key] = $resultRow;
         }
         

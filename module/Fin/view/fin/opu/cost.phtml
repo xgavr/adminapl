@@ -62,6 +62,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="10" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Октябрь</th>
                      <th data-field="11" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Ноябрь</th>
                      <th data-field="12" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Декабрь</th>
+                     <th data-field="13" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountTotalFormatter">Итого</th>
                  </tr>                
             </thead>
         </table>
@@ -150,8 +151,22 @@ $this->pageBreadcrumbs()->setItems([
     }        
     
     function amountFormatter(value){
-        if (value){
+        if (value > 0){
             return $.number(value, 0, ',', ' ' );
+        }
+        if (value < 0){
+            return '<span style="color:red">'+$.number(value, 0, ',', ' ' )+'</span>';
+        }
+        
+        return '';
+    }    
+        
+    function amountTotalFormatter(value){
+        if (value > 0){
+            return '<b>'+$.number(value, 0, ',', ' ' )+'</b>';
+        }
+        if (value < 0){
+            return '<b style="color:red">'+$.number(value, 0, ',', ' ' )+'</b>';
         }
         
         return '';

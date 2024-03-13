@@ -190,7 +190,8 @@ class FinManager {
             $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
             
             $finOpu->setPurchaseRetail(abs($row['purchase']));
-            $finOpu->setIncomeRetail(abs($row['revenue']) - abs($row['purchase']));
+            $finOpu->setIncomeRetail($finOpu->getIncomeRetail() - abs($row['purchase']));
+            $finOpu->setMarginRetail((abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']));
             
             $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
             
@@ -222,6 +223,7 @@ class FinManager {
             $finOpu->setPurchaseTp(abs($row['purchase']));
             $finOpu->setCostTp(abs($row['cost']));
             $finOpu->setIncomeTp(abs($row['revenue']) - abs($row['purchase']) - abs($row['cost']));
+            $finOpu->setMarginTp((abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']));
             
             $finOpu->setRevenueTotal($finOpu->getRevenueRetail() + $finOpu->getRevenueTp());
             $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
@@ -250,18 +252,19 @@ class FinManager {
         foreach ($costs as $cost){
              $resultRow['key'] = $cost['costId'];
              $resultRow['mark'] = $cost['costName'];
-             $resultRow['01'] = '';
-             $resultRow['02'] = '';
-             $resultRow['03'] = '';
-             $resultRow['04'] = '';
-             $resultRow['05'] = '';
-             $resultRow['06'] = '';
-             $resultRow['07'] = '';
-             $resultRow['08'] = '';
-             $resultRow['09'] = '';
-             $resultRow['10'] = '';
-             $resultRow['11'] = '';
-             $resultRow['12'] = '';
+             $resultRow['01'] = 0;
+             $resultRow['02'] = 0;
+             $resultRow['03'] = 0;
+             $resultRow['04'] = 0;
+             $resultRow['05'] = 0;
+             $resultRow['06'] = 0;
+             $resultRow['07'] = 0;
+             $resultRow['08'] = 0;
+             $resultRow['09'] = 0;
+             $resultRow['10'] = 0;
+             $resultRow['11'] = 0;
+             $resultRow['12'] = 0;
+             $resultRow['13'] = 0;
              $result[$cost['costId']] = $resultRow;
         }
         
@@ -321,18 +324,19 @@ class FinManager {
         foreach ($zps as $zp){
              $resultRow['key'] = $zp['userId'];
              $resultRow['mark'] = $zp['userName'];
-             $resultRow['01'] = '';
-             $resultRow['02'] = '';
-             $resultRow['03'] = '';
-             $resultRow['04'] = '';
-             $resultRow['05'] = '';
-             $resultRow['06'] = '';
-             $resultRow['07'] = '';
-             $resultRow['08'] = '';
-             $resultRow['09'] = '';
-             $resultRow['10'] = '';
-             $resultRow['11'] = '';
-             $resultRow['12'] = '';
+             $resultRow['01'] = 0;
+             $resultRow['02'] = 0;
+             $resultRow['03'] = 0;
+             $resultRow['04'] = 0;
+             $resultRow['05'] = 0;
+             $resultRow['06'] = 0;
+             $resultRow['07'] = 0;
+             $resultRow['08'] = 0;
+             $resultRow['09'] = 0;
+             $resultRow['10'] = 0;
+             $resultRow['11'] = 0;
+             $resultRow['12'] = 0;
+             $resultRow['13'] = 0;
              $result[$zp['userId']] = $resultRow;
         }
         

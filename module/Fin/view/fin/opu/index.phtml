@@ -1,4 +1,7 @@
 <?php
+use Laminas\Json\Encoder;
+use Fin\Entity\FinOpu;
+
 $this->headTitle('Прибыли и убытки');
 
 $this->mainMenu()->setActiveItemId('report');
@@ -65,6 +68,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="10" data-sortable="false" data-align="right" data-formatter="amountFormatter">Октябрь</th>
                      <th data-field="11" data-sortable="false" data-align="right" data-formatter="amountFormatter">Ноябрь</th>
                      <th data-field="12" data-sortable="false" data-align="right" data-formatter="amountFormatter">Декабрь</th>
+                     <th data-field="13" data-sortable="false" data-align="right" data-formatter="amountTotalFormatter">Итого</th>
                  </tr>                
             </thead>
         </table>
@@ -116,7 +120,17 @@ $this->pageBreadcrumbs()->setItems([
     
     function rowStyle(row){
         var retired = 'tablerow';
-        
+//        console.log(row.key);
+//        console.log(<?= Encoder::encode(array_keys(FinOpu::getSuccessList()))?>);
+        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinOpu::getSuccessList()))?>) >= 0){
+            retired += ' success';
+        }
+        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinOpu::getInfoList()))?>) >= 0){
+            retired += ' info';
+        }
+        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinOpu::getWaringList()))?>) >= 0){
+            retired += ' warning';
+        }
         return {classes: retired};
     }
     
@@ -139,9 +153,23 @@ $this->pageBreadcrumbs()->setItems([
         return params;
     }
     
-    function amountFormatter(value){
-        if (value){
+    function amountFormatter(value, row){
+        if (value > 0){
             return $.number(value, 0, ',', ' ' );
+        }
+        if (value < 0){
+            return '<span style="color:red">'+$.number(value, 0, ',', ' ' )+'</span>';
+        }
+        
+        return '';
+    }    
+        
+    function amountTotalFormatter(value, row){
+        if (value > 0){
+            return '<b>'+$.number(value, 0, ',', ' ' )+'</b>';
+        }
+        if (value < 0){
+            return '<b style="color:red">'+$.number(value, 0, ',', ' ' )+'</b>';
         }
         
         return '';
