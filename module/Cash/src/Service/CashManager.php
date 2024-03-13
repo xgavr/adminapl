@@ -845,7 +845,6 @@ class CashManager {
         
         if ($cashDoc){
             if ($cashDoc->getStatement()){
-                var_dump($cashDoc->getStatement()->getId(), $statement->getId());
                 if ($cashDoc->getStatement()->getId() != $statement->getId()){
                     $cashDoc = null;
                 }
@@ -988,13 +987,14 @@ class CashManager {
      * @param Legal $legal
      * @param float $amount
      * @param date $paymentDate
+     * @param Statement $statement
      * 
      * @return CashDoc 
      */
-    private function findCashDocLegal($legal, $amount, $paymentDate)
+    private function findCashDocLegal($legal, $amount, $statement)
     {
         $cashDoc = $this->entityManager->getRepository(CashDoc::class)
-                ->findCashDocForStatement($legal, $amount, $paymentDate);        
+                ->findCashDocForStatement($legal, $amount, $statement->getChargeDate());        
         
         return $cashDoc;
     }
@@ -1025,7 +1025,7 @@ class CashManager {
             $legals = $this->entityManager->getRepository(Legal::class)
                     ->findBy(['inn' => $legalInn, 'kpp' => $legalKpp]);
             foreach ($legals as $legal){
-                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getChargeDate());
+                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement);
                 $legalsToCheck[$legal->getId()] = $legal;
                 if ($cashDoc){
                     break;
@@ -1037,7 +1037,7 @@ class CashManager {
             $legals = $this->entityManager->getRepository(Legal::class)
                     ->findBy(['inn' => $legalInn]);
             foreach ($legals as $legal){
-                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getChargeDate());
+                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement);
                 $legalsToCheck[$legal->getId()] = $legal;
                 if ($cashDoc){
                     break;
@@ -1052,7 +1052,7 @@ class CashManager {
             foreach ($bankAccounts as $bankAccount){
                 $legal = $bankAccount->getLegal();
                 $legalsToCheck[$legal->getId()] = $legal;
-                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement->getChargeDate());
+                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement);
                 if ($cashDoc){
                     break;
                 }

@@ -16,6 +16,7 @@ use Cash\Entity\UserTransaction;
 use Company\Entity\Office;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
+use Bank\Entity\Statement;
 
 /**
  * Description of CashRepository
@@ -614,12 +615,18 @@ class CashRepository extends EntityRepository
     * @param Legal $legal
     * @param float $amount
     * @param date $paymentDate
+    * @param Statement $statement
     * @return CashDoc
     */
-   public function findCashDocForStatement($legal, $amount, $paymentDate)
+   public function findCashDocForStatement($legal, $amount, $paymentDate, $statement)
    {
         $entityManager = $this->getEntityManager();
         $queryBuiler = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuiler->expr()->orX();
+        $orX->add($queryBuiler->expr()->isNull('cd.statement'));
+        $orX->add($queryBuiler->expr()->eq('cd.statement', $statement->getId()));
+                
         
         $queryBuiler->select('cd')
             ->from(CashDoc::class, 'cd')
@@ -632,6 +639,7 @@ class CashRepository extends EntityRepository
             ->setParameter('legal', $legal->getId()) 
             ->andWhere('cd.status = :status')
             ->setParameter('status', CashDoc::STATUS_ACTIVE)
+            ->andWhere($orX)                    
             ->setMaxResults(1)    
             ;        
 //            var_dump($queryBuiler->getParameters());
