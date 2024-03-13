@@ -843,11 +843,14 @@ class CashManager {
     {
         $cashDoc = $statement->getCashDoc();
         
-        if ($cashDoc->getStatement()){
-            if ($cashDoc->getStatement()->getId() != $statement->getId()){
-                $cashDoc = null;
+        if ($cashDoc){
+            if ($cashDoc->getStatement()){
+                var_dump($cashDoc->getStatement()->getId(), $statement->getId());
+                if ($cashDoc->getStatement()->getId() != $statement->getId()){
+                    $cashDoc = null;
+                }
             }
-        }
+        }    
         
         if ($statement->getAmount() > 0){
             $data['kind'] = CashDoc::KIND_IN_RETURN_SUPPLIER;
@@ -875,11 +878,13 @@ class CashManager {
     {
         $cashDoc = $statement->getCashDoc();
         
-        if ($cashDoc->getStatement()){
-            if ($cashDoc->getStatement()->getId() != $statement->getId()){
-                $cashDoc = null;
+        if ($cashDoc){
+            if ($cashDoc->getStatement()){
+                if ($cashDoc->getStatement()->getId() != $statement->getId()){
+                    $cashDoc = null;
+                }
             }
-        }
+        }    
         
         $legal = null;
         $legalAccount = $this->entityManager->getRepository(BankAccount::class)
