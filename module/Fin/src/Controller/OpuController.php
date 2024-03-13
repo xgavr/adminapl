@@ -76,10 +76,6 @@ class OpuController extends AbstractActionController
                 }
                 $result[$key][date('m', strtotime($row['period']))] = $value;
                 
-                if ($key == 'incomeRetail'){
-                    $result[$key][date('m', strtotime($row['period']))] = '('.$result['marginRetail'][date('m', strtotime($row['period']))].') '.$value;                    
-                }
-                
                 $result[$key]['13'] += (float) $value;
             }    
         }
