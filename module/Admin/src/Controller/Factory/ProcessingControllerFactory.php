@@ -46,7 +46,7 @@ use Cash\Service\CashManager;
 use ApiMarketPlace\Service\ReportManager;
 use Bank\Service\PaymentManager;
 use Bank\Service\MlManager;
-use Fin\Entity\FinOpu;
+use Fin\Service\FinManager;
 use Zp\Service\ZpCalculator;
 
 /**
@@ -96,7 +96,7 @@ class ProcessingControllerFactory implements FactoryInterface {
         $ampReportManager = $container->get(ReportManager::class);
         $paymentManager = $container->get(PaymentManager::class);
         $bankMlManager = $container->get(MlManager::class);
-        $finManager = $container->get(FinOpu::class);
+        $finManager = $container->get(FinManager::class);
         $zpManager = $container->get(ZpCalculator::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
