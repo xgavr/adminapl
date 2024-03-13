@@ -458,13 +458,13 @@ class FinOpu
             'revenueRetail' => 'Оборот розница',
             'purchaseRetail' => 'Закупка розница',
             'incomeRetail' => 'Доход розница',
-            'marginRetail' => 'Макжа розница (%)',
+            'marginRetail' => 'Маржа розница (%)',
             'incomeRetail_' => '',
             'revenueTp' => 'Оборот ТП',
             'purchaseTp' => 'Закупка ТП',
             'costTp' => 'Расходы ТП',
             'incomeTp' => 'Доход ТП',
-            'marginTp' => 'Макжа ТП (%)',
+            'marginTp' => 'Маржа ТП (%)',
             'incomeTp_' => '',
             'incomeTotal' => 'Доход всего',
             'incomeTotal_' => '',
@@ -511,12 +511,20 @@ class FinOpu
     {
         return [
             'incomeRetail' => 'Доход розница',
-            'marginRetail' => 'Макжа розница (%)',
+            'marginRetail' => 'Маржа розница (%)',
             'incomeTp' => 'Доход ТП',
             'incomeTotal' => 'Доход всего',
-            'marginTp' => 'Макжа ТП (%)',
+            'marginTp' => 'Маржа ТП (%)',
             'profit' => 'Прибыль',
             'profitNet' => 'Чистая пибыль',
+        ];    
+    }
+    
+    public static function getMuteList()
+    {
+        return [
+            'marginRetail' => 'Маржа розница (%)',
+            'marginTp' => 'Маржа ТП (%)',
         ];    
     }
     

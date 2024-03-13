@@ -80,6 +80,9 @@ class OpuController extends AbstractActionController
             }    
         }
         
+        $result['marginRetail']['13'] = 0;
+        $result['marginTp']['13'] = 0;
+        
         return new JsonModel([
             'total' => count($result),
             'rows' => array_values($result),

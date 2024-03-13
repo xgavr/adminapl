@@ -120,13 +120,14 @@ $this->pageBreadcrumbs()->setItems([
     
     function rowStyle(row){
         var retired = 'tablerow';
-//        console.log(row.key);
-//        console.log(<?= Encoder::encode(array_keys(FinOpu::getSuccessList()))?>);
         if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinOpu::getSuccessList()))?>) >= 0){
             retired += ' success';
         }
         if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinOpu::getInfoList()))?>) >= 0){
             retired += ' info';
+        }
+        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinOpu::getMuteList()))?>) >= 0){
+            retired += ' retired-muted';
         }
         if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinOpu::getWaringList()))?>) >= 0){
             retired += ' warning';
