@@ -190,7 +190,7 @@ class FinManager {
             $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
             
             $finOpu->setPurchaseRetail(abs($row['purchase']));
-            $finOpu->setIncomeRetail($finOpu->getIncomeRetail() - abs($row['purchase']));
+            $finOpu->setIncomeRetail($finOpu->getRevenueRetail() - abs($row['purchase']));
             $finOpu->setMarginRetail((abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']));
             
             $finOpu->setIncomeTotal($finOpu->getIncomeRetail() + $finOpu->getIncomeTp());
