@@ -56,6 +56,7 @@ class Statement {
     const KIND_IN_OTHER = 16; //прочее 
     const KIND_IN_SELF = 17; //перевод на другой счет
     const KIND_IN_FIN_SERVICE = 18; //поступление от фин сервисов
+    const KIND_IN_DEPOSIT_PERCENT = 19; //выплата процентов 
     
     const KIND_OUT_SUPPLIER = 101; //оплата поставщику
     const KIND_OUT_BAYER = 102; //возврат покупателю
@@ -522,6 +523,11 @@ class Statement {
         return $this->chargeDate;
     }
 
+    public function getDocDateAtomFormat() {
+        $datetime = new \DateTime($this->chargeDate);
+        return $datetime->format(\DateTime::ATOM);
+    }
+    
     /**
      * Устанавливает chargeDate
      * @param date $chargeDate
@@ -945,6 +951,7 @@ class Statement {
             self::KIND_IN_OTHER_CALC => 'Прочие расчеты с контрагентами',
             self::KIND_IN_FACTORING => 'Оплата от факторинговой компании',
             self::KIND_IN_DEPOSIT => 'Депозит',
+            self::KIND_IN_DEPOSIT_PERCENT => 'Выплата процентов',
             self::KIND_IN_CASH => 'Взнос наличными из кассы',
             self::KIND_IN_COLLECTION => 'Инкассация',
             self::KIND_IN_LOAN_USER => 'Возврат займа работником',
@@ -1040,6 +1047,14 @@ class Statement {
         return $this->cashDoc;
     }
     
+    public function getCashDocAsArray()
+    {
+        if ($this->cashDoc){
+            return $this->getCashDoc()->toArray();
+        }
+        return;
+    }
+    
     /**
      * @param CashDoc $cashDoc
      */
@@ -1076,4 +1091,34 @@ class Statement {
             'paymentType' => Payment::PAYMENT_TYPE_NORMAL,            
         ];        
     }
+    
+    /**
+     * Массив для формы
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'account' => $this->getAccount(),
+            'amount' => $this->getAmount(),
+            'amountService' => $this->getAmountService(),
+            'bankSystemId' => $this->getBankSystemId(),
+            'bik' => $this->getBik(),
+            'docDate' => $this->getDocDateAtomFormat(),
+            'counterpartyAccount' => $this->getCounterpartyAccountNumber(),
+            'counterpartyBik' => $this->getCounterpartyBankBik(),
+            'counterpartyName' => $this->getCounterpartyName(),
+            'id' => $this->getId(),
+            'kind' => $this->getKind(),
+            'pay' => $this->getPay(),
+            'paymentNumber' => $this->getPaymentNumber(),
+            'purpose' => $this->getPaymentPurpose(),
+            'supplierBillId' => $this->getSupplierBillId(),
+            'counterpartyBankName' => $this->getСounterpartyBankName(),
+            'counterpartyInn' => $this->getСounterpartyInn(),
+            'counterpartyKpp' => $this->getСounterpartyKpp(),
+            'cashDoc' => $this->getCashDocAsArray(),
+        ];
+    }                        
 }
+

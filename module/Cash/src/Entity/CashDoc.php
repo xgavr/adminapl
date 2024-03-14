@@ -931,6 +931,10 @@ class CashDoc {
         $this->cost = $cost;
     }
 
+    /**
+     * 
+     * @return Legal
+     */
     public function getLegal()
     {
         return $this->legal;
@@ -1075,6 +1079,7 @@ class CashDoc {
             'info' => $this->info,
             'kind' => $this->kind,
             'legal' => ($this->legal) ? $this->legal->getId():null,
+            'legalData' => ($this->legal) ? $this->getLegal()->toArray():null,
             'supplier' => $this->getDefaultSupplierId(),
             'order' => ($this->order) ? $this->order->getId():null,
             'orderApl' => ($this->order) ? $this->order->getAplId():null,

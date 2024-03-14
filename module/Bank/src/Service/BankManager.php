@@ -146,6 +146,7 @@ class BankManager
         } else {
             $statement = new Statement(); 
             $statement->setPay(Statement::PAY_NEW);
+            $statement->setStatusAccount(Statement::STATUS_ACCOUNT_NO);
             $statement->setCashDoc(null);
         }
         
@@ -228,6 +229,7 @@ class BankManager
     {
         $statement->setKind($kind);
         $statement->setAmountService(0);
+        $statement->setStatusAccount(Statement::STATUS_ACCOUNT_NO);
         
         if ($kind == Statement::KIND_IN_CART && empty($statement->getAmountService())){
             $statement->setAmountService($this->acquiringCommissionFromPurpose($statement));
@@ -768,6 +770,33 @@ class BankManager
                         if (isset($transaction->DebtorParty)){
                             if (isset($transaction->DebtorParty->kpp)){
                                 $payment['counterparty_kpp'] = $transaction->DebtorParty->kpp;
+                            }
+                        }
+                        
+                        if (isset($transaction->TaxFields)){
+                            if (isset($transaction->TaxFields->kbk)){
+                                $payment['tax_info_kbk'] = $transaction->TaxFields->kbk;
+                            }
+                            if (isset($transaction->TaxFields->oktmo)){
+                                $payment['tax_info_okato'] = $transaction->TaxFields->oktmo;
+                            }
+                            if (isset($transaction->TaxFields->documentNumber)){
+                                $payment['tax_info_document_number'] = $transaction->TaxFields->documentNumber;
+                            }
+                            if (isset($transaction->TaxFields->documentDate)){
+                                $payment['tax_info_document_date'] = $transaction->TaxFields->documentDate;
+                            }
+                            if (isset($transaction->TaxFields->originatorStatus)){
+                                $payment['tax_info_status'] = $transaction->TaxFields->originatorStatus;
+                            }
+                            if (isset($transaction->TaxFields->base)){
+                                $payment['tax_info_reason_code'] = $transaction->TaxFields->base;
+                            }
+                            if (isset($transaction->TaxFields->type)){
+                                $payment['supplier_bill_id'] = $transaction->TaxFields->type;
+                            }
+                            if (isset($transaction->TaxFields->field107)){
+                                $payment['tax_info_period'] = $transaction->TaxFields->field107;
                             }
                         }
                         
