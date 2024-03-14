@@ -994,7 +994,7 @@ class CashManager {
     private function findCashDocLegal($legal, $amount, $statement)
     {
         $cashDoc = $this->entityManager->getRepository(CashDoc::class)
-                ->findCashDocForStatement($legal, $amount, $statement->getChargeDate());        
+                ->findCashDocForStatement($legal, $amount, $statement->getChargeDate(), $statement);        
         
         return $cashDoc;
     }
