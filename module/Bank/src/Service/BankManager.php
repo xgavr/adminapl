@@ -66,6 +66,12 @@ class BankManager
      * @var \Ai\Service\GigaManager
      */
     private $gigaManager;
+    
+    /**
+     * Дата запрета
+     * @var string
+     */
+    private $allowDate;    
 
     public function __construct($entityManager, $tochkaStatement, $adminManager, 
             $postManager, $costManager, $gigaManager)
@@ -84,8 +90,21 @@ class BankManager
         if (!is_dir(self::STATEMENTS_ARCH_DIR)){
             mkdir(self::STATEMENTS_ARCH_DIR);
         }
+        
+        $setting = $this->adminManager->getSettings();
+        $this->allowDate = $setting['allow_date'];
+        
     }
 
+    /**
+     * Получить дату запрета
+     * @return date
+     */
+    public function getAllowDate()
+    {
+        return $this->allowDate; 
+    }
+    
     /**
      * Добавление новой или обновлние записи остатков на счете
      * @param array $data

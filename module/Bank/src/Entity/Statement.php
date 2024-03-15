@@ -57,6 +57,7 @@ class Statement {
     const KIND_IN_SELF = 17; //перевод на другой счет
     const KIND_IN_FIN_SERVICE = 18; //поступление от фин сервисов
     const KIND_IN_DEPOSIT_PERCENT = 19; //выплата процентов 
+    const KIND_IN_PERSON = 20; //перевод от частного лица
     
     const KIND_OUT_SUPPLIER = 101; //оплата поставщику
     const KIND_OUT_BAYER = 102; //возврат покупателю
@@ -957,6 +958,7 @@ class Statement {
             self::KIND_IN_LOAN_USER => 'Возврат займа работником',
             self::KIND_IN_CAPITAL => 'Взнос в уставный капитал',
             self::KIND_IN_OTHER => 'Прочее поступление',
+            self::KIND_IN_PERSON => 'Оплата от частного лица',
             
             self::KIND_UNKNOWN => 'Не определено',
         ];

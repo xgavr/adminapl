@@ -70,6 +70,7 @@
                     data-side-pagination="server"
                     data-pagination="true" 
                     data-page-list="[5, 10, 20, 50]"
+                    data-page-size="5"
                     data-toolbar="#toolbar"
                     data-show-refresh="true"
                     data-show-toggle="false"
@@ -891,7 +892,7 @@
                     operType(row.id, row.kind, row.amount);
                 },
                 isEnabled: function(row) {
-                    return true;
+                    return row.chargeDate > '<?= $allowDate?>';
                 }                
             }, 
             paycheck: {
@@ -901,7 +902,7 @@
                     payCheck('/till/statement-to-cash-doc/'+row.id);
                 },
                 isEnabled: function(row) {
-                    return true;
+                    return row.chargeDate > '<?= $allowDate?>';
                 }                
             }, 
             tokens: {
@@ -1049,7 +1050,16 @@
     
     function rowStyle(row, index) {
         var retired = 'tablerow';
-        return {classes: retired};    
+        
+        if (row.statusAccount == '<?= Statement::STATUS_ACCOUNT_NO?>'){
+           retired += ' status-account-no';
+        }
+        
+        if (row.kind == '<?= Statement::KIND_UNKNOWN?>'){
+           retired += ' warning';
+        }
+        
+        return {classes: retired};
     }
     
     

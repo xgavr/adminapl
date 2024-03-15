@@ -67,6 +67,7 @@ class IndexController extends AbstractActionController
             'currentBalances' => $curentBalances,
             'numberFormatFilter' => new \Laminas\I18n\Filter\NumberFormat('ru-RU'),
             'avatar' => new \LasseRafn\InitialAvatarGenerator\InitialAvatar(),
+            'allowDate' => date('Y-m-d', strtotime($this->bankManager->getAllowDate().' + 1 day')),
         ]);
     }
     
