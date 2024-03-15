@@ -164,22 +164,22 @@ $this->pageBreadcrumbs()->setItems([
         //$('#userSelect').val(<?= $currentUser->getId()  ?>);
         
         $table.on('load-success.bs.table', function (e, res) {
-            $('#startBalance').html(res.startBalance);
-            $('#startBalanceLabel').html('Долг за предприятием на начало');
-            if (res.startBalance < 0){
-                $('#startBalanceLabel').html('Долг за сотрудником на начало');
+            $('#startBalance').html($.number(res.startBalance, 0, ',', ' '));
+            $('#startBalanceLabel').html('Долг за предприятием на начало месяца');
+            if (Math.round(res.startBalance) < 0){
+                $('#startBalanceLabel').html('Долг за сотрудником на начало месяца');
                 $('#startBalance').removeClass( "text-info" );
                 $('#startBalance').addClass( "text-danger" );
             }
-            $('#endBalance').html(res.endBalance);
-            $('#endBalanceLabel').html('Долг за предприятием на конец');
-            if (res.endBalance < 0){
-                $('#endBalanceLabel').html('Долг за сотрудником на конец');
+            $('#endBalance').html($.number(res.endBalance, 0, ',', ' '));
+            $('#endBalanceLabel').html('Долг за предприятием на конец месяца');
+            if (Math.round(res.endBalance) < 0){
+                $('#endBalanceLabel').html('Долг за сотрудником на конец месяца');
                 $('#endBalance').removeClass( "text-info" );
                 $('#endBalance').addClass( "text-danger" );
             }
-            $('#totalIn').html(res.totalIn);
-            $('#totalOut').html(res.totalOut);
+            $('#totalIn').html($.number(res.totalIn, 0, ',', ' '));
+            $('#totalOut').html($.number(res.totalOut, 0, ',', ' '));
         });                
         $(document).on('change', '#companySelect', function (e) {
             refreshTable();
