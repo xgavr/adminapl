@@ -713,7 +713,10 @@
     
     function purposeFormatter(value, row){
         var kinds = <?= Encoder::encode(Statement::getKindList())?>;
-        var kindText = '<p><a href="#" class="oper-type" data-id="'+row.id+'" data-kind="'+row.kind+'" data-amount="'+row.amount+'"><small>'+kinds[row.kind]+'</small></a></p>'; 
+        var kindText = '<p><small class="text-info">'+kinds[row.kind]+'</small></p>';
+        if (row.chargeDate > '<?= $allowDate?>'){
+            var kindText = '<p><a href="#" class="oper-type" data-id="'+row.id+'" data-kind="'+row.kind+'" data-amount="'+row.amount+'"><small>'+kinds[row.kind]+'</small></a></p>'; 
+        }    
         return kindText + value;
     }
     
