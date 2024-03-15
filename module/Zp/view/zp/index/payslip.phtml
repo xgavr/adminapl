@@ -166,6 +166,8 @@ $this->pageBreadcrumbs()->setItems([
         $table.on('load-success.bs.table', function (e, res) {
             $('#startBalance').html($.number(res.startBalance, 0, ',', ' '));
             $('#startBalanceLabel').html('Долг за предприятием на начало месяца');
+            $('#startBalance').addClass( "text-info" );
+            $('#startBalance').removeClass( "text-danger" );
             if (Math.round(res.startBalance) < 0){
                 $('#startBalanceLabel').html('Долг за сотрудником на начало месяца');
                 $('#startBalance').removeClass( "text-info" );
@@ -173,6 +175,8 @@ $this->pageBreadcrumbs()->setItems([
             }
             $('#endBalance').html($.number(res.endBalance, 0, ',', ' '));
             $('#endBalanceLabel').html('Долг за предприятием на конец месяца');
+            $('#endBalance').addClass( "text-info" );
+            $('#endBalance').removeClass( "text-danger" );
             if (Math.round(res.endBalance) < 0){
                 $('#endBalanceLabel').html('Долг за сотрудником на конец месяца');
                 $('#endBalance').removeClass( "text-info" );
