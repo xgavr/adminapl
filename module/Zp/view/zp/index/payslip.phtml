@@ -87,29 +87,28 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="company.name" data-sortable="true" data-width="200">Организация</th>
                      <th data-field="user.fullName" data-sortable="true" data-width="200">Сотрудник</th>
                      <th data-field="accrual.name" data-footer-formatter="totalFooterFormatter" data-sortable="true">Вид начисления/удержания</th>
-                     <th data-field="amountOut" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Начислено</th>
-                     <th data-field="amountIn" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Удержано</th>
+                     <th data-field="amountOut" data-sortable="false" data-width="250" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Начислено</th>
+                     <th data-field="amountIn" data-sortable="false" data-width="250" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Удержано</th>
                      <th data-field="active" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
             </thead>
         </table>
     </div>
-</div>    
+</div>  
+<p></p>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-6">
     </div>
-    <div class="col-md-3">
-    </div>
-    <div class="col-md-3">
-    </div>
-    <div class="col-md-3">
-        <table>
+    <div class="col-md-6">
+        <table width="100%" class="table table-bordered table-hover table-condensed">
             <tr>
-                <td>
-                   Долг на начало  
+                <td id="startBalanceLabel">
+                   Долг на начало за предприятием  
                 </td>
-                <td align="right">
-                    <span class="text-danger" id="startBalance"></span>
+                <td align="right" width="250">
+                    <strong><span class="text-info" id="startBalance"></span></strong>
+                </td>
+                <td align="right" width="5">
                 </td>
             </tr>
             <tr>
@@ -117,23 +116,29 @@ $this->pageBreadcrumbs()->setItems([
                    Начислено  
                 </td>
                 <td align="right">
-                    <span class="text-danger" id="totalIn"></span>
+                    <strong><span class="text-info" id="totalIn"></span></strong>
+                </td>
+                <td>
                 </td>
             </tr>
             <tr>
                 <td>
-                   Удеражно/получено  
+                   Удержано/получено  
                 </td>
                 <td align="right">
-                    <span class="text-danger" id="totalOut"></span>
+                    <strong><span class="text-info" id="totalOut"></span></strong>
+                </td>
+                <td>
                 </td>
             </tr>
             <tr>
-                <td>
-                   Долг на конец  
+                <td id="endBalanceLabel">
+                   Долг на конец за предприятием  
                 </td>
                 <td align="right">
-                    <span class="text-danger" id="endBalance"></span>
+                    <strong><span class="text-info" id="endBalance"></span></strong>
+                </td>
+                <td>
                 </td>
             </tr>
         </table>             
@@ -160,7 +165,19 @@ $this->pageBreadcrumbs()->setItems([
         
         $table.on('load-success.bs.table', function (e, res) {
             $('#startBalance').html(res.startBalance);
+            $('#startBalanceLabel').html('Долг за предприятием на начало');
+            if (res.startBalance < 0){
+                $('#startBalanceLabel').html('Долг за сотрудником на начало');
+                $('#startBalance').removeClass( "text-info" );
+                $('#startBalance').addClass( "text-danger" );
+            }
             $('#endBalance').html(res.endBalance);
+            $('#endBalanceLabel').html('Долг за предприятием на конец');
+            if (res.endBalance < 0){
+                $('#endBalanceLabel').html('Долг за сотрудником на конец');
+                $('#endBalance').removeClass( "text-info" );
+                $('#endBalance').addClass( "text-danger" );
+            }
             $('#totalIn').html(res.totalIn);
             $('#totalOut').html(res.totalOut);
         });                
