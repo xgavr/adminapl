@@ -400,7 +400,7 @@ $this->headLink()
                             <option value="date">Дата</option>
                             <option value="week">Неделя</option>                        
                             <option value="month">Месяц</option>                        
-                            <option value="qv">Квартал</option>                        
+                            <!--<option value="qv">Квартал</option>-->                        
                             <option value="number"  selected="true">Год</option>                        
                         </select>
                         <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control" min="2012" type="number" value="<?= date('Y')?>">
@@ -575,7 +575,7 @@ $this->headLink()
     }
 
     $(function () {        
-        rangeDatePickerInit();
+//        rangeDatePickerInit();
         
         $('#ordertable').on('load-success.bs.table', function (e, res) {
             setCookies('clientSaveId');
