@@ -1093,6 +1093,7 @@ class PrintManager {
      */
     public function offer($order, $writerType = 'Pdf', $stamp = true, $code = true)
     {
+        ini_set('memory_limit', '512M');
         ini_set("pcre.backtrack_limit", "5000000");
         setlocale(LC_ALL, 'ru_RU', 'ru_RU.UTF-8', 'ru', 'russian');
 //        echo strftime("%B %d, %Y", time()); exit;
