@@ -339,6 +339,13 @@ class ClientRepository extends EntityRepository{
                             ;
                 }    
             }
+            if (!empty($params['company'])){
+                if (is_numeric($params['company'])){
+                    $queryBuilder->andWhere('r.company = :company')
+                            ->setParameter('company', $params['company'])
+                            ;
+                }    
+            }
             if (!empty($params['contract'])){
                 if (is_numeric($params['contract'])){
                     $queryBuilder->andWhere('r.contract = :contract')
