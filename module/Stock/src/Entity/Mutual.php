@@ -102,7 +102,7 @@ class Mutual {
     private $office;    
     
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="mutuals") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="companyMutuals") 
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
      */
     private $company;

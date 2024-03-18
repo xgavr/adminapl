@@ -118,11 +118,19 @@ class Contract {
    */
    private $ptu;        
 
+   /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Mutual", mappedBy="contract")
+    * @ORM\JoinColumn(name="id", referencedColumnName="contract_id")
+   */
+   private $mutuals;        
+
     /**
      * Constructor.
      */
     public function __construct() 
     {
+        $this->ptu = new ArrayCollection();
+        $this->mutuals = new ArrayCollection();
     }
 
     public function getId() 
@@ -530,6 +538,10 @@ class Contract {
     {
         return $this->ptu;
     }    
+    
+    public function getMutuals() {
+        return $this->mutuals;
+    }
     
     /**
      * Массив для формы

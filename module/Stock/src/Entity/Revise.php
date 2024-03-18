@@ -139,9 +139,16 @@ class Revise {
      * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="revises") 
      * @ORM\JoinColumn(name="user_creator_id", referencedColumnName="id")
      */
-    private $userCreator;        
+    private $userCreator;       
+    
+   /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Mutual", mappedBy="reviseDoc")
+    * @ORM\JoinColumn(name="id", referencedColumnName="doc_id")
+   */
+   private $mutuals;               
     
     public function __construct() {
+        $this->mutuals = new ArrayCollection();
     }
    
     public function getId() 
@@ -650,6 +657,10 @@ class Revise {
     {
         $this->userCreator = $userCreator;
     }    
+    
+    public function getMutuals() {
+        return $this->mutuals;
+    }
     
     /**
      * Массив для формы

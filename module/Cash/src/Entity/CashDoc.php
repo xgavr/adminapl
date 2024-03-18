@@ -206,6 +206,12 @@ class CashDoc {
     * @ORM\OneToOne(targetEntity="Bank\Entity\AplPayment", mappedBy="cashDoc")
    */
    private $aplPayment;    
+   
+   /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Mutual", mappedBy="cashDoc")
+    * @ORM\JoinColumn(name="id", referencedColumnName="doc_id")
+   */
+   private $mutuals;           
 
    /**
      * Constructor.
@@ -214,6 +220,7 @@ class CashDoc {
     {
         $this->cashTransactions = new ArrayCollection();
         $this->userTransactions = new ArrayCollection();
+        $this->mutuals = new ArrayCollection();
     }    
     
     public function getId() 
@@ -1057,6 +1064,10 @@ class CashDoc {
      */
     public function getAplPayment() {
         return $this->aplPayment;
+    }
+    
+    public function getMutuals() {
+        return $this->mutuals;
     }
     
     /**
