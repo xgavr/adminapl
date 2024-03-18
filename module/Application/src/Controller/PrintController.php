@@ -355,6 +355,7 @@ class PrintController extends AbstractActionController
         
         $startDate = '2012-01-01';
         $endDate = '2199-01-01';
+        $current = date('Y-m-d 23:59:59');
         if (!empty($dateStart)){
             $startDate = date('Y-m-d', strtotime($dateStart));
             $endDate = $startDate;
@@ -398,7 +399,7 @@ class PrintController extends AbstractActionController
         }
         
 //        var_dump($startDate, $endDate); exit;
-        $updfile = $this->printManager->revise($startDate, $endDate, $company, $legal, $contract, $ext, $stamp);
+        $updfile = $this->printManager->revise($startDate, min($endDate, $current), $company, $legal, $contract, $ext, $stamp);
         
         // Render the view template.
         header('Content-type: application/'. strtolower($ext));
