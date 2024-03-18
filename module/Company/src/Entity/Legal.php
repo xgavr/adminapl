@@ -152,6 +152,18 @@ class Legal {
     private $companyMutuals;
     
     /**
+    * @ORM\OneToMany(targetEntity="Cash\Entity\CashDoc", mappedBy="legal")
+    * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
+    */
+    private $cashDocs;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Cash\Entity\CashDoc", mappedBy="company")
+    * @ORM\JoinColumn(name="id", referencedColumnName="company_id")
+    */
+    private $companyCashDocs;
+    
+    /**
      * @ORM\ManyToMany(targetEntity="\Application\Entity\Contact", mappedBy="legals")
      */
     private $contacts;
@@ -214,6 +226,8 @@ class Legal {
         $this->personalRevises = new ArrayCollection();
         $this->mutuals = new ArrayCollection();
         $this->companyMutuals = new ArrayCollection();
+        $this->cashDocs = new ArrayCollection();
+        $this->companyCashDocs = new ArrayCollection();
     }
     
     
@@ -1013,6 +1027,14 @@ class Legal {
 
     public function getCompanyMutuals() {
         return $this->companyMutuals;
+    }
+    
+    public function getCashDocs() {
+        return $this->cashDocs;
+    }
+
+    public function getCompanyCashDocs() {
+        return $this->companyCashDocs;
     }
     
     /**

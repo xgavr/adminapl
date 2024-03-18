@@ -135,11 +135,18 @@ class Cash {
     private $bankAccounts;    
     
     /**
+    * @ORM\OneToMany(targetEntity="Cash\Entity\CashDoc", mappedBy="cash")
+    * @ORM\JoinColumn(name="id", referencedColumnName="cash_id")
+    */
+    private $cashDocs;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
         $this->bankAccounts = new ArrayCollection();        
+        $this->cashDocs = new ArrayCollection();        
     }    
     
     public function getId() 
@@ -583,6 +590,10 @@ class Cash {
     public function getBankAccounts()
     {
         return $this->bankAccounts;
+    }
+    
+    public function getCashDocs() {
+        return $this->cashDocs;
     }
     
     /**

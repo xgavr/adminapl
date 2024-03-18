@@ -155,6 +155,12 @@ class Contact {
      */
     private $contactCars;   
 
+    /**
+    * @ORM\OneToMany(targetEntity="Cash\Entity\CashDoc", mappedBy="contact")
+    * @ORM\JoinColumn(name="id", referencedColumnName="contact_id")
+     */
+    private $cashDocs;   
+
    public function __construct() {
       $this->phones = new ArrayCollection();
       $this->emails = new ArrayCollection();
@@ -164,6 +170,7 @@ class Contact {
       $this->orders = new ArrayCollection();
       $this->ot = new ArrayCollection();
       $this->contactCars = new ArrayCollection();
+      $this->cashDocs = new ArrayCollection();
       
    }
    
@@ -661,7 +668,15 @@ class Contact {
     {
         $this->orders[] = $order;
     }
-            
+         
+    public function getOrders() {
+        return $this->orders;
+    }
+
+    public function getCashDocs() {
+        return $this->cashDocs;
+    }
+    
     /**
      * Контакт представление
      * @return string

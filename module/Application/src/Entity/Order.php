@@ -307,6 +307,12 @@ class Order {
    */
    private $qrcodes;
     
+   /**
+    * @ORM\OneToMany(targetEntity="Cash\Entity\CashDoc", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
+   */
+   private $cashDocs;
+    
     /**
     * @ORM\OneToMany(targetEntity="Admin\Entity\Wammchat", mappedBy="order")
     * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
@@ -329,6 +335,7 @@ class Order {
         $this->vt = new ArrayCollection();
         $this->wammchats = new ArrayCollection();
         $this->qrcodes = new ArrayCollection();
+        $this->cashDocs = new ArrayCollection();
     }
     
     protected function _encrypt($unencryptedText, $passphrase)
@@ -1736,6 +1743,14 @@ class Order {
             }            
         }
         return;    
+    }
+    
+    public function getQrcodes() {
+        return $this->qrcodes;
+    }
+
+    public function getCashDocs() {
+        return $this->cashDocs;
     }
     
     /**

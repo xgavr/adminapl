@@ -65,6 +65,19 @@ class Cost {
      */
     protected $kindFin;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Cash\Entity\CashDoc", mappedBy="cost") 
+     * @ORM\JoinColumn(name="id", referencedColumnName="cost_id")
+     */
+    private $cashDocs;        
+    
+    /**
+     * Constructor.
+     */
+    public function __construct() 
+    {
+       $this->cashDocs = new ArrayCollection();
+    }
     
     public function getId() 
     {
@@ -212,6 +225,10 @@ class Cost {
         return $this;
     }    
         
+    public function getCashDocs() {
+        return $this->cashDocs;
+    }
+    
     /**
      * Массив для формы
      * @return array 

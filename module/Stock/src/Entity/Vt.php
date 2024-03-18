@@ -122,6 +122,12 @@ class Vt {
     private $office;
     
     /**
+     * @ORM\OneToMany(targetEntity="Cash\Entity\CashDoc", mappedBy="vt") 
+     * @ORM\JoinColumn(name="id", referencedColumnName="vt_id")
+     */
+    private $cashDocs;    
+    
+    /**
      * @ORM\OneToMany(targetEntity="Stock\Entity\VtGood", mappedBy="vt") 
      * @ORM\JoinColumn(name="id", referencedColumnName="vt_id")
      */
@@ -133,6 +139,7 @@ class Vt {
     public function __construct() 
     {
        $this->vtGoods = new ArrayCollection();
+       $this->cashDocs = new ArrayCollection();
     }
     
     
@@ -554,6 +561,10 @@ class Vt {
     {
         return $this->vtGoods;
     }    
+    
+    public function getCashDocs() {
+        return $this->cashDocs;
+    }
     
     /**
      * Массив для формы

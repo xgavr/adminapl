@@ -132,6 +132,12 @@ class User
     private $personalRevises;
     
     /**
+    * @ORM\OneToMany(targetEntity="Cash\Entity\CashDoc", mappedBy="user")
+    * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
+     */
+    private $cashDocs;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -143,6 +149,7 @@ class User
         $this->personalMutuals = new ArrayCollection();
         $this->personalAccruals = new ArrayCollection();
         $this->personalRevises = new ArrayCollection();
+        $this->cashDocs = new ArrayCollection();
     }
     
     /**
@@ -565,6 +572,10 @@ class User
     
     public function getPersonalRevises() {
         return $this->personalRevises;
+    }
+    
+    public function getCashDocs() {
+        return $this->cashDocs;
     }
     
     /**

@@ -168,7 +168,7 @@ class CashDoc {
     private $legal;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="cashDocs") 
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="companyCashDocs") 
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
      */
     private $company;    
