@@ -638,10 +638,10 @@ $this->headLink()
             var company = $("#mutualCompanySelect").val();
             var legal = $("#mutualLegalSelect").val();
             var contract = $("#mutualContractSelect").val();
-//            var period = $("#mutualPeriodSelect").val();
-//            var dateStart = $("#mutualDateStart").val();
+            var period = $("#mutualPeriodSelect").val();
+            var dateStart = $("#mutualDateStart").val();
             var dateRange = $("#rangeDateStart").val();
-            var url = '/print/revise?ext=Pdf&company='+company+'&legal='+legal+'&contract='+contract+'&dateRange='+dateRange;
+            var url = '/print/revise?ext=Pdf&company='+company+'&legal='+legal+'&contract='+contract+'&period='+period+'&dateStart='+dateStart;
             window.open(url, 'windowObject');
         });
     });

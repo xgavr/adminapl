@@ -344,40 +344,29 @@ class PrintController extends AbstractActionController
     public function reviseAction() 
     {       
         $dateStart = $this->params()->fromQuery('dateStart');
-        $dateEnd = $this->params()->fromQuery('dateEnd');
+//        $dateEnd = $this->params()->fromQuery('dateEnd');
         $period = $this->params()->fromQuery('period');
         $companyId = $this->params()->fromQuery('company', -1);
         $legalId = $this->params()->fromQuery('legal', -1);
         $contractId = $this->params()->fromQuery('contract', -1);
         $ext = $this->params()->fromQuery('ext', 'Pdf');
         $stamp = $this->params()->fromQuery('stamp');
-        $range = $this->params()->fromQuery('dateRange');
+//        $range = $this->params()->fromQuery('dateRange');
         
-        if ($range){
-            $endDate = '2199-01-01';
-            list($start, $end) = explode(' - ', $range);
-            $startDate = date('Y-m-d', strtotime($start));
-            if (!empty($end)){
-                $endDate = date('Y-m-d 23:59:59', strtotime($end));
-            }            
-        }
-        
-        if (empty($range)){
-            $startDate = '2012-01-01';
-            $endDate = '2199-01-01';
-            if (!empty($dateStart)){
-                $startDate = date('Y-m-d', strtotime($dateStart));
-                $endDate = $startDate;
-                if ($period == 'week'){
-                    $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
-                }    
-                if ($period == 'month'){
-                    $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
-                }    
-                if ($period == 'number'){
-                    $startDate = $dateStart.'-01-01';
-                    $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
-                }    
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
             }    
         }    
 

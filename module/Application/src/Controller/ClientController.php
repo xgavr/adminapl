@@ -471,7 +471,7 @@ class ClientController extends AbstractActionController
         $order = $this->params()->fromQuery('order', 'ASC');
         $dateStart = $this->params()->fromQuery('dateStart');
         $period = $this->params()->fromQuery('period');
-        $range = $this->params()->fromQuery('dateRange');
+//        $range = $this->params()->fromQuery('dateRange');
         
         $startDate = '2012-01-01';
         $endDate = '2199-01-01';
