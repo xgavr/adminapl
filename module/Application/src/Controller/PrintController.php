@@ -397,6 +397,7 @@ class PrintController extends AbstractActionController
                     ->find($contractId);
         }
         
+        var_dump($startDate, $endDate);
         $updfile = $this->printManager->revise($startDate, $endDate, $company, $legal, $contract, $ext, $stamp);
         
         // Render the view template.
