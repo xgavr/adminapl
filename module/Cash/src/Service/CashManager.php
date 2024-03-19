@@ -1269,4 +1269,45 @@ class CashManager {
         
         return;
     }
+    
+    /**
+     * Заменить contact in cashdoc
+     * @param CashDoc $cashDoc
+     * @param Contact $newContact
+     */
+    public function changeContact($cashDoc, $newContact)
+    {
+        $cashDoc->setContact($newContact);
+        $this->entityManager->persist($cashDoc);
+
+        $retails = $this->entityManager->getRepository(Retail::class)
+                ->findBy(['docId' => $cashDoc->getId(), 'docType' => Movement::DOC_CASH]);
+
+        foreach ($retails as $retail){
+            $retail->setContact($newContact);
+            $this->entityManager->persist($retail);
+        }            
+            
+        $this->entityManager->flush();
+        
+        return;
+    }  
+    
+    /**
+     * Заменить contact in cashDoc by phone
+     * @param CashDoc $cashDoc
+     * @param string $phoneStr
+     */
+    public function changeContactByPhone($cashDoc, $phoneStr)
+    {
+        $phoneFilter = new PhoneFilter();
+        $phone = $this->entityManager->getRepository(Phone::class)
+                ->findOneBy(['name' => $phoneFilter->filter($phoneStr)]);
+        
+        if ($phone){
+            $this->changeContact($cashDoc, $phone->getContact());
+        }
+        
+        return;
+    }      
 }

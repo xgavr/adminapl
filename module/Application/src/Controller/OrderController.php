@@ -954,6 +954,26 @@ class OrderController extends AbstractActionController
         );                   
     }
     
+    public function changeContactByPhoneAction()
+    {
+        $orderId = $this->params()->fromRoute('id', -1);
+        $phone = $this->params()->fromQuery('phone');
+        
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);        
+
+        if ($order == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->orderManager->changeContactByPhone($order, $phone);
+        
+        return new JsonModel(
+            ['result' => 'ok']
+        );                   
+    }
+    
     public function cancelOldAction()
     {
         $this->orderManager->cancelOld();

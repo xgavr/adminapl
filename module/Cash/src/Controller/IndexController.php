@@ -121,4 +121,23 @@ class IndexController extends AbstractActionController
         ]);
     }
 
+    public function changeContactByPhoneAction()
+    {
+        $cashDocId = $this->params()->fromRoute('id', -1);
+        $phone = $this->params()->fromQuery('phone');
+        
+        $cashDoc = $this->entityManager->getRepository(CashDoc::class)
+                ->find($cashDocId);        
+
+        if ($cashDoc == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->cashManager->changeContactByPhone($cashDoc, $phone);
+        
+        return new JsonModel(
+            ['result' => 'ok']
+        );                   
+    }    
 }

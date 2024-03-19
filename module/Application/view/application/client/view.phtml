@@ -524,6 +524,16 @@ $this->headLink()
 
 
 <script type="text/javascript">    
+    var _phoneForSave = '';
+    
+    function setPhoneForSave(phone){
+        _phoneForSave = phone;
+    }
+    
+    function getPhoneForSave(){
+        return _phoneForSave;
+    }
+    
     function setCookies(cookieKey){
         let expires = 30;
         $('.cookie-control').each(function () {
@@ -571,6 +581,32 @@ $this->headLink()
         if ($.isNumeric($('#mutualCompanySelect').val()) && $.isNumeric($('#mutualLegalSelect').val())){
             $(".revise-print").prop('disabled', false);
         }        
+        return;
+    }
+
+    function changeContactByPhone(docId, docType){        
+        bootbox.prompt({
+            title: 'Укажите телефон нового контакта',
+            value: getPhoneForSave(),        
+            callback: function (result) {
+//                console.log(result);                
+                if (result){
+                    setPhoneForSave(result);
+                    
+                    if (docType == <?= Movement::DOC_ORDER?>){
+                        $.getJSON('/order/change-contact-by-phone/'+docId+'?phone='+result, function( data ) {
+                            $('#mutualtable').bootstrapTable('refresh', {silent:true});
+                            $('#ordertable').bootstrapTable('refresh', {silent:true});
+                        });                    
+                    }    
+                    if (docType == <?= Movement::DOC_CASH?>){
+                        $.getJSON('/cash/change-contact-by-phone/'+docId+'?phone='+result, function( data ) {
+                            $('#mutualtable').bootstrapTable('refresh', {silent:true});
+                        });                    
+                    }    
+                }    
+            }
+        });
         return;
     }
 
@@ -1203,7 +1239,7 @@ $this->headLink()
         },
         actionsGroups: [
            ['addComment', 'comments', 'history'],
-           ['addLegal', 'duplicate'],
+           ['addLegal', 'changeContact', 'duplicate'],
            ['vt', 'cash']
         ],      
         actions: {
@@ -1340,6 +1376,19 @@ $this->headLink()
                     });    
                 }
             },    
+            changeContact: {
+                name: 'Изменить контакт',
+                iconClass: 'glyphicon glyphicon-check',
+                onClick: function(row) {
+                    changeContactByPhone(row.id, '<?= Movement::DOC_ORDER?>');
+                },
+                isShown: function(row) {
+                  return true;
+                },
+                isEnabled: function(row) {
+                    return true;
+                }                
+            }, 
             duplicate: {
                 name: 'Скопировать',
                 iconClass: 'glyphicon glyphicon-duplicate',
@@ -1409,8 +1458,8 @@ $this->headLink()
             return $('#mutualtable').bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
+           ['changeContact', 'duplicate'],
            ['addComment', 'comments', 'history'],
-           ['addLegal', 'duplicate'],
            ['vt', 'cash']
         ],      
         actions: {
@@ -1458,6 +1507,19 @@ $this->headLink()
                         }
                     }
                     return false;
+                }                
+            }, 
+            changeContact: {
+                name: 'Изменить контакт',
+                iconClass: 'glyphicon glyphicon-check',
+                onClick: function(row) {
+                    changeContactByPhone(row.docId, row.docType);
+                },
+                isShown: function(row) {
+                  return true;
+                },
+                isEnabled: function(row) {
+                    return true;
                 }                
             }, 
             history: {

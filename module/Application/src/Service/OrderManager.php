@@ -43,6 +43,7 @@ use Stock\Entity\ComitentBalance;
 use Stock\Entity\Comitent;
 use Application\Entity\Comment;
 use User\Filter\PhoneFilter;
+use Stock\Entity\Vt;
 
 /**
  * Description of OrderService
@@ -1922,6 +1923,59 @@ class OrderManager
             $this->entityManager->persist($row);
             $this->entityManager->flush();
             $this->repostOrder($row->getOrder());
+        }
+        
+        return;
+    }  
+    
+    /**
+     * Заменить contact in order
+     * @param Order $order
+     * @param Contact $newContact
+     */
+    public function changeContact($order, $newContact)
+    {
+        $order->setContact($newContact);
+        $this->entityManager->persist($order);
+
+        $retails = $this->entityManager->getRepository(Retail::class)
+                ->findBy(['docId' => $order->getId(), 'docType' => Movement::DOC_ORDER]);
+
+        foreach ($retails as $retail){
+            $retail->setContact($newContact);
+            $this->entityManager->persist($retail);
+        }   
+        
+        $vts = $this->entityManager->getRepository(Vt::class)
+                ->findBy(['order' => $order->getId()]);
+        foreach ($vts as $vt){
+            $vtRetails = $this->entityManager->getRepository(Retail::class)
+                    ->findBy(['docId' => $vt->getId(), 'docType' => Movement::DOC_VT]);
+
+            foreach ($vtRetails as $vtRetail){
+                $vtRetail->setContact($newContact);
+                $this->entityManager->persist($vtRetail);
+            }               
+        }
+            
+        $this->entityManager->flush();
+        
+        return;
+    }  
+    
+    /**
+     * Заменить contact in order by phone
+     * @param Order $order
+     * @param string $phoneStr
+     */
+    public function changeContactByPhone($order, $phoneStr)
+    {
+        $phoneFilter = new PhoneFilter();
+        $phone = $this->entityManager->getRepository(Phone::class)
+                ->findOneBy(['name' => $phoneFilter->filter($phoneStr)]);
+        
+        if ($phone){
+            $this->changeContact($order, $phone->getContact());
         }
         
         return;
