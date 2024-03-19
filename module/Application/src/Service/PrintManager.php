@@ -1295,7 +1295,7 @@ class PrintManager {
                     'companyId' => $company->getId(), 
                     'legalId' => $legal->getId(), 
                     'contractId' => ($contract) ? $contract->getId():null, 
-                    'endDate' => date('Y-m-d', strtotime($dateStart)),
+                    'endDate' => date('Y-m-d 23:59:59', strtotime($dateStart).' -1 day'),
                     'endBalance' => true,
                 ])->getOneOrNullResult();
         
