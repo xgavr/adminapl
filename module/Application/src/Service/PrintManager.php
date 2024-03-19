@@ -1290,13 +1290,13 @@ class PrintManager {
         }
         
         $startTotal = 0;
-        var_dump(strtotime($dateStart).' -1 day'); exit;
+        var_dump(strtotime($dateStart.' -1 day')); exit;
         $startBalance = $this->entityManager->getRepository(Mutual::class)
                 ->mutualBalance([
                     'companyId' => $company->getId(), 
                     'legalId' => $legal->getId(), 
                     'contractId' => ($contract) ? $contract->getId():null, 
-                    'endDate' => date('Y-m-d 23:59:59', strtotime($dateStart).' -1 day'),
+                    'endDate' => date('Y-m-d 23:59:59', strtotime($dateStart.' -1 day')),
                     'endBalance' => true,
                 ])->getOneOrNullResult();
         
