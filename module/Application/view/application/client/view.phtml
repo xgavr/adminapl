@@ -1238,8 +1238,8 @@ $this->headLink()
             closeButton: false
         });
         $.get( url, function(data){
-            $table.bootstrapTable('updateByUniqueId', {id: id, row: data.data});
             dialog.modal('hide');
+            $('#ordertable').bootstrapTable('updateByUniqueId', {id: id, row: data.data});
         });
     }
 
