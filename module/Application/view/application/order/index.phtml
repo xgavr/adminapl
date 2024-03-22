@@ -689,6 +689,9 @@ $this->pageBreadcrumbs()->setItems([
                         zIndex: 9999
                     });    
                 }
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
             },    
             updateFromApl: {
                 name: 'Загрузить из Апл',

@@ -1232,6 +1232,17 @@ $this->headLink()
         });
     }    
 
+    function updateApl(id, url){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: false
+        });
+        $.get( url, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: id, row: data.data});
+            dialog.modal('hide');
+        });
+    }
+
     var menu = new BootstrapMenu('.tablerow', {
         fetchElementData: function(rowElem) {
             var rowId = $(rowElem).attr('data-index');
@@ -1239,7 +1250,7 @@ $this->headLink()
         },
         actionsGroups: [
            ['addComment', 'comments', 'history'],
-           ['addLegal', 'changeContact', 'duplicate'],
+           ['addLegal', 'changeContact', 'duplicate', 'updateApl'],
            ['vt', 'cash']
         ],      
         actions: {
@@ -1375,6 +1386,9 @@ $this->headLink()
                         zIndex: 9999
                     });    
                 }
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
             },    
             changeContact: {
                 name: 'Изменить контакт',
@@ -1386,7 +1400,7 @@ $this->headLink()
                   return true;
                 },
                 isEnabled: function(row) {
-                    return true;
+                    return row.dateOper > '<?= $allowDate?>';
                 }                
             }, 
             duplicate: {
@@ -1394,6 +1408,16 @@ $this->headLink()
                 iconClass: 'glyphicon glyphicon-duplicate',
                 onClick: function (row){
                     duplicateOrder(row.id, '/order/duplicate/'+row.id);
+                },
+                isEnabled: function(row) {
+                    return row.id > 0;
+                }                
+            },    
+            sendToApl: {
+                name: 'Отправиь в Апл',
+                iconClass: 'glyphicon glyphicon-arrow-up',
+                onClick: function (row){
+                    updateApl(row.id, '/apl/send-order-id/'+row.id);
                 },
                 isEnabled: function(row) {
                     return row.id > 0;
