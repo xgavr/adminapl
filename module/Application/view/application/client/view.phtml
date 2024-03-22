@@ -1235,7 +1235,7 @@ $this->headLink()
     function updateApl(id, url){
         var dialog = bootbox.dialog({
             message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-            closeButton: false
+            closeButton: true
         });
         $.get( url, function(data){
             dialog.modal('hide');
