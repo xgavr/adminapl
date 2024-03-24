@@ -29,7 +29,7 @@ return [
             'api.rest.good' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route' => '/good[/:good_id]',
+                    'route' => '/api-good[/:good_id]',
                     'defaults' => [
                         'controller' => 'Api\\V1\\Rest\\Good\\Controller',
                     ],
@@ -362,6 +362,12 @@ return [
         ],
         'Api\\V1\\Rest\\ApiSearch\\Controller' => [
             'input_filter' => 'Api\\V1\\Rest\\ApiSearch\\Validator',
+        ],
+        'Api\\V1\\Rest\\Good\\Controller' => [
+            'input_filter' => 'Api\\V1\\Rest\\Good\\Validator',
+        ],
+        'Api\\V1\\Rest\\GoodApl\\Controller' => [
+            'input_filter' => 'Api\\V1\\Rest\\GoodApl\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -982,6 +988,64 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'field_type' => 'string',
             ],
         ],
+        'Api\\V1\\Rest\\Good\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'article',
+                'description' => 'Артикул',
+                'field_type' => 'string',
+                'error_message' => 'Укажите артикул',
+            ],
+            1 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'producer',
+                'description' => 'производитель',
+                'field_type' => 'string',
+            ],
+        ],
+        'Api\\V1\\Rest\\GoodApl\\Validator' => [
+            0 => [
+                'required' => true,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'article',
+                'description' => 'Артикул',
+                'field_type' => 'string',
+                'error_message' => 'Укажите артикул',
+            ],
+            1 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'producer',
+                'description' => 'Производитель',
+                'field_type' => 'string',
+            ],
+        ],
     ],
     'api-tools-rest' => [
         'Api\\V1\\Rest\\Good\\Controller' => [
@@ -999,7 +1063,10 @@ STATUS_CANCELED  = -10; // Отменен.',
                 0 => 'GET',
                 1 => 'POST',
             ],
-            'collection_query_whitelist' => [],
+            'collection_query_whitelist' => [
+                0 => 'article',
+                1 => 'producer',
+            ],
             'page_size' => 25,
             'page_size_param' => null,
             'entity_class' => \Api\V1\Rest\Good\GoodEntity::class,
@@ -1021,7 +1088,10 @@ STATUS_CANCELED  = -10; // Отменен.',
                 0 => 'GET',
                 1 => 'POST',
             ],
-            'collection_query_whitelist' => [],
+            'collection_query_whitelist' => [
+                0 => 'article',
+                1 => 'producer',
+            ],
             'page_size' => 25,
             'page_size_param' => null,
             'entity_class' => \Api\V1\Rest\GoodApl\GoodAplEntity::class,

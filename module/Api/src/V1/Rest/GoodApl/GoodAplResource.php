@@ -3,6 +3,9 @@ namespace Api\V1\Rest\GoodApl;
 
 use Laminas\ApiTools\ApiProblem\ApiProblem;
 use Laminas\ApiTools\Rest\AbstractResourceListener;
+use Application\Filter\ProducerName;
+use Application\Entity\UnknownProducer;
+use Application\Entity\Goods;
 
 class GoodAplResource extends AbstractResourceListener
 {
@@ -83,7 +86,40 @@ class GoodAplResource extends AbstractResourceListener
      */
     public function fetchAll($params = [])
     {
-        return new ApiProblem(405, 'The GET method has not been defined for collections');
+        $code = $producerStr = $unknownProducer = null;
+        
+        $paramsArray = $params->toArray();
+        
+        if (!empty($paramsArray['producer'])){
+            $producerStr = $paramsArray['producer'];
+        }
+        
+        if (!empty($paramsArray['article'])){
+            $code = $paramsArray['article'];
+        }
+        
+        if ($producerStr){
+            $producerNameFilter = new ProducerName();
+            $producerName = $producerNameFilter->filter($producerStr);
+            $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
+                    ->findOneBy(['name' => $producerName]);
+        }    
+        
+        if ($unknownProducer && $code){
+            if ($unknownProducer->getProducer()){
+                $producer = $unknownProducer->getProducer();
+                if ($producer){
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
+                    if ($good){
+                        return $good->toArray();
+                    }
+                }    
+            }
+        }
+        
+        return new ApiProblem(404, 'Ничего не нашлось :(');
+//        return new ApiProblem(405, 'The GET method has not been defined for collections');
     }
 
     /**
