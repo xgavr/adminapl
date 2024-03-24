@@ -87,6 +87,7 @@ class GoodResource extends AbstractResourceListener
     public function fetchAll($params = [])
     {
         $code = $producerStr = $unknownProducer = null;
+        $result = [];
         
         $paramsArray = $params->toArray();
         
@@ -112,7 +113,8 @@ class GoodResource extends AbstractResourceListener
                     $good = $this->entityManager->getRepository(Goods::class)
                             ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
                     if ($good){
-                        return $good->toArray();
+                        $result[] = $good->toArray();
+                        return $result;
                     }
                 }    
             }
