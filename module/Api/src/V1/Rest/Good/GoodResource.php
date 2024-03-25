@@ -6,6 +6,7 @@ use Laminas\ApiTools\Rest\AbstractResourceListener;
 use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
+use Application\Filter\ArticleCode;
 
 class GoodResource extends AbstractResourceListener
 {
@@ -91,12 +92,13 @@ class GoodResource extends AbstractResourceListener
         
         $paramsArray = $params->toArray();
         
-        if (!empty($paramsArray['producer'])){
-            $producerStr = $paramsArray['producer'];
+        if (!empty($paramsArray['article'])){
+            $articleFilter = new ArticleCode();
+            $code = $articleFilter->filter($paramsArray['article']);
         }
         
-        if (!empty($paramsArray['article'])){
-            $code = $paramsArray['article'];
+        if (!empty($paramsArray['producer'])){
+            $producerStr = $paramsArray['producer'];
         }
         
         if ($producerStr){
