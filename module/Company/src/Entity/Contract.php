@@ -3,6 +3,7 @@
 namespace Company\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Company\Entity\Legal;
 use Company\Entity\Office;
 use Bank\Entity\Payment;
