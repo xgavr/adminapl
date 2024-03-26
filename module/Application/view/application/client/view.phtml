@@ -1482,7 +1482,7 @@ $this->headLink()
             return $('#mutualtable').bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
-           ['changeContact', 'duplicate'],
+           ['changeContact', 'duplicate', 'sendToApl'],
            ['addComment', 'comments', 'history'],
            ['vt', 'cash']
         ],      
@@ -1546,6 +1546,28 @@ $this->headLink()
                     return true;
                 }                
             }, 
+            sendToApl: {
+                name: 'Отправиь в Апл',
+                iconClass: 'glyphicon glyphicon-arrow-up',
+                onClick: function (row){
+                    switch(row.docType){
+                        case '<?= Movement::DOC_ORDER?>': 
+                            return updateApl(row.docId, '/apl/send-order-id/'+row.docId);                            
+                        case '<?= Movement::DOC_CASH?>': 
+                            return updateApl(row.docId, '/apl/send-cash-doc/'+row.docId);
+                            
+                    }
+                },
+                isEnabled: function(row) {
+                    switch(row.docType){
+                        case '<?= Movement::DOC_ORDER?>': 
+                        case '<?= Movement::DOC_CASH?>': 
+                            return row.docId > 0;                            
+                        default:    
+                        return false;
+                    }                    
+                }                
+            },    
             history: {
                 name: 'История',
                 iconClass: 'glyphicon glyphicon-list-alt',
