@@ -66,7 +66,7 @@ class CostRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('cm, c, cost')
+        $queryBuilder->select('cm, c, cost, cd')
             ->from(CostMutual::class, 'cm')
             ->join('cm.company', 'c')    
             ->join('cm.cost', 'cost')    
