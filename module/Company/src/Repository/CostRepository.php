@@ -70,6 +70,7 @@ class CostRepository extends EntityRepository
             ->from(CostMutual::class, 'cm')
             ->join('cm.company', 'c')    
             ->join('cm.cost', 'cost')    
+            ->leftJoin('cm.cashDoc', 'cd', 'WITH', 'cm.docType = '.Movement::DOC_CASH) 
                 ;
         
         if (is_array($params)){
@@ -116,7 +117,6 @@ class CostRepository extends EntityRepository
         
         $queryBuilder->select('sum(cm.amount) as amount')
             ->from(CostMutual::class, 'cm')
-            ->leftJoin('cm.cashDoc', 'cd', 'WITH', 'cm.docType = '.Movement::DOC_CASH) 
             ->where('cm.status = :status')
             ->setParameter('status', CostMutual::STATUS_ACTIVE)    
                 ;
