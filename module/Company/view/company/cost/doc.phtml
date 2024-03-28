@@ -39,7 +39,7 @@ $this->pageBreadcrumbs()->setItems([
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="costSelect" name="user" style="width: 200px" class="form-control cookie-control">
+                    <select id="costSelect" name="cost" style="width: 200px" class="form-control cookie-control">
                         <option>все расходы</option>
                         <?php foreach ($costs as $value):?>
                             <option value="<?= $value->getId()?>" <?= ($costId == $value->getId()) ? 'selected':''?>><?= $value->getName()?></option>
