@@ -49,7 +49,7 @@ $this->pageBreadcrumbs()->setItems([
             >
             <thead>
                 <tr>
-                     <th data-field="mark" data-sortable="false" data-footer-formatter="totalFooterFormatter">Показатель</th>
+                     <th data-field="mark" data-sortable="false" data-footer-formatter="totalFooterFormatter" data-formatter="markFormatter">Показатель</th>
                      <th data-field="01" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Январь</th>
                      <th data-field="02" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Февраль</th>
                      <th data-field="03" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Март</th>
@@ -150,6 +150,10 @@ $this->pageBreadcrumbs()->setItems([
         }, 0)), 0, ',', ' ');
     }        
     
+    function markFormatter(value, row){
+        return '<a href="/cost/doc?cost='+row.key+'" target="_blank">'+value+'</a>';
+    }    
+        
     function amountFormatter(value){
         if (value > 0){
             return $.number(value, 0, ',', ' ' );

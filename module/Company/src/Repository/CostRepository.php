@@ -10,6 +10,8 @@ namespace Company\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Company\Entity\Cost;
+use Company\Entity\CostMutual;
+
 /**
  * Description of CostRepository
  *
@@ -52,5 +54,99 @@ class CostRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult();       
     }
     
+    /**
+     * Получить операции
+     * @param array $params
+     * @return query
+     */
+    public function findMutuals($params = null)
+    {
+        $entityManager = $this->getEntityManager();
 
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('cm, c, cost')
+            ->from(CostMutual::class, 'cm')
+            ->join('cm.company', 'c')    
+            ->join('cm.cost', 'cost')    
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['company'])){
+                $queryBuilder->andWhere('cm.company = :company')
+                        ->setParameter('company', $params['company'])
+                        ;
+            }            
+            if (!empty($params['cost'])){
+                if (is_numeric($params['cost'])){
+                    $queryBuilder->andWhere('cm.cost = :cost')
+                            ->setParameter('cost', $params['cost'])
+                            ;
+                }    
+            }            
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere("cm.dateOper >= :startDate")
+                        ->setParameter('startDate', $params['startDate'])
+                        ;
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere("cm.dateOper <= :endDate")
+                        ->setParameter('endDate', $params['endDate'])
+                        ;
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('cm.'.$params['sort'], $params['order']);
+            }            
+        }    
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();       
+    }
+    
+    /**
+     * Получить операции
+     * @param array $params
+     * @return query
+     */
+    public function findMutualsTotal($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('sum(cm.amount) as amount')
+            ->from(CostMutual::class, 'cm')
+            ->where('cm.status = :status')
+            ->setParameter('status', CostMutual::STATUS_ACTIVE)    
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['company'])){
+                $queryBuilder->andWhere('cm.company = :company')
+                        ->setParameter('company', $params['company'])
+                        ;
+            }            
+            if (!empty($params['cost'])){
+                if (is_numeric($params['cost'])){
+                    $queryBuilder->andWhere('cm.cost = :cost')
+                            ->setParameter('cost', $params['cost'])
+                            ;
+                }    
+            }            
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere("cm.dateOper >= :startDate")
+                        ->setParameter('startDate', $params['startDate'])
+                        ;
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere("cm.dateOper <= :endDate")
+                        ->setParameter('endDate', $params['endDate'])
+                        ;
+            }
+        }    
+        
+        $queryBuilder->setMaxResults(1);
+        
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getOneOrNullResult();       
+    }
 }

@@ -1,0 +1,243 @@
+<?php
+use Company\Entity\CostMutual;
+use Laminas\Json\Encoder;
+use Company\Entity\Cost;
+use Stock\Entity\Movement;
+use Cash\Entity\CashDoc;
+
+$this->mainMenu()->setActiveItemId('report');
+$this->mainMenu()->setActiveUrl($this->url('opu'));
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'ОПиУ' => $this->url('opu'),
+            'Расходы' => $this->url('opu', ['action' => 'cost']),
+            'Детализация' => $this->url('cost', ['action' => 'doc'])
+            ]);  
+?>
+<?= $this->pageBreadcrumbs()->render(); ?>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+<!--                    <select id="periodSelect" class="form-control" name="period">
+                        <option value="date">Дата</option>
+                        <option value="week">Неделя</option>                        
+                        <option value="month" selected="">Месяц</option>                        
+                        <option value="number">Год</option>                        
+                    </select>-->
+                    <input name="dateStart" id="dateStart" style="width: 200px" class="form-control refresh-table" type="month" min="2024-01" value="<?= date('Y-m')?>">
+                </div>
+                <div class="form-group">
+                    <select id="companySelect" name="company" style="width: 200px" class="form-control cookie-control">
+                        <!--<option selected>все компании</option>-->
+                        <?php foreach ($companies as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="costSelect" name="user" style="width: 200px" class="form-control cookie-control">
+                        <option>все расходы</option>
+                        <?php foreach ($costs as $value):?>
+                            <option value="<?= $value->getId()?>" <?= ($costId == $value->getId()) ? 'selected':''?>><?= $value->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+            </div>
+        </div>    
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/cost/doc-content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            data-show-footer="true"
+            data-row-style="rowStyle"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-cookie="false"
+            data-cookie-id-table="costMutualsSaveId"
+            data-cookie-expire="1m"            
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-sortable="true" data-align="right" data-width="10">Id</th>
+                     <th data-field="dateOper" data-sortable="true" data-width="10" data-formatter="dateFormatter">Дата</th>
+                     <th data-field="cost.name">Вид расхода</th>
+                     <th data-field="docId" data-sortable="false" data-footer-formatter="totalFooterFormatter" data-formatter="docKeyFormatter">Документ</th>
+                     <th data-field="amount" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма</th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
+
+<script type="text/javascript">
+    var $table = $('#table');
+        $ok = $('#ok');
+    
+    function refreshTable(){
+        $table.bootstrapTable('refresh');
+    }
+    
+
+    $(function () {
+        $ok.click(function () {
+            refreshTable();
+        });
+        $table.on('load-success.bs.table', function (e, res) {
+            tableRowClick();   
+            var totalAmount = 0;
+            if (res.totalAmount){
+                totalAmount = res.totalAmount;
+            }
+            $('#amountTotalFooter').html((Math.round(totalAmount*100)/100).toFixed(2));
+        });                
+        $(document).on('change', '#companySelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#costSelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#dateStart', function (e) {
+            refreshTable();
+        });
+    });    
+    
+    function rowStyle(row){
+        var retired = 'tablerow';
+
+        if (row.status === '<?= CostMutual::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }
+        
+        return {classes: retired};
+    }
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function dateFormatter(value){
+        var date = new Date(value);
+        return $.format.date(date, "dd.MM.yyyy");
+    }    
+    
+    function amountFormatter(value){
+        return (Math.round(value*100)/100).toFixed(2);
+    }        
+        
+    function totalFooterFormatter() {
+        return 'Итого:';
+    }
+
+function amountTotalFormatter(){
+        return '<span id="amountTotalFooter"></span>';
+    }    
+        
+    function docKeyFormatter(value, row){
+        let docType = row.docType;        
+        let docId = row.docId;  
+        var comment = '';
+        switch(docType){
+            case '<?= Movement::DOC_ORDER?>': 
+                return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №Z"+docId+"</a>";
+            case '<?= Movement::DOC_MSR?>': 
+                comment = (row.marketSaleReport.comment) ? row.marketSaleReport.comment:'';        
+                return "<a href='#' class='msr-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о продажах №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
+            case '<?= Movement::DOC_VT?>': 
+                return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
+            case '<?= Movement::DOC_PTU?>': 
+                if (row.ptu){        
+                    comment = row.ptu.comment;        
+                }    
+                return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
+            case '<?= Movement::DOC_OT?>': 
+                return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
+            case '<?= Movement::DOC_ST?>': 
+                return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
+            case '<?= Movement::DOC_VTP?>': 
+                return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
+            case '<?= Movement::DOC_REVISE?>':
+                if (row.reviseDoc){        
+                    comment = row.reviseDoc.comment;        
+                    return "<a href='#' class='revise-modal-show' modal-url='/revise/edit-form/"+docId+"'>Корректировка №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
+                } else {
+                    return '!Документ не найден!';
+                }    
+            case '<?= Movement::DOC_CASH?>':
+                var cashName = '';
+                var result = '';
+                var kindName = '';
+                var kindNames = <?= CashDoc::getKindListAsJavascriptArray()?>;
+                if (row.cashDoc){
+                    if (row.cashDoc.cash){
+                        kindName = kindNames[row.cashDoc.kind];
+                        cashName = kindName +' '+ row.cashDoc.cash.name;
+                        if (row.amount < 0){
+                            result = "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        } else {   
+                            result = "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        }    
+                    }    
+                    if (row.cashDoc.user){
+                        cashName = kindName +' '+ row.cashDoc.user.fullName;
+                        if (row.amount < 0){
+                            result = "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        } else {    
+                            result = "<a href='#' class='cash-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                        }    
+                    } 
+                    if (row.cashDoc.order){
+                        var orderId = 'Z'+row.cashDoc.order.id;
+                        if (row.cashDoc.order.aplId){
+                            orderId += '('+row.cashDoc.order.aplId+')';
+                        }
+                        result += " <a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+orderId+"</a>";
+                    }
+                    return result;
+                }    
+            default: return docId;            
+        }
+    }
+        
+    function activeFormatter(value, row){
+        var url = '/personal/edit-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs personal-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+        
+    function responseHandler(res) {
+        return res;
+    }    
+</script>

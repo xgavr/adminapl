@@ -11,6 +11,8 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Company\Entity\Cost;
 use Company\Form\CostForm;
+use Company\Entity\Legal;
+use Laminas\View\Model\JsonModel;
 
 class CostController extends AbstractActionController
 {
@@ -198,5 +200,85 @@ class CostController extends AbstractActionController
         // Redirect to "index" cost
         return $this->redirect()->toRoute('cost', ['action'=>'index']); 
     }
+    
+    public function docAction()
+    {
+        $cost = $this->params()->fromQuery('cost');
+        
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
+        $costs = $this->entityManager->getRepository(Cost::class)
+                ->findBy(['status' => Cost::STATUS_ACTIVE]);
+        
+        return new ViewModel([
+            'companies' => $companies,
+            'costs' => $costs,
+            'costId' => $cost
+        ]);
+    }
+ 
+    public function docContentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $company = $this->params()->fromQuery('company');
+        $cost = $this->params()->fromQuery('cost');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period', 'month');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order', 'DESC');
+        
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
+        }    
+        
+        $params = [
+            'q' => $q, 'company' => $company, 'cost' => $cost,
+            'startDate' => $startDate, 'endDate' => $endDate,             
+            'sort' => $sort, 'order' => $order, 
+        ];
+        
+        $query = $this->entityManager->getRepository(Cost::class)
+                        ->findMutuals($params);
+        
+        $total = count($query->getResult());
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $totalAmount = $this->entityManager->getRepository(Cost::class)
+                        ->findMutualsTotal($params);
+        $totalAmountResult = 0;
+        if ($totalAmount){
+            $totalAmountResult = $totalAmount['amount'];
+        }
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'totalAmount' => $totalAmountResult,
+            'rows' => $result,
+        ]);          
+    }        
     
 }
