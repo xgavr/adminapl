@@ -191,6 +191,13 @@ function amountTotalFormatter(){
                 } else {
                     return '!Документ не найден!';
                 }    
+            case '<?= Movement::DOC_BANK?>':
+                if (row.statement){        
+                    comment = row.statement.purpose;        
+                    return comment;
+                } else {
+                    return '!Документ не найден!';
+                }    
             case '<?= Movement::DOC_CASH?>':
                 var cashName = '';
                 var result = '';

@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Cash\Entity\CashDoc;
 use Bank\Entity\Payment;
+use Company\Entity\CostMutual;
 
 /**
  * Description of Bank
@@ -250,7 +251,13 @@ class Statement {
      */
     private $cashDoc;
     
-    /**
+   /**
+    * @ORM\OneToMany(targetEntity="Company\Entity\CostMutual", mappedBy="statement")
+    * @ORM\JoinColumn(name="id", referencedColumnName="doc_id")
+   */
+   private $costMutuals;           
+
+   /**
      * @ORM\ManyToMany(targetEntity="Bank\Entity\StatementToken")
      * @ORM\JoinTable(name="statement_token_token",
      *      joinColumns={@ORM\JoinColumn(name="statement_id", referencedColumnName="id")},
@@ -265,6 +272,7 @@ class Statement {
     public function __construct() 
     {
         $this->statementTokens = new ArrayCollection();
+        $this->costMutuals = new ArrayCollection();
     }
     
     /**
@@ -1071,6 +1079,10 @@ class Statement {
      */
     public function getStatementTokens() {
         return $this->statementTokens;
+    }
+    
+    public function getCostMutuals() {
+        return $this->costMutuals;
     }
     
     /**

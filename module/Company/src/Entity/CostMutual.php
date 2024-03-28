@@ -81,6 +81,12 @@ class CostMutual
     private $cashDoc;        
 
     /**
+     * @ORM\ManyToOne(targetEntity="Bank\Entity\Statement", inversedBy="costMutuals") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $statement;        
+
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -283,7 +289,26 @@ class CostMutual
     public function setCashDoc($cashDoc) 
     {
         $this->cashDoc = $cashDoc;
-    }                             
+    }
+    
+    /**
+     * 
+     * @return Statement
+     */
+    public function getStatement() {
+        return $this->statement;
+    }
+
+    /**
+     * 
+     * @param Statement $statement
+     * @return $this
+     */
+    public function setStatement($statement) {
+        $this->statement = $statement;
+        return $this;
+    }
+    
 }
 
 
