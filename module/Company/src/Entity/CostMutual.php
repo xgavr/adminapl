@@ -73,6 +73,12 @@ class CostMutual
      * @ORM\JoinColumn(name="cost_id", referencedColumnName="id")
      */
     private $cost;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Cash\Entity\CashDoc", inversedBy="costMutuals") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $cashDoc;        
 
     /**
      * Constructor.
@@ -262,6 +268,22 @@ class CostMutual
         $this->cost = $cost;
         return $this;
     }    
+    
+    /*
+     * @return CashDoc
+     */    
+    public function getCashDoc() 
+    {
+        return $this->cashDoc;
+    }
+
+    /**
+     * @param CashDoc $cashDoc
+     */    
+    public function setCashDoc($cashDoc) 
+    {
+        $this->cashDoc = $cashDoc;
+    }                             
 }
 
 

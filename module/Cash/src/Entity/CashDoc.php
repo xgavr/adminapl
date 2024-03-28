@@ -214,6 +214,12 @@ class CashDoc {
    private $mutuals;           
 
    /**
+    * @ORM\OneToMany(targetEntity="Company\Entity\CostMutual", mappedBy="cashDoc")
+    * @ORM\JoinColumn(name="id", referencedColumnName="doc_id")
+   */
+   private $costMutuals;           
+
+   /**
      * Constructor.
      */
     public function __construct() 
@@ -221,6 +227,7 @@ class CashDoc {
         $this->cashTransactions = new ArrayCollection();
         $this->userTransactions = new ArrayCollection();
         $this->mutuals = new ArrayCollection();
+        $this->costMutuals = new ArrayCollection();
     }    
     
     public function getId() 
@@ -1068,6 +1075,10 @@ class CashDoc {
     
     public function getMutuals() {
         return $this->mutuals;
+    }
+    
+    public function getCostMutuals() {
+        return $this->costMutuals;
     }
     
     /**

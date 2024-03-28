@@ -11,6 +11,7 @@ namespace Company\Repository;
 use Doctrine\ORM\EntityRepository;
 use Company\Entity\Cost;
 use Company\Entity\CostMutual;
+use Stock\Entity\Movement;
 
 /**
  * Description of CostRepository
@@ -115,6 +116,7 @@ class CostRepository extends EntityRepository
         
         $queryBuilder->select('sum(cm.amount) as amount')
             ->from(CostMutual::class, 'cm')
+            ->leftJoin('cm.cashDoc', 'cd', 'WITH', 'cm.docType = '.Movement::DOC_CASH) 
             ->where('cm.status = :status')
             ->setParameter('status', CostMutual::STATUS_ACTIVE)    
                 ;

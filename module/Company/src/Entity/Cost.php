@@ -72,11 +72,18 @@ class Cost {
     private $cashDocs;        
     
     /**
+    * @ORM\OneToMany(targetEntity="Company\Entity\CostMutual", mappedBy="cost")
+    * @ORM\JoinColumn(name="id", referencedColumnName="cost_id")
+     */
+    private $costMutuals;
+        
+    /**
      * Constructor.
      */
     public function __construct() 
     {
        $this->cashDocs = new ArrayCollection();
+       $this->costMutuals = new ArrayCollection();
     }
     
     public function getId() 
@@ -228,6 +235,10 @@ class Cost {
     public function getCashDocs() {
         return $this->cashDocs;
     }
+    
+    public function getCostMutuals() {
+        return $this->costMutuals;
+    }    
     
     /**
      * Массив для формы
