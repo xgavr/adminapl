@@ -131,22 +131,35 @@ class CostManager
                 $amount = $this->entityManager->getRepository(St::class)
                     ->findMovementBaseAmount($st);
 
-                $costMutual = new CostMutual();
-                $costMutual->setAmount(abs($amount));
-                $costMutual->setCompany($st->getCompany());
-                $costMutual->setDateOper($st->getDocDate());
-                $costMutual->setDocId($st->getId());
-                $costMutual->setDocKey($st->getLogKey());
-                $costMutual->setDocStamp($docStamp);
-                $costMutual->setDocType(Movement::DOC_ST);
-                $costMutual->setStatus(CostMutual::getStatusFromSt($st));
-                $costMutual->setCost($st->getCost());
+//                $costMutual = new CostMutual();
+//                $costMutual->setAmount(abs($amount));
+//                $costMutual->setCompany($st->getCompany());
+//                $costMutual->setDateOper($st->getDocDate());
+//                $costMutual->setDocId($st->getId());
+//                $costMutual->setDocKey($st->getLogKey());
+//                $costMutual->setDocStamp($docStamp);
+//                $costMutual->setDocType(Movement::DOC_ST);
+//                $costMutual->setStatus(CostMutual::getStatusFromSt($st));
+//                $costMutual->setCost($st->getCost());
 
-                $this->entityManager->persist($costMutual);
+//                $this->entityManager->persist($costMutual);
+                
+                $this->entityManager->getConnection()->insert('cost_mutual', [
+                    'amount' => abs($amount),
+                    'company_id' => $st->getCompany()->getId(),
+                    'date_oper' => $st->getDocDate(),
+                    'doc_id' => $st->getId(),
+                    'doc_key' => $st->getLogKey(),
+                    'doc_stamp' => $docStamp,
+                    'doc_type' => Movement::DOC_ST,
+                    'status' => CostMutual::getStatusFromSt($st),
+                    'cost_id' => $st->getCost()->getId(),
+                ]);
+
                 break;
         }    
         
-        $this->entityManager->flush();
+//        $this->entityManager->flush();
         
         return $costMutual;
     }    
@@ -166,21 +179,33 @@ class CostManager
         
         foreach ($ptu->getPtuCosts() as $ptuCost){
 
-            $costMutual = new CostMutual();
-            $costMutual->setAmount($ptuCost->getAmount());
-            $costMutual->setCompany($ptu->getContract()->getCompany());
-            $costMutual->setDateOper($ptu->getDocDate());
-            $costMutual->setDocId($ptu->getId());
-            $costMutual->setDocKey($ptu->getLogKey());
-            $costMutual->setDocStamp($docStamp);
-            $costMutual->setDocType(Movement::DOC_PTU);
-            $costMutual->setStatus(CostMutual::getStatusFromPtu($ptu));
-            $costMutual->setCost($ptuCost->getCost());
-
-            $this->entityManager->persist($costMutual);
+//            $costMutual = new CostMutual();
+//            $costMutual->setAmount($ptuCost->getAmount());
+//            $costMutual->setCompany($ptu->getContract()->getCompany());
+//            $costMutual->setDateOper($ptu->getDocDate());
+//            $costMutual->setDocId($ptu->getId());
+//            $costMutual->setDocKey($ptu->getLogKey());
+//            $costMutual->setDocStamp($docStamp);
+//            $costMutual->setDocType(Movement::DOC_PTU);
+//            $costMutual->setStatus(CostMutual::getStatusFromPtu($ptu));
+//            $costMutual->setCost($ptuCost->getCost());
+//
+//            $this->entityManager->persist($costMutual);
+            
+            $this->entityManager->getConnection()->insert('cost_mutual', [
+                'amount' => $ptuCost->getAmount(),
+                'company_id' => $ptu->getContract()->getCompany()->getId(),
+                'date_oper' => $ptu->getDocDate(),
+                'doc_id' => $ptu->getId(),
+                'doc_key' => $ptu->getLogKey(),
+                'doc_stamp' => $docStamp,
+                'doc_type' => Movement::DOC_PTU,
+                'status' => CostMutual::getStatusFromPtu($ptu),
+                'cost_id' => $ptuCost->getCost()->getId(),
+            ]);
         }    
         
-        $this->entityManager->flush();
+//        $this->entityManager->flush();
         
         return $costMutual;
     }    
@@ -202,22 +227,35 @@ class CostManager
 
             case CashDoc::KIND_OUT_COST:
 
-                $costMutual = new CostMutual();
-                $costMutual->setAmount($cashDoc->getAmount());
-                $costMutual->setCompany($cashDoc->getCompany());
-                $costMutual->setDateOper($cashDoc->getDateOper());
-                $costMutual->setDocId($cashDoc->getId());
-                $costMutual->setDocKey($cashDoc->getLogKey());
-                $costMutual->setDocStamp($docStamp);
-                $costMutual->setDocType(Movement::DOC_CASH);
-                $costMutual->setStatus(CostMutual::getStatusFromCashDoc($cashDoc));
-                $costMutual->setCost($cashDoc->getCost());
+//                $costMutual = new CostMutual();
+//                $costMutual->setAmount($cashDoc->getAmount());
+//                $costMutual->setCompany($cashDoc->getCompany());
+//                $costMutual->setDateOper($cashDoc->getDateOper());
+//                $costMutual->setDocId($cashDoc->getId());
+//                $costMutual->setDocKey($cashDoc->getLogKey());
+//                $costMutual->setDocStamp($docStamp);
+//                $costMutual->setDocType(Movement::DOC_CASH);
+//                $costMutual->setStatus(CostMutual::getStatusFromCashDoc($cashDoc));
+//                $costMutual->setCost($cashDoc->getCost());
 
-                $this->entityManager->persist($costMutual);
+//                $this->entityManager->persist($costMutual);
+                
+                $this->entityManager->getConnection()->insert('cost_mutual', [
+                    'amount' => $cashDoc->getAmount(),
+                    'company_id' => $cashDoc->getCompany()->getId(),
+                    'date_oper' => $cashDoc->getDateOper(),
+                    'doc_id' => $cashDoc->getId(),
+                    'doc_key' => $cashDoc->getLogKey(),
+                    'doc_stamp' => $docStamp,
+                    'doc_type' => Movement::DOC_CASH,
+                    'status' => CostMutual::getStatusFromCashDoc($cashDoc),
+                    'cost_id' => $cashDoc->getCost()->getId(),
+                ]);
+        
                 break;
         }    
         
-        $this->entityManager->flush();
+//        $this->entityManager->flush();
         
         return $costMutual;
     }   
