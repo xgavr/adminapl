@@ -19,6 +19,7 @@ use Cash\Entity\CashDoc;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Stock\Entity\Revise;
 use Stock\Entity\Ptu;
+use Application\Entity\Order;
 
 
 /**
@@ -130,6 +131,12 @@ class Retail {
      * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
      */
     private $ptu;    
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Order", inversedBy="retails") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $order;    
 
     /**
      * @ORM\ManyToOne(targetEntity="ApiMarketPlace\Entity\MarketSaleReport", inversedBy="retails") 
@@ -505,6 +512,25 @@ class Retail {
         $this->ptu = $ptu;
         return $this;
     }
+    
+    /**
+     * 
+     * @return Order
+     */
+    public function getOrder() {
+        return $this->order;
+    }
+
+    /**
+     * 
+     * @param Order $order
+     * @return $this
+     */
+    public function setOrder($order) {
+        $this->order = $order;
+        return $this;
+    }
+
     
     /**
      * 

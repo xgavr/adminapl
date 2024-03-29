@@ -145,6 +145,43 @@ class FinManager {
     }
     
     /**
+     * Шаблон на сводных retail
+     * 
+     * @param date $startDate
+     * @param date $endDate
+     * @param Legal $company
+     * 
+     * @return array
+     */
+    public function emptyRetailYear($startDate, $endDate, $company)
+    {
+        $result = [];
+        $retails = $this->entityManager->getRepository(FinOpu::class)
+                ->findActiveRetail($startDate, $endDate, $company);
+        
+        foreach ($retails as $retail){
+             $resultRow['key'] = $retail['userId'];
+             $resultRow['mark'] = $retail['userName'];
+             $resultRow['01'] = 0;
+             $resultRow['02'] = 0;
+             $resultRow['03'] = 0;
+             $resultRow['04'] = 0;
+             $resultRow['05'] = 0;
+             $resultRow['06'] = 0;
+             $resultRow['07'] = 0;
+             $resultRow['08'] = 0;
+             $resultRow['09'] = 0;
+             $resultRow['10'] = 0;
+             $resultRow['11'] = 0;
+             $resultRow['12'] = 0;
+             $resultRow['13'] = 0;
+             $result[$retail['userId']] = $resultRow;
+        }
+        
+        return $result;        
+    }
+    
+    /**
      * Рассчитать розничную выручку за период
      * @param date $period
      */
@@ -383,7 +420,7 @@ class FinManager {
         
         $this->entityManager->flush();
     }
-    
+        
     /**
      * Рассчитать ЕСН и налог на прибыль за период
      * @param date $period

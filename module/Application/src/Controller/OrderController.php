@@ -982,4 +982,86 @@ class OrderController extends AbstractActionController
             ['ok']
         );                   
     }
+    
+    public function finAction()
+    {
+        $user = $this->params()->fromQuery('user');
+        
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
+        $users = $this->entityManager->getRepository(User::class)
+                ->findBy(['status' => User::STATUS_ACTIVE]);
+        
+        return new ViewModel([
+            'companies' => $companies,
+            'users' => $users,
+            'userId' => $user
+        ]);
+    }
+ 
+    public function finContentAction()
+    {
+        	        
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $company = $this->params()->fromQuery('company');
+        $user = $this->params()->fromQuery('user');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period', 'month');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order', 'DESC');
+        
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
+        }    
+        
+        $params = [
+            'q' => $q, 'company' => $company, 'user' => $user,
+            'startDate' => $startDate, 'endDate' => $endDate,             
+            'sort' => $sort, 'order' => $order, 
+        ];
+        
+        $query = $this->entityManager->getRepository(Order::class)
+                        ->findRetails($params);
+        
+        $total = count($query->getResult());
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $totalAmount = $this->entityManager->getRepository(Order::class)
+                        ->findRetailsTotal($params);
+        
+        $totalAmountResult = 0;
+        if ($totalAmount){
+            $totalAmountResult = $totalAmount['amount'];
+        }
+        
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'totalAmount' => $totalAmountResult,
+            'rows' => $result,
+        ]);          
+    }        
+    
 }

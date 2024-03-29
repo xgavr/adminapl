@@ -167,6 +167,45 @@ class OpuController extends AbstractActionController
         ]);                  
     }
     
+    public function retailRevenueAction()
+    {
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
+        
+        return new ViewModel([
+            'years' => range(date('Y'), 2024),
+            'companies' => $companies,
+        ]);
+    }
+
+    public function retailRevenueContentAction()
+    {
+        $year = $this->params()->fromQuery('year', date('Y'));
+        $companyId = $this->params()->fromQuery('company');
+        $status = $this->params()->fromQuery('status');
+        
+        $startDate = "$year-01-01";
+        $endDate = "$year-12-31";
+
+        $company = $this->entityManager->getRepository(Legal::class)
+                ->find($companyId);
+                
+        $data = $this->entityManager->getRepository(FinOpu::class)
+                        ->findRetailRevenue($startDate, $endDate, $company);
+        
+        $result = $this->finManager->emptyRetailYear($startDate, $endDate, $company);
+        
+        foreach ($data as $row){
+            $result[$row['userId']][date('m', strtotime($row['period']))] = abs(round($row['amount']));
+            $result[$row['userId']][13] += abs(round($row['amount']));
+        }
+        
+        return new JsonModel([
+            'total' => count($result),
+            'rows' => array_values($result),
+        ]);                  
+    }
+    
     public function calculateAction()
     {
         $year = $this->params()->fromQuery('year', date('Y'));

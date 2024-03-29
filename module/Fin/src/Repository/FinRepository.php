@@ -19,6 +19,8 @@ use Zp\Entity\PersonalMutual;
 use Company\Entity\TaxMutual;
 use Company\Entity\Tax;
 use Stock\Entity\Retail;
+use Application\Entity\Order;
+use Stock\Entity\Vt;
 
 /**
  * Description of FinRepository
@@ -186,6 +188,96 @@ class FinRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult(2);       
     }
     
+    /**
+     * Получить активные user
+     * @param date $startDate
+     * @param date $endDate
+     * @param Legal $company
+     * @return array
+     */
+    public function findActiveUser($startDate, $endDate, $company)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('r')
+            ->from(Retail::class, 'r')
+            ->andWhere('r.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('r.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate)
+            ->andWhere('r.company = :company')    
+            ->setParameter('company', $company->getId())
+            ->andWhere('r.status = :status')
+            ->setParameter('status', Retail::STATUS_ACTIVE)    
+            ->addGroupBy('userId')    
+                ;
+        $retails = $queryBuilder->getQuery()->getResult();
+        
+        $result = [];
+        foreach ($retails as $retail){
+            switch ($retail->getDocType()){
+                case Movement::DOC_ORDER:
+                    $order = $entityManager->getRepository(Order::class)
+                        ->find($retail->getDocId());
+                    $row['id'] = $order->getUser()->getId();
+                    $row['name'] = $order->getUser()->getFullName();
+                    $result[$row['id']] = $row;
+                    break;
+                case Movement::DOC_VT:
+                    $vt = $entityManager->getRepository(Vt::class)
+                        ->find($retail->getDocId());
+                    $row['id'] = $vt->getOrder()->getUser()->getId();
+                    $row['name'] = $vt->getOrder()->getUser()->getFullName();
+                    $result[$row['id']] = $row;
+                    break;
+            }
+            
+        }
+        return $result;       
+    }
+    
+    /**
+     * Получить сводные zp
+     * @param date $startDate
+     * @param date $endDate
+     * @param Legal $company
+     * @return array
+     */
+    public function findRetailRevenue($startDate, $endDate, $company)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('LAST_DAY(r.dateOper) as period, u.id as userId, u.fullName as userName, sum(pm.amount) as amount')
+            ->from(Retail::class, 'r')
+            ->join('pm.user', 'u')
+            ->andWhere('pm.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('pm.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate)
+            ->andWhere('pm.company = :company')    
+            ->setParameter('company', $company->getId())
+            ->andWhere('pm.amount < 0')    
+            ->andWhere('pm.status = :status')
+            ->setParameter('status', PersonalMutual::STATUS_ACTIVE)    
+            ->groupBy('period')    
+            ->addGroupBy('userId')    
+            ->orderBy('period') 
+                ;
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);       
+    }    
     
     /**
      * Выручка розницы

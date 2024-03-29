@@ -18,7 +18,7 @@ class CostManager
 {
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;  
         
@@ -262,19 +262,32 @@ class CostManager
         if ($cost && $amount){
             $companyAccount = $this->entityManager->getRepository(BankAccount::class)
                     ->findOneBy(['rs' => $statement->getAccount()]);
-            $costMutual = new CostMutual();
-            $costMutual->setAmount($amount);
-            $costMutual->setCompany($companyAccount->getLegal());
-            $costMutual->setDateOper($statement->getChargeDate());
-            $costMutual->setDocId($statement->getId());
-            $costMutual->setDocKey($statement->getLogKey());
-            $costMutual->setDocStamp($docStamp);
-            $costMutual->setDocType(Movement::DOC_BANK);
-            $costMutual->setStatus(CostMutual::getStatusFromStatement($statement));
-            $costMutual->setCost($cost);
             
-            $this->entityManager->persist($costMutual);
-            $this->entityManager->flush();
+//            $costMutual = new CostMutual();
+//            $costMutual->setAmount($amount);
+//            $costMutual->setCompany($companyAccount->getLegal());
+//            $costMutual->setDateOper($statement->getChargeDate());
+//            $costMutual->setDocId($statement->getId());
+//            $costMutual->setDocKey($statement->getLogKey());
+//            $costMutual->setDocStamp($docStamp);
+//            $costMutual->setDocType(Movement::DOC_BANK);
+//            $costMutual->setStatus(CostMutual::getStatusFromStatement($statement));
+//            $costMutual->setCost($cost);
+//            
+//            $this->entityManager->persist($costMutual);
+//            $this->entityManager->flush();
+            
+            $this->entityManager->getConnection()->insert('cost_mutual', [
+                'amount' => $amount,
+                'company_id' => $companyAccount->getLegal()->getId(),
+                'date_oper' => $statement->getChargeDate(),
+                'doc_id' => $statement->getId(),
+                'doc_key' => $statement->getLogKey(),
+                'doc_stamp' => $docStamp,
+                'doc_type' => Movement::DOC_BANK,
+                'status' => CostMutual::getStatusFromStatement($statement),
+                'cost_id' => $cost->getId(),
+            ]);
         }
                 
         return $costMutual;

@@ -319,6 +319,12 @@ class Order {
      */
     private $wammchats;
 
+    /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Retail", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="doc_id")
+     */
+    private $retails;
+
     private $ciphering = "AES-128-CTR"; //Метод шифрования
     
     private $iv = "1234567891011121"; // Non-NULL Initialization Vector for encryption
@@ -336,6 +342,7 @@ class Order {
         $this->wammchats = new ArrayCollection();
         $this->qrcodes = new ArrayCollection();
         $this->cashDocs = new ArrayCollection();
+        $this->retails = new ArrayCollection();
     }
     
     protected function _encrypt($unencryptedText, $passphrase)
@@ -1751,6 +1758,10 @@ class Order {
 
     public function getCashDocs() {
         return $this->cashDocs;
+    }
+    
+    public function getRetails() {
+        return $this->retails;
     }
     
     /**
