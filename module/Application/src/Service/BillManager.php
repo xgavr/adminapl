@@ -727,10 +727,10 @@ class BillManager
                     if ($good){
                         return $good;
                     }                
-                    $good = $this->entityManager->getRepository(Oem::class)
-                            ->findOneBy(['oe' => $code, 'source' => Oem::SOURCE_MY_CODE]);
-                    if ($good){
-                        return $good;
+                    $oem = $this->entityManager->getRepository(Oem::class)
+                            ->findOneBy(['oe' => $code, 'source' => Oem::SOURCE_MY_CODE]);                    
+                    if ($oem->getGood()){
+                        return $oem->getGood();
                     }                
                 }    
             }    
