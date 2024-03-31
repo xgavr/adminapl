@@ -175,7 +175,8 @@ function amountTotalFormatter(){
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
             case '<?= Movement::DOC_PTU?>': 
                 if (row.ptu){        
-                    comment = row.ptu.supplier.name + ' ' + (row.ptu.comment) ? row.ptu.comment:'';
+                    comment = (row.ptu.comment) ? row.ptu.comment:'';        
+                    comment = row.ptu.supplier.name + ' ' + comment;
                 }    
                 return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a> <small class='text-muted'>"+comment.trim()+"</small>";
             case '<?= Movement::DOC_OT?>': 
