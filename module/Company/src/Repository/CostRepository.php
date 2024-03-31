@@ -66,7 +66,7 @@ class CostRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('cm, c, cost, cd, cash, user, s, st, ptu')
+        $queryBuilder->select('cm, c, cost, cd, cash, user, s, st, ptu, supplier')
             ->from(CostMutual::class, 'cm')
             ->join('cm.company', 'c')    
             ->join('cm.cost', 'cost')    
@@ -76,6 +76,7 @@ class CostRepository extends EntityRepository
             ->leftJoin('cm.statement', 's', 'WITH', 'cm.docType = '.Movement::DOC_BANK) 
             ->leftJoin('cm.st', 'st', 'WITH', 'cm.docType = '.Movement::DOC_ST) 
             ->leftJoin('cm.ptu', 'ptu', 'WITH', 'cm.docType = '.Movement::DOC_PTU) 
+            ->leftJoin('ptu.supplier', 'supplier') 
                 ;
         
         if (is_array($params)){
