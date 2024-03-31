@@ -181,7 +181,10 @@ function amountTotalFormatter(){
             case '<?= Movement::DOC_OT?>': 
                 return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
             case '<?= Movement::DOC_ST?>': 
-                return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
+                if (row.st){        
+                    comment = row.st.comment;        
+                }    
+                return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
             case '<?= Movement::DOC_VTP?>': 
                 return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
             case '<?= Movement::DOC_REVISE?>':
@@ -204,21 +207,24 @@ function amountTotalFormatter(){
                 var kindName = '';
                 var kindNames = <?= CashDoc::getKindListAsJavascriptArray()?>;
                 if (row.cashDoc){
+                    if (row.cashDoc){        
+                        comment = row.cashDoc.comment;        
+                    }    
                     if (row.cashDoc.cash){
                         kindName = kindNames[row.cashDoc.kind];
                         cashName = kindName +' '+ row.cashDoc.cash.name;
                         if (row.amount < 0){
-                            result = "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                            result = "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
                         } else {   
-                            result = "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                            result = "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
                         }    
                     }    
                     if (row.cashDoc.user){
                         cashName = kindName +' '+ row.cashDoc.user.fullName;
                         if (row.amount < 0){
-                            result = "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                            result = "<a href='#' class='cash-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
                         } else {    
-                            result = "<a href='#' class='cash-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
+                            result = "<a href='#' class='cash-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
                         }    
                     } 
                     if (row.cashDoc.order){
@@ -226,7 +232,7 @@ function amountTotalFormatter(){
                         if (row.cashDoc.order.aplId){
                             orderId += '('+row.cashDoc.order.aplId+')';
                         }
-                        result += " <a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+orderId+"</a>";
+                        result += " <a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+orderId+"</a> <small class='text-muted'>"+comment+"</small>";
                     }
                     return result;
                 }    

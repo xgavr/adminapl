@@ -722,15 +722,15 @@ class BillManager
                 }
                 if ($articleStr){
                     $code = $articleFilter->filter($articleStr);
-                    $good = $this->entityManager->getRepository(Goods::class)
-                            ->findOneByCode($code);
-                    if ($good){
-                        return $good;
-                    }                
                     $oem = $this->entityManager->getRepository(Oem::class)
                             ->findOneBy(['oe' => $code, 'source' => Oem::SOURCE_MY_CODE]);                    
                     if ($oem->getGood()){
                         return $oem->getGood();
+                    }                
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->findOneByCode($code);
+                    if ($good){
+                        return $good;
                     }                
                 }    
             }    
