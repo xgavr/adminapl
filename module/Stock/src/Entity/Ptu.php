@@ -157,6 +157,11 @@ class Ptu {
      */
     private $idoc;
     
+    /**
+     * @ORM\OneToMany(targetEntity="Company\Entity\CostMutual", mappedBy="ptu") 
+     * @ORM\JoinColumn(name="id", referencedColumnName="doc_id")
+     */
+    private $costMutuals;
     
     /**
      * Constructor.
@@ -166,6 +171,7 @@ class Ptu {
        $this->vtp = new ArrayCollection();
        $this->ptuGoods = new ArrayCollection();
        $this->ptuCosts = new ArrayCollection();
+       $this->costMutuals = new ArrayCollection();
     }
     
     
@@ -704,6 +710,10 @@ class Ptu {
     public function setIdoc($idoc)
     {
         $this->idoc = $idoc;
+    }
+    
+    public function getCostMutuals() {
+        return $this->costMutuals;
     }
     
     /**

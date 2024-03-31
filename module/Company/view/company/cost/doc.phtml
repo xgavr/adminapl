@@ -182,7 +182,7 @@ function amountTotalFormatter(){
                 return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
             case '<?= Movement::DOC_ST?>': 
                 if (row.st){        
-                    comment = row.st.comment;        
+                    comment = (row.st.comment) ? row.st.comment:'';        
                 }    
                 return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
             case '<?= Movement::DOC_VTP?>': 
@@ -208,7 +208,7 @@ function amountTotalFormatter(){
                 var kindNames = <?= CashDoc::getKindListAsJavascriptArray()?>;
                 if (row.cashDoc){
                     if (row.cashDoc){        
-                        comment = row.cashDoc.comment;        
+                        comment = (row.cashDoc.comment) ? row.cashDoc.comment:'';        
                     }    
                     if (row.cashDoc.cash){
                         kindName = kindNames[row.cashDoc.kind];

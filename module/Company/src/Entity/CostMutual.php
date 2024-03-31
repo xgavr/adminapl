@@ -87,6 +87,18 @@ class CostMutual
     private $statement;        
 
     /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\St", inversedBy="costMutuals") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $st;        
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Ptu", inversedBy="costMutuals") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $ptu;        
+
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -309,6 +321,41 @@ class CostMutual
         return $this;
     }
     
+    /**
+     * 
+     * @return St
+     */
+    public function getSt() {
+        return $this->st;
+    }
+
+    /**
+     * 
+     * @param St $st
+     * @return $this
+     */
+    public function setSt($st) {
+        $this->st = $st;
+        return $this;
+    }
+
+    /**
+     * 
+     * @return Ptu
+     */
+    public function getPtu() {
+        return $this->ptu;
+    }
+
+    /**
+     * 
+     * @param Ptu $ptu
+     * @return $this
+     */
+    public function setPtu($ptu) {
+        $this->ptu = $ptu;
+        return $this;
+    }
 }
 
 

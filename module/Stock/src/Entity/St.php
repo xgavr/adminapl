@@ -147,11 +147,18 @@ class St {
     private $stGoods;    
     
     /**
+     * @ORM\OneToMany(targetEntity="Company\Entity\CostMutual", mappedBy="st") 
+     * @ORM\JoinColumn(name="id", referencedColumnName="doc_id")
+     */
+    private $costMutuals;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
        $this->stGoods = new ArrayCollection();
+       $this->costMutuals = new ArrayCollection();
     }
     
     
@@ -636,6 +643,10 @@ class St {
         return $this->stGoods;
     }
 
+    public function getCostMutuals() {
+        return $this->costMutuals;
+    }
+    
     /**
      * Массив для формы
      * @return array 
