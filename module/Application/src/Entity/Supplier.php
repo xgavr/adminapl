@@ -201,6 +201,12 @@ class Supplier {
    */
    private $supplierOrders;
 
+    /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Ptu", mappedBy="supplier")
+    * @ORM\JoinColumn(name="id", referencedColumnName="supplier_id")
+   */
+   private $ptu;
+
    /**
      * Constructor.
      */
@@ -220,6 +226,7 @@ class Supplier {
         $this->rates = new ArrayCollection();
         $this->regions = new ArrayCollection();  
         $this->children = new ArrayCollection();
+        $this->ptu = new ArrayCollection();
     }
     
     
@@ -923,6 +930,10 @@ class Supplier {
     {
         return $this->supplierOrders;
     }      
+    
+    public function getPtu() {
+        return $this->ptu;
+    }
     
     /**
      * Массив для формы
