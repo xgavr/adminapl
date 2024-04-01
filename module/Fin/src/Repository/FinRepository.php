@@ -277,7 +277,7 @@ class FinRepository extends EntityRepository
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
         
-        $queryBuilder->select('LAST_DAY(m.dateOper) as period, u.id as userId, u.fullName as userName, sum(m.amount) as amount')
+        $queryBuilder->select('LAST_DAY(m.dateOper) as period, u.id as userId, u.fullName as userName, sum(m.baseAmount) as amount')
             ->from(Movement::class, 'm')
             ->join('m.user', 'u')
             ->andWhere('m.dateOper >= :startDate')    
