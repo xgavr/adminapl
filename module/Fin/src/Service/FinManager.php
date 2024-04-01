@@ -68,6 +68,8 @@ class FinManager {
         $opu->setZpTp(empty($data['zpTp']) ? 0:$data['zpTp']);
         $opu->setEsn(empty($data['esn']) ? 0:$data['esn']);
         $opu->setProfitNet(empty($data['profitNet']) ? 0:$data['profitNet']);
+        $opu->setMarginRetail(empty($data['marginRetail']) ? 0:$data['marginRetail']);
+        $opu->setMarginTp(empty($data['marginTp']) ? 0:$data['marginTp']);
         
         $this->entityManager->persist($opu);
         $this->entityManager->flush();
@@ -125,6 +127,8 @@ class FinManager {
         $opu->setZpRetail($data['zpRetail']);
         $opu->setZpTotal($data['zpTotal']);
         $opu->setZpTp($data['zpTp']);
+        $opu->setMarginRetail($data['marginReatail']);
+        $opu->setMarginTp($data['marginTp']);
         
         $this->entityManager->persist($opu);
         $this->entityManager->flush();
