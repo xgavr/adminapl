@@ -187,6 +187,7 @@ class OrderManager
             'legal_id' => $legalId,
             'contract_id' => $contractId,
             'doc_stamp' => $docStamp,
+            'user_id' => $order->getUserId(),
         ];
 
         $this->entityManager->getRepository(Retail::class)
@@ -371,6 +372,7 @@ class OrderManager
                             'legal_id' => $legalId,
                             'contract_id' => $contractId,
                             'doc_stamp' => $docStamp,
+                            'user_id' => $order->getUserId(),
                         ];
 
                         $this->entityManager->getRepository(Retail::class)

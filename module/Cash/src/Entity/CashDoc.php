@@ -908,6 +908,15 @@ class CashDoc {
         return;
     }
     
+    public function getOrderUserId()
+    {
+        if ($this->order){
+            return $this->order->getUserId();
+        }
+        
+        return;
+    }
+    
     /**
      * Add order
      * @param Order $order

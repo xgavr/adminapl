@@ -138,6 +138,12 @@ class User
     private $cashDocs;
     
     /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Retail", mappedBy="user")
+    * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
+     */
+    private $retails;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -150,6 +156,7 @@ class User
         $this->personalAccruals = new ArrayCollection();
         $this->personalRevises = new ArrayCollection();
         $this->cashDocs = new ArrayCollection();
+        $this->retails = new ArrayCollection();
     }
     
     /**
@@ -589,6 +596,10 @@ class User
             $office->addUser($this);
         }    
     }      
+    
+    public function getRetails() {
+        return $this->retails;
+    }
     
     public function toArray()
     {

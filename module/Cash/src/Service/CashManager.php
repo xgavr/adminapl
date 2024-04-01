@@ -293,6 +293,7 @@ class CashManager {
                 'legal_id' => $legalId,
                 'contract_id' => $contractId,
                 'doc_stamp' =>$docStamp,
+                'user_id' => $cashDoc->getOrderUserId(),
             ];
 
             $this->entityManager->getRepository(Retail::class)

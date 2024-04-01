@@ -19,6 +19,7 @@ use Cash\Entity\CashDoc;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Stock\Entity\Revise;
 use Stock\Entity\Ptu;
+use User\Entity\User;
 
 
 /**
@@ -142,6 +143,12 @@ class Retail {
      * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
      */
     private $marketSaleReport;    
+        
+    /**
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="retails") 
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;    
         
     public function __construct() {
     }
@@ -549,4 +556,21 @@ class Retail {
         return $this;
     }
 
+    /**
+     * 
+     * @return User
+     */
+    public function getUser() {
+        return $this->user;
+    }
+
+    /**
+     * 
+     * @param User $user
+     * @return $this
+     */
+    public function setUser($user) {
+        $this->user = $user;
+        return $this;
+    }
 }

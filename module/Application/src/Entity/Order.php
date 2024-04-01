@@ -1122,6 +1122,20 @@ class Order {
         return $this->user;
     }
 
+    /*
+     * Возвращает связанный user id.
+     * @return integer
+     */
+    
+    public function getUserId() 
+    {
+        if ($this->user){
+            return $this->user->getId();
+        }  
+        
+        return;
+    }
+
     /**
      * user apl id
      * @return integer
