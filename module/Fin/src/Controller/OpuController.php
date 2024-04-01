@@ -194,11 +194,19 @@ class OpuController extends AbstractActionController
         if ($kind == 'revenueRetail'){        
             $data = $this->entityManager->getRepository(FinOpu::class)
                             ->findRetailRevenue($startDate, $endDate, $company);
+            foreach ($data as $row){
+                $result[$row['userId']][date('m', strtotime($row['period']))] = round($row['amount']);
+                $result[$row['userId']][13] += round($row['amount']);
+            }
         }    
         
         if ($kind == 'purchaseRetail'){        
             $data = $this->entityManager->getRepository(FinOpu::class)
                             ->findRetailPurchase($startDate, $endDate, $company);
+            foreach ($data as $row){
+                $result[$row['userId']][date('m', strtotime($row['period']))] = -round($row['purchase']);
+                $result[$row['userId']][13] += -round($row['purchase']);
+            }
         }    
         
         if ($kind == 'incomeRetail'){        
@@ -209,6 +217,10 @@ class OpuController extends AbstractActionController
         if ($kind == 'marginRetail'){        
             $data = $this->entityManager->getRepository(FinOpu::class)
                             ->findRetailPurchase($startDate, $endDate, $company);
+            foreach ($data as $row){
+                $result[$row['userId']][date('m', strtotime($row['period']))] = (abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']);
+                //$result[$row['userId']][13] += round($row['purchase']);
+            }
         }    
         
         $result = $this->finManager->emptyRetailYear($startDate, $endDate, $company);
