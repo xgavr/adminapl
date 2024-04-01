@@ -190,9 +190,26 @@ class OpuController extends AbstractActionController
 
         $company = $this->entityManager->getRepository(Legal::class)
                 ->find($companyId);
-                
-        $data = $this->entityManager->getRepository(FinOpu::class)
-                        ->findRetailRevenue($startDate, $endDate, $company);
+        
+        if ($kind == 'revenueRetail'){        
+            $data = $this->entityManager->getRepository(FinOpu::class)
+                            ->findRetailRevenue($startDate, $endDate, $company);
+        }    
+        
+        if ($kind == 'purchaseRetail'){        
+            $data = $this->entityManager->getRepository(FinOpu::class)
+                            ->findRetailPurchase($startDate, $endDate, $company);
+        }    
+        
+        if ($kind == 'incomeRetail'){        
+            $data = $this->entityManager->getRepository(FinOpu::class)
+                            ->findRetailPurchase($startDate, $endDate, $company);
+        }    
+        
+        if ($kind == 'marginRetail'){        
+            $data = $this->entityManager->getRepository(FinOpu::class)
+                            ->findRetailPurchase($startDate, $endDate, $company);
+        }    
         
         $result = $this->finManager->emptyRetailYear($startDate, $endDate, $company);
         

@@ -215,7 +215,7 @@ class FinRepository extends EntityRepository
             ->andWhere('r.company = :company')    
             ->setParameter('company', $company->getId())
             ->andWhere('r.status = :status')
-            ->setParameter('status', PersonalMutual::STATUS_ACTIVE)
+            ->setParameter('status', Retail::STATUS_ACTIVE)
             ->andWhere($orX)    
             ->addGroupBy('userId')    
                 ;
@@ -224,7 +224,7 @@ class FinRepository extends EntityRepository
     }
     
     /**
-     * Получить сводные zp
+     * Получить сводные выручки
      * @param date $startDate
      * @param date $endDate
      * @param Legal $company
@@ -250,7 +250,44 @@ class FinRepository extends EntityRepository
             ->andWhere('r.company = :company')    
             ->setParameter('company', $company->getId())
             ->andWhere('r.status = :status')
-            ->setParameter('status', PersonalMutual::STATUS_ACTIVE)    
+            ->setParameter('status', Retail::STATUS_ACTIVE)    
+            ->andWhere($orX)    
+            ->groupBy('period')    
+            ->addGroupBy('userId')    
+            ->orderBy('period') 
+                ;
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);       
+    }   
+    
+    /**
+     * Получить сводные закупки
+     * @param date $startDate
+     * @param date $endDate
+     * @param Legal $company
+     * @return array
+     */
+    public function findRetailPurchase($startDate, $endDate, $company)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('LAST_DAY(m.dateOper) as period, u.id as userId, u.fullName as userName, sum(m.amount) as amount')
+            ->from(Movement::class, 'm')
+            ->join('m.user', 'u')
+            ->andWhere('m.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('m.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate)
+            ->andWhere('m.company = :company')    
+            ->setParameter('company', $company->getId())
+            ->andWhere('m.status = :status')
+            ->setParameter('status', Retail::STATUS_ACTIVE)    
             ->andWhere($orX)    
             ->groupBy('period')    
             ->addGroupBy('userId')    
