@@ -167,7 +167,7 @@ class OpuController extends AbstractActionController
         ]);                  
     }
     
-    public function retailRevenueAction()
+    public function retailAction()
     {
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
@@ -178,10 +178,11 @@ class OpuController extends AbstractActionController
         ]);
     }
 
-    public function retailRevenueContentAction()
+    public function retailContentAction()
     {
         $year = $this->params()->fromQuery('year', date('Y'));
         $companyId = $this->params()->fromQuery('company');
+        $kind = $this->params()->fromQuery('kind');
         $status = $this->params()->fromQuery('status');
         
         $startDate = "$year-01-01";
@@ -196,8 +197,8 @@ class OpuController extends AbstractActionController
         $result = $this->finManager->emptyRetailYear($startDate, $endDate, $company);
         
         foreach ($data as $row){
-            $result[$row['userId']][date('m', strtotime($row['period']))] = abs(round($row['amount']));
-            $result[$row['userId']][13] += abs(round($row['amount']));
+            $result[$row['userId']][date('m', strtotime($row['period']))] = round($row['amount']);
+            $result[$row['userId']][13] += round($row['amount']);
         }
         
         return new JsonModel([

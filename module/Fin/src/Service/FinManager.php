@@ -161,7 +161,7 @@ class FinManager {
     {
         $result = [];
         $retails = $this->entityManager->getRepository(FinOpu::class)
-                ->findActiveRetail($startDate, $endDate, $company);
+                ->findActiveUser($startDate, $endDate, $company);
         
         foreach ($retails as $retail){
              $resultRow['key'] = $retail['userId'];

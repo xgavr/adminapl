@@ -18,6 +18,7 @@ use Stock\Entity\St;
 use Stock\Entity\Ptu;
 use Stock\Entity\Ot;
 use Application\Entity\Order;
+use User\Entity\User;
 
 
 /**
@@ -160,6 +161,12 @@ class Movement {
      * @ORM\JoinColumn(name="base_id", referencedColumnName="id")
      */
     private $vt;    
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="movements") 
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;    
 
     public function __construct() {
     }
@@ -618,5 +625,24 @@ class Movement {
     public function setVt($vt) 
     {
         $this->vt = $vt;
-    }                         
+    }   
+    
+    /**
+     * 
+     * @return User
+     */
+    public function getUser() {
+        return $this->user;
+    }
+
+    /**
+     * 
+     * @param User $user
+     * @return $this
+     */
+    public function setUser($user) {
+        $this->user = $user;
+        return $this;
+    }
+
 }

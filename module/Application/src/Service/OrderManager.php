@@ -325,6 +325,7 @@ class OrderManager
                         'office_id' => $order->getOffice()->getId(),
                         'company_id' => $order->getCompany()->getId(),
                         'doc_stamp' => $docStamp,
+                        'user_id' => $order->getUserId(),
                     ];
 
                     $this->entityManager->getRepository(Movement::class)

@@ -455,12 +455,12 @@ class FinOpu
     public static function getMarkList()
     {
         return [
-            'revenueRetail' => 'Оборот розница',
+            'revenueRetail' => '<a href="/opu/retail" target="_blank">Выручка розница</a>',
             'purchaseRetail' => 'Закупка розница',
             'incomeRetail' => 'Доход розница',
             'marginRetail' => 'Маржа розница (%)',
             'incomeRetail_' => '',
-            'revenueTp' => 'Оборот ТП',
+            'revenueTp' => 'Выручка ТП',
             'purchaseTp' => 'Закупка ТП',
             'costTp' => 'Расходы ТП',
             'incomeTp' => 'Доход ТП',
@@ -489,19 +489,19 @@ class FinOpu
     public static function getSuccessList()
     {
         return [
-            'revenueRetail' => 'Оборот розница',
+            'revenueRetail' => 'Выручка розница',
             'revenueTp' => 'Оборот ТП',
         ];    
     }
     
-    public static function getWaringList()
+    public static function getWarningList()
     {
         return [
             'purchaseRetail' => 'Закупка розница',
             'purchaseTp' => 'Закупка ТП',
             'costTp' => 'Расходы ТП',
-            'costTotal' => '<a href="/opu/cost" target="_blank">Расходы</a>',
-            'zpTotal' => '<a href="/opu/zp" target="_blank">Зарплата</a>',
+            'costTotal' => 'Расходы',
+            'zpTotal' => 'Зарплата',
             'esn' => 'ЕСН',
             'tax' => 'Налог',
         ];    
@@ -517,6 +517,16 @@ class FinOpu
             'marginTp' => 'Маржа ТП (%)',
             'profit' => 'Прибыль',
             'profitNet' => 'Чистая пибыль',
+        ];    
+    }
+    
+    public static function getRetailKindList()
+    {
+        return [
+            'revenueRetail' => 'Выручка розница',
+            'purchaseRetail' => 'Закупка розница',
+            'incomeRetail' => 'Доход розница',
+            'marginRetail' => 'Маржа розница (%)',
         ];    
     }
     

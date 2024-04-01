@@ -144,6 +144,12 @@ class User
     private $retails;
     
     /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Movement", mappedBy="user")
+    * @ORM\JoinColumn(name="id", referencedColumnName="user_id")
+     */
+    private $movements;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -157,6 +163,7 @@ class User
         $this->personalRevises = new ArrayCollection();
         $this->cashDocs = new ArrayCollection();
         $this->retails = new ArrayCollection();
+        $this->movements = new ArrayCollection();
     }
     
     /**
@@ -601,6 +608,10 @@ class User
         return $this->retails;
     }
     
+    public function getMovements() {
+        return $this->movements;
+    }
+
     public function toArray()
     {
         return [

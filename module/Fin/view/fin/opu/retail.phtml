@@ -1,18 +1,19 @@
 <?php
-use Laminas\Json\Encoder;
 use Fin\Entity\FinOpu;
 
-$this->headTitle('Прибыли и убытки');
+$this->headTitle('Продажи');
 
 $this->mainMenu()->setActiveItemId('report');
 $this->mainMenu()->setActiveUrl($this->url('opu'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
-            'Прибыли и убытки' => $this->url('opu')
+            'ОПиУ' => $this->url('opu'),
+            'Продажи' => $this->url('opu', ['action' => 'retail'])
             ]);  
 
 ?>
+<?= $this->pageBreadcrumbs()->render(); ?>
 
 <div class="row">
     <div class="col-md-12">
@@ -32,15 +33,18 @@ $this->pageBreadcrumbs()->setItems([
                         <?php endforeach;?>
                     </select>                    
                 </div>    
-                <button class="btn btn-default calculate-button"
-                        title="Пересчитать ОПУ">
-                    <span class="glyphicon glyphicon-rub" ></span>
-                </button>                         
+                <div class="form-group">
+                    <select id="kindSelect" name="kind" style="width: 200px" class="form-control cookie-control">
+                        <?php foreach (FinOpu::getRetailKindList() as $key => $value):?>
+                            <option value="<?= $key?>"><?= $value?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
             </div>
         </div>    
         <table id="table" 
             data-toggle="table" 
-            data-url="/opu/content"
+            data-url="/opu/retail-content"
             data-side-pagination="server"
             data-pagination="false" 
             data-page-list="[5, 10, 20, 50]"
@@ -49,26 +53,26 @@ $this->pageBreadcrumbs()->setItems([
             data-show-toggle="false"
             data-query-params="queryParams"
             data-response-handler="responseHandler"
-            data-show-footer="false"
+            data-show-footer="true"
             data-row-style="rowStyle"
             data-classes = "table table-bordered table-hover table-condensed"
             >
             <thead>
                 <tr>
-                     <th data-field="mark" data-sortable="false">Показатель</th>
-                     <th data-field="01" data-sortable="false" data-align="right" data-formatter="amountFormatter">Январь</th>
-                     <th data-field="02" data-sortable="false" data-align="right" data-formatter="amountFormatter">Февраль</th>
-                     <th data-field="03" data-sortable="false" data-align="right" data-formatter="amountFormatter">Март</th>
-                     <th data-field="04" data-sortable="false" data-align="right" data-formatter="amountFormatter">Апрель</th>
-                     <th data-field="05" data-sortable="false" data-align="right" data-formatter="amountFormatter">Май</th>
-                     <th data-field="06" data-sortable="false" data-align="right" data-formatter="amountFormatter">Июнь</th>
-                     <th data-field="07" data-sortable="false" data-align="right" data-formatter="amountFormatter">Июль</th>
-                     <th data-field="08" data-sortable="false" data-align="right" data-formatter="amountFormatter">Август</th>
-                     <th data-field="09" data-sortable="false" data-align="right" data-formatter="amountFormatter">Сентябрь</th>
-                     <th data-field="10" data-sortable="false" data-align="right" data-formatter="amountFormatter">Октябрь</th>
-                     <th data-field="11" data-sortable="false" data-align="right" data-formatter="amountFormatter">Ноябрь</th>
-                     <th data-field="12" data-sortable="false" data-align="right" data-formatter="amountFormatter">Декабрь</th>
-                     <th data-field="13" data-sortable="false" data-align="right" data-formatter="amountTotalFormatter">Итого</th>
+                     <th data-field="mark" data-sortable="false" data-footer-formatter="totalFooterFormatter">Показатель</th>
+                     <th data-field="01" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Январь</th>
+                     <th data-field="02" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Февраль</th>
+                     <th data-field="03" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Март</th>
+                     <th data-field="04" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Апрель</th>
+                     <th data-field="05" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Май</th>
+                     <th data-field="06" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Июнь</th>
+                     <th data-field="07" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Июль</th>
+                     <th data-field="08" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Август</th>
+                     <th data-field="09" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Сентябрь</th>
+                     <th data-field="10" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Октябрь</th>
+                     <th data-field="11" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Ноябрь</th>
+                     <th data-field="12" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Декабрь</th>
+                     <th data-field="13" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountTotalFormatter">Итого</th>
                  </tr>                
             </thead>
         </table>
@@ -92,6 +96,9 @@ $this->pageBreadcrumbs()->setItems([
             tableRowClick();        
         });                
         $(document).on('change', '#companySelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#kindSelect', function (e) {
             refreshTable();
         });
         $(document).on('change', '#yearSelect', function (e) {
@@ -120,18 +127,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function rowStyle(row){
         var retired = 'tablerow';
-        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinOpu::getSuccessList()))?>) >= 0){
-            retired += ' success';
-        }
-        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinOpu::getInfoList()))?>) >= 0){
-            retired += ' info';
-        }
-        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinOpu::getMuteList()))?>) >= 0){
-            retired += ' retired-muted';
-        }
-        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinOpu::getWarningList()))?>) >= 0){
-            retired += ' warning';
-        }
+        
         return {classes: retired};
     }
     
@@ -154,7 +150,20 @@ $this->pageBreadcrumbs()->setItems([
         return params;
     }
     
-    function amountFormatter(value, row){
+    function totalFooterFormatter() {
+        return 'Итого:';
+    }
+    
+    function footerFormatter(data){
+        var field = this.field;
+        return $.number((data.map(function (row) {
+            return +row[field];
+        }).reduce(function (sum, i) {
+            return (Math.round((sum + i)*100)/100);
+        }, 0)), 0, ',', ' ');
+    }        
+    
+    function amountFormatter(value){
         if (value > 0){
             return $.number(value, 0, ',', ' ' );
         }
@@ -165,7 +174,7 @@ $this->pageBreadcrumbs()->setItems([
         return '';
     }    
         
-    function amountTotalFormatter(value, row){
+    function amountTotalFormatter(value){
         if (value > 0){
             return '<b>'+$.number(value, 0, ',', ' ' )+'</b>';
         }
