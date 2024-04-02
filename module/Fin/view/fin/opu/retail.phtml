@@ -155,12 +155,16 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function footerFormatter(data){
-        var field = this.field;
-        return $.number((data.map(function (row) {
-            return +row[field];
-        }).reduce(function (sum, i) {
-            return (Math.round((sum + i)*100)/100);
-        }, 0)), 0, ',', ' ');
+        if ($('#kindSelect') !== 'marginRetail'){
+            var field = this.field;
+            return $.number((data.map(function (row) {
+                return +row[field];
+            }).reduce(function (sum, i) {
+                return (Math.round((sum + i)*100)/100);
+            }, 0)), 0, ',', ' ');
+        }
+        
+        return '';
     }        
     
     function amountFormatter(value){
