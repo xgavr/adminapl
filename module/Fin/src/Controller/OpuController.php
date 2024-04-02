@@ -191,6 +191,8 @@ class OpuController extends AbstractActionController
         $company = $this->entityManager->getRepository(Legal::class)
                 ->find($companyId);
         
+        $result = $this->finManager->emptyRetailYear($startDate, $endDate, $company);
+        
         if ($kind == 'revenueRetail'){        
             $data = $this->entityManager->getRepository(FinOpu::class)
                             ->findRetailRevenue($startDate, $endDate, $company);
@@ -223,12 +225,10 @@ class OpuController extends AbstractActionController
             }
         }    
         
-        $result = $this->finManager->emptyRetailYear($startDate, $endDate, $company);
-        
-        foreach ($data as $row){
-            $result[$row['userId']][date('m', strtotime($row['period']))] = round($row['amount']);
-            $result[$row['userId']][13] += round($row['amount']);
-        }
+//        foreach ($data as $row){
+//            $result[$row['userId']][date('m', strtotime($row['period']))] = round($row['amount']);
+//            $result[$row['userId']][13] += round($row['amount']);
+//        }
         
         return new JsonModel([
             'total' => count($result),
