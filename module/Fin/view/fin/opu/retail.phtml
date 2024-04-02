@@ -36,7 +36,7 @@ $this->pageBreadcrumbs()->setItems([
                 <div class="form-group">
                     <select id="kindSelect" name="kind" style="width: 200px" class="form-control cookie-control">
                         <?php foreach (FinOpu::getRetailKindList() as $key => $value):?>
-                            <option value="<?= $key?>"><?= $value?> <?= ($kind == $key) ? 'selected':'' ?></option>
+                            <option value="<?= $key?>"  <?= ($kind == $key) ? 'selected':'' ?>><?= $value?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
@@ -59,7 +59,7 @@ $this->pageBreadcrumbs()->setItems([
             >
             <thead>
                 <tr>
-                     <th data-field="mark" data-sortable="false" data-footer-formatter="totalFooterFormatter">Показатель</th>
+                     <th data-field="mark" data-sortable="false" data-footer-formatter="totalFooterFormatter" data-formatter="markFormatter">Сотрудник</th>
                      <th data-field="01" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Январь</th>
                      <th data-field="02" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Февраль</th>
                      <th data-field="03" data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="amountFormatter">Март</th>
@@ -188,6 +188,10 @@ $this->pageBreadcrumbs()->setItems([
         
         return '';
     }    
+    
+    function markFormatter(value, row){
+        return '<a href="/order/fin?user='+row.key+'" target="_blank">'+value+'</a>';
+    }        
         
     function responseHandler(res) {
         return res;

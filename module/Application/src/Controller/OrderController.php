@@ -29,6 +29,7 @@ use Stock\Entity\Register;
 use ApiMarketPlace\Entity\Marketplace;
 use Application\Form\OrderLegalForm;
 use Application\Filter\OrderFromIdZ;
+use Company\Entity\Legal;
 
 class OrderController extends AbstractActionController
 {
@@ -1047,13 +1048,13 @@ class OrderController extends AbstractActionController
             $query->setMaxResults($limit);
         }
 
-        $totalAmount = $this->entityManager->getRepository(Order::class)
-                        ->findRetailsTotal($params);
+//        $totalAmount = $this->entityManager->getRepository(Order::class)
+//                        ->findRetailsTotal($params);
         
         $totalAmountResult = 0;
-        if ($totalAmount){
-            $totalAmountResult = $totalAmount['amount'];
-        }
+//        if ($totalAmount){
+////            $totalAmountResult = $totalAmount['amount'];
+//        }
         
         $result = $query->getResult(2);
         

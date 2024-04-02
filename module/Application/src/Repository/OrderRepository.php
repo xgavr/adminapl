@@ -21,6 +21,7 @@ use Application\Entity\SupplierOrder;
 use Application\Entity\SupplySetting;
 use Stock\Entity\Retail;
 use Application\Entity\Client;
+use Stock\Entity\Movement;
 
 /**
  * Description of OrderRepository
@@ -668,5 +669,69 @@ class OrderRepository extends EntityRepository{
         
         return $queryBuilder->getQuery()->getResult();
         
-    }                    
+    }        
+    
+    /**
+     * Получить сводные закупки
+     * @param array $params
+     * @return array
+     */
+    public function findRetails($params)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('o.id as orderId, o.aplId as orderAplId, identity(r.user) as userId, sum(r.amount) as amount')
+            ->addSelect('o.shipmentTotal as shipmentTotal')
+//            ->addSelect('sum(select m.amount from movement m where m.doc_id = r.doc_id and m.doc_type = r.doc_type) as revenue')
+//            ->addSelect('sum(select m.baseAmount from movement m where m.doc_id = r.doc_id and m.doc_type = r.doc_type) as purchase')
+            ->from(Retail::class, 'r')
+            ->join('r.order', 'o')
+            ->andWhere('r.status = :status')
+            ->setParameter('status', Retail::STATUS_ACTIVE)    
+            ->andWhere($orX)    
+                ;
+                
+            if (!empty($params['user'])){
+                if (is_numeric($params['user'])){
+                    $queryBuilder->andWhere('r.user = :user')
+                    ->setParameter('user', $params['user'])
+                            ;
+                }    
+            }            
+            if (!empty($params['company'])){
+                if (is_numeric($params['company'])){
+                    $queryBuilder->andWhere('r.company = :company')
+                    ->setParameter('company', $params['company'])
+                            ;
+                }    
+            }            
+            if (!empty($params['userId'])){
+                if (is_numeric($params['userId'])){
+                    $queryBuilder->andWhere('r.user = :user')
+                    ->setParameter('user', $params['userId'])
+                            ;
+                }    
+            }            
+            if (isset($params['sort'])){
+                $queryBuilder->addOrderBy('r.'.$params['sort'], $params['order']);
+            }        
+            
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere('r.dateOper >= :startDate')
+                        ->setParameter('startDate', $params['startDate']);
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere('r.dateOper <= :endDate')
+                        ->setParameter('endDate', $params['endDate']);
+            }
+                
+//        var_dump($queryBuilder->getQuery()->getSQL());    
+        return $queryBuilder->getQuery();       
+    }        
 }

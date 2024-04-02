@@ -5,7 +5,7 @@ use Company\Entity\Cost;
 use Stock\Entity\Movement;
 use Cash\Entity\CashDoc;
 
-$this->headTitle('Детализация оборота');
+$this->headTitle('Детализация выручки');
 
 $this->mainMenu()->setActiveItemId('report');
 $this->mainMenu()->setActiveUrl($this->url('opu'));
@@ -13,7 +13,7 @@ $this->mainMenu()->setActiveUrl($this->url('opu'));
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'ОПиУ' => $this->url('opu'),
-            'Оборот' => $this->url('orders', ['action' => 'fin'])
+            'Выручка' => $this->url('order', ['action' => 'fin'])
             ]);  
 ?>
 <?= $this->pageBreadcrumbs()->render(); ?>
@@ -51,7 +51,7 @@ $this->pageBreadcrumbs()->setItems([
         </div>    
         <table id="table" 
             data-toggle="table" 
-            data-url="/cost/doc-content"
+            data-url="/order/fin-content"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
