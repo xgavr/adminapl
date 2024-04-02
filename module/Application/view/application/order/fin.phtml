@@ -42,8 +42,8 @@ $this->pageBreadcrumbs()->setItems([
                 <div class="form-group">
                     <select id="userSelect" name="user" style="width: 200px" class="form-control cookie-control">
                         <option>все сотруднки</option>
-                        <?php foreach ($costs as $value):?>
-                            <option value="<?= $value->getId()?>" <?= ($costId == $value->getId()) ? 'selected':''?>><?= $value->getName()?></option>
+                        <?php foreach ($users as $value):?>
+                            <option value="<?= $value->getId()?>" <?= ($userId == $value->getId()) ? 'selected':''?>><?= $value->getFullName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
@@ -66,12 +66,13 @@ $this->pageBreadcrumbs()->setItems([
             data-cookie="false"
             data-cookie-id-table="userSaveId"
             data-cookie-expire="1m"            
+            data-sort-name="dateOper"
             >
             <thead>
                 <tr>
                      <th data-field="id" data-sortable="true" data-align="right" data-width="10">Id</th>
                      <th data-field="dateOper" data-sortable="true" data-width="10" data-formatter="dateFormatter">Дата</th>
-                     <th data-field="cost.name">Вид расхода</th>
+                     <!--<th data-field="cost.name">Вид расхода</th>-->
                      <th data-field="docId" data-sortable="false" data-footer-formatter="totalFooterFormatter" data-formatter="docKeyFormatter">Документ</th>
                      <th data-field="amount" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма</th>
                  </tr>                
