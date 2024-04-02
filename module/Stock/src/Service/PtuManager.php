@@ -188,6 +188,8 @@ class PtuManager
                     'office_id' => $ptu->getOffice()->getId(),
                     'company_id' => $ptu->getContract()->getCompany()->getId(),
                     'doc_stamp' => $docStamp,
+                    'amount_extra_type' => Movement::EXTRA_AMOUNT_UNKNOWN,
+                    'amount_extra' => 0,
                 ];
 
                 $this->entityManager->getRepository(Movement::class)

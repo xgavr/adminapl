@@ -455,7 +455,7 @@ class FinOpu
     public static function getMarkList()
     {
         return [
-            'revenueRetail' => '<a href="/opu/retail" target="_blank">Выручка розница</a>',
+            'revenueRetail' => '<a href="/opu/retail?kind=revenueRetail" target="_blank">Выручка розница</a>',
             'purchaseRetail' => 'Закупка розница',
             'incomeRetail' => 'Доход розница',
             'marginRetail' => 'Маржа розница (%)',

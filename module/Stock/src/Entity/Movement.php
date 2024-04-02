@@ -48,6 +48,9 @@ class Movement {
     const DOC_BANK = 12; // выписка
     const DOC_ZPRV = 13; // корректировка зп
     
+    const EXTRA_AMOUNT_DELIVERY = 1; //доставка
+    const EXTRA_AMOUNT_UNKNOWN = 9; //прочее
+    
     
     /**
      * @ORM\Id
@@ -120,6 +123,16 @@ class Movement {
      * @ORM\Column(name="amount")  
      */
     protected $amount;
+
+    /** 
+     * @ORM\Column(name="amount_extra")  
+     */
+    protected $amountExtra;
+
+    /** 
+     * @ORM\Column(name="amount_extra_type")  
+     */
+    protected $amountExtraType;
 
     /** 
      * @ORM\Column(name="base_amount")  
@@ -305,6 +318,15 @@ class Movement {
     public function getAmount() 
     {
         return $this->amount;
+    }
+    
+    public function getAmountExtra() {
+        return $this->amountExtra;
+    }
+
+    public function setAmountExtra($amountExtra) {
+        $this->amountExtra = $amountExtra;
+        return $this;
     }
     
     /**
@@ -544,6 +566,40 @@ class Movement {
     {
         $this->status = $status;
     }   
+    
+    public function getAmountExtraType() {
+        return $this->amountExtraType;
+    }
+
+    /**
+     * Returns possible extra amount type as array.
+     * @return array
+     */
+    public static function getAmountExtraTypeList() 
+    {
+        return [
+            self::EXTRA_AMOUNT_DELIVERY => 'Доставка',
+            self::EXTRA_AMOUNT_UNKNOWN => 'Не известно',
+        ];
+    }    
+    
+    /**
+     * Returns user extra amount type as string.
+     * @return string
+     */
+    public function getAmountExtraTypeAsString()
+    {
+        $list = self::getExtraAmountTypeList();
+        if (isset($list[$this->amountExtraType]))
+            return $list[$this->amountExtraType];
+        
+        return 'Unknown';
+    }    
+        
+    public function setAmountExtraType($amountExtraType) {
+        $this->amountExtraType = $amountExtraType;
+        return $this;
+    }
     
     /**
      * Returns the office.

@@ -156,6 +156,8 @@ class PtManager
                             'office_id' => $pt->getOffice()->getId(),
                             'company_id' => $pt->getCompany()->getId(),
                             'doc_stamp' => $docStamp,
+                            'amount_extra_type' => Movement::EXTRA_AMOUNT_UNKNOWN,
+                            'amount_extra' => 0,
                         ];
 
                         $this->entityManager->getRepository(Movement::class)
@@ -202,6 +204,8 @@ class PtManager
                             'office_id' => $pt->getOffice2()->getId(),
                             'company_id' => $pt->getCompany2()->getId(),
                             'doc_stamp' => $docStamp - 60*60*6, //-6 часов,
+                            'amount_extra_type' => Movement::EXTRA_AMOUNT_UNKNOWN,
+                            'amount_extra' => 0,
                         ];
 
                         $this->entityManager->getRepository(Movement::class)

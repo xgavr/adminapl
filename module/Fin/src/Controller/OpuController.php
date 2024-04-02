@@ -169,12 +169,15 @@ class OpuController extends AbstractActionController
     
     public function retailAction()
     {
+        $kind = $this->params()->fromQuery('kind');
+        
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
         
         return new ViewModel([
             'years' => range(date('Y'), 2024),
             'companies' => $companies,
+            'kind' => $kind,
         ]);
     }
 
