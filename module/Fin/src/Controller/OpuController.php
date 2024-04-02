@@ -212,8 +212,19 @@ class OpuController extends AbstractActionController
         }    
         
         if ($kind == 'incomeRetail'){        
-            $data = $this->entityManager->getRepository(FinOpu::class)
+            $dataRevenue = $this->entityManager->getRepository(FinOpu::class)
+                            ->findRetailRevenue($startDate, $endDate, $company);
+            $dataPurchase = $this->entityManager->getRepository(FinOpu::class)
                             ->findRetailPurchase($startDate, $endDate, $company);
+            foreach ($dataRevenue as $row){
+                $result[$row['userId']][date('m', strtotime($row['period']))] = round($row['amount']);
+                $result[$row['userId']][13] += round($row['amount']);
+            }
+            
+            foreach ($dataPurchase as $row){
+                $result[$row['userId']][date('m', strtotime($row['period']))] += round($row['purchase']);
+                $result[$row['userId']][13] += round($row['purchase']);
+            }
         }    
         
         if ($kind == 'marginRetail'){        
