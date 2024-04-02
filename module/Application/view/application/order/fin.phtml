@@ -78,6 +78,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="shipmentTotal" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма доставки</th>
                      <th data-field="revenue" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма товаров</th>
                      <th data-field="purchase" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма закупки</th>
+                     <th data-field="margin" data-sortable="false" data-align="right" data-formatter="marginFormatter">Маржа, %</th>
                      <!--<th data-field="cost.name">Вид расхода</th>-->
                      <!--<th data-field="docId" data-sortable="false" data-footer-formatter="totalFooterFormatter" data-formatter="docKeyFormatter">Документ</th>-->
                  </tr>                
@@ -155,7 +156,11 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function amountFormatter(value){
-        return (Math.round(value*100)/100).toFixed(2);
+        return (Math.round(value*100)/100).toFixed(0);
+    }        
+        
+    function marginFormatter(value, row){
+        return (Math.round((row.revenue - row.purchase)*100/row.revenue)).toFixed(0);
     }        
         
     function totalFooterFormatter() {
