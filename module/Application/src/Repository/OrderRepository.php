@@ -686,7 +686,7 @@ class OrderRepository extends EntityRepository{
         $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
         $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
         
-        $queryBuilder->select('o.id as orderId, o.aplId as orderAplId, identity(r.user) as userId, sum(r.amount) as amount')
+        $queryBuilder->select('o.id as orderId, o.aplId as orderAplId, identity(r.user) as userId, r.amount as amount')
             ->addSelect('r.docId as docId')
             ->addSelect('r.docType as docType')
             ->addSelect('r.dateOper as dateOper')
@@ -694,8 +694,7 @@ class OrderRepository extends EntityRepository{
 //            ->addSelect('sum(select m.amount from movement m where m.doc_id = r.doc_id and m.doc_type = r.doc_type) as revenue')
 //            ->addSelect('sum(select m.baseAmount from movement m where m.doc_id = r.doc_id and m.doc_type = r.doc_type) as purchase')
             ->from(Retail::class, 'r')
-            ->joinLeft('r.order', 'o')
-//            ->joinLeft('r.vt', 'o')
+            ->leftJoin('r.order', 'o')
             ->andWhere('r.status = :status')
             ->setParameter('status', Retail::STATUS_ACTIVE)    
             ->andWhere($orX)    
