@@ -262,8 +262,6 @@ class VtManager
                         'company_id' => $vt->getOrder()->getCompany()->getId(),
                         'doc_stamp' => $docStamp - 60*60*12, //-12 часов
                         'user_id' => $vt->getOrder()->getUserId(),
-                        'amount_extra_type' => Movement::EXTRA_AMOUNT_UNKNOWN,
-                        'amount_extra' => 0,
                     ];
 
                     $this->entityManager->getRepository(Movement::class)

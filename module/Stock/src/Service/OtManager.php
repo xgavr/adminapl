@@ -125,8 +125,6 @@ class OtManager
                     'office_id' => $ot->getOffice()->getId(),
                     'company_id' => $ot->getCompany()->getId(),
                     'doc_stamp' => $docStamp,
-                    'amount_extra_type' => Movement::EXTRA_AMOUNT_UNKNOWN,
-                    'amount_extra' => 0,
                 ];
 
                 $this->entityManager->getRepository(Movement::class)

@@ -326,8 +326,6 @@ class OrderManager
                         'company_id' => $order->getCompany()->getId(),
                         'doc_stamp' => $docStamp,
                         'user_id' => $order->getUserId(),
-                        'amount_extra_type' => Movement::EXTRA_AMOUNT_DELIVERY,
-                        'amount_extra' => $order->getShipmentTotal(),
                     ];
 
                     $this->entityManager->getRepository(Movement::class)
