@@ -1052,7 +1052,7 @@ class OrderController extends AbstractActionController
                         ->findRetailsTotal($params);
         
         $movementResult = $this->entityManager->getRepository(Order::class)
-                        ->findRetailsTotal($params);
+                        ->findMovementsTotal($params);
         
         
         $result = $query->getResult(2);

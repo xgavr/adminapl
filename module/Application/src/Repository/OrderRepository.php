@@ -813,8 +813,8 @@ class OrderRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
         
         $orX = $queryBuilder->expr()->orX();
-        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
-        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
         
         $queryBuilder->select('sum(m.amount) as revenue, sum(m.baseAmount) as purchase')
             ->from(Movement::class, 'm')
