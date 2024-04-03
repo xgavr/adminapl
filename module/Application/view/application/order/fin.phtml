@@ -207,7 +207,7 @@ $this->pageBreadcrumbs()->setItems([
     function marginFormatter(value, row){
         var margin = Math.round((row.revenue - row.purchase)*100/row.revenue);
         if (margin > 0){
-            return $.number(margin, 2, '.2', '' );
+            return $.number(margin, 2, '.', '' );
         }
         if (margin < 0){
             return '<span style="color:red">'+$.number(margin, 2, '.', '' )+'</span>';
