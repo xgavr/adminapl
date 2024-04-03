@@ -693,6 +693,8 @@ class OrderRepository extends EntityRepository{
             ->addSelect('r.docType as docType')
             ->addSelect('r.dateOper as dateOper')
             ->addSelect('o.shipmentTotal as shipmentTotal')
+            ->addSelect('o.statusAccount as orderStatusAccount')
+            ->addSelect('vt.statusAccount as vtStatusAccount')
             ->addSelect('(select -sum(mr.amount) from Stock\Entity\Movement mr where mr.docId = r.docId and mr.docType = r.docType) as revenue')
             ->addSelect('(select -sum(mp.baseAmount) from Stock\Entity\Movement mp where mp.docId = r.docId and mp.docType = r.docType) as purchase')
             ->from(Retail::class, 'r')

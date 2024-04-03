@@ -4,6 +4,8 @@ use Laminas\Json\Encoder;
 use Company\Entity\Cost;
 use Stock\Entity\Movement;
 use Cash\Entity\CashDoc;
+use Application\Entity\Order;
+use Stock\Entity\Vt;
 
 $this->headTitle('Детализация заказов');
 
@@ -149,6 +151,12 @@ $this->pageBreadcrumbs()->setItems([
 
         if (row.status === '<?= CostMutual::STATUS_RETIRED?>'){
            retired += ' retired';
+        }
+        if (row.orderStatusAccount === '<?= Order::STATUS_TAKE_NO?>'){
+           retired += ' warning';
+        }
+        if (row.vtStatusAccount === '<?= Vt::STATUS_TAKE_NO?>'){
+           retired += ' warning';
         }
         
         return {classes: retired};
