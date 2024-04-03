@@ -277,6 +277,7 @@ class IndexController extends AbstractActionController
         return new ViewModel([
             'companies' => $companies,
             'users' => $users,
+            'accruals' => $accruals,
             'userId' => $user,
             'companyId' => $company,
             'accrualId' => $accrual,
