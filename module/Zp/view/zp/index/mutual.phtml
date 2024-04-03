@@ -84,14 +84,14 @@ use Laminas\Json\Encoder;
     var $mutualTable = $('#mutualtable');
             $ok = $('#ok');
     
-    function refreshTable(){
+    function mutualRefreshTable(){
         $mutualTable.bootstrapTable('refresh');
     }    
 
     $( document ).ready(function() {
 
         $ok.click(function () {
-            refreshTable();
+            mutualRefreshTable();
         });
         
         $mutualTable.bootstrapTable({
@@ -108,16 +108,16 @@ use Laminas\Json\Encoder;
 //        $table.on('load-success.bs.table', function (e, res) {
 //        });                
         $(document).on('change', '#mutualCompanySelect', function (e) {
-            refreshTable();
+            mutualRefreshTable();
         });
         $(document).on('change', '#mutualUserSelect', function (e) {
-            refreshTable();
+            mutualRefreshTable();
         });
         $(document).on('change', '#mutualAccrualSelect', function (e) {
-            refreshTable();
+            mutualRefreshTable();
         });
         $(document).on('change', '#mutualDateStart', function (e) {
-            refreshTable();
+            mutualRefreshTable();
         });
         
         $(document).on('click', '.zp-mutual-close', function (e) {            
