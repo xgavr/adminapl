@@ -257,4 +257,29 @@ class IndexController extends AbstractActionController
         ]);          
     }            
     
+    public function mutualAction()
+    {
+        $company = $this->params()->fromQuery('company');
+        $user = $this->params()->fromQuery('user');
+        $accrual = $this->params()->fromQuery('accrual');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period');
+
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
+        $users = $this->entityManager->getRepository(User::class)
+                ->findBy(['status' => User::STATUS_ACTIVE]);
+        
+        return new ViewModel([
+            'companies' => $companies,
+            'users' => $users,
+            'userId' => $user,
+            'companyId' => $company,
+            'accrualId' => $accrual,
+            'period' => $period,
+            'dateStart' => $dateStart,
+            'currentUser' => $this->logManager->currentUser(),
+            'rbacManager' => $this->rbacManager,
+        ]);
+    }         
 }

@@ -1,0 +1,193 @@
+<?php
+use Zp\Entity\Personal;
+use Zp\Entity\PersonalAccrual;
+use Laminas\Json\Encoder;
+
+
+?>
+<div class="row">
+    <div class="col-md-12">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <button class="btn btn-default zp-modal-show" type="button" disabled modal-url="/zp/edit-form">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>    
+                <div class="form-group">
+                    <select id="periodSelect" class="form-control" name="period">
+                        <option value="date">Дата</option>
+                        <option value="week">Неделя</option>                        
+                        <option value="month" selected="">Месяц</option>                        
+                        <option value="number">Год</option>                        
+                    </select>
+                    <input name="dateStart" id="dateStart" style="width: 200px" class="form-control refresh-table" type="month" value="<?= date('Y-m')?>">
+                </div>
+                <div class="form-group">
+                    <select id="companySelect" name="company" style="width: 200px" class="form-control cookie-control">
+                        <!--<option selected>все компании</option>-->
+                        <?php foreach ($companies as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="userSelect" name="user" style="width: 200px" class="form-control cookie-control">
+                        <option>все сотрудники</option>
+                        <?php foreach ($users as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select id="accrualSelect" name="accrual" style="width: 200px" class="form-control cookie-control">
+                        <option>все начисления</option>
+                        <?php foreach ($accruals as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <button value="/zp/update-zp/" class="btn btn-default refresh-table-button"
+                        title="Рассчитать ЗП">
+                    <span class="glyphicon glyphicon-rub" ></span>
+                </button>                         
+            </div>
+        </div>    
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/zp/content"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            data-show-footer="false"
+            data-row-style="rowStyle"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-cookie="true"
+            data-cookie-id-table="zpSaveId"
+            data-cookie-expire="1m"            
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-sortable="true" data-align="right" data-width="10">Id</th>
+                     <th data-field="dateOper" data-sortable="true" data-width="10" data-formatter="dateFormatter">Дата</th>
+                     <th data-field="docId" data-sortable="false">Документ</th>
+                     <th data-field="accrual.name" data-sortable="false">Операция</th>
+                     <th data-field="user.fullName">Сотрудник</th>
+                     <th data-field="amount" data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                     <th data-field="active" data-formatter="activeFormatter" data-width="5"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<?php echo $this->partial('/zp/index/zp-partial', []); ?>
+
+<script type="text/javascript">
+    var $table = $('#table');
+        $ok = $('#ok');
+    
+    function refreshTable(){
+        $table.bootstrapTable('refresh');
+    }
+    
+
+    $(function () {
+        $ok.click(function () {
+            refreshTable();
+        });
+        $table.on('load-success.bs.table', function (e, res) {
+        });                
+        $(document).on('change', '#companySelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#userSelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#accrualSelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#dateStart', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#periodSelect', function (e) {
+            var selectType = $(this).val();
+            $('#dateStart').attr('type', selectType);
+            switch(selectType){
+                case 'number':
+                    $('#dateStart').val(new Date().getFullYear());
+                    $('#dateStart').attr('min', 2012);
+                    break;
+                case 'month':    
+//                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM"));
+//                    break;
+                default:
+                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
+            }
+        });
+    });    
+    
+    function rowStyle(row){
+        var retired = 'tablerow';
+
+        if (row.status === '<?= PersonalMutual::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }
+        
+        return {classes: retired};
+    }
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function dateFormatter(value){
+        var date = new Date(value);
+        return $.format.date(date, "dd.MM.yyyy");
+    }    
+    
+    function amountFormatter(value){
+        return (Math.round(value*100)/100).toFixed(2);
+    }        
+    
+    function statusFormatter(value, row){
+        var statuses = <?= Encoder::encode(Personal::getStatusList())?>;
+        return statuses[value];
+    }    
+    
+    function activeFormatter(value, row){
+        var url = '/personal/edit-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs personal-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+        return btn;
+    }    
+        
+    function responseHandler(res) {
+        return res;
+    }    
+</script>

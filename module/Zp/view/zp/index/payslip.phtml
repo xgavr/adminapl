@@ -286,10 +286,10 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function activeFormatter(value, row){
-        var url = '/personal/edit-form/'+row.id;
-        btn = '<button disabled';
+        var url = '/zp/mutual?company='+row.company.id+'&user='+row.user.id+'&accrual='+row.accrual.id;
+        btn = '<button ';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs personal-modal-show"';
+        btn += ' class="btn btn-default btn-xs mutual-modal-show"';
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';

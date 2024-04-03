@@ -255,59 +255,5 @@ class PersonalController extends AbstractActionController
             'rowNo' => $rowNo,
             'accrual' => $accrual,
         ]);        
-    }
-    
-    public function mutualAction()
-    {
-        $user = $this->params()->fromQuery('user');
-        
-        $companies = $this->entityManager->getRepository(Legal::class)
-                ->companies();
-        $users = $this->entityManager->getRepository(User::class)
-                ->findBy(['status' => User::STATUS_ACTIVE]);
-        
-        return new ViewModel([
-            'companies' => $companies,
-            'users' => $users,
-            'userId' => $user
-        ]);
     }    
-    
-    public function mutualContentAction()
-    {
-        	        
-        $q = $this->params()->fromQuery('search');
-        $company = $this->params()->fromQuery('company');
-        $user = $this->params()->fromQuery('user');
-        $position = $this->params()->fromQuery('position');
-        $status = $this->params()->fromQuery('status');
-        $offset = $this->params()->fromQuery('offset');
-        $limit = $this->params()->fromQuery('limit');
-        $sort = $this->params()->fromQuery('sort');
-        $order = $this->params()->fromQuery('order', 'DESC');
-        
-        $params = [
-            'q' => $q, 'company' => $company, 'sort' => $sort, 'order' => $order, 
-            'user' => $user, 'position' => $position, 'status' => $status, 
-        ];
-        
-        $query = $this->entityManager->getRepository(Personal::class)
-                        ->findPersonal($params);
-        
-        $total = count($query->getResult());
-        
-        if ($offset) {
-            $query->setFirstResult($offset);
-        }
-        if ($limit) {
-            $query->setMaxResults($limit);
-        }
-
-        $result = $query->getResult(2);
-        
-        return new JsonModel([
-            'total' => $total,
-            'rows' => $result,
-        ]);          
-    }            
 }
