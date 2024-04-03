@@ -80,7 +80,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="revenue" data-sortable="false" data-align="right" data-footer-formatter="revenueTotalFormatter" data-formatter="amountFormatter">Сумма товаров</th>
                      <th data-field="purchase" data-sortable="false" data-align="right" data-footer-formatter="purchaseTotalFormatter" data-formatter="amountFormatter">Сумма закупки</th>
                      <th data-field="income" data-sortable="false" data-align="right" data-footer-formatter="incomeTotalFormatter" data-formatter="incomeFormatter">Доход</th>
-                     <th data-field="margin" data-sortable="false" data-align="right" data-formatter="marginFormatter">Маржа, %</th>
+                     <th data-field="margin" data-sortable="false" data-align="right" data-footer-formatter="marginTotalFormatter" data-formatter="marginFormatter">Маржа, %</th>
                      <!--<th data-field="cost.name">Вид расхода</th>-->
                      <!--<th data-field="docId" data-sortable="false" data-footer-formatter="totalFooterFormatter" data-formatter="docKeyFormatter">Документ</th>-->
                  </tr>                
@@ -130,6 +130,7 @@ $this->pageBreadcrumbs()->setItems([
             $('#revenueTotalFooter').html($.number(totalRevenue, 2, '.', '' ));
             $('#purchaseTotalFooter').html($.number(totalPurchase, 2, '.', '' ));
             $('#incomeTotalFooter').html($.number(totalAmount-totalPurchase, 2, '.', '' ));
+            $('#marginTotalFooter').html($.number((totalRevenue-totalPurchase)*100/totalRevenue, 2, '.', '' ));
             
         });                
         $(document).on('change', '#companySelect', function (e) {
@@ -258,6 +259,10 @@ $this->pageBreadcrumbs()->setItems([
         
     function incomeTotalFormatter(){
         return '<span id="incomeTotalFooter"></span>';
+    }    
+
+    function marginTotalFormatter(){
+        return '<span id="marginTotalFooter"></span>';
     }    
         
     function docKeyFormatter(value, row){
