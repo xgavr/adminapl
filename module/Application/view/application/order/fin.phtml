@@ -157,7 +157,15 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function amountFormatter(value){
-        return (Math.round(value*100)/100).toFixed(0);
+//        return (Math.round(value*100)/100).toFixed(0);
+        if (value > 0){
+            return $.number(value, 0, ',', '' );
+        }
+        if (value < 0){
+            return '<span style="color:red">'+$.number(value, 0, ',', '' )+'</span>';
+        }
+        
+        return '';
     }        
         
     function marginFormatter(value, row){
