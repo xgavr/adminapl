@@ -97,12 +97,18 @@ use Laminas\Json\Encoder;
     }
     
 
-    $(function () {
+    $( document ).ready(function() {
         $ok.click(function () {
             refreshTable();
         });
-        $table.on('load-success.bs.table', function (e, res) {
-        });                
+        
+        $('#accrualtable').bootstrapTable({
+            onLoadSuccess: function(res){
+            }            
+        });
+        
+//        $table.on('load-success.bs.table', function (e, res) {
+//        });                
         $(document).on('change', '#companySelect', function (e) {
             refreshTable();
         });
