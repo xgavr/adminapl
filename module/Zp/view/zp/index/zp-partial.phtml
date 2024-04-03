@@ -84,6 +84,9 @@
             if ($("#userSelect").length){
                 url += '&user='+$("#userSelect").val();
             }
+            if ($("#accrualSelect").length){
+                url += '&accrual='+$("#accrualSelect").val();
+            }
             showFormDialog({
                 id: 'mutualModal',
                 url: url,
