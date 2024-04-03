@@ -118,7 +118,9 @@ class IndexController extends AbstractActionController
         $query = $this->entityManager->getRepository(PersonalMutual::class)
                         ->findMutuals($params);
         
-        $total = count($query->getResult());
+//        $total = count($query->getResult());
+        $totalResult = $this->entityManager->getRepository(PersonalMutual::class)
+                        ->findMutualsTotal($params);
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -130,7 +132,8 @@ class IndexController extends AbstractActionController
         $result = $query->getResult(2);
         
         return new JsonModel([
-            'total' => $total,
+            'total' => $totalResult['totalCount'],
+            'totalAmount' => $totalResult['amount'],
             'rows' => $result,
         ]);          
     }        

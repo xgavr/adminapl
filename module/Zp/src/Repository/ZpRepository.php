@@ -83,6 +83,57 @@ class ZpRepository extends EntityRepository
     }
     
     /**
+     * Получить итоги операций
+     * @param array $params
+     * @return query
+     */
+    public function findMutualsTotal($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('sum(pm.amount) as amount, count(pm.id) as totalCount')
+            ->from(PersonalMutual::class, 'pm')
+            ->setMaxResults(1)    
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['company'])){
+                $queryBuilder->andWhere('pm.company = :company')
+                        ->setParameter('company', $params['company'])
+                        ;
+            }            
+            if (!empty($params['user'])){
+                if (is_numeric($params['user'])){
+                    $queryBuilder->andWhere('pm.user = :user')
+                            ->setParameter('user', $params['user'])
+                            ;
+                }    
+            }            
+            if (!empty($params['accrual'])){
+                if (is_numeric($params['accrual'])){
+                    $queryBuilder->andWhere('pm.accrual = :accrual')
+                            ->setParameter('accrual', $params['accrual'])
+                            ;
+                }    
+            }            
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere("pm.dateOper >= :startDate")
+                        ->setParameter('startDate', $params['startDate'])
+                        ;
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere("pm.dateOper <= :endDate")
+                        ->setParameter('endDate', $params['endDate'])
+                        ;
+            }
+        }    
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getOneOrNullResult();       
+    }
+    
+    /**
      * Получить Наисления
      * @param array $params
      * @return query

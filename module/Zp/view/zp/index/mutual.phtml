@@ -17,24 +17,24 @@ use Laminas\Json\Encoder;
                         <option value="month" selected="">Месяц</option>                        
                         <option value="number">Год</option>                        
                     </select>
-                    <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control refresh-table" type="month" value="<?= date('Y-m')?>">
+                    <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control refresh-table" min="2024-01-01" type="month" value="<?= date('Y-m')?>">
                 </div>
                 <div class="form-group">
-                    <select id="mutualCompanySelect" name="company" style="width: 200px" class="form-control cookie-control">
+                    <select id="mutualCompanySelect" name="company" style="width: 200px" <?= ($rbacManager->isGranted(null, 'zp.manage')) ? '':'disabled' ?> class="form-control cookie-control">
                         <?php foreach ($companies as $value):?>
                             <option value="<?= $value->getId()?>" <?= ($companyId == $value->getId()) ? 'selected':''?>><?= $value->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="mutualUserSelect" name="user" style="width: 200px" class="form-control cookie-control">
+                    <select id="mutualUserSelect" name="user" style="width: 200px" <?= ($rbacManager->isGranted(null, 'zp.manage')) ? '':'disabled' ?> class="form-control cookie-control">
                         <?php foreach ($users as $value):?>
                             <option value="<?= $value->getId()?>" <?= ($userId == $value->getId()) ? 'selected':''?>><?= $value->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="mutualAccrualSelect" name="accrual" style="width: 200px" class="form-control cookie-control">
+                    <select id="mutualAccrualSelect" name="accrual" style="width: 200px" <?= ($rbacManager->isGranted(null, 'zp.manage')) ? '':'disabled' ?> class="form-control cookie-control">
                         <?php foreach ($accruals as $value):?>
                             <option value="<?= $value->getId()?>" <?= ($accrualId == $value->getId()) ? 'selected':''?>><?= $value->getName()?></option>
                         <?php endforeach;?>
@@ -53,12 +53,14 @@ use Laminas\Json\Encoder;
             data-show-toggle="false"
             data-query-params="mutualQueryParams"
             data-response-handler="mutualResponseHandler"
-            data-show-footer="false"
             data-row-style="mutualRowStyle"
             data-classes = "table table-bordered table-hover table-condensed"
             data-cookie="false"
             data-cookie-id-table="zpMutualSaveId"
             data-cookie-expire="1m"            
+            data-show-footer="true"
+            data-sort-name="dateOper"
+            data-sort-order="desc"
             >
             <thead>
                 <tr>
@@ -66,8 +68,8 @@ use Laminas\Json\Encoder;
                      <th data-field="dateOper" data-sortable="true" data-width="10" data-formatter="dateFormatter">Дата</th>
                      <th data-field="docId" data-sortable="false">Документ</th>
                      <th data-field="accrual.name" data-sortable="false">Операция</th>
-                     <th data-field="user.fullName">Сотрудник</th>
-                     <th data-field="amount" data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                     <th data-field="user.fullName" data-footer-formatter="totalFooterFormatter">Сотрудник</th>
+                     <th data-field="amount" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма</th>
                  </tr>                
             </thead>
         </table>
@@ -78,24 +80,28 @@ use Laminas\Json\Encoder;
     <button type="button" class="btn btn-secondary zp-mutual-close" data-dismiss="modal">Закрыть</button>
 </div>
 
-<?php echo $this->partial('/zp/index/zp-partial', []); ?>
-
 <script type="text/javascript">
-    var $table = $('#mutualtable');
-        $ok = $('#ok');
+    var $mutualTable = $('#mutualtable');
+            $ok = $('#ok');
     
     function refreshTable(){
-        $table.bootstrapTable('refresh');
-    }
-    
+        $mutualTable.bootstrapTable('refresh');
+    }    
 
     $( document ).ready(function() {
+
         $ok.click(function () {
             refreshTable();
         });
         
-        $('#mutualtable').bootstrapTable({
+        $mutualTable.bootstrapTable({
             onLoadSuccess: function(res){
+                tableRowClick();   
+                var totalAmount = 0;
+                if (res.totalAmount){
+                    totalAmount = Math.abs(res.totalAmount);
+                }
+                $('#amountTotalFooter').html($.number(totalAmount, 2, '.', '' ));
             }            
         });
         
@@ -114,9 +120,7 @@ use Laminas\Json\Encoder;
             refreshTable();
         });
         
-        $(document).on('click', '.zp-mutual-close', function (e) {
-            $('#mutualtable').bootstrapTable('destroy');
-            $('#mutualToolbar').remove();
+        $(document).on('click', '.zp-mutual-close', function (e) {            
         });
         
         $(document).on('change', '#mutualPeriodSelect', function (e) {
@@ -165,13 +169,21 @@ use Laminas\Json\Encoder;
         return params;
     }
     
+    function totalFooterFormatter() {
+        return 'Итого:';
+    }
+    
+    function amountTotalFormatter(){
+        return '<span id="amountTotalFooter"></span>';
+    }        
+
     function dateFormatter(value){
         var date = new Date(value);
         return $.format.date(date, "dd.MM.yyyy");
     }    
     
     function amountFormatter(value){
-        return (Math.round(value*100)/100).toFixed(2);
+        return (Math.round(Math.abs(value)*100)/100).toFixed(2);
     }        
     
     function statusFormatter(value, row){
