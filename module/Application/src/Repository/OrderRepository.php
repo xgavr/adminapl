@@ -672,7 +672,7 @@ class OrderRepository extends EntityRepository{
     }        
     
     /**
-     * Получить сводные закупки
+     * Получить сводные продажи закупки
      * @param array $params
      * @return array
      */
@@ -743,7 +743,7 @@ class OrderRepository extends EntityRepository{
     }   
     
     /**
-     * Получить итоги сводные закупки
+     * Получить итоги сводные продажи
      * @param array $params
      * @return array
      */
@@ -759,13 +759,12 @@ class OrderRepository extends EntityRepository{
         
         $queryBuilder->select('sum(r.amount) as amount')
             ->addSelect('sum(o.shipmentTotal) as shipmentTotal')
-            ->addSelect('(select -sum(mr.amount) from Stock\Entity\Movement mr where mr.docId = r.docId and mr.docType = r.docType) as revenue')
-            ->addSelect('(select -sum(mp.baseAmount) from Stock\Entity\Movement mp where mp.docId = r.docId and mp.docType = r.docType) as purchase')
             ->from(Retail::class, 'r')
             ->leftJoin('r.order', 'o', 'WITH', 'r.docType = '.Movement::DOC_ORDER)
             ->andWhere('r.status = :status')
             ->setParameter('status', Retail::STATUS_ACTIVE)    
             ->andWhere($orX)    
+            ->setMaxResults(1)    
                 ;
                 
             if (!empty($params['user'])){
@@ -799,6 +798,63 @@ class OrderRepository extends EntityRepository{
             }
                 
 //        var_dump($queryBuilder->getQuery()->getSQL());    
-        return $queryBuilder->getQuery()->getResult();       
+        return $queryBuilder->getQuery()->getOneOrNullResult();       
+    } 
+    
+    /**
+     * Получить итоги сводные закупки
+     * @param array $params
+     * @return array
+     */
+    public function findMovementsTotal($params)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('sum(m.amount) as revenue, sum(m.baseAmount) as purchase')
+            ->from(Movement::class, 'm')
+            ->andWhere('m.status = :status')
+            ->setParameter('status', Movement::STATUS_ACTIVE)    
+            ->andWhere($orX)  
+            ->setMaxResults(1)    
+                ;
+                
+            if (!empty($params['user'])){
+                if (is_numeric($params['user'])){
+                    $queryBuilder->andWhere('m.user = :user')
+                    ->setParameter('user', $params['user'])
+                            ;
+                }    
+            }            
+            if (!empty($params['company'])){
+                if (is_numeric($params['company'])){
+                    $queryBuilder->andWhere('m.company = :company')
+                    ->setParameter('company', $params['company'])
+                            ;
+                }    
+            }            
+            if (!empty($params['userId'])){
+                if (is_numeric($params['userId'])){
+                    $queryBuilder->andWhere('m.user = :user')
+                    ->setParameter('user', $params['userId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere('m.dateOper >= :startDate')
+                        ->setParameter('startDate', $params['startDate']);
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere('m.dateOper <= :endDate')
+                        ->setParameter('endDate', $params['endDate']);
+            }
+                
+//        var_dump($queryBuilder->getQuery()->getSQL());    
+        return $queryBuilder->getQuery()->getOneOrNullResult();       
     }        
 }

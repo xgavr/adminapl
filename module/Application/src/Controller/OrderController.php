@@ -1048,19 +1048,19 @@ class OrderController extends AbstractActionController
             $query->setMaxResults($limit);
         }
 
-        $totalAmountResult = $this->entityManager->getRepository(Order::class)
+        $retailResult = $this->entityManager->getRepository(Order::class)
                         ->findRetailsTotal($params);
         
-//        $totalAmountResult = 0;
-//        if ($totalAmount){
-////            $totalAmountResult = $totalAmount['amount'];
-//        }
+        $movementResult = $this->entityManager->getRepository(Order::class)
+                        ->findRetailsTotal($params);
+        
         
         $result = $query->getResult(2);
         
         return new JsonModel([
             'total' => $total,
-            'totalAmount' => $totalAmountResult,
+            'retailResult' => $retailResult,
+            'movementResult' => $movementResult,
             'rows' => $result,
         ]);          
     }        
