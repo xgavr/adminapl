@@ -740,6 +740,8 @@ class OrderRepository extends EntityRepository{
                         ->setParameter('endDate', $params['endDate']);
             }
                 
+            $queryBuilder->addOrderBy('r.docStamp', 'DESC');
+            
 //        var_dump($queryBuilder->getQuery()->getSQL());    
         return $queryBuilder->getQuery();       
     }   
