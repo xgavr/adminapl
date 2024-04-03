@@ -269,6 +269,8 @@ class IndexController extends AbstractActionController
                 ->companies();
         $users = $this->entityManager->getRepository(User::class)
                 ->findBy(['status' => User::STATUS_ACTIVE]);
+        $accruals = $this->entityManager->getRepository(Accrual::class)
+                ->findBy(['status' => Accrual::STATUS_ACTIVE]);
         
         $this->layout()->setTemplate('layout/terminal');
         
