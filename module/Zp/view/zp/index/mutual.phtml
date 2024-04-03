@@ -54,22 +54,22 @@ use Laminas\Json\Encoder;
                 </button>                         
             </div>
         </div>    
-        <table id="table" 
-            data-toggle="table" 
+        <table id="mutualtable" 
+            data-toggle="mutualtable" 
             data-url="/zp/content"
             data-side-pagination="server"
             data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
-            data-toolbar="#toolbar"
+            data-toolbar="#mutualToolbar"
             data-show-refresh="true"
             data-show-toggle="false"
-            data-query-params="queryParams"
-            data-response-handler="responseHandler"
+            data-query-params="mutualQueryParams"
+            data-response-handler="mutualResponseHandler"
             data-show-footer="false"
-            data-row-style="rowStyle"
+            data-row-style="mutualRowStyle"
             data-classes = "table table-bordered table-hover table-condensed"
             data-cookie="true"
-            data-cookie-id-table="zpSaveId"
+            data-cookie-id-table="zpMutualSaveId"
             data-cookie-expire="1m"            
             >
             <thead>
@@ -80,7 +80,6 @@ use Laminas\Json\Encoder;
                      <th data-field="accrual.name" data-sortable="false">Операция</th>
                      <th data-field="user.fullName">Сотрудник</th>
                      <th data-field="amount" data-sortable="false" data-align="right" data-formatter="amountFormatter">Сумма</th>
-                     <th data-field="active" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
             </thead>
         </table>
@@ -90,7 +89,7 @@ use Laminas\Json\Encoder;
 <?php echo $this->partial('/zp/index/zp-partial', []); ?>
 
 <script type="text/javascript">
-    var $table = $('#table');
+    var $table = $('#mutualtable');
         $ok = $('#ok');
     
     function refreshTable(){
@@ -133,7 +132,7 @@ use Laminas\Json\Encoder;
         });
     });    
     
-    function rowStyle(row){
+    function mutualRowStyle(row){
         var retired = 'tablerow';
 
         if (row.status === '<?= PersonalMutual::STATUS_RETIRED?>'){
@@ -143,18 +142,18 @@ use Laminas\Json\Encoder;
         return {classes: retired};
     }
     
-    function queryParams(params) {
-        $('#toolbar').find('input[name]').each(function () {
+    function mutualQueryParams(params) {
+        $('#mutualToolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        $('#toolbar').find('select[name]').each(function () {
+        $('#mutualToolbar').find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('#table .page-size').html();
+        limit = $('#mutualtable .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('#table li.page-number.active a').html();
+        offset = $('#mutualtable li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
@@ -176,19 +175,7 @@ use Laminas\Json\Encoder;
         return statuses[value];
     }    
     
-    function activeFormatter(value, row){
-        var url = '/personal/edit-form/'+row.id;
-        btn = '<button';
-        btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs personal-modal-show"';
-        btn += ' aria-label="Left Align"'; 
-        btn += ' modal-url="'+url+'">';
-        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-        btn += '</button>';
-        return btn;
-    }    
-        
-    function responseHandler(res) {
+    function mutualResponseHandler(res) {
         return res;
     }    
 </script>
