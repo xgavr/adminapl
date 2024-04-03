@@ -8,50 +8,38 @@ use Laminas\Json\Encoder;
 ?>
 <div class="row">
     <div class="col-md-12">
-        <div id="toolbar">
+        <div id="mutualToolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <button class="btn btn-default zp-modal-show" type="button" disabled modal-url="/zp/edit-form">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    </button>
-                </div>    
-                <div class="form-group">
-                    <select id="periodSelect" class="form-control" name="period">
+                    <select id="mutualPeriodSelect" class="form-control" name="period">
                         <option value="date">Дата</option>
                         <option value="week">Неделя</option>                        
                         <option value="month" selected="">Месяц</option>                        
                         <option value="number">Год</option>                        
                     </select>
-                    <input name="dateStart" id="dateStart" style="width: 200px" class="form-control refresh-table" type="month" value="<?= date('Y-m')?>">
+                    <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control refresh-table" type="month" value="<?= date('Y-m')?>">
                 </div>
                 <div class="form-group">
-                    <select id="companySelect" name="company" style="width: 200px" class="form-control cookie-control">
-                        <!--<option selected>все компании</option>-->
+                    <select id="mutualCompanySelect" name="company" style="width: 200px" class="form-control cookie-control">
                         <?php foreach ($companies as $value):?>
-                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                            <option value="<?= $value->getId()?>" <?= ($companyId == $value->getId()) ? 'selected':''?>><?= $value->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="userSelect" name="user" style="width: 200px" class="form-control cookie-control">
-                        <option>все сотрудники</option>
+                    <select id="mutualUserSelect" name="user" style="width: 200px" class="form-control cookie-control">
                         <?php foreach ($users as $value):?>
-                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                            <option value="<?= $value->getId()?>" <?= ($userId == $value->getId()) ? 'selected':''?>><?= $value->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="accrualSelect" name="accrual" style="width: 200px" class="form-control cookie-control">
-                        <option>все начисления</option>
+                    <select id="mutualAccrualSelect" name="accrual" style="width: 200px" class="form-control cookie-control">
                         <?php foreach ($accruals as $value):?>
-                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                            <option value="<?= $value->getId()?>" <?= ($accrualId == $value->getId()) ? 'selected':''?>><?= $value->getName()?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
-                <button value="/zp/update-zp/" class="btn btn-default refresh-table-button"
-                        title="Рассчитать ЗП">
-                    <span class="glyphicon glyphicon-rub" ></span>
-                </button>                         
             </div>
         </div>    
         <table id="mutualtable" 
@@ -109,31 +97,31 @@ use Laminas\Json\Encoder;
         
 //        $table.on('load-success.bs.table', function (e, res) {
 //        });                
-        $(document).on('change', '#companySelect', function (e) {
+        $(document).on('change', '#mutualCompanySelect', function (e) {
             refreshTable();
         });
-        $(document).on('change', '#userSelect', function (e) {
+        $(document).on('change', '#mutualUserSelect', function (e) {
             refreshTable();
         });
-        $(document).on('change', '#accrualSelect', function (e) {
+        $(document).on('change', '#mutualAccrualSelect', function (e) {
             refreshTable();
         });
-        $(document).on('change', '#dateStart', function (e) {
+        $(document).on('change', '#mutualDateStart', function (e) {
             refreshTable();
         });
-        $(document).on('change', '#periodSelect', function (e) {
+        $(document).on('change', '#mutualPeriodSelect', function (e) {
             var selectType = $(this).val();
-            $('#dateStart').attr('type', selectType);
+            $('#mutualDateStart').attr('type', selectType);
             switch(selectType){
                 case 'number':
-                    $('#dateStart').val(new Date().getFullYear());
-                    $('#dateStart').attr('min', 2012);
+                    $('#mutualDateStart').val(new Date().getFullYear());
+                    $('#mutualDateStart').attr('min', 2012);
                     break;
                 case 'month':    
 //                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM"));
 //                    break;
                 default:
-                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
+                    $('#mutualDateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
             }
         });
     });    
