@@ -74,12 +74,12 @@ $this->pageBreadcrumbs()->setItems([
                 <tr>
                      <th data-field="docId" data-sortable="true" data-align="right" data-width="50" data-formatter="docFormatter">Номер заказа</th>
                      <th data-field="orderAplId" data-sortable="false" data-align="right" data-width="50" data-formatter="aplFormatter">Номер АПЛ</th>
-                     <th data-field="dateOper" data-sortable="true" data-width="50" data-formatter="dateFormatter">Дата</th>
+                     <th data-field="dateOper" data-sortable="true" data-width="50" data-footer-formatter="totalFooterFormatter" data-formatter="dateFormatter">Дата</th>
                      <th data-field="amount" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма заказа</th>
-                     <th data-field="shipmentTotal" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма доставки</th>
-                     <th data-field="revenue" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма товаров</th>
-                     <th data-field="purchase" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма закупки</th>
-                     <th data-field="income" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="incomeFormatter">Доход</th>
+                     <th data-field="shipmentTotal" data-sortable="false" data-align="right" data-footer-formatter="shipmentTotalFormatter" data-formatter="amountFormatter">Сумма доставки</th>
+                     <th data-field="revenue" data-sortable="false" data-align="right" data-footer-formatter="revenueTotalFormatter" data-formatter="amountFormatter">Сумма товаров</th>
+                     <th data-field="purchase" data-sortable="false" data-align="right" data-footer-formatter="purchaseTotalFormatter" data-formatter="amountFormatter">Сумма закупки</th>
+                     <th data-field="income" data-sortable="false" data-align="right" data-footer-formatter="incomeTotalFormatter" data-formatter="incomeFormatter">Доход</th>
                      <th data-field="margin" data-sortable="false" data-align="right" data-formatter="marginFormatter">Маржа, %</th>
                      <!--<th data-field="cost.name">Вид расхода</th>-->
                      <!--<th data-field="docId" data-sortable="false" data-footer-formatter="totalFooterFormatter" data-formatter="docKeyFormatter">Документ</th>-->
@@ -107,10 +107,30 @@ $this->pageBreadcrumbs()->setItems([
         $table.on('load-success.bs.table', function (e, res) {
             tableRowClick();   
             var totalAmount = 0;
-            if (res.totalAmount){
-                totalAmount = res.totalAmount;
+            var totalShipment = 0;
+            var totalRevenue = 0;
+            var totalPurchase = 0;
+            var totalIncome = 0;
+            
+            if (res.movementResult.purchase){
+                totalPurchase = res.movementResult.purchase;
             }
-            $('#amountTotalFooter').html((Math.round(totalAmount*100)/100).toFixed(2));
+            if (res.movementResult.revenue){
+                totalRevenue = res.movementResult.revenue;
+            }
+            if (res.retailResult.amount){
+                totalAmount = res.retailResult.amount;
+            }
+            if (res.retailResult.shipmentTotal){
+                totalShipment = res.retailResult.shipmentTotal;
+            }
+            
+            $('#amountTotalFooter').html($.number(totalAmount, 2, '.', '' ));
+            $('#shipmentTotalFooter').html($.number(totalShipment, 2, '.', '' ));
+            $('#revenueTotalFooter').html($.number(totalRevenue, 2, '.', '' ));
+            $('#purchaseTotalFooter').html($.number(totalPurchase, 2, '.', '' ));
+            $('#incomeTotalFooter').html($.number(totalAmount-totalPurchase, 2, '.', '' ));
+            
         });                
         $(document).on('change', '#companySelect', function (e) {
             refreshTable();
@@ -220,8 +240,24 @@ $this->pageBreadcrumbs()->setItems([
         return 'Итого:';
     }
 
-function amountTotalFormatter(){
+    function amountTotalFormatter(){
         return '<span id="amountTotalFooter"></span>';
+    }    
+
+    function shipmentTotalFormatter(){
+        return '<span id="shipmentTotalFooter"></span>';
+    }    
+
+    function revenueTotalFormatter(){
+        return '<span id="revenueTotalFooter"></span>';
+    }    
+
+    function purchaseTotalFormatter(){
+        return '<span id="purchaseTotalFooter"></span>';
+    }    
+        
+    function incomeTotalFormatter(){
+        return '<span id="incomeTotalFooter"></span>';
     }    
         
     function docKeyFormatter(value, row){

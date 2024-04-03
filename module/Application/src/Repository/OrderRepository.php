@@ -816,7 +816,7 @@ class OrderRepository extends EntityRepository{
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
         
-        $queryBuilder->select('sum(m.amount) as revenue, sum(m.baseAmount) as purchase')
+        $queryBuilder->select('-sum(m.amount) as revenue, -sum(m.baseAmount) as purchase')
             ->from(Movement::class, 'm')
             ->andWhere('m.status = :status')
             ->setParameter('status', Movement::STATUS_ACTIVE)    
