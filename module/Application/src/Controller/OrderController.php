@@ -1048,10 +1048,10 @@ class OrderController extends AbstractActionController
             $query->setMaxResults($limit);
         }
 
-//        $totalAmount = $this->entityManager->getRepository(Order::class)
-//                        ->findRetailsTotal($params);
+        $totalAmountResult = $this->entityManager->getRepository(Order::class)
+                        ->findRetailsTotal($params);
         
-        $totalAmountResult = 0;
+//        $totalAmountResult = 0;
 //        if ($totalAmount){
 ////            $totalAmountResult = $totalAmount['amount'];
 //        }
