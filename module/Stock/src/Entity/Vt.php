@@ -134,12 +134,19 @@ class Vt {
     private $vtGoods;    
     
     /**
+     * @ORM\OneToMany(targetEntity="Stock\Entity\Retail", mappedBy="vt") 
+     * @ORM\JoinColumn(name="id", referencedColumnName="vt_id")
+     */
+    private $retails;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
     {
        $this->vtGoods = new ArrayCollection();
        $this->cashDocs = new ArrayCollection();
+       $this->retails = new ArrayCollection();
     }
     
     
@@ -564,6 +571,10 @@ class Vt {
     
     public function getCashDocs() {
         return $this->cashDocs;
+    }
+    
+    public function getRetails() {
+        return $this->retails;
     }
     
     /**

@@ -64,16 +64,16 @@ $this->pageBreadcrumbs()->setItems([
             data-show-footer="true"
             data-row-style="rowStyle"
             data-classes = "table table-bordered table-hover table-condensed"
-            data-cookie="false"
-            data-cookie-id-table="userSaveId"
+            data-cookie="true"
+            data-cookie-id-table="finOrderSaveId"
             data-cookie-expire="1m"            
             data-sort-name="dateOper"
             data-sort-order="desc"
             >
             <thead>
                 <tr>
-                     <th data-field="docId" data-sortable="true" data-align="right" data-width="10">Номер заказа</th>
-                     <th data-field="orderAplId" data-sortable="false" data-align="right" data-width="10">Номер АПЛ</th>
+                     <th data-field="docId" data-sortable="true" data-align="right" data-width="10" data-formatter="docFormatter">Номер заказа</th>
+                     <th data-field="orderAplId" data-sortable="false" data-align="right" data-width="10" data-formatter="aplFormatter">Номер АПЛ</th>
                      <th data-field="dateOper" data-sortable="true" data-width="10" data-formatter="dateFormatter">Дата</th>
                      <th data-field="amount" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма заказа</th>
                      <th data-field="shipmentTotal" data-sortable="false" data-align="right" data-footer-formatter="amountTotalFormatter" data-formatter="amountFormatter">Сумма доставки</th>
@@ -151,6 +151,29 @@ $this->pageBreadcrumbs()->setItems([
         return params;
     }
     
+    function docFormatter(value, row){
+        let docType = row.docType;        
+        let docId = row.docId;  
+        switch(docType){
+            case '<?= Movement::DOC_ORDER?>': 
+                return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>"+row.orderId+"</a>";
+            case '<?= Movement::DOC_VT?>': 
+                return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>"+row.vtOrderId+"</a>";
+            default: return docId;            
+        }
+    }
+    
+    function aplFormatter(value, row){
+        let docType = row.docType;        
+        let docId = row.docId;  
+        var aplId = row.orderAplId;
+        if (docType === '<?= Movement::DOC_VT?>'){
+            aplId = row.vtOrderAplId;
+        }
+        
+        return '<a title="АПЛ ссылка" href="https://autopartslist.ru/admin/orders/view/id/' + aplId + '" target="_blank">' + aplId + '</a>';
+    }
+    
     function dateFormatter(value){
         var date = new Date(value);
         return $.format.date(date, "dd.MM.yyyy");
@@ -169,7 +192,15 @@ $this->pageBreadcrumbs()->setItems([
     }        
         
     function marginFormatter(value, row){
-        return (Math.round((row.revenue - row.purchase)*100/row.revenue)).toFixed(0);
+        var margin = Math.round((row.revenue - row.purchase)*100/row.revenue);
+        if (margin > 0){
+            return $.number(margin, 0, ',', '' );
+        }
+        if (margin < 0){
+            return '<span style="color:red">'+$.number(margin, 0, ',', '' )+'</span>';
+        }
+        
+        return '';
     }        
         
     function totalFooterFormatter() {

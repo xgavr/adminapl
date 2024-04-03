@@ -20,6 +20,7 @@ use ApiMarketPlace\Entity\MarketSaleReport;
 use Stock\Entity\Revise;
 use Stock\Entity\Ptu;
 use User\Entity\User;
+use Stock\Entity\Vt;
 
 
 /**
@@ -137,6 +138,12 @@ class Retail {
      * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
      */
     private $order;    
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Vt", inversedBy="retails") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $vt;    
 
     /**
      * @ORM\ManyToOne(targetEntity="ApiMarketPlace\Entity\MarketSaleReport", inversedBy="retails") 
@@ -536,8 +543,25 @@ class Retail {
         $this->order = $order;
         return $this;
     }
-
     
+    /**
+     * 
+     * @return Vt
+     */
+    public function getVt() {
+        return $this->vt;
+    }
+
+    /**
+     * 
+     * @param Vt $vt
+     * @return $this
+     */
+    public function setVt($vt) {
+        $this->vt = $vt;
+        return $this;
+    }
+        
     /**
      * 
      * @return MarketSaleReport
