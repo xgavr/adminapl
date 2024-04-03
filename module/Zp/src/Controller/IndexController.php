@@ -270,6 +270,8 @@ class IndexController extends AbstractActionController
         $users = $this->entityManager->getRepository(User::class)
                 ->findBy(['status' => User::STATUS_ACTIVE]);
         
+        $this->layout()->setTemplate('layout/terminal');
+        
         return new ViewModel([
             'companies' => $companies,
             'users' => $users,
