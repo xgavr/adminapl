@@ -56,7 +56,7 @@ use Laminas\Json\Encoder;
             data-show-footer="false"
             data-row-style="mutualRowStyle"
             data-classes = "table table-bordered table-hover table-condensed"
-            data-cookie="true"
+            data-cookie="false"
             data-cookie-id-table="zpMutualSaveId"
             data-cookie-expire="1m"            
             >
@@ -75,7 +75,7 @@ use Laminas\Json\Encoder;
 </div>    
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-secondary zp-mutual-close" data-dismiss="modal">Закрыть</button>
 </div>
 
 <?php echo $this->partial('/zp/index/zp-partial', []); ?>
@@ -113,6 +113,12 @@ use Laminas\Json\Encoder;
         $(document).on('change', '#mutualDateStart', function (e) {
             refreshTable();
         });
+        
+        $(document).on('click', '.zp-mutual-close', function (e) {
+            $('#mutualtable').bootstrapTable('destroy');
+            $('#mutualToolbar').remove();
+        });
+        
         $(document).on('change', '#mutualPeriodSelect', function (e) {
             var selectType = $(this).val();
             $('#mutualDateStart').attr('type', selectType);
