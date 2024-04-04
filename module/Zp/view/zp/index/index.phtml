@@ -57,7 +57,7 @@ $this->pageBreadcrumbs()->setItems([
                         <?php endforeach;?>
                     </select>                    
                 </div>    
-                <button value="/zp/update-zp/" class="btn btn-default refresh-table-button"
+                <button value="/zp/update-zp/" class="btn btn-default update-zp"
                         title="Рассчитать ЗП">
                     <span class="glyphicon glyphicon-rub" ></span>
                 </button>                         
@@ -106,6 +106,27 @@ $this->pageBreadcrumbs()->setItems([
         $table.bootstrapTable('refresh');
     }
     
+    function updateZp(docId, docType){ 
+        bootbox.prompt({
+            title: 'Рассчитать ЗП за месяц',
+            inputType: 'date',
+            value: new Date($('#dateStart').val()).toISOString().split('T')[0],        
+            callback: function (result) {
+//                console.log(result);                
+                if (result){
+                    var dialog = bootbox.dialog({
+                        message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                        closeButton: true
+                    });                    
+                    $.getJSON('/zp/update-zp?dateStart='+result, function( data ) {
+                        dialog.modal('hide');
+                        $table.bootstrapTable('refresh', {silent:true});
+                    });                    
+                }    
+            }
+        });
+        return;
+    }    
 
     $(function () {
         $ok.click(function () {
@@ -125,6 +146,9 @@ $this->pageBreadcrumbs()->setItems([
         $(document).on('change', '#dateStart', function (e) {
             refreshTable();
         });
+        $(document).on('click', '.update-zp', function (e) {
+            updateZp();
+        });
         $(document).on('change', '#periodSelect', function (e) {
             var selectType = $(this).val();
             $('#dateStart').attr('type', selectType);
@@ -141,7 +165,7 @@ $this->pageBreadcrumbs()->setItems([
             }
         });
     });    
-    
+        
     function rowStyle(row){
         var retired = 'tablerow';
 

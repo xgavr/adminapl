@@ -140,7 +140,10 @@ class IndexController extends AbstractActionController
     
     public function updateZpAction()
     {
-        $this->zpCalculator->periodCalculator();        
+        $dateStart = $this->params()->fromQuery('dateStart');
+
+//        $this->zpCalculator->periodCalculator();        
+        $this->zpCalculator->monthCalculator($dateStart);        
         
         return new JsonModel(
            ['result' => 'ok']

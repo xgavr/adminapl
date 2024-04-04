@@ -18,6 +18,9 @@ class PersonalAccrual
     const STATUS_ACTIVE       = 1; //.
     const STATUS_RETIRED      = 2; // .
     
+    const TAXED_NDFL_YES = 1; // облагается НДФЛ
+    const TAXED_NDFL_NO = 2; // не облагается НДФЛ
+    
     /**
      * @ORM\Id
      * @ORM\Column(name="id")
@@ -44,6 +47,11 @@ class PersonalAccrual
      * @ORM\Column(name="row_no")  
      */
     protected $rowNo;
+
+    /** 
+     * @ORM\Column(name="taxed_ndfl")  
+     */
+    protected $taxedNdfl;
 
     /**
      * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="personalAccruals") 
@@ -112,6 +120,45 @@ class PersonalAccrual
         return 'Unknown';
     }    
 
+    public function setStatus($status) {
+        $this->status = $status;
+        return $this;
+    }
+    
+    public function getTaxedNdfl() {
+        return $this->taxedNdfl;
+    }
+    
+    /**
+     * Returns possible taxed as array.
+     * @return array
+     */
+    public static function getTaxedNdflList() 
+    {
+        return [
+            self::TAXED_NDFL_YES => 'Да',
+            self::TAXED_NDFL_NO => 'Нет',
+        ];
+    }    
+
+    /**
+     * Returns taxed as string.
+     * @return string
+     */
+    public function getTaxedNdflAsString()
+    {
+        $list = self::getTaxedNdflList();
+        if (isset($list[$this->taxedNdfl]))
+            return $list[$this->taxedNdfl];
+        
+        return 'Unknown';
+    }    
+
+    public function setTaxedNdfl($taxedNdfl) {
+        $this->taxedNdfl = $taxedNdfl;
+        return $this;
+    }
+    
     /**
      * 
      * @return User
@@ -138,11 +185,6 @@ class PersonalAccrual
         return $this;
     }
 
-    public function setStatus($status) {
-        $this->status = $status;
-        return $this;
-    }
-    
     /**
      * 
      * @param User $user

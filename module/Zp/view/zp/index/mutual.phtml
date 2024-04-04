@@ -208,9 +208,9 @@ use Stock\Entity\Movement;
             case '<?= Movement::DOC_VT?>': 
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
             case '<?= Movement::DOC_ST?>': 
-                return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
+                return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание в ЗП №"+docId+"</a>";
             case '<?= Movement::DOC_CASH?>':
-                return 'Выдача из кассы/подотчета';        
+                return 'Выдано из кассы/подотчета';        
             default: return docId;            
         }
     }

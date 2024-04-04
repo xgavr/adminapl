@@ -56,7 +56,7 @@ class ZpCalculator {
      * 
      * @var Accrual
      */
-    private $incomeTaxAccrual;
+    private $taxNdflAccrual;
 
     public function __construct($entityManager, $adminManager, $taxManager)
     {
@@ -64,7 +64,7 @@ class ZpCalculator {
         $this->adminManager = $adminManager;
         $this->taxManager = $taxManager;
         
-        $this->incomeTaxAccrual = $this->entityManager->getRepository(Accrual::class)
+        $this->taxNdflAccrual = $this->entityManager->getRepository(Accrual::class)
                 ->findOneBy(['payment' => Accrual::PAYMENT_TAX]);
     }
     
@@ -232,23 +232,25 @@ class ZpCalculator {
         
         $this->entityManager->persist($personalMutual);
                 
-        $incomeTax = $this->taxManager->repostDocCalculatorIncomeTax($docCalculator, $docStamp);
+        $taxNdfl = $this->taxManager->repostDocCalculatorNdflTax($docCalculator, $docStamp);
         
-        $personalMutual = new PersonalMutual();
-        $personalMutual->setAmount(abs($incomeTax->getAmount()));
-        $personalMutual->setCompany($docCalculator->getCompany());
-        $personalMutual->setDateOper($docCalculator->getDateOper());
-        $personalMutual->setDocId($docCalculator->getId());
-        $personalMutual->setDocKey($docCalculator->getLogKey());
-        $personalMutual->setDocStamp($docStamp);
-        $personalMutual->setDocType(Movement::DOC_ZP);
-        $personalMutual->setStatus(PersonalMutual::getStatusFromDocCalculator($docCalculator));
-        $personalMutual->setUser($docCalculator->getUser());
-        $personalMutual->setKind(PersonalMutual::KIND_DEDUCTION);
-        $personalMutual->setAccrual($this->incomeTaxAccrual);
+        if ($taxNdfl){
+            $personalMutual = new PersonalMutual();
+            $personalMutual->setAmount(abs($taxNdfl->getAmount()));
+            $personalMutual->setCompany($docCalculator->getCompany());
+            $personalMutual->setDateOper($docCalculator->getDateOper());
+            $personalMutual->setDocId($docCalculator->getId());
+            $personalMutual->setDocKey($docCalculator->getLogKey());
+            $personalMutual->setDocStamp($docStamp);
+            $personalMutual->setDocType(Movement::DOC_ZP);
+            $personalMutual->setStatus(PersonalMutual::getStatusFromDocCalculator($docCalculator));
+            $personalMutual->setUser($docCalculator->getUser());
+            $personalMutual->setKind(PersonalMutual::KIND_DEDUCTION);
+            $personalMutual->setAccrual($this->taxNdflAccrual);
 
-        $this->entityManager->persist($personalMutual);
-        $this->entityManager->flush();
+            $this->entityManager->persist($personalMutual);
+            $this->entityManager->flush();
+        }    
 
         $this->taxManager->repostDocCalculatorEsn($docCalculator, $docStamp);
         
@@ -289,22 +291,24 @@ class ZpCalculator {
 
                     $this->entityManager->persist($personalMutual);
                     
-                    $incomeTax = $this->taxManager->repostCashDocIncomeTax($cashDoc, $docStamp);
+                    $taxNdfl = $this->taxManager->repostCashDocNdflTax($cashDoc, $docStamp);
 
-                    $personalMutual = new PersonalMutual();
-                    $personalMutual->setAmount(abs($incomeTax->getAmount()));
-                    $personalMutual->setCompany($cashDoc->getCompany());
-                    $personalMutual->setDateOper($cashDoc->getDateOper());
-                    $personalMutual->setDocId($cashDoc->getId());
-                    $personalMutual->setDocKey($cashDoc->getLogKey());
-                    $personalMutual->setDocStamp($docStamp);
-                    $personalMutual->setDocType(Movement::DOC_CASH);
-                    $personalMutual->setStatus(PersonalMutual::getStatusFromCashDoc($cashDoc));
-                    $personalMutual->setUser($cashDoc->getUser());
-                    $personalMutual->setKind(PersonalMutual::KIND_DEDUCTION);
-                    $personalMutual->setAccrual($this->incomeTaxAccrual);
+                    if ($taxNdfl){
+                        $personalMutual = new PersonalMutual();
+                        $personalMutual->setAmount(abs($taxNdfl->getAmount()));
+                        $personalMutual->setCompany($cashDoc->getCompany());
+                        $personalMutual->setDateOper($cashDoc->getDateOper());
+                        $personalMutual->setDocId($cashDoc->getId());
+                        $personalMutual->setDocKey($cashDoc->getLogKey());
+                        $personalMutual->setDocStamp($docStamp);
+                        $personalMutual->setDocType(Movement::DOC_CASH);
+                        $personalMutual->setStatus(PersonalMutual::getStatusFromCashDoc($cashDoc));
+                        $personalMutual->setUser($cashDoc->getUser());
+                        $personalMutual->setKind(PersonalMutual::KIND_DEDUCTION);
+                        $personalMutual->setAccrual($this->taxNdflAccrual);
 
-                    $this->entityManager->persist($personalMutual);
+                        $this->entityManager->persist($personalMutual);
+                    }    
 
                     $this->taxManager->repostCashDocEsn($cashDoc, $docStamp);
                     
@@ -531,6 +535,26 @@ class ZpCalculator {
     {
         $dateCalculation = date('Y-m-d', strtotime('first day of previous month'));
         while ($dateCalculation <= date('Y-m-d')){
+            if ($dateCalculation >= date('2024-01-01')){
+                $this->dateCalculation($dateCalculation);                
+            }
+                        
+            $dateCalculation = date('Y-m-d', strtotime($dateCalculation .' +1 day'));
+        }
+        
+        return;
+    }
+    
+    /**
+     * Рассчитать за месяц
+     * @param date $dateStart
+     */
+    public function monthCalculator($dateStart)
+    {
+        $dateCalculation = date('Y-m-01', strtotime($dateStart));
+        $dateEnd = min(date('Y-m-t 23:59:59'), date('Y-m-t 23:59:59', strtotime($dateStart)));
+        
+        while ($dateCalculation <= $dateEnd){
             if ($dateCalculation >= date('2024-01-01')){
                 $this->dateCalculation($dateCalculation);                
             }

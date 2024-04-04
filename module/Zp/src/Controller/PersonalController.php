@@ -242,6 +242,7 @@ class PersonalController extends AbstractActionController
                 $data = [
                     'accrual' => $accrual->getId(),
                     'status' => $params['status'],
+                    'taxedNdfl' => $params['taxedNdfl'],
                     'rate' => $params['rate'],
                 ];
                 $form->setData($data);

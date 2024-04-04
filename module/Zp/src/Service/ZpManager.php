@@ -249,6 +249,7 @@ class ZpManager {
                 $personalAccrual->setRate($accrualData['rate']);
                 $personalAccrual->setRowNo($rowNo);
                 $personalAccrual->setStatus($accrualData['status']);
+                $personalAccrual->setTaxedNdfl($accrualData['taxedNdfl']);
                 $personalAccrual->setUser($data['user']);
 
                 $this->entityManager->persist($personalAccrual);
@@ -343,6 +344,7 @@ class ZpManager {
                 $personalAccrual->setRate($accrualData['rate']);
                 $personalAccrual->setRowNo($rowNo);
                 $personalAccrual->setStatus($accrualData['status']);
+                $personalAccrual->setTaxedNdfl($accrualData['taxedNdfl']);
                 $personalAccrual->setUser($data['user']);
 
                 $this->entityManager->persist($personalAccrual);

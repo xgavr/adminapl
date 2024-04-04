@@ -134,6 +134,7 @@ $form->prepare();
                         <th data-field="accrual.name">Начисление</th>
                         <th data-field="status" data-formatter="statusFormatter">Статус</th>
                         <th data-field='rate' data-type="numeric" data-always-use-formatter="true" data-editable="true" data-formatter="rateFormatter" data-align="right">Размер</th>
+                        <th data-field="taxedNdfl" data-formatter="taxedNdflFormatter">Облагать НДФЛ</th>
                         <th data-field="rowNo" data-formatter="accrualActiveFormatter" data-width="10"></th>
                      </tr>                
                 </thead>
@@ -167,7 +168,8 @@ $form->prepare();
             var newRow = {
                 accrual: row.accrual.id,
                 status: row.status,
-                rate: row.rate
+                rate: row.rate,
+                taxedNdfl: row.taxedNdfl
             };
             result.push(newRow);
         });   
@@ -251,6 +253,11 @@ $form->prepare();
     
     function statusFormatter(value, row){
         var statuses = <?= Encoder::encode(PersonalAccrual::getStatusList())?>;
+        return statuses[value];
+    }        
+    
+    function taxedNdflFormatter(value, row){
+        var statuses = <?= Encoder::encode(PersonalAccrual::getTaxedNdflList())?>;
         return statuses[value];
     }        
     

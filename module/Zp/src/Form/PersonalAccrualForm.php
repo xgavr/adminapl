@@ -65,17 +65,18 @@ class PersonalAccrualForm extends Form
             ],
         ]);
         
-//        $this->add([           
-//            'type'  => 'select',
-//            'name' => 'user',
-//            'attributes' => [
-//                'id' => 'userSelectForm'
-//            ],
-//            'options' => [
-//                'label' => 'Сотрудник',
-//            ],
-//        ]);
-//        
+        $this->add([           
+            'type'  => 'select',
+            'name' => 'taxedNdfl',
+            'attributes' => [
+                'id' => 'taxedNdflSelectForm'
+            ],
+            'options' => [
+                'label' => 'Облагать НДФЛ',
+                'value_options' => PersonalAccrual::getTaxedNdflList(),                
+            ],
+        ]);
+        
         $this->add([           
             'type'  => 'select',
             'name' => 'accrual',

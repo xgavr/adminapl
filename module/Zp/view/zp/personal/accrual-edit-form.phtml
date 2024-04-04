@@ -16,6 +16,10 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('taxedNdfl')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'personal-accrual-submit']);
 
@@ -35,11 +39,18 @@ $form->prepare();
             
 <div class="modal-body">
     <div class="row">
-        <div class="col-xs-12">                        
+        <div class="col-xs-6">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('accrual')); ?>
                 <?= $this->formElement($form->get('accrual')); ?>
                 <?= $this->formElementErrors($form->get('accrual')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-6">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('taxedNdfl')); ?>
+                <?= $this->formElement($form->get('taxedNdfl')); ?>
+                <?= $this->formElementErrors($form->get('taxedNdfl')); ?>                  
             </div>
         </div>    
     </div>    
@@ -87,7 +98,8 @@ $form->prepare();
                     var row = {
                         accrual: accrual,
                         status: data.status,
-                        rate: data.rate
+                        rate: data.rate,
+                        taxedNdfl: data.taxedNdfl
                     };
 
                     <?php if($rowNo): ?>

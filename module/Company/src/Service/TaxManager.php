@@ -111,65 +111,74 @@ class TaxManager
      * 
      * @return TaxMutual
      */
-    public function repostDocCalculatorIncomeTax($docCalculator, $docStamp)
+    public function repostDocCalculatorNdflTax($docCalculator, $docStamp)
     {
         $tax = $this->entityManager->getRepository(Tax::class)
-                ->currentTax(Tax::KIND_INC, $docCalculator->getDateOper());
+                ->currentTax(Tax::KIND_NDFL, $docCalculator->getDateOper());
 
         $this->removeTaxMutual(Movement::DOC_ZP, $docCalculator->getId(), $tax->getId());
         
-        $amount = abs($docCalculator->getAmount())*$tax->getAmount()/100;
-        
-        $taxMutual = new TaxMutual();
-        $taxMutual->setAmount(-$amount);
-        $taxMutual->setCompany($docCalculator->getCompany());
-        $taxMutual->setDateOper($docCalculator->getDateOper());
-        $taxMutual->setDocId($docCalculator->getId());
-        $taxMutual->setDocKey($docCalculator->getLogKey());
-        $taxMutual->setDocStamp($docStamp);
-        $taxMutual->setDocType(Movement::DOC_ZP);
-        $taxMutual->setStatus(TaxMutual::getStatusFromDocCalculator($docCalculator));
-        $taxMutual->setTax($tax);
+        if ($docCalculator->getTaxedNdfl()){
+            $amount = abs($docCalculator->getAmount())*$tax->getAmount()/100;
 
-        $this->entityManager->persist($taxMutual);
+            $taxMutual = new TaxMutual();
+            $taxMutual->setAmount(-$amount);
+            $taxMutual->setCompany($docCalculator->getCompany());
+            $taxMutual->setDateOper($docCalculator->getDateOper());
+            $taxMutual->setDocId($docCalculator->getId());
+            $taxMutual->setDocKey($docCalculator->getLogKey());
+            $taxMutual->setDocStamp($docStamp);
+            $taxMutual->setDocType(Movement::DOC_ZP);
+            $taxMutual->setStatus(TaxMutual::getStatusFromDocCalculator($docCalculator));
+            $taxMutual->setTax($tax);
+
+            $this->entityManager->persist($taxMutual);
+
+            $this->entityManager->flush();
+
+            return $taxMutual;
+        }
         
-        $this->entityManager->flush();
-        
-        return $taxMutual;
+        return;
     }   
 
     /**
      * Провести расчет подоходного налога
      * @param CashDoc $cashDoc
      * @param float $docStamp
+     * @param bool $taxed
      * 
      * @return TaxMutual
      */
-    public function repostCashDocIncomeTax($cashDoc, $docStamp)
+    public function repostCashDocNdflTax($cashDoc, $docStamp, $taxed = false)
     {
         $tax = $this->entityManager->getRepository(Tax::class)
-                ->currentTax(Tax::KIND_INC, $cashDoc->getDateOper());
+                ->currentTax(Tax::KIND_NDFL, $cashDoc->getDateOper());
 
         $this->removeTaxMutual(Movement::DOC_CASH, $cashDoc->getId(), $tax->getId());
         
-        $amount = abs($cashDoc->getAmount())*$tax->getAmount()/100;
-        
-        $taxMutual = new TaxMutual();
-        $taxMutual->setAmount(-$amount);
-        $taxMutual->setCompany($cashDoc->getCompany());
-        $taxMutual->setDateOper($cashDoc->getDateOper());
-        $taxMutual->setDocId($cashDoc->getId());
-        $taxMutual->setDocKey($cashDoc->getLogKey());
-        $taxMutual->setDocStamp($docStamp);
-        $taxMutual->setDocType(Movement::DOC_CASH);
-        $taxMutual->setStatus(TaxMutual::getStatusFromCashDoc($cashDoc));
-        $taxMutual->setTax($tax);
+        if ($taxed){
+            $amount = abs($cashDoc->getAmount())*$tax->getAmount()/100;
 
-        $this->entityManager->persist($taxMutual);
+            $taxMutual = new TaxMutual();
+            $taxMutual->setAmount(-$amount);
+            $taxMutual->setCompany($cashDoc->getCompany());
+            $taxMutual->setDateOper($cashDoc->getDateOper());
+            $taxMutual->setDocId($cashDoc->getId());
+            $taxMutual->setDocKey($cashDoc->getLogKey());
+            $taxMutual->setDocStamp($docStamp);
+            $taxMutual->setDocType(Movement::DOC_CASH);
+            $taxMutual->setStatus(TaxMutual::getStatusFromCashDoc($cashDoc));
+            $taxMutual->setTax($tax);
+
+            $this->entityManager->persist($taxMutual);
+
+            $this->entityManager->flush();
         
-        $this->entityManager->flush();
+            return $taxMutual;
+        }
         
-        return $taxMutual;
+        return;
     }   
     
     /**

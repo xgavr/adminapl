@@ -279,6 +279,19 @@ class DocCalculator
     public function getPersonalAccrual() {
         return $this->personalAccrual;
     }
+    
+    /**
+     * @return bool
+     */
+    public function getTaxedNdfl()
+    {
+        switch ($this->getPersonalAccrual()->getTaxedNdfl()){
+            case PersonalAccrual::TAXED_NDFL_YES:
+                return true;
+        }
+        
+        return false;
+    }
 
     /**
      * 

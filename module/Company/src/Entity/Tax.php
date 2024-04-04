@@ -26,7 +26,7 @@ class Tax {
     const KIND_PROFIT       = 2; // прибыль
     const KIND_PROGIT_MIN   = 3; // прибыль минимальный
     const KIND_ESN       = 4; // ЕСН
-    const KIND_INC    = 5; // подоходный
+    const KIND_NDFL    = 5; // подоходный
     
     /**
      * @ORM\Id
@@ -144,7 +144,7 @@ class Tax {
     public static function getKindList() 
     {
         return [
-            self::KIND_INC => 'Подоходный',
+            self::KIND_NDFL => 'Подоходный',
             self::KIND_ESN => 'ЕСН',
             self::KIND_PROFIT => 'Прибыль',
             self::KIND_PROGIT_MIN => 'Прибыль минимальный',
