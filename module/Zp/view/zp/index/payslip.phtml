@@ -146,6 +146,7 @@ $this->pageBreadcrumbs()->setItems([
 </div>
 
 <?php echo $this->partial('/zp/index/zp-partial', []); ?>
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
     var $table = $('#table');
@@ -285,8 +286,8 @@ $this->pageBreadcrumbs()->setItems([
         return statuses[value];
     }    
     
-    function activeFormatter(value, row){
-        var url = '/zp/mutual?company='+row.company.id+'&user='+row.user.id+'&accrual='+row.accrual.id;
+    function activeFormatter(value, row){        
+        var url = '/zp/mutual?company='+row.company.id+'&user='+row.user.id+'&accrual='+row.accrual.id+'&period='+$('#periodSelect').val()+'&dateStart='+$('#dateStart').val();
         btn = '<button ';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs mutual-modal-show"';
