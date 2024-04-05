@@ -552,7 +552,7 @@ class ZpCalculator {
     public function monthCalculator($dateStart)
     {
         $dateCalculation = date('Y-m-01', strtotime($dateStart));
-        $dateEnd = min(date('Y-m-t 23:59:59'), date('Y-m-t 23:59:59', strtotime($dateStart)));
+        $dateEnd = min(date('Y-m-d 23:59:59'), date('Y-m-t 23:59:59', strtotime($dateStart)));
         
         while ($dateCalculation <= $dateEnd){
             if ($dateCalculation >= date('2024-01-01')){
