@@ -595,6 +595,8 @@ class FinOpu
         return [
             'marginRetail' => 'Маржа розница (%)',
             'marginTp' => 'Маржа ТП (%)',
+            'orderCount' => 'Количество заказов',
+            'avgBill' => 'Средний чек',
         ];    
     }
     
