@@ -155,7 +155,7 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function footerFormatter(data){
-        if ($('#kindSelect').val() !== 'marginRetail'){
+        if ($('#kindSelect').val() !== 'marginRetail' && $('#kindSelect').val() !== 'avgBill'){
             var field = this.field;
             return $.number((data.map(function (row) {
                 return +row[field];

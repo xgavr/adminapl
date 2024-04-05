@@ -254,7 +254,7 @@ class OpuController extends AbstractActionController
                             ->findRetailOrderCount($startDate, $endDate, $company);
             foreach ($data as $row){
                 $result[$row['userId']][date('m', strtotime($row['period']))] = $row['avgBill'];
-                $result[$row['userId']][13] += $row['avgBill'];
+                //$result[$row['userId']][13] += $row['avgBill'];
             }
         }    
         
