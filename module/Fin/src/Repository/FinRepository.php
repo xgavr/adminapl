@@ -258,6 +258,43 @@ class FinRepository extends EntityRepository
                 ;
 //                var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult(2);       
+    } 
+    
+    /**
+     * Получить количество заказов
+     * @param date $startDate
+     * @param date $endDate
+     * @param Legal $company
+     * @return array
+     */
+    public function findRetailOrderCount($startDate, $endDate, $company)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
+//        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('LAST_DAY(r.dateOper) as period, u.id as userId, u.fullName as userName, count(r.docId) as orderCount')
+            ->from(Retail::class, 'r')
+            ->join('r.user', 'u')
+            ->andWhere('r.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('r.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate)
+            ->andWhere('r.company = :company')    
+            ->setParameter('company', $company->getId())
+            ->andWhere('r.status = :status')
+            ->setParameter('status', Retail::STATUS_ACTIVE)    
+            ->andWhere($orX)    
+            ->groupBy('period')    
+            ->addGroupBy('userId')    
+            ->orderBy('period') 
+                ;
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);       
     }   
     
     /**
@@ -316,6 +353,40 @@ class FinRepository extends EntityRepository
         $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
         
         $queryBuilder->select('identity(r.company) as companyId, LAST_DAY(r.dateOper) as period, sum(r.amount) as revenue')
+            ->from(Retail::class, 'r')
+            ->where('r.status = :status')
+            ->setParameter('status', Retail::STATUS_ACTIVE)    
+            ->andWhere($orX)
+            ->andWhere('r.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('r.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate) 
+            ->groupBy('companyId')    
+            ->addGroupBy('period')  
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();       
+    }
+        
+    /**
+     * Количество заказов розницы
+     * 
+     * @param date $startDate
+     * @param date $endDate
+     * 
+     * @return array 
+     */
+    public function retailOrderCount($startDate, $endDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
+//        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('identity(r.company) as companyId, LAST_DAY(r.dateOper) as period, count(r.docId) as orderCount')
             ->from(Retail::class, 'r')
             ->where('r.status = :status')
             ->setParameter('status', Retail::STATUS_ACTIVE)    

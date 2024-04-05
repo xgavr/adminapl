@@ -82,6 +82,15 @@ class FinOpu
      */
     protected $marginTp;
 
+    /** 
+     * @ORM\Column(name="order_count")  
+     */
+    protected $orderCount;
+
+    /** 
+     * @ORM\Column(name="avg_bill")  
+     */
+    protected $avgBill;
     
     /** 
      * @ORM\Column(name="income_total")  
@@ -152,6 +161,17 @@ class FinOpu
      * @ORM\Column(name="fund")  
      */
     protected $fund;
+    
+    /** 
+     * @ORM\Column(name="new_client_count")  
+     */
+    protected $newClientCount;
+    
+    /** 
+     * Стоимость нового заказа
+     * @ORM\Column(name="cpo")  
+     */
+    protected $cpo;
     
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="finOpus") 
@@ -334,6 +354,16 @@ class FinOpu
         return $this;
     }
     
+    public function setOrderCount($orderCount) {
+        $this->orderCount = $orderCount;
+        return $this;
+    }
+
+    public function setAvgBill($avgBill) {
+        $this->avgBill = $avgBill;
+        return $this;
+    }
+    
     public function setCostRetail($costRetail) {
         $this->costRetail = $costRetail;
         return $this;
@@ -433,7 +463,33 @@ class FinOpu
         $this->profitNet = $profitNet;
         return $this;
     }
+
+    public function getOrderCount() {
+        return $this->orderCount;
+    }
+
+    public function getAvgBill() {
+        return $this->avgBill;
+    }
     
+    public function getNewClientCount() {
+        return $this->newClientCount;
+    }
+
+    public function getCpo() {
+        return $this->cpo;
+    }
+
+    public function setNewClientCount($newClientCount) {
+        $this->newClientCount = $newClientCount;
+        return $this;
+    }
+
+    public function setCpo($cpo) {
+        $this->cpo = $cpo;
+        return $this;
+    }
+
     /**
      * 
      * @return Legal
@@ -459,6 +515,8 @@ class FinOpu
             'purchaseRetail' => 'Закупка розница',
             'incomeRetail' => 'Доход розница',
             'marginRetail' => 'Маржа розница (%)',
+            'orderCount' => 'Количество заказов',
+            'avgBill' => 'Средний чек',
             'incomeRetail_' => '',
             'revenueTp' => 'Выручка ТП',
             'purchaseTp' => 'Закупка ТП',
@@ -515,6 +573,8 @@ class FinOpu
             'incomeTp' => 'Доход ТП',
             'incomeTotal' => 'Доход всего',
             'marginTp' => 'Маржа ТП (%)',
+            'orderCount' => 'Количество заказов',
+            'avgBill' => 'Средний чек',
             'profit' => 'Прибыль',
             'profitNet' => 'Чистая пибыль',
         ];    

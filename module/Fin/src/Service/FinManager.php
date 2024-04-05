@@ -70,6 +70,10 @@ class FinManager {
         $opu->setProfitNet(empty($data['profitNet']) ? 0:$data['profitNet']);
         $opu->setMarginRetail(empty($data['marginRetail']) ? 0:$data['marginRetail']);
         $opu->setMarginTp(empty($data['marginTp']) ? 0:$data['marginTp']);
+        $opu->setOrderCount(empty($data['orderCount']) ? 0:$data['orderCount']);
+        $opu->setAvgBill(empty($data['avgBill']) ? 0:$data['avgBill']);
+        $opu->setNewClientCount(empty($data['newClientCount']) ? 0:$data['newClientCount']);
+        $opu->setCpo(empty($data['cpo']) ? 0:$data['cpo']);
         
         $this->entityManager->persist($opu);
         $this->entityManager->flush();
@@ -129,6 +133,10 @@ class FinManager {
         $opu->setZpTp($data['zpTp']);
         $opu->setMarginRetail($data['marginReatail']);
         $opu->setMarginTp($data['marginTp']);
+        $opu->setOrderCount($data['orderCount']);
+        $opu->setAvgBill($data['avgBill']);
+        $opu->setNewClientCount($data['newClientCount']);
+        $opu->setCpo($data['cpo']);
         
         $this->entityManager->persist($opu);
         $this->entityManager->flush();
@@ -205,6 +213,36 @@ class FinManager {
             
             $finOpu->setRevenueRetail(abs($row['revenue']));            
             $finOpu->setRevenueTotal($finOpu->getRevenueRetail() + $finOpu->getRevenueTp());
+            
+            $this->entityManager->persist($finOpu);
+        }
+        
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Рассчитать розничные количество заказов за период
+     * @param date $period
+     */
+    public function retailOrderCount($period)
+    {
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+//        var_dump($startDate, $endDate); exit;
+        $retailOrderCounts = $this->entityManager->getRepository(FinOpu::class)
+                ->retailOrderCount($startDate, $endDate);
+        
+        foreach ($retailOrderCounts as $row){
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($row['companyId']);
+            
+            $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
+            
+            $finOpu->setOrderCount($row['orderCount']);
+            $finOpu->setAvgBill(0);
+            if ($row['orderCount'] > 0){
+                $finOpu->setAvgBill($finOpu->getRevenueRetail()/$row['orderCount']);
+            }    
             
             $this->entityManager->persist($finOpu);
         }
@@ -453,7 +491,10 @@ class FinManager {
             $taxMin = $this->entityManager->getRepository(Tax::class)
                     ->currentTax(Tax::KIND_PROGIT_MIN, $row['period']);
             
-            $finOpu->setTax(max($finOpu->getProfit() * $taxInc->getAmount()/100, $finOpu->getRevenueTotal() * $taxMin->getAmount()/100));
+            if ($taxInc && $taxMin){
+            
+                $finOpu->setTax(max($finOpu->getProfit() * $taxInc->getAmount()/100, $finOpu->getRevenueTotal() * $taxMin->getAmount()/100));
+            }    
 
             $finOpu->setProfitNet($finOpu->getProfit() - $finOpu->getTax());
 
@@ -470,6 +511,7 @@ class FinManager {
     public function calculate($period)
     {
         $this->incomeRetailRevenue($period);
+        $this->retailOrderCount($period);
         $this->incomeRetail($period);
         $this->incomeTp($period);
         $this->costs($period);
