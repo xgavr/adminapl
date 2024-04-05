@@ -277,7 +277,9 @@ class FinRepository extends EntityRepository
         $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
 //        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
         
-        $queryBuilder->select('LAST_DAY(r.dateOper) as period, u.id as userId, u.fullName as userName, count(r.docId) as orderCount')
+        $queryBuilder->select('LAST_DAY(r.dateOper) as period, u.id as userId, u.fullName as userName')
+            ->addSelect('count(r.docId) as orderCount')    
+            ->addSelect('avg(r.amount) as avgBill')    
             ->from(Retail::class, 'r')
             ->join('r.user', 'u')
             ->andWhere('r.dateOper >= :startDate')    

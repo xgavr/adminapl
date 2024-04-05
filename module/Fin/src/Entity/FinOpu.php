@@ -586,6 +586,8 @@ class FinOpu
             'revenueRetail' => 'Выручка розница',
             'purchaseRetail' => 'Закупка розница',
             'incomeRetail' => 'Доход розница',
+            'orderCount' => 'Количество заказов',
+            'avgBill' => 'Средний чек',
             'marginRetail' => 'Маржа розница (%)',
         ];    
     }

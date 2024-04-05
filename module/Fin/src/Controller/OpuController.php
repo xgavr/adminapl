@@ -238,6 +238,24 @@ class OpuController extends AbstractActionController
                 $result[$row['userId']][date('m', strtotime($row['period']))] = (abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']);
                 //$result[$row['userId']][13] += round($row['purchase']);
             }
+        }  
+        
+        if ($kind == 'orderCount'){        
+            $data = $this->entityManager->getRepository(FinOpu::class)
+                            ->findRetailOrderCount($startDate, $endDate, $company);
+            foreach ($data as $row){
+                $result[$row['userId']][date('m', strtotime($row['period']))] = $row['orderCount'];
+                $result[$row['userId']][13] += $row['orderCount'];
+            }
+        }    
+        
+        if ($kind == 'avgBill'){        
+            $data = $this->entityManager->getRepository(FinOpu::class)
+                            ->findRetailOrderCount($startDate, $endDate, $company);
+            foreach ($data as $row){
+                $result[$row['userId']][date('m', strtotime($row['period']))] = $row['avgBill'];
+                $result[$row['userId']][13] += $row['avgBill'];
+            }
         }    
         
 //        foreach ($data as $row){
