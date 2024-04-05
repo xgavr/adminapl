@@ -80,8 +80,8 @@ class OpuController extends AbstractActionController
             }    
         }
         
-        $result['marginRetail']['13'] = 0;
-        $result['marginTp']['13'] = 0;
+        $result['marginRetail']['13'] = ($result['revenueRetail']['13']-$result['purchaseRetail']['13'])*100/$result['revenueRetail']['13'];
+        $result['marginTp']['13'] = ($result['revenueTp']['13']-$result['purchaseTp']['13'])*100/$result['revenueTp']['13'];
         
         return new JsonModel([
             'total' => count($result),

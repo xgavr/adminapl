@@ -145,14 +145,14 @@ $docName = 'Новый';
         $("#price").inputmask();
 
         $("#price").on('input', function(){
-            var value = $(this).val();
-            $(this).val(value.replace(",","."));
+//            var value = $(this).val();
+//            $(this).val(value.replace(",","."));
             $("#amount").val(Math.round($(this).val()*$("#quantity").val()*100)/100);
         });
         
         $("#amount").on('input', function(){
-            var value = $(this).val();
-            $(this).val(parseFloat(value.replace(",",".").replace(/\s/g, '')));
+//            var value = $(this).val();
+//            $(this).val(parseFloat(value.replace(",",".").replace(/\s/g, '')));
             if ($("#quantity").val()){
                 $("#price").val(Math.round($(this).val()*100/$("#quantity").val())/100);
             }    
