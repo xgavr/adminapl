@@ -116,6 +116,8 @@ class CashManager {
         $cash->setSupplierStatus($data['supplierStatus']);
         $cash->setPayment($data['payment']);
         $cash->setBalance(0);
+        $cash->setAccountNumber(empty($data['accountNumber']) ? '':$data['accountNumber']);
+        $cash->setBankInn(empty($data['bankInn']) ? '':$data['bankInn']);
         
         $cash->setOffice($office);
         $this->entityManager->persist($cash);
@@ -144,6 +146,8 @@ class CashManager {
         $cash->setRefillStatus($data['refillStatus']);
         $cash->setSupplierStatus($data['supplierStatus']);
         $cash->setPayment($data['payment']);
+        $cash->setAccountNumber(empty($data['accountNumber']) ? '':$data['accountNumber']);
+        $cash->setBankInn(empty($data['bankInn']) ? '':$data['bankInn']);
         
         $this->entityManager->persist($cash);
         $this->entityManager->flush();

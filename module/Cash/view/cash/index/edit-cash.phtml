@@ -45,6 +45,10 @@ $form->get('payment')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('accountNumber')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'cash-submit']);
 
 $form->prepare();
@@ -61,7 +65,7 @@ $form->prepare();
 
 <div class="modal-body">
     <div class="row">
-        <div class="col-lg-9">
+        <div class="col-lg-12">
             <div class="row">
                 <div class="col-xs-3">                        
                     <div class="form-group">
@@ -142,6 +146,22 @@ $form->prepare();
                         <?= $this->formLabel($form->get('payment')); ?>
                         <?= $this->formElement($form->get('payment')); ?>
                         <?= $this->formElementErrors($form->get('payment')); ?>                  
+                    </div>
+                </div>    
+            </div>    
+            <div class="row">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('accountNumber')); ?>
+                        <?= $this->formElement($form->get('accountNumber')); ?>
+                        <?= $this->formElementErrors($form->get('accountNumber')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('bankInn')); ?>
+                        <?= $this->formElement($form->get('bankInn')); ?>
+                        <?= $this->formElementErrors($form->get('bankInn')); ?>                  
                     </div>
                 </div>    
             </div>    

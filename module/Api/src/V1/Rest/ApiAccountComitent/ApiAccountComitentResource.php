@@ -12,6 +12,7 @@ use Stock\Entity\Vt;
 use Stock\Entity\Vtp;
 use Application\Entity\Order;
 use Bank\Entity\Statement;
+use Cash\Entity\CashDoc;
 
 class ApiAccountComitentResource extends AbstractResourceListener
 {
@@ -162,6 +163,15 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 
             }
         }    
+        if ($params['docType'] == 'CashDoc'){
+            $cashDocs = $this->entityManager->getRepository(CashDoc::class)
+                    ->findBy(['statusAccount' => CashDoc::STATUS_ACCOUNT_NO]);
+            foreach ($cashDocs as $cashDoc){
+                $row = $cashDoc->toExport();
+                $result[] = $row;
+                
+            }
+        }    
 
         return ['reports' => $result];
         
@@ -264,6 +274,16 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     $this->entityManager->persist($statement);
                     $this->entityManager->flush();
                     return ['statusAccount' => $statement->getStatusAccount()];
+                }
+            }
+            if ($data->docType == 'CashDoc'){
+                $cashDoc = $this->entityManager->getRepository(CashDoc::class)
+                        ->find($id);
+                if ($cashDoc){
+                    $cashDoc->setStatusAccount($data->statusAccount);
+                    $this->entityManager->persist($cashDoc);
+                    $this->entityManager->flush();
+                    return ['statusAccount' => $cashDoc->getStatusAccount()];
                 }
             }
         }

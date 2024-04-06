@@ -121,6 +121,16 @@ class Cash {
      */
     protected $dateCreated;  
             
+    /** 
+     * @ORM\Column(name="account_number")  
+     */
+    protected $accountNumber;  
+            
+    /** 
+     * @ORM\Column(name="bank_inn")  
+     */
+    protected $bankInn;  
+            
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="vt") 
      * @ORM\JoinColumn(name="office_id", referencedColumnName="id")
@@ -216,6 +226,23 @@ class Cash {
         $this->dateCreated = $dateCreated;
     }     
     
+    public function getAccountNumber() {
+        return $this->accountNumber;
+    }
+
+    public function setAccountNumber($accountNumber) {
+        $this->accountNumber = $accountNumber;
+        return $this;
+    }
+    public function getBankInn() {
+        return $this->bankInn;
+    }
+
+    public function setBankInn($bankInn) {
+        $this->bankInn = $bankInn;
+        return $this;
+    }
+
     /**
      * Returns status.
      * @return int     
@@ -564,6 +591,10 @@ class Cash {
         $this->checkStatus = $checkStatus;
     }   
     
+    /**
+     * 
+     * @return Office
+     */
     public function getOffice()
     {
         return $this->office;
@@ -615,6 +646,9 @@ class Cash {
             'supplierStatus' => $this->getSupplierStatus(),
             'payment' => $this->getPayment(),
             'balance' => $this->getBalance(),
+            'office' => $this->getOffice()->toArray(),
+            'accountNumber' => $this->getAccountNumber(),
+            'bankInn' => $this->getBankInn(),
         ];
         
         return $result;

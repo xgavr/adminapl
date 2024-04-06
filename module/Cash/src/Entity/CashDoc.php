@@ -328,6 +328,11 @@ class CashDoc {
         return $this->dateOper;
     }
     
+    public function getDocDateAtomFormat() {
+        $datetime = new \DateTime($this->dateOper);
+        return $datetime->format(\DateTime::ATOM);
+    }
+    
     /**
      * Sets the date when this cash oper.
      * @param string $dateOper     
@@ -872,6 +877,10 @@ class CashDoc {
         $this->cashRefill = $cashRefill;
     }
 
+    /**
+     * 
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;
@@ -947,6 +956,10 @@ class CashDoc {
         $this->contact = $contact;
     }
 
+    /**
+     * 
+     * @return Order
+     */
     public function getOrder()
     {
         return $this->order;
@@ -1150,7 +1163,8 @@ class CashDoc {
     public function toArray()
     {
         $result = [
-            'amount' => $this->amount,
+            'id' => $this->getId(),
+            'amount' => $this->getKindAmount(),
             'aplId' => $this->aplId,
             'cash' => ($this->cash) ? $this->cash->getId():null,
             'cashRefill' => ($this->cashRefill) ? $this->cashRefill->getId():NULL,
@@ -1171,6 +1185,38 @@ class CashDoc {
             'user' => ($this->user) ? $this->user->getId():null,
             'userRefill' => ($this->userRefill) ? $this->userRefill->getId():null,
             'vt' => ($this->vt) ? $this->vt->getId():null,
+        ];
+        
+        return $result;
+    }    
+        
+    /**
+     * Массив для export
+     * @return array 
+     */
+    public function toExport()
+    {
+        $result = [
+            'id' => $this->getId(),
+            'amount' => $this->amount,
+            'aplId' => $this->aplId,
+            'cash' => ($this->cash) ? $this->cash->toArray():null,
+            'cashRefill' => ($this->cashRefill) ? $this->cashRefill->toArray():NULL,
+            'comment' => $this->comment,
+            'company' => $this->company->toArray(),
+            'cost' => ($this->cost) ? $this->cost->toArray():NULL,
+            'dateOper' => $this->getDocDateAtomFormat(),
+            'info' => $this->info,
+            'kind' => $this->kind,
+            'legal' => ($this->legal) ? $this->legal->toArray():null,
+            'supplierAplId' => $this->getDefaultSupplierAplId(),
+            'order' => ($this->order) ? $this->order->toArray():null,
+            'status' => $this->status,
+            'user' => ($this->user) ? $this->user->toArray():null,
+            'userRefill' => ($this->userRefill) ? $this->userRefill->toArray():null,
+            'vt' => ($this->vt) ? $this->vt->toArray():null,
+            'creator' => ($this->userCreator) ? $this->userCreator->toArray():null,
+            'statement' => ($this->statement) ? $this->statement->toArray():null,
         ];
         
         return $result;
@@ -1204,7 +1250,7 @@ class CashDoc {
             'userInfo' => ($this->user) ? $this->user->toArray():null,
             'userRefill' => ($this->userRefill) ? $this->userRefill->getId():null,
             'userRefillInfo' => ($this->userRefill) ? $this->userRefill->toArray():null,
-            'order' => ($this->vt) ? $this->vt->getId():null,
+            'vt' => ($this->vt) ? $this->vt->getId():null,
         ];
     }    
 }

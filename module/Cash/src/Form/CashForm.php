@@ -65,6 +65,30 @@ class CashForm extends Form implements ObjectManagerAwareInterface
         ]);
 
         $this->add([           
+            'type'  => 'text',
+            'name' => 'accountNumber',
+            'attributes' => [
+                'id' => 'accountNumber',
+                'value' => '50.01',
+            ],
+            'options' => [
+                'label' => 'Счет кассы',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'bankInn',
+            'attributes' => [
+                'id' => 'bankInn',
+                'value' => '',
+            ],
+            'options' => [
+                'label' => 'ИНН сервиса',
+            ],
+        ]);
+
+        $this->add([           
             'type'  => 'number',
             'name' => 'commission',
             'attributes' => [
