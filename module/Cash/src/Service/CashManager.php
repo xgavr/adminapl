@@ -566,6 +566,7 @@ class CashManager {
         $cashDoc->setUserRefill(empty($data['userRefill']) ? null:$data['userRefill']);
         $cashDoc->setVt(empty($data['vt']) ? null:$data['vt']);
         $cashDoc->setStatement(empty($data['statement']) ? null:$data['statement']);
+        $cashDoc->setStatusAccount(CashDoc::STATUS_ACCOUNT_NO);
         
         if ($inData['status'] == CashDoc::STATUS_CORRECT){
             $cashDoc->setStatusEx(CashDoc::STATUS_EX_APL);
@@ -625,6 +626,7 @@ class CashManager {
         $cashDoc->setUserRefill(empty($data['userRefill']) ? null:$data['userRefill']);
         $cashDoc->setVt(empty($data['vt']) ? null:$data['vt']);
         $cashDoc->setStatement(empty($data['statement']) ? null:$data['statement']);
+        $cashDoc->setStatusAccount(CashDoc::STATUS_ACCOUNT_NO);
 
         if ($inData['status'] == CashDoc::STATUS_CORRECT){
             $cashDoc->setStatusEx(CashDoc::STATUS_EX_APL);

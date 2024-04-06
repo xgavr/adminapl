@@ -56,6 +56,10 @@ class CashDoc {
     const KIND_OUT_SALARY           = 16; // выдача зп.
     const KIND_OUT_COST             = 17; // расходы.
     
+    const STATUS_ACCOUNT_OK  = 1;// обновлено 
+    const STATUS_ACCOUNT_NO  = 2;// не обновлено
+    const STATUS_TAKE_NO  = 3;// не проведено    
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -98,6 +102,11 @@ class CashDoc {
      */
     protected $status;
 
+    /** 
+     * @ORM\Column(name="status_account")  
+     */
+    protected $statusAccount = self::STATUS_ACCOUNT_NO;
+    
     /**
      * @ORM\Column(name="check_status")   
      */
@@ -382,6 +391,59 @@ class CashDoc {
     }    
     
     /**
+     * Sets status.
+     * @param int $status     
+     */
+    public function setStatus($status) 
+    {
+        $this->status = $status;
+    }   
+    
+    /**
+     * Returns statusAccount.
+     * @return int     
+     */
+    public function getStatusAccount() 
+    {
+        return $this->statusAccount;
+    }
+
+    /**
+     * Returns possible statusAccount as array.
+     * @return array
+     */
+    public static function getStatusAccountList() 
+    {
+        return [
+            self::STATUS_ACCOUNT_OK => 'Обновлено',
+            self::STATUS_ACCOUNT_NO=> 'Не обновлено',
+            self::STATUS_TAKE_NO=> 'Не проведено',
+        ];
+    }    
+    
+    /**
+     * Returns statusAccount as string.
+     * @return string
+     */
+    public function getStatusAccountAsString()
+    {
+        $list = self::getStatusAccountList();
+        if (isset($list[$this->statusAccount]))
+            return $list[$this->statusAccount];
+        
+        return 'Unknown';
+    }    
+        
+    /**
+     * Sets statusAccount.
+     * @param int $statusAccount     
+     */
+    public function setStatusAccount($statusAccount) 
+    {
+        $this->statusAccount = $statusAccount;
+    }   
+    
+    /**
      * Returns possible apl statuses as array.
      * @return array
      */
@@ -406,15 +468,6 @@ class CashDoc {
         return 'Unknown';
     }    
 
-    /**
-     * Sets status.
-     * @param int $status     
-     */
-    public function setStatus($status) 
-    {
-        $this->status = $status;
-    }   
-    
     /**
      * Returns check status.
      * @return int     
