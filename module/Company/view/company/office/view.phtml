@@ -296,6 +296,8 @@ $legalContact = $office->getLegalContact();
                         <th>Оплата</th>
                         <th>Остаток</th>
                         <th>Статус</th>
+                        <th>Бух. счет</th>
+                        <th>ИНН сервиса</th>
                         <th>Действие</th>        
                     </tr>
 
@@ -313,6 +315,10 @@ $legalContact = $office->getLegalContact();
                         </td>
                         <td></td>
                         <td><?= $this->escapeHtml($cash->getStatusAsString()); ?> 
+                        </td>
+                        <td><?= $this->escapeHtml($cash->getAccountNumber()); ?> 
+                        </td>
+                        <td><?= $this->escapeHtml($cash->bankInn()); ?> 
                         </td>
                         <td>
                             <nobr>
