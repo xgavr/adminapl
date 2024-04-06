@@ -287,9 +287,9 @@ $legalContact = $office->getLegalContact();
                 </div>
             </div>
             <div class="panel-body">
-                <table class="table table-striped">
+                <table class="table table-striped table-condensed">
 
-                   <tr>
+                    <tr>
                         <th>ID</th>
                         <th>Апл Id</th>
                         <th>Наименование</th>
@@ -303,7 +303,7 @@ $legalContact = $office->getLegalContact();
 
                     <?php foreach ($office->getCashes() as $cash): ?>
 
-                    <tr>
+                    <tr class="tablerow <?= $cash->getStatusClassAsString()?>">
                         <td><?= $this->escapeHtml($cash->getId()); ?></td>
                         <td><?= $this->escapeHtml($cash->getAplId()); ?>
                         </td>

@@ -278,6 +278,31 @@ class Cash {
     }    
     
     /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusClassList() 
+    {
+        return [
+            self::STATUS_ACTIVE => '',
+            self::STATUS_RETIRED => 'retired'
+        ];
+    }    
+    
+    /**
+     * Returns cash status as string.
+     * @return string
+     */
+    public function getStatusClassAsString()
+    {
+        $list = self::getStatusClassList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
+    /**
      * Sets status.
      * @param int $status     
      */
