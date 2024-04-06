@@ -49,6 +49,10 @@ $form->get('accountNumber')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('bankInn')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'cash-submit']);
 
 $form->prepare();
