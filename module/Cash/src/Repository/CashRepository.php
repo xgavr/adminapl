@@ -114,7 +114,7 @@ class CashRepository extends EntityRepository
             }            
             if (!empty($params['kind'])){
                 if (is_numeric($params['kind'])){
-                    $queryBuilder->andWhere('cd.kind = ?4')
+                    $queryBuilder->andWhere('cashDoc.kind = ?4')
                         ->setParameter('4', $params['kind'])
                             ;
                 }            
