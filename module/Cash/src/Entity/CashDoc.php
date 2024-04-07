@@ -1164,7 +1164,7 @@ class CashDoc {
     {
         $result = [
             'id' => $this->getId(),
-            'amount' => $this->getKindAmount(),
+            'amount' => $this->amount,
             'aplId' => $this->aplId,
             'cash' => ($this->cash) ? $this->cash->getId():null,
             'cashRefill' => ($this->cashRefill) ? $this->cashRefill->getId():NULL,
@@ -1198,7 +1198,7 @@ class CashDoc {
     {
         $result = [
             'id' => $this->getId(),
-            'amount' => $this->amount,
+            'amount' => $this->getKindAmount(),
             'aplId' => $this->aplId,
             'cash' => ($this->cash) ? $this->cash->toArray():null,
             'cashRefill' => ($this->cashRefill) ? $this->cashRefill->toArray():NULL,
