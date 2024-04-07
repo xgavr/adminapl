@@ -75,20 +75,20 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('ct, cd, c, cr, ur, cost, l, u, uc, cnt, clt, o, cdc')
+        $queryBuilder->select('ct, cashDoc, c, cr, ur, cost, l, u, uc, cnt, clt, o, cdc')
             ->from(CashTransaction::class, 'ct')
-            ->join('ct.cashDoc', 'cd')
+            ->join('ct.cashDoc', 'cashDoc')
             ->join('ct.cash', 'c')
-            ->leftJoin('cd.cashRefill', 'cr')    
-            ->leftJoin('cd.userRefill', 'ur')    
-            ->leftJoin('cd.userCreator', 'uc')    
-            ->leftJoin('cd.cost', 'cost')    
-            ->leftJoin('cd.legal', 'l')
-            ->leftJoin('cd.cash', 'cdc')
-            ->leftJoin('cd.user', 'u')
-            ->leftJoin('cd.contact', 'cnt')
+            ->leftJoin('cashDoc.cashRefill', 'cr')    
+            ->leftJoin('cashDoc.userRefill', 'ur')    
+            ->leftJoin('cashDoc.userCreator', 'uc')    
+            ->leftJoin('cashDoc.cost', 'cost')    
+            ->leftJoin('cashDoc.legal', 'l')
+            ->leftJoin('cashDoc.cash', 'cdc')
+            ->leftJoin('cashDoc.user', 'u')
+            ->leftJoin('cashDoc.contact', 'cnt')
             ->leftJoin('cnt.client', 'clt')
-            ->leftJoin('cd.order', 'o')
+            ->leftJoin('cashDoc.order', 'o')
             ->where('ct.dateOper >= ?1')
             ->setParameter('1', $dateStart)    
             ->andWhere('ct.dateOper <= ?2')
@@ -121,13 +121,13 @@ class CashRepository extends EntityRepository
             }    
             if (!empty($params['cashDocId'])){
                 if (is_numeric($params['cashDocId'])){
-                    $queryBuilder->andWhere('cd.id = :id')
+                    $queryBuilder->andWhere('cashDoc.id = :id')
                         ->setParameter('id', $params['cashDocId'])
                             ;
                 }            
             }    
             if (isset($params['sort'])){
-                $queryBuilder->addOrderBy('ct.'.$params['sort'], $params['order']);
+                $queryBuilder->addOrderBy($params['sort'], $params['order']);
             }
             
             $queryBuilder->addOrderBy('ct.docStamp', isset($params['order']) ? $params['order']:'DESC');
