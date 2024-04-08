@@ -888,7 +888,7 @@ class BillManager
             if (!empty($result['choices'])){
                 foreach ($result['choices'] as $choice){
                     if (!empty($choice['message']['content'])){                        
-                        $articleResult = Decoder::decode($choice['message']['content']);
+                        $articleResult = Decoder::decode($choice['message']['content'], \Laminas\Json\Json::TYPE_ARRAY);
                         if (!empty($articleResult['article'])){
                             $articleFilter = new ArticleCode();
                             $code = $articleFilter->filter($articleStr);
