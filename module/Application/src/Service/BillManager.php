@@ -891,7 +891,7 @@ class BillManager
                         $articleResult = Decoder::decode($choice['message']['content'], \Laminas\Json\Json::TYPE_ARRAY);
                         if (!empty($articleResult['article'])){
                             $articleFilter = new ArticleCode();
-                            $code = $articleFilter->filter($articleStr);
+                            $code = $articleFilter->filter($articleResult['article']);
                             return $this->entityManager->getRepository(Goods::class)
                                     ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
                         }
