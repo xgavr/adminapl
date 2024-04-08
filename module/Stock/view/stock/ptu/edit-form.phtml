@@ -29,7 +29,8 @@ $form->get('doc_date')->setAttributes([
     ]);
 
 $form->get('doc_no')->setAttributes([
-    'class'=>'form-control enter-search', 
+    'class'=>'form-control',
+    'onfocus' => "this.select();",
     ]);
 
 $form->get('comment')->setAttributes([
