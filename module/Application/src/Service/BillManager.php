@@ -30,6 +30,7 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Entity\GoodSupplier;
 use Application\Entity\Oem;
+use Laminas\Json\Decoder;
 
 /**
  * Description of BillManager
@@ -869,13 +870,13 @@ class BillManager
      * @param Producer $producer
      * @param string $goodName
      */
-    protected function _findGoodByCodeName($idoc, $producer, $goodName)
+    protected function _findGoodByGoodName($idoc, $producer, $goodName)
     {
         if ($producer && $goodName){
             $messages = [];
             $messages[] = [
                 'role' => 'system',
-                'content' => 'Ты специалист по логистеке. Нужно найти артикул товара в описании. Ответь в формате JSON {"article":"xxxxx"}',
+                'content' => 'Ты специалист по логистике. Нужно найти артикул товара в описании. Ответь в формате JSON {"article":"xxxxx"}',
             ];
             $messages[] = [
                 'role' => 'user',
@@ -886,8 +887,14 @@ class BillManager
             
             if (!empty($result['choices'])){
                 foreach ($result['choices'] as $choice){
-                    if (!empty($choice['message']['content'])){
-                        return $choice['message']['content'];
+                    if (!empty($choice['message']['content'])){                        
+                        $articleResult = Decoder::decode($choice['message']['content']);
+                        if (!empty($articleResult['article'])){
+                            $articleFilter = new ArticleCode();
+                            $code = $articleFilter->filter($articleStr);
+                            return $this->entityManager->getRepository(Goods::class)
+                                    ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
+                        }
                     }    
                 }
             }            
@@ -971,7 +978,10 @@ class BillManager
         }
         
         if (empty($articleStr) && $goodName && $producer){
-            
+            $good = $this->_findGoodByGoodName($idoc, $producer, $goodName);
+            if ($good){
+                return $good;
+            }
         }
 
         return $this->_newGood($articleStr, $producer, $goodName);
