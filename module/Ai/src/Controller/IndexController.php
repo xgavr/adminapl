@@ -78,4 +78,21 @@ class IndexController extends AbstractActionController
 
         return new JsonModel($result);
     }
+    
+    public function articleTestAction()
+    {
+        $messages = [];
+        $messages[] = [
+            'role' => 'system',
+            'content' => 'Ты специалист по логистеке. Нужно найти артикул товара в описании. Ответь в формате JSON {"article":"xxxxx"}',
+        ];
+        $messages[] = [
+            'role' => 'user',
+            'content' => 'AMD.JFC85 Фильтр салона NISSAN Qashqai I J10E X-Tr',
+        ];
+        
+        $result = $this->gigaManager->completions($messages);
+
+        return new JsonModel($result);
+    }
 }

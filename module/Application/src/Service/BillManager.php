@@ -64,13 +64,21 @@ class BillManager
      */
     private $assemblyManager;
     
+    /**
+     * Giga manager.
+     * @var \Ai\Service\GigaManager
+     */
+    private $gigaManager;
+    
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $postManager, $ptuManager, $assemblyManager)
+    public function __construct($entityManager, $postManager, $ptuManager, 
+            $assemblyManager, $gigaManager)
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;
         $this->ptuManager = $ptuManager;
         $this->assemblyManager = $assemblyManager;
+        $this->gigaManager = $gigaManager;
     }
     
     /**
@@ -856,6 +864,39 @@ class BillManager
     }
     
     /**
+     * Найти подходящий товар по коду
+     * @param Idoc $idoc
+     * @param Producer $producer
+     * @param string $goodName
+     */
+    protected function _findGoodByCodeName($idoc, $producer, $goodName)
+    {
+        if ($producer && $goodName){
+            $messages = [];
+            $messages[] = [
+                'role' => 'system',
+                'content' => 'Ты специалист по логистеке. Нужно найти артикул товара в описании. Ответь в формате JSON {"article":"xxxxx"}',
+            ];
+            $messages[] = [
+                'role' => 'user',
+                'content' => $goodName,
+            ];
+
+            $result = $this->gigaManager->completions($messages);
+            
+            if (!empty($result['choices'])){
+                foreach ($result['choices'] as $choice){
+                    if (!empty($choice['message']['content'])){
+                        return $choice['message']['content'];
+                    }    
+                }
+            }            
+        }       
+        
+        return;
+    }
+    
+    /**
      * Получить товар
      * @param Idoc $idoc
      * @param array $data
@@ -878,8 +919,8 @@ class BillManager
                 return $good;
             }
         }
-            
-        if ($code && $producerStr){
+        
+        if ($producerStr){
             $producerNameFilter = new ProducerName();
             $producerName = $producerNameFilter->filter($producerStr);
             $unknownProducer = $this->entityManager->getRepository(UnknownProducer::class)
@@ -887,15 +928,18 @@ class BillManager
             if ($unknownProducer){
                 if ($unknownProducer->getProducer()){
                     $producer = $unknownProducer->getProducer();
-                    if ($producer){
-                        $good = $this->entityManager->getRepository(Goods::class)
-                                ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
-                        if ($good){
-                            return $good;
-                        }
-                    }    
                 }
-            }
+            }    
+        }
+            
+        if ($code && $producer){
+            if ($producer){
+                $good = $this->entityManager->getRepository(Goods::class)
+                        ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
+                if ($good){
+                    return $good;
+                }
+            }    
         }
         
         if ($iid){
@@ -923,6 +967,10 @@ class BillManager
             if ($good){
                 return $good;
             }
+            
+        }
+        
+        if (empty($articleStr) && $goodName && $producer){
             
         }
 

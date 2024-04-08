@@ -14,6 +14,7 @@ use Application\Service\BillManager;
 use Admin\Service\PostManager;
 use Stock\Service\PtuManager;
 use Application\Service\AssemblyManager;
+use Ai\Service\GigaManager;
 
 /**
  * Description of BillManagerFactory
@@ -30,8 +31,10 @@ class BillManagerFactory  implements FactoryInterface
         $postManager = $container->get(PostManager::class);
         $ptuManager = $container->get(PtuManager::class);
         $assemblyManager = $container->get(AssemblyManager::class);
+        $gigaManager = $container->get(GigaManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new BillManager($entityManager, $postManager, $ptuManager, $assemblyManager);
+        return new BillManager($entityManager, $postManager, $ptuManager, 
+                $assemblyManager, $gigaManager);
     }
 }
