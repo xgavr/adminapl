@@ -1605,6 +1605,7 @@ class OrderManager
                 'recipient_id' => null,
                 'bank_account_id' => null,
                 'status_ex' => Order::STATUS_EX_NEW,
+                'status_account' => Order::STATUS_ACCOUNT_NO,
             ];
 
             $legal = $recipient = $bankAccount = $contract = null;
