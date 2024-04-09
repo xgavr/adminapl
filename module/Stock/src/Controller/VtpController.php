@@ -274,7 +274,13 @@ class VtpController extends AbstractActionController
                             ->findOneBy(['ptu' => $basePtuId, 'status' => Vtp::STATUS_ACTIVE, 'statusDoc' => Vtp::STATUS_DOC_NEW]);
                     if ($vtp){
                         $vtpId = $vtp->getId();        
-                    }    
+                    } 
+                    
+                    if (empty($ptu)){
+                        $ptu = $this->entityManager->getRepository(Ptu::class)
+                                ->find($basePtuId);                        
+                        $ptuList[$ptu->getId()] = $ptu->getDocIdPresent();
+                    }
                 }
             }
         }    
