@@ -131,7 +131,7 @@ use Stock\Entity\Vtp;
     }    
 
 function baseActiveFormatter(value, row){
-        var url = '/vtp/edit-form?good='+value;
+        var url = '/vtp/edit-form?good='+value+'&ptu='+row.ptuId;
         btn = '<nobr><button';
         btn += ' type="button" title="Оформить возврат"';
         btn += ' class="btn btn-default btn-xs vtp-modal-show"';

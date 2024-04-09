@@ -127,9 +127,10 @@ class MovementRepository extends EntityRepository{
      * Найти партии с остатком
      * 
      * @param integer $goodId
+     * @param Ptu $ptu
      * @return array
      */
-    public function availableBasePtu($goodId)
+    public function availableBasePtu($goodId, $ptu = null)
     {
         $entityManager = $this->getEntityManager();
         $qb = $entityManager->createQueryBuilder();
@@ -145,6 +146,11 @@ class MovementRepository extends EntityRepository{
                 ->having('rest > 0')
                 ->setMaxResults(1)
                 ;
+        if (!empty($ptu)){
+            $qb->andWhere('m.docId = :ptuId')
+                    ->setParameter('ptuId', $ptu->getId())
+                    ;
+        }
                 
         return $qb->getQuery()->getOneOrNullResult();
     }
@@ -161,6 +167,7 @@ class MovementRepository extends EntityRepository{
         $qb = $entityManager->createQueryBuilder();
         $qb->select('identity(m.good) as goodId')
                 ->addSelect('m.baseId')
+                ->addSelect('p.id as ptuId')
                 ->addSelect('p.aplId')
                 ->addSelect('p.docNo')
                 ->addSelect('p.docDate')

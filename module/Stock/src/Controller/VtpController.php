@@ -256,16 +256,22 @@ class VtpController extends AbstractActionController
         $ptu = $vtp = $office = $supplier = $legal = $company = $good = $base = null;
         $notDisabled = true; $ptuList = [];
         
+        if ($ptuId > 0){
+            $ptu = $this->entityManager->getRepository(Ptu::class)
+                    ->find($ptuId);
+            $ptuList[$ptu->getId()] = $ptu->getDocIdPresent();
+        }    
+
         if ($goodId > 0){
             $good = $this->entityManager->getRepository(Goods::class)
                     ->find($goodId);
             if ($good){
                 $base = $this->entityManager->getRepository(Movement::class)
-                        ->availableBasePtu($good->getId());
+                        ->availableBasePtu($good->getId(), $ptu);
                 if ($base){
-                    $ptuId = $base['baseId'];
+                    $basePtuId = $base['baseId'];
                     $vtp = $this->entityManager->getRepository(Vtp::class)
-                            ->findOneBy(['ptu' => $ptuId, 'status' => Vtp::STATUS_ACTIVE, 'statusDoc' => Vtp::STATUS_DOC_NEW]);
+                            ->findOneBy(['ptu' => $basePtuId, 'status' => Vtp::STATUS_ACTIVE, 'statusDoc' => Vtp::STATUS_DOC_NEW]);
                     if ($vtp){
                         $vtpId = $vtp->getId();        
                     }    
@@ -273,11 +279,6 @@ class VtpController extends AbstractActionController
             }
         }    
 
-        if ($ptuId > 0){
-            $ptu = $this->entityManager->getRepository(Ptu::class)
-                    ->find($ptuId);
-            $ptuList[$ptu->getId()] = $ptu->getDocIdPresent();
-        }    
         if ($vtpId > 0){
             $vtp = $this->entityManager->getRepository(Vtp::class)
                     ->find($vtpId);
