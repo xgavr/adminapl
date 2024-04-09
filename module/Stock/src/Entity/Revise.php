@@ -14,6 +14,7 @@ use Company\Entity\Office;
 use Application\Entity\Contact;
 use User\Entity\User;
 use Laminas\Json\Encoder;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
