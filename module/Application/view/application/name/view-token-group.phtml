@@ -356,15 +356,11 @@ $this->pageBreadcrumbs()->setItems([
             var names = value.split(';');
             var result = [];
             for (var i in names){
-                var name = names[i].replace(/[^А-ЯЁа-яё ]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
-                console.log(name.indexOf('грм'));
-                name.replace(/\bгрм\b/g, 'ГРМ');
-                name.replace('грм', 'ГРМ');
-                console.log(name.indexOf('ГРМ'));
-                name.replace('шрус', 'ШРУС');
-                name.replace('кпп', 'КПП');
-                name.replace('акпп', 'АКПП');
-                console.log(name);
+                var name = names[i].replace(/[^А-ЯЁа-яё ]/g, '').replace(/\s+/g, ' ').trim().toLowerCase()
+                .replace('грм', 'ГРМ')
+                .replace('шрус', 'ШРУС')
+                .replace('кпп', 'КПП')
+                .replace('акпп', 'АКПП');
                 result.push('<span class="goodName" onclick="promptDialog(\''+name+'\')">'+names[i]+'</span>');
             }
             return result.join(' ');
