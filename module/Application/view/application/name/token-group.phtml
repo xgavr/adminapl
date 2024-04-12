@@ -8,15 +8,6 @@ $this->pageBreadcrumbs()->setItems([
             'Группы наименований'=>$this->url('name', ['action' => 'token-group'])
             ]);
 
-$this->headLink()
-//    ->appendStylesheet('https://cdnjs.cloudflare.com/ajax/libs/jquery-bootgrid/1.3.1/jquery.bootgrid.css')        
-    ->appendStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')        
-        ;
-
-$this->headScript()
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
-    ->appendFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
-            ;    
 ?>
 
 <div class="row">
@@ -283,7 +274,8 @@ $this->headScript()
     
     /**
     * Промпт диалог
-    *
+    * @param {string} url
+    * @param {string} initValue
     */
     function promptDialog(url, initValue) {
         if (url){            
@@ -296,10 +288,10 @@ $this->headScript()
                     if (result){
                         $.ajax({
                             type: 'GET',
-                            url: url+'?prompt='+result,
+                            url: url+'?prompt='+result
                         })
                             .done(function (data) {
-                                if (data == 'ok'){
+                                if (data === 'ok'){
                                     $('#table').bootstrapTable('refresh');
                                 }    
                             })

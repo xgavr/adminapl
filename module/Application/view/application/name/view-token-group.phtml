@@ -346,7 +346,7 @@ $this->pageBreadcrumbs()->setItems([
             ' data-pk="<?= $tokenGroup->getId()?>"',
             ' data-name="'+value+'"',
             ' data-url="/name/update-title-bigram-display">',
-            '</a>',
+            '</a>'
         ].join(''); 
     } 
     
@@ -357,6 +357,10 @@ $this->pageBreadcrumbs()->setItems([
             var result = [];
             for (var i in names){
                 var name = names[i].replace(/[^А-ЯЁа-яё ]/g, '').replace(/\s+/g, ' ').trim();
+                name.replace('грм', 'ГРМ');
+                name.replace('шрус', 'ШРУС');
+                name.replace('кпп', 'КПП');
+                name.replace('акпп', 'АКПП');
                 result.push('<span class="goodName" onclick="promptDialog(\''+name.toLowerCase()+'\')">'+names[i]+'</span>');
             }
             return result.join(' ');
@@ -367,14 +371,14 @@ $this->pageBreadcrumbs()->setItems([
     
     /**
     * Промпт диалог
-    *
+    * @param {string} initValue 
     */
     function promptDialog(initValue) {
         var url = '/name/token-group-name-form/<?= $tokenGroup->getId()?>';
         if (url){
             if (!initValue){
                 var initValue = $('#tokenGroupName').html();
-                if (initValue == '---'){
+                if (initValue === '---'){
                     initValue = '';
                 }
             }    
@@ -384,10 +388,10 @@ $this->pageBreadcrumbs()->setItems([
                 title: 'Наименование группы', 
                 callback: function(result){
                     /* result = String containing user input if OK clicked or null if Cancel clicked */
-                    if (result != null){
+                    if (result !== null){
                         $.ajax({
                             type: 'GET',
-                            url: url+'?prompt='+result,
+                            url: url+'?prompt='+result
                         })
                             .done(function (data) {
                                 if (data){
