@@ -616,10 +616,17 @@ $this->headLink()
         
         $('#ordertable').on('load-success.bs.table', function (e, res) {
             setCookies('clientSaveId');
+            tableRowClick();
         });        
         
         $('#mutualtable').on('load-success.bs.table', function (e, res) {
-            $('#startBalance').html($.number(res.startBalance, 2, '.', '' ));            
+            $('#startBalance').html($.number(res.startBalance, 2, '.', '' ));  
+            
+            $('.tablerow-mutual').on('click', function(e){
+                $('.tablerow-mutual').removeClass('active-click');
+                $(this).addClass('active-click');
+            });
+            
         });        
         
         getCookies('clientSaveId');
