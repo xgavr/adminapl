@@ -453,13 +453,14 @@ $this->headLink()
                 data-icon-size="sm"
                 data-row-style="mutualRowStyle"
                 data-undefined-text = ""
+                data-show-footer="true"
                 >
                 <thead>
                     <tr>
                         <th data-field="docStamp" data-width="80" data-sortable="true" data-formatter="docStampFormatter">Дата</th>
                         <th data-field="amount" data-type="numeric" data-align="right" data-width="30" data-formatter="inFormatter">Отгрузка</th>
                         <th data-field="amount" data-type="numeric" data-align="right" data-width="30" data-formatter="outFormatter">Оплата</th>
-                        <th data-field="rest" data-type="numeric" data-align="right" data-formatter="restFormatter" data-width="30">Баланс</th>
+                        <th data-field="rest" data-type="numeric" data-align="right" data-footer-formatter="footerRestFormatter" data-formatter="restFormatter" data-width="30">Баланс</th>
                         <th data-field="docKey" data-formatter="docKeyFormatter">Документ</th>
                         <th data-field="legal.name" data-formatter="legalFormatter">Юр. лицо</th>
                         <th data-field="contract.name" data-formatter="contractFormatter">Договор</th>
@@ -615,6 +616,10 @@ $this->headLink()
         
         $('#ordertable').on('load-success.bs.table', function (e, res) {
             setCookies('clientSaveId');
+        });        
+        
+        $('#mutualtable').on('load-success.bs.table', function (e, res) {
+            $('#startBalance').html($.number(res.startBalance, 2, '.', '' ));            
         });        
         
         getCookies('clientSaveId');
@@ -1201,6 +1206,10 @@ $this->headLink()
         
         return '';
     }    
+    
+    function footerRestFormatter(data){
+        return '<span id="startBalance"></span>';
+    }
     
     function responseHandler(res) {
         return res;

@@ -505,12 +505,13 @@ class ClientController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
+        $params = ['q' => $search, 'source' => $source, 
+                    'sort' => $sort, 'order' => $order, 'company' => $company,
+                    'legal' => $legal, 'contract' => $contract,
+                    'startDate' => $startDate, 'endDate' => $endDate];
         
         $query = $this->entityManager->getRepository(Client::class)
-                        ->retails($client, ['q' => $search, 'source' => $source, 
-                            'sort' => $sort, 'order' => $order, 'company' => $company,
-                            'legal' => $legal, 'contract' => $contract,
-                            'startDate' => $startDate, 'endDate' => $endDate]);
+                        ->retails($client, $params);
 
         $total = count($query->getResult(2));
         
@@ -528,9 +529,15 @@ class ClientController extends AbstractActionController
                         $company, $legal, $contract);
         }
         
+        $params['restDate'] = $startDate;
+        $restQuery = $this->entityManager->getRepository(Client::class)
+                        ->restRetails($client, $params);
+        $rest = $restQuery->getOneOrNullResult();
+        
         return new JsonModel([
             'total' => $total,
             'rows' => $result,
+            'startBalance' => empty($rest['amount']) ? 0:$rest['amount'],
         ]);                  
     }   
     

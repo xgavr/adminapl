@@ -356,6 +356,69 @@ class ClientRepository extends EntityRepository{
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();            
+    } 
+    
+    /**
+     * Долг на дату
+     * 
+     * @param Client $client
+     * @param array $params
+     * @return Query
+     */
+    public function restRetails($client, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('sum(r.amount) as amount')
+            ->from(Retail::class, 'r')
+            ->join('r.contact', 'ct')
+            ->where('ct.client = ?1')
+            ->setParameter('1', $client->getId())
+            ->andWhere('r.status = :status')    
+            ->setParameter('status', Retail::STATUS_ACTIVE)
+            ->setMaxResults(1)    
+            ;
+        
+        if (is_array($params)){
+            if (!empty($params['office'])){
+                if (is_numeric($params['office'])){
+                    $queryBuilder->andWhere('r.office = ?2')
+                        ->setParameter('2', $params['office']);
+                }    
+            }
+            if (!empty($params['restDate'])){
+                $queryBuilder->andWhere('r.dateOper < :restDate')
+                        ->setParameter('restDate', $params['restDate']);
+            }
+            if (!empty($params['legal'])){
+                if ($params['legal'] == Client::RETAIL_ID){
+                    $queryBuilder->andWhere('r.legal is null')
+                            ;
+                }    
+                if (is_numeric($params['legal'])){
+                    $queryBuilder->andWhere('r.legal = :legal')
+                            ->setParameter('legal', $params['legal'])
+                            ;
+                }    
+            }
+            if (!empty($params['company'])){
+                if (is_numeric($params['company'])){
+                    $queryBuilder->andWhere('r.company = :company')
+                            ->setParameter('company', $params['company'])
+                            ;
+                }    
+            }
+            if (!empty($params['contract'])){
+                if (is_numeric($params['contract'])){
+                    $queryBuilder->andWhere('r.contract = :contract')
+                            ->setParameter('contract', $params['contract'])
+                            ;
+                }    
+            }
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery();            
     }    
     
     /**
