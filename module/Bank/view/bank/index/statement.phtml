@@ -413,7 +413,7 @@
 
     function deleteStatement(url){
         $.getJSON( url, function( data ) {
-            $table.bootstrapTable('refresh');
+            $table.bootstrapTable('refresh', {'silent': true});
         });     
 //        bootbox.confirm('Удалить?', function(result){
 //            if (result){

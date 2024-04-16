@@ -1183,6 +1183,7 @@ class Statement {
             'counterpartyInn' => $this->getСounterpartyInn(),
             'counterpartyKpp' => $this->getСounterpartyKpp(),
             'cashDoc' => $this->getCashDocAsArray(),
+            'status' => $this->getStatus(),
         ];
     }                        
 }
