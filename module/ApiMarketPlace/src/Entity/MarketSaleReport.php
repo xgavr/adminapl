@@ -11,6 +11,7 @@ namespace ApiMarketPlace\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use ApiMarketPlace\Entity\MarketSaleReportItem;
+use Company\Entity\Contract;
 
 /**
  * Description of MarketPlaceReport
@@ -38,6 +39,7 @@ class MarketSaleReport {
     
     const TYPE_REPORT = 1; //отчет о продажах
     const TYPE_COMPENSATION = 2; //отчет о компенсациях
+//    const TYPE_DECOMPENSATION = 3; //отчет о декомпенсациях
     
     /**
      * @ORM\Id
@@ -236,6 +238,10 @@ class MarketSaleReport {
         return $this->marketplace;
     }
 
+    /**
+     * 
+     * @return Contract
+     */
     public function getContract() {
         return $this->contract;
     }
@@ -497,6 +503,7 @@ class MarketSaleReport {
         return [
             self::TYPE_REPORT => 'Реализация',
             self::TYPE_COMPENSATION => 'Компенсация',
+//            self::TYPE_DECOMPENSATION => 'Декомпенсация',
         ];
     }    
     
@@ -547,6 +554,7 @@ class MarketSaleReport {
             'vatAmount' => $this->getVatAmount(),
             'baseAmount' => $this->getBaseAmount(),
             'costAmount' => $this->getCostAmount(),
+            'reportType' => $this->getReportType(),
             'id' => $this->getId(),
             'legal' => $this->getContract()->getLegal()->toArray(),
             'items' => $this->itemsToArray(),
@@ -575,6 +583,7 @@ class MarketSaleReport {
             'vatAmount' => $this->getVatAmount(),
             'baseAmount' => $this->getBaseAmount(),
             'costAmount' => $this->getCostAmount(),
+            'reportType' => $this->getReportType(),
             'id' => $this->getId(),
             'legal' => $this->getContract()->getLegal()->toArray(),
             'items' => $this->itemsToArray(),

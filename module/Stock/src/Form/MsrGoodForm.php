@@ -98,11 +98,24 @@ class MsrGoodForm extends Form implements ObjectManagerAwareInterface
             'name' => 'saleQty',
             'attributes' => [                
                 'id' => 'saleQty',
-                'min' => 1,
-                'value' => 1,
+                'min' => 0,
+                'value' => 0,
             ],
             'options' => [
-                'label' => 'Количество',
+                'label' => 'Количество продано',
+            ],
+       ]);        
+
+        $this->add([
+            'type'  => 'number',
+            'name' => 'returnQty',
+            'attributes' => [                
+                'id' => 'returnQty',
+                'min' => 0,
+                'value' => 0,
+            ],
+            'options' => [
+                'label' => 'Количество возврат',
             ],
        ]);        
 

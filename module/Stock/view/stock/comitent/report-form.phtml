@@ -19,6 +19,10 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+//$form->get('reportType')->setAttributes([
+//    'class'=>'form-control', 
+//    ]);
+//
 $form->get('marketplace')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -199,6 +203,7 @@ $form->prepare();
                 good_id: row.good.id,
                 offer_id: row.offerId,
                 saleQty: row.saleQty,
+                returnQty: row.returnQty,
                 saleAmount: row.saleAmount,
                 salePriceSeller: row.saleAmount,
                 priceSale: row.priceSale,

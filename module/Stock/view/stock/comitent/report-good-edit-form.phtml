@@ -26,6 +26,10 @@ $form->get('saleQty')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('returnQty')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('saleAmount')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -85,11 +89,16 @@ $docName = 'Новый';
         </div>    
     </div>
     <div class="row">
-        <div class="col-xs-3">                        
+        <div class="col-xs-6">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('saleQty')); ?>
                 <?= $this->formElement($form->get('saleQty')); ?>
                 <?= $this->formElementErrors($form->get('saleQty')); ?>                  
+            </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('returnQty')); ?>
+                <?= $this->formElement($form->get('returnQty')); ?>
+                <?= $this->formElementErrors($form->get('returnQty')); ?>                  
             </div>
         </div>    
         <div class="col-xs-3">                        
@@ -141,8 +150,8 @@ $docName = 'Новый';
                         offerId: answer.good.aplId,
                         saleAmount: data.saleAmount,
                         saleQty: data.saleQty,
+                        returnQty: data.returnQty,
                         priceSale: data.priceSale,
-                        returnQty: 0,
                         baseAmount: 0
                     };
 

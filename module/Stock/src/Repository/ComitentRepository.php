@@ -16,6 +16,7 @@ use Application\Entity\Order;
 use Company\Entity\Contract;
 use Stock\Entity\Movement;
 use Stock\Entity\Vt;
+use ApiMarketPlace\Entity\MarketSaleReport;
 
 /**
  * Description of ComitentRepository
@@ -98,7 +99,7 @@ class ComitentRepository extends EntityRepository{
     }
     
     /**
-     * Добавить запись движения заказа
+     * Добавить запись движения возврата
      * @param Vt $vt
      * @param type $data
      */
@@ -172,7 +173,7 @@ class ComitentRepository extends EntityRepository{
         
         return $qb->getQuery()->getResult();
     }
-    
+        
     /**
      * Найти документ для возврата
      * 
@@ -208,8 +209,8 @@ class ComitentRepository extends EntityRepository{
         $qb->addOrderBy('c.docStamp', $method);
         
         if ($baseKey){
-            $qb->andWhere('c.baseKey = ?5')
-               ->setParameter('5', $baseKey);     
+            $qb->andWhere('c.baseKey = ?6')
+               ->setParameter('6', $baseKey);     
         }
         
         return $qb->getQuery()->getResult();

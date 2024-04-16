@@ -222,6 +222,7 @@ class ComitentController extends AbstractActionController
                     'code' => $good->getCode(),
                     'goodInputName' => $good->getInputName(),
                     'saleQty' => $params['saleQty'],
+                    'returnQty' => $params['returnQty'],
                     'saleAmount' => $params['saleAmount'],
                     'priceSale' => $params['priceSale'],
                 ];
@@ -285,6 +286,7 @@ class ComitentController extends AbstractActionController
             $data = $this->params()->fromPost();
             $form->setData($data);
             $form->remove('saleQty');
+            $form->remove('returnQty');
             
             if ($form->isValid()) {
                 if (isset($data['good'])){
