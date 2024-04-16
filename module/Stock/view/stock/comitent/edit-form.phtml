@@ -4,7 +4,7 @@
 
             
 <div class="modal-header">
-    <h3 class="modal-title" id="comitentModalLabel"><?= $marketSaleReport->getDocPresent()?> на сумму <?= $marketSaleReport->getDocAmount()?> руб.</h3>
+    <h3 class="modal-title" id="comitentModalLabel"><?= $marketSaleReport->getDocPresent()?> на сумму <?= round($marketSaleReport->getDocAmount(), 2)?> руб.</h3>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
