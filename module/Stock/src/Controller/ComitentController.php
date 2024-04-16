@@ -224,6 +224,7 @@ class ComitentController extends AbstractActionController
                     'saleQty' => $params['saleQty'],
                     'returnQty' => $params['returnQty'],
                     'saleAmount' => $params['saleAmount'],
+                    'returnAmount' => $params['returnAmount'],
                     'priceSale' => $params['priceSale'],
                 ];
                 $form->setData($data);

@@ -137,7 +137,18 @@ class MsrGoodForm extends Form implements ObjectManagerAwareInterface
                 'id' => 'saleAmount'
             ],
             'options' => [
-                'label' => 'Сумма',
+                'label' => 'Сумма продажи',
+            ],
+       ]);        
+
+        $this->add([
+            'type'  => 'text',
+            'name' => 'returnAmount',
+            'attributes' => [                
+                'id' => 'returnAmount'
+            ],
+            'options' => [
+                'label' => 'Сумма возврата',
             ],
        ]);        
 

@@ -34,6 +34,10 @@ $form->get('saleAmount')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('retunAmount')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('priceSale')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -89,7 +93,7 @@ $docName = 'Новый';
         </div>    
     </div>
     <div class="row">
-        <div class="col-xs-6">                        
+        <div class="col-xs-4">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('saleQty')); ?>
                 <?= $this->formElement($form->get('saleQty')); ?>
@@ -101,11 +105,16 @@ $docName = 'Новый';
                 <?= $this->formElementErrors($form->get('returnQty')); ?>                  
             </div>
         </div>    
-        <div class="col-xs-3">                        
+        <div class="col-xs-4">                        
             <div class="form-group">
                 <?= $this->formLabel($form->get('saleAmount')); ?>
                 <?= $this->formElement($form->get('saleAmount')); ?>
                 <?= $this->formElementErrors($form->get('saleAmount')); ?>                  
+            </div>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('returnAmount')); ?>
+                <?= $this->formElement($form->get('returnAmount')); ?>
+                <?= $this->formElementErrors($form->get('returnAmount')); ?>                  
             </div>
         </div>
         <div class="col-xs-3">                        
@@ -149,6 +158,7 @@ $docName = 'Новый';
                         good: good,
                         offerId: answer.good.aplId,
                         saleAmount: data.saleAmount,
+                        returnAmount: data.returnAmount,
                         saleQty: data.saleQty,
                         returnQty: data.returnQty,
                         priceSale: data.priceSale,
@@ -212,6 +222,11 @@ $docName = 'Новый';
         });
         
         $("#saleAmount").on('input', function(){
+            var value = $(this).val();
+            $(this).val(parseFloat(value.replace(",",".").replace(/\s/g, '')));
+        });
+        
+        $("#returnAmount").on('input', function(){
             var value = $(this).val();
             $(this).val(parseFloat(value.replace(",",".").replace(/\s/g, '')));
         });
