@@ -276,6 +276,10 @@ class CostManager
         
         $costMutual = null;
         
+        if ($statement->getStatus() == Statement::STATUS_RETIRED){
+            return;
+        }
+        
         $cost = null; $amount = 0;
         switch ($statement->getKind()){
 

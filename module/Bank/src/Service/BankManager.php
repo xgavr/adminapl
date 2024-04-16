@@ -167,6 +167,7 @@ class BankManager
             $statement->setPay(Statement::PAY_NEW);
             $statement->setStatusAccount(Statement::STATUS_ACCOUNT_NO);
             $statement->setCashDoc(null);
+            $statement->setStatus(Statement::STATUS_ACTIVE);
         }
         
         $filter = new \Laminas\Filter\Word\SeparatorToCamelCase('_');
@@ -177,7 +178,7 @@ class BankManager
                 $statement->$func($value);
             }
         }
-        
+                
         $this->entityManager->persist($statement);
         $this->entityManager->flush($statement);
     }
@@ -263,7 +264,7 @@ class BankManager
     
     /**
      * Удаление строки выписки
-     * @param \Bank\Entity\Statement $statement
+     * @param Statement $statement
      */
     public function removeStatement($statement)
     {
@@ -271,6 +272,21 @@ class BankManager
         $this->entityManager->flush();
     }
 
+    /**
+     * Изменить статус строки выписки
+     * 
+     * @param Statement $statement
+     * @param integer $status
+     */
+    public function changeStatementStatus($statement, $status)
+    {
+        $statement->setStatus($status);
+        $this->entityManager->persist($statement);
+        $this->entityManager->flush();
+
+        $this->repostStatement($statement);
+    }
+    
     /**
      * Загруза выписки эквайринга
      * 

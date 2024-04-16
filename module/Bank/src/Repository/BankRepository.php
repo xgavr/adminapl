@@ -180,6 +180,8 @@ class BankRepository extends EntityRepository
                     ->andWhere('s.chargeDate >= ?2')
                     ->setParameter('1', $balance->getAccount())
                     ->setParameter('2', $balance->getDateBalance())
+                    ->andWhere('s.status = :status')
+                    ->setParameter('status', Statement::STATUS_ACTIVE)
                     ->groupBy('s.account')
                     ;
             

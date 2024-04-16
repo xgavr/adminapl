@@ -213,6 +213,33 @@ class IndexController extends AbstractActionController
         ]);                  
     }
     
+    public function deleteStatementAction()
+    {
+        $statementId = $this->params()->fromRoute('id');
+        
+        if ($statementId){
+            $statement = $this->entityManager->getRepository(Statement::class)
+                    ->find($statementId);
+            
+            if ($statement){                
+//                $this->bankManager->removeStatement($statement);
+                
+                $status = Statement::STATUS_ACTIVE;
+                if ($statement->getStatus() == Statement::STATUS_ACTIVE){
+                    $status = Statement::STATUS_RETIRED;
+                }
+                
+                $this->bankManager->changeStatementStatus($statement, $status);
+            }
+        }
+        
+        return new JsonModel([
+            'ok',
+        ]);                  
+    }
+
+    
+    
     public function acquiringIntersectAction()
     {
         $this->bankManager->findAcquiringIntersect();

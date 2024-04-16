@@ -22,6 +22,8 @@ use Company\Entity\CostMutual;
  */
 class Statement {
     
+    const STATUS_ACTIVE = 1; //данные новые
+    const STATUS_RETIRED = 2; //данные удалены
 
     const SWAP1_TRANSFERED = 1; //данные переданы
     const SWAP1_TO_TRANSFER = 2; //данные не перданы
@@ -240,6 +242,12 @@ class Statement {
      */
     protected $kind = self::KIND_UNKNOWN;
 
+    /** 
+     * Статус объекта
+     * @ORM\Column(name="status")  
+     */
+    protected $status;
+    
     /** 
      * @ORM\Column(name="amount_service")  
      */
@@ -1039,6 +1047,49 @@ class Statement {
         $this->kind = $kind;
     }  
         
+    /**
+     * Returns status.
+     * @return int     
+     */
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getStatusList() 
+    {
+        return [
+            self::STATUS_ACTIVE => 'Учитывать',
+            self::STATUS_RETIRED => 'Не учитывать',
+        ];
+    }    
+    
+    /**
+     * Returns status as string.
+     * @return string
+     */
+    public function getStatusAsString()
+    {
+        $list = self::getStatusList();
+        if (isset($list[$this->status]))
+            return $list[$this->status];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets status.
+     * @param int $status     
+     */
+    public function setStatus($status) 
+    {
+        $this->status = $status;
+    }   
+    
     public function getAmountService() {
         return $this->amountService;
     }
