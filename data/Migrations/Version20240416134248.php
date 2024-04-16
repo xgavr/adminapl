@@ -15,7 +15,7 @@ final class Version20240416134248 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('bank_statement');
-        $table->addColumn('status', 'string', ['notnull' => true, 'default' => Statement::STATUS_ACTIVE, 'comment' => 'Статус']);
+        $table->addColumn('status', 'integer', ['notnull' => true, 'default' => Statement::STATUS_ACTIVE, 'comment' => 'Статус']);
     }   
 
     public function down(Schema $schema) : void
