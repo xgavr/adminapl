@@ -160,16 +160,18 @@ $form->prepare();
         var data = $('#msrgoodtable').bootstrapTable('getData');
         var amount = 0; var quantity = 0;
         $.each(data, function( index, value ) {
-            amount += Math.round(value.amount*100)/100;
+            amount += Math.round(value.saleAmount*100)/100 - Math.round(value.returnAmount*100)/100;
             quantity += Math.round(value.quantity*100)/100; 
         });
-        $('#msrAmount').html(Math.round(amount*100)/100);
-        $('#msrQuantity').html(Math.round(quantity*100)/100);
+//        $('#msrAmount').html(Math.round(amount*100)/100);
+//        $('#msrQuantity').html(Math.round(quantity*100)/100);
+        return amount;
     }
     
     function submitForm(){
         var data = serializeForm('#market-sale-report-form');
-        data['doc_amount'] = getReportTotal();
+//        data['doc_amount'] = getReportTotal();
+        data['doc_amount'] = msrUpdateTotal();
          $('#compensation-submit').prop('disabled', true);
         data.reportGood = getFormatedReportGood();
         $.ajax({
@@ -298,18 +300,11 @@ $form->prepare();
     }
 
     function footerFormatter(data){
-        setReportTotal(0);
         var field = this.field;
         return (data.map(function (row) {
             return +row[field];
         }).reduce(function (sum, i) {
             var total = sum + i;
-            if (field == 'saleAmount'){
-                setReportTotal(getReportTotal() + total);
-            }
-            if (field == 'returnAmount'){
-                setReportTotal(getReportTotal() - total);
-            }
             return (Math.round((total)*100)/100);
         }, 0)).toFixed(2);
     }
