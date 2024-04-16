@@ -281,6 +281,7 @@ class BankManager
     public function changeStatementStatus($statement, $status)
     {
         $statement->setStatus($status);
+        $statement->setStatusAccount(Statement::STATUS_ACCOUNT_NO);
         $this->entityManager->persist($statement);
         $this->entityManager->flush();
 
