@@ -196,14 +196,14 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 if (count($data1)){
                     $result[] = [
                         'company' => $company->toArray(),
-                        'dateOper' => date('Ymd', strtotime($params['endDate'])),
+                        'dateOper' => date('Ymd', strtotime($zpParams1['endDate'])),
                         'data' => $data1, 
                     ];   
                 }    
 
                 $zpParams0= [
                     'startDate' => date('Y-m-01'), 
-                    'endDate' => date('Y-m-d'), 
+                    'endDate' => date('Y-m-t'), 
                     'summary' => false,
                     'company' => $company->getId(),
                 ];
@@ -211,7 +211,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 if (count($data0)){
                     $result[] = [
                         'company' => $company->toArray(),
-                        'dateOper' => date('Ymd', strtotime($params['endDate'])),
+                        'dateOper' => date('Ymd', strtotime($zpParams0['endDate'])),
                         'data' => $data0, 
                     ];   
                 }    
