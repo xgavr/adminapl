@@ -899,13 +899,28 @@ class Goods {
     
     /*
      * Возвращает связанный tokenGroup id.
-     * @return \Application\Entity\TokenGroup
+     * @return int
      */    
     public function getTokenGroupId() 
     {
         if ($this->tokenGroup){
             if ($this->tokenGroup->getId()){
                 return $this->tokenGroup->getId();                
+            }
+        }
+        
+        return;
+    }
+
+    /*
+     * Возвращает связанный tokenGroup name.
+     * @return int
+     */    
+    public function getTokenGroupName() 
+    {
+        if ($this->tokenGroup){
+            if ($this->tokenGroup->getId()){
+                return $this->tokenGroup->getName();                
             }
         }
         

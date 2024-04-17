@@ -314,21 +314,25 @@ class GoodsManager
         
         foreach ($iterable as $row){
             foreach ($row as $good){
+                
+                $upd = ['upd_week' => date('W'), 'available' => Goods::AVAILABLE_TRUE];
+                
                 $articleCount = $this->entityManager->getRepository(Article::class)
                         ->count(['good' => $good->getId()]);
-                if ($articleCount == 0){
-                    $this->entityManager->getRepository(Goods::class)
-                            ->updateGoodId($good->getId(), ['available' => Goods::AVAILABLE_FALSE]);
+                
+                if ($articleCount == 0){                    
+                    $upd['available'] = Goods::AVAILABLE_FALSE;
+                    
+                    if (empty($good->getTokenGroupName())){
+                        $upd['token_group'] = null;
+                    }
     
-                    $bidCount = $this->entityManager->getRepository(Bid::class)
-                            ->count(['good' => $good->getId()]);
-                    if ($bidCount == 0){
-                        $this->removeGood($good);
-                    }    
-                } else {
-                    $this->entityManager->getRepository(Goods::class)
-                            ->updateGoodId($good->getId(), ['upd_week' => date('W'), 'available' => Goods::AVAILABLE_TRUE]);
-                }    
+                    $this->removeGood($good);
+                }
+                
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGoodId($good->getId(), $upd);
+                
                 $this->entityManager->detach($good);
             }    
             if (time() >= $finishTime){
