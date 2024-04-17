@@ -192,7 +192,14 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     'summary' => false,
                     'company' => $company->getId(),
                 ];
-                $result[] = $this->zpManager->payslip($zpParams1);                
+                $data1 = $this->zpManager->payslip($zpParams1);
+                if (count($data1)){
+                    $result[] = [
+                        'company' => $company->toArray(),
+                        'operDate' => date('Ymd', strtotime($params['endDate'])),
+                        'data' => $data1, 
+                    ];   
+                }    
 
                 $zpParams0= [
                     'startDate' => date('Y-m-01'), 
@@ -200,11 +207,18 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     'summary' => false,
                     'company' => $company->getId(),
                 ];
-                $result[] = $this->zpManager->payslip($zpParams0);
+                $data0 = $this->zpManager->payslip($zpParams0);
+                if (count($data0)){
+                    $result[] = [
+                        'company' => $company->toArray(),
+                        'operDate' => date('Ymd', strtotime($params['endDate'])),
+                        'data' => $data0, 
+                    ];   
+                }    
             }            
         }    
 
-        return ['reports' => array_filter($result)];
+        return ['reports' => $result];
         
 //        return new ApiProblem(404, 'Нет отчетов для выгрузки!');
     }
