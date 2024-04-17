@@ -13,6 +13,7 @@ use Stock\Entity\Vtp;
 use Application\Entity\Order;
 use Bank\Entity\Statement;
 use Cash\Entity\CashDoc;
+use Company\Entity\Office;
 
 class ApiAccountComitentResource extends AbstractResourceListener
 {
@@ -180,15 +181,30 @@ class ApiAccountComitentResource extends AbstractResourceListener
             }
         }    
         if ($params['docType'] == 'Zp'){
-            $zpParams= [
-                'startDate' => date('Y-m-d', strtotime('first day of previous month')), 
-                'endDate' => date('Y-m-d'), 
-                'summary' => false,
-            ];
-            $result = $this->zpManager->payslip($zpParams);
+            
+            $companies = $this->entityManager->getRepository(Office::class)
+                    ->findAllCompanies();
+            
+            foreach ($companies as $company){
+                $zpParams1= [
+                    'startDate' => date('Y-m-d', strtotime('first day of previous month')), 
+                    'endDate' => date('Y-m-d', strtotime('last day of previous month')), 
+                    'summary' => false,
+                    'company' => $company->getId(),
+                ];
+                $result[] = $this->zpManager->payslip($zpParams1);
+
+                $zpParams0= [
+                    'startDate' => date('Y-m-01'), 
+                    'endDate' => date('Y-m-d'), 
+                    'summary' => false,
+                    'company' => $company->getId(),
+                ];
+                $result[] = $this->zpManager->payslip($zpParams0);
+            }            
         }    
 
-        return ['reports' => $result];
+        return ['reports' => array_filter($result)];
         
 //        return new ApiProblem(404, 'Нет отчетов для выгрузки!');
     }
