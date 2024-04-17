@@ -324,7 +324,7 @@ class GoodsManager
                     $upd['available'] = Goods::AVAILABLE_FALSE;
                     
                     if (empty($good->getTokenGroupName())){
-                        $upd['token_group'] = null;
+                        $upd['token_group_id'] = null;
                     }
     
                     $this->removeGood($good);
