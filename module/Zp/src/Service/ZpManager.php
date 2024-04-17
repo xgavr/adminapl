@@ -371,4 +371,43 @@ class ZpManager {
         
         return;
     }
+    
+    /**
+     * Сводные расчеты ЗП
+     * @param array $params
+     * @return array
+     */
+    public function payslip($params)
+    {
+        $query = $this->entityManager->getRepository(PersonalMutual::class)
+                        ->payslip($params);
+        
+        $result = $query->getResult(2);
+        
+        $data = [];
+        $totalIn = $totalOut = $startBalance = 0;
+        foreach ($result as $rows){
+            $row = [
+                'company' => $this->entityManager->getRepository(Legal::class)
+                    ->find($rows['company'])->toArray(),
+                'user' => $this->entityManager->getRepository(User::class)
+                    ->find($rows['user'])->toArray(),
+                'amount' => $rows['amount'],
+                'amountIn' => $rows['amountIn'],
+                'amountOut' => $rows['amountOut'],
+            ];
+            
+            $totalIn += $rows['amountIn'];
+            $totalOut += $rows['amountOut'];
+            
+            if (!empty($rows['accrual'])){
+                $row['accrual'] = $this->entityManager->getRepository(Accrual::class)
+                    ->find($rows['accrual'])->toArray();
+            }
+            
+            $data[] = $row;        
+        } 
+        
+        return $data;
+    }
 }

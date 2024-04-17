@@ -29,10 +29,17 @@ class ApiAccountComitentResource extends AbstractResourceListener
      */
     private $reportManager;
 
-    public function __construct($entityManager, $reportManager) 
+    /**
+     * Zp manager.
+     * @var \Zp\Service\ZpManager
+     */
+    private $zpManager;
+
+    public function __construct($entityManager, $reportManager, $zpManager) 
     {
        $this->entityManager = $entityManager;       
        $this->reportManager = $reportManager;       
+       $this->zpManager = $zpManager;       
     }
 
     /**
@@ -171,6 +178,14 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 $result[] = $row;
                 
             }
+        }    
+        if ($params['docType'] == 'Zp'){
+            $zpParams= [
+                'startDate' => date('Y-m-d', strtotime('first day of previous month')), 
+                'endDate' => date('Y-m-d'), 
+                'summary' => false,
+            ];
+            $result = $this->zpManager->payslip($zpParams);
         }    
 
         return ['reports' => $result];
