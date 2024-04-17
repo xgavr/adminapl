@@ -192,7 +192,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     'summary' => false,
                     'company' => $company->getId(),
                 ];
-                $result[] = $this->zpManager->payslip($zpParams1);
+                $result[] = $this->zpManager->payslip($zpParams1);                
 
                 $zpParams0= [
                     'startDate' => date('Y-m-01'), 

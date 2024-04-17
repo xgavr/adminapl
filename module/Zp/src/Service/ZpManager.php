@@ -395,6 +395,7 @@ class ZpManager {
                 'amount' => $rows['amount'],
                 'amountIn' => $rows['amountIn'],
                 'amountOut' => $rows['amountOut'],
+                'dateOper' => date('Ymd', strtotime($params['endDate'])),
             ];
             
             $totalIn += $rows['amountIn'];
