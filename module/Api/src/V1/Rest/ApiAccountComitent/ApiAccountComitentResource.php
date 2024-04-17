@@ -196,7 +196,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 if (count($data1)){
                     $result[] = [
                         'company' => $company->toArray(),
-                        'operDate' => date('Ymd', strtotime($params['endDate'])),
+                        'dateOper' => date('Ymd', strtotime($params['endDate'])),
                         'data' => $data1, 
                     ];   
                 }    
@@ -211,7 +211,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 if (count($data0)){
                     $result[] = [
                         'company' => $company->toArray(),
-                        'operDate' => date('Ymd', strtotime($params['endDate'])),
+                        'dateOper' => date('Ymd', strtotime($params['endDate'])),
                         'data' => $data0, 
                     ];   
                 }    
