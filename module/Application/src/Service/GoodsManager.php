@@ -1203,7 +1203,7 @@ class GoodsManager
             $ordersReserve = $this->entityManager->getRepository(Reserve::class)
                     ->ordersReserve(['goodId' => $good->getId()]);
             foreach ($ordersReserve as $order){
-                $row['reserve'][] = $order->toArray();
+                $row['reserves'][] = $order->toArray();
             }
             
             foreach ($row['purchases'] as $purchase){
