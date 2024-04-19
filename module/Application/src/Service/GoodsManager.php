@@ -1201,7 +1201,7 @@ class GoodsManager
             foreach ($bases as $purchase){
                 $purchase['daysTotal'] = 14;
                 $purchase['daysPassed'] = round((time() - strtotime($purchase['docDate']))/(60*60*24));
-                $purchase['daysLeft'] = max(0, $purchase['daysTotal']-$purchase['daysPassed']['daysPassed']);
+                $purchase['daysLeft'] = max(0, $purchase['daysTotal']-$purchase['daysPassed']);
                 
                 $row['purchases'][]= $purchase;
             }                        
