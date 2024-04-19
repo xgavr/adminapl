@@ -92,7 +92,7 @@ class GoodResource extends AbstractResourceListener
         $result = [];
         
         $paramsArray = $params->toArray();
-        var_dump($paramsArray);
+//        var_dump($paramsArray);
         if (!empty($paramsArray['article'])){
             $articleFilter = new ArticleCode();
             $code = $articleFilter->filter($paramsArray['article']);
