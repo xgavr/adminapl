@@ -1191,9 +1191,11 @@ class GoodsManager
         
         $goodBalances = $this->entityManager->getRepository(GoodBalance::class)
                 ->findBy(['good' => $good->getId()]);
+        
         foreach ($goodBalances as $goodBalance){
             $row['purchases'] = $this->entityManager->getRepository(Movement::class)
-                    ->findPtuBases(['goodId' => $good->getId()]);
+                    ->findPtuBases(['goodId' => $goodBalance->getGood()->getId()]);
+            
             $row['orders'] = $goodBalances = $goodBalance->toArray();
             
             foreach ($row['purchases'] as $purchase){
