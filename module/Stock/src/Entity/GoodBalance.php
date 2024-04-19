@@ -14,6 +14,7 @@ use Company\Entity\Office;
 use Application\Entity\Goods;
 use User\Entity\User;
 use Stock\Entity\Register;
+use Stock\Entity\GoodBalance;
 
 
 /**
@@ -260,4 +261,25 @@ class GoodBalance {
         return $this->base;
     }
 
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'available' => $this->getAvailable(),
+            'company' => $this->getCompany()->toArray(),
+            'delivery' => $this->getDelivery(),
+            'id' => $this->getId(),
+            'office' => $this->getOffice()->toArray(),
+            'price' => $this->getPrice(),
+            'reserve' => $this->getReserve(),
+            'rest' => $this->getRest(),
+            'status' => $this->getStatus(),
+            'vozvrat' => $this->getVozvrat(),
+        ];
+        
+        return $result;
+    }            
 }

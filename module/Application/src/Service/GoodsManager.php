@@ -1179,4 +1179,31 @@ class GoodsManager
         
         return $result;
     }
+    
+    /**
+     * Инфа о товаре
+     * @param Goood $good
+     * @return array
+     */
+    public function detail($good)
+    {
+        $result = [];
+        
+        $goodBalances = $this->entityManager->getRepository(GoodBalance::class)
+                ->findBy(['good' => $good->getId()]);
+        foreach ($goodBalances as $goodBalance){
+            $row['purchases'] = $this->entityManager->getRepository(Movement::class)
+                    ->findPtuBases(['goodId' => $good->getId()]);
+            $row['orders'] = $goodBalances = $goodBalance->toArray();
+            
+            foreach ($row['purchases'] as $purchase){
+                $row['purchases']['daysPassed'] = round((time() - strtotime($purchase['docDate']))/(60*60*24));
+                $row['purchases']['daysLeft'] = max(0, $row['purchases']['daysPassed']-14);
+            }
+            
+            $result[] = $row;
+        }
+        
+        return $result; 
+    }
 }

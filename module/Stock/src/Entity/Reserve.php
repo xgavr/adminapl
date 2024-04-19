@@ -186,4 +186,23 @@ class Reserve {
         return $this->user;
     }
 
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'company' => $this->getCompany()->toArray(),
+            'docKey' => $this->getDockey(),
+            'good' => $this->getGood()->toArray(),
+            'id' => $this->getId(),
+            'office' => $this->getOffice()->toArray(),
+            'rest' => $this->getRest(),
+            'status' => $this->getStatus(),
+            'statusName' => $this->getStatusAsString(),
+        ];
+        
+        return $result;
+    }                
 }

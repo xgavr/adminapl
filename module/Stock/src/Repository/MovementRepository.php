@@ -200,6 +200,13 @@ class MovementRepository extends EntityRepository{
 
             $orX = $qb->expr()->orX();
             $orX->add($qb->expr()->eq('m.good', 0));                        
+            
+            if (!empty($params['goodId'])){
+                if (is_numeric($params['goodId'])){
+                    $orX = $qb->expr()->orX();
+                    $orX->add($qb->expr()->eq('m.good', $params['goodId']));                        
+                }
+            }
 
             if (isset($params['sort'])){
                 $qb->addOrderBy('p.'.$params['sort'], $params['order']);

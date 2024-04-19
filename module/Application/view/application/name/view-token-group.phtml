@@ -364,10 +364,12 @@ $this->pageBreadcrumbs()->setItems([
                         .replace('ваз', '')
                         .replace('уаз', '')
                         .replace('грм', 'ГРМ')
+                        .replace('гбц', 'ГБЦ')
+                        .replace('двс', 'ДВС')
                         .replace('шрус', 'ШРУС')
-                        .replace('кпп', 'КПП')
                         .replace('акпп', 'АКПП')
-                        .replace('мкпп', 'МКПП');
+                        .replace('мкпп', 'МКПП')
+                        .replace('кпп', 'КПП');
                 result.push('<span class="goodName" onclick="promptDialog(\''+name+'\')">'+names[i]+'</span>');
             }
             return result.join(' ');

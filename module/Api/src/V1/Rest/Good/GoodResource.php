@@ -7,6 +7,7 @@ use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
+use Stock\Entity\GoodBalance;
 
 class GoodResource extends AbstractResourceListener
 {
@@ -119,6 +120,22 @@ class GoodResource extends AbstractResourceListener
                         return $result;
                     }
                 }    
+            }
+        }
+        
+        if ($code){
+            $goods = $this->entityManager->getRepository(Goods::class)
+                    ->findOneBy(['code' => $code]);
+            foreach ($goods as $good){
+                $goodResult = $good->toArray();
+                if (!empty($paramsArray['detail'])){                    
+                   $goodResult['details'] = $this->goodManager->detail($good);
+                }
+                $result[] = $goodResult;                
+            }  
+            
+            if (count($result)){
+                return $result;
             }
         }
         
