@@ -30,6 +30,7 @@ use Stock\Entity\OtGood;
 use Stock\Entity\GoodBalance;
 use Admin\Entity\Log;
 use Application\Entity\Oem;
+use Stock\Entity\Reserve;
 
 /**
  * Description of GoodsService
@@ -1197,11 +1198,18 @@ class GoodsManager
                     ->findPtuBases(['goodId' => $goodBalance->getGood()->getId()]);
             $row['purchases'] = $bases->getResult();
             
-            $row['orders'] = $goodBalances = $goodBalance->toArray();
+            $row['rest'] = $goodBalances = $goodBalance->toArray();
+            
+            $ordersReserve = $this->entityManager->getRepository(Reserve::class)
+                    ->ordersReserve(['goodId' => $good->getId()]);
+            foreach ($ordersReserve as $order){
+                $row['reserve'][] = $order->toArray();
+            }
             
             foreach ($row['purchases'] as $purchase){
+                $row['purchases']['daysTotal'] = 14;
                 $row['purchases']['daysPassed'] = round((time() - strtotime($purchase['docDate']))/(60*60*24));
-                $row['purchases']['daysLeft'] = max(0, $row['purchases']['daysPassed']-14);
+                $row['purchases']['daysLeft'] = max(0, $row['purchases']['daysTotal']-$row['purchases']['daysPassed']);
             }
             
             $result[] = $row;

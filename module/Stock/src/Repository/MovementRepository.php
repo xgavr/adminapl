@@ -759,4 +759,33 @@ class MovementRepository extends EntityRepository{
         return $result;
         
     }    
+    
+    /**
+     * Документы в резерве
+     * @param array $params
+     */
+    public function ordersReserve($params)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('o')
+                ->from(Reserve::class, 'r')
+                ->join(Register::class, 're', 'WITH', 'r.docKey = re.docKey')
+                ->join(Order::class, 'o', 'WITH', 're.docId = o.id and re.docType = :docType')
+                ->setParameter('docType', Movement::DOC_ORDER)
+                ;
+        
+        if (!empty($params['goodId'])){
+            if (is_numeric($params['orderId'])){
+                $queryBuilder->andWhere('r.good = :goodId')
+                        ->setParameter('goodId', $params['goodId'])
+                        ;
+            }
+        }
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
 }
