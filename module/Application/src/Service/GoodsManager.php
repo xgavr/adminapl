@@ -1207,9 +1207,9 @@ class GoodsManager
             }
             
             foreach ($row['purchases'] as $purchase){
-                $row['purchases']['daysTotal'] = 14;
-                $row['purchases']['daysPassed'] = round((time() - strtotime($purchase['docDate']))/(60*60*24));
-                $row['purchases']['daysLeft'] = max(0, $row['purchases']['daysTotal']-$row['purchases']['daysPassed']);
+                $purchase['daysTotal'] = 14;
+                $purchase['daysPassed'] = round((time() - strtotime($purchase['docDate']))/(60*60*24));
+                $purchase['daysLeft'] = max(0, $row['purchases']['daysTotal']-$row['purchases']['daysPassed']);
             }
             
             $result[] = $row;
