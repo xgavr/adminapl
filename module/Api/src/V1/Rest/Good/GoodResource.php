@@ -126,11 +126,11 @@ class GoodResource extends AbstractResourceListener
         if ($code){
             if (!empty($paramsArray['inv'])){                    
                 $goods = $this->entityManager->getRepository(Goods::class)
-                        ->findOneBy(['code' => $code]);
+                        ->findBy(['code' => $code]);
                 
                 foreach ($goods as $good){
                     $goodResult = $good->toArray();
-                       $goodResult['details'] = $this->goodManager->detail($good);
+                    $goodResult['details'] = $this->goodManager->detail($good);
                     $result[] = $goodResult;                
                 }  
 
