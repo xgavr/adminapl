@@ -124,19 +124,20 @@ class GoodResource extends AbstractResourceListener
         }
         
         if ($code){
-            $goods = $this->entityManager->getRepository(Goods::class)
-                    ->findOneBy(['code' => $code]);
-            foreach ($goods as $good){
-                $goodResult = $good->toArray();
-                if (!empty($paramsArray['detail'])){                    
-                   $goodResult['details'] = $this->goodManager->detail($good);
+            if (!empty($paramsArray['inv'])){                    
+                $goods = $this->entityManager->getRepository(Goods::class)
+                        ->findOneBy(['code' => $code]);
+                
+                foreach ($goods as $good){
+                    $goodResult = $good->toArray();
+                       $goodResult['details'] = $this->goodManager->detail($good);
+                    $result[] = $goodResult;                
+                }  
+
+                if (count($result)){
+                    return $result;
                 }
-                $result[] = $goodResult;                
-            }  
-            
-            if (count($result)){
-                return $result;
-            }
+            }    
         }
         
         return new ApiProblem(404, 'Ничего не нашлось :(');

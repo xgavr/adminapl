@@ -1016,6 +1016,36 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'description' => 'производитель',
                 'field_type' => 'string',
             ],
+            2 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'detail',
+                'description' => 'Выводить больше данных о товаре:
+- резерв по заказам
+- данные о поступлениях',
+                'field_type' => 'integer',
+            ],
+            3 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'inv',
+                'field_type' => 'integer',
+                'description' => 'Выводить больше данных о товаре:
+- резерв по заказам
+- данные о поступлениях',
+            ],
         ],
         'Api\\V1\\Rest\\GoodApl\\Validator' => [
             0 => [
@@ -1066,6 +1096,8 @@ STATUS_CANCELED  = -10; // Отменен.',
             'collection_query_whitelist' => [
                 0 => 'article',
                 1 => 'producer',
+                2 => 'detail',
+                3 => 'inv',
             ],
             'page_size' => 25,
             'page_size_param' => null,
