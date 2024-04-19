@@ -1194,9 +1194,17 @@ class GoodsManager
                 ->findBy(['good' => $good->getId()]);
         
         foreach ($goodBalances as $goodBalance){
-            $bases = $this->entityManager->getRepository(Movement::class)
+            $basesQuery = $this->entityManager->getRepository(Movement::class)
                     ->findPtuBases(['goodId' => $goodBalance->getGood()->getId()]);
-            $row['purchases'] = $bases->getResult();
+            $bases = $basesQuery->getResult();
+            
+            foreach ($bases as $purchase){
+                $purchase['daysTotal'] = 14;
+                $purchase['daysPassed'] = round((time() - strtotime($purchase['docDate']))/(60*60*24));
+                $purchase['daysLeft'] = max(0, $purchase['daysTotal']-$purchase['daysPassed']['daysPassed']);
+                
+                $row['purchases'][]= $purchase;
+            }                        
             
             $row['rest'] = $goodBalances = $goodBalance->toArray();
             
@@ -1204,12 +1212,6 @@ class GoodsManager
                     ->ordersReserve(['goodId' => $good->getId()]);
             foreach ($ordersReserve as $order){
                 $row['reserves'][] = $order->toArray();
-            }
-            
-            foreach ($row['purchases'] as $purchase){
-                $purchase['daysTotal'] = 14;
-                $purchase['daysPassed'] = round((time() - strtotime($purchase['docDate']))/(60*60*24));
-                $purchase['daysLeft'] = max(0, $row['purchases']['daysTotal']-$row['purchases']['daysPassed']);
             }
             
             $result[] = $row;
