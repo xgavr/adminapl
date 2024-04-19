@@ -777,13 +777,17 @@ class MovementRepository extends EntityRepository{
                 ->setParameter('docType', Movement::DOC_ORDER)
                 ;
         
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('r.good', 0));                        
+            
         if (!empty($params['goodId'])){
-            if (is_numeric($params['orderId'])){
-                $queryBuilder->andWhere('r.good = :goodId')
-                        ->setParameter('goodId', $params['goodId'])
-                        ;
+            if (is_numeric($params['goodId'])){
+                $orX = $queryBuilder->expr()->orX();
+                $orX->add($queryBuilder->expr()->eq('r.good', $params['goodId']));                        
             }
         }
+        
+        $queryBuilder->andWhere($orX);
         
         return $queryBuilder->getQuery()->getResult();
         
