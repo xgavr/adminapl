@@ -678,7 +678,7 @@ class ZpRepository extends EntityRepository
                 ->andWhere('pm.status = :status')
                 ->setParameter('status', PersonalMutual::STATUS_ACTIVE)
                 ->groupBy('company')
-                ->addGroupBy('user')                
+                ->addGroupBy('user')
                 ;    
         
         if (is_array($params)){

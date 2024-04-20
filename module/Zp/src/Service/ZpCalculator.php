@@ -681,4 +681,83 @@ class ZpCalculator {
         
         return;
     }
+    
+    /**
+     * Сводный отчет по зп
+     * @param date $startDate
+     */
+    public function totalReport($startDate)
+    {
+        $params = [
+            'startDate' => date('Y-m-01', strtotime($startDate)), 
+            'endDate' => min(date('Y-m-d'), date('Y-m-t', strtotime($startDate))),
+            'summary' => true,
+        ];
+        
+        $query = $this->entityManager->getRepository(PersonalMutual::class)
+                        ->payslip($params);
+        
+        $data = $query->getResult();
+        
+        $result = "<p>Сводный расчетный лист за период:	{$params['startDate']} - {$params['endDate']}</p>";
+        $result .= "<table border=1>";
+        $result .= "<tr>";
+        $result .= "<th colspan='2'>Сотрудник</th>";
+        $result .= "<th>Долг на начало</th>";
+        $result .= "<th>Начислено</th>";
+        $result .= "<th>Получено</th>";
+        $result .= "<th>Долг на конец</th>";
+        $result .= "</tr>";
+
+        $totalStart = $totalIn = $totalOut = $totalEnd = 0;
+        
+        foreach ($data as $row){
+            $userData = $this->entityManager->getRepository(User::class)
+                ->find($row['user'])->toArray();
+                    
+            $params['startDate'] = date('2012-01-01');        
+            $params['endDate'] = date('Y-m-d 23:59:59', strtotime($startDate.' -1 day'));
+            $params['user'] = $userData['id'];
+
+            $balaceQuery = $this->entityManager->getRepository(PersonalMutual::class)
+                            ->payslip($params);
+            
+            $balanceResult = $balaceQuery->getOneOrNullResult(2);
+            $startBalance = empty($balanceResult['amount']) ? 0:$balanceResult['amount'];
+            $endBalance = $startBalance+$row['amountOut']-$row['amountIn'];
+
+            $userReport = 'rl'.$userData['aplId'].date('Ym', strtotime($startDate));
+            
+            $result .= "<tr>";                
+            $result .= "<td><a href='/users/dd-report?report=$userReport'>".$userReport."</a></td>";                
+            $result .= "<td>{$userData['fullName']}</td>";                
+            $result .= "<td align='right'>".round($startBalance)."</td>";                
+            $result .= "<td align='right'>".round($row['amountOut'])."</td>";                
+            $result .= "<td align='right'>".round($row['amountIn'])."</td>";                
+            $result .= "<td align='right'>".round($endBalance)."</td>";                
+            $result .= "</tr>";    
+            
+            $totalStart += round($startBalance);
+            $totalIn += round($row['amountOut']);
+            $totalOut += round($row['amountIn']);
+            $totalEnd += round($endBalance);
+        }
+        
+        $result .= "<tr>";
+        $result .= "<th colspan='2' align='right'>Итого</th>";
+        $result .= "<th align='right'>$totalStart</th>";
+        $result .= "<th align='right'>$totalIn</th>";
+        $result .= "<th align='right'>$totalOut</th>";
+        $result .= "<th align='right'>$totalEnd</th>";
+        $result .= "</tr>";
+
+        $result .= "</table>";
+        $result .= "<p>".date('Y-m-d H:i:s')."</p>";
+        
+        $fileName = "./data/reports/zp".date('Ym', strtotime($startDate)).".html";
+
+        file_put_contents($fileName, $result);
+        
+        return;                
+    }
 }

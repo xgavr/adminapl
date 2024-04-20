@@ -293,4 +293,16 @@ class IndexController extends AbstractActionController
             'rbacManager' => $this->rbacManager,
         ]);
     }         
+    
+    public function totalReportAction()
+    {
+        $dateStart = $this->params()->fromQuery('dateStart');
+
+//        $this->zpCalculator->periodCalculator();        
+        $this->zpCalculator->totalReport($dateStart);        
+        
+        return new JsonModel(
+           ['result' => 'ok']
+        );                           
+    }
 }
