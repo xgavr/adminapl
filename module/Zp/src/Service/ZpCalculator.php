@@ -744,11 +744,11 @@ class ZpCalculator {
         }
         
         $result .= "<tr>";
-        $result .= "<th colspan='2' align='right'>Итого</th>";
-        $result .= "<th align='right'>$totalStart</th>";
-        $result .= "<th align='right'>$totalIn</th>";
-        $result .= "<th align='right'>$totalOut</th>";
-        $result .= "<th align='right'>$totalEnd</th>";
+        $result .= "<td colspan='2' align='right'>Итого</td>";
+        $result .= "<td align='right'>$totalStart</td>";
+        $result .= "<td align='right'>$totalIn</td>";
+        $result .= "<td align='right'>$totalOut</td>";
+        $result .= "<td align='right'>$totalEnd</td>";
         $result .= "</tr>";
 
         $result .= "</table>";
