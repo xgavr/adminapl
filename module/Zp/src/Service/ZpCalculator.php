@@ -700,7 +700,7 @@ class ZpCalculator {
         $data = $query->getResult();
         
         $result = "<p>Сводный расчетный лист за период:	{$params['startDate']} - {$params['endDate']}</p>";
-        $result .= "<table table table-bordered table-hover table-condensed>";
+        $result .= "<table class='table table-bordered table-hover table-condensed'>";
         $result .= "<tr>";
         $result .= "<th colspan='2'>Сотрудник</th>";
         $result .= "<th>Долг на начало</th>";
