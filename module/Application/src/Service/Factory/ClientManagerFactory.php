@@ -13,7 +13,6 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\ClientManager;
 use Application\Service\ContactManager;
 use User\Service\UserManager;
-use Admin\Service\AplOrderService;
 
 /**
  * Description of ClientManagerFactory
@@ -30,7 +29,6 @@ class ClientManagerFactory  implements FactoryInterface
         $contactManager = $container->get(ContactManager::class);        
         $userManager = $container->get(UserManager::class);  
         $authService = $container->get(\Laminas\Authentication\AuthenticationService::class);
-        //$aplOrderService = $container->get(AplOrderService::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new ClientManager($entityManager, $contactManager, $userManager, 

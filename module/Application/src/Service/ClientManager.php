@@ -43,12 +43,6 @@ class ClientManager
      */
     private $userManager;
 
-    /**
-     * AplOrderService manager
-     * @var \Admin\Service\AplOrderService
-     */
-    private $aplOrderService;
-
     private $authService;
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
@@ -59,7 +53,6 @@ class ClientManager
         $this->contactManager = $contactManager;
         $this->userManager = $userManager;
         $this->authService = $authService;
-        $this->aplOrderService = $aplOrderService;
     }
     
     /**
@@ -406,50 +399,30 @@ class ClientManager
     }  
     
     /**
-     * Поправить дубли клиентов по телефону
+     * Поправить aplId по телефону
      * 
-     * @param Client $client
+     * @param integer $clientAplId
+     * @param string $phoneStr
      */
-    public function correctByPhone($client)
+    public function correctByPhone($clientAplId, $phoneStr)
     {
-        if ($client->getContactPhone()){
-            return; //есть телефон, не нужно править
-        }
-        
-        $order = $this->entityManager->getRepository(Order::class)
-                ->findOneBy(['contact' => $client->getContact()->getId()], ['id' => 'DESC']);
-        
-        if (empty($order)){
-            return; //нет заказов, не получится править
-        }
-                
-        if (empty($order->getAplId())){
-            return; //нет aplId заказа, не получится править            
-        }
-        
-        $aplData = $this->aplOrderService->unloadOrder(null, $order->getAplId(), null, false, true);
-        
-        if (empty($aplData)){
-            return; //нет данных apl, не получится править
-        }
-        
-        if (empty($aplData['phone'])){            
+        if (empty($phoneStr)){            
             return; //нет телефона, не получится править            
         }
         
-        if ($aplData['client'] == $client->getAplId()){
-            $query = $this->entityManager->getRepository(Client::class)
-                    ->findAllClient(['search' => $aplData['phone']]);
-            
-            $query->setMaxResult(1);
-            
-            $oldClient = $query->getOneOrNullResult();
-            
-            if ($oldClient){                
-                $oldClient->setAplId($client->getAplId());
+        $query = $this->entityManager->getRepository(Client::class)
+                ->findAllClient(['search' => $phoneStr]);
+
+        $query->setMaxResult(1);
+
+        $oldClient = $query->getOneOrNullResult();
+
+        if ($oldClient){      
+            if ($oldClient->getAplId() != $clientAplId){
+                $oldClient->setAplId($clientAplId);
                 $this->entityManager->persist($oldClient);
                 $this->entityManager->flush();
-            }
+            }    
         }
         
         return;

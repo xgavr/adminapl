@@ -34,6 +34,7 @@ use Application\Entity\Article;
 use Application\Entity\CarFillVolume;
 use Laminas\Filter\Digits;
 use Application\Entity\RequestSetting;
+use User\Filter\PhoneFilter;
 
 /**
  * Description of AplService
@@ -767,9 +768,12 @@ class AplService {
         if ($debug){
 //            var_dump('apl client: '.$row);            
         }
+        
+        $phoneFilter = new PhoneFilter();
+        
         if (!$client && !empty($row['phone'])){
             $phone = $this->entityManager->getRepository(Phone::class)
-                    ->findOneByName($row['phone']);
+                    ->findOneByName($phoneFilter->filter($row['phone']));
 
             if ($phone){
                $contact = $phone->getContact();
