@@ -53,7 +53,7 @@ class ClientManager
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
     public function __construct($entityManager, $contactManager, $userManager, 
-            $authService, $aplOrderService)
+            $authService)
     {
         $this->entityManager = $entityManager;
         $this->contactManager = $contactManager;
