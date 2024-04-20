@@ -701,13 +701,13 @@ class ZpCalculator {
         
         $result = "<p>Сводный расчетный лист за период:	{$params['startDate']} - {$params['endDate']}</p>";
         $result .= "<table class='table table-bordered table-hover table-condensed'>";
-        $result .= "<tr>";
+        $result .= "<thead><tr>";
         $result .= "<th colspan='2'>Сотрудник</th>";
         $result .= "<th>Долг на начало</th>";
         $result .= "<th>Начислено</th>";
         $result .= "<th>Получено</th>";
         $result .= "<th>Долг на конец</th>";
-        $result .= "</tr>";
+        $result .= "</tr></thead>";
 
         $totalStart = $totalIn = $totalOut = $totalEnd = 0;
         
