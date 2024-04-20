@@ -309,6 +309,16 @@ class ClientManager
         set_time_limit(1800);
         
         if ($client->getAplId()){
+            $user = $this->entityManager->getRepository(User::class)
+                    ->findOneBy(['aplId' => $client->getAplId()]);
+            
+            if ($user){
+                $contact = $user->getLegalContact();
+                $contact->setClient($client);
+                $this->entityManager->persist($contact);
+                $this->entityManager->flush();
+            }
+            
             $clients = $this->entityManager->getRepository(Client::class)
                     ->findBy(['aplId' => $client->getAplId()]);
             if (count($clients) > 1){
