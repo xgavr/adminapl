@@ -30,7 +30,7 @@ class ClientManagerFactory  implements FactoryInterface
         $contactManager = $container->get(ContactManager::class);        
         $userManager = $container->get(UserManager::class);  
         $authService = $container->get(\Laminas\Authentication\AuthenticationService::class);
-        $aplOrderService = $contactManager->get(AplOrderService::class);
+        $aplOrderService = $container->get(AplOrderService::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new ClientManager($entityManager, $contactManager, $userManager, 
