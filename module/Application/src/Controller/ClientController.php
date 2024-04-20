@@ -437,8 +437,11 @@ class ClientController extends AbstractActionController
             return;
         }
         
-        $this->clientManager->aplUnion($client);
-        $this->clientManager->updateBalance($client);
+        if (empty($client->getContactPhone())){
+            $this->clientManager->correctByPhone($client);
+        }
+        //$this->clientManager->aplUnion($client);
+        //$this->clientManager->updateBalance($client);
         
         return new JsonModel([
             'result' => 'ok-reload',

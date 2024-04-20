@@ -15,6 +15,7 @@ use Application\Entity\Phone;
 use Application\Entity\Email;
 use User\Filter\PhoneFilter;
 use Application\Entity\Comment;
+use Application\Entity\Order;
 
 /**
  * Description of ClientService
@@ -42,15 +43,23 @@ class ClientManager
      */
     private $userManager;
 
+    /**
+     * AplOrderService manager
+     * @var \Admin\Service\AplOrderService
+     */
+    private $aplOrderService;
+
     private $authService;
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $contactManager, $userManager, $authService)
+    public function __construct($entityManager, $contactManager, $userManager, 
+            $authService, $aplOrderService)
     {
         $this->entityManager = $entityManager;
         $this->contactManager = $contactManager;
         $this->userManager = $userManager;
         $this->authService = $authService;
+        $this->aplOrderService = $aplOrderService;
     }
     
     /**
@@ -394,5 +403,55 @@ class ClientManager
         }
         
         return;
-    }    
+    }  
+    
+    /**
+     * Поправить дубли клиентов по телефону
+     * 
+     * @param Client $client
+     */
+    public function correctByPhone($client)
+    {
+        if ($client->getContactPhone()){
+            return; //есть телефон, не нужно править
+        }
+        
+        $order = $this->entityManager->getRepository(Order::class)
+                ->findOneBy(['contact' => $client->getContact()->getId()], ['id' => 'DESC']);
+        
+        if (empty($order)){
+            return; //нет заказов, не получится править
+        }
+                
+        if (empty($order->getAplId())){
+            return; //нет aplId заказа, не получится править            
+        }
+        
+        $aplData = $this->aplOrderService->unloadOrder(null, $order->getAplId(), null, false, true);
+        
+        if (empty($aplData)){
+            return; //нет данных apl, не получится править
+        }
+        
+        if (empty($aplData['phone'])){            
+            return; //нет телефона, не получится править            
+        }
+        
+        if ($aplData['client'] == $client->getAplId()){
+            $query = $this->entityManager->getRepository(Client::class)
+                    ->findAllClient(['search' => $aplData['phone']]);
+            
+            $query->setMaxResult(1);
+            
+            $oldClient = $query->getOneOrNullResult();
+            
+            if ($oldClient){                
+                $oldClient->setAplId($client->getAplId());
+                $this->entityManager->persist($oldClient);
+                $this->entityManager->flush();
+            }
+        }
+        
+        return;
+    }
 }

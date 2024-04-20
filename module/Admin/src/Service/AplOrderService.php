@@ -676,9 +676,11 @@ class AplOrderService {
      * @param integer $start
      * @param integer $aplId
      * @param bool $debug
+     * @param bool $resultOnly
      * @return 
      */
-    public function unloadOrder($start = 0, $aplId = null, $orderTotal = null, $debug = false)
+    public function unloadOrder($start = 0, $aplId = null, $orderTotal = null, 
+            $debug = false, $resultOnly = false)
     {
         $url = $this->aplApi().'unload-order?api='.$this->aplApiKey();
         
@@ -714,6 +716,9 @@ class AplOrderService {
         if (is_array($result)){
             if ($debug){
                 var_dump($result);
+            }    
+            if ($resultOnly){
+                return $result;
             }    
             if (is_numeric($orderTotal) && $aplId){
                 if ($orderTotal == $result['sort']){

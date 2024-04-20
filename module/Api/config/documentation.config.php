@@ -168,4 +168,67 @@ STATUS_CANCELED  = -10; // Отменен."
             ],
         ],
     ],
+    'Api\\V1\\Rest\\Good\\Controller' => [
+        'collection' => [
+            'GET' => [
+                'response' => '{
+   "_links": {
+       "self": {
+           "href": "/api-good"
+       },
+       "first": {
+           "href": "/api-good?page={page}"
+       },
+       "prev": {
+           "href": "/api-good?page={page}"
+       },
+       "next": {
+           "href": "/api-good?page={page}"
+       },
+       "last": {
+           "href": "/api-good?page={page}"
+       }
+   }
+   "_embedded": {
+       "good": [
+           {
+               "_links": {
+                   "self": {
+                       "href": "/api-good[/:good_id]"
+                   }
+               }
+              "article": "Артикул",
+              "producer": "производитель",
+              "detail": "Выводить больше данных о товаре:
+- резерв по заказам
+- данные о поступлениях",
+              "inv": "Выводить больше данных о товаре:
+- резерв по заказам
+- данные о поступлениях"
+           }
+       ]
+   }
+}',
+                'description' => 'good - массив товаров найденных по запросу
+    
+    details - дополнительная информация по товарам
+        
+        purchases - массив поступлении товара
+            docDate - дата поступления
+            supplierName - поставщик
+            daysTotal - Макс дней на возврат
+            daysPassed - прошло дней от поставки
+            daysLeft - осталось дней до возврата
+        
+        rest - массив остатков в разрезе офисов и компаний
+             available - доступное количество (остаток - резерв - доставка - на возврате)
+             reserve - резерв в заказах
+             rest - остаток
+             delivery - на доставке
+            vozvrat - на возврате
+
+        reserves - массив заказов подтвержденных и на доставке, где присутствует товар',
+            ],
+        ],
+    ],
 ];
