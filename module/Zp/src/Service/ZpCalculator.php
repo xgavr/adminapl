@@ -805,7 +805,7 @@ class ZpCalculator {
         $startBalance = empty($balanceResult['amount']) ? 0:-round($balanceResult['amount']);
 
         if ($startBalance >= 0){
-            $result .= "<p>Долг за предприятием на начало <b>$startBalance</b></p>";            
+            $result .= "<div><p>Долг за предприятием на начало <b>$startBalance</b></p></div>";            
         } else {
             $result .= "<p>Долг за сотрудником на начало <b>$startBalance</b></p>";                        
         }
