@@ -576,6 +576,57 @@ class ZpRepository extends EntityRepository
     }
     
     /**
+     * Получить order calculators
+     * @param array $params
+     * @return query
+     */
+    public function findOrderCalculators($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('oc')
+            ->from(OrderCalculator::class, 'oc')
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['status'])){
+                $queryBuilder->andWhere('oc.status = :status')
+                        ->setParameter('status', $params['status'])
+                        ;
+            }            
+            if (!empty($params['company'])){
+                $queryBuilder->andWhere('oc.company = :company')
+                        ->setParameter('company', $params['company'])
+                        ;
+            }            
+            if (!empty($params['user'])){
+                if (is_numeric($params['user'])){
+                    $queryBuilder->andWhere('oc.user = :user')
+                            ->setParameter('user', $params['user'])
+                            ;
+                }    
+            }            
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere("oc.dateOper >= :startDate")
+                        ->setParameter('startDate', $params['startDate'])
+                        ;
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere("oc.dateOper <= :endDate")
+                        ->setParameter('endDate', $params['endDate'])
+                        ;
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->orderBy('oc.'.$params['sort'], $params['order']);
+            }            
+        }    
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();       
+    }
+    
+    /**
      * База Tp
      * @param date $dateCalculation
      * @param array $params

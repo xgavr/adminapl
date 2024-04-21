@@ -872,7 +872,7 @@ class ZpCalculator {
         
         $mutualTotal = 0;
          
-        $result .= "<br/><div>Выплаты:</div>";
+        $result .= "<div>Выплаты:</div>";
         $result .= "<table class='table table-bordered table-hover table-condensed'>";
         $result .= "<thead><tr>";
         $result .= "<td>Дата</td>";
@@ -894,7 +894,7 @@ class ZpCalculator {
             }
             
             $result .= "<tr>";
-            $result .= "<td>".date('d-m', strtotime($mutual->getDateOper()))."</td>";
+            $result .= "<td>".date('d.m', strtotime($mutual->getDateOper()))."</td>";
             $result .= "<td>$docName</td>";
             $result .= "<td align='right'>".round($mutual->getAmount())."</td>";
             $result .= "</tr>";  
@@ -905,6 +905,65 @@ class ZpCalculator {
         $result .= "<thead><tr>";
         $result .= "<td colspan='2' align='right'>Итого:</td>";
         $result .= "<td align='right'>$mutualTotal</td>";
+        $result .= "</tr></thead>";
+        $result .= "</table>";
+        
+        $orderParams = [
+            'user' => $user->getId(), 'status' => OrderCalculator::STATUS_ACTIVE,
+            'startDate' => $dateStart, 'endDate' => $dateEnd,             
+            'sort' => 'dateOper', 'order' => 'asc', 
+        ];
+        
+        $orderQuery = $this->entityManager->getRepository(OrderCalculator::class)
+                        ->findOrderCalculators($orderParams);
+        
+        $orderCalcs = $orderQuery->getResult();
+        
+        $amountTotal = $deliveryTotal = $baseTotal = $incomeTotal = $accrualTotal = 0;
+         
+        $result .= "<div>Расшифровка продаж за период: $dateStart - $dateEnd</div>";
+        $result .= "<table class='table table-bordered table-hover table-condensed'>";
+        $result .= "<thead><tr>";
+        $result .= "<td>Дата</td>";
+        $result .= "<td>Номер заказа АПЛ</td>";
+        $result .= "<td>Офис</td>";
+        $result .= "<td>Сумма продажи</td>";
+        $result .= "<td>Доставка</td>";
+        $result .= "<td>Закупка</td>";
+        $result .= "<td>Доход</td>";
+        $result .= "<td>Процент</td>";
+        $result .= "<td>Начислено</td>";
+        $result .= "</tr></thead>";
+        
+        foreach ($orderCalcs as $orderCalc){
+            
+            $result .= "<tr>";
+            $result .= "<td>".date('d.m', strtotime($orderCalc->getDateOper()))."</td>";
+            $result .= "<td>{$orderCalc->getOrder()->getAplId()}</td>";
+            $result .= "<td>{$orderCalc->getOrder()->getOffice()->getName()}</td>";
+            $result .= "<td align='right'>".round($orderCalc->getAmount())."</td>";
+            $result .= "<td align='right'>".round($orderCalc->getDeliveryAmount())."</td>";
+            $result .= "<td align='right'>".round($orderCalc->getBaseAmount())."</td>";
+            $result .= "<td align='right'>".round($orderCalc->getAmount()-$orderCalc->getBaseAmount())."</td>";
+            $result .= "<td align='right'>10</td>";
+            $result .= "<td align='right'></td>";
+            $result .= "</tr>";  
+            
+            $amountTotal += round($orderCalc->getAmount());
+            $deliveryTotal += round($orderCalc->getDeliveryAmount());
+            $baseTotal += round($orderCalc->getBaseAmount());
+            $incomeTotal += round($orderCalc->getAmount() - $orderCalc->getBaseAmount());
+            $accrualTotal += 0;
+        }
+        
+        $result .= "<thead><tr>";
+        $result .= "<td colspan='3' align='right'>Итого:</td>";
+        $result .= "<td align='right'>$amountTotal</td>";
+        $result .= "<td align='right'>$deliveryTotal</td>";
+        $result .= "<td align='right'>$baseTotal</td>";
+        $result .= "<td align='right'>$incomeTotal</td>";
+        $result .= "<td align='right'></td>";
+        $result .= "<td align='right'>$accrualTotal</td>";
         $result .= "</tr></thead>";
         $result .= "</table>";
         
