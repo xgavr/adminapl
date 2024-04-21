@@ -865,7 +865,7 @@ class ZpCalculator {
         $mutualQuery = $this->entityManager->getRepository(PersonalMutual::class)
                         ->findMutuals($mutualParams);
         
-        $mutualData = $mutualQuery->getResult(2);
+        $mutuals = $mutualQuery->getResult();
         
         $mutualTotal = 0;
          
@@ -877,26 +877,26 @@ class ZpCalculator {
         $result .= "<td>Сумма</td>";
         $result .= "</tr></thead>";
         
-        foreach ($mutualData as $mutualRow){
+        foreach ($mutuals as $mutual){
             
-            switch ($mutualRow['docType']){
+            switch ($mutual->getDocType()){
                 case Movement::DOC_CASH: 
-                    $docName = 'Выдано из кассы/подотчета №'.$mutualRow['docId'];
+                    $docName = 'Выдано из кассы/подотчета №'.$mutual->getDocId();
                     break;
                 case Movement::DOC_ST: 
-                    $docName = 'Списание товаров №'.$mutualRow['docId'];
+                    $docName = 'Списание товаров №'.$mutual->getDocId();
                     break;
                 default:
-                    $docName = 'Документ №'.$mutualRow['docId'];
+                    $docName = 'Документ №'.$mutual->getDocId();
             }
             
             $result .= "<tr>";
-            $result .= "<td>".date('d-m', strtotime($mutualRow['dateOper']))."</td>";
+            $result .= "<td>".date('d-m', strtotime($mutual->getDateOper()))."</td>";
             $result .= "<td>$docName</td>";
-            $result .= "<td align='right'>".round($mutualRow['amount'])."</td>";
+            $result .= "<td align='right'>".round($mutual->getAmount())."</td>";
             $result .= "</tr>";  
             
-            $mutualTotal += round($mutualRow['amount']);
+            $mutualTotal += round($mutual->getAmount());
         }
         
         $result .= "<thead><tr>";
