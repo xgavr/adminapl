@@ -825,11 +825,16 @@ class ZpCalculator {
             $accrual = $this->entityManager->getRepository(Accrual::class)
                 ->find($row['accrual']);
             
+            if ($accrual->getPayment() == Accrual::PAYMENT_TAX){
+                $row['amountOut'] = -$row['amountIn'];
+                $row['amountIn'] = 0;
+            }
+            
             $result .= "<tr>";
             $result .= "<td>{$accrual->getName()}</td>";
             $result .= "<td></td>";
-            $result .= "<td>".round($row['amountOut'])."</td>";
-            $result .= "<td>".round($row['amountIn'])."</td>";
+            $result .= "<td align='right'>".round($row['amountOut'])."</td>";
+            $result .= "<td align='right'>".round($row['amountIn'])."</td>";
             $result .= "</tr>";
             
             $totalOut += round($row['amountOut']);
@@ -839,9 +844,9 @@ class ZpCalculator {
         $endBalance = $startBalance + $totalOut - $totalIn;
         
         $result .= "<thead><tr>";
-        $result .= "<td colspan='2'>Итого:</td>";
-        $result .= "<td>$totalOut</td>";
-        $result .= "<td>$totalIn</td>";
+        $result .= "<td colspan='2' align='right'>Итого:</td>";
+        $result .= "<td align='right'>$totalOut</td>";
+        $result .= "<td align='right'>$totalIn</td>";
         $result .= "</tr></thead>";
         $result .= "</table>";
         
