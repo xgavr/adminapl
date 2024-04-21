@@ -777,8 +777,8 @@ class ZpCalculator {
         $dateStart = date('Y-m-01', strtotime($startDate));
         $dateEnd = min(date('Y-m-d'), date('Y-m-t', strtotime($dateStart)));
         
-        $result = "<p>Расчетный лист за период:	$dateStart - $dateEnd</p>";
-        $result .= "<p>{$user->getFullName()}</p>";
+        $result = "<div>Расчетный лист за период:	$dateStart - $dateEnd</div>";
+        $result .= "<div>{$user->getFullName()}</div>";
         
         
         $params = [
@@ -805,12 +805,12 @@ class ZpCalculator {
         $startBalance = empty($balanceResult['amount']) ? 0:-round($balanceResult['amount']);
 
         if ($startBalance >= 0){
-            $result .= "<div><p>Долг за предприятием на начало <b>$startBalance</b></p></div>";            
+            $result .= "<div>Долг за предприятием на начало <b>$startBalance</b></div>";            
         } else {
-            $result .= "<p>Долг за сотрудником на начало <b>$startBalance</b></p>";                        
+            $result .= "<div>Долг за сотрудником на начало <b>$startBalance</b></div>";                        
         }
         
-        $result .= "<p>Начисления:</p>";
+        $result .= "<div>Начисления:</div>";
         $result .= "<table class='table table-bordered table-hover table-condensed'>";
         $result .= "<thead><tr>";
         $result .= "<td>Вид расчета</td>";
@@ -846,12 +846,12 @@ class ZpCalculator {
         $result .= "</table>";
         
         if ($endBalance >= 0){
-            $result .= "<p>Долг за предприятием на конец <b>$endBalance</b></p>";            
+            $result .= "<div>Долг за предприятием на конец <b>$endBalance</b></div>";            
         } else {
-            $result .= "<p>Долг за сотрудником на конец <b>$endBalance</b></p>";                        
+            $result .= "<div>Долг за сотрудником на конец <b>$endBalance</b></div>";                        
         }
         
-        $result .= "<p>".date('Y-m-d H:i:s')."</p>";
+        $result .= "<div>".date('Y-m-d H:i:s')."</div>";
         
         $fileName = "./data/reports/rl".$user->getAplId().date('Ym', strtotime($dateStart)).".html";
 
