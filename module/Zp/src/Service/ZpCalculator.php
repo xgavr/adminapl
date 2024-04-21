@@ -829,6 +829,7 @@ class ZpCalculator {
             $result .= "<td>{$accrual->getName()}</td>";
             $result .= "<td></td>";
             $result .= "<td>".round($row['amountOut'])."</td>";
+            $result .= "<td>".round($row['amountIn'])."</td>";
             $result .= "</tr>";
             
             $totalOut += round($row['amountOut']);
