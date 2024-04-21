@@ -778,7 +778,7 @@ class ZpCalculator {
         $dateEnd = min(date('Y-m-d'), date('Y-m-t', strtotime($dateStart)));
         
         $result = "<div>Расчетный лист за период:	$dateStart - $dateEnd</div>";
-        $result .= "<div>{$user->getFullName()}</div>";
+        $result .= "<div style='font-weight: bold;'>{$user->getFullName()}</div>";
         
         
         $params = [
