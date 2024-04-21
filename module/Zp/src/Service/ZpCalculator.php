@@ -865,7 +865,7 @@ class ZpCalculator {
         $mutualQuery = $this->entityManager->getRepository(PersonalMutual::class)
                         ->findMutuals($mutualParams);
         
-        $mutualData = $mutualQuery->getResult();
+        $mutualData = $mutualQuery->getResult(2);
         
         $mutualTotal = 0;
          
@@ -910,6 +910,8 @@ class ZpCalculator {
         
         $fileName = "./data/reports/rl".$user->getAplId().date('Ym', strtotime($dateStart)).".html";
 
-        file_put_contents($fileName, $result);        
+        file_put_contents($fileName, $result); 
+        
+        return;
     }
 }
