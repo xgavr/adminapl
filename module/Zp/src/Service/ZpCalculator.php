@@ -816,7 +816,7 @@ class ZpCalculator {
         $result .= "<td>Вид расчета</td>";
         $result .= "<td>Размер</td>";
         $result .= "<td>Начислено</td>";
-        $result .= "<td>Получено</td>";
+        $result .= "<td>Удержано/получено</td>";
         $result .= "</tr></thead>";
         
         $totalIn = $totalOut = $totalEnd = $endBalance = 0;
