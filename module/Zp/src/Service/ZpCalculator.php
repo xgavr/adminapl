@@ -723,7 +723,7 @@ class ZpCalculator {
                             ->payslip($params);
             
             $balanceResult = $balaceQuery->getOneOrNullResult(2);
-            $startBalance = empty($balanceResult['amount']) ? 0:$balanceResult['amount'];
+            $startBalance = empty($balanceResult['amount']) ? 0:-$balanceResult['amount'];
             $endBalance = $startBalance+$row['amountOut']-$row['amountIn'];
 
             $userReport = 'rl'.$userData['aplId'].date('Ym', strtotime($startDate));
