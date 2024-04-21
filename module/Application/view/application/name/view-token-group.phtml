@@ -357,7 +357,7 @@ $this->pageBreadcrumbs()->setItems([
             var result = [];
             for (var i in names){
                 var name = names[i].toLowerCase()
-                        .replace(/babs/b, 'АБС')
+                        .replace(/\babs\b/g, 'АБС')
                         .replace(/[^А-ЯЁа-яё ]/g, '')
                         .replace(/\s+/g, ' ')
                         .trim()                
@@ -368,7 +368,7 @@ $this->pageBreadcrumbs()->setItems([
                         .replace('газель', '')
                         .replace('грм', 'ГРМ')
                         .replace('акб', 'АКБ')
-                        .replace(/bгур/b, 'ГУР')
+                        .replace(/\bгур\b/g, 'ГУР')
                         .replace('гбц', 'ГБЦ')
                         .replace('двс', 'ДВС')
                         .replace('шрус', 'ШРУС')
