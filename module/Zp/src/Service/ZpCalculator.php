@@ -843,6 +843,7 @@ class ZpCalculator {
         $result .= "<td>$totalOut</td>";
         $result .= "<td>$totalIn</td>";
         $result .= "</tr></thead>";
+        $result .= "</table>";
         
         if ($endBalance >= 0){
             $result .= "<p>Долг за предприятием на конец <b>$endBalance</b></p>";            
