@@ -856,8 +856,11 @@ class ZpCalculator {
             $result .= "<div>Долг за сотрудником на конец <b>$endBalance</b></div>";                        
         }
         
+        $paymentAccrual = $this->entityManager->getRepository(Accrual::class)
+                ->findOneBy(['payment' => Accrual::PAYMENT_PAYMENT]);
+        
         $mutualParams = [
-            'user' => $user->getId(), 'accrual' => $accrual,
+            'user' => $user->getId(), 'accrual' => $paymentAccrual->getId(),
             'startDate' => $dateStart, 'endDate' => $dateEnd,             
             'sort' => 'dateOper', 'order' => 'asc', 
         ];
