@@ -816,7 +816,7 @@ class ZpCalculator {
         $result .= "<td>Вид расчета</td>";
         $result .= "<td>Размер</td>";
         $result .= "<td>Начислено</td>";
-        $result .= "<td>Удержано/получено</td>";
+        $result .= "<td>Получено</td>";
         $result .= "</tr></thead>";
         
         $totalIn = $totalOut = $totalEnd = $endBalance = 0;
@@ -855,6 +855,56 @@ class ZpCalculator {
         } else {
             $result .= "<div>Долг за сотрудником на конец <b>$endBalance</b></div>";                        
         }
+        
+        $mutualParams = [
+            'user' => $user->getId(), 'accrual' => $accrual,
+            'startDate' => $dateStart, 'endDate' => $dateEnd,             
+            'sort' => 'dateOper', 'order' => 'asc', 
+        ];
+        
+        $mutualQuery = $this->entityManager->getRepository(PersonalMutual::class)
+                        ->findMutuals($mutualParams);
+        
+        $mutualData = $mutualQuery->getResult();
+        
+        $mutualTotal = 0;
+         
+        $result .= "<br/><div>Выплаты:</div>";
+        $result .= "<table class='table table-bordered table-hover table-condensed'>";
+        $result .= "<thead><tr>";
+        $result .= "<td>Дата</td>";
+        $result .= "<td>Документ</td>";
+        $result .= "<td>Сумма</td>";
+        $result .= "</tr></thead>";
+        
+        foreach ($mutualData as $mutualRow){
+            
+            switch ($mutualRow['docType']){
+                case Movement::DOC_CASH: 
+                    $docName = 'Выдано из кассы/подотчета №'.$mutualRow['docId'];
+                    break;
+                case Movement::DOC_ST: 
+                    $docName = 'Списание товаров №'.$mutualRow['docId'];
+                    break;
+                default:
+                    $docName = 'Документ №'.$mutualRow['docId'];
+            }
+            
+            $result .= "<tr>";
+            $result .= "<td>".date('d-m', strtotime($mutualRow['dateOper']))."</td>";
+            $result .= "<td>$docName</td>";
+            $result .= "<td align='right'>".round($row['amount'])."</td>";
+            $result .= "</tr>";  
+            
+            $mutualTotal += round($row['amount']);
+        }
+        
+        $result .= "<thead><tr>";
+        $result .= "<td colspan='2' align='right'>Итого:</td>";
+        $result .= "<td align='right'>$mutualTotal</td>";
+        $result .= "</tr></thead>";
+        $result .= "</table>";
+        
         
         $result .= "<div>".date('Y-m-d H:i:s')."</div>";
         
