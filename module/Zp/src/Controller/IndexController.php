@@ -305,4 +305,29 @@ class IndexController extends AbstractActionController
            ['result' => 'ok']
         );                           
     }
+    
+    public function userReportAction()
+    {
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $userId = $this->params()->fromQuery('user');
+
+        if ($userId<1) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Find a user with such ID.
+        $user = $this->entityManager->getRepository(User::class)
+                ->find($userId);
+        
+        if ($user == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        $this->zpCalculator->userReport($user, $dateStart);        
+        
+        return new JsonModel(
+           ['result' => 'ok']
+        );                           
+    }
 }

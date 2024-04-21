@@ -534,6 +534,7 @@ class ZpCalculator {
     public function periodCalculator()
     {
         $dateCalculation = date('Y-m-d', strtotime('first day of previous month'));
+        $dateReport = $dateCalculation;
         while ($dateCalculation <= date('Y-m-d')){
             if ($dateCalculation >= date('2024-01-01')){
                 $this->dateCalculation($dateCalculation);                
@@ -541,6 +542,9 @@ class ZpCalculator {
                         
             $dateCalculation = date('Y-m-d', strtotime($dateCalculation .' +1 day'));
         }
+        
+        $this->totalReport($dateReport); //прошлый месяц
+        $this->totalReport(date('Y-m-d')); // текущий месяц
         
         return;
     }
@@ -714,12 +718,12 @@ class ZpCalculator {
         $totalStart = $totalIn = $totalOut = $totalEnd = 0;
         
         foreach ($data as $row){
-            $userData = $this->entityManager->getRepository(User::class)
-                ->find($row['user'])->toArray();
+            $user = $this->entityManager->getRepository(User::class)
+                ->find($row['user']);
                     
             $params['startDate'] = date('2012-01-01');        
             $params['endDate'] = date('Y-m-t 23:59:59', strtotime($dateStart.' -1 day'));
-            $params['user'] = $userData['id'];
+            $params['user'] = $user->getId();
 
             $balaceQuery = $this->entityManager->getRepository(PersonalMutual::class)
                             ->payslip($params);
@@ -728,11 +732,11 @@ class ZpCalculator {
             $startBalance = empty($balanceResult['amount']) ? 0:-$balanceResult['amount'];
             $endBalance = $startBalance+$row['amountOut']-$row['amountIn'];
 
-            $userReport = 'rl'.$userData['aplId'].date('Ym', strtotime($dateStart));
+            $userReport = 'rl'.$user->getAplId().date('Ym', strtotime($dateStart));
             
             $result .= "<tr>";                
             $result .= "<td><a href='/users/dd-report?report=$userReport'>".$userReport."</a></td>";                
-            $result .= "<td>{$userData['fullName']}</td>";                
+            $result .= "<td>{$user->getFullName()}</td>";                
             $result .= "<td align='right'>".round($startBalance)."</td>";                
             $result .= "<td align='right'>".round($row['amountOut'])."</td>";                
             $result .= "<td align='right'>".round($row['amountIn'])."</td>";                
@@ -746,7 +750,7 @@ class ZpCalculator {
         }
         
         $result .= "<tr>";
-        $result .= "<td colspan='2' align='right'>Итого</td>";
+        $result .= "<td colspan='2' align='right'>Итого:</td>";
         $result .= "<td align='right'>$totalStart</td>";
         $result .= "<td align='right'>$totalIn</td>";
         $result .= "<td align='right'>$totalOut</td>";
@@ -761,5 +765,94 @@ class ZpCalculator {
         file_put_contents($fileName, $result);
         
         return;                
+    }
+    
+    /**
+     * 
+     * @param User $user
+     * @param date $startDate
+     */
+    public function userReport($user, $startDate)
+    {
+        $dateStart = date('Y-m-01', strtotime($startDate));
+        $dateEnd = min(date('Y-m-d'), date('Y-m-t', strtotime($dateStart)));
+        
+        $result = "<p>Расчетный лист за период:	$dateStart - $dateEnd</p>";
+        $result .= "<p>{$user->getFullName()}</p>";
+        
+        
+        $params = [
+            'startDate' => $dateStart, 
+            'endDate' => $dateEnd,
+            'summary' => false,
+            'user' => $user->getId(),
+        ];
+        
+        
+        $query = $this->entityManager->getRepository(PersonalMutual::class)
+                        ->payslip($params);
+        
+        $data = $query->getResult();
+        
+        $params['startDate'] = date('2012-01-01');        
+        $params['endDate'] = date('Y-m-t 23:59:59', strtotime($dateStart.' -1 day'));
+        $params['summary'] = true;
+
+        $balaceQuery = $this->entityManager->getRepository(PersonalMutual::class)
+                        ->payslip($params);
+
+        $balanceResult = $balaceQuery->getOneOrNullResult(2);
+        $startBalance = empty($balanceResult['amount']) ? 0:-round($balanceResult['amount']);
+
+        if ($startBalance >= 0){
+            $result .= "<p>Долг за предприятием на начало <b>$startBalance</b></p>";            
+        } else {
+            $result .= "<p>Долг за сотрудником на начало <b>$startBalance</b></p>";                        
+        }
+        
+        $result .= "<p>Начисления:</p>";
+        $result .= "<table class='table table-bordered table-hover table-condensed'>";
+        $result .= "<thead><tr>";
+        $result .= "<td>Вид расчета</td>";
+        $result .= "<td>Размер</td>";
+        $result .= "<td>Начислено</td>";
+        $result .= "<td>Получено</td>";
+        $result .= "</tr></thead>";
+        
+        $totalIn = $totalOut = $totalEnd = $endBalance = 0;
+
+        foreach ($data as $row){
+            $accrual = $this->entityManager->getRepository(Accrual::class)
+                ->find($row['accrual']);
+            
+            $result .= "<tr>";
+            $result .= "<td>{$accrual->getName()}</td>";
+            $result .= "<td></td>";
+            $result .= "<td>".round($row['amountOut'])."</td>";
+            $result .= "</tr>";
+            
+            $totalOut += round($row['amountOut']);
+            $totalIn += round($row['amountIn']);            
+        }
+        
+        $endBalance = $startBalance + $totalOut - $totalIn;
+        
+        $result .= "<thead><tr>";
+        $result .= "<td colspan='2'>Итого:</td>";
+        $result .= "<td>$totalOut</td>";
+        $result .= "<td>$totalIn</td>";
+        $result .= "</tr></thead>";
+        
+        if ($endBalance >= 0){
+            $result .= "<p>Долг за предприятием на конец <b>$endBalance</b></p>";            
+        } else {
+            $result .= "<p>Долг за сотрудником на конец <b>$endBalance</b></p>";                        
+        }
+        
+        $result .= "<p>".date('Y-m-d H:i:s')."</p>";
+        
+        $fileName = "./data/reports/rl".$user->getAplId().date('Ym', strtotime($dateStart)).".html";
+
+        file_put_contents($fileName, $result);        
     }
 }

@@ -57,10 +57,10 @@ $this->pageBreadcrumbs()->setItems([
                         <?php endforeach;?>
                     </select>                    
                 </div>    
-<!--                <button value="/zp/update-zp/" <?= ($rbacManager->isGranted(null, 'zp.manage')) ? '':'disabled' ?> class="btn btn-default refresh-table-button"
-                        title="Рассчитать ЗП">
-                    <span class="glyphicon glyphicon-rub" ></span>
-                </button>                         -->
+                <button value="/zp/user-report/" <?= ($rbacManager->isGranted(null, 'zp.manage')) ? '':'disabled' ?> class="btn btn-default user-report"
+                        title="Сохранить в файл">
+                    <span class="glyphicon glyphicon-save-file" ></span>
+                </button>                         
             </div>
         </div>    
         <table id="table" 
@@ -156,6 +156,27 @@ $this->pageBreadcrumbs()->setItems([
         $table.bootstrapTable('refresh');
     }
     
+    function userReport(){ 
+        bootbox.prompt({
+            title: 'Сохранить отчет за месяц',
+            inputType: 'date',
+            value: new Date($('#dateStart').val()).toISOString().split('T')[0],        
+            callback: function (result) {
+//                console.log(result);                
+                if (result){
+                    var dialog = bootbox.dialog({
+                        message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                        closeButton: true
+                    });                    
+                    $.getJSON('/zp/user-report?user='+$('#userSelect').val()+'&dateStart='+result, function( data ) {
+                        dialog.modal('hide');
+//                        $table.bootstrapTable('refresh', {silent:true});
+                    });                    
+                }    
+            }
+        });
+        return;
+    }    
 
     $(function () {
         $ok.click(function () {
@@ -197,6 +218,9 @@ $this->pageBreadcrumbs()->setItems([
         });
         $(document).on('change', '#dateStart', function (e) {
             refreshTable();
+        });
+        $(document).on('click', '.user-report', function (e) {
+            userReport();
         });
         $(document).on('change', '#periodSelect', function (e) {
             var selectType = $(this).val();
