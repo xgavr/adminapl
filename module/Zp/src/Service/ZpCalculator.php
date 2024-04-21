@@ -688,9 +688,11 @@ class ZpCalculator {
      */
     public function totalReport($startDate)
     {
+        $dateStart = date('Y-m-01', strtotime($startDate));
+        
         $params = [
-            'startDate' => date('Y-m-01', strtotime($startDate)), 
-            'endDate' => min(date('Y-m-d'), date('Y-m-t', strtotime($startDate))),
+            'startDate' => $dateStart, 
+            'endDate' => min(date('Y-m-d'), date('Y-m-t', strtotime($dateStart))),
             'summary' => true,
         ];
         
@@ -716,7 +718,7 @@ class ZpCalculator {
                 ->find($row['user'])->toArray();
                     
             $params['startDate'] = date('2012-01-01');        
-            $params['endDate'] = date('Y-m-d 23:59:59', strtotime($startDate.' -1 day'));
+            $params['endDate'] = date('Y-m-t 23:59:59', strtotime($dateStart.' -1 day'));
             $params['user'] = $userData['id'];
 
             $balaceQuery = $this->entityManager->getRepository(PersonalMutual::class)
@@ -726,7 +728,7 @@ class ZpCalculator {
             $startBalance = empty($balanceResult['amount']) ? 0:-$balanceResult['amount'];
             $endBalance = $startBalance+$row['amountOut']-$row['amountIn'];
 
-            $userReport = 'rl'.$userData['aplId'].date('Ym', strtotime($startDate));
+            $userReport = 'rl'.$userData['aplId'].date('Ym', strtotime($dateStart));
             
             $result .= "<tr>";                
             $result .= "<td><a href='/users/dd-report?report=$userReport'>".$userReport."</a></td>";                
@@ -754,7 +756,7 @@ class ZpCalculator {
         $result .= "</table>";
         $result .= "<p>".date('Y-m-d H:i:s')."</p>";
         
-        $fileName = "./data/reports/zp".date('Ym', strtotime($startDate)).".html";
+        $fileName = "./data/reports/zp".date('Ym', strtotime($dateStart)).".html";
 
         file_put_contents($fileName, $result);
         
