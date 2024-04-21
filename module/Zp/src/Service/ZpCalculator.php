@@ -893,10 +893,10 @@ class ZpCalculator {
             $result .= "<tr>";
             $result .= "<td>".date('d-m', strtotime($mutualRow['dateOper']))."</td>";
             $result .= "<td>$docName</td>";
-            $result .= "<td align='right'>".round($row['amount'])."</td>";
+            $result .= "<td align='right'>".round($mutualRow['amount'])."</td>";
             $result .= "</tr>";  
             
-            $mutualTotal += round($row['amount']);
+            $mutualTotal += round($mutualRow['amount']);
         }
         
         $result .= "<thead><tr>";
