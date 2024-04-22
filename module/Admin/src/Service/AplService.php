@@ -941,7 +941,7 @@ class AplService {
 
         $response = $client->send();
         $body = $response->getBody();
-        
+        var_dump($body);
         if (is_numeric($body)){
             $producer->setAplId((int) $body);
             $this->entityManager->persist($producer);
