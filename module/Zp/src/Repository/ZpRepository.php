@@ -690,9 +690,11 @@ class ZpRepository extends EntityRepository
                  ->setMaxResults(1)
                 ;
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
-        
         if ($result){
-            return $result;
+            var_dump($order->getDateOper(), $order->getUserId(), $result->getStatus());
+            if ($result->getStatus() == PersonalAccrual::STATUS_ACTIVE){
+                return $result;
+            }    
         }
         return false;
     }
