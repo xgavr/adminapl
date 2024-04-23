@@ -855,12 +855,15 @@ class ZpCalculator {
                 $row['amountOut'] = -$row['amountIn'];
                 $row['amountIn'] = 0;
             }
+
+            $outStr = (round($row['amountOut'])) ? round($row['amountOut']):'';
+            $inStr = (round($row['amountIn'])) ? round($row['amountIn']):'';
             
             $result .= "<tr>".PHP_EOL;
             $result .= "<td>{$accrual->getName()}</td>".PHP_EOL;
             $result .= "<td></td>".PHP_EOL;
-            $result .= "<td align='right'>".round($row['amountOut'])."</td>".PHP_EOL;
-            $result .= "<td align='right'>".round($row['amountIn'])."</td>".PHP_EOL;
+            $result .= "<td align='right'>$outStr</td>".PHP_EOL;
+            $result .= "<td align='right'>$inStr</td>".PHP_EOL;
             $result .= "</tr>".PHP_EOL;
             
             $totalOut += round($row['amountOut']);
