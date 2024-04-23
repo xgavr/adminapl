@@ -928,8 +928,8 @@ class ZpCalculator {
         }
         
         $result .= "<tr>".PHP_EOL;
-        $result .= "<td colspan='2' align='right' style='font-weight: bold;>Итого:</td>".PHP_EOL;
-        $result .= "<td align='right' style='font-weight: bold;>$mutualTotal</td>".PHP_EOL;
+        $result .= "<td colspan='2' align='right' style='font-weight: bold;'>Итого:</td>".PHP_EOL;
+        $result .= "<td align='right' style='font-weight: bold;'>$mutualTotal</td>".PHP_EOL;
         $result .= "</tr>".PHP_EOL;
         $result .= "</table>".PHP_EOL;
         
