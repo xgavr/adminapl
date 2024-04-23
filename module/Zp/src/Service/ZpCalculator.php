@@ -823,14 +823,16 @@ class ZpCalculator {
         $balanceResult = $balaceQuery->getOneOrNullResult(2);
         $startBalance = empty($balanceResult['amount']) ? 0:-round($balanceResult['amount']);
 
-        if ($startBalance >= 0){
-            $result .= "<div>Долг за предприятием на начало <span style='font-weight: bold;'>$startBalance</span></div>";            
-        } else {
-            $result .= "<div>Долг за сотрудником на начало <span style='font-weight: bold;'>$startBalance</span></div>";                        
-        }
-        
         $result .= "<div>Начисления:</div>";
         $result .= "<table class='table table-bordered table-hover table-condensed'>";
+        $result .= "<tr>";
+        if ($startBalance >= 0){
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на конец:</td>";
+        } else {
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на конец:</td>";
+        }
+        $result .= "<td align='right' style='font-weight: bold;'>$startBalance</td>";
+        $result .= "</tr>";
         $result .= "<tr>";
         $result .= "<td align='center' style='font-weight: bold;'>Вид расчета</td>";
         $result .= "<td align='center' style='font-weight: bold;'>Размер</td>";
@@ -867,13 +869,17 @@ class ZpCalculator {
         $result .= "<td align='right' style='font-weight: bold;'>$totalOut</td>";
         $result .= "<td align='right' style='font-weight: bold;'>$totalIn</td>";
         $result .= "</tr>";
+
+        $result .= "<tr>";
+        if ($endBalance >= 0){
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на конец:</td>";
+        } else {
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на конец:</td>";
+        }
+        $result .= "<td align='right' style='font-weight: bold;'>$endBalance</td>";
+        $result .= "</tr>";
         $result .= "</table>";
         
-        if ($endBalance >= 0){
-            $result .= "<div>Долг за предприятием на конец <span style='font-weight: bold;'>$endBalance</span></div>";            
-        } else {
-            $result .= "<div>Долг за сотрудником на конец <spanstyle='font-weight: bold;'>$endBalance</span></div>";                        
-        }
         
         $paymentAccrual = $this->entityManager->getRepository(Accrual::class)
                 ->findOneBy(['payment' => Accrual::PAYMENT_PAYMENT]);
