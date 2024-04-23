@@ -133,7 +133,7 @@ class ZpCalculator {
             $orderCalculator->setRate($personalAccrual->getRate());
             $orderCalculator->setPositionNum($personalAccrual->getPersonal()->getPositionNum());
             
-            $accrualAmount = abs($base['amount'])*($personalAccrual->getRate()/100)*$personalAccrual->getPersonal()->getPositionNum(); 
+            $accrualAmount = (abs($base['amount'])-abs($base['baseAmount']))*($personalAccrual->getRate()/100)*$personalAccrual->getPersonal()->getPositionNum(); 
             
             $orderCalculator->setAccrualAmount($accrualAmount);
 
@@ -191,7 +191,7 @@ class ZpCalculator {
             $orderCalculator->setRate($personalAccrual->getRate());
             $orderCalculator->setPositionNum($personalAccrual->getPersonal()->getPositionNum());
             
-            $accrualAmount = -abs($base['amount'])*($personalAccrual->getRate()/100)*$personalAccrual->getPersonal()->getPositionNum(); 
+            $accrualAmount = (-abs($base['amount']) + abs($base['baseAmount'])) *($personalAccrual->getRate()/100)*$personalAccrual->getPersonal()->getPositionNum(); 
             
             $orderCalculator->setAccrualAmount($accrualAmount);
 
@@ -921,15 +921,15 @@ class ZpCalculator {
             $result .= "<tr>";
             $result .= "<td>".date('d.m', strtotime($mutual->getDateOper()))."</td>";
             $result .= "<td>$docName</td>";
-            $result .= "<td align='right' style='font-weight: bold;'>".round($mutual->getAmount())."</td>";
+            $result .= "<td align='right''>".round($mutual->getAmount())."</td>";
             $result .= "</tr>";  
             
             $mutualTotal += round($mutual->getAmount());
         }
         
         $result .= "<thead><tr>";
-        $result .= "<td colspan='2' align='right'>Итого:</td>";
-        $result .= "<td align='right'>$mutualTotal</td>";
+        $result .= "<td colspan='2' align='right' style='font-weight: bold;>Итого:</td>";
+        $result .= "<td align='right' style='font-weight: bold;>$mutualTotal</td>";
         $result .= "</tr></thead>";
         $result .= "</table>";
         
@@ -965,7 +965,7 @@ class ZpCalculator {
 
                 $result .= "<tr>";
                 $result .= "<td>".date('d.m', strtotime($orderCalc->getDateOper()))."</td>";
-                $result .= "<td>{$orderCalc->getOrder()->getAplId()}</td>";
+                $result .= "<td align='right'>{$orderCalc->getOrder()->getAplId()}</td>";
                 $result .= "<td>{$orderCalc->getOrder()->getOffice()->getName()}</td>";
                 $result .= "<td align='right'>".round($orderCalc->getAmount())."</td>";
                 $result .= "<td align='right'>".round($orderCalc->getDeliveryAmount())."</td>";
