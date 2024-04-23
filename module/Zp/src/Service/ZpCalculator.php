@@ -880,9 +880,9 @@ class ZpCalculator {
 
         $result .= "<tr>".PHP_EOL;
         if ($endBalance >= 0){
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
+            $result .= "<td colspan='3' align='right' style='font-size: 12; font-weight: bold; color: green'>Долг за предприятием на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
         } else {
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
+            $result .= "<td colspan='3' align='right' style='font-size: 12; font-weight: bold; color: red'>Долг за сотрудником на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
         }
         $result .= "<td align='right' style='font-weight: bold;'>$endBalance</td>".PHP_EOL;
         $result .= "</tr>".PHP_EOL;
