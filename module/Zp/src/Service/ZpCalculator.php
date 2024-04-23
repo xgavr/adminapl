@@ -832,11 +832,11 @@ class ZpCalculator {
         $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
         $result .= "<tr>".PHP_EOL;
         if ($startBalance >= 0){
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на ".date('d.m.Y', strtotime($dateStart)).":</td>".PHP_EOL;
+            $result .= "<td colspan='3' align='right' style=''>Долг за предприятием на ".date('d.m.Y', strtotime($dateStart)).":</td>".PHP_EOL;
         } else {
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на ".date('d.m.Y', strtotime($dateStart)).":</td>".PHP_EOL;
+            $result .= "<td colspan='3' align='right' style=''>Долг за сотрудником на ".date('d.m.Y', strtotime($dateStart)).":</td>".PHP_EOL;
         }
-        $result .= "<td align='right' style='font-weight: bold;'>$startBalance</td>".PHP_EOL;
+        $result .= "<td align='right' style=''>$startBalance</td>".PHP_EOL;
         $result .= "</tr>".PHP_EOL;
         $result .= "<tr>".PHP_EOL;
         $result .= "<td align='center' style='font-weight: bold;'>Вид расчета</td>".PHP_EOL;
@@ -880,11 +880,12 @@ class ZpCalculator {
 
         $result .= "<tr>".PHP_EOL;
         if ($endBalance >= 0){
-            $result .= "<td colspan='3' align='right' style='font-size: 12; font-weight: bold; color: green'>Долг за предприятием на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
+            $result .= "<td colspan='3' align='right' style=''>Долг за предприятием на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
+            $result .= "<td align='right' style='font-size: 16; color: green; font-weight: bold;'>$endBalance</td>".PHP_EOL;
         } else {
-            $result .= "<td colspan='3' align='right' style='font-size: 12; font-weight: bold; color: red'>Долг за сотрудником на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
+            $result .= "<td colspan='3' align='right' style=''>Долг за сотрудником на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
+            $result .= "<td align='right' style='font-size: 16; color: red; font-weight: bold;'>$endBalance</td>".PHP_EOL;
         }
-        $result .= "<td align='right' style='font-weight: bold;'>$endBalance</td>".PHP_EOL;
         $result .= "</tr>".PHP_EOL;
         $result .= "</table>".PHP_EOL;
         
