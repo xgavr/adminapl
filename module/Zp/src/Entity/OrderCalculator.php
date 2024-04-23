@@ -67,6 +67,21 @@ class OrderCalculator
     protected $baseAmount;
     
     /** 
+     * @ORM\Column(name="rate")  
+     */
+    protected $rate;
+    
+    /** 
+     * @ORM\Column(name="accrual_amount")  
+     */
+    protected $accrualAmount;
+    
+    /** 
+     * @ORM\Column(name="position_num")  
+     */
+    protected $positionNum;
+    
+    /** 
      * @ORM\Column(name="status")  
      */
     protected $status;
@@ -195,7 +210,33 @@ class OrderCalculator
         $this->baseAmount = $baseAmount;
         return $this;
     }
+    public function getRate() {
+        return $this->rate;
+    }
 
+    public function setRate($rate) {
+        $this->rate = $rate;
+        return $this;
+    }
+
+    public function getAccrualAmount() {
+        return $this->accrualAmount;
+    }
+
+    public function setAccrualAmount($accrualAmount) {
+        $this->accrualAmount = $accrualAmount;
+        return $this;
+    }
+    
+    public function getPositionNum() {
+        return $this->positionNum;
+    }
+
+    public function setPositionNum($positionNum) {
+        $this->positionNum = $positionNum;
+        return $this;
+    }
+        
     public function getStatus() {
         return $this->status;
     }

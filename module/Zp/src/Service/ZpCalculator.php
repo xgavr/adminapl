@@ -102,8 +102,11 @@ class ZpCalculator {
             $orderCalculator->setStatus(OrderCalculator::STATUS_RETIRED);
             $this->entityManager->persist($orderCalculator);
         }    
-                
-        if ($order->getStatus() == Order::STATUS_SHIPPED && !$order->isComitentContract()){
+        
+        $personalAccrual = $this->entityManager->getRepository(PersonalAccrual::class)
+                ->findForOrderCalculate($order);
+        
+        if ($personalAccrual && $order->getStatus() == Order::STATUS_SHIPPED && !$order->isComitentContract()){
             
             $base = $this->entityManager->getRepository(Movement::class)
                     ->findBaseAmount(Movement::DOC_ORDER, $order->getId());
@@ -127,6 +130,12 @@ class ZpCalculator {
             $orderCalculator->setShipping($order->getShipping());
             $orderCalculator->setStatus(OrderCalculator::STATUS_ACTIVE);
             $orderCalculator->setUser($order->getUser());
+            $orderCalculator->setRate($personalAccrual->getRate());
+            $orderCalculator->setPositionNum($personalAccrual->getPersonal()->getPositionNum());
+            
+            $accrualAmount = abs($base['amount'])*($personalAccrual->getRate()/100)*$personalAccrual->getPersonal()->getPositionNum(); 
+            
+            $orderCalculator->setAccrualAmount($accrualAmount);
 
             $this->entityManager->persist($orderCalculator);            
         }
@@ -151,7 +160,10 @@ class ZpCalculator {
             $this->entityManager->persist($orderCalculator);
         }    
         
-        if ($vt->getStatus() == Vt::STATUS_ACTIVE && !$vt->getOrder()->isComitentContract()){
+        $personalAccrual = $this->entityManager->getRepository(PersonalAccrual::class)
+                ->findForOrderCalculate($vt->getOrder());
+        
+        if ($personalAccrual && $vt->getStatus() == Vt::STATUS_ACTIVE && !$vt->getOrder()->isComitentContract()){
             
             $base = $this->entityManager->getRepository(Movement::class)
                     ->findBaseAmount(Movement::DOC_VT, $vt->getId());
@@ -175,6 +187,13 @@ class ZpCalculator {
             $orderCalculator->setShipping(null);
             $orderCalculator->setStatus(OrderCalculator::STATUS_ACTIVE);
             $orderCalculator->setUser($vt->getOrder()->getUser());
+
+            $orderCalculator->setRate($personalAccrual->getRate());
+            $orderCalculator->setPositionNum($personalAccrual->getPersonal()->getPositionNum());
+            
+            $accrualAmount = -abs($base['amount'])*($personalAccrual->getRate()/100)*$personalAccrual->getPersonal()->getPositionNum(); 
+            
+            $orderCalculator->setAccrualAmount($accrualAmount);
 
             $this->entityManager->persist($orderCalculator);            
         }

@@ -17,6 +17,7 @@ use Zp\Entity\OrderCalculator;
 use ApiMarketPlace\Entity\MarketSaleReport;
 use Zp\Entity\PersonalMutual;
 use Zp\Entity\PersonalRevise;
+use Application\Entity\Order;
         
 /**
  * Description of ZpRepository
@@ -664,6 +665,36 @@ class ZpRepository extends EntityRepository
         }
         
         return 0;
+    }
+    
+    /**
+     * Считать сотрудника по заказам
+     * @param Order $order
+     * @return PersonalAccrual
+     */
+    public function findForOrderCalculate($order)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('pa')
+                ->from(PersonalAccrual::class, 'pa')
+                ->join('pa.accrual', 'a')
+                ->where('pa.user = :user')
+                ->setParameter('user', $order->getUserId())
+                ->andWhere('a.kind = :kind')
+                ->setParameter('kind', Accrual::BASE_INCOME_ORDER)
+                ->andWhere('pa.dateOper <= :dateOper')
+                ->setParameter('dateOper', $order->getDateOper())
+                ->orderBy('pa.dateOper', 'DESC')
+                 ->setMaxResults(1)
+                ;
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+        
+        if ($result){
+            return $result;
+        }
+        return false;
     }
     
     /**
