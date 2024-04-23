@@ -753,12 +753,15 @@ class ZpCalculator {
 
             $userReport = 'rl'.$user->getAplId().date('Ym', strtotime($dateStart));
             
+            $outStr = (round($row['amountOut'])) ? round($row['amountOut']):'';
+            $inStr = (round($row['amountIn'])) ? round($row['amountIn']):'';
+            
             $result .= "<tr>".PHP_EOL;                
             $result .= "<td><a href='/users/dd-report?report=$userReport'>".$userReport."</a></td>".PHP_EOL;                
             $result .= "<td>{$user->getFullName()}</td>".PHP_EOL;                
             $result .= "<td align='right'>".round($startBalance)."</td>".PHP_EOL;                
-            $result .= "<td align='right'>".round($row['amountOut'])."</td>".PHP_EOL;                
-            $result .= "<td align='right'>".round($row['amountIn'])."</td>".PHP_EOL;                
+            $result .= "<td align='right'>$outStr</td>".PHP_EOL;                
+            $result .= "<td align='right'>$inStr</td>".PHP_EOL;                
             $result .= "<td align='right'>".round($endBalance)."</td>".PHP_EOL;                
             $result .= "</tr>".PHP_EOL;    
             
@@ -777,7 +780,7 @@ class ZpCalculator {
         $result .= "</tr>".PHP_EOL;
 
         $result .= "</table>".PHP_EOL;
-        $result .= "<p>".date('Y-m-d H:i:s')."</p>".PHP_EOL;
+        $result .= "<p>".date('d.m.Y H:i:s')."</p>".PHP_EOL;
         
         $fileName = "./data/reports/zp".date('Ym', strtotime($dateStart)).".html";
 
@@ -797,7 +800,7 @@ class ZpCalculator {
         $dateEnd = min(date('Y-m-d'), date('Y-m-t', strtotime($dateStart)));
         
         $result = "<div>Расчетный лист за период: ".date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd));
-        $result .= "    (<span>".date('Y-m-d H:i:s')."</span>)".PHP_EOL;
+        $result .= "    (<span>".date('d.m.Y H:i:s')."</span>)".PHP_EOL;
         $result .= "</div>".PHP_EOL;
         $result .= "<div style='font-weight: bold; margin: 10px;'>{$user->getFullName()}</div>".PHP_EOL;
         
@@ -996,8 +999,6 @@ class ZpCalculator {
             $result .= "</table>".PHP_EOL;
         }    
                 
-        $result .= "<div>".date('Y-m-d H:i:s')."</div>".PHP_EOL;
-        
         $fileName = "./data/reports/rl".$user->getAplId().date('Ym', strtotime($dateStart)).".html";
 
         file_put_contents($fileName, $result); 
