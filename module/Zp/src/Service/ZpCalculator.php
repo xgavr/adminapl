@@ -797,7 +797,7 @@ class ZpCalculator {
         $dateEnd = min(date('Y-m-d'), date('Y-m-t', strtotime($dateStart)));
         
         $result = "<div>Расчетный лист за период:	$dateStart - $dateEnd</div>";
-        $result .= "<div style='font-weight: bold;'>{$user->getFullName()}</div>";
+        $result .= "<div style='font-weight: bold; margin: 10px;'>{$user->getFullName()}</div>";
         
         
         $params = [
@@ -827,9 +827,9 @@ class ZpCalculator {
         $result .= "<table class='table table-bordered table-hover table-condensed'>";
         $result .= "<tr>";
         if ($startBalance >= 0){
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на конец:</td>";
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на $dateStart:</td>";
         } else {
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на конец:</td>";
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на $dateStart:</td>";
         }
         $result .= "<td align='right' style='font-weight: bold;'>$startBalance</td>";
         $result .= "</tr>";
@@ -872,9 +872,9 @@ class ZpCalculator {
 
         $result .= "<tr>";
         if ($endBalance >= 0){
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на конец:</td>";
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на $dateEnd:</td>";
         } else {
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на конец:</td>";
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на $dateEnd:</td>";
         }
         $result .= "<td align='right' style='font-weight: bold;'>$endBalance</td>";
         $result .= "</tr>";
@@ -921,7 +921,7 @@ class ZpCalculator {
             $result .= "<tr>";
             $result .= "<td>".date('d.m', strtotime($mutual->getDateOper()))."</td>";
             $result .= "<td>$docName</td>";
-            $result .= "<td align='right'>".round($mutual->getAmount())."</td>";
+            $result .= "<td align='right' style='font-weight: bold;'>".round($mutual->getAmount())."</td>";
             $result .= "</tr>";  
             
             $mutualTotal += round($mutual->getAmount());
