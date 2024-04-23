@@ -682,17 +682,16 @@ class ZpRepository extends EntityRepository
                 ->join('pa.accrual', 'a')
                 ->where('pa.user = :user')
                 ->setParameter('user', $order->getUserId())
-                ->andWhere('a.kind = :kind')
-                ->setParameter('kind', Accrual::BASE_INCOME_ORDER)
+                ->andWhere('a.basis = :basis')
+                ->setParameter('basis', Accrual::BASE_INCOME_ORDER)
                 ->andWhere('pa.dateOper <= :dateOper')
                 ->setParameter('dateOper', $order->getDateOper())
                 ->orderBy('pa.dateOper', 'DESC')
                  ->setMaxResults(1)
                 ;
-        var_dump($queryBuilder->getQuery()->getSQL());
+
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
         if ($result){
-            var_dump($order->getDateOper(), $order->getUserId(), $result->getStatus());
             if ($result->getStatus() == PersonalAccrual::STATUS_ACTIVE){
                 return $result;
             }    
