@@ -769,6 +769,8 @@ class ZpCalculator {
             $totalIn += round($row['amountOut']);
             $totalOut += round($row['amountIn']);
             $totalEnd += round($endBalance);
+            
+            $this->userReport($user, $dateStart);
         }
         
         $result .= "<tr>".PHP_EOL;
