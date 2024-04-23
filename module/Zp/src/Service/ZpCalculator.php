@@ -724,15 +724,15 @@ class ZpCalculator {
         
         $data = $query->getResult();
         
-        $result = "<p>Сводный расчетный лист за период:	{$params['startDate']} - {$params['endDate']}</p>";
-        $result .= "<table class='table table-bordered table-hover table-condensed'>";
-        $result .= "<tr>";
-        $result .= "<td colspan='2'>Сотрудник</td>";
-        $result .= "<td>Долг на начало</td>";
-        $result .= "<td>Начислено</td>";
-        $result .= "<td>Получено</td>";
-        $result .= "<td>Долг на конец</td>";
-        $result .= "</tr>";
+        $result = "<p>Сводный расчетный лист за период:	{$params['startDate']} - {$params['endDate']}</p>".PHP_EOL;
+        $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
+        $result .= "<tr>".PHP_EOL;
+        $result .= "<td colspan='2'>Сотрудник</td>".PHP_EOL;
+        $result .= "<td>Долг на начало</td>".PHP_EOL;
+        $result .= "<td>Начислено</td>".PHP_EOL;
+        $result .= "<td>Получено</td>".PHP_EOL;
+        $result .= "<td>Долг на конец</td>".PHP_EOL;
+        $result .= "</tr>".PHP_EOL;
 
         $totalStart = $totalIn = $totalOut = $totalEnd = 0;
         
@@ -753,14 +753,14 @@ class ZpCalculator {
 
             $userReport = 'rl'.$user->getAplId().date('Ym', strtotime($dateStart));
             
-            $result .= "<tr>";                
-            $result .= "<td><a href='/users/dd-report?report=$userReport'>".$userReport."</a></td>";                
-            $result .= "<td>{$user->getFullName()}</td>";                
-            $result .= "<td align='right'>".round($startBalance)."</td>";                
-            $result .= "<td align='right'>".round($row['amountOut'])."</td>";                
-            $result .= "<td align='right'>".round($row['amountIn'])."</td>";                
-            $result .= "<td align='right'>".round($endBalance)."</td>";                
-            $result .= "</tr>";    
+            $result .= "<tr>".PHP_EOL;                
+            $result .= "<td><a href='/users/dd-report?report=$userReport'>".$userReport."</a></td>".PHP_EOL;                
+            $result .= "<td>{$user->getFullName()}</td>".PHP_EOL;                
+            $result .= "<td align='right'>".round($startBalance)."</td>".PHP_EOL;                
+            $result .= "<td align='right'>".round($row['amountOut'])."</td>".PHP_EOL;                
+            $result .= "<td align='right'>".round($row['amountIn'])."</td>".PHP_EOL;                
+            $result .= "<td align='right'>".round($endBalance)."</td>".PHP_EOL;                
+            $result .= "</tr>".PHP_EOL;    
             
             $totalStart += round($startBalance);
             $totalIn += round($row['amountOut']);
@@ -768,16 +768,16 @@ class ZpCalculator {
             $totalEnd += round($endBalance);
         }
         
-        $result .= "<tr>";
-        $result .= "<td colspan='2' align='right'>Итого:</td>";
-        $result .= "<td align='right'>$totalStart</td>";
-        $result .= "<td align='right'>$totalIn</td>";
-        $result .= "<td align='right'>$totalOut</td>";
-        $result .= "<td align='right'>$totalEnd</td>";
-        $result .= "</tr>";
+        $result .= "<tr>".PHP_EOL;
+        $result .= "<td colspan='2' align='right'>Итого:</td>".PHP_EOL;
+        $result .= "<td align='right'>$totalStart</td>".PHP_EOL;
+        $result .= "<td align='right'>$totalIn</td>".PHP_EOL;
+        $result .= "<td align='right'>$totalOut</td>".PHP_EOL;
+        $result .= "<td align='right'>$totalEnd</td>".PHP_EOL;
+        $result .= "</tr>".PHP_EOL;
 
-        $result .= "</table>";
-        $result .= "<p>".date('Y-m-d H:i:s')."</p>";
+        $result .= "</table>".PHP_EOL;
+        $result .= "<p>".date('Y-m-d H:i:s')."</p>".PHP_EOL;
         
         $fileName = "./data/reports/zp".date('Ym', strtotime($dateStart)).".html";
 
@@ -796,8 +796,8 @@ class ZpCalculator {
         $dateStart = date('Y-m-01', strtotime($startDate));
         $dateEnd = min(date('Y-m-d'), date('Y-m-t', strtotime($dateStart)));
         
-        $result = "<div>Расчетный лист за период:	$dateStart - $dateEnd</div>";
-        $result .= "<div style='font-weight: bold; margin: 10px;'>{$user->getFullName()}</div>";
+        $result = "<div>Расчетный лист за период: ".date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd))."</div>".PHP_EOL;
+        $result .= "<div style='font-weight: bold; margin: 10px;'>{$user->getFullName()}</div>".PHP_EOL;
         
         
         $params = [
@@ -823,22 +823,22 @@ class ZpCalculator {
         $balanceResult = $balaceQuery->getOneOrNullResult(2);
         $startBalance = empty($balanceResult['amount']) ? 0:-round($balanceResult['amount']);
 
-        $result .= "<div>Начисления:</div>";
-        $result .= "<table class='table table-bordered table-hover table-condensed'>";
-        $result .= "<tr>";
+        $result .= "<div>Начисления:</div>".PHP_EOL;
+        $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
+        $result .= "<tr>".PHP_EOL;
         if ($startBalance >= 0){
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на $dateStart:</td>";
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на ".date('d.m.Y', strtotime($dateStart)).":</td>".PHP_EOL;
         } else {
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на $dateStart:</td>";
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на ".date('d.m.Y', strtotime($dateStart)).":</td>".PHP_EOL;
         }
-        $result .= "<td align='right' style='font-weight: bold;'>$startBalance</td>";
-        $result .= "</tr>";
-        $result .= "<tr>";
-        $result .= "<td align='center' style='font-weight: bold;'>Вид расчета</td>";
-        $result .= "<td align='center' style='font-weight: bold;'>Размер</td>";
-        $result .= "<td align='center' style='font-weight: bold;'>Начислено</td>";
-        $result .= "<td align='center' style='font-weight: bold;'>Получено</td>";
-        $result .= "</tr></thead>";
+        $result .= "<td align='right' style='font-weight: bold;'>$startBalance</td>".PHP_EOL;
+        $result .= "</tr>".PHP_EOL;
+        $result .= "<tr>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Вид расчета</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Размер</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Начислено</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Получено</td>".PHP_EOL;
+        $result .= "</tr>".PHP_EOL;
         
         $totalIn = $totalOut = $totalEnd = $endBalance = 0;
 
@@ -851,12 +851,12 @@ class ZpCalculator {
                 $row['amountIn'] = 0;
             }
             
-            $result .= "<tr>";
-            $result .= "<td>{$accrual->getName()}</td>";
-            $result .= "<td></td>";
-            $result .= "<td align='right'>".round($row['amountOut'])."</td>";
-            $result .= "<td align='right'>".round($row['amountIn'])."</td>";
-            $result .= "</tr>";
+            $result .= "<tr>".PHP_EOL;
+            $result .= "<td>{$accrual->getName()}</td>".PHP_EOL;
+            $result .= "<td></td>".PHP_EOL;
+            $result .= "<td align='right'>".round($row['amountOut'])."</td>".PHP_EOL;
+            $result .= "<td align='right'>".round($row['amountIn'])."</td>".PHP_EOL;
+            $result .= "</tr>".PHP_EOL;
             
             $totalOut += round($row['amountOut']);
             $totalIn += round($row['amountIn']);            
@@ -864,21 +864,21 @@ class ZpCalculator {
         
         $endBalance = $startBalance + $totalOut - $totalIn;
         
-        $result .= "<tr>";
-        $result .= "<td colspan='2' align='right' style='font-weight: bold;'>Итого:</td>";
-        $result .= "<td align='right' style='font-weight: bold;'>$totalOut</td>";
-        $result .= "<td align='right' style='font-weight: bold;'>$totalIn</td>";
-        $result .= "</tr>";
+        $result .= "<tr>".PHP_EOL;
+        $result .= "<td colspan='2' align='right' style='font-weight: bold;'>Итого:</td>".PHP_EOL;
+        $result .= "<td align='right' style='font-weight: bold;'>$totalOut</td>".PHP_EOL;
+        $result .= "<td align='right' style='font-weight: bold;'>$totalIn</td>".PHP_EOL;
+        $result .= "</tr>".PHP_EOL;
 
         $result .= "<tr>";
         if ($endBalance >= 0){
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на $dateEnd:</td>";
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
         } else {
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на $dateEnd:</td>";
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за сотрудником на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
         }
-        $result .= "<td align='right' style='font-weight: bold;'>$endBalance</td>";
-        $result .= "</tr>";
-        $result .= "</table>";
+        $result .= "<td align='right' style='font-weight: bold;'>$endBalance</td>".PHP_EOL;
+        $result .= "</tr>".PHP_EOL;
+        $result .= "</table>".PHP_EOL;
         
         
         $paymentAccrual = $this->entityManager->getRepository(Accrual::class)
@@ -897,13 +897,13 @@ class ZpCalculator {
         
         $mutualTotal = 0;
          
-        $result .= "<div>Выплаты:</div>";
-        $result .= "<table class='table table-bordered table-hover table-condensed'>";
-        $result .= "<tr>";
-        $result .= "<td align='center' style='font-weight: bold;'>Дата</td>";
-        $result .= "<td align='center' style='font-weight: bold;'>Документ</td>";
-        $result .= "<td align='center' style='font-weight: bold;'>Сумма</td>";
-        $result .= "</tr>";
+        $result .= "<div>Выплаты:</div>".PHP_EOL;
+        $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
+        $result .= "<tr>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Дата</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Документ</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Сумма</td>".PHP_EOL;
+        $result .= "</tr>".PHP_EOL;
         
         foreach ($mutuals as $mutual){
             
@@ -918,20 +918,20 @@ class ZpCalculator {
                     $docName = 'Документ №'.$mutual->getDocId();
             }
             
-            $result .= "<tr>";
-            $result .= "<td>".date('d.m', strtotime($mutual->getDateOper()))."</td>";
-            $result .= "<td>$docName</td>";
-            $result .= "<td align='right''>".round($mutual->getAmount())."</td>";
-            $result .= "</tr>";  
+            $result .= "<tr>".PHP_EOL;
+            $result .= "<td>".date('d.m', strtotime($mutual->getDateOper()))."</td>".PHP_EOL;
+            $result .= "<td>$docName</td>".PHP_EOL;
+            $result .= "<td align='right''>".round($mutual->getAmount())."</td>".PHP_EOL;
+            $result .= "</tr>".PHP_EOL;  
             
             $mutualTotal += round($mutual->getAmount());
         }
         
-        $result .= "<thead><tr>";
-        $result .= "<td colspan='2' align='right' style='font-weight: bold;>Итого:</td>";
-        $result .= "<td align='right' style='font-weight: bold;>$mutualTotal</td>";
-        $result .= "</tr></thead>";
-        $result .= "</table>";
+        $result .= "<tr>".PHP_EOL;
+        $result .= "<td colspan='2' align='right' style='font-weight: bold;>Итого:</td>".PHP_EOL;
+        $result .= "<td align='right' style='font-weight: bold;>$mutualTotal</td>".PHP_EOL;
+        $result .= "</tr>".PHP_EOL;
+        $result .= "</table>".PHP_EOL;
         
         $orderParams = [
             'user' => $user->getId(), 'status' => OrderCalculator::STATUS_ACTIVE,
@@ -947,33 +947,33 @@ class ZpCalculator {
         if (count($orderCalcs)){
             $amountTotal = $deliveryTotal = $baseTotal = $incomeTotal = $accrualTotal = 0;
 
-            $result .= "<div>Расшифровка продаж за период: $dateStart - $dateEnd</div>";
-            $result .= "<table class='table table-bordered table-hover table-condensed'>";
-            $result .= "<tr>";
-            $result .= "<td align='center' style='font-weight: bold;'>Дата</td>";
-            $result .= "<td align='center' style='font-weight: bold;'>Номер заказа АПЛ</td>";
-            $result .= "<td align='center' style='font-weight: bold;'>Офис</td>";
-            $result .= "<td align='center' style='font-weight: bold;'>Сумма продажи</td>";
-            $result .= "<td align='center' style='font-weight: bold;'>Доставка</td>";
-            $result .= "<td align='center' style='font-weight: bold;'>Закупка</td>";
-            $result .= "<td align='center' style='font-weight: bold;'>Доход</td>";
-            $result .= "<td align='center' style='font-weight: bold;'>Процент</td>";
-            $result .= "<td align='center' style='font-weight: bold;'>Начислено</td>";
-            $result .= "</tr>";
+            $result .= "<div>Расшифровка продаж за период: ".date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd))."</div>".PHP_EOL;
+            $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
+            $result .= "<tr>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Дата</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Номер заказа АПЛ</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Офис</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Сумма продажи</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Доставка</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Закупка</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Доход</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Процент</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Начислено</td>".PHP_EOL;
+            $result .= "</tr>".PHP_EOL;
 
             foreach ($orderCalcs as $orderCalc){
 
-                $result .= "<tr>";
-                $result .= "<td>".date('d.m', strtotime($orderCalc->getDateOper()))."</td>";
-                $result .= "<td align='right'>{$orderCalc->getOrder()->getAplId()}</td>";
-                $result .= "<td>{$orderCalc->getOrder()->getOffice()->getName()}</td>";
-                $result .= "<td align='right'>".round($orderCalc->getAmount())."</td>";
-                $result .= "<td align='right'>".round($orderCalc->getDeliveryAmount())."</td>";
-                $result .= "<td align='right'>".round($orderCalc->getBaseAmount())."</td>";
-                $result .= "<td align='right'>".round($orderCalc->getAmount()-$orderCalc->getBaseAmount())."</td>";
-                $result .= "<td align='right'>".$orderCalc->getRate()."</td>";
-                $result .= "<td align='right'>".round($orderCalc->getAccrualAmount())."</td>";
-                $result .= "</tr>";  
+                $result .= "<tr>".PHP_EOL;
+                $result .= "<td>".date('d.m', strtotime($orderCalc->getDateOper()))."</td>".PHP_EOL;
+                $result .= "<td align='right'>{$orderCalc->getOrder()->getAplId()}</td>".PHP_EOL;
+                $result .= "<td>{$orderCalc->getOrder()->getOffice()->getName()}</td>".PHP_EOL;
+                $result .= "<td align='right'>".round($orderCalc->getAmount())."</td>".PHP_EOL;
+                $result .= "<td align='right'>".round($orderCalc->getDeliveryAmount())."</td>".PHP_EOL;
+                $result .= "<td align='right'>".round($orderCalc->getBaseAmount())."</td>".PHP_EOL;
+                $result .= "<td align='right'>".round($orderCalc->getAmount()-$orderCalc->getBaseAmount())."</td>".PHP_EOL;
+                $result .= "<td align='right'>".$orderCalc->getRate()."</td>".PHP_EOL;
+                $result .= "<td align='right'>".round($orderCalc->getAccrualAmount())."</td>".PHP_EOL;
+                $result .= "</tr>".PHP_EOL;  
 
                 $amountTotal += round($orderCalc->getAmount());
                 $deliveryTotal += round($orderCalc->getDeliveryAmount());
@@ -982,19 +982,19 @@ class ZpCalculator {
                 $accrualTotal += round($orderCalc->getAccrualAmount());
             }
 
-            $result .= "<thead><tr>";
-            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Итого:</td>";
-            $result .= "<td align='right' style='font-weight: bold;'>$amountTotal</td>";
-            $result .= "<td align='right' style='font-weight: bold;'>$deliveryTotal</td>";
-            $result .= "<td align='right' style='font-weight: bold;'>$baseTotal</td>";
-            $result .= "<td align='right' style='font-weight: bold;'>$incomeTotal</td>";
-            $result .= "<td align='right' style='font-weight: bold;'></td>";
-            $result .= "<td align='right' style='font-weight: bold;'>$accrualTotal</td>";
-            $result .= "</tr></thead>";
-            $result .= "</table>";
+            $result .= "<tr>".PHP_EOL;
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Итого:</td>".PHP_EOL;
+            $result .= "<td align='right' style='font-weight: bold;'>$amountTotal</td>".PHP_EOL;
+            $result .= "<td align='right' style='font-weight: bold;'>$deliveryTotal</td>".PHP_EOL;
+            $result .= "<td align='right' style='font-weight: bold;'>$baseTotal</td>".PHP_EOL;
+            $result .= "<td align='right' style='font-weight: bold;'>$incomeTotal</td>".PHP_EOL;
+            $result .= "<td align='right' style='font-weight: bold;'></td>".PHP_EOL;
+            $result .= "<td align='right' style='font-weight: bold;'>$accrualTotal</td>".PHP_EOL;
+            $result .= "</tr>".PHP_EOL;
+            $result .= "</table>".PHP_EOL;
         }    
                 
-        $result .= "<div>".date('Y-m-d H:i:s')."</div>";
+        $result .= "<div>".date('Y-m-d H:i:s')."</div>".PHP_EOL;
         
         $fileName = "./data/reports/rl".$user->getAplId().date('Ym', strtotime($dateStart)).".html";
 
