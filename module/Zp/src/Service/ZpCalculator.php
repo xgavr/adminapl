@@ -870,7 +870,7 @@ class ZpCalculator {
         $result .= "<td align='right' style='font-weight: bold;'>$totalIn</td>".PHP_EOL;
         $result .= "</tr>".PHP_EOL;
 
-        $result .= "<tr>";
+        $result .= "<tr>".PHP_EOL;
         if ($endBalance >= 0){
             $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Долг за предприятием на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
         } else {
@@ -921,7 +921,7 @@ class ZpCalculator {
             $result .= "<tr>".PHP_EOL;
             $result .= "<td>".date('d.m', strtotime($mutual->getDateOper()))."</td>".PHP_EOL;
             $result .= "<td>$docName</td>".PHP_EOL;
-            $result .= "<td align='right''>".round($mutual->getAmount())."</td>".PHP_EOL;
+            $result .= "<td align='right'>".round($mutual->getAmount())."</td>".PHP_EOL;
             $result .= "</tr>".PHP_EOL;  
             
             $mutualTotal += round($mutual->getAmount());
