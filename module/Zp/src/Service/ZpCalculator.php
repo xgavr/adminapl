@@ -824,18 +824,18 @@ class ZpCalculator {
         $startBalance = empty($balanceResult['amount']) ? 0:-round($balanceResult['amount']);
 
         if ($startBalance >= 0){
-            $result .= "<div>Долг за предприятием на начало <b>$startBalance</b></div>";            
+            $result .= "<div>Долг за предприятием на начало <span style='font-weight: bold;'>$startBalance</span></div>";            
         } else {
-            $result .= "<div>Долг за сотрудником на начало <b>$startBalance</b></div>";                        
+            $result .= "<div>Долг за сотрудником на начало <span style='font-weight: bold;'>$startBalance</span></div>";                        
         }
         
         $result .= "<div>Начисления:</div>";
         $result .= "<table class='table table-bordered table-hover table-condensed'>";
-        $result .= "<thead><tr>";
-        $result .= "<td>Вид расчета</td>";
-        $result .= "<td>Размер</td>";
-        $result .= "<td>Начислено</td>";
-        $result .= "<td>Получено</td>";
+        $result .= "<tr>";
+        $result .= "<td align='center' style='font-weight: bold;'>Вид расчета</td>";
+        $result .= "<td align='center' style='font-weight: bold;'>Размер</td>";
+        $result .= "<td align='center' style='font-weight: bold;'>Начислено</td>";
+        $result .= "<td align='center' style='font-weight: bold;'>Получено</td>";
         $result .= "</tr></thead>";
         
         $totalIn = $totalOut = $totalEnd = $endBalance = 0;
@@ -862,17 +862,17 @@ class ZpCalculator {
         
         $endBalance = $startBalance + $totalOut - $totalIn;
         
-        $result .= "<thead><tr>";
-        $result .= "<td colspan='2' align='right'>Итого:</td>";
-        $result .= "<td align='right'>$totalOut</td>";
-        $result .= "<td align='right'>$totalIn</td>";
-        $result .= "</tr></thead>";
+        $result .= "<tr>";
+        $result .= "<td colspan='2' align='right' style='font-weight: bold;'>Итого:</td>";
+        $result .= "<td align='right' style='font-weight: bold;'>$totalOut</td>";
+        $result .= "<td align='right' style='font-weight: bold;'>$totalIn</td>";
+        $result .= "</tr>";
         $result .= "</table>";
         
         if ($endBalance >= 0){
-            $result .= "<div>Долг за предприятием на конец <b>$endBalance</b></div>";            
+            $result .= "<div>Долг за предприятием на конец <span style='font-weight: bold;'>$endBalance</span></div>";            
         } else {
-            $result .= "<div>Долг за сотрудником на конец <b>$endBalance</b></div>";                        
+            $result .= "<div>Долг за сотрудником на конец <spanstyle='font-weight: bold;'>$endBalance</span></div>";                        
         }
         
         $paymentAccrual = $this->entityManager->getRepository(Accrual::class)
@@ -893,11 +893,11 @@ class ZpCalculator {
          
         $result .= "<div>Выплаты:</div>";
         $result .= "<table class='table table-bordered table-hover table-condensed'>";
-        $result .= "<thead><tr>";
-        $result .= "<td>Дата</td>";
-        $result .= "<td>Документ</td>";
-        $result .= "<td>Сумма</td>";
-        $result .= "</tr></thead>";
+        $result .= "<tr>";
+        $result .= "<td align='center' style='font-weight: bold;'>Дата</td>";
+        $result .= "<td align='center' style='font-weight: bold;'>Документ</td>";
+        $result .= "<td align='center' style='font-weight: bold;'>Сумма</td>";
+        $result .= "</tr>";
         
         foreach ($mutuals as $mutual){
             
@@ -938,55 +938,56 @@ class ZpCalculator {
         
         $orderCalcs = $orderQuery->getResult();
         
-        $amountTotal = $deliveryTotal = $baseTotal = $incomeTotal = $accrualTotal = 0;
-         
-        $result .= "<div>Расшифровка продаж за период: $dateStart - $dateEnd</div>";
-        $result .= "<table class='table table-bordered table-hover table-condensed'>";
-        $result .= "<thead><tr>";
-        $result .= "<td>Дата</td>";
-        $result .= "<td>Номер заказа АПЛ</td>";
-        $result .= "<td>Офис</td>";
-        $result .= "<td>Сумма продажи</td>";
-        $result .= "<td>Доставка</td>";
-        $result .= "<td>Закупка</td>";
-        $result .= "<td>Доход</td>";
-        $result .= "<td>Процент</td>";
-        $result .= "<td>Начислено</td>";
-        $result .= "</tr></thead>";
-        
-        foreach ($orderCalcs as $orderCalc){
-            
+        if (count($orderCalcs)){
+            $amountTotal = $deliveryTotal = $baseTotal = $incomeTotal = $accrualTotal = 0;
+
+            $result .= "<div>Расшифровка продаж за период: $dateStart - $dateEnd</div>";
+            $result .= "<table class='table table-bordered table-hover table-condensed'>";
             $result .= "<tr>";
-            $result .= "<td>".date('d.m', strtotime($orderCalc->getDateOper()))."</td>";
-            $result .= "<td>{$orderCalc->getOrder()->getAplId()}</td>";
-            $result .= "<td>{$orderCalc->getOrder()->getOffice()->getName()}</td>";
-            $result .= "<td align='right'>".round($orderCalc->getAmount())."</td>";
-            $result .= "<td align='right'>".round($orderCalc->getDeliveryAmount())."</td>";
-            $result .= "<td align='right'>".round($orderCalc->getBaseAmount())."</td>";
-            $result .= "<td align='right'>".round($orderCalc->getAmount()-$orderCalc->getBaseAmount())."</td>";
-            $result .= "<td align='right'>10</td>";
-            $result .= "<td align='right'></td>";
-            $result .= "</tr>";  
-            
-            $amountTotal += round($orderCalc->getAmount());
-            $deliveryTotal += round($orderCalc->getDeliveryAmount());
-            $baseTotal += round($orderCalc->getBaseAmount());
-            $incomeTotal += round($orderCalc->getAmount() - $orderCalc->getBaseAmount());
-            $accrualTotal += 0;
-        }
-        
-        $result .= "<thead><tr>";
-        $result .= "<td colspan='3' align='right'>Итого:</td>";
-        $result .= "<td align='right'>$amountTotal</td>";
-        $result .= "<td align='right'>$deliveryTotal</td>";
-        $result .= "<td align='right'>$baseTotal</td>";
-        $result .= "<td align='right'>$incomeTotal</td>";
-        $result .= "<td align='right'></td>";
-        $result .= "<td align='right'>$accrualTotal</td>";
-        $result .= "</tr></thead>";
-        $result .= "</table>";
-        
-        
+            $result .= "<td align='center' style='font-weight: bold;'>Дата</td>";
+            $result .= "<td align='center' style='font-weight: bold;'>Номер заказа АПЛ</td>";
+            $result .= "<td align='center' style='font-weight: bold;'>Офис</td>";
+            $result .= "<td align='center' style='font-weight: bold;'>Сумма продажи</td>";
+            $result .= "<td align='center' style='font-weight: bold;'>Доставка</td>";
+            $result .= "<td align='center' style='font-weight: bold;'>Закупка</td>";
+            $result .= "<td align='center' style='font-weight: bold;'>Доход</td>";
+            $result .= "<td align='center' style='font-weight: bold;'>Процент</td>";
+            $result .= "<td align='center' style='font-weight: bold;'>Начислено</td>";
+            $result .= "</tr>";
+
+            foreach ($orderCalcs as $orderCalc){
+
+                $result .= "<tr>";
+                $result .= "<td>".date('d.m', strtotime($orderCalc->getDateOper()))."</td>";
+                $result .= "<td>{$orderCalc->getOrder()->getAplId()}</td>";
+                $result .= "<td>{$orderCalc->getOrder()->getOffice()->getName()}</td>";
+                $result .= "<td align='right'>".round($orderCalc->getAmount())."</td>";
+                $result .= "<td align='right'>".round($orderCalc->getDeliveryAmount())."</td>";
+                $result .= "<td align='right'>".round($orderCalc->getBaseAmount())."</td>";
+                $result .= "<td align='right'>".round($orderCalc->getAmount()-$orderCalc->getBaseAmount())."</td>";
+                $result .= "<td align='right'>".$orderCalc->getRate()."</td>";
+                $result .= "<td align='right'>".round($orderCalc->getAccrualAmount())."</td>";
+                $result .= "</tr>";  
+
+                $amountTotal += round($orderCalc->getAmount());
+                $deliveryTotal += round($orderCalc->getDeliveryAmount());
+                $baseTotal += round($orderCalc->getBaseAmount());
+                $incomeTotal += round($orderCalc->getAmount() - $orderCalc->getBaseAmount());
+                $accrualTotal += round($orderCalc->getAccrualAmount());
+            }
+
+            $result .= "<thead><tr>";
+            $result .= "<td colspan='3' align='right' style='font-weight: bold;'>Итого:</td>";
+            $result .= "<td align='right' style='font-weight: bold;'>$amountTotal</td>";
+            $result .= "<td align='right' style='font-weight: bold;'>$deliveryTotal</td>";
+            $result .= "<td align='right' style='font-weight: bold;'>$baseTotal</td>";
+            $result .= "<td align='right' style='font-weight: bold;'>$incomeTotal</td>";
+            $result .= "<td align='right' style='font-weight: bold;'></td>";
+            $result .= "<td align='right' style='font-weight: bold;'>$accrualTotal</td>";
+            $result .= "</tr></thead>";
+            $result .= "</table>";
+        }    
+                
         $result .= "<div>".date('Y-m-d H:i:s')."</div>";
         
         $fileName = "./data/reports/rl".$user->getAplId().date('Ym', strtotime($dateStart)).".html";
