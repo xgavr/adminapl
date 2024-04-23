@@ -881,10 +881,18 @@ class ZpCalculator {
         $result .= "<tr>".PHP_EOL;
         if ($endBalance >= 0){
             $result .= "<td colspan='3' align='right' style=''>Долг за предприятием на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
-            $result .= "<td align='right' style='font-size: large; color: green; font-weight: bold;'>$endBalance</td>".PHP_EOL;
+            if (date('Ym') == date('Ym', strtotime($dateEnd))){
+                $result .= "<td align='right' style='font-size: large; color: green; font-weight: bold;'>$endBalance</td>".PHP_EOL;
+            } else {
+                $result .= "<td align='right' style=''>$endBalance</td>".PHP_EOL;                
+            }    
         } else {
             $result .= "<td colspan='3' align='right' style=''>Долг за сотрудником на ".date('d.m.Y', strtotime($dateEnd)).":</td>".PHP_EOL;
-            $result .= "<td align='right' style='font-size: large; color: red; font-weight: bold;'>$endBalance</td>".PHP_EOL;
+            if (date('Ym') == date('Ym', strtotime($dateEnd))){
+                $result .= "<td align='right' style='font-size: large; color: red; font-weight: bold;'>$endBalance</td>".PHP_EOL;
+            } else {    
+                $result .= "<td align='right' style=''>$endBalance</td>".PHP_EOL;
+            }    
         }
         $result .= "</tr>".PHP_EOL;
         $result .= "</table>".PHP_EOL;
