@@ -689,6 +689,7 @@ class ZpRepository extends EntityRepository
                 ->orderBy('pa.dateOper', 'DESC')
                  ->setMaxResults(1)
                 ;
+        var_dump($queryBuilder->getQuery()->getSQL());
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
         if ($result){
             var_dump($order->getDateOper(), $order->getUserId(), $result->getStatus());
