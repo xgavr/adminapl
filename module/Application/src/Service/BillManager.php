@@ -876,7 +876,7 @@ class BillManager
             $messages = [];
             $messages[] = [
                 'role' => 'system',
-                'content' => 'Ты специалист по логистике. Нужно найти артикул товара в описании. Ответь в формате JSON {"article":"xxxxx"}',
+                'content' => 'Ты специалист по логистике. Определи артикул товара в описании. Ответь в формате JSON {"article":"xxxxx"}',
             ];
             $messages[] = [
                 'role' => 'user',
