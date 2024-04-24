@@ -800,13 +800,7 @@ class ZpCalculator {
 
         file_put_contents($fileName, $result);
         
-        $settings = $this->adminManager->getAplExchangeSettings();
-//        var_dump($settings['reports_ftp_login'], $settings['reports_ftp_passw']); exit;
-        $this->ftpManager->put([
-            'host' => 'autopartslist.ru',
-            'port' => 21,
-            'login' => $settings['reports_ftp_login'],
-            'password' => $settings['reports_ftp_passw'],
+        $this->ftpManager->putReportToApl([
             'source_file' => $fileName,
             'dest_file' => basename($fileName),
         ]);

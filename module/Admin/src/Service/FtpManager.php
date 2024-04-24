@@ -17,12 +17,12 @@ class FtpManager {
 
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
-    /*
-     * @var Admin\Service\AdminManager
+    /**
+     * @var \Admin\Service\AdminManager
      */
     private $adminManager;
     
@@ -95,6 +95,27 @@ class FtpManager {
             if (file_exists($params['source_file']) && $params['dest_file']){
                 return $this->put($params);
             }
+        }
+        
+        return;        
+    }    
+    
+    /**
+     * Отчеты ЗП на АПЛ
+     * @param $params array
+     * $params['source_file'] - локальный файл
+     * $params['dest_file'] - файл на фтп
+     */
+    public function putReportToApl($params)
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        $params['host'] = 'autopartslist.ru';
+        $params['login'] = $settings['reports_ftp_login'];
+        $params['password'] = $settings['reports_ftp_passw'];
+            
+        if (file_exists($params['source_file']) && $params['dest_file']){
+            return $this->put($params);
         }
         
         return;        
