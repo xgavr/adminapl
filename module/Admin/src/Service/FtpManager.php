@@ -46,7 +46,7 @@ class FtpManager {
     {
         $ftp = ftp_connect($params['host']);
         
-        ftp_login($ftp, $params['login'],$params['password']) or die("Cannot login");
+        ftp_login($ftp, $params['login'],$params['password']) or die("Cannot login or password");
         ftp_pasv($ftp, true) or die("Cannot switch to passive mode");
         
         $result = ftp_put($ftp, $params['dest_file'], $params['source_file'], FTP_BINARY);
