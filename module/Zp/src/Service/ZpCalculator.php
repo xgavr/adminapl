@@ -801,6 +801,7 @@ class ZpCalculator {
         file_put_contents($fileName, $result);
         
         $settings = $this->adminManager->getAplExchangeSettings();
+        var_dump($settings); exit;
         $this->ftpManager->put([
             'host' => 'autopartslist.ru',
             'port' => '21',
