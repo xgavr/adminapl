@@ -906,7 +906,7 @@ class ZpCalculator {
         $mutualParams = [
             'user' => $user->getId(), 'accrual' => $paymentAccrual->getId(),
             'startDate' => $dateStart, 'endDate' => $dateEnd,             
-            'sort' => 'dateOper', 'order' => 'asc', 
+            'sort' => 'dateOper', 'order' => 'asc', 'status' => PersonalMutual::STATUS_ACTIVE,
         ];
         
         $mutualQuery = $this->entityManager->getRepository(PersonalMutual::class)

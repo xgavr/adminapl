@@ -65,6 +65,13 @@ class ZpRepository extends EntityRepository
                             ;
                 }    
             }            
+            if (!empty($params['status'])){
+                if (is_numeric($params['status'])){
+                    $queryBuilder->andWhere('pm.status = :status')
+                            ->setParameter('status', $params['status'])
+                            ;
+                }    
+            }            
             if (!empty($params['startDate'])){
                 $queryBuilder->andWhere("pm.dateOper >= :startDate")
                         ->setParameter('startDate', $params['startDate'])
