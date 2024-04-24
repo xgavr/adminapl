@@ -270,6 +270,22 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'reports_ftp_login',
+            'options' => [
+                'label' => 'Логин ФТП отчетов',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'reports_ftp_passw',
+            'options' => [
+                'label' => 'Пароль ФТП отчетов',
+            ],
+        ]);
+        
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -501,6 +517,26 @@ class AplExchangeForm extends Form implements ObjectManagerAwareInterface
                 ],                
                 'validators' => [
                     ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'reports_ftp_login',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'StringTrim'],
+                ],                
+                'validators' => [
+                ],
+            ]);         
+        
+        $inputFilter->add([
+                'name'     => 'reports_ftp_passw',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'StringTrim'],
+                ],                
+                'validators' => [
                 ],
             ]);         
     }    

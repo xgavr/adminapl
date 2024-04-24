@@ -95,6 +95,14 @@ $form->get('bank')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('reports_ftp_login')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('reports_ftp_passw')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -224,6 +232,16 @@ $form->prepare();
             <?= $this->formLabel($form->get('bank')); ?>
             <?= $this->formElement($form->get('bank')); ?>
             <?= $this->formElementErrors($form->get('bank')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('reports_ftp_login')); ?>
+            <?= $this->formElement($form->get('reports_ftp_login')); ?>
+            <?= $this->formElementErrors($form->get('reports_ftp_login')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('reports_ftp_passw')); ?>
+            <?= $this->formElement($form->get('reports_ftp_passw')); ?>
+            <?= $this->formElementErrors($form->get('reports_ftp_passw')); ?>                  
         </div>
     </div>    
     <div class="col-md-3" id="side-nav" >

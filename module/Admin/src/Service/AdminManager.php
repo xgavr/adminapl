@@ -331,6 +331,8 @@ class AdminManager {
         $config->apl_exchange->cash = $data['cash']; //обновлять платежи
         $config->apl_exchange->market = $data['market']; //выгружать прайс листы в торговые площадки
         $config->apl_exchange->bank = $data['bank']; //обмен а АПЛ
+        $config->apl_exchange->reports_ftp_login = $data['reports_ftp_login']; //отчеты а АПЛ
+        $config->apl_exchange->reports_ftp_passw = $data['reports_ftp_passw']; //отчеты а АПЛ
         
         $writer = new PhpArray();
         

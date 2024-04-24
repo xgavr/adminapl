@@ -53,16 +53,23 @@ class ZpCalculator {
     private $taxManager;
     
     /**
+     * Ftp Manager
+     * @var \Admin\Service\FtpManager
+     */
+    private $ftpManager;
+    
+    /**
      * 
      * @var Accrual
      */
     private $taxNdflAccrual;
 
-    public function __construct($entityManager, $adminManager, $taxManager)
+    public function __construct($entityManager, $adminManager, $taxManager, $ftpManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->taxManager = $taxManager;
+        $this->ftpManager = $ftpManager;
         
         $this->taxNdflAccrual = $this->entityManager->getRepository(Accrual::class)
                 ->findOneBy(['payment' => Accrual::PAYMENT_TAX]);
@@ -792,6 +799,16 @@ class ZpCalculator {
         $fileName = "./data/reports/zp".date('Ym', strtotime($dateStart)).".html";
 
         file_put_contents($fileName, $result);
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+        $this->ftpManager->put([
+            'host' => 'autopartslist.ru',
+            'port' => '21',
+            'login' => $settings['reports_ftp_login'],
+            'password' => $settings['reports_ftp_passw'],
+            'source_file' => $fileName,
+            'dest_file' => basename($fileName),
+        ]);
         
         return;                
     }

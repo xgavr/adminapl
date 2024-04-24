@@ -13,6 +13,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Zp\Service\ZpCalculator;
 use Admin\Service\AdminManager;
 use Company\Service\TaxManager;
+use Admin\Service\FtpManager;
 
 /**
  * Description of ZpCalculatorFactory
@@ -28,8 +29,9 @@ class ZpCalculatorFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $adminManager = $container->get(AdminManager::class);
         $taxManager = $container->get(TaxManager::class);
+        $ftpManager = $container->get(FtpManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new ZpCalculator($entityManager, $adminManager, $taxManager);
+        return new ZpCalculator($entityManager, $adminManager, $taxManager, $ftpManager);
     }
 }
