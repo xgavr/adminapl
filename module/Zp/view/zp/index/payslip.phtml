@@ -97,7 +97,7 @@ $this->pageBreadcrumbs()->setItems([
 </div>  
 <p></p>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-3">
     </div>
     <div class="col-md-6">
         <table width="100%" class="table table-bordered table-hover table-condensed">
@@ -106,7 +106,7 @@ $this->pageBreadcrumbs()->setItems([
                    Долг на начало за предприятием  
                 </td>
                 <td align="right" width="250">
-                    <strong><span class="text-info" id="startBalance"></span></strong>
+                    <strong><span id="startBalance"></span></strong>
                 </td>
                 <td align="right" width="5">
                 </td>
@@ -136,12 +136,14 @@ $this->pageBreadcrumbs()->setItems([
                    Долг на конец за предприятием  
                 </td>
                 <td align="right">
-                    <strong><span class="text-info" id="endBalance"></span></strong>
+                    <strong><span class="h1" id="endBalance"></span></strong>
                 </td>
                 <td>
                 </td>
             </tr>
         </table>             
+    </div>
+    <div class="col-md-3">
     </div>
 </div>
 
@@ -188,20 +190,16 @@ $this->pageBreadcrumbs()->setItems([
         $table.on('load-success.bs.table', function (e, res) {
             $('#startBalance').html($.number(res.startBalance, 0, ',', ' '));
             $('#startBalanceLabel').html('Долг за предприятием на начало месяца');
-            $('#startBalance').addClass( "text-info" );
-            $('#startBalance').removeClass( "text-danger" );
             if (Math.round(res.startBalance) < 0){
                 $('#startBalanceLabel').html('Долг за сотрудником на начало месяца');
-                $('#startBalance').removeClass( "text-info" );
-                $('#startBalance').addClass( "text-danger" );
             }
             $('#endBalance').html($.number(res.endBalance, 0, ',', ' '));
             $('#endBalanceLabel').html('Долг за предприятием на конец месяца');
-            $('#endBalance').addClass( "text-info" );
-            $('#endBalance').removeClass( "text-danger" );
+            $('#endBalance').addClass( "text-success");
+            $('#endBalance').removeClass( "text-danger");
             if (Math.round(res.endBalance) < 0){
                 $('#endBalanceLabel').html('Долг за сотрудником на конец месяца');
-                $('#endBalance').removeClass( "text-info" );
+                $('#endBalance').removeClass( "text-success" );
                 $('#endBalance').addClass( "text-danger" );
             }
             $('#totalIn').html($.number(res.totalIn, 0, ',', ' '));
