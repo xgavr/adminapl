@@ -725,7 +725,7 @@ class ZpCalculator {
         $data = $query->getResult();
         
         $result = '<style>'
-                . '.table-bordered {'
+                . '.table-bordered tr td{'
                 . 'border: 1px solid #ddd;}'
                 . '</style>'.PHP_EOL;
         

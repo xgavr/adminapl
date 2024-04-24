@@ -100,6 +100,8 @@ class BankRepository extends EntityRepository
                     $queryBuilder->select('count(s.id) as totalCount')
                             ->addSelect('sum(case when s.amount > 0 then s.amount else 0 end) as inTotal')
                             ->addSelect('sum(case when s.amount < 0 then s.amount else 0 end) as outTotal')
+                            ->andWhere('s.status = :status')
+                            ->setParameter('status', Statement::STATUS_ACTIVE)
                             ;
                 }    
             }
