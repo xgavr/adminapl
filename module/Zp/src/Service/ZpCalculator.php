@@ -733,17 +733,18 @@ class ZpCalculator {
         
         $result = '<style>'
                 . '.table-bordered tr td{'
-                . 'border: 1px solid #ddd;}'
+                . 'border: 1px solid #ddd;'
+                . '}'
                 . '</style>'.PHP_EOL;
         
         $result .= "<p>Сводный расчетный лист за период:	{$params['startDate']} - {$params['endDate']}</p>".PHP_EOL;
         $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
         $result .= "<tr>".PHP_EOL;
-        $result .= "<th colspan='2'>Сотрудник</th>".PHP_EOL;
-        $result .= "<th>Долг на начало</th>".PHP_EOL;
-        $result .= "<th>Начислено</th>".PHP_EOL;
-        $result .= "<th>Получено</th>".PHP_EOL;
-        $result .= "<th>Долг на конец</th>".PHP_EOL;
+        $result .= "<td colspan='2' align='center' style='font-weight: bold;'>Сотрудник</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Долг на начало</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Начислено</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Получено</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Долг на конец</td>".PHP_EOL;
         $result .= "</tr>".PHP_EOL;
 
         $totalStart = $totalIn = $totalOut = $totalEnd = 0;
@@ -858,10 +859,10 @@ class ZpCalculator {
         $result .= "<td align='right' style=''>$startBalance</td>".PHP_EOL;
         $result .= "</tr>".PHP_EOL;
         $result .= "<tr>".PHP_EOL;
-        $result .= "<th align='center' style='font-weight: bold;'>Вид расчета</th>".PHP_EOL;
-        $result .= "<th align='center' style='font-weight: bold;'>Размер</th>".PHP_EOL;
-        $result .= "<th align='center' style='font-weight: bold;'>Начислено</th>".PHP_EOL;
-        $result .= "<th align='center' style='font-weight: bold;'>Получено</th>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Вид расчета</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Размер</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Начислено</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Получено</td>".PHP_EOL;
         $result .= "</tr>".PHP_EOL;
         
         $totalIn = $totalOut = $totalEnd = $endBalance = 0;
@@ -936,9 +937,9 @@ class ZpCalculator {
         $result .= "<div>Выплаты:</div>".PHP_EOL;
         $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
         $result .= "<tr>".PHP_EOL;
-        $result .= "<th align='center' style='font-weight: bold;'>Дата</th>".PHP_EOL;
-        $result .= "<th align='center' style='font-weight: bold;'>Документ</th>".PHP_EOL;
-        $result .= "<th align='center' style='font-weight: bold;'>Сумма</th>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Дата</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Документ</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Сумма</td>".PHP_EOL;
         $result .= "</tr>".PHP_EOL;
         
         foreach ($mutuals as $mutual){
@@ -986,15 +987,15 @@ class ZpCalculator {
             $result .= "<div>Расшифровка продаж за период: ".date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd))."</div>".PHP_EOL;
             $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
             $result .= "<tr>".PHP_EOL;
-            $result .= "<th align='center' style='font-weight: bold;'>Дата</th>".PHP_EOL;
-            $result .= "<th align='center' style='font-weight: bold;'>Номер заказа АПЛ</th>".PHP_EOL;
-            $result .= "<th align='center' style='font-weight: bold;'>Офис</th>".PHP_EOL;
-            $result .= "<th align='center' style='font-weight: bold;'>Сумма продажи</th>".PHP_EOL;
-            $result .= "<th align='center' style='font-weight: bold;'>Доставка</th>".PHP_EOL;
-            $result .= "<th align='center' style='font-weight: bold;'>Закупка</th>".PHP_EOL;
-            $result .= "<th align='center' style='font-weight: bold;'>Доход</th>".PHP_EOL;
-            $result .= "<th align='center' style='font-weight: bold;'>Процент</th>".PHP_EOL;
-            $result .= "<th align='center' style='font-weight: bold;'>Начислено</th>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Дата</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Номер заказа АПЛ</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Офис</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Сумма продажи</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Доставка</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Закупка</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Доход</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Процент</td>".PHP_EOL;
+            $result .= "<td align='center' style='font-weight: bold;'>Начислено</td>".PHP_EOL;
             $result .= "</tr>".PHP_EOL;
 
             foreach ($orderCalcs as $orderCalc){
