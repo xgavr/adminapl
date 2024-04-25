@@ -802,7 +802,7 @@ class MovementRepository extends EntityRepository{
         }
         
         $queryBuilder->andWhere($orX);
-        var_dump($queryBuilder->getQuery()->getSQL());
+//        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();
         
     }
