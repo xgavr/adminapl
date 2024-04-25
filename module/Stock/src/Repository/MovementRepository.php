@@ -773,7 +773,7 @@ class MovementRepository extends EntityRepository{
      */
     public function ordersReserve($params)
     {
-        var_dump($params);
+//        var_dump($params);
         
         $entityManager = $this->getEntityManager();
 
