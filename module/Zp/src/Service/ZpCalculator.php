@@ -737,7 +737,7 @@ class ZpCalculator {
                 . '}'
                 . '</style>'.PHP_EOL;
         
-        $result .= "<p>Сводный расчетный лист за период:	{$params['startDate']} - {$params['endDate']}</p>".PHP_EOL;
+        $result .= "<div class='panel-body'>Сводный расчетный лист за период:	{$params['startDate']} - {$params['endDate']}</div>".PHP_EOL;
         $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
         $result .= "<tr>".PHP_EOL;
         $result .= "<td colspan='2' align='center' style='font-weight: bold;'>Сотрудник</td>".PHP_EOL;
@@ -832,7 +832,7 @@ class ZpCalculator {
         $result .= "<div class='panel-body'>Расчетный лист за период: ".date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd));
         $result .= "    (<span>".date('d.m.Y H:i:s')."</span>)".PHP_EOL;
         $result .= "</div>".PHP_EOL;
-        $result .= "<div style='font-weight: bold; margin: 10px;'>{$user->getFullName()}</div>".PHP_EOL;
+        $result .= "<div  class='panel-body' style='font-weight: bold; margin: 10px;'>{$user->getFullName()}</div>".PHP_EOL;
         
         
         $params = [
@@ -947,9 +947,9 @@ class ZpCalculator {
         $result .= "<div>Выплаты:</div>".PHP_EOL;
         $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
         $result .= "<tr>".PHP_EOL;
-        $result .= "<td align='center' style='font-weight: bold;'>Дата</td>".PHP_EOL;
+        $result .= "<td width='20%' align='center' style='font-weight: bold;'>Дата</td>".PHP_EOL;
         $result .= "<td align='center' style='font-weight: bold;'>Документ</td>".PHP_EOL;
-        $result .= "<td align='center' style='font-weight: bold;'>Сумма</td>".PHP_EOL;
+        $result .= "<td width='20%' align='center' style='font-weight: bold;'>Сумма</td>".PHP_EOL;
         $result .= "</tr>".PHP_EOL;
         
         foreach ($mutuals as $mutual){
@@ -994,7 +994,7 @@ class ZpCalculator {
         if (count($orderCalcs)){
             $amountTotal = $deliveryTotal = $baseTotal = $incomeTotal = $accrualTotal = 0;
 
-            $result .= "<div>Расшифровка продаж за период: ".date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd))."</div>".PHP_EOL;
+            $result .= "<div class='panel-body'>Расшифровка продаж за период: ".date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd))."</div>".PHP_EOL;
             $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
             $result .= "<tr>".PHP_EOL;
             $result .= "<td align='center' style='font-weight: bold;'>Дата</td>".PHP_EOL;
