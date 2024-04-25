@@ -819,7 +819,13 @@ class ZpCalculator {
         $dateStart = date('Y-m-01', strtotime($startDate));
         $dateEnd = min(date('Y-m-d'), date('Y-m-t', strtotime($dateStart)));
         
-        $result = "<div>Расчетный лист за период: ".date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd));
+        $result = '<style>'
+                . '.table-bordered tr td{'
+                . 'border: 1px solid #ddd;'
+                . '}'
+                . '</style>'.PHP_EOL;
+        
+        $result .= "<div>Расчетный лист за период: ".date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd));
         $result .= "    (<span>".date('d.m.Y H:i:s')."</span>)".PHP_EOL;
         $result .= "</div>".PHP_EOL;
         $result .= "<div style='font-weight: bold; margin: 10px;'>{$user->getFullName()}</div>".PHP_EOL;
@@ -1034,6 +1040,11 @@ class ZpCalculator {
         $fileName = "./data/reports/rl".$user->getAplId().date('Ym', strtotime($dateStart)).".html";
 
         file_put_contents($fileName, $result); 
+
+        $this->ftpManager->putReportToApl([
+            'source_file' => $fileName,
+            'dest_file' => basename($fileName),
+        ]);
         
         return;
     }
