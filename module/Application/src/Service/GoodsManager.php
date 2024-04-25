@@ -1210,6 +1210,7 @@ class GoodsManager
                 $row['purchases'][]= $purchase;
             }                        
             
+            $row['officeGb'] = $goodBalance->getOffice()->getId();
             $row['rest'] = $goodBalance->toArray();
             
             $ordersReserve = $this->entityManager->getRepository(Reserve::class)
