@@ -820,9 +820,11 @@ class ZpCalculator {
         $dateEnd = min(date('Y-m-d'), date('Y-m-t', strtotime($dateStart)));
         
         $result = '<style>'
+                . '.table-bordered{'
+                . 'width: 100%; '
+                . '}'.PHP_EOL
                 . '.table-bordered tr td{'
                 . 'border: 1px solid #ddd; '
-                . 'width: 50%;'
                 . '}'.PHP_EOL
                 . '.panel-body{'
                 . 'padding: 15px;'
