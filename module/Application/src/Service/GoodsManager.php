@@ -1195,7 +1195,11 @@ class GoodsManager
         
         foreach ($goodBalances as $goodBalance){
             $basesQuery = $this->entityManager->getRepository(Movement::class)
-                    ->findPtuBases(['goodId' => $goodBalance->getGood()->getId()]);
+                    ->findPtuBases([
+                        'goodId' => $goodBalance->getGood()->getId(), 
+                        'officeId' => $goodBalance->getOffice()->getId(),
+                    ]);
+            
             $bases = $basesQuery->getResult();
             
             foreach ($bases as $purchase){
@@ -1206,10 +1210,13 @@ class GoodsManager
                 $row['purchases'][]= $purchase;
             }                        
             
-            $row['rest'] = $goodBalances = $goodBalance->toArray();
+            $row['rest'] = $goodBalance->toArray();
             
             $ordersReserve = $this->entityManager->getRepository(Reserve::class)
-                    ->ordersReserve(['goodId' => $good->getId()]);
+                    ->ordersReserve([
+                        'goodId' => $good->getId(),
+                        'officeId' => $goodBalance->getOffice()->getId(),
+                    ]);
             foreach ($ordersReserve as $order){
                 $row['reserves'][] = $order->toArray();
             }

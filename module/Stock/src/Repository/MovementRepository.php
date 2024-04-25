@@ -224,6 +224,13 @@ class MovementRepository extends EntityRepository{
                     }                    
                 }
             }
+            if (!empty($params['officeId'])){
+                if (is_numeric($params['officeId'])){
+                    $qb->andWhere('m.office = :office')
+                            ->setParameter('office', $params['officeId'])
+                            ;
+                }
+            }
             if ($orX->count()){
                 $qb->andWhere($orX);
             }    
@@ -784,6 +791,13 @@ class MovementRepository extends EntityRepository{
             if (is_numeric($params['goodId'])){
                 $orX = $queryBuilder->expr()->orX();
                 $orX->add($queryBuilder->expr()->eq('r.good', $params['goodId']));                        
+            }
+        }
+        if (!empty($params['officeId'])){
+            if (is_numeric($params['officeId'])){
+                $queryBuilder->andWhere('r.office = :office')
+                        ->setParameter('office', $params['officeId'])
+                        ;
             }
         }
         
