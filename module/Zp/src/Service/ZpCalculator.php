@@ -946,6 +946,7 @@ class ZpCalculator {
         
         $mutualTotal = 0;
          
+        $result .= "<div class='panel-body'></div>".PHP_EOL;
         $result .= "<div>Выплаты:</div>".PHP_EOL;
         $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
         $result .= "<tr>".PHP_EOL;
