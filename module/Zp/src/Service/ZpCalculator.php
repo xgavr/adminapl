@@ -822,7 +822,7 @@ class ZpCalculator {
         $result = '<style>'
                 . '.table-bordered tr td{'
                 . 'border: 1px solid #ddd; '
-                . 'width: 100%;'
+                . 'width: 50%;'
                 . '}'.PHP_EOL
                 . '.panel-body{'
                 . 'padding: 15px;'
@@ -947,9 +947,9 @@ class ZpCalculator {
         $result .= "<div>Выплаты:</div>".PHP_EOL;
         $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
         $result .= "<tr>".PHP_EOL;
-        $result .= "<td width='20%' align='center' style='font-weight: bold;'>Дата</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Дата</td>".PHP_EOL;
         $result .= "<td align='center' style='font-weight: bold;'>Документ</td>".PHP_EOL;
-        $result .= "<td width='20%' align='center' style='font-weight: bold;'>Сумма</td>".PHP_EOL;
+        $result .= "<td align='center' style='font-weight: bold;'>Сумма</td>".PHP_EOL;
         $result .= "</tr>".PHP_EOL;
         
         foreach ($mutuals as $mutual){
