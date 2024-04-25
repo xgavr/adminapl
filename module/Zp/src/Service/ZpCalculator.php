@@ -837,7 +837,7 @@ class ZpCalculator {
         $result .= "    (<span>".date('d.m.Y H:i:s')."</span>)".PHP_EOL;
         $result .= "</div>".PHP_EOL;
         $result .= "<div class='panel-body'></div>".PHP_EOL;
-        $result .= "<div style='font-weight: bold; margin: 10px;'>{$user->getFullName()}</div>".PHP_EOL;
+        $result .= "<div style='font-weight: bold;'>{$user->getFullName()}</div>".PHP_EOL;
         
         
         $params = [
