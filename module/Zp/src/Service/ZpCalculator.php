@@ -821,11 +821,15 @@ class ZpCalculator {
         
         $result = '<style>'
                 . '.table-bordered tr td{'
-                . 'border: 1px solid #ddd;'
+                . 'border: 1px solid #ddd; '
+                . 'width: 100%;'
+                . '}'.PHP_EOL
+                . '.panel-body{'
+                . 'padding: 15px;'
                 . '}'
                 . '</style>'.PHP_EOL;
         
-        $result .= "<div>Расчетный лист за период: ".date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd));
+        $result .= "<div class='panel-body'>Расчетный лист за период: ".date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd));
         $result .= "    (<span>".date('d.m.Y H:i:s')."</span>)".PHP_EOL;
         $result .= "</div>".PHP_EOL;
         $result .= "<div style='font-weight: bold; margin: 10px;'>{$user->getFullName()}</div>".PHP_EOL;
