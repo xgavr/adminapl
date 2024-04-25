@@ -192,7 +192,7 @@ class JobManager
           529 => ['command' => 'update-user',                       'shedule' => '44 16 * * *', 'description' => 'Обновление сотрудников'],
           529 => ['command' => 'market-place-reports',              'shedule' => '40 2 * * *',  'description' => 'Загрузка отчетов ТП'],
           530 => ['command' => 'payment-auto',                      'shedule' => '40 4 * * *',  'description' => 'Автоплатежки'],
-          531 => ['command' => 'zp',                                'shedule' => '41 4,16 * * *', 'description' => 'Зарплата'],
+          531 => ['command' => 'zp',                                'shedule' => '41 22 * * *', 'description' => 'Зарплата'],
           532 => ['command' => 'fin',                               'shedule' => '55 6,12,18 * * *', 'description' => 'Фин. отчеты'],
         ];
     }
