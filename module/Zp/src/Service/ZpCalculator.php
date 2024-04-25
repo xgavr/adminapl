@@ -734,11 +734,15 @@ class ZpCalculator {
         $result = '<style>'
                 . '.table-bordered tr td{'
                 . 'border: 1px solid #ddd;'
+                . '} '
+                . '.panel-body{'
+                . 'padding: 15px;'
                 . '}'
                 . '</style>'.PHP_EOL;
         
         $result .= "<div class='panel-body'></div>".PHP_EOL;
         $result .= "<div>Сводный расчетный лист за период:	{$params['startDate']} - {$params['endDate']}</div>".PHP_EOL;
+        $result .= "<div class='panel-body'></div>".PHP_EOL;
         $result .= "<table class='table table-bordered table-hover table-condensed'>".PHP_EOL;
         $result .= "<tr>".PHP_EOL;
         $result .= "<td colspan='2' align='center' style='font-weight: bold;'>Сотрудник</td>".PHP_EOL;
