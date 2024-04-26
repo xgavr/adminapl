@@ -20,7 +20,9 @@ $this->pageBreadcrumbs()->setItems([
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <button class="btn btn-default zp-modal-show" type="button" disabled modal-url="/zp/edit-form">
+                    <button class="btn btn-default personal-revise-modal-show" type="button"
+                            <?= ($rbacManager->isGranted(null, 'zp.manage')) ? '':'disabled' ?> 
+                            modal-url="/personal-revise/edit-form">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
                 </div>    

@@ -9,6 +9,7 @@ use Stock\Entity\St;
 use Company\Entity\Tax;
 use Stock\Entity\Ptu;
 use Zp\Entity\DocCalculator;
+use Zp\Entity\PersonalRevise;
 
 /**
  * This class represents a position accrual.
@@ -182,6 +183,19 @@ class TaxMutual
     {
         switch ($cashDoc->getStatus()){
             case CashDoc::STATUS_ACTIVE: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }    
+
+    /**
+     * Returns possible PersonalRevise status.
+     * @param PersonalRevise $personalRevise
+     * @return integer
+     */
+    public static function getStatusFromPersonalRevise($personalRevise) 
+    {
+        switch ($personalRevise->getStatus()){
+            case PersonalRevise::STATUS_ACTIVE: return self::STATUS_ACTIVE;
             default: return self::STATUS_RETIRED;    
         }
     }    

@@ -20,6 +20,7 @@ class PersonalRevise
     const KIND_OPEN_BALANCE = 1; //начальный остаток
     const KIND_VACATION = 2; //отпуск
     const KIND_FINE = 3; //штраф
+    const KIND_BONUS = 4; //премия, разовое начисление
     
     /**
      * @ORM\Id
@@ -193,9 +194,10 @@ class PersonalRevise
     public static function getKindList() 
     {
         return [
+            self::KIND_VACATION => 'Отпуск',
+            self::KIND_BONUS => 'Премия',
             self::KIND_FINE => 'Штраф',
             self::KIND_OPEN_BALANCE => 'Начальный остаток',
-            self::KIND_VACATION => 'Отпуск',
         ];
     }    
 

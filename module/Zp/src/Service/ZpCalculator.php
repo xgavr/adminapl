@@ -607,7 +607,7 @@ class ZpCalculator {
                 ->zpReviseRegister($personalRevise);
         
         $personalMutual = new PersonalMutual();
-        $personalMutual->setAmount($personalRevise->getAmount());
+        $personalMutual->setAmount(PersonalMutual::getKindAmountFromPersonalRevise($personalRevise));
         $personalMutual->setCompany($personalRevise->getCompany());
         $personalMutual->setDateOper($personalRevise->getDocDate());
         $personalMutual->setDocId($personalRevise->getId());
@@ -616,14 +616,17 @@ class ZpCalculator {
         $personalMutual->setDocType(Movement::DOC_ZPRV);
         $personalMutual->setStatus(PersonalMutual::getStatusFromPersonalRevise($personalRevise));
         $personalMutual->setUser($personalRevise->getUser());
-        $personalMutual->setKind(PersonalMutual::KIND_PAYMENT);
+        $personalMutual->setKind(PersonalMutual::getKindFromPersonalRevise($personalRevise));
         $personalMutual->setAccrual($personalRevise->getAccrual());
         
         $this->entityManager->persist($personalMutual);
         $this->entityManager->flush();
                 
-        return $personalMutual;
-        
+        if ($personalMutual->getAccrual()->getPayment() == Accrual::PAYMENT_ONE_TIME){
+            $this->taxManager->repostPersonalReviseEsn($personalRevise, $docStamp);
+        }    
+
+        return $personalMutual;        
     }
     
     /**
@@ -635,6 +638,13 @@ class ZpCalculator {
     {
         switch ($kind){
             case PersonalRevise::KIND_VACATION:
+                $accrual = $this->entityManager->getRepository(Accrual::class)
+                    ->findOneBy(['payment' => Accrual::PAYMENT_AVERAGE]);
+                return $accrual;
+            case PersonalRevise::KIND_BONUS:
+                $accrual = $this->entityManager->getRepository(Accrual::class)
+                    ->findOneBy(['payment' => Accrual::PAYMENT_ONE_TIME]);
+                return $accrual;
             case PersonalRevise::KIND_FINE:
             case PersonalRevise::KIND_OPEN_BALANCE:
             default:

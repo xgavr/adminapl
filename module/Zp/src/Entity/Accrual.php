@@ -27,7 +27,7 @@ class Accrual
     const PAYMENT_WORK_TIME  = 1; // повременная оплата, оклад
     const PAYMENT_WORK       = 2; // сдельная оплата.
     const PAYMENT_AVERAGE    = 3; // оплата по среднему, отпуск.
-    const PAYMENT_ONE_TIME   = 4; // разовая оплата.
+    const PAYMENT_ONE_TIME   = 4; // разовая оплата, премия.
     const PAYMENT_COURIER    = 5; // оплата доставки.
     const PAYMENT_OTHER      = 6; // прочая оплата.
     const PAYMENT_TAX        = 7; // налог.

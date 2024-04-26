@@ -269,6 +269,41 @@ class PersonalMutual
     }    
     
     /**
+     * Returns possible PersonalRevise kind.
+     * @param PersonalRevise $personalRevise
+     * @return integer
+     */
+    public static function getKindFromPersonalRevise($personalRevise) 
+    {
+        switch ($personalRevise->getKind()){
+            case PersonalRevise::KIND_BONUS: 
+            case PersonalRevise::KIND_VACATION: 
+                return self::KIND_ACCRUAL_ADM;
+            case PersonalRevise::KIND_FINE: 
+            case PersonalRevise::KIND_OPEN_BALANCE: 
+            default: return self::KIND_PAYMENT;    
+        }
+    }    
+    
+    /**
+     * Returns possible PersonalRevise amount.
+     * @param PersonalRevise $personalRevise
+     * @return integer
+     */
+    public static function getKindAmountFromPersonalRevise($personalRevise) 
+    {
+        switch ($personalRevise->getKind()){
+            case PersonalRevise::KIND_BONUS: 
+            case PersonalRevise::KIND_VACATION: 
+                return -abs($personalRevise->getAmount());
+            case PersonalRevise::KIND_FINE: 
+                return abs($personalRevise->getAmount());
+            case PersonalRevise::KIND_OPEN_BALANCE: 
+            default: return $personalRevise->getAmount();    
+        }
+    }    
+    
+    /**
      * Returns possible kinds as array.
      * @return array
      */

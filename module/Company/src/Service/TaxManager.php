@@ -6,6 +6,7 @@ use Company\Entity\TaxMutual;
 use Zp\Entity\DocCalculator;
 use Stock\Entity\Movement;
 use Cash\Entity\CashDoc;
+use Zp\Entity\PersonalRevise;
 
 /**
  * This service is responsible for adding/editing roles.
@@ -240,6 +241,40 @@ class TaxManager
         $taxMutual->setDocStamp($docStamp);
         $taxMutual->setDocType(Movement::DOC_CASH);
         $taxMutual->setStatus(TaxMutual::getStatusFromCashDoc($cashDoc));
+        $taxMutual->setTax($tax);
+
+        $this->entityManager->persist($taxMutual);
+        
+        $this->entityManager->flush();
+        
+        return $taxMutual;
+    }   
+    
+    /**
+     * Провести расчет корректировки
+     * @param PersonalRevise $personalRevise
+     * @param float $docStamp
+     * 
+     * @return TaxMutual
+     */
+    public function repostPersonalReviseEsn($personalRevise, $docStamp)
+    {
+        $tax = $this->entityManager->getRepository(Tax::class)
+                ->currentTax(Tax::KIND_ESN, $personalRevise->getDocDate());
+
+        $this->removeTaxMutual(Movement::DOC_ZPRV, $personalRevise->getId(), $tax->getId());
+        
+        $amount = abs($personalRevise->getAmount())*$tax->getAmount()/100;
+        
+        $taxMutual = new TaxMutual();
+        $taxMutual->setAmount(-$amount);
+        $taxMutual->setCompany($personalRevise->getCompany());
+        $taxMutual->setDateOper($personalRevise->getDocDate());
+        $taxMutual->setDocId($personalRevise->getId());
+        $taxMutual->setDocKey($personalRevise->getLogKey());
+        $taxMutual->setDocStamp($docStamp);
+        $taxMutual->setDocType(Movement::DOC_ZPRV);
+        $taxMutual->setStatus(TaxMutual::getStatusFromPersonalRevise($personalRevise));
         $taxMutual->setTax($tax);
 
         $this->entityManager->persist($taxMutual);
