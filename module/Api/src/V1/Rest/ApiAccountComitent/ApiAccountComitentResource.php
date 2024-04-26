@@ -185,10 +185,22 @@ class ApiAccountComitentResource extends AbstractResourceListener
             $companies = $this->entityManager->getRepository(Office::class)
                     ->findAllCompanies();
             
+            $startDate = date('Y-m-01', strtotime('first day of previous month'));
+            $endDate = date('Y-m-t', strtotime('last day of previous month'));
+                
+            $startDateCurrent = date('Y-m-01');
+            $endDateCurrent = date('Y-m-t');
+
+            if (!empty($params['startDate'])){
+                $startDate = $startDateCurrent = date('Y-m-01', strtotime($params['startDate']));
+                $endDate = $endDateCurrent = date('Y-m-t', strtotime($params['startDate']));                
+            }
+            
             foreach ($companies as $company){
+                
                 $zpParams1= [
-                    'startDate' => date('Y-m-d', strtotime('first day of previous month')), 
-                    'endDate' => date('Y-m-d', strtotime('last day of previous month')), 
+                    'startDate' => $startDate, 
+                    'endDate' => $endDate, 
                     'summary' => false,
                     'company' => $company->getId(),
                 ];
@@ -201,19 +213,21 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     ];   
                 }    
 
-                $zpParams0= [
-                    'startDate' => date('Y-m-01'), 
-                    'endDate' => date('Y-m-t'), 
-                    'summary' => false,
-                    'company' => $company->getId(),
-                ];
-                $data0 = $this->zpManager->payslip($zpParams0);
-                if (count($data0)){
-                    $result[] = [
-                        'company' => $company->toArray(),
-                        'dateOper' => date('Ymd', strtotime($zpParams0['endDate'])),
-                        'data' => $data0, 
-                    ];   
+                if ($startDate != $startDateCurrent){
+                    $zpParams0= [
+                        'startDate' => $startDateCurrent, 
+                        'endDate' => $endDateCurrent, 
+                        'summary' => false,
+                        'company' => $company->getId(),
+                    ];
+                    $data0 = $this->zpManager->payslip($zpParams0);
+                    if (count($data0)){
+                        $result[] = [
+                            'company' => $company->toArray(),
+                            'dateOper' => date('Ymd', strtotime($zpParams0['endDate'])),
+                            'data' => $data0, 
+                        ];   
+                    }    
                 }    
             }            
         }    

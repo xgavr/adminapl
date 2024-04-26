@@ -432,6 +432,22 @@ return [
                 'description' => 'Id документа',
                 'field_type' => 'integer',
             ],
+            3 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'startDate',
+                'description' => 'Начало периода',
+                'field_type' => 'date',
+            ],
+            4 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'endDate',
+                'description' => 'Конец периода',
+                'field_type' => 'date',
+            ],
         ],
         'Api\\V1\\Rest\\ApiCommentToApl\\Validator' => [
             0 => [
@@ -1148,6 +1164,8 @@ STATUS_CANCELED  = -10; // Отменен.',
             'collection_query_whitelist' => [
                 0 => 'docType',
                 1 => 'docId',
+                2 => 'startDate',
+                3 => 'endDate',
             ],
             'page_size' => 25,
             'page_size_param' => null,
