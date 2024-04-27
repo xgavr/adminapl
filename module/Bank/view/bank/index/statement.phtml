@@ -115,6 +115,7 @@
                     data-query-params="balanceQueryParams"
                     data-response-handler="responseHandler"
                     data-classes = "table table-bordered table-hover table-condensed"
+                    data-row-style="balanceRowStyle"
                     >
                     <thead>
                         <tr>
@@ -351,22 +352,8 @@
         return curentRowIndex;
     }
 
-    var $table = $('#table').bootstrapTable({
-            onLoadSuccess: function(res){
-                var inTotal = (res.inTotal) ? Math.round(res.inTotal*100)/100:0;
-                var outTotal = (res.outTotal) ? -Math.round(res.outTotal*100)/100:0;
-                var startTotal = (res.startTotal) ? Math.round(res.startTotal*100)/100:0;
-                $('#inTotalFooter').html(inTotal.toFixed(2));
-                $('#outTotalFooter').html(outTotal.toFixed(2));
-                $('#startTotalFooter').html(startTotal.toFixed(2));
-                $('#endTotalFooter').html((Math.round((startTotal+inTotal-outTotal)*100)/100).toFixed(2));
-            }
-        }),
-        $tableBalance = $('#table_balance').bootstrapTable({
-            onLoadSuccess: function(res){
-                tableRowClick();        
-            }
-        }),
+    var $table = $('#table'),
+        $tableBalance = $('#table_balance'),
         $qrCodeTable = $('#table_qrcode'),    
         $ok = $('#ok'), 
         $okStatementDate = $('#dateStart'),
@@ -473,6 +460,24 @@
             $(".enter-search").val('');
             refreshTable();
         });
+        
+        $table.on('load-success.bs.table', function (e, res) {
+            tableRowClick();        
+            var inTotal = (res.inTotal) ? Math.round(res.inTotal*100)/100:0;
+            var outTotal = (res.outTotal) ? -Math.round(res.outTotal*100)/100:0;
+            var startTotal = (res.startTotal) ? Math.round(res.startTotal*100)/100:0;
+            $('#inTotalFooter').html(inTotal.toFixed(2));
+            $('#outTotalFooter').html(outTotal.toFixed(2));
+            $('#startTotalFooter').html(startTotal.toFixed(2));
+            $('#endTotalFooter').html((Math.round((startTotal+inTotal-outTotal)*100)/100).toFixed(2));
+        });        
+
+        $tableBalance.on('load-success.bs.table', function (e, res) {
+            $('.balancetablerow').on('click', function(e){
+                $('.balancetablerow').removeClass('active-click');
+                $(this).addClass('active-click');
+            });                
+        });        
 
         $('input[name="date"]').change(function (){
             refreshTable();
@@ -1095,6 +1100,12 @@
         if (row.status == '<?= Statement::STATUS_RETIRED?>'){
            retired += ' retired';
         }
+        
+        return {classes: retired};
+    }
+    
+    function balanceRowStyle(row, index) {
+        var retired = 'balancetablerow';
         
         return {classes: retired};
     }
