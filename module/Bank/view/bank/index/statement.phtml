@@ -362,6 +362,11 @@
                 $('#endTotalFooter').html((Math.round((startTotal+inTotal-outTotal)*100)/100).toFixed(2));
             }
         }),
+        $tableBalance = $('#table_balance').bootstrapTable({
+            onLoadSuccess: function(res){
+                tableRowClick();        
+            }
+        }),
         $qrCodeTable = $('#table_qrcode'),    
         $ok = $('#ok'), 
         $okStatementDate = $('#dateStart'),
