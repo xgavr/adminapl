@@ -286,14 +286,11 @@ class PtuRepository extends EntityRepository{
             }
             if (!empty($params['supplierId'])){
                 $supplier = $entityManager->getRepository(Supplier::class)
-                        ->findOneById($params['supplierId']);
+                        ->find($params['supplierId']);
                 if ($supplier){
-                    $orX = $queryBuilder->expr()->orX();
-                    foreach ($supplier->getLegalContact()->getLegals() as $legal){
-                        $orX->add($queryBuilder->expr()->eq('p.legal', $legal->getId()));
-                    }    
-                    $queryBuilder->andWhere($orX);
-                }    
+                    $queryBuilder->andWhere('p.supplier = :supplier')
+                            ->setParameter('supplier', $supplier->getId());
+                }
             }            
             if (!empty($params['companyId'])){
                 $company = $entityManager->getRepository(Legal::class)
