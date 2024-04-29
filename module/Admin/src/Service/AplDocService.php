@@ -452,6 +452,11 @@ class AplDocService {
         $ptu = $this->entityManager->getRepository(Ptu::class)
                 ->findOneByAplId($data['id']);
         if ($ptu){
+            
+            if (!$supplier){
+                $dataPtu['supplier'] = $ptu->getSupplier();
+            }
+            
             $this->ptuManager->updatePtu($ptu, $dataPtu);
             $this->ptuManager->removePtuGood($ptu); 
         } else {        
