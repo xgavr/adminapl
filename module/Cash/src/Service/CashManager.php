@@ -268,7 +268,7 @@ class CashManager {
                 'date_oper' => $cashDoc->getDateOper(),
                 'status' => Mutual::getStatusFromCashdoc($cashDoc),
                 'revise' => Mutual::REVISE_NOT,
-                'amount' => $cashDoc->getMutualAmount(),
+                'amount' => $cashDoc->getAmount(),
                 'legal_id' => $serviceLegal->getId(),
                 'contract_id' => $serviceContract->getId(),
                 'office_id' => $cashDoc->getCash()->getOffice()->getId(),
