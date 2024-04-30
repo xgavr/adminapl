@@ -76,6 +76,7 @@
             data-sort-order="desc"
             data-classes = "table table-bordered table-hover table-condensed"
             data-show-footer="true"
+            data-row-style="rowStyle"
             >
             <thead>
                 <tr>
@@ -95,12 +96,16 @@
 <script type="text/javascript">
 
     var $table = $('#table');
+    var ok = $('#ok');
 
     function refreshTable(){
         $table.bootstrapTable('refresh');
     }
 
-    var ok = $('#ok');
+    function rowStyle(row){
+        var retired = 'tablerow';
+        return {classes: retired};
+    }
 
     $(function () {
         ok.click(function () {
