@@ -249,7 +249,35 @@ class CashManager {
             ];
 
             $this->entityManager->getRepository(Mutual::class)
-                    ->insertMutual($data);
+                    ->insertMutual($data);            
+        }
+        
+        if ($cashDoc->isFinService()){ // взаиморасчеты с финсервисами
+            
+            $serviceLegal = $this->entityManager->getRepository(Legal::class)
+                    ->findOneBy(['inn' => $cashDoc->getCash()->getBankInn()]);
+            
+            $serviceContract = $this->findDefaultContract($cashDoc->getCash()->getOffice(), 
+                    $serviceLegal, $cashDoc->getDateOper(), $cashDoc->getId(),
+                    Contract::KIND_SUPPLIER, Contract::PAY_CASHLESS);   
+            
+            $data = [
+                'doc_key' => $cashDoc->getLogKey(),
+                'doc_type' => Movement::DOC_CASH,
+                'doc_id' => $cashDoc->getId(),
+                'date_oper' => $cashDoc->getDateOper(),
+                'status' => Mutual::getStatusFromCashdoc($cashDoc),
+                'revise' => Mutual::REVISE_NOT,
+                'amount' => $cashDoc->getMutualAmount(),
+                'legal_id' => $serviceLegal->getId(),
+                'contract_id' => $serviceContract->getId(),
+                'office_id' => $office->getId(),
+                'company_id' => $cashDoc->getCompany()->getId(),
+                'doc_stamp' => $docStamp,
+            ];
+
+            $this->entityManager->getRepository(Mutual::class)
+                    ->insertMutual($data);            
         }
         
         return;
