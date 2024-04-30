@@ -692,12 +692,18 @@ class CashDoc {
         }
     }
     
+    /**
+     * Платежный сервис?
+     * @return boolean
+     */
     public function isFinService()
     {
         switch ($this->kind){
             case $this::KIND_IN_PAYMENT_CLIENT:
                 if ($this->getCash()){
-                    return !empty($this->getCash()->getBankInn());
+                    if ($this->getCash()->getPayment() == Cash::PAYMENT_PAY_SERVICE){
+                        return !empty($this->getCash()->getBankInn());
+                    }
                 }
             default : return false;    
         }
