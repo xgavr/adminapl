@@ -94,15 +94,7 @@
 </div>
 <script type="text/javascript">
 
-    var $table = $('#table').bootstrapTable({
-        onLoadSuccess: function(res){
-            tableRowClick();
-            var inTotal = (res.balanceIn) ? res.balanceIn:0;
-            var outTotal = (res.balanceOut) ? -res.balanceOut:0;
-            $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
-            $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
-        }
-    });
+    var $table = $('#table');
 
     function refreshTable(){
         $table.bootstrapTable('refresh');
@@ -114,6 +106,13 @@
         ok.click(function () {
             refreshTable();
         });
+        $table.on('load-success.bs.table', function (e, res) {
+            var inTotal = (res.balanceIn) ? res.balanceIn:0;
+            var outTotal = (res.balanceOut) ? -res.balanceOut:0;
+            $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
+            $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
+            tableRowClick();
+        });        
         $('#legalSelect').change(function () {
             refreshTable();
         });
