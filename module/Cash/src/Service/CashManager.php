@@ -271,7 +271,7 @@ class CashManager {
                 'amount' => $cashDoc->getMutualAmount(),
                 'legal_id' => $serviceLegal->getId(),
                 'contract_id' => $serviceContract->getId(),
-                'office_id' => $office->getId(),
+                'office_id' => $cashDoc->getCash()->getOffice()->getId(),
                 'company_id' => $cashDoc->getCompany()->getId(),
                 'doc_stamp' => $docStamp,
             ];
