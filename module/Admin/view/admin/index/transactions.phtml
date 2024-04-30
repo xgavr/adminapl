@@ -117,6 +117,7 @@ $this->pageBreadcrumbs()->setItems([
         
         $table.on('load-success.bs.table', function (e, res) {
             setCookies('transactionSaveId');
+            tableRowClick();
         });        
 
         $table.on('expand-row.bs.table', function (e, res, $detail) {
