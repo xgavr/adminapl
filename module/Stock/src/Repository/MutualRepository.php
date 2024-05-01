@@ -708,6 +708,14 @@ class MutualRepository extends EntityRepository{
                             ;
                 }    
             }            
+            if (!empty($params['kind'])){
+                if (is_numeric($params['kind'])){
+                    $queryBuilder
+                        ->andWhere('c.kind = :kind')
+                        ->setParameter('kind', $params['kind'])
+                            ;
+                }    
+            }            
             if (!empty($params['sort'])){
                 $queryBuilder
                     ->orderBy('c.'.$params['sort'], $params['order'])
@@ -783,6 +791,14 @@ class MutualRepository extends EntityRepository{
                     $queryBuilder
                         ->andWhere('c.pay = :pay')
                         ->setParameter('pay', $params['pay'])
+                            ;
+                }    
+            }            
+            if (!empty($params['kind'])){
+                if (is_numeric($params['kind'])){
+                    $queryBuilder
+                        ->andWhere('c.kind = :kind')
+                        ->setParameter('kind', $params['kind'])
                             ;
                 }    
             }            

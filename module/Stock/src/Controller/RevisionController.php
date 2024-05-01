@@ -199,7 +199,7 @@ class RevisionController extends AbstractActionController
             'q' => trim($q), 'sort' => $sort, 'order' => $order, 
             'supplierId' => $supplierId, 'officeId' => $officeId,
             'status' => $status, 'companyId' => $companyId, 'legalId' => $legalId,
-            'contractId' => $contractId, 'pay' => $pay,
+            'contractId' => $contractId, 'pay' => $pay, 'kind' => Contract::KIND_SUPPLIER,
         ];
                 
         $query = $this->entityManager->getRepository(Mutual::class)
