@@ -525,10 +525,11 @@ class ZpRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('identity(pa.company) as company, identity(pa.personal) as personal, '
+        $queryBuilder->select('identity(pa.company) as company, identity(pe.position) as position, '
                 . 'identity(pa.accrual) as accrual, identity(pa.user) as user, pa.taxedNdfl')
                 ->distinct()
                 ->from(PersonalAccrual::class, 'pa')
+                ->join('pa.personal', 'pe')
                 ->where('pa.dateOper <= :dateOper')
                 ->setParameter('dateOper', $dateCalculation)
                 ;
@@ -557,6 +558,7 @@ class ZpRepository extends EntityRepository
             $queryBuilder->resetDQLParts();
             $queryBuilder->select('pa')
                     ->from(PersonalAccrual::class, 'pa')
+                    ->join('pa.personal', 'pe')
                     ->where('pa.dateOper <= :dateOper')
                     ->setParameter('dateOper', $dateCalculation)
                     ->orderBy('pa.dateOper', 'Desc')
@@ -566,8 +568,10 @@ class ZpRepository extends EntityRepository
                     ->setParameter('accrual', $personalAccrualRow['accrual'])
                     ->andWhere('pa.company = :company')
                     ->setParameter('company', $personalAccrualRow['company'])
-                    ->andWhere('pa.personal = :personal')
-                    ->setParameter('personal', $personalAccrualRow['personal'])
+//                    ->andWhere('pa.personal = :personal')
+//                    ->setParameter('personal', $personalAccrualRow['personal'])
+                    ->andWhere('pe.position = :position')
+                    ->setParameter('position', $personalAccrualRow['position'])
                     ->andWhere('pa.taxedNdfl = :taxedNdfl')
                     ->setParameter('taxedNdfl', $personalAccrualRow['taxedNdfl'])
                     ->setMaxResults(1)
