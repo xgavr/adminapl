@@ -424,7 +424,7 @@ class CashManager {
      */
     public function addUserOrderTransaction($order, $docStamp)
     {
-        $this->removeUserOrderTransactions(Movement::DOC_ORDER, $order->getId());
+        $this->removeUserDocTransactions(Movement::DOC_ORDER, $order->getId());
         
         if ($order->getStatus() == Order::STATUS_SHIPPED && $order->getContact()->getUser()){
             $userTransaction = new UserTransaction();
@@ -473,7 +473,7 @@ class CashManager {
      */
     public function addUserVtTransaction($vt, $docStamp)
     {
-        $this->removeUserOrderTransactions(Movement::DOC_VT, $vt->getId());
+        $this->removeUserDocTransactions(Movement::DOC_VT, $vt->getId());
         
         if ($vt->getStatus() == Vt::STATUS_ACTIVE && $vt->getOrder()->getContact()->getUser()){
             $userTransaction = new UserTransaction();
