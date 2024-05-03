@@ -510,7 +510,7 @@ class RegisterManager
                 $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                     ->find($register->getDocId());
                 if ($cashDoc){
-                    $this->cashManager->updateCashTransaction($cashDoc);
+                    $this->cashManager->repostCashDoc($cashDoc);
                     $flag = true;
                 }
                 break;                

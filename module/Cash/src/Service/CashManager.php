@@ -330,6 +330,43 @@ class CashManager {
 
             $this->entityManager->getRepository(Retail::class)
                     ->insertRetail($data);
+            
+            if ($cashDoc->getContact()->getUser()){ // оплата от сотрудника
+                $data = [
+                    'doc_key' => $cashDoc->getLogKey(),
+                    'doc_type' => Movement::DOC_CASH,
+                    'doc_id' => $cashDoc->getId(),
+                    'date_oper' => $cashDoc->getDateOper(),
+                    'status' => Retail::getStatusFromCashdoc($cashDoc),
+                    'revise' => Retail::REVISE_NOT,
+                    'amount' => -$cashDoc->getMutualAmount(),
+                    'contact_id' => $cashDoc->getContact()->getId(),
+                    'office_id' => $office->getId(),
+                    'company_id' => $cashDoc->getCompany()->getId(),
+                    'legal_id' => $legalId,
+                    'contract_id' => $contractId,
+                    'doc_stamp' =>$docStamp,
+                    'user_id' => $cashDoc->getOrderUserId(),
+                ];
+
+                $this->entityManager->getRepository(Retail::class)
+                        ->insertRetail($data);                
+                
+                $userTransaction = new UserTransaction();
+                $userTransaction->setAmount(-$cashDoc->getMutualAmount());
+                $userTransaction->setCashDoc($cashDoc);
+                $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
+                $userTransaction->setDateOper($cashDoc->getDateOper());
+                $userTransaction->setStatus(UserTransaction::STATUS_ACTIVE);
+                $userTransaction->setUser($cashDoc->getContact()->getUser());
+                $userTransaction->setDocStamp($docStamp);
+                $userTransaction->setDocId($cashDoc->getId());
+                $userTransaction->setDocType(Movement::DOC_CASH);
+
+                $this->entityManager->persist($userTransaction);  
+                
+                $this->entityManager->flush();
+            }
         }    
         
         return;
@@ -560,7 +597,7 @@ class CashManager {
      * Добавить запись о кассовой операции
      * @param CashDoc $cashDoc
      */
-    public function updateCashTransaction($cashDoc)
+    public function repostCashDoc($cashDoc)
     {
         $docStamp = $this->entityManager->getRepository(Register::class)
                 ->cashDocRegister($cashDoc);
@@ -729,7 +766,7 @@ class CashManager {
         
         $this->entityManager->flush();
         
-        $this->updateCashTransaction($cashDoc);
+        $this->repostCashDoc($cashDoc);
         $this->logManager->infoCash($cashDoc, Log::STATUS_NEW);
         
         return $cashDoc;
@@ -787,7 +824,7 @@ class CashManager {
         
         $this->entityManager->flush();
         
-        $this->updateCashTransaction($cashDoc);
+        $this->repostCashDoc($cashDoc);
         $this->logManager->infoCash($cashDoc, Log::STATUS_UPDATE);
         
         return $cashDoc;
@@ -806,7 +843,7 @@ class CashManager {
         $this->entityManager->persist($cashDoc);
         $this->entityManager->flush($cashDoc);
         
-        $this->updateCashTransaction($cashDoc);
+        $this->repostCashDoc($cashDoc);
         $this->logManager->infoCash($cashDoc, Log::STATUS_UPDATE);
         
         return $cashDoc;
