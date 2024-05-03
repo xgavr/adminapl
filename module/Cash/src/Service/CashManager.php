@@ -36,7 +36,6 @@ use Stock\Entity\Movement;
 use Bank\Entity\QrCodePayment;
 use Laminas\Json\Encoder;
 use Bank\Entity\AplPayment;
-use Stock\Entity\Vt;
 
 /**
  * Description of CashManager
