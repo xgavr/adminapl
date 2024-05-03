@@ -53,6 +53,12 @@ class VtManager
     private $zpManager;
 
     /**
+     * Cash manager
+     * @var \Cash\Service\CashManager
+     */
+    private $cashManager;
+    
+    /**
      * Дата запрета
      * @var string
      */
@@ -62,13 +68,14 @@ class VtManager
      * Constructs the service.
      */
     public function __construct($entityManager, $logManager, $orderManager, $adminManager,
-            $zpManager) 
+            $zpManager, $cashManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->orderManager = $orderManager;
         $this->adminManager = $adminManager;
         $this->zpManager = $zpManager;
+        $this->cashManager = $cashManager;
 
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];        
@@ -394,6 +401,7 @@ class VtManager
         $this->updateVtMovement($vt, $docStamp);
         
         $this->zpManager->addVtCalculator($vt);
+        $this->cashManager->addUserVtTransaction($vt, $docStamp);
         
         return;
     }

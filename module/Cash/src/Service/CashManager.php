@@ -36,6 +36,7 @@ use Stock\Entity\Movement;
 use Bank\Entity\QrCodePayment;
 use Laminas\Json\Encoder;
 use Bank\Entity\AplPayment;
+use Stock\Entity\Vt;
 
 /**
  * Description of CashManager
@@ -397,8 +398,122 @@ class CashManager {
         $userTransaction->setStatus(UserTransaction::getStatusFromCashdoc($cashDoc));
         $userTransaction->setUser($user);
         $userTransaction->setDocStamp($docStamp);
+        $userTransaction->setDocId($cashDoc->getId());
+        $userTransaction->setDocType(Movement::DOC_CASH);
         
         $this->entityManager->persist($userTransaction);        
+    }
+    
+    /**
+     * Удалить записи подотчета c других документов
+     * @param integer $docType
+     * @param integer $docId
+     */
+    protected function removeUserDocTransactions($docType, $docId)
+    {
+        $userTransactions = $this->entityManager->getRepository(UserTransaction::class)
+                ->findBy(['docType' => $docType, 'docId' => $docId]);
+        foreach ($userTransactions as $userTransaction){
+            $this->entityManager->remove($userTransaction);
+        }
+    }
+
+    /**
+     * Создать запись подотчет c заказа
+     * @param Order $order
+     * @param float $docStamp
+     */
+    public function addUserOrderTransaction($order, $docStamp)
+    {
+        $this->removeUserOrderTransactions(Movement::DOC_ORDER, $order->getId());
+        
+        if ($order->getStatus() == Order::STATUS_SHIPPED && $order->getContact()->getUser()){
+            $userTransaction = new UserTransaction();
+            $userTransaction->setAmount($order->getTotal());
+            $userTransaction->setCashDoc(null);
+            $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
+            $userTransaction->setDateOper($order->getDocDate());
+            $userTransaction->setStatus(UserTransaction::STATUS_ACTIVE);
+            $userTransaction->setUser($order->getContact()->getUser());
+            $userTransaction->setDocStamp($docStamp);
+            $userTransaction->setDocId($order->getId());
+            $userTransaction->setDocType(Movement::DOC_ORDER);
+
+            $this->entityManager->persist($userTransaction);                    
+
+            $data = [
+                'doc_key' => $order->getLogKey(),
+                'doc_type' => Movement::DOC_ORDER,
+                'doc_id' => $order->getId(),
+                'date_oper' => $order->getDocDate(),
+                'status' => Retail::getStatusFromOrder($order),
+                'revise' => Retail::REVISE_NOT,
+                'amount' => -$order->getTotal(),
+                'contact_id' => $order->getContact()->getId(),
+                'office_id' => $order->getOffice()->getId(),
+                'company_id' => $order->getCompany()->getId(),
+                'legal_id' => null,
+                'contract_id' => null,
+                'doc_stamp' =>$docStamp,
+                'user_id' => $order->getUserId(),
+            ];
+
+            $this->entityManager->getRepository(Retail::class)
+                    ->insertRetail($data);
+        }     
+        
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
+     * Создать запись подотчет c возврата
+     * @param Vt $vt
+     * @param float $docStamp
+     */
+    public function addUserVtTransaction($vt, $docStamp)
+    {
+        $this->removeUserOrderTransactions(Movement::DOC_VT, $vt->getId());
+        
+        if ($vt->getStatus() == Vt::STATUS_ACTIVE && $vt->getOrder()->getContact()->getUser()){
+            $userTransaction = new UserTransaction();
+            $userTransaction->setAmount($vt->getAmount());
+            $userTransaction->setCashDoc(null);
+            $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
+            $userTransaction->setDateOper($vt->getDocDate());
+            $userTransaction->setStatus(UserTransaction::STATUS_ACTIVE);
+            $userTransaction->setUser($vt->getOrder()->getContact()->getUser());
+            $userTransaction->setDocStamp($docStamp);
+            $userTransaction->setDocId($vt->getId());
+            $userTransaction->setDocType(Movement::DOC_VT);
+
+            $this->entityManager->persist($userTransaction);                    
+
+            $data = [
+                'doc_key' => $vt->getLogKey(),
+                'doc_type' => Movement::DOC_VT,
+                'doc_id' => $vt->getId(),
+                'date_oper' => $vt->getDocDate(),
+                'status' => Retail::getStatusFromVt($vt),
+                'revise' => Retail::REVISE_NOT,
+                'amount' => $vt->getTotal(),
+                'contact_id' => $vt->getOrder()->getContact()->getId(),
+                'office_id' => $vt->getOrder()->getOffice()->getId(),
+                'company_id' => $vt->getOrder()->getCompany()->getId(),
+                'legal_id' => null,
+                'contract_id' => null,
+                'doc_stamp' =>$docStamp,
+                'user_id' => $vt->getOrder()->getUserId(),
+            ];
+
+            $this->entityManager->getRepository(Retail::class)
+                    ->insertRetail($data);
+        }     
+        
+        $this->entityManager->flush();
+        
+        return;
     }
     
     /**

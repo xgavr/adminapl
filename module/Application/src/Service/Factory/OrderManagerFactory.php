@@ -18,6 +18,7 @@ use Application\Service\ContactManager;
 use Application\Service\ClientManager;
 use Admin\Service\AplService;
 use Zp\Service\ZpCalculator;
+use Cash\Service\CashManager;
 
 /**
  * Description of OrderManagerFactory
@@ -39,10 +40,11 @@ class OrderManagerFactory  implements FactoryInterface
         $clientManager = $container->get(ClientManager::class);
         $aplManager = $container->get(AplService::class);
         $zpManager = $container->get(ZpCalculator::class);
+        $cashManager = $container->get(CashManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new OrderManager($entityManager, $authService, $logManager,
                 $legalManager, $adminManager, $contactManager, $clientManager,
-                $aplManager, $zpManager);
+                $aplManager, $zpManager, $cashManager);
     }
 }

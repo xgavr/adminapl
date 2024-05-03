@@ -5,6 +5,7 @@ namespace Migrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Stock\Entity\Movement;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
@@ -63,17 +64,19 @@ final class Version20240502035820 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-//        $table = $schema->getTable('personal_accrual');
-//        $table->addColumn('position_id', 'integer', ['notnull' => false, 'default' => 0, 'comment' => 'Должность']);
-//        $table->addForeignKeyConstraint('position', ['position_id'], ['id'], 
-//                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'personal_accrual_position_id_position_id_fk');
+        $table = $schema->getTable('user_transaction');
+        $table->changeColumn('cash_doc_id', ['notnull' => false, 'comment' => 'Документ кассы']);
+        $table->addColumn('doc_id', 'integer', ['notnull' => true, 'default' => 0, 'comment' => 'Документ']);
+        $table->addColumn('doc_type', 'integer', ['notnull' => true, 'default' => Movement::DOC_CASH, 'comment' => 'Тип документа']);
+        $table->addIndex(['doc_type', 'doc_id'], 'doc_type_doc_id_indx');
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-//        $table = $schema->getTable('personal_accrual');
-//        $table->removeForeignKey('personal_accrual_position_id_position_id_fk');
-//        $table->dropColumn('position_id');
+        $table = $schema->getTable('user_transaction');
+        $table->dropIndex('doc_type_doc_id_indx');
+        $table->dropColumn('doc_type');
+        $table->dropColumn('doc_id');
     }
 }

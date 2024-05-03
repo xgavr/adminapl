@@ -50,6 +50,16 @@ class UserTransaction {
      */
     protected $docStamp;  
 
+    /** 
+     * @ORM\Column(name="doc_id")  
+     */
+    protected $docId;  
+
+    /** 
+     * @ORM\Column(name="doc_type")  
+     */
+    protected $docType;  
+
     /**
      * @ORM\Column(name="status")   
      */
@@ -138,6 +148,24 @@ class UserTransaction {
 
     public function setDocStamp($docStamp) {
         $this->docStamp = $docStamp;
+        return $this;
+    }
+
+    public function getDocId() {
+        return $this->docId;
+    }
+
+    public function setDocId($docId) {
+        $this->docId = $docId;
+        return $this;
+    }
+
+    public function getDocType() {
+        return $this->docType;
+    }
+
+    public function setDocType($docType) {
+        $this->docType = $docType;
         return $this;
     }
 
