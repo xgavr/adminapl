@@ -237,7 +237,9 @@ class UserTransaction {
     public function setCashDoc($cashDoc)
     {
         $this->cashDoc = $cashDoc;
-        $cashDoc->addUserTransaction($this);
+        if ($cashDoc){
+            $cashDoc->addUserTransaction($this);
+        }    
     }
         
     public function getUser()
