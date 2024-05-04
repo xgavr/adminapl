@@ -351,6 +351,11 @@ class Client {
     {
         return $this->contacts;
     }
+    
+    public function getContactsCount()
+    {
+        return $this->contacts->count();
+    }
         
     public function getContact()
     {
