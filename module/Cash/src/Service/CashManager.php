@@ -533,7 +533,7 @@ class CashManager {
                 'date_oper' => $vt->getDocDate(),
                 'status' => Retail::getStatusFromVt($vt),
                 'revise' => Retail::REVISE_NOT,
-                'amount' => $vt->getTotal(),
+                'amount' => $vt->getAmount(),
                 'contact_id' => $vt->getOrder()->getContact()->getId(),
                 'office_id' => $vt->getOrder()->getOffice()->getId(),
                 'company_id' => $vt->getOrder()->getCompany()->getId(),
