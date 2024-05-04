@@ -164,6 +164,11 @@ class Client {
         return ($this->name) ? $this->name:'Nan';
     }
 
+    public function getContactName() 
+    {
+        return $this->getContact()->getName();
+    }
+
     public function getNameOrNan() 
     {
         return ($this->name) ? $this->name:'Nan';

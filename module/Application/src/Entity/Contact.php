@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Company\Entity\Legal;
 use Doctrine\Common\Collections\Criteria;
+use User\Entity\User;
+use Company\Entity\Office;
+use Application\Entity\Supplier;
+use Application\Entity\Client;
 
 
 /**
@@ -186,7 +190,34 @@ class Contact {
 
     public function getName() 
     {
-        return $this->name;
+        if ($this->name){
+            return $this->name;
+        }
+        
+        if ($this->getClient()){
+            if ($this->getClient()->getName()){
+                return $this->getClient()->getName();
+            }
+        }
+        
+        if ($this->getUser()){
+            if ($this->getUser()->getFullName()){
+                return $this->getUser()->getFullName();
+            }
+        }
+        
+        if ($this->getSupplier()){
+            if ($this->getSupplier()->getName()){
+                return $this->getSupplier()->getName();
+            }
+        }
+        if ($this->getOffice()){
+            if ($this->getOffice()->getName()){
+                return $this->getOffice()->getName();
+            }
+        }
+        
+        return;
     }
 
     public function setName($name) 
@@ -364,7 +395,7 @@ class Contact {
 
     /*
      * Возвращает связанный supplier.
-     * @return \Application\Entity\Supplier
+     * @return Supplier
      */    
     public function getSupplier() 
     {
@@ -373,7 +404,7 @@ class Contact {
 
     /**
      * Задает связанный supplier.
-     * @param \Application\Entity\Supplier $supplier
+     * @param Supplier $supplier
      */    
     public function setSupplier($supplier) 
     {
@@ -383,7 +414,7 @@ class Contact {
     
     /*
      * Возвращает связанный client.
-     * @return \Application\Entity\Client
+     * @return Client
      */    
     public function getClient() 
     {
@@ -392,7 +423,7 @@ class Contact {
 
     /**
      * Задает связанный client.
-     * @param \Application\Entity\Client $client
+     * @param Client $client
      */    
     public function setClient($client) 
     {
@@ -404,7 +435,7 @@ class Contact {
     
     /*
      * Возвращает связанный user.
-     * @return \User\Entity\User
+     * @return User
      */    
     public function getUser() 
     {
@@ -413,7 +444,7 @@ class Contact {
 
     /**
      * Задает связанный user.
-     * @param \Application\Entity\User $user
+     * @param User $user
      */    
     public function setUser($user) 
     {
@@ -425,7 +456,7 @@ class Contact {
     
     /*
      * Возвращает связанный office.
-     * @return \Company\Entity\Office
+     * @return Office
      */    
     public function getOffice() 
     {
@@ -434,7 +465,7 @@ class Contact {
 
     /**
      * Задает связанный office.
-     * @param \Company\Entity\Office $office
+     * @param Office $office
      */    
     public function setOffice($office) 
     {
