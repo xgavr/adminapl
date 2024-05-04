@@ -321,7 +321,7 @@ class ClientManager
             
             $clients = $this->entityManager->getRepository(Client::class)
                     ->findBy(['aplId' => $client->getAplId()]);
-//            if (count($clients) > 1){
+            if (count($clients) > 1){
                 foreach ($clients as $oldClient){                    
                     if ($oldClient->getId() != $client->getId()){
                         $contact = $client->getLegalContact();
@@ -346,7 +346,7 @@ class ClientManager
                         }            
                     }
                 }
-//            }
+            }
         }
         return;
     }
