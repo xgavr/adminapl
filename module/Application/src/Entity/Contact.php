@@ -85,19 +85,19 @@ class Contact {
     protected $dateCreated;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="contact") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="contacts") 
      * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
      */
     protected $supplier;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Client", inversedBy="contact") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Client", inversedBy="contacts") 
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     protected $client;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="user") 
+     * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="contacts") 
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;

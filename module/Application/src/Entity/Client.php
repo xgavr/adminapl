@@ -11,6 +11,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+//use Application\Entity\Contact;
 
 /**
  * Description of Client
@@ -386,10 +387,25 @@ class Client {
      */
     public function getLegalContacts()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", Contact::STATUS_LEGAL));
-        return $this->getContacts()->matching($criteria);
+        $result = new ArrayCollection();
+        
+        foreach ($this->getContacts() as $contact){
+            if ($contact->getStatus() == Contact::STATUS_LEGAL){
+                $result[] = $contact;
+            }
+        }
+        return $result;
+        
+//        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", Contact::STATUS_LEGAL));
+//        return $this->getContacts()->matching($criteria);
     }
         
+    public function getLegalContactsCount()
+    {
+        return $this->getLegalContacts()->count();
+    }
+        
+    
     /**
      * Returns the array of for first legal contact assigned to this.
      * @return array
