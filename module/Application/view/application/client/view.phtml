@@ -18,7 +18,7 @@ $this->mainMenu()->setActiveUrl('client');
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'Покупатели'=>$this->url('client'),
-            $client->getName()=>$this->url('client', ['action'=>'view', 'id'=>$client->getId()]),
+            $client->getContactName()=>$this->url('client', ['action'=>'view', 'id'=>$client->getId()]),
             ]);
 
 $legalContact = $client->getLegalContact();
@@ -166,6 +166,34 @@ $this->headLink()
                                         <div class="pull-right">
                                             <strong><a href="/users/view/<?= $client->getContact()->getUser()->getId()?>" target="_blank">
                                                 <?= $client->getContact()->getUser()->getFullName()?>
+                                            </a></strong>
+                                        </div>
+                                    </td>
+                                </tr>    
+                            <?php endif;?>
+                            <?php if ($client->getContact()->getSupplier()): ?>
+                                <tr>
+                                    <td>
+                                        <div class="pull-left">
+                                            Поставщик                                    
+                                        </div>    
+                                        <div class="pull-right">
+                                            <strong><a href="/supplier/view/<?= $client->getContact()->getSupplier()->getId()?>" target="_blank">
+                                                <?= $client->getContact()->getSupplier()->getName()?>
+                                            </a></strong>
+                                        </div>
+                                    </td>
+                                </tr>    
+                            <?php endif;?>
+                            <?php if ($client->getContact()->getOffice()): ?>
+                                <tr>
+                                    <td>
+                                        <div class="pull-left">
+                                            Офис                                    
+                                        </div>    
+                                        <div class="pull-right">
+                                            <strong><a href="/office/view/<?= $client->getContact()->getOffice()->getId()?>" target="_blank">
+                                                <?= $client->getContact()->getOffice()->getName()?>
                                             </a></strong>
                                         </div>
                                     </td>
