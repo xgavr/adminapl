@@ -348,12 +348,14 @@ $this->headLink()
         </div>    
         <div class="tab-pane fade" role="tabpanel" id="cars" aria-labelledby="car-tab">
             <div id="cartoolbar">
-                <div class="form-inline" role="form">
-                    <button value="/garage/edit-form/?contact=<?= $legalContact->getId()?>" class="btn btn-default btn-sm"
-                            data-toggle="modal" data-target="#modal-dialog" <?= ($legalContact) ? '':'disabled'?> title="Добавить машину">
-                        <span class="glyphicon glyphicon-plus" ></span>
-                    </button>                                        
-                </div>
+                <?php if ($legalContact):?>
+                    <div class="form-inline" role="form">
+                        <button value="/garage/edit-form/?contact=<?= $legalContact->getId()?>" class="btn btn-default btn-sm"
+                                data-toggle="modal" data-target="#modal-dialog" <?= ($legalContact) ? '':'disabled'?> title="Добавить машину">
+                            <span class="glyphicon glyphicon-plus" ></span>
+                        </button>                                        
+                    </div>
+                <?php endif;?>
             </div>
             <table id="cartable" 
                 data-toggle="table" 
