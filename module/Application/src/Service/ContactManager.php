@@ -669,6 +669,10 @@ class ContactManager
      */
     public function union($contact, $oldContact)
     {
+        if ($contact->getId() == $oldContact->getId()){
+            return;
+        }
+        
         $this->unite($contact, $oldContact, false);
         
         foreach ($oldContact->getPhones() as $phone){

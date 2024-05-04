@@ -323,20 +323,22 @@ class ClientManager
                     ->findBy(['aplId' => $client->getAplId()]);
 //            if (count($clients) > 1){
                 foreach ($clients as $oldClient){                    
-                    if ($oldClient->getId() != $client->getId()){
-                        $contact = $client->getLegalContact();
-                        if ($contact){
-                            foreach ($oldClient->getContacts() as $oldContact){
-                                                                
-                                $this->contactManager->union($contact, $oldContact);
-                                
-                                $this->entityManager->refresh($oldContact);
-                                if ($this->contactManager->isRemoveContact($oldContact)){
-                                    $this->contactManager->removeContact($oldContact);
-                                }
-                            }                            
-                        }
+                    
+                    $contact = $client->getLegalContact();
+                    if ($contact){
+                        foreach ($oldClient->getContacts() as $oldContact){
+
+                            $this->contactManager->union($contact, $oldContact);
+
+                            $this->entityManager->refresh($oldContact);
+                            if ($this->contactManager->isRemoveContact($oldContact)){
+                                $this->contactManager->removeContact($oldContact);
+                            }
+                        }                            
+                    }
                         
+                    if ($oldClient->getId() != $client->getId()){
+
                         $this->union($client, $oldClient);
 
                         $this->entityManager->refresh($oldClient);
