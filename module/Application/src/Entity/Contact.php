@@ -190,19 +190,9 @@ class Contact {
 
     public function getName() 
     {
-        if ($this->name){
-            return $this->name;
-        }
-        
-        if ($this->getClient()){
-            if ($this->getClient()->getName()){
-                return $this->getClient()->getName();
-            }
-        }
-        
-        if ($this->getUser()){
-            if ($this->getUser()->getFullName()){
-                return $this->getUser()->getFullName();
+        if ($this->getOffice()){
+            if ($this->getOffice()->getName()){
+                return $this->getOffice()->getName();
             }
         }
         
@@ -211,10 +201,21 @@ class Contact {
                 return $this->getSupplier()->getName();
             }
         }
-        if ($this->getOffice()){
-            if ($this->getOffice()->getName()){
-                return $this->getOffice()->getName();
+
+        if ($this->getUser()){
+            if ($this->getUser()->getFullName()){
+                return $this->getUser()->getFullName();
             }
+        }
+        
+        if ($this->getClient()){
+            if ($this->getClient()->getName()){
+                return $this->getClient()->getName();
+            }
+        }
+        
+        if ($this->name){
+            return $this->name;
         }
         
         return;
