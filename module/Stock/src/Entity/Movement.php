@@ -47,6 +47,8 @@ class Movement {
     const DOC_ZP = 11; // zp calculator
     const DOC_BANK = 12; // выписка
     const DOC_ZPRV = 13; // корректировка зп
+    const DOC_ORDER_USER = 14; //заказ в подотчет
+    const DOC_VT_USER = 15; //возврат в подотчет
         
     /**
      * @ORM\Id

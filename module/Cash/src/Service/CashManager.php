@@ -479,7 +479,7 @@ class CashManager {
 
             $data = [
                 'doc_key' => $order->getLogKey(),
-                'doc_type' => Movement::DOC_ORDER,
+                'doc_type' => Movement::DOC_ORDER_USER,
                 'doc_id' => $order->getId(),
                 'date_oper' => $order->getDocDate(),
                 'status' => Retail::getStatusFromOrder($order),
@@ -528,7 +528,7 @@ class CashManager {
 
             $data = [
                 'doc_key' => $vt->getLogKey(),
-                'doc_type' => Movement::DOC_VT,
+                'doc_type' => Movement::DOC_VT_USER,
                 'doc_id' => $vt->getId(),
                 'date_oper' => $vt->getDocDate(),
                 'status' => Retail::getStatusFromVt($vt),
