@@ -654,12 +654,18 @@ class CashRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
         $queryBuiler = $entityManager->createQueryBuilder();
         
+        $orX = $queryBuiler->expr()->orX();
+        $orX->add($queryBuiler->expr()->eq('r.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuiler->expr()->eq('r.docType', Movement::DOC_VT));
+        $orX->add($queryBuiler->expr()->eq('r.docType', Movement::DOC_CASH));
+        
         $queryBuiler->select('r')
                 ->from(Retail::class, 'r')
                 ->join('r.contact', 'c')
 //                ->where('r.docType = :docType')
 //                ->setParameter('docType', Movement::DOC_CASH)
                 ->andWhere('c.user is not null')
+                ->andWhere($orX)
                 ;
         
         return $queryBuiler->getQuery()->getResult();

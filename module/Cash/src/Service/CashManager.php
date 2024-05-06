@@ -334,7 +334,7 @@ class CashManager {
             if ($cashDoc->getContact()->getUser()){ // оплата от сотрудника
                 $data = [
                     'doc_key' => $cashDoc->getLogKey(),
-                    'doc_type' => Movement::DOC_CASH,
+                    'doc_type' => Movement::DOC_CASH_USER,
                     'doc_id' => $cashDoc->getId(),
                     'date_oper' => $cashDoc->getDateOper(),
                     'status' => Retail::getStatusFromCashdoc($cashDoc),
@@ -405,14 +405,17 @@ class CashManager {
         foreach ($retails as $retail){
             switch ($retail->getDocType()){
                 case Movement::DOC_CASH:
+                    $this->removeRetails($retail->getCashDoc());
                     $this->addRetails($retail->getCashDoc(), $retail->getDocStamp());
                     break;
                 case Movement::DOC_ORDER:
-                    $this->removeUserRetail($retail->getDocKey(), Movement::DOC_ORDER_USER);
+                    $this->entityManager->getRepository(Retail::class)
+                            ->removeOrderRetails($retail->getOrder()->getLogKey());                
                     $this->addUserOrderTransaction($retail->getOrder(), $retail->getDocStamp());
                     break;
                 case Movement::DOC_VT:
-                    $this->removeUserRetail($retail->getDocKey(), Movement::DOC_VT_USER);
+                    $this->entityManager->getRepository(Retail::class)
+                            ->removeOrderRetails($retail->getVt()->getLogKey());                
                     $this->addUserVtTransaction($retail->getVt(), $retail->getDocStamp());
                     break;
             }

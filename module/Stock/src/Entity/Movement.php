@@ -49,6 +49,7 @@ class Movement {
     const DOC_ZPRV = 13; // корректировка зп
     const DOC_ORDER_USER = 14; //заказ в подотчет
     const DOC_VT_USER = 15; //возврат в подотчет
+    const DOC_CASH_USER = 16; //оплата/возврат заказа в подотчет
         
     /**
      * @ORM\Id
