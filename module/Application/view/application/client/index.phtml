@@ -60,6 +60,7 @@ $this->pageBreadcrumbs()->setItems([
             data-cookie-id-table="clientSaveId"
             data-cookie-expire="1m"
             data-classes = "table table-bordered table-hover table-condensed"
+            data-row-style="rowStyle"
             >
             <thead>
                 <tr>
@@ -99,9 +100,24 @@ $this->pageBreadcrumbs()->setItems([
         $('#table').bootstrapTable('refresh');
     }
 
-    var table = $('#table').bootstrapTable({
-        onLoadSuccess: function(res){
+//    var table = $('#table').bootstrapTable();
+
+    $ok = $('#ok');
+
+    function rowStyle(row){
+        var retired = 'tablerow';
+        
+        return {classes: retired};
+    }
+
+    $(function () {
+        $ok.click(function () {
+            refreshTable();
+        });
+
+        $('#table').on('load-success.bs.table', function (e, res) {
 //            $('#totalRow').html($('#table').bootstrapTable('getOptions').totalRows);
+            tableRowClick();
             $("[data-toggle='tooltip']").tooltip();
             $('.editableCheckBox').change(function() {
                 $.ajax({
@@ -112,16 +128,8 @@ $this->pageBreadcrumbs()->setItems([
 //                      alert( "Прибыли данные: " + msg );
                     }
                 });
-            });        
-        }
-    });
-
-    $ok = $('#ok');
-
-    $(function () {
-        $ok.click(function () {
-            refreshTable();
-        });
+            });                    
+        });        
 
         $(".inputclear").click(function(){
             $(".enter-search").val('');

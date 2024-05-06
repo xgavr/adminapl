@@ -17,6 +17,7 @@ use Company\Entity\Office;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
 use Bank\Entity\Statement;
+use Stock\Entity\Retail;
 
 /**
  * Description of CashRepository
@@ -643,5 +644,24 @@ class CashRepository extends EntityRepository
 //            var_dump($queryBuiler->getParameters());
 //        var_dump($queryBuiler->getQuery()->getSQL()); exit;
         return $queryBuiler->getQuery()->getOneOrNullResult();
+   }
+   
+   /**
+    * Исправить оплаты и отгрузки на сотрудников
+    */
+   public function findForUserRetailFix()
+   {
+        $entityManager = $this->getEntityManager();
+        $queryBuiler = $entityManager->createQueryBuilder();
+        
+        $queryBuiler->select('r')
+                ->from(Retail::class, 'r')
+                ->join('r.contact', 'c')
+//                ->where('r.docType = :docType')
+//                ->setParameter('docType', Movement::DOC_CASH)
+                ->andWhere('c.user is not null')
+                ;
+        
+        return $queryBuiler->getQuery()->getResult();
    }
 }

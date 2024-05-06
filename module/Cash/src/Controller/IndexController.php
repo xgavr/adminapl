@@ -139,5 +139,15 @@ class IndexController extends AbstractActionController
         return new JsonModel(
             ['result' => 'ok']
         );                   
+    }  
+    
+    public function fixUserRetailAction()
+    {        
+        $this->cashManager->fixUserRetail();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
     }    
 }
+

@@ -372,6 +372,55 @@ class CashManager {
         return;
     }    
     
+    
+    /**
+     * Удаление записей отгрузок сотрудников
+     * @param string $docKey
+     * @param integer $docType
+     */
+    private function removeUserRetail($docKey, $docType)
+    {
+        $retails = $this->entityManager->getRepository(Retail::class)
+                ->findBy(['docKey' => $docKey, 'docType' => $docType]);
+        foreach ($retails as $retail){
+            $this->entityManager->remove($retail);            
+        }
+        
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
+     * Исправить оплаты и отгрузки на сотрудников
+     * @return null
+     */
+    public function fixUserRetail()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(600);
+        
+        $retails = $this->entityManager->getRepository(Cash::class)
+                ->findForUserRetailFix();
+        foreach ($retails as $retail){
+            switch ($retail->getDocType()){
+                case Movement::DOC_CASH:
+                    $this->addRetails($retail->getCashDoc(), $retail->getDocStamp());
+                    break;
+                case Movement::DOC_ORDER:
+                    $this->removeUserRetail($retail->getDocKey(), Movement::DOC_ORDER_USER);
+                    $this->addUserOrderTransaction($retail->getOrder(), $retail->getDocStamp());
+                    break;
+                case Movement::DOC_VT:
+                    $this->removeUserRetail($retail->getDocKey(), Movement::DOC_VT_USER);
+                    $this->addUserVtTransaction($retail->getVt(), $retail->getDocStamp());
+                    break;
+            }
+        }
+        
+        return;
+    }
+    
     /**
      * Удалить кассовые записи
      * @param CashDoc $cashDoc
