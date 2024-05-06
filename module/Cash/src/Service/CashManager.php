@@ -398,7 +398,7 @@ class CashManager {
     public function fixUserRetail()
     {
         ini_set('memory_limit', '2048M');
-        set_time_limit(600);
+        set_time_limit(900);
         
         $retails = $this->entityManager->getRepository(Cash::class)
                 ->findForUserRetailFix();
