@@ -16,6 +16,7 @@ use Stock\Entity\ComitentBalance;
 use Stock\Entity\Comitent;
 use Company\Entity\Contract;
 use Laminas\Json\Encoder;
+use Cash\Entity\CashDoc;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -632,6 +633,41 @@ class VtManager
         }
         
         return;
-    }        
+    }      
+    
+    /**
+     * Исправить оплаты и отгрузки на сотрудников
+     * @return null
+     */
+    public function fixUserRetail()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+        
+        $registers = $this->entityManager->getRepository(CashDoc::class)
+                ->findForUserRetailFix();
+        foreach ($registers as $register){
+            switch ($register->getDocType()){
+//                case Movement::DOC_CASH:
+//                    $this->cashManager->removeRetails($register->getCashDoc());
+//                    $this->cashManager->addRetails($register->getCashDoc(), $register->getDocStamp());
+//                    break;
+//                case Movement::DOC_ORDER:
+//                    $this->entityManager->getRepository(Retail::class)
+//                            ->removeOrderRetails($register->getOrder()->getLogKey());                
+//                    $this->updateOrderRetails($register->getOrder(), $register->getDocStamp());
+//                    $this->cashManager->addUserOrderTransaction($register->getOrder(), $register->getDocStamp());
+//                    break;
+                case Movement::DOC_VT:
+                    $this->entityManager->getRepository(Retail::class)
+                            ->removeOrderRetails($register->getVt()->getLogKey());                
+                    $this->updateVtRetails($register->getVt(), $register->getDocStamp());
+                    $this->addUserVtTransaction($register->getVt(), $register->getDocStamp());
+                    break;
+            }
+        }
+        
+        return;
+    }    
 }
 

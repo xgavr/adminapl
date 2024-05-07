@@ -660,9 +660,10 @@ class CashRepository extends EntityRepository
         
         $queryBuiler->select('r')
                 ->from(Register::class, 'r')
-                ->join('r.order', 'o', 'WITH', 'r.docType = :docType')
+                ->join('r.vt', 'vt', 'WITH', 'r.docType = :docType')
+                ->join('vt.order', 'o')
                 ->join('o.contact', 'c')
-                ->setParameter('docType', Movement::DOC_ORDER)
+                ->setParameter('docType', Movement::DOC_VT)
 //                ->where('r.docType = :docType')
 //                ->setParameter('docType', Movement::DOC_CASH)
                 ->andWhere('c.user is not null')
