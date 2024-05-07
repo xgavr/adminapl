@@ -59,7 +59,7 @@ $form->prepare();
 <?= $this->form()->openTag($form); ?>
 
 <div class="modal-header">
-    <h5 class="modal-title" id="otModalLabel">Поступление в подотчет</h5>
+    <h5 class="modal-title" id="otModalLabel">Поступление в подотчет  <?= ($cashDoc) ? $cashDoc->getId():' Новое'?></h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
