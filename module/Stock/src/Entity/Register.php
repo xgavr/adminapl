@@ -119,6 +119,12 @@ class Register {
      */
     private $marketSaleReport;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Cash\Entity\CashDoc") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $cashDoc;
+
     public function __construct() {
     }
    
@@ -315,6 +321,19 @@ class Register {
         return;
     }
 
+    /**
+     * 
+     * @return CashDoc
+     */
+    public function getCashDoc() 
+    {
+        if ($this->docType == Movement::DOC_CASH){
+            return $this->cashDoc;
+        }
+        
+        return;
+    }
+        
     /**
      * Представление документа
      * @param integer $docType

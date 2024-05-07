@@ -17,7 +17,6 @@ use Company\Entity\Office;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
 use Bank\Entity\Statement;
-use Stock\Entity\Retail;
 
 /**
  * Description of CashRepository
@@ -655,17 +654,19 @@ class CashRepository extends EntityRepository
         $queryBuiler = $entityManager->createQueryBuilder();
         
         $orX = $queryBuiler->expr()->orX();
-        $orX->add($queryBuiler->expr()->eq('r.docType', Movement::DOC_ORDER));
-        $orX->add($queryBuiler->expr()->eq('r.docType', Movement::DOC_VT));
-        $orX->add($queryBuiler->expr()->eq('r.docType', Movement::DOC_CASH));
+//        $orX->add($queryBuiler->expr()->eq('r.docType', Movement::DOC_ORDER));
+//        $orX->add($queryBuiler->expr()->eq('r.docType', Movement::DOC_VT));
+//        $orX->add($queryBuiler->expr()->eq('r.docType', Movement::DOC_CASH));
         
         $queryBuiler->select('r')
-                ->from(Retail::class, 'r')
-                ->join('r.contact', 'c')
+                ->from(Register::class, 'r')
+                ->join('r.order', 'o', 'WITH', 'r.docType = :docType')
+                ->join('o.contact', 'c')
+                ->setParameter('docType', Movement::DOC_ORDER)
 //                ->where('r.docType = :docType')
 //                ->setParameter('docType', Movement::DOC_CASH)
                 ->andWhere('c.user is not null')
-                ->andWhere($orX)
+//                ->andWhere($orX)
                 ;
         
         return $queryBuiler->getQuery()->getResult();

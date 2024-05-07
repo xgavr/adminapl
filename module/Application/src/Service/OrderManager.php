@@ -44,6 +44,7 @@ use Stock\Entity\Comitent;
 use Application\Entity\Comment;
 use User\Filter\PhoneFilter;
 use Stock\Entity\Vt;
+use Cash\Entity\CashDoc;
 
 /**
  * Description of OrderService
@@ -203,6 +204,40 @@ class OrderManager
         return;
     }    
     
+    /**
+     * Исправить оплаты и отгрузки на сотрудников
+     * @return null
+     */
+    public function fixUserRetail()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+        
+        $registers = $this->entityManager->getRepository(CashDoc::class)
+                ->findForUserRetailFix();
+        foreach ($registers as $register){
+            switch ($register->getDocType()){
+                case Movement::DOC_CASH:
+                    $this->cashManager->removeRetails($register->getCashDoc());
+                    $this->cashManager->addRetails($register->getCashDoc(), $register->getDocStamp());
+                    break;
+                case Movement::DOC_ORDER:
+                    $this->entityManager->getRepository(Retail::class)
+                            ->removeOrderRetails($register->getOrder()->getLogKey());                
+                    $this->updateOrderRetails($register->getOrder(), $register->getDocStamp());
+                    $this->cashManager->addUserOrderTransaction($register->getOrder(), $register->getDocStamp());
+                    break;
+//                case Movement::DOC_VT:
+//                    $this->entityManager->getRepository(Retail::class)
+//                            ->removeOrderRetails($retail->getVt()->getLogKey());                
+//                    $this->addUserVtTransaction($retail->getVt(), $retail->getDocStamp());
+//                    break;
+            }
+        }
+        
+        return;
+    }
+        
     /**
      * Получить контракт по умолчанию
      * 

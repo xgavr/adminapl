@@ -287,7 +287,7 @@ class CashManager {
      * Удаление взаиморасчетов розницы
      * @param CashDoc $cashDoc
      */
-    protected function removeRetails($cashDoc)
+    public function removeRetails($cashDoc)
     {
         $this->entityManager->getRepository(Retail::class)
                 ->removeOrderRetails($cashDoc->getLogKey());                
@@ -357,7 +357,7 @@ class CashManager {
                 $userTransaction->setCashDoc($cashDoc);
                 $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
                 $userTransaction->setDateOper($cashDoc->getDateOper());
-                $userTransaction->setStatus(UserTransaction::STATUS_ACTIVE);
+                $userTransaction->setStatus(UserTransaction::getStatusFromCashdoc($cashDoc));
                 $userTransaction->setUser($cashDoc->getContact()->getUser());
                 $userTransaction->setDocStamp($docStamp);
                 $userTransaction->setDocId($cashDoc->getId());
@@ -371,25 +371,6 @@ class CashManager {
         
         return;
     }    
-    
-    
-    /**
-     * Удаление записей отгрузок сотрудников
-     * @param string $docKey
-     * @param integer $docType
-     */
-    private function removeUserRetail($docKey, $docType)
-    {
-        $retails = $this->entityManager->getRepository(Retail::class)
-                ->findBy(['docKey' => $docKey, 'docType' => $docType]);
-        foreach ($retails as $retail){
-            $this->entityManager->remove($retail);            
-        }
-        
-        $this->entityManager->flush();
-        
-        return;
-    }
     
     /**
      * Исправить оплаты и отгрузки на сотрудников
@@ -408,16 +389,16 @@ class CashManager {
                     $this->removeRetails($retail->getCashDoc());
                     $this->addRetails($retail->getCashDoc(), $retail->getDocStamp());
                     break;
-                case Movement::DOC_ORDER:
-                    $this->entityManager->getRepository(Retail::class)
-                            ->removeOrderRetails($retail->getOrder()->getLogKey());                
-                    $this->addUserOrderTransaction($retail->getOrder(), $retail->getDocStamp());
-                    break;
-                case Movement::DOC_VT:
-                    $this->entityManager->getRepository(Retail::class)
-                            ->removeOrderRetails($retail->getVt()->getLogKey());                
-                    $this->addUserVtTransaction($retail->getVt(), $retail->getDocStamp());
-                    break;
+//                case Movement::DOC_ORDER:
+//                    $this->entityManager->getRepository(Retail::class)
+//                            ->removeOrderRetails($retail->getOrder()->getLogKey());                
+//                    $this->addUserOrderTransaction($retail->getOrder(), $retail->getDocStamp());
+//                    break;
+//                case Movement::DOC_VT:
+//                    $this->entityManager->getRepository(Retail::class)
+//                            ->removeOrderRetails($retail->getVt()->getLogKey());                
+//                    $this->addUserVtTransaction($retail->getVt(), $retail->getDocStamp());
+//                    break;
             }
         }
         
@@ -521,7 +502,7 @@ class CashManager {
             $userTransaction->setCashDoc(null);
             $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
             $userTransaction->setDateOper($order->getDocDate());
-            $userTransaction->setStatus(UserTransaction::STATUS_ACTIVE);
+            $userTransaction->setStatus(UserTransaction::getStatusFromOrder($order));
             $userTransaction->setUser($order->getContact()->getUser());
             $userTransaction->setDocStamp($docStamp);
             $userTransaction->setDocId($order->getId());
@@ -570,7 +551,7 @@ class CashManager {
             $userTransaction->setCashDoc(null);
             $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
             $userTransaction->setDateOper($vt->getDocDate());
-            $userTransaction->setStatus(UserTransaction::STATUS_ACTIVE);
+            $userTransaction->setStatus(UserTransaction::getStatusFromVt($vt));
             $userTransaction->setUser($vt->getOrder()->getContact()->getUser());
             $userTransaction->setDocStamp($docStamp);
             $userTransaction->setDocId($vt->getId());

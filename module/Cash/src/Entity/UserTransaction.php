@@ -11,6 +11,9 @@ namespace Cash\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Cash\Entity\Cash;
+use Cash\Entity\CashDoc;
+use Application\Entity\Order;
+use Stock\Entity\Vt;
 
 /**
  * Description of CashTransaction
@@ -182,6 +185,33 @@ class UserTransaction {
         }
     }    
     
+    /**
+     * Returns possible order status.
+     * @param Order $order
+     * @return integer
+     */
+    public static function getStatusFromOrder($order) 
+    {
+        switch ($order->getStatus()){
+            case Order::STATUS_SHIPPED: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }    
+
+    /**
+     * Returns possible vt status.
+     * @param Vt $vt
+     * @return integer
+     */
+    public static function getStatusFromVt($vt) 
+    {
+        switch ($vt->getStatus()){
+            case Vt::STATUS_RETIRED: return self::STATUS_RETIRED;
+            case Vt::STATUS_COMMISSION: return self::STATUS_COMMISSION;
+            default: return self::STATUS_ACTIVE;    
+        }
+    }    
+        
     /**
      * Returns status.
      * @return int     
