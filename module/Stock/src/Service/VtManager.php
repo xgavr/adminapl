@@ -662,7 +662,7 @@ class VtManager
                     $this->entityManager->getRepository(Retail::class)
                             ->removeOrderRetails($register->getVt()->getLogKey());                
                     $this->updateVtRetails($register->getVt(), $register->getDocStamp());
-                    $this->addUserVtTransaction($register->getVt(), $register->getDocStamp());
+                    $this->cashManager->addUserVtTransaction($register->getVt(), $register->getDocStamp());
                     break;
             }
         }
