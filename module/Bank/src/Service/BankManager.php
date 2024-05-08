@@ -260,7 +260,7 @@ class BankManager
         $acquiring->setAcode(null);
         $acquiring->setCart($statement->getCounterpartyAccountNumber());
         $acquiring->setCartType('QR код');
-        $acquiring->setComiss(null);
+        $acquiring->setComiss(0);
         $acquiring->setIdent(null);
         $acquiring->setInn($statement->getСounterpartyInn());
         $acquiring->setOperDate($statement->getChargeDate());
