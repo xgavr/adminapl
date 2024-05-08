@@ -241,6 +241,26 @@ class BankManager
     }
     
     /**
+     * Удалить оплаты картой, связанные с выпиской
+     * @param Statement $statement
+     */
+    private function removeAcquiringByStatementXPayment($statement)
+    {
+        if (!empty($statement->getXPaymentId())){
+            $acquirings = $this->entityManager->getRepository(Acquiring::class)
+                    ->findBy(['rrn' => $statement->getXPaymentId(), 'status' => Acquiring::STATUS_NO_MATCH]);
+            
+            foreach ($acquirings as $acquiring){
+                $this->entityManager->remove($acquiring);                
+            }
+            
+            $this->entityManager->flush();
+        }
+        
+        return;
+    }
+    
+    /**
      * Добавить оплату по кур коду в эквайринг 
      * @param Statement $statement
      */
@@ -285,6 +305,8 @@ class BankManager
         $statement->setKind($kind);
         $statement->setAmountService(0);
         $statement->setStatusAccount(Statement::STATUS_ACCOUNT_NO);
+        
+        $this->removeAcquiringByStatementXPayment($statement);
         
         if ($kind == Statement::KIND_IN_CART && empty($statement->getAmountService())){
             $statement->setAmountService($this->acquiringCommissionFromPurpose($statement));
