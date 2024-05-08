@@ -974,7 +974,7 @@
                     }
                 },
                 isEnabled: function(row) {
-                    return row.cashDoc !== null || row.kind === '<?= Statement::KIND_OUT_SUPPLIER?>';
+                    return row.cashDoc !== null || row.kind === '<?= Statement::KIND_OUT_SUPPLIER?>' || row.kind === '<?= Statement::KIND_IN_BAYER?>';
                 }                
             },
             returnPay: {

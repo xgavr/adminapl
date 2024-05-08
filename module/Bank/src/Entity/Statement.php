@@ -61,6 +61,7 @@ class Statement {
     const KIND_IN_FIN_SERVICE = 18; //поступление от фин сервисов
     const KIND_IN_DEPOSIT_PERCENT = 19; //выплата процентов 
     const KIND_IN_PERSON = 20; //перевод от частного лица
+    const KIND_IN_QR_CODE = 21; //оплата по qr коду
     
     const KIND_OUT_SUPPLIER = 101; //оплата поставщику
     const KIND_OUT_BAYER = 102; //возврат покупателю
@@ -956,6 +957,7 @@ class Statement {
     {
         return [
             self::KIND_IN_CART => 'Поступление по платежным картам',
+            self::KIND_IN_QR_CODE => 'Оплата по QR коду',
             self::KIND_IN_FIN_SERVICE => 'Поступление от финансовых сервисов',
             self::KIND_IN_SELF => 'Перевод на свой счет',
             self::KIND_IN_BAYER => 'Оплата от покупателя',

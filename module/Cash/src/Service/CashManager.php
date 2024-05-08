@@ -74,15 +74,25 @@ class CashManager {
      */
     private $costManager;
 
+    /**
+     * Admin manager.
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+
     public function __construct($entityManager, $logManager, $legalManager, $zpManager,
-            $costManager)
+            $costManager, $adminManager)
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->legalManager = $legalManager;
         $this->zpManager = $zpManager;
         $this->costManager = $costManager;
-    }
+        $this->adminManager = $adminManager;
+
+        $setting = $this->adminManager->getSettings();
+        $this->allowDate = $setting['allow_date'];
+}
     
     /**
      * Текущий пользователь
@@ -93,6 +103,15 @@ class CashManager {
         return $this->logManager->currentUser();
     }
     
+    /**
+     * Получить дату запрета
+     * @return date
+     */
+    public function getAllowDate()
+    {
+        return $this->allowDate; 
+    }
+        
     /**
      * Новая касса
      * 
@@ -1183,7 +1202,7 @@ class CashManager {
                 $data['cash'] = $cash;
                 $data['checkStatus'] = $cash->getCheckStatus();
                 $data['company'] = $company;
-                $data['dateOper'] = $statement->getChargeDate();
+                $data['dateOper'] = max($statement->getChargeDate(), $this->getAllowDate());
                 $data['legal'] = $legal;
                 $data['statement'] = $statement;
 

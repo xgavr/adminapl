@@ -15,6 +15,7 @@ use Admin\Service\LogManager;
 use Company\Service\LegalManager;
 use Zp\Service\ZpCalculator;
 use Company\Service\CostManager;
+use Admin\Service\AdminManager;
 
 /**
  * Description of CashManagerFactory
@@ -32,9 +33,10 @@ class CashManagerFactory  implements FactoryInterface
         $legalManager = $container->get(LegalManager::class);
         $zpManager = $container->get(ZpCalculator::class);
         $costManager = $container->get(CostManager::class);
+        $adminManager = $container->get(AdminManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new CashManager($entityManager, $logManager, $legalManager, $zpManager,
-                $costManager);
+                $costManager, $adminManager);
     }
 }
