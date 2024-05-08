@@ -266,7 +266,6 @@ class BankManager
         $acquiring->setOperDate($statement->getChargeDate());
         $acquiring->setOperType('Оплата');
         $acquiring->setPoint($statement->getCounterpartyBankBik());
-        $acquiring->setRrn($statement->getId());
         $acquiring->setTransDate($statement->getPaymentDate());
         
         $this->entityManager->persist($acquiring);
