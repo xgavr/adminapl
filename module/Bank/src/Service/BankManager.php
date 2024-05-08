@@ -241,6 +241,41 @@ class BankManager
     }
     
     /**
+     * Добавить оплату по кур коду в эквайринг 
+     * @param Statement $statement
+     */
+    private function addQrCodeAsAcquirring($statement)
+    {
+        $acquiring = $this->entityManager->getRepository(Acquiring::class)
+                ->findOneBy(['rrn' => $statement->getXPaymentId(), 'output' => $statement->getAmount()]);
+        
+        if (empty($acquiring)){        
+            $acquiring = new Acquiring();
+            $acquiring->setAmount($statement->getAmount());
+            $acquiring->setOutput($statement->getAmount());
+            $acquiring->setRrn($statement->getXPaymentId());
+            $acquiring->setStatus(Acquiring::STATUS_NO_MATCH);
+        }
+        
+        $acquiring->setAcode(null);
+        $acquiring->setCart($statement->getCounterpartyAccountNumber());
+        $acquiring->setCartType('QR код');
+        $acquiring->setComiss(null);
+        $acquiring->setIdent(null);
+        $acquiring->setInn($statement->getСounterpartyInn());
+        $acquiring->setOperDate($statement->getChargeDate());
+        $acquiring->setOperType('Оплата');
+        $acquiring->setPoint($statement->getCounterpartyBankBik());
+        $acquiring->setRrn($statement->getId());
+        $acquiring->setTransDate($statement->getPaymentDate());
+        
+        $this->entityManager->persist($acquiring);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
      * Обновление вида операции
      * 
      * @param Statement $statement
@@ -254,6 +289,10 @@ class BankManager
         
         if ($kind == Statement::KIND_IN_CART && empty($statement->getAmountService())){
             $statement->setAmountService($this->acquiringCommissionFromPurpose($statement));
+        }
+        
+        if ($kind == Statement::KIND_IN_QR_CODE){
+            $statement->addQrCodeAsAcquirring($statement);
         }
         
         $this->entityManager->flush();
