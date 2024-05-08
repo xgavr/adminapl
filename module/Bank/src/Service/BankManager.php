@@ -244,7 +244,7 @@ class BankManager
      * Добавить оплату по кур коду в эквайринг 
      * @param Statement $statement
      */
-    private function addQrCodeAsAcquirring($statement)
+    private function addQrCodeAsAcquiring($statement)
     {
         $acquiring = $this->entityManager->getRepository(Acquiring::class)
                 ->findOneBy(['rrn' => $statement->getXPaymentId(), 'output' => $statement->getAmount()]);
@@ -292,7 +292,7 @@ class BankManager
         }
         
         if ($kind == Statement::KIND_IN_QR_CODE){
-            $statement->addQrCodeAsAcquirring($statement);
+            $this->addQrCodeAsAcquiring($statement);
         }
         
         $this->entityManager->flush();
