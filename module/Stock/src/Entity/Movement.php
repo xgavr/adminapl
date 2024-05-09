@@ -50,6 +50,7 @@ class Movement {
     const DOC_ORDER_USER = 14; //заказ в подотчет
     const DOC_VT_USER = 15; //возврат в подотчет
     const DOC_CASH_USER = 16; //оплата/возврат заказа в подотчет
+    const DOC_ORDER_COMISS = 17; //заказ списания комиссионного товар
         
     /**
      * @ORM\Id

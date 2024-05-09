@@ -402,7 +402,7 @@ class OrderManager
                         
                         $retailData = [
                             'doc_key' => $order->getLogKey(),
-                            'doc_type' => Movement::DOC_ORDER,
+                            'doc_type' => Movement::DOC_ORDER_COMISS,
                             'doc_id' => $order->getId(),
                             'date_oper' => $order->getDateOper(),
                             'status' => Retail::getStatusFromOrder($order),
