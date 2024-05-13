@@ -334,7 +334,13 @@ class ContactController extends AbstractActionController
                     $this->contactManager->updatePhone($dataPhone, ['phone' => $data['phone'], 'comment' => $data['comment']]);
                     $contactPhone = $dataPhone->getContact();
                     if ($contactPhone->getId() != $contact->getId()){
-                        $this->contactManager->unite($contact, $contactPhone);
+//                        $this->contactManager->unite($contact, $contactPhone);
+                        $this->contactManager->union($contact, $contactPhone);
+
+                        $this->entityManager->refresh($contactPhone);
+                        if ($this->contactManager->isRemoveContact($contactPhone)){
+                            $this->contactManager->removeContact($contactPhone);
+                        }
                     }
                 } else {
                     $phone = $this->contactManager->addPhone($contact, ['phone' => $data['phone'], 'comment' => $data['comment']], true);
