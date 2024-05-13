@@ -251,12 +251,12 @@ class OrderManager
                 ->findOrdersToFixRetail();
         foreach ($ids as $row){
             var_dump($row);
-            exit;
             $order = $this->entityManager->getRepository(Order::class)
                     ->find($row['orderId']);
             if ($order){
                 $this->_repostOrderMutuals($order, $row['docStamp']);                
             }
+            exit;
         }
         
         return;
