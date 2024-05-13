@@ -632,7 +632,7 @@ class ContactManager
                 $contact->setSupplier($oldContact->getSupplier());
                 $oldContact->setSupplier(null);
             }
-            if ($contact->getSupplier()){
+            if ($contact->getSupplier() && $oldContact->getSupplier()){
                 if ($contact->getSupplier()->getAplId() == $oldContact->getSupplier()->getAplId()){
                     $oldContact->setSupplier(null);
                 }
