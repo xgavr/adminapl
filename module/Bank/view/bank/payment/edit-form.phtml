@@ -43,6 +43,7 @@ $form->get('counterpartyName')->setAttributes([
 
 $form->get('amount')->setAttributes([
     'class'=>'form-control', 
+    'onfocus' => "this.select();",
     ]);
 
 $form->get('paymentDate')->setAttributes([
