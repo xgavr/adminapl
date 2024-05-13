@@ -239,6 +239,30 @@ class OrderManager
     }
         
     /**
+     * Исправить отгрузки 
+     * @return null
+     */
+    public function fixOrderRetail()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+        
+        $ids = $this->entityManager->getRepository(Retail::class)
+                ->findOrdersToFixRetail();
+        foreach ($ids as $row){
+            var_dump($row);
+            exit;
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($row['orderId']);
+            if ($order){
+                $this->_repostOrderMutuals($order, $row['docStamp']);                
+            }
+        }
+        
+        return;
+    }
+        
+    /**
      * Получить контракт по умолчанию
      * 
      * @param Office $office
@@ -1141,6 +1165,28 @@ class OrderManager
     /**
      * Перепроведение заказа
      * @param Order $order
+     * @param float $docStamp
+     */
+    private function _repostOrderMutuals($order, $docStamp)
+    {
+        
+        $this->entityManager->getRepository(Retail::class)
+                ->removeOrderRetails($order->getLogKey());
+        $this->entityManager->getRepository(Mutual::class)
+                ->removeDocMutuals($order->getLogKey());                
+
+        if ($order->getStatus() == Order::STATUS_SHIPPED){
+            $this->updateOrderRetails($order, $docStamp);
+            if ($order->getLegal()){
+                $this->updateOrderMutuals($order, $docStamp);
+            }
+        }
+        
+    }
+    
+    /**
+     * Перепроведение заказа
+     * @param Order $order
      */
     public function repostOrder($order)
     {
@@ -1161,20 +1207,21 @@ class OrderManager
                 ->removeDocComiss($order->getLogKey());
         $this->entityManager->getRepository(Comitent::class)
                 ->removeDocComitent($order->getLogKey());        
-        $this->entityManager->getRepository(Retail::class)
-                ->removeOrderRetails($order->getLogKey());
-        $this->entityManager->getRepository(Mutual::class)
-                ->removeDocMutuals($order->getLogKey());                
         $this->entityManager->getRepository(Reserve::class)
                 ->updateReserve($order);
         $this->updateOrderMovement($order, $docStamp);            
 
-        if ($order->getStatus() == Order::STATUS_SHIPPED){
-            $this->updateOrderRetails($order, $docStamp);
-            if ($order->getLegal()){
-                $this->updateOrderMutuals($order, $docStamp);
-            }
-        }
+//        $this->entityManager->getRepository(Retail::class)
+//                ->removeOrderRetails($order->getLogKey());
+//        $this->entityManager->getRepository(Mutual::class)
+//                ->removeDocMutuals($order->getLogKey());                
+//        if ($order->getStatus() == Order::STATUS_SHIPPED){
+//            $this->updateOrderRetails($order, $docStamp);
+//            if ($order->getLegal()){
+//                $this->updateOrderMutuals($order, $docStamp);
+//            }
+//        }
+        $this->_repostOrderMutuals($order, $docStamp);
         
         $this->zpManager->addOrderCalculator($order);
         $this->cashManager->addUserOrderTransaction($order, $docStamp);

@@ -22,6 +22,7 @@ use Company\Entity\Contract;
 use Stock\Entity\Revision;
 use User\Entity\User;
 use Application\Entity\Client;
+use Application\Entity\Order;
 
 /**
  * Description of MutualRepository
@@ -805,5 +806,27 @@ class MutualRepository extends EntityRepository{
         }
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
+    }
+    
+    /**
+     * Найти заказы у котрых нет записей в retail
+     */
+    public function findOrdersToFixRetail()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('o.id as orderId, r.docStamp as docStamp')
+                ->from(Register::class, 'r')
+                ->join('r.order', 'o', 'WITH', 'r.docType = :docType')
+                ->leftJoin(Retail::class, 'rt', 'WITH', 'r.docKey = rt.docKey')
+                ->setParameter('docType', Movement::DOC_ORDER)
+                ->andWhere('o.status = :status')
+                ->setParameter('status', Order::STATUS_SHIPPED)
+                ->andWhere('rt.docKey is null')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
     }
 }

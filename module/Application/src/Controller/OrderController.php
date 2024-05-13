@@ -1072,5 +1072,14 @@ class OrderController extends AbstractActionController
         return new JsonModel([
             'result' => 'ok-reload',
         ]);
+    }     
+    
+    public function fixOrderRetailAction()
+    {        
+        $this->orderManager->fixOrderRetail();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
     }        
 }
