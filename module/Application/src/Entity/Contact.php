@@ -410,7 +410,9 @@ class Contact {
     public function setSupplier($supplier) 
     {
         $this->supplier = $supplier;
-        $supplier->addContact($this);
+        if ($supplier){
+            $supplier->addContact($this);
+        }    
     }     
     
     /*
