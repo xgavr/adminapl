@@ -23,6 +23,7 @@ use Stock\Entity\Revision;
 use User\Entity\User;
 use Application\Entity\Client;
 use Application\Entity\Order;
+use Stock\Entity\Vt;
 
 /**
  * Description of MutualRepository
@@ -824,6 +825,28 @@ class MutualRepository extends EntityRepository{
                 ->setParameter('docType', Movement::DOC_ORDER)
                 ->andWhere('o.status = :status')
                 ->setParameter('status', Order::STATUS_SHIPPED)
+                ->andWhere('rt.docKey is null')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /**
+     * Найти возвраты у котрых нет записей в retail
+     */
+    public function findVtToFixRetail()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('vt.id as vtId, r.docStamp as docStamp')
+                ->from(Register::class, 'r')
+                ->join('r.vt', 'vt', 'WITH', 'r.docType = :docType')
+                ->leftJoin(Retail::class, 'rt', 'WITH', 'r.docKey = rt.docKey')
+                ->setParameter('docType', Movement::DOC_VT)
+                ->andWhere('vt.status = :status')
+                ->setParameter('status', Vt::STATUS_ACTIVE)
                 ->andWhere('rt.docKey is null')
                 ;
         

@@ -669,5 +669,36 @@ class VtManager
         
         return;
     }    
+    
+    /**
+     * Исправить отгрузки 
+     * @return null
+     */
+    public function fixVtRetail()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+        
+        $ids = $this->entityManager->getRepository(Retail::class)
+                ->findVtToFixRetail();
+        foreach ($ids as $row){
+            var_dump($row);
+            $vt = $this->entityManager->getRepository(Vt::class)
+                    ->find($row['vtId']);
+            if ($vt){
+                $this->updateVtRetails($vt, $row['docStamp']);
+                if ($vt->getOrder()->getLegal()){
+                    $this->updateVtMutuals($vt, $row['docStamp']);
+                } else {
+                    $this->entityManager->getRepository(Mutual::class)
+                            ->removeDocMutuals($vt->getLogKey());            
+                }    
+            }
+            exit;
+        }
+        
+        return;
+    }
+            
 }
 

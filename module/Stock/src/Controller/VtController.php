@@ -363,7 +363,7 @@ class VtController extends AbstractActionController
     
     public function fixUserRetailAction()
     {        
-        $this->vtManager->fixUserRetail();
+        $this->vtManager->fixVtRetail();
         
         return new JsonModel([
             'result' => 'ok-reload',
