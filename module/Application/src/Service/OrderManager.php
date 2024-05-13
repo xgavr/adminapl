@@ -256,7 +256,7 @@ class OrderManager
             if ($order){
                 $this->_repostOrderMutuals($order, $row['docStamp']);                
             }
-            exit;
+//            exit;
         }
         
         return;
