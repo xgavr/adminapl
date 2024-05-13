@@ -694,7 +694,7 @@ class VtManager
                             ->removeDocMutuals($vt->getLogKey());            
                 }    
             }
-            exit;
+//            exit;
         }
         
         return;
