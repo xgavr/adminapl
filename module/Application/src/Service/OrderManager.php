@@ -1745,7 +1745,7 @@ class OrderManager
         } else {
             $register = $this->entityManager->getRepository(Register::class)
                     ->findOneBy(['docKey' => $order->getLogKey()]);
-            
+            var_dump($register->getDocStamp());
             $this->_repostOrderMutuals($order, $register->getDocStamp());
         }
         
