@@ -529,10 +529,11 @@ class OrderController extends AbstractActionController
     public function orderLegalFormAction()
     {
         $orderId = (int)$this->params()->fromRoute('id', -1);
+        $table = $this->params()->fromQuery('table', 'order');
         
         $order = null;
         
-        if ($orderId > 0){
+        if ($orderId > 0 && $docType == Movement::DOC_ORDER){
             $order = $this->entityManager->getRepository(Order::class)
                     ->find($orderId);
         }    
@@ -545,15 +546,17 @@ class OrderController extends AbstractActionController
             $form->setData($data);
 
             if ($form->isValid()) {
-                
+
                 $this->orderManager->updOrderLegal($order, $data);
-                
-                $query = $this->entityManager->getRepository(Order::class)
-                        ->findAllOrder(['orderId' => $order->getId()]);
-                $result = $query->getOneOrNullResult(2);
-                return new JsonModel([
-                    'row' => $result,
-                ]);
+
+                if ($table == 'order'){
+                    $query = $this->entityManager->getRepository(Order::class)
+                            ->findAllOrder(['orderId' => $order->getId()]);
+                    $result = $query->getOneOrNullResult(2);
+                    return new JsonModel([
+                        'row' => $result,
+                    ]);
+                }    
             } else {
                 return new JsonModel(
                    ['error' => $form->getMessages()]

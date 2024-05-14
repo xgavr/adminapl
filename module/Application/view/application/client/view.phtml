@@ -1185,11 +1185,14 @@ $this->headLink()
         var comment = '';
         switch(docType){
             case '<?= Movement::DOC_ORDER?>': 
+            case '<?= Movement::DOC_ORDER_USER?>': 
+            case '<?= Movement::DOC_ORDER_COMISS?>': 
                 return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №Z"+docId+"</a>";
             case '<?= Movement::DOC_MSR?>': 
                 comment = (row.marketSaleReport.comment) ? row.marketSaleReport.comment:'';        
                 return "<a href='#' class='msr-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о продажах №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
             case '<?= Movement::DOC_VT?>': 
+            case '<?= Movement::DOC_VT_USER?>': 
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
             case '<?= Movement::DOC_PTU?>': 
                 if (row.ptu){        
@@ -1210,6 +1213,7 @@ $this->headLink()
                     return '!Документ не найден!';
                 }    
             case '<?= Movement::DOC_CASH?>':
+            case '<?= Movement::DOC_CASH_USER?>':
                 var cashName = '';
                 var result = '';
                 var kindName = '';
@@ -1543,7 +1547,7 @@ $this->headLink()
             return $('#mutualtable').bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
-           ['changeContact', 'duplicate', 'sendToApl'],
+           ['addLegal', 'changeContact', 'duplicate', 'sendToApl'],
            ['addComment', 'comments', 'history'],
            ['vt', 'cash']
         ],      
@@ -1607,6 +1611,22 @@ $this->headLink()
                     return true;
                 }                
             }, 
+            addLegal: {
+                name: 'Юр. лицо',
+                iconClass: 'glyphicon glyphicon-plus',
+                onClick: function (row){
+                    var url = '/order/order-legal-form/'+row.docId+'&table=retail';
+                    showFormDialog({
+                        id: 'orderLegalModal',
+                        url: url,
+                        width: '1000px',
+                        zIndex: 9999
+                    });    
+                },
+                isEnabled: function(row) {
+                    return row.docType === '<?= Movement::DOC_ORDER ?>';
+                }                
+            },    
             sendToApl: {
                 name: 'Отправиь в Апл',
                 iconClass: 'glyphicon glyphicon-arrow-up',

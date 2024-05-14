@@ -267,6 +267,12 @@ $form->prepare();
                     if ($("#table")){
                         $("#table").bootstrapTable('updateByUniqueId', {id: <?= $order->getId() ?>, row: data.row});
                     }            
+                    if ($("#ordertable")){
+                        $("#ordertable").bootstrapTable('refresh', {silent: true});
+                    }            
+                    if ($("#mutualtable")){
+                        $("#mutualtable").bootstrapTable('refresh', {silent: true});
+                    }            
                     $('#orderLegalModal').modal('hide');
                 } else {
                     $('#orderLegalModal .modal-content').html(data);
