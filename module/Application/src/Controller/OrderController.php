@@ -533,7 +533,7 @@ class OrderController extends AbstractActionController
         
         $order = null;
         
-        if ($orderId > 0 && $docType == Movement::DOC_ORDER){
+        if ($orderId > 0){
             $order = $this->entityManager->getRepository(Order::class)
                     ->find($orderId);
         }    
