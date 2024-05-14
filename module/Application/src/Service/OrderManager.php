@@ -1740,12 +1740,13 @@ class OrderManager
         $this->entityManager->getConnection()
                 ->update('orders', $upd, ['id' => $order->getId()]);
 
+        $this->entityManager->refresh($order);
+        
         if ($order->getDateOper() > $this->allowDate){
             $this->repostOrder($order);
         } else {
             $register = $this->entityManager->getRepository(Register::class)
                     ->findOneBy(['docKey' => $order->getLogKey()]);
-            var_dump($register->getDocStamp());
             $this->_repostOrderMutuals($order, $register->getDocStamp());
         }
         
