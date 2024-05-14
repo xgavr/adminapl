@@ -411,6 +411,7 @@ class Movement {
             self::DOC_ZP => 'zpdc',
             self::DOC_BANK => 'bank',
             self::DOC_ZPRV => 'zprv',
+            self::DOC_CASH => 'cash',
         ];
     }        
     

@@ -551,5 +551,26 @@ class TillController extends AbstractActionController
         return new JsonModel(
            $result
         );           
+    }     
+    
+    public function updateLegalAction()
+    {
+        $cashDocId = $this->params()->fromRoute('id', -1);
+        
+        $cashDoc = $this->entityManager->getRepository(CashDoc::class)
+                ->find($cashDocId);        
+
+        if ($cashDoc == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->cashManager->changeLegal($cashDoc);
+        
+        $result = [];
+        
+        return new JsonModel(
+           $result
+        );           
     }                
 }

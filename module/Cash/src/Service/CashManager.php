@@ -646,6 +646,22 @@ class CashManager {
     }
     
     /**
+     * Перепровести документ оплаты
+     * @param CashDoc $cashDoc
+     * @param string $docStamp
+     * @return null
+     */
+    private function _repostCashDocMutuals($cashDoc, $docStamp)
+    {
+        $this->removeMutuals($cashDoc);
+        $this->removeRetails($cashDoc);
+        $this->addMutuals($cashDoc, $docStamp);
+        $this->addRetails($cashDoc, $docStamp);
+        
+        return;
+    }
+    
+    /**
      * Добавить запись о кассовой операции
      * @param CashDoc $cashDoc
      */
@@ -654,8 +670,6 @@ class CashManager {
         $docStamp = $this->entityManager->getRepository(Register::class)
                 ->cashDocRegister($cashDoc);
         
-        $this->removeMutuals($cashDoc);
-        $this->removeRetails($cashDoc);
         $this->removeTransactions($cashDoc);
         $this->removeUserTransactions($cashDoc);
         
@@ -683,8 +697,7 @@ class CashManager {
         
         $this->entityManager->flush();
         
-        $this->addMutuals($cashDoc, $docStamp);
-        $this->addRetails($cashDoc, $docStamp);
+        $this->_repostCashDocMutuals($cashDoc, $docStamp);
         
         $this->zpManager->repostCashDoc($cashDoc, $docStamp);
         $this->costManager->repostCashDoc($cashDoc, $docStamp);
@@ -766,6 +779,30 @@ class CashManager {
         }
         
         return $data;
+    }
+    
+    /**
+     * 
+     * @param CashDoc $cashDoc
+     */
+    public function changeLegal($cashDoc)
+    {
+        $legal = null;
+        if ($cashDoc->getOrder()){
+            $legal = $cashDoc->getOrder()->getLegal();
+        }
+        
+        $cashDoc->setLegal($legal);
+        
+        if ($cashDoc->getDateOper() > $this->getAllowDate()){
+            $this->repostCashDoc($cashDoc);
+        } else {
+            $register = $this->entityManager->getRepository(Register::class)
+                    ->findOneBy(['docKey' => $cashDoc->getLogKey()]);                        
+            $this->_repostCashDocMutuals($cashDoc, $register->getDocStamp());
+        }
+        
+        return;
     }
     
     /**

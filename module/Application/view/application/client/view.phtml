@@ -1541,6 +1541,16 @@ $this->headLink()
         }         
     }
         
+    function changeDocLegal(mutualRow){
+        if (mutualRow.reviseDoc){
+        }         
+        if (mutualRow.cashDoc){
+            $.get( "/till/update-legal/"+mutualRow.cashDoc.id, function(data){
+                $('#mutualtable').bootstrapTable('refresh', {silent: true});
+            });        
+        }         
+    }
+        
     var menuMutual = new BootstrapMenu('.tablerow-mutual', {
         fetchElementData: function(rowElem) {
             var rowId = $(rowElem).attr('data-index');
@@ -1601,17 +1611,22 @@ $this->headLink()
             addLegal: {
                 name: 'Юр. лицо',
                 iconClass: 'glyphicon glyphicon-plus',
-                onClick: function (row){
-                    var url = '/order/order-legal-form/'+row.docId+'?table=retail';
-                    showFormDialog({
-                        id: 'orderLegalModal',
-                        url: url,
-                        width: '1000px',
-                        zIndex: 9999
-                    });    
+                onClick: function (row){                   
+                    if (row.docType === '<?= Movement::DOC_CASH ?>'){ 
+                        changeDocLegal(row);
+                    }    
+                    if (row.docType === '<?= Movement::DOC_ORDER ?>'){                     
+                        var url = '/order/order-legal-form/'+row.docId+'?table=retail';
+                        showFormDialog({
+                            id: 'orderLegalModal',
+                            url: url,
+                            width: '1000px',
+                            zIndex: 9999
+                        });    
+                    }    
                 },
                 isEnabled: function(row) {
-                    return row.docType === '<?= Movement::DOC_ORDER ?>';
+                    return row.docType === '<?= Movement::DOC_ORDER ?>' || row.docType === '<?= Movement::DOC_CASH ?>';
                 }                
             },    
             changeContact: {
