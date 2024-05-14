@@ -1598,6 +1598,22 @@ $this->headLink()
                     return false;
                 }                
             }, 
+            addLegal: {
+                name: 'Юр. лицо',
+                iconClass: 'glyphicon glyphicon-plus',
+                onClick: function (row){
+                    var url = '/order/order-legal-form/'+row.docId+'?table=retail';
+                    showFormDialog({
+                        id: 'orderLegalModal',
+                        url: url,
+                        width: '1000px',
+                        zIndex: 9999
+                    });    
+                },
+                isEnabled: function(row) {
+                    return row.docType === '<?= Movement::DOC_ORDER ?>';
+                }                
+            },    
             changeContact: {
                 name: 'Изменить контакт',
                 iconClass: 'glyphicon glyphicon-check',
@@ -1611,22 +1627,6 @@ $this->headLink()
                     return true;
                 }                
             }, 
-            addLegal: {
-                name: 'Юр. лицо',
-                iconClass: 'glyphicon glyphicon-plus',
-                onClick: function (row){
-                    var url = '/order/order-legal-form/'+row.docId+'&table=retail';
-                    showFormDialog({
-                        id: 'orderLegalModal',
-                        url: url,
-                        width: '1000px',
-                        zIndex: 9999
-                    });    
-                },
-                isEnabled: function(row) {
-                    return row.docType === '<?= Movement::DOC_ORDER ?>';
-                }                
-            },    
             sendToApl: {
                 name: 'Отправиь в Апл',
                 iconClass: 'glyphicon glyphicon-arrow-up',
