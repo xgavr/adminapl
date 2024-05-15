@@ -98,10 +98,11 @@ class ClientController extends AbstractActionController
         $limit = $this->params()->fromQuery('limit', 10);
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'ASC');
-        $pricecol = $this->params()->fromQuery('pricecol', 'ASC');
+        $pricecol = $this->params()->fromQuery('pricecol');
+        $legal = $this->params()->fromQuery('legal');
         
         $params = ['search' => $q, 'sort' => $sort, 'order' => $order,
-                            'pricecol' => $pricecol];
+                    'pricecol' => $pricecol, 'legal' => $legal];
         
         $query = $this->entityManager->getRepository(Client::class)
                         ->findAllClient($params);

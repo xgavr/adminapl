@@ -170,7 +170,7 @@ class ClientRepository extends EntityRepository{
             }    
         }    
         if (!empty($params['legal'])){
-            $queryBuilder->join('c.contact', 'cntl')
+            $queryBuilder->join('c.contacts', 'cntl')
                     ->join('cntl.legals', 'l')
                     ->addSelect('l')
                     ;
@@ -228,6 +228,12 @@ class ClientRepository extends EntityRepository{
                 $queryBuilder->andWhere('c.pricecol = :pricecol')
                         ->setParameter('pricecol', $params['pricecol']);
             }    
+        }    
+        if (!empty($params['legal'])){
+            $queryBuilder->join('c.contacts', 'cntl')
+                    ->join('cntl.legals', 'l')
+                    ->addSelect('l')
+                    ;
         }    
         if (!empty($params['search'])){
             $balanceFlag = false;
