@@ -180,6 +180,9 @@ class OrderManager
             if ($contract->getKind() == Contract::KIND_COMITENT){
                 return;
             }
+            if ($contract->getKind() == Contract::KIND_SUPPLIER && $contract->getPay() == Contract::PAY_CASHLESS){ //учет только в мутуалс
+                return;
+            }
         }
         $data = [
             'doc_key' => $order->getLogKey(),
