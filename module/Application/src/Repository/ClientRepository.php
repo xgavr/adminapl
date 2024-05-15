@@ -172,8 +172,7 @@ class ClientRepository extends EntityRepository{
         if (!empty($params['legal'])){
             $queryBuilder->join('c.contacts', 'cntl')
                     ->join('cntl.legals', 'l')
-                    ->addSelect('cntl')
-                    ->addSelect('l')
+//                    ->addSelect('cntl')
                     ->addSelect('l')
                     ;
         }    
