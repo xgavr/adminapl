@@ -169,6 +169,12 @@ class ClientRepository extends EntityRepository{
                         ->setParameter('pricecol', $params['pricecol']);
             }    
         }    
+        if (!empty($params['legal'])){
+            $queryBuilder->join('c.contact', 'cntl')
+                    ->join('cntl.legals', 'l')
+                    ->addSelect('l')
+                    ;
+        }    
         if (!empty(trim($params['search']))){
             $balanceFlag = false;
             
