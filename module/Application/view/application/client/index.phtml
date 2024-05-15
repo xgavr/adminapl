@@ -170,11 +170,11 @@ $this->pageBreadcrumbs()->setItems([
             value = '---';
         }
         if (row.contacts){
-            var names = new Array();
+            var names = [];
             $.each(row.contacts, function( index, contact ) {
                 if (contact.legals){
                     $.each(contact.legals, function( index, legal ) {
-                        names[] = legal.name; 
+                        names.push(legal.name); 
                     };    
                 };
             });            
