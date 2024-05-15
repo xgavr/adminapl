@@ -128,7 +128,7 @@ $this->pageBreadcrumbs()->setItems([
 //            $('#totalRow').html($('#table').bootstrapTable('getOptions').totalRows);
             tableRowClick();
             var inTotal = (res.balanceIn) ? res.balanceIn:0;
-            var outTotal = (res.balanceOut) ? -res.balanceOut:0;
+            var outTotal = (res.balanceOut) ? res.balanceOut:0;
             $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
             $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
         });        
