@@ -127,17 +127,10 @@ $this->pageBreadcrumbs()->setItems([
         $('#table').on('load-success.bs.table', function (e, res) {
 //            $('#totalRow').html($('#table').bootstrapTable('getOptions').totalRows);
             tableRowClick();
-            $("[data-toggle='tooltip']").tooltip();
-            $('.editableCheckBox').change(function() {
-                $.ajax({
-                    type: "POST",
-                    url: $(this).attr('data-url'),
-                    data: "pk="+$(this).attr('data-pk'),
-                    success: function(msg){
-//                      alert( "Прибыли данные: " + msg );
-                    }
-                });
-            });                    
+            var inTotal = (res.balanceIn) ? res.balanceIn:0;
+            var outTotal = (res.balanceOut) ? -res.balanceOut:0;
+            $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
+            $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
         });        
 
         $(".inputclear").click(function(){

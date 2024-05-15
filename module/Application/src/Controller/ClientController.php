@@ -121,6 +121,8 @@ class ClientController extends AbstractActionController
         
         return new JsonModel([
             'total' => $totalResult['countC'],
+            'balanceIn' => $totalResult['balanceIn'],
+            'balanceOut' => $totalResult['balanceOut'],
             'rows' => $result,
         ]);          
     }    
