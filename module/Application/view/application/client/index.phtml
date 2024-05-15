@@ -169,6 +169,17 @@ $this->pageBreadcrumbs()->setItems([
         if (!value){
             value = '---';
         }
+        if (row.contacts){
+            var names = new Array();
+            $.each(row.contacts, function( index, contact ) {
+                if (contact.legals){
+                    $.each(contact.legals, function( index, legal ) {
+                        names[] = legal.name; 
+                    };    
+                };
+            });            
+            value = '<small><span class="muted">'+names.join('<br/>')+'</span><small>';
+        };
         return [
             '<div class="pull-left">',
             '<a href="/client/view/' + row.id + '" target="_blank">' + value + '</a>',
