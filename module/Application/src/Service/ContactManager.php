@@ -620,7 +620,7 @@ class ContactManager
                 $contact->setClient($oldContact->getClient());
                 $oldContact->setClient(null);
             }
-            if ($contact->getClient()){
+            if ($contact->getClient() && $oldContact->getClient()){
                 if ($contact->getClient()->getAplId() == $oldContact->getClient()->getAplId()){
                     $oldContact->setClient(null);
                 }
