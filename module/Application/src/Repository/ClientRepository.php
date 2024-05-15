@@ -221,8 +221,8 @@ class ClientRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('count(c.id) as countC')
-                ->addSelect('sum(case c.balance > 0 then c.balance else 0) as balanceIn')
-                ->addSelect('sum(case c.balance < 0 then -c.balance else 0) as balanceOut')
+                ->addSelect('sum(case when c.balance > 0 then c.balance else 0) as balanceIn')
+                ->addSelect('sum(case when c.balance < 0 then -c.balance else 0) as balanceOut')
                 ->from(Client::class, 'c')
                 ;
         $balanceFlag = true;
