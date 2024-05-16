@@ -797,12 +797,14 @@ class CashManager {
                     ->findStatementLegal($cashDoc->getStatement());
         }
         
-        if (!$legal && $cashDoc->getCash()->getPayment() == Cash::PAYMENT_CASHLESS){
-            $statement = $this->entityManager->getRepository(CashDoc::class)
-                    ->findStatementForCashDoc($cashDoc);
-            $legal = $this->entityManager->getRepository(Statement::class)
-                    ->findStatementLegal($statement);
-        }
+        if ($cashDoc->getCash()){
+            if (!$legal && $cashDoc->getCash()->getPayment() == Cash::PAYMENT_CASHLESS){
+                $statement = $this->entityManager->getRepository(CashDoc::class)
+                        ->findStatementForCashDoc($cashDoc);
+                $legal = $this->entityManager->getRepository(Statement::class)
+                        ->findStatementLegal($statement);
+            }
+        }    
         
         $cashDoc->setLegal($legal);
         
