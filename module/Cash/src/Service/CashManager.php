@@ -792,6 +792,18 @@ class CashManager {
             $legal = $cashDoc->getOrder()->getLegal();
         }
         
+        if (!$legal && $cashDoc->getStatement()){
+            $legal = $this->entityManager->getRepository(Statement::class)
+                    ->findStatementLegal($cashDoc->getStatement());
+        }
+        
+        if (!$legal){
+            $statement = $this->entityManager->getRepository(CashDoc::class)
+                    ->findStatementForCashDoc($cashDoc);
+            $legal = $this->entityManager->getRepository(Statement::class)
+                    ->findStatementLegal($statement);
+        }
+        
         $cashDoc->setLegal($legal);
         
         if ($cashDoc->getDateOper() > $this->getAllowDate()){

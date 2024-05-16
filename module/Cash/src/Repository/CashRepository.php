@@ -646,6 +646,40 @@ class CashRepository extends EntityRepository
    }
    
    /**
+    * Найти выписку для документа
+    * @param CashDoc $cashDoc
+    * @return Statement
+    */
+   public function findStatementForCashDoc($cashDoc)
+   {
+        $entityManager = $this->getEntityManager();
+        $queryBuiler = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuiler->expr()->orX();
+
+        $contact = $cashDoc->getContact();
+        foreach ($contact->getLegals() as $legal){
+            $orX->add($queryBuiler->expr()->eq('s.counterpartyInn', $legal->getInn()));
+        }
+                
+        
+        $queryBuiler->select('s')
+            ->from(Statement::class, 's')
+            ->where('date(s.chargeDate) = :docDate')
+            ->setParameter('docDate', date('Y-m-d', strtotime($cashDoc->getDateOper()))) 
+            ->andWhere('s.amount = :amount')
+            ->setParameter('amount', $cashDoc->getAmount()) 
+            ->andWhere('s.status = :status')
+            ->setParameter('status', Statement::STATUS_ACTIVE)
+            ->andWhere($orX)                    
+            ->setMaxResults(1)    
+            ;        
+//            var_dump($queryBuiler->getParameters());
+//        var_dump($queryBuiler->getQuery()->getSQL()); exit;
+        return $queryBuiler->getQuery()->getOneOrNullResult();
+   }
+   
+   /**
     * Исправить оплаты и отгрузки на сотрудников
     */
    public function findForUserRetailFix()

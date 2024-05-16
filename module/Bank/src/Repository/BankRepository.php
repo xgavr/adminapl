@@ -13,6 +13,8 @@ use Bank\Entity\Statement;
 use Bank\Entity\Balance;
 use Bank\Entity\Acquiring;
 use Bank\Entity\AplPayment;
+use Company\Entity\BankAccount;
+use Company\Entity\Legal;
 
 /**
  * Description of BankRepository
@@ -410,4 +412,24 @@ class BankRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    /**
+     * Найти юолицо по выписке
+     * @param Statement $statement
+     * @return Legal 
+     */
+    public function findStatementLegal($statement)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $bankAccount = $entityManager->getRepository(BankAccount::class)
+                ->findOneBy(['rs' => $statement->getCounterpartyAccountNumber()]);
+        if ($bankAccount){
+            return $bankAccount->getLegal();
+        }
+        
+        $legal = $entityManager->getRepository(Legal::class)
+                ->findOneBy(['inn' => $statement->getСounterpartyInn()]);
+        
+        return $legal;
+    }
 }
