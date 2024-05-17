@@ -36,6 +36,7 @@ use Stock\Entity\Movement;
 use Bank\Entity\QrCodePayment;
 use Laminas\Json\Encoder;
 use Bank\Entity\AplPayment;
+use Company\Entity\Office;
 
 /**
  * Description of CashManager
@@ -1249,22 +1250,28 @@ class CashManager {
             $company = $companyAccount->getLegal();
         }    
         if ($cash && $company && $legal){
-            if ($company->getInn() != $legalInn){ 
-                $data['cash'] = $cash;
-                $data['checkStatus'] = $cash->getCheckStatus();
-                $data['company'] = $company;
-                $data['dateOper'] = max($statement->getChargeDate(), $this->getAllowDate());
-                $data['legal'] = $legal;
-                $data['statement'] = $statement;
+            
+            if ($company->getInn() == $legalInn){ 
+                return $cashDoc;
+            }
+            
+            $data['cash'] = $cash;
+            $data['checkStatus'] = $cash->getCheckStatus();
+            $data['company'] = $company;
+            $data['dateOper'] = max($statement->getChargeDate(), $this->getAllowDate());
+            $data['legal'] = $legal;
+            $data['statement'] = $statement;
 
-                if ($legal->getClientContact()){
-                    $data['comment'] = $statement->getPaymentPurpose();
-                    return $this->clientCashDocFromStatement($statement, $data);
-                }    
-                
-                if ($legal->getSupplier()){
-                    return $this->supplierCashDocFromStatement($statement, $data);
-                }                
+            $contract = $this->entityManager->getRepository(Office::class)
+                            ->findCurrentContract($company, $legal, $statement->getChargeDate(), Contract::PAY_CASHLESS);
+
+            if ($legal->getSupplier() && $contract->getKind() == Contract::KIND_SUPPLIER){
+                return $this->supplierCashDocFromStatement($statement, $data);
+            }   
+
+            if ($legal->getClientContact()){
+                $data['comment'] = $statement->getPaymentPurpose();
+                return $this->clientCashDocFromStatement($statement, $data);
             }    
         }
         

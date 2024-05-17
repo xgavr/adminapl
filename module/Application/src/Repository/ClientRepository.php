@@ -161,7 +161,9 @@ class ClientRepository extends EntityRepository{
         $balanceFlag = true;
         
         if (isset($params['sort'])){
-            $queryBuilder->orderBy('c.'.$params['sort'], $params['order']);
+            $queryBuilder->orderBy('c.'.$params['sort'], $params['order'])
+                    ->addOrderBy('c.id', $params['order'])
+                    ;
         }
         if (!empty($params['pricecol'])){
             if (is_numeric($params['pricecol'])){

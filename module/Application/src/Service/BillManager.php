@@ -151,6 +151,14 @@ class BillManager
      */
     public function removeIdoc($idoc)
     {
+        $ptus = $this->entityManager->getRepository(Ptu::class)
+                ->findBy(['idoc' => $idoc->getId()]);
+        
+        foreach ($ptus as $ptu){
+            $ptu->setIdoc(null);
+            $this->entityManager->persist($ptu);
+            $this->entityManager->flush();
+        }
         
         $this->entityManager->remove($idoc);
         $this->entityManager->flush();
