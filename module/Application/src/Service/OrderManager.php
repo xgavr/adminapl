@@ -1185,6 +1185,7 @@ class OrderManager
             }
         }
         
+        $this->cashManager->addUserOrderTransaction($order, $docStamp);
     }
     
     /**
@@ -1227,7 +1228,6 @@ class OrderManager
         $this->_repostOrderMutuals($order, $docStamp);
         
         $this->zpManager->addOrderCalculator($order);
-        $this->cashManager->addUserOrderTransaction($order, $docStamp);
         
         return;
     }
