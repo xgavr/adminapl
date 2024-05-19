@@ -531,7 +531,7 @@ class ClientController extends AbstractActionController
         $result = $query->getResult(2);
         foreach ($result as $key=>$value){
             $result[$key]['rest'] = $this->entityManager->getRepository(Retail::class)
-                ->clientStampRest($clientId, $value['docType'], $value['docId'], 
+                ->clientStampRest($clientId, $value['docKey'], 
                         $company, $legal, $contract);
         }
         
@@ -597,7 +597,7 @@ class ClientController extends AbstractActionController
         $result = $query->getResult(2);
         foreach ($result as $key=>$value){
             $result[$key]['rest'] = $this->entityManager->getRepository(Comiss::class)
-                ->clientStampRest($clientId, $value['docType'], $value['docId'], $company);
+                ->clientStampRest($clientId, $value['docKey'], $company);
         }
         
         return new JsonModel([

@@ -118,17 +118,16 @@ class ComissRepository extends EntityRepository{
     /**
     * Остаток на момент времени
     * @param integer $clientId
-     *@param integer $docType 
-     *@param integer $docId 
+     *@param integer $docKey 
      * @param integer $companyId
     * @return integer
     */
-    public function clientStampRest($clientId, $docType, $docId, $companyId = null)
+    public function clientStampRest($clientId, $docKey, $companyId = null)
     {
         $entityManager = $this->getEntityManager();
         
         $register = $entityManager->getRepository(Register::class)
-                ->findOneBy(['docType' => $docType, 'docId' => $docId]);
+                ->findOneBy(['docKey' => $docKey]);
                 
         if ($register){
             $qb = $entityManager->createQueryBuilder();

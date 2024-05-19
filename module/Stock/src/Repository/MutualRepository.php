@@ -248,20 +248,19 @@ class MutualRepository extends EntityRepository{
     /**
     * Остаток на момент времени
     * @param integer $clientId
-     *@param integer $docType 
-     *@param integer $docId 
+     *@param string $docKey 
      * @param integer $companyId
      * @param integer $legalId
      * @param integer $contractId
     * @return integer
     */
-    public function clientStampRest($clientId, $docType, $docId, $companyId = null, 
+    public function clientStampRest($clientId, $docKey, $companyId = null, 
             $legalId = null, $contractId = null)
     {
         $entityManager = $this->getEntityManager();
         
         $register = $entityManager->getRepository(Register::class)
-                ->findOneBy(['docType' => $docType, 'docId' => $docId]);
+                ->findOneBy(['docKey' => $docKey]);
                 
         if ($register){
             $qb = $entityManager->createQueryBuilder();
