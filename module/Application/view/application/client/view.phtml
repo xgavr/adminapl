@@ -1642,7 +1642,8 @@ $this->headLink()
                     }    
                 },
                 isEnabled: function(row) {
-                    return row.docType === '<?= Movement::DOC_ORDER ?>' || row.docType === '<?= Movement::DOC_CASH ?>' || row.docType === '<?= Movement::DOC_ST ?>';
+                    return row.docType === '<?= Movement::DOC_ORDER ?>' || row.docType === '<?= Movement::DOC_CASH ?>' 
+                            || row.docType === '<?= Movement::DOC_ST ?>' || row.docType === '<?= Movement::DOC_VT ?>';
                 }                
             },    
             changeContact: {
