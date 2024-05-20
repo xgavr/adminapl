@@ -789,7 +789,9 @@ class CashManager {
     {
         $legal = null;
         if ($cashDoc->getOrder()){
-            $legal = $cashDoc->getOrder()->getLegal();
+            if ($cashDoc->getOrder()->getStatus() != Order::STATUS_CANCELED){
+                $legal = $cashDoc->getOrder()->getLegal();
+            }    
         }
         
         if (!$legal && $cashDoc->getStatement()){
