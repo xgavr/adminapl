@@ -444,7 +444,7 @@ class StController extends AbstractActionController
             return;                        
         }        
         
-        $this->stManager->removeSt($st);
+        $this->stManager->repostSt($st);
         
         $result = [];
         

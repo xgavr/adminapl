@@ -253,7 +253,7 @@ class StManager
             
             $register = $this->entityManager->getRepository(Register::class)
                     ->findOneBy(['docKey' => $st->getLogKey()]);
-            var_dump($register->getDocStamp());
+
             $this->updateStMovement($st, $register->getDocStamp());
         }     
         
