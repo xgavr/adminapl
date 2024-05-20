@@ -249,6 +249,8 @@ class StManager
             $this->costManager->repostSt($st, $docStamp);
             
         } else {
+            $this->entityManager->refresh($st);
+            
             $register = $this->entityManager->getRepository(Register::class)
                     ->findOneBy(['docKey' => $st->getLogKey()]);
 
