@@ -389,8 +389,14 @@ class VtManager
      */
     public function repostVt($vt)
     {
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->vtRegister($vt);
+        if ($vt->getDocDate() >= $this->getAllowDate()){
+            $docStamp = $this->entityManager->getRepository(Register::class)
+                    ->vtRegister($vt);
+        } else {
+            $register = $this->entityManager->getRepository(Register::class)
+                    ->findOneBy(['docKey' => $vt->getLogKey()]);
+            $docStamp = $register->getDocStamp();
+        }    
         
         $this->updateVtRetails($vt, $docStamp);
         if ($vt->getOrder()->getLegal()){
@@ -401,8 +407,10 @@ class VtManager
         }    
         $this->updateVtMovement($vt, $docStamp);
         
-        $this->zpManager->addVtCalculator($vt);
-        $this->cashManager->addUserVtTransaction($vt, $docStamp);
+        if ($vt->getDocDate() >= $this->getAllowDate()){
+            $this->zpManager->addVtCalculator($vt);
+            $this->cashManager->addUserVtTransaction($vt, $docStamp);
+        }    
         
         return;
     }

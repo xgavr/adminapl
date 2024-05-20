@@ -369,4 +369,25 @@ class VtController extends AbstractActionController
             'result' => 'ok-reload',
         ]);
     }        
+    
+    public function repostAction()
+    {
+        $vtId = $this->params()->fromRoute('id', -1);
+        
+        $vt = $this->entityManager->getRepository(Vt::class)
+                ->find($vtId);        
+
+        if ($vt == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->vtManager->repostVt($vt);
+        
+        $result = [];
+        
+        return new JsonModel(
+           $result
+        );           
+    }                        
 }

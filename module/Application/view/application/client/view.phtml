@@ -1547,6 +1547,11 @@ $this->headLink()
                 $('#mutualtable').bootstrapTable('refresh', {silent: true});
             });        
         }         
+        if (mutualRow.docType === '<?= Movement::DOC_VT ?>'){
+            $.get( "/vt/repost/"+mutualRow.docId, function(data){
+                $('#mutualtable').bootstrapTable('refresh', {silent: true});
+            });        
+        }         
         if (mutualRow.reviseDoc){
         }         
         if (mutualRow.cashDoc){
@@ -1621,6 +1626,9 @@ $this->headLink()
                         changeDocLegal(row);
                     }    
                     if (row.docType === '<?= Movement::DOC_ST ?>'){ 
+                        changeDocLegal(row);
+                    }    
+                    if (row.docType === '<?= Movement::DOC_VT ?>'){ 
                         changeDocLegal(row);
                     }    
                     if (row.docType === '<?= Movement::DOC_ORDER ?>'){                     
