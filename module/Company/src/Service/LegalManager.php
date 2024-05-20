@@ -357,7 +357,7 @@ class LegalManager
         $orderCount = $this->entityManager->getRepository(Order::class)
                 ->count(['bankAccount' => $bankAccount->getId()]);
         if (!empty($orderCount)){
-//            var_dump(1);
+            var_dump(1);
             return false;
         }
         $paymentCount = $this->entityManager->getRepository(Payment::class)
