@@ -357,33 +357,37 @@ class LegalManager
         $orderCount = $this->entityManager->getRepository(Order::class)
                 ->count(['bankAccount' => $bankAccount->getId()]);
         if (!empty($orderCount)){
-            var_dump(1);
+//            var_dump(1);
             return false;
         }
         $paymentCount = $this->entityManager->getRepository(Payment::class)
                 ->count(['bankAccount' => $bankAccount->getId()]);
         if (!empty($paymentCount)){
-            var_dump(2);
+//            var_dump(2);
             return false;
         }
         $qrcodeCount = $this->entityManager->getRepository(QrCode::class)
                 ->count(['bankAccount' => $bankAccount->getId()]);
         if (!empty($qrcodeCount)){
-            var_dump(3);
+//            var_dump(3);
             return false;
         }
         $qrcodePaymentCount = $this->entityManager->getRepository(QrCodePayment::class)
                 ->count(['bankAccount' => $bankAccount->getId()]);
         if (!empty($qrcodePaymentCount)){
-            var_dump(4);
+//            var_dump(4);
             return false;
         }
+        
+        $rsCount = $this->entityManager->getRepository(BankAccount::class)
+                ->count(['rs' => $bankAccount->getRs()]);
+        
         $statementCount = $this->entityManager->getRepository(Statement::class)
                 ->count(['counterpartyAccountNumber' => $bankAccount->getRs()]);
         $statementCount1 = $this->entityManager->getRepository(Statement::class)
                 ->count(['account' => $bankAccount->getRs()]);
-        if ($statementCount > 0 || $statementCount1 > 0){
-            var_dump(5);
+        if ($rsCount == 1 && ($statementCount > 0 || $statementCount1 > 0)){
+//            var_dump(5);
             return false;
         }    
         
