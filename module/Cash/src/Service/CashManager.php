@@ -350,7 +350,7 @@ class CashManager {
             $this->entityManager->getRepository(Retail::class)
                     ->insertRetail($data);
             
-            if ($cashDoc->getContact()->getUser()){ // оплата от сотрудника
+            if ($cashDoc->getContact()->getUser() && empty($cashDoc->getLegal())){ // оплата от сотрудника
                 $data = [
                     'doc_key' => $cashDoc->getLogKey(),
                     'doc_type' => Movement::DOC_CASH_USER,
@@ -515,7 +515,7 @@ class CashManager {
     {
         $this->removeUserDocTransactions(Movement::DOC_ORDER, $order->getId());
         
-        if ($order->getStatus() == Order::STATUS_SHIPPED && $order->getContact()->getUser()){
+        if ($order->getStatus() == Order::STATUS_SHIPPED && $order->getContact()->getUser() && empty($order->getLegal())){
             $userTransaction = new UserTransaction();
             $userTransaction->setAmount($order->getTotal());
             $userTransaction->setCashDoc(null);
@@ -564,7 +564,7 @@ class CashManager {
     {
         $this->removeUserDocTransactions(Movement::DOC_VT, $vt->getId());
         
-        if ($vt->getStatus() == Vt::STATUS_ACTIVE && $vt->getOrder()->getContact()->getUser()){
+        if ($vt->getStatus() == Vt::STATUS_ACTIVE && $vt->getOrder()->getContact()->getUser()  && empty($vt->getOrder()->getLegal())){
             $userTransaction = new UserTransaction();
             $userTransaction->setAmount($vt->getAmount());
             $userTransaction->setCashDoc(null);

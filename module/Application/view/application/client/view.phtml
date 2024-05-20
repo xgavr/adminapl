@@ -1542,6 +1542,11 @@ $this->headLink()
     }
         
     function changeDocLegal(mutualRow){
+        if (mutualRow.docType === '<?= Movement::DOC_ST ?>'){
+            $.get( "/st/repost/"+mutualRow.docId, function(data){
+                $('#mutualtable').bootstrapTable('refresh', {silent: true});
+            });        
+        }         
         if (mutualRow.reviseDoc){
         }         
         if (mutualRow.cashDoc){
@@ -1613,6 +1618,9 @@ $this->headLink()
                 iconClass: 'glyphicon glyphicon-plus',
                 onClick: function (row){                   
                     if (row.docType === '<?= Movement::DOC_CASH ?>'){ 
+                        changeDocLegal(row);
+                    }    
+                    if (row.docType === '<?= Movement::DOC_ST ?>'){ 
                         changeDocLegal(row);
                     }    
                     if (row.docType === '<?= Movement::DOC_ORDER ?>'){                     

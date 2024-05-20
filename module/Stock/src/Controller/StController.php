@@ -19,6 +19,7 @@ use Company\Entity\Legal;
 use User\Entity\User;
 use Company\Entity\Cost;
 use Stock\Entity\GoodBalance;
+use Stock\Entity\Register;
 
 class StController extends AbstractActionController
 {
@@ -431,4 +432,24 @@ class StController extends AbstractActionController
         );           
     }
         
+    public function repostAction()
+    {
+        $stId = $this->params()->fromRoute('id', -1);
+        
+        $st = $this->entityManager->getRepository(St::class)
+                ->find($stId);        
+
+        if ($st == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->stManager->removeSt($st, $register->getDocStamp());
+        
+        $result = [];
+        
+        return new JsonModel(
+           $result
+        );           
+    }                    
 }

@@ -97,12 +97,11 @@ class StManager
      * Обновить движения документа
      * 
      * @param St $st
+     * @param float $docStamp
      */
-    public function updateStMovement($st)
+    public function updateStMovement($st, $docStamp)
     {
         
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->stRegister($st);
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($st->getLogKey());
         $this->entityManager->getRepository(Comiss::class)
@@ -230,9 +229,6 @@ class StManager
         $this->entityManager->getConnection()
                 ->update('st', ['status_account' => $stTake], ['id' => $st->getId()]);  
         
-        $this->zpManager->repostSt($st, $docStamp);
-        $this->costManager->repostSt($st, $docStamp);
-        
         return;
     }    
     
@@ -243,7 +239,21 @@ class StManager
      */
     public function repostSt($st)
     {
-        $this->updateStMovement($st);
+        if ($st->getDocDate() >= $this->getAllowDate()){
+            $docStamp = $this->entityManager->getRepository(Register::class)
+                    ->stRegister($st);
+
+            $this->updateStMovement($st, $docStamp);
+
+            $this->zpManager->repostSt($st, $docStamp);
+            $this->costManager->repostSt($st, $docStamp);
+            
+        } else {
+            $register = $this->entityManager->getRepository(Register::class)
+                    ->findOneBy(['docKey' => $st->getLogKey()]);
+
+            $this->updateStMovement($st, $register->getDocStamp());
+        }     
         
         return;
     }
@@ -482,7 +492,7 @@ class StManager
             $row->setGood($newGood);
             $this->entityManager->persist($row);
             $this->entityManager->flush();
-            $this->updateStMovement($row->getSt());
+            $this->repostSt($row->getSt());
         }
         
         return;
