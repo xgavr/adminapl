@@ -444,7 +444,7 @@ class StController extends AbstractActionController
             return;                        
         }        
         
-        $this->stManager->removeSt($st, $register->getDocStamp());
+        $this->stManager->removeSt($st);
         
         $result = [];
         
