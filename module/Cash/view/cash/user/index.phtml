@@ -245,7 +245,9 @@
     
     function creatorFormatter(value, row){
         if (row.cashDoc){
-            return row.cashDoc.userCreator.fullName;
+            if (row.cashDoc.userCreator){
+                return row.cashDoc.userCreator.fullName;
+            }    
         }
         return value;
     }    
