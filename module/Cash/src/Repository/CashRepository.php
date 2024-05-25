@@ -235,10 +235,8 @@ class CashRepository extends EntityRepository
 
         $queryBuilder->select('ut, cd, u, cr, ur, cost, l, c, uc, cnt, clt, o, cdu')
             ->from(UserTransaction::class, 'ut')
-            ->join('ut.cashDoc', 'cd')
-            ->join(Register::class, 'r', 'WITH', 'cd.id = r.docId and r.docType = :docType')
-            ->setParameter('docType', Movement::DOC_CASH)    
             ->join('ut.user', 'u')
+            ->leftJoin('ut.cashDoc', 'cd')
             ->leftJoin('cd.cashRefill', 'cr')    
             ->leftJoin('cd.userRefill', 'ur')    
             ->leftJoin('cd.userCreator', 'uc')    
@@ -253,7 +251,7 @@ class CashRepository extends EntityRepository
             ->setParameter('1', $dateStart)    
             ->andWhere('cd.dateOper <= ?2')
             ->setParameter('2', $dateEnd . ' 23:59:59')    
-            ->orderBy('r.docStamp', 'DESC')                 
+            ->orderBy('ut.docStamp', 'DESC')                 
 //            ->addOrderBy('cd.id', 'DESC')                 
                 ;
         
@@ -280,7 +278,7 @@ class CashRepository extends EntityRepository
                 }    
             }            
             if (isset($params['order'])){                
-                $queryBuilder->orderBy('r.docStamp', $params['order']);
+                $queryBuilder->orderBy('ut.docStamp', $params['order']);
             }            
         }
 
@@ -304,8 +302,8 @@ class CashRepository extends EntityRepository
 
         $queryBuilder->select('count(ut.id) as countCd, sum(CASE WHEN ut.amount >= 0 and ut.status = :status THEN ut.amount ELSE 0 END) as amountIn, sum(CASE WHEN ut.amount < 0 and ut.status = :status THEN ut.amount ELSE 0 END) as amountOut')
             ->from(UserTransaction::class, 'ut')
-            ->join('ut.cashDoc', 'cd')
             ->join('ut.user', 'c')
+            ->leftJoin('ut.cashDoc', 'cd')
             ->where('cd.dateOper >= ?1')
             ->setParameter('1', $dateStart)    
             ->andWhere('cd.dateOper <= ?2')
