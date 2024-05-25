@@ -84,17 +84,17 @@
             <thead>
                 <tr>
                      <!--<th data-field="id" data-type="numeric" data-sortable="true" data-align="right">ID</th>-->
-                     <th data-field="cashDoc.dateOper" data-sortable="true" data-formatter="dateFormatter" data-width="80">Дата</th>
-                     <th data-field="cashDoc.id" data-sortable="false" data-width="50" data-formatter="cashIdFormatter" data-align="right">Номер</th>
-                     <th data-field='cashDoc.kind' data-sortable="false" data-formatter="kindFormatter" data-width="200">Операция</th>
+                     <th data-field="dateOper" data-sortable="true" data-formatter="dateFormatter" data-width="80">Дата</th>
+                     <th data-field="docId" data-sortable="false" data-width="50" data-formatter="cashIdFormatter" data-align="right">Номер</th>
+                     <th data-field='kind' data-sortable="false" data-formatter="kindFormatter" data-width="200">Операция</th>
                      <th data-field='inSum' data-sortable="false" data-align="right" data-footer-formatter="footerDebitFormatter" data-formatter="inFormatter" data-width="100">Приход</th>
                      <th data-field='outSum' data-sortable="false" data-align="right" data-footer-formatter="footerCreditFormatter" data-formatter="outFormatter" data-width="100">Расход</th>
                      <th data-field='rest' data-sortable="false" data-align="right" data-formatter="userRestFormatter" data-width="100">Остаток</th>
                      <th data-field='user.fullName' data-sortable="false" data-width="150">Сотрудник</th>
-                     <th data-field='cashDoc.kind' data-sortable="false" data-formatter="operFormatter">Кому/от кого</th>
-                     <th data-field='cashDoc.comment' data-sortable="false">Комментарий</th>
+                     <th data-field='kind' data-sortable="false" data-formatter="operFormatter">Кому/от кого</th>
+                     <th data-field='comment' data-sortable="false" data-formatter="commentFormatter">Комментарий</th>
                      <!--<th data-field='status' data-sortable="false"></th>-->
-                     <th data-field='cashDoc.userCreator.fullName' data-sortable="false" data-width="50">Отв.</th>
+                     <th data-field='userCreator' data-sortable="false" data-width="50" data-formatter="creatorFormatter">Отв.</th>
                      <th data-field="amount" data-formatter="tillActiveFormatter" data-width="5"></th>
                  </tr>                
             </thead>
@@ -230,8 +230,22 @@
     }
     
     function cashIdFormatter(value, row){
-        if (row.cashDoc.aplId){
+        if (row.cashDoc){
             return '<nobr>' + value + ' (' + row.cashDoc.aplId + ')</nobr>';
+        }
+        return value;
+    }    
+    
+    function commentFormatter(value, row){
+        if (row.cashDoc){
+            return row.cashDoc.comment;
+        }
+        return value;
+    }    
+    
+    function creatorFormatter(value, row){
+        if (row.cashDoc){
+            return row.cashDoc.userCreator.fullName;
         }
         return value;
     }    
@@ -306,89 +320,95 @@
     }    
     
     function cashFormatter(value, row){
-        if (row.cashDoc.user){
-            return row.cashDoc.user.fullName;
-        }        
-        if (row.cashDoc.cash && row.cashDoc.userRefill){
-            return row.cashDoc.userRefill.fullName;
-        }        
+        if (row.cashDoc){
+            if (row.cashDoc.user){
+                return row.cashDoc.user.fullName;
+            }        
+            if (row.cashDoc.cash && row.cashDoc.userRefill){
+                return row.cashDoc.userRefill.fullName;
+            }        
+        }    
         return value; 
     }    
 
     function operFormatter(value, row){
-        var userRefill = null;
-        var orderId = (row.cashDoc.order) ? "<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+row.cashDoc.order.aplId+"</a>":'Пополнение ЛС';
-        var contactName = '!Контакт не указан!';
-        if (row.cashDoc.contact){
-            var contactName = (row.cashDoc.contact.client) ? "<a href='/client/view/"+row.cashDoc.contact.client.id+"' target=_blank>"+row.cashDoc.contact.client.name+"</a>":'NaN';
+        if (row.cashDoc){
+            var userRefill = null;
+            var orderId = (row.cashDoc.order) ? "<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+row.cashDoc.order.aplId+"</a>":'Пополнение ЛС';
+            var contactName = '!Контакт не указан!';
+            if (row.cashDoc.contact){
+                var contactName = (row.cashDoc.contact.client) ? "<a href='/client/view/"+row.cashDoc.contact.client.id+"' target=_blank>"+row.cashDoc.contact.client.name+"</a>":'NaN';
+            }    
+            switch(value){
+                case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
+                case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
+                            return contactName+' '+orderId;
+                case '<?= CashDoc::KIND_IN_REFILL ?>': 
+                case '<?= CashDoc::KIND_OUT_REFILL ?>': 
+                            return row.cashDoc.cashRefill.name;
+                case '<?= CashDoc::KIND_IN_RETURN_USER ?>':
+                        if (row.amount > 0){
+                            return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.userRefill.fullName;
+                        } else {
+                            return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
+                        }    
+                case '<?= CashDoc::KIND_OUT_COURIER ?>': 
+                            return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName + ' ' + contactName+ ' ' + orderId:null;                        
+                case '<?= CashDoc::KIND_OUT_SALARY ?>':  
+                            return row.cashDoc.userRefill.fullName;
+                case '<?= CashDoc::KIND_OUT_USER ?>': 
+                        if (row.amount < 0){
+                            return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.userRefill.fullName;
+                        } else {
+                            return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
+                        }    
+                case '<?= CashDoc::KIND_OUT_COST ?>': 
+                            return row.cashDoc.cost.name;
+                case '<?= CashDoc::KIND_IN_RETURN_SUPPLIER ?>': 
+                case '<?= CashDoc::KIND_OUT_SUPPLIER ?>': 
+                    if (row.cashDoc.legal){
+                        return row.cashDoc.legal.name;
+                    }                
+                    return '<span class="text-warning">!Поставщик не указан!</span>';
+            }
         }    
-        switch(value){
-            case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
-            case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
-                        return contactName+' '+orderId;
-            case '<?= CashDoc::KIND_IN_REFILL ?>': 
-            case '<?= CashDoc::KIND_OUT_REFILL ?>': 
-                        return row.cashDoc.cashRefill.name;
-            case '<?= CashDoc::KIND_IN_RETURN_USER ?>':
-                    if (row.amount > 0){
-                        return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.userRefill.fullName;
-                    } else {
-                        return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
-                    }    
-            case '<?= CashDoc::KIND_OUT_COURIER ?>': 
-                        return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName + ' ' + contactName+ ' ' + orderId:null;                        
-            case '<?= CashDoc::KIND_OUT_SALARY ?>':  
-                        return row.cashDoc.userRefill.fullName;
-            case '<?= CashDoc::KIND_OUT_USER ?>': 
-                    if (row.amount < 0){
-                        return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.userRefill.fullName;
-                    } else {
-                        return (row.cashDoc.cash) ? row.cashDoc.cash.name:row.cashDoc.user.fullName;
-                    }    
-            case '<?= CashDoc::KIND_OUT_COST ?>': 
-                        return row.cashDoc.cost.name;
-            case '<?= CashDoc::KIND_IN_RETURN_SUPPLIER ?>': 
-            case '<?= CashDoc::KIND_OUT_SUPPLIER ?>': 
-                if (row.cashDoc.legal){
-                    return row.cashDoc.legal.name;
-                }                
-                return '<span class="text-warning">!Поставщик не указан!</span>';
-        }
         return;
     }    
     
     function tillActiveFormatter(value, row){
         var btn = '<nobr>';
-        if (row.cashDoc.user && row.statusEx != <?= CashDoc::STATUS_EX_RECD?>){
-            if (row.cashDoc.kind<10){
-                var url = '/accountant/edit-user-in/'+row.cashDoc.id;
-                btn += '<button';
-                btn += ' type="button"';
-                btn += ' class="btn btn-default btn-xs user-in-modal-show"';
-                btn += ' aria-label="Left Align"'; 
-                btn += ' modal-url="'+url+'">';
-                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-                btn += '</button>';
-            }    
-            if (row.cashDoc.kind>10){
-                var url = '/accountant/edit-user-out/'+row.cashDoc.id;
-                btn += '<button';
-                btn += ' type="button"';
-                btn += ' class="btn btn-default btn-xs user-out-modal-show"';
-                btn += ' aria-label="Left Align"'; 
-                btn += ' modal-url="'+url+'">';
-                btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-                btn += '</button>';
-            }    
+        if (row.cashDoc){
+            if (row.cashDoc.user && row.statusEx != <?= CashDoc::STATUS_EX_RECD?>){
+                if (row.cashDoc.kind<10){
+                    var url = '/accountant/edit-user-in/'+row.cashDoc.id;
+                    btn += '<button';
+                    btn += ' type="button"';
+                    btn += ' class="btn btn-default btn-xs user-in-modal-show"';
+                    btn += ' aria-label="Left Align"'; 
+                    btn += ' modal-url="'+url+'">';
+                    btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+                    btn += '</button>';
+                }    
+                if (row.cashDoc.kind>10){
+                    var url = '/accountant/edit-user-out/'+row.cashDoc.id;
+                    btn += '<button';
+                    btn += ' type="button"';
+                    btn += ' class="btn btn-default btn-xs user-out-modal-show"';
+                    btn += ' aria-label="Left Align"'; 
+                    btn += ' modal-url="'+url+'">';
+                    btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+                    btn += '</button>';
+                }    
 
-            var url = '/apl/send-cash-doc/'+row.cashDoc.id;
-            btn += ' <button';
-            btn += ' type="button"';
-            btn += ' class="btn btn-info btn-xs send-cash-doc"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'">';
-            btn += '<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>';
-            btn += '</button>';
+                var url = '/apl/send-cash-doc/'+row.cashDoc.id;
+                btn += ' <button';
+                btn += ' type="button"';
+                btn += ' class="btn btn-info btn-xs send-cash-doc"';
+                btn += ' aria-label="Left Align"'; 
+                btn += ' modal-url="'+url+'">';
+                btn += '<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>';
+                btn += '</button>';
+            }    
         }    
         btn += '</nobr>';
         return btn;
