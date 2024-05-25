@@ -802,7 +802,7 @@ class AplService {
         
         $digitsFilter = new Digits();
         $client_data = [
-            'name' => $row['name'],
+//            'name' => $row['name'],
             'status' => ($row['publish'] == 1 ? AplClient::STATUS_ACTIVE:AplClient::STATUS_RETIRED),
             'aplId' => $row['id'],
             'pricecol' => $digitsFilter->filter(empty($row['pricecol']) ? 0:$row['pricecol']),
@@ -810,7 +810,8 @@ class AplService {
 
         if ($client){                    
             $this->clientManager->updClient($client, $client_data);                    
-        } else {                            
+        } else {  
+            $client_data['name'] = $row['name'];
             $client = $this->clientManager->addClient($client_data);                        
         }
 
