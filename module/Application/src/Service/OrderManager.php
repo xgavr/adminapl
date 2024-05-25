@@ -1213,19 +1213,10 @@ class OrderManager
                 ->removeDocComitent($order->getLogKey());        
         $this->entityManager->getRepository(Reserve::class)
                 ->updateReserve($order);
-        $this->updateOrderMovement($order, $docStamp);            
 
-//        $this->entityManager->getRepository(Retail::class)
-//                ->removeOrderRetails($order->getLogKey());
-//        $this->entityManager->getRepository(Mutual::class)
-//                ->removeDocMutuals($order->getLogKey());                
-//        if ($order->getStatus() == Order::STATUS_SHIPPED){
-//            $this->updateOrderRetails($order, $docStamp);
-//            if ($order->getLegal()){
-//                $this->updateOrderMutuals($order, $docStamp);
-//            }
-//        }
         $this->_repostOrderMutuals($order, $docStamp);
+
+        $this->updateOrderMovement($order, $docStamp);            
         
         $this->zpManager->addOrderCalculator($order);
         
