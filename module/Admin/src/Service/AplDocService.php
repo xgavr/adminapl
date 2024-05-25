@@ -1979,7 +1979,7 @@ class AplDocService {
                         break;                        
                     case 'Correct': 
 //                        if ($this->unloadRevise($result)){ 
-//                            $this->unloadedDoc($result['id']);
+                            $this->unloadedDoc($result['id']);
 //                        }    
                         break;                        
                     default; break;    
