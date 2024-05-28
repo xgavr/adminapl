@@ -1,5 +1,6 @@
 <?php
     use Cash\Entity\CashDoc;
+    use Stock\Entity\Movement;
 
     $this->headTitle('Подотчет');
 
@@ -372,7 +373,12 @@
                     }                
                     return '<span class="text-warning">!Поставщик не указан!</span>';
             }
-        }    
+        } else {
+            switch(row.docType){
+                case '<?= Movement::DOC_ORDER?>':
+                    return "<a href='#' class='order-view-show' modal-url='/order/view/"+row.docId+"'>Заказ №Z"+row.docId+"</a>"
+            }
+        }        
         return;
     }    
     
