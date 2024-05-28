@@ -435,39 +435,31 @@ class CashRepository extends EntityRepository
     /**
     * Остаток по if
     * @param integer $userId
-    * @param integer $docId 
+    * @param float $docStamp 
     * @return integer
     */
-    public function accountantRest($userId, $docId)
+    public function accountantRest($userId, $docStamp)
     {
         $entityManager = $this->getEntityManager();
         
-        $register = $entityManager->getRepository(Register::class)
-                ->findOneBy(['docType' => Movement::DOC_CASH, 'docId' => $docId]);
-                
-        if ($register){
-            $qb = $entityManager->createQueryBuilder();
-            $qb->select('sum(ut.amount) as utSum')
-                    ->from(UserTransaction::class, 'ut')
-                    ->join(Register::class, 'r', 'WITH', 'ut.cashDoc = r.docId and r.docType = :docType')
-                    ->where('ut.user = ?1')
-                    ->andWhere('r.docStamp <= ?2') 
-                    ->andWhere('r.docStamp > 0')
-                    ->andWhere('ut.status = :status')
-                    ->setParameter('docType', Movement::DOC_CASH)
-                    ->setParameter('1', $userId)
-                    ->setParameter('2', $register->getDocStamp())
-                    ->setParameter('status', UserTransaction::STATUS_ACTIVE)
-                    ;
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('sum(ut.amount) as utSum')
+                ->from(UserTransaction::class, 'ut')
+                ->where('ut.user = ?1')
+                ->andWhere('ut.docStamp <= ?2') 
+                ->andWhere('ut.docStamp > 0')
+                ->andWhere('ut.status = :status')
+                ->setParameter('1', $userId)
+                ->setParameter('2', $docStamp)
+                ->setParameter('status', UserTransaction::STATUS_ACTIVE)
+                ;
 
-            $result = $qb->getQuery()->getOneOrNullResult();
-            if ($result){
-                return $result['utSum'];
-            }
-            
-            return 0;
+        $result = $qb->getQuery()->getOneOrNullResult();
+        if ($result){
+            return $result['utSum'];
         }
-        return;
+            
+        return 0;
     }    
     
     /**

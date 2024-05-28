@@ -111,7 +111,7 @@ class UserController extends AbstractActionController
             foreach ($result as $key=>$value){
 //                var_dump($value);
                 $result[$key]['rest'] = $this->entityManager->getRepository(UserTransaction::class)
-                    ->accountantRest($userId, $value['cashDoc']['id']);
+                    ->accountantRest($userId, $value['docStamp']);
             }
         }    
         
