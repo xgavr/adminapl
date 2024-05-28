@@ -333,7 +333,7 @@
     }    
 
     function operFormatter(value, row){
-        console.log(roe.cashDoc);
+        console.log(row.cashDoc);
         if (row.cashDoc){
             var userRefill = null;
             var orderId = (row.cashDoc.order) ? "<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+row.cashDoc.order.aplId+"</a>":'Пополнение ЛС';
