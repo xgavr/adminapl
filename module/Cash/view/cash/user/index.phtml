@@ -146,7 +146,8 @@
     }
     
     function refreshTable(){
-        $table.bootstrapTable('selectPage', 1);
+        $table.bootstrapTable('refresh', {'silent': true});
+//        $table.bootstrapTable('selectPage', 1);
     }
 
     function officeChange(){
@@ -188,7 +189,7 @@
         });
         
         $(document).on('change', '#userSelect', function (e) {
-            $table.bootstrapTable('selectPage', 1);
+            refreshTable();
         });
         
         $(document).on('change', '#periodSelect', function (e) {
@@ -332,6 +333,7 @@
     }    
 
     function operFormatter(value, row){
+        console.log(roe.cashDoc);
         if (row.cashDoc){
             var userRefill = null;
             var orderId = (row.cashDoc.order) ? "<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+row.cashDoc.order.aplId+"</a>":'Пополнение ЛС';
