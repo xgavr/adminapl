@@ -333,7 +333,6 @@
     }    
 
     function operFormatter(value, row){
-        console.log(row.cashDoc);
         if (row.cashDoc){
             var userRefill = null;
             var orderId = (row.cashDoc.order) ? "<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+row.cashDoc.order.aplId+"</a>":'Пополнение ЛС';
@@ -341,7 +340,7 @@
             if (row.cashDoc.contact){
                 var contactName = (row.cashDoc.contact.client) ? "<a href='/client/view/"+row.cashDoc.contact.client.id+"' target=_blank>"+row.cashDoc.contact.client.name+"</a>":'NaN';
             }    
-            switch(value){
+            switch(row.cashDoc.kind){
                 case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
                 case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
                             return contactName+' '+orderId;
