@@ -372,7 +372,7 @@ class CashManager {
                         ->insertRetail($data);                
                 
                 $userTransaction = new UserTransaction();
-                $userTransaction->setAmount(-$cashDoc->getMutualAmount());
+                $userTransaction->setAmount($cashDoc->getMutualAmount());
                 $userTransaction->setCashDoc($cashDoc);
                 $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
                 $userTransaction->setDateOper($cashDoc->getDateOper());
@@ -817,6 +817,7 @@ class CashManager {
         } else {
             $register = $this->entityManager->getRepository(Register::class)
                     ->findOneBy(['docKey' => $cashDoc->getLogKey()]);                        
+            $this->removeUserTransactions($cashDoc);
             $this->_repostCashDocMutuals($cashDoc, $register->getDocStamp());
         }
         
