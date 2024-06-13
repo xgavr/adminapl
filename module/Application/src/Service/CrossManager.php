@@ -560,7 +560,7 @@ class CrossManager {
             if (!$value){
                 continue;
             }
-            var_dump($value);
+//            var_dump($value);
             if (!$name || !$brandName){
                 if ($isRuValidator->isValid(mb_strtoupper($value, 'utf-8'))){
                     if (!$name){
@@ -594,7 +594,7 @@ class CrossManager {
 
             if (!isset($producer) || !isset($brandProducer)){
                 $producerName = $producerNameFilter->filter($value);
-//                var_dump($producerName);
+                var_dump($producerName);
                 if ($producerName){
                     $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                             ->findUnknownProducerByName($producerName);
