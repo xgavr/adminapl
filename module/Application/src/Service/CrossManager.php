@@ -550,7 +550,6 @@ class CrossManager {
     public function exploreLine($line)
     {
         $row = $line->getRawdataAsArray();
-        var_dump($row);
         $producerNameFilter = new ProducerName();
         $articleFilter = new ArticleCode();
         $isRuValidator = new IsRU();
@@ -561,7 +560,7 @@ class CrossManager {
             if (!$value){
                 continue;
             }
-//            var_dump($value);
+            var_dump($value);
             if (!$name || !$brandName){
                 if ($isRuValidator->isValid(mb_strtoupper($value, 'utf-8'))){
                     if (!$name){
