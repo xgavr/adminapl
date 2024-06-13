@@ -594,7 +594,7 @@ class CrossManager {
 
             if (!isset($producer) || !isset($brandProducer)){
                 $producerName = $producerNameFilter->filter($value);
-                var_dump($producerName);
+//                var_dump($producerName);
                 if ($producerName){
                     $unknownProducers = $this->entityManager->getRepository(UnknownProducer::class)
                             ->findUnknownProducerByName($producerName);
