@@ -261,6 +261,25 @@ class UserInForm extends Form implements ObjectManagerAwareInterface
             ]);          
         
         $inputFilter->add([
+                'name'     => 'orderApl',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 1024
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
                 'name'     => 'phone',
                 'required' => false,
                 'filters'  => [
