@@ -464,11 +464,11 @@
                     changeDocStatus(row);
                 },
                 isShown: function(row) {
-                  return row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>';
+                  return row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>' || row.cashDoc.status === '<?= CashDoc::STATUS_CORRECT?>';
                 },
                 isEnabled: function(row) {
                     if (row.cashDoc){
-                        if (row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
+                        if (row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>' || row.cashDoc.status === '<?= CashDoc::STATUS_CORRECT?>'){
                             return true;
                         }
                     }
