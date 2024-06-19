@@ -579,7 +579,7 @@ class CashManager {
         
         $user = null;
         
-        if ($vt->getStatus() == Vt::STATUS_ACTIVE && $vt->getOrder()->getContact()->getUser()  && empty($vt->getOrder()->getLegal())){
+        if ($vt->getStatus() == Vt::STATUS_ACTIVE && $vt->getOrder()->getContact()->getUser() && empty($vt->getOrder()->getLegal())){
             
             $user = $vt->getOrder()->getContact()->getUser();
             
@@ -589,7 +589,7 @@ class CashManager {
             $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
             $userTransaction->setDateOper($vt->getDocDate());
             $userTransaction->setStatus(UserTransaction::getStatusFromVt($vt));
-            $userTransaction->setUser($vt->getOrder()->getContact()->getUser());
+            $userTransaction->setUser($user);
             $userTransaction->setDocStamp($docStamp);
             $userTransaction->setDocId($vt->getId());
             $userTransaction->setDocType(Movement::DOC_VT);

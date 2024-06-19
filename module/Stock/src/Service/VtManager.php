@@ -409,8 +409,9 @@ class VtManager
         
         if ($vt->getDocDate() >= $this->getAllowDate()){
             $this->zpManager->addVtCalculator($vt);
-            $this->cashManager->addUserVtTransaction($vt, $docStamp);
         }    
+        
+        $this->cashManager->addUserVtTransaction($vt, $docStamp);
         
         return;
     }

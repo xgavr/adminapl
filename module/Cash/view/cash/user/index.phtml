@@ -241,7 +241,9 @@
     
     function cashIdFormatter(value, row){
         if (row.cashDoc){
-            return '<nobr>' + value + ' (' + row.cashDoc.aplId + ')</nobr>';
+            if (row.cashDoc.aplId){
+                return '<nobr>' + value + ' (' + row.cashDoc.aplId + ')</nobr>';
+            }            
         }
         return value;
     }    
