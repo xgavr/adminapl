@@ -163,8 +163,14 @@ class ReviseManager
      */
     public function repostRevise($revise)
     {
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->reviseRegister($revise);
+        if ($revise->getDocDate() > $this->getAllowDate()){
+            $docStamp = $this->entityManager->getRepository(Register::class)
+                    ->reviseRegister($revise);
+        } else {
+            $register = $this->entityManager->getRepository(Register::class)
+                    ->findOneBy(['docKey' => $revise->getLogKey()]);
+            $docStamp = $register->getDocStamp();            
+        }    
         
         $this->updateReviseMutuals($revise, $docStamp);
         $this->updateReviseRetails($revise, $docStamp);

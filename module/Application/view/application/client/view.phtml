@@ -1579,11 +1579,21 @@ $this->headLink()
                     changeDocStatus(row);
                 },
                 isShown: function(row) {
-                  return true;
+                    if (row.reviseDoc){
+                        if (row.reviseDoc.status === '<?= Revise::STATUS_RETIRED?>'){
+                            return true;
+                        }
+                    }
+                    if (row.cashDoc){
+                        if (row.cashDoc.status === '<?= CashDoc::STATUS_RETIRED?>'){
+                            return true;
+                        }
+                    }
+                    return false;
                 },
                 isEnabled: function(row) {
                     if (row.reviseDoc){
-                        if (row.reviseDoc.docDate > '<?= $allowDate?>' && row.reviseDoc.status === '<?= Revise::STATUS_RETIRED?>'){
+                        if (row.reviseDoc.status === '<?= Revise::STATUS_RETIRED?>'){
                             return true;
                         }
                     }
@@ -1602,11 +1612,21 @@ $this->headLink()
                     changeDocStatus(row);
                 },
                 isShown: function(row) {
-                  return true;
+                    if (row.reviseDoc){
+                        if (row.reviseDoc.status === '<?= Revise::STATUS_ACTIVE?>'){
+                            return true;
+                        }
+                    }
+                    if (row.cashDoc){
+                        if (row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
+                            return true;
+                        }
+                    }
+                    return false;
                 },
                 isEnabled: function(row) {
                     if (row.reviseDoc){
-                        if (row.reviseDoc.docDate > '<?= $allowDate?>' && row.reviseDoc.status === '<?= Revise::STATUS_ACTIVE?>'){
+                        if (row.reviseDoc.status === '<?= Revise::STATUS_ACTIVE?>'){
                             return true;
                         }
                     }
