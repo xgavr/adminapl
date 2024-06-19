@@ -438,9 +438,14 @@
     
     function rowStyle(row, index) {
         var retired = 'tablerow';
-        if (row.status == '<?= CashDoc::STATUS_RETIRED?>'){
-           retired += ' retired';
-        }        
+        if (row.cashDoc){
+            if (row.cashDoc.status == '<?= CashDoc::STATUS_RETIRED?>'){
+               retired += ' retired';
+            }        
+            if (row.cashDoc.status == '<?= CashDoc::STATUS_CORRECT?>'){
+               retired += ' retired-muted';
+            }        
+        }    
         return {classes: retired};    
     }
     
