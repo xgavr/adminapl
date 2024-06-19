@@ -13,6 +13,7 @@ use Laminas\InputFilter\InputFilter;
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Cash\Entity\CashDoc;
+use User\Filter\PhoneFilter;
 
 /**
  * Description of UserIn
@@ -148,12 +149,34 @@ class UserInForm extends Form implements ObjectManagerAwareInterface
         ]);
         
         $this->add([            
-            'type'  => 'number',
+            'type'  => 'hidden',
             'name' => 'order',
             'attributes' => [                
             ],
             'options' => [
                 'label' => 'Номер заказа',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'number',
+            'name' => 'orderApl',
+            'attributes' => [                
+                'id' => 'orderApl'
+            ],
+            'options' => [
+                'label' => 'Номер заказа в АПЛ',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'phone',
+            'attributes' => [
+                'id' => 'phone'
+            ],
+            'options' => [
+                'label' => 'Телефон',
             ],
         ]);
         
@@ -237,6 +260,25 @@ class UserInForm extends Form implements ObjectManagerAwareInterface
                 ],
             ]);          
         
+        $inputFilter->add([
+                'name'     => 'phone',
+                'required' => false,
+                'filters'  => [
+                    [
+                        'name' => PhoneFilter::class,
+                        'options' => [
+                            'format' => PhoneFilter::PHONE_FORMAT_DB,
+                        ]
+                    ],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'PhoneNumber',
+                        'options' => [
+                        ],
+                    ],
+                ],
+            ]);        
         
     }    
     

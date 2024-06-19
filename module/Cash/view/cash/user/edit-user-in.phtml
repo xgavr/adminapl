@@ -135,9 +135,23 @@ $form->prepare();
             <div class="row" id="payment">
                 <div class="col-xs-3">                        
                     <div class="form-group">
-                        <?= $this->formLabel($form->get('order')); ?>
+                        <?= $this->formLabel($form->get('orderApl')); ?>
+                        <?= $this->formElement($form->get('orderApl')); ?>
+                        <?= $this->formElementErrors($form->get('orderApl')); ?>                  
                         <?= $this->formElement($form->get('order')); ?>
-                        <?= $this->formElementErrors($form->get('order')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('phone')); ?>
+                        <span id="contactName"></span>
+                        <?= $this->formElement($form->get('phone')); ?>
+                        <?= $this->formElementErrors($form->get('phone')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <div></div>
                     </div>
                 </div>    
             </div>    
@@ -172,6 +186,8 @@ $form->prepare();
 <?= $this->form()->closeTag(); ?>
             
 <script>         
+    $('#phone').mask('8 (000) 000-0000', {selectOnFocus: false});
+
     function submitForm(){
         var data = serializeForm('#user-in-form');
          $('#user-in-submit').prop('disabled', true);
@@ -222,11 +238,13 @@ $form->prepare();
         }
 
         $('#payment').hide();
-        $('#order').attr('required', false);
+        $('#orderApl').attr('required', false);
         $('#legal').attr('required', false);
+        $('#phone').attr('required', false);
         if ($("#kind").val() == <?= CashDoc::KIND_IN_PAYMENT_CLIENT?>){
             $('#payment').show();
-            $('#order').attr('required', true);
+            $('#phone').attr('required', true);
+//            $('#orderApl').attr('required', true);
             //$('#legal').attr('required', true);
         }
 
