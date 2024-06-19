@@ -149,7 +149,7 @@ class UserOutForm extends Form implements ObjectManagerAwareInterface
         ]);
         
         $this->add([            
-            'type'  => 'number',
+            'type'  => 'hidden',
             'name' => 'order',
             'attributes' => [                
             ],
