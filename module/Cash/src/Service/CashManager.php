@@ -667,8 +667,14 @@ class CashManager {
      */
     public function repostCashDoc($cashDoc)
     {
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->cashDocRegister($cashDoc);
+        if ($cashDoc->getDateOper() > $this->getAllowDate()){
+            $docStamp = $this->entityManager->getRepository(Register::class)
+                    ->cashDocRegister($cashDoc);
+        } else {
+            $register = $this->entityManager->getRepository(Register::class)
+                    ->findOneBy(['docKey' => $cashDoc->getLogKey()]);
+            $docStamp = $register->getDocStamp();
+        }    
         
         $this->removeTransactions($cashDoc);
         $this->removeUserTransactions($cashDoc);
@@ -699,8 +705,10 @@ class CashManager {
         
         $this->_repostCashDocMutuals($cashDoc, $docStamp);
         
-        $this->zpManager->repostCashDoc($cashDoc, $docStamp);
-        $this->costManager->repostCashDoc($cashDoc, $docStamp);
+        if ($cashDoc->getDateOper() > $this->getAllowDate()){
+            $this->zpManager->repostCashDoc($cashDoc, $docStamp);
+            $this->costManager->repostCashDoc($cashDoc, $docStamp);
+        }    
         
         $this->updateBalance($cashDoc);
             

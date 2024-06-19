@@ -1,5 +1,6 @@
 <?php
     use Cash\Entity\CashDoc;
+    use Stock\Entity\Movement;
 
     $this->headTitle('Касса');
 
@@ -125,8 +126,6 @@
                 data-classes = "table table-bordered table-hover table-condensed"
                 data-show-footer="true"
                 data-auto-refresh="true"
-                data-show-refresh="false"
-                data-buttons-class='xs'
             >
                 <thead>
                     <tr>
@@ -153,8 +152,6 @@
                 data-classes = "table table-bordered table-hover table-condensed"
                 data-show-footer="true"
                 data-auto-refresh="true"
-                data-show-refresh="false"
-                data-buttons-class='xs'
             >
                 <thead>
                     <tr>
@@ -195,6 +192,18 @@
             });            
             refreshTable();
         });    
+    }
+
+    function changeDocStatus(row){
+        if (row.cashDoc){
+            var status = <?= CashDoc::STATUS_ACTIVE?>;
+            if (row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
+                status = <?= CashDoc::STATUS_RETIRED?>;
+            }
+            $.get( "/till/status/"+row.cashDoc.id+'?status='+status, function(data){
+                $table.bootstrapTable('refresh', {silent: true});
+            });        
+        }         
     }
 
     $(function () {   
@@ -390,14 +399,14 @@
                 btn += '</button>';
             }    
             
-            var url = '/apl/send-cash-doc/'+row.cashDoc.id;
-            btn += ' <button';
-            btn += ' type="button"';
-            btn += ' class="btn btn-info btn-xs send-cash-doc"';
-            btn += ' aria-label="Left Align"'; 
-            btn += ' modal-url="'+url+'">';
-            btn += '<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>';
-            btn += '</button>';
+//            var url = '/apl/send-cash-doc/'+row.cashDoc.id;
+//            btn += ' <button';
+//            btn += ' type="button"';
+//            btn += ' class="btn btn-info btn-xs send-cash-doc"';
+//            btn += ' aria-label="Left Align"'; 
+//            btn += ' modal-url="'+url+'">';
+//            btn += '<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>';
+//            btn += '</button>';
         }    
         btn += '</nobr>';
         return btn;
@@ -419,5 +428,86 @@
     function responseHandler(res) {
         return res;
     }    
+    
+    var menuMutual = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            var rowId = $(rowElem).attr('data-index');
+            return $table.bootstrapTable('getData')[rowId];
+        },
+        actionsGroups: [
+           ['sendToApl'],
+           ['history']
+        ],      
+        actions: {
+            statusActive: {
+                name: 'Учитывать',
+                iconClass: 'glyphicon glyphicon-check',
+                onClick: function(row) {
+                    changeDocStatus(row);
+                },
+                isShown: function(row) {
+                  return row.cashDoc.status === '<?= CashDoc::STATUS_RETIRED?>';
+                },
+                isEnabled: function(row) {
+                    if (row.cashDoc){
+                        if (row.cashDoc.dateOper > '<?= $allowDate?>' && row.cashDoc.status === '<?= CashDoc::STATUS_RETIRED?>'){
+                            return true;
+                        }
+                    }
+                    return false;
+                }                
+            }, 
+            statusRetired: {
+                name: 'Не учитывать',
+                iconClass: 'glyphicon glyphicon-unchecked',
+                onClick: function(row) {
+                    changeDocStatus(row);
+                },
+                isShown: function(row) {
+                  return row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>';
+                },
+                isEnabled: function(row) {
+                    if (row.cashDoc){
+                        if (row.cashDoc.dateOper > '<?= $allowDate?>' && row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
+                            return true;
+                        }
+                    }
+                    return false;
+                }                
+            }, 
+            sendToApl: {
+                name: 'Отправиь в Апл',
+                iconClass: 'glyphicon glyphicon-arrow-up',
+                onClick: function (row){
+                    var url = '/apl/send-cash-doc/'+row.cashDoc.id;
+                    var dialog = bootbox.dialog({
+                        message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                        closeButton: true
+                    });
+                    $.get( url, function(data){
+                        dialog.modal('hide');
+                    });
+                }
+            },    
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.cashDoc.id+"?docType="+'<?= Movement::DOC_CASH?>',
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
+                }
+            }
+        }
+    });    
+    
 </script>
 

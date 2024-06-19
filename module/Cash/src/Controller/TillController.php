@@ -60,6 +60,7 @@ class TillController extends AbstractActionController
             'cashes' =>  $cashes,
             'offices' =>  $offices,
             'currentUser' => $currentUser,
+            'allowDate' => $this->cashManager->getAllowDate(),
         ]);
     }
     
