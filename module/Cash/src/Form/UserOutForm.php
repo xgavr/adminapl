@@ -158,6 +158,28 @@ class UserOutForm extends Form implements ObjectManagerAwareInterface
         ]);
         
         $this->add([            
+            'type'  => 'number',
+            'name' => 'orderApl',
+            'attributes' => [                
+                'id' => 'orderApl'
+            ],
+            'options' => [
+                'label' => 'Номер заказа в АПЛ',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'phone',
+            'attributes' => [
+                'id' => 'phone'
+            ],
+            'options' => [
+                'label' => 'Телефон',
+            ],
+        ]);
+        
+        $this->add([            
             'type'  => 'hidden',
             'name' => 'aplId',
             'attributes' => [                
@@ -277,6 +299,25 @@ class UserOutForm extends Form implements ObjectManagerAwareInterface
                 ],
             ]);          
         
+        $inputFilter->add([
+                'name'     => 'phone',
+                'required' => false,
+                'filters'  => [
+                    [
+                        'name' => PhoneFilter::class,
+                        'options' => [
+                            'format' => PhoneFilter::PHONE_FORMAT_DB,
+                        ]
+                    ],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'PhoneNumber',
+                        'options' => [
+                        ],
+                    ],
+                ],
+            ]);        
         
     }    
     
