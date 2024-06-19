@@ -351,6 +351,9 @@ class CashManager {
                     ->insertRetail($data);
             
             if ($cashDoc->getContact()->getUser() && empty($cashDoc->getLegal())){ // оплата от сотрудника
+                
+                $user = $cashDoc->getContact()->getUser();
+                
                 $data = [
                     'doc_key' => $cashDoc->getLogKey(),
                     'doc_type' => Movement::DOC_CASH_USER,
@@ -377,7 +380,7 @@ class CashManager {
                 $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
                 $userTransaction->setDateOper($cashDoc->getDateOper());
                 $userTransaction->setStatus(UserTransaction::getStatusFromCashdoc($cashDoc));
-                $userTransaction->setUser($cashDoc->getContact()->getUser());
+                $userTransaction->setUser($user);
                 $userTransaction->setDocStamp($docStamp);
                 $userTransaction->setDocId($cashDoc->getId());
                 $userTransaction->setDocType(Movement::DOC_CASH);
@@ -385,6 +388,8 @@ class CashManager {
                 $this->entityManager->persist($userTransaction);  
                 
                 $this->entityManager->flush();
+                
+                $this->updateUserBalance($user);
             }
         }    
         
@@ -515,14 +520,19 @@ class CashManager {
     {
         $this->removeUserDocTransactions(Movement::DOC_ORDER, $order->getId());
         
+        $user = null;
+        
         if ($order->getStatus() == Order::STATUS_SHIPPED && $order->getContact()->getUser() && empty($order->getLegal())){
+            
+            $user = $order->getContact()->getUser();
+            
             $userTransaction = new UserTransaction();
             $userTransaction->setAmount($order->getTotal());
             $userTransaction->setCashDoc(null);
             $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
             $userTransaction->setDateOper($order->getDocDate());
             $userTransaction->setStatus(UserTransaction::getStatusFromOrder($order));
-            $userTransaction->setUser($order->getContact()->getUser());
+            $userTransaction->setUser($user);
             $userTransaction->setDocStamp($docStamp);
             $userTransaction->setDocId($order->getId());
             $userTransaction->setDocType(Movement::DOC_ORDER);
@@ -548,9 +558,12 @@ class CashManager {
 
             $this->entityManager->getRepository(Retail::class)
                     ->insertRetail($data);
-        }     
+            
+        }                     
         
         $this->entityManager->flush();
+        
+        $this->updateUserBalance($user, true);
         
         return;
     }
@@ -564,7 +577,12 @@ class CashManager {
     {
         $this->removeUserDocTransactions(Movement::DOC_VT, $vt->getId());
         
+        $user = null;
+        
         if ($vt->getStatus() == Vt::STATUS_ACTIVE && $vt->getOrder()->getContact()->getUser()  && empty($vt->getOrder()->getLegal())){
+            
+            $user = $vt->getOrder()->getContact()->getUser();
+            
             $userTransaction = new UserTransaction();
             $userTransaction->setAmount($vt->getAmount());
             $userTransaction->setCashDoc(null);
@@ -597,13 +615,59 @@ class CashManager {
 
             $this->entityManager->getRepository(Retail::class)
                     ->insertRetail($data);
+
         }     
         
         $this->entityManager->flush();
         
+        $this->updateUserBalance($user, true);
+        
         return;
     }
     
+    /**
+     * Обновить баланс
+     * @param User $user
+     * @param bool $flush 
+     */
+    private function updateUserBalance($user, $flush = false)
+    {
+        if ($user){
+            $balance = $this->entityManager->getRepository(Cash::class)
+                    ->userBalance($user->getId(), date('Y-m-d 23:59:59'));
+            $user->setBalance($balance);
+            $this->entityManager->persist($user);
+        }   
+        
+        if ($flush){
+            $this->entityManager->flush();
+        }
+        
+        return;
+    }
+
+    /**
+     * Обновить баланс
+     * @param Cash $cash
+     * @param bool $flush 
+     */
+    private function updateCashBalance($cash, $flush = false)
+    {
+        if ($cash){
+            $balance = $this->entityManager->getRepository(Cash::class)
+                    ->cashBalance($cash->getId(), date('Y-m-d 23:59:59'));
+            $cash->setBalance($balance);
+            $this->entityManager->persist($cash);
+        }   
+        
+        if ($flush){
+            $this->entityManager->flush();
+        }
+        
+        return;
+    }
+
+
     /**
      * Обновить тeкущие остатки
      * @param CashDoc $cashDoc
@@ -616,28 +680,16 @@ class CashManager {
         $userRefill = $cashDoc->getUserRefill();
         
         if ($cash){
-            $balance = $this->entityManager->getRepository(Cash::class)
-                    ->cashBalance($cash->getId(), date('Y-m-d 23:59:59'));
-            $cash->setBalance($balance);
-            $this->entityManager->persist($cash);
+            $this->updateCashBalance($cash);
         }    
         if ($cashRefill){
-            $balance = $this->entityManager->getRepository(Cash::class)
-                    ->cashBalance($cashRefill->getId(), date('Y-m-d 23:59:59'));
-            $cashRefill->setBalance($balance);
-            $this->entityManager->persist($cashRefill);
+            $this->updateCashBalance($cashRefill);
         }    
         if ($user){
-            $balance = $this->entityManager->getRepository(Cash::class)
-                    ->userBalance($user->getId(), date('Y-m-d 23:59:59'));
-            $user->setBalance($balance);
-            $this->entityManager->persist($user);
+            $this->updateUserBalance($user);
         }    
         if ($userRefill){
-            $balance = $this->entityManager->getRepository(Cash::class)
-                    ->userBalance($userRefill->getId(), date('Y-m-d 23:59:59'));
-            $userRefill->setBalance($balance);
-            $this->entityManager->persist($userRefill);
+            $this->updateUserBalance($userRefill);
         }    
         
         $this->entityManager->flush();
