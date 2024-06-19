@@ -326,9 +326,13 @@
         return '';
     }    
     
-    function kindFormatter(value){
-        var kinds = <?= CashDoc::getKindListAsJavascriptArray() ?>;
-        return kinds[value];
+    function kindFormatter(value, row){
+        if (row.cashDoc){
+            var kinds = <?= CashDoc::getKindListAsJavascriptArray() ?>;
+            return kinds[row.cashDoc.kind];
+        }
+        
+        return '';
     }    
     
     function cashFormatter(value, row){
