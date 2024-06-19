@@ -450,7 +450,7 @@
                 },
                 isEnabled: function(row) {
                     if (row.cashDoc){
-                        if (row.cashDoc.dateOper > '<?= $allowDate?>' && row.cashDoc.status === '<?= CashDoc::STATUS_RETIRED?>'){
+                        if (row.cashDoc.status === '<?= CashDoc::STATUS_RETIRED?>'){
                             return true;
                         }
                     }
@@ -468,7 +468,7 @@
                 },
                 isEnabled: function(row) {
                     if (row.cashDoc){
-                        if (row.cashDoc.dateOper > '<?= $allowDate?>' && row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
+                        if (row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
                             return true;
                         }
                     }
