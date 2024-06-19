@@ -13,6 +13,7 @@ use Laminas\InputFilter\InputFilter;
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Cash\Entity\CashDoc;
+use User\Filter\PhoneFilter;
 
 /**
  * Description of CashOut
