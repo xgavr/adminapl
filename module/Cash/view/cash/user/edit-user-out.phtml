@@ -241,7 +241,7 @@ $form->prepare();
         
         $('#userReturn').hide();
         $('#userRefill').attr('required', false);
-        if ($.inArray($("#kind").val(), ['<?= CashDoc::KIND_OUT_COURIER?>', '<?= CashDoc::KIND_OUT_SALARY?>', '<?= CashDoc::KIND_OUT_USER?>']) != -1){ 
+        if ($.inArray($("#kind").val(), ['<?= CashDoc::KIND_OUT_SALARY?>', '<?= CashDoc::KIND_OUT_USER?>']) != -1){ 
             $('#userReturn').show();
             $('#userRefill').attr('required', true);
         }
@@ -257,7 +257,8 @@ $form->prepare();
         $('#order').attr('required', false);
         $('#vt').attr('required', false);
         $('#legal').attr('required', false);
-        if ($("#kind").val() == <?= CashDoc::KIND_OUT_RETURN_CLIENT?>){
+        if ($.inArray($("#kind").val(), ['<?= CashDoc::KIND_OUT_COURIER?>', '<?= CashDoc::KIND_OUT_RETURN_CLIENT?>']) != -1){ 
+//        if ($("#kind").val() == <?= CashDoc::KIND_OUT_RETURN_CLIENT?>){
             $('#payment').show();
             $('#order').attr('required', true);
             //$('#legal').attr('required', true);
