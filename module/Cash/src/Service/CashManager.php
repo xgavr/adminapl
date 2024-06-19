@@ -389,7 +389,7 @@ class CashManager {
                 
                 $this->entityManager->flush();
                 
-                $this->updateUserBalance($user);
+                $this->updateUserBalance($user, true);
             }
         }    
         
