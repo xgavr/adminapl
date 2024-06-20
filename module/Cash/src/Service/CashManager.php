@@ -589,7 +589,7 @@ class CashManager {
             $user = $vt->getOrder()->getContact()->getUser();
             
             $userTransaction = new UserTransaction();
-            $userTransaction->setAmount($vt->getAmount());
+            $userTransaction->setAmount(-$vt->getAmount());
             $userTransaction->setCashDoc(null);
             $userTransaction->setDateCreated(date('Y-m-d H:i:s'));
             $userTransaction->setDateOper($vt->getDocDate());

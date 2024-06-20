@@ -337,6 +337,9 @@
             return kinds[row.cashDoc.kind];
         }
         
+        var kinds = <?= Movement::getDocList() ?>;
+        return kinds[row.docType];
+        
         return '';
     }    
     
@@ -397,6 +400,8 @@
             switch(row.docType){
                 case '<?= Movement::DOC_ORDER?>':
                     return "<a href='#' class='order-view-show' modal-url='/order/view/"+row.docId+"'>Заказ №Z"+row.docId+"</a>"
+                case '<?= Movement::DOC_VT?>':
+                    return "Возврат товаров №"+row.docId;
             }
         }        
         return;
