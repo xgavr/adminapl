@@ -40,6 +40,15 @@ $this->pageBreadcrumbs()->setItems([
                         <?php endforeach;?>
                     </select>                    
                 </div>    
+                <div class="form-group">
+                    <select id="statusSelect" name="status" style="width: 200px" class="form-control cookie-control">
+                        <!--<option selected>все компании</option>-->
+                        <option>все сотрудники</option>
+                        <?php foreach ($users as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
             </div>
         </div>    
         <table id="table" 
@@ -56,6 +65,8 @@ $this->pageBreadcrumbs()->setItems([
             data-show-footer="false"
             data-row-style="rowStyle"
             data-classes = "table table-bordered table-hover table-condensed"
+            data-sort-name="docDate"
+            data-sort-order="desc"  
             >
             <thead>
                 <tr>
@@ -152,4 +163,96 @@ $this->pageBreadcrumbs()->setItems([
     function responseHandler(res) {
         return res;
     }    
+    
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            setCurrentIndex($(rowElem).attr('data-index'));
+            return $table.bootstrapTable('getData')[getCurrentIndex()];
+        },
+        actionsGroups: [
+           ['statusActiv', 'statusRetired'], 
+           ['duplicate'],
+           ['history']
+        ],      
+        actions: {
+            statusActiv: {
+                name: 'Сделать активным',
+                iconClass: 'glyphicon glyphicon-ok',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Ptu::STATUS_ACTIVE?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Ptu::STATUS_RETIRED?>;
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
+            }, 
+            statusRetired: {
+                name: 'Сделать не активным',
+                iconClass: 'glyphicon glyphicon-remove',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Ptu::STATUS_RETIRED?>);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Ptu::STATUS_ACTIVE?>;
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>' || row.status != <?= Ptu::STATUS_ACTIVE?>;
+                }                
+            },
+            repostEx: {
+                name: 'Обновить',
+                iconClass: 'glyphicon glyphicon-refresh',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    repostEx(row.id);
+                },
+                isShown: function(row) {
+                  return row.status == <?= Ptu::STATUS_ACTIVE?>;
+                },
+                isEnabled: function(row) {
+                    return row.docDate > '<?= $allowDate?>';
+                }                
+            },
+            duplicate: {
+                name: 'Скопировать',
+                iconClass: 'glyphicon glyphicon-duplicate',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    var url = '/ptu/edit-form/'+row.id+'?copy=1';
+                    showFormDialog({
+                        id: 'ptuModal',
+                        url: url,
+                        width: '1440px'
+                    });
+                },
+                isShown: function(row) {
+                  return true;
+                },
+                isEnabled: function(row) {
+                    return true;
+                }                
+            },
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.id+"?docType=ptu",
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
+                }
+            }
+        }
+    });        
+    
 </script>

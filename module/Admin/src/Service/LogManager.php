@@ -528,7 +528,7 @@ class LogManager {
         $fp = @fopen($errorLogFile, "r");
         if ($fp) {
             while (($buffer = fgets($fp, 4096)) !== false) {
-                $result[] = $buffer;
+                $result[] = strip_tags($buffer);
             }
             if (!feof($fp)) {
                 $result[] = "Ошибка: fgets() неожиданно потерпел неудачу\n";
