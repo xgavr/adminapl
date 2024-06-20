@@ -155,7 +155,7 @@
             >
                 <thead>
                     <tr>
-                         <th data-field="name" data-footer-formatter="totalFooterFormatter" data-sortable="false">Подотчет</th>
+                         <th data-field="link" data-footer-formatter="totalFooterFormatter" data-sortable="false">Подотчет</th>
                          <th data-field="balance" data-footer-formatter="footerFormatter" data-sortable="false" data-align="right" data-formatter="amountFormatter">Остаток</th>
                      </tr>                
                 </thead>
@@ -294,7 +294,10 @@
     }    
     
     function amountFormatter(value){
-        return (Math.round(value*100)/100).toFixed(2);
+        if (value>=0){
+            return (Math.round(value*100)/100).toFixed(2);
+        }
+        return '<span class="text-danger">'+(Math.round(value*100)/100).toFixed(2)+'</span>';
     }
     
     function inFormatter(value){

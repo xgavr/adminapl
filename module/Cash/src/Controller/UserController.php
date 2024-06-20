@@ -257,6 +257,7 @@ class UserController extends AbstractActionController
     public function editUserOutAction()
     {
         $cashDocId = (int)$this->params()->fromRoute('id', -1);
+        $userId = (int)$this->params()->fromQuery('user', -1);
         
         $cashDoc = null;
         
@@ -264,6 +265,11 @@ class UserController extends AbstractActionController
             $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                     ->find($cashDocId);
         }    
+        
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();
+            $userId = $data['user'];
+        }
         
         $form = new UserOutForm($this->entityManager);
         $this->cashManager->cashFormOptions($form, $cashDoc);

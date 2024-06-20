@@ -876,7 +876,8 @@ class CashManager {
             $this->repostCashDoc($cashDoc);
         } else {
             $register = $this->entityManager->getRepository(Register::class)
-                    ->findOneBy(['docKey' => $cashDoc->getLogKey()]);                        
+                    ->findOneBy(['docKey' => $cashDoc->getLogKey()]);  
+            var_dump($register->getDocStamp());
             $this->removeUserTransactions($cashDoc);
             $this->_repostCashDocMutuals($cashDoc, $register->getDocStamp());
         }
