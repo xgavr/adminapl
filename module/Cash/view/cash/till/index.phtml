@@ -344,6 +344,7 @@
     function operFormatter(value, row){
         var cashRefill = null;
         var cashName = null;
+        var userName = null;
         switch(value){
             case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
             case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
@@ -355,11 +356,13 @@
                         return contactName+' '+orderId;
             case '<?= CashDoc::KIND_IN_REFILL ?>': 
                         cashRefill = (row.cashDoc.cashRefill) ? row.cashDoc.cashRefill.name:row.cashDoc.userRefill.fullName;
-                        cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:'<span class="text-warning">!Касса не указана!</span>';
+                        userName = (row.cashDoc.user) ? row.cashDoc.user.fullName:'<span class="text-warning">!Касса не указана!</span>';
+                        cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:userName;
                         return (row.amount < 0) ? cashName:cashRefill;
             case '<?= CashDoc::KIND_OUT_REFILL ?>': 
                         cashRefill = (row.cashDoc.cashRefill) ? row.cashDoc.cashRefill.name:row.cashDoc.userRefill.fullName;
-                        cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:'<span class="text-warning">!Касса не указана!</span>';
+                        userName = (row.cashDoc.user) ? row.cashDoc.user.fullName:'<span class="text-warning">!Касса не указана!</span>';
+                        cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:userName;
                         return (row.amount > 0) ? cashName:cashRefill;
             case '<?= CashDoc::KIND_IN_RETURN_USER ?>': 
             case '<?= CashDoc::KIND_OUT_COURIER ?>': 
