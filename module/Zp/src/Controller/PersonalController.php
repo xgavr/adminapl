@@ -49,7 +49,7 @@ class PersonalController extends AbstractActionController
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
         $users = $this->entityManager->getRepository(User::class)
-                ->findBy(['status' => User::STATUS_ACTIVE]);
+                ->findBy([], ['status' => 'ASC']);
         
         return new ViewModel([
             'companies' => $companies,
@@ -119,7 +119,7 @@ class PersonalController extends AbstractActionController
         $form->get('company')->setValueOptions($companyList);
         $form->get('company')->setValue($companyId);
         $form->get('user')->setValueOptions($this->entityManager->
-                getRepository(User::class)->userListForm(['status' => User::STATUS_ACTIVE, 'all' => 'веберете сотрудника']));
+                getRepository(User::class)->userListForm(['all' => 'выберете сотрудника']));
         $form->get('position')->setValueOptions($this->entityManager->
                 getRepository(Position::class)->positionListForm(['status' => Position::STATUS_ACTIVE, 'company' => $companyId, 'all' => 'веберете должность']));
         $form->get('user')->setValue($userId);
