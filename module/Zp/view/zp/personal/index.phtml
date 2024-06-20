@@ -42,10 +42,8 @@ $this->pageBreadcrumbs()->setItems([
                 </div>    
                 <div class="form-group">
                     <select id="statusSelect" name="status" style="width: 200px" class="form-control cookie-control">
-                        <!--<option selected>все компании</option>-->
-                        <option>все сотрудники</option>
-                        <?php foreach ($users as $value):?>
-                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                        <?php foreach (Personal::getStatusList() as $key => $value):?>
+                            <option value="<?= $key?>"><?= $value?></option>
                         <?php endforeach;?>
                     </select>                    
                 </div>    
@@ -179,10 +177,8 @@ $this->pageBreadcrumbs()->setItems([
                 name: 'Сделать активным',
                 iconClass: 'glyphicon glyphicon-ok',
                 onClick: function(row) {
-                    changeStatus(row.id, <?= Ptu::STATUS_ACTIVE?>);
                 },
                 isShown: function(row) {
-                  return row.status == <?= Ptu::STATUS_RETIRED?>;
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';
@@ -193,13 +189,10 @@ $this->pageBreadcrumbs()->setItems([
                 iconClass: 'glyphicon glyphicon-remove',
 //                classNames: 'bg-danger',
                 onClick: function(row) {
-                    changeStatus(row.id, <?= Ptu::STATUS_RETIRED?>);
                 },
                 isShown: function(row) {
-                  return row.status == <?= Ptu::STATUS_ACTIVE?>;
                 },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>' || row.status != <?= Ptu::STATUS_ACTIVE?>;
                 }                
             },
             repostEx: {
@@ -210,7 +203,6 @@ $this->pageBreadcrumbs()->setItems([
                     repostEx(row.id);
                 },
                 isShown: function(row) {
-                  return row.status == <?= Ptu::STATUS_ACTIVE?>;
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';
