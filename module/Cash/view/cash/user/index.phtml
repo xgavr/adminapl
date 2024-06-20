@@ -337,10 +337,10 @@
             return kinds[row.cashDoc.kind];
         }
         
-        var kinds = <?= Movement::getDocList() ?>;
+        var kinds = <?= Movement::getDocListAsJavascriptArray() ?>;
         return kinds[row.docType];
         
-        return '';
+//        return '';
     }    
     
     function cashFormatter(value, row){

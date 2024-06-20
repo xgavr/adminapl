@@ -369,6 +369,15 @@ class Movement {
         ];
     }        
 
+    public static function getDocListAsJavascriptArray() 
+    {
+        $result = [];
+        foreach (self::getDocList() as $key=>$value){
+            $result[] = "$key: '$value'";
+        }
+        return '{'.implode(', ', $result).'}';
+    }    
+    
     /**
      * Returns possible doc as array.
      * @return array
