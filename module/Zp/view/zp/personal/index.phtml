@@ -65,6 +65,7 @@ $this->pageBreadcrumbs()->setItems([
             data-classes = "table table-bordered table-hover table-condensed"
             data-sort-name="docDate"
             data-sort-order="desc"  
+            data-unique-id="id"
             >
             <thead>
                 <tr>
@@ -88,6 +89,16 @@ $this->pageBreadcrumbs()->setItems([
     var $table = $('#table');
         $ok = $('#ok');
     
+    var curentRowIndex = -1;
+    
+    function setCurrentIndex(index){
+        curentRowIndex = index;
+    }
+    
+    function getCurrentIndex(){
+        return curentRowIndex;
+    }
+    
     function refreshTable(){
         $table.bootstrapTable('refresh');
     }
@@ -103,6 +114,9 @@ $this->pageBreadcrumbs()->setItems([
             refreshTable();
         });
         $(document).on('change', '#userSelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#statusSelect', function (e) {
             refreshTable();
         });
     });    
@@ -195,25 +209,12 @@ $this->pageBreadcrumbs()->setItems([
                 isEnabled: function(row) {
                 }                
             },
-            repostEx: {
-                name: 'Обновить',
-                iconClass: 'glyphicon glyphicon-refresh',
-//                classNames: 'bg-danger',
-                onClick: function(row) {
-                    repostEx(row.id);
-                },
-                isShown: function(row) {
-                },
-                isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>';
-                }                
-            },
             duplicate: {
                 name: 'Скопировать',
                 iconClass: 'glyphicon glyphicon-duplicate',
 //                classNames: 'bg-danger',
                 onClick: function(row) {
-                    var url = '/ptu/edit-form/'+row.id+'?copy=1';
+                    var url = '/personal/edit-form/'+row.id+'?copy=1';
                     showFormDialog({
                         id: 'ptuModal',
                         url: url,
@@ -226,23 +227,6 @@ $this->pageBreadcrumbs()->setItems([
                 isEnabled: function(row) {
                     return true;
                 }                
-            },
-            history: {
-                name: 'История',
-                iconClass: 'glyphicon glyphicon-list-alt',
-//                classNames: 'bg-danger',
-                onClick: function(row) {
-                    $.ajax({
-                        type: "GET",
-                        url: "/log/history/"+row.id+"?docType=ptu",
-                        success: function (result) {
-                            bootbox.alert({
-                                size: "large",
-                                message: result
-                            });
-                        }
-                    });                    
-                }
             }
         }
     });        

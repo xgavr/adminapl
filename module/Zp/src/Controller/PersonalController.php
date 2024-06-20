@@ -100,6 +100,7 @@ class PersonalController extends AbstractActionController
         $personalId = (int)$this->params()->fromRoute('id', -1);
         $companyId = $this->params()->fromQuery('company');
         $userId = $this->params()->fromQuery('user');
+        $copy = (int) $this->params()->fromQuery('copy', false);
         
         $personal = null;
         if ($personalId > 0){
@@ -160,7 +161,7 @@ class PersonalController extends AbstractActionController
                     'company' => $personal->getCompany()->getId(),
                     'user' => $personal->getUser()->getId(),
                     'position' => $personal->getPosition()->getId(),
-                    'docDate' => $personal->getDocDate(),
+                    'docDate' => ($copy) ? date('Y-m-d'):$personal->getDocDate(),  
                     'status' => $personal->getStatus(),
                     'positionNum' => $personal->getPositionNum(),
                 ];
@@ -171,6 +172,7 @@ class PersonalController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
+            'copy' => $copy,
             'personal' => $personal,
         ]);        
     }    

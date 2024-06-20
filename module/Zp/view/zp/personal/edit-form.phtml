@@ -186,7 +186,7 @@ $form->prepare();
         data.accruals = getFormatedAccrualGood();
         $.ajax({
             type: 'POST',
-            url: '/personal/edit-form/<?= ($personal) ? $personal->getId():"" ?>?company='+$('#companySelectForm').val()+'&user='+$('#userSelectForm').val(),
+            url: '/personal/edit-form/<?= ($personal && !$copy) ? $personal->getId():"" ?>?company='+$('#companySelectForm').val()+'&user='+$('#userSelectForm').val(),
             data: $.param(data)
         })
             .done(function (data) {
