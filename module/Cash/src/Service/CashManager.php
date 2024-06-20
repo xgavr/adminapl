@@ -468,8 +468,10 @@ class CashManager {
      */
     protected function removeUserTransactions($cashDoc)
     {
+        var_dump(1);
         $userTransactions = $cashDoc->getUserTransactions();
         foreach ($userTransactions as $userTransaction){
+            var_dump(2);
             $this->entityManager->remove($userTransaction);
         }
     }
@@ -877,7 +879,6 @@ class CashManager {
         } else {
             $register = $this->entityManager->getRepository(Register::class)
                     ->findOneBy(['docKey' => $cashDoc->getLogKey()]);  
-            var_dump($register->getDocStamp());
             $this->removeUserTransactions($cashDoc);
             $this->_repostCashDocMutuals($cashDoc, $register->getDocStamp());
         }
