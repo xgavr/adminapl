@@ -468,7 +468,7 @@ class CashManager {
      */
     protected function removeUserTransactions($cashDoc)
     {
-        var_dump(1);
+        var_dump($cashDoc->getId());
         $userTransactions = $cashDoc->getUserTransactions();
         foreach ($userTransactions as $userTransaction){
             var_dump(2);
