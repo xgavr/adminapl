@@ -465,14 +465,17 @@ class CashManager {
     /**
      * Удалить записи подотчета
      * @param CashDoc $cashDoc
+     * @param bool $flush;
      */
-    protected function removeUserTransactions($cashDoc)
+    protected function removeUserTransactions($cashDoc, $flush = false)
     {
-        var_dump($cashDoc->getId());
         $userTransactions = $cashDoc->getUserTransactions();
         foreach ($userTransactions as $userTransaction){
-            var_dump(2);
             $this->entityManager->remove($userTransaction);
+        }
+        
+        if ($flush){
+            $this->entityManager->flush();
         }
     }
 
@@ -879,7 +882,7 @@ class CashManager {
         } else {
             $register = $this->entityManager->getRepository(Register::class)
                     ->findOneBy(['docKey' => $cashDoc->getLogKey()]);  
-            $this->removeUserTransactions($cashDoc);
+            $this->removeUserTransactions($cashDoc, true);
             $this->_repostCashDocMutuals($cashDoc, $register->getDocStamp());
         }
         
