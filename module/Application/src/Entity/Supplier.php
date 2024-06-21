@@ -32,8 +32,8 @@ class Supplier {
     const PREPAY_ON           = 1;//Брать предоплату
     const PREPAY_OFF          = 2;//Не брать предоплату
    
-    const PRICE_LIST_ON       = 1;//Учавствовать в расчете цены
-    const PRICE_LIST_OFF      = 2;//Не учавствовать
+    const PRICE_LIST_ON       = 1;//Поставщик товаров
+    const PRICE_LIST_OFF      = 2;//Поставщик услуг
    
     const PRICE_FOLDER       = './data/prices'; // папка с прайсами
     const PRICE_FOLDER_ARX   = './data/prices/arx'; // папка с архивами прайсов
