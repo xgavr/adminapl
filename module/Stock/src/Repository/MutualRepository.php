@@ -717,6 +717,14 @@ class MutualRepository extends EntityRepository{
                             ;
                 }    
             }            
+            if (!empty($params['priceListStatus'])){
+                if (is_numeric($params['priceListStatus'])){
+                    $queryBuilder
+                        ->andWhere('s.priceListStatus = :priceListStatus')
+                        ->setParameter('priceListStatus', $params['priceListStatus'])
+                            ;
+                }    
+            }            
             if (!empty($params['sort'])){
                 $queryBuilder
                     ->orderBy('c.'.$params['sort'], $params['order'])

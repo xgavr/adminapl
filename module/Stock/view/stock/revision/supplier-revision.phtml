@@ -1,6 +1,7 @@
 <?php
     use Company\Entity\Contract;
     use Laminas\Json\Encoder;
+    use Application\Entity\Supplier;
     
     $this->headTitle('Сверка поставщиков');
 
@@ -39,11 +40,14 @@
                         <?php endforeach;?>
                     </select>                    
                 </div>    
-<!--                <div class="form-group">
-                    <select id="legalSelect" name="legal" style="width: 200px" class="form-control">
-                        <option selected>все юр.лица</option>
+                <div class="form-group">
+                    <select id="kindSelect" name="priceListStatus" style="width: 200px" class="form-control">
+                        <option selected>все типы</option>
+                        <?php foreach (Supplier::getPriceListStatusList() as $key => $value):?>
+                            <option value="<?= $key ?>" <?= ($key = Supplier::PRICE_LIST_ON) ? 'selected':'' ?>><?= $value ?></option>
+                        <?php endforeach;?>
                     </select>                    
-                </div>    -->
+                </div>    
                 <div class="form-group">
                     <select id="paySelect" name="pay" style="width: 200px" class="form-control cookie-control">
                         <option selected>все виды</option>
@@ -128,6 +132,9 @@
             refreshTable();
         });
         $('#paySelect').change(function () {
+            refreshTable();
+        });
+        $('#kindSelect').change(function () {
             refreshTable();
         });
     });
