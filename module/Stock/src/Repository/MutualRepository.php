@@ -731,12 +731,12 @@ class MutualRepository extends EntityRepository{
                         ;
             }            
         }
-        if ($notnull){
-            $queryBuilder->andWhere('round(c.balance) != 0')
-                    ->andWhere('s.priceListStatus = :priceListStatus')
-                    ->setParameter('priceListStatus', Supplier::PRICE_LIST_ON)
-                    ;
-        }
+//        if ($notnull){
+//            $queryBuilder->andWhere('round(c.balance) != 0')
+//                    ->andWhere('s.priceListStatus = :priceListStatus')
+//                    ->setParameter('priceListStatus', Supplier::PRICE_LIST_ON)
+//                    ;
+//        }
         
         return $queryBuilder->getQuery();
     }
