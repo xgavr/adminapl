@@ -53,7 +53,7 @@ $this->pageBreadcrumbs()->setItems([
                     </select>
                 </div>    
                 <div class="form-group">
-                    <select id="shipplingSelect" style="width: 200px" class="form-control refresh-table cookie-control" name="shipping">
+                    <select id="shippingSelect" style="width: 200px" class="form-control refresh-table cookie-control" name="shipping">
                         <option>все</option>
                     </select>
                 </div>    
@@ -154,6 +154,7 @@ $this->pageBreadcrumbs()->setItems([
 
     function officeChange(){
         $('#shippingSelect').empty();
+        $('#shippingSelect').append('<option>все</option>');
         $.getJSON( '/order/shippings/'+$('#officeSelect').val(), function( data ) {
             $.each( data.rows, function( key, value ) {
                 $('#shippingSelect').append('<option value="' + value.id + '">' + value.name + '</option>');
@@ -234,6 +235,9 @@ $this->pageBreadcrumbs()->setItems([
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
+        $('#toolbar').find('select[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
         limit = $('#table .page-size').html();
         if (limit){
             params.limit = limit;
@@ -242,10 +246,10 @@ $this->pageBreadcrumbs()->setItems([
         if (offset){
             params.offset = params.limit * (offset - 1);
         }    
-        params.office = $('#officeSelect').val();
-        params.user = $('#userSelect').val();
-        params.status = $('#statusSelect').val();
-        params.shipping = $('#shippingSelect').val();
+//        params.office = $('#officeSelect').val();
+//        params.user = $('#userSelect').val();
+//        params.status = $('#statusSelect').val();
+//        params.shipping = $('#shippingSelect').val();
         return params;
     }
 
