@@ -50,7 +50,7 @@ class AiSettings extends Form implements ObjectManagerAwareInterface
                 
         $this->add([            
             'type'  => 'text',
-            'name' => 'Авторизационные данные',
+            'name' => 'gigachat_client_secret',
             'options' => [
                 'label' => 'Gigachat Client Secret',
             ],
