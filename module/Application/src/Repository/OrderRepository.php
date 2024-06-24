@@ -285,6 +285,13 @@ class OrderRepository extends EntityRepository{
                             ;
                 }    
             }            
+            if (!empty($params['shipping'])){
+                if (is_numeric($params['shipping'])){
+                    $queryBuilder->andWhere('o.shipping = :shipping')
+                        ->setParameter('shipping', $params['shipping'])
+                            ;
+                }    
+            }            
             if (isset($params['sort'])){
                 $queryBuilder->addOrderBy('o.'.$params['sort'], $params['order']);
             }        
@@ -364,6 +371,13 @@ class OrderRepository extends EntityRepository{
                 $queryBuilder->andWhere('o.status = ?3')
                     ->setParameter('3', $params['status'])
                         ;
+            }            
+            if (!empty($params['shipping'])){
+                if (is_numeric($params['shipping'])){
+                    $queryBuilder->andWhere('o.shipping = :shipping')
+                        ->setParameter('shipping', $params['shipping'])
+                            ;
+                }    
             }            
             if (!empty($params['startDate'])){
                 $queryBuilder->andWhere('o.dateOper >= :startDate')

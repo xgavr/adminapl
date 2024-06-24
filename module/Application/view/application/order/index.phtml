@@ -52,6 +52,11 @@ $this->pageBreadcrumbs()->setItems([
                         <?php endforeach;?>
                     </select>
                 </div>    
+                <div class="form-group">
+                    <select id="shipplingSelect" style="width: 200px" class="form-control refresh-table cookie-control" name="shipping">
+                        <option>все</option>
+                    </select>
+                </div>    
 <!--                <div class="form-group">
                     <input id="monthSelect" class="form-control" type="month" placeholder="Период" value="<?= date('Y-m');?>">
                 </div>-->
@@ -148,13 +153,13 @@ $this->pageBreadcrumbs()->setItems([
     }
 
     function officeChange(){
-//        $.getJSON( '/accountant/office-cashes/'+$('#officeSelect').val(), function( data ) {
-//            $('#userSelect').empty();
-//            $.each( data.rows, function( key, value ) {
-//                $('#userSelect').append('<option value="' + key + '">' + value.name + '</option>');
-//            });            
-//            refreshTable();
-//        });    
+        $('#shippingSelect').empty();
+        $.getJSON( '/order/shippings/'+$('#officeSelect').val(), function( data ) {
+            $.each( data.rows, function( key, value ) {
+                $('#shippingSelect').append('<option value="' + value.id + '">' + value.name + '</option>');
+            });
+            refreshTable();
+        });    
     }
     
     function updateApl(id, url){
@@ -220,6 +225,9 @@ $this->pageBreadcrumbs()->setItems([
         $(document).on('change', '#userSelect', function (e) {
             refreshTable();
         });        
+        $(document).on('change', '#shippingSelect', function (e) {
+            refreshTable();
+        });        
     });
     
     function queryParams(params) {
@@ -237,6 +245,7 @@ $this->pageBreadcrumbs()->setItems([
         params.office = $('#officeSelect').val();
         params.user = $('#userSelect').val();
         params.status = $('#statusSelect').val();
+        params.shipping = $('#shippingSelect').val();
         return params;
     }
 
