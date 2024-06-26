@@ -174,8 +174,11 @@ class ClientRepository extends EntityRepository{
         if (!empty($params['legal'])){
             $queryBuilder->join('c.contacts', 'cntl')
                     ->join('cntl.legals', 'l')
+                    ->join('l.contracts', 'contract')
                     ->addSelect('cntl')
                     ->addSelect('l')
+                    ->addSelect('contract')
+                    ->andWhere('round(contract.balance) != 0')
                     ;
         }    
         if (!empty(trim($params['search']))){
@@ -237,6 +240,8 @@ class ClientRepository extends EntityRepository{
         if (!empty($params['legal'])){
             $queryBuilder->join('c.contacts', 'cntl')
                     ->join('cntl.legals', 'l')
+                    ->join('l.contracts', 'contract')
+                    ->andWhere('round(contract.balance) != 0')
                     ;
         }    
         if (!empty($params['search'])){
