@@ -220,20 +220,24 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function creditFormatter(value, row){
+        var result = value;
         if ($('legalSelect').val() === '1'){
-            value = contractsBalance(row);
+            console.log(1);
+            result = contractsBalance(row);
         }    
-        if (value<0){
-            return (-Math.round(value*100)/100).toFixed(2);
+        if (result<0){
+            return (-Math.round(result*100)/100).toFixed(2);
         }
         return '';
     }
     function debitFormatter(value, row){
+        var result = value;
         if ($('legalSelect').val() === '1'){
-            value = contractsBalance(row);
+            console.log(1);
+            result = contractsBalance(row);
         }    
-        if (value>0){
-            return (Math.round(value*100)/100).toFixed(2);
+        if (result>0){
+            return (Math.round(result*100)/100).toFixed(2);
         }
         return '';
     }
