@@ -245,7 +245,8 @@ class ClientRepository extends EntityRepository{
             $queryBuilder->join('c.contacts', 'cntl')
                     ->join('cntl.legals', 'l')
                     ->join('l.contracts', 'contract')
-                    ->andWhere('round(contract.balance) != 0')
+                    ->addSelect('sum(case when contract.balance > 0 then contract.balance else 0 end) as contractBalanceIn')
+                    ->addSelect('sum(case when contract.balance < 0 then -contract.balance else 0 end) as contractBalanceOut')
                     ;
         }    
         if (!empty($params['search'])){

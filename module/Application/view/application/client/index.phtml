@@ -129,6 +129,10 @@ $this->pageBreadcrumbs()->setItems([
             tableRowClick();
             var inTotal = (res.balanceIn) ? res.balanceIn:0;
             var outTotal = (res.balanceOut) ? res.balanceOut:0;
+            if ($('#legalSelect').val() === '1'){
+                inTotal = (res.contractBalanceIn) ? res.contractBalanceIn:0;
+                outTotal = (res.contractBalanceOut) ? res.contractBalanceOut:0;
+            }    
             $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
             $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
         });        
