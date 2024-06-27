@@ -123,6 +123,8 @@ class ClientController extends AbstractActionController
             'total' => $totalResult['countC'],
             'balanceIn' => $totalResult['balanceIn'],
             'balanceOut' => $totalResult['balanceOut'],
+            'contractBalanceIn' => (empty($totalResult['contractBalanceIn'])) ? 0:$totalResult['contractBalanceIn'],
+            'contractBalanceOut' => (empty($totalResult['contractBalanceOut'])) ? 0:$totalResult['contractBalanceOut'],
             'rows' => $result,
         ]);          
     }    
