@@ -202,20 +202,26 @@ $this->pageBreadcrumbs()->setItems([
         return (Math.round(value*100)/100).toFixed(2);
     }    
 
+    function contractsBalance(row){
+        var result = 0;
+        if (row.contacts){
+            $.each(row.contacts, function( index, contact ) {
+                if (contact.legals){
+                    $.each(contact.legals, function( index, legal ) {
+                        $.each(legal.contracts, function( index, contract ) {
+                            result += contract.balance;
+                        });
+                    });
+                }
+            });            
+        };
+        
+        return result;
+    }
+    
     function creditFormatter(value, row){
         if ($('legalSelect').val() === '1'){
-            value = 0;
-            if (row.contacts){
-                $.each(row.contacts, function( index, contact ) {
-                    if (contact.legals){
-                        $.each(contact.legals, function( index, legal ) {
-                            $.each(legal.contracts, function( index, contract ) {
-                                value += contract.balance;
-                            });
-                        });
-                    }
-                });            
-            };
+            value = contractsBalance(row);
         }    
         if (value<0){
             return (-Math.round(value*100)/100).toFixed(2);
@@ -223,19 +229,8 @@ $this->pageBreadcrumbs()->setItems([
         return '';
     }
     function debitFormatter(value, row){
-        if ($('#legalSelect').val() === '1'){
-            value = 0;
-            if (row.contacts){
-                $.each(row.contacts, function( index, contact ) {
-                    if (contact.legals){
-                        $.each(contact.legals, function( index, legal ) {
-                            $.each(legal.contracts, function( index, contract ) {
-                                value += contract.balance;
-                            });
-                        });
-                    }
-                });            
-            };
+        if ($('legalSelect').val() === '1'){
+            value = contractsBalance(row);
         }    
         if (value>0){
             return (Math.round(value*100)/100).toFixed(2);
