@@ -221,7 +221,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function creditFormatter(value, row){
         var result = value;
-        if ($('legalSelect').val() === '1'){
+        if ($('#legalSelect').val() === 1){
             console.log(1);
             result = contractsBalance(row);
         }    
@@ -232,7 +232,7 @@ $this->pageBreadcrumbs()->setItems([
     }
     function debitFormatter(value, row){
         var result = value;
-        if ($('legalSelect').val() === '1'){
+        if ($('#legalSelect').val() === 1){
             console.log(1);
             result = contractsBalance(row);
         }    
