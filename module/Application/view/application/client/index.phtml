@@ -202,7 +202,7 @@ $this->pageBreadcrumbs()->setItems([
         return (Math.round(value*100)/100).toFixed(2);
     }    
 
-    function creditFormatter(value){
+    function creditFormatter(value, row){
         if ($('legalSelect').val() === 1){
             value = 0;
             if (row.contacts){
@@ -222,7 +222,7 @@ $this->pageBreadcrumbs()->setItems([
         }
         return '';
     }
-    function debitFormatter(value){
+    function debitFormatter(value, row){
         if ($('#legalSelect').val() === 1){
             value = 0;
             if (row.contacts){
