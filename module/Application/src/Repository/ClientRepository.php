@@ -172,7 +172,7 @@ class ClientRepository extends EntityRepository{
             }    
         }    
         if (!empty($params['legal'])){
-            $queryBuilder->join('c.contacts', 'cntl')
+            $queryBuilder->join('c.contacts')
                     ->join('cntl.legals', 'l')
                     ->join('l.contracts', 'contract')
                     ->addSelect('cntl')
@@ -245,6 +245,8 @@ class ClientRepository extends EntityRepository{
             $queryBuilder->join('c.contacts', 'cntl')
                     ->join('cntl.legals', 'l')
                     ->join('l.contracts', 'contract')
+                    ->addSelect('cntl')
+                    ->addSelect('l')
                     ->addSelect('sum(case when contract.balance > 0 then contract.balance else 0 end) as contractBalanceIn')
                     ->addSelect('sum(case when contract.balance < 0 then -contract.balance else 0 end) as contractBalanceOut')
                     ;
