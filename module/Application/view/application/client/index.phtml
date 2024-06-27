@@ -205,14 +205,11 @@ $this->pageBreadcrumbs()->setItems([
     function contractsBalance(row){
         var result = 0;
         if (row.contacts){
-            console.log(1);
             $.each(row.contacts, function( index, contact ) {
                 if (contact.legals){
-                    console.log(2);
                     $.each(contact.legals, function( index, legal ) {
-                        console.log(3);
                         $.each(legal.contracts, function( index, contract ) {
-                            console.log(4);
+                            console.log(contract.balance);
                             result += contract.balance;
                         });
                     });
@@ -220,6 +217,7 @@ $this->pageBreadcrumbs()->setItems([
             });            
         };
         
+        console.log(result);
         return result;
     }
     
