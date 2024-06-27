@@ -209,15 +209,13 @@ $this->pageBreadcrumbs()->setItems([
                 if (contact.legals){
                     $.each(contact.legals, function( index, legal ) {
                         $.each(legal.contracts, function( index, contract ) {
-                            console.log(contract.balance);
-                            result += contract.balance;
+                            result += Math.round(contract.balance*100)/100);
                         });
                     });
                 }
             });            
         };
         
-        console.log(result);
         return result;
     }
     
