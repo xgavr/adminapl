@@ -203,7 +203,7 @@ $this->pageBreadcrumbs()->setItems([
     }    
 
     function creditFormatter(value, row){
-        if ($('legalSelect').val() === 1){
+        if ($('legalSelect').val() === '1'){
             value = 0;
             if (row.contacts){
                 $.each(row.contacts, function( index, contact ) {
@@ -223,7 +223,7 @@ $this->pageBreadcrumbs()->setItems([
         return '';
     }
     function debitFormatter(value, row){
-        if ($('#legalSelect').val() === 1){
+        if ($('#legalSelect').val() === '1'){
             value = 0;
             if (row.contacts){
                 $.each(row.contacts, function( index, contact ) {
