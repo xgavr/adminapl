@@ -208,11 +208,11 @@ class ClientRepository extends EntityRepository{
         }
         
         if ($balanceFlag){
-            $queryBuilder->andWhere('round(c.balance) != 0');
             if (!empty($params['legal'])){
-                $queryBuilder->andWhere('round(contract.balance) != 0')
-                        ;
-            }    
+                $queryBuilder->andWhere('round(contract.balance) != 0');
+            } else {
+                $queryBuilder->andWhere('round(c.balance) != 0');                
+            }   
         }
         
 //        var_dump($queryBuilder->getQuery()->getSQL());
@@ -276,8 +276,7 @@ class ClientRepository extends EntityRepository{
         }
         if ($balanceFlag){
             if (!empty($params['legal'])){
-                $queryBuilder->andWhere('round(contract.balance) != 0')
-                        ;
+                $queryBuilder->andWhere('round(contract.balance) != 0');
             } else {
                 $queryBuilder->andWhere('round(c.balance) != 0');                
             }    
