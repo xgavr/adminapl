@@ -275,10 +275,11 @@ class ClientRepository extends EntityRepository{
             }    
         }
         if ($balanceFlag){
-            $queryBuilder->andWhere('round(c.balance) != 0');
             if (!empty($params['legal'])){
                 $queryBuilder->andWhere('round(contract.balance) != 0')
                         ;
+            } else {
+                $queryBuilder->andWhere('round(c.balance) != 0');                
             }    
         }
         
