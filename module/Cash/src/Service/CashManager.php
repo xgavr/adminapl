@@ -248,7 +248,11 @@ class CashManager {
     {
         if ($cashDoc->isMutual()){
             $office = ($cashDoc->getCash()) ? $cashDoc->getCash()->getOffice():$cashDoc->getUser()->getOffice();
-            $contract = $this->findDefaultContract($office, 
+            $contractOffice = $office;
+            if ($cashDoc->getOrder()){
+                $contractOffice = $cashDoc->getOrder()->getOffice();
+            }
+            $contract = $this->findDefaultContract($contractOffice, 
                     $cashDoc->getLegal(), $cashDoc->getDateOper(), $cashDoc->getId(),
                     $cashDoc->getContractKind(), $cashDoc->contractPayCash());
 
@@ -322,9 +326,13 @@ class CashManager {
     {
         if ($cashDoc->isRetail()&& $cashDoc->getContact()){
             $legalId = $contractId = null;
-            $office = ($cashDoc->getCash()) ? $cashDoc->getCash()->getOffice():$cashDoc->getUser()->getOffice();            
+            $office = ($cashDoc->getCash()) ? $cashDoc->getCash()->getOffice():$cashDoc->getUser()->getOffice();
+            $contractOffice = $office;
+            if ($cashDoc->getOrder()){
+                $contractOffice = $cashDoc->getOrder()->getOffice();
+            }
             if ($cashDoc->getLegal()){
-                $contract = $this->findDefaultContract($office, 
+                $contract = $this->findDefaultContract($contractOffice, 
                         $cashDoc->getLegal(), $cashDoc->getDateOper(), $cashDoc->getId(),
                         $cashDoc->getContractKind(), $cashDoc->contractPayCash());
                 $legalId = $cashDoc->getLegal()->getId();
