@@ -178,7 +178,9 @@ class ClientRepository extends EntityRepository{
                     ->addSelect('cntl')
                     ->addSelect('l')
                     ->addSelect('contract')
-                    ->andWhere('round(contract.balance) != 0')
+                    ->andWhere('contract.kind in (:customerKind, :comitentKind)')
+                    ->setParameter('contractKind', Contract::KIND_CUSTOMER)
+                    ->setParameter('comitentKind', Contract::KIND_COMITENT)
                     ;
         }    
         if (!empty(trim($params['search']))){
@@ -247,6 +249,9 @@ class ClientRepository extends EntityRepository{
                     ->join('l.contracts', 'contract')
                     ->addSelect('sum(case when contract.balance > 0 then contract.balance else 0 end) as contractBalanceIn')
                     ->addSelect('sum(case when contract.balance < 0 then -contract.balance else 0 end) as contractBalanceOut')
+                    ->andWhere('contract.kind in (:customerKind, :comitentKind)')
+                    ->setParameter('contractKind', Contract::KIND_CUSTOMER)
+                    ->setParameter('comitentKind', Contract::KIND_COMITENT)
                     ;
         }    
         if (!empty($params['search'])){
