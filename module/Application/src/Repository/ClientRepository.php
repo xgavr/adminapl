@@ -179,7 +179,7 @@ class ClientRepository extends EntityRepository{
                     ->addSelect('l')
                     ->addSelect('contract')
                     ->andWhere('contract.kind in (:customerKind, :comitentKind)')
-                    ->setParameter('contractKind', Contract::KIND_CUSTOMER)
+                    ->setParameter('customerKind', Contract::KIND_CUSTOMER)
                     ->setParameter('comitentKind', Contract::KIND_COMITENT)
                     ;
         }    
@@ -250,7 +250,7 @@ class ClientRepository extends EntityRepository{
                     ->addSelect('sum(case when contract.balance > 0 then contract.balance else 0 end) as contractBalanceIn')
                     ->addSelect('sum(case when contract.balance < 0 then -contract.balance else 0 end) as contractBalanceOut')
                     ->andWhere('contract.kind in (:customerKind, :comitentKind)')
-                    ->setParameter('contractKind', Contract::KIND_CUSTOMER)
+                    ->setParameter('customerKind', Contract::KIND_CUSTOMER)
                     ->setParameter('comitentKind', Contract::KIND_COMITENT)
                     ;
         }    
