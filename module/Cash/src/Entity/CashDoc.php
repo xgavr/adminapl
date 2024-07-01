@@ -700,6 +700,7 @@ class CashDoc {
     {
         switch ($this->kind){
             case $this::KIND_IN_PAYMENT_CLIENT:
+            case $this::KIND_OUT_RETURN_CLIENT:
                 if ($this->getCash()){
                     if ($this->getCash()->getPayment() == Cash::PAYMENT_PAY_SERVICE){
                         return !empty($this->getCash()->getBankInn());
