@@ -186,7 +186,7 @@
                         <tr>
                             <th>Офис</th>
                             <th>Компания</th>
-                            <th>№,дата</th>
+                            <th>(id),№,дата</th>
                             <th>Наименование</th>
                             <th>Тип</th>
                             <th>Оплата</th>
@@ -203,7 +203,7 @@
                                     <?= $contract->getCompany()->getName() ?>
                                 </td>
                                 <td>
-                                    <?= $contract->getAct() ?> от <?= date('d.m.Y', strtotime($contract->getDateStart())) ?>
+                                    (<?= $contract->getId() ?>) <?= $contract->getAct() ?> от <?= date('d.m.Y', strtotime($contract->getDateStart())) ?>
                                 </td>
                                 <td>
                                     <?= $contract->getContractPresentPay() ?>
