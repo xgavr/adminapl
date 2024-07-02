@@ -154,7 +154,7 @@ $this->pageBreadcrumbs()->setItems([
             refreshTable();
         });
         $(document).on('change', '#legalSelect', function (e) {
-            $('#legalSelect').prop('disabled', $('#legalSelect').val() === '0');
+            $('#companySelect').prop('disabled', $('#legalSelect').val() === '0');
             refreshTable();
         });
         $(document).on('change', '#companySelect', function (e) {
