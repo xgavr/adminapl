@@ -171,6 +171,12 @@ class ClientRepository extends EntityRepository{
                         ->setParameter('pricecol', $params['pricecol']);
             }    
         }    
+        if (!empty($params['company'])){
+            if (is_numeric($params['company'])){
+                $queryBuilder->andWhere('c.company = :company')
+                        ->setParameter('company', $params['company']);
+            }    
+        }    
         if (!empty($params['legal'])){
             $queryBuilder->join('c.contacts', 'cntl')
                     ->join('cntl.legals', 'l')
@@ -241,6 +247,12 @@ class ClientRepository extends EntityRepository{
             if (is_numeric($params['pricecol'])){
                 $queryBuilder->andWhere('c.pricecol = :pricecol')
                         ->setParameter('pricecol', $params['pricecol']);
+            }    
+        }    
+        if (!empty($params['company'])){
+            if (is_numeric($params['company'])){
+                $queryBuilder->andWhere('c.company = :company')
+                        ->setParameter('company', $params['company']);
             }    
         }    
         if (!empty($params['legal'])){

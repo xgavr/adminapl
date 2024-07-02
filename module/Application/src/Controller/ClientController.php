@@ -84,9 +84,12 @@ class ClientController extends AbstractActionController
         $total = $this->entityManager->getRepository(Client::class)
                 ->count([]);
         
+        $companies = $this->entityManager->getRepository(Legal::class)
+                ->companies();
         // Визуализируем шаблон представления.
         return new ViewModel([
             'total' => $total,
+            'companies' => $companies,
         ]);  
     }
     
@@ -100,9 +103,10 @@ class ClientController extends AbstractActionController
         $order = $this->params()->fromQuery('order', 'ASC');
         $pricecol = $this->params()->fromQuery('pricecol');
         $legal = $this->params()->fromQuery('legal');
+        $company = $this->params()->fromQuery('company');
         
         $params = ['search' => $q, 'sort' => $sort, 'order' => $order,
-                    'pricecol' => $pricecol, 'legal' => $legal];
+                    'pricecol' => $pricecol, 'legal' => $legal, 'company' => $company];
         
         $query = $this->entityManager->getRepository(Client::class)
                         ->findAllClient($params);
