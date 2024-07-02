@@ -100,13 +100,12 @@ class PtManager
      * Обновить движения документа
      * 
      * @param Pt $pt
+     * @param float $docStamp
      */
-    public function updatePtMovement($pt)
+    public function updatePtMovement($pt, $docStamp)
     {
         
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->ptRegister($pt);
-        $this->entityManager->getRepository(Movement::class)
+       $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($pt->getLogKey());
         $this->entityManager->getRepository(Comiss::class)
                 ->removeDocComiss($pt->getLogKey());
@@ -262,11 +261,10 @@ class PtManager
      * Обновить взаиморасчеты розничного заказа
      * 
      * @param Pt $pt
+     * @param float $docStamp
      */
-    public function updatePtRetails($pt)
+    public function updatePtRetails($pt, $docStamp)
     {
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->ptRegister($pt);
         $this->entityManager->getRepository(Retail::class)
                 ->removeOrderRetails($pt->getLogKey());
         if ($pt->getCompany()->getInn() != $pt->getCompany2()->getInn()){
@@ -298,11 +296,10 @@ class PtManager
      * Обновить взаиморасчеты заказа
      * 
      * @param Pt $pt
+     * @param float $docStamp
      */
-    public function updatePtMutuals($pt)
+    public function updatePtMutuals($pt, $docStamp)
     {
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->ptRegister($pt);
         $this->entityManager->getRepository(Mutual::class)
                 ->removeDocMutuals($pt->getLogKey());                        
         if ($pt->getCompany()->getInn() != $pt->getCompany2()->getInn()){        
@@ -335,10 +332,16 @@ class PtManager
     public function repostPt($pt)
     {
         if ($pt->getDocDate() > $this->getAllowDate()){
-            $this->updatePtMovement($pt);            
+            $docStamp = $this->entityManager->getRepository(Register::class)
+                    ->ptRegister($pt);        
+            $this->updatePtMovement($pt, $docStamp);            
+        } else {
+            $register = $this->entityManager->getRepository(Register::class)
+                    ->findOneBy(['docKey' => $pt->getLogKey()]);
+            $docStamp = $register->getDocStamp();
         }
-        $this->updatePtRetails($pt);
-        $this->updatePtMutuals($pt);
+        $this->updatePtRetails($pt, $docStamp);
+        $this->updatePtMutuals($pt, $docStamp);
         
         return;
     }
