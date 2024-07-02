@@ -687,6 +687,7 @@ class ContactManager
 
         foreach ($oldContact->getLegals() as $legal){
             $oldContact->removeLegalAssociation($legal);
+            $contact->removeLegalAssociation($legal);
             $legal->addContact($contact);
             $this->entityManager->persist($legal);
         }
