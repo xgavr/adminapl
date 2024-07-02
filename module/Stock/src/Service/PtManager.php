@@ -270,6 +270,7 @@ class PtManager
         $this->entityManager->getRepository(Retail::class)
                 ->removeOrderRetails($pt->getLogKey());
         if ($pt->getCompany()->getInn() != $pt->getCompany2()->getInn()){
+            $contract = $this->orderManager->findDefaultContract($pt->getOffice(), $pt->getCompany2(), $pt->getDocDate(), $pt->getDocNo());
             $data = [
                 'doc_key' => $pt->getLogKey(),
                 'doc_type' => Movement::DOC_PT,
@@ -281,6 +282,8 @@ class PtManager
                 'contact_id' => $pt->getOffice2()->getLegalContact()->getId(),
                 'office_id' => $pt->getOffice()->getId(),
                 'company_id' => $pt->getCompany()->getId(),
+                'legal_id' => $pt->getCompany2()->getId(),
+                'contract_id' => $contract->getId(),
                 'doc_stamp' => $docStamp,
             ];
 
@@ -331,7 +334,9 @@ class PtManager
      */
     public function repostPt($pt)
     {
-        $this->updatePtMovement($pt);
+        if ($pt->getDocDate() > $this->getAllowDate()){
+            $this->updatePtMovement($pt);            
+        }
         $this->updatePtRetails($pt);
         $this->updatePtMutuals($pt);
         

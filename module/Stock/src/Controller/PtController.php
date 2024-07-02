@@ -576,6 +576,29 @@ class PtController extends AbstractActionController
         );           
     }            
     
+    public function repostAction()
+    {
+        $ptId = $this->params()->fromRoute('id', -1);
+
+        $pt = $this->entityManager->getRepository(Pt::class)
+                ->find($ptId);        
+
+        if ($pt == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->ptManager->repostPt($pt);
+
+        $query = $this->entityManager->getRepository(Pt::class)
+                ->findAllPt(['ptId' => $pt->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
+        return new JsonModel(
+           $result
+        );           
+    }            
+    
     public function clearTakeAction()
     {
         $ptId = $this->params()->fromRoute('id', -1);
