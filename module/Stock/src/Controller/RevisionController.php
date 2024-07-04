@@ -92,6 +92,7 @@ class RevisionController extends AbstractActionController
         $contractId = $this->params()->fromQuery('contract');
         $officeId = $this->params()->fromQuery('office');
         $dateStart = $this->params()->fromQuery('dateStart');
+        $docType = $this->params()->fromQuery('docType');
         $period = $this->params()->fromQuery('period');
         $status = $this->params()->fromQuery('status');
         
@@ -117,6 +118,7 @@ class RevisionController extends AbstractActionController
             'supplierId' => $supplierId, 'officeId' => $officeId,
             'startDate' => $startDate, 'endDate' => $endDate, 'status' => $status,
             'companyId' => $companyId, 'legalId' => $legalId, 'contractId' => $contractId,
+            'docType' => $docType,
         ];
                 
         $query = $this->entityManager->getRepository(Mutual::class)
