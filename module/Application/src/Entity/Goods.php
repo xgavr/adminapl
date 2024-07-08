@@ -1315,6 +1315,7 @@ class Goods {
             'nameInput' => $this->getInputName(),
             'producer' => $this->getProducer()->toArray(),
             'group' => $this->getGenericGroup()->toArray(),
+            'tokenGroup' => ($this->getTokenGroup()) ? $this->getTokenGroup()->toArray():[],
         ];
         
         return $result;

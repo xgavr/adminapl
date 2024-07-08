@@ -347,4 +347,21 @@ class TokenGroup {
         $this->titleTokens[] = $titleToken;
     }             
 
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'goodCount' => $this->getGoodCount(),
+            'movement' => $this->getMovement(),
+            'lemms' => $this->getLemms(),
+        ];
+        
+        return $result;
+    }            
+        
 }
