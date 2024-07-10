@@ -314,6 +314,16 @@ class CashDoc {
         }
     }
 
+    public function getFinServiceAmount() 
+    {
+        switch ($this->kind){
+            case $this::KIND_OUT_RETURN_CLIENT:
+                return -$this->amount;
+            default:    
+                return $this->amount;
+        }
+    }
+
     public function setAmount($amount) 
     {
         $this->amount = $amount;
