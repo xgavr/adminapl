@@ -57,14 +57,33 @@ class ApiLandingResource extends AbstractResourceListener
             }
             
             $order = $this->orderManager->addNewOrder($office, $contact, [
-                'mode' => Order::MODE_LANDING,
+                'mode' => ($data->mode) ? $data->mode:Order::MODE_LANDING,
                 'info' => (empty($data->need)) ? null:$data->need,
                 'address' => (empty($data->address)) ? null:$data->address,
                 'geo' => (empty($data->geo)) ? null:$data->geo,                
                 'vin' => (empty($data->vin)) ? null:$data->vin,
+                'user' => $data->user,
             ]);
             
-            $this->orderManager->updateDependInfo($order, true);
+            if ($order && !empty($data->goods)){
+                $i = 1;
+                foreach ($data->goods as $good){
+//                    var_dump($good); exit;
+                    $bid = [
+                        'good' => $good['id'],
+                        'price' => $good['price'],
+                        'num' => $good['num'],
+                        'rowNo' => $i,
+                    ];
+                    $i++;
+                    $this->orderManager->addNewBid($order, $bid, false);
+                }                    
+            }
+            
+            $this->orderManager->updateDependInfo($order);
+            $this->entityManager->flush();
+
+            $this->orderManager->updOrderTotal($order);
             
             return ['result' => 'Z'.$order->getId()];
 //            return ['result' => $data];            

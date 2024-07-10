@@ -866,6 +866,14 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'description' => 'VIN номер',
                 'field_type' => 'string',
             ],
+            8 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'goods',
+                'description' => 'Товары',
+                'field_type' => 'array',
+            ],
         ],
         'Api\\V1\\Rest\\ApiSearch\\Validator' => [
             0 => [

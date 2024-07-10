@@ -47,6 +47,7 @@ class Order {
     const MODE_FAST  = 4; // Быстрый заказ
     const MODE_INNER  = 5; // Внутренний заказ
     const MODE_LANDING  = 6; // Заказ с лендинга
+    const MODE_OFFER  = 7; // Заказ предложение
     
     const STATUS_EX_OK  = 1;// обновлено 
     const STATUS_EX_NO  = 2;// не обновлено
@@ -851,6 +852,8 @@ class Order {
             self::MODE_VIN => 'Запрос по VIN',
             self::MODE_FAST => 'Быстрый заказ',
             self::MODE_INNER => 'Внутренний заказ',
+            self::MODE_OFFER => 'Предложение',
+            self::MODE_LANDING => 'Ландинг',
         ];
     }    
     
@@ -880,6 +883,7 @@ class Order {
             self::MODE_FAST => 'fast',
             self::MODE_INNER => 'inner',
             self::MODE_LANDING => 'vin',
+            self::MODE_OFFER => 'order',
         ];
     }    
     
