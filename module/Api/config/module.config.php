@@ -874,6 +874,32 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'description' => 'Товары',
                 'field_type' => 'array',
             ],
+            9 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'mode',
+                'description' => 'Вид заказа (6 - лендинг, 7 - предложение)',
+                'field_type' => 'integer',
+            ],
+            10 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'user',
+                'description' => 'Ид менеджера (в админапл)(Night - 21)',
+                'field_type' => 'integer',
+            ],
         ],
         'Api\\V1\\Rest\\ApiSearch\\Validator' => [
             0 => [
