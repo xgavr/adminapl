@@ -315,7 +315,7 @@
                     kindName = kindNames[row.cashDoc.kind];
                     if (row.cashDoc.cash){
                         cashName = kindName +' '+ row.cashDoc.cash.name;
-                        if (row.kind < 10){
+                        if (row.cashDoc.kind < 10){
                             result = "<a href='#' class='cash-in-modal-show' modal-url='/till/edit-cash-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
                         } else {   
                             result = "<a href='#' class='cash-out-modal-show' modal-url='/till/edit-cash-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
@@ -323,7 +323,7 @@
                     }    
                     if (row.cashDoc.user){
                         cashName = kindName +' '+ row.cashDoc.user.fullName;
-                        if (row.kind < 10){
+                        if (row.cashDoc.kind < 10){
                             result = "<a href='#' class='user-in-modal-show' modal-url='/accountant/edit-user-in/"+docId+"'>"+cashName+" №"+docId+"</a>";
                         } else {    
                             result = "<a href='#' class='user-out-modal-show' modal-url='/accountant/edit-user-out/"+docId+"'>"+cashName+" №"+docId+"</a>";
