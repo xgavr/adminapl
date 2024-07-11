@@ -127,7 +127,7 @@ class ApiClientInfoResource extends AbstractResourceListener
                 ->find($id);
         
         if ($client){
-            return $this->clientInfo($client);
+            return $this->clientInfo($client, ['orderStatus' => Order::STATUS_SHIPPED]);
         }
 
         return new ApiProblem(404, "Клиент с идентификаторм $id не найден");
