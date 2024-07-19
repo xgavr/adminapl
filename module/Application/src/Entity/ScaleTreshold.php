@@ -21,7 +21,7 @@ class ScaleTreshold
 {
     const DEFAULT_ROUNDING = -1; //окруление по умолчанию
     
-    const MIN_RATE = 7;        //минимальная наценка
+    const MIN_RATE = 10;        //минимальная наценка
     const PRICE_COL_COUNT = 5; //количество колонок цен
     
     /**

@@ -21,7 +21,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author Daddy
  */
-class GoodsForm extends Form implements ObjectManagerAwareInterface
+class GoodsForm extends Form 
 {
     
     
