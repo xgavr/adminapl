@@ -21,7 +21,7 @@ class ScaleTreshold
 {
     const DEFAULT_ROUNDING = -1; //окруление по умолчанию
     
-    const MIN_RATE = 10;        //минимальная наценка
+    const MIN_RATE = 7;        //минимальная наценка
     const PRICE_COL_COUNT = 5; //количество колонок цен
     
     /**
@@ -182,7 +182,8 @@ class ScaleTreshold
         $result = [];
         $col = 0;
         $minRetailPrice = min($retailPrice, ceil($price + $price*self::MIN_RATE/100));
-        $priceTreshold = ($retailPrice - $price)/(self::PRICE_COL_COUNT + 1);
+//        $priceTreshold = ($retailPrice - $price)/(self::PRICE_COL_COUNT + 1);
+        $priceTreshold = ($retailPrice - $minRetailPrice)/(self::PRICE_COL_COUNT);
         
         while ($col <= self::PRICE_COL_COUNT){
             $result[$col]['price'] = round($retailPrice - $col*$priceTreshold, self::DEFAULT_ROUNDING);
