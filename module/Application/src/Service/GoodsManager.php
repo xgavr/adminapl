@@ -43,7 +43,7 @@ class GoodsManager
     const GOOD_IMAGE_DIR = './public/img/goods'; //папка для хранения картинок товаров    
     const TD_IMAGE_DIR = './pulic/img/goods/TD'; //папка для хранения картинок товаров
     
-    const MIN_REST_FOR_PRICE = 1; //,было 1000, мнимальное количество для расчета среденей цены, если 1, то считается по среднему
+    const MIN_REST_FOR_PRICE = 1000; //,было 1000, мнимальное количество для расчета среденей цены, если 1, то считается по среднему
     
     /**
      * Doctrine entity manager.
