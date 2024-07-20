@@ -241,7 +241,10 @@ class OpuController extends AbstractActionController
             $data = $this->entityManager->getRepository(FinOpu::class)
                             ->findRetailPurchase($startDate, $endDate, $company);
             foreach ($data as $row){
-                $result[$row['userId']][date('m', strtotime($row['period']))] = (abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']);
+                $result[$row['userId']][date('m', strtotime($row['period']))] = 0;
+                if (!empty(abs($row['revenue']))){
+                    $result[$row['userId']][date('m', strtotime($row['period']))] = (abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']);
+                }    
                 //$result[$row['userId']][13] += round($row['purchase']);
             }
         }  
