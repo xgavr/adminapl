@@ -22,7 +22,7 @@ class ExcelColumn implements \PhpOffice\PhpSpreadsheet\Reader\IReadFilter
      * @param type $worksheetName
      * @return string
      */
-    public function readCell(string $columnAddress, int $row, string $worksheetName = '') {
+    public function readCell(string $columnAddress, int $row, string $worksheetName = ''): bool {
         //  Read columns A to Z only
         if (in_array($columnAddress, range('A','Z'))) {
             return true;
