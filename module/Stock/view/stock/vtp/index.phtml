@@ -291,21 +291,21 @@
     
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status === '<?= Vtp::STATUS_RETIRED?>'){
+        if (row.status === <?= Vtp::STATUS_RETIRED?>){
            retired += ' retired';
 //           return {classes: retired};
         }
-        if (row.statusAccount === '<?= Vtp::STATUS_TAKE_NO?>'){
+        if (row.statusAccount === <?= Vtp::STATUS_TAKE_NO?>){
            retired += ' warning';
            return {classes: retired};
         }
-        if (row.statusAccount === '<?= Vtp::STATUS_ACCOUNT_NO?>'){
+        if (row.statusAccount === <?= Vtp::STATUS_ACCOUNT_NO?>){
            retired += ' status-account-no';
         }
         switch(row.statusDoc){
-            case '<?= Vtp::STATUS_DOC_NOT_RECD?>': 
+            case <?= Vtp::STATUS_DOC_NOT_RECD?>: 
                         return {classes: 'success '+retired}; break;
-            case '<?= Vtp::STATUS_DOC_RECD?>': 
+            case <?= Vtp::STATUS_DOC_RECD?>: 
                         return {classes: 'info '+retired}; break;
                 default:break;     
         }
@@ -315,7 +315,7 @@
     
     function vtpIndexTakeStyle(row){
         var classes = 'default';
-        if (row.vtpg.take === "<?= VtpGood::TAKE_NO?>"){
+        if (row.vtpg.take === <?= VtpGood::TAKE_NO?>){
             classes = 'warning';
         }        
         return {classes: classes};
@@ -400,7 +400,7 @@
 
     function ptuDateFormatter(value, row){
         value = dateFormatter(value);
-        if (row.statusDoc === '<?= Vtp::STATUS_DOC_NEW?>' && row.status === '<?= Vtp::STATUS_ACTIVE?>'){
+        if (row.statusDoc === <?= Vtp::STATUS_DOC_NEW?> && row.status === <?= Vtp::STATUS_ACTIVE?>){
             var diff = dateDiff(row.ptu.docDate);
             var badgeClass = 'badge';
             if (diff > 9){
@@ -488,7 +488,7 @@
                     changeStatusDoc(row, <?= Vtp::STATUS_DOC_NEW?>);
                 },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>' && row.statusDoc !== '<?= Vtp::STATUS_DOC_NEW?>' && row.status == <?= Vtp::STATUS_ACTIVE?>;
+                    return row.docDate > '<?= $allowDate?>' && row.statusDoc !== <?= Vtp::STATUS_DOC_NEW?> && row.status === <?= Vtp::STATUS_ACTIVE?>;
                 }                
             }, 
             statusDocRect: {
@@ -498,7 +498,7 @@
                     changeStatusDoc(row, <?= Vtp::STATUS_DOC_RECD?>);
                 },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>' && row.statusDoc != '<?= Vtp::STATUS_DOC_RECD?>' && row.status == <?= Vtp::STATUS_ACTIVE?>;
+                    return row.docDate > '<?= $allowDate?>' && row.statusDoc !== <?= Vtp::STATUS_DOC_RECD?> && row.status === <?= Vtp::STATUS_ACTIVE?>;
                 }                
             }, 
             statusDocNotRect: {
@@ -520,14 +520,14 @@
                     });                    
                 },
                 isEnabled: function(row) {
-                    return row.statusDoc != '<?= Vtp::STATUS_DOC_NOT_RECD?>' && row.status == <?= Vtp::STATUS_ACTIVE?>;
+                    return row.statusDoc !== <?= Vtp::STATUS_DOC_NOT_RECD?> && row.status === <?= Vtp::STATUS_ACTIVE?>;
                 }                
             }, 
             statusActiv: {
                 name: 'Сделать активным',
                 iconClass: 'glyphicon glyphicon-ok',
                 onClick: function(row) {
-                    if (row.statusDoc == <?= Vtp::STATUS_DOC_NOT_RECD?>){
+                    if (row.statusDoc === <?= Vtp::STATUS_DOC_NOT_RECD?>){
                         bootbox.prompt({
                             title: 'Дата принятия возврата поставщиком',
                             inputType: 'date',
@@ -546,7 +546,7 @@
                     }    
                 },
                 isShown: function(row) {
-                  return row.status == <?= Vtp::STATUS_RETIRED?>;
+                  return row.status === <?= Vtp::STATUS_RETIRED?>;
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';
@@ -563,7 +563,7 @@
                   return row.status == <?= Vtp::STATUS_ACTIVE?>;
                 },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>' || row.status != <?= Vtp::STATUS_ACTIVE?> || row.statusDoc != <?= Vtp::STATUS_DOC_NOT_RECD?>;
+                    return row.docDate > '<?= $allowDate?>' || row.status !== <?= Vtp::STATUS_ACTIVE?> || row.statusDoc !== <?= Vtp::STATUS_DOC_NOT_RECD?>;
                 }                
             },
             repostEx: {
@@ -574,7 +574,7 @@
                     repostEx(row.id);
                 },
                 isShown: function(row) {
-                  return row.status == <?= Vtp::STATUS_ACTIVE?> && row.statusDoc == <?= Vtp::STATUS_DOC_NOT_RECD?>;
+                  return row.status == <?= Vtp::STATUS_ACTIVE?> && row.statusDoc === <?= Vtp::STATUS_DOC_NOT_RECD?>;
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';
