@@ -85,6 +85,7 @@ class ApiQrcodeResource extends AbstractResourceListener
      */
     public function fetchAll($params = [])
     {
+        var_dump($params); exit;
         if (is_array($params)){
             if (!empty($params['order']) && !empty($params['amount'])){
                 $toFloat = new ToFloat();
@@ -94,7 +95,7 @@ class ApiQrcodeResource extends AbstractResourceListener
                 ]);
                 
                 if ($qrCode instanceof QrCode){
-                    return $qrCode->toLog();
+                    return $qrCode->toCheck();
                 }
             }
         }
