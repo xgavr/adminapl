@@ -639,13 +639,13 @@ $this->headLink()
                 if (result){
                     setPhoneForSave(result);
                     
-                    if (docType == <?= Movement::DOC_ORDER?>){
+                    if (docType === <?= Movement::DOC_ORDER?>){
                         $.getJSON('/order/change-contact-by-phone/'+docId+'?phone='+result, function( data ) {
                             $('#mutualtable').bootstrapTable('refresh', {silent:true});
                             $('#ordertable').bootstrapTable('refresh', {silent:true});
                         });                    
                     }    
-                    if (docType == <?= Movement::DOC_CASH?>){
+                    if (docType === <?= Movement::DOC_CASH?>){
                         $.getJSON('/cash/change-contact-by-phone/'+docId+'?phone='+result, function( data ) {
                             $('#mutualtable').bootstrapTable('refresh', {silent:true});
                         });                    
@@ -853,25 +853,25 @@ $this->headLink()
     function rowStyle(row){
         var retired = 'tablerow';
         switch(row.status){
-            case '<?= Order::STATUS_TAKE_NO?>': 
-            case '<?= Vt::STATUS_TAKE_NO?>': 
+            case <?= Order::STATUS_TAKE_NO?>: 
+            case <?= Vt::STATUS_TAKE_NO?>: 
                 return {classes: 'warning '+retired};
             default: break;            
         }                
         switch(row.status){
-            case '<?= Order::STATUS_SHIPPED?>': 
+            case <?= Order::STATUS_SHIPPED?>: 
                         return {classes: 'success '+retired}; break;
-            case '<?= Order::STATUS_DELIVERY?>': 
-            case '<?= Vt::STATUS_COMMISSION?>': 
-            case '<?= Vt::STATUS_DEFECT?>': 
-            case '<?= Vt::STATUS_WAIT?>': 
+            case <?= Order::STATUS_DELIVERY?>: 
+            case <?= Vt::STATUS_COMMISSION?>: 
+            case <?= Vt::STATUS_DEFECT?>: 
+            case <?= Vt::STATUS_WAIT?>: 
                         return {classes: 'info '+retired}; break;
-            case '<?= Order::STATUS_CONFIRMED?>': 
+            case <?= Order::STATUS_CONFIRMED?>: 
                         return {classes: retired, css: {"background-color": "linen"}}; break;
-            case '<?= Order::STATUS_PROCESSED?>': 
+            case <?= Order::STATUS_PROCESSED?>': 
                         return {classes: retired, css: {"background-color": "WhiteSmoke"}}; break;
-            case '<?= Order::STATUS_CANCELED?>': 
-            case '<?= Vt::STATUS_RETIRED?>': 
+            case <?= Order::STATUS_CANCELED?>: 
+            case <?= Vt::STATUS_RETIRED?>: 
                         return {classes: 'retired '+retired}; break;
             default:break;     
         }
@@ -882,13 +882,13 @@ $this->headLink()
     function vtRowStyle(row){
         var retired = 'default';
         switch(row.status){
-            case '<?= Vt::STATUS_TAKE_NO?>': 
+            case <?= Vt::STATUS_TAKE_NO?>: 
                 return {classes: 'warning '+retired};
-            case '<?= Vt::STATUS_COMMISSION?>': 
-            case '<?= Vt::STATUS_DEFECT?>': 
-            case '<?= Vt::STATUS_WAIT?>': 
+            case <?= Vt::STATUS_COMMISSION?>: 
+            case <?= Vt::STATUS_DEFECT?>: 
+            case <?= Vt::STATUS_WAIT?>: 
                         return {classes: 'info '+retired}; break;
-            case '<?= Vt::STATUS_RETIRED?>': 
+            case <?= Vt::STATUS_RETIRED?>: 
                         return {classes: 'retired '+retired}; break;
             default:break;     
         }
@@ -899,7 +899,7 @@ $this->headLink()
     function mutualRowStyle(row){
         var retired = 'default tablerow-mutual';
         switch(row.status){
-            case '<?= Retail::STATUS_RETIRED?>': 
+            case <?= Retail::STATUS_RETIRED?>: 
                 return {classes: 'retired '+retired}; break;
             default:break;     
         }
@@ -1062,9 +1062,9 @@ $this->headLink()
 
     function inFormatter(value, row){
         switch(row.docType){
-            case '<?= Movement::DOC_VT?>':
+            case <?= Movement::DOC_VT?>:
                 return (Math.round(value*100)/100).toFixed(2);
-            case '<?= Movement::DOC_CASH?>':
+            case <?= Movement::DOC_CASH?>:
                 return;
             default:
                 if (value>0){
@@ -1076,9 +1076,9 @@ $this->headLink()
     
     function outFormatter(value, row){
         switch(row.docType){
-            case '<?= Movement::DOC_VT?>':
+            case <?= Movement::DOC_VT?>:
                 return;
-            case '<?= Movement::DOC_CASH?>':
+            case <?= Movement::DOC_CASH?>:
                 return (-Math.round(value*100)/100).toFixed(2);
             default:
                 if (value<0){
@@ -1184,36 +1184,36 @@ $this->headLink()
         let docId = row.docId;  
         var comment = '';
         switch(docType){
-            case '<?= Movement::DOC_ORDER?>': 
-            case '<?= Movement::DOC_ORDER_USER?>': 
-            case '<?= Movement::DOC_ORDER_COMISS?>': 
+            case <?= Movement::DOC_ORDER?>: 
+            case <?= Movement::DOC_ORDER_USER?>: 
+            case <?= Movement::DOC_ORDER_COMISS?>: 
                 return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №Z"+docId+"</a>";
-            case '<?= Movement::DOC_MSR?>': 
+            case <?= Movement::DOC_MSR?>: 
                 comment = (row.marketSaleReport.comment) ? row.marketSaleReport.comment:'';        
                 return "<a href='#' class='msr-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о продажах №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
-            case '<?= Movement::DOC_VT?>': 
-            case '<?= Movement::DOC_VT_USER?>': 
+            case <?= Movement::DOC_VT?>: 
+            case <?= Movement::DOC_VT_USER?>: 
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
-            case '<?= Movement::DOC_PTU?>': 
+            case '<?= Movement::DOC_PTU?>: 
                 if (row.ptu){        
                     comment = row.ptu.comment;        
                 }    
                 return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
-            case '<?= Movement::DOC_OT?>': 
+            case <?= Movement::DOC_OT?>: 
                 return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
-            case '<?= Movement::DOC_ST?>': 
+            case <?= Movement::DOC_ST?>: 
                 return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
-            case '<?= Movement::DOC_VTP?>': 
+            case <?= Movement::DOC_VTP?>: 
                 return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
-            case '<?= Movement::DOC_REVISE?>':
+            case <?= Movement::DOC_REVISE?>:
                 if (row.reviseDoc){        
                     comment = row.reviseDoc.comment;        
                     return "<a href='#' class='revise-modal-show' modal-url='/revise/edit-form/"+docId+"'>Корректировка №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
                 } else {
                     return '!Документ не найден!';
                 }    
-            case '<?= Movement::DOC_CASH?>':
-            case '<?= Movement::DOC_CASH_USER?>':
+            case <?= Movement::DOC_CASH?>:
+            case <?= Movement::DOC_CASH_USER?>:
                 var cashName = '';
                 var result = '';
                 var kindName = '';
@@ -1325,7 +1325,7 @@ $this->headLink()
                     changeOrderStatus(row.id, <?= Order::STATUS_NEW?>);
                 },
                 isShown: function(row) {
-                  return row.status != '<?= Order::STATUS_NEW?>';
+                  return row.status !== <?= Order::STATUS_NEW?>;
                 },
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
@@ -1351,7 +1351,7 @@ $this->headLink()
                     changeOrderStatus(row.id, <?= Order::STATUS_CONFIRMED?>);
                 },
                 isShown: function(row) {
-                  return row.status != '<?= Order::STATUS_CONFIRMED?>';
+                  return row.status !== <?= Order::STATUS_CONFIRMED?>;
                 },
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
@@ -1378,7 +1378,7 @@ $this->headLink()
                     changeOrderStatus(row.id, <?= Order::STATUS_SHIPPED?>);
                 },
                 isShown: function(row) {
-                  return row.status != <?= Order::STATUS_SHIPPED?>;
+                  return row.status !== <?= Order::STATUS_SHIPPED?>;
                 },
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
@@ -1391,7 +1391,7 @@ $this->headLink()
                     changeOrderStatus(row.id, <?= Order::STATUS_CANCELED?>);
                 },
                 isShown: function(row) {
-                  return row.status != <?= Order::STATUS_CANCELED?>;
+                  return row.status !== <?= Order::STATUS_CANCELED?>;
                 },
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
@@ -1459,7 +1459,7 @@ $this->headLink()
                 name: 'Изменить контакт',
                 iconClass: 'glyphicon glyphicon-check',
                 onClick: function(row) {
-                    changeContactByPhone(row.id, '<?= Movement::DOC_ORDER?>');
+                    changeContactByPhone(row.id, <?= Movement::DOC_ORDER?>);
                 },
                 isShown: function(row) {
                   return true;
@@ -1501,7 +1501,7 @@ $this->headLink()
                     });
                 },
                 isEnabled: function(row) {
-                    return row.status == <?= Order::STATUS_SHIPPED?>;
+                    return row.status === <?= Order::STATUS_SHIPPED?>;
                 }                
             },
             cash: {
@@ -1523,7 +1523,7 @@ $this->headLink()
     function changeDocStatus(mutualRow){
         if (mutualRow.reviseDoc){
             var status = <?= Revise::STATUS_ACTIVE?>;
-            if (mutualRow.reviseDoc.status === '<?= Revise::STATUS_ACTIVE?>'){
+            if (mutualRow.reviseDoc.status === <?= Revise::STATUS_ACTIVE?>){
                 status = <?= Revise::STATUS_RETIRED?>;
             }
             $.get( "/revise/status/"+mutualRow.reviseDoc.id+'?status='+status, function(data){
@@ -1532,7 +1532,7 @@ $this->headLink()
         }         
         if (mutualRow.cashDoc){
             var status = <?= CashDoc::STATUS_ACTIVE?>;
-            if (mutualRow.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
+            if (mutualRow.cashDoc.status === <?= CashDoc::STATUS_ACTIVE?>){
                 status = <?= CashDoc::STATUS_RETIRED?>;
             }
             $.get( "/till/status/"+mutualRow.cashDoc.id+'?status='+status, function(data){
@@ -1542,12 +1542,12 @@ $this->headLink()
     }
         
     function changeDocLegal(mutualRow){
-        if (mutualRow.docType === '<?= Movement::DOC_ST ?>'){
+        if (mutualRow.docType === <?= Movement::DOC_ST ?>){
             $.get( "/st/repost/"+mutualRow.docId, function(data){
                 $('#mutualtable').bootstrapTable('refresh', {silent: true});
             });        
         }         
-        if (mutualRow.docType === '<?= Movement::DOC_VT ?>'){
+        if (mutualRow.docType === <?= Movement::DOC_VT ?>){
             $.get( "/vt/repost/"+mutualRow.docId, function(data){
                 $('#mutualtable').bootstrapTable('refresh', {silent: true});
             });        
@@ -1580,12 +1580,12 @@ $this->headLink()
                 },
                 isShown: function(row) {
                     if (row.reviseDoc){
-                        if (row.reviseDoc.status === '<?= Revise::STATUS_RETIRED?>'){
+                        if (row.reviseDoc.status === <?= Revise::STATUS_RETIRED?>){
                             return true;
                         }
                     }
                     if (row.cashDoc){
-                        if (row.cashDoc.status === '<?= CashDoc::STATUS_RETIRED?>'){
+                        if (row.cashDoc.status === <?= CashDoc::STATUS_RETIRED?>){
                             return true;
                         }
                     }
@@ -1593,12 +1593,12 @@ $this->headLink()
                 },
                 isEnabled: function(row) {
                     if (row.reviseDoc){
-                        if (row.reviseDoc.status === '<?= Revise::STATUS_RETIRED?>'){
+                        if (row.reviseDoc.status === <?= Revise::STATUS_RETIRED?>){
                             return true;
                         }
                     }
                     if (row.cashDoc){
-                        if (row.cashDoc.dateOper > '<?= $allowDate?>' && row.cashDoc.status === '<?= CashDoc::STATUS_RETIRED?>'){
+                        if (row.cashDoc.dateOper > '<?= $allowDate?>' && row.cashDoc.status === <?= CashDoc::STATUS_RETIRED?>){
                             return true;
                         }
                     }
@@ -1613,12 +1613,12 @@ $this->headLink()
                 },
                 isShown: function(row) {
                     if (row.reviseDoc){
-                        if (row.reviseDoc.status === '<?= Revise::STATUS_ACTIVE?>'){
+                        if (row.reviseDoc.status === <?= Revise::STATUS_ACTIVE?>){
                             return true;
                         }
                     }
                     if (row.cashDoc){
-                        if (row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
+                        if (row.cashDoc.status === <?= CashDoc::STATUS_ACTIVE?>){
                             return true;
                         }
                     }
@@ -1626,12 +1626,12 @@ $this->headLink()
                 },
                 isEnabled: function(row) {
                     if (row.reviseDoc){
-                        if (row.reviseDoc.status === '<?= Revise::STATUS_ACTIVE?>'){
+                        if (row.reviseDoc.status === <?= Revise::STATUS_ACTIVE?>){
                             return true;
                         }
                     }
                     if (row.cashDoc){
-                        if (row.cashDoc.dateOper > '<?= $allowDate?>' && row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
+                        if (row.cashDoc.dateOper > '<?= $allowDate?>' && row.cashDoc.status === <?= CashDoc::STATUS_ACTIVE?>){
                             return true;
                         }
                     }
@@ -1642,16 +1642,16 @@ $this->headLink()
                 name: 'Юр. лицо',
                 iconClass: 'glyphicon glyphicon-plus',
                 onClick: function (row){                   
-                    if (row.docType === '<?= Movement::DOC_CASH ?>'){ 
+                    if (row.docType === <?= Movement::DOC_CASH ?>){ 
                         changeDocLegal(row);
                     }    
-                    if (row.docType === '<?= Movement::DOC_ST ?>'){ 
+                    if (row.docType === <?= Movement::DOC_ST ?>){ 
                         changeDocLegal(row);
                     }    
-                    if (row.docType === '<?= Movement::DOC_VT ?>'){ 
+                    if (row.docType === <?= Movement::DOC_VT ?>){ 
                         changeDocLegal(row);
                     }    
-                    if (row.docType === '<?= Movement::DOC_ORDER ?>'){                     
+                    if (row.docType === <?= Movement::DOC_ORDER ?>){                     
                         var url = '/order/order-legal-form/'+row.docId+'?table=retail';
                         showFormDialog({
                             id: 'orderLegalModal',
@@ -1662,8 +1662,8 @@ $this->headLink()
                     }    
                 },
                 isEnabled: function(row) {
-                    return row.docType === '<?= Movement::DOC_ORDER ?>' || row.docType === '<?= Movement::DOC_CASH ?>' 
-                            || row.docType === '<?= Movement::DOC_ST ?>' || row.docType === '<?= Movement::DOC_VT ?>';
+                    return row.docType === <?= Movement::DOC_ORDER ?> || row.docType === <?= Movement::DOC_CASH ?> 
+                            || row.docType === <?= Movement::DOC_ST ?> || row.docType === <?= Movement::DOC_VT ?>;
                 }                
             },    
             changeContact: {
@@ -1684,17 +1684,17 @@ $this->headLink()
                 iconClass: 'glyphicon glyphicon-arrow-up',
                 onClick: function (row){
                     switch(row.docType){
-                        case '<?= Movement::DOC_ORDER?>': 
+                        case <?= Movement::DOC_ORDER?>: 
                             return updateApl(row.docId, '/apl/send-order-id/'+row.docId);                            
-                        case '<?= Movement::DOC_CASH?>': 
+                        case <?= Movement::DOC_CASH?>: 
                             return updateApl(row.docId, '/apl/send-cash-doc/'+row.docId);
                             
                     }
                 },
                 isEnabled: function(row) {
                     switch(row.docType){
-                        case '<?= Movement::DOC_ORDER?>': 
-                        case '<?= Movement::DOC_CASH?>': 
+                        case <?= Movement::DOC_ORDER?>: 
+                        case <?= Movement::DOC_CASH?>: 
                             return row.docId > 0;                            
                         default:    
                         return false;
