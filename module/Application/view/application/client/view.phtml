@@ -868,7 +868,7 @@ $this->headLink()
                         return {classes: 'info '+retired}; break;
             case <?= Order::STATUS_CONFIRMED?>: 
                         return {classes: retired, css: {"background-color": "linen"}}; break;
-            case <?= Order::STATUS_PROCESSED?>': 
+            case <?= Order::STATUS_PROCESSED?>: 
                         return {classes: retired, css: {"background-color": "WhiteSmoke"}}; break;
             case <?= Order::STATUS_CANCELED?>: 
             case <?= Vt::STATUS_RETIRED?>: 
@@ -1194,7 +1194,7 @@ $this->headLink()
             case <?= Movement::DOC_VT?>: 
             case <?= Movement::DOC_VT_USER?>: 
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
-            case '<?= Movement::DOC_PTU?>: 
+            case <?= Movement::DOC_PTU?>: 
                 if (row.ptu){        
                     comment = row.ptu.comment;        
                 }    
@@ -1338,7 +1338,7 @@ $this->headLink()
                     changeOrderStatus(row.id, <?= Order::STATUS_PROCESSED?>);
                 },
                 isShown: function(row) {
-                  return row.status != '<?= Order::STATUS_PROCESSED?>';
+                  return row.status != <?= Order::STATUS_PROCESSED?>;
                 },
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
