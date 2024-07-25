@@ -33,6 +33,7 @@ class AdminManager {
     const API_MARKET_PLACES      = './data/settings/api_market_places.php'; //файл с настройками апи тп
     const SBP_SETTINGS      = './data/settings/sbp_settings.php'; //файл с настройками сбп
     const AI_SETTINGS      = './data/settings/ai_settings.php'; //файл с настройками gigachat
+    const IA_SETTINGS      = './data/settings/ia_settings.php'; //файл с настройками интернет эквайринга
     
     /**
      * Doctrine entity manager.
@@ -772,4 +773,56 @@ class AdminManager {
         return;
     }
     
+    /**
+     * Получить настройки Интернет эквайринга
+     * 
+     * @return array
+     */
+    public function getInternetAcquiringSettings()
+    {
+        if (file_exists(self::IA_SETTINGS)){
+            $config = new Config(include self::IA_SETTINGS);
+        }  else {
+            $config = new Config([], true);
+            $config->ia_settings = [];
+        }   
+        
+        return $config->ia_settings;
+    }
+
+    
+    /**
+     * Настройки Интернет эквайринга
+     * @param array $data
+     */
+    public function setInternetAcquiringSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::IA_SETTINGS)){
+            $config = new Config(include self::IA_SETTINGS, true);
+        }  else {
+            $config = new Config([], true);
+            $config->ia_settings = [];
+        }
+        
+        if (!isset($config->ia_settings)){
+            $config->ia_settings = [];
+        }
+        
+        $config->ia_settings->sber_client_id = $data['sber_client_id'];
+        $config->ia_settings->sber_client_secret = $data['sber_client_secret'];
+        $config->ia_settings->sber_score = $data['sber_score'];
+
+        $config->ia_settings->tochka_client_id = $data['tochka_client_id'];
+        $config->ia_settings->tochka_client_secret = $data['tochka_client_secret'];
+        $config->ia_settings->tochka_score = $data['tochka_score'];
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::IA_SETTINGS, $config);
+        
+        return;
+    }
 }

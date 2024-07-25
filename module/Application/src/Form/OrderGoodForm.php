@@ -12,7 +12,6 @@ use Laminas\InputFilter\InputFilter;
 
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Application\Entity\Goods;
 
 /**
  * Description of OrderGood
@@ -263,7 +262,7 @@ class OrderGoodForm extends Form implements ObjectManagerAwareInterface
         
     }    
     
-    public function setObjectManager(ObjectManager $objectManager)
+    public function setObjectManager($objectManager)
     {
         $this->objectManager = $objectManager;
     }

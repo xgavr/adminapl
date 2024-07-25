@@ -613,6 +613,12 @@ class NavManager
                     'link'  => $url('admin', ['action' => 'ai-settings'])                    
                 ];
 
+                $settingsDropDownItems[] = [
+                    'id' => 'iaSettings',
+                    'label' => 'Настройи интернет эквайринга',
+                    'link'  => $url('admin', ['action' => 'ia-settings'])                    
+                ];
+
                 if (count($settingsDropDownItems)!=0) {
                     $items[] = [
                         'id' => 'settings',

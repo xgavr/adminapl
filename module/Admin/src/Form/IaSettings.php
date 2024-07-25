@@ -5,38 +5,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace Bank\Form;
+namespace Admin\Form;
 
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
 
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Bank\Entity\Payment;
 
 /**
- * Description of suppliers pay form
+ * Description of IaSettings
  *
  * @author Daddy
  */
-class SuppliersPayForm extends Form 
+class IaSettings extends Form 
 {
     
+    protected $objectManager;    
     
-    protected $objectManager;
-
-    protected $entityManager;
-        
     /**
      * Конструктор.     
      */
-    public function __construct($entityManager)
+    public function __construct()
     {
         // Определяем имя формы.
-        parent::__construct('suppliers-pay-form');
-     
-        $this->entityManager = $entityManager;
-        
+        parent::__construct('ia-settings');
+             
         // Задает для этой формы метод POST.
         $this->setAttribute('method', 'post');
                 
@@ -46,52 +40,68 @@ class SuppliersPayForm extends Form
 
     protected function addElements() 
     {
-                
-        $this->add([
-            'type'  => 'select',
-            'name' => 'bankAccount',
-            'attributes' => [                
-            ],
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'sber_client_id',
             'options' => [
-                'label' => 'Счет списания',
-            ],
-        ]);        
-
-
-        $this->add([
-            'type'  => 'date',
-            'name' => 'paymentDate',
-            'attributes' => [                
-                'step' => 1,
-                'value' => date('Y-m-d'),
-                'min' => date('Y-m-d'),
-            ],
-            'options' => [
-                'label' => 'Дата платежа',
-//                'format' => 'Y-m-d',
+                'label' => 'Sber Client ID',
             ],
         ]);
                 
-        
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'sber_client_secret',
+            'options' => [
+                'label' => 'Sber Client Secret',
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'sber_score',
+            'options' => [
+                'label' => 'Sber Score',
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'tochka_client_id',
+            'options' => [
+                'label' => 'Tochka Client ID',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'tochka_client_secret',
+            'options' => [
+                'label' => 'Tochka Client Secret',
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'tochka_score',
+            'options' => [
+                'label' => 'Tochka Score',
+            ],
+        ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
             'name' => 'submit',
             'attributes' => [                
                 'value' => 'Сохранить',
-                'id' => 'ot_submitbutton',
+                'id' => 'submit_button',
             ],
         ]);        
-
-        // Add the CSRF field
+                        
     }
     
     private function addInputFilter() 
     {
-        
-        $inputFilter = new InputFilter();        
-        $this->setInputFilter($inputFilter);
-        
         
     }    
     
@@ -103,6 +113,6 @@ class SuppliersPayForm extends Form
     public function getObjectManager()
     {
         return $this->objectManager;
-    }        
+    }            
     
 }

@@ -35,7 +35,6 @@ class UserRepository  extends EntityRepository
     
     public function findOneByEmail($email)
     {
-        $cacheDriver = new \Doctrine\Common\Cache\ArrayCache();
         
         $entityManager = $this->getEntityManager();
 

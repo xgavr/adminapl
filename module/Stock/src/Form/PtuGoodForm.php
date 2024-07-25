@@ -19,7 +19,7 @@ use Application\Entity\Goods;
  *
  * @author Daddy
  */
-class PtuGoodForm extends Form implements ObjectManagerAwareInterface
+class PtuGoodForm extends Form 
 {
     
     

@@ -19,7 +19,7 @@ use Stock\Entity\Ptu;
  *
  * @author Daddy
  */
-class PtuForm extends Form implements ObjectManagerAwareInterface
+class PtuForm extends Form 
 {
     
     

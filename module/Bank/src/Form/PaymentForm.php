@@ -19,7 +19,7 @@ use Bank\Entity\Payment;
  *
  * @author Daddy
  */
-class PaymentForm extends Form implements ObjectManagerAwareInterface
+class PaymentForm extends Form 
 {
     
     

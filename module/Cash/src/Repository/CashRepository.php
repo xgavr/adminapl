@@ -509,7 +509,7 @@ class CashRepository extends EntityRepository
     * @param int $period month, year
     * @param array $params
     */        
-   public function periodTransaction($dateStart, $dateEnd, $period = 'month', $params)
+   public function periodTransaction($dateStart, $dateEnd, $period = 'month', $params = null)
    {
 //       var_dump($dateEnd, $dateStart, $period, $params); exit;
         $entityManager = $this->getEntityManager();

@@ -29,6 +29,7 @@ use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 use Admin\Form\SbpSettings;
 use Company\Entity\BankAccount;
 use Admin\Form\AiSettings;
+use Admin\Form\IaSettings;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -950,6 +951,53 @@ class IndexController extends AbstractActionController
                         'Настройки сохранены.');
 
                 $this->redirect()->toRoute('admin', ['action' => 'ai-settings']);
+            } else {
+                $this->flashMessenger()->addInfoMessage(
+                        'Настройки не сохранены.');                
+            }
+        } else {
+            if ($settings){
+                $form->setData($settings);
+            }                
+        }
+        
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+    
+    /**
+     * Управление настройками ia
+     * 
+     * @return ViewModel
+     */
+    public function iaSettingsAction()
+    {
+        $form = new IaSettings();
+    
+        $settings = $this->adminManager->getInternetAcquiringSettings();
+        
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                //                 
+                $this->adminManager->setInternetAcquiringSettings($data);
+                
+                $this->flashMessenger()->addSuccessMessage(
+                        'Настройки сохранены.');
+
+                $this->redirect()->toRoute('admin', ['action' => 'ia-settings']);
             } else {
                 $this->flashMessenger()->addInfoMessage(
                         'Настройки не сохранены.');                
