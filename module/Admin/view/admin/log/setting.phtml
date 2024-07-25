@@ -190,7 +190,7 @@ $sourceString = '['.implode(',', $editableSourse).']';
     function statusName(value){
         switch(value){
             <?php foreach ($statuses as $key => $value):?>
-                case "<?= $key?>": result="<?= $value?>"; break;      
+                case <?= $key?>: result="<?= $value?>"; break;      
             <?php endforeach;?>            
             default: result = 'Неизвестно'; break;
         }
