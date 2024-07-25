@@ -313,7 +313,7 @@ class RawManager {
 //                }    
                 $filterSubset = new \Application\Filter\ExcelColumn();
                 $reader->setReadFilter($filterSubset);
-                $spreadsheet = $reader->load($filename, 4);
+                $spreadsheet = $reader->load($filename, 8);
 
                 $sheets = $spreadsheet->getAllSheets();
                 foreach ($sheets as $sheet) { // PHPExcel_Worksheet
