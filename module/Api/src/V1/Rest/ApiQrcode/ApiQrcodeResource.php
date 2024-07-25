@@ -85,12 +85,12 @@ class ApiQrcodeResource extends AbstractResourceListener
      */
     public function fetchAll($params = [])
     {
-        if (is_object($data)){
-            if (!empty($data->order) && !empty($data->amount)){
+        if (is_object($params)){
+            if (!empty($params->order) && !empty($params->amount)){
                 $toFloat = new ToFloat();
                 $qrCode = $this->sbpManager->registerQrCode([
-                    'orderAplId' => $data->order,
-                    'amount' => $toFloat->filter($data->amount),
+                    'orderAplId' => $params->order,
+                    'amount' => $toFloat->filter($params->amount),
                 ]);
                 
                 if ($qrCode instanceof QrCode){
