@@ -15,10 +15,16 @@ namespace Application\Filter;
  */
 class ExcelColumn implements \PhpOffice\PhpSpreadsheet\Reader\IReadFilter
 {
-    
-    public function readCell($column, $row, $worksheetName = '') {
+    /**
+     * 
+     * @param string $columnAddress
+     * @param int $row
+     * @param type $worksheetName
+     * @return string
+     */
+    public function readCell(string $columnAddress, int $row, string $worksheetName = '') {
         //  Read columns A to Z only
-        if (in_array($column,range('A','Z'))) {
+        if (in_array($columnAddress, range('A','Z'))) {
             return true;
         }
 
