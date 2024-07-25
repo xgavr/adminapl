@@ -85,6 +85,19 @@ class ApiQrcodeResource extends AbstractResourceListener
      */
     public function fetchAll($params = [])
     {
+        if (is_array($params)){
+            if (!empty($params['order']) && !empty($params['amount'])){
+                $toFloat = new ToFloat();
+                $qrCode = $this->sbpManager->registerQrCode([
+                    'orderAplId' => $params['order'],
+                    'amount' => $toFloat->filter($params['amount']),
+                ]);
+                
+                if ($qrCode instanceof QrCode){
+                    return $qrCode->toLog();
+                }
+            }
+        }
         return new ApiProblem(405, 'The GET method has not been defined for collections');
     }
 

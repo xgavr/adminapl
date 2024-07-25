@@ -626,4 +626,16 @@ class QrCode {
             'ttl' => $this->getTtl(),            
         ];
     }
+    
+    /**
+     * Данные в чек апл
+     * @return array 
+     */
+    public function toCheck()
+    {
+        return [
+            'img' => $this->getCheckImg(),
+            'payload' => $this->getPayload(),
+        ];
+    }
 }
