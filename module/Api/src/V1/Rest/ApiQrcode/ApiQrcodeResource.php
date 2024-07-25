@@ -90,7 +90,7 @@ class ApiQrcodeResource extends AbstractResourceListener
                 $toFloat = new ToFloat();
                 $qrCode = $this->sbpManager->registerQrCode([
                     'orderAplId' => $params->order,
-                    'amount' => $toFloat->filter($params->amount),
+                    'amount' => $toFloat->filter(round($params->amount/100, 2),
                 ]);
                 
                 if ($qrCode instanceof QrCode){
