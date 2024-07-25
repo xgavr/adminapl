@@ -1464,7 +1464,7 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.api-qrcode',
                 'route_identifier_name' => 'api_qrcode_id',
-                'hydrator' => \Laminas\Hydrator\ArraySerializable::class,
+                'hydrator' => \Laminas\Hydrator\ArraySerializableHydrator::class,
             ],
             \Api\V1\Rest\ApiQrcode\ApiQrcodeCollection::class => [
                 'entity_identifier_name' => 'id',
