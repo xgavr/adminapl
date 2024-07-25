@@ -100,10 +100,10 @@ $sourceString = '['.implode(',', $editableSourse).']';
 
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status === '<?= Setting::STATUS_ERROR?>'){
+        if (row.status === <?= Setting::STATUS_ERROR?>){
            retired += ' warning';
         }        
-        if (row.status === '<?= Setting::STATUS_RETIRED?>'){
+        if (row.status === <?= Setting::STATUS_RETIRED?>){
            retired += ' success';
         }        
         return {classes: retired};
