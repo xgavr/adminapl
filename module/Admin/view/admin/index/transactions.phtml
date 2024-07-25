@@ -162,7 +162,7 @@ $this->pageBreadcrumbs()->setItems([
         var retired = 'tablerow';
         switch(row.docType){
             case '<?= Movement::DOC_ORDER?>': 
-                if (row.order.statusAccount == <?= Order::STATUS_TAKE_NO?>){
+                if (row.order.statusAccount === <?= Order::STATUS_TAKE_NO?>){
                     return {classes: 'warning '+retired}; break;
                 }
                 switch(row.order.status){
@@ -175,62 +175,62 @@ $this->pageBreadcrumbs()->setItems([
                     default:break;     
                 }; break;
             case '<?= Movement::DOC_VT?>': 
-                if (row.vt.statusAccount == <?= Vt::STATUS_TAKE_NO?>){
+                if (row.vt.statusAccount === <?= Vt::STATUS_TAKE_NO?>){
                     return {classes: 'warning '+retired}; break;
                 }
                 switch(row.vt.status){
-                    case '<?= Vt::STATUS_RETIRED?>': 
+                    case <?= Vt::STATUS_RETIRED?>: 
                         return {classes: 'retired '+retired}; break;
-                    case '<?= Vt::STATUS_COMMISSION?>': 
-                    case '<?= Vt::STATUS_DEFECT?>': 
-                    case '<?= Vt::STATUS_WAIT?>': 
+                    case <?= Vt::STATUS_COMMISSION?>: 
+                    case <?= Vt::STATUS_DEFECT?>: 
+                    case <?= Vt::STATUS_WAIT?>: 
                         return {classes: 'info '+retired}; break;
                     default:break;     
                 }; break;
-            case '<?= Movement::DOC_PTU?>': 
+            case <?= Movement::DOC_PTU?>: 
                 switch(row.ptu.status){
-                    case '<?= Ptu::STATUS_RETIRED?>': 
+                    case <?= Ptu::STATUS_RETIRED?>: 
                         return {classes: 'retired '+retired}; break;
                     default:break;     
                 }; break;
-            case '<?= Movement::DOC_OT?>': 
+            case <?= Movement::DOC_OT?>: 
                 switch(row.ot.status){
-                    case '<?= Ot::STATUS_RETIRED?>': 
+                    case <?= Ot::STATUS_RETIRED?>: 
                         return {classes: 'retired '+retired}; break;
-                    case '<?= Ot::STATUS_COMMISSION?>': 
+                    case <?= Ot::STATUS_COMMISSION?>: 
                         return {classes: 'info '+retired}; break;
                     default:break;     
                 }; break;
-            case '<?= Movement::DOC_PT?>': 
-                if (row.pt.statusAccount == <?= Pt::STATUS_TAKE_NO?>){
+            case <?= Movement::DOC_PT?>: 
+                if (row.pt.statusAccount === <?= Pt::STATUS_TAKE_NO?>){
                     return {classes: 'warning '+retired}; break;
                 }
                 switch(row.pt.status){
-                    case '<?= Pt::STATUS_RETIRED?>': 
+                    case <?= Pt::STATUS_RETIRED?>: 
                         return {classes: 'retired '+retired}; break;
                     default:break;     
                 }; break;
-            case '<?= Movement::DOC_ST?>': 
-                if (row.st.statusAccount == <?= St::STATUS_TAKE_NO?>){
+            case <?= Movement::DOC_ST?>: 
+                if (row.st.statusAccount === <?= St::STATUS_TAKE_NO?>){
                     return {classes: 'warning '+retired}; break;
                 }
                 switch(row.st.status){
-                    case '<?= St::STATUS_RETIRED?>': 
+                    case <?= St::STATUS_RETIRED?>: 
                         return {classes: 'retired '+retired}; break;
                     default:break;     
                 }; break;
-            case '<?= Movement::DOC_VTP?>': 
-                if (row.vtp.statusAccount == <?= Vtp::STATUS_TAKE_NO?>){
+            case <?= Movement::DOC_VTP?>: 
+                if (row.vtp.statusAccount === <?= Vtp::STATUS_TAKE_NO?>){
                     return {classes: 'warning '+retired}; break;
                 }
                 switch(row.vtp.status){
-                    case '<?= Vtp::STATUS_RETIRED?>': 
+                    case <?= Vtp::STATUS_RETIRED?>: 
                         return {classes: 'retired '+retired}; break;
                     default:break;     
                 }; break;
-            case '<?= Movement::DOC_REVISE?>': 
+            case <?= Movement::DOC_REVISE?>: 
                 switch(row.revise.status){
-                    case '<?= Revise::STATUS_RETIRED?>': 
+                    case <?= Revise::STATUS_RETIRED?>: 
                         return {classes: 'retired '+retired}; break;
                     default:break;     
                 }; break;
@@ -241,20 +241,20 @@ $this->pageBreadcrumbs()->setItems([
     
     function typeFormatter(docType, docId, docKey){
         switch(docType){
-            case '<?= Movement::DOC_ORDER?>': 
+            case <?= Movement::DOC_ORDER?>: 
 //                        return "<a href='/order/intro/"+docId+"' target='_blank'>Заказ №"+docId+"</a>";
                         return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №"+docId+"</a>";
-            case '<?= Movement::DOC_VT?>': 
+            case <?= Movement::DOC_VT?>: 
                         return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
-            case '<?= Movement::DOC_PTU?>': 
+            case <?= Movement::DOC_PTU?>: 
                         return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a>";
-            case '<?= Movement::DOC_OT?>': 
+            case <?= Movement::DOC_OT?>: 
                         return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
-            case '<?= Movement::DOC_PT?>': 
+            case <?= Movement::DOC_PT?>: 
                         return "<a href='#' class='pt-modal-show' modal-url='/pt/edit-form/"+docId+"'>Перемещение №"+docId+"</a>";
-            case '<?= Movement::DOC_ST?>': 
+            case <?= Movement::DOC_ST?>: 
                         return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
-            case '<?= Movement::DOC_VTP?>': 
+            case <?= Movement::DOC_VTP?>: 
                         return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
             default: return docKey;            
         }
@@ -271,21 +271,21 @@ $this->pageBreadcrumbs()->setItems([
     
     function totalFormatter(value, row){
         switch(row.docType){
-            case '<?= Movement::DOC_ORDER?>': 
+            case <?= Movement::DOC_ORDER?>': 
                     return (Math.round(row.order.total*100)/100).toFixed(2);
-            case '<?= Movement::DOC_VT?>': 
+            case <?= Movement::DOC_VT?>: 
                     return (Math.round(row.vt.amount*100)/100).toFixed(2);
-            case '<?= Movement::DOC_PTU?>': 
+            case <?= Movement::DOC_PTU?>: 
                     return (Math.round(row.ptu.amount*100)/100).toFixed(2);
-            case '<?= Movement::DOC_OT?>': 
+            case <?= Movement::DOC_OT?>: 
                     return (Math.round(row.ot.amount*100)/100).toFixed(2);
-            case '<?= Movement::DOC_PT?>': 
+            case <?= Movement::DOC_PT?>: 
                     return (Math.round(row.pt.amount*100)/100).toFixed(2);
-            case '<?= Movement::DOC_ST?>': 
+            case <?= Movement::DOC_ST?>: 
                     return (Math.round(row.st.amount*100)/100).toFixed(2);
-            case '<?= Movement::DOC_VTP?>': 
+            case <?= Movement::DOC_VTP?>: 
                     return (Math.round(row.vtp.amount*100)/100).toFixed(2);
-            case '<?= Movement::DOC_REVISE?>': 
+            case <?= Movement::DOC_REVISE?>: 
                     return (Math.round(row.revise.amount*100)/100).toFixed(2);
             default: return 0;            
         }
@@ -337,15 +337,15 @@ $this->pageBreadcrumbs()->setItems([
                 },
                 isEnabled: function(row) {
                     switch(row.docType){
-                        case '<?= Movement::DOC_ORDER?>': 
+                        case <?= Movement::DOC_ORDER?>: 
                                 return row.order.status == <?= Order::STATUS_SHIPPED?>;
-                        case '<?= Movement::DOC_VT?>': 
+                        case <?= Movement::DOC_VT?>: 
                                 return row.vt.status == <?= Vt::STATUS_ACTIVE?>;
-                        case '<?= Movement::DOC_PT?>': 
+                        case <?= Movement::DOC_PT?>: 
                                 return row.pt.status == <?= Pt::STATUS_ACTIVE?>;
-                        case '<?= Movement::DOC_ST?>': 
+                        case <?= Movement::DOC_ST?>: 
                                 return row.st.status == <?= St::STATUS_ACTIVE?>;
-                        case '<?= Movement::DOC_VTP?>': 
+                        case <?= Movement::DOC_VTP?>: 
                                 return row.vtp.status == <?= Vtp::STATUS_ACTIVE?> && row.vtp.statusDoc == <?= Vtp::STATUS_DOC_NOT_RECD?>;
                         default: return false;            
                     }
