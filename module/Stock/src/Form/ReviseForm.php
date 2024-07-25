@@ -21,7 +21,7 @@ use User\Validator\PhoneExistsValidator;
  *
  * @author Daddy
  */
-class ReviseForm extends Form implements ObjectManagerAwareInterface
+class ReviseForm extends Form 
 {
     
     

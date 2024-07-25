@@ -19,7 +19,7 @@ use Application\Entity\Goods;
  *
  * @author Daddy
  */
-class VtGoodForm extends Form implements ObjectManagerAwareInterface
+class VtGoodForm extends Form
 {
     
     

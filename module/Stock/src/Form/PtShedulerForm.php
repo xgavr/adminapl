@@ -19,7 +19,7 @@ use Stock\Entity\PtSheduler;
  *
  * @author Daddy
  */
-class PtShedulerForm extends Form implements ObjectManagerAwareInterface
+class PtShedulerForm extends Form 
 {
     
     

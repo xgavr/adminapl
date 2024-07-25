@@ -19,7 +19,7 @@ use Company\Entity\Cost;
  *
  * @author Daddy
  */
-class PtuCostForm extends Form implements ObjectManagerAwareInterface
+class PtuCostForm extends Form 
 {
     
     

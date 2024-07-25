@@ -19,7 +19,7 @@ use Stock\Entity\Ot;
  *
  * @author Daddy
  */
-class OtForm extends Form implements ObjectManagerAwareInterface
+class OtForm extends Form
 {
     
     

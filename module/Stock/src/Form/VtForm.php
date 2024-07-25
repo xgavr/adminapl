@@ -19,7 +19,7 @@ use Stock\Entity\Vt;
  *
  * @author Daddy
  */
-class VtForm extends Form implements ObjectManagerAwareInterface
+class VtForm extends Form 
 {
     
     

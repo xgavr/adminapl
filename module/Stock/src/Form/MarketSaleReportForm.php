@@ -19,7 +19,7 @@ use ApiMarketPlace\Entity\MarketSaleReport;
  *
  * @author Daddy
  */
-class MarketSaleReportForm extends Form implements ObjectManagerAwareInterface
+class MarketSaleReportForm extends Form 
 {
     
     

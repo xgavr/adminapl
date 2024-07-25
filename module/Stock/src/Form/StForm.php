@@ -19,7 +19,7 @@ use Stock\Entity\St;
  *
  * @author Daddy
  */
-class StForm extends Form implements ObjectManagerAwareInterface
+class StForm extends Form 
 {
     
     

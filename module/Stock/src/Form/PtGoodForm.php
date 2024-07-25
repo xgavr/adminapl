@@ -18,7 +18,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author Daddy
  */
-class PtGoodForm extends Form implements ObjectManagerAwareInterface
+class PtGoodForm extends Form 
 {
     
     

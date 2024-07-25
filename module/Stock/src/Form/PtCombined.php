@@ -19,7 +19,7 @@ use Stock\Entity\Pt;
  *
  * @author Daddy
  */
-class PtCombined extends Form implements ObjectManagerAwareInterface
+class PtCombined extends Form
 {
     
     
