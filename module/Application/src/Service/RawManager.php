@@ -296,21 +296,21 @@ class RawManager {
                     
                 $filter = new RawToStr();
                     
-                try{
+//                try{
                     $reader = IOFactory::createReaderForFile($filename);
-                } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
+//                } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
                     //попытка прочитать файл старым способом
-                    $raw->setName($e->getMessage());
-                    $raw->setStatus(Raw::STATUS_FAILED);
-                    $this->entityManager->persist($raw);
-                    $this->entityManager->flush($raw);                    
-                    return $this->uploadRawpriceXls2($supplier, $filename);
+//                    $raw->setName($e->getMessage());
+//                    $raw->setStatus(Raw::STATUS_FAILED);
+//                    $this->entityManager->persist($raw);
+//                    $this->entityManager->flush($raw);                    
+//                    return $this->uploadRawpriceXls2($supplier, $filename);
                     
                     //if ($e->getMessage() == 'Unable to identify a reader for this file'){
                         //$this->renameToArchive($supplier, $filename);
                         //return;
                     //}    
-                }    
+//                }    
                 $filterSubset = new \Application\Filter\ExcelColumn();
                 $reader->setReadFilter($filterSubset);
                 $spreadsheet = $reader->load($filename);
@@ -497,11 +497,11 @@ class RawManager {
                 }
 
                 if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
-                    try {
+                    //try {
                         return $this->uploadRawpriceXls($supplier, $filename);
-                    } catch (\PhpOffice\PhpSpreadsheet\Exception $e){
-                        return $this->uploadRawpriceXls2($supplier, $filename);                        
-                    }    
+//                    } catch (\PhpOffice\PhpSpreadsheet\Exception $e){
+//                        return $this->uploadRawpriceXls2($supplier, $filename);                        
+//                    }    
                 }
                 if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
                     return $this->uploadRawpriceCsv($supplier, $filename);
