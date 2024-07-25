@@ -668,7 +668,7 @@
     function sourceFormatter(value){
         switch(value){
             <?php foreach ($oemSources as $key => $value):?>
-                case "<?= $key?>": result="<?= $value?>"; break;      
+                case <?= $key?>: result="<?= $value?>"; break;      
             <?php endforeach;?>            
             default: result = 'Неизвестно'; break;
         }
@@ -679,7 +679,7 @@
     function statusFormatter(value){
         switch(value){
             <?php foreach ($oemStatuses as $key => $value):?>
-                case "<?= $key?>": result="<?= $value?>"; break;      
+                case <?= $key?>: result="<?= $value?>"; break;      
             <?php endforeach;?>            
             default: result = 'Неизвестно'; break;
         }
@@ -730,20 +730,20 @@
     
     function docFormatter(docType, docId, docKey){
         switch(docType){
-            case '<?= Movement::DOC_ORDER?>': 
+            case <?= Movement::DOC_ORDER?>: 
 //                        return "<a href='/order/intro/"+docId+"' target='_blank'>Заказ №"+docId+"</a>";
                         return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №"+docId+"</a>";
-            case '<?= Movement::DOC_VT?>': 
+            case <?= Movement::DOC_VT?>: 
                         return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
-            case '<?= Movement::DOC_PTU?>': 
+            case <?= Movement::DOC_PTU?>: 
                         return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a>";
-            case '<?= Movement::DOC_OT?>': 
+            case <?= Movement::DOC_OT?>: 
                         return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
-            case '<?= Movement::DOC_PT?>': 
+            case <?= Movement::DOC_PT?>: 
                         return "<a href='#' class='pt-modal-show' modal-url='/pt/edit-form/"+docId+"'>Перемещение №"+docId+"</a>";
-            case '<?= Movement::DOC_ST?>': 
+            case <?= Movement::DOC_ST?>: 
                         return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
-            case '<?= Movement::DOC_VTP?>': 
+            case <?= Movement::DOC_VTP?>: 
                         return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
             default: return docKey;            
         }
