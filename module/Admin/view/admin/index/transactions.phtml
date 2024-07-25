@@ -161,20 +161,20 @@ $this->pageBreadcrumbs()->setItems([
     function rowStyle(row){
         var retired = 'tablerow';
         switch(row.docType){
-            case '<?= Movement::DOC_ORDER?>': 
+            case <?= Movement::DOC_ORDER?>: 
                 if (row.order.statusAccount === <?= Order::STATUS_TAKE_NO?>){
                     return {classes: 'warning '+retired}; break;
                 }
                 switch(row.order.status){
-                    case '<?= Order::STATUS_DELIVERY?>': 
+                    case <?= Order::STATUS_DELIVERY?>: 
                                 return {classes: 'info '+retired}; break;
-                    case '<?= Order::STATUS_CONFIRMED?>': 
+                    case <?= Order::STATUS_CONFIRMED?>: 
                                 return {classes: 'default '+retired}; break;
-                    case '<?= Order::STATUS_CANCELED?>': 
+                    case <?= Order::STATUS_CANCELED?>: 
                                 return {classes: 'retired '+retired}; break;
                     default:break;     
                 }; break;
-            case '<?= Movement::DOC_VT?>': 
+            case <?= Movement::DOC_VT?>: 
                 if (row.vt.statusAccount === <?= Vt::STATUS_TAKE_NO?>){
                     return {classes: 'warning '+retired}; break;
                 }
@@ -271,7 +271,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function totalFormatter(value, row){
         switch(row.docType){
-            case <?= Movement::DOC_ORDER?>': 
+            case <?= Movement::DOC_ORDER?>: 
                     return (Math.round(row.order.total*100)/100).toFixed(2);
             case <?= Movement::DOC_VT?>: 
                     return (Math.round(row.vt.amount*100)/100).toFixed(2);
@@ -338,15 +338,15 @@ $this->pageBreadcrumbs()->setItems([
                 isEnabled: function(row) {
                     switch(row.docType){
                         case <?= Movement::DOC_ORDER?>: 
-                                return row.order.status == <?= Order::STATUS_SHIPPED?>;
+                                return row.order.status === <?= Order::STATUS_SHIPPED?>;
                         case <?= Movement::DOC_VT?>: 
-                                return row.vt.status == <?= Vt::STATUS_ACTIVE?>;
+                                return row.vt.status === <?= Vt::STATUS_ACTIVE?>;
                         case <?= Movement::DOC_PT?>: 
-                                return row.pt.status == <?= Pt::STATUS_ACTIVE?>;
+                                return row.pt.status === <?= Pt::STATUS_ACTIVE?>;
                         case <?= Movement::DOC_ST?>: 
-                                return row.st.status == <?= St::STATUS_ACTIVE?>;
+                                return row.st.status === <?= St::STATUS_ACTIVE?>;
                         case <?= Movement::DOC_VTP?>: 
-                                return row.vtp.status == <?= Vtp::STATUS_ACTIVE?> && row.vtp.statusDoc == <?= Vtp::STATUS_DOC_NOT_RECD?>;
+                                return row.vtp.status === <?= Vtp::STATUS_ACTIVE?> && row.vtp.statusDoc === <?= Vtp::STATUS_DOC_NOT_RECD?>;
                         default: return false;            
                     }
                 }                
