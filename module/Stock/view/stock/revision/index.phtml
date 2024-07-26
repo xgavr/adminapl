@@ -227,29 +227,29 @@
         });
         
         $table.on('check.bs.table', function (e, row) {
-            changeRevise(row.id, '<?= Mutual::REVISE_OK?>');
+            changeRevise(row.id, <?= Mutual::REVISE_OK?>);
         });
         
         $table.on('uncheck.bs.table', function (e, row) {
-            changeRevise(row.id, '<?= Mutual::REVISE_NOT?>');
+            changeRevise(row.id, <?= Mutual::REVISE_NOT?>);
         });
         
         $table.on('check-all.bs.table', function (e, rows) {
             $.each( rows, function( key, value ) {
-                changeRevise(value.id, '<?= Mutual::REVISE_OK?>');
+                changeRevise(value.id, <?= Mutual::REVISE_OK?>);
             });            
         });
         
         $table.on('uncheck-all.bs.table', function (e, rowsDefore, rows) {
             $.each( rows, function( key, value ) {
-                changeRevise(value.id, '<?= Mutual::REVISE_NOT?>');
+                changeRevise(value.id, <?= Mutual::REVISE_NOT?>);
             });            
         });
     });    
     
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status == '<?= Mutual::STATUS_RETIRED?>'){
+        if (row.status === <?= Mutual::STATUS_RETIRED?>){
            retired += ' retired';
         }
         
@@ -282,31 +282,31 @@
     
     function typeFormatter(docType, docId, docKey, row){
         switch(docType){
-            case '<?= Movement::DOC_ORDER?>': 
+            case <?= Movement::DOC_ORDER?>: 
 //                        return "<a href='/order/intro/"+docId+"' target='_blank'>Заказ №"+docId+"</a>";
                         return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №"+docId+"</a>";
-            case '<?= Movement::DOC_MSR?>': 
+            case <?= Movement::DOC_MSR?>: 
                 return "<a href='#' class='msr-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о продажах №"+docId+"</a>";
-            case '<?= Movement::DOC_VT?>': 
+            case <?= Movement::DOC_VT?>: 
                         return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
-            case '<?= Movement::DOC_PTU?>': 
+            case <?= Movement::DOC_PTU?>: 
                         return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a>";
-            case '<?= Movement::DOC_OT?>': 
+            case <?= Movement::DOC_OT?>: 
                         return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
-            case '<?= Movement::DOC_PT?>': 
+            case <?= Movement::DOC_PT?>: 
                         return "<a href='#' class='pt-modal-show' modal-url='/pt/edit-form/"+docId+"'>Перемещение №"+docId+"</a>";
-            case '<?= Movement::DOC_ST?>': 
+            case <?= Movement::DOC_ST?>: 
                         return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
-            case '<?= Movement::DOC_VTP?>': 
+            case <?= Movement::DOC_VTP?>: 
                         return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
-            case '<?= Movement::DOC_REVISE?>':
+            case <?= Movement::DOC_REVISE?>:
                 if (row.reviseDoc){        
                     var comment = row.reviseDoc.comment;        
                     return "<a href='#' class='revise-modal-show' modal-url='/revise/edit-form/"+docId+"'>Корректировка №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
                 } else {
                     return '!Документ не найден!';
                 }    
-            case '<?= Movement::DOC_CASH?>':
+            case <?= Movement::DOC_CASH?>:
                 var cashName = '';
                 var result = '';
                 var kindName = '';
@@ -370,11 +370,11 @@
     
     function debitFormatter(value, row){
         switch(row.docType){
-            case '<?= Movement::DOC_PTU?>': 
-            case '<?= Movement::DOC_OT?>': 
+            case <?= Movement::DOC_PTU?>: 
+            case <?= Movement::DOC_OT?>: 
 //                return (-Math.round(value*100)/100).toFixed(2);
                 return $.number(-value, 2, '.', '' );
-            case '<?= Movement::DOC_VTP?>': 
+            case <?= Movement::DOC_VTP?>: 
 //                return (-Math.round(value*100)/100).toFixed(2);
                 return '<span style="color:red">'+$.number(-value, 2, '.', '' )+'</span>';
             default:    
@@ -384,9 +384,9 @@
     }
     function creditFormatter(value, row){
         switch(row.docType){
-            case '<?= Movement::DOC_PTU?>': 
-            case '<?= Movement::DOC_OT?>': 
-            case '<?= Movement::DOC_VTP?>': 
+            case <?= Movement::DOC_PTU?>: 
+            case <?= Movement::DOC_OT?>: 
+            case <?= Movement::DOC_VTP?>: 
                 return '';
             default:    
 //                return (Math.round(value*100)/100).toFixed(2);
@@ -412,7 +412,7 @@
     }
 
     function reviseFormatter(value){
-        return value==='<?= Mutual::REVISE_OK?>';
+        return value===<?= Mutual::REVISE_OK?>;
     }
     
     function activeFormatter(value, row){
