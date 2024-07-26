@@ -246,6 +246,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
      */
     public function patch($id, $data)
     {
+        var_dump($data); exit;
         if (is_object($data)){
             if ($data->docType == 'MarketSaleReport'){
                 $report = $this->entityManager->getRepository(MarketSaleReport::class)
@@ -329,7 +330,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 $statement = $this->entityManager->getRepository(Statement::class)
                         ->find($id);
                 if ($statement){
-                    $statement->setStatusAccount((int) $data->statusAccount);
+                    $statement->setStatusAccount($data->statusAccount);
                     $this->entityManager->persist($statement);
                     $this->entityManager->flush();
                     return ['statusAccount' => $statement->getStatusAccount()];
