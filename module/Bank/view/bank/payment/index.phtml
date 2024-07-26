@@ -114,16 +114,16 @@
 <script type="text/javascript">
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status === '<?= Payment::STATUS_RETIRED?>'){
+        if (row.status === <?= Payment::STATUS_RETIRED?>){
            retired += ' retired';
         }
-        if (row.status === '<?= Payment::STATUS_ERROR?>'){
+        if (row.status === <?= Payment::STATUS_ERROR?>){
            retired += ' warning';
         }
-        if (row.status === '<?= Payment::STATUS_TRANSFER?>'){
+        if (row.status === <?= Payment::STATUS_TRANSFER?>){
            retired += ' info';
         }
-        if (row.status === '<?= Payment::STATUS_SUCCESS?>'){
+        if (row.status === <?= Payment::STATUS_SUCCESS?>){
            retired += ' success';
         }
         return {classes: retired};
@@ -295,11 +295,11 @@
     }
     
     function purposeFormatter(value, row){
-        if (row.paymentAuto === '<?= Payment::PAYMENT_AUTO_WEEK ?>'){
+        if (row.paymentAuto === <?= Payment::PAYMENT_AUTO_WEEK ?>){
             var days = <?= Encoder::encode(Payment::getPaymentWeekDayList()) ?>;
             return value + '<br/><h5 class="retired-muted"><span class="label label-success">!</span> Автоплатеж. Каждую неделю в '+days[row.paymentAutoDay]+' до '+$.format.date(new Date(row.paymentAutoStopDate), "dd.MM.yyyy")+'</h5>';
         }
-        if (row.paymentAuto === '<?= Payment::PAYMENT_AUTO_MONTH ?>'){
+        if (row.paymentAuto === <?= Payment::PAYMENT_AUTO_MONTH ?>){
             return value + '<br/><h5 class="retired-muted"><span class="label label-success">!</span> Автоплатеж. Каждый месяц, '+row.paymentAutoDay+' числа до '+$.format.date(new Date(row.paymentAutoStopDate), "dd.MM.yyyy")+'</h5>';
         }
         if (row.statusMessage){
@@ -334,7 +334,7 @@
     
     function sendFormatter(value, row){
         var disabled = '';
-        if (row.status === '<?= Payment::STATUS_RETIRED?>'){
+        if (row.status === <?= Payment::STATUS_RETIRED?>){
             disabled = 'disabled = "true"';
         }
         if (!row.requestId){
