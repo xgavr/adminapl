@@ -767,13 +767,13 @@
     function payFormatter(value, row){
         var url = '/till/statement-to-cash-doc/'+row.id;
         var checkClass = 'btn-default';
-        if (row.pay === '<?= Statement::PAY_NEW?>'){
+        if (row.pay === <?= Statement::PAY_NEW?>){
             checkClass = 'btn-info';
         }
-        if (row.pay === '<?= Statement::PAY_WARNING?>'){
+        if (row.pay === <?= Statement::PAY_WARNING?>){
             checkClass = 'btn-warning';
         }
-        if (row.swap1 === '<?= Statement::SWAP1_TRANSFERED?>' && row.pay === '<?= Statement::PAY_CHECK?>'){
+        if (row.swap1 === <?= Statement::SWAP1_TRANSFERED?> && row.pay === <?= Statement::PAY_CHECK?>){
             checkClass = 'btn-success';
         }
         var btnClass = 'btn-default';
@@ -933,14 +933,14 @@
             }, 
             delete: {
                 name: function(row) {
-                         return (row.status === '<?= Statement::STATUS_ACTIVE ?>') ? 'Не учитывать':'Учитывать';                    
+                         return (row.status === <?= Statement::STATUS_ACTIVE ?>) ? 'Не учитывать':'Учитывать';                    
                     },                
                 iconClass: 'glyphicon glyphicon-trash',
                 onClick: function(row) {
                     deleteStatement('/bank/delete-statement/'+row.id);
                 },
                 isEnabled: function(row) {
-                    return row.chargeDate > '<?= $allowDate?>' && row.kind === '<?= Statement::KIND_UNKNOWN ?>';
+                    return row.chargeDate > <?= $allowDate?> && row.kind === <?= Statement::KIND_UNKNOWN ?>;
                 }                
             }, 
             tokens: {
@@ -961,7 +961,7 @@
                     if (row.cashDoc){
                         cashDocId = row.cashDoc.id;
                     }    
-                    if (cashDocId || row.kind === '<?= Statement::KIND_OUT_SUPPLIER?>'){
+                    if (cashDocId || row.kind === <?= Statement::KIND_OUT_SUPPLIER?>){
                         
                         if (row.amount>0){
                             var url = '/till/edit-cash-in/'+cashDocId+'?statement='+row.id;
@@ -974,7 +974,7 @@
                     }
                 },
                 isEnabled: function(row) {
-                    return row.cashDoc !== null || row.kind === '<?= Statement::KIND_OUT_SUPPLIER?>' || row.kind === '<?= Statement::KIND_IN_BAYER?>';
+                    return row.cashDoc !== null || row.kind === <?= Statement::KIND_OUT_SUPPLIER?> || row.kind === <?= Statement::KIND_IN_BAYER?>;
                 }                
             },
             returnPay: {
@@ -1089,15 +1089,15 @@
     function rowStyle(row, index) {
         var retired = 'tablerow';
         
-        if (row.statusAccount == '<?= Statement::STATUS_ACCOUNT_NO?>'){
+        if (row.statusAccount === <?= Statement::STATUS_ACCOUNT_NO?>){
            retired += ' status-account-no';
         }
         
-        if (row.kind == '<?= Statement::KIND_UNKNOWN?>'){
+        if (row.kind === <?= Statement::KIND_UNKNOWN?>){
            retired += ' warning';
         }
 
-        if (row.status == '<?= Statement::STATUS_RETIRED?>'){
+        if (row.status === <?= Statement::STATUS_RETIRED?>){
            retired += ' retired';
         }
         
@@ -1304,7 +1304,7 @@
     function qrcodeRefundFormatter(value, row){
         var btn = '<nobr>';
 
-        if (row.paymentType == '<?= QrCodePayment::TYPE_PAYMENT?>'){
+        if (row.paymentType === <?= QrCodePayment::TYPE_PAYMENT?>){
             btn += ' <button';
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs"';
@@ -1315,7 +1315,7 @@
             btn += '</button>';
         }    
 
-        if (row.paymentType == '<?= QrCodePayment::TYPE_REFUND?>'){
+        if (row.paymentType === <?= QrCodePayment::TYPE_REFUND?>){
             btn += ' <button';
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs"';
@@ -1339,7 +1339,7 @@
         if (row.cashDoc){
             btnClass = 'btn-info';
             var cashDocId = row.cashDoc.id;
-            if (row.paymentType == '<?= QrCodePayment::TYPE_PAYMENT?>'){
+            if (row.paymentType === <?= QrCodePayment::TYPE_PAYMENT?>){
                 var url = '/till/edit-cash-in/'+cashDocId;
                 btn += ' <button';
                 btn += ' type="button"';
@@ -1349,7 +1349,7 @@
                 btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
                 btn += '</button>';
             }    
-            if (row.paymentType == '<?= QrCodePayment::TYPE_REFUND?>'){
+            if (row.paymentType === <?= QrCodePayment::TYPE_REFUND?>){
                 var url = '/till/edit-cash-out/'+cashDocId;
                 btn += ' <button';
                 btn += ' type="button"';
