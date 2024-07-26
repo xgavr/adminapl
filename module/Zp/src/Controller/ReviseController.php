@@ -110,6 +110,7 @@ class ReviseController extends AbstractActionController
         $reviseId = (int)$this->params()->fromRoute('id', -1);
         $companyId = $this->params()->fromQuery('company');
         $userId = $this->params()->fromQuery('user');
+        $copy = (int) $this->params()->fromQuery('copy', false);
         
         $revise = null;
         if ($reviseId > 0){
@@ -163,7 +164,8 @@ class ReviseController extends AbstractActionController
                     'company' => $revise->getCompany()->getId(),
                     'user' => $revise->getUser()->getId(),
                     'accrual' => $revise->getAccrual()->getId(),
-                    'docDate' => $revise->getDocDate(),
+//                    'docDate' => $revise->getDocDate(),
+                    'docDate' => ($copy) ? date('Y-m-d'):$revise->getDocDate(),  
                     'status' => $revise->getStatus(),
                     'kind' => $revise->getKind(),
                     'docNum' => $revise->getDocNum(),
@@ -177,6 +179,7 @@ class ReviseController extends AbstractActionController
         // Render the view template.
         return new ViewModel([
             'form' => $form,
+            'copy' => $copy,
             'revise' => $revise,
         ]);        
     }        

@@ -134,7 +134,7 @@ $form->prepare();
         var data = serializeForm('#personal-revise-form');
         $.ajax({
             type: 'POST',
-            url: '/personal-revise/edit-form/<?= ($revise) ? $revise->getId():"" ?>?company='+$('#companySelectForm').val()+'&user='+$('#userSelectForm').val(),
+            url: '/personal-revise/edit-form/<?= ($revise && !$copy) ? $revise->getId():"" ?>?company='+$('#companySelectForm').val()+'&user='+$('#userSelectForm').val(),
             data: $.param(data)
         })
             .done(function (data) {

@@ -67,6 +67,9 @@ $this->pageBreadcrumbs()->setItems([
             data-show-footer="false"
             data-row-style="rowStyle"
             data-classes = "table table-bordered table-hover table-condensed"
+            data-sort-name="docDate"
+            data-sort-order="desc"  
+            data-unique-id="id"
             >
             <thead>
                 <tr>
@@ -90,10 +93,19 @@ $this->pageBreadcrumbs()->setItems([
     var $table = $('#table');
         $ok = $('#ok');
     
-    function refreshTable(){
-        $table.bootstrapTable('refresh');
+    var curentRowIndex = -1;
+    
+    function setCurrentIndex(index){
+        curentRowIndex = index;
     }
     
+    function getCurrentIndex(){
+        return curentRowIndex;
+    }
+    
+    function refreshTable(){
+        $table.bootstrapTable('refresh');
+    }    
 
     $(function () {
         $ok.click(function () {
@@ -175,4 +187,59 @@ $this->pageBreadcrumbs()->setItems([
     function responseHandler(res) {
         return res;
     }    
+    
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            setCurrentIndex($(rowElem).attr('data-index'));
+            return $table.bootstrapTable('getData')[getCurrentIndex()];
+        },
+        actionsGroups: [
+           ['statusActiv', 'statusRetired'], 
+           ['duplicate'],
+           ['history']
+        ],      
+        actions: {
+            statusActiv: {
+                name: 'Сделать активным',
+                iconClass: 'glyphicon glyphicon-ok',
+                onClick: function(row) {
+                },
+                isShown: function(row) {
+                },
+                isEnabled: function(row) {
+                }                
+            }, 
+            statusRetired: {
+                name: 'Сделать не активным',
+                iconClass: 'glyphicon glyphicon-remove',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                },
+                isShown: function(row) {
+                },
+                isEnabled: function(row) {
+                }                
+            },
+            duplicate: {
+                name: 'Скопировать',
+                iconClass: 'glyphicon glyphicon-duplicate',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    var url = '/personal-revise/edit-form/'+row.id+'?copy=1';
+                    showFormDialog({
+                        id: 'ptuModal',
+                        url: url,
+                        width: '1440px'
+                    });
+                },
+                isShown: function(row) {
+                  return true;
+                },
+                isEnabled: function(row) {
+                    return true;
+                }                
+            }
+        }
+    });        
+    
 </script>
