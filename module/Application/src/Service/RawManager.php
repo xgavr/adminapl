@@ -296,24 +296,18 @@ class RawManager {
                     
                 $filter = new RawToStr();
                     
-//                try{
-                    $reader = IOFactory::createReaderForFile($filename);
-//                } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
-                    //попытка прочитать файл старым способом
-//                    $raw->setName($e->getMessage());
-//                    $raw->setStatus(Raw::STATUS_FAILED);
-//                    $this->entityManager->persist($raw);
-//                    $this->entityManager->flush($raw);                    
-//                    return $this->uploadRawpriceXls2($supplier, $filename);
-                    
-                    //if ($e->getMessage() == 'Unable to identify a reader for this file'){
-                        //$this->renameToArchive($supplier, $filename);
-                        //return;
-                    //}    
-//                }    
+                $reader = IOFactory::createReaderForFile($filename);
                 $filterSubset = new \Application\Filter\ExcelColumn();
+                
                 $reader->setReadFilter($filterSubset);
-                $spreadsheet = $reader->load($filename);
+                
+                try{
+                    $spreadsheet = $reader->load($filename);
+                } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
+                    // принудительно
+                    $reader = IOFactory::createReader("Xlsx");
+                    $spreadsheet = $reader->load($filename);                    
+                }    
 
                 $sheets = $spreadsheet->getAllSheets();
                 foreach ($sheets as $sheet) { // PHPExcel_Worksheet
