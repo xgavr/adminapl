@@ -255,19 +255,19 @@ $this->pageBreadcrumbs()->setItems([
 
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.statusAccount == <?= Order::STATUS_TAKE_NO?>){
+        if (row.statusAccount === <?= Order::STATUS_TAKE_NO?>){
             return {classes: 'warning '+retired};
         }
         switch(row.status){
-            case '<?= Order::STATUS_SHIPPED?>': 
+            case <?= Order::STATUS_SHIPPED?>: 
                         return {classes: 'success '+retired}; break;
-            case '<?= Order::STATUS_DELIVERY?>': 
+            case <?= Order::STATUS_DELIVERY?>: 
                         return {classes: 'info '+retired}; break;
-            case '<?= Order::STATUS_CONFIRMED?>': 
+            case <?= Order::STATUS_CONFIRMED?>: 
                         return {classes: retired, css: {"background-color": "linen"}}; break;
-            case '<?= Order::STATUS_PROCESSED?>': 
+            case <?= Order::STATUS_PROCESSED?>: 
                         return {classes: retired, css: {"background-color": "WhiteSmoke"}}; break;
-            case '<?= Order::STATUS_CANCELED?>': 
+            case <?= Order::STATUS_CANCELED?>: 
                         return {classes: 'retired '+retired}; break;
             default:break;     
         }
@@ -277,7 +277,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function bidTakeStyle(row){
         var classes = 'default';
-        if (row.take === "<?= Bid::TAKE_NO?>"){
+        if (row.take === <?= Bid::TAKE_NO?>){
             classes = 'warning';
         }        
         return {classes: classes};
@@ -541,7 +541,7 @@ $this->pageBreadcrumbs()->setItems([
                     changeOrderStatus(row.id, <?= Order::STATUS_NEW?>);
                 },
                 isShown: function(row) {
-                  return row.status != '<?= Order::STATUS_NEW?>';
+                  return row.status !== <?= Order::STATUS_NEW?>;
                 },
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
@@ -554,7 +554,7 @@ $this->pageBreadcrumbs()->setItems([
                     changeOrderStatus(row.id, <?= Order::STATUS_PROCESSED?>);
                 },
                 isShown: function(row) {
-                  return row.status != '<?= Order::STATUS_PROCESSED?>';
+                  return row.status !== <?= Order::STATUS_PROCESSED?>;
                 },
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
@@ -567,7 +567,7 @@ $this->pageBreadcrumbs()->setItems([
                     changeOrderStatus(row.id, <?= Order::STATUS_CONFIRMED?>);
                 },
                 isShown: function(row) {
-                  return row.status != '<?= Order::STATUS_CONFIRMED?>';
+                  return row.status !== <?= Order::STATUS_CONFIRMED?>;
                 },
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
@@ -581,7 +581,7 @@ $this->pageBreadcrumbs()->setItems([
                     changeOrderStatus(row.id, <?= Order::STATUS_DELIVERY?>);
                 },
                 isShown: function(row) {
-                  return row.status != <?= Order::STATUS_DELIVERY?>;
+                  return row.status !== <?= Order::STATUS_DELIVERY?>;
                 },
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
@@ -594,7 +594,7 @@ $this->pageBreadcrumbs()->setItems([
                     changeOrderStatus(row.id, <?= Order::STATUS_SHIPPED?>);
                 },
                 isShown: function(row) {
-                  return row.status != <?= Order::STATUS_SHIPPED?>;
+                  return row.status !== <?= Order::STATUS_SHIPPED?>;
                 },
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
@@ -607,7 +607,7 @@ $this->pageBreadcrumbs()->setItems([
                     changeOrderStatus(row.id, <?= Order::STATUS_CANCELED?>);
                 },
                 isShown: function(row) {
-                  return row.status != <?= Order::STATUS_CANCELED?>;
+                  return row.status !== <?= Order::STATUS_CANCELED?>;
                 },
                 isEnabled: function(row) {
                     return row.dateOper > '<?= $allowDate?>';
@@ -749,7 +749,7 @@ $this->pageBreadcrumbs()->setItems([
                     });
                 },
                 isEnabled: function(row) {
-                    return row.status == <?= Order::STATUS_SHIPPED?>;
+                    return row.status === <?= Order::STATUS_SHIPPED?>;
                 }                
             },
             cash: {
