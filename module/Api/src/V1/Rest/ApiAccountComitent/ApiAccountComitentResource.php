@@ -246,8 +246,8 @@ class ApiAccountComitentResource extends AbstractResourceListener
      */
     public function patch($id, $data)
     {
-        var_dump($data); exit;
         if (is_object($data)){
+            var_dump($data->docType, $id); exit;
             if ($data->docType == 'MarketSaleReport'){
                 $report = $this->entityManager->getRepository(MarketSaleReport::class)
                         ->find($id);
