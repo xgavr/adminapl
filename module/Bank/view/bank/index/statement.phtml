@@ -1200,7 +1200,7 @@
             callback: function (result) {
                 var dialog = bootbox.dialog({
                     message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-                    closeButton: false
+                    closeButton: true
                 });
                 if (result){
                     var url = "/sbp/refund/" + paymentId + "?amount="+result;
@@ -1221,8 +1221,9 @@
                                 dialog.modal('hide');
                                 bootbox.alert("Произошла ошибка при выполнении операции.");
                             });        
-                    }        
-                    
+                    }                            
+                } else {
+                    dialog.modal('hide');
                 }
             }
         });
@@ -1231,7 +1232,7 @@
     function sbpRefundUpdate(paymentId){
         var dialog = bootbox.dialog({
             message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-            closeButton: false
+            closeButton: true
         });
         var url = "/sbp/refund-update/" + paymentId;
         if (url){
