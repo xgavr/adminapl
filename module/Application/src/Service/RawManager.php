@@ -303,7 +303,7 @@ class RawManager {
                 
                 try{
                     $spreadsheet = $reader->load($filename);
-                } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e){
+                } catch (\PhpOffice\PhpSpreadsheet\Exception $e){
                     // принудительно
                     $reader = IOFactory::createReader("Xlsx");
                     $spreadsheet = $reader->load($filename);                    
