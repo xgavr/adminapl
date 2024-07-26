@@ -34,6 +34,10 @@ class ToFloat extends AbstractFilter
     
     public function filter($value)
     {
+        if (is_null($value)){
+            return;
+        }
+        
         if (mb_strlen(trim($value)) > 25){
             return;
         }
