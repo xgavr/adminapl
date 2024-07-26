@@ -587,6 +587,10 @@ class RegisterManager
             $register = $this->entityManager->getRepository(Register::class)
                     ->findForActualize($stamp);
             
+            if (empty($register)){
+                break;
+            }
+            
             $stamp = $register->getDocStamp();
             
             $allowDate = $this->getAllowDate();
