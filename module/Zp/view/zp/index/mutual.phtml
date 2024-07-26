@@ -150,7 +150,7 @@ use Stock\Entity\Movement;
     function mutualRowStyle(row){
         var retired = 'tablerow';
 
-        if (row.status === '<?= PersonalMutual::STATUS_RETIRED?>'){
+        if (row.status === <?= PersonalMutual::STATUS_RETIRED?>){
            retired += ' retired';
         }
         
@@ -198,18 +198,18 @@ use Stock\Entity\Movement;
         let docId = row.docId;  
         var comment = '';
         switch(docType){
-            case '<?= Movement::DOC_ZP?>': 
+            case <?= Movement::DOC_ZP?>: 
                 return 'Начисление ЗП';
-            case '<?= Movement::DOC_ORDER?>': 
+            case <?= Movement::DOC_ORDER?>: 
                 return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №Z"+docId+"</a>";
-            case '<?= Movement::DOC_MSR?>': 
+            case <?= Movement::DOC_MSR?>: 
                 comment = (row.marketSaleReport.comment) ? row.marketSaleReport.comment:'';        
                 return "<a href='#' class='msr-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о продажах №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
-            case '<?= Movement::DOC_VT?>': 
+            case <?= Movement::DOC_VT?>: 
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
-            case '<?= Movement::DOC_ST?>': 
+            case <?= Movement::DOC_ST?>: 
                 return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание в ЗП №"+docId+"</a>";
-            case '<?= Movement::DOC_CASH?>':
+            case <?= Movement::DOC_CASH?>:
                 return 'Выдано из кассы/подотчета';        
             default: return docId;            
         }

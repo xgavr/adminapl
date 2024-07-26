@@ -14,6 +14,7 @@ use Admin\Service\PostManager;
 use Admin\Service\AutoruManager;
 use Admin\Service\HelloManager;
 use Admin\Service\AdminManager;
+use Bankapi\Service\Tochka\SbpManager;
 
 
 /**
@@ -31,8 +32,10 @@ class PostControllerFactory implements FactoryInterface {
         $autoruManager = $container->get(AutoruManager::class);
         $helloManager = $container->get(HelloManager::class);
         $adminManager = $container->get(AdminManager::class);
+        $sbpManager = $container->get(SbpManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new PostController($entityManager, $postManager, $autoruManager, $helloManager, $adminManager);
+        return new PostController($entityManager, $postManager, $autoruManager, 
+                $helloManager, $adminManager, $sbpManager);
     }
 }

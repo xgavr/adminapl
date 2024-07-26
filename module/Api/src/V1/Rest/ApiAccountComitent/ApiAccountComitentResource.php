@@ -329,7 +329,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 $statement = $this->entityManager->getRepository(Statement::class)
                         ->find($id);
                 if ($statement){
-                    $statement->setStatusAccount($data->statusAccount);
+                    $statement->setStatusAccount((int) $data->statusAccount);
                     $this->entityManager->persist($statement);
                     $this->entityManager->flush();
                     return ['statusAccount' => $statement->getStatusAccount()];

@@ -15,6 +15,7 @@ use Application\Entity\Order;
 use Admin\Form\PostForm;
 use User\Entity\User;
 use Application\Entity\Email;
+use Laminas\Filter\ToFloat;
 
 
 class PostController extends AbstractActionController
@@ -50,14 +51,22 @@ class PostController extends AbstractActionController
      */
     private $adminManager;        
     
+    /**
+     * SbpManager manager.
+     * @var \Bankapi\Service\Tochka\SbpManager
+     */
+    private $sbpManager;        
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $postManager, $autoruManager, $helloManager, $adminManager) 
+    public function __construct($entityManager, $postManager, $autoruManager, 
+            $helloManager, $adminManager, $sbpManager) 
     {
         $this->postManager = $postManager;        
         $this->autoruManager = $autoruManager;
         $this->helloManager = $helloManager;
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
+        $this->sbpManager = $sbpManager;
     }   
 
     
@@ -168,17 +177,32 @@ class PostController extends AbstractActionController
         $orderId = (int)$this->params()->fromRoute('id', -1);
         $prepay = $this->params()->fromQuery('prepay', 0);
         
-        $result = [];
+        $qrCodeInfo = [];
         if ($orderId > 0){
             $order = $this->entityManager->getRepository(Order::class)
                     ->find($orderId);
         }
         
-        $this->layout()->setTemplate('layout/terminal');
+        if (!empty($order) && !empty($prepay)){
+            if ($order->getAplId()){
+                $toFloat = new ToFloat();
+                $qrCode = $this->sbpManager->registerQrCode([
+                    'orderAplId' => $order->getAplId(),
+                    'amount' => $toFloat->filter($prepay),
+                ]);
 
+                if ($qrCode instanceof QrCode){
+                    $qrCodeInfo = $qrCode->toLog();
+                }
+            }    
+        }
+
+        $this->layout()->setTemplate('layout/terminal');
+        
         return new ViewModel([
             'orderAplId' => $order->getMessageAplId(),
             'prepay' => $prepay,
+            'qrCode' => $qrCodeInfo,
         ]);                        
     }
 

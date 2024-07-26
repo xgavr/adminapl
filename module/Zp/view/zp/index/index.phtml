@@ -198,7 +198,7 @@ $this->pageBreadcrumbs()->setItems([
     function rowStyle(row){
         var retired = 'tablerow';
 
-        if (row.status === '<?= PersonalMutual::STATUS_RETIRED?>'){
+        if (row.status === <?= PersonalMutual::STATUS_RETIRED?>){
            retired += ' retired';
         }
         

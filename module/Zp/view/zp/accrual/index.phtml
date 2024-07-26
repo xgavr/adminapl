@@ -78,7 +78,7 @@ $this->pageBreadcrumbs()->setItems([
     function rowStyle(row){
         var retired = 'tablerow';
 
-        if (row.status === '<?= Accrual::STATUS_RETIRED?>'){
+        if (row.status === <?= Accrual::STATUS_RETIRED?>){
            retired += ' retired';
         }
         
