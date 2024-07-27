@@ -21,7 +21,7 @@ use User\Validator\PhoneExistsValidator;
  *
  * @author Daddy
  */
-class CashInForm extends Form implements ObjectManagerAwareInterface
+class CashInForm extends Form
 {
     
     

@@ -20,7 +20,7 @@ use User\Filter\PhoneFilter;
  *
  * @author Daddy
  */
-class CashOutForm extends Form implements ObjectManagerAwareInterface
+class CashOutForm extends Form 
 {
     
     

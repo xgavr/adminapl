@@ -20,7 +20,7 @@ use User\Filter\PhoneFilter;
  *
  * @author Daddy
  */
-class UserOutForm extends Form implements ObjectManagerAwareInterface
+class UserOutForm extends Form 
 {
     
     

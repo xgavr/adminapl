@@ -19,7 +19,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author Daddy
  */
-class CashForm extends Form implements ObjectManagerAwareInterface
+class CashForm extends Form 
 {
     
     protected $objectManager;    
