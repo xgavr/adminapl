@@ -301,13 +301,7 @@ class RawManager {
                 
                 $reader->setReadFilter($filterSubset);
                 
-                try{
-                    $spreadsheet = $reader->load($filename);
-                } catch (\PhpOffice\PhpSpreadsheet\Exception $e){
-                    // принудительно
-                    $reader = IOFactory::createReader("Xlsx");
-                    $spreadsheet = $reader->load($filename);                    
-                }    
+                $spreadsheet = $reader->load($filename);
 
                 $sheets = $spreadsheet->getAllSheets();
                 foreach ($sheets as $sheet) { // PHPExcel_Worksheet
