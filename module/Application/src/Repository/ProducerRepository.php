@@ -528,8 +528,10 @@ class ProducerRepository  extends EntityRepository{
                     'rawpriceCount' => $unknownProducer->getRawpriceCount(),
                     'intersect_coef' => $intersectCoef,
                 ]);
-
-            return $stmt->fetchAll();
+            
+            if ($stmt){
+                return $stmt->fetchAll();
+            }    
         }    
         
         return [];
