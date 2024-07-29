@@ -529,9 +529,7 @@ class ProducerRepository  extends EntityRepository{
                     'intersect_coef' => $intersectCoef,
                 ]);
             
-            if ($stmt){
-                return $stmt->fetchAllAssociative();
-            }    
+            return $stmt->fetchAllAssociative();
         }    
         
         return [];

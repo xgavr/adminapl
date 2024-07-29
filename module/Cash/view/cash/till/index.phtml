@@ -197,7 +197,7 @@
     function changeDocStatus(row){
         if (row.cashDoc){
             var status = <?= CashDoc::STATUS_ACTIVE?>;
-            if (row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>'){
+            if (row.cashDoc.status === <?= CashDoc::STATUS_ACTIVE?>){
                 status = <?= CashDoc::STATUS_RETIRED?>;
             }
             $.get( "/till/status/"+row.cashDoc.id+'?status='+status, function(data){
@@ -346,33 +346,33 @@
         var cashName = null;
         var userName = null;
         switch(value){
-            case '<?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>': 
-            case '<?= CashDoc::KIND_OUT_RETURN_CLIENT ?>': 
+            case <?= CashDoc::KIND_IN_PAYMENT_CLIENT ?>: 
+            case <?= CashDoc::KIND_OUT_RETURN_CLIENT ?>: 
                         var orderId = (row.cashDoc.order) ? "<a href='#' class='order-view-show' modal-url='/order/view/"+row.cashDoc.order.id+"'>Заказ №"+row.cashDoc.order.aplId+"</a>":'Пополнение ЛС';
                         var contactName = '<span class="text-warning">!Контакт не указан!</span>';
                         if (row.cashDoc.contact){
                             var contactName = (row.cashDoc.contact.client) ? "<a href='/client/view/"+row.cashDoc.contact.client.id+"' target=_blank>"+row.cashDoc.contact.client.name+"</a>":'NaN';
                         }    
                         return contactName+' '+orderId;
-            case '<?= CashDoc::KIND_IN_REFILL ?>': 
+            case <?= CashDoc::KIND_IN_REFILL ?>: 
                         cashRefill = (row.cashDoc.cashRefill) ? row.cashDoc.cashRefill.name:row.cashDoc.userRefill.fullName;
                         userName = (row.cashDoc.user) ? row.cashDoc.user.fullName:'<span class="text-warning">!Касса не указана!</span>';
                         cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:userName;
                         return (row.amount < 0) ? cashName:cashRefill;
-            case '<?= CashDoc::KIND_OUT_REFILL ?>': 
+            case <?= CashDoc::KIND_OUT_REFILL ?>: 
                         cashRefill = (row.cashDoc.cashRefill) ? row.cashDoc.cashRefill.name:row.cashDoc.userRefill.fullName;
                         userName = (row.cashDoc.user) ? row.cashDoc.user.fullName:'<span class="text-warning">!Касса не указана!</span>';
                         cashName = (row.cashDoc.cash) ? row.cashDoc.cash.name:userName;
                         return (row.amount > 0) ? cashName:cashRefill;
-            case '<?= CashDoc::KIND_IN_RETURN_USER ?>': 
-            case '<?= CashDoc::KIND_OUT_COURIER ?>': 
-            case '<?= CashDoc::KIND_OUT_SALARY ?>': 
-            case '<?= CashDoc::KIND_OUT_USER ?>': 
+            case <?= CashDoc::KIND_IN_RETURN_USER ?>: 
+            case <?= CashDoc::KIND_OUT_COURIER ?>: 
+            case <?= CashDoc::KIND_OUT_SALARY ?>: 
+            case <?= CashDoc::KIND_OUT_USER ?>: 
                         return (row.cashDoc.userRefill) ? row.cashDoc.userRefill.fullName:null;
-            case '<?= CashDoc::KIND_OUT_COST ?>': 
+            case <?= CashDoc::KIND_OUT_COST ?>: 
                         return row.cashDoc.cost.name;
-            case '<?= CashDoc::KIND_IN_RETURN_SUPPLIER ?>': 
-            case '<?= CashDoc::KIND_OUT_SUPPLIER ?>': 
+            case <?= CashDoc::KIND_IN_RETURN_SUPPLIER ?>: 
+            case <?= CashDoc::KIND_OUT_SUPPLIER ?>: 
                 if (row.cashDoc.legal){
                     return row.cashDoc.legal.name;
                 }                
@@ -383,7 +383,7 @@
     
     function tillActiveFormatter(value, row){
         var btn = '<nobr>';
-        if (row.cashDoc.cash && row.statusEx != <?= CashDoc::STATUS_EX_RECD?>){
+        if (row.cashDoc.cash && row.statusEx !== <?= CashDoc::STATUS_EX_RECD?>){
             if (row.cashDoc.kind<10){
                 var url = '/till/edit-cash-in/'+row.cashDoc.id;
                 btn += '<button';
@@ -421,10 +421,10 @@
     function rowStyle(row, index) {
         var retired = 'tablerow';
         if (row.cashDoc){
-            if (row.cashDoc.status == '<?= CashDoc::STATUS_RETIRED?>'){
+            if (row.cashDoc.status === <?= CashDoc::STATUS_RETIRED?>){
                retired += ' retired';
             }        
-            if (row.cashDoc.status == '<?= CashDoc::STATUS_CORRECT?>'){
+            if (row.cashDoc.status === <?= CashDoc::STATUS_CORRECT?>){
                retired += ' retired-muted';
             }        
         }    
@@ -452,11 +452,11 @@
                     changeDocStatus(row);
                 },
                 isShown: function(row) {
-                  return row.cashDoc.status === '<?= CashDoc::STATUS_RETIRED?>';
+                  return row.cashDoc.status === <?= CashDoc::STATUS_RETIRED?>;
                 },
                 isEnabled: function(row) {
                     if (row.cashDoc){
-                        if (row.cashDoc.status === '<?= CashDoc::STATUS_RETIRED?>'){
+                        if (row.cashDoc.status === <?= CashDoc::STATUS_RETIRED?>){
                             return true;
                         }
                     }
@@ -470,11 +470,11 @@
                     changeDocStatus(row);
                 },
                 isShown: function(row) {
-                  return row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>' || row.cashDoc.status === '<?= CashDoc::STATUS_CORRECT?>';
+                  return row.cashDoc.status === <?= CashDoc::STATUS_ACTIVE?> || row.cashDoc.status === <?= CashDoc::STATUS_CORRECT?>;
                 },
                 isEnabled: function(row) {
                     if (row.cashDoc){
-                        if (row.cashDoc.status === '<?= CashDoc::STATUS_ACTIVE?>' || row.cashDoc.status === '<?= CashDoc::STATUS_CORRECT?>'){
+                        if (row.cashDoc.status === <?= CashDoc::STATUS_ACTIVE?> || row.cashDoc.status === <?= CashDoc::STATUS_CORRECT?>){
                             return true;
                         }
                     }
