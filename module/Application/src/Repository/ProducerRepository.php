@@ -503,6 +503,7 @@ class ProducerRepository  extends EntityRepository{
     {
         $entityManager = $this->getEntityManager();
 //        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
+        $conn = $entityManager->getConnection();
 
         if ($unknownProducer->getRawpriceCount()){
             $sql = 'select t.unknown_producer_intersect as unknown_producer_id, '
@@ -522,14 +523,20 @@ class ProducerRepository  extends EntityRepository{
 
 //            var_dump($sql); exit;
 
-            $stmt = $entityManager->getConnection()->prepare($sql);
-            $stmt->executeQuery([
+//            $stmt = $entityManager->getConnection()->prepare($sql);
+//            $stmt->executeQuery([
+//                    'unknownProducer' => $unknownProducer->getId(),
+//                    'rawpriceCount' => $unknownProducer->getRawpriceCount(),
+//                    'intersect_coef' => $intersectCoef,
+//                ]);
+            
+            $params = [
                     'unknownProducer' => $unknownProducer->getId(),
                     'rawpriceCount' => $unknownProducer->getRawpriceCount(),
                     'intersect_coef' => $intersectCoef,
-                ]);
+                ];
             
-            return $stmt->fetchAllAssociative();
+            return $conn->fetchAllAssociativeIndexed($sql, $params);
         }    
         
         return [];
