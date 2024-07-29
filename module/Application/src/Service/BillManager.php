@@ -323,9 +323,9 @@ class BillManager
 //                        var_dump($cell->getCalculatedValue());
 //                        var_dump($cell->getFormattedValue());
                         if (Date::isDateTime($cell) && $cell->getValue()) {
-                            $value = date('Y-m-d', Date::excelToTimestamp($cell->getValue()));
+                            $value = date('Y-m-d', Date::excelToTimestamp(floatval($cell->getValue())));
                         } elseif (Date::isDateTimeFormat($cell->getStyle()->getNumberFormat()) && $cell->getValue()) {
-                            $value = date('Y-m-d', Date::excelToTimestamp($cell->getValue()));
+                            $value = date('Y-m-d', Date::excelToTimestamp(floatval($cell->getValue())));
                         } else {
                             if (!empty($cell->getCalculatedValue())){
                                 $value = mb_substr(trim($cell->getCalculatedValue()), 0, 50);
