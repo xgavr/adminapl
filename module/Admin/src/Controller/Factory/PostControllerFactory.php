@@ -14,7 +14,7 @@ use Admin\Service\PostManager;
 use Admin\Service\AutoruManager;
 use Admin\Service\HelloManager;
 use Admin\Service\AdminManager;
-use Bankapi\Service\Tochka\SbpManager;
+use Bank\Service\SbpManager;
 
 
 /**

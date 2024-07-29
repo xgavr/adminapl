@@ -139,28 +139,29 @@ class SbpManager
                         ->findOneBy(['qrcId' => $resultData['qrcId']]);
                 if ($qrCode){
                     return $qrCode;
-                }
+                } else {
                 
-                $qrCode = new QrCode();            
-                $qrCode->setAccount($account);
-                $qrCode->setAmount($amount);
-                $qrCode->setBankAccount($bankAccount);
-                $qrCode->setCurrency($qrCodeData['Data']['currency']);
-                $qrCode->setDateCreated(date('Y-m-d H:i:s'));
-                $qrCode->setImageContent($resultData['image']['content']);
-                $qrCode->setImageHeight($resultData['image']['height']);
-                $qrCode->setImageMediaType($resultData['image']['mediaType']);
-                $qrCode->setImageWidth($resultData['image']['width']);
-                $qrCode->setMerchantId($merchant_id);
-                $qrCode->setPayload($resultData['payload']);
-                $qrCode->setPaymentPurpose($qrCodeData['Data']['paymentPurpose']);
-                $qrCode->setQrcId($resultData['qrcId']);
-                $qrCode->setQrcType($qrCodeData['Data']['qrcType']);
-                $qrCode->setSourceName($qrCodeData['Data']['sourceName']);
-                $qrCode->setOrderAplId($data['orderAplId']);
-                $qrCode->setStatus($qrCode::STATUS_ACTIVE);
-                $qrCode->setPaymentStatus($qrCode::PAYMENT_NOT_STARTED);
-                $qrCode->setTtl($qrCodeData['Data']['ttl']);
+                    $qrCode = new QrCode();            
+                    $qrCode->setAccount($account);
+                    $qrCode->setAmount($amount);
+                    $qrCode->setBankAccount($bankAccount);
+                    $qrCode->setCurrency($qrCodeData['Data']['currency']);
+                    $qrCode->setDateCreated(date('Y-m-d H:i:s'));
+                    $qrCode->setImageContent($resultData['image']['content']);
+                    $qrCode->setImageHeight($resultData['image']['height']);
+                    $qrCode->setImageMediaType($resultData['image']['mediaType']);
+                    $qrCode->setImageWidth($resultData['image']['width']);
+                    $qrCode->setMerchantId($merchant_id);
+                    $qrCode->setPayload($resultData['payload']);
+                    $qrCode->setPaymentPurpose($qrCodeData['Data']['paymentPurpose']);
+                    $qrCode->setQrcId($resultData['qrcId']);
+                    $qrCode->setQrcType($qrCodeData['Data']['qrcType']);
+                    $qrCode->setSourceName($qrCodeData['Data']['sourceName']);
+                    $qrCode->setOrderAplId($data['orderAplId']);
+                    $qrCode->setStatus($qrCode::STATUS_ACTIVE);
+                    $qrCode->setPaymentStatus($qrCode::PAYMENT_NOT_STARTED);
+                    $qrCode->setTtl($qrCodeData['Data']['ttl']);
+                }    
                 
                 $order = $this->entityManager->getRepository(Order::class)
                         ->findOneBy(['aplId' => $data['orderAplId']]);

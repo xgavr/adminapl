@@ -53,7 +53,7 @@ class PostController extends AbstractActionController
     
     /**
      * SbpManager manager.
-     * @var \Bankapi\Service\Tochka\SbpManager
+     * @var \Bank\Service\SbpManager
      */
     private $sbpManager;        
     
