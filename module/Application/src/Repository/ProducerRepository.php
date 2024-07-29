@@ -523,14 +523,14 @@ class ProducerRepository  extends EntityRepository{
 //            var_dump($sql); exit;
 
             $stmt = $entityManager->getConnection()->prepare($sql);
-            $stmt->execute([
+            $stmt->executeQuery([
                     'unknownProducer' => $unknownProducer->getId(),
                     'rawpriceCount' => $unknownProducer->getRawpriceCount(),
                     'intersect_coef' => $intersectCoef,
                 ]);
             
             if ($stmt){
-                return $stmt->fetchAll();
+                return $stmt->fetchAllAssociative();
             }    
         }    
         
