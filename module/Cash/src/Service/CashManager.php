@@ -473,7 +473,7 @@ class CashManager {
     /**
      * Удалить записи подотчета
      * @param CashDoc $cashDoc
-     * @param bool $flush;
+     * @param bool $flush
      */
     protected function removeUserTransactions($cashDoc, $flush = false)
     {
