@@ -149,13 +149,13 @@ $this->pageBreadcrumbs()->setItems([
     function rowStyle(row){
         var retired = 'tablerow';
 
-        if (row.status === '<?= CostMutual::STATUS_RETIRED?>'){
+        if (row.status === <?= CostMutual::STATUS_RETIRED?>){
            retired += ' retired';
         }
-        if (row.orderStatusAccount === '<?= Order::STATUS_TAKE_NO?>'){
+        if (row.orderStatusAccount === <?= Order::STATUS_TAKE_NO?>){
            retired += ' warning';
         }
-        if (row.vtStatusAccount === '<?= Vt::STATUS_TAKE_NO?>'){
+        if (row.vtStatusAccount === <?= Vt::STATUS_TAKE_NO?>){
            retired += ' warning';
         }
         
@@ -185,9 +185,9 @@ $this->pageBreadcrumbs()->setItems([
         let docType = row.docType;        
         let docId = row.docId;  
         switch(docType){
-            case '<?= Movement::DOC_ORDER?>': 
+            case <?= Movement::DOC_ORDER?>: 
                 return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>"+row.orderId+"</a>";
-            case '<?= Movement::DOC_VT?>': 
+            case <?= Movement::DOC_VT?>: 
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>"+row.vtOrderId+"</a>";
             default: return docId;            
         }
@@ -197,7 +197,7 @@ $this->pageBreadcrumbs()->setItems([
         let docType = row.docType;        
         let docId = row.docId;  
         var aplId = row.orderAplId;
-        if (docType === '<?= Movement::DOC_VT?>'){
+        if (docType === <?= Movement::DOC_VT?>){
             aplId = row.vtOrderAplId;
         }
         
@@ -278,39 +278,39 @@ $this->pageBreadcrumbs()->setItems([
         let docId = row.docId;  
         var comment = '';
         switch(docType){
-            case '<?= Movement::DOC_ORDER?>': 
+            case <?= Movement::DOC_ORDER?>: 
                 return "<a href='#' class='order-view-show' modal-url='/order/view/"+docId+"'>Заказ №Z"+docId+"</a>";
-            case '<?= Movement::DOC_MSR?>': 
+            case <?= Movement::DOC_MSR?>: 
                 comment = (row.marketSaleReport.comment) ? row.marketSaleReport.comment:'';        
                 return "<a href='#' class='msr-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о продажах №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
-            case '<?= Movement::DOC_VT?>': 
+            case <?= Movement::DOC_VT?>: 
                 return "<a href='#' class='vt-modal-show' modal-url='/vt/edit-form/"+docId+"'>Возврат покупателя №"+docId+"</a>";
             case '<?= Movement::DOC_PTU?>': 
                 if (row.ptu){        
                     comment = row.ptu.comment;        
                 }    
                 return "<a href='#' class='ptu-modal-show' modal-url='/ptu/edit-form/"+docId+"'>Поступление №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
-            case '<?= Movement::DOC_OT?>': 
+            case <?= Movement::DOC_OT?>: 
                 return "<a href='#' class='ot-modal-show' modal-url='/ot/edit-form/"+docId+"'>Оприходование №"+docId+"</a>";
-            case '<?= Movement::DOC_ST?>': 
+            case <?= Movement::DOC_ST?>: 
                 return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
-            case '<?= Movement::DOC_VTP?>': 
+            case <?= Movement::DOC_VTP?>: 
                 return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
-            case '<?= Movement::DOC_REVISE?>':
+            case <?= Movement::DOC_REVISE?>:
                 if (row.reviseDoc){        
                     comment = row.reviseDoc.comment;        
                     return "<a href='#' class='revise-modal-show' modal-url='/revise/edit-form/"+docId+"'>Корректировка №"+docId+"</a> <small class='text-muted'>"+comment+"</small>";
                 } else {
                     return '!Документ не найден!';
                 }    
-            case '<?= Movement::DOC_BANK?>':
+            case <?= Movement::DOC_BANK?>:
                 if (row.statement){        
                     comment = row.statement.purpose;        
                     return comment;
                 } else {
                     return '!Документ не найден!';
                 }    
-            case '<?= Movement::DOC_CASH?>':
+            case <?= Movement::DOC_CASH?>:
                 var cashName = '';
                 var result = '';
                 var kindName = '';
