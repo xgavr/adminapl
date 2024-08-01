@@ -205,7 +205,7 @@ class OrderRepository extends EntityRepository{
 
 
                 }    
-                if ($alnum && strlen($alnum) > 7){
+                if ($alnum && strlen($alnum) > 5){
                     $queryBuilder->leftJoin('c.contactCars', 'cc');
                     $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
                     $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
@@ -219,6 +219,93 @@ class OrderRepository extends EntityRepository{
             }    
         }    
         return $result;
+    }
+    
+    /**
+     * 
+     * @param QueryBuilder $queryBuilder
+     * @param array $params
+     */
+    private function findAllOrderParams($queryBuilder, $params)
+    {
+        
+        if (!empty($params['officeId'])){
+            if (is_numeric($params['officeId'])){
+                $queryBuilder->andWhere('o.office = ?1')
+                    ->setParameter('1', $params['officeId'])
+                        ;
+            }    
+        }            
+        if (!empty($params['userId'])){
+            if (is_numeric($params['userId'])){
+                $orX = $queryBuilder->expr()->orX();
+                if (!empty($params['status'])){
+                    if ($params['status'] == Order::STATUS_NEW){
+                        $orX->add($queryBuilder->expr()->isNull('o.user'));
+                    }
+                }
+                $orX->add($queryBuilder->expr()->eq('o.user', $params['userId']));
+                $queryBuilder->andWhere($orX);
+            }    
+        }            
+        if (!empty($params['clientId'])){
+            if (is_numeric($params['clientId'])){
+                $queryBuilder->andWhere('c.client = :client')
+                    ->setParameter('client', $params['clientId'])
+                        ;
+            }    
+        }            
+        if (!empty($params['status'])){
+            if (is_numeric($params['status'])){
+                $queryBuilder->andWhere('o.status = ?3')
+                    ->setParameter('3', $params['status'])
+                        ;
+            }    
+        }            
+        if (!empty($params['shipping'])){
+            if (is_numeric($params['shipping'])){
+                $queryBuilder->andWhere('o.shipping = :shipping')
+                    ->setParameter('shipping', $params['shipping'])
+                        ;
+            }    
+        }            
+        if (isset($params['sort'])){
+            $queryBuilder->addOrderBy('o.'.$params['sort'], $params['order']);
+        }        
+
+        if (!empty($params['orderId'])){
+            if (is_numeric($params['orderId'])){
+                $queryBuilder->andWhere('o.id = :orderId')
+                        ->setParameter('orderId', $params['orderId']);
+            }    
+        }
+        if (!empty($params['startDate'])){
+            $queryBuilder->andWhere('o.dateOper >= :startDate')
+                    ->setParameter('startDate', $params['startDate']);
+        }
+        if (!empty($params['endDate'])){
+            $queryBuilder->andWhere('o.dateOper <= :endDate')
+                    ->setParameter('endDate', $params['endDate']);
+        }
+
+        if (!empty($params['search'])){
+            $orX = $queryBuilder->expr()->orX();
+            $orX->add($queryBuilder->expr()->eq('o.id', 0));
+            $orX->add($queryBuilder->expr()->eq('o.trackNumber', trim($params['search'])));
+
+            $contacts = $this->searchContacts($params['search']);                
+            foreach ($contacts as $contact){
+                $orX->add($queryBuilder->expr()->eq('c.id', $contact['id']));                    
+            }
+            $orders = $this->searchOe($params['search']);                
+            foreach ($orders as $order){
+                $orX->add($queryBuilder->expr()->eq('o.id', $order['orderId']));                    
+            }
+            $queryBuilder->andWhere($orX);
+            $queryBuilder->setMaxResults(self::MAX_ORDER_SEARCH_RESULT);
+        }
+        
+        return $queryBuilder;
     }
     
     /**
@@ -267,8 +354,6 @@ class OrderRepository extends EntityRepository{
                     }
                     $orX->add($queryBuilder->expr()->eq('o.user', $params['userId']));
                     $queryBuilder->andWhere($orX);
-//                    $queryBuilder->andWhere('o.user = ?2')
-//                        ->setParameter('2', $params['userId'])                            
                 }    
             }            
             if (!empty($params['clientId'])){

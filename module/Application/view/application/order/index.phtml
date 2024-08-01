@@ -435,6 +435,9 @@ $this->pageBreadcrumbs()->setItems([
         if (row.skiper){
             result.push(row.skiper.fullName);
         }
+        if (row.trackNumber){
+            result.push(row.trackNumber);
+        }
         return result.join(' ');
     }
 
