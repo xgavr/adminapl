@@ -48,6 +48,7 @@ return [
             Service\Tochka\SbpManager::class => Service\Tochka\Factory\SbpManagerFactory::class,
             Service\Tochka\Statement::class => Service\Tochka\Factory\StatementFactory::class,
             Service\Tochka\Webhook::class => Service\Tochka\Factory\WebhookFactory::class,
+            Service\YooKassa\Authenticate::class => Service\YooKassa\Factory\AuthenticateFactory::class,
         ],
     ],    
     'view_manager' => [

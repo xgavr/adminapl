@@ -80,8 +80,14 @@ class CashManager {
      */
     private $adminManager;
 
+    /**
+     * Telegram manager.
+     * @var \Admin\Service\TelegrammManager
+     */
+    private $telegramManager;
+
     public function __construct($entityManager, $logManager, $legalManager, $zpManager,
-            $costManager, $adminManager)
+            $costManager, $adminManager, $telegramManager)
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
@@ -89,6 +95,7 @@ class CashManager {
         $this->zpManager = $zpManager;
         $this->costManager = $costManager;
         $this->adminManager = $adminManager;
+        $this->telegramManager = $telegramManager;
 
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];
@@ -1535,6 +1542,11 @@ class CashManager {
                     $this->updateCashDoc($cashDoc, $data);
                 } else {
                     $cashDoc = $this->addCashDoc($data);
+                    $settings = $this->adminManager->getTelegramSettings();
+                    $this->telegramManager->addPostponeMesage([
+                        'chat_id' => $settings['telegram_group_chat_id'], 
+                        'text' => 'Оплата по СБП '.$data['amount'].' '.$order->getAplIdLink(),                        
+                    ]);
                 }                
             }            
         }

@@ -18,7 +18,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author Daddy
  */
-class PriceSettingsForm extends Form implements ObjectManagerAwareInterface
+class PriceSettingsForm extends Form 
 {
     
     protected $objectManager;    

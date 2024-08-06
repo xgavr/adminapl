@@ -54,14 +54,18 @@ class GeoIp extends AbstractFilter
      */
     public function filter($ip)
     {
-        $parsedUrl = parse_url($ip);
-        
-        if (!isset($parsedUrl['host'])){
-            $parsedUrl['host'] = '';
+        if (!empty($ip)){
+            $parsedUrl = parse_url($ip);
+
+            if (!isset($parsedUrl['host'])){
+                $parsedUrl['host'] = '';
+            }
+            $result = \Laminas\Json\Json::decode(file_get_contents("http://ip-api.com/json/{$parsedUrl['host']}?lang=ru"), \Laminas\Json\Json::TYPE_ARRAY);
+    //var_dump($result);
+            return $result;
         }
-        $result = \Laminas\Json\Json::decode(file_get_contents("http://ip-api.com/json/{$parsedUrl['host']}?lang=ru"), \Laminas\Json\Json::TYPE_ARRAY);
-//var_dump($result);
-        return $result;
+        
+        return;
     }
     
 }

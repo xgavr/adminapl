@@ -18,7 +18,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author Daddy
  */
-class AplExchangeForm extends Form implements ObjectManagerAwareInterface
+class AplExchangeForm extends Form 
 {
     
     protected $objectManager;    

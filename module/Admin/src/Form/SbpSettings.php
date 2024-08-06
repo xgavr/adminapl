@@ -18,7 +18,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author Daddy
  */
-class SbpSettings extends Form implements ObjectManagerAwareInterface
+class SbpSettings extends Form 
 {
     
     protected $objectManager;    

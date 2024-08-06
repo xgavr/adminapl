@@ -19,7 +19,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author Daddy
  */
-class ProducerUnionForm extends Form implements ObjectManagerAwareInterface
+class ProducerUnionForm extends Form 
 {
     
     

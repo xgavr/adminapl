@@ -18,7 +18,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author Daddy
  */
-class ApiMarketPlaces extends Form implements ObjectManagerAwareInterface
+class ApiMarketPlaces extends Form 
 {
     
     protected $objectManager;    

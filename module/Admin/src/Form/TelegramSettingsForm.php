@@ -18,7 +18,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author Daddy
  */
-class TelegramSettingsForm extends Form implements ObjectManagerAwareInterface
+class TelegramSettingsForm extends Form 
 {
     
     protected $objectManager;    
