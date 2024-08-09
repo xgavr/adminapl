@@ -569,6 +569,10 @@ class FinDds
     public static function getInfoList()
     {
         return [
+            'goodBegin' => 'Товары на начало',
+            'goodIn' => 'Товары поступило',
+            'goodOut' => 'Товары выбыло',
+            'goodEnd' => 'Товары на конец',
         ];    
     }
     

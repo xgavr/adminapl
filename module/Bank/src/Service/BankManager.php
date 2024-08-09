@@ -229,7 +229,7 @@ class BankManager
         ];
         $messages[] = [
             'role' => 'user',
-            'content' => $statement->getPaymentPurpose(),
+            'content' => $statement->getPaymentPurposeDot(),
         ];
         
         $result = $this->gigaManager->completions($messages);

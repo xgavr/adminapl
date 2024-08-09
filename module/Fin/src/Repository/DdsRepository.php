@@ -15,6 +15,7 @@ use Cash\Entity\CashTransaction;
 use Cash\Entity\UserTransaction;
 use Bank\Entity\Statement;
 use Bank\Entity\Balance;
+use Stock\Entity\Movement;
 
 /**
  * Description of DdsRepository
@@ -251,5 +252,57 @@ class DdsRepository extends EntityRepository
 //                var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult(2);       
     }
+        
+    /**
+     * Получить остатки товаров
+     * @param date $startDate
+     * @return array
+     */
+    public function findGoodBalance($startDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('identity(m.company) as companyId, sum(m.baseAmount) as amount')
+            ->from(Movement::class, 'm')
+            ->andWhere('m.dateOper < :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('m.status = :status')
+            ->setParameter('status', Movement::STATUS_ACTIVE)    
+            ->groupBy('companyId')    
+            //->addGroupBy('period')  
+                ;
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);       
+    }
     
+    /**
+     * Получить движение товаров
+     * @param date $startDate
+     * @param date $endDate
+     * @return array
+     */
+    public function findMovement($startDate, $endDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('identity(m.company) as companyId, LAST_DAY(m.dateOper) as period, '
+                . 'sum(case when m.quantity > 0 then m.baseAmount else 0 end) as amountIn,'
+                . 'sum(case when m.quantity < 0 then -m.baseAmount else 0 end) as amountOut')
+            ->from(Movement::class, 'm')
+            ->where('m.status = :status')
+            ->setParameter('status', Movement::STATUS_ACTIVE)    
+            ->andWhere('m.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('m.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate) 
+            ->groupBy('companyId')    
+            ->addGroupBy('period')  
+                ;
+        
+        return $queryBuilder->getQuery()->getResult(2);       
+    }        
 }

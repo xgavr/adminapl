@@ -10,9 +10,6 @@ namespace Fin\Service;
 
 use Fin\Entity\FinDds;
 use Company\Entity\Legal;
-use Company\Entity\Cost;
-use Zp\Entity\PersonalMutual;
-use Company\Entity\Tax;
 use Cash\Entity\CashDoc;
 use Bank\Entity\Statement;
 
@@ -967,6 +964,106 @@ class DdsManager {
     }
     
     /**
+     * Остатки товаров
+     * @param date $period
+     */
+    public function beginGood($period)
+    {
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+        
+        $p = new \DatePeriod(
+            new \DateTime($startDate),
+            \DateInterval::createFromDateString('first day of next month'),
+            new \DateTime($endDate)
+        );
+
+        foreach ($p as $day){
+//            var_dump($day->format('Y-m-t'));            
+            if (date('Y-m-d') >= $day->format('Y-m-d')){
+
+                $goodBalances = $this->entityManager->getRepository(FinDds::class)
+                        ->findGoodBalance($day->format('Y-m-d'));
+                foreach ($goodBalances as $row){
+                    $company = $this->entityManager->getRepository(Legal::class)
+                            ->find($row['companyId']);
+                    $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
+
+                    $finDds->setGoodBegin($row['amount']);            
+
+                    $this->entityManager->persist($finDds);                
+                }
+
+            }
+        }
+        $this->entityManager->flush();
+    }
+    
+    /**
+     * Остатки товаров на конец
+     * @param date $period
+     */
+    public function endedGood($period)
+    {
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+        
+        $p = new \DatePeriod(
+            new \DateTime($startDate),
+            \DateInterval::createFromDateString('first day of next month'),
+            new \DateTime($endDate)
+        );
+
+        foreach ($p as $day){
+            if (date('Y-m-d') >= $day->format('Y-m-d')){
+                $firstDayNextMonth = date('Y-m-d', strtotime($day->format('Y-m-d').' first day of next month'));
+
+                $goodBalances = $this->entityManager->getRepository(FinDds::class)
+                        ->findGoodBalance($firstDayNextMonth);
+                foreach ($goodBalances as $row){
+                    $company = $this->entityManager->getRepository(Legal::class)
+                            ->find($row['companyId']);
+                    $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
+
+                    $finDds->setGoodEnd($row['amount']);            
+
+                    $this->entityManager->persist($finDds);                
+                }
+            }
+        }
+        $this->entityManager->flush();
+    }
+    
+    /**
+     * Рассчитать товары
+     * @param date $period
+     */
+    public function movements($period)
+    {
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+//        var_dump($startDate, $endDate); exit;
+        
+        $movements = $this->entityManager->getRepository(FinDds::class)
+                ->findMovement($startDate, $endDate);
+        
+        foreach ($movements as $row){
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($row['companyId']);
+            
+            $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
+            
+            $finDds->setGoodIn($row['amountIn']);
+            $finDds->setGoodOut(abs($row['amountOut']));                
+            
+            $this->outTotal($finDds);
+            $this->entityManager->persist($finDds);
+        }
+        
+        $this->entityManager->flush();
+    }
+    
+    /**
      * Посчитать dds за период
      * @param date $period
      */
@@ -997,6 +1094,10 @@ class DdsManager {
         $this->outCredit($period);
         $this->outOther($period);
         $this->ended($period);
+        
+        $this->beginGood($period);
+        $this->endedGood($period);
+        $this->movements($period);
         
         return;
     }

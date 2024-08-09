@@ -616,6 +616,15 @@ class Statement {
     }
 
     /**
+     * Возвращает назначение платежа без запятых.
+     * @return string
+     */
+    public function getPaymentPurposeDot() 
+    {
+        return str_replace(',', '.', $this->purpose);
+    }
+
+    /**
      * Устанавливает назначение платежа
      * @param string $purpose
      */
