@@ -253,6 +253,7 @@ class DdsManager {
                 $userBalances = $this->entityManager->getRepository(FinDds::class)
                         ->findUserBalance($day->format('Y-m-d'));
                 foreach ($userBalances as $row){
+                    var_dump($row);
                     $company = $this->entityManager->getRepository(Legal::class)
                             ->find($row['companyId']);
                     $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
