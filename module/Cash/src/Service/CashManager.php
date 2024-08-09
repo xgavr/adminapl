@@ -1543,9 +1543,9 @@ class CashManager {
                 } else {
                     $cashDoc = $this->addCashDoc($data);
                     $settings = $this->adminManager->getTelegramSettings();
-                    $this->telegramManager->addPostponeMesage([
+                    $this->telegramManager->addPostponeMessage([
                         'chat_id' => $settings['telegram_group_chat_id'], 
-                        'text' => 'Оплата по СБП '.$data['amount'].' '.$order->getAplIdLink(),                        
+                        'text' => $data['amount'].' поступило по СБП заказ '.$order->getAplId(),                        
                     ]);
                 }                
             }            

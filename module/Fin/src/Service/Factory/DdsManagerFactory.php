@@ -6,28 +6,28 @@
  * and open the template in the editor.
  */
 
-namespace Bankapi\Service\YooKassa\Factory;
+namespace Fin\Service\Factory;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Bankapi\Service\YooKassa\Authenticate;
-use Bankapi\Service\YooKassa\Statement;
+use Fin\Service\DdsManager;
+use Admin\Service\AdminManager;
 
 /**
- * Description of StatementFactory
+ * Description of DdsManagerFactory
  *
  * @author Daddy
  */
-class StatementFactory  implements FactoryInterface
+class DdsManagerFactory  implements FactoryInterface
 {
                    
     public function __invoke(ContainerInterface $container, 
                     $requestedName, array $options = null)
     {
-        
-        $auth = $container->get(Authenticate::class);
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $adminManager = $container->get(AdminManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new Statement($auth);
+        return new DdsManager($entityManager, $adminManager);
     }
 }

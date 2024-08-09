@@ -19,8 +19,7 @@ use Zp\Entity\PersonalMutual;
 use Company\Entity\TaxMutual;
 use Company\Entity\Tax;
 use Stock\Entity\Retail;
-use Application\Entity\Order;
-use Stock\Entity\Vt;
+
 
 /**
  * Description of FinRepository

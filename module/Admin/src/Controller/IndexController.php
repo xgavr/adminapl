@@ -1146,7 +1146,7 @@ class IndexController extends AbstractActionController
     {
         $settings = $this->adminManager->getTelegramSettings();
         if ($settings['telegram_admin_chat_id']){
-            $this->telegramManager->addPostponeMesage([
+            $this->telegramManager->addPostponeMessage([
                 'chat_id' => $settings['telegram_admin_chat_id'], 
                 'text' => 'Привет! Это отложенное сообщение!',
                 ]);       

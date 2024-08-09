@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -14,7 +14,7 @@ class Version20171218080842 extends AbstractMigration
     /**
      * Returns the description of this migration.
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         $description = 'Дополнение в таблицу поставщиков';
         return $description;
@@ -22,7 +22,7 @@ class Version20171218080842 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->createTable('supplier');
@@ -41,7 +41,7 @@ class Version20171218080842 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->dropTable('supplier');

@@ -276,6 +276,12 @@ class Statement {
     private $statementTokens;
     
     /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="statements") 
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
+    private $company;    
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -1138,6 +1144,15 @@ class Statement {
         return $this->costMutuals;
     }
     
+    public function getCompany() {
+        return $this->company;
+    }
+
+    public function setCompany($company) {
+        $this->company = $company;
+        return $this;
+    }
+
     /**
      * Данные для ответной платежки
      */

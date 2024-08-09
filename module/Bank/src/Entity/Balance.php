@@ -45,6 +45,12 @@ class Balance {
     protected $balance;
         
     /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="balances") 
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
+    private $company;    
+    
+    /**
      * Возвращает Id
      * @return int
      */    
@@ -134,4 +140,12 @@ class Balance {
         $this->balance = $balance;
     }     
 
+    public function getCompany() {
+        return $this->company;
+    }
+
+    public function setCompany($company) {
+        $this->company = $company;
+        return $this;
+    }
 }

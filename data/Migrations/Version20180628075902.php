@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -10,7 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20180628075902 extends AbstractMigration
 {
-    public function getDescription()
+    public function getDescription(): string
     {
         $description = 'A migration which creates the `price_description` tables.';
         return $description;
@@ -19,7 +19,7 @@ class Version20180628075902 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         // Create 'price_description' table
@@ -45,7 +45,7 @@ class Version20180628075902 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->dropTable('price_description');

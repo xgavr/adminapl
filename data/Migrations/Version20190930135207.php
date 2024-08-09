@@ -26,7 +26,7 @@ final class Version20190930135207 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function preUp(Schema $schema)
+    public function preUp(Schema $schema): void
     {
         parent::preUp($schema);
         $this->setForeignKeyChecks(false);
@@ -35,7 +35,7 @@ final class Version20190930135207 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function postUp(Schema $schema)
+    public function postUp(Schema $schema): void
     {
         parent::postUp($schema);
         $this->setForeignKeyChecks(true);
@@ -44,7 +44,7 @@ final class Version20190930135207 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function preDown(Schema $schema)
+    public function preDown(Schema $schema): void
     {
         parent::preDown($schema);
         $this->setForeignKeyChecks(false);
@@ -53,7 +53,7 @@ final class Version20190930135207 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function postDown(Schema $schema)
+    public function postDown(Schema $schema): void
     {
         parent::postDown($schema);
         $this->setForeignKeyChecks(true);

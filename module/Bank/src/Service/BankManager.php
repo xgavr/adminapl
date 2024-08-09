@@ -106,6 +106,23 @@ class BankManager
     }
     
     /**
+     * Найти компанию по рс
+     * @param string $account
+     * @return Legal 
+     */
+    private function findCompanyByAccount($account)
+    {
+        $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                ->findOneBy(['rs' => $account]);
+        
+        if ($bankAccount){
+            return $bankAccount->getLegal();
+        }
+        
+        return;
+    }
+    
+    /**
      * Добавление новой или обновлние записи остатков на счете
      * @param array $data
      * @return \Bank\Entity\Balance 
@@ -124,6 +141,7 @@ class BankManager
             $balance->setAccount($data['account']);
             $balance->setDateBalance($data['dateBalance']);
             $balance->setBalance($data['balance']);
+            $balance->setCompany($this->findCompanyByAccount($data['account']));
         }    
         
         $this->entityManager->persist($balance);
@@ -168,6 +186,7 @@ class BankManager
             $statement->setStatusAccount(Statement::STATUS_ACCOUNT_NO);
             $statement->setCashDoc(null);
             $statement->setStatus(Statement::STATUS_ACTIVE);
+            $statement->setCompany($this->findCompanyByAccount($data['account']));
         }
         
         $filter = new \Laminas\Filter\Word\SeparatorToCamelCase('_');
@@ -180,7 +199,7 @@ class BankManager
         }
                 
         $this->entityManager->persist($statement);
-        $this->entityManager->flush($statement);
+        $this->entityManager->flush();
     }
     
     /**

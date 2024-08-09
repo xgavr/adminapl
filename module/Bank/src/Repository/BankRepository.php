@@ -123,9 +123,10 @@ class BankRepository extends EntityRepository
      * @param string $q поисковый запрос
      * @param string $rs счет
      * @param date $dateBalance
+     * @param Legal $company
      * @return object
      */
-    public function findBalance($q = null, $rs = null, $dateBalance = null)
+    public function findBalance($q = null, $rs = null, $dateBalance = null, $company = null)
     {
         $entityManager = $this->getEntityManager();
 
@@ -137,6 +138,15 @@ class BankRepository extends EntityRepository
             ->addOrderBy('b.account', 'ASC')    
                 ;
         
+        if ($company){
+            if (!is_array($rs)){
+                $rs = [];
+            }
+            foreach ($company->getBankAccounts() as $account){
+                $rs[] = $account->getRs();
+            }
+        }
+
         if (is_array($rs)){
             $or = $queryBuilder->expr()->orX();
             foreach ($rs as $account){

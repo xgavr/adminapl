@@ -133,6 +133,18 @@ class Legal {
     private $bankAccounts;
     
     /**
+    * @ORM\OneToMany(targetEntity="Bank\Entity\Balance", mappedBy="company")
+    * @ORM\JoinColumn(name="id", referencedColumnName="company_id")
+     */
+    private $balances;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Bank\Entity\Statement", mappedBy="company")
+    * @ORM\JoinColumn(name="id", referencedColumnName="company_id")
+     */
+    private $statements;
+    
+    /**
     * @ORM\OneToMany(targetEntity="Company\Entity\Contract", mappedBy="legal")
     * @ORM\JoinColumn(name="id", referencedColumnName="legal_id")
      * @ORM\OrderBy({"status" = "ASC", "dateStart" = "DESC", "id" = "DESC"})
@@ -235,6 +247,8 @@ class Legal {
         $this->companyMutuals = new ArrayCollection();
         $this->cashDocs = new ArrayCollection();
         $this->companyCashDocs = new ArrayCollection();
+        $this->balances = new ArrayCollection();
+        $this->statements = new ArrayCollection();
     }
     
     
@@ -1047,7 +1061,15 @@ class Legal {
     public function getCompanyCashDocs() {
         return $this->companyCashDocs;
     }
-    
+ 
+    public function getBalances() {
+        return $this->balances;
+    }
+
+    public function getStatements() {
+        return $this->statements;
+    }
+        
     /**
      * Массив для формы
      * @return array 

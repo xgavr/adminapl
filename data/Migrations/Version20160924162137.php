@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -14,17 +14,17 @@ class Version20160924162137 extends AbstractMigration
     /**
      * Returns the description of this migration.
      */
-    public function getDescription()
-    {
-        $description = 'This is the initial migration which creates the user table.';
-        return $description;
-    }
+//    public function getDescription(): string
+//    {
+//        $description = 'This is the initial migration which creates the user table.';
+//        return $description;
+//    }
     
     /**
      * Upgrades the schema to its newer state.
      * @param Schema $schema
      */
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         // Create 'user' table
         $table = $schema->createTable('user');
@@ -45,7 +45,7 @@ class Version20160924162137 extends AbstractMigration
      * Reverts the schema changes.
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $schema->dropTable('user');
     }

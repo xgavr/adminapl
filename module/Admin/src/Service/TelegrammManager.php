@@ -274,7 +274,7 @@ class TelegrammManager
      * 
      * @param array $params
      */
-    public function addPostponeMesage($params)
+    public function addPostponeMessage($params)
     {
         if (!is_dir(self::LOG_FOLDER)){
             mkdir(self::LOG_FOLDER);

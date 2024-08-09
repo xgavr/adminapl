@@ -23,6 +23,20 @@ return [
                     ],
                 ],
             ],
+            'dds' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/dds[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\DdsController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
             'opu' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -41,6 +55,10 @@ return [
     ],
     'access_filter' => [
         'controllers' => [
+            Controller\DdsController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
             Controller\IndexController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
@@ -53,12 +71,14 @@ return [
     ],    
     'controllers' => [
         'factories' => [
+            Controller\DdsController::class => Controller\Factory\DdsControllerFactory::class,
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\OpuController::class => Controller\Factory\OpuControllerFactory::class,
         ],
     ],
     'service_manager' => [
         'factories' => [
+            Service\DdsManager::class => Service\Factory\DdsManagerFactory::class,
             Service\FinManager::class => Service\Factory\FinManagerFactory::class,
         ],
     ],    

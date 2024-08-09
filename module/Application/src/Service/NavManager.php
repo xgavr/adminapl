@@ -441,6 +441,11 @@ class NavManager
                 
                 $reportDropdownItems[] = [
                             'id' => 'fin',
+                            'label' => 'ДДС',
+                            'link' => $url('dds')
+                        ];                                
+                $reportDropdownItems[] = [
+                            'id' => 'fin',
                             'label' => 'ОПиУ',
                             'link' => $url('opu')
                         ];

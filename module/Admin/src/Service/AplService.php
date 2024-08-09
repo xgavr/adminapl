@@ -906,7 +906,7 @@ class AplService {
 //                        'text' => $params['text'],
 //                    ]);
                     
-                    $this->telegramManager->addPostponeMesage([
+                    $this->telegramManager->addPostponeMessage([
                         'chat_id' => $params['chat_id'], 
                         'text' => $params['text'],
                     ]);

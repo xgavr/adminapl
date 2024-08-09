@@ -11,7 +11,7 @@ use Application\Entity\SupplierApiSetting;
  */
 final class Version20210304130234 extends AbstractMigration
 {
-    public function getDescription()
+    public function getDescription(): string
     {
         $description = 'A migration which creates the `supplier_api_setting` table.';
         return $description;
@@ -20,7 +20,7 @@ final class Version20210304130234 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         // Create 'price_description' table
@@ -43,7 +43,7 @@ final class Version20210304130234 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $schema->dropTable('supplier_api_setting');
