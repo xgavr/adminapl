@@ -253,18 +253,15 @@ class DdsManager {
                 $userBalances = $this->entityManager->getRepository(FinDds::class)
                         ->findUserBalance($day->format('Y-m-d'));
                 foreach ($userBalances as $row){
-                    var_dump($row); 
-                    if (!empty($row['companyId'])){
-                        $company = $this->entityManager->getRepository(Legal::class)
-                                ->find($row['companyId']);
-                        $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
+                    $company = $this->entityManager->getRepository(Legal::class)
+                            ->find($row['companyId']);
+                    $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
 
-                        $finDds->setAccountantBegin($row['amount']);            
+                    $finDds->setAccountantBegin($row['amount']);            
 
-                        $finDds->setTotalBegin($finDds->getBankBegin() + $finDds->getCashBegin() + $finDds->getAccountantBegin());
+                    $finDds->setTotalBegin($finDds->getBankBegin() + $finDds->getCashBegin() + $finDds->getAccountantBegin());
 
-                        $this->entityManager->persist($finDds);                
-                    }    
+                    $this->entityManager->persist($finDds);                
                 }
             }
         }
