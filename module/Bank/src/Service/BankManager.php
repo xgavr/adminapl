@@ -225,11 +225,11 @@ class BankManager
         $messages[] = [
             'role' => 'system',
             'content' => 'Ты бухгалтер. '
-            . 'В назначении поступившего платежа указана сумма комиссии. Ответь только числом в формате 1234.56',
+            . 'В назначении поступившего платежа указана сумма комиссии с копейками. Ответь только числом в формате 1234.56',
         ];
         $messages[] = [
             'role' => 'user',
-            'content' => $statement->getPaymentPurposeDot(),
+            'content' => $statement->getPaymentPurpose(),
         ];
         
         $result = $this->gigaManager->completions($messages);
