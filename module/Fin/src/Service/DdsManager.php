@@ -651,7 +651,7 @@ class DdsManager {
             
             $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
             
-            $finDds->setSupplierOut($row['amount'] + $finDds->getSupplierOut());
+            $finDds->setSupplierOut(abs($row['amount']) + $finDds->getSupplierOut());
             
             $this->outTotal($finDds);
             
@@ -717,7 +717,7 @@ class DdsManager {
             
             $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
             
-            $finDds->setRevenueOut($row['amount'] + $finDds->getRevenueOut());
+            $finDds->setRevenueOut(abs($row['amount']) + $finDds->getRevenueOut());
             
             $this->outTotal($finDds);
             
@@ -792,7 +792,7 @@ class DdsManager {
             
             $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
             
-            $finDds->setZp($row['amount'] + $finDds->getZp());
+            $finDds->setZp(abs($row['amount']) + $finDds->getZp());
             
             $this->outTotal($finDds);
             
@@ -824,7 +824,7 @@ class DdsManager {
             
             $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
             
-            $finDds->setTax($row['amount']);
+            $finDds->setTax(abs($row['amount']));
             
             $this->outTotal($finDds);
             $this->entityManager->persist($finDds);
@@ -890,7 +890,7 @@ class DdsManager {
             
             $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
             
-            $finDds->setCost($row['amount'] + $finDds->getCost());
+            $finDds->setCost(abs($row['amount']) + $finDds->getCost());
             
             $this->outTotal($finDds);
             
@@ -923,7 +923,7 @@ class DdsManager {
             
             $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
             
-            $finDds->setLoansOut($row['amount']);
+            $finDds->setLoansOut(abs($row['amount']));
             
             $this->outTotal($finDds);
             $this->entityManager->persist($finDds);
@@ -954,7 +954,7 @@ class DdsManager {
             
             $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
             
-            $finDds->setOtherOut($row['amount']);
+            $finDds->setOtherOut(abs($row['amount']));
             
             $this->outTotal($finDds);
             $this->entityManager->persist($finDds);

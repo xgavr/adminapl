@@ -16,6 +16,7 @@ use Cash\Entity\UserTransaction;
 use Bank\Entity\Statement;
 use Bank\Entity\Balance;
 use Stock\Entity\Movement;
+use Cash\Entity\Cash;
 
 /**
  * Description of DdsRepository
@@ -100,8 +101,11 @@ class DdsRepository extends EntityRepository
         $queryBuilder->select('identity(cd.company) as companyId, LAST_DAY(ct.dateOper) as period, sum(ct.amount) as amount')
             ->from(CashTransaction::class, 'ct')
             ->join('ct.cashDoc', 'cd')    
+            ->join('cd.cash', 'c')    
             ->where('ct.status = :status')
             ->setParameter('status', CashTransaction::STATUS_ACTIVE)    
+            ->andWhere('c.kind = :payment')
+            ->setParameter('payment', Cash::PAYMENT_CASH)    
             ->andWhere($orX)
             ->andWhere('ct.dateOper >= :startDate')    
             ->setParameter('startDate', $startDate)    
@@ -221,8 +225,11 @@ class DdsRepository extends EntityRepository
         $queryBuilder->select('identity(cd.company) as companyId, sum(ct.amount) as amount')
             ->from(CashTransaction::class, 'ct')
             ->join('ct.cashDoc', 'cd')    
+            ->join('cd.cash', 'c')    
             ->where('ct.status = :status')
             ->setParameter('status', CashTransaction::STATUS_ACTIVE)    
+            ->andWhere('c.kind = :payment')
+            ->setParameter('payment', Cash::PAYMENT_CASH)    
             ->andWhere('ct.dateOper < :startDate')    
             ->setParameter('startDate', $startDate)    
             ->groupBy('companyId')    
