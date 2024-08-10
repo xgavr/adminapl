@@ -230,6 +230,12 @@ class Legal {
     private $personalRevises;
     
     /**
+    * @ORM\OneToMany(targetEntity="Cash\Entity\UserTransaction", mappedBy="company")
+    * @ORM\JoinColumn(name="id", referencedColumnName="company_id")
+     */
+    private $userTransactions;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -249,6 +255,7 @@ class Legal {
         $this->companyCashDocs = new ArrayCollection();
         $this->balances = new ArrayCollection();
         $this->statements = new ArrayCollection();
+        $this->userTransactions = new ArrayCollection();
     }
     
     
@@ -1070,6 +1077,10 @@ class Legal {
         return $this->statements;
     }
         
+    public function getUserTransactions() {
+        return $this->userTransactions;
+    }
+
     /**
      * Массив для формы
      * @return array 

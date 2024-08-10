@@ -243,9 +243,8 @@ class DdsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('identity(cd.company) as companyId, sum(ut.amount) as amount')
+        $queryBuilder->select('identity(ut.company) as companyId, sum(ut.amount) as amount')
             ->from(UserTransaction::class, 'ut')
-            ->join('ut.cashDoc', 'cd')    
             ->where('ut.status = :status')
             ->setParameter('status', UserTransaction::STATUS_ACTIVE)    
             ->andWhere('ut.dateOper < :startDate')    

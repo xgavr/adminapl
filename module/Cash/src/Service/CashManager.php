@@ -399,6 +399,7 @@ class CashManager {
                 $userTransaction->setDocStamp($docStamp);
                 $userTransaction->setDocId($cashDoc->getId());
                 $userTransaction->setDocType(Movement::DOC_CASH);
+                $userTransaction->setCompany($cashDoc->getCompany());
 
                 $this->entityManager->persist($userTransaction);  
                 
@@ -513,6 +514,7 @@ class CashManager {
         $userTransaction->setDocStamp($docStamp);
         $userTransaction->setDocId($cashDoc->getId());
         $userTransaction->setDocType(Movement::DOC_CASH);
+        $userTransaction->setCompany($cashDoc->getCompany());
         
         $this->entityManager->persist($userTransaction);        
     }
@@ -556,6 +558,7 @@ class CashManager {
             $userTransaction->setDocStamp($docStamp);
             $userTransaction->setDocId($order->getId());
             $userTransaction->setDocType(Movement::DOC_ORDER);
+            $userTransaction->setCompany($order->getCompany());
 
             $this->entityManager->persist($userTransaction);                    
 
@@ -613,6 +616,7 @@ class CashManager {
             $userTransaction->setDocStamp($docStamp);
             $userTransaction->setDocId($vt->getId());
             $userTransaction->setDocType(Movement::DOC_VT);
+            $userTransaction->setCompany($vt->getOrder()->getCompany());
 
             $this->entityManager->persist($userTransaction);                    
 

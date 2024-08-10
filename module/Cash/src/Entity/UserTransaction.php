@@ -14,6 +14,7 @@ use Cash\Entity\Cash;
 use Cash\Entity\CashDoc;
 use Application\Entity\Order;
 use Stock\Entity\Vt;
+use Company\Entity\Legal;
 
 /**
  * Description of CashTransaction
@@ -80,6 +81,11 @@ class UserTransaction {
      */
     private $user;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="userTransactions") 
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
+    private $company;    
     
     /**
      * Constructor.
@@ -284,5 +290,24 @@ class UserTransaction {
     public function setUser($user)
     {
         $this->user = $user;
-    }    
+    }   
+    
+    /**
+     * 
+     * @return Legal
+     */
+    public function getCompany() {
+        return $this->company;
+    }
+
+    /**
+     * 
+     * @param Legal $company
+     * @return $this
+     */
+    public function setCompany($company) {
+        $this->company = $company;
+        return $this;
+    }
+    
 }
