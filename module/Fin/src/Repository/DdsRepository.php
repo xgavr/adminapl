@@ -98,9 +98,8 @@ class DdsRepository extends EntityRepository
             $orX->add($queryBuilder->expr()->eq('cd.kind', $kind));
         }    
         
-        $queryBuilder->select('identity(cd.company) as companyId, LAST_DAY(ct.dateOper) as period, sum(ct.amount) as amount')
+        $queryBuilder->select('identity(ct.company) as companyId, LAST_DAY(ct.dateOper) as period, sum(ct.amount) as amount')
             ->from(CashTransaction::class, 'ct')
-            ->join('ct.cashDoc', 'cd')    
             ->join('ct.cash', 'c')    
             ->where('ct.status = :status')
             ->setParameter('status', CashTransaction::STATUS_ACTIVE)    
@@ -222,9 +221,8 @@ class DdsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('identity(cd.company) as companyId, sum(ct.amount) as amount')
+        $queryBuilder->select('identity(ct.company) as companyId, sum(ct.amount) as amount')
             ->from(CashTransaction::class, 'ct')
-            ->join('ct.cashDoc', 'cd')    
             ->join('ct.cash', 'c')    
             ->where('ct.status = :status')
             ->setParameter('status', CashTransaction::STATUS_ACTIVE)    
