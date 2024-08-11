@@ -100,6 +100,7 @@ class DdsRepository extends EntityRepository
         
         $queryBuilder->select('identity(ct.company) as companyId, LAST_DAY(ct.dateOper) as period, sum(ct.amount) as amount')
             ->from(CashTransaction::class, 'ct')
+            ->join('ct.cashDoc', 'cd')    
             ->join('ct.cash', 'c')    
             ->where('ct.status = :status')
             ->setParameter('status', CashTransaction::STATUS_ACTIVE)    
