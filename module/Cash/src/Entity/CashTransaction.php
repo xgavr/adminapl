@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Cash\Entity\Cash;
 use Cash\Entity\CashDoc;
+use Company\Entity\Legal;
 
 /**
  * Description of CashTransaction
@@ -68,6 +69,11 @@ class CashTransaction {
      */
     private $cash;
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="cashTransactions") 
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     */
+    private $company;    
     
     /**
      * Constructor.
@@ -226,5 +232,23 @@ class CashTransaction {
     {
         $this->cash = $cash;
     }    
+    
+    /**
+     * 
+     * @return Legal
+     */
+    public function getCompany() {
+        return $this->company;
+    }
+
+    /**
+     * 
+     * @param type $company
+     * @return $this
+     */
+    public function setCompany($company) {
+        $this->company = $company;
+        return $this;
+    }
     
 }

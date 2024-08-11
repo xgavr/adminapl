@@ -463,8 +463,9 @@ class CashManager {
      * @param float $amount
      * @param Cash $cash
      * @param float $docStamp
+     * @param Legal $company
      */
-    protected function addTransaction($cashDoc, $amount, $cash, $docStamp)
+    protected function addTransaction($cashDoc, $amount, $cash, $docStamp, $company = null)
     {
         $cashTransaction = new CashTransaction();
         $cashTransaction->setAmount($amount);
@@ -474,6 +475,11 @@ class CashManager {
         $cashTransaction->setStatus(CashTransaction::getStatusFromCashdoc($cashDoc));
         $cashTransaction->setCash($cash);
         $cashTransaction->setDocStamp($docStamp);
+        if ($company){
+            $cashTransaction->setCompany($company);
+        } else {
+            $cashTransaction->setCompany($cashDoc->getCompany());
+        }    
         
         $this->entityManager->persist($cashTransaction);        
     }
@@ -762,9 +768,14 @@ class CashManager {
             $this->addUserTransaction($cashDoc, $cashDoc->getKindAmount(), $cashDoc->getUser(), $docStamp);
         }    
         
+        $companyRefill = null;
+        if ($cashDoc->getCashRefill()){
+            $companyRefill = $this->entityManager->getRepository(Office::class)
+                ->findDefaultCompany($cashDoc->getCashRefill()->getOffice(), $cashDoc->getDateOper());
+        }    
         switch ($cashDoc->getKind()){
             case CashDoc::KIND_IN_REFILL:
-                $this->addTransaction($cashDoc, -$cashDoc->getAmount(), $cashDoc->getCashRefill(), $docStamp);
+                $this->addTransaction($cashDoc, -$cashDoc->getAmount(), $cashDoc->getCashRefill(), $docStamp, $companyRefill);
                 break;
             case CashDoc::KIND_IN_RETURN_USER:
                 $this->addUserTransaction($cashDoc, -$cashDoc->getAmount(), $cashDoc->getUserRefill(), $docStamp);
@@ -773,7 +784,7 @@ class CashManager {
                 $this->addUserTransaction($cashDoc, $cashDoc->getAmount(), $cashDoc->getUserRefill(), $docStamp);
                 break;
             case CashDoc::KIND_OUT_REFILL:
-                $this->addTransaction($cashDoc, $cashDoc->getAmount(), $cashDoc->getCashRefill(), $docStamp);
+                $this->addTransaction($cashDoc, $cashDoc->getAmount(), $cashDoc->getCashRefill(), $docStamp, $companyRefill);
                 break;
         }
         

@@ -17,7 +17,7 @@ use Stock\Entity\Vt;
 use Company\Entity\Legal;
 
 /**
- * Description of CashTransaction
+ * Description of UserTransaction
  * @ORM\Entity(repositoryClass="\Cash\Repository\CashRepository")
  * @ORM\Table(name="user_transaction")
  * @author Daddy
