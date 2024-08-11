@@ -35,6 +35,7 @@ class Cash {
     const PAYMENT_I_CARD   = 4; // интернет эквайринг
     const PAYMENT_PAY_SERVICE   = 5; // платежный сервис
     const PAYMENT_QRCODE   = 6; // оплата по qr коду
+    const PAYMENT_TANSIT   = 99; // транзитная касса
 
     const ORDER_ACTIVE       = 1; // доступно в заказе.
     const ORDER_RETIRED      = 2; // не доступно.
@@ -419,6 +420,7 @@ class Cash {
             self::PAYMENT_I_CARD => 'Интернет эквайринг',
             self::PAYMENT_PAY_SERVICE => 'Платежный сервис',
             self::PAYMENT_QRCODE => 'Оплата по QR коду',
+            self::PAYMENT_TANSIT => 'Транзитная',
         ];
     }    
     
