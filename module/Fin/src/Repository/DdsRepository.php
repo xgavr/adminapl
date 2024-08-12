@@ -284,10 +284,11 @@ class DdsRepository extends EntityRepository
             ->andWhere('m.status = :status')
             ->setParameter('status', Movement::STATUS_ACTIVE)    
             ->groupBy('companyId')    
-            ->groupBy('goodId')    
+            ->addGroupBy('goodId')    
             ->having('rest > 0')    
                 ;
         
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
         $result = [];
         $data = $queryBuilder->getQuery()->getResult(2);
         foreach ($data as $row){

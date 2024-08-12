@@ -1108,9 +1108,9 @@ class DdsManager {
         $this->outOther($period);
         $this->ended($period);
         
-//        $this->beginGood($period);
-//        $this->endedGood($period);
-//        $this->movements($period);
+        $this->beginGood($period);
+        $this->endedGood($period);
+        $this->movements($period);
         
         return;
     }
