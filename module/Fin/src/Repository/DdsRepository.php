@@ -277,17 +277,30 @@ class DdsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('identity(m.company) as companyId, sum(m.baseAmount) as amount')
+        $queryBuilder->select('identity(m.company) as companyId, identity(m.good) as goodId, sum(m.baseAmount) as amount, sum(m.quantity) as rest')
             ->from(Movement::class, 'm')
             ->andWhere('m.dateOper < :startDate')    
             ->setParameter('startDate', $startDate)    
             ->andWhere('m.status = :status')
             ->setParameter('status', Movement::STATUS_ACTIVE)    
             ->groupBy('companyId')    
-            //->addGroupBy('period')  
+            ->groupBy('goodId')    
+            ->having('rest > 0')    
                 ;
-//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        return $queryBuilder->getQuery()->getResult(2);       
+        
+        $result = [];
+        $data = $queryBuilder->getQuery()->getResult(2);
+        foreach ($data as $row){
+            if (empty($result[$row['companyId']])){
+               $result[$row['companyId']] = [
+                    'companyId' => $row['companyId'],
+                    'amount' => 0,
+               ];                        
+            }
+            
+            $result[$row['companyId']]['amount'] += $row['amount'];
+        }
+        return $result;       
     }
     
     /**
