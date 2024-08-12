@@ -4,10 +4,16 @@ $this->headTitle('Зарплата');
 $this->mainMenu()->setActiveItemId('report');
 $this->mainMenu()->setActiveUrl($this->url('opu'));
 
+if ($kind == 20){
+    $title = 'Получено деньгами';
+} else {
+    $title = 'Зарплата начисленно';
+}
+
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'ОПиУ' => $this->url('opu'),
-            'Зарплата' => $this->url('opu', ['action' => 'zp'])
+            $title => $this->url('opu', ['action' => 'zp'])
             ]);  
 
 ?>

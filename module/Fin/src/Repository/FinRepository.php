@@ -188,6 +188,8 @@ class FinRepository extends EntityRepository
         if (!empty($kind)){
             $queryBuilder->andWhere('pm.kind = :kind')
                     ->setParameter('kind', $kind)
+                    ->andWhere('pm.docType = :docType')
+                    ->setParameter('docType', Movement::DOC_CASH)
                     ;
         } else {
             $queryBuilder->andWhere('pm.amount < 0');
