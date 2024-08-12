@@ -294,7 +294,7 @@ class DdsManager {
                             ->find($row['companyId']);
                     $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
 
-                    if ($firstDayNextMonth < date('Y-m-d')){
+                    if ($firstDayNextMonth > date('Y-m-d')){
                         $finDds->setBankEnd($row['amount']);            
                     } else {
                         $statement = $this->entityManager->getRepository(FinDds::class)
