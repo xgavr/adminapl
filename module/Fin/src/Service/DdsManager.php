@@ -12,6 +12,7 @@ use Fin\Entity\FinDds;
 use Company\Entity\Legal;
 use Cash\Entity\CashDoc;
 use Bank\Entity\Statement;
+use Stock\Entity\Movement;
 
 /**
  * Description of DdsManager
@@ -586,6 +587,24 @@ class DdsManager {
         $endDate = date('Y-12-31 23:59:59', strtotime($period));
 //        var_dump($startDate, $endDate); exit;
         
+        $userOtherIncomes = $this->entityManager->getRepository(FinDds::class)
+                ->findOtherUserTransaction($startDate, $endDate, [
+                    Movement::DOC_ORDER,
+                ]);
+        
+        foreach ($userOtherIncomes as $row){
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($row['companyId']);
+            
+            $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
+            
+            $finDds->setOtherIn($row['amount']);
+            
+            $this->incomeTotal($finDds);
+            
+            $this->entityManager->persist($finDds);
+        }
+        
         $bankOthersIncomes = $this->entityManager->getRepository(FinDds::class)
                 ->findStatement($startDate, $endDate, [
                     Statement::KIND_IN_TAX_RETURN,
@@ -599,7 +618,7 @@ class DdsManager {
             
             $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
             
-            $finDds->setDepositIn($row['amount']);
+            $finDds->setOtherIn($row['amount'] + $finDds->getOtherIn());
             
             $this->incomeTotal($finDds);
             $this->entityManager->persist($finDds);
@@ -955,6 +974,24 @@ class DdsManager {
         $endDate = date('Y-12-31 23:59:59', strtotime($period));
 //        var_dump($startDate, $endDate); exit;
         
+        $userOtherOuts = $this->entityManager->getRepository(FinDds::class)
+                ->findOtherUserTransaction($startDate, $endDate, [
+                    Movement::DOC_VT,
+                ]);
+        
+        foreach ($userOtherOuts as $row){
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($row['companyId']);
+            
+            $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
+            
+            $finDds->setOtherOut(abs($row['amount']));
+            
+            $this->outTotal($finDds);
+            
+            $this->entityManager->persist($finDds);
+        }
+        
         $bankOtherOuts = $this->entityManager->getRepository(FinDds::class)
                 ->findStatement($startDate, $endDate, [
                     Statement::KIND_OUT_OTHER_CALC,
@@ -967,7 +1004,7 @@ class DdsManager {
             
             $finDds = $this->getFinDds($row['period'], $company, FinDds::STATUS_FACT);
             
-            $finDds->setOtherOut(abs($row['amount']));
+            $finDds->setOtherOut(abs($row['amount']) + $finDds->getOtherOut());
             
             $this->outTotal($finDds);
             $this->entityManager->persist($finDds);

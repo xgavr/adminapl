@@ -137,11 +137,46 @@ class DdsRepository extends EntityRepository
             $orX->add($queryBuilder->expr()->eq('cd.kind', $kind));
         }    
         
-        $queryBuilder->select('identity(cd.company) as companyId, LAST_DAY(ut.dateOper) as period, sum(ut.amount) as amount')
+        $queryBuilder->select('identity(ut.company) as companyId, LAST_DAY(ut.dateOper) as period, sum(ut.amount) as amount')
             ->from(UserTransaction::class, 'ut')
             ->join('ut.cashDoc', 'cd')    
             ->where('ut.status = :status')
-            ->setParameter('status', CashTransaction::STATUS_ACTIVE)    
+            ->setParameter('status', UserTransaction::STATUS_ACTIVE)    
+            ->andWhere($orX)
+            ->andWhere('ut.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('ut.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate) 
+            ->groupBy('companyId')    
+            ->addGroupBy('period')  
+                ;
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);       
+    }
+    
+    /**
+     * Получить прочие движения в подотчете
+     * @param date $startDate
+     * @param date $endDate
+     * @param array $docTypes
+     * @return array
+     */
+    public function findOtherUserTransaction($startDate, $endDate, $docTypes)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        
+        foreach ($docTypes as $docType){
+            $orX->add($queryBuilder->expr()->eq('ut.docType', $docType));
+        }    
+        
+        $queryBuilder->select('identity(ut.company) as companyId, LAST_DAY(ut.dateOper) as period, sum(ut.amount) as amount')
+            ->from(UserTransaction::class, 'ut')
+            ->where('ut.status = :status')
+            ->setParameter('status', UserTransaction::STATUS_ACTIVE)    
             ->andWhere($orX)
             ->andWhere('ut.dateOper >= :startDate')    
             ->setParameter('startDate', $startDate)    
