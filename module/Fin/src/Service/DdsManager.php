@@ -295,9 +295,12 @@ class DdsManager {
                     $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
 
                     if ($firstDayNextMonth > date('Y-m-d')){
-                        $statement = $this->entityManager->getRepository(FinDds::class)
+                        $statements = $this->entityManager->getRepository(FinDds::class)
                                 ->findStatement($day->format('Y-m-01'), date('Y-m-d'), []);
-                        $finDds->setBankEnd($finDds->getBankBegin() + $statement['amount']);                                    
+                        foreach ($statements as $statement){
+                            $finDds->setBankEnd($finDds->getBankBegin() + $statement['amount']);
+                            break;
+                        }    
                     } else {
                         $finDds->setBankEnd($row['amount']);            
                     }    
