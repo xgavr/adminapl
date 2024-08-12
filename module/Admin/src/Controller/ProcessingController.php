@@ -269,7 +269,7 @@ class ProcessingController extends AbstractActionController
             $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
             $ozonService, $userManager, $smsManager, $sbpManager, $cashManager,
             $ampReportManager, $paymentManager, $bankMlManager, $finManager, 
-            $zpManager, $ddsmanager) 
+            $zpManager, $ddsManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
