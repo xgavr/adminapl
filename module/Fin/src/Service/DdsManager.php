@@ -294,21 +294,24 @@ class DdsManager {
                             ->find($row['companyId']);
                     $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
 
-                    var_dump($firstDayNextMonth);
-                    if ($firstDayNextMonth > date('Y-m-d')){
-                        $statements = $this->entityManager->getRepository(FinDds::class)
-                                ->findStatement($date('Y-m-01'), $firstDayNextMonth, []);
-                        foreach ($statements as $statement){
-                            $finDds->setBankEnd($finDds->getBankBegin() + $statement['amount']);
-                            break;
-                        }    
-                    } else {
-                        $finDds->setBankEnd($row['amount']);            
-                    }    
+                    $finDds->setBankEnd($row['amount']);            
 
                     $this->entityManager->persist($finDds);                
                 }
 
+                // банк текущий месяц
+                if ($firstDayNextMonth === date('Y-m-01')){
+                    $statements = $this->entityManager->getRepository(FinDds::class)
+                            ->findStatement($firstDayNextMonth, date('Y-m-t'), []);
+                    foreach ($statements as $statement){
+                        $company = $this->entityManager->getRepository(Legal::class)
+                                ->find($statement['companyId']);
+                        $finDds = $this->getFinDds($statement['period'], $company, FinDds::STATUS_FACT);
+
+                        $finDds->setBankEnd($finDds->getBankBegin() + $statement['amount']);
+                    }    
+                }
+                
                 $cashBalances = $this->entityManager->getRepository(FinDds::class)
                         ->findCashBalance($firstDayNextMonth);
                 foreach ($cashBalances as $row){
