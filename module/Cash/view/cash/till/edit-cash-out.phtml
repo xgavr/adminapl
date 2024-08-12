@@ -233,6 +233,9 @@ $form->prepare();
                     $('#cashOutModal').modal('hide');
                     //window.location.reload();
                     $('#table').bootstrapTable('refresh', {'silent':true});
+                    if ($('#mutualtable').length){
+                        $('#mutualtable').bootstrapTable('refresh', {'silent':true});
+                    }    
                 } else {
                     $('#cashOutModal .modal-content').html(data);                    
                 }    
