@@ -295,11 +295,11 @@ class DdsManager {
                     $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
 
                     if ($firstDayNextMonth > date('Y-m-d')){
-                        $finDds->setBankEnd($row['amount']);            
-                    } else {
                         $statement = $this->entityManager->getRepository(FinDds::class)
-                                ->findStatement($day->format('Y-m-t'), date('Y-m-d'), []);
+                                ->findStatement($day->format('Y-m-01'), date('Y-m-d'), []);
                         $finDds->setBankEnd($finDds->getBankBegin() + $statement['amount']);                                    
+                    } else {
+                        $finDds->setBankEnd($row['amount']);            
                     }    
 
                     $this->entityManager->persist($finDds);                
