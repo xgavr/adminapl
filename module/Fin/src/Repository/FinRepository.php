@@ -159,9 +159,10 @@ class FinRepository extends EntityRepository
      * @param date $startDate
      * @param date $endDate
      * @param Legal $company
+     * @param integer $kind
      * @return array
      */
-    public function findZp($startDate, $endDate, $company)
+    public function findZp($startDate, $endDate, $company, $kind = 0)
     {
         $entityManager = $this->getEntityManager();
 
@@ -176,13 +177,21 @@ class FinRepository extends EntityRepository
             ->setParameter('endDate', $endDate)
             ->andWhere('pm.company = :company')    
             ->setParameter('company', $company->getId())
-            ->andWhere('pm.amount < 0')    
+//            ->andWhere('pm.amount < 0')    
             ->andWhere('pm.status = :status')
             ->setParameter('status', PersonalMutual::STATUS_ACTIVE)    
             ->groupBy('period')    
             ->addGroupBy('userId')    
             ->orderBy('period') 
                 ;
+        
+        if (!empty($kind)){
+            $queryBuilder->andWhere('pm.kind = :kind')
+                    ->setParameter('kind', $kind)
+                    ;
+        } else {
+            $queryBuilder->andWhere('pm.amount < 0');
+        }
 //                var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult(2);       
     }

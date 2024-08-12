@@ -513,7 +513,7 @@ class FinDds
             'totalOut' => 'Выбыло всего',
             'supplierOut' => 'Поставщикам',
             'revenueOut' => 'Покупатели (возврат)',
-            'zp' => 'Зарплата',
+            'zp' => '<a href="/opu/zp?kind=20" target="_blank">Зарплата</a>',
             'tax' => 'Налоги',
             'cost' => 'Расходы',
             'loansOut' => 'Возврат кредитов',

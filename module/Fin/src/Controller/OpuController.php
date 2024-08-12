@@ -150,7 +150,7 @@ class OpuController extends AbstractActionController
     {
         $year = $this->params()->fromQuery('year', date('Y'));
         $companyId = $this->params()->fromQuery('company');
-        $status = $this->params()->fromQuery('status');
+        $kind = $this->params()->fromQuery('kind');
         
         $startDate = "$year-01-01";
         $endDate = "$year-12-31";
@@ -159,7 +159,7 @@ class OpuController extends AbstractActionController
                 ->find($companyId);
                 
         $data = $this->entityManager->getRepository(FinOpu::class)
-                        ->findZp($startDate, $endDate, $company);
+                        ->findZp($startDate, $endDate, $company, $kind);
         
         $result = $this->finManager->emptyZpYear($startDate, $endDate, $company);
         
