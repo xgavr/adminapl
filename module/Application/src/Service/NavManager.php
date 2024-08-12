@@ -439,11 +439,11 @@ class NavManager
 //                            'link' => $url('report', ['action' => 'accountant'])
 //                        ];
                 
-//                $reportDropdownItems[] = [
-//                            'id' => 'fin',
-//                            'label' => 'ДДС',
-//                            'link' => $url('dds')
-//                        ];                                
+                $reportDropdownItems[] = [
+                            'id' => 'fin',
+                            'label' => 'ДДС',
+                            'link' => $url('dds')
+                        ];                                
                 $reportDropdownItems[] = [
                             'id' => 'fin',
                             'label' => 'ОПиУ',
