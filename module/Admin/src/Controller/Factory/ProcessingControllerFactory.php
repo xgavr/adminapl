@@ -48,6 +48,7 @@ use Bank\Service\PaymentManager;
 use Bank\Service\MlManager;
 use Fin\Service\FinManager;
 use Zp\Service\ZpCalculator;
+use Fin\Service\DdsManager;
 
 /**
  * Description of ClientControllerFactory
@@ -98,6 +99,7 @@ class ProcessingControllerFactory implements FactoryInterface {
         $bankMlManager = $container->get(MlManager::class);
         $finManager = $container->get(FinManager::class);
         $zpManager = $container->get(ZpCalculator::class);
+        $ddsManager = $container->get(DdsManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new ProcessingController($entityManager, $postManager, $autoruManager, 
@@ -108,6 +110,6 @@ class ProcessingControllerFactory implements FactoryInterface {
                 $aplOrderService, $aplCashService, $billManager, $registerManager,
                 $ptManager, $jobManager, $ozonService, $userManager, $smsManager,
                 $sbpManager, $cashManager, $ampReportManager, $paymentManager,
-                $bankMlManager, $finManager, $zpManager);
+                $bankMlManager, $finManager, $zpManager, $ddsManager);
     }
 }

@@ -254,6 +254,12 @@ class ProcessingController extends AbstractActionController
      */
     private $zpManager;    
 
+    /**
+     * Dds manager.
+     * @var \Fin\Service\DdsManager
+     */
+    private $ddsManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
@@ -262,7 +268,8 @@ class ProcessingController extends AbstractActionController
             $aplDocService, $marketManager, $carManager, $helloManager, $aplOrderService,
             $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
             $ozonService, $userManager, $smsManager, $sbpManager, $cashManager,
-            $ampReportManager, $paymentManager, $bankMlManager, $finManager, $zpManager) 
+            $ampReportManager, $paymentManager, $bankMlManager, $finManager, 
+            $zpManager, $ddsmanager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -303,6 +310,7 @@ class ProcessingController extends AbstractActionController
         $this->bankMlManager = $bankMlManager;
         $this->finManager = $finManager;
         $this->zpManager = $zpManager;
+        $this->ddsManager = $ddsManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -2214,6 +2222,7 @@ class ProcessingController extends AbstractActionController
             $period = date('Y')."-12-31";
 
             $this->finManager->calculate($period);
+            $this->ddsManager->calculate($period);
         }    
                 
         return new JsonModel(
