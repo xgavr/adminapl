@@ -434,10 +434,10 @@ $this->headLink()
             <div id="mutualtoolbar">
                 <div class="form-inline" role="form">
                     <button class="btn btn-default cash-in-modal-show" type="button" modal-url="/till/edit-cash-in">
-                        <span class="glyphicon glyphicon-rub glyphicon-plus" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-rub" aria-hidden="true"></span>+
                     </button>                
                     <button class="btn btn-default cash-out-modal-show" type="button" modal-url="/till/edit-cash-out">
-                        <span class="glyphicon glyphicon-rub glyphicon-minus" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-rub" aria-hidden="true"></span>-
                     </button>                
                     <button class="btn btn-default btn-sm revise-modal-show" type="button" modal-url="/revise/edit-form?client=<?= $client->getId()?>&kind=<?= Revise::KIND_REVISE_CLIENT?>">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>

@@ -177,7 +177,7 @@ class DdsRepository extends EntityRepository
             ->from(Statement::class, 's')
             ->where('s.status = :status')
             ->setParameter('status', Statement::STATUS_ACTIVE)    
-            ->andWhere($orX)
+//            ->andWhere($orX)
             ->andWhere('s.chargeDate >= :startDate')    
             ->setParameter('startDate', $startDate)    
             ->andWhere('s.chargeDate <= :endDate')    
@@ -185,6 +185,10 @@ class DdsRepository extends EntityRepository
             ->groupBy('companyId')    
             ->addGroupBy('period')  
                 ;
+        
+        if ($orX->count()){
+            $queryBuilder->andWhere($orX);
+        }
 //                var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult(2);       
     }
