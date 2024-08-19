@@ -459,17 +459,21 @@ $this->pageBreadcrumbs()->setItems([
             }    
         }    
         
-        return [
-//            '<a href="#" class="order-comment-modal-show" modal-url="/comments/edit-local-form/" order-id="'+row.id+'" title="Добавить комментарий">(+)</a>',
-            //'(' + value.length + ')',
-            '<small><nobr>',
-            $.format.date(created, "dd.MM.yy HH:MM:ss"),
-            userName,
-            '</small>',
-            '</nobr><br/>',
-            (commentLength) ? '<a href="#" class="comments-modal-show" modal-url="/comments/order-form/" order-id="'+row.id+'" title="Комментарии">('+commentLength+')</a>':'',
-            result
-        ].join(' ');
+        if (commentLength){
+            return [
+    //            '<a href="#" class="order-comment-modal-show" modal-url="/comments/edit-local-form/" order-id="'+row.id+'" title="Добавить комментарий">(+)</a>',
+                //'(' + value.length + ')',
+                '<small><nobr>',
+                $.format.date(created, "dd.MM.yy HH:MM:ss"),
+                userName,
+                '</small>',
+                '</nobr><br/>',
+                (commentLength) ? '<a href="#" class="comments-modal-show" modal-url="/comments/order-form/" order-id="'+row.id+'" title="Комментарии">('+commentLength+')</a>':'',
+                result
+            ].join(' ');
+        }
+        
+        return '';
     }
 
     function linkFormatter(value, row){
