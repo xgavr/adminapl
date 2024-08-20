@@ -17,7 +17,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author Daddy
  */
-class SupplySettingForm extends Form implements ObjectManagerAwareInterface
+class SupplySettingForm extends Form 
 {
 
     protected $objectManager;
