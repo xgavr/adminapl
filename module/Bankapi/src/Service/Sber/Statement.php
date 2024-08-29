@@ -20,7 +20,7 @@ use Laminas\Json\Encoder;
 class Statement {
 
     /**
-     * @var Bankapi\Service\Sber\Authenticate
+     * @var \Bankapi\Service\Sber\Authenticate
      */
     private $auth;
     
@@ -33,19 +33,17 @@ class Statement {
      * Получить список счетов
      * @return array|\Exception
      */
-    public function accountList()
+    public function clientInfo()
     {
-        $this->auth->isAuth();
-        
         $client = new Client();
-        $client->setUri($this->auth->getUri().'/account/list');
+        $client->setUri($this->auth->getUri().'/v1/client-info');
         $client->setAdapter($this->auth::HTTPS_ADAPTER);
         $client->setMethod('GET');
         $client->setOptions(['timeout' => 30]);
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
-            'Content-Type: application/json',
+            'Accept: application/json',
             'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
         ]);
 

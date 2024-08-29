@@ -199,7 +199,7 @@ class RevisionController extends AbstractActionController
         $pay = $this->params()->fromQuery('pay');
         
         $params = [
-            'q' => trim($q), 'sort' => $sort, 'order' => $order, 
+            'q' => $q, 'sort' => $sort, 'order' => $order, 
             'supplierId' => $supplierId, 'officeId' => $officeId,
             'status' => $status, 'companyId' => $companyId, 'legalId' => $legalId,
             'contractId' => $contractId, 'pay' => $pay, 'kind' => Contract::KIND_SUPPLIER,

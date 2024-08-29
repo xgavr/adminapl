@@ -24,12 +24,7 @@ use Laminas\Json\Encoder;
 class Authenticate {
     
     const URI_PRODUCTION = 'https://enter.tochka.com';
-    const URI_PRODUCTION2 = 'https://enter.tochka.com/uapi/';
-    const URI_SANDBOX2 = 'https://enter.tochka.com/sandbox/v2/';
     const URI_DEBUGGING = 'https://private-anon-b91c8e0e22-tochka.apiary-proxy.com';
-    const MODE_API = 'api';
-    const MODE_API2 = 'uapi';
-    const MODE_SANDBOX = 'sandbox';
     
     const VERSION = 'v1';
     const VERSION2 = 'v1.0';
@@ -61,45 +56,12 @@ class Authenticate {
     /**
      * @var string
      */
-    private $uri;
-
-    /**
-     * @var string
-     */
-    private $uri2;
-
-    /**
-     * @var string
-     */
-    private $mode;
-
-    /**
-     * @var string
-     */
-    private $token_dir;
-
-    /**
-     * @var string
-     */
-    private $permanent_access_token;
-
-    /**
-     * @var string
-     */
-    private $token_filename;
-
-    /**
-     * @var string
-     */
-    private $jwt_public_key;
-    
+    private $uri;    
 
     public function __construct($authParams) 
     {
         $this->client_id = $authParams['client_id'];
         $this->client_secret = $authParams['client_secret'];
-        $this->token_dir = $authParams['token_dir'];
-        $this->permanent_access_token = $authParams['access_token'];
 
         if (file_exists('./config/development.config.php')) {
             $this->uri = self::URI_DEBUGGING;

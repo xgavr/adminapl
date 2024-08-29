@@ -665,6 +665,16 @@ class MutualRepository extends EntityRepository{
     public function contractBalances($params = null)
     {
         $entityManager = $this->getEntityManager();
+        
+        $subQb = $entityManager->createQueryBuilder();
+        $subQb->select('min(contacts.id) as contactId')
+                ->from(Legal::class, 'legal')
+                ->join('legal.contacts', 'contacts')
+                ->andWhere('contacts.status = :contactStatus')
+                ->andWhere('legal.id = l.id')
+                ->setMaxResults(1)
+                ;
+        
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
@@ -673,7 +683,7 @@ class MutualRepository extends EntityRepository{
             ->from(Contract::class, 'c')
             ->join('c.company', 'cm')
             ->join('c.legal', 'l')
-            ->join('l.contacts', 'cn')
+            ->join('l.contacts', 'cn', 'WITH', 'cn.id = ('.$subQb->getQuery()->getDQL().')')
             ->join('cn.supplier', 's')    
             ->andWhere('cn.status = :contactStatus')
             ->setParameter(':contactStatus', Contact::STATUS_LEGAL)
@@ -754,6 +764,7 @@ class MutualRepository extends EntityRepository{
                     ;
         }
         
+        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
     }
     
