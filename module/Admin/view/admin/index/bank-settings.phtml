@@ -150,7 +150,7 @@ $form->prepare();
                     if (data == 'ok'){
                         bootbox.alert("Успешно!");
                     } else {
-                        bootbox.alert("Не удалось отправить сообщение!");
+                        bootbox.alert(data.result.message);
                     }    
                 })
                 .fail(function () {
