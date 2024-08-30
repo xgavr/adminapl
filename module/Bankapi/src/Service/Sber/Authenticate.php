@@ -23,8 +23,9 @@ use Laminas\Json\Encoder;
  */
 class Authenticate {
     
-    const URI_PRODUCTION = 'https://fintech.sberbank.ru:9443';
+    //const URI_PRODUCTION = 'https://fintech.sberbank.ru:9443';
     const URI_TEST = 'https://iftfintech.testsbi.sberbank.ru:9443';
+    const URI_PRODUCTION = 'https://iftfintech.testsbi.sberbank.ru:9443';
         
     /**
      * Adapter
@@ -54,6 +55,7 @@ class Authenticate {
 
         if (file_exists('./config/development.config.php')) {
             $this->client_id = $authParams['test_client_id'];
+            $this->client_secret = $authParams['test_client_secret'];
             $this->uri = self::URI_TEST;
         }
     }
