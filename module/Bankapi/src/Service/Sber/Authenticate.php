@@ -107,13 +107,13 @@ class Authenticate {
                 }
                 $error_msg = $response->getStatusCode().' '.$response->getReasonPhrase();
                 if (isset($error['error'])){
-                    $error_msg .= ' ('.$error['error'].')';
+                    $error_msg .= ' e('.$error['error'].')';
                 }
-                if (isset($error['json_error'])){
-                    $error_msg .= ' ('.$error['error'].')';
+                if (isset($error['decode_error'])){
+                    $error_msg .= ' de('.$error['decode_error'].')';
                 }
                 if (isset($error['error_description'])){
-                    $error_msg .= ' '.$error['error_description'];
+                    $error_msg .= ' ed'.$error['error_description'];
                 }
                 if (isset($error['message'])){
                     $error_msg .= ' '.$error['message'];
