@@ -101,7 +101,7 @@ class Authenticate {
                 //$this->reAuth();
             default:
                 try {
-                    $error = Decoder::decode($response->getContent(), \Laminas\Json\Json::TYPE_ARRAY);
+                    $error = Decoder::decode(base64_decode($response->getContent()), \Laminas\Json\Json::TYPE_ARRAY);
                 } catch (\Laminas\Json\Exception\RuntimeException $e){
                     $error['decode_error'] = $e->getMessage();
                 }
