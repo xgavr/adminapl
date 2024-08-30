@@ -110,7 +110,7 @@ class Authenticate {
                     $error_msg .= ' e('.$error['error'].')';
                 }
                 if (isset($error['decode_error'])){
-                    $error_msg .= ' de('.$error['decode_error'].')';
+                    $error_msg .= ' de('.$error['decode_error'].' c:'.$response->getContent().')';
                 }
                 if (isset($error['error_description'])){
                     $error_msg .= ' ed'.$error['error_description'];
