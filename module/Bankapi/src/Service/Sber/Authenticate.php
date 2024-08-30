@@ -98,7 +98,7 @@ class Authenticate {
             case 400: //Invalid code
             case 401: //The access token is invalid or has expired
             case 403: //The access token is missing
-                $this->reAuth();
+                //$this->reAuth();
             default:
                 $error = Decoder::decode($response->getContent(), \Laminas\Json\Json::TYPE_ARRAY);
                 $error_msg = $response->getStatusCode().' '.$response->getReasonPhrase();
