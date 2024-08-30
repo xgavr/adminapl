@@ -10,8 +10,8 @@ namespace Bankapi\Service\Sber\Factory;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Bankapi\Service\Tochka\Authenticate;
-use Bankapi\Service\Tochka\Statement;
+use Bankapi\Service\Sber\Authenticate;
+use Bankapi\Service\Sber\Statement;
 
 /**
  * Description of StatementFactory

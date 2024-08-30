@@ -39,13 +39,20 @@ class IndexController extends AbstractActionController
      */
     private $webhook;    
 
+    /**
+     * Statement manager.
+     * @var \Bankapi\Service\Sber\Statement
+     */
+    private $sberStatement;    
+
     public function __construct($tochkaAuth, $tochkaStatement, $sbpManager,
-            $webhook) 
+            $webhook, $sberStatement) 
     {
         $this->tochkaAuth = $tochkaAuth;
         $this->tochkaStatement = $tochkaStatement;        
         $this->sbpManager = $sbpManager;        
         $this->webhook = $webhook;        
+        $this->sberStatement = $sberStatement;        
     }   
     
     public function indexAction()
@@ -201,5 +208,14 @@ class IndexController extends AbstractActionController
         return new JsonModel([
                 'result' => $result,
             ]);
+    }
+    
+    public function sberClientInfoAction()
+    {
+        $result = $this->sberStatement->clientInfo();
+
+        return new JsonModel([
+                'result' => $result,
+            ]);        
     }
 }

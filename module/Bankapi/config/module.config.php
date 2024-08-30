@@ -43,6 +43,8 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            Service\Sber\Authenticate::class => Service\Sber\Factory\AuthenticateFactory::class,
+            Service\Sber\Statement::class => Service\Sber\Factory\StatementFactory::class,
             Service\Tochka\Authenticate::class => Service\Tochka\Factory\AuthenticateFactory::class,
             Service\Tochka\Payment::class => Service\Tochka\Factory\PaymentFactory::class,
             Service\Tochka\SbpManager::class => Service\Tochka\Factory\SbpManagerFactory::class,

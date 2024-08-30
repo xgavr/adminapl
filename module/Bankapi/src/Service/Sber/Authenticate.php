@@ -23,21 +23,9 @@ use Laminas\Json\Encoder;
  */
 class Authenticate {
     
-    const URI_PRODUCTION = 'https://enter.tochka.com';
-    const URI_DEBUGGING = 'https://private-anon-b91c8e0e22-tochka.apiary-proxy.com';
-    
-    const VERSION = 'v1';
-    const VERSION2 = 'v1.0';
-    
-    const TOKEN_AUTH = 'authorization_code';
-    const TOKEN_ACCESS = 'access_token';
-    const TOKEN_REFRESH = 'refresh_token';
-
-    const TOKEN_ACCESS_SANDBOX = 'working_token';
-    
-    const TOKEN_FILENAME = 'bankapi_tochka.php'; //файл, где хранятся токены
-    const JWT_PUBLIC_KEY = 'bankapi_tochka_public_key.txt'; //публичный ключ OpenAPI
-    
+    const URI_PRODUCTION = 'https://fintech.sberbank.ru:9443';
+    const URI_TEST = 'https://iftfintech.testsbi.sberbank.ru:9443';
+        
     /**
      * Adapter
      */
@@ -62,34 +50,11 @@ class Authenticate {
     {
         $this->client_id = $authParams['client_id'];
         $this->client_secret = $authParams['client_secret'];
+        $this->uri = self::URI_PRODUCTION;
 
         if (file_exists('./config/development.config.php')) {
-            $this->uri = self::URI_DEBUGGING;
-            $this->uri2 = self::URI_SANDBOX2;
-            $this->permanent_access_token = self::TOKEN_ACCESS_SANDBOX;
-        } else {
-            $this->uri = self::URI_PRODUCTION;
-            $this->uri2 = self::URI_PRODUCTION2;
-        }
-
-        $this->mode = $authParams['mode'];
-        if ($this->mode == 'sandbox'){
-            $this->uri .= '/'.self::MODE_SANDBOX;
-        } else {
-            $this->uri .= '/'.self::MODE_API;
-        }
-        
-        $this->uri .= '/'.self::VERSION;
-        
-        if (!is_dir($this->token_dir)){
-            mkdir($this->token_dir);
-        }
-        
-        $this->token_filename = $this->token_dir.self::TOKEN_FILENAME;
-
-        $this->jwt_public_key = '';
-        if (file_exists($this->token_dir.self::JWT_PUBLIC_KEY)){
-            $this->jwt_public_key = file_get_contents($this->token_dir.self::JWT_PUBLIC_KEY);
+            $this->client_id = $authParams['test_client_id'];
+            $this->uri = self::URI_TEST;
         }
     }
     
@@ -102,91 +67,7 @@ class Authenticate {
     {
         return $this->uri;
     }
-    
-    /**
-     * Получить uri api2
-     * @param string $method
-     * @param string $action
-     * @return string 
-     */
-    public function getUri2($method, $action)
-    {
-        return $this->uri2.$method.'/'.self::VERSION2.'/'.$action;
-    }
-
-    /**
-     * Получить режим
-     * 
-     * @return string 
-     */
-    public function getMode()
-    {
-        return $this->mode;
-    }
-    
-    /**
-     * Хранение кодов в папке token_dir
-     * @param string $code код
-     * @param string $grant_type тип кода
-     */
-    public function saveCode($code, $grant_type)
-    {
-        if (file_exists($this->token_filename)){
-            $config = new \Laminas\Config\Config(include $this->token_filename, true);
-        } else {
-            $config = new \Laminas\Config\Config([], true);
-        }
         
-        $config->$grant_type = $code;
-        
-        $writer = new \Laminas\Config\Writer\PhpArray();
-        $writer->toFile($this->token_filename, $config);
-        
-        return;
-    }
-    
-    /**
-     * Получить код доступа
-     *@param string $grant_type тип кода
-     */
-    public function readCode($grant_type)
-    {
-        if ($grant_type == self::TOKEN_ACCESS){
-            if ($this->permanent_access_token){
-                return $this->permanent_access_token;
-            }
-        }
-        
-        if (file_exists($this->token_filename)){
-            $config = new \Laminas\Config\Config(include $this->token_filename);
-            return $config->$grant_type;
-        }
-        
-        return;
-    }
-    
-    /**
-     * Получить ссылку на вход для авторизации
-     * @return string 
-     */
-    public function authUrl()
-    {
-        return $this->uri.'/authorize?response_type=code&client_id='.$this->client_id;
-    }
-    
-    /**
-     * Проверить авторизацию
-     * @return bool
-     */
-    public function isAuth()
-    {
-        if (!$this->readCode(self::TOKEN_ACCESS)){
-            throw new \Exception('Требуется авторизация в банке!');
-        }        
-
-        return true;
-    }
-
     /**
      * Получить Client_id
      * @return bool
@@ -197,17 +78,14 @@ class Authenticate {
     }
 
     /**
-     * Удаление токенов
-     * @return void
+     * Получить Client_id
+     * @return bool
      */
-    public function reAuth()
+    public function getClientSecret()
     {
-        $this->saveCode('', self::TOKEN_AUTH);
-        $this->saveCode('', self::TOKEN_ACCESS);                
-        
-        return;
+        return $this->client_secret;
     }
-    
+
     /**
      * Обработка ошибок
      * @param \Laminas\Http\Response $response
@@ -243,56 +121,4 @@ class Authenticate {
         
         throw new \Exception('Неопознаная ошибка');
     }    
-
-
-    /**
-     * Обмен кода авторизации на access_token и refresh_token
-     * @param string $code код
-     * @param string $grant_type тип кода
-     */    
-    public function accessToken($code, $grant_type)
-    {
-        
-        $postParameters = [
-            'client_id' => $this->client_id,
-            'client_secret' => $this->client_secret,
-            'grant_type' => $grant_type,            
-        ];
-        
-        if ($grant_type == self::TOKEN_AUTH) $postParameters['code'] = $code;
-        if ($grant_type == self::TOKEN_REFRESH) $postParameters['refresh_token'] = $code;
-
-        $client = new Client();
-        $client->setUri($this->uri.'/oauth2/token');
-        $client->setAdapter($this::HTTPS_ADAPTER);
-        $client->setMethod('POST');
-        $client->setRawBody(Encoder::encode($postParameters));
-        $client->setOptions(['timeout' => 30]);
-        
-        $headers = $client->getRequest()->getHeaders();
-        $headers->addHeaders([
-             'Content-Type: application/json',
-        ]);
-        
-        $response = $client->send();
-                
-        if ($response->isOk()){
-            $result = Decoder::decode($response->getBody());
-            if ($grant_type == self::TOKEN_AUTH){
-                $this->saveCode($code, self::TOKEN_AUTH);
-                return $this->accessToken($result->refresh_token, self::TOKEN_REFRESH);
-            }    
-            if ($grant_type == self::TOKEN_REFRESH){
-                $this->saveCode($result->access_token, self::TOKEN_ACCESS);
-                return true;
-            }
-        }
-        
-        return $this->exception($response);
-    }  
-    
-    public function getJwtPublicKey()
-    {
-        return $this->jwt_public_key;
-    }
 }

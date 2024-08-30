@@ -44,7 +44,7 @@ class Statement {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
             'Accept: application/json',
-            'Authorization: Bearer '.$this->auth->readCode($this->auth::TOKEN_ACCESS),
+            'Authorization: Bearer '.$this->auth->getClientSecret(),
         ]);
 
         $client->setHeaders($headers);

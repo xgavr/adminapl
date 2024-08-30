@@ -8,6 +8,7 @@ use Bankapi\Service\Tochka\Authenticate;
 use Bankapi\Service\Tochka\Statement;
 use Bankapi\Service\Tochka\SbpManager;
 use Bankapi\Service\Tochka\Webhook;
+use Bankapi\Service\Sber\Statement as SberStatement;
 
 /**
  * This is the factory for IndexController. Its purpose is to instantiate the
@@ -21,9 +22,10 @@ class IndexControllerFactory implements FactoryInterface
         $statementManager = $container->get(Statement::class);
         $sbpManager = $container->get(SbpManager::class);
         $webhook = $container->get(Webhook::class);
+        $sberStatement = $container->get(SberStatement::class);
         
         // Instantiate the controller and inject dependencies
         return new IndexController($authManager, $statementManager, $sbpManager,
-                $webhook);
+                $webhook, $sberStatement);
     }
 }

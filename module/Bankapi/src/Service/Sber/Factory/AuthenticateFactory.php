@@ -10,6 +10,7 @@ namespace Bankapi\Service\Sber\Factory;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Bankapi\Service\Sber\Authenticate;
 
 /**
  * Description of AuthenticateFactory
