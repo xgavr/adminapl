@@ -100,9 +100,16 @@ class Authenticate {
             case 403: //The access token is missing
                 //$this->reAuth();
             default:
-                $error = Decoder::decode($response->getContent(), \Laminas\Json\Json::TYPE_ARRAY);
+                try {
+                    $error = Decoder::decode($response->getContent(), \Laminas\Json\Json::TYPE_ARRAY);
+                } catch (\Laminas\Json\Exception\RuntimeException $e){
+                    $error['decode_error'] = $e->getMessage();
+                }
                 $error_msg = $response->getStatusCode().' '.$response->getReasonPhrase();
                 if (isset($error['error'])){
+                    $error_msg .= ' ('.$error['error'].')';
+                }
+                if (isset($error['json_error'])){
                     $error_msg .= ' ('.$error['error'].')';
                 }
                 if (isset($error['error_description'])){
