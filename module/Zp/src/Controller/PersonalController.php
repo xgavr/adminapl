@@ -259,4 +259,27 @@ class PersonalController extends AbstractActionController
             'accrual' => $accrual,
         ]);        
     }    
+    
+    public function statusAction()
+    {
+        $docId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', Personal::STATUS_ACTIVE);
+        
+        $personal = $this->entityManager->getRepository(Personal::class)
+                ->find($docId);        
+
+        if ($personal == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->zpManager->updatePersonalStatus($personal, $status);
+        $query = $this->entityManager->getRepository(Personal::class)
+                ->findPersonal(['docId' => $personal->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
+        return new JsonModel(
+           $result
+        );           
+    }                    
 }

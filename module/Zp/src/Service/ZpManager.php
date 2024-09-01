@@ -359,6 +359,22 @@ class ZpManager {
     }
     
     /**
+     * Update Personal status.
+     * @param Personal $personal
+     * @param integer $status
+     * @return integer
+     */
+    public function updatePersonalStatus($personal, $status)            
+    {
+
+        $personal->setStatus($status);
+
+        $this->entityManager->persist($personal);
+        $this->entityManager->flush();
+        return;
+    }
+    
+    /**
      * Удалить плановое начисление
      * @param Personal $personal
      */

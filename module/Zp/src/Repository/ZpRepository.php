@@ -310,6 +310,13 @@ class ZpRepository extends EntityRepository
             ->join('p.position', 'pos')
                 ;
         if (is_array($params)){
+            if (!empty($params['docId'])){
+                if (is_numeric($params['docId'])){
+                    $queryBuilder->andWhere('p.id = :id')
+                            ->setParameter('id', $params['docId'])
+                            ;
+                }    
+            }            
             if (!empty($params['company'])){
                 if (is_numeric($params['company'])){
                     $queryBuilder->andWhere('p.company = :company')

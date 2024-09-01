@@ -104,6 +104,11 @@ $this->pageBreadcrumbs()->setItems([
         $table.bootstrapTable('refresh');
     }
     
+    function changeStatus(docId, status){
+        $.get( "/personal/status/"+docId+'?status='+status, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: docId, row: data});
+        });        
+    }
 
     $(function () {
         $ok.click(function () {
@@ -192,10 +197,13 @@ $this->pageBreadcrumbs()->setItems([
                 name: 'Сделать активным',
                 iconClass: 'glyphicon glyphicon-ok',
                 onClick: function(row) {
+                    changeStatus(row.id, <?= Personal::STATUS_ACTIVE?>);
                 },
                 isShown: function(row) {
+                    return row.status === <?= Personal::STATUS_RETIRED?>;
                 },
                 isEnabled: function(row) {
+                    return row.status === <?= Personal::STATUS_RETIRED?>;
                 }                
             }, 
             statusRetired: {
@@ -203,10 +211,13 @@ $this->pageBreadcrumbs()->setItems([
                 iconClass: 'glyphicon glyphicon-remove',
 //                classNames: 'bg-danger',
                 onClick: function(row) {
+                    changeStatus(row.id, <?= Personal::STATUS_RETIRED?>);
                 },
                 isShown: function(row) {
+                    return row.status === <?= Personal::STATUS_ACTIVE?>;
                 },
                 isEnabled: function(row) {
+                    return row.status === <?= Personal::STATUS_ACTIVE?>;
                 }                
             },
             duplicate: {
@@ -216,7 +227,7 @@ $this->pageBreadcrumbs()->setItems([
                 onClick: function(row) {
                     var url = '/personal/edit-form/'+row.id+'?copy=1';
                     showFormDialog({
-                        id: 'ptuModal',
+                        id: 'personalModal',
                         url: url,
                         width: '1440px'
                     });
