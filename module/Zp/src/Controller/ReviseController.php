@@ -155,7 +155,7 @@ class ReviseController extends AbstractActionController
                 }    
                                 
                 return new JsonModel(
-                   ['ok']
+                   ['result' => 'ok']
                 );           
             }
         } else {
@@ -182,5 +182,28 @@ class ReviseController extends AbstractActionController
             'copy' => $copy,
             'revise' => $revise,
         ]);        
-    }        
+    }     
+    
+    public function statusAction()
+    {
+        $docId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', PersonalRevise::STATUS_ACTIVE);
+        
+        $revise = $this->entityManager->getRepository(PersonalRevise::class)
+                ->find($docId);        
+
+        if ($revise == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->zpCalculator->updateReviseStatus($revise, $status);
+        $query = $this->entityManager->getRepository(PersonalRevise::class)
+                ->findPersonalRevise(['docId' => $revise->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
+        return new JsonModel(
+           $result
+        );           
+    }                
 }

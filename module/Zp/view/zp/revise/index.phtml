@@ -107,6 +107,13 @@ $this->pageBreadcrumbs()->setItems([
         $table.bootstrapTable('refresh');
     }    
 
+    function changeStatus(docId, status){
+        $.get( "/personal-revise/status/"+docId+'?status='+status, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: docId, row: data});
+        });        
+    }
+
+
     $(function () {
         $ok.click(function () {
             refreshTable();
@@ -203,10 +210,13 @@ $this->pageBreadcrumbs()->setItems([
                 name: 'Сделать активным',
                 iconClass: 'glyphicon glyphicon-ok',
                 onClick: function(row) {
+                    changeStatus(row.id, <?= PersonalRevise::STATUS_ACTIVE?>);
                 },
                 isShown: function(row) {
+                    return row.status === <?= PersonalRevise::STATUS_RETIRED?>;
                 },
                 isEnabled: function(row) {
+                    return row.status === <?= PersonalRevise::STATUS_RETIRED?>;
                 }                
             }, 
             statusRetired: {
@@ -214,10 +224,13 @@ $this->pageBreadcrumbs()->setItems([
                 iconClass: 'glyphicon glyphicon-remove',
 //                classNames: 'bg-danger',
                 onClick: function(row) {
+                    changeStatus(row.id, <?= PersonalRevise::STATUS_RETIRED?>);
                 },
                 isShown: function(row) {
+                    return row.status === <?= PersonalRevise::STATUS_ACTIVE?>;
                 },
                 isEnabled: function(row) {
+                    return row.status === <?= PersonalRevise::STATUS_ACTIVE?>;
                 }                
             },
             duplicate: {
@@ -227,7 +240,7 @@ $this->pageBreadcrumbs()->setItems([
                 onClick: function(row) {
                     var url = '/personal-revise/edit-form/'+row.id+'?copy=1';
                     showFormDialog({
-                        id: 'ptuModal',
+                        id: 'personalReviseModal',
                         url: url,
                         width: '1440px'
                     });

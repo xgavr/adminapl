@@ -341,7 +341,7 @@
                     changeStatus(row.id, <?= Ptu::STATUS_ACTIVE?>);
                 },
                 isShown: function(row) {
-                  return row.status == <?= Ptu::STATUS_RETIRED?>;
+                  return row.status === <?= Ptu::STATUS_RETIRED?>;
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';
@@ -355,7 +355,7 @@
                     changeStatus(row.id, <?= Ptu::STATUS_RETIRED?>);
                 },
                 isShown: function(row) {
-                  return row.status == <?= Ptu::STATUS_ACTIVE?>;
+                  return row.status === <?= Ptu::STATUS_ACTIVE?>;
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>' || row.status != <?= Ptu::STATUS_ACTIVE?>;
@@ -369,7 +369,7 @@
                     repostEx(row.id);
                 },
                 isShown: function(row) {
-                  return row.status == <?= Ptu::STATUS_ACTIVE?>;
+                  return row.status === <?= Ptu::STATUS_ACTIVE?>;
                 },
                 isEnabled: function(row) {
                     return row.docDate > '<?= $allowDate?>';

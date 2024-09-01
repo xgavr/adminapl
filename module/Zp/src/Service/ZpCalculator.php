@@ -708,6 +708,22 @@ class ZpCalculator {
     }
     
     /**
+     * Update PersonalRevise status.
+     * @param PersonalRevise $revise
+     * @param integer $status
+     * @return integer
+     */
+    public function updateReviseStatus($revise, $status)            
+    {
+
+        $revise->setStatus($status);
+
+        $this->entityManager->persist($revise);
+        $this->entityManager->flush();
+        return;
+    }
+    
+    /**
      * Удалить корректировку ЗП
      * @param PersonalRevise $personalRevise
      * @return null
