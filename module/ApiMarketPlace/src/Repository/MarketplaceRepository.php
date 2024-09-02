@@ -194,7 +194,7 @@ class MarketplaceRepository extends EntityRepository
 
             $row = $queryBuilder->getQuery()->getOneOrNullResult();   
 
-            if ($row){
+            if (!empty($row['cost'])){
                 $cost = abs($row['cost']);
             }            
         }    
