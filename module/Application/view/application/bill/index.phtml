@@ -16,9 +16,6 @@ $this->pageBreadcrumbs()->setItems([
     <div class="col-md-12">
         <div id="billtoolbar">
             <div class="form-inline" role="form">
-<!--                <div class="form-group">
-                    <input name="search" style="width: 400px" class="form-control" type="text" placeholder="">
-                </div>-->
                 <button id="byMail" type="button" class="btn btn-default" title="Проверить почту">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
@@ -28,6 +25,12 @@ $this->pageBreadcrumbs()->setItems([
                 <button id="correctionIdocs" type="button" class="btn btn-warning" title="Исправить документы">
                     <span class="glyphicon glyphicon-wrench"></span>
                 </button>
+                <div class="form-group">
+                    <div class='btn-group'>
+                        <input name="search" style="width: 200px" class="form-control enter-search" onfocus="this.select();" type="text" placeholder="">
+                        <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                    </div>    
+                </div>
                 <div class="form-group">
                     <select id="supplierSelect" name="supplierSelect" style="width: 250px" class="form-control">
                         <option selected>поставщик</option>
@@ -88,11 +91,7 @@ $this->pageBreadcrumbs()->setItems([
 
 <script type="text/javascript">
 
-    var $table = $('#billTable').bootstrapTable({
-        onLoadSuccess: function(){
-            tableRowClick();        
-        }
-    });
+    var $table = $('#billTable');
     var ok = $('#ok');
 
     function refreshTable(){
@@ -104,6 +103,15 @@ $this->pageBreadcrumbs()->setItems([
         ok.click(function () {
             $table.bootstrapTable('refresh');
         });
+
+        $(".inputclear").click(function(){
+            $(".enter-search").val('');
+            refreshTable();
+        });
+
+        $('#table').on('load-success.bs.table', function (e, res) {
+            tableRowClick();
+        });        
 
         $(document).on('change', '#supplierSelect', function (e) {
             refreshTable();

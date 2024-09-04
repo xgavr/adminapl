@@ -184,7 +184,7 @@ class Idoc {
     }
 
     /**
-     * Данные жокумента
+     * Данные документа
      * @param bool $allColumn
      * @return array
      */

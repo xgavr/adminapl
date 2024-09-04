@@ -69,6 +69,9 @@ class BillRepository  extends EntityRepository{
                             ->setParameter('month', $params['month']);
                 }    
             }
+            if (!empty($params['search'])){
+                $queryBuilder->andWhere($queryBuilder->expr()->like('i.name', '\'%'.$params['search'].'%\''));
+            }
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
@@ -118,6 +121,9 @@ class BillRepository  extends EntityRepository{
                     $queryBuilder->andWhere('MONTH(i.dateCreated) = :month')
                             ->setParameter('month', $params['month']);
                 }    
+            }
+            if (!empty($params['search'])){
+                $queryBuilder->andWhere($queryBuilder->expr()->like('i.name', '\'%'.$params['search'].'%\''));
             }
         }
         $result = $queryBuilder->getQuery()->getOneOrNullResult();

@@ -53,6 +53,7 @@ class BillController extends AbstractActionController
     public function contentAction()
     {
         
+        $q = $this->params()->fromQuery('search');
         $supplier = $this->params()->fromQuery('supplier');
         $status = $this->params()->fromQuery('status');
         $offset = $this->params()->fromQuery('offset');
@@ -65,7 +66,7 @@ class BillController extends AbstractActionController
             $month = date('m', strtotime($year_month));
         }
         
-        $params = ['supplier' => $supplier, 'status' => $status, 
+        $params = ['search' => $q, 'supplier' => $supplier, 'status' => $status, 
             'year' => $year, 'month' => $month];
         
         $query = $this->entityManager->getRepository(Idoc::class)
