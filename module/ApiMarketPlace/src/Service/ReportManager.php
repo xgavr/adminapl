@@ -217,7 +217,7 @@ class ReportManager
                 $item->setMarketSaleReport($report);
                 $item->setPrice($price);
                 $item->setPriceSale($priceSale);
-                $item->setProductId(empty($row['sku']) ? 0:$row['sku']);
+                $item->setProductId(empty($row['item']['sku']) ? 0:$row['item']['sku']);
                 $item->setOfferId($offerIdDisp);
                 $item->setProductName(empty($row['item']['name']) ? 0:$row['item']['name']);
                 $item->setReturnAmount(empty($row['return_commission']['amount']) ? 0:$row['return_commission']['amount']/$offerCount);
