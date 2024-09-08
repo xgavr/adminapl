@@ -196,24 +196,28 @@ class TaxManager
 
         $this->removeTaxMutual(Movement::DOC_ZP, $docCalculator->getId(), $tax->getId());
         
-        $amount = abs($docCalculator->getAmount())*$tax->getAmount()/100;
-        
-        $taxMutual = new TaxMutual();
-        $taxMutual->setAmount(-$amount);
-        $taxMutual->setCompany($docCalculator->getCompany());
-        $taxMutual->setDateOper($docCalculator->getDateOper());
-        $taxMutual->setDocId($docCalculator->getId());
-        $taxMutual->setDocKey($docCalculator->getLogKey());
-        $taxMutual->setDocStamp($docStamp);
-        $taxMutual->setDocType(Movement::DOC_ZP);
-        $taxMutual->setStatus(TaxMutual::getStatusFromDocCalculator($docCalculator));
-        $taxMutual->setTax($tax);
+        if ($docCalculator->getTaxedNdfl()){
+            $amount = abs($docCalculator->getAmount())*$tax->getAmount()/100;
 
-        $this->entityManager->persist($taxMutual);
+            $taxMutual = new TaxMutual();
+            $taxMutual->setAmount(-$amount);
+            $taxMutual->setCompany($docCalculator->getCompany());
+            $taxMutual->setDateOper($docCalculator->getDateOper());
+            $taxMutual->setDocId($docCalculator->getId());
+            $taxMutual->setDocKey($docCalculator->getLogKey());
+            $taxMutual->setDocStamp($docStamp);
+            $taxMutual->setDocType(Movement::DOC_ZP);
+            $taxMutual->setStatus(TaxMutual::getStatusFromDocCalculator($docCalculator));
+            $taxMutual->setTax($tax);
+
+            $this->entityManager->persist($taxMutual);
+
+            $this->entityManager->flush();
+
+            return $taxMutual;
+        }
         
-        $this->entityManager->flush();
-        
-        return $taxMutual;
+        return;
     }   
     
     /**
@@ -230,24 +234,26 @@ class TaxManager
 
         $this->removeTaxMutual(Movement::DOC_CASH, $cashDoc->getId(), $tax->getId());
         
-        $amount = abs($cashDoc->getAmount())*$tax->getAmount()/100;
+//        $amount = abs($cashDoc->getAmount())*$tax->getAmount()/100;
+//        
+//        $taxMutual = new TaxMutual();
+//        $taxMutual->setAmount(-$amount);
+//        $taxMutual->setCompany($cashDoc->getCompany());
+//        $taxMutual->setDateOper($cashDoc->getDateOper());
+//        $taxMutual->setDocId($cashDoc->getId());
+//        $taxMutual->setDocKey($cashDoc->getLogKey());
+//        $taxMutual->setDocStamp($docStamp);
+//        $taxMutual->setDocType(Movement::DOC_CASH);
+//        $taxMutual->setStatus(TaxMutual::getStatusFromCashDoc($cashDoc));
+//        $taxMutual->setTax($tax);
+//
+//        $this->entityManager->persist($taxMutual);
+//        
+//        $this->entityManager->flush();
+//        
+//        return $taxMutual;
         
-        $taxMutual = new TaxMutual();
-        $taxMutual->setAmount(-$amount);
-        $taxMutual->setCompany($cashDoc->getCompany());
-        $taxMutual->setDateOper($cashDoc->getDateOper());
-        $taxMutual->setDocId($cashDoc->getId());
-        $taxMutual->setDocKey($cashDoc->getLogKey());
-        $taxMutual->setDocStamp($docStamp);
-        $taxMutual->setDocType(Movement::DOC_CASH);
-        $taxMutual->setStatus(TaxMutual::getStatusFromCashDoc($cashDoc));
-        $taxMutual->setTax($tax);
-
-        $this->entityManager->persist($taxMutual);
-        
-        $this->entityManager->flush();
-        
-        return $taxMutual;
+        return;
     }   
     
     /**
@@ -264,24 +270,26 @@ class TaxManager
 
         $this->removeTaxMutual(Movement::DOC_ZPRV, $personalRevise->getId(), $tax->getId());
         
-        $amount = abs($personalRevise->getAmount())*$tax->getAmount()/100;
+//        $amount = abs($personalRevise->getAmount())*$tax->getAmount()/100;
+//        
+//        $taxMutual = new TaxMutual();
+//        $taxMutual->setAmount(-$amount);
+//        $taxMutual->setCompany($personalRevise->getCompany());
+//        $taxMutual->setDateOper($personalRevise->getDocDate());
+//        $taxMutual->setDocId($personalRevise->getId());
+//        $taxMutual->setDocKey($personalRevise->getLogKey());
+//        $taxMutual->setDocStamp($docStamp);
+//        $taxMutual->setDocType(Movement::DOC_ZPRV);
+//        $taxMutual->setStatus(TaxMutual::getStatusFromPersonalRevise($personalRevise));
+//        $taxMutual->setTax($tax);
+//
+//        $this->entityManager->persist($taxMutual);
+//        
+//        $this->entityManager->flush();
+//        
+//        return $taxMutual;
         
-        $taxMutual = new TaxMutual();
-        $taxMutual->setAmount(-$amount);
-        $taxMutual->setCompany($personalRevise->getCompany());
-        $taxMutual->setDateOper($personalRevise->getDocDate());
-        $taxMutual->setDocId($personalRevise->getId());
-        $taxMutual->setDocKey($personalRevise->getLogKey());
-        $taxMutual->setDocStamp($docStamp);
-        $taxMutual->setDocType(Movement::DOC_ZPRV);
-        $taxMutual->setStatus(TaxMutual::getStatusFromPersonalRevise($personalRevise));
-        $taxMutual->setTax($tax);
-
-        $this->entityManager->persist($taxMutual);
-        
-        $this->entityManager->flush();
-        
-        return $taxMutual;
-    }        
+        return;
+    }          
 }
 
