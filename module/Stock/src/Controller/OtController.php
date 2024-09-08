@@ -126,7 +126,7 @@ class OtController extends AbstractActionController
         $goodId = (int)$this->params()->fromQuery('good', -1);
         
         $ot = $office = $company = $comiss = $contactName = $good = null;
-        $notDisabled = true;        
+        $notDisabled = true; $otGood = [];        
         if ($otId > 0){
             $ot = $this->entityManager->getRepository(Ot::class)
                     ->find($otId);
@@ -164,8 +164,10 @@ class OtController extends AbstractActionController
 
             if ($form->isValid()) {
                 unset($data['csrf']);
-                $otGood = $data['otGood'];
-                unset($data['otGood']);
+                if (!empty($data['otGood'])){
+                    $otGood = $data['otGood'];
+                    unset($data['otGood']);
+                }    
                 $data['status_ex'] = Ot::STATUS_EX_NEW;
                 $data['office'] = $office;
                 $data['company'] = $company;
