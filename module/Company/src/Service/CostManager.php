@@ -294,6 +294,11 @@ class CostManager
                         ->findOneBy(['kind' => Cost::KIND_BANK_CART]);
                 $amount = abs($statement->getAmount());                
                 break;
+            case Statement::KIND_OUT_CREDIT_RETURN:
+                $cost = $this->entityManager->getRepository(Cost::class)
+                        ->findOneBy(['kind' => Cost::KIND_CREDIT_RETURN]);
+                $amount = abs($statement->getAmount());                
+                break;
             case Statement::KIND_IN_CART:
                 $cost = $this->entityManager->getRepository(Cost::class)
                         ->findOneBy(['kind' => Cost::KIND_BANK_ACQUIRING]);
