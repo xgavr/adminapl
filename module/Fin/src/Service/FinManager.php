@@ -302,7 +302,7 @@ class FinManager {
             
             $finOpu->setRevenueTp(abs($row['revenue']));
             $finOpu->setPurchaseTp(abs($row['purchase']));
-            $finOpu->setCostTp(abs($row['cost']));
+            //$finOpu->setCostTp(abs($row['cost']));
             $finOpu->setIncomeTp(abs($row['revenue']) - abs($row['purchase']) - abs($row['cost']));
             if (abs($row['revenue'])){
                 $finOpu->setMarginTp((abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']));
@@ -383,6 +383,32 @@ class FinManager {
             }
             
             $finOpu->setCostTotal($finOpu->getCostFix() + $finOpu->getCostRetail());
+            $this->entityManager->persist($finOpu);
+        }
+        
+        $this->entityManager->flush();
+    }
+    
+    /**
+     * Рассчитать расходы ТП за период
+     * @param date $period
+     */
+    public function costsTp($period)
+    {
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+        
+        $costs = $this->entityManager->getRepository(FinOpu::class)
+                ->costTp($startDate, $endDate);
+
+        foreach ($costs as $row){
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($row['companyId']);
+            
+            $finOpu = $this->getFinOpu($row['period'], $company, FinOpu::STATUS_FACT);
+            
+            $finOpu->setCostTp(abs($row['amount']));
+            
             $this->entityManager->persist($finOpu);
         }
         
@@ -513,6 +539,7 @@ class FinManager {
         $this->incomeRetailRevenue($period);
         $this->retailOrderCount($period);
         $this->incomeRetail($period);
+        $this->costsTp($period);
         $this->incomeTp($period);
         $this->costs($period);
         $this->zp($period);

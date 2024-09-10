@@ -513,6 +513,39 @@ class FinRepository extends EntityRepository
     }
     
     /**
+     * Расходы ТП
+     * 
+     * @param date $startDate
+     * @param date $endDate
+     * 
+     * @return array 
+     */
+    public function costTp($startDate, $endDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('identity(cm.company) as companyId, c.kindFin as kindFin, LAST_DAY(cm.dateOper) as period, sum(cm.amount) as amount')
+            ->from(CostMutual::class, 'cm')
+            ->join('cm.cost', 'c')    
+            ->where('cm.status = :status')
+            ->setParameter('status', CostMutual::STATUS_ACTIVE)    
+            ->andWhere('cm.dateOper >= :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('cm.dateOper <= :endDate')    
+            ->setParameter('endDate', $endDate) 
+            ->andWhere('c.kind = :excKind')    
+            ->setParameter('excKind', Cost::KIND_MP) 
+            ->groupBy('companyId')    
+            ->groupBy('kindFin')    
+            ->addGroupBy('period')    
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();       
+    }
+    
+    /**
      * Зарплата
      * 
      * @param date $startDate

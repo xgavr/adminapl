@@ -12,6 +12,7 @@ use Gam6itko\OzonSeller\Service\V3\Posting\FbsService;
 use Gam6itko\OzonSeller\Service\V2\ProductService as ProductService2;
 use Gam6itko\OzonSeller\Service\V1\ProductService;
 use Gam6itko\OzonSeller\Service\V2\FinanceService;
+use Gam6itko\OzonSeller\Exception\OzonSellerException;
 use Symfony\Component\HttpClient\Psr18Client;
 use Application\Entity\Goods;
 use Application\Entity\ScaleTreshold;
@@ -498,7 +499,11 @@ class OzonService {
         
         $client = new Psr18Client();
         $financeService= new FinanceService($config, $client);
-        $result = $financeService->realization(['month' => date('n', strtotime($month)), 'year' => date('Y', strtotime($month))]);
+        try{
+            $result = $financeService->realization(['month' => date('n', strtotime($month)), 'year' => date('Y', strtotime($month))]);
+        } catch(OzonSellerException $e){
+            $result = $e->getMessage();
+        }    
         
         return $result;        
     }
