@@ -502,7 +502,11 @@ class OzonService {
         try{
             $result = $financeService->realization(['month' => date('n', strtotime($month)), 'year' => date('Y', strtotime($month))]);
         } catch(OzonSellerException $e){
-            $result = $e->getMessage();
+            $result = [
+                'header' => 0,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+                ];
         }    
         
         return $result;        
