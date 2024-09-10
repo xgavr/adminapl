@@ -303,7 +303,7 @@ class FinManager {
             $finOpu->setRevenueTp(abs($row['revenue']));
             $finOpu->setPurchaseTp(abs($row['purchase']));
             //$finOpu->setCostTp(abs($row['cost']));
-            $finOpu->setIncomeTp(abs($row['revenue']) - abs($row['purchase']) - abs($row['cost']));
+            $finOpu->setIncomeTp(abs($row['revenue']) - abs($row['purchase']) - $finOpu->getCostTp());
             if (abs($row['revenue'])){
                 $finOpu->setMarginTp((abs($row['revenue']) - abs($row['purchase']))*100/abs($row['revenue']));
             }    
