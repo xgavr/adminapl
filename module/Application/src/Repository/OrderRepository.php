@@ -156,7 +156,8 @@ class OrderRepository extends EntityRepository{
                 
                 $orX = $queryBuilder->expr()->orX();
                 $orX->add($queryBuilder->expr()->like('g.code', ':alnum'));
-                $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
+//                $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
+                $queryBuilder->setParameter('alnum', $alnum);
                 
                 $queryBuilder->andWhere($orX);
                 
@@ -201,7 +202,8 @@ class OrderRepository extends EntityRepository{
 
                     $queryBuilder->leftJoin('c.phones', 'p');
                     $orX->add($queryBuilder->expr()->like('p.name', ':digits'));
-                    $queryBuilder->setParameter('digits', '%' . $digits . '%');
+//                    $queryBuilder->setParameter('digits', '%' . $digits . '%');
+                    $queryBuilder->setParameter('digits', $digits);
 
 
                 }    
@@ -209,7 +211,8 @@ class OrderRepository extends EntityRepository{
                     $queryBuilder->leftJoin('c.contactCars', 'cc');
                     $orX->add($queryBuilder->expr()->like('cc.vin', ':alnum'));
                     $orX->add($queryBuilder->expr()->like('cc.vin2', ':alnum'));
-                    $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
+//                    $queryBuilder->setParameter('alnum', '%' . $alnum . '%');
+                    $queryBuilder->setParameter('alnum', $alnum);
                 }                
             }    
             

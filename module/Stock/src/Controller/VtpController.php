@@ -148,12 +148,12 @@ class VtpController extends AbstractActionController
                 if ($vtpGood){
                     $upd[$data['name']] = $data['value'];
                     if ($data['name'] == 'quantity'){
-                        $value = (empty($data['value'])) ? 0:$data['value'];
+                        $value = (is_numeric($data['value'])) ? $data['value']:0;
                         $upd['amount'] = $value*$vtpGood->getPrice();
                     }
                     if ($data['name'] == 'price'){
                         unset($upd['price']);
-                        $value = (empty($data['value'])) ? 0:$data['value'];
+                        $value = (is_numeric($data['value'])) ? $data['value']:0;
                         $upd['amount'] = $value*$vtpGood->getQuantity();
                     }
                     $this->vtpManager->updateVtpGood($vtpGood, $upd);

@@ -131,7 +131,10 @@ class VtpManager
                             ->findOneByBaseKey($base['baseKey']);
                     
                     $quantity = min($base['rest'], $write);
-                    $amount = $quantity*$vtpGood->getAmount()/$vtpGood->getQuantity();
+                    $amount = 0;
+                    if (!empty($vtpGood->getQuantity())){
+                        $amount = $quantity*$vtpGood->getAmount()/$vtpGood->getQuantity();
+                    }    
                     $baseAmount = $base['basePrice']*$quantity;
                     
                     $data = [
