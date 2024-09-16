@@ -820,9 +820,10 @@ class OrderController extends AbstractActionController
         
         if ($this->getRequest()->isPost()){
             $data = $this->params()->fromPost();
-            if (isset($data['bids'])){
-                $this->orderManager->updateBids($order, $data['bids']);
+            if (!isset($data['bids'])){
+                $data['bids'] = [];
             }    
+            $this->orderManager->updateBids($order, $data['bids']);
         }
         return new JsonModel([
             'result' => 'ok',
