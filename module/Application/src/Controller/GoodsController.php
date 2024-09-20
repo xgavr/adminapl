@@ -165,7 +165,7 @@ class GoodsController extends AbstractActionController
                     $good = $this->entityManager->getRepository(Goods::class)
                             ->findBy(['code' => $codeFiltered, 'producer' => $producer->getId()]);
                     if (empty($good)){
-                        $good = $this->assemblyManager->addNewGood($data['code'], $producer, null, 0, $data['name']);
+                        $good = $this->assemblyManager->addNewGood($codeFiltered, $producer, null, 0, $data['name']);
                     }    
                 }    
                 
