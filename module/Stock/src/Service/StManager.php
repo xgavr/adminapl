@@ -116,8 +116,13 @@ class StManager
 
         $stGoods = $this->entityManager->getRepository(StGood::class)
                 ->findBySt($st->getId());
-
+        
+        $stAmount = 0;
+        
         foreach ($stGoods as $stGood){
+            
+            $stGoodAmount = 0;       
+    
             if ($st->getStatus() == St::STATUS_ACTIVE){
                 $bases = $this->entityManager->getRepository(Movement::class)
                         ->findBases($stGood->getGood()->getId(), $docStamp, $st->getOffice()->getId());
@@ -133,6 +138,8 @@ class StManager
                     if ($movement){
                         $quantity = min($base['rest'], $write);
                         $baseAmount = $base['basePrice']*$quantity;
+                        $stGoodAmount += $baseAmount;
+                        $stAmount += $baseAmount;
 
                         $data = [
                             'doc_key' => $st->getLogKey(),
@@ -224,10 +231,13 @@ class StManager
                     ->updateGoodBalance($stGood->getGood()->getId());
             $this->entityManager->getRepository(ComissBalance::class)
                     ->updateComissBalance($stGood->getGood()->getId());            
+            
+            $this->entityManager->getConnection()
+                    ->update('st_good', ['amount' => $stGoodAmount], ['id' => $stGood->getId()]);
         }
-
+        
         $this->entityManager->getConnection()
-                ->update('st', ['status_account' => $stTake], ['id' => $st->getId()]);  
+                ->update('st', ['status_account' => $stTake, 'amount' => $stAmount], ['id' => $st->getId()]);  
         
         return;
     }    
