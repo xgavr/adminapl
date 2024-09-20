@@ -175,6 +175,49 @@ class ApiOrderInfoResource extends AbstractResourceListener
     }
 
     /**
+     * Получить инфо по заказу
+     * 
+     * @param int $id
+     */
+    private function orderInfo($id)
+    {
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($id);
+        if ($order){
+            $orderInfo = $order->toArray();
+
+            $lastCommentInfo = [];
+
+            $lastComment = $this->orderManager->lastComment($order);
+
+            if ($lastComment){
+                $lastCommentInfo = [
+                    'comment' => $lastComment->getComment(),
+                    'user' => ($lastComment->getUser()) ? $lastComment->getUser()->getId():'',
+                    'userName' => $lastComment->getUserName(),
+                    'created' => $lastComment->getDateCreated(),
+                ];
+            }
+
+            $orderInfo['lastComment'] = $lastCommentInfo;
+
+            $bids = $this->entityManager->getRepository(Bid::class)
+                    ->findBy(['order' => $id]);
+            $bidsInfo = [];
+            foreach($bids as $bid){
+                $bidInfo = $bid->toLog();
+                $bidInfo['good'] = $this->goodManager->goodForApl($bid->getGood());
+                $bidsInfo[] = $bidInfo;
+            }
+
+            $orderInfo['goods'] = $bidsInfo;
+
+            return $orderInfo;                 
+        }        
+        return new ApiProblem(404, 'Заказ '.$id.' не найден');                
+    }
+    
+    /**
      * Fetch a resource
      *
      * @param  mixed $id
@@ -183,39 +226,7 @@ class ApiOrderInfoResource extends AbstractResourceListener
     public function fetch($id)
     {
         if (is_numeric($id)){
-            $order = $this->entityManager->getRepository(Order::class)
-                    ->find($id);
-            if ($order){
-                $orderInfo = $order->toArray();
-                
-                $lastCommentInfo = [];
-                
-                $lastComment = $this->orderManager->lastComment($order);
-                
-                if ($lastComment){
-                    $lastCommentInfo = [
-                        'comment' => $lastComment->getComment(),
-                        'user' => ($lastComment->getUser()) ? $lastComment->getUser()->getId():'',
-                        'userName' => $lastComment->getUserName(),
-                        'created' => $lastComment->getDateCreated(),
-                    ];
-                }
-                
-                $orderInfo['lastComment'] = $lastCommentInfo;
-                
-                $bids = $this->entityManager->getRepository(Bid::class)
-                        ->findBy(['order' => $id]);
-                $bidsInfo = [];
-                foreach($bids as $bid){
-                    $bidInfo = $bid->toLog();
-                    $bidInfo['good'] = $this->goodManager->goodForApl($bid->getGood());
-                    $bidsInfo[] = $bidInfo;
-                }
-                
-                $orderInfo['goods'] = $bidsInfo;
-                
-                return $orderInfo;                 
-            }
+            return $this->orderInfo($id);
         }        
         return new ApiProblem(404, 'Заказ '.$id.' не найден');        
     }
@@ -228,6 +239,17 @@ class ApiOrderInfoResource extends AbstractResourceListener
      */
     public function fetchAll($params = [])
     {
+        if (!empty($params['orderAplId'])){
+            if (is_numeric($params['orderAplId'])){
+                $orders = $this->entityManager->getRepository(Order::class)
+                        ->findBy(['aplId' => $params['orderAplId']]);
+                foreach($orders as $order){
+                    $result[] = $this->orderInfo($order->getId());
+                } 
+                
+                return $result;
+            }
+        }
         return new ApiProblem(405, 'The GET method has not been defined for collections');
     }
 

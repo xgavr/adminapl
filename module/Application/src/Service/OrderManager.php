@@ -1640,6 +1640,7 @@ class OrderManager
     {
         $data = $order->toArray();
         
+        unset($data['id']);
         unset($data['aplId']);
         unset($data['dateMod']);
         unset($data['geo']);

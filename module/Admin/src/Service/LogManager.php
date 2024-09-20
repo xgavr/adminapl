@@ -470,7 +470,7 @@ class LogManager {
             $goodLog = $good->toLog();
             
             $data = [
-                'log_key' => $good->getLogKey(),
+                'log_key' => $good->getCode(),
                 'message' => Json::encode($goodLog),
                 'date_created' => date('Y-m-d H:i:s'),
                 'status' => $status,
