@@ -31,6 +31,7 @@ use Stock\Entity\GoodBalance;
 use Admin\Entity\Log;
 use Application\Entity\Oem;
 use Stock\Entity\Reserve;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of GoodsService
@@ -82,9 +83,12 @@ class GoodsManager
     public function addNewGoods($data, $flushnow=true) 
     {
         // Создаем новую сущность Goods.
+        $codeFilter = new ArticleCode();
+        $code = $codeFilter->filter($data['code']);
+        
         $goods = new Goods();
         $goods->setName($data['name']);
-        $goods->setCode($data['code']);
+        $goods->setCode($code);
         $goods->setAvailable($data['available']);
         $goods->setDescription($data['description']);
         
@@ -124,8 +128,11 @@ class GoodsManager
     
     public function updateGoods($goods, $data) 
     {
+        $codeFilter = new ArticleCode();
+        $code = $codeFilter->filter($data['code']);
+
         $goods->setName($data['name']);
-        $goods->setCode($data['code']);
+        $goods->setCode($code);
         $goods->setAvailable($data['available']);
         $goods->setDescription($data['description']);
                
