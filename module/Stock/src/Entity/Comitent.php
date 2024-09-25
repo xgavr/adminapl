@@ -132,13 +132,13 @@ class Comitent {
     
     /**
      * @ORM\ManyToOne(targetEntity="Stock\Entity\Vt", inversedBy="comitent") 
-     * @ORM\JoinColumn(name="base_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
      */
     private $vt;        
     
     /**
      * @ORM\ManyToOne(targetEntity="ApiMarketPlace\Entity\MarketSaleReport", inversedBy="comitent") 
-     * @ORM\JoinColumn(name="base_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
      */
     private $marketSaleReport;        
     

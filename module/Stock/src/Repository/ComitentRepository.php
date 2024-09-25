@@ -342,7 +342,7 @@ class ComitentRepository extends EntityRepository{
             ->join('m.company', 'c')
             ->leftJoin('m.vt', 'vt', 'WITH', 'm.baseType = '.Movement::DOC_VT) 
             ->leftJoin('vt.order', 'vtOrder')    
-            ->leftJoin('m.marketSaleReport', 'msr', 'WITH', 'm.baseType = '.Movement::DOC_MSR) 
+            ->leftJoin('m.marketSaleReport', 'msr', 'WITH', 'm.docType = '.Movement::DOC_MSR) 
             ->where('m.good = ?1')
             ->setParameter('1', $good->getId())
             ;
