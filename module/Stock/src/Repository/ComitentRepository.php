@@ -295,4 +295,32 @@ class ComitentRepository extends EntityRepository{
         return;
     }
     
+    /**
+     * Товары в торговых площадках
+     * @param array $options
+     */
+    public function goodInComitent($options = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('identity(c.good) as goodId')
+                ->from(ComitentBalance::class, 'c')
+                ->distinct()
+                ->andWhere('c.rest != 0')
+                ;
+        $data = $qb->getQuery()->getResult();
+        
+        if (is_array($options)){
+            if (isset($options['asArray'])){
+                $result = [];
+                foreach ($data as $row){
+                    $result[] = $row['goodId'];
+                }
+                return $result;
+            }
+        }
+        
+        return $data;        
+    }    
 }

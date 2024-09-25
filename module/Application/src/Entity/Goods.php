@@ -83,6 +83,7 @@ class Goods {
     const SEARCH_OE = 4; //поиск по ое
     const SEARCH_COMISS = 5; //товары на комиссии
     const SEARCH_NAME = 6; //поиск по наименованию
+    const SEARCH_TP = 7; //товары в торговых площадках
     
     /**
      * @ORM\Id
@@ -344,6 +345,12 @@ class Goods {
     * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
    */
    private $goodBalances;
+
+   /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\ComitentBalance", mappedBy="good")
+    * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
+   */
+   private $comitentBalances;
 
    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\GoodSupplier", mappedBy="good")
@@ -1096,6 +1103,7 @@ class Goods {
             self::SEARCH_OE => 'Поиск по ОЕ',
             self::SEARCH_NAME => 'Поиск по наименованию',
             self::SEARCH_COMISS => 'На комиссии',
+            self::SEARCH_TP => 'В маркетплейсах',
         ];
     }
 
@@ -1275,6 +1283,15 @@ class Goods {
     public function getBalances()
     {
         return $this->goodBalances;
+    }                
+
+    /**
+     * Returns the array of good comitent balances assigned to this good.
+     * @return array
+     */
+    public function getComitentBalances()
+    {
+        return $this->comitentBalances;
     }                
 
     /**

@@ -442,16 +442,23 @@ class GoodsController extends AbstractActionController
         $office = $this->params()->fromQuery('office');
         $opts = $this->params()->fromQuery('opts', false);
         
-        $query = $this->entityManager->getRepository(Goods::class)
-                        ->presence([
-                            'q' => $q, 
-                            'sort' => $sort, 
-                            'order' => $order, 
-                            'producerId' => $producer,
-                            'groupId' => $group,
-                            'office' => $office,
-                            'accurate' => $accurate,
-                            ]);
+        $params = [
+            'q' => $q, 
+            'sort' => $sort, 
+            'order' => $order, 
+            'producerId' => $producer,
+            'groupId' => $group,
+            'office' => $office,
+            'accurate' => $accurate,            
+        ];
+        
+        if($accurate == Goods::SEARCH_TP){
+            $query = $this->entityManager->getRepository(Goods::class)
+                            ->presenceComitent($params);            
+        } else {
+            $query = $this->entityManager->getRepository(Goods::class)
+                            ->presence($params);
+        }    
         
         $total = count($query->getResult(2));
         

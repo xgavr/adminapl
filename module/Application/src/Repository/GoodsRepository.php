@@ -25,6 +25,7 @@ use Application\Entity\TokenGroup;
 use Application\Entity\Article;
 use Application\Entity\ArticleToken;
 use Application\Entity\GoodToken;
+use Stock\Entity\ComitentBalance;
 
 
 /**
@@ -1714,6 +1715,108 @@ class GoodsRepository extends EntityRepository
                             ;
                 }    
             }
+            
+            if (!empty($params['sort'])){
+                $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);
+            }
+        }
+        
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();            
+    }    
+    
+    
+    /**
+     * Наличие товара у комитента
+     * 
+     * @param array $params
+     * @return Query
+     */
+    public function presenceComitent($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, g.retailCount')
+                ->addSelect('p.id as producerId, p.name as producerName')
+                ->addSelect('off.name as officeName')        
+                ->addSelect('cb.rest, 0 as reserve, 0 as delivery, 0 as vozvrat, cb.rest as available')        
+                ->addSelect('tg.name')
+                ->addSelect('0 as aplRest')
+                ;
+        
+        $queryBuilder->from(ComitentBalance::class, 'cb')
+                ->join('cb.good', 'g')
+                ->where('cb.rest != 0')    
+                ;
+        
+        if (is_array($params)){
+            if (isset($params['q'])){                
+                $codeFilter = new ArticleCode();
+                $q = $codeFilter->filter($params['q']);
+
+                $searchOpt= Goods::SEARCH_CODE;
+                if (isset($params['accurate'])){
+                    $searchOpt= $params['accurate'];
+                }
+//                var_dump($q); exit;
+                if ($q){
+                    
+                    $queryBuilder->resetDQLPart('from')
+                            ->resetDQLPart('join')
+                            ->resetDQLPart('where')
+                            ->from(Goods::class, 'g')
+                            ->leftJoin('g.comitentBalances', 'cb')
+                            ;
+                
+                    switch ($searchOpt){
+                        case Goods::SEARCH_APLID:
+                            $queryBuilder
+                                ->andWhere('g.aplId = :aplId')                           
+                                ->setParameter('aplId', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_ID:
+                            $queryBuilder
+                                ->andWhere('g.id = :id')                           
+                                ->setParameter('id', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_OE:
+                            $orX = $queryBuilder->expr()->orX(
+                                    $queryBuilder->expr()->eq('o.oe', '?4')    
+                                );
+                            $queryBuilder->join('g.oems', 'o')
+                                ->andWhere($orX) 
+                                ->setParameter('4', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_NAME: 
+                            $tg = $this->findTokenGroupByPhrase($params['q']);
+        //                    var_dump($tg); exit;
+                            if (count($tg)){
+                                $inX = $queryBuilder->expr()->in('tg.id', $tg);
+                                $queryBuilder
+                                        ->andWhere($inX)
+                                        ->andWhere('cb.rest != 0') 
+                                        ;                                        
+                            }                                    
+                            break;
+                        default:
+                            $queryBuilder
+                                ->andWhere('g.code = :code')                           
+                                ->setParameter('code', $q)    
+                                ;
+                            break;    
+                    }
+                }   
+            }
+            
+            $queryBuilder->join('g.producer', 'p')    
+                    ->leftJoin('cb.legal', 'off') 
+                    ->leftJoin('g.tokenGroup', 'tg')
+                 ;   
             
             if (!empty($params['sort'])){
                 $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);
