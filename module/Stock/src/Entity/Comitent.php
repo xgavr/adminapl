@@ -130,6 +130,12 @@ class Comitent {
      */
     private $contract;    
     
+    /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Vt", inversedBy="comitent") 
+     * @ORM\JoinColumn(name="base_id", referencedColumnName="id")
+     */
+    private $vt;        
+    
     public function __construct() {
     }
    
@@ -427,5 +433,13 @@ class Comitent {
     public function setContract($contract) 
     {
         $this->contract = $contract;
-    }                         
+    }        
+    
+    /*
+     * @return Vt
+     */    
+    public function getVt() 
+    {
+        return $this->vt;
+    }    
 }

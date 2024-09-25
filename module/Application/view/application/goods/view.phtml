@@ -112,6 +112,7 @@
             <li role="presentation"><a href="#oem" role="tab" id="oem-tab" data-toggle="tab" aria-controls="oem" aria-expanded="true">Номера <span id="oemBadge" class="badge">0</span></a></li>
             <li role="presentation"><a href="#linked" role="tab" id="linked-tab" data-toggle="tab" aria-controls="linked" aria-expanded="true">Применимость <span id="linkedBadge" class="badge">0</span></a></li>
             <li role="presentation"><a href="#prices" role="tab" id="price-tab" data-toggle="tab" aria-controls="prices" aria-expanded="true">Цены <span id="pricesBadge" class="badge"><?= $goods->getFormatMeanPrice()?></span></a></li>
+            <li role="presentation"><a href="#comitent" role="tab" id="comitent-tab" data-toggle="tab" aria-controls="comitent" aria-expanded="true">ТП <span id="comitentBadge" class="badge">0</span></a></li>
         </ul>
 
         <div class="tab-content" id="featureTabContent">
@@ -378,6 +379,84 @@
                     </thead>
                 </table>
             </div>
+            <div class="tab-pane fade" role="tabpanel" id="comitent" aria-labelledby="comitent-tab">
+                <div id="comitentToolbar">
+                    <div class="form-inline" role="form">
+                        <div class="form-group">
+                            <select id="comitentPeriodSelect" class="form-control" name="period">
+                                <option value="date">Дата</option>
+                                <option value="week">Неделя</option>                        
+                                <option value="month">Месяц</option>                        
+                                <option value="number"  selected="true">Год</option>                        
+                            </select>
+                            <input name="dateStart" id="comitentDateStart" style="width: 200px" class="form-control" type="number" value="<?= date('Y')?>">
+                        </div>
+                    </div>
+                </div>
+                <table id="comitentTable" 
+                    data-toggle="table" 
+                    data-url="/comitent/movements/<?= $goods->getId()?>"
+                    data-side-pagination="server"
+                    data-cookie="false"
+                    data-cookie-id-table="comitentSaveId"
+                    data-pagination="true" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#comitentToolbar"
+                    data-show-refresh="true"
+                    data-show-toggle="false"
+                    data-sort-name="docStamp"
+                    data-sort-order="asc"            
+                    data-query-params="comitentQueryParams"
+                    data-response-handler="responseHandler"
+                    data-row-style="comitentRowStyle"
+                    data-classes = "table table-bordered table-hover table-condensed"
+                    data-silent-sort ="true"
+                    >
+                    <thead>
+                        <tr>
+                             <!--<th data-field="docStamp" data-width="150">Дата</th>-->
+                             <th data-field="dateOper" data-width="100" data-sortable="true" data-formatter="dateFormatter">Дата</th>
+                             <th data-field="quantity" data-type="numeric" data-align="right" data-width="30" data-formatter="inFormatter">Приход</th>
+                             <th data-field="quantity" data-type="numeric" data-align="right" data-width="30" data-formatter="outFormatter">Расход</th>
+                             <th data-field="rest" data-type="numeric" data-align="right" data-width="30">Остаток</th>
+                             <th data-field="docKey" data-formatter="movementFormatter">Документ</th>
+                             <th data-field="baseKey" data-formatter="baseFormatter">Партия</th>
+                             <th data-field="legal.name" data-width="50">Офис</th>
+                             <th data-field="company.name" data-width="150">ЮЛ</th>
+                         </tr>                
+                    </thead>
+                </table>
+                <div id="comitentBalanceToolbar">
+                    <div class="form-inline" role="form">
+                    </div>
+                </div>
+                <table id="comitentBalanceTable" 
+                    data-toggle="table" 
+                    data-url ="/comitent/balance/<?= $goods->getId()?>"
+                    data-side-pagination="server"
+                    data-cookie="false"
+                    data-cookie-id-table="balanceSaveId"
+                    data-pagination="false" 
+                    data-page-list="[5, 10, 20, 50]"
+                    data-toolbar="#comitentBalanceToolbar"
+                    data-show-refresh="true"
+                    data-show-toggle="false"
+                    data-query-params="comitentBalanceQueryParams"
+                    data-response-handler="responseHandler"
+                    data-row-style="comitentRowStyle"
+                    data-classes = "table table-bordered table-hover table-condensed"
+                    data-auto-refresh ="true"
+                    data-auto-refresh-interval="60"
+                    data-show-auto-refresh="false"
+                    >
+                    <thead>
+                        <tr>
+                             <th data-field="office">ТП</th>
+                             <th data-field="rest"  data-type="numeric" data-width="20" data-align="right">Остаток</th>
+                         </tr>                
+                    </thead>
+                </table>
+            </div>
             <div class="tab-pane fade" role="tabpanel" id="linked" aria-labelledby="linked-tab">
                 <table id="linkedTable" 
                     data-toggle="table" 
@@ -496,6 +575,67 @@
         $('.editable').editable();
     });
 
+    var $linkedTable = $('#linkedTable');
+    
+    var $oemTable = $('#oemTable');
+
+    var $priceTable = $('#priceTable');
+    
+    var $movementTable = $('#movementTable');
+    var $comitentTable = $('#comitentTable');
+
+    var $optsTable = $('#optsTable');
+
+    $(function () {
+    
+        $linkedTable.on('load-success.bs.table', function (e, res) {
+            $('#linkedBadge').html($linkedTable.bootstrapTable('getOptions').totalRows);
+        });        
+
+        $oemTable.on('load-success.bs.table', function (e, res) {
+            $('#oemBadge').html($oemTable.bootstrapTable('getOptions').totalRows);
+        });        
+
+        $priceTable.on('load-success.bs.table', function (e, res) {
+            $('#priceBadge').html($priceTable.bootstrapTable('getOptions').totalRows);
+        });        
+
+        $movementTable.on('load-success.bs.table', function (e, res) {
+            $('#movementBadge').html($movementTable.bootstrapTable('getOptions').totalRows);
+        });        
+
+        $comitentTable.on('load-success.bs.table', function (e, res) {
+            $('#comitentTable').html($comitentTable.bootstrapTable('getOptions').totalRows);
+        });        
+
+        $optsTable.on('load-success.bs.table', function (e, res) {
+            $('.editable').editable();
+        });        
+
+        $('#priceStatusSelect').change(function (){
+            $('#priceTable').bootstrapTable('refresh');
+        })
+        $('#supplierSelect').change(function (){
+            $('#priceTable').bootstrapTable('refresh');
+        })
+        $('#oemSourceSelect').change(function (){
+            $('#oemTable').bootstrapTable('refresh');
+        })
+        $('select[name="office"]').change(function (){
+            $('.st-combined-modal-show').attr('modal-url', '/st/combined-form/<?= $goods->getId()?>?office='+$(this).val());
+            $('#movementTable').bootstrapTable('refresh');
+        })
+        $('#monthSelect').change(function (){
+            $('#movementTable').bootstrapTable('refresh', {silent: true});
+        })
+        $('#dateStart').change(function (){
+            $('#movementTable').bootstrapTable('refresh', {silent: true});
+        })
+        $('#periodSelect').change(function (e) {
+            $('#dateStart').attr('type', $(this).val());
+        });
+    });
+
     $(document).on('click', '.reserve-show', function (e) {
         var url = $(e.currentTarget).attr('modal-url');
         $.ajax({
@@ -562,31 +702,6 @@
         }        
     }); 
 
-    $(function () {
-        $('#priceStatusSelect').change(function (){
-            $('#priceTable').bootstrapTable('refresh');
-        })
-        $('#supplierSelect').change(function (){
-            $('#priceTable').bootstrapTable('refresh');
-        })
-        $('#oemSourceSelect').change(function (){
-            $('#oemTable').bootstrapTable('refresh');
-        })
-        $('select[name="office"]').change(function (){
-            $('.st-combined-modal-show').attr('modal-url', '/st/combined-form/<?= $goods->getId()?>?office='+$(this).val());
-            $('#movementTable').bootstrapTable('refresh');
-        })
-        $('#monthSelect').change(function (){
-            $('#movementTable').bootstrapTable('refresh', {silent: true});
-        })
-        $('#dateStart').change(function (){
-            $('#movementTable').bootstrapTable('refresh', {silent: true});
-        })
-        $('#periodSelect').change(function (e) {
-            $('#dateStart').attr('type', $(this).val());
-        });
-    });
-
     function tabQueryParams(tab, params) {
         $(tab +'Toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
@@ -620,8 +735,19 @@
         return tabQueryParams('#movements', params);
     }
     
+    function comitentQueryParams(params) {
+        params.month = $('#comitentMonthSelect').val();
+        params.dateStart = $('#comitentDateStart').val();
+        params.period = $('#comitentPeriodSelect').val();
+        return tabQueryParams('#comitent', params);
+    }
+    
     function balanceQueryParams(params) {
         return tabQueryParams('#balance', params);
+    }
+
+    function comitentBalanceQueryParams(params) {
+        return tabQueryParams('#comitentBalance', params);
     }
 
     function priceQueryParams(params) {
@@ -634,37 +760,6 @@
         return res;
     }       
         
-    var linkedTable = $('#linkedTable').bootstrapTable({
-        onLoadSuccess: function(res){
-            $('#linkedBadge').html($('#linkedTable').bootstrapTable('getOptions').totalRows)
-        }
-    });
-    
-    var oemTable = $('#oemTable').bootstrapTable({
-        onLoadSuccess: function(res){
-            $('#oemBadge').html($('#oemTable').bootstrapTable('getOptions').totalRows)
-        }
-    });
-
-    var priceTable = $('#priceTable').bootstrapTable({
-        onLoadSuccess: function(res){
-            $('#priceBadge').html($('#priceTable').bootstrapTable('getOptions').totalRows)
-        }
-    });
-    
-    var movementTable = $('#movementTable').bootstrapTable({
-        onLoadSuccess: function(res){
-            $('#movementBadge').html($('#movementTable').bootstrapTable('getOptions').totalRows);
-//            $('#balanceTable').bootstrapTable('refreshOptions', {url: "/goods/balance/<?= $goods->getId()?>", silent: true});
-        }
-    });
-
-    var optsTable = $('#optsTable').bootstrapTable({
-        onLoadSuccess: function(res){
-            $('.editable').editable();
-        }
-    });
-
     function sourceFormatter(value){
         switch(value){
             <?php foreach ($oemSources as $key => $value):?>
@@ -711,6 +806,24 @@
     }    
 
     function movementRowStyle(row, index) {
+        if (row.status == <?= Movement::STATUS_RETIRED?>) {
+            return {               
+                classes: 'retired'
+            };   
+        }
+        if (row.status == <?= Movement::STATUS_COMMISSION?>) {
+            return {               
+                classes: 'info'
+            };   
+        }
+        return {
+          css: {
+//            color: 'blue'
+          }
+        };   
+    }
+    
+    function comitentRowStyle(row, index) {
         if (row.status == <?= Movement::STATUS_RETIRED?>) {
             return {               
                 classes: 'retired'

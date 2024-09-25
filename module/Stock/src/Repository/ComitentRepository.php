@@ -323,4 +323,113 @@ class ComitentRepository extends EntityRepository{
         
         return $data;        
     }    
+    
+    /**
+     * Движения товара
+     * 
+     * @param Goods $good
+     * @param array $params
+     * @return Query
+     */
+    public function movements($good, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('m, l, c, vt, vtOrder')
+            ->from(Comitent::class, 'm')
+            ->join('m.legal', 'l')    
+            ->join('m.company', 'c')
+            ->leftJoin('m.vt', 'vt', 'WITH', 'm.baseType = '.Movement::DOC_VT) 
+            ->leftJoin('vt.order', 'vtOrder')    
+            ->where('m.good = ?1')
+            ->setParameter('1', $good->getId())
+            ;
+        
+        if (is_array($params)){
+            if (!empty($params['sort'])){
+                $sort = $params['sort'];
+                if ($sort == 'dateOper'){
+                    $sort = 'docStamp';
+                }
+                $queryBuilder->addOrderBy('m.'.$sort, $params['order']);
+            }
+            if (!empty($params['legal'])){
+                if (is_numeric($params['legal'])){
+                    $queryBuilder->andWhere('m.legal = ?2')
+                        ->setParameter('2', $params['office']);
+                }    
+            }
+            if (!empty($params['startDate'])){
+                $queryBuilder->andWhere('m.dateOper >= :startDate')
+                        ->setParameter('startDate', $params['startDate']);
+            }
+            if (!empty($params['endDate'])){
+                $queryBuilder->andWhere('m.dateOper <= :endDate')
+                        ->setParameter('endDate', $params['endDate']);
+            }
+            if (!empty($params['month'])){
+                if (is_numeric($params['month'])){
+                    $queryBuilder->andWhere('MONTH(m.dateOper) = :month')
+                            ->setParameter('month', $params['month']);
+                }    
+            }
+            if (!empty($params['year'])){
+                if (is_numeric($params['year'])){
+                    $queryBuilder->andWhere('YEAR(m.dateOper) = :year')
+                            ->setParameter('year', $params['year']);
+                }    
+            }
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery();            
+    }   
+    
+    /**
+    * Остаток товара на момент времени
+    * @param integer $goodId
+     *@param integer $docType 
+     *@param integer $docId 
+     *@param integer $legalId 
+     * @param integer $companyId
+    * @return integer
+    */
+    public function stampRest($goodId, $docType, $docId, $legalId = null, $companyId = null)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $register = $entityManager->getRepository(Register::class)
+                ->findOneBy(['docType' => $docType, 'docId' => $docId]);
+                
+        if ($register){
+            $qb = $entityManager->createQueryBuilder();
+            $qb->select('sum(m.quantity) as rSum')
+                    ->from(Comitent::class, 'm')
+                    ->where('m.good = ?1')
+                    ->andWhere('m.docStamp <= ?2') 
+                    ->andWhere('m.docStamp > 0')
+                    ->setParameter('1', $goodId)
+                    ->setParameter('2', $register->getDocStamp())
+                    ;
+            if (!empty($legalId)){
+                if (is_numeric($legalId)){
+                    $qb->andWhere('m.olegal = ?3');
+                    $qb->setParameter('3', $legalId);
+                }    
+            }
+
+            if (!empty($companyId)){
+                if (is_numeric($companyId)){
+                    $qb->andWhere('m.company = ?4');
+                    $qb->setParameter('4', $companyId);
+                }    
+            }
+
+            $result = $qb->getQuery()->getOneOrNullResult();
+
+            return $result['rSum'];
+        }
+        return;
+    }            
+    
 }

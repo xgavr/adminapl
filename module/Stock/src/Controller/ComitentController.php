@@ -18,6 +18,8 @@ use Stock\Form\MsrGoodForm;
 use Application\Entity\Goods;
 use Stock\Form\MarketSaleReportForm;
 use Admin\Filter\ArrayKeysCamelCase;
+use Stock\Entity\Comitent;
+use Stock\Entity\ComitentBalance;
 
 class ComitentController extends AbstractActionController
 {
@@ -394,4 +396,113 @@ class ComitentController extends AbstractActionController
         );           
     }            
     
+    public function movementsAction()
+    {
+        
+        $goodsId = (int)$this->params()->fromRoute('id', -1);
+
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $search = $this->params()->fromQuery('search');
+        $source = $this->params()->fromQuery('source');
+        $legal = $this->params()->fromQuery('legal');
+        $sort = $this->params()->fromQuery('sort', 'docStamp');
+        $order = $this->params()->fromQuery('order', 'ASC');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period');
+        
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
+        }    
+        
+        // Validate input parameter
+        if ($goodsId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->find($goodsId);
+
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $query = $this->entityManager->getRepository(Comitent::class)
+                        ->movements($goods, ['q' => $search, 'source' => $source, 
+                            'sort' => $sort, 'order' => $order, 'legal' => $legal,
+                            'startDate' => $startDate, 'endDate' => $endDate]);
+
+        $total = count($query->getResult(2));
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        foreach ($result as $key=>$value){
+            $result[$key]['rest'] = $this->entityManager->getRepository(Comitent::class)
+                ->stampRest($goodsId, $value['docType'], $value['docId'], $legal);
+        }
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }
+
+    public function balanceAction()
+    {
+        
+        $goodsId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($goodsId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->find($goodsId);
+
+        if ($goods == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $rests = $this->entityManager->getRepository(ComitentBalance::class)
+                ->findBy(['good' => $goods->getId()]);
+        
+        $result = [];
+        foreach ($rests as $rest){
+            $result[] = [
+                'legal' => $rest->getLegal()->getName().' ('.$rest->getCompany()->getName().')',
+                'rest' => $rest->getRest(),
+            ];
+        }
+        
+        $total = count($result);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }    
 }
