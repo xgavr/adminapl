@@ -336,7 +336,7 @@ class ComitentRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m, l, c, vt, vtOrder')
+        $queryBuilder->select('m, l, c, vt, vtOrder, msr')
             ->from(Comitent::class, 'm')
             ->join('m.legal', 'l')    
             ->join('m.company', 'c')
