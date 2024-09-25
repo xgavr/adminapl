@@ -5,6 +5,7 @@
     use Stock\Entity\Reserve;
     use Application\Filter\GoodAvailable;
     use Application\Entity\Goods;
+    use ApiMarketPlace\Entity\MarketSaleReport;
     
     $priceCols = $goodsManager->priceCols($goods);
     $retailCount = ($goods->getRetailCount()) ? $goods->getRetailCount():'';
@@ -847,7 +848,7 @@
         };   
     }
     
-    function docFormatter(docType, docId, docKey){
+    function docFormatter(docType, docId, docKey, row){
         switch(docType){
             case <?= Movement::DOC_ORDER?>: 
 //                        return "<a href='/order/intro/"+docId+"' target='_blank'>Заказ №"+docId+"</a>";
@@ -865,13 +866,18 @@
             case <?= Movement::DOC_VTP?>: 
                         return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
             case <?= Movement::DOC_MSR?>: 
+                    if (row.marketSaleReport.reportType === <?= MarketSaleReport::TYPE_REPORT?>){    
                         return "<a href='#' class='msrc-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет №"+docId+"</a>";
+                    }    
+                    if (row.marketSaleReport.reportType === <?= MarketSaleReport::TYPE_COMPENSATION?>){    
+                        return "<a href='#' class='msrc-modal-show' modal-url='/comitent/report-form/"+docId+"'>Отчет №"+docId+"</a>";
+                    }    
             default: return docKey;            
         }
     }
         
     function movementFormatter(value, row){
-        return docFormatter(row.docType, row.docId, value);
+        return docFormatter(row.docType, row.docId, value, row);
     }
     
     function inFormatter(value){
@@ -903,7 +909,7 @@
     }
 
     function baseFormatter(value, row){
-        return docFormatter(row.baseType, row.baseId, value);
+        return docFormatter(row.baseType, row.baseId, value, row);
     }
     
     function baseSupplierFormatter(value, row){
@@ -932,7 +938,7 @@
         }
         if (row.vt){
             if (row.vt.order){
-                return docFormatter('<?= Movement::DOC_ORDER?>', row.vt.order.id, '');
+                return docFormatter('<?= Movement::DOC_ORDER?>', row.vt.order.id, '', row);
             }
         }
         return value;
