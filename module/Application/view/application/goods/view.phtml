@@ -864,6 +864,8 @@
                         return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание №"+docId+"</a>";
             case <?= Movement::DOC_VTP?>: 
                         return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
+            case <?= Movement::DOC_MSR?>: 
+                        return "<a href='#' class='msrc-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет №"+docId+"</a>";
             default: return docKey;            
         }
     }

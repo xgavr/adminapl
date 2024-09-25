@@ -136,6 +136,12 @@ class Comitent {
      */
     private $vt;        
     
+    /**
+     * @ORM\ManyToOne(targetEntity="ApiMarketPlace\Entity\MarketSaleReport", inversedBy="comitent") 
+     * @ORM\JoinColumn(name="base_id", referencedColumnName="id")
+     */
+    private $marketSaleReport;        
+    
     public function __construct() {
     }
    
@@ -441,5 +447,13 @@ class Comitent {
     public function getVt() 
     {
         return $this->vt;
+    }    
+
+    /*
+     * @return MarketSaleReport
+     */    
+    public function getMsr() 
+    {
+        return $this->marketSaleReport;
     }    
 }
