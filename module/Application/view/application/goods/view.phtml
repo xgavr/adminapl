@@ -451,7 +451,7 @@
                     >
                     <thead>
                         <tr>
-                             <th data-field="office">ТП</th>
+                             <th data-field="legal">ТП</th>
                              <th data-field="rest"  data-type="numeric" data-width="20" data-align="right">Остаток</th>
                          </tr>                
                     </thead>
@@ -605,7 +605,7 @@
         });        
 
         $comitentTable.on('load-success.bs.table', function (e, res) {
-            $('#comitentTable').html($comitentTable.bootstrapTable('getOptions').totalRows);
+            $('#comitentBadge').html($comitentTable.bootstrapTable('getOptions').totalRows);
         });        
 
         $optsTable.on('load-success.bs.table', function (e, res) {
@@ -629,10 +629,16 @@
             $('#movementTable').bootstrapTable('refresh', {silent: true});
         })
         $('#dateStart').change(function (){
-            $('#movementTable').bootstrapTable('refresh', {silent: true});
+            $movementTable.bootstrapTable('refresh', {silent: true});
         })
         $('#periodSelect').change(function (e) {
             $('#dateStart').attr('type', $(this).val());
+        });
+        $('#comitentDateStart').change(function (){
+            $comitentTable.bootstrapTable('refresh', {silent: true});
+        })
+        $('#comitentPeriodSelect').change(function (e) {
+            $('#comitentDateStart').attr('type', $(this).val());
         });
     });
 
