@@ -457,14 +457,19 @@ class ComitentController extends AbstractActionController
         }
 
         $result = $query->getResult(2);
+        $totalIn = $totalOut = $totalRest = 0;
         foreach ($result as $key=>$value){
             $result[$key]['rest'] = $this->entityManager->getRepository(Comitent::class)
                 ->stampRest($goodsId, $value['docType'], $value['docId'], $legal);
+            $totalIn += ($value['quantity'] >= 0) ? $value['quantity']:0;
+            $totalOut += ($value['quantity'] <= 0) ? -$value['quantity']:0;
         }
         
         return new JsonModel([
             'total' => $total,
             'rows' => $result,
+            'totalIn' => $totalIn,
+            'totalOut' => $totalOut,
         ]);                  
     }
 
