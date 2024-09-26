@@ -886,7 +886,13 @@ class GoodsController extends AbstractActionController
                             'sort' => $sort, 'order' => $order, 'office' => $office,
                             'startDate' => $startDate, 'endDate' => $endDate]);
 
-        $total = count($query->getResult(2));
+        $fullResult = $query->getResult(2);
+        $totalIn = $totalOut = $totalRest = 0;
+        $total = count($fullResult);
+        foreach ($fullResult as $key=>$value){
+            $totalIn += ($value['quantity'] >= 0) ? $value['quantity']:0;
+            $totalOut += ($value['quantity'] <= 0) ? -$value['quantity']:0;
+        }
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -896,12 +902,9 @@ class GoodsController extends AbstractActionController
         }
 
         $result = $query->getResult(2);
-        $totalIn = $totalOut = $totalRest = 0;
         foreach ($result as $key=>$value){
             $result[$key]['rest'] = $this->entityManager->getRepository(Movement::class)
                 ->stampRest($goodsId, $value['docType'], $value['docId'], $office);
-            $totalIn += ($value['quantity'] >= 0) ? $value['quantity']:0;
-            $totalOut += ($value['quantity'] <= 0) ? -$value['quantity']:0;
         }
         
         return new JsonModel([
