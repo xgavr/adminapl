@@ -867,7 +867,7 @@
                         return "<a href='#' class='vtp-modal-show' modal-url='/vtp/edit-form/"+docId+"'>Возврат поставщику №"+docId+"</a>";
             case <?= Movement::DOC_MSR?>: 
                     if (row.marketSaleReport.reportType === <?= MarketSaleReport::TYPE_REPORT?>){    
-                        return "<a href='#' class='msrc-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о реализациях №"+docId+"</a>";
+                        return "<a href='#' class='msrc-modal-show' modal-url='/comitent/edit-form/"+docId+"'>Отчет о реализации №"+docId+"</a>";
                     }    
                     if (row.marketSaleReport.reportType === <?= MarketSaleReport::TYPE_COMPENSATION?>){    
                         return "<a href='#' class='msrc-modal-show' modal-url='/comitent/report-form/"+docId+"'>Отчет о компенсациях №"+docId+"</a>";

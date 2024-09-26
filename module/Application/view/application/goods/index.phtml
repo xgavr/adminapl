@@ -59,6 +59,7 @@ $this->pageBreadcrumbs()->setItems([
             data-query-params="queryParams"
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
+            data-row-style="rowStyle"
             >
             <thead>
                 <tr>
@@ -123,9 +124,17 @@ $this->pageBreadcrumbs()->setItems([
         });
     }
 
+    function rowStyle(row){
+        var retired = 'tablerow';
+        return {classes: retired};
+    }
     
     $(function () {
         getCookies('goodsSaveId');
+        
+        $table.on('load-success.bs.table', function (e, res) {
+            tableRowClick();
+        });        
         
         $("[data-toggle='tooltip']").tooltip();
         

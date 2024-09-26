@@ -105,6 +105,10 @@
     }
 
     $(function () {        
+        $table.on('load-success.bs.table', function (e, res) {
+            tableRowClick();
+        });        
+
         $(document).on('change', '#marketplaceSelect', function (e) {
             refreshTable();
         });
