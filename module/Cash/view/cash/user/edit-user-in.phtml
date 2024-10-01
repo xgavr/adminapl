@@ -212,6 +212,9 @@ $form->prepare();
                     $('#userInModal').modal('hide');
                     //window.location.reload();
                     $('#table').bootstrapTable('refresh', {'silent':true});
+                    if ($('#cashdoctable').length){
+                        $('#cashdoctable').bootstrapTable('refresh', {'silent':true});
+                    }    
                 } else {
                     $('#userInModal .modal-content').html(data);                    
                 }    

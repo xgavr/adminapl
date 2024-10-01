@@ -13,14 +13,8 @@ use Laminas\View\Model\JsonModel;
 use Cash\Entity\Cash;
 use Cash\Entity\CashDoc;
 use Cash\Form\CashForm;
-use Cash\Form\CashInForm;
-use Cash\Form\CashOutForm;
 use Company\Entity\Office;
-use Application\Entity\Supplier;
-use Company\Entity\Cost;
-use User\Entity\User;
-use Company\Entity\Legal;
-
+use Application\Entity\Order;
 
 class IndexController extends AbstractActionController
 {
@@ -172,5 +166,44 @@ class IndexController extends AbstractActionController
             'order' => $order,
         ]);                
     }
+
+    public function orderContentAction()
+    {       
+        $orderId = $this->params()->fromRoute('id', -1);
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order', 'DESC');
+        
+        if ($orderId <= 0){
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }    
+        
+        $params = [
+            'sort' => $sort, 'order' => $order, 'orderId' => $orderId,
+        ];
+        
+        $query = $this->entityManager->getRepository(CashDoc::class)
+                        ->cashDocQuery($params);
+        
+        $fullResult = $query->getResult(2);
+        $total = count($fullResult);
+                
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult(2);
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);                  
+    }
+    
 }
 

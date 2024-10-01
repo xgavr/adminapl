@@ -356,8 +356,9 @@ class TillController extends AbstractActionController
         $cashDocId = (int)$this->params()->fromRoute('id', -1);
         $cashId = (int)$this->params()->fromQuery('cash', -1);
         $statementId = (int)$this->params()->fromQuery('statement', -1);
+        $orderId = (int)$this->params()->fromQuery('order', -1);
         
-        $cashDoc = $statement = null;
+        $cashDoc = $statement = $order = null;
         
         if ($cashDocId > 0){
             $cashDoc = $this->entityManager->getRepository(CashDoc::class)
@@ -369,13 +370,18 @@ class TillController extends AbstractActionController
                     ->find($statementId);
         }    
         
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }    
+        
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $cashId = $data['cash'];
         }
         
         $form = new CashInForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form, $cashDoc, $cashId, $statementId);
+        $this->cashManager->cashFormOptions($form, $cashDoc, $cashId, $statementId, $orderId);
         
         if ($this->getRequest()->isPost()) {
             
@@ -409,6 +415,7 @@ class TillController extends AbstractActionController
             'form' => $form,
             'cashDoc' => $cashDoc,
             'statement' => $statement,
+            'order' => $order,
         ]);        
     }        
     
@@ -417,6 +424,7 @@ class TillController extends AbstractActionController
         $cashDocId = (int)$this->params()->fromRoute('id', -1);
         $cashId = (int)$this->params()->fromQuery('cash', -1);
         $statementId = (int)$this->params()->fromQuery('statement', -1);
+        $orderId = (int)$this->params()->fromQuery('order', -1);
         
         $cashDoc = $statement = null;
         
@@ -430,8 +438,13 @@ class TillController extends AbstractActionController
                     ->find($statementId);
         }    
         
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }    
+        
         $form = new CashOutForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form, $cashDoc, $cashId, $statementId);
+        $this->cashManager->cashFormOptions($form, $cashDoc, $cashId, $statementId, $orderId);
         
         if ($this->getRequest()->isPost()) {
             
@@ -468,6 +481,7 @@ class TillController extends AbstractActionController
             'form' => $form,
             'cashDoc' => $cashDoc,
             'statement' => $statement,
+            'order' => $order,
         ]);        
     }     
     

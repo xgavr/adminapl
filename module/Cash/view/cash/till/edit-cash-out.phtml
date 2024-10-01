@@ -236,6 +236,9 @@ $form->prepare();
                     if ($('#mutualtable').length){
                         $('#mutualtable').bootstrapTable('refresh', {'silent':true});
                     }    
+                    if ($('#cashdoctable').length){
+                        $('#cashdoctable').bootstrapTable('refresh', {'silent':true});
+                    }    
                 } else {
                     $('#cashOutModal .modal-content').html(data);                    
                 }    

@@ -121,14 +121,25 @@ $tag = md5(time());
 </div>
 
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-6">
         <div id="cashdoctoolbar">
             <div class="form-inline" role="form">
-                <button <?= $cashDocDisabled?> class="btn btn-default btn-sm cash-doc-modal-show" type="button" modal-url="/cash/edit-form?order=<?= $order->getId()?>">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Оплата
+                <button <?= $cashDocDisabled?> class="btn btn-info btn-sm cash-in-modal-show" type="button" 
+                    modal-url="/till/edit-cash-in?order=<?= $order->getId()?>" title="Поступление в кассу">
+                    <span class="glyphicon glyphicon-rub" aria-hidden="true"></span> +
                 </button>                
-                <button <?= $cashDocDisabled?> class="btn btn-default btn-sm cash-doc-modal-show" type="button" modal-url="/cash/edit-form?order=<?= $order->getId()?>">
-                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Возврат
+                <button <?= $cashDocDisabled?> class="btn btn-info btn-sm cash-out-modal-show" type="button" 
+                    modal-url="/till/edit-cash-out?order=<?= $order->getId()?>" title="Списание из кассы">
+                    <span class="glyphicon glyphicon-rub" aria-hidden="true"></span> -
+                </button>  
+                
+                <button <?= $cashDocDisabled?> class="btn btn-default btn-sm user-in-modal-show" type="button" 
+                    modal-url="/accountant/edit-user-in/?order=<?= $order->getId()?>" title="Поступление в подотчет">
+                    <span class="glyphicon glyphicon-ruble" aria-hidden="true"></span> +
+                </button>                
+                <button <?= $cashDocDisabled?> class="btn btn-default btn-sm user-out-modal-show" type="button" 
+                    modal-url="/accountant/edit-user-out/?order=<?= $order->getId()?>"  title="Списание с подотчета">
+                    <span class="glyphicon glyphicon-ruble" aria-hidden="true"></span> -
                 </button>                
             </div>
         </div>
@@ -151,22 +162,22 @@ $tag = md5(time());
             <thead>
                 <tr>
                     <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="100">Номер</th>
-                    <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="100">Дата</th>
+                    <th data-field="dateOper" data-sortable="true" data-formatter="dateFormatter" data-width="100">Дата</th>
                     <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
+                    <th data-field='kind' data-sortable="false" data-formatter="cashDocKindFormatter">Операция</th>
                     <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="amountFormatter">Сумма</th>
-                    <th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>
-                    <th data-field='office.name' data-sortable="false">Склад</th>
-                    <th data-field='status' data-sortable="false" data-formatter="statusFormatter">Статус</th>
+                    <!--<th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>-->
+                    <!--<th data-field='office.name' data-sortable="false">Склад</th>-->
                     <th data-field='comment' data-sortable="false">Примечание</th>
-                    <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
+                    <th data-field="" data-formatter="cashDocActiveFormatter" data-width="10"></th>
                  </tr>                
             </thead>
         </table>
     </div>
-</div>    
+<!--</div>-->    
 
-<div class="row">
-    <div class="col-xs-12">
+<!--<div class="row">-->
+    <div class="col-xs-6">
         <div id="vttoolbar">
             <div class="form-inline" role="form">
                 <button <?= $vtDisabled?> class="btn btn-default btn-sm vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
@@ -196,9 +207,9 @@ $tag = md5(time());
                     <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="100">Дата</th>
                     <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
                     <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="amountFormatter">Сумма</th>
-                    <th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>
+                    <!--<th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>-->
                     <th data-field='office.name' data-sortable="false">Склад</th>
-                    <th data-field='status' data-sortable="false" data-formatter="statusFormatter">Статус</th>
+<!--                    <th data-field='status' data-sortable="false" data-formatter="statusFormatter">Статус</th>-->
                     <th data-field='comment' data-sortable="false">Примечание</th>
                     <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
                  </tr>                
@@ -411,7 +422,7 @@ $tag = md5(time());
     }
 
     function vtRowStyle(row){
-        var retired = 'tablerow';
+        var retired = 'vttablerow';
         if (row.status === <?= Vt::STATUS_RETIRED?>){
            retired += ' retired';
         }
@@ -432,7 +443,7 @@ $tag = md5(time());
     }
     
     function cashdocRowStyle(row){
-        var retired = 'tablerow';
+        var retired = 'cashdoctablerow';
         if (row.status === <?= CashDoc::STATUS_RETIRED?>){
            retired += ' retired';
         }
@@ -507,14 +518,50 @@ $tag = md5(time());
         return (Math.round(value*100)/100).toFixed(2);
     }    
     
+    function cashDocKindFormatter(value){
+        var result = <?= Encoder::encode(CashDoc::getKindList())?>;
+        return result[value];
+    }
+
     function statusFormatter(value){
         var result = <?= Encoder::encode(Vt::getStatusList())?>;
         return result[value];
     }
 
+    function cashDocActiveFormatter(value, row){
+        
+        var btn = '<button';
+        btn += ' type="button"';
+
+        var url = '/till/edit-cash-in/'+row.id;
+        
+        if (row.kind<10){
+            btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
+        }    
+        if (row.kind>10){
+            url = '/till/edit-cash-out/'+row.id;
+            btn += ' class="btn btn-default btn-xs cash-out-modal-show"';
+        }    
+        if (row.kind<10 && row.userId > 0){
+            url = '/accountant/edit-user-in/'+row.id;
+            btn += ' class="btn btn-default btn-xs user-in-modal-show"';
+        }    
+        if (row.kind>10 && row.userId > 0){
+            url = '/accountant/edit-user-out/'+row.id;
+            btn += ' class="btn btn-default btn-xs user-out-modal-show"';
+        }    
+
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        return btn;
+    }    
+    
     function activeFormatter(value, row){
         var url = '/vt/edit-form/'+row.id;
-        btn = '<button';
+        var btn = '<button';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs vt-modal-show"';
         btn += ' aria-label="Left Align"'; 

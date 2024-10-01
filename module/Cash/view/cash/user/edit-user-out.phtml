@@ -231,6 +231,9 @@ $form->prepare();
                     $('#userOutModal').modal('hide');
                     //window.location.reload();
                     $('#table').bootstrapTable('refresh', {'silent':true});
+                    if ($('#cashdoctable').length){
+                        $('#cashdoctable').bootstrapTable('refresh', {'silent':true});
+                    }    
                 } else {
                     $('#userOutModal .modal-content').html(data);                    
                      $('#user-out-submit').prop('disabled', false);

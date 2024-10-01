@@ -1117,8 +1117,10 @@ class CashManager {
      * @param CashDoc $cashDoc
      * @param integer $cashId
      * @param integer $statementId
+     * @param integer $orderId
      */
-    public function cashFormOptions($form, $cashDoc = null, $cashId = null, $statementId = null)
+    public function cashFormOptions($form, $cashDoc = null, $cashId = null, 
+            $statementId = null, $orderId = null)
     {
         $user = $this->logManager->currentUser();
         if ($form->has('cash')){
@@ -1143,6 +1145,15 @@ class CashManager {
                         if ($statement->getAmount() < 0){
                             $form->get('kind')->setValue(CashDoc::KIND_OUT_SUPPLIER);
                         }
+                    }
+                }
+                if ($orderId > 0){ //из заказа
+                    $order = $this->entityManager->getRepository(Order::class)
+                            ->find($orderId);
+                    if ($order){
+                        $form->get('order')->setValue($order->getId());
+                        $form->get('orderApl')->setValue($order->getAplId());
+                        $form->get('phone')->setValue($order->getContact()->getPhoneAsString());
                     }
                 }
             }           

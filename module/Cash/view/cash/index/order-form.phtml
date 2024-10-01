@@ -1,10 +1,13 @@
 <?php
 use Application\Entity\Order;
 use Cash\Entity\CashDoc;
+use Laminas\Json\Encoder;
 
 if ($order){
     $docName = '№ '.$order->getDocNo().' от  '.date('d.m.Y', strtotime($order->getDocDate()));
 }
+
+$cashDocDisabled = (!empty($order)) ? '':'disabled';
 
 ?>
 
@@ -16,14 +19,28 @@ if ($order){
 </div>
 <div class="row">
     <div class="col-xs-12">
-        <div id="vttoolbar">
+        <div id="cashdoctoolbar">
             <div class="form-inline" role="form">
-                <button class="btn btn-default vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                <button <?= $cashDocDisabled?> class="btn btn-info btn-sm cash-in-modal-show" type="button" 
+                    modal-url="/till/edit-cash-in?order=<?= $order->getId()?>" title="Поступление в кассу">
+                    <span class="glyphicon glyphicon-rub" aria-hidden="true"></span> +
+                </button>                
+                <button <?= $cashDocDisabled?> class="btn btn-info btn-sm cash-out-modal-show" type="button" 
+                    modal-url="/till/edit-cash-out?order=<?= $order->getId()?>" title="Списание из кассы">
+                    <span class="glyphicon glyphicon-rub" aria-hidden="true"></span> -
+                </button>  
+                
+                <button <?= $cashDocDisabled?> class="btn btn-default btn-sm user-in-modal-show" type="button" 
+                    modal-url="/accountant/edit-user-in/?order=<?= $order->getId()?>" title="Поступление в подотчет">
+                    <span class="glyphicon glyphicon-ruble" aria-hidden="true"></span> +
+                </button>                
+                <button <?= $cashDocDisabled?> class="btn btn-default btn-sm user-out-modal-show" type="button" 
+                    modal-url="/accountant/edit-user-out/?order=<?= $order->getId()?>"  title="Списание с подотчета">
+                    <span class="glyphicon glyphicon-ruble" aria-hidden="true"></span> -
                 </button>                
             </div>
         </div>
-        <table id="vttable" 
+        <table id="cashdoctable" 
             data-toggle="cashdoctable" 
             data-url="/cash/order-content/<?= ($order) ? $order->getId():"" ?>"
             data-side-pagination="server"
@@ -40,14 +57,15 @@ if ($order){
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-sortable="false" data-formatter="cashDocIdFormatter" data-width="100">Номер</th>
-                     <th data-field="dateOper" data-sortable="true" data-formatter="cashDocDateFormatter" data-width="100">Дата</th>
-                     <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
-                     <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="cashDocAmountFormatter">Сумма</th>
-                     <th data-field='orderAplId' data-sortable="false" data-formatter="cashDocLinkFormatter">Заказ</th>
-                     <th data-field='office.name' data-sortable="false">Офис</th>
-                     <th data-field='comment' data-sortable="false">Примечание</th>
-                     <th data-field="" data-formatter="cashDocActiveFormatter" data-width="10"></th>
+                    <th data-field="id" data-sortable="false" data-formatter="cashDocIdFormatter" data-width="100">Номер</th>
+                    <th data-field="dateOper" data-sortable="true" data-formatter="cashDocDateFormatter" data-width="100">Дата</th>
+                    <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
+                    <th data-field='kind' data-sortable="false" data-formatter="cashDocKindFormatter">Операция</th>
+                    <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="cashDocAmountFormatter">Сумма</th>
+                    <!--<th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>-->
+                    <!--<th data-field='office.name' data-sortable="false">Склад</th>-->
+                    <th data-field='comment' data-sortable="false">Примечание</th>
+                    <th data-field="" data-formatter="cashDocActiveFormatter" data-width="10"></th>
                  </tr>                
             </thead>
         </table>
@@ -56,20 +74,16 @@ if ($order){
 
 <script>
     $( document ).ready(function() {        
-        $('#cashdoctable').bootstrapTable({
-            onLoadSuccess: function(res){
-                
-            }            
-        });         
+        $cashdoctable = $('#cashdoctable').bootstrapTable();         
     });
     
     function cashRefreshTable(){
         $('#cashdoctable').bootstrapTable('refresh');
     }
     
-    function cashRowStyle(row){
-        var retired = 'tablerow';
-        if (row.status == '<?= CashDoc::STATUS_RETIRED ?>'){
+    function cashDocRowStyle(row){
+        var retired = 'cashdoctablerow';
+        if (row.status === <?= CashDoc::STATUS_RETIRED ?>){
            retired += ' retired';
         }
         return {classes: retired};
@@ -104,26 +118,38 @@ if ($order){
         return $.format.date(date, "dd.MM.yyyy");
     }
     
-    function cashDocLinkFormatter(value, row){
-        if (!value){
-            value = '---';
-        }
-        return [
-            '<div class="pull-left">',
-            '<a href="/order/intro/' + row.id + '" target="_blank">' + value + '</a>',
-            '</div>'
-        ].join(''); 
-    }    
+    function cashDocKindFormatter(value){
+        var result = <?= Encoder::encode(CashDoc::getKindList())?>;
+        return result[value];
+    }
     
     function cashDocAmountFormatter(value){
         return (Math.round(value*100)/100).toFixed(2);
     }    
     
     function cashDocActiveFormatter(value, row){
-        var url = '/vt/edit-form/'+row.id;
-        btn = '<button';
+        
+        var btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-default btn-xs vt-modal-show"';
+
+        var url = '/till/edit-cash-in/'+row.id;
+        
+        if (row.kind<10){
+            btn += ' class="btn btn-default btn-xs cash-in-modal-show"';
+        }    
+        if (row.kind>10){
+            url = '/till/edit-cash-out/'+row.id;
+            btn += ' class="btn btn-default btn-xs cash-out-modal-show"';
+        }    
+        if (row.kind<10 && row.userId > 0){
+            url = '/accountant/edit-user-in/'+row.id;
+            btn += ' class="btn btn-default btn-xs user-in-modal-show"';
+        }    
+        if (row.kind>10 && row.userId > 0){
+            url = '/accountant/edit-user-out/'+row.id;
+            btn += ' class="btn btn-default btn-xs user-out-modal-show"';
+        }    
+
         btn += ' aria-label="Left Align"'; 
         btn += ' modal-url="'+url+'">';
         btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
@@ -131,6 +157,7 @@ if ($order){
 
         return btn;
     }    
+
     function cashDocResponseHandler(res) {
         return res;
     }     

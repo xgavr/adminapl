@@ -210,10 +210,12 @@ $form->prepare();
             .done(function (data) {
                 if (data == 'ok'){
                     $('#cashInModal').modal('hide');
-                    //window.location.reload();
                     $('#table').bootstrapTable('refresh', {'silent':true});
                     if ($('#mutualtable').length){
                         $('#mutualtable').bootstrapTable('refresh', {'silent':true});
+                    }    
+                    if ($('#cashdoctable').length){
+                        $('#cashdoctable').bootstrapTable('refresh', {'silent':true});
                     }    
                 } else {
                     $('#cashInModal .modal-content').html(data);                    

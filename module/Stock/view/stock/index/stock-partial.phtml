@@ -261,45 +261,53 @@
 
         $(document).on('click', '.cash-in-modal-show', function (e) {
             var url = $(this).attr('modal-url');
-            if ($('#cashSelect')){
+            if ($('#cashSelect').val()){
                 url += '?cash='+$('#cashSelect').val();
             }    
             showFormDialog({
                 id: 'cashInModal',
                 url: url,
-                width: '1440px'
+                width: '1440px',
+                zIndex: 9998
             });
         });  
         
         $(document).on('click', '.cash-out-modal-show', function (e) {
             var url = $(this).attr('modal-url');
-            if ($('#cashSelect')){
+            if ($('#cashSelect').val()){
                 url += '?cash='+$('#cashSelect').val();
             }    
             showFormDialog({
                 id: 'cashOutModal',
                 url: url,
-                width: '1440px'
+                width: '1440px',
+                zIndex: 9998
             });
         });  
         
         $(document).on('click', '.user-in-modal-show', function (e) {
             var url = $(this).attr('modal-url');
-            var urlQuery = '?user='+$('#userSelect').val();
+            if ($('#userSelect').val()){
+                url += '?user='+$('#cashSelect').val();
+            }    
             showFormDialog({
                 id: 'userInModal',
-                url: url+urlQuery,
-                width: '1440px'
+                url: url,
+                width: '1440px',
+                zIndex: 9998
             });
         });  
         
         $(document).on('click', '.user-out-modal-show', function (e) {
             var url = $(this).attr('modal-url');
-            var urlQuery = '?user='+$('#userSelect').val();
+            if ($('#userSelect').val()){
+                url += '?user='+$('#cashSelect').val();
+            }    
             showFormDialog({
                 id: 'userOutModal',
-                url: url+urlQuery,
-                width: '1440px'
+                url: url,
+                width: '1440px',
+                zIndex: 9998
             });
         });  
 

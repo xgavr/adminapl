@@ -210,6 +210,7 @@ class UserController extends AbstractActionController
     public function editUserInAction()
     {
         $cashDocId = (int)$this->params()->fromRoute('id', -1);
+        $orderId = (int)$this->params()->fromQuery('order', -1);
         
         $cashDoc = null;
         
@@ -218,8 +219,13 @@ class UserController extends AbstractActionController
                     ->find($cashDocId);
         }    
         
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }    
+        
         $form = new UserInForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form, $cashDoc);
+        $this->cashManager->cashFormOptions($form, $cashDoc, null, null, $orderId);
         
         if ($this->getRequest()->isPost()) {
             
@@ -251,6 +257,7 @@ class UserController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'cashDoc' => $cashDoc,
+            'order' => $order, 
         ]);        
     }        
     
@@ -258,12 +265,18 @@ class UserController extends AbstractActionController
     {
         $cashDocId = (int)$this->params()->fromRoute('id', -1);
         $userId = (int)$this->params()->fromQuery('user', -1);
+        $orderId = (int)$this->params()->fromQuery('order', -1);
         
         $cashDoc = null;
         
         if ($cashDocId > 0){
             $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                     ->find($cashDocId);
+        }    
+        
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
         }    
         
         if ($this->getRequest()->isPost()) {
@@ -272,7 +285,7 @@ class UserController extends AbstractActionController
         }
         
         $form = new UserOutForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form, $cashDoc);
+        $this->cashManager->cashFormOptions($form, $cashDoc, null, null, $orderId);
         
         if ($this->getRequest()->isPost()) {
             
@@ -304,6 +317,7 @@ class UserController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'cashDoc' => $cashDoc,
+            'order' => $order,
         ]);        
     }        
 }
