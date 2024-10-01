@@ -229,10 +229,26 @@ class BillSetting {
      */
     public static function gname($name)
     {
-        $result = preg_replace('/[^а-яА-Я]/ui', '',$name );
+        $blackListRu = [
+            'января',
+            'февраля',
+            'марта',
+            'апреля',
+            'мая',
+            'июня',
+            'июля',
+            'августа',
+            'сентября',
+            'октября',
+            'ноября',
+            'декабря',
+        ];
+        
+        $result = preg_replace('/[^а-яА-Я]/ui', '', mb_str_replace($blackListRu, '', $name));
         if (empty($result)){
             $result = preg_replace('/[^a-zA-Z]/ui', '',$name );            
         }
+                
         if (empty($result)){
             $result = $name;   
         }

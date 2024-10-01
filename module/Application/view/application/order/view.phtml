@@ -3,8 +3,10 @@ use Application\Entity\Order;
 use Stock\Entity\Vt;
 use Application\Entity\Bid;
 use Laminas\Json\Encoder;
+use Cash\Entity\CashDoc;
 
 $vtDisabled = ($order->getStatus() == Order::STATUS_SHIPPED) ? '':'disabled';
+$cashDocDisabled = (!empty($order)) ? '':'disabled';
 $tag = md5(time());
 ?>
 <div class="modal-header">
@@ -120,10 +122,55 @@ $tag = md5(time());
 
 <div class="row">
     <div class="col-xs-12">
+        <div id="cashdoctoolbar">
+            <div class="form-inline" role="form">
+                <button <?= $cashDocDisabled?> class="btn btn-default btn-sm cash-doc-modal-show" type="button" modal-url="/cash/edit-form?order=<?= $order->getId()?>">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Оплата
+                </button>                
+                <button <?= $cashDocDisabled?> class="btn btn-default btn-sm cash-doc-modal-show" type="button" modal-url="/cash/edit-form?order=<?= $order->getId()?>">
+                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Возврат
+                </button>                
+            </div>
+        </div>
+        <table id="cashdoctable" 
+            data-toggle="cashdoctable" 
+            data-url="/cash/order-content/<?= ($order) ? $order->getId():"" ?>"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#cashdoctoolbar"
+            data-icon-size="sm"
+            data-show-refresh="true"
+            data-query-params="cashdocQueryParams"
+            data-sort-name="id"
+            data-sort-order="desc"            
+            data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-row-style="cashdocRowStyle"
+            >
+            <thead>
+                <tr>
+                    <th data-field="id" data-sortable="false" data-formatter="idFormatter" data-width="100">Номер</th>
+                    <th data-field="docDate" data-sortable="true" data-formatter="dateFormatter" data-width="100">Дата</th>
+                    <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
+                    <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="amountFormatter">Сумма</th>
+                    <th data-field='order.aplId' data-sortable="false" data-formatter="linkFormatter">Заказ</th>
+                    <th data-field='office.name' data-sortable="false">Склад</th>
+                    <th data-field='status' data-sortable="false" data-formatter="statusFormatter">Статус</th>
+                    <th data-field='comment' data-sortable="false">Примечание</th>
+                    <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<div class="row">
+    <div class="col-xs-12">
         <div id="vttoolbar">
             <div class="form-inline" role="form">
                 <button <?= $vtDisabled?> class="btn btn-default btn-sm vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить возврат
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Возврат товара
                 </button>                
             </div>
         </div>
@@ -225,6 +272,7 @@ $tag = md5(time());
     $( document ).ready(function() {        
         $ordegoodtable = $('#ordergoodtable').bootstrapTable();        
         $vttable = $('#vttable').bootstrapTable();         
+        $cashdoctable = $('#cashdoctable').bootstrapTable();         
         
         $ordegoodtable.on('load-success.bs.table', function (e, res) {
             orderUpdateTotal();
@@ -237,8 +285,10 @@ $tag = md5(time());
         $(document).on('click', '.order-view-close', function (e) {
             $ordegoodtable.bootstrapTable('destroy');
             $vttable.bootstrapTable('destroy');
+            $cashdoctable.bootstrapTable('destroy');
             $('#ordergoodtoolbar').remove();
             $('#vttoolbar').remove();
+            $('#cashdoctoolbar').remove();
 //            $('#orderViewModal').modal('hide');
         });        
 
@@ -336,6 +386,22 @@ $tag = md5(time());
         return params;
     }
     
+    function cashdocQueryParams(params) {
+        $('#cashdoctoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#cashdoctable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#cashdoctable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
     function bidTakeStyle(row){
         var classes = 'default';
         if (row.take === <?= Bid::TAKE_NO?>){
@@ -362,6 +428,14 @@ $tag = md5(time());
            retired = ' warning';
         }
         
+        return {classes: retired};
+    }
+    
+    function cashdocRowStyle(row){
+        var retired = 'tablerow';
+        if (row.status === <?= CashDoc::STATUS_RETIRED?>){
+           retired += ' retired';
+        }
         return {classes: retired};
     }
 

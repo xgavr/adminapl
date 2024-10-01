@@ -303,6 +303,15 @@
             });
         });  
 
+        $(document).on('click', '.cash-doc-index-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'cashDocIndexModal',
+                url: url,
+                width: '1440px'
+            });
+        });  
+
         $(document).on('click', '.producer-union-modal-show', function (e) {
             var url = $(this).attr('modal-url');
             showFormDialog({

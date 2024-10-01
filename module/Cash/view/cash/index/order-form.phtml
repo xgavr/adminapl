@@ -1,0 +1,137 @@
+<?php
+use Application\Entity\Order;
+use Cash\Entity\CashDoc;
+
+if ($order){
+    $docName = '№ '.$order->getDocNo().' от  '.date('d.m.Y', strtotime($order->getDocDate()));
+}
+
+?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="cashDocModalLabel">Оплаты по заказу <?= $docName?></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="vttoolbar">
+            <div class="form-inline" role="form">
+                <button class="btn btn-default vt-modal-show" type="button" modal-url="/vt/edit-form?order=<?= $order->getId()?>">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>                
+            </div>
+        </div>
+        <table id="vttable" 
+            data-toggle="cashdoctable" 
+            data-url="/cash/order-content/<?= ($order) ? $order->getId():"" ?>"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#cashdoctoolbar"
+            data-show-refresh="true"
+            data-query-params="cashDocQueryParams"
+            data-sort-name="id"
+            data-sort-order="desc"            
+            data-response-handler="cashDocResponseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-row-style="cashDocRowStyle"
+            >
+            <thead>
+                <tr>
+                     <th data-field="id" data-sortable="false" data-formatter="cashDocIdFormatter" data-width="100">Номер</th>
+                     <th data-field="dateOper" data-sortable="true" data-formatter="cashDocDateFormatter" data-width="100">Дата</th>
+                     <!--<th data-field="aplId" data-type="numeric" data-align="right">AplId</th>-->
+                     <th data-field='amount' data-sortable="false" data-type="numeric" data-align="right" data-formatter="cashDocAmountFormatter">Сумма</th>
+                     <th data-field='orderAplId' data-sortable="false" data-formatter="cashDocLinkFormatter">Заказ</th>
+                     <th data-field='office.name' data-sortable="false">Офис</th>
+                     <th data-field='comment' data-sortable="false">Примечание</th>
+                     <th data-field="" data-formatter="cashDocActiveFormatter" data-width="10"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<script>
+    $( document ).ready(function() {        
+        $('#cashdoctable').bootstrapTable({
+            onLoadSuccess: function(res){
+                
+            }            
+        });         
+    });
+    
+    function cashRefreshTable(){
+        $('#cashdoctable').bootstrapTable('refresh');
+    }
+    
+    function cashRowStyle(row){
+        var retired = 'tablerow';
+        if (row.status == '<?= CashDoc::STATUS_RETIRED ?>'){
+           retired += ' retired';
+        }
+        return {classes: retired};
+    }
+
+    function cashDocQueryParams(params) {
+        $('#cashdoctoolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#cashdoctable .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#cashdoctable li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+
+    function cashDocIdFormatter(value, row){
+        if (row.aplId > 0){
+            return value + ' ('+row.aplId+')';
+        }
+        
+        return value;
+    }    
+    
+    function cashDocDateFormatter(value){
+        var date = new Date(value);
+        return $.format.date(date, "dd.MM.yyyy");
+    }
+    
+    function cashDocLinkFormatter(value, row){
+        if (!value){
+            value = '---';
+        }
+        return [
+            '<div class="pull-left">',
+            '<a href="/order/intro/' + row.id + '" target="_blank">' + value + '</a>',
+            '</div>'
+        ].join(''); 
+    }    
+    
+    function cashDocAmountFormatter(value){
+        return (Math.round(value*100)/100).toFixed(2);
+    }    
+    
+    function cashDocActiveFormatter(value, row){
+        var url = '/vt/edit-form/'+row.id;
+        btn = '<button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-default btn-xs vt-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button>';
+
+        return btn;
+    }    
+    function cashDocResponseHandler(res) {
+        return res;
+    }     
+</script>

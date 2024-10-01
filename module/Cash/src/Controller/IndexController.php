@@ -148,6 +148,29 @@ class IndexController extends AbstractActionController
         return new JsonModel([
             'result' => 'ok-reload',
         ]);
-    }    
+    }  
+    
+    public function orderFormAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($orderId <= 0){
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }    
+        
+        $order = $this->entityManager->getRepository(Order::class)
+                ->find($orderId);
+        
+        if ($order == null){
+            $this->getResponse()->setStatusCode(404);
+            return;            
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        return new ViewModel([
+            'order' => $order,
+        ]);                
+    }
 }
 

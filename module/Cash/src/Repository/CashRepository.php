@@ -38,7 +38,10 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('cd.id, cd.dateOper')
+        $queryBuilder->select('cd.id, cd.dateOper, cd.amount, cd.comment')
+            ->addSelect('identity(cd.cash) as cashId')    
+            ->addSelect('identity(cd.user) as userId')    
+            ->addSelect('identity(cd.order) as orderId')    
             ->from(CashDoc::class, 'cd')
                 ;
         
@@ -51,6 +54,13 @@ class CashRepository extends EntityRepository
             if (is_numeric($params['kind'])){
                 $queryBuilder->andWhere('cd.kind = ?4')
                     ->setParameter('4', $params['kind'])
+                        ;
+            }            
+            if (is_numeric($params['orderId'])){
+                $queryBuilder->andWhere('cd.order = :orderId')
+                    ->setParameter('orderId', $params['orderId'])
+                    ->join('cd.order', 'o')
+                    ->addSelect('o.aplId as orderAplId')    
                         ;
             }            
             if (isset($params['sort'])){
