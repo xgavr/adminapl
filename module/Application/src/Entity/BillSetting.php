@@ -244,7 +244,7 @@ class BillSetting {
             'декабря',
         ];
         
-        $result = preg_replace('/[^а-яА-Я]/ui', '', mb_str_replace($blackListRu, '', $name));
+        $result = preg_replace('/[^а-яА-Я]/ui', '', str_replace($blackListRu, '', $name));
         if (empty($result)){
             $result = preg_replace('/[^a-zA-Z]/ui', '',$name );            
         }
