@@ -9,9 +9,10 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Application\Entity\Supplier;
 
 /**
- * Description of Pricelist
+ * Description of BillGetting
  * @ORM\Entity(repositoryClass="\Application\Repository\SupplierRepository")
  * @ORM\Table(name="bill_gettings")
  * @author Daddy
@@ -64,6 +65,12 @@ class BillGetting {
      * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
      */
     private $supplier;    
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Supplier", inversedBy="realSupplierBillGettings") 
+     * @ORM\JoinColumn(name="real_supplier_id", referencedColumnName="id")
+     */
+    private $realSupplier;    
     
     public function getId() 
     {
@@ -181,7 +188,7 @@ class BillGetting {
 
     /**
      * Задает связанный supplier.
-     * @param \Application\Entity\Supplier $supplier
+     * @param Supplier $supplier
      */    
     public function setSupplier($supplier) 
     {
@@ -189,4 +196,26 @@ class BillGetting {
         $supplier->addBillGettings($this);
     }    
         
+    /**
+     * 
+     * @return Supplier
+     */
+    public function getRealSupplier() {
+        if ($this->realSupplier){
+            return $this->realSupplier;
+        }
+        
+        return $this->getSupplier();
+    }
+
+    /**
+     * 
+     * @param Supplier $realSupplier
+     * @return $this
+     */
+    public function setRealSupplier($realSupplier) {
+        $this->realSupplier = $realSupplier;
+        return $this;
+    }
+
 }

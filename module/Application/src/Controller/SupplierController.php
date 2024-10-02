@@ -595,6 +595,14 @@ class SupplierController extends AbstractActionController
         
         $form = new BillGettingForm();
 
+        $supplierList = ['--выбререте постащика--'];
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findForFormPtu();
+        foreach ($suppliers as $formSupplier){
+            $supplierList[$formSupplier->getId()] = $formSupplier->getName();
+        }
+        $form->get('realSupplier')->setValueOptions($supplierList);
+        
         if ($this->getRequest()->isPost()) {
             
             $data = $this->params()->fromPost();
@@ -620,6 +628,7 @@ class SupplierController extends AbstractActionController
                     'emailPassword' => $billGetting->getEmailPassword(),  
                     'appPassword' => $billGetting->getAppPassword(),  
                     'status' => $billGetting->getStatus(),  
+                    'realSupplier' => ($billGetting->getRealSupplier()) ? $billGetting->getRealSupplier()->getId():null,  
                 ];
                 $form->setData($data);
             }    

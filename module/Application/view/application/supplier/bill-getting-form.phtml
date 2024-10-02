@@ -22,6 +22,10 @@ $form->get('status')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('realSupplier')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'bill-getting-submit']);
 
 $form->prepare();
@@ -85,6 +89,12 @@ $form->prepare();
                             <?= $this->formElement($form->get('appPassword')); ?>
                             <?= $this->formElementErrors($form->get('appPassword')); ?>                  
                         </div>
+
+                        <div class="form-group">
+                            <?= $this->formLabel($form->get('realSupplier')); ?>
+                            <?= $this->formElement($form->get('realSupplier')); ?>
+                            <?= $this->formElementErrors($form->get('realSupplier')); ?>                  
+                        </div>                        
 
                         <?= $this->formElement($form->get('csrf')); ?>
                     </div>        

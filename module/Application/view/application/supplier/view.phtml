@@ -383,6 +383,7 @@ $this->pageBreadcrumbs()->setItems([
                                         <br/>
                                         Email пароль: <span><?= $billGetting->getEmailPassword() ?></span><br/>
                                         Пароль приложения: <span><?= $billGetting->getAppPassword() ?></span><br/>
+                                        Реальный поставщик: <span><?= $billGetting->getRealSupplier()->getName() ?></span><br/>
                                     </div>        
                                     <div class="pull-right">                                
                                         <button value="/supplier/bill-getting-form/<?= $supplier->getId() ?>?billGetting=<?= $billGetting->getId() ?>" class="btn btn-default btn-xs"

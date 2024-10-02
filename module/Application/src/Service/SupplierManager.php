@@ -551,6 +551,15 @@ class SupplierManager
         $billGetting->setAppPassword($data['appPassword']);
         $billGetting->setStatus($data['status']);
         
+        $billGetting->setRealSupplier(null);
+        if (!empty($data['realSupplier'])){
+            if (is_numeric($data['realSupplier'])){
+                $realSupplier = $this->entityManager->getRepository(Supplier::class)
+                        ->find($data['realSupplier']);
+                $billGetting->setRealSupplier($realSupplier);
+            }    
+        }
+        
         $currentDate = date('Y-m-d H:i:s');
         $billGetting->setDateCreated($currentDate);        
         
@@ -572,6 +581,15 @@ class SupplierManager
         $billGetting->setEmailPassword($data['emailPassword']);
         $billGetting->setAppPassword($data['appPassword']);
         $billGetting->setStatus($data['status']);
+        
+        $billGetting->setRealSupplier(null);
+        if (!empty($data['realSupplier'])){
+            if (is_numeric($data['realSupplier'])){
+                $realSupplier = $this->entityManager->getRepository(Supplier::class)
+                        ->find($data['realSupplier']);
+                $billGetting->setRealSupplier($realSupplier);
+            }    
+        }
         
         // Добавляем сущность в менеджер сущностей.
         $this->entityManager->persist($billGetting);

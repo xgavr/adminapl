@@ -97,6 +97,17 @@ class BillGettingForm extends Form
             ],
         ]);
         
+        $this->add([
+            'type'  => 'select',
+            'name' => 'realSupplier',
+            'attributes' => [                
+                'id' => 'realSupplier',
+            ],
+            'options' => [
+                'label' => 'Подставить поставщика',
+            ],
+        ]);
+                
                 
         // Добавляем кнопку отправки формы
         $this->add([
@@ -224,6 +235,22 @@ class BillGettingForm extends Form
                 ],
             ]); 
         
+        $inputFilter->add([
+                'name'     => 'realSupplier',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'IsInt',
+                        'options' => [
+                            'min' => 0,
+                            'locale' => 'ru-Ru'
+                        ],
+                    ],
+                ],
+            ]);          
         
     }    
 }
