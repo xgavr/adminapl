@@ -180,7 +180,7 @@ if ($st){
                         <th data-field="good.name" data-type="numeric">Наименование</th>
                         <th data-field='price' data-formatter="pgPriceFormatter" data-align="right">Цена</th>
                         <th data-field='quantity' data-align="right">Количество</th>
-                        <th data-field='amount' data-align="right">Сумма</th>
+                        <th data-field='amount' data-align="right" data-formatter="stAmountFormatter">Сумма</th>
                         <th data-field="baseKey" data-visible="false" data-editable="true" data-editable-type="select" data-editable-source="/st/find-base/<?= ($st) ? $st->getId():"" ?>" data-width="10">Партия</th>
                         <th data-field="rowNo" data-formatter="pgEditFormatter" data-width="10"></th>
                         <th data-field="rowNo" data-formatter="pgActiveFormatter" data-width="10"></th>
@@ -456,7 +456,11 @@ if ($st){
     }    
     
     function pgPriceFormatter(value, row){
-        return Math.round(row.amount*100/row.quantity)/100;
+        return (Math.round(row.amount*100/row.quantity)/100).toFixed(2);
+    }        
+    
+    function stAmountFormatter(value, row){
+        return (Math.round(row.amount*100)/100).toFixed(2);
     }        
     
     function stgoodResponseHandler(res) {

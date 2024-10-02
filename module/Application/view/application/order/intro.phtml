@@ -768,7 +768,7 @@ $disabled = (!empty($orderId)) ? '':'disabled';
     var $orderIntroForm = $('#order-form');
         
     $orderIntroForm.submit(function() {
-        submitForm();
+        introSubmitForm();
         return false;
     });
         
@@ -784,7 +784,7 @@ $disabled = (!empty($orderId)) ? '':'disabled';
 
     $('.phone').on('input paste', function(){
         var value = $( this ).val();
-        if (value.length == 16){
+        if (value.length === 16){
             $.post('/ring/find-phone', {phone: value}, function (data) {
                 if (data){
                     $('#contact').val(data.contact);
@@ -904,7 +904,7 @@ $disabled = (!empty($orderId)) ? '':'disabled';
         });                    
     });
     
-    function submitForm(){
+    function introSubmitForm(){
         window.onbeforeunload = false;
         $(".has-error").each(function( index ) {
             $(this).removeClass('has-error');
@@ -1236,7 +1236,7 @@ $disabled = (!empty($orderId)) ? '':'disabled';
             
         $('#order-submit').on('click', function(){
             $('#order-submit').attr('disabled', true);
-            submitForm();
+            introSubmitForm();
         });            
     });    
     
