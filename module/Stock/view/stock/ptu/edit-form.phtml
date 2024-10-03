@@ -148,7 +148,7 @@ if ($ptu && !$copy){
                                 <button type="button" class="btn btn-default ptu-good-modal-show" modal-url="/ptu/good-edit-form">
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                 </button>
-                                <button type="button" class="btn btn-default" onclick="ptuFill()" id="fillPtu" disabled>
+                                <button type="button" class="btn btn-default" onclick="ptuFill()" id="fillPtu" <?= ($supplier) ? '':'disabled'?>>
                                     <span aria-hidden="true">Заполнить из заказов</span>
                                 </button>
                             </div>

@@ -334,6 +334,7 @@ class PtuController extends AbstractActionController
             'copy' => $copy,
             'allowDate' => $this->ptuManager->getAllowDate(),
             'disabled' => !$notDisabled,
+            'supplier' => $supplier,
         ]);        
     }    
         
