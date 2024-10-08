@@ -1,0 +1,222 @@
+<?php
+    use GoodMap\Entity\Rack;
+    
+    $this->headTitle('Карта склада');
+
+    $this->mainMenu()->setActiveItemId('stock');
+    $this->mainMenu()->setActiveUrl($this->url('good-map'));
+
+    $this->pageBreadcrumbs()->setItems([
+                'Главная'=>$this->url('home'),
+                'Склад'=>$this->url('stock'),
+                'Карта склада'=>$this->url('good-map'),
+                ]);
+
+
+?>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <button class="btn btn-default add-rack" type="button" title="Добавить стеллаж">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </button>                
+                <div class="form-group">
+                    <select id="officeSelect" style="width: 100px" class="form-control">
+                        <option selected>офис</option>
+                        <?php foreach ($offices as $office):?>
+                            <option value="<?= $office->getId()?>" <?= ($office->getId() === $currentOfficeId) ? 'selected':'' ?>><?= $office->getName()?></option>
+                        <?php endforeach;?>
+                    </select>
+                    
+                </div>    
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/good-map/content"
+            data-cookie="true"
+            data-cookie-id-table="goodMapSaveId"
+            data-cookie-expire="1m"
+            data-side-pagination="server"
+            data-pagination="false" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-query-params="queryParams"
+            data-sort-name="code"
+            data-sort-order="asc"            
+            data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-row-style="goodmapRowStyle"
+            data-tree-enable="false"
+            data-id-field="id"
+            data-parent-id-field="pid"
+            data-tree-show-field = ""
+            >
+            <thead>
+                <tr>
+                    <!--<th data-check="true"></th>-->
+                    <!--<th data-field="id" data-sortable="false" data-width="10" data-align="left">Номер</th>-->
+                    <th data-field="code" data-sortable="true" data-width="10" data-editable="true" data-align="left">Код</th>
+                    <th data-field='name' data-editable="true" >Наименование</th>
+                    <th data-field='comment' data-editable="true" >Примечание</th>
+                    <th data-field="foldCount" data-formatter="foldFormatter" data-width="5" data-align="right">К</th>
+                    <th data-field="" data-formatter="activeAddFormatter" data-width="5"></th>
+                    <th data-field="" data-formatter="activeDelFormatter" data-width="5"></th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<script type="text/javascript">
+    var $table = $('#table'),
+        $ok = $('#ok');
+    
+    function refreshTable(){
+        $table.bootstrapTable('refresh');
+    }
+
+    function addRack(){        
+        $.get( "/good-map/add?table=rack&office="+$('#officeSelect').val(), function(data){
+            $table.bootstrapTable('refresh', {silent: true});
+        });        
+    }
+
+    function addLocation(url){        
+        $.get( url, function(data){
+            $table.bootstrapTable('refresh', {silent: true});
+        });        
+    }
+
+    function changeName(id, table, name){
+        $.get( "/good-map/change-name/"+id+'?name='+name+'&table='+table, function(data){
+            
+        });        
+    }
+
+    function changeComment(id, table, comment){
+        $.get( "/good-map/change-comment/"+id+'?comment='+comment+'&table='+table, function(data){
+            
+        });        
+    }
+    
+    function changeCode(id, table, code){
+        $.get( "/good-map/change-code/"+id+'?code='+code+'&table='+table, function(data){
+            
+        });        
+    }
+
+    $(function(){
+        $(document).on('change', '#officeSelect', function (e) {
+            $table.bootstrapTable('refresh', {silent: false});
+        });
+        
+        $(document).on('click', '.add-rack', function (e) {
+            addRack();
+        });
+        
+        $(document).on('click', '.add-location', function (e) {
+            addLocation($(this).attr('add-url'));
+        });
+
+        $(document).on('click', '.del-location', function (e) {
+            if (confirm('Удалить '+$(this).attr('del-name')+'?')){
+                $.get( $(this).attr('del-url'), function(data){
+                    $table.bootstrapTable('refresh', {silent: true});
+                });        
+            }    
+        });
+
+        $(document).on('editable-save.bs.table', '#table', function (e, field, row, old, $el) {
+            if (field === 'name'){
+                changeName(row.rid, row.tbl, row.name);
+            }
+            if (field === 'comment'){
+                changeComment(row.rid, row.tbl, row.comment);
+            }
+            if (field === 'code'){
+                changeCode(row.rid, row.tbl, row.code);
+            }
+        });                
+    });
+
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        params.office = $('#officeSelect').val();
+        
+        return params;
+    }
+    
+    function goodmapRowStyle(row){
+        var retired = 'tablerow';
+        if (row.status === '<?= Rack::STATUS_RETIRED?>'){
+           retired += ' retired';
+        }
+        return {classes: retired};
+    }
+        
+    function activeAddFormatter(value, row){
+        if (row.tbl === 'rack'){
+            var url = '/good-map/add?table=shelf&pid='+row.rid;
+            btn = '<button';
+            btn += ' type="button" title="Добавить полку"';
+            btn += ' class="btn btn-info btn-xs add-location"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' add-url="'+url+'">';
+            btn += '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>';
+            btn += '</button>';
+            return btn;
+        }    
+        if (row.tbl === 'shelf'){
+            var url = '/good-map/add?table=cell&pid='+row.rid;
+            btn = '<button';
+            btn += ' type="button" title="Добавить ячейку"';
+            btn += ' class="btn btn-default btn-xs add-location"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' add-url="'+url+'">';
+            btn += '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>';
+            btn += '</button>';
+            return btn;
+        }
+        
+        return '';
+    }    
+    
+    function foldFormatter(value, row){
+        return value;
+    }    
+    
+    function activeDelFormatter(value, row){
+        if (row.foldCount === 0){
+            var url = '/good-map/delete?table='+row.tbl+'&pid='+row.rid;
+            btn = '<button';
+            btn += ' type="button" title="Удалить '+row.name+'"';
+            btn += ' class="btn btn-default btn-xs del-location"';
+            btn += ' aria-label="Left Align"'; 
+            btn += ' del-url="'+url+'" del-name="'+row.name+'">';
+            btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
+            btn += '</button>';
+            return btn;
+        }
+        
+        return '';
+    }    
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>
+

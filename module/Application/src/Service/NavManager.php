@@ -233,6 +233,11 @@ class NavManager
                     'link'  => $url('pt')
                 ];
                 $stockDropdownItems[] = [
+                    'id' => 'good-map',
+                    'label' => 'Карта склада',
+                    'link'  => $url('good-map')
+                ];
+                $stockDropdownItems[] = [
                     'id' => 'transaction',
                     'label' => 'Журнал операций',
                     'link' => $url('admin', ['action'=>'transactions'])

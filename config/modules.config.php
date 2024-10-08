@@ -57,4 +57,5 @@ return [
     'Search',
     'Fin',
     'Zp',
+    'GoodMap',
 ];

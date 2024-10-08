@@ -122,6 +122,7 @@ return [
                     'match_against' => 'DoctrineExtensions\Query\Mysql\MatchAgainst',
                     'ifnull' => 'DoctrineExtensions\Query\Mysql\IfNull',
                     'replace' => 'DoctrineExtensions\Query\Mysql\Replace',
+                    'concat_ws' => 'DoctrineExtensions\Query\Mysql\ConcatWs',
                 ],
                 'numeric_functions' => [
                     'floor' => 'DoctrineExtensions\Query\Mysql\Floor',

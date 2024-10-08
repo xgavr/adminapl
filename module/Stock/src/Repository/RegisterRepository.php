@@ -28,6 +28,7 @@ use ApiMarketPlace\Entity\MarketSaleReport;
 use Zp\Entity\DocCalculator;
 use Bank\Entity\Statement;
 use Zp\Entity\PersonalRevise;
+use GoodMap\Entity\FoldDoc;
 
 
 /**
@@ -359,6 +360,18 @@ class RegisterRepository extends EntityRepository
     {
         $dateOper = date('Y-m-d 12:00:00', strtotime($statement->getChargeDate()));
         return $this->register($dateOper, Movement::DOC_BANK, $statement->getId(), $statement->getLogKey());
+    } 
+
+    /**
+     * Регистриция складского перемещения
+     * 
+     * @param  FoldDoc $foldDoc
+     * @return float
+     */
+    public function foldDocRegister($foldDoc)
+    {
+        $dateOper = date('Y-m-d 12:00:00', strtotime($foldDoc->getDocDate()));
+        return $this->register($dateOper, Movement::DOC_FT, $foldDoc->getId(), $foldDoc->getLogKey());
     } 
 
     public function allRegister()

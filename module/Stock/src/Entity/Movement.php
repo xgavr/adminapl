@@ -51,6 +51,7 @@ class Movement {
     const DOC_VT_USER = 15; //возврат в подотчет
     const DOC_CASH_USER = 16; //оплата/возврат заказа в подотчет
     const DOC_ORDER_COMISS = 17; //заказ списания комиссионного товар
+    const DOC_FT = 18; //складские перемещения
         
     /**
      * @ORM\Id
@@ -366,6 +367,7 @@ class Movement {
             self::DOC_ZP => 'Расчет ЗП',
             self::DOC_BANK => 'Выписка',
             self::DOC_ZPRV => 'Корректировка ЗП',
+            self::DOC_FT => 'Перемещение на складе',
         ];
     }        
 
@@ -398,6 +400,7 @@ class Movement {
             self::DOC_ZP => 'Расчет ЗП',
             self::DOC_BANK => 'Выписка',
             self::DOC_ZPRV => 'Корректировка ЗП',
+            self::DOC_FT => 'Перемещение на складе',
         ];
     }        
 
@@ -421,6 +424,7 @@ class Movement {
             self::DOC_BANK => 'bank',
             self::DOC_ZPRV => 'zprv',
             self::DOC_CASH => 'cash',
+            self::DOC_FT => 'ft',
         ];
     }        
     

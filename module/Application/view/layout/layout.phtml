@@ -24,10 +24,18 @@
                         ]
                 )
 
+                ->prependStylesheet('//cdn.jsdelivr.net/npm/jquery-treegrid@0.3.0/css/jquery.treegrid.css', 
+                        'screen',
+                        true,
+                        [
+                            'rel' => 'stylesheet', 
+                        ]
+                )
+
 //                ->prependStylesheet('//cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/css/bootstrap-select.min.css')
                 ->prependStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css')
 
-                ->prependStylesheet('//unpkg.com/bootstrap-table@1.22.1/dist/extensions/reorder-rows/bootstrap-table-reorder-rows.css', 
+                ->prependStylesheet('//unpkg.com/bootstrap-table@1.23.5/dist/extensions/reorder-rows/bootstrap-table-reorder-rows.css', 
                         'screen',
                         true,
                         [
@@ -44,7 +52,7 @@
                         ]
                 )
 
-                ->prependStylesheet('//unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css',
+                ->prependStylesheet('//unpkg.com/bootstrap-table@1.23.5/dist/bootstrap-table.min.css',
                         'screen',
                         true,
                         [
@@ -103,18 +111,24 @@
 //            ->prependFile('//cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js')
             ->prependFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js')
         
-            ->prependFile('//unpkg.com/bootstrap-table@1.22.1/dist/extensions/reorder-rows/bootstrap-table-reorder-rows.min.js')
+            ->prependFile('//unpkg.com/bootstrap-table@1.23.5/dist/extensions/reorder-rows/bootstrap-table-reorder-rows.min.js')
 //            ->prependFile('//cdn.jsdelivr.net/npm/x-editable@1.5.1/dist/bootstrap3-editable/js/bootstrap-editable.min.js')
             ->prependFile('//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js')
 
-            ->prependFile('//unpkg.com/bootstrap-table@1.22.1/dist/extensions/auto-refresh/bootstrap-table-auto-refresh.min.js')
-            ->prependFile('//unpkg.com/bootstrap-table@1.22.1/dist/extensions/editable/bootstrap-table-editable.min.js')
-            ->prependFile('//unpkg.com/bootstrap-table@1.22.1/dist/extensions/cookie/bootstrap-table-cookie.min.js')
-            ->prependFile('//unpkg.com/bootstrap-table@1.22.1/src/locale/bootstrap-table-ru-RU.js')
-            ->prependFile('//unpkg.com/bootstrap-table@1.22.1/dist/extensions/export/bootstrap-table-export.min.js')
-            ->prependFile('//unpkg.com/bootstrap-table@1.22.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js')
-            ->prependFile('//unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js')
+            ->prependFile('//unpkg.com/bootstrap-table@1.23.5/dist/extensions/auto-refresh/bootstrap-table-auto-refresh.min.js')
+            ->prependFile('//unpkg.com/bootstrap-table@1.23.5/dist/extensions/editable/bootstrap-table-editable.min.js')
+            ->prependFile('//unpkg.com/bootstrap-table@1.23.5/dist/extensions/cookie/bootstrap-table-cookie.min.js')
+            ->prependFile('//unpkg.com/bootstrap-table@1.23.5/src/locale/bootstrap-table-ru-RU.js')
+            ->prependFile('//unpkg.com/bootstrap-table@1.23.5/dist/extensions/export/bootstrap-table-export.min.js')
+            ->prependFile('//unpkg.com/bootstrap-table@1.23.5/dist/extensions/filter-control/bootstrap-table-filter-control.min.js')
+        
+            ->prependFile('//cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/extensions/treegrid/bootstrap-table-treegrid.min.js')
+        
+            ->prependFile('//unpkg.com/bootstrap-table@1.23.5/dist/bootstrap-table.min.js')
 //            ->prependFile('//cdn.jsdelivr.net/npm/tablednd@1.0.5/dist/jquery.tablednd.min.js')
+            
+            ->prependFile('//cdn.jsdelivr.net/npm/jquery-treegrid@0.3.0/js/jquery.treegrid.min.js')
+            
             ->prependFile('//cdnjs.cloudflare.com/ajax/libs/TableDnD/1.0.5/jquery.tablednd.min.js')
             ->prependFile('//cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/tableExport.min.js')
             ->prependFile('//cdn.jsdelivr.net/npm/tableexport.jquery.plugin@1.10.21/libs/jsPDF/jspdf.min.js')
