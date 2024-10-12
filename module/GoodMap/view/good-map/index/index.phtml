@@ -133,7 +133,11 @@
         });
 
         $(document).on('click', '.print-barcode', function (e) {
-            prnt('/good-map/print-barcode?office='+$('#officeSelect').val()+'&code='+$(this).attr('data-code'));
+            var code = '';
+            if ($(this).attr('data-code')){
+                code = $(this).attr('data-code');
+            }
+            prnt('/good-map/print-barcode?office='+$('#officeSelect').val()+'&code='+code);
         });
 
         $(document).on('click', '.del-location', function (e) {
