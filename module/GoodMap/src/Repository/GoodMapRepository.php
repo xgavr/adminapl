@@ -176,6 +176,12 @@ class GoodMapRepository extends EntityRepository
                 }    
             }
         }
+        
+        if (!empty($params['code'])){
+            return array_filter($result, function($v, $k) use ($params){
+                return in_array($params['code'], $v);
+            }, ARRAY_FILTER_USE_BOTH);            
+        }
 
         return $result;
     }    

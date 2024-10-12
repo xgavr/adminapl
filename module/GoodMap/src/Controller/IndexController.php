@@ -324,6 +324,7 @@ class IndexController extends AbstractActionController
             'rack' => $decodedCode['rack'],
             'shelf' => $decodedCode['shelf'],
             'cell' => $decodedCode['cell'],
+            'code' => $code,
         ]);
         
         $result = $this->entityManager->getRepository(Rack::class)
