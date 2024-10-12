@@ -3,6 +3,7 @@ namespace Api\V1\Rest\ApiSearch;
 
 use Laminas\ApiTools\ApiProblem\ApiProblem;
 use Laminas\ApiTools\Rest\AbstractResourceListener;
+use Application\Entity\Goods;
 
 class ApiSearchResource extends AbstractResourceListener
 {
@@ -78,9 +79,15 @@ class ApiSearchResource extends AbstractResourceListener
     public function fetchAll($params = [])
     {
 //        var_dump($params);
-        return $this->searchManager->searchFromStr($params['search'], $params);
+        if (!empty($params['search'])){
+            return $this->searchManager->searchFromStr($params['search'], $params);
+        }    
         
-        //return new ApiProblem(405, 'The GET method has not been defined for collections');
+        if (!empty($params['oem'])){
+            return $this->searchManager->searchFromOem($params['oem'], $params);
+        }    
+        
+        return new ApiProblem(404, 'Нет параметров для поиска');
     }
 
     /**
