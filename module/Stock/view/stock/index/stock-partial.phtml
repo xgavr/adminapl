@@ -383,6 +383,15 @@
             });
         });          
 
+        $(document).on('click', '.fold-doc-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'foldDocModal',
+                url: url
+//                width: '1440px'
+            });
+        });          
+
 
         $(document).on('change', '#supplierSelect', function (e) {
             refreshTable();

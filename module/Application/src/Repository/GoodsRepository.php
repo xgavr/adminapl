@@ -1617,14 +1617,17 @@ class GoodsRepository extends EntityRepository
         
         $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, g.retailCount')
                 ->addSelect('p.id as producerId, p.name as producerName')
-                ->addSelect('off.name as officeName')        
+                ->addSelect('off.name as officeName, off.id as officeId')        
                 ->addSelect('gb.rest, gb.reserve, gb.delivery, gb.vozvrat, gb.rest-gb.reserve-gb.delivery-gb.vozvrat as available')        
                 ->addSelect('tg.name')
                 ->addSelect('gs.rest as aplRest')
+                ->addSelect('fb.foldName')
+                ->addSelect('fb.foldCode')
                 ;
         
         $queryBuilder->from(GoodBalance::class, 'gb')
                 ->join('gb.good', 'g')
+                ->leftJoin('g.foldBalances', 'fb', 'WITH', 'fb.rest != 0 and fb.office = gb.office')
                 ->where('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0')    
                 ;
         

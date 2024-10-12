@@ -47,6 +47,12 @@ class StManager
     private $costManager;
         
     /**
+     * Fold manager
+     * @var \GoodMap\Service\FoldManager
+     */
+    private $foldManager;
+        
+    /**
      * Дата запрета
      * @var string
      */
@@ -62,13 +68,14 @@ class StManager
      * Constructs the service.
      */
     public function __construct($entityManager, $logManager, $adminManager, $zpManager,
-            $costManager) 
+            $costManager, $foldManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->adminManager = $adminManager;
         $this->zpManager = $zpManager;
         $this->costManager = $costManager;
+        $this->foldManager = $foldManager;
     
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];        
@@ -266,6 +273,8 @@ class StManager
 
             $this->updateStMovement($st, $register->getDocStamp());
         }     
+        
+        $this->foldManager->stFold($st, $docStamp);
         
         return;
     }

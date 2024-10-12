@@ -86,6 +86,11 @@ class IndexController extends AbstractActionController
         ]);          
     }        
     
+    public function statusesAction()
+    {
+        return new JsonModel(Rack::getStatusList());                  
+    }
+    
     public function addAction()
     {
         $pid = $this->params()->fromQuery('pid');
@@ -267,7 +272,67 @@ class IndexController extends AbstractActionController
 
         return new JsonModel(
            ['ok']
-        );           
+        );                   
+    }
+    
+    public function changeStatusAction()
+    {
+        $id = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status');
+        $table = $this->params()->fromQuery('table');
         
+        switch ($table){
+            case 'rack':
+                $rack = $this->entityManager->getRepository(Rack::class)
+                        ->find($id);
+                if ($rack){
+                    $this->goodMapManager->updateRackStatus($rack, $status);
+                }
+                break;
+            case 'shelf':
+                $shelf = $this->entityManager->getRepository(Shelf::class)
+                        ->find($id);
+                if ($shelf){
+                    $this->goodMapManager->updateShelfStatus($shelf, $status);
+                }
+                break;
+            case 'cell':
+                $cell = $this->entityManager->getRepository(Cell::class)
+                        ->find($id);
+                if ($cell){
+                    $this->goodMapManager->updateCellStatus($cell, $status);
+                }
+                break;
+        }
+
+        return new JsonModel(
+           ['ok']
+        );                   
     }    
+    
+    public function printBarcodeAction()
+    {
+        $code = $this->params()->fromQuery('code');
+        $officeId = (int)$this->params()->fromQuery('office', -1);
+
+        $decodedCode = $this->goodMapManager->decodeCode($code);
+        
+        $params = array_filter([
+            'officeId' => $officeId, 
+            'sort' => 'code', 
+            'order' => 'asc',
+            'rack' => $decodedCode['rack'],
+            'shelf' => $decodedCode['shelf'],
+            'cell' => $decodedCode['cell'],
+        ]);
+        
+        $result = $this->entityManager->getRepository(Rack::class)
+                ->findAllRack($params);
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+            'rows' => $result,
+        ]);        
+    }        
 }

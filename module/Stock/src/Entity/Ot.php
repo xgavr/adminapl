@@ -587,6 +587,11 @@ class Ot {
         return;
     }
 
+    public function getOtGoods()
+    {
+        return $this->otGoods;
+    }
+    
     public function addOtGoods($otGood)
     {
         $this->otGoods[] = $otGood;

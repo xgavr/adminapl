@@ -37,6 +37,16 @@ class FoldBalance {
     protected $id;
     
     /** 
+     * @ORM\Column(name="fold_code")  
+     */
+    protected $foldCode;
+    
+    /** 
+     * @ORM\Column(name="fold_name")  
+     */
+    protected $foldName;
+    
+    /** 
      * @ORM\Column(name="rest")  
      */
     protected $rest;
@@ -85,6 +95,24 @@ class FoldBalance {
         return $this;
     }
 
+    public function getFoldCode() {
+        return $this->foldCode;
+    }
+
+    public function setFoldCode($foldCode) {
+        $this->foldCode = $foldCode;
+        return $this;
+    }
+
+    public function getFoldName() {
+        return $this->foldName;
+    }
+
+    public function setFoldName($foldName) {
+        $this->foldName = $foldName;
+        return $this;
+    }
+        
     public function getRest() {
         return $this->rest;
     }

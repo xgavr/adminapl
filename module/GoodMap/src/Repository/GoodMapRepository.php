@@ -14,6 +14,8 @@ use Company\Entity\Office;
 use GoodMap\Entity\Shelf;
 use GoodMap\Entity\Cell;
 use GoodMap\Entity\Fold;
+use GoodMap\Entity\FoldDoc;
+use Application\Entity\Goods;
 
 
 /**
@@ -102,6 +104,18 @@ class GoodMapRepository extends EntityRepository
                             ->setParameter('2', $office->getId());
                 }
             }
+            if (!empty($params['rack'])){
+                $queryBuilder->andWhere('r.id = :rack')
+                        ->setParameter('rack', $params['rack']->getId());
+            }
+            if (!empty($params['shelf'])){
+                $queryBuilder->andWhere('s.id = :shelf')
+                        ->setParameter('shelf', $params['shelf']->getId());
+            }
+            if (!empty($params['cell'])){
+                $queryBuilder->andWhere('c.id = :cell')
+                        ->setParameter('cell', $params['cell']->getId());
+            }
         }
         
         $data = $queryBuilder->getQuery()->getResult(2);
@@ -119,6 +133,7 @@ class GoodMapRepository extends EntityRepository
                 'tbl' => 'rack',
                 'rid' => $row['id'],
                 'foldCount' => $row['foldCount'],
+                'status' => $row['status'],
             ];
             
             $result[] = $rack;
@@ -135,6 +150,7 @@ class GoodMapRepository extends EntityRepository
                         'tbl' => 'shelf',
                         'rid' => $rowShelf['id'],
                         'foldCount' => $rowShelf['foldCount'],
+                        'status' => $row['status'],
                     ];                
                     
                     $result[] = $shelf;
@@ -151,6 +167,7 @@ class GoodMapRepository extends EntityRepository
                                 'tbl' => 'cell',
                                 'rid' => $rowCell['id'],
                                 'foldCount' => $rowCell['foldCount'],
+                                'status' => $row['status'],
                             ];                
 
                             $result[] = $cell;
@@ -165,40 +182,88 @@ class GoodMapRepository extends EntityRepository
     
     /**
      * остаток в месте
-     * @param Fold $fold
+     * @param array $params
      */
-    public function goodFoldRest($fold)
+    public function goodMapRest($params)
     {
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('sum(f.rest) as rest')
+        $queryBuilder->select('sum(f.quantity) as rest')
             ->from(Fold::class, 'f')
             ->setMaxResults(1)
+            ->andWhere('f.good = :good')
+            ->setParameter('good', $params['goodId'])    
             ->andWhere('f.office = :office')
-            ->setParameter('office', $fold->getOffice()->getId())    
+            ->setParameter('office', $params['officeId'])    
             ->andWhere('f.rack = :rack')
-            ->setParameter('rack', $fold->getRack()->getId())
+            ->setParameter('rack', $params['rackId'])
             ->andWhere('f.status = :status')
             ->setParameter('status', Fold::STATUS_ACTIVE)                
                 ;
         
-        if ($fold->getShelf()){
-            $queryBuilder->andWhere('f.shelf = :shelf')
-                ->setParameter('shelf', $fold->getShelf()->getId());
+        if (!empty($params['shelfId'])){
+            if (is_numeric($params['shelfId'])){
+                $queryBuilder->andWhere('f.shelf = :shelf')
+                    ->setParameter('shelf', $params['shelfId']);
+            }    
         }        
-        if ($fold->getCell()){
-            $queryBuilder->andWhere('f.cell = :cell')
-                ->setParameter('cell', $fold->getCell()->getId());
+        if (!empty($params['cellId'])){
+            if (is_numeric($params['cellId'])){
+                $queryBuilder->andWhere('f.cell = :cell')
+                    ->setParameter('cell', $params['cellId']);
+            }    
         }        
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
-        
-        if ($result){
+//        var_dump($params, $result);
+        if (!empty($result['rest'])){
             return $result['rest'];
         }    
         
         return 0;
+    }
+    
+    /**
+     * остаток в месте
+     * @param Fold $fold
+     */
+    public function goodFoldRest($fold)
+    {
+        return $this->goodMapRest([
+            'goodId' => $fold->getGood()->getId(),
+            'officeId' => $fold->getOffice()->getId(),
+            'rackId' => $fold->getRackId(),
+            'shelfId' => $fold->getShelfId(),
+            'cellId' => $fold->getCellId(),
+        ]);
+    }
+    
+    /**
+     * @param Office $office
+     * @param Goods $good
+     * @param date $docDate
+     * 
+     * @return FoldDoc
+     */
+    public function findLastFoldDoc($office, $good, $docDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('fd')
+            ->from(FoldDoc::class, 'fd')
+            ->andWhere('fd.office = :office')
+            ->setParameter('office', $office->getId())
+            ->andWhere('fd.good = :good')
+            ->setParameter('good', $good->getId())
+            ->andWhere('fd.docDate >= :docDate')
+            ->setParameter('docDate', $docDate)
+            ->setMaxResults(1)    
+                ;
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 }

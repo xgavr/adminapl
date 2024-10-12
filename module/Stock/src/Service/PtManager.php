@@ -58,6 +58,12 @@ class PtManager
     private $orderManager;
         
     /**
+     * Fold manager
+     * @var \GoodMap\Service\FoldManager
+     */
+    private $foldManager;
+        
+    /**
      * Дата запрета
      * @var string
      */
@@ -66,12 +72,14 @@ class PtManager
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager, $orderManager, $adminManager) 
+    public function __construct($entityManager, $logManager, $orderManager, 
+            $adminManager, $foldManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->orderManager = $orderManager;
         $this->adminManager = $adminManager;
+        $this->foldManager = $foldManager;
 
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];        
@@ -342,6 +350,7 @@ class PtManager
         }
         $this->updatePtRetails($pt, $docStamp);
         $this->updatePtMutuals($pt, $docStamp);
+        $this->foldManager->ptFold($pt, $docStamp);
         
         return;
     }

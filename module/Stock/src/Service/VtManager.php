@@ -60,6 +60,12 @@ class VtManager
     private $cashManager;
     
     /**
+     * Fold manager
+     * @var \GoodMap\Service\FoldManager
+     */
+    private $foldManager;
+    
+    /**
      * Дата запрета
      * @var string
      */
@@ -69,7 +75,7 @@ class VtManager
      * Constructs the service.
      */
     public function __construct($entityManager, $logManager, $orderManager, $adminManager,
-            $zpManager, $cashManager) 
+            $zpManager, $cashManager, $foldManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
@@ -77,6 +83,7 @@ class VtManager
         $this->adminManager = $adminManager;
         $this->zpManager = $zpManager;
         $this->cashManager = $cashManager;
+        $this->foldManager = $foldManager;
 
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];        
@@ -412,7 +419,7 @@ class VtManager
         }    
         
         $this->cashManager->addUserVtTransaction($vt, $docStamp);
-        
+        $this->foldManager->vtFold($vt, $docStamp);
         return;
     }
 

@@ -70,7 +70,8 @@
         "laminas/laminas-cache-storage-adapter-memcached": "^2.5",
         "yoomoney/yookassa-sdk-php": "^2.11",
         "shuchkin/simplexlsx": "^1.1",
-        "shuchkin/simplexls": "^0.10.4"
+        "shuchkin/simplexls": "^0.10.4",
+        "splitbrain/php-qrcode": "^0.1.0"
     },
     "autoload": {
         "psr-4": {

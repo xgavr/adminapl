@@ -75,6 +75,8 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="available" data-width="50" data-align="right" data-formatter="availableFormatter">Доступно</th>             
                      <th data-field="retailCount" data-width="50" data-align="right">Продаж</th>             
                      <th data-field="officeName">Офис</th>             
+                     <!--<th data-field="foldCode"  data-width="10" data-editable="true" data-editable-type="select" data-editable-source="/fold/folds">Хранение</th>-->
+                     <th data-field="foldName" data-width="150" data-formatter="foldCodeFormatter">Хранение</th>
                      <th data-field="id" data-width="10" data-formatter="activeFormatter"></th>
                      <th data-field="aplRest"  data-width="5" data-align="right" data-formatter="statusExFormatter" data-cell-style="cellStatusExStyle">А</th>
                  </tr>                
@@ -134,8 +136,19 @@ $this->pageBreadcrumbs()->setItems([
         
         $table.on('load-success.bs.table', function (e, res) {
             tableRowClick();
+            $('.fold').editable();  
         });        
         
+        $(document).on('editable-save.bs.table', '#table', function (e, field, row, old, $el) {
+            console.log(row);
+            if (field === 'foldCode'){
+                $.get( "/fold/change-code?good="+row.id+'&office='+row.officeId
+                        +'&code='+row.foldCode+'&quantity='+row.rest, function(data){
+
+                });        
+            }
+        });                
+
         $("[data-toggle='tooltip']").tooltip();
         
         $ok.click(function () {
@@ -197,6 +210,24 @@ $this->pageBreadcrumbs()->setItems([
 //        ].join(''); 
         return value;
     }    
+    
+    function foldCodeFormatter(value, row){
+        var disabled = (row.rest > 0) ? 'false':'true';
+        return [
+            '<a href="#"',
+            ' class="fold" data-type="select"',
+            ' data-pk="'+row.id+'"',
+            ' data-value="'+row.foldCode+'"',
+            ' data-disabled="'+disabled+'"',
+            ' data-mode="inline"',
+            ' data-showbuttons="false"',
+            ' data-name="code"',
+            ' data-source="/fold/folds?office='+row.officeId+'"',
+            ' data-url="/fold/change-code?good='+row.id+'&office='+row.officeId+'&rest='+row.rest+'">',
+            '</a>'
+        ].join(''); 
+    }    
+    
     
     function activeFormatter(value, row){
         var disabled = 'disabled="diasbled"';

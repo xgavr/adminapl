@@ -15,6 +15,7 @@ use Company\Entity\Office;
 use GoodMap\Entity\Fold;
 use GoodMap\Entity\FoldBalance;
 use GoodMap\Entity\FoldDoc;
+use Stock\Entity\Ptu;
 
 /**
  * Description of GoodMapManager
@@ -239,7 +240,7 @@ class GoodMapManager {
         if (!$rack->getCode()){
             $codeCount = $this->entityManager->getRepository(Rack::class)
                     ->count(['office' => $office->getId()]);
-            $rack->setCode($codeCount);                
+            $rack->setCode($office->getId().'-'.$codeCount);                
             
             $this->entityManager->persist($rack);
             $this->entityManager->flush();
@@ -345,6 +346,20 @@ class GoodMapManager {
     
     /**
      * 
+     * @param Rack $rack
+     * @param int $status
+     */
+    public function updateRackStatus($rack, $status)
+    {
+        $rack->setStatus($status);
+        $this->entityManager->persist($rack);
+        $this->entityManager->flush();
+        
+        return;
+    }        
+    
+    /**
+     * 
      * @param Shelf $shelf
      * @param str $name
      */
@@ -387,6 +402,20 @@ class GoodMapManager {
     
     /**
      * 
+     * @param Shelf $shelf
+     * @param int $status
+     */
+    public function updateShelfStatus($shelf, $status)
+    {
+        $shelf->setStatus($status);
+        $this->entityManager->persist($shelf);
+        $this->entityManager->flush();
+        
+        return;
+    }        
+    
+    /**
+     * 
      * @param Cell $cell
      * @param str $name
      */
@@ -425,172 +454,57 @@ class GoodMapManager {
         $this->entityManager->flush();
         
         return;
-    }
+    }        
     
     /**
      * 
-     * @param array $data
-     * @return Fold
+     * @param Cell $cell
+     * @param int $status
      */
-    public function addFold($data)
+    public function updateCellStatus($cell, $status)
     {
-        $fold = new Fold();
-        $fold->setCell(empty($data['cell']) ?  null:$data['cell']);
-        $fold->setDateOper($data['dateOper']);
-        $fold->setDocId(empty($data['docId']) ?  null:$data['docId']);
-        $fold->setDocKey(empty($data['docKey']) ?  null:$data['docKey']);
-        $fold->setDocStamp(empty($data['docStamp']) ?  null:$data['docStamp']);
-        $fold->setDocType(empty($data['docType']) ?  null:$data['docType']);
-        $fold->setGood($data['good']);
-        $fold->setOffice($data['office']);
-        $fold->setQuantity($data['quantity']);
-        $fold->setRack($data['rack']);
-        $fold->setShelf(empty($data['shelf']) ?  null:$data['shelf']);
-        $fold->setStatus($data['status']);
-        
-        $this->entityManager->persist($fold);
-        $this->entityManager->flush();
-        
-        $this->updateFoldBalance($fold);
-        
-        return $fold;
-    }
-    
-    /**
-     * @param Fola $fold
-     * @param array $data
-     * @return Fold
-     */
-    public function updateFold($fold, $data)
-    {
-        $fold->setCell(empty($data['cell']) ?  null:$data['cell']);
-        $fold->setDateOper($data['dateOper']);
-        $fold->setDocId(empty($data['docId']) ?  null:$data['docId']);
-        $fold->setDocKey(empty($data['docKey']) ?  null:$data['docKey']);
-        $fold->setDocStamp(empty($data['docStamp']) ?  null:$data['docStamp']);
-        $fold->setDocType(empty($data['docType']) ?  null:$data['docType']);
-        $fold->setGood($data['good']);
-        $fold->setOffice($data['office']);
-        $fold->setQuantity($data['quantity']);
-        $fold->setRack($data['rack']);
-        $fold->setShelf(empty($data['shelf']) ?  null:$data['shelf']);
-        $fold->setStatus($data['status']);
-        
-        $this->entityManager->persist($fold);
-        $this->entityManager->flush();
-        
-        $this->updateFoldBalance($fold);
-        
-        return $fold;
-    }
-    
-    /**
-     * 
-     * @param Fold $fold
-     * @return bool
-     */
-    public function removeFold($fold)
-    {
-        $this->entityManager->remove($fold);
-        $this->entityManager->flush();
-        
-        return true;
-    }    
-    
-    /**
-     * Обновить остаток в месте хранения
-     * @param Fold $fold
-     */
-    public function updateFoldBalance($fold)
-    {
-        $params = [
-            'good' => $fold->getGood()->getId(),
-            'office' => $fold->getOffice()->getId(),
-            'rack' => $fold->getRackId(),
-            'shelf' => $fold->getShelfId(),
-            'cell' => $fold->getCellId(),
-        ];
-        
-        $foldBalance = $this->entityManager->getRepository(FoldBalance::class)
-                ->findOneBy(array_filter($params));
-                
-        if (!$foldBalance){
-            $foldBalance = new FoldBalance();
-            $foldBalance->setCell($fold->getCell());
-            $foldBalance->setGood($fold->getGood());
-            $foldBalance->setOffice($fold->getOffice());
-            $foldBalance->setRack($fold->getRack());
-            $foldBalance->setShelf($fold->getShelf());
-            $foldBalance->setStatus(FoldBalance::STATUS_ACTIVE);
-        }
-        
-        $foldBalance->setRest($this->entityManager->getRepository(Fold::class)->goodFoldRest($fold));
-        
-        $this->entityManager->persist($foldBalance);
+        $cell->setStatus($status);
+        $this->entityManager->persist($cell);
         $this->entityManager->flush();
         
         return;
-    }
-    
+    }    
+
     /**
-     * 
-     * @param array $data
-     * @return FoldDoc
+     * Разложить код на сущности
+     * @param string $code
      */
-    public function addFoldDoc($data)
+    public function decodeCode($code) 
     {
-        $foldDoc = new FoldDoc();
-        $foldDoc->setCell(empty($data['cell']) ?  null:$data['cell']);
-        $foldDoc->setDateCreated(date('Y--m-d H:i:s'));
-        $foldDoc->setDocDate($data['docDate']);
-        $foldDoc->setGood($data['good']);
-        $foldDoc->setKind($data['kind']);
-        $foldDoc->setOffice($data['office']);
-        $foldDoc->setQuantity($data['quantity']);
-        $foldDoc->setRack($data['rack']);
-        $foldDoc->setShelf(empty($data['shelf']) ?  null:$data['shelf']);
-        $foldDoc->setStatus($data['status']);
+        $rack = $this->entityManager->getRepository(Rack::class)
+                ->findOneBy(['code' => $code]);
         
-        $this->entityManager->persist($foldDoc);
-        $this->entityManager->flush();
-                
-        return $foldDoc;
-    }
+        $result = [
+            'rack' => $rack,
+            'shelf' => null,
+            'cell' => null,
+        ];    
         
-    /**
-     * 
-     * @param FoldDoc $foldDoc
-     * @param array $data
-     * @return Fold
-     */
-    public function updateFoldDoc($foldDoc, $data)
-    {
-        $foldDoc->setCell(empty($data['cell']) ?  null:$data['cell']);
-        $foldDoc->setDocDate($data['docDate']);
-        $foldDoc->setGood($data['good']);
-        $foldDoc->setKind($data['kind']);
-        $foldDoc->setOffice($data['office']);
-        $foldDoc->setQuantity($data['quantity']);
-        $foldDoc->setRack($data['rack']);
-        $foldDoc->setShelf(empty($data['shelf']) ?  null:$data['shelf']);
-        $foldDoc->setStatus($data['status']);
+        $shelf = $this->entityManager->getRepository(Shelf::class)
+                ->findOneBy(['code' => $code]);
+        if ($shelf){
+            $result = [
+                'rack' => $shelf->getRack(),
+                'shelf' => $shelf,
+                'cell' => null,
+            ];    
+        }
         
-        $this->entityManager->persist($foldDoc);
-        $this->entityManager->flush();
-                
-        return $foldDoc;
-    }
+        $cell = $this->entityManager->getRepository(Cell::class)
+                ->findOneBy(['code' => $code]);
+        if ($cell){
+            $result = [
+                'rack' => $cell->getShelf()->getRack(),
+                'shelf' => $cell->getShelf(),
+                'cell' => $cell,
+            ];    
+        }
         
-    /**
-     * 
-     * @param FoldDoc $foldDoc
-     * @return bool
-     */
-    public function removeFoldDoc($foldDoc)
-    {
-        $this->entityManager->remove($foldDoc);
-        $this->entityManager->flush();
-        
-        return true;
-    }        
+        return $result;
+    }           
 }

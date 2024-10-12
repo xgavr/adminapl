@@ -36,6 +36,12 @@ class OtManager
     private $adminManager;
         
     /**
+     * Fold manager
+     * @var \GoodMap\Service\FoldManager
+     */
+    private $foldManager;
+        
+    /**
      * Дата запрета
      * @var string
      */
@@ -44,11 +50,12 @@ class OtManager
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager, $adminManager) 
+    public function __construct($entityManager, $logManager, $adminManager, $foldManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->adminManager = $adminManager;
+        $this->foldManager = $foldManager;
         
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];
@@ -147,6 +154,8 @@ class OtManager
                     ->updateComissBalance($otGood->getGood()->getId());            
         }    
 
+        $this->foldManager->otFold($ot, $docStamp);
+        
         return;
     }    
     

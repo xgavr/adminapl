@@ -28,11 +28,9 @@
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>" <?= ($office->getId() === $currentOfficeId) ? 'selected':'' ?>><?= $office->getName()?></option>
                         <?php endforeach;?>
-                    </select>                    
+                    </select>
+                    
                 </div>    
-                <button class="btn btn-default print-barcode" type="button" title="Печать">
-                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
-                </button>                
             </div>
         </div>
         <table id="table" 
@@ -61,14 +59,13 @@
                 <tr>
                     <!--<th data-check="true"></th>-->
                     <!--<th data-field="id" data-sortable="false" data-width="10" data-align="left">Номер</th>-->
-                    <th data-field="code" data-sortable="true" data-width="10" data-align="left">Код</th>
+                    <th data-field="code" data-sortable="true" data-width="10" data-editable="true" data-align="left">Код</th>
                     <th data-field='name' data-editable="true" >Наименование</th>
                     <th data-field='comment' data-editable="true" >Примечание</th>
                     <th data-field='status' data-editable="true" data-editable-type="select" data-editable-source="/good-map/statuses">Назначение</th>
                     <!--<th data-field="foldCount" data-formatter="foldFormatter" data-width="5" data-align="right">К</th>-->
                     <th data-field="" data-formatter="activeAddFormatter" data-width="5"></th>
-                    <th data-field="" data-formatter="activeAddFormatter" data-width="5"></th>
-                    <th data-field="" data-formatter="printFormatter" data-width="5"></th>
+                    <th data-field="" data-formatter="activeDelFormatter" data-width="5"></th>
                  </tr>                
             </thead>
         </table>
@@ -130,10 +127,6 @@
         
         $(document).on('click', '.add-location', function (e) {
             addLocation($(this).attr('add-url'));
-        });
-
-        $(document).on('click', '.print-barcode', function (e) {
-            prnt('/good-map/print-barcode?office='+$('#officeSelect').val()+'&code='+$(this).attr('data-code'));
         });
 
         $(document).on('click', '.del-location', function (e) {
@@ -228,18 +221,6 @@
             btn += '</button>';
             return btn;
         }
-        
-        return '';
-    }    
-    
-    function printFormatter(value, row){
-        btn = '<button';
-        btn += ' type="button" title="Печать '+row.name+'"';
-        btn += ' class="btn btn-default btn-xs print-barcode"';
-        btn += ' aria-label="Left Align" data-code="'+row.code+'">'; 
-        btn += '<span class="glyphicon glyphicon-print" aria-hidden="true"></span>';
-        btn += '</button>';
-        return btn;
         
         return '';
     }    

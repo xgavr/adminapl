@@ -23,11 +23,26 @@ return [
                     ],
                 ],
             ],
+            'fold' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/fold[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\FoldController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
         ],
     ],    
     'controllers' => [
         'factories' => [
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
+            Controller\FoldController::class => Controller\Factory\FoldControllerFactory::class,
         ],
     ],
     'access_filter' => [
@@ -36,11 +51,16 @@ return [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
+            Controller\FoldController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
         ],
     ],    
     'service_manager' => [
         'factories' => [
             Service\GoodMapManager::class => Service\Factory\GoodMapManagerFactory::class,
+            Service\FoldManager::class => Service\Factory\FoldManagerFactory::class,
         ],
     ],    
     'view_manager' => [

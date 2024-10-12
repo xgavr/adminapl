@@ -8,6 +8,7 @@ use Application\Service\OrderManager;
 use Admin\Service\AdminManager;
 use Zp\Service\ZpCalculator;
 use Cash\Service\CashManager;
+use GoodMap\Service\FoldManager;
 
 /**
  * This is the factory class for VtManager service. The purpose of the factory
@@ -26,8 +27,9 @@ class VtManagerFactory
         $adminManager = $container->get(AdminManager::class);
         $zpManager = $container->get(ZpCalculator::class);
         $cashManager = $container->get(CashManager::class);
+        $foldManager = $container->get(FoldManager::class);
                         
         return new VtManager($entityManager, $logManager, $orderManager, $adminManager,
-                $zpManager, $cashManager);
+                $zpManager, $cashManager, $foldManager);
     }
 }

@@ -7,6 +7,7 @@ use Admin\Service\LogManager;
 use Admin\Service\AdminManager;
 use Zp\Service\ZpCalculator;
 use Company\Service\CostManager;
+use GoodMap\Service\FoldManager;
 
 /**
  * This is the factory class for StManager service. The purpose of the factory
@@ -24,8 +25,9 @@ class StManagerFactory
         $adminManager = $container->get(AdminManager::class);
         $zpManager = $container->get(ZpCalculator::class);
         $costManager = $container->get(CostManager::class);
+        $foldManager = $container->get(FoldManager::class);
                         
         return new StManager($entityManager, $logManager, $adminManager, $zpManager,
-                $costManager);
+                $costManager, $foldManager);
     }
 }

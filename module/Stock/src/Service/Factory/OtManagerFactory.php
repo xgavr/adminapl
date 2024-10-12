@@ -5,6 +5,7 @@ use Interop\Container\ContainerInterface;
 use Stock\Service\OtManager;
 use Admin\Service\LogManager;
 use Admin\Service\AdminManager;
+use GoodMap\Service\FoldManager;
 
 /**
  * This is the factory class for OtManager service. The purpose of the factory
@@ -20,7 +21,8 @@ class OtManagerFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
         $adminManager = $container->get(AdminManager::class);
+        $foldManager = $container->get(FoldManager::class);
                         
-        return new OtManager($entityManager, $logManager, $adminManager);
+        return new OtManager($entityManager, $logManager, $adminManager, $foldManager);
     }
 }

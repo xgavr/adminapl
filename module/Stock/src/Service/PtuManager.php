@@ -46,6 +46,12 @@ class PtuManager
     private $costManager;
         
     /**
+     * Fold manager
+     * @var \GoodMap\Service\FoldManager
+     */
+    private $foldManager;
+        
+    /**
      * Дата запрета
      * @var string
      */
@@ -54,12 +60,14 @@ class PtuManager
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager, $adminManager, $costManager) 
+    public function __construct($entityManager, $logManager, $adminManager, 
+            $costManager, $foldManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->adminManager = $adminManager;
         $this->costManager = $costManager;
+        $this->foldManager = $foldManager;
 
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];
@@ -266,7 +274,7 @@ class PtuManager
             $this->updatePtuMutuals($ptu, $docStamp);
             $this->updatePtuRetail($ptu, $docStamp);
             $this->costManager->repostPtu($ptu, $docStamp);
-        
+            $this->foldManager->ptuFold($ptu, $docStamp);
         }    
         return;
     }

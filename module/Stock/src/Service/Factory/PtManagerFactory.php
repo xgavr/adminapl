@@ -6,6 +6,7 @@ use Stock\Service\PtManager;
 use Admin\Service\LogManager;
 use Application\Service\OrderManager;
 use Admin\Service\AdminManager;
+use GoodMap\Service\FoldManager;
 
 /**
  * This is the factory class for PtManager service. The purpose of the factory
@@ -22,7 +23,9 @@ class PtManagerFactory
         $logManager = $container->get(LogManager::class);
         $orderManager = $container->get(OrderManager::class);
         $adminManager = $container->get(AdminManager::class);
+        $foldManager = $container->get(FoldManager::class);
                         
-        return new PtManager($entityManager, $logManager, $orderManager, $adminManager);
+        return new PtManager($entityManager, $logManager, $orderManager, 
+                $adminManager, $foldManager);
     }
 }

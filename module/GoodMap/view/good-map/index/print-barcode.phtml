@@ -1,0 +1,38 @@
+<?php
+    use splitbrain\phpQRCode\QRCode;
+    
+?>
+<style>
+    svg {
+        width: 5em;
+        height: 5em;
+        /*fill: #ff0000;*/
+    }    
+</style>
+
+<table border="1">   
+    <tr>
+        <th>Код</th>
+        <th>Наименование</th>
+        <th>Баркод</th>
+    </tr>
+    <?php foreach($rows as $row):?>
+        <tr>
+            <td>
+                <?= $row['code']?>
+            </td>    
+            <td>
+                <?= $row['name']?>
+            </td>    
+            <td align="center">
+                <?php 
+                    echo QRCode::svg($row['code']);
+                ?>
+            </td>    
+        </tr>
+    <?php endforeach;?>        
+</table>
+
+<script type="text/javascript">
+</script>
+

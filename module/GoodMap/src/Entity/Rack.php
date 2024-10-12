@@ -22,8 +22,10 @@ use GoodMap\Entity\Shelf;
 class Rack {
     
      // Rack status constants.
-    const STATUS_ACTIVE       = 1; // Active.
-    const STATUS_RETIRED      = 2; // Retired.
+    const STATUS_ACTIVE       = 1; // Общее хранение.
+    const STATUS_RETIRED      = 2; // Не использовать.
+    const STATUS_EXTRADITION      = 3; // Выдача.
+    const STATUS_RETURN      = 4; // Возврат.
    
     
     /**
@@ -134,8 +136,10 @@ class Rack {
     public static function getStatusList() 
     {
         return [
-            self::STATUS_ACTIVE => 'Активный',
-            self::STATUS_RETIRED => 'Удален',
+            self::STATUS_ACTIVE => 'Обычное хранение',
+            self::STATUS_RETIRED => 'Не использовать',
+            self::STATUS_EXTRADITION => 'Выдача',
+            self::STATUS_RETURN => 'Возврат',
         ];
     }    
     

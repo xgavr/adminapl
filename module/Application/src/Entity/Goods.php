@@ -359,6 +359,12 @@ class Goods {
    private $goodSuppliers;
 
    /**
+    * @ORM\OneToMany(targetEntity="GoodMap\Entity\FoldBalance", mappedBy="good")
+    * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
+   */
+   private $foldBalances;
+
+   /**
      * Конструктор.
      */
     public function __construct() 
@@ -369,6 +375,7 @@ class Goods {
       $this->cars = new ArrayCollection();
       $this->attributeValues = new ArrayCollection();
       $this->oems = new ArrayCollection();
+      $this->foldBalances = new ArrayCollection();
     }
     
   
@@ -1303,6 +1310,10 @@ class Goods {
         return $this->goodSuppliers;
     }    
     
+    public function getFoldBalances() {
+        return $this->foldBalances;
+    }
+
     /**
      * Лог
      * @return array
