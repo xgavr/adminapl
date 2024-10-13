@@ -696,8 +696,10 @@ class OrderRepository extends EntityRepository{
             }
         }
         if (!empty($params['office'])){
-            $queryBuilder->andWhere('o.office = :office')
-                    ->setParameter('office', $params['office']);
+            if (is_numeric($params['office'])){
+                $queryBuilder->andWhere('o.office = :office')
+                        ->setParameter('office', $params['office']);
+            }    
         }
         if (!empty($params['year'])){
             $queryBuilder->select('MONTH(o.dateOper) as month, sum(o.total) as total')
@@ -713,7 +715,7 @@ class OrderRepository extends EntityRepository{
         if (!empty($params['base'])){
             
         }
-        
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }
 

@@ -61,16 +61,7 @@
 </div>
 
 <script>
-    var $table = $('#table').bootstrapTable({
-        onLoadSuccess: function(data){
-                var x = []; var y = [];
-                $.each(data.rows, function( index, value ) {
-                    x.push(value.year);
-                    y.push(value.total);
-                });
-                plotly(x, y);
-            }                    
-        }),
+    var $table = $('#table').bootstrapTable(),
         $ok = $('#ok');
 
     function refreshTable(){
@@ -92,6 +83,15 @@
     }
     
     $(function(){        
+        $table.on('load-success.bs.table', function (e, data) {
+            var x = []; var y = [];
+            $.each(data.rows, function( index, value ) {
+                x.push(value.year);
+                y.push(value.total);
+            });
+            plotly(x, y);
+        });  
+        
         $(document).on('change', '#officeSelect', function (e) {
             refreshTable();
         });
