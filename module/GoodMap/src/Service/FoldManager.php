@@ -615,7 +615,7 @@ class FoldManager {
             foreach ($vtp->getVtpGoods() as $vtpGood){
                 
                 $lastFoldDoc =  $this->entityManager->getRepository(FoldDoc::class)
-                        ->findLastFoldDoc($vtp->getOffice(), $vtpGood->getGood(), $vtp->getDocDate());
+                        ->findLastFoldDoc($vtp->getPtu()->getOffice(), $vtpGood->getGood(), $vtp->getDocDate());
                 
                 if (!empty($lastFoldDoc)){
                     continue;
