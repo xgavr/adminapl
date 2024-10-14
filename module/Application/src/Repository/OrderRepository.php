@@ -784,7 +784,7 @@ class OrderRepository extends EntityRepository{
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
         
-        $queryBuilder->select('count(m.good) as countId, '
+        $queryBuilder->select('count(distinct(m.good)) as countId, '
                 . 'sum(-m.amount + m.baseAmount) as income, '
                 . 'sum(-m.quantity) as quantity')
                 ->from(Movement::class, 'm')
@@ -812,9 +812,6 @@ class OrderRepository extends EntityRepository{
                 ->setParameter('endDate', $params['endDate']) 
                     ;
         }
-        if (isset($params['sort'])){
-            $queryBuilder->orderBy($params['sort'], $params['order']);
-        }            
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }
@@ -882,7 +879,7 @@ class OrderRepository extends EntityRepository{
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
         
-        $queryBuilder->select('count(ifnull(g.tokenGroup, 0)) as tgCount, '
+        $queryBuilder->select('count(distinct(ifnull(g.tokenGroup, 0))) as tgCount, '
                 . 'sum(-m.amount + m.baseAmount) as income, '
                 . 'sum(-m.quantity) as quantity')
                 ->from(Movement::class, 'm')
@@ -910,9 +907,6 @@ class OrderRepository extends EntityRepository{
                 ->setParameter('endDate', $params['endDate']) 
                     ;
         }
-        if (isset($params['sort'])){
-            $queryBuilder->orderBy($params['sort'], $params['order']);
-        }            
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }

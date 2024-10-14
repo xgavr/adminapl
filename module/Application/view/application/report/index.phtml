@@ -272,7 +272,6 @@
             res.push({x: x, y:y, type:"lines", name: 'Продажа'});
             res.push({x: x1, y:y1, type:"lines", name: 'Закупка'});
             res.push({x: x2, y:y2, type:"lines", name: 'Доход'});
-//            res.push({x: x3, y:y3, type:"lines", name: 'Товаров, шт'});
             
             const layout = {xaxis: {title: xTitle}, yaxis: {title: 'Сумма'}};
                 
@@ -305,13 +304,13 @@
         });  
         
         $table3.on('load-success.bs.table', function (e, data) {
-            $('#table3 .incomeFooter').text($.number(data.income,  0, ',', ' '));
-            $('#table3 .quantityFooter').text($.number(data.quantity,  0, ',', ' '));
+            $table3.find('.incomeFooter').text($.number(data.income,  0, ',', ' '));
+            $table3.find('.quantityFooter').text($.number(data.quantity,  0, ',', ' '));
         });  
         
         $table4.on('load-success.bs.table', function (e, data) {
-            $('#table4 .incomeFooter').text($.number(data.income,  0, ',', ' '));
-            $('#table4 .quantityFooter').text($.number(data.quantity,  0, ',', ' '));
+            $table4.find('.incomeFooter').text($.number(data.income,  0, ',', ' '));
+            $table4.find('.quantityFooter').text($.number(data.quantity,  0, ',', ' '));
         });  
         
         $(document).on('change', '.officeSelect', function (e) {
