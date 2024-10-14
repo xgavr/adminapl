@@ -454,6 +454,11 @@ class NavManager
                             'label' => 'ОПиУ',
                             'link' => $url('opu')
                         ];
+                $reportDropdownItems[] = [
+                            'id' => 'fin',
+                            'label' => 'Аналитика',
+                            'link' => $url('report')
+                        ];
                                 
                 if (count($reportDropdownItems)!=0) {
                     $items[] = [
