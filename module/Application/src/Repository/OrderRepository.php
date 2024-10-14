@@ -832,7 +832,7 @@ class OrderRepository extends EntityRepository{
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
         
-        $queryBuilder->select('ifnull(g.tokenGroup, \'Без категории\') as tgName, ifnull(tg.lemms, \'Без категории\') as tgLemms, '
+        $queryBuilder->select('ifnull(tg.name, \'Без категории\') as tgName, ifnull(tg.lemms, \'Без категории\') as tgLemms, '
                 . 'sum(-m.amount + m.baseAmount) as income, '
                 . 'sum(-m.quantity) as quantity')
                 ->from(Movement::class, 'm')
