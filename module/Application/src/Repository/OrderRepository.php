@@ -788,7 +788,6 @@ class OrderRepository extends EntityRepository{
                 . 'sum(-m.amount + m.baseAmount) as income, '
                 . 'sum(-m.quantity) as quantity')
                 ->from(Movement::class, 'm')
-                ->join('m.good', 'g')
                 ->where('m.status = :status')
                 ->setParameter('status', Movement::STATUS_ACTIVE)    
                 ->andWhere($orX)
@@ -820,6 +819,104 @@ class OrderRepository extends EntityRepository{
         return $queryBuilder->getQuery();
     }
 
+    /**
+     * Выручка по группам товаров
+     * @param array $params
+     */
+    public function revenueByTokenGroup($params)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('ifnull(g.tokenGroup, \'Без категории\') as tgName, ifnull(tg.lemms, \'Без категории\') as tgLemms, '
+                . 'sum(-m.amount + m.baseAmount) as income, '
+                . 'sum(-m.quantity) as quantity')
+                ->from(Movement::class, 'm')
+                ->join('m.good', 'g')
+                ->leftJoin('g.tokenGroup', 'tg')
+                ->where('m.status = :status')
+                ->setParameter('status', Movement::STATUS_ACTIVE)    
+                ->andWhere($orX)
+                ->groupBy('g.tokenGroup')
+                ;
+        
+        if (!empty($params['office'])){
+            if (is_numeric($params['office'])){
+                $queryBuilder->andWhere('m.office = :office')
+                        ->setParameter('office', $params['office']);
+            }    
+        }
+        if (!empty($params['startDate'])){
+            $queryBuilder
+                ->andWhere('m.dateOper >= :startDate')    
+                ->setParameter('startDate', $params['startDate'])    
+                    ;
+        }
+        if (!empty($params['endDate'])){
+            $queryBuilder
+                ->andWhere('m.dateOper <= :endDate')    
+                ->setParameter('endDate', $params['endDate']) 
+                    ;
+        }
+        if (isset($params['sort'])){
+            $queryBuilder->orderBy($params['sort'], $params['order']);
+        }            
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }
+    
+    /**
+     * Количество по группам товаров
+     * @param array $params
+     */
+    public function revenueByTokenGroupCount($params)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('count(ifnull(g.tokenGroup, 0)) as tgCount, '
+                . 'sum(-m.amount + m.baseAmount) as income, '
+                . 'sum(-m.quantity) as quantity')
+                ->from(Movement::class, 'm')
+                ->join('m.good', 'g')
+                ->where('m.status = :status')
+                ->setParameter('status', Movement::STATUS_ACTIVE)    
+                ->andWhere($orX)
+                ;
+        
+        if (!empty($params['office'])){
+            if (is_numeric($params['office'])){
+                $queryBuilder->andWhere('m.office = :office')
+                        ->setParameter('office', $params['office']);
+            }    
+        }
+        if (!empty($params['startDate'])){
+            $queryBuilder
+                ->andWhere('m.dateOper >= :startDate')    
+                ->setParameter('startDate', $params['startDate'])    
+                    ;
+        }
+        if (!empty($params['endDate'])){
+            $queryBuilder
+                ->andWhere('m.dateOper <= :endDate')    
+                ->setParameter('endDate', $params['endDate']) 
+                    ;
+        }
+        if (isset($params['sort'])){
+            $queryBuilder->orderBy($params['sort'], $params['order']);
+        }            
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }
+    
     /**
      * Найти записи для отправки в АПЛ
      */
