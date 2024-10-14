@@ -46,8 +46,8 @@
         <table id="table" 
             data-toggle="table" 
             data-url="/report/revenueByYears"
-            data-side-pagination="server"
-            data-pagination="false" 
+            data-side-pagination="client"
+            data-pagination="true" 
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
@@ -58,14 +58,15 @@
             data-classes = "table table-bordered table-hover table-condensed"
             data-response-handler="responseHandler"
             data-show-export="true"
+            data-show-footer="true"
             >
             <thead>
                 <tr>
                      <th data-field="period" data-align="right">Период</th>
-                     <th data-field='revenue' data-sortable="false" data-align="right" data-formatter="totalFormatter">Продажа</th>
-                     <th data-field='purchase' data-sortable="false" data-align="right" data-formatter="totalFormatter">Закупка</th>
-                     <th data-field='income' data-sortable="false" data-align="right" data-formatter="totalFormatter">Доход</th>
-                     <th data-field='quantity' data-sortable="false" data-align="right" data-formatter="totalFormatter">Товаров, шт</th>
+                     <th data-field='revenue' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Продажа</th>
+                     <th data-field='purchase' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Закупка</th>
+                     <th data-field='income' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Доход</th>
+                     <!--<th data-field='quantity' data-sortable="false" data-align="right" data-formatter="totalFormatter">Товаров, шт</th>-->
                  </tr>                
             </thead>
         </table>
@@ -96,7 +97,7 @@
             var x = []; var y = []; 
             var x1 = []; var y1 = []; 
             var x2 = []; var y2 = []; 
-            var x3 = []; var y3 = []; 
+//            var x3 = []; var y3 = []; 
             var res = []; 
             var TESTER = document.getElementById('tester');
             $.each(data.rows, function( index, value ) {
@@ -106,14 +107,14 @@
                 y1.push(value.purchase);
                 x2.push(value.period);
                 y2.push(value.income);
-                x3.push(value.period);
-                y3.push(value.quantity);
+//                x3.push(value.period);
+//                y3.push(value.quantity);
             });
             
             res.push({x: x, y:y, type:"lines", name: 'Продажа'});
             res.push({x: x1, y:y1, type:"lines", name: 'Закупка'});
             res.push({x: x2, y:y2, type:"lines", name: 'Доход'});
-            res.push({x: x3, y:y3, type:"lines", name: 'Товаров, шт'});
+//            res.push({x: x3, y:y3, type:"lines", name: 'Товаров, шт'});
             
             const layout = {title: "Обороты", type: 'bar'};
                 
@@ -177,6 +178,15 @@
     function totalFormatter(value, row){
         return $.number(value, 0, ',', ' ' );
     }
+    
+    function footerFormatter(data){
+        var field = this.field;
+        return $.number((data.map(function (row) {
+            return +row[field];
+        }).reduce(function (sum, i) {
+            return (Math.round((sum + i)*100)/100);
+        }, 0)), 0, ',', ' ');
+    }    
     
     function responseHandler(res) {
         return res;
