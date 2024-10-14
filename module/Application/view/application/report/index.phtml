@@ -155,7 +155,7 @@
             res.push({x: x2, y:y2, type:"lines", name: 'Доход'});
 //            res.push({x: x3, y:y3, type:"lines", name: 'Товаров, шт'});
             
-            const layout = {title: "Обороты", xaxis: {title: 'период'}, yaxis: {title: 'Сумма'}};
+            const layout = {title: "Суммовые характеристики", xaxis: {title: 'период'}, yaxis: {title: 'Сумма'}};
                 
             Plotly.newPlot( TESTER, res, layout);        
         });  
@@ -180,7 +180,7 @@
             res.push({x: x1, y:y1, type:"lines", name: 'Товары, шт'});
             res.push({x: x2, y:y2, type:"lines", name: 'Возвраты'});
             
-            const layout = {title: "Количество", xaxis: {title: 'период'}, yaxis: {title: 'Сумма'}};
+            const layout = {title: "Количественные характеристики", xaxis: {title: 'период'}, yaxis: {title: 'Количество'}};
                 
             Plotly.newPlot( TESTER, res, layout);        
         });  
