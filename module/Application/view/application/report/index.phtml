@@ -65,6 +65,7 @@
                      <th data-field='revenue' data-sortable="false" data-align="right" data-formatter="totalFormatter">Продажа</th>
                      <th data-field='purchase' data-sortable="false" data-align="right" data-formatter="totalFormatter">Закупка</th>
                      <th data-field='income' data-sortable="false" data-align="right" data-formatter="totalFormatter">Доход</th>
+                     <th data-field='quantity' data-sortable="false" data-align="right" data-formatter="totalFormatter">Товаров, шт</th>
                  </tr>                
             </thead>
         </table>
@@ -95,6 +96,7 @@
             var x = []; var y = []; 
             var x1 = []; var y1 = []; 
             var x2 = []; var y2 = []; 
+            var x3 = []; var y3 = []; 
             var res = []; 
             var TESTER = document.getElementById('tester');
             $.each(data.rows, function( index, value ) {
@@ -104,11 +106,14 @@
                 y1.push(value.purchase);
                 x2.push(value.period);
                 y2.push(value.income);
+                x3.push(value.period);
+                y3.push(value.quantity);
             });
             
             res.push({x: x, y:y, type:"lines", name: 'Продажа'});
             res.push({x: x1, y:y1, type:"lines", name: 'Закупка'});
             res.push({x: x2, y:y2, type:"lines", name: 'Доход'});
+            res.push({x: x3, y:y3, type:"lines", name: 'Товаров, шт'});
             
             const layout = {title: "Обороты", type: 'bar'};
                 
