@@ -704,6 +704,7 @@ class OrderRepository extends EntityRepository{
                     $queryBuilder->addSelect('DAY(m.dateOper) as period');
                     break;
                 case 'year':        
+                case 'number':
                     $queryBuilder->addSelect('MONTH(m.dateOper) as period');
                     brek;
                 default:
