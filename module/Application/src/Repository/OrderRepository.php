@@ -673,9 +673,14 @@ class OrderRepository extends EntityRepository{
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
         
         $queryBuilder->select('sum(-m.amount) as revenue, sum(-m.baseAmount) as purchase, '
-                . 'sum(-m.amount + m.baseAmount) as income, sum(-m.quantity) as quantity')
+                . 'sum(-m.amount + m.baseAmount) as income, '
+                . 'sum(-m.quantity) as quantity, '
+                . 'count(CASE WHEN m.docType = :orderDocType THEN m.docId ELSE 0 END) as orderCount, '
+                . 'count(CASE WHEN m.docType = :vtDocType THEN m.docId ELSE 0 END) as vtCount')
                 ->from(Movement::class, 'm')
                 ->where('m.status = :status')
+                ->setParameter('orderDocType', Movement::DOC_ORDER)    
+                ->setParameter('vtDocType', Movement::DOC_VT)    
                 ->setParameter('status', Movement::STATUS_ACTIVE)    
                 ->andWhere($orX)
                 ->groupBy('period')

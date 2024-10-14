@@ -18,13 +18,11 @@
     <div class="col-md-6">
         <div id="tester"></div>
     </div>
-<!--</div>    
-<div class="row">-->
     <div class="col-md-6">
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <select id="officeSelect" style="width: 100px" class="form-control">
+                    <select style="width: 100px" class="form-control officeSelect">
                         <option selected>офис</option>
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
@@ -32,14 +30,12 @@
                     </select>                    
                 </div>    
                 <div class="form-group">
-                    <select id="periodSelect" class="form-control" name="period">
-                        <!--<option value="date">Дата</option>-->
-                        <!--<option value="week">Неделя</option>-->                        
+                    <select class="form-control periodSelect" name="period">
                         <option value="all">За все времена</option>                        
                         <option value="number">Год</option>                        
                         <option value="month" selected="">Месяц</option>                        
                     </select>
-                    <input name="dateStart" id="dateStart" style="width: 200px" min="2024-01" class="form-control refresh-table" type="month" value="<?= date('Y-m')?>">
+                    <input name="dateStart" style="width: 200px" class="form-control dateStart" type="month" value="<?= date('Y-m')?>">
                 </div>                
             </div>
         </div>
@@ -52,7 +48,7 @@
             data-toolbar="#toolbar"
             data-show-refresh="true"
             data-show-toggle="false"
-            data-query-params="queryParams"
+            data-query-params="queryParams1"
             data-sort-name="period"
             data-sort-order="asc"            
             data-classes = "table table-bordered table-hover table-condensed"
@@ -62,7 +58,7 @@
             >
             <thead>
                 <tr>
-                     <th data-field="period" data-align="right">Период</th>
+                     <th data-field="period" data-align="right" data-footer-formatter="totalFooterFormatter">Период</th>
                      <th data-field='revenue' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Продажа</th>
                      <th data-field='purchase' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Закупка</th>
                      <th data-field='income' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Доход</th>
@@ -73,23 +69,68 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-6">
+        <div id="tester2"></div>
+    </div>
+    <div class="col-md-6">
+        <div id="toolbar2">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <select style="width: 100px" class="form-control officeSelect">
+                        <option selected>офис</option>
+                        <?php foreach ($offices as $office):?>
+                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select class="form-control periodSelect" name="period">
+                        <option value="all">За все времена</option>                        
+                        <option value="number">Год</option>                        
+                        <option value="month" selected="">Месяц</option>                        
+                    </select>
+                    <input name="dateStart" style="width: 200px" class="form-control dateStart" type="month" value="<?= date('Y-m')?>">
+                </div>                
+            </div>
+        </div>
+        <table id="table2" 
+            data-toggle="table" 
+            data-url="/report/revenueByYears"
+            data-side-pagination="client"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar2"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-query-params="queryParams2"
+            data-sort-name="period"
+            data-sort-order="asc"            
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-response-handler="responseHandler"
+            data-show-export="true"
+            data-show-footer="true"
+            >
+            <thead>
+                <tr>
+                     <th data-field="period" data-align="right" data-footer-formatter="totalFooterFormatter">Период</th>
+                     <th data-field='orderCount' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Заказы</th>
+                     <th data-field='quantity' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Товары, шт</th>
+                     <th data-field='vtCount' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Возврат, шт</th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>
+
 <script>
     var $table = $('#table'),
+        $table2 = $('#table2'),
         $ok = $('#ok');
 
     function refreshTable(){
         $table.bootstrapTable('refresh');
-    }
-    
-    function plotly(x, y, layout){
-	TESTER = document.getElementById('tester');
-	Plotly.newPlot( TESTER, [{
-            x: x,
-            y: y,
-            type: 'bar'
-            }], 
-            layout
-        );        
+        $table2.bootstrapTable('refresh');
     }
     
     $(function(){        
@@ -107,8 +148,6 @@
                 y1.push(value.purchase);
                 x2.push(value.period);
                 y2.push(value.income);
-//                x3.push(value.period);
-//                y3.push(value.quantity);
             });
             
             res.push({x: x, y:y, type:"lines", name: 'Продажа'});
@@ -116,65 +155,90 @@
             res.push({x: x2, y:y2, type:"lines", name: 'Доход'});
 //            res.push({x: x3, y:y3, type:"lines", name: 'Товаров, шт'});
             
-            const layout = {title: "Обороты", type: 'bar'};
+            const layout = {title: "Обороты", xaxis: {title: 'период'}, yaxis: {title: 'Сумма'}};
                 
             Plotly.newPlot( TESTER, res, layout);        
         });  
         
-        $(document).on('change', '#officeSelect', function (e) {
+        $table2.on('load-success.bs.table', function (e, data) {
+            var x = []; var y = []; 
+            var x1 = []; var y1 = []; 
+            var x2 = []; var y2 = []; 
+//            var x3 = []; var y3 = []; 
+            var res = []; 
+            var TESTER = document.getElementById('tester2');
+            $.each(data.rows, function( index, value ) {
+                x.push(value.period);
+                y.push(value.orderCount);
+                x1.push(value.period);
+                y1.push(value.quantity);
+                x2.push(value.period);
+                y2.push(value.vtCount);
+            });
+            
+            res.push({x: x, y:y, type:"lines", name: 'Заказы'});
+            res.push({x: x1, y:y1, type:"lines", name: 'Товары, шт'});
+            res.push({x: x2, y:y2, type:"lines", name: 'Возврат, шт'});
+            
+            const layout = {title: "Количество", xaxis: {title: 'период'}, yaxis: {title: 'Сумма'}};
+                
+            Plotly.newPlot( TESTER, res, layout);        
+        });  
+        
+        $(document).on('change', '.officeSelect', function (e) {
+            $('.officeSelect').val($(this).val());
             refreshTable();
         });
-        $(document).on('change', '#dateStart', function (e) {
+        
+        $(document).on('change', '.dateStart', function (e) {
+            $('.dateStart').val($(this).val());
             refreshTable();
         });
-//        $(document).on('change', '#monthSelect', function (e) {
-//            refreshTable();
-//        });        
-        $(document).on('change', '#periodSelect', function (e) {
+
+        $(document).on('change', '.periodSelect', function (e) {
             var selectType = $(this).val();
-            $('#dateStart').attr('type', selectType);
+            $('.periodSelect').val($(this).val());
+            $('.dateStart').attr('type', selectType);
             switch(selectType){
                 case 'number':
-                    $('#dateStart').val(new Date().getFullYear());
-                    //$('#dateStart').attr('min', 2024);
+                    $('.dateStart').val(new Date().getFullYear());
                     break;
                 case 'month':    
-                    //$('#dateStart').attr('min', '2024-01');
-                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM"));
+                    $('.dateStart').val($.format.date(new Date(), "yyyy-MM"));
                     break;
                 case 'all':    
-                    //$('#dateStart').attr('min', '2012-01');
-                    $('#dateStart').val(null);
+                    $('.dateStart').val(null);
                     break;
                 default:
-                    $('#dateStart').attr('min', '2011-01-01');
-                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
+                    $('.dateStart').attr('min', '2011-01-01');
+                    $('.dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
             }
             refreshTable();
         });
     });
 
-    function queryParams(params) {
-        $('#toolbar').find('input[name]').each(function () {
+    function queryParams(params, toolbar) {
+        toolbar.find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        $('#toolbar').find('select[name]').each(function () {
+        toolbar.find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('#table .page-size').html();
-        if (limit){
-            params.limit = limit;
-        }    
-        offset = $('#table li.page-number.active a').html();
-        if (offset){
-            params.offset = params.limit * (offset - 1);
-        }    
-//        params.office = $('#officeSelect').val();
-//        params.month = $('#monthSelect').val();
-        
         return params;
     }        
 
+    function queryParams1(params){
+        return queryParams(params, $('#toolbar'));
+    }
+
+    function queryParams2(params){
+        return queryParams(params, $('#toolbar2'));
+    }
+
+    function totalFooterFormatter() {
+        return 'Итого:';
+    }
+    
     function totalFormatter(value, row){
         return $.number(value, 0, ',', ' ' );
     }
@@ -191,4 +255,5 @@
     function responseHandler(res) {
         return res;
     }    
+    
 </script>
