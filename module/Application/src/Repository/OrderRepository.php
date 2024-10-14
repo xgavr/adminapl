@@ -668,53 +668,48 @@ class OrderRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('YEAR(o.dateOper) as year, sum(o.total) as total')
-                ->from(Order::class, 'o')
-                ->where('o.status = :status')
-                ->setParameter('status', Order::STATUS_SHIPPED)
-                ->groupBy('year')
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('sum(m.amount) as revenue, sum(m.baseAmount) as purchase, sum(m.amount - m.baseAmount) as income')
+                ->from(Movement::class, 'm')
+                ->where('m.status = :status')
+                ->setParameter('status', Movement::STATUS_ACTIVE)    
+                ->andWhere($orX)
+                ->groupBy('period')
                 ;
-        if (!empty($params['base'])){
-            if ($params['base'] == 'bid'){
-                $queryBuilder->select('YEAR(o.dateOper) as year, sum(b.num*b.price) as total')
-                        ->from(Order::class, 'o')                
-                        ->join('o.bids', 'b');                
-            }
-            if ($params['base'] == 'retail'){
-                $queryBuilder->select('YEAR(o.dateOper) as year, sum(o.amount) as total')
-                        ->from(Retail::class, 'o')
-                        ->where('o.status = :status')
-                        ->setParameter('status', Retail::STATUS_ACTIVE)
-                        ;
-            }
-            if ($params['base'] == 'movement'){
-                $queryBuilder->select('YEAR(o.dateOper) as year, sum(o.amount) as total')
-                        ->from(Retail::class, 'o')
-                        ->where('o.status = :status')
-                        ->setParameter('status', Movement::STATUS_ACTIVE)
-                        ;
-            }
-        }
+        
         if (!empty($params['office'])){
             if (is_numeric($params['office'])){
-                $queryBuilder->andWhere('o.office = :office')
+                $queryBuilder->andWhere('m.office = :office')
                         ->setParameter('office', $params['office']);
             }    
         }
-        if (!empty($params['year'])){
-            $queryBuilder->select('MONTH(o.dateOper) as month, sum(o.total) as total')
-                    ->andWhere('YEAR(o.dateOper) = :year')
-                    ->setParameter('year', $params['year'])
-                    ->groupBy('month');
+        if (!empty($params['startDate'])){
+            $queryBuilder
+                ->andWhere('m.dateOper >= :startDate')    
+                ->setParameter('startDate', $params['startDate'])    
+                    ;
         }
-        if (!empty($params['month'])){
-            $queryBuilder->select('DAY(o.dateOper) as day, sum(o.total) as total')
-                    ->andWhere('MONTH(o.dateOper) = :month')
-                    ->setParameter('month', $params['month']);
+        if (!empty($params['endDate'])){
+            $queryBuilder
+                ->andWhere('m.dateOper <= :endDate')    
+                ->setParameter('endDate', $params['endDate']) 
+                    ;
         }
-        if (!empty($params['base'])){
-            
-        }
+        if (!empty($params['period'])){
+            switch ($params['period']){
+                case 'month':
+                    $queryBuilder->addSelect('DAY(m.dateOper) as period');
+                    break;
+                case 'year':        
+                    $queryBuilder->addSelect('MONTH(m.dateOper) as period');
+                    brek;
+                default:
+                    $queryBuilder->addSelect('YEAR(m.dateOper) as period');                    
+                }
+        }    
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }

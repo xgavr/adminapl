@@ -57,11 +57,29 @@ class ReportController extends AbstractActionController
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $office = $this->params()->fromQuery('office');
-        $year = $this->params()->fromQuery('year');
-        $month = $this->params()->fromQuery('month');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period');
         $base = $this->params()->fromQuery('base');
         
-        $params = ['office' => $office, 'year' => $year, 'month' => $month,
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
+        }    
+
+        $params = ['office' => $office, 'period' => $period, 
+            'startDate' => $startDate, 'endDate' => $endDate,
             'base' => $base];
         
         $query = $this->entityManager->getRepository(Order::class)
