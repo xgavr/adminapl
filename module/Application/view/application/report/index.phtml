@@ -16,6 +16,56 @@
 ?>
 <div class="row">
     <div class="col-md-6">
+        <div id="toolbar3">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <select style="width: 100px" class="form-control officeSelect">
+                        <option selected>офис</option>
+                        <?php foreach ($offices as $office):?>
+                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select class="form-control periodSelect" name="period">
+                        <option value="all">За все времена</option>                        
+                        <option value="number">Год</option>                        
+                        <option value="month" selected="">Месяц</option>                        
+                    </select>
+                    <input name="dateStart" style="width: 200px" class="form-control dateStart" type="month" value="<?= date('Y-m')?>">
+                </div>                
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/report/revenueByGoods"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar3"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-query-params="queryParams3"
+            data-sort-name="income"
+            data-sort-order="desc"            
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-response-handler="responseHandler"
+            data-show-export="true"
+            data-show-footer="true"
+            >
+            <thead>
+                <tr>
+                     <th data-field="code" data-footer-formatter="totalFooterFormatter">Товар</th>
+                     <th data-field='quantity' data-sortable="true" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Продажи, шт</th>
+                     <th data-field='income' data-sortable="true" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Доход, руб.</th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
         <div id="tester"></div>
     </div>
     <div class="col-md-6">
@@ -58,11 +108,10 @@
             >
             <thead>
                 <tr>
-                     <th data-field="period" data-align="right" data-footer-formatter="totalFooterFormatter">Период</th>
+                     <th data-field="period" data-align="right" data-footer-formatter="totalFooterFormatter"><span class="periodName">День</span></th>
                      <th data-field='revenue' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Продажа</th>
                      <th data-field='purchase' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Закупка</th>
                      <th data-field='income' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Доход</th>
-                     <!--<th data-field='quantity' data-sortable="false" data-align="right" data-formatter="totalFormatter">Товаров, шт</th>-->
                  </tr>                
             </thead>
         </table>
@@ -113,7 +162,7 @@
             >
             <thead>
                 <tr>
-                     <th data-field="period" data-align="right" data-footer-formatter="totalFooterFormatter">Период</th>
+                    <th data-field="period" data-align="right" data-footer-formatter="totalFooterFormatter"><span class="periodName">День</span></th>
                      <th data-field='orderCount' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Заказы</th>
                      <th data-field='quantity' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Товары, шт</th>
                      <th data-field='vtCount' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Возвраты</th>
@@ -126,11 +175,22 @@
 <script>
     var $table = $('#table'),
         $table2 = $('#table2'),
+        $table3 = $('#table3'),
         $ok = $('#ok');
+        $periodName = 'День';
+        
+    function setPeriodName(name){
+        $periodName = name;
+    }  
+    
+    function getPeriodName(){
+        return $periodName;
+    }
 
     function refreshTable(){
         $table.bootstrapTable('refresh');
         $table2.bootstrapTable('refresh');
+        $table3.bootstrapTable('refresh');
     }
     
     $(function(){        
@@ -138,7 +198,7 @@
             var x = []; var y = []; 
             var x1 = []; var y1 = []; 
             var x2 = []; var y2 = []; 
-//            var x3 = []; var y3 = []; 
+            var xTitle = getPeriodName();
             var res = []; 
             var TESTER = document.getElementById('tester');
             $.each(data.rows, function( index, value ) {
@@ -155,7 +215,7 @@
             res.push({x: x2, y:y2, type:"lines", name: 'Доход'});
 //            res.push({x: x3, y:y3, type:"lines", name: 'Товаров, шт'});
             
-            const layout = {title: "Суммовые характеристики", xaxis: {title: 'период'}, yaxis: {title: 'Сумма'}};
+            const layout = {title: "Суммовые характеристики", xaxis: {title: xTitle}, yaxis: {title: 'Сумма'}};
                 
             Plotly.newPlot( TESTER, res, layout);        
         });  
@@ -164,7 +224,7 @@
             var x = []; var y = []; 
             var x1 = []; var y1 = []; 
             var x2 = []; var y2 = []; 
-//            var x3 = []; var y3 = []; 
+            var xTitle = getPeriodName();
             var res = []; 
             var TESTER = document.getElementById('tester2');
             $.each(data.rows, function( index, value ) {
@@ -180,7 +240,7 @@
             res.push({x: x1, y:y1, type:"lines", name: 'Товары, шт'});
             res.push({x: x2, y:y2, type:"lines", name: 'Возвраты'});
             
-            const layout = {title: "Количественные характеристики", xaxis: {title: 'период'}, yaxis: {title: 'Количество'}};
+            const layout = {title: "Количественные характеристики", xaxis: {title: xTitle}, yaxis: {title: 'Количество'}};
                 
             Plotly.newPlot( TESTER, res, layout);        
         });  
@@ -202,17 +262,22 @@
             switch(selectType){
                 case 'number':
                     $('.dateStart').val(new Date().getFullYear());
+                    setPeriodName('Месяц');
                     break;
                 case 'month':    
                     $('.dateStart').val($.format.date(new Date(), "yyyy-MM"));
+                    setPeriodName('День');
                     break;
                 case 'all':    
                     $('.dateStart').val(null);
+                    setPeriodName('Год');
                     break;
                 default:
                     $('.dateStart').attr('min', '2011-01-01');
                     $('.dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
+                    setPeriodName('Год');
             }
+            $('.periodName').text(getPeriodName());
             refreshTable();
         });
     });
@@ -232,6 +297,10 @@
     }
 
     function queryParams2(params){
+        return queryParams(params, $('#toolbar2'));
+    }
+
+    function queryParams3(params){
         return queryParams(params, $('#toolbar2'));
     }
 

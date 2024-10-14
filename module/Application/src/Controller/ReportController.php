@@ -101,6 +101,58 @@ class ReportController extends AbstractActionController
             'rows' => $result,
         ]);         
     }
+    
+    public function revenueByGoodsAction()
+    {
+        
+        $offset = $this->params()->fromQuery('offset');
+        $limit = $this->params()->fromQuery('limit');
+        $office = $this->params()->fromQuery('office');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order', 'DESC');
+        
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
+        }    
+
+        $params = ['office' => $office, 'period' => $period, 
+            'startDate' => $startDate, 'endDate' => $endDate,
+            'sort' => $sort, 'order' => $order];
+        
+        $query = $this->entityManager->getRepository(Order::class)
+                    ->revenueByGoods($params);            
+        
+        $total = count($query->getResult());
+        
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        $result = $query->getResult();
+        
+        return new JsonModel([
+            'total' => $total,
+            'rows' => $result,
+        ]);         
+    }
 
     public function accountantAction()
     {
