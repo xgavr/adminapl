@@ -793,7 +793,7 @@ class OrderRepository extends EntityRepository{
                 ->setParameter('status', Movement::STATUS_ACTIVE)    
                 ->andWhere($orX)
                 ->groupBy('g.id')
-//                ->setMaxResults(10)
+                ->setMaxResults(1)
                 ;
         
         if (!empty($params['office'])){
