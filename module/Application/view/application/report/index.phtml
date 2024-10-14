@@ -36,7 +36,7 @@
                 </div>                
             </div>
         </div>
-        <table id="table" 
+        <table id="table3" 
             data-toggle="table" 
             data-url="/report/revenueByGoods"
             data-side-pagination="server"
@@ -55,9 +55,9 @@
             >
             <thead>
                 <tr>
-                     <th data-field="code" data-footer-formatter="totalFooterFormatter">Товар</th>
-                     <th data-field='quantity' data-sortable="true" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Продажи, шт</th>
-                     <th data-field='income' data-sortable="true" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Доход, руб.</th>
+                     <th data-field="code" data-footer-formatter="totalFooterFormatter" data-formatter="goodLinkFormatter">Товар</th>
+                     <th data-field='quantity' data-sortable="true" data-align="right" data-footer-formatter="goodFooterFormatter" data-formatter="totalFormatter">Продажи, шт</th>
+                     <th data-field='income' data-sortable="true" data-align="right" data-footer-formatter="goodFooterFormatter" data-formatter="totalFormatter">Доход, руб.</th>
                  </tr>                
             </thead>
         </table>
@@ -178,6 +178,7 @@
         $table3 = $('#table3'),
         $ok = $('#ok');
         $periodName = 'День';
+        $table3Footer = [];
         
     function setPeriodName(name){
         $periodName = name;
@@ -185,6 +186,14 @@
     
     function getPeriodName(){
         return $periodName;
+    }
+
+    function setTable3Footer(data){
+        $table3Footer = data;
+    }  
+    
+    function getTable3Footer(){
+        return $table3Footer;
     }
 
     function refreshTable(){
@@ -243,6 +252,10 @@
             const layout = {title: "Количественные характеристики", xaxis: {title: xTitle}, yaxis: {title: 'Количество'}};
                 
             Plotly.newPlot( TESTER, res, layout);        
+        });  
+        
+        $table3.on('load-success.bs.table', function (e, data) {
+            setTable3Footer(data);
         });  
         
         $(document).on('change', '.officeSelect', function (e) {
@@ -319,6 +332,20 @@
         }).reduce(function (sum, i) {
             return (Math.round((sum + i)*100)/100);
         }, 0)), 0, ',', ' ');
+    }    
+    
+    function goodFooterFormatter(data){
+        return $.number(getTable3Footer()[this.field], 0, ',', ' ');
+    }
+    
+    function goodLinkFormatter(value, row){
+        var url = '/goods/view/'+row.id;
+        btn = '<nobr><a';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-link btn-xs" target="_blank">';
+        btn += '<span class="glyphicon glyphicon-link"></span>';
+        btn += '</a>'+value+' '+row.name+'</nobr>';
+        return btn;
     }    
     
     function responseHandler(res) {

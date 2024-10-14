@@ -137,7 +137,10 @@ class ReportController extends AbstractActionController
         $query = $this->entityManager->getRepository(Order::class)
                     ->revenueByGoods($params);            
         
-        $total = count($query->getResult());
+        $countQuery = $this->entityManager->getRepository(Order::class)
+                    ->revenueByGoodsCount($params);            
+        
+        $totalResult = $countQuery->getOneOrNullResult();
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -149,7 +152,9 @@ class ReportController extends AbstractActionController
         $result = $query->getResult();
         
         return new JsonModel([
-            'total' => $total,
+            'total' => $totalResult['countId'],
+            'income' => $totalResult['income'],
+            'quantity' => $totalResult['quantity'],
             'rows' => $result,
         ]);         
     }
