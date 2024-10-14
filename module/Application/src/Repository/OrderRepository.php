@@ -675,8 +675,8 @@ class OrderRepository extends EntityRepository{
         $queryBuilder->select('sum(-m.amount) as revenue, sum(-m.baseAmount) as purchase, '
                 . 'sum(-m.amount + m.baseAmount) as income, '
                 . 'sum(-m.quantity) as quantity, '
-                . 'sum(CASE WHEN m.docType = :orderDocType THEN 1 ELSE 0 END) as orderCount, '
-                . 'sum(CASE WHEN m.docType = :vtDocType THEN 1 ELSE 0 END) as vtCount')
+                . 'count(distinct CASE WHEN m.docType = :orderDocType THEN m.docId ELSE 0 END) as orderCount, '
+                . 'count(distinct CASE WHEN m.docType = :vtDocType THEN m.docId ELSE 0 END) as vtCount')
                 ->from(Movement::class, 'm')
                 ->where('m.status = :status')
                 ->setParameter('orderDocType', Movement::DOC_ORDER)    
