@@ -15,7 +15,7 @@
 
 ?>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div id="toolbar3">
             <div class="form-inline" role="form">
                 <div class="form-group">
@@ -340,11 +340,11 @@
     
     function goodLinkFormatter(value, row){
         var url = '/goods/view/'+row.id;
-        btn = '<nobr><a';
+        btn = '<a';
         btn += ' href="'+url+'"';
         btn += ' class="btn btn-link btn-xs" target="_blank">';
         btn += '<span class="glyphicon glyphicon-link"></span>';
-        btn += '</a>'+value+' '+row.name+'</nobr>';
+        btn += '</a><b>'+value+'</b> '+row.name;
         return btn;
     }    
     
