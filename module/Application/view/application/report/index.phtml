@@ -116,7 +116,7 @@
                      <th data-field="period" data-align="right" data-footer-formatter="totalFooterFormatter">Период</th>
                      <th data-field='orderCount' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Заказы</th>
                      <th data-field='quantity' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Товары, шт</th>
-                     <th data-field='vtCount' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Возврат, шт</th>
+                     <th data-field='vtCount' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Возвраты</th>
                  </tr>                
             </thead>
         </table>
@@ -178,7 +178,7 @@
             
             res.push({x: x, y:y, type:"lines", name: 'Заказы'});
             res.push({x: x1, y:y1, type:"lines", name: 'Товары, шт'});
-            res.push({x: x2, y:y2, type:"lines", name: 'Возврат, шт'});
+            res.push({x: x2, y:y2, type:"lines", name: 'Возвраты'});
             
             const layout = {title: "Количество", xaxis: {title: 'период'}, yaxis: {title: 'Сумма'}};
                 
