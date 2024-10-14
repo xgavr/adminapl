@@ -792,7 +792,6 @@ class OrderRepository extends EntityRepository{
                 ->where('m.status = :status')
                 ->setParameter('status', Movement::STATUS_ACTIVE)    
                 ->andWhere($orX)
-                ->groupBy('g.id')
                 ->setMaxResults(1)
                 ;
         
