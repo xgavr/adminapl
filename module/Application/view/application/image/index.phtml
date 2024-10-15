@@ -23,7 +23,7 @@ $this->pageBreadcrumbs()->setItems([
                                 <?php if ($imageManager->isImageFile($fileInfo->getFileName())): ?>
                                     <?php if(mime_content_type($fileInfo->getPathname()) != 'image/tiff'):?>
                                         <a href="<?= $imageManager->publicPath($fileInfo->getPathname()) ?>" target="_blank">
-                                            <img src="<?= $imageManager->publicPath($fileInfo->getPathname()) ?>" width="300" class="img-thumbnail" alt="<?= $fileInfo->getFileName() ?>">
+                                            <img src="<?= $imageManager->publicPath($fileInfo->getPathname()) ?>" width="200" class="img-thumbnail" alt="<?= $fileInfo->getFileName() ?>">
                                         </a>
                                     <?php endif; ?>
                                 <?php endif;?>
