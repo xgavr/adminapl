@@ -34,6 +34,10 @@ $this->pageBreadcrumbs()->setItems([
                                 <div class="pull-left">
                                     <?= $fileInfo->getFileName() ?>
                                     <?= mime_content_type($fileInfo->getPathname()) ?>
+                                    <button value="/image/delete-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-warning btn-xs this-delete"
+                                            title="Удалить">
+                                        <span class="glyphicon glyphicon-remove" ></span>
+                                    </button>                             
                                 </div>
                                 <div class="pull-right">
                                     <?php if(mime_content_type($fileInfo->getPathname()) == 'image/tiff'):?>
@@ -48,10 +52,6 @@ $this->pageBreadcrumbs()->setItems([
                                             <span class="glyphicon glyphicon-compressed" ></span>
                                         </button>                             
                                     <?php endif;?>
-                                    <button value="/image/delete-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-warning btn-xs this-delete"
-                                            title="Удалить">
-                                        <span class="glyphicon glyphicon-remove" ></span>
-                                    </button>                             
                                 </div>                                                                            
                             </div>                    
                             <div class="caption panel-body small">
