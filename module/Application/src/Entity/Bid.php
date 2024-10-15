@@ -9,6 +9,8 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Laminas\Json\Decoder;
+use Laminas\Validator\IsJsonString;
 
 /**
  * Description of Bid
@@ -144,6 +146,15 @@ class Bid {
     public function getOpts() 
     {
         return $this->opts;
+    }
+
+    public function getOptsAsArray() 
+    {
+        $jsonValidator = new IsJsonString();
+        if ($jsonValidator->isValid($this->opts)){
+            return Decoder::decode($this->opts, \Laminas\Json\Json::TYPE_ARRAY);
+        }    
+        return [];
     }
 
     public function setOpts($opts) 
@@ -351,7 +362,7 @@ class Bid {
             'rowNo' => $this->getRowNo(),
             'displayName' => $this->getDisplayName(),
             'oem' => $this->getOe(),
-            'opts' => $this->getOpts(),
+            'opts' => $this->getOptsAsArray(),
         ];
     }    
 
