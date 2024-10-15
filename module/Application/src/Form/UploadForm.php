@@ -83,10 +83,10 @@ class UploadForm extends Form
         $fileInput->getFilterChain()->attachByName(
             'filerenameupload',
             [
-                'use_upload_name' => false,
+                'use_upload_name' => true,
                 'use_upload_extension' => true,
                 'target'    => $this->target,
-                'randomize' => true,
+                'randomize' => false,
             ]
         );
         $inputFilter->add($fileInput);
