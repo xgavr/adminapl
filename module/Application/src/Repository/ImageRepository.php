@@ -183,6 +183,13 @@ class ImageRepository extends EntityRepository
         $fileInfo = pathinfo($filename);
         $code = preg_replace("/\([^)]+\)/","", $fileInfo['filename']); // удалить круглые скобки
         
+        //Разложить понижнему подчеркиванию
+        $_code = explode('_', $code);
+        
+        if ($_code[0] !== $code){
+            $code = $_code[0];
+        }
+        
         $filter = new \Application\Filter\ArticleCode();
         
         $data = $this->getEntityManager()->getRepository(Goods::class)
