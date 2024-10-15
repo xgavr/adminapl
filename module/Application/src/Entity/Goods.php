@@ -803,6 +803,15 @@ class Goods {
     }
     
     /**
+     * .
+     * @return int
+     */
+    public function getImageCount() 
+    {
+        return $this->images->count();
+    }
+    
+    /**
      * Добавляет новою картинку к этому товару.
      * @param $image
      */

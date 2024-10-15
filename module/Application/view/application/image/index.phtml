@@ -18,7 +18,7 @@ $this->pageBreadcrumbs()->setItems([
             <?php foreach($files as $fileInfo):?>
                 <?php if (file_exists($fileInfo->getPathname())):?>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="thumbnail">
                                 <?php if ($imageManager->isImageFile($fileInfo->getFileName())): ?>
                                     <?php if(mime_content_type($fileInfo->getPathname()) != 'image/tiff'):?>
@@ -29,7 +29,7 @@ $this->pageBreadcrumbs()->setItems([
                                 <?php endif;?>
                             </div>
                         </div>    
-                        <div class="col-md-6">
+                        <div class="col-md-9">
                             <div class="caption panel-body small">
                                 <div class="pull-left">
                                     <?= $fileInfo->getFileName() ?>
@@ -58,7 +58,7 @@ $this->pageBreadcrumbs()->setItems([
                                 <?php $data = $imageManager->goodsByFileName($fileInfo->getPathname())?>
                                 <?php if ($data):?>
                                     <?php foreach ($data as $good):?>
-                                <a href="/goods/view/<?= $good->getId()?>" target="_blank"><?= $good->getProducer()->getName()?> <?= $good->getCode()?></a>  
+                                <a href="/goods/view/<?= $good->getId()?>" target="_blank"><?= $good->getProducer()->getName()?> <?= $good->getCode()?></a> (<?= $good->getImageCount()?>)  
                                         <?php if ($imageManager->isImageFile($fileInfo->getFileName())): ?>
                                             <?php if(mime_content_type($fileInfo->getPathname()) != 'image/tiff'):?>
                                                 <button value="/image/upload-tmp-file/?file=<?= $fileInfo->getPathname() ?>&good=<?= $good->getId()?>" class="btn btn-default btn-xs refresh-button"
