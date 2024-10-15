@@ -92,7 +92,7 @@ class Images {
         return $this->path;
     }
 
-    public function publicPath($path)
+    public static function publicPath($path)
     {
         return str_replace('./public', '', $path);
     }
