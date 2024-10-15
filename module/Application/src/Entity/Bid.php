@@ -362,7 +362,7 @@ class Bid {
             'rowNo' => $this->getRowNo(),
             'displayName' => $this->getDisplayName(),
             'oem' => $this->getOe(),
-            'opts' => $this->getOptsAsArray(),
+//            'opts' => $this->getOptsAsArray(),
         ];
     }    
 
@@ -375,9 +375,12 @@ class Bid {
     {
         return [
             'price' => $this->getPrice(),
-            'good' => $this->getGood()->toArray(),
+            'good' => $this->getGood()->getId(),
             'num' => $this->getNum(),
             'rowNo' => $this->getRowNo(),
+            'displayName' => $this->getDisplayName(),
+            'oem' => $this->getOe(),
+            'opts' => $this->getOptsAsArray(),
         ];
     }    
     

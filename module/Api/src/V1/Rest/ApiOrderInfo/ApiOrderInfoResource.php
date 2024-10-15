@@ -205,7 +205,7 @@ class ApiOrderInfoResource extends AbstractResourceListener
                     ->findBy(['order' => $id]);
             $bidsInfo = [];
             foreach($bids as $bid){
-                $bidInfo = $bid->toLog();
+                $bidInfo = $bid->toArray();
                 $bidInfo['good'] = $this->goodManager->goodForApl($bid->getGood());
                 $bidsInfo[] = $bidInfo;
             }
