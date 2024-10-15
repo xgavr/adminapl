@@ -351,6 +351,7 @@ class Bid {
             'rowNo' => $this->getRowNo(),
             'displayName' => $this->getDisplayName(),
             'oem' => $this->getOe(),
+            'opts' => $this->getOpts(),
         ];
     }    
 
