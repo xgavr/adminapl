@@ -42,7 +42,7 @@ class ImageController extends AbstractActionController
         shuffle($files);
         
         return new ViewModel([
-            'files' => array_slice($files, 0, 20),
+            'files' => array_slice($files, 0, 100),
             'imageManager' => $this->imageManager,
         ]);
     }
