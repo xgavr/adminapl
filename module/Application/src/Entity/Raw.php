@@ -28,6 +28,7 @@ class Raw {
     const STATUS_PARSE        = 5; //Разбирается
     const STATUS_FAILED       = 6; // Не удалось загрузить.
     const STATUS_PRE_RETIRED  = 7; // Удалить после разбора.
+    const STATUS_NEW          = 9; // Новый.
     
     const STAGE_NOT                 = 1; //поля не разобраны
     const STAGE_PRODUCER_PARSED     = 2; //производители разобраны 
@@ -68,6 +69,16 @@ class Raw {
      * @ORM\Column(name="filename")   
      */
     protected $filename;
+
+    /**
+     * @ORM\Column(name="sender")   
+     */
+    protected $sender;
+
+    /**
+     * @ORM\Column(name="subject")   
+     */
+    protected $subject;
 
     /**
      * @ORM\Column(name="row_count")   
@@ -138,7 +149,7 @@ class Raw {
 
     public function setFilename($filename) 
     {
-        $this->filename = $filename;
+        $this->filename = strtolower(trim($filename));
     }     
 
     public function getName() 
@@ -160,7 +171,23 @@ class Raw {
     {
         $this->rows = $rows;
     }     
+    public function getSender() {
+        return $this->sender;
+    }
 
+    public function setSender($sender) {
+        $this->sender = $sender;
+        return $this;
+    }
+
+    public function getSubject() {
+        return $this->subject;
+    }
+
+    public function setSubject($subject) {
+        $this->subject = $subject;
+        return $this;
+    }
     
     /**
      * Returns status.
@@ -178,6 +205,7 @@ class Raw {
     public static function getStatusList() 
     {
         return [
+            self::STATUS_NEW => 'Не определен',
             self::STATUS_ACTIVE => 'Новый',
             self::STATUS_RETIRED => 'Удалить',
             self::STATUS_PARSED => 'Разобран',

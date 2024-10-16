@@ -13,6 +13,8 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\PriceManager;
 use Admin\Service\PostManager;
 use Admin\Service\FtpManager;
+use Admin\Service\AdminManager;
+
 /**
  * Description of PbManagerFactory
  *
@@ -27,8 +29,10 @@ class PriceManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $postManager = $container->get(PostManager::class);
         $ftpManager = $container->get(FtpManager::class);
+        $adminManager = $container->get(AdminManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new PriceManager($entityManager, $postManager, $ftpManager);
+        return new PriceManager($entityManager, $postManager, $ftpManager,
+                $adminManager);
     }
 }

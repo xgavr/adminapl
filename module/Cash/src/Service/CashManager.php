@@ -1359,6 +1359,7 @@ class CashManager {
             $cash = $companyAccount->getCash();
             $company = $companyAccount->getLegal();
         }    
+        
         if ($cash && $company && $legal){
             
             if ($company->getInn() == $legalInn){ 
@@ -1373,11 +1374,13 @@ class CashManager {
             $data['statement'] = $statement;
 
             $contract = $this->entityManager->getRepository(Office::class)
-                            ->findCurrentContract($company, $legal, $statement->getChargeDate(), Contract::PAY_CASHLESS);
-
-            if ($legal->getSupplier() && $contract->getKind() == Contract::KIND_SUPPLIER){
-                return $this->supplierCashDocFromStatement($statement, $data);
-            }   
+                        ->findCurrentContract($company, $legal, $statement->getChargeDate(), Contract::PAY_CASHLESS);
+        
+            if ($contract){
+                if ($legal->getSupplier() && $contract->getKind() == Contract::KIND_SUPPLIER){
+                    return $this->supplierCashDocFromStatement($statement, $data);
+                }   
+            }    
 
             if ($legal->getClientContact()){
                 $data['comment'] = $statement->getPaymentPurpose();

@@ -31,6 +31,7 @@ class RawManager {
     
     const PRICE_FOLDER       = './data/prices'; // папка с прайсами
     const PRICE_FOLDER_ARX   = './data/prices/arx'; // папка с архивами прайсов
+    const PRICE_FOLDER_NEW   = './data/prices/new'; // папка с новыми прайсами
     
     const PRICE_BATCHSIZE    = 50000; // количество записей единовременной загруки строк прайса
 
@@ -70,7 +71,11 @@ class RawManager {
         return self::PRICE_FOLDER_ARX;
     }      
     
-    
+    public function getPriceNewFolder()
+    {
+        return self::PRICE_FOLDER_ARX;
+    }      
+        
     /*
      * Очистить содержимое папки
      * 
@@ -205,17 +210,26 @@ class RawManager {
                     $delimiter = $detector->filter($filename);
                 
                     $filter = new RawToStr();
-
+                                        
+                    $baseName = $basenameFilter->filter($filename);
                     $rows = 0;
-                    $raw = new Raw();
-                    $raw->setSupplier($supplier);
-                    $raw->setFilename($basenameFilter->filter($filename));
+                    $raw = $this->entityManager->getRepository(Raw::class)
+                            ->findOneBy([
+                                'status' => Raw::STATUS_NEW, 
+                                'supplier' => $supplier->getId(),
+                                'filename' => $baseName,
+                            ]);
+                    
+                    if (empty($raw)){
+                        $raw = new Raw();
+                        $currentDate = date('Y-m-d H:i:s');
+                        $raw->setDateCreated($currentDate);
+                        $raw->setSupplier($supplier);
+                        $raw->setFilename($baseName);
+                    }    
                     $raw->setStatus(Raw::STATUS_LOAD);
-                    $raw->setRows($rows);                    
-
-                    $currentDate = date('Y-m-d H:i:s');
-                    $raw->setDateCreated($currentDate);
-
+                    $raw->setRows($rows);    
+                    
                     $this->entityManager->persist($raw);
                     $this->entityManager->flush();
 
@@ -280,17 +294,25 @@ class RawManager {
                 
                 $basenameFilter = new Basename();
                 
+                $baseName = $basenameFilter->filter($filename);
                 $rows = 0;
-                $raw = new Raw();
-                $raw->setSupplier($supplier);
-                $raw->setFilename($basenameFilter->filter($filename));
+                $raw = $this->entityManager->getRepository(Raw::class)
+                        ->findOneBy([
+                            'status' => Raw::STATUS_NEW, 
+                            'supplier' => $supplier->getId(),
+                            'filename' => $baseName,
+                        ]);
+
+                if (empty($raw)){
+                    $raw = new Raw();
+                    $currentDate = date('Y-m-d H:i:s');
+                    $raw->setDateCreated($currentDate);
+                    $raw->setSupplier($supplier);
+                    $raw->setFilename($baseName);
+                }    
                 $raw->setStatus(Raw::STATUS_LOAD);
-                $raw->setRows($rows);
-//                $raw->setName('');
-
-                $currentDate = date('Y-m-d H:i:s');
-                $raw->setDateCreated($currentDate);
-
+                $raw->setRows($rows);    
+                
                 $this->entityManager->persist($raw);
                 $this->entityManager->flush();
                     
@@ -379,25 +401,28 @@ class RawManager {
                     $excel = $mvexcel->createPHPExcelObject($filename);
                 } catch (\PHPExcel_Reader_Exception $e){
                     //попытка прочитать файл не удалась
-                    $raw = new Raw();
-                    $raw->setName($e->getMessage());
-                    $raw->setStatus(Raw::STATUS_FAILED);
-                    $this->entityManager->persist($raw);
-                    $this->entityManager->flush($raw);                    
-                    $this->renameToArchive($supplier, $filename);
                     return;
                 }    
 
+                $baseName = $basenameFilter->filter($filename);
                 $rows = 0;
-                $raw = new Raw();
-                $raw->setSupplier($supplier);
-                $raw->setFilename($basenameFilter->filter($filename));
+                $raw = $this->entityManager->getRepository(Raw::class)
+                        ->findOneBy([
+                            'status' => Raw::STATUS_NEW, 
+                            'supplier' => $supplier->getId(),
+                            'filename' => $baseName,
+                        ]);
+
+                if (empty($raw)){
+                    $raw = new Raw();
+                    $currentDate = date('Y-m-d H:i:s');
+                    $raw->setDateCreated($currentDate);
+                    $raw->setSupplier($supplier);
+                    $raw->setFilename($baseName);
+                }    
                 $raw->setStatus(Raw::STATUS_LOAD);
-                $raw->setRows($rows);
-
-                $currentDate = date('Y-m-d H:i:s');
-                $raw->setDateCreated($currentDate);
-
+                $raw->setRows($rows);    
+                
                 $this->entityManager->persist($raw);
                 $this->entityManager->flush();
                     

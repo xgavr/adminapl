@@ -14,6 +14,7 @@ use Laminas\Http\Client;
 use Application\Validator\FileExtensionValidator;
 use Application\Validator\PriceNameValidator;
 use Application\Filter\Basename;
+use Application\Entity\Raw;
 
 /**
  * Description of PriceManager
@@ -24,6 +25,7 @@ class PriceManager {
     
     const PRICE_FOLDER       = './data/prices'; // папка с прайсами
     const PRICE_FOLDER_ARX   = './data/prices/arx'; // папка с архивами прайсов
+    const PRICE_FOLDER_NEW   = './data/prices/new'; // папка с новыми прайсами
     const PRICE_FILE_EXTENSIONS   = 'zip, rar, xls, xlsx, csv, txt'; //допустимые расширения файлов прайсов
 
     /**
@@ -32,22 +34,29 @@ class PriceManager {
      */
     private $entityManager;
     
-    /*
+    /**
      * @var \Admin\Service\PostManager
      */
     private $postManager;
   
-    /*
+    /**
      * @var \Admin\Service\FtpManager
      */
     private $ftpManager;
   
+    /**
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+  
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $postManager, $ftpManager)
+    public function __construct($entityManager, $postManager, $ftpManager,
+            $adminManager)
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;
         $this->ftpManager = $ftpManager;
+        $this->adminManager = $adminManager;
     }
     
     public function getPriceFolder()
@@ -60,7 +69,11 @@ class PriceManager {
         return self::PRICE_FOLDER_ARX;
     }      
     
-    
+    public function getPriceNewFolder()
+    {
+        return self::PRICE_FOLDER_ARX;
+    }      
+        
     /*
      * Очистить содержимое папки
      * 
@@ -170,6 +183,21 @@ class PriceManager {
                                 if (file_exists($attachment['temp_file'])){ 
                                     $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
                                     if (copy($attachment['temp_file'], $target)){
+                                        
+                                        $raw = new Raw();
+                                        $raw->setFilename($attachment['filename']);
+                                        $raw->setParseStage(Raw::STAGE_NOT);
+                                        $raw->setRows(0);
+                                        $raw->setSender(empty($mail['from']) ? null:$mail['from']);
+                                        $raw->setStatus(Raw::STATUS_NEW);
+                                        $raw->setStatusEx(Raw::EX_NEW);
+                                        $raw->setSubject(empty($mail['subject']) ? null:$mail['subject']);
+                                        $raw->setSupplier($priceGetting->getSupplier());
+                                        $currentDate = date('Y-m-d H:i:s');
+                                        $raw->setDateCreated($currentDate);
+                                        $this->entityManager->persist($raw);
+                                        $this->entityManager->flush();
+                                        
                                         //Закинуть прайс в папку поставщика с таким же прайсом
                                         $this->putPriceFileToPriceSupplier($priceGetting->getSupplier(), $target);
                                         //Проверка наименования файла
@@ -198,11 +226,100 @@ class PriceManager {
     }
     
     /**
+     * Проверка почты в ящике прайсов
+     * 
+     */
+    public function getNewPriceByMail()
+    {
+        $setting = $this->adminManager->getPriceSettings();
+                
+        if (!empty($setting['sup_email']) && !empty($setting['sup_app_password'])){
+            $box = [
+                'user' => $setting['sup_email'],
+                'password' => $setting['sup_app_password'],
+                'leave_message' => false,
+            ];
+            
+            $mailList = $this->postManager->readImap($box);
+            
+            $priceNameValidator = new PriceNameValidator();
+            
+            if (count($mailList)){
+                foreach ($mailList as $mail){
+                    if (isset($mail['attachment'])){
+                        foreach($mail['attachment'] as $attachment){
+                            if ($attachment['filename'] && file_exists($attachment['temp_file'])){
+                                if (file_exists($attachment['temp_file'])){ 
+                                    
+                                    $supplier = $this->entityManager->getRepository(Supplier::class)
+                                                ->suplierByFromEmail($mail['from']);
+                                    
+                                    if ($supplier){
+                                        $target = self::PRICE_FOLDER.'/'.$supplier->getId().'/'.$attachment['filename'];
+                                    } else {
+                                        $target = self::PRICE_FOLDER_NEW.'/'.$attachment['filename'];                                        
+                                    }
+                                    
+                                    if (copy($attachment['temp_file'], $target)){
+                                        
+                                        $raw = new Raw();
+                                        $raw->setFilename($attachment['filename']);
+                                        $raw->setParseStage(Raw::STAGE_NOT);
+                                        $raw->setRows(0);
+                                        $raw->setSender(empty($mail['from']) ? null:$mail['from']);
+                                        $raw->setStatus(Raw::STATUS_NEW);
+                                        $raw->setStatusEx(Raw::EX_NEW);
+                                        $raw->setSubject(empty($mail['subject']) ? null:$mail['subject']);
+                                        $currentDate = date('Y-m-d H:i:s');
+                                        $raw->setDateCreated($currentDate);
+                                        
+                                        if ($supplier){
+                                            
+                                            $raw->setSupplier($supplier);
+                                            
+                                            foreach ($supplier->getPriceGettings() as $priceGetting){
+                                                //Закинуть прайс в папку поставщика с таким же прайсом
+                                                $this->putPriceFileToPriceSupplier($priceGetting->getSupplier(), $target);
+                                                //Проверка наименования файла
+                                                if (!$priceNameValidator->isValid($attachment['filename'], $priceGetting)){
+                                                    unlink($attachment['temp_file']);                                    
+                                                    unlink($target);                                    
+                                                }
+
+                                                // отправить файл на другой сервер
+                                                if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
+                                                    $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
+                                                    $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
+                                                }  
+
+                                                if (file_exists($attachment['temp_file'])){
+                                                    unlink($attachment['temp_file']);
+                                                }    
+                                            }    
+                                        }  
+                                        
+                                        $this->entityManager->persist($raw);
+                                        $this->entityManager->flush();
+                                    }
+                                }    
+                            }
+                        }
+                    }
+                }
+            }
+        }    
+        
+        return;
+    }
+    
+    /**
      * Прочитать очередной ящик
      */
     public function readQueyeMailBox()
     {
         set_time_limit(300);
+        
+        $this->getNewPriceByMail();
                 
         $priceGetting = $this->entityManager->getRepository(PriceGetting::class)
                 ->findOneBy(['status' => PriceGetting::STATUS_ACTIVE, 'mailBoxCheck' => PriceGetting::MAILBOX_TO_CHECK]);

@@ -375,7 +375,7 @@ class Bid {
     {
         return [
             'price' => $this->getPrice(),
-            'good' => $this->getGood()->getId(),
+            'good' => $this->getGood()->toArray(),
             'num' => $this->getNum(),
             'rowNo' => $this->getRowNo(),
             'displayName' => $this->getDisplayName(),

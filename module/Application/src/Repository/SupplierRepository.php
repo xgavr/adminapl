@@ -19,6 +19,7 @@ use Application\Entity\SupplySetting;
 use Company\Entity\Office;
 use Company\Entity\Region;
 use Stock\Entity\Mutual;
+use Application\Entity\Email;
 
 /**
  * Description of SupplierRepository
@@ -478,4 +479,25 @@ class SupplierRepository extends EntityRepository{
                 ->findOneBy(['good' => $good->getId(), 'supplier' => 7, 'update' => date('Y-m-d')]);
     }
     
+    /**
+     * Поставщик по почте отправителя
+     */
+    public function suplierByFromEmail($fromEmail)
+    {
+        
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('s')
+                ->distinct()
+                ->from(Email::class, 'e')
+                ->join('e.contact', 'c')
+                ->join(Supplier::class, 's', 'WITH', 'c.supplier = s.id')
+                ->where('e.name like :email')
+                ->setParameter('email', strtolower(trim($fromEmail)))
+                ->setMaxResults(1)
+                ;
+                
+        return $queryBuilder->getQuery()->getOneOrNullResult();                        
+    }
 }

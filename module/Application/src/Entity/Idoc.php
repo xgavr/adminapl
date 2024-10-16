@@ -58,6 +58,16 @@ class Idoc {
     protected $info;
 
     /**
+     * @ORM\Column(name="sender")   
+     */
+    protected $sender;
+
+    /**
+     * @ORM\Column(name="subject")   
+     */
+    protected $subject;
+    
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status;    
@@ -108,6 +118,24 @@ class Idoc {
     {
         $this->name = $name;
     }     
+ 
+    public function getSender() {
+        return $this->sender;
+    }
+
+    public function setSender($sender) {
+        $this->sender = $sender;
+        return $this;
+    }
+
+    public function getSubject() {
+        return $this->subject;
+    }
+
+    public function setSubject($subject) {
+        $this->subject = $subject;
+        return $this;
+    }
     
     /**
      * Returns status.

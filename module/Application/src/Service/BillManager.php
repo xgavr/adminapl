@@ -54,6 +54,12 @@ class BillManager
     private $postManager;
     
     /**
+     * Admin manager.
+     * @var \Admin\Service\AdminManager
+     */
+    private $adminManager;
+    
+    /**
      * Ptu manager.
      * @var \Stock\Service\PtuManager
      */
@@ -73,13 +79,14 @@ class BillManager
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
     public function __construct($entityManager, $postManager, $ptuManager, 
-            $assemblyManager, $gigaManager)
+            $assemblyManager, $gigaManager, $adminManager)
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;
         $this->ptuManager = $ptuManager;
         $this->assemblyManager = $assemblyManager;
         $this->gigaManager = $gigaManager;
+        $this->adminManager = $adminManager;
     }
     
     /**
@@ -99,6 +106,8 @@ class BillManager
         $idoc->setDateCreated(date('Y-m-d H:i:s'));
         $idoc->setDocKey(null);
         $idoc->setSupplier($supplier);
+        $idoc->setSender(empty($data['sender']) ? null:$data['sender']);
+        $idoc->setSubject(empty($data['subject']) ? null:$data['subject']);
         
         $this->entityManager->persist($idoc);
         $this->entityManager->flush();
@@ -120,6 +129,8 @@ class BillManager
         $idoc->setDescription($data['description']);
         $idoc->setInfo(empty($data['info']) ? null:$data['info']);
         $idoc->setDocKey($data['docKey']);
+        $idoc->setSender(empty($data['sender']) ? null:$data['sender']);
+        $idoc->setSubject(empty($data['subject']) ? null:$data['subject']);
         
         $this->entityManager->persist($idoc);
         $this->entityManager->flush($idoc);
@@ -288,8 +299,10 @@ class BillManager
      * @param Supplier $supplier
      * @param string $filename
      * @param string $filepath
+     * @param string $sender
+     * @param string $subject
      */
-    protected function _xls2array($supplier, $filename, $filepath)
+    protected function _xls2array($supplier, $filename, $filepath, $sender, $subject)
     {        
         setlocale(LC_ALL,'ru_RU.UTF-8');
         ini_set('memory_limit', '512M');
@@ -342,6 +355,8 @@ class BillManager
                     'name' => $filename,
                     'description' => Encoder::encode($result),
                     'docKey' => null,
+                    'sender' => $sender,
+                    'subject' => $subject,
                 ]);                
             }                
             unset($spreadsheet);
@@ -355,8 +370,10 @@ class BillManager
      * @param Supplier $supplier
      * @param string $filename
      * @param string $content
+     * @param string $sender
+     * @param string $subject
      */
-    protected function _html2array($supplier, $filename, $content)
+    protected function _html2array($supplier, $filename, $content, $sender, $subject)
     {
         libxml_use_internal_errors(true);
         ini_set('memory_limit', '512M');
@@ -391,6 +408,8 @@ class BillManager
                 'name' => $filename,
                 'description' => Encoder::encode($result),
                 'docKey' => null,
+                'sender' => $sender,
+                'subject' => $subject,
             ]);                
         }    
                                     
@@ -402,10 +421,12 @@ class BillManager
      * @param Supplier $supplier
      * @param string $filename
      * @param string $filepath
+     * @param string $sender
+     * @param string $subject
      * @return array
      */
     
-    protected function _csv2array($supplier, $filename, $filepath)
+    protected function _csv2array($supplier, $filename, $filepath, $sender, $subject)
     {
         ini_set('memory_limit', '512M');
         $result = [];
@@ -443,6 +464,8 @@ class BillManager
             'name' => $filename,
             'description' => Encoder::encode($result),
             'docKey' => null,
+            'sender' => $sender,
+            'subject' => $subject,
         ]);                
         
         return $result;
@@ -453,29 +476,33 @@ class BillManager
      * @param Supplier $supplier
      * @param string $filename
      * @param string $filepath
+     * @param string $sender
+     * @param string $subject
      * @return array
      */
-    protected function _filedata2array($supplier, $filename, $filepath)
+    protected function _filedata2array($supplier, $filename, $filepath, $sender, $subject)
     {
         $result = [];
         $pathinfo = pathinfo($filename);
         
 //        $stripContent = strip_tags($content);
-        if($supplier->getId() == 65) { //микадо злбчее
-//            // contains HTML
-            $content = file_get_contents($filepath);
-            return $this->_html2array($supplier, $filename, $content);
-        }       
+        if ($supplier){
+            if($supplier->getId() == 65) { //микадо злбчее
+    //            // contains HTML
+                $content = file_get_contents($filepath);
+                return $this->_html2array($supplier, $filename, $content, $sender, $subject);
+            }       
+        }    
         if (!empty($pathinfo['extension'])){
             
             if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
-                return $this->_xls2array($supplier, $filename, $filepath);            
+                return $this->_xls2array($supplier, $filename, $filepath, $sender, $subject);            
             }
             
             if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
-                return $this->_csv2array($supplier, $filename, $filepath);            
+                return $this->_csv2array($supplier, $filename, $filepath, $sender, $subject);            
             } else {
-                return $this->_xls2array($supplier, $filename, $filepath);                                
+                return $this->_xls2array($supplier, $filename, $filepath, $sender, $subject);                                
             }       
         }
         return $result;
@@ -547,7 +574,7 @@ class BillManager
                     if ($validator->isValid($fileInfo->getPathname()) && strtolower($pathinfo['extension']) != 'xlsx'){                    
                         $this->_decompressAttachment($supplier, $fileInfo->getFilename(), $fileInfo->getPathname());
                     } else {
-                        $this->_filedata2array($supplier, $fileInfo->getFilename(), $fileInfo->getPathname());
+                        $this->_filedata2array($supplier, $fileInfo->getFilename(), $fileInfo->getPathname(), null, null);
                     }    
                 }
                 if ($fileInfo->isDir()){
@@ -595,8 +622,6 @@ class BillManager
     {
         if ($billGetting->getEmail() && $billGetting->getEmailPassword()){
             $box = [
-                'host' => 'imap.yandex.ru',
-                'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $billGetting->getEmail(),
                 'password' => $billGetting->getAppPassword(),
                 'leave_message' => false,
@@ -614,7 +639,54 @@ class BillManager
                                 if ($validator->isValid($attachment['temp_file']) && strtolower($pathinfo['extension']) != 'xlsx'){
                                     $this->_decompressAttachment($billGetting->getRealSupplier(), $attachment['filename'], $attachment['temp_file']);
                                 } else {
-                                    $this->_filedata2array($billGetting->getRealSupplier(), $attachment['filename'], $attachment['temp_file']);
+                                    $this->_filedata2array($billGetting->getRealSupplier(), $attachment['filename'], $attachment['temp_file'], $mail['from'], $mail['subject']);
+                                }    
+                                if (file_exists($attachment['temp_file'])){
+                                    unlink($attachment['temp_file']);
+                                }    
+                            }
+                        }
+                    }
+//                    exit;
+                }
+            }
+        }    
+        
+        return;
+    }   
+    
+    /**
+     * Проверка почты в общем ящике
+     * 
+     */
+    public function getNewBillByMail()
+    {
+        $setting = $this->adminManager->getPriceSettings();
+        
+        if (!empty($setting['b_email']) && !empty($setting['b_app_password'])){
+            $box = [
+                'user' => $setting['b_email'],
+                'password' => $setting['b_app_password'],
+                'leave_message' => false,
+            ];
+            
+            $mailList = $this->postManager->readImap($box);
+//            var_dump($mailList);
+            $validator = new IsCompressed();
+            if (count($mailList)){
+                foreach ($mailList as $mail){
+                    if (isset($mail['attachment'])){
+                        foreach($mail['attachment'] as $attachment){
+                            if ($attachment['filename'] && file_exists($attachment['temp_file'])){
+                                $pathinfo = pathinfo($attachment['filename']);
+                                
+                                $supplier = $this->entityManager->getRepository(Supplier::class)
+                                            ->suplierByFromEmail($mail['from']);
+                                
+                                if ($validator->isValid($attachment['temp_file']) && strtolower($pathinfo['extension']) != 'xlsx'){
+                                    $this->_decompressAttachment($supplier, $attachment['filename'], $attachment['temp_file']);
+                                } else {
+                                    $this->_filedata2array($supplier, $attachment['filename'], $attachment['temp_file'], $mail['from'], $mail['subject']);
                                 }    
                                 if (file_exists($attachment['temp_file'])){
                                     unlink($attachment['temp_file']);
@@ -638,6 +710,8 @@ class BillManager
         ini_set('memory_limit', '512M');
         set_time_limit(900);
         $startTime = time();
+        
+        $this->getNewBillByMail();
         
         $billGettings = $this->entityManager->getRepository(BillGetting::class)
                 ->findBy(['status' => BillSetting::STATUS_ACTIVE]);
@@ -1124,6 +1198,10 @@ class BillManager
      */
     public function tryPtu($idoc)
     {
+        if (empty($idoc->getSupplier())){
+            return;
+        }
+        
         $oldstatus = $idoc->getStatus();
         $idoc->setStatus(Idoc::STATUS_PROC);
         $this->entityManager->persist($idoc);
