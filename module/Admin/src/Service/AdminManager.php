@@ -132,16 +132,16 @@ class AdminManager {
         $config->admin->autoru_email = $data['autoru_email'];
         $config->admin->autoru_email_password = $data['autoru_email_password'];
         
-        $config->admin->sup_email = $data['sup_email'];
-        $config->admin->sup_email_password = $data['sup_email_password'];
-        $config->admin->sup_app_password = $data['sup_app_password'];
+//        $config->admin->sup_email = $data['sup_email'];
+//        $config->admin->sup_email_password = $data['sup_email_password'];
+//        $config->admin->sup_app_password = $data['sup_app_password'];
+//
+//        $config->admin->b_email = $data['b_email'];
+//        $config->admin->b_email_password = $data['b_email_password'];
+//        $config->admin->b_app_password = $data['b_app_password'];
 
-        $config->admin->b_email = $data['b_email'];
-        $config->admin->b_email_password = $data['b_email_password'];
-        $config->admin->b_app_password = $data['b_app_password'];
-
-        $config->admin->telefonistka_email = $data['telefonistka_email'];
-        $config->admin->telefonistka_email_password = $data['telefonistka_email_password'];
+//        $config->admin->telefonistka_email = $data['telefonistka_email'];
+//        $config->admin->telefonistka_email_password = $data['telefonistka_email_password'];
         
         $config->admin->allow_date = $data['allow_date'];
         $config->admin->doc_actualize = $data['doc_actualize'];
