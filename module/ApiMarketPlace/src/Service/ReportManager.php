@@ -184,6 +184,7 @@ class ReportManager
      */
     public function addReportItems($report, $data)
     {
+        $reportTotal = 0;
         foreach ($data as $row){
             
             $offers = explode('+', empty($row['item']['offer_id']) ? 0:$row['item']['offer_id']);
@@ -235,13 +236,17 @@ class ReportManager
                 $item->setRowNumber(empty($row['rowNumber']) ? 0:$row['rowNumber']);
                 $item->setBaseAmount(0);
 
+                $reportTotal += $item->getSalePriceSeller();
                 $this->entityManager->persist($item);  
 
                 $k++;
             }    
         }
         
+//                var_dump($reportTotal);
         if ($report->getDocDate() > $this->getAllowDate()){
+            $report->setDocAmount($reportTotal);
+            $this->entityManager->persist($item);  
             $this->entityManager->flush();
         }    
         
