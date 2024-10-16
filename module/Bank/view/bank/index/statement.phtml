@@ -940,7 +940,7 @@
                     deleteStatement('/bank/delete-statement/'+row.id);
                 },
                 isEnabled: function(row) {
-                    return row.chargeDate > <?= $allowDate?> && row.kind === <?= Statement::KIND_UNKNOWN ?>;
+                    return row.chargeDate > <?= $allowDate?> || row.kind === <?= Statement::KIND_UNKNOWN ?>;
                 }                
             }, 
             tokens: {
