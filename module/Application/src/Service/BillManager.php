@@ -639,7 +639,7 @@ class BillManager
                                 if ($validator->isValid($attachment['temp_file']) && strtolower($pathinfo['extension']) != 'xlsx'){
                                     $this->_decompressAttachment($billGetting->getRealSupplier(), $attachment['filename'], $attachment['temp_file']);
                                 } else {
-                                    $this->_filedata2array($billGetting->getRealSupplier(), $attachment['filename'], $attachment['temp_file'], $mail['from'], $mail['subject']);
+                                    $this->_filedata2array($billGetting->getRealSupplier(), $attachment['filename'], $attachment['temp_file'], $mail['fromaddress'], $mail['subject']);
                                 }    
                                 if (file_exists($attachment['temp_file'])){
                                     unlink($attachment['temp_file']);
@@ -686,7 +686,7 @@ class BillManager
                                 if ($validator->isValid($attachment['temp_file']) && strtolower($pathinfo['extension']) != 'xlsx'){
                                     $this->_decompressAttachment($supplier, $attachment['filename'], $attachment['temp_file']);
                                 } else {
-                                    $this->_filedata2array($supplier, $attachment['filename'], $attachment['temp_file'], $mail['from'], $mail['subject']);
+                                    $this->_filedata2array($supplier, $attachment['filename'], $attachment['temp_file'], $mail['fromaddress'], $mail['subject']);
                                 }    
                                 if (file_exists($attachment['temp_file'])){
                                     unlink($attachment['temp_file']);
