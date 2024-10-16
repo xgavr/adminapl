@@ -2,7 +2,7 @@
 $this->headTitle('Настройки загрузки прайсов');
 
 $this->mainMenu()->setActiveItemId('settings');
-$this->mainMenu()->setActiveUrl($this->url('settings', ['action' => 'price-settings']));
+$this->mainMenu()->setActiveUrl($this->url('admin', ['action' => 'price-settings']));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
@@ -109,6 +109,30 @@ $form->get('cross_mail_app_password')->setAttributes([
     ]);
 
 $form->get('cross_mail_box_check')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('sup_email')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('sup_email_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('sup_app_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('b_email')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('b_email_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('b_app_password')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -222,47 +246,59 @@ $form->prepare();
     </div>   
     <div class="col-md-3">
         <div class="form-group">
-            <?= $this->formLabel($form->get('image_mail_box')); ?>
-            <?= $this->formElement($form->get('image_mail_box')); ?>
-            <?= $this->formElementErrors($form->get('image_mail_box')); ?>                  
+            <?= $this->formLabel($form->get('cross_mail_box_check')); ?>
+            <?= $this->formElement($form->get('cross_mail_box_check')); ?>
+            <?= $this->formElementErrors($form->get('cross_mail_box_check')); ?>                  
         </div>                
         <div class="form-group">
-            <?= $this->formLabel($form->get('image_mail_box_password')); ?>
-            <?= $this->formElement($form->get('image_mail_box_password')); ?>
-            <?= $this->formElementErrors($form->get('image_mail_box_password')); ?>                  
-        </div>                
-        <div class="form-group">
-            <?= $this->formLabel($form->get('image_mail_box_check')); ?>
-            <?= $this->formElement($form->get('image_mail_box_check')); ?>
-            <?= $this->formElementErrors($form->get('image_mail_box_check')); ?>                  
-        </div>                
-        <div class="form-group">
-            <?= $this->formLabel($form->get('cross_mail_box')); ?>
+            <?= $this->formLabel($form->get('sup_email')); ?>
             <div class="input-group">
-                <?= $this->formElement($form->get('cross_mail_box')); ?>
+                <?= $this->formElement($form->get('sup_email')); ?>
                 <span class="input-group-btn">
                     <a class="btn btn-default" type="button" title="Перейти на biz.mail.ru" href="https://biz.mail.ru/login/autopartslist.ru" target="_blank">
                         <span class="glyphicon glyphicon-link"></span>
                     </a>
                 </span>                                                            
             </div>
-            <?= $this->formElementErrors($form->get('cross_mail_box')); ?>                  
-        </div>                
+            <?= $this->formElementErrors($form->get('sup_email')); ?>                  
+        </div>
+                
         <div class="form-group">
-            <?= $this->formLabel($form->get('cross_mail_box_password')); ?>
-            <?= $this->formElement($form->get('cross_mail_box_password')); ?>
-            <?= $this->formElementErrors($form->get('cross_mail_box_password')); ?>                  
-        </div>                
+            <?= $this->formLabel($form->get('sup_email_password')); ?>
+            <?= $this->formElement($form->get('sup_email_password')); ?>
+            <?= $this->formElementErrors($form->get('sup_email_password')); ?>                  
+        </div>
+
         <div class="form-group">
-            <?= $this->formLabel($form->get('cross_mail_app_password')); ?>
-            <?= $this->formElement($form->get('cross_mail_app_password')); ?>
-            <?= $this->formElementErrors($form->get('cross_mail_app_password')); ?>                  
-        </div>                
+            <?= $this->formLabel($form->get('sup_app_password')); ?>
+            <?= $this->formElement($form->get('sup_app_password')); ?>
+            <?= $this->formElementErrors($form->get('sup_app_password')); ?>                  
+        </div>
+        
         <div class="form-group">
-            <?= $this->formLabel($form->get('cross_mail_box_check')); ?>
-            <?= $this->formElement($form->get('cross_mail_box_check')); ?>
-            <?= $this->formElementErrors($form->get('cross_mail_box_check')); ?>                  
-        </div>                
+            <?= $this->formLabel($form->get('b_email')); ?>
+            <div class="input-group">
+                <?= $this->formElement($form->get('b_email')); ?>
+                <span class="input-group-btn">
+                    <a class="btn btn-default" type="button" title="Перейти на biz.mail.ru" href="https://biz.mail.ru/login/autopartslist.ru" target="_blank">
+                        <span class="glyphicon glyphicon-link"></span>
+                    </a>
+                </span>                                                            
+            </div>
+            <?= $this->formElementErrors($form->get('b_email')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('b_email_password')); ?>
+            <?= $this->formElement($form->get('b_email_password')); ?>
+            <?= $this->formElementErrors($form->get('b_email_password')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('b_app_password')); ?>
+            <?= $this->formElement($form->get('b_app_password')); ?>
+            <?= $this->formElementErrors($form->get('b_app_password')); ?>                  
+        </div>
     </div>
     <div class="col-sm-3" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">

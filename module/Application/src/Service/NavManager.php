@@ -592,23 +592,23 @@ class NavManager
                     'link'  => $url('admin', ['action' => 'apl-exchange-settings'])                    
                 ];
 
-                $settingsDropDownItems[] = [
-                    'id' => 'zetasoft',
-                    'label' => 'Настройи ZetaSoft',
-                    'link'  => $url('admin', ['action' => 'zetasoft-settings'])                    
-                ];
-                
-                $settingsDropDownItems[] = [
-                    'id' => 'partsapi',
-                    'label' => 'Настройи PartsApi',
-                    'link'  => $url('admin', ['action' => 'parts-api-settings'])                    
-                ];
-
-                $settingsDropDownItems[] = [
-                    'id' => 'tdExchange',
-                    'label' => 'Настройи обмена по апи текдока',
-                    'link'  => $url('admin', ['action' => 'td-exchange-settings'])                    
-                ];
+//                $settingsDropDownItems[] = [
+//                    'id' => 'zetasoft',
+//                    'label' => 'Настройи ZetaSoft',
+//                    'link'  => $url('admin', ['action' => 'zetasoft-settings'])                    
+//                ];
+//                
+//                $settingsDropDownItems[] = [
+//                    'id' => 'partsapi',
+//                    'label' => 'Настройи PartsApi',
+//                    'link'  => $url('admin', ['action' => 'parts-api-settings'])                    
+//                ];
+//
+//                $settingsDropDownItems[] = [
+//                    'id' => 'tdExchange',
+//                    'label' => 'Настройи обмена по апи текдока',
+//                    'link'  => $url('admin', ['action' => 'td-exchange-settings'])                    
+//                ];
 
                 $settingsDropDownItems[] = [
                     'id' => 'apiMarketPlaces',
@@ -628,11 +628,11 @@ class NavManager
                     'link'  => $url('admin', ['action' => 'ai-settings'])                    
                 ];
 
-                $settingsDropDownItems[] = [
-                    'id' => 'iaSettings',
-                    'label' => 'Настройи интернет эквайринга',
-                    'link'  => $url('admin', ['action' => 'ia-settings'])                    
-                ];
+//                $settingsDropDownItems[] = [
+//                    'id' => 'iaSettings',
+//                    'label' => 'Настройи интернет эквайринга',
+//                    'link'  => $url('admin', ['action' => 'ia-settings'])                    
+//                ];
 
                 if (count($settingsDropDownItems)!=0) {
                     $items[] = [

@@ -325,6 +325,72 @@ class PriceSettingsForm extends Form
             ],
         ]);
                 
+        $this->add([            
+            'type'  => 'email',
+            'name' => 'sup_email',
+            'attributes' => [
+                'id' => 'sup_email'
+            ],
+            'options' => [
+                'label' => 'Общий email для прайсов',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'sup_email_password',
+            'attributes' => [
+                'id' => 'sup_email_password'
+            ],
+            'options' => [
+                'label' => 'Пароль на email для прайсов',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'sup_app_password',
+            'attributes' => [
+                'id' => 'sup_app_password'
+            ],
+            'options' => [
+                'label' => 'Пароль приложения для прайсов',
+            ],
+        ]);        
+        
+        $this->add([            
+            'type'  => 'email',
+            'name' => 'b_email',
+            'attributes' => [
+                'id' => 'b_email'
+            ],
+            'options' => [
+                'label' => 'Общий email для накладных',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'b_email_password',
+            'attributes' => [
+                'id' => 'b_email_password'
+            ],
+            'options' => [
+                'label' => 'Пароль на email для накладных',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'b_app_password',
+            'attributes' => [
+                'id' => 'b_app_password'
+            ],
+            'options' => [
+                'label' => 'Пароль приложения для накладных',
+            ],
+        ]);        
+        
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -574,7 +640,7 @@ class PriceSettingsForm extends Form
         
         $inputFilter->add([
                 'name'     => 'image_mail_box_check',
-                'required' => true,
+                'required' => false,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
                 ],                
@@ -647,7 +713,7 @@ class PriceSettingsForm extends Form
         
         $inputFilter->add([
                 'name'     => 'cross_mail_box_check',
-                'required' => true,
+                'required' => false,
                 'filters'  => [                    
                     ['name' => 'ToInt'],
                 ],                
@@ -655,6 +721,130 @@ class PriceSettingsForm extends Form
                     ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
                 ],
             ]); 
+        
+        $inputFilter->add([
+                'name'     => 'sup_email',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                    [
+                        'name' => 'EmailAddress',
+                        'options' => [
+                            'allow' => \Laminas\Validator\Hostname::ALLOW_DNS,
+                            'useMxCheck'    => false,                            
+                        ],
+                    ],
+                ],
+            ]);        
+        
+        $inputFilter->add([
+                'name'     => 'sup_email_password',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 32
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'sup_app_password',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 32
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'b_email',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 128
+                        ],
+                    ],
+                    [
+                        'name' => 'EmailAddress',
+                        'options' => [
+                            'allow' => \Laminas\Validator\Hostname::ALLOW_DNS,
+                            'useMxCheck'    => false,                            
+                        ],
+                    ],
+                ],
+            ]);        
+        
+        $inputFilter->add([
+                'name'     => 'b_email_password',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 32
+                        ],
+                    ],
+                ],
+            ]);          
+        
+        $inputFilter->add([
+                'name'     => 'b_app_password',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
+                    ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 32
+                        ],
+                    ],
+                ],
+            ]);          
         
     }    
     

@@ -229,6 +229,15 @@ class AdminManager {
         $config->price->cross_mail_box_password = $data['cross_mail_box_password']; //ящик для сбора кроссов пароль
         $config->price->cross_mail_app_password = $data['cross_mail_app_password']; //ящик для сбора кроссов пароль app
         $config->price->cross_mail_box_check = $data['cross_mail_box_check']; //ящик для сбора кроссов проверять
+
+        $config->price->sup_email = $data['sup_email'];
+        $config->price->sup_email_password = $data['sup_email_password'];
+        $config->price->sup_app_password = $data['sup_app_password'];
+
+        $config->price->b_email = $data['b_email'];
+        $config->price->b_email_password = $data['b_email_password'];
+        $config->price->b_app_password = $data['b_app_password'];
+
         
         $writer = new PhpArray();
         

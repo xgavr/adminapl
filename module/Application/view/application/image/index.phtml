@@ -34,6 +34,12 @@ $this->pageBreadcrumbs()->setItems([
                                 <div class="pull-left">
                                     <?= $fileInfo->getFileName() ?>
                                     <?= mime_content_type($fileInfo->getPathname()) ?>
+                                    <?php if ($imageManager->isCompressFile($fileInfo->getPathName())): ?>
+                                        <button value="/image/decompress-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
+                                                title="Распаковать">
+                                            <span class="glyphicon glyphicon-compressed" ></span>
+                                        </button>                             
+                                    <?php endif;?>
                                     <button value="/image/delete-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-warning btn-xs this-delete"
                                             title="Удалить">
                                         <span class="glyphicon glyphicon-remove" ></span>
@@ -45,12 +51,6 @@ $this->pageBreadcrumbs()->setItems([
                                                 title="Конвертировать в jpg">
                                             <span class="glyphicon glyphicon-transfer" ></span>
                                         </button>
-                                    <?php endif;?>
-                                    <?php if ($imageManager->isCompressFile($fileInfo->getPathName())): ?>
-                                        <button value="/image/decompress-tmp-file/?file=<?= $fileInfo->getPathname() ?>" class="btn btn-default btn-xs refresh-button"
-                                                title="Распаковать">
-                                            <span class="glyphicon glyphicon-compressed" ></span>
-                                        </button>                             
                                     <?php endif;?>
                                 </div>                                                                            
                             </div>                    

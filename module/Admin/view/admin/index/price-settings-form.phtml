@@ -56,7 +56,29 @@ $form->get('image_mail_box_password')->setAttributes([
 $form->get('image_mail_box_check')->setAttributes([
     'class'=>'form-control', 
     ]);
+$form->get('sup_email')->setAttributes([
+    'class'=>'form-control', 
+    ]);
 
+$form->get('sup_email_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('sup_app_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('b_email')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('b_email_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('b_app_password')->setAttributes([
+    'class'=>'form-control', 
+    ]);
 
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
@@ -150,7 +172,58 @@ $form->prepare();
             <?= $this->formLabel($form->get('image_mail_box_check')); ?>
             <?= $this->formElement($form->get('image_mail_box_check')); ?>
             <?= $this->formElementErrors($form->get('image_mail_box_check')); ?>                  
-        </div>                
+        </div>    
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('sup_email')); ?>
+            <div class="input-group">
+                <?= $this->formElement($form->get('sup_email')); ?>
+                <span class="input-group-btn">
+                    <a class="btn btn-default" type="button" title="Перейти на biz.mail.ru" href="https://biz.mail.ru/login/autopartslist.ru" target="_blank">
+                        <span class="glyphicon glyphicon-link"></span>
+                    </a>
+                </span>                                                            
+            </div>
+            <?= $this->formElementErrors($form->get('sup_email')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('sup_email_password')); ?>
+            <?= $this->formElement($form->get('sup_email_password')); ?>
+            <?= $this->formElementErrors($form->get('sup_email_password')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('sup_app_password')); ?>
+            <?= $this->formElement($form->get('sup_app_password')); ?>
+            <?= $this->formElementErrors($form->get('sup_app_password')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('b_email')); ?>
+            <div class="input-group">
+                <?= $this->formElement($form->get('b_email')); ?>
+                <span class="input-group-btn">
+                    <a class="btn btn-default" type="button" title="Перейти на biz.mail.ru" href="https://biz.mail.ru/login/autopartslist.ru" target="_blank">
+                        <span class="glyphicon glyphicon-link"></span>
+                    </a>
+                </span>                                                            
+            </div>
+            <?= $this->formElementErrors($form->get('b_email')); ?>                  
+        </div>
+                
+        <div class="form-group">
+            <?= $this->formLabel($form->get('b_email_password')); ?>
+            <?= $this->formElement($form->get('b_email_password')); ?>
+            <?= $this->formElementErrors($form->get('b_email_password')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('b_app_password')); ?>
+            <?= $this->formElement($form->get('b_app_password')); ?>
+            <?= $this->formElementErrors($form->get('b_app_password')); ?>                  
+        </div>
+        
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
             <button type="button" class="btn btn-primary" id="price-settings-submit">Загрузить</button>

@@ -266,73 +266,7 @@ class SettingsForm extends Form
                 'label' => 'Пароль на email телефонистки',
             ],
         ]);
-               
-        $this->add([            
-            'type'  => 'email',
-            'name' => 'sup_email',
-            'attributes' => [
-                'id' => 'sup_email'
-            ],
-            'options' => [
-                'label' => 'Общий email для прайсов',
-            ],
-        ]);
-                
-        $this->add([            
-            'type'  => 'text',
-            'name' => 'sup_email_password',
-            'attributes' => [
-                'id' => 'sup_email_password'
-            ],
-            'options' => [
-                'label' => 'Пароль на email для прайсов',
-            ],
-        ]);
-                
-        $this->add([            
-            'type'  => 'text',
-            'name' => 'sup_app_password',
-            'attributes' => [
-                'id' => 'sup_app_password'
-            ],
-            'options' => [
-                'label' => 'Пароль приложения для прайсов',
-            ],
-        ]);        
-        
-        $this->add([            
-            'type'  => 'email',
-            'name' => 'b_email',
-            'attributes' => [
-                'id' => 'b_email'
-            ],
-            'options' => [
-                'label' => 'Общий email для накладных',
-            ],
-        ]);
-                
-        $this->add([            
-            'type'  => 'text',
-            'name' => 'b_email_password',
-            'attributes' => [
-                'id' => 'b_email_password'
-            ],
-            'options' => [
-                'label' => 'Пароль на email для накладных',
-            ],
-        ]);
-                
-        $this->add([            
-            'type'  => 'text',
-            'name' => 'b_app_password',
-            'attributes' => [
-                'id' => 'b_app_password'
-            ],
-            'options' => [
-                'label' => 'Пароль приложения для накладных',
-            ],
-        ]);        
-        
+                       
         $this->add([            
             'type'  => 'date',
             'name' => 'allow_date',
