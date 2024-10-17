@@ -86,7 +86,7 @@ class UploadForm extends Form
                 'use_upload_name' => true,
                 'use_upload_extension' => true,
                 'target'    => $this->target,
-                'randomize' => false,
+                'randomize' => true,
             ]
         );
         $inputFilter->add($fileInput);

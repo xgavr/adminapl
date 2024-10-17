@@ -29,6 +29,7 @@ class Idoc {
     const STATUS_ERROR      = 3; // Не прочитано.
     const STATUS_PROC      = 4; // Читается.
     const STATUS_TO_CORRECT      = 9; // Читается.
+    const STATUS_NEW      = 10; // Не определено.
         
     /**
      * @ORM\Id
@@ -66,6 +67,11 @@ class Idoc {
      * @ORM\Column(name="subject")   
      */
     protected $subject;
+    
+    /**
+     * @ORM\Column(name="tmp_file")   
+     */
+    protected $tmpfile;
     
     /**
      * @ORM\Column(name="status")  
@@ -137,6 +143,15 @@ class Idoc {
         return $this;
     }
     
+    public function getTmpfile() {
+        return $this->tmpfile;
+    }
+
+    public function setTmpfile($tmpfile) {
+        $this->tmpfile = $tmpfile;
+        return $this;
+    }
+
     /**
      * Returns status.
      * @return int     
@@ -159,6 +174,7 @@ class Idoc {
             self::STATUS_ERROR => 'Нет документа',
             self::STATUS_PROC => 'Обработка',
             self::STATUS_TO_CORRECT => 'Требуется исправление',
+            self::STATUS_NEW => 'Не определено',
         ];
     }    
     
@@ -331,7 +347,9 @@ class Idoc {
     public function setSupplier($supplier) 
     {
         $this->supplier = $supplier;
-        $supplier->addIdoc($this);
+        if ($supplier){
+            $supplier->addIdoc($this);
+        }    
     }    
         
         

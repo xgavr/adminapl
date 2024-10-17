@@ -19,12 +19,16 @@ $this->pageBreadcrumbs()->setItems([
                 <button id="byMail" type="button" class="btn btn-default" title="Проверить почту">
                     <span class="glyphicon glyphicon-envelope"></span>
                 </button>
+                <button value="/bills/upload-bill-form/" class="btn btn-default"
+                        data-toggle="modal" data-target="#modal-dialog" title="Загрузить документ">
+                    <span class="glyphicon glyphicon-import"></span>
+                </button>                                                
                 <button id="tryIdocs" type="button" class="btn btn-default" title="Загрузить документы">
                     <span class="glyphicon glyphicon-download-alt"></span>
                 </button>
-                <button id="correctionIdocs" type="button" class="btn btn-warning" title="Исправить документы">
+<!--                <button id="correctionIdocs" type="button" class="btn btn-warning" title="Исправить документы">
                     <span class="glyphicon glyphicon-wrench"></span>
-                </button>
+                </button>-->
                 <div class="form-group">
                     <div class='btn-group'>
                         <input name="search" style="width: 200px" class="form-control enter-search" onfocus="this.select();" type="text" placeholder="Поиск по имени файла">
@@ -79,7 +83,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="docKey" data-formatter="docFormatter">ПТУ</th>
                      <th data-field="info" data-width="100" data-align="right" data-formatter="billAmountFormatter">Инфо</th>
                      <th data-field="supplierName" data-formatter="supplierFormatter">Поставщик</th>
-                     <th data-field="sender">Почта</th>
+                     <!--<th data-field="sender">Почта</th>-->
                      <th data-field="name">Файл</th>
                      <th data-field="id" data-formatter="activeFormatter" data-width="50"></th>
                  </tr>                
@@ -296,6 +300,7 @@ $this->pageBreadcrumbs()->setItems([
     function supplierFormatter(value, row){
         if (!value){
             value = '---';
+            return value;
         }
         return [
             '<nobr>',

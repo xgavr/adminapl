@@ -15,6 +15,7 @@ use Application\Entity\BillGetting;
 use Application\Form\BillSettingForm;
 use Application\Entity\BillSetting;
 use Application\Entity\Supplier;
+use Application\Form\UploadForm;
 
 
 class BillController extends AbstractActionController
@@ -312,4 +313,46 @@ class BillController extends AbstractActionController
             'ok'
         ]);         
     }
+    
+    public function uploadBillFormAction()
+    {
+        $form = new UploadForm($this->billManager->getBillFolder());
+
+        if($this->getRequest()->isPost()) {
+            
+            $data = array_merge_recursive(
+                $this->params()->fromPost(),
+                $this->params()->fromFiles()
+            );            
+//            var_dump($data); exit;
+
+            // Заполняем форму данными.
+            $form->setData($data);
+            if($form->isValid()) {
+                                
+                // Получаем валадированные данные формы.
+                $data = $form->getData();
+//                var_dump($data); exit;
+                
+                $this->billManager->addIdoc(null, [
+                    'status' => Idoc::STATUS_NEW,
+                    'name' => $data['name']['name'],
+                    'description' => '',
+                    'tempfile' => $data['name']['tmp_name'],
+                ]);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+            
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+            'form' => $form,
+        ]);        
+    }
+    
 }
