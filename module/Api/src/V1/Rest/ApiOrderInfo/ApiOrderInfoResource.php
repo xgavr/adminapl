@@ -239,6 +239,7 @@ class ApiOrderInfoResource extends AbstractResourceListener
      */
     public function fetchAll($params = [])
     {
+        $result = [];
         if (!empty($params['orderAplId'])){
             if (is_numeric($params['orderAplId'])){
                 $orders = $this->entityManager->getRepository(Order::class)
@@ -250,7 +251,8 @@ class ApiOrderInfoResource extends AbstractResourceListener
                 return $result;
             }
         }
-        return new ApiProblem(405, 'The GET method has not been defined for collections');
+        return new ApiProblem(404, 'Заказ '.$params['orderAplId'].' не найден');        
+//        return new ApiProblem(405, 'The GET method has not been defined for collections');
     }
 
     /**
