@@ -198,6 +198,11 @@ class PriceManager {
                                         $this->entityManager->persist($raw);
                                         $this->entityManager->flush();
                                         
+                                        if ($priceGetting->getSupplier() && !empty($mail['fromEmail'])){
+                                            $this->postManager->addEmailToContact($priceGetting->getSupplier()->getLegalContact(), $mail['fromEmail']);
+                                        }
+                                        
+                                        
                                         //Закинуть прайс в папку поставщика с таким же прайсом
                                         $this->putPriceFileToPriceSupplier($priceGetting->getSupplier(), $target);
                                         //Проверка наименования файла
@@ -296,6 +301,10 @@ class PriceManager {
                                                     unlink($attachment['temp_file']);
                                                 }    
                                             }    
+                                            
+                                            if (!empty($mail['fromEmail'])){
+                                                $this->postManager->addEmailToContact($supplier->getLegalContact(), $mail['fromEmail']);
+                                            }
                                         }  
                                         
                                         $this->entityManager->persist($raw);

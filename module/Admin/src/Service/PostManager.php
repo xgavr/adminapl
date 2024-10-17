@@ -25,6 +25,8 @@ use Admin\Entity\PostLog;
 use User\Entity\User;
 use Application\Entity\Order;
 use Application\Filter\OrderFromIdZ;
+use Application\Entity\Email;
+use Application\Entity\Contact;
 
 /**
  * Description of PostManager
@@ -786,5 +788,40 @@ class PostManager {
         }    
         
         return $result;
+    }
+    
+    /**
+     * Привязать почту к контакту
+     * @param Contact $contact
+     * @param string $emailStr
+     */
+    public function addEmailToContact($contact, $emailStr)
+    {
+        $emailFilter = new EmailFromStr();
+        $emailValidator = new \Laminas\Validator\EmailAddress();
+        $emailName = $emailFilter->filter($emailStr);
+        
+        if ($emailValidator->isValid($emailName)){
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneBy(['name' => $emailName]);
+            
+            if (empty($email)){
+                $email = new Email();
+                $email->setContact($contact);
+                $email->setDateCreated(date('Y-m-d H:i:s'));
+                $email->setName($emailName);
+                
+                $this->entityManager->persist($email);
+                $this->entityManager->flush();
+            }
+            
+            if ($email->getContact()->getId() !== $contact->getId()){
+                $email->setContact($contact);
+                $this->entityManager->persist($email);
+                $this->entityManager->flush();
+            }            
+        }
+        
+        return;
     }
 }

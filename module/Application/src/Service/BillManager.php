@@ -112,6 +112,10 @@ class BillManager
         $this->entityManager->persist($idoc);
         $this->entityManager->flush();
         
+        if ($supplier && !empty($data['sender'])){
+            $this->postManager->addEmailToContact($supplier->getLegalContact(), $data['sender']);
+        }
+        
         return $idoc;
     }
     
