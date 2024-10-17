@@ -638,7 +638,7 @@ class PostManager {
                                 }
                             }    
 
-//                            var_dump($headers); exit;                            
+                            var_dump($headers); exit;                            
 //                            var_dump($structure->parts); exit;
 //                            var_dump($this->flattenParts($structure)); exit;
 
