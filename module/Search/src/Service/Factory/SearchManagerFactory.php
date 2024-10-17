@@ -12,6 +12,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\AdminManager;
 use Search\Service\SearchManager;
+use Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesResource;
 
 /**
  * Description of SearchManagerFactory
@@ -26,8 +27,9 @@ class SearchManagerFactory  implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $adminManager = $container->get(AdminManager::class);
+        $suppliersPrices = $container->get(ApiSuppliersPricesResource::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new SearchManager($entityManager, $adminManager);
+        return new SearchManager($entityManager, $adminManager, $suppliersPrices);
     }
 }

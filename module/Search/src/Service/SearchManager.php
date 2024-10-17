@@ -41,10 +41,17 @@ class SearchManager {
      */
     private $adminManager;
         
-    public function __construct($entityManager, $adminManager)
+    /**
+     * ApiSuppliersPricesResource manager.
+     * @var \Api\V1\Rest\ApiSuppliersPrices\ApiSuppliersPricesResource
+     */
+    private $suppliersPricesManager;
+        
+    public function __construct($entityManager, $adminManager, $suppliersPrices)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
+        $this->suppliersPricesManager = $suppliersPrices;
     }
     
     /**
@@ -240,6 +247,7 @@ class SearchManager {
         $result = $query->getResult(2);
         foreach ($result as $key => $value){
             $result[$key]['opts'] = Goods::optPrices($value['price'], empty($value['meanPrice']) ? 0:$value['meanPrice']);
+            $result[$key]['sups'] = $this->suppliersPricesManager->fetch($value['aplId']);
         }
         
         return $result;        

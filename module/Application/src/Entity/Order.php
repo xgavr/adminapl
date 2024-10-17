@@ -1869,6 +1869,7 @@ class Order {
             'goods' => [],
             'selections' => $this->getSelectionsAsString(),
             'dependInfo' => $this->getDependInfoAsArray(),
+            'total' => $this->getTotal(),
         ];
     }    
 
