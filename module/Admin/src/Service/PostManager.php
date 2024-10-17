@@ -570,6 +570,8 @@ class PostManager {
     {
         ini_set('memory_limit', '512M');
         
+        $emailFilter = new EmailFromStr();
+        
 //        $params['server'] = '{imap.yandex.ru:993/imap/ssl}';
         $params['server'] = '{imap.mail.ru:993/imap/ssl}';
         $nameDomain = explode("@", $params['user']);
@@ -632,13 +634,14 @@ class PostManager {
                                     $result[$messageNumber]['to'] = iconv_mime_decode($headers[0]->to, ICONV_MIME_DECODE_CONTINUE_ON_ERROR);
                                 }    
                                 $result[$messageNumber]['from'] = iconv_mime_decode($headers[0]->from, ICONV_MIME_DECODE_CONTINUE_ON_ERROR);
+                                $result[$messageNumber]['fromEmail'] = $emailFilter->filter($result[$messageNumber]['from']);
                                 $result[$messageNumber]['date'] = $headers[0]->date;
                                 if (isset($headers[0]->subject)){
                                     $result[$messageNumber]['subject'] = iconv_mime_decode($headers[0]->subject, ICONV_MIME_DECODE_CONTINUE_ON_ERROR);                                    
                                 }
                             }    
 
-                            var_dump($headers); exit;                            
+//                            var_dump($headers); exit;                            
 //                            var_dump($structure->parts); exit;
 //                            var_dump($this->flattenParts($structure)); exit;
 

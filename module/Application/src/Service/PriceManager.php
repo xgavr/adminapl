@@ -188,7 +188,7 @@ class PriceManager {
                                         $raw->setFilename($attachment['filename']);
                                         $raw->setParseStage(Raw::STAGE_NOT);
                                         $raw->setRows(0);
-                                        $raw->setSender(empty($mail['from']) ? null:$mail['from']);
+                                        $raw->setSender(empty($mail['fromEmail']) ? null:$mail['fromEmail']);
                                         $raw->setStatus(Raw::STATUS_NEW);
                                         $raw->setStatusEx(Raw::EX_NEW);
                                         $raw->setSubject(empty($mail['subject']) ? null:$mail['subject']);
@@ -252,7 +252,7 @@ class PriceManager {
                                 if (file_exists($attachment['temp_file'])){ 
                                     
                                     $supplier = $this->entityManager->getRepository(Supplier::class)
-                                                ->suplierByFromEmail($mail['from']);
+                                                ->suplierByFromEmail($mail['fromEmail']);
                                     
                                     if ($supplier){
                                         $target = self::PRICE_FOLDER.'/'.$supplier->getId().'/'.$attachment['filename'];
@@ -266,7 +266,7 @@ class PriceManager {
                                         $raw->setFilename($attachment['filename']);
                                         $raw->setParseStage(Raw::STAGE_NOT);
                                         $raw->setRows(0);
-                                        $raw->setSender(empty($mail['from']) ? null:$mail['from']);
+                                        $raw->setSender(empty($mail['fromEmail']) ? null:$mail['fromEmail']);
                                         $raw->setStatus(Raw::STATUS_NEW);
                                         $raw->setStatusEx(Raw::EX_NEW);
                                         $raw->setSubject(empty($mail['subject']) ? null:$mail['subject']);
