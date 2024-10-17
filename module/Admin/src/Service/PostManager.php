@@ -815,11 +815,11 @@ class PostManager {
                 $this->entityManager->flush();
             }
             
-            if ($email->getContact()->getId() !== $contact->getId()){
-                $email->setContact($contact);
-                $this->entityManager->persist($email);
-                $this->entityManager->flush();
-            }            
+//            if ($email->getContact()->getId() !== $contact->getId()){
+//                $email->setContact($contact);
+//                $this->entityManager->persist($email);
+//                $this->entityManager->flush();
+//            }            
         }
         
         return;
