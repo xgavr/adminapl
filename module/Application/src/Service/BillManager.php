@@ -1287,6 +1287,10 @@ class BillManager
             return;
         }
         
+        if ($idoc->getStatus() === Idoc::STATUS_NEW){
+            $this->rereadIdoc($idoc);
+        }
+        
         $oldstatus = $idoc->getStatus();
         $idoc->setStatus(Idoc::STATUS_PROC);
         $this->entityManager->persist($idoc);
