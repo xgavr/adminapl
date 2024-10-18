@@ -113,7 +113,7 @@ class BillManager
                     ->findOneBy([
                         'supplier' => $supplier->getId(),
                         'status' => Idoc::STATUS_NEW,
-                        'tempfile' => $data['tempfile'],
+                        'tmpfile' => $data['tempfile'],
                     ]);
             if ($idoc){
                 return $this->updateIdoc($idoc, $data);
