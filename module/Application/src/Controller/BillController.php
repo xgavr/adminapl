@@ -338,7 +338,7 @@ class BillController extends AbstractActionController
                     'status' => Idoc::STATUS_NEW,
                     'name' => $data['name']['name'],
                     'description' => '',
-                    'tempfile' => $data['name']['tmp_name'],
+                    'tmpfile' => $data['name']['tmp_name'],
                 ]);
                 
                 return new JsonModel(
