@@ -541,7 +541,7 @@ $this->pageBreadcrumbs()->setItems([
            ['selection'],
            ['addComment', 'comments', 'history'],
            ['addLegal', 'updateFromApl', 'sendToApl', 'duplicate'],
-           ['vt', 'cash']
+           ['vt', 'cash', 'cashes']
         ],      
         actions: {
             statusNew: {
@@ -762,6 +762,22 @@ $this->pageBreadcrumbs()->setItems([
                 }                
             },
             cash: {
+                name: 'Оплата+',
+                iconClass: 'glyphicon glyphicon-rub',
+                onClick: function (row){
+                    var url = '/till/edit-cash-in?order='+row.id;
+                    showFormDialog({
+                        id: 'cashInModal',
+                        url: url,
+                        width: '1440px',
+                        zIndex: 9998
+                    });
+                },
+                isEnabled: function(row) {
+                    return false;
+                }                
+            },
+            cashes: {
                 name: 'Оплата',
                 iconClass: 'glyphicon glyphicon-rub',
                 onClick: function (row){

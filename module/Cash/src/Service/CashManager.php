@@ -1154,6 +1154,7 @@ class CashManager {
                         $form->get('order')->setValue($order->getId());
                         $form->get('orderApl')->setValue($order->getAplId());
                         $form->get('phone')->setValue($order->getContact()->getPhoneAsString());
+                        $form->get('amount')->setValue(max($order->getTotal(), $order->getClientBalance()));
                     }
                 }
             }           

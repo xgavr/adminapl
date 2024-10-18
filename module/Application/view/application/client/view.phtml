@@ -1343,7 +1343,7 @@ $this->headLink()
         actionsGroups: [
            ['addComment', 'comments', 'history'],
            ['addLegal', 'changeContact', 'duplicate', 'sendToApl'],
-           ['vt', 'cash']
+           ['vt', 'cash', 'cashes']
         ],      
         actions: {
             statusNew: {
@@ -1532,7 +1532,20 @@ $this->headLink()
                 }                
             },
             cash: {
-                name: 'Оплата',
+                name: 'Оплата+',
+                iconClass: 'glyphicon glyphicon-rub',
+                onClick: function (row){
+                    var url = '/till/edit-cash-in?order='+row.id;
+                    showFormDialog({
+                        id: 'cashInModal',
+                        url: url,
+                        width: '1440px',
+                        zIndex: 9998
+                    });
+                }
+            },
+            cashes: {
+                name: 'Оплаты',
                 iconClass: 'glyphicon glyphicon-rub',
                 onClick: function (row){
                     var url = '/cash/order-form/'+row.id;

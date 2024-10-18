@@ -713,7 +713,8 @@ $disabled = (!empty($orderId)) ? '':'disabled';
             <button type="button" class="btn btn-primary btn-sm btn-block" id="order-submit">Сохранить</button>    
             <!--<button type="button" class="btn btn-secondary btn-sm btn-block" id="order-reset">Закрыть</button>-->
             <button type="button" <?= $disabled ?> class="btn btn-default btn-sm btn-block vt-index-modal-show" modal-url="/vt/order-form/<?= $orderId?>">Возврат</button>    
-            <button type="button" <?= $disabled ?> class="btn btn-default btn-sm btn-block cash-doc-index-modal-show" modal-url="/cash/order-form/<?= $orderId?>">Оплата</button>    
+            <button type="button" <?= $disabled ?> class="btn btn-default btn-sm btn-block cash-in-modal-show" modal-url="/till/edit-cash-in?order=<?= $orderId?>">Оплата+</button>    
+            <button type="button" <?= $disabled ?> class="btn btn-default btn-sm btn-block cash-doc-index-modal-show" modal-url="/cash/order-form/<?= $orderId?>">Оплаты</button>    
             <div class="dropdown">
                 <button type="button" data-toggle="dropdown" class="btn btn-default btn-sm btn-block" ria-haspopup="true" aria-expanded="false">
                     Печать

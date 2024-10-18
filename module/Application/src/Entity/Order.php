@@ -1048,6 +1048,14 @@ class Order {
         return;
     }
 
+    public function getClientBalance() 
+    {
+        if ($this->contact->getClient()){
+            return $this->contact->getClient()->getBalance();
+        }
+        return 0;
+    }
+
     /**
      * Задает связанный contact.
      * @param Contact $contact
