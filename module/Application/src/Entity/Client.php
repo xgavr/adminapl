@@ -170,6 +170,11 @@ class Client {
         return $this->getContact()->getName();
     }
 
+    public function getBestName() 
+    {
+        return max($this->getContactName(), $this->getName());
+    }
+
     public function getNameOrNan() 
     {
         return ($this->name) ? $this->name:'Nan';
@@ -368,6 +373,16 @@ class Client {
         foreach ($this->contacts as $contact){
             if ($contact->getPhone()){
                 return $contact->getPhone()->getName();
+            }
+        }
+        return;
+    }
+
+    public function getContactEmail()
+    {
+        foreach ($this->contacts as $contact){
+            if ($contact->getEmail()){
+                return $contact->getEmail()->getName();
             }
         }
         return;

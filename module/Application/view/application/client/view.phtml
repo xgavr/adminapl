@@ -258,6 +258,11 @@ $this->headLink()
             <div id="ordertoolbar">
                 <div class="form-inline" role="form">
                     <div class="form-group">
+                        <a class="btn btn-default" type="button" 
+                           href="<?= $this->url('order', ['action' => 'intro'], ['query' => ['client' => $client->getId()]])?>" 
+                           target="_blank" title="Новый заказ">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </a>                
                         <select id="clientOrderStatusSelect" style="width: 200px" class="form-control cookie-control" name="status">
                             <option>все</option>
                             <?php foreach (Order::getStatusList() as $key=>$value):?>

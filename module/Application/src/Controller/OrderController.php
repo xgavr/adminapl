@@ -30,6 +30,7 @@ use ApiMarketPlace\Entity\Marketplace;
 use Application\Form\OrderLegalForm;
 use Application\Filter\OrderFromIdZ;
 use Company\Entity\Legal;
+use Application\Entity\Client;
 
 class OrderController extends AbstractActionController
 {
@@ -236,8 +237,9 @@ class OrderController extends AbstractActionController
     public function introAction()
     {
         $orderId = (int)$this->params()->fromRoute('id', -1);
+        $clientId = (int)$this->params()->fromQuery('client', -1);
         
-        $order = $orderComments = null;
+        $order = $orderComments = $client = null;
         $office = $this->orderManager->currentUser()->getOffice();
         
         if ($orderId > 0){
@@ -246,6 +248,11 @@ class OrderController extends AbstractActionController
             $orderComments = $this->entityManager->getRepository(Comment::class)
                     ->findBy(['order' => $order->getId()], ['id' => 'DESC']);
             $office= $order->getOffice();                    
+        }    
+        
+        if ($clientId > 0){
+            $client = $this->entityManager->getRepository(Client::class)
+                    ->find($clientId);
         }    
         
         $form = new OrderForm($this->entityManager);
@@ -258,6 +265,11 @@ class OrderController extends AbstractActionController
             $form->get('courier')->setAttribute('disabled', $order->getShipping()->getRate() != Shipping::RATE_TK);
             $form->get('shipmentDistance')->setAttribute('disabled', $order->getShipping()->getRate() != Shipping::RATE_DISTANCE);
         }    
+        if ($client){
+            $form->get('name')->setValue($client->getBestName());
+            $form->get('phone')->setValue($client->getContactPhone());
+            $form->get('email')->setValue($client->getContactEmail());
+        }
         
         if ($this->getRequest()->isPost()) {
             
