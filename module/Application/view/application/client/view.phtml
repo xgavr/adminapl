@@ -1530,11 +1530,12 @@ $this->headLink()
                 name: 'Оплата',
                 iconClass: 'glyphicon glyphicon-rub',
                 onClick: function (row){
-                    var url = '/comments/order-form/'+row.id;
+                    var url = '/cash/order-form/'+row.id;
                     showFormDialog({
-                        id: 'orderCommentsModal',
+                        id: 'cashDocIndexModal',
                         url: url,
-                        zIndex: 8888
+                        zIndex: 8888,
+                        width: '1440px'
                     });
                 }
             }
