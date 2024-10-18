@@ -355,4 +355,44 @@ class BillController extends AbstractActionController
         ]);        
     }
     
+    public function suppliersAction()
+    {
+        $suppliers = $this->entityManager->getRepository(Supplier::class)
+                ->findForFormPtu();
+        $result = [];
+
+        foreach ($suppliers as $supplier){
+            $result[$supplier->getId()] = $supplier->getName();
+        }
+        
+        return new JsonModel($result);                
+    }
+    
+    public function changeIdocSupplierAction()
+    {
+        $idocId = $supplierId = -1;
+        
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $idocId = $data['pk'];
+            $supplierId = $data['value'];            
+        }    
+
+        if ($idocId<0 || $supplierId < 0) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }           
+        $idoc = $this->entityManager->getRepository(Idoc::class)
+                ->find($idocId);
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->find($supplierId);
+        
+        $this->billManager->updateIdocSupplier($idoc, $supplier); 
+        
+        return new JsonModel([
+            'ok'
+        ]);         
+    }
 }

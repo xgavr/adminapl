@@ -104,6 +104,12 @@ $this->pageBreadcrumbs()->setItems([
 //        $table.bootstrapTable('refresh');
     }
 
+    function changeSupplier(id, supplier){
+        $.get( "/bills/change-idoc-supplier/"+id+'?supplier='+supplier, function(data){
+            $table.bootstrapTable('refresh', {silent: true});
+        });        
+    }
+
     $(function () {
         ok.click(function () {
             $table.bootstrapTable('refresh');
@@ -114,9 +120,17 @@ $this->pageBreadcrumbs()->setItems([
             refreshTable();
         });
 
-        $('#billTable').on('load-success.bs.table', function (e, res) {
+        $table.on('load-success.bs.table', function (e, res) {
             tableRowClick();
-        });        
+            $('.editable').editable();
+        });       
+        
+        $(document).on('editable-save.bs.table', '#billTable', function (e, field, row, old, $el) {
+//            if (field === 'supplierName'){
+//                changeSupplier(row.id, row.supplierName);
+//                console.log(row);
+//            }
+        });                
 
         $(document).on('change', '#supplierSelect', function (e) {
             refreshTable();
@@ -249,12 +263,16 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function docFormatter(value, row){
-        if (!value){
-            return;
+        var disabled='';
+        var keys = [];
+        if (value){
+            var keys = value.split(':');
         }
-        var keys = value.split(':')
+        if (!value || !row.supplierName){
+            disabled = 'disabled';
+        }   
         var url = '/ptu/edit-form/'+keys[1];
-        btn = '<button';
+        btn = '<button '+disabled;
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs ptu-modal-show"';
         btn += ' aria-label="Left Align"'; 
@@ -264,7 +282,7 @@ $this->pageBreadcrumbs()->setItems([
         btn += '</button>';
         
         if (row.info && row.status !== <?= Idoc::STATUS_RETIRED?>){
-            btn += ' <button';
+            btn += ' <button '+disabled;
             btn += ' type="button"';
             btn += ' class="btn btn-default btn-xs info-show"';
             btn += ' aria-label="Left Align" data-value="'+row.info+'"'; 
@@ -299,7 +317,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function supplierFormatter(value, row){
         if (!value){
-            value = '---';
+            value = '<a href="#" class="editable" editable="true" data-pk="'+row.id+'" data-type="select" data-source="/bills/suppliers" data-url="/bills/change-idoc-supplier"></a>';
             return value;
         }
         return [

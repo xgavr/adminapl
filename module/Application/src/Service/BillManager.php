@@ -108,12 +108,12 @@ class BillManager
      */
     public function addIdoc($supplier, $data)
     {
-        if ($supplier && !empty($data['tempfile'])){
+        if ($supplier && !empty($data['tmpfile'])){
             $idoc = $this->entityManager->getRepository(Idoc::class)
                     ->findOneBy([
                         'supplier' => $supplier->getId(),
                         'status' => Idoc::STATUS_NEW,
-                        'tmpfile' => $data['tempfile'],
+                        'tmpfile' => $data['tmpfile'],
                     ]);
             if ($idoc){
                 return $this->updateIdoc($idoc, $data);
@@ -130,7 +130,7 @@ class BillManager
         $idoc->setSupplier($supplier);
         $idoc->setSender(empty($data['sender']) ? null:$data['sender']);
         $idoc->setSubject(empty($data['subject']) ? null:$data['subject']);
-        $idoc->setTmpfile(empty($data['tempfile']) ? null:$data['tempfile']);
+        $idoc->setTmpfile(empty($data['tmpfile']) ? null:$data['tmpfile']);
         
         $this->entityManager->persist($idoc);
         $this->entityManager->flush();
@@ -158,10 +158,26 @@ class BillManager
         $idoc->setDocKey(empty($data['docKey']) ? null:$data['docKey']);
         $idoc->setSender(empty($data['sender']) ? null:$data['sender']);
         $idoc->setSubject(empty($data['subject']) ? null:$data['subject']);
-        $idoc->setTmpfile(empty($data['tempfile']) ? null:$data['tempfile']);
+        $idoc->setTmpfile(empty($data['tmpfile']) ? null:$data['tmpfile']);
         
         $this->entityManager->persist($idoc);
         $this->entityManager->flush($idoc);
+        
+        return $idoc;
+    }
+    
+    /**
+     * Обновить документ
+     * 
+     * @param Idoc $idoc
+     * @param Supplier $supplier
+     * @return idoc
+     */
+    public function updateIdocSupplier($idoc, $supplier)
+    {
+        $idoc->setSupplier($supplier);
+        $this->entityManager->persist($idoc);
+        $this->entityManager->flush();
         
         return $idoc;
     }
@@ -198,6 +214,10 @@ class BillManager
             $this->entityManager->persist($ptu);
             $this->entityManager->flush();
         }
+        
+        if (file_exists($idoc->getTmpfile())){
+            unlink($idoc->getTmpfile());
+        }    
         
         $this->entityManager->remove($idoc);
         $this->entityManager->flush();
@@ -386,7 +406,7 @@ class BillManager
                     'docKey' => null,
                     'sender' => $sender,
                     'subject' => $subject,
-                    'tempfile' => $filepath,
+                    'tmpfile' => $filepath,
                 ]);                
             }                
             unset($spreadsheet);
@@ -441,7 +461,7 @@ class BillManager
                 'docKey' => null,
                 'sender' => $sender,
                 'subject' => $subject,
-                'tempfile' => $filepath,
+                'tmpfile' => $filepath,
             ]);                
         }    
                                     
@@ -498,7 +518,7 @@ class BillManager
             'docKey' => null,
             'sender' => $sender,
             'subject' => $subject,
-            'tempfile' => $filepath,
+            'tmpfile' => $filepath,
         ]);                
         
         return $result;
@@ -735,7 +755,7 @@ class BillManager
                                     'docKey' => null,
                                     'sender' => $mail['fromEmail'],
                                     'subject' => $mail['subject'],
-                                    'tempfile' => $attachment['temp_file'],
+                                    'tmpfile' => $attachment['temp_file'],
                                 ]);                                                    
                             }
                         }
