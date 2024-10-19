@@ -343,8 +343,13 @@ $this->pageBreadcrumbs()->setItems([
     }    
 
     function activeFormatter(value, row){
+        var disabled='';
+        if (!value || !row.supplierName){
+            disabled = 'disabled';
+        }   
+
         var url = '/bills/bill-setting-form/'+value;
-        btn = '<button';
+        btn = '<button disabled';
         btn += ' modal-url="'+url+'"';
         btn += ' class="btn btn-default btn-xs bill-setting-modal-show"';
 //        btn += ' data-toggle="modal" data-target="#modal-dialog"'; 
@@ -353,7 +358,7 @@ $this->pageBreadcrumbs()->setItems([
         btn += '</button>';
         
         var url = '/bills/idoc-to-ptu/'+value;
-        btn += ' <button';
+        btn += ' <button disabled';
         btn += ' url="'+url+'"';
         btn += ' class="btn btn-default btn-xs try-ptu"';
         btn += ' title="ПТУ">'; 

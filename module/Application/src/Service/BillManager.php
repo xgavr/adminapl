@@ -163,6 +163,9 @@ class BillManager
         $this->entityManager->persist($idoc);
         $this->entityManager->flush($idoc);
         
+        if ($idoc->getSupplier() && $idoc->getSender()){
+            $this->postManager->addEmailToContact($idoc->getSupplier()->getLegalContact(), $idoc->getSender());
+        }
         return $idoc;
     }
     
@@ -176,6 +179,7 @@ class BillManager
     public function updateIdocSupplier($idoc, $supplier)
     {
         $idoc->setSupplier($supplier);
+        $idoc->setStatus(Idoc::STATUS_ACTIVE);
         $this->entityManager->persist($idoc);
         $this->entityManager->flush();
         
