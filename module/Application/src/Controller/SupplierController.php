@@ -1361,17 +1361,17 @@ class SupplierController extends AbstractActionController
 
         // Validate input parameter
         if ($supplierId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
+//            $this->getResponse()->setStatusCode(404);
+//            return;
         }
         
         // Find the supplier ID
         $supplier = $this->entityManager->getRepository(Supplier::class)
-                ->findOneById($supplierId);
+                ->find($supplierId);
         
         if ($supplier == null) {
-            $this->getResponse()->setStatusCode(404);
-            return;                        
+//            $this->getResponse()->setStatusCode(404);
+//            return;                        
         }        
         
         $form = new UploadForm($this->supplierManager->getPriceFolder($supplier));
