@@ -615,9 +615,11 @@ class BillManager
      * 
      * @param Supplier $supplier
      * @param string $folderName
+     * @param string $sender
+     * @param string $subject
      * 
      */
-    protected function _checkBillFolder($supplier, $folderName)
+    protected function _checkBillFolder($supplier, $folderName, $sender, $subject)
     {    
         setlocale(LC_ALL,'ru_RU.UTF-8');
 
@@ -629,13 +631,13 @@ class BillManager
                 if ($fileInfo->isFile()){
                     $pathinfo = pathinfo($fileInfo->getFilename());
                     if ($validator->isValid($fileInfo->getPathname()) && strtolower($pathinfo['extension']) != 'xlsx'){                    
-                        $this->_decompressAttachment($supplier, $fileInfo->getFilename(), $fileInfo->getPathname());
+                        $this->_decompressAttachment($supplier, $fileInfo->getFilename(), $fileInfo->getPathname(), $sender, $subject);
                     } else {
-                        $this->_filedata2array($supplier, $fileInfo->getFilename(), $fileInfo->getPathname(), null, null);
+                        $this->_filedata2array($supplier, $fileInfo->getFilename(), $fileInfo->getPathname(), $sender, $subject);
                     }    
                 }
                 if ($fileInfo->isDir()){
-                    $this->_checkBillFolder($supplier, $fileInfo->getPathname());                    
+                    $this->_checkBillFolder($supplier, $fileInfo->getPathname(), $sender, $subject);                    
                 }
             }
         }
@@ -647,9 +649,12 @@ class BillManager
      * @param Supplier $supplier
      * @param string $filename
      * @param string $filepath
+     * @param string $filepath
+     * @param string $sender
+     * @param string $subject
      * @return null
      */
-    protected function _decompressAttachment($supplier, $filename, $filepath)
+    protected function _decompressAttachment($supplier, $filename, $filepath, $sender, $subject)
     {
         $this->_addBillFolder($supplier);
         $bill_supplier_folder_name = self::BILL_FOLDER.'/'.$supplier->getId();
@@ -663,7 +668,7 @@ class BillManager
         ]);
         if ($filter->filter($filepath)){
             unlink($filepath);
-            $this->_checkBillFolder($supplier, $bill_supplier_folder_name);
+            $this->_checkBillFolder($supplier, $bill_supplier_folder_name, $sender, $subject);
         }
         
         $this->_clearBillFolder($supplier, $bill_supplier_folder_name);
@@ -684,7 +689,7 @@ class BillManager
         if ($attachment['filename'] && file_exists($attachment['temp_file'])){
             $pathinfo = pathinfo($attachment['filename']);
             if ($validator->isValid($attachment['temp_file']) && strtolower($pathinfo['extension']) != 'xlsx'){
-                $this->_decompressAttachment($supplier, $attachment['filename'], $attachment['temp_file']);
+                $this->_decompressAttachment($supplier, $attachment['filename'], $attachment['temp_file'], $mail['fromEmail'], $mail['subject']);
             } else {
                 $this->_filedata2array($supplier, $attachment['filename'], $attachment['temp_file'], $mail['fromEmail'], $mail['subject']);
             }    
