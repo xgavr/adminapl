@@ -800,11 +800,12 @@ class PostManager {
         $emailFilter = new EmailFromStr();
         $emailValidator = new \Laminas\Validator\EmailAddress();
         $emailName = $emailFilter->filter($emailStr);
-        
+        var_dump($emailName);
         if ($emailValidator->isValid($emailName)){
             $email = $this->entityManager->getRepository(Email::class)
                     ->findOneBy(['name' => $emailName]);
             
+            var_dump($emailName);
             if (empty($email)){
                 $email = new Email();
                 $email->setContact($contact);
