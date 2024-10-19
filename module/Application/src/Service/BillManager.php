@@ -1291,6 +1291,10 @@ class BillManager
             return;
         }
         
+        if ($idoc->getSupplier() && $idoc->getSender()){
+            $this->postManager->addEmailToContact($idoc->getSupplier()->getLegalContact(), $idoc->getSender());
+        }
+        
         if ($idoc->getStatus() === Idoc::STATUS_NEW){
             $this->rereadIdoc($idoc);
         }
@@ -1322,11 +1326,7 @@ class BillManager
         $idoc->setStatus($oldstatus);
         $this->entityManager->persist($idoc);
         $this->entityManager->flush($idoc);
-        
-        if ($idoc->getSupplier() && $idoc->getSender()){
-            $this->postManager->addEmailToContact($idoc->getSupplier()->getLegalContact(), $idoc->getSender());
-        }
-        
+                
         return;
     }
     
