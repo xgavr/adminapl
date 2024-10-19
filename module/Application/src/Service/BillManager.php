@@ -1323,6 +1323,10 @@ class BillManager
         $this->entityManager->persist($idoc);
         $this->entityManager->flush($idoc);
         
+        if ($idoc->getSupplier() && $idoc->getSender()){
+            $this->postManager->addEmailToContact($idoc->getSupplier()->getLegalContact(), $idoc->getSender());
+        }
+        
         return;
     }
     
