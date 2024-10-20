@@ -87,6 +87,10 @@ class TillController extends AbstractActionController
             if ($period == 'month'){
                 $endDate = date('Y-m-d', strtotime('+ 1 month - 1 day', strtotime($startDate)));
             }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = $dateStart.'-12-31';
+            }    
         }    
         
         $params = [

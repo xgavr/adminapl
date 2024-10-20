@@ -235,7 +235,23 @@
             refreshTable();
         });
         $(document).on('change', '#periodSelect', function (e) {
-            $('#dateStart').attr('type', $(this).val());
+            var selectType = $(this).val();
+            $('#dateStart').attr('type', selectType);
+            switch(selectType){
+                case 'number':
+                    $('#dateStart').val(new Date().getFullYear());
+                    break;
+                case 'month':    
+                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM"));
+                    break;
+                case 'all':    
+                    $('#dateStart').val(null);
+                    break;
+                default:
+                    $('#dateStart').attr('min', '2011-01-01');
+                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
+            }
+            refreshTable();
         });
         $(document).on('click', '.send-cash-doc', function (e) {
             var url = $(this).attr('modal-url');
