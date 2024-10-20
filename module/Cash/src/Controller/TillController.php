@@ -76,8 +76,8 @@ class TillController extends AbstractActionController
         $dateStart = $this->params()->fromQuery('dateStart');
         $period = $this->params()->fromQuery('period', 'date');
         
-        $startDate = '2012-01-01';
-        $endDate = '2199-01-01';
+        $startDate = date('Y-m-d');
+        $endDate = date('Y-m-d');
         if ($dateStart){
             $startDate = date('Y-m-d', strtotime($dateStart));
             $endDate = $startDate;
