@@ -234,6 +234,9 @@
         $(document).on('change', '#cashSelect', function (e) {
             refreshTable();
         });
+        $(document).on('change', '#dateStart', function (e) {
+            refreshTable();
+        });
         $(document).on('change', '#periodSelect', function (e) {
             var selectType = $(this).val();
             $('#dateStart').attr('type', selectType);
