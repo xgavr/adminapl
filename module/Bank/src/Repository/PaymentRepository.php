@@ -50,6 +50,8 @@ class PaymentRepository extends EntityRepository
                 ->setParameter('4', Contract::STATUS_ACTIVE)
                 ->andWhere('ct.pay = ?5')
                 ->setParameter('5', Contract::PAY_CASHLESS)
+                ->andWhere('s.priceListStatus = :priceListStatus')
+                ->setParameter('priceListStatus', Supplier::PRICE_LIST_ON)
                 ->addOrderBy('s.amount', 'DESC')
                 ->addOrderBy('ba.id', 'DESC')
                 ;
