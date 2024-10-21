@@ -172,7 +172,7 @@ class PriceManager {
                 
                 //Проверка наименования файла
                 $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
-                        ->findBy(['priceSupplier' => $supplier->getId(), 'status' => PriceGetting::STATUS_ACTIVE]);
+                        ->findBy(['supplier' => $supplier->getId(), 'status' => PriceGetting::STATUS_ACTIVE]);
                 
                 foreach ($priceGettings as $priceGetting){
                     if (!$priceNameValidator->isValid($newRaw->getFilename(), $priceGetting)){
