@@ -102,8 +102,10 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                 $data = $goodSuppliersQuery->getResult();
                 foreach ($data as $row){      
                     $reserve = null;
+                    $restApl = 0;
                     if ($row->getSupplier()->getAplId() == 6){ //если Апл
                         $reserve = $this->aplReserve($good);
+                        $restApl = $row->getRest();
                     }
                     $result[] = [
                         'price' => $row->getPrice(),
@@ -114,6 +116,7 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                         'rest' => $row->getRest(),
                         'comp' => $row->getLot(),
                         'reserve' => $reserve,
+                        'restApl' => $restApl,
                     ];
                 }
             }    
