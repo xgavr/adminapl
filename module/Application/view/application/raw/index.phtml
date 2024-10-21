@@ -314,7 +314,7 @@ $this->pageBreadcrumbs()->setItems([
         return [
             '<a href="/raw/view/'+row.id+'">'+value+'</a>',
             row.sender
-        ].join(''); 
+        ].join(' '); 
     }
     
     function statusFormatter(value, row) {

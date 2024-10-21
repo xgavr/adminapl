@@ -132,9 +132,10 @@ class PriceManager {
      * 
      * @param Supplier $supplier
      * @param string $filename
+     * @param Raw $newRaw
      * @return null
      */
-    public function putPriceFileToPriceSupplier($supplier, $filename)
+    public function putPriceFileToPriceSupplier($supplier, $filename, $newRaw = null)
     {
         $priceNameValidator = new PriceNameValidator();
         if (file_exists($filename)){
@@ -146,8 +147,17 @@ class PriceManager {
                 if (copy($filename, $target)){
                     if (!$priceNameValidator->isValid($target, $priceGetting)){
                         unlink($target);                                    
+                        continue;
                     }
-                    continue;
+                    
+                    if ($newRaw){
+                        $this->addNewRaw($priceGetting->getSupplier(), [
+                            'filename' => $newRaw->getFilename(),
+//                            'fromEmail' => $newRaw->getSender(),
+                            'subject' => $newRaw->getSubject(),
+                            'tmpfile' => $target,
+                        ]);
+                    }    
                 }
             }    
         }
@@ -168,7 +178,7 @@ class PriceManager {
             $target = self::PRICE_FOLDER.'/'.$supplier->getId().'/'.$newRaw->getFilename();
             if (copy($newRaw->getTmpfile(), $target)){
                 //Закинуть прайс в папку поставщика с таким же прайсом
-                $this->putPriceFileToPriceSupplier($supplier, $target);
+                $this->putPriceFileToPriceSupplier($supplier, $target, $newRaw);
                 
                 //Проверка наименования файла
                 $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
@@ -177,18 +187,16 @@ class PriceManager {
                 foreach ($priceGettings as $priceGetting){
                     if (!$priceNameValidator->isValid($newRaw->getFilename(), $priceGetting)){
                         if (file_exists($target)){
-                            unlink($target);                                    
+                            unlink($target);
+                        }                                
+                        if (file_exists($newRaw->getTmpfile())){
+                            unlink($newRaw->getTmpfile());
                         }    
+                        $this->entityManager->remove($newRaw);
+                        $this->entityManager->flush();
+                        
+                        break;
                     }
-                }    
-
-//                if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
-//                    $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
-//                    $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
-//                }    
-                
-                if (file_exists($newRaw->getTmpfile())){
-                    unlink($newRaw->getTmpfile());
                 }    
             }
         }           
@@ -262,30 +270,44 @@ class PriceManager {
      */
     public function addNewRaw($supplier, $data)
     {
-        $raw = new Raw();
-        $raw->setFilename($data['filename']);
-        $raw->setParseStage(Raw::STAGE_NOT);
-        $raw->setRows(0);
-        $raw->setSender(empty($data['fromEmail']) ? null:$data['fromEmail']);
-        $raw->setStatus(Raw::STATUS_NEW);
-        $raw->setStatusEx(Raw::EX_NEW);
-        $raw->setSubject(empty($data['subject']) ? null:$data['subject']);
-        $currentDate = date('Y-m-d H:i:s');
-        $raw->setDateCreated($currentDate);
-        $raw->setTmpfile(empty($data['tmpfile']) ? null:$data['tmpfile']);
+        $raw = $this->entityManager->getRepository(Raw::class)
+                ->findOneBy([
+                    'filename' => $data['filename'],
+                    'parseStage' => Raw::STAGE_NOT,
+                    'status' => Raw::STATUS_NEW,
+                    'sender' => empty($data['fromEmail']) ? null:$data['fromEmail'],
+                    'subject' => empty($data['subject']) ? null:$data['subject'],
+                    'tmpfile' => empty($data['tmpfile']) ? null:$data['tmpfile'],
+                    'supplier' => empty($supplier) ? null:$supplier->getId(), 
+                ]);
         
-        $raw->setSupplier($supplier);
+        if (empty($raw)){
+        
+            $raw = new Raw();
+            $raw->setFilename($data['filename']);
+            $raw->setParseStage(Raw::STAGE_NOT);
+            $raw->setRows(0);
+            $raw->setSender(empty($data['fromEmail']) ? null:$data['fromEmail']);
+            $raw->setStatus(Raw::STATUS_NEW);
+            $raw->setStatusEx(Raw::EX_NEW);
+            $raw->setSubject(empty($data['subject']) ? null:$data['subject']);
+            $currentDate = date('Y-m-d H:i:s');
+            $raw->setDateCreated($currentDate);
+            $raw->setTmpfile(empty($data['tmpfile']) ? null:$data['tmpfile']);
 
-        $this->entityManager->persist($raw);
-        $this->entityManager->flush();
-        
-        if (!empty($data['fromEmail']) && $supplier){
-            if ($supplier->getParent()){
-                $this->postManager->addEmailToContact($supplier->getParent()->getLegalContact(), $data['fromEmail']);
-            } else {    
-                $this->postManager->addEmailToContact($supplier->getLegalContact(), $data['fromEmail']);
-            }    
-        }
+            $raw->setSupplier($supplier);
+
+            $this->entityManager->persist($raw);
+            $this->entityManager->flush();
+
+            if (!empty($data['fromEmail']) && $supplier){
+                if ($supplier->getParent()){
+                    $this->postManager->addEmailToContact($supplier->getParent()->getLegalContact(), $data['fromEmail']);
+                } else {    
+                    $this->postManager->addEmailToContact($supplier->getLegalContact(), $data['fromEmail']);
+                }    
+            }
+        }    
         
         return $raw;
     }

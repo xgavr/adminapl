@@ -110,6 +110,7 @@ class RawManager {
      * @param Application\Entity\Supplier $supplier
      * @param string $folderName
      * 
+     * 
      */
     public function checkPriceFolder($supplier, $folderName)
     {    
@@ -477,8 +478,9 @@ class RawManager {
     
     /*
      * Загрузка сырого прайса
-     * @var Application\Entity\Supplier
-     * @var string $filename
+     * @param Application\Entity\Supplier $supplier
+     * @param string $filename
+     * 
      */
     
     public function uploadRawprice($supplier, $filename)
@@ -501,7 +503,12 @@ class RawManager {
                     ]);
                     try {
                         if ($filter->filter($filename)){
-                            unlink($filename);                            
+                            unlink($filename);   
+                            
+                            $basenameFilter = new Basename();
+
+                            $baseName = $basenameFilter->filter($filename);
+                            
                             return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
                         }
                     } catch (Laminas\Filter\Exception\RuntimeException $e){
