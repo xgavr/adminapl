@@ -686,6 +686,7 @@ class BillManager
     {
         $validator = new IsCompressed();
 
+        var_dump($attachment);
         if ($attachment['filename'] && file_exists($attachment['temp_file'])){
             $pathinfo = pathinfo($attachment['filename']);
             if ($validator->isValid($attachment['temp_file']) && strtolower($pathinfo['extension']) != 'xlsx'){
