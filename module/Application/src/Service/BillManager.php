@@ -696,6 +696,7 @@ class BillManager
             }    
             if (file_exists($attachment['temp_file'])){
                 unlink($attachment['temp_file']);
+                return true;
             }    
         }
         

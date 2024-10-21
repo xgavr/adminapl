@@ -280,7 +280,11 @@ class PriceManager {
         $this->entityManager->flush();
         
         if (!empty($data['fromEmail']) && $supplier){
-            $this->postManager->addEmailToContact($supplier->getLegalContact(), $data['fromEmail']);
+            if ($supplier->getParent()){
+                $this->postManager->addEmailToContact($supplier->getParent()->getLegalContact(), $data['fromEmail']);
+            } else {    
+                $this->postManager->addEmailToContact($supplier->getLegalContact(), $data['fromEmail']);
+            }    
         }
         
         return $raw;
