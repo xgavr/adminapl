@@ -176,10 +176,8 @@ class PriceManager {
                 
                 foreach ($priceGettings as $priceGetting){
                     if (!$priceNameValidator->isValid($newRaw->getFilename(), $priceGetting)){
-                        if ($newRaw->getTmpfile()){
-                            if (file_exists($target)){
-                                unlink($target);                                    
-                            }    
+                        if (file_exists($target)){
+                            unlink($target);                                    
                         }    
                     }
                 }    
