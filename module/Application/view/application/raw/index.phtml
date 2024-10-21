@@ -59,8 +59,8 @@ $this->pageBreadcrumbs()->setItems([
                 <tr>
                      <th data-field="id" data-type="numeric">ID</th>
                      <th data-field="supplier" data-formatter="supplierFormatter">Поставщик</th>
-                     <th data-field="filename"  data-formatter="filenameFormatter">Файл</th>
-                     <th data-field="sender">Почта</th>
+                     <th data-field="filename"  data-formatter="filenameFormatter">Файл, почта</th>
+                     <!--<th data-field="sender">Почта</th>-->
                      <th data-field="rows">Строк</th>
                      <th data-field="status" data-formatter="statusExStageFormatter">Состояние</th>
                      <th data-field="dateCreated" data-formatter="dateCreatedFormatter">Дата</th>
@@ -310,7 +310,11 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function filenameFormatter(value, row) {
-        return '<a href="/raw/view/'+row.id+'">'+value+'</a>';
+//        return '<a href="/raw/view/'+row.id+'">'+value+'</a>';
+        return [
+            '<a href="/raw/view/'+row.id+'">'+value+'</a>',
+            row.sender
+        ].join(''); 
     }
     
     function statusFormatter(value, row) {
