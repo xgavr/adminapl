@@ -179,7 +179,7 @@ class BillManager
     public function updateIdocSupplier($idoc, $supplier)
     {
         $idoc->setSupplier($supplier);
-        $idoc->setStatus(Idoc::STATUS_ACTIVE);
+//        $idoc->setStatus(Idoc::STATUS_ACTIVE);
         $this->entityManager->persist($idoc);
         $this->entityManager->flush();
         
@@ -686,7 +686,7 @@ class BillManager
     {
         $validator = new IsCompressed();
 
-        var_dump($attachment);
+//        var_dump($attachment);
         if ($attachment['filename'] && file_exists($attachment['temp_file'])){
             $pathinfo = pathinfo($attachment['filename']);
             if ($validator->isValid($attachment['temp_file']) && strtolower($pathinfo['extension']) != 'xlsx'){
