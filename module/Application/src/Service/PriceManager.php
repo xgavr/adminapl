@@ -155,6 +155,78 @@ class PriceManager {
         return;
     }
     
+    /**
+     * 
+     * @param Raw $newRaw
+     */
+    public function checkNewPriceFile($newRaw)
+    {
+        $supplier = $newRaw->getSupplier();        
+        if ($supplier){
+            $priceNameValidator = new PriceNameValidator();
+                    
+            $target = self::PRICE_FOLDER.'/'.$supplier->getId().'/'.$newRaw->getFilename();
+            if (copy($newRaw->getTmpfile(), $target)){
+                //Закинуть прайс в папку поставщика с таким же прайсом
+                $this->putPriceFileToPriceSupplier($supplier, $target);
+                
+                //Проверка наименования файла
+                $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
+                        ->findBy(['priceSupplier' => $supplier->getId(), 'status' => PriceGetting::STATUS_ACTIVE]);
+                
+                foreach ($priceGettings as $priceGetting){
+                    if (!$priceNameValidator->isValid($newRaw->getFilename(), $priceGetting)){
+                        unlink($newRaw->getTmpfile());                                    
+                        unlink($target);                                    
+                    }
+                }    
+
+//                if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
+//                    $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
+//                    $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
+//                }    
+                
+                if (file_exists($newRaw->getTmpfile())){
+                    unlink($newRaw->getTmpfile());
+                }    
+            }
+        }           
+        return;        
+    }
+    
+    /**
+     * 
+     * @param Supplier|null $supplier
+     * @param array $mailList
+     */
+    private function saveAttachement($supplier, $mailList)
+    {
+        if (count($mailList)){
+            foreach ($mailList as $mail){
+                if (isset($mail['attachment'])){
+                    foreach($mail['attachment'] as $attachment){
+                        if ($attachment['filename'] && file_exists($attachment['temp_file'])){
+                            if (file_exists($attachment['temp_file'])){ 
+
+                                $newRaw = $this->addNewRaw($supplier, [
+                                    'filename' => $attachment['filename'],
+                                    'fromEmail' => $mail['fromEmail'],
+                                    'subject' => $mail['subject'],
+                                    'tmpfile' => $attachment['temp_file'],
+                                    ]);
+
+                                if ($supplier){
+                                    $this->checkNewPriceFile($newRaw);
+                                }    
+                            }    
+                        }
+                    }
+                }
+            }
+        }
+        
+        return;        
+    }
     
     /**
      * Проверка почты в ящике поставщика
@@ -173,58 +245,59 @@ class PriceManager {
             
             $mailList = $this->postManager->readImap($box);
             
-            $priceNameValidator = new PriceNameValidator();
-            
-            if (count($mailList)){
-                foreach ($mailList as $mail){
-                    if (isset($mail['attachment'])){
-                        foreach($mail['attachment'] as $attachment){
-                            if ($attachment['filename'] && file_exists($attachment['temp_file'])){
-                                if (file_exists($attachment['temp_file'])){ 
-                                    $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$attachment['filename'];
-                                    if (copy($attachment['temp_file'], $target)){
-                                        
-                                        $raw = new Raw();
-                                        $raw->setFilename($attachment['filename']);
-                                        $raw->setParseStage(Raw::STAGE_NOT);
-                                        $raw->setRows(0);
-                                        $raw->setSender(empty($mail['fromEmail']) ? null:$mail['fromEmail']);
-                                        $raw->setStatus(Raw::STATUS_NEW);
-                                        $raw->setStatusEx(Raw::EX_NEW);
-                                        $raw->setSubject(empty($mail['subject']) ? null:$mail['subject']);
-                                        $raw->setSupplier($priceGetting->getSupplier());
-                                        $currentDate = date('Y-m-d H:i:s');
-                                        $raw->setDateCreated($currentDate);
-                                        $this->entityManager->persist($raw);
-                                        $this->entityManager->flush();
-                                        
-                                        if ($priceGetting->getSupplier() && !empty($mail['fromEmail'])){
-                                            $this->postManager->addEmailToContact($priceGetting->getSupplier()->getLegalContact(), $mail['fromEmail']);
-                                        }
-                                        
-                                        
-                                        //Закинуть прайс в папку поставщика с таким же прайсом
-                                        $this->putPriceFileToPriceSupplier($priceGetting->getSupplier(), $target);
-                                        //Проверка наименования файла
-                                        if (!$priceNameValidator->isValid($attachment['filename'], $priceGetting)){
-                                            unlink($attachment['temp_file']);                                    
-                                            unlink($target);                                    
-                                        }
-                                        
-                                        if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
-                                            $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
-                                            $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
-                                        }    
-                                        if (file_exists($attachment['temp_file'])){
-                                            unlink($attachment['temp_file']);
-                                        }    
-                                    }
-                                }    
-                            }
-                        }
-                    }
-                }
-            }
+            $this->saveAttachement($priceGetting->getSupplier(), $mailList);
+        }    
+        
+        return;
+    }
+    
+    /**
+     * Добавить upload прайс
+     * 
+     * @param Supplier|null $supplier
+     * @param array $data
+     * 
+     * @return Raw 
+     */
+    public function addNewRaw($supplier, $data)
+    {
+        $raw = new Raw();
+        $raw->setFilename($data['filename']);
+        $raw->setParseStage(Raw::STAGE_NOT);
+        $raw->setRows(0);
+        $raw->setSender(empty($data['fromEmail']) ? null:$data['fromEmail']);
+        $raw->setStatus(Raw::STATUS_NEW);
+        $raw->setStatusEx(Raw::EX_NEW);
+        $raw->setSubject(empty($data['subject']) ? null:$data['subject']);
+        $currentDate = date('Y-m-d H:i:s');
+        $raw->setDateCreated($currentDate);
+        $raw->setTmpfile(empty($data['tmpfile']) ? null:$data['tmpfile']);
+        
+        $raw->setSupplier($supplier);
+
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush();
+        
+        if (!empty($data['fromEmail']) && $supplier){
+            $this->postManager->addEmailToContact($supplier->getLegalContact(), $data['fromEmail']);
+        }
+        
+        return $raw;
+    }
+    
+    /**
+     * 
+     * @param Raw $raw
+     * @param Supplier $supplier
+     */
+    public function updateRawSupplier($raw, $supplier)
+    {
+        $raw->setSupplier($supplier);
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush();
+        
+        if ($supplier){
+            $this->checkNewPriceFile($raw);
         }    
         
         return;
@@ -246,76 +319,7 @@ class PriceManager {
             ];
             
             $mailList = $this->postManager->readImap($box);
-            
-            $priceNameValidator = new PriceNameValidator();
-            
-            if (count($mailList)){
-                foreach ($mailList as $mail){
-                    if (isset($mail['attachment'])){
-                        foreach($mail['attachment'] as $attachment){
-                            if ($attachment['filename'] && file_exists($attachment['temp_file'])){
-                                if (file_exists($attachment['temp_file'])){ 
-                                    
-                                    $supplier = $this->entityManager->getRepository(Supplier::class)
-                                                ->suplierByFromEmail($mail['fromEmail']);
-                                    
-                                    if ($supplier){
-                                        $target = self::PRICE_FOLDER.'/'.$supplier->getId().'/'.$attachment['filename'];
-                                    } else {
-                                        $target = self::PRICE_FOLDER_NEW.'/'.$attachment['filename'];                                        
-                                    }
-                                    
-                                    if (copy($attachment['temp_file'], $target)){
-                                        
-                                        $raw = new Raw();
-                                        $raw->setFilename($attachment['filename']);
-                                        $raw->setParseStage(Raw::STAGE_NOT);
-                                        $raw->setRows(0);
-                                        $raw->setSender(empty($mail['fromEmail']) ? null:$mail['fromEmail']);
-                                        $raw->setStatus(Raw::STATUS_NEW);
-                                        $raw->setStatusEx(Raw::EX_NEW);
-                                        $raw->setSubject(empty($mail['subject']) ? null:$mail['subject']);
-                                        $currentDate = date('Y-m-d H:i:s');
-                                        $raw->setDateCreated($currentDate);
-                                        
-                                        if ($supplier){
-                                            
-                                            $raw->setSupplier($supplier);
-                                            
-                                            foreach ($supplier->getPriceGettings() as $priceGetting){
-                                                //Закинуть прайс в папку поставщика с таким же прайсом
-                                                $this->putPriceFileToPriceSupplier($priceGetting->getSupplier(), $target);
-                                                //Проверка наименования файла
-                                                if (!$priceNameValidator->isValid($attachment['filename'], $priceGetting)){
-                                                    unlink($attachment['temp_file']);                                    
-                                                    unlink($target);                                    
-                                                }
-
-                                                // отправить файл на другой сервер
-                                                if ($priceGetting->getOrderToApl() == PriceGetting::ORDER_PRICE_FILE_TO_APL){    
-                                                    $destfile = '/'.$priceGetting->getSupplier()->getAplId().'/'.$attachment['filename'];
-                                                    $this->ftpManager->putPriceToApl(['source_file' => $attachment['temp_file'], 'dest_file' => $destfile]);
-                                                }  
-
-                                                if (file_exists($attachment['temp_file'])){
-                                                    unlink($attachment['temp_file']);
-                                                }    
-                                            }    
-                                            
-                                            if (!empty($mail['fromEmail'])){
-                                                $this->postManager->addEmailToContact($supplier->getLegalContact(), $mail['fromEmail']);
-                                            }
-                                        }  
-                                        
-                                        $this->entityManager->persist($raw);
-                                        $this->entityManager->flush();
-                                    }
-                                }    
-                            }
-                        }
-                    }
-                }
-            }
+            $this->saveAttachement(null, $mailList);
         }    
         
         return;

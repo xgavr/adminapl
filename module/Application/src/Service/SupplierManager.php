@@ -71,20 +71,24 @@ class SupplierManager
             mkdir($price_data_folder_name);
         }
         
-        $price_supplier_folder_name = $price_data_folder_name.'/'.$supplier->getId();
-        if (!is_dir($price_supplier_folder_name)){
-            mkdir($price_supplier_folder_name);
-        }
+        if ($supplier){
+            $price_supplier_folder_name = $price_data_folder_name.'/'.$supplier->getId();
+            if (!is_dir($price_supplier_folder_name)){
+                mkdir($price_supplier_folder_name);
+            }
+        }    
 
         $arx_price_data_folder_name = $this->priceManager->getPriceArxFolder();
         if (!is_dir($arx_price_data_folder_name)){
             mkdir($arx_price_data_folder_name);
         }
         
-        $arx_price_supplier_folder_name = $arx_price_data_folder_name.'/'.$supplier->getId();
-        if (!is_dir($arx_price_supplier_folder_name)){
-            mkdir($arx_price_supplier_folder_name);
-        }
+        if ($supplier){
+            $arx_price_supplier_folder_name = $arx_price_data_folder_name.'/'.$supplier->getId();
+            if (!is_dir($arx_price_supplier_folder_name)){
+                mkdir($arx_price_supplier_folder_name);
+            }
+        }    
     }        
     
     public function addNewSupplier($data) 
@@ -120,6 +124,11 @@ class SupplierManager
     {
         $this->addPriceFolder($supplier);
         $price_data_folder_name = $this->priceManager->getPriceFolder();
+        
+        if (!$supplier){
+            return $price_data_folder_name;
+        }
+        
         return $price_data_folder_name.'/'.$supplier->getId();
     }  
     
@@ -774,9 +783,21 @@ class SupplierManager
         $this->entityManager->flush();
     }    
     
-    public function checkPriceFolder($supplier)
+    /**
+     * 
+     * @param Supplier $supplier
+     * @param array $data
+     * @return type
+     */
+    public function checkPriceFolder($supplier, $data = null)
     {
-        $this->rawManager->checkSupplierPrice($supplier);
+        if ($supplier){
+            return $this->rawManager->checkSupplierPrice($supplier);
+        }   
+
+        $this->priceManager->addNewRaw(null, $data);
+        
+        return;
     }
     
     /**

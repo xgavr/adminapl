@@ -19,7 +19,7 @@ $this->pageBreadcrumbs()->setItems([
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <button value="/supplier/upload-price-form" class="btn btn-default btn-xs"
+                    <button value="/supplier/upload-price-form" class="btn btn-default"
                             data-toggle="modal" data-target="#modal-dialog" title="Загрузить прайс">
                         <span class="glyphicon glyphicon-import"></span>
                     </button>                                                
@@ -186,12 +186,6 @@ $this->pageBreadcrumbs()->setItems([
 <script type="text/javascript">
     var $table = $('#table');
     
-    $table.bootstrapTable({
-        onLoadSuccess: function (data){
-            statUpdate();
-        }
-    });    
-
     function stat(data){
         var names2 = ''; var values2 = '';
         var names3 = ''; var values3 = ''; var status3Count = 0;
@@ -253,6 +247,10 @@ $this->pageBreadcrumbs()->setItems([
     }
 
     $(function () {
+        $table.on('load-success.bs.table', function (e, res) {
+            statUpdate();
+            $('.editable').editable();
+        });       
         $('#rawStatusSelect').change(function (){
             $table.bootstrapTable('selectPage', 1);
         });
@@ -262,17 +260,20 @@ $this->pageBreadcrumbs()->setItems([
     });
     
     function queryParams(params) {
-        $('#toolbar').each(function () {
+        $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('.page-size').html();
+//        $('#toolbar').find('select[name]').each(function () {
+//            params[$(this).attr('name')] = $(this).val();
+//        });
+        limit = $('#table .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('li.page-number.active a').html();
+        offset = $('#table li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
-        }            
+        }    
         params.status = $('#rawStatusSelect').val();
         params.stage = $('#rawStageSelect').val();
         return params;
@@ -294,12 +295,18 @@ $this->pageBreadcrumbs()->setItems([
         return btn;
     }
     
-    function supplierFormatter(value) {
-        if (value){
-            return '<a href="/supplier/view/'+value.id+'">'+value.name+'</a>';
+    function supplierFormatter(value, row) {
+        if (!value){
+            value = '<a href="#" class="editable" editable="true" data-pk="'+row.id+'" data-type="select" data-source="/bills/suppliers" data-url="/price/change-raw-supplier"></a>';
+            return value;
         }
-        
-        return '';
+        return [
+            '<nobr>',
+            '<a href="#" class="btn btn-link btn-xs supplier-link" supplier-id="'+row.supplier.id+'" title="Перейти на сайт поставщика">',
+            '<span class="glyphicon glyphicon-link"></span></a>',
+            '<a href="/supplier/view/' + row.supplier.id + '" target="_blank">' + row.supplier.name + '</a>',
+            '</nobr>'
+        ].join(''); 
     }
     
     function filenameFormatter(value, row) {
@@ -330,23 +337,4 @@ $this->pageBreadcrumbs()->setItems([
         return value;
     }
     
-    var addCart = function(data){
-        data.num = $('#num'+data.good).val();
-        $.post(
-            '/shop/add-cart',
-            data,
-            addCartSuccess
-        );
-    };
-    
-    function addCartSuccess(data)
-    {
-        if (data.num){  
-            $('#nav_cart_badge').html(data.num);
-        }  
-        if (data.good){
-            $('#shop_index_add_cart_'+data.good).removeClass('btn-default');
-            $('#shop_index_add_cart_'+data.good).addClass('btn-success');
-        }
-    }
 </script>

@@ -342,5 +342,34 @@ class PriceController extends AbstractActionController
             'files' => $this->supplierManager->getPriceFilesToUpload(),
         ]);
                     
-    }    
+    }
+
+    public function changeRawSupplierAction()
+    {
+        $rawId = $supplierId = -1;
+        
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $rawId = $data['pk'];
+            $supplierId = $data['value'];            
+        }    
+//        var_dump($data); exit;
+        if ($rawId<0 || $supplierId < 0) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }           
+        $raw = $this->entityManager->getRepository(Raw::class)
+                ->find($rawId);
+        
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->find($supplierId);
+        
+        $this->priceManager->updateRawSupplier($raw, $supplier); 
+        
+        return new JsonModel([
+            'ok'
+        ]);         
+    }
+    
 }

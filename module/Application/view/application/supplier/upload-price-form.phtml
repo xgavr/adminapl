@@ -55,7 +55,7 @@ $form->prepare();
 
         $.ajax({
             type: 'POST',
-            url: '/supplier/upload-price-form/<?= $supplier->getId() ?>',
+            url: '/supplier/upload-price-form/<?= empty($supplier) ? '':$supplier->getId() ?>',
             contentType: false,
             processData: false,
             data: form_data
@@ -63,11 +63,14 @@ $form->prepare();
             .done(function (data) {
                 dialog.modal('hide');
                 if (data == 'ok'){
-                    $('#upload-price-modal').modal('hide');
-                    //bootbox.alert("Файл успешно загружен.");
-                    window.location.reload();
+                    $('#modal-dialog').modal('hide');
+                    if ($('#table').length){
+                        $('#table').bootstrapTable('refresh');
+                    } else {
+                        window.location.reload();
+                    }    
                 } else {
-                    $('#upload-price-modal-content').html(data);
+                    $('#modal-content').html(data);
                 }    
             })
             .fail(function () {

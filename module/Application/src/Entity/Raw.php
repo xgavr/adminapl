@@ -84,6 +84,11 @@ class Raw {
      * @ORM\Column(name="row_count")   
      */
     protected $rows;
+    
+    /**
+     * @ORM\Column(name="tmp_file")   
+     */
+    protected $tmpfile;
 
     /** 
      * @ORM\Column(name="status")  
@@ -171,6 +176,7 @@ class Raw {
     {
         $this->rows = $rows;
     }     
+    
     public function getSender() {
         return $this->sender;
     }
@@ -186,6 +192,15 @@ class Raw {
 
     public function setSubject($subject) {
         $this->subject = $subject;
+        return $this;
+    }
+    
+    public function getTmpfile() {
+        return $this->tmpfile;
+    }
+
+    public function setTmpfile($tmpfile) {
+        $this->tmpfile = $tmpfile;
         return $this;
     }
     
@@ -409,7 +424,9 @@ class Raw {
     public function setSupplier($supplier) 
     {
         $this->supplier = $supplier;
-        $supplier->addRaw($this);
+        if ($supplier){
+            $supplier->addRaw($this);
+        }    
     }    
     
     /**

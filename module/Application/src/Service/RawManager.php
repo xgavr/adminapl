@@ -501,7 +501,7 @@ class RawManager {
                     ]);
                     try {
                         if ($filter->filter($filename)){
-                            unlink($filename);
+                            unlink($filename);                            
                             return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
                         }
                     } catch (Laminas\Filter\Exception\RuntimeException $e){
@@ -574,6 +574,11 @@ class RawManager {
                 ->count(['raw' => $raw->getId()]);
         
         if ($rawpricesCount == 0){
+            if ($raw->getTmpfile()){
+                if (file_exists($raw->getTmpfile())){
+                    unlink($raw->getTmpfile());                            
+                }    
+            }    
             $this->entityManager->remove($raw);
             $this->entityManager->flush($raw);
         }
@@ -596,6 +601,9 @@ class RawManager {
                 ->findRawForRemove($days);
 
         foreach ($raws as $raw){
+            if ($raw->getStatus() === Raw::STATUS_PARSED && $raw->getSupplier()->getStatus() === Supplier::STATUS_ACTIVE){
+                continue; //погодить удалять последний разобранный
+            }
             $rawpriceQuery = $this->entityManager->getRepository(Rawprice::class)
                     ->deleteRawRawpricesQuery($raw);
             $iterator = $rawpriceQuery->iterate();
@@ -606,7 +614,13 @@ class RawManager {
                 if (time() > $startTime + 1700){
                     return;
                 }            
-            }                        
+            }
+            
+            if ($raw->getTmpfile()){
+                if (file_exists($raw->getTmpfile())){
+                    unlink($raw->getTmpfile());                            
+                }    
+            }    
             
             $this->entityManager->getConnection()->delete('raw', ['id' => $raw->getId()]);                
         }        

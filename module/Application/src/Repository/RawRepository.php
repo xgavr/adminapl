@@ -267,7 +267,7 @@ class RawRepository extends EntityRepository
 
         $queryBuilder->select("c, s")
             ->from(Raw::class, 'c')
-            ->join('c.supplier', 's')    
+            ->leftJoin('c.supplier', 's')    
                 ;
         
         if (isset($params['status'])){

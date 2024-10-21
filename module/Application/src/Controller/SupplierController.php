@@ -1390,7 +1390,10 @@ class SupplierController extends AbstractActionController
                                 
                 // Получаем валадированные данные формы.
                 $data = $form->getData();
-                //$this->supplierManager->checkPriceFolder($supplier);
+                $this->supplierManager->checkPriceFolder($supplier, [
+                    'filename' => $data['name']['name'],
+                    'tmpfile' => $data['name']['tmp_name'],
+                ]);
               
                 return new JsonModel(
                    ['ok']
@@ -1493,6 +1496,7 @@ class SupplierController extends AbstractActionController
         return new JsonModel([
             'url' => $result,
         ]);                  
-        
+                
     }
+        
 }
