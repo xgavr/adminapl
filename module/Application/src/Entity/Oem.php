@@ -67,6 +67,21 @@ class Oem {
     protected $source;        
 
     /**
+     * @ORM\Column(name="rating")  
+     */
+    protected $rating;        
+
+    /**
+     * @ORM\Column(name="order_count")  
+     */
+    protected $orderCount;        
+
+    /**
+     * @ORM\Column(name="return_count")  
+     */
+    protected $returnCount;        
+
+    /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="oems") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
      */
@@ -139,6 +154,34 @@ class Oem {
         $this->intersectGoodId = $intersectGoodId;
     }     
 
+    public function getRating() {
+        return $this->rating;
+    }
+
+    public function setRating($rating) {
+        $this->rating = $rating;
+        return $this;
+    }
+
+    public function getOrderCount() {
+        return $this->orderCount;
+    }
+
+    public function setOrderCount($orderCount) {
+        $this->orderCount = $orderCount;
+        return $this;
+    }
+
+    public function getReturnCount() {
+        return $this->returnCount;
+    }
+
+    public function setReturnCount($returnCount) {
+        $this->returnCount = $returnCount;
+        return $this;
+    }
+
+    
     /**
      * Возвращает связанный goods.
      * @return \Application\Entity\Goods

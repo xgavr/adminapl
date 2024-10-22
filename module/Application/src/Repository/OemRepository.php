@@ -688,4 +688,69 @@ class OemRepository  extends EntityRepository{
         
         return;
     }
+    
+    /**
+     * Запрос по oem
+     * 
+     * @param array $params
+     * @return object
+     */
+    public function querySearchOem($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('o, g, p, tg')
+            ->distinct()    
+            ->from(Oem::class, 'o')
+            ->join('o.good', 'g')
+            ->join('g.producer', 'p', 'WITH')    
+            ->leftJoin('g.tokenGroup', 'tg') 
+            ->andWhere('o.status = :status')
+            ->setParameter('status', Oem::STATUS_ACTIVE)    
+                ;
+
+        if (is_array($params)){
+            if (isset($params['q'])){
+                $codeFilter = new ArticleCode();
+                $q = $codeFilter->filter($params['q']);
+
+                $searchOpt = Goods::SEARCH_CODE;
+                if (isset($params['accurate'])){
+                    $searchOpt= $params['accurate'];
+                }
+
+                if ($q){
+                    switch ($searchOpt){
+                        case Goods::SEARCH_OE:
+                            $queryBuilder->andWhere('o.oe = :oe') 
+                                ->setParameter('oe', $q)    
+                                ->addOrderBy('MATCH (o.oe) AGAINST (:field)', 'DESC')    
+                                ->setParameter('field', $q)    
+                                ;
+                            break;    
+                        default:
+                            $queryBuilder
+                                ->andWhere('g.code = :code')                           
+                                ->setParameter('code', $q)    
+                                ;
+                            break;    
+                    }
+                } else {
+                    $queryBuilder
+                        ->andWhere('o.id = 0')   
+                        ->orderBy('g.id', 'DESC')    
+                        ->setMaxResults(100)    
+                     ;                    
+                }    
+            }
+            if (isset($params['sort'])){
+                $queryBuilder->addOrderBy('o.'.$params['sort'], $params['order']);                
+            }            
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }
+    
 }

@@ -299,6 +299,8 @@ class GoodsRepository extends EntityRepository
                                 ->setParameter('4', $q)    
                                 ->addOrderBy('MATCH (g.code) AGAINST (:field)', 'DESC')    
                                 ->setParameter('field', $q)    
+                                ->andWhere('o.status = :status')
+                                ->setParameter('status', Oem::STATUS_ACTIVE)    
                                 ;
                             break;    
                         case Goods::SEARCH_NAME:

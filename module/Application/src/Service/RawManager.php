@@ -523,7 +523,9 @@ class RawManager {
                                 $this->entityManager->flush();                                
                             }
                             
-                            unlink($filename);   
+                            if (file_exists($filename)){
+                                unlink($filename);   
+                            }    
                             
                             return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
                         }

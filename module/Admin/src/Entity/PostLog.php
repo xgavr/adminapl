@@ -62,6 +62,11 @@ class PostLog {
     protected $subject;
 
     /**
+     * @ORM\Column(name="message_id")   
+     */
+    protected $messageId;
+
+    /**
      * @ORM\Column(name="body")   
      */
     protected $body;
@@ -155,6 +160,14 @@ class PostLog {
     public function setSubject($subject)
     {
         $this->subject = $subject;
+    }
+    public function getMessageId() {
+        return $this->messageId;
+    }
+
+    public function setMessageId($messageId) {
+        $this->messageId = $messageId;
+        return $this;
     }
     
     /**

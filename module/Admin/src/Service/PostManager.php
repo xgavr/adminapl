@@ -366,6 +366,7 @@ class PostManager {
             $postLog->setTo($data['to']);
             $postLog->setFrom($fromEmail);
             $postLog->setFromStr($data['from']);
+            $postLog->setMessageId(empty($data['messageId']) ? null:$data['messageId']);
 
             $postLog->setDateCreated(date('Y-m-d H:i:s', strtotime($data['date'])));
             $postLog->setStatus(PostLog::STATUS_ACTIVE);
@@ -626,10 +627,13 @@ class PostManager {
                             
                             $structure = imap_fetchstructure($connection, $messageNumber);
                             $headers = imap_fetch_overview($connection, $messageNumber);
-
+                            $headerInfo = imap_headerinfo($connection, $messageNumber);
 //                            var_dump($structure); exit;
 
                             $result[$messageNumber]['to'] = $params['user'];
+                            if ($headerInfo){
+                                $result[$messageNumber]['messageId'] = $headerInfo->message_id;
+                            }    
                             
                             if (isset($headers[0])){
                                 if (isset($headers[0]->to)){

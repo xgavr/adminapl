@@ -16,6 +16,7 @@ use Application\Entity\Bigram;
 use Application\Entity\Token;
 use Search\Entity\SearchLog;
 use Application\Entity\Goods;
+use Application\Entity\Oem;
 
 /**
  * Description of SearchManager
@@ -248,6 +249,32 @@ class SearchManager {
         foreach ($result as $key => $value){
             $result[$key]['opts'] = Goods::optPrices($value['price'], empty($value['meanPrice']) ? 0:$value['meanPrice']);
             $result[$key]['sups'] = $this->suppliersPricesManager->fetch($value['aplId']);
+        }
+        
+        return $result;        
+    }
+    
+    /**
+     * Поиск по oe
+     * @param string $oemStr
+     * @param array $params
+     * 
+     * @return array
+     */
+    public function searchFromOe($oemStr, $params = null)
+    {
+        $searchParams = array_filter([
+            'q' => $oemStr, 
+            'accurate' => 4,            
+        ]);
+        
+        $query = $this->entityManager->getRepository(Oem::class)
+                ->querySearchOem($searchParams);
+        
+        $result = $query->getResult(2);
+        foreach ($result as $key => $value){
+            $result[$key]['opts'] = Goods::optPrices($value['good']['price'], empty($value['good']['meanPrice']) ? 0:$value['good']['meanPrice']);
+            $result[$key]['sups'] = $this->suppliersPricesManager->fetch($value['good']['aplId']);
         }
         
         return $result;        
