@@ -87,8 +87,8 @@ class ApiSearchResource extends AbstractResourceListener
             return $this->searchManager->searchFromOem($params['oem'], $params);
         }    
         
-        if (!empty($params['oe'])){
-            return $this->searchManager->searchFromOe($params['oe'], $params);
+        if (!empty($params['oemx'])){
+            return $this->searchManager->searchFromOe($params['oemx'], $params);
         }    
         
         return new ApiProblem(404, 'Нет параметров для поиска');

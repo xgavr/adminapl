@@ -1054,6 +1054,23 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'description' => 'Поиск по оригинальному номеру',
                 'field_type' => 'string',
             ],
+            8 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\StripTags::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'oemx',
+                'description' => 'оригинальный номер',
+                'field_type' => 'string',
+            ],
         ],
         'Api\\V1\\Rest\\Good\\Validator' => [
             0 => [
@@ -1410,6 +1427,7 @@ STATUS_CANCELED  = -10; // Отменен.',
                 5 => 'device',
                 6 => 'ip_address',
                 7 => 'oem',
+                8 => 'oemx',
             ],
             'page_size' => 25,
             'page_size_param' => 'limit',
