@@ -75,6 +75,7 @@ class HelloManager {
             'user' => $settings['hello_email'],
             'password' => $settings['hello_app_password'],
             'leave_message' => false,
+            'folders' => ['hello'],
         ];
         
         $this->postManager->readImap($box);

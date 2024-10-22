@@ -575,7 +575,6 @@ class PostManager {
         
         $emailFilter = new EmailFromStr();
         
-//        $params['server'] = '{imap.yandex.ru:993/imap/ssl}';
         $params['server'] = '{imap.mail.ru:993/imap/ssl}';
         $nameDomain = explode("@", $params['user']);
         $domain = $nameDomain[1];
@@ -631,6 +630,7 @@ class PostManager {
 //                            var_dump($structure); exit;
 
                             $result[$messageNumber]['to'] = $params['user'];
+                            
                             if ($headerInfo){
                                 $result[$messageNumber]['messageId'] = $headerInfo->message_id;
                             }    
@@ -663,6 +663,7 @@ class PostManager {
 
                             if (count($flattenedParts)){
 
+                                $attachmentFilename = null;
                                 foreach($flattenedParts as $partNumber => $part) {
                                     
 //                                    var_dump($part);
@@ -692,7 +693,8 @@ class PostManager {
                                                 }    
 
                                                 $filename = $this->getFilenameFromPart($part);
-                                                if($filename) {
+                                                if($filename && $attachmentFilename != $filename) {
+                                                        $attachmentFilename = $filename; //на загружать одни и теже файлы
                                                         // it's an attachment
                                                         $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
                                                         // now do something with the attachment, e.g. save it somewhere
@@ -729,7 +731,8 @@ class PostManager {
                                             case 9: // other
                                                 $filename = $this->getFilenameFromPart($part);
 //var_dump($filename);
-                                                if($filename) {
+                                                if($filename && $attachmentFilename != $filename) {
+                                                    $attachmentFilename = $filename; //на загружать одни и теже файлы
                                                         // it's an attachment
                                                     if (isset($structure->parts)){
                                                         $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
