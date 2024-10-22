@@ -219,7 +219,7 @@ class RawManager {
                                 'status' => Raw::STATUS_NEW, 
                                 'supplier' => $supplier->getId(),
                                 'filename' => $baseName,
-                            ]);
+                            ],['dateCreated' => 'desc']);
                     
                     if (empty($raw)){
                         $raw = new Raw();
@@ -302,7 +302,7 @@ class RawManager {
                             'status' => Raw::STATUS_NEW, 
                             'supplier' => $supplier->getId(),
                             'filename' => $baseName,
-                        ]);
+                        ],['dateCreated' => 'desc']);
 
                 if (empty($raw)){
                     $raw = new Raw();
@@ -412,7 +412,7 @@ class RawManager {
                             'status' => Raw::STATUS_NEW, 
                             'supplier' => $supplier->getId(),
                             'filename' => $baseName,
-                        ]);
+                        ],['dateCreated' => 'desc']);
 
                 if (empty($raw)){
                     $raw = new Raw();
@@ -513,7 +513,7 @@ class RawManager {
                                         'status' => Raw::STATUS_NEW, 
                                         'supplier' => $supplier->getId(),
                                         'filename' => $baseName,
-                                    ]);
+                                    ],['dateCreated' => 'desc']);
                             
                             if ($raw){
                                 if (file_exists($raw->getTmpfile())){
