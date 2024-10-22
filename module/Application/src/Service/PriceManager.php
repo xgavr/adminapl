@@ -213,6 +213,12 @@ class PriceManager {
         if (count($mailList)){
             foreach ($mailList as $mail){
                 if (isset($mail['attachment'])){
+                    
+                    if (empty($supplier)){
+                        $supplier = $this->entityManager->getRepository(Supplier::class)
+                                ->suplierByFromEmail($mail['fromEmail']);                        
+                    }
+                    
                     foreach($mail['attachment'] as $attachment){
                         if ($attachment['filename'] && file_exists($attachment['temp_file'])){
                             if (file_exists($attachment['temp_file'])){ 
