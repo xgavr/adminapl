@@ -726,8 +726,8 @@ class OemRepository  extends EntityRepository{
                         case Goods::SEARCH_OE:
                             $queryBuilder->andWhere('o.oe = :oe') 
                                 ->setParameter('oe', $q)    
-                                ->addOrderBy('MATCH (o.oe) AGAINST (:field)', 'DESC')    
-                                ->setParameter('field', $q)    
+                                //->addOrderBy('MATCH (o.oe) AGAINST (:field)', 'DESC')    
+                                //->setParameter('field', $q)    
                                 ;
                             break;    
                         default:
