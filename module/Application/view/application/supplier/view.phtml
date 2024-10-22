@@ -81,7 +81,7 @@ $this->pageBreadcrumbs()->setItems([
                         <br/>
                         Главный поставщик: 
                         <b>                            
-                            <?= $this->escapeHtml($supplier->getParent()->getLink()) ?>                        
+                            <?= $supplier->getParent()->getLink() ?>                        
                         </b>
                      <?php endif;?>
                      <?php if ($supplier->getChildren()->count()):?>
@@ -89,7 +89,7 @@ $this->pageBreadcrumbs()->setItems([
                         Склады:
                         <?php foreach ($supplier->getChildren() as $child):?>
                             <br/><i>                            
-                                <?= $this->escapeHtml($child->getLink()) ?>                        
+                                <?= $child->getLink() ?>                        
                             </i>
                         <?php endforeach;?>
                      <?php endif;?>
