@@ -81,8 +81,17 @@ $this->pageBreadcrumbs()->setItems([
                         <br/>
                         Главный поставщик: 
                         <b>                            
-                            <?= $this->escapeHtml($supplier->getParent()->getName()) ?>                        
+                            <?= $this->escapeHtml($supplier->getParent()->getLink()) ?>                        
                         </b>
+                     <?php endif;?>
+                     <?php if ($supplier->getChildren()->count()):?>
+                        <br/>
+                        Склады:
+                        <?php foreach ($supplier->getChildren() as $child):?>
+                            <br/><i>                            
+                                <?= $this->escapeHtml($child->getLink()) ?>                        
+                            </i>
+                        <?php endforeach;?>
                      <?php endif;?>
                 </div>
                 <div class="pull-right">
