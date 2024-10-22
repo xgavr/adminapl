@@ -273,8 +273,8 @@ class SearchManager {
         
         $result = $query->getResult(2);
         foreach ($result as $key => $value){
-            $result[$key]['opts'] = Goods::optPrices($value['good']['price'], empty($value['good']['meanPrice']) ? 0:$value['good']['meanPrice']);
-            $result[$key]['sups'] = $this->suppliersPricesManager->fetch($value['good']['aplId']);
+            $result[$key]['good']['opts'] = Goods::optPrices($value['good']['price'], empty($value['good']['meanPrice']) ? 0:$value['good']['meanPrice']);
+            $result[$key]['good']['sups'] = $this->suppliersPricesManager->fetch($value['good']['aplId']);
         }
         
         return $result;        
