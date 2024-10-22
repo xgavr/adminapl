@@ -503,11 +503,27 @@ class RawManager {
                     ]);
                     try {
                         if ($filter->filter($filename)){
-                            unlink($filename);   
                             
                             $basenameFilter = new Basename();
 
                             $baseName = $basenameFilter->filter($filename);
+                            
+                            $raw = $this->entityManager->getRepository(Raw::class)
+                                    ->findOneBy([
+                                        'status' => Raw::STATUS_NEW, 
+                                        'supplier' => $supplier->getId(),
+                                        'filename' => $baseName,
+                                    ]);
+                            
+                            if ($raw){
+                                if (file_exists($raw->getTmpfile())){
+                                    unlink($raw->getTmpfile());
+                                }    
+                                $this->entityManager->remove($raw);
+                                $this->entityManager->flush();                                
+                            }
+                            
+                            unlink($filename);   
                             
                             return $this->checkPriceFolder($supplier, self::PRICE_FOLDER.'/'.$supplier->getId());
                         }

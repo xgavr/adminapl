@@ -251,8 +251,6 @@ class PriceManager {
     {
         if ($priceGetting->getEmail() && $priceGetting->getAppPassword()){
             $box = [
-                'host' => 'imap.yandex.ru',
-                'server' => '{imap.yandex.ru:993/imap/ssl}',
                 'user' => $priceGetting->getEmail(),
                 'password' => $priceGetting->getAppPassword(),
                 'leave_message' => false,
