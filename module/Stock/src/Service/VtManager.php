@@ -17,6 +17,7 @@ use Stock\Entity\Comitent;
 use Company\Entity\Contract;
 use Laminas\Json\Encoder;
 use Cash\Entity\CashDoc;
+use Application\Entity\Oem;
 
 /**
  * This service is responsible for adding/editing ptu.
