@@ -777,7 +777,7 @@ class OemRepository  extends EntityRepository{
                     ->andWhere('m.oe = :oe')
                     ->setParameter('oe', $oe)
                     ->andWhere('m.good = :good')
-                    ->setParameter('good', $good()->getId())
+                    ->setParameter('good', $good->getId())
                     ->andWhere('m.status = :status')
                     ->setParameter('status', Movement::STATUS_ACTIVE)
                     ->setMaxResults(1)
@@ -801,13 +801,20 @@ class OemRepository  extends EntityRepository{
                 $rating++;
             }
             
-            $oem->setOrderCount($orderCount);
-            $oem->setReturnCount($returnCount);
-            $oem->setRating($rating);
-            
-            $entityManager->persist($oem);
-            $entityManager->flush();
+            if ($rating || $oem->getRating() != $rating){
+                $oem->setOrderCount($orderCount);
+                $oem->setReturnCount($returnCount);
+                $oem->setRating($rating);
+
+                $entityManager->persist($oem);
+                $entityManager->flush();
+            }    
         }    
         return;
     }    
+    
+    public function updateRatings()
+    {
+        
+    }
 }
