@@ -130,6 +130,11 @@ class Movement {
      */
     protected $baseAmount;
     
+    /** 
+     * @ORM\Column(name="oe")  
+     */
+    protected $oe;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="movements") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
@@ -346,7 +351,16 @@ class Movement {
     {
         return $this->quantity;
     }
-        
+   
+    public function getOe() {
+        return $this->oe;
+    }
+
+    public function setOe($oe) {
+        $this->oe = $oe;
+        return $this;
+    }
+    
     /**
      * Returns possible doc as array.
      * @return array

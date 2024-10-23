@@ -277,6 +277,7 @@ class VtManager
                         'company_id' => $vt->getOrder()->getCompany()->getId(),
                         'doc_stamp' => $docStamp - 60*60*12, //-12 часов
                         'user_id' => $vt->getOrder()->getUserId(),
+                        'oe' => $movement->getOe(),
                     ];
 
                     $this->entityManager->getRepository(Movement::class)

@@ -402,6 +402,7 @@ class OrderManager
                         'company_id' => $order->getCompany()->getId(),
                         'doc_stamp' => $docStamp,
                         'user_id' => $order->getUserId(),
+                        'oe' => $bid->getOe(),
                     ];
 
                     $this->entityManager->getRepository(Movement::class)

@@ -89,6 +89,11 @@ class VtGood {
      */
     protected $baseKey;    
     
+    /** 
+     * @ORM\Column(name="oe")  
+     */
+    protected $oe;    
+    
     /**
      * @ORM\ManyToOne(targetEntity="Stock\Entity\Vt", inversedBy="vtGoods") 
      * @ORM\JoinColumn(name="vt_id", referencedColumnName="id")
@@ -188,6 +193,15 @@ class VtGood {
         }
         
         return;
+    }
+    
+    public function getOe() {
+        return $this->oe;
+    }
+
+    public function setOe($oe) {
+        $this->oe = $oe;
+        return $this;
     }
     
     /**
