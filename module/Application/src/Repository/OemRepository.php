@@ -753,4 +753,33 @@ class OemRepository  extends EntityRepository{
         return $queryBuilder->getQuery();
     }
     
+    /**
+     * Обновить рейтинг
+     * @param Good $good
+     * @param string $oe
+     */
+    public function updateRating($good, $oe)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('count(b.id) as orderCount')
+                ->from(Bid::class, 'b')
+                ->andWhere('b.oe = :oe')
+                ->setParameter('oe', $oe)
+                ->andWhere('b.good = :good')
+                ->setParameter('good', $good->getId())
+                ->andWhere('b.take = :take')
+                ->setParameter('take', Bid::TAKE_OK)
+                ->setMaxResults(1)
+                ;
+        
+        $orderRow = $queryBuilder->getQuery()->getOneOrNullResult();
+        
+        $entityManager->getConnection()
+                ->update('oem', ['order_count' => intval($row['orderCount'])], ['good_id' => $good->getId(), 'oe' => $oe]);
+        
+        return;
+    }
 }

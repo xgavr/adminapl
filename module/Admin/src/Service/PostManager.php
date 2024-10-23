@@ -662,8 +662,7 @@ class PostManager {
 //                            var_dump($flattenedParts); exit;
 
                             if (count($flattenedParts)){
-
-                                $attachmentFilename = null;
+                                
                                 foreach($flattenedParts as $partNumber => $part) {
                                     
 //                                    var_dump($part);
@@ -693,8 +692,7 @@ class PostManager {
                                                 }    
 
                                                 $filename = $this->getFilenameFromPart($part);
-                                                if($filename && $attachmentFilename != $filename) {
-                                                        $attachmentFilename = $filename; //на загружать одни и теже файлы
+                                                if($filename) {
                                                         // it's an attachment
                                                         $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
                                                         // now do something with the attachment, e.g. save it somewhere
@@ -731,8 +729,7 @@ class PostManager {
                                             case 9: // other
                                                 $filename = $this->getFilenameFromPart($part);
 //var_dump($filename);
-                                                if($filename && $attachmentFilename != $filename) {
-                                                    $attachmentFilename = $filename; //на загружать одни и теже файлы
+                                                if($filename) {
                                                         // it's an attachment
                                                     if (isset($structure->parts)){
                                                         $attachment = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
