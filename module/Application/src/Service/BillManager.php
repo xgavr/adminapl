@@ -753,9 +753,9 @@ class BillManager
             if (count($mailList)){
                 foreach ($mailList as $mail){
                     if (isset($mail['attachment'])){
+                        $supplier = $this->entityManager->getRepository(Supplier::class)
+                                    ->suplierByFromEmail($mail['fromEmail']);
                         foreach($mail['attachment'] as $attachment){
-                            $supplier = $this->entityManager->getRepository(Supplier::class)
-                                        ->suplierByFromEmail($mail['fromEmail']);
                             if ($supplier){
                                 $this->saveAttachment($supplier, $mail, $attachment);
                             } else {     

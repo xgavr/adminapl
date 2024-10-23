@@ -214,8 +214,10 @@ class PriceManager {
             foreach ($mailList as $mail){
                 if (isset($mail['attachment'])){
                     
-                    if (empty($supplier)){
-                        $supplier = $this->entityManager->getRepository(Supplier::class)
+                    $fromSupplier = $supplier;
+                    
+                    if (empty($fromSupplier)){
+                        $fromSupplier = $this->entityManager->getRepository(Supplier::class)
                                 ->suplierByFromEmail($mail['fromEmail']);                        
                     }
                     
@@ -223,14 +225,14 @@ class PriceManager {
                         if ($attachment['filename'] && file_exists($attachment['temp_file'])){
                             if (file_exists($attachment['temp_file'])){ 
 
-                                $newRaw = $this->addNewRaw($supplier, [
+                                $newRaw = $this->addNewRaw($fromSupplier, [
                                     'filename' => $attachment['filename'],
                                     'fromEmail' => $mail['fromEmail'],
                                     'subject' => $mail['subject'],
                                     'tmpfile' => $attachment['temp_file'],
                                     ]);
 
-                                if ($supplier){
+                                if ($fromSupplier){
                                     $this->checkNewPriceFile($newRaw);
                                 }    
                             }    
