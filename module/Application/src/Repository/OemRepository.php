@@ -830,10 +830,10 @@ class OemRepository  extends EntityRepository{
                 ->setParameter('status', Oem::STATUS_ACTIVE)
                 ->andWhere('o.source = :source')
                 ->setParameter('source', Oem::SOURCE_MAN)
-                ->andWhere('o.rating = 0')
+//                ->andWhere('o.rating = 0')
                 ;
         $data = $queryBuilder->getQuery()->getResult();
-        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         foreach ($data as $row){
             var_dump($row);
             $this->updateRating($row['goodId'], $row['oe']);
