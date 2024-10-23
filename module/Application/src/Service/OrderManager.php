@@ -513,7 +513,7 @@ class OrderManager
             
             if (!empty($bid->getOe())){
                 $this->entityManager->getRepository(Oem::class)
-                        ->updateRating($bid->getGood(), $bid->getOe());
+                        ->updateRating($bid->getGood()->getId(), $bid->getOe());
             }    
         }
         

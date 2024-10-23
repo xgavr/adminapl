@@ -757,15 +757,15 @@ class OemRepository  extends EntityRepository{
     
     /**
      * Обновить рейтинг good-oe
-     * @param Goods $good
+     * @param int $goodId
      * @param string $oe
      */
-    public function updateRating($good, $oe)
+    public function updateRating($goodId, $oe)
     {
         $entityManager = $this->getEntityManager();
 
         $oem = $entityManager->getRepository(Oem::class)
-                ->findOneBy(['good' => $good->getId(), 'oe' => $oe]);
+                ->findOneBy(['good' => $goodId, 'oe' => $oe]);
         
         if ($oem){
             $queryBuilder = $entityManager->createQueryBuilder();
@@ -777,7 +777,7 @@ class OemRepository  extends EntityRepository{
                     ->andWhere('m.oe = :oe')
                     ->setParameter('oe', $oe)
                     ->andWhere('m.good = :good')
-                    ->setParameter('good', $good->getId())
+                    ->setParameter('good', $goodId)
                     ->andWhere('m.status = :status')
                     ->setParameter('status', Movement::STATUS_ACTIVE)
                     ->setMaxResults(1)
@@ -813,8 +813,28 @@ class OemRepository  extends EntityRepository{
         return;
     }    
     
+    /**
+     * Обновить рейтинг везде
+     */
     public function updateRatings()
     {
+        set_time_limit(0);
+        ini_set('memory_limit', '4096M');
         
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('identity(o.good) as goodId, o.oe')
+                ->from(Oem::class, 'o')
+                ->andWhere('o.status = :status')
+                ->setParameter('status', Oem::STATUS_ACTIVE)
+                ;
+        $data = $queryBuilder->getQuery()->getResult();
+        
+        foreach ($data as $row){
+            $this->updateRating($row['goodId'], $row['oe']);
+        }
+        
+        return;
     }
 }

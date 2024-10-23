@@ -30,6 +30,7 @@ use Admin\Form\SbpSettings;
 use Company\Entity\BankAccount;
 use Admin\Form\AiSettings;
 use Admin\Form\IaSettings;
+use Application\Entity\Oem;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -1395,6 +1396,17 @@ class IndexController extends AbstractActionController
 
         return new JsonModel(
            $result
+        );           
+    }      
+    
+    public function updateOemRatingAction()
+    {
+
+        $this->entityManager->getRepository(Oem::class)
+                ->updateRatings();
+                
+        return new JsonModel(
+           ['ok']
         );           
     }            
 }
