@@ -829,7 +829,7 @@ class OemRepository  extends EntityRepository{
                 ->andWhere('o.status = :status')
                 ->setParameter('status', Oem::STATUS_ACTIVE)
                 ->andWhere('o.source = :source')
-                ->setParameter('source', Oem::SOURCE_MAN)
+                ->setParameter('source', Oem::SOURCE_CROSS)
 //                ->andWhere('o.rating = 0')
                 ;
         $data = $queryBuilder->getQuery()->getResult();
