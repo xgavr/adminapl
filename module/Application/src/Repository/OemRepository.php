@@ -771,8 +771,8 @@ class OemRepository  extends EntityRepository{
             $queryBuilder = $entityManager->createQueryBuilder();
 
             $queryBuilder->select(''
-                    . 'sum(case when m.quantity > 0 then m.quantity else 0 end) as orderCount,'
-                    . 'sum(case when m.quantity < 0 then m.quantity else 0 end) as returnCount')
+                    . 'sum(case when m.quantity > 0 then m.quantity else 0 end) as returnCount,'
+                    . 'sum(case when m.quantity < 0 then -m.quantity else 0 end) as orderCount')
                     ->from(Movement::class, 'm')
                     ->andWhere('m.oe = :oe')
                     ->setParameter('oe', $oe)
@@ -795,7 +795,7 @@ class OemRepository  extends EntityRepository{
                 $returnCount = $row['returnCount'];
             }
             
-            $rating = $orderCount + $returnCount;
+            $rating = $orderCount - $returnCount;
             
             if ($oem->getSource() === Oem::SOURCE_MAN || $oem->getSource() === Oem::SOURCE_CROSS){
                 $rating++;
