@@ -835,6 +835,7 @@ class OemRepository  extends EntityRepository{
         $data = $queryBuilder->getQuery()->getResult();
         
         foreach ($data as $row){
+            var_dump($row);
             $this->updateRating($row['goodId'], $row['oe']);
         }
         
