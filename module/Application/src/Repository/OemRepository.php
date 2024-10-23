@@ -833,7 +833,7 @@ class OemRepository  extends EntityRepository{
                 ->andWhere('o.rating = 0')
                 ;
         $data = $queryBuilder->getQuery()->getResult();
-        
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         foreach ($data as $row){
             var_dump($row);
             $this->updateRating($row['goodId'], $row['oe']);
