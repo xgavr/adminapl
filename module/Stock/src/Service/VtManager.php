@@ -289,7 +289,7 @@ class VtManager
                     
                     if (!empty($movement->getOe())){
                         $this->entityManager->getRepository(Oem::class)
-                                ->updateRating($vt->getGood(), $movement->getOe());
+                                ->updateRating($vtGood->getGood(), $movement->getOe());
                     }    
 
                     //проверка компании заказа и компании офиса, переместить, если не совпадает
