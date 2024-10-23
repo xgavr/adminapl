@@ -819,7 +819,7 @@ class OemRepository  extends EntityRepository{
     public function updateRatings()
     {
         set_time_limit(0);
-        ini_set('memory_limit', '4096M');
+        ini_set('memory_limit', '9000M');
         
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
