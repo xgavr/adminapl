@@ -19,6 +19,7 @@ use Admin\Filter\TransferName;
 use Application\Entity\Bid;
 use Application\Entity\Selection;
 use Stock\Entity\VtGood;
+use Stock\Entity\Movement;
 
 
 /**
@@ -756,68 +757,57 @@ class OemRepository  extends EntityRepository{
     
     /**
      * Обновить рейтинг good-oe
-     * @param Bid $bid
+     * @param Goods $good
+     * @param string $oe
      */
-    public function updateRatingUsingBid($bid)
+    public function updateRating($good, $oe)
     {
-        $result = 0;
-        
-        if ($bid->getOe()){
-            $entityManager = $this->getEntityManager();
+        $entityManager = $this->getEntityManager();
 
+        $oem = $entityManager->getRepository(Oem::class)
+                ->findOneBy(['good' => $good->getId(), 'oe' => $oe]);
+        
+        if ($oem){
             $queryBuilder = $entityManager->createQueryBuilder();
 
-            $queryBuilder->select('count(b.id) as orderCount')
-                    ->from(Bid::class, 'b')
-                    ->andWhere('b.oe = :oe')
-                    ->setParameter('oe', $bid->getOe())
-                    ->andWhere('b.good = :good')
-                    ->setParameter('good', $bid->getGood()->getId())
-                    ->andWhere('b.take = :take')
-                    ->setParameter('take', Bid::TAKE_OK)
+            $queryBuilder->select(''
+                    . 'sum(case when m.quantity > 0 then m.quantity else 0 end) as orderCount,'
+                    . 'sum(case when m.quantity < 0 then m.quantity else 0 end) as returnCount')
+                    ->from(Movement::class, 'm')
+                    ->andWhere('m.oe = :oe')
+                    ->setParameter('oe', $oe)
+                    ->andWhere('m.good = :good')
+                    ->setParameter('good', $good()->getId())
+                    ->andWhere('m.status = :status')
+                    ->setParameter('status', Movement::STATUS_ACTIVE)
                     ->setMaxResults(1)
                     ;
 
-            $orderRow = $queryBuilder->getQuery()->getOneOrNullResult();
+            $row = $queryBuilder->getQuery()->getOneOrNullResult();
 
-            if (!empty($orderRow['orderCount'])){
-                $result = $orderRow['orderCount'];
+            $orderCount = $returnCount = 0;
+        
+            if (!empty($row['orderCount'])){
+                $orderCount = $row['orderCount'];
             }
+
+            if (!empty($row['returnCount'])){
+                $returnCount = $row['returnCount'];
+            }
+            
+            $rating = $orderCount + $returnCount;
+            
+            if ($oem->getSource() === Oem::SOURCE_MAN || $oem->getSource() === Oem::SOURCE_CROSS){
+                $rating++;
+            }
+            
+            $oem->setOrderCount($orderCount);
+            $oem->setReturnCount($returnCount);
+            $oem->setRating($rating);
+            
+            $entityManager->persist($oem);
+            $entityManager->flush();
         }    
-        
-        $entityManager->getConnection()
-                ->update('oem', ['order_count' => $result], ['good_id' => $bid->getGood()->getId(), 'oe' => $bid->getOe()]);
-        
         return;
-    }
-    
-    /**
-     * Обновить рейтинг good-oe
-     * @param VtGood $vtGood
-     */
-    public function updateRatingUsingVtGood($vtGood)
-    {
-
-            $queryBuilder = $entityManager->createQueryBuilder();
-
-            $queryBuilder->select('count(vtg.id) as returnCount')
-                    ->from(VtGood::class, 'vtg')
-                    ->join('vtg.vt', 'vt')
-                    ->andWhere('vt.order = :order')
-                    ->setParameter('order', $bid->getOrder()->getId())
-                    ->andWhere('vg.good = :good')
-                    ->setParameter('good', $bid->getGood()->getId())
-                    ->andWhere('vg.take = :take')
-                    ->setParameter('take', VtGood::TAKE_OK)
-                    ->setMaxResults(1)
-                    ;
-
-            $returnRow = $queryBuilder->getQuery()->getOneOrNullResult();
-           
-        
-        $entityManager->getConnection()
-                ->update('oem', ['order_count' => intval($row['orderCount'])], ['good_id' => $good->getId(), 'oe' => $oe]);
-        
-        return;
-    }
+    }    
 }

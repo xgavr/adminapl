@@ -510,6 +510,11 @@ class OrderManager
 
             $this->entityManager->getRepository(ComissBalance::class)
                     ->updateComissBalance($bid->getGood()->getId());
+            
+            if (!empty($bid->getOe())){
+                $this->entityManager->getRepository(Oem::class)
+                        ->updateRating($bid->getGood(), $bid->getOe());
+            }    
         }
         
         $this->entityManager->getConnection()

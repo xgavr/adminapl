@@ -285,6 +285,11 @@ class VtManager
                     
                     $this->entityManager->getRepository(Comitent::class)
                             ->insertVtComitent($vt, $data);
+                    
+                    if (!empty($movement->getOe())){
+                        $this->entityManager->getRepository(Oem::class)
+                                ->updateRating($vt->getGood(), $movement->getOe());
+                    }    
 
                     //проверка компании заказа и компании офиса, переместить, если не совпадает
                     if (!$vt->getOrder()->getCompany()->companyInOffice($vt->getOffice())){
