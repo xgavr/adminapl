@@ -23,7 +23,7 @@ final class Version20241024140603 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('supplier');
-        $table->addColumn('remove_price', 'integer', ['notnull' => true, 'default' => Supplier::REMOVE_PRICE_LIST_OFF, 'comment' => 'Удалять прайс лист']);
+        $table->addColumn('remove_price', 'integer', ['notnull' => true, 'default' => Supplier::REMOVE_PRICE_LIST_ON, 'comment' => 'Удалять прайс лист']);
 
         $table = $schema->getTable('oem');
         $table->addColumn('update_rating', 'integer', ['notnull' => true, 'default' => Oem::RATING_FOR_UPDATE, 'comment' => 'Обновление рейтинга']);

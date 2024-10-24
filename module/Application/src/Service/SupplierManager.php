@@ -100,6 +100,7 @@ class SupplierManager
         $supplier->setStatus($data['status']);
         $supplier->setPrepayStatus($data['prepayStatus']);
         $supplier->setPriceListStatus($data['priceListStatus']);
+        $supplier->setRemovePrice($data['removePrice']);
         $supplier->setParent($data['parent']);
         $supplier->setOffice($data['office']);
         $supplier->setAmount(0);
@@ -230,6 +231,7 @@ class SupplierManager
         $supplier->setStatus($data['status']);
         $supplier->setPrepayStatus($data['prepayStatus']);
         $supplier->setPriceListStatus($data['priceListStatus']);
+        $supplier->setRemovePrice($data['removePrice']);
         $supplier->setParent($data['parent']);
         $supplier->setOffice($data['office']);
 

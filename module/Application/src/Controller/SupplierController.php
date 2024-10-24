@@ -320,6 +320,7 @@ class SupplierController extends AbstractActionController
                         'status'=>$supplier->getStatus(),     
                         'prepayStatus' => $supplier->getPrepayStatus(),
                         'priceListStatus' => $supplier->getPriceListStatus(),
+                        'removePrice' => $supplier->getRemovePrice(),
                         'parent' => $supplier->getParentId(),
                         'office' => ($supplier->getOffice()) ? $supplier->getOffice()->getId():null,
                     ));

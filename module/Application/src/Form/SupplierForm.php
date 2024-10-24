@@ -138,6 +138,15 @@ class SupplierForm extends Form
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'removePrice',
+            'options' => [
+                'label' => 'Удалять прайс',
+                'value_options' => Supplier::getRemovePriceList(),
+            ],
+        ]);
+        
                 
         // Add "parent" field
         $this->add([            
@@ -268,6 +277,17 @@ class SupplierForm extends Form
         
         $inputFilter->add([
                 'name'     => 'priceListStatus',
+                'required' => true,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                ],
+            ]); 
+        
+        $inputFilter->add([
+                'name'     => 'removePrice',
                 'required' => true,
                 'filters'  => [                    
                     ['name' => 'ToInt'],

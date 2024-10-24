@@ -69,7 +69,8 @@ $this->pageBreadcrumbs()->setItems([
                     <br/>
                     Статус: <?= $this->escapeHtml($supplier->getStatusAsString()) ?>,
                      <?= $this->escapeHtml($supplier->getPrepayStatusAsString()) ?>,
-                     <?= $this->escapeHtml($supplier->getPriceListStatusAsString()) ?>
+                     <?= $this->escapeHtml($supplier->getPriceListStatusAsString()) ?>,
+                     <?= $this->escapeHtml($supplier->getRemovePriceAsString()) ?>
                      <?php if ($supplier->getOffice()):?>
                         <br/>
                         Офис поступлений: 
