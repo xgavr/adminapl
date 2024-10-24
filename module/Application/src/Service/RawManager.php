@@ -16,7 +16,7 @@ use Application\Filter\RawToStr;
 use Application\Filter\CsvDetectDelimiterFilter;
 use MvlabsPHPExcel\Service;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
+use Application\Entity\GoodSupplier;
 use Laminas\Validator\File\IsCompressed;
 use Laminas\Filter\Decompress;
 use Application\Filter\Basename;
@@ -626,7 +626,8 @@ class RawManager {
                 ->findRawForRemove($days);
 
         foreach ($raws as $raw){
-            if ($raw->getStatus() === Raw::STATUS_PARSED && $raw->getSupplier()->getStatus() === Supplier::STATUS_ACTIVE){
+            if ($raw->getSupplier()->getRemovePrice() === Supplier::REMOVE_PRICE_LIST_OFF && $raw->getSupplier()->getStatus() === Supplier::STATUS_ACTIVE){
+                $this->entityManager->getConnection()->update('good_supplier', ['up_date' => date('Y-m-d')], ['supplier_id' => $raw->getSupplier()->getId()]);                                
                 continue; //погодить удалять последний разобранный
             }
             $rawpriceQuery = $this->entityManager->getRepository(Rawprice::class)

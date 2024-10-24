@@ -219,7 +219,7 @@ class SettingsForm extends Form
                 'id' => 'hello_email'
             ],
             'options' => [
-                'label' => 'Email автосекретаря',
+                'label' => 'Email менджеров',
             ],
         ]);
                 
@@ -230,7 +230,7 @@ class SettingsForm extends Form
                 'id' => 'hello_email_password'
             ],
             'options' => [
-                'label' => 'Пароль на email автосекретаря',
+                'label' => 'Пароль на email менджеров',
             ],
         ]);
                 
@@ -241,7 +241,40 @@ class SettingsForm extends Form
                 'id' => 'hello_app_password'
             ],
             'options' => [
-                'label' => 'Пароль приложения автосекретаря',
+                'label' => 'Пароль приложения почты менджеров',
+            ],
+        ]);
+
+        $this->add([            
+            'type'  => 'email',
+            'name' => 'info_email',
+            'attributes' => [
+                'id' => 'info_email'
+            ],
+            'options' => [
+                'label' => 'Email общий',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'info_email_password',
+            'attributes' => [
+                'id' => 'info_email_password'
+            ],
+            'options' => [
+                'label' => 'Пароль на email общий',
+            ],
+        ]);
+                
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'info_app_password',
+            'attributes' => [
+                'id' => 'info_app_password'
+            ],
+            'options' => [
+                'label' => 'Пароль приложения общей почты',
             ],
         ]);
 

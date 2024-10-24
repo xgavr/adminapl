@@ -129,6 +129,9 @@ class AdminManager {
         $config->admin->hello_email = $data['hello_email'];
         $config->admin->hello_email_password = $data['hello_email_password'];
         $config->admin->hello_app_password = $data['hello_app_password'];
+        $config->admin->info_email = $data['info_email'];
+        $config->admin->info_email_password = $data['info_email_password'];
+        $config->admin->info_app_password = $data['info_app_password'];
         $config->admin->autoru_email = $data['autoru_email'];
         $config->admin->autoru_email_password = $data['autoru_email_password'];
         

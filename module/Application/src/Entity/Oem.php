@@ -31,6 +31,9 @@ class Oem {
     const SOURCE_MY_CODE = 6; //Артикул товара
     const SOURCE_IID = 8; //Номер у поставщика
     
+    const RATING_UPDATED      = 1; // Рейтинг обновлен.
+    const RATING_FOR_UPDATE   = 2; // Рейтинг не обновлен.
+
     const SOURCE_TD_NAME = 'ТекДок';
     const INTERSECT_NAME = 'ОЕ кросс';
 
@@ -80,6 +83,11 @@ class Oem {
      * @ORM\Column(name="return_count")  
      */
     protected $returnCount;        
+
+    /**
+     * @ORM\Column(name="update_rating")  
+     */
+    protected $updateRating;        
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="oems") 
@@ -181,6 +189,39 @@ class Oem {
         return $this;
     }
 
+    public function getUpdateRating() {
+        return $this->updateRating;
+    }
+
+    /**
+     * Returns possible update rating as array.
+     * @return array
+     */
+    public static function getUpdateRatingList() 
+    {
+        return [
+            self::RATING_UPDATED => 'Рейтинг обновлен',
+            self::RATING_FOR_UPDATE => 'Рейтинг не обновлен'
+        ];
+    }    
+    
+    /**
+     * Returns update rating as string.
+     * @return string
+     */
+    public function getUpdateRatingAsString()
+    {
+        $list = self::getUpdateRatingList();
+        if (isset($list[$this->updateRating]))
+            return $list[$this->updateRating];
+        
+        return 'Unknown';
+    }    
+    
+    public function setUpdateRating($updateRating) {
+        $this->updateRating = $updateRating;
+        return $this;
+    }
     
     /**
      * Возвращает связанный goods.

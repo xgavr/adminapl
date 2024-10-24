@@ -34,6 +34,9 @@ class Supplier {
    
     const PRICE_LIST_ON       = 1;//Поставщик товаров
     const PRICE_LIST_OFF      = 2;//Поставщик услуг
+    
+    const REMOVE_PRICE_LIST_ON       = 1;//Удалять последний прайс лист
+    const REMOVE_PRICE_LIST_OFF      = 2;//Не удалять прайс лист
    
     const PRICE_FOLDER       = './data/prices'; // папка с прайсами
     const PRICE_FOLDER_ARX   = './data/prices/arx'; // папка с архивами прайсов
@@ -79,6 +82,11 @@ class Supplier {
      * @ORM\Column(name="prepay")  
      */
     protected $prepayStatus;
+
+    /** 
+     * @ORM\Column(name="remove_price")  
+     */
+    protected $removePrice;
 
     /** 
      * @ORM\Column(name="price_list")  
@@ -507,6 +515,49 @@ class Supplier {
     public function setPriceListStatus($priceListStatus) 
     {
         $this->priceListStatus = $priceListStatus;
+    }   
+
+    /**
+     * Returns remove price.
+     * @return int     
+     */
+    public function getRemovePrice() 
+    {
+        return $this->removePrice;
+    }
+
+    /**
+     * Returns possible remove price list as array.
+     * @return array
+     */
+    public static function getRemovePriceList() 
+    {
+        return [
+            self::REMOVE_PRICE_LIST_OFF => 'Не удалять прайс лист',
+            self::REMOVE_PRICE_LIST_ON => 'Удалять прайс лист'
+        ];
+    }    
+    
+    /**
+     * Returns remove price as string.
+     * @return string
+     */
+    public function getRemovePriceAsString()
+    {
+        $list = self::getRemovePriceList();
+        if (isset($list[$this->removePrice]))
+            return $list[$this->removePrice];
+        
+        return 'Unknown';
+    }    
+    
+    /**
+     * Sets remove price.
+     * @param int $removePrice     
+     */
+    public function setRemovePrice($removePrice) 
+    {
+        $this->removePrice = $removePrice;
     }   
 
     /**
