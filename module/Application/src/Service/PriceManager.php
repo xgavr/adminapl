@@ -240,7 +240,7 @@ class PriceManager {
                     }
                 }
                 if ($supplier && !empty($mail['toEmail'])){
-                    $supplier->setToBillEmail(implode(';', $mail['toEmail']));
+                    $supplier->setToSupEmail(implode(';', $mail['toEmail']));
                     $this->entityManager->persist($supplier);
                     $this->entityManager->flush();
                 }                    
