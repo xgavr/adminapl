@@ -76,6 +76,7 @@ class OemManager
             $oem->setStatus($data['status']);
             $oem->setSource($data['source']);
             $oem->setBrandName($data['brandName']);
+            $oem->setUpdateRating(Oem::RATING_FOR_UPDATE);
 
             $this->entityManager->persist($oem);
             $this->entityManager->flush();                    

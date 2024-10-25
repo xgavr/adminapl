@@ -1045,6 +1045,26 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * 
+     * Обновление рейтинга ОЕ
+     */
+    public function updateOemRatingAction()
+    {
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_oem'] == 1){
+            $this->entityManager->getRepository(\Application\Entity\Oem::class)
+                    ->updateRatings();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    
+    /**
      * Обновление наименований производителей
      */
     public function producerBestNameAction()

@@ -612,6 +612,20 @@ class RawManager {
     }  
     
     /**
+     * Обновить не удаляемый прайс
+     * @param Raw $raw
+     */
+    public function updateOldRaw($raw)
+    {
+        $raw->setDateCreated(date('Y-m-d H:i:s'));
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush();
+        
+        $this->entityManager->getConnection()->update('good_supplier', ['up_date' => date('Y-m-d')], ['supplier_id' => $raw->getSupplier()->getId()]);                                
+        return;
+    }
+    
+    /**
      * Удаление старых прайсов
      * @param int $days
      * 
@@ -627,7 +641,7 @@ class RawManager {
 
         foreach ($raws as $raw){
             if ($raw->getSupplier()->getRemovePrice() === Supplier::REMOVE_PRICE_LIST_OFF && $raw->getSupplier()->getStatus() === Supplier::STATUS_ACTIVE){
-                $this->entityManager->getConnection()->update('good_supplier', ['up_date' => date('Y-m-d')], ['supplier_id' => $raw->getSupplier()->getId()]);                                
+                $this->updateOldRaw($raw);
                 continue; //погодить удалять последний разобранный
             }
             $rawpriceQuery = $this->entityManager->getRepository(Rawprice::class)

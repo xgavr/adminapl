@@ -99,6 +99,7 @@ class OemRepository  extends EntityRepository{
                 'status' => Oem::STATUS_ACTIVE,
                 'source' => $source,
                 'intersect_good_id' => $intescetGoodId,
+                'update_rating' => Oem::RATING_FOR_UPDATE,
             ];
 //            var_dump($data);
             $this->getEntityManager()->getRepository(Goods::class)
@@ -114,6 +115,7 @@ class OemRepository  extends EntityRepository{
                             'oe_number' => $oems['oeNumber'],
                             'brand_name' => $brandName,
                             'source' => Oem::SOURCE_TD,
+                            'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
                         ], 
                         ['id' => $oem->getId()]);
             }
@@ -573,7 +575,8 @@ class OemRepository  extends EntityRepository{
                 $this->addOemToGood($goodId, [
                             'oe' => $codeFilter->filter($line->getOe()),
                             'brandName' => $line->getOeBrand(), 
-                            'oeNumber' => $line->getOe()
+                            'oeNumber' => $line->getOe(),
+                            'updateRating' => Oem::RATING_FOR_UPDATE,
                          ], Oem::SOURCE_CROSS);
             }    
         }
@@ -818,26 +821,38 @@ class OemRepository  extends EntityRepository{
      */
     public function updateRatings()
     {
-        set_time_limit(0);
-        ini_set('memory_limit', '9000M');
+        set_time_limit(900);
+        ini_set('memory_limit', '4048M');
+
+        $startTime = time();
         
         $entityManager = $this->getEntityManager();
-        $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('identity(o.good) as goodId, o.oe')
-                ->from(Oem::class, 'o')
-                ->andWhere('o.status = :status')
-                ->setParameter('status', Oem::STATUS_ACTIVE)
-                ->andWhere('o.source = :source')
-                ->setParameter('source', Oem::SOURCE_CROSS)
-//                ->andWhere('o.rating = 0')
-                ;
-        $data = $queryBuilder->getQuery()->getResult();
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        foreach ($data as $row){
-//            var_dump($row);
-            $this->updateRating($row['goodId'], $row['oe']);
-        }
+        while (true){
+            $queryBuilder = $entityManager->createQueryBuilder();
+
+            $queryBuilder->select('identity(o.good) as goodId, o.oe')
+                    ->from(Oem::class, 'o')
+                    ->andWhere('o.updateRating = :updateRating')
+                    ->setParameter('updateRating', Oem::RATING_FOR_UPDATE)
+                    ->setMaxResults(10000)
+                    ;
+
+            $data = $queryBuilder->getQuery()->getResult();
+            
+            if (empty($data)){
+                return;
+            }
+            
+            foreach ($data as $row){
+    //            var_dump($row);
+                $this->updateRating($row['goodId'], $row['oe']);
+
+                if (time() > $startTime + 840){
+                    return;
+                }            
+            }
+        }    
         
         return;
     }
