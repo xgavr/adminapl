@@ -808,10 +808,12 @@ class OemRepository  extends EntityRepository{
                 $oem->setOrderCount($orderCount);
                 $oem->setReturnCount($returnCount);
                 $oem->setRating($rating);
-
-                $entityManager->persist($oem);
-                $entityManager->flush();
+                
             }    
+            
+            $oem->setUpdateRating(Oem::RATING_UPDATED);
+            $entityManager->persist($oem);
+            $entityManager->flush();
         }    
         return;
     }    

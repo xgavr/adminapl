@@ -700,6 +700,12 @@ class BillManager
             }    
         }
         
+        if ($supplier && !empty($mail['toEmail'])){
+            $supplier->setToBillEmail(implode(';', $mail['toEmail']));
+            $this->entityManager->persist($supplier);
+            $this->entityManager->flush();
+        }                    
+        
         return;
     }
     

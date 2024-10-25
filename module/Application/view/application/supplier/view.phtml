@@ -71,6 +71,10 @@ $this->pageBreadcrumbs()->setItems([
                      <?= $this->escapeHtml($supplier->getPrepayStatusAsString()) ?>,
                      <?= $this->escapeHtml($supplier->getPriceListStatusAsString()) ?>,
                      <?= $this->escapeHtml($supplier->getRemovePriceAsString()) ?>
+                    <br/>
+                    Приемник прайсов: <?= $this->escapeHtml($supplier->getToSupEmail()) ?>
+                    <br/>
+                    Приемник накладных: <?= $this->escapeHtml($supplier->getToBillEmail()) ?>
                      <?php if ($supplier->getOffice()):?>
                         <br/>
                         Офис поступлений: 

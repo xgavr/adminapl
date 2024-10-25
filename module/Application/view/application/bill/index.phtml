@@ -317,7 +317,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function senderFormatter(value, row){
         return [
-            (row.sender) ? '<b>'+row.sender+'</b>':'',
+            (row.sender) ? '<span class"muted">'+row.sender+'</span>':'',
             (row.name) ? row.name:''
         ].filter(function(v){return v !== '';}).join(' '); 
     }    

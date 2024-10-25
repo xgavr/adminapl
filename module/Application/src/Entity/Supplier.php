@@ -98,6 +98,16 @@ class Supplier {
      */
     protected $address;
 
+    /**
+     * @ORM\Column(name="to_sup_email")   
+     */
+    protected $toSupEmail;
+
+    /**
+     * @ORM\Column(name="to_bill_email")   
+     */
+    protected $toBillEmail;
+
     /** 
      * @ORM\Column(name="date_created")  
      */
@@ -323,6 +333,25 @@ class Supplier {
         $this->quantity = $quantity;
     }     
 
+    public function getToSupEmail() {
+        return $this->toSupEmail;
+    }
+
+    public function setToSupEmail($toSupEmail) {
+        $this->toSupEmail = $toSupEmail;
+        return $this;
+    }
+
+    public function getToBillEmail() {
+        return $this->toBillEmail;
+    }
+
+    public function setToBillEmail($toBillEmail) {
+        $this->toBillEmail = $toBillEmail;
+        return $this;
+    }
+    
+    
     /**
      * Returns status.
      * @return int     
