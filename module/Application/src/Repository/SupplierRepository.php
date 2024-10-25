@@ -41,7 +41,10 @@ class SupplierRepository extends EntityRepository{
         $queryBuilder = $entityManager->createQueryBuilder();
 
 //        $queryBuilder->select('s, o')
-        $queryBuilder->select('s.id as id, s.aplId as aplId, s.name as name, o.name as officeName, s.amount as amount')
+        $queryBuilder->select('s.id as id, s.aplId as aplId, s.name as name, '
+                . 'o.name as officeName, s.amount as amount'
+                . 'o.toBillEmail, s.toSupEmail'
+                )
             ->from(Supplier::class, 's')
             ->join('s.office', 'o')    
             ->orderBy('s.status')
