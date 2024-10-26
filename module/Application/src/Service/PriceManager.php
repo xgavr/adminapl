@@ -239,9 +239,9 @@ class PriceManager {
                         }
                     }
                 }
-                if ($supplier && (!empty($mail['to']) || !empty($mail['toEmail']))){
+                if ($fromSupplier && (!empty($mail['to']) || !empty($mail['toEmail']))){
                     $supplier->setToSupEmail(!empty($mail['toEmail']) ? implode(';', $mail['toEmail']):$mail['to']);
-                    $this->entityManager->persist($supplier);
+                    $this->entityManager->persist($fromSupplier);
                     $this->entityManager->flush();
                 }                    
             }
