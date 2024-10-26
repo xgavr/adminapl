@@ -633,8 +633,15 @@ class PostManager {
                             
                             if ($headerInfo){
                                 $result[$messageNumber]['messageId'] = $headerInfo->message_id;
-                                foreach ($headerInfo->to as $id => $object){
-                                    $result[$messageNumber]['toEmail'][] = $object->mailbox . "@" . $object->host;
+                                if (!empty($headerInfo->to)){
+                                    foreach ($headerInfo->to as $id => $object){
+                                        $result[$messageNumber]['toEmail'][] = $object->mailbox . "@" . $object->host;
+                                    }    
+                                }    
+                                if (!empty($headerInfo->reply_to)){
+                                    foreach ($headerInfo->reply_to as $id => $object){
+                                        $result[$messageNumber]['toEmail'][] = $object->mailbox . "@" . $object->host;
+                                    }    
                                 }    
                             }    
                             
