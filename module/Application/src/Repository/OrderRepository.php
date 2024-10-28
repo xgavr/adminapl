@@ -416,7 +416,7 @@ class OrderRepository extends EntityRepository{
                 $queryBuilder->setMaxResults(self::MAX_ORDER_SEARCH_RESULT);
             }
         }
-var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }      
     
@@ -494,6 +494,7 @@ var_dump($queryBuilder->getQuery()->getSQL()); exit;
             }
         }
         
+var_dump($queryBuilder->getQuery()->getSQL()); exit;
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
 
         return $result['orderCount'];
