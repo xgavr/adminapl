@@ -684,6 +684,7 @@ class BillManager
     */
     private function saveAttachment($supplier, $mail, $attachment)
     {
+        $result = false;
         $validator = new IsCompressed();
 
 //        var_dump($attachment);
@@ -696,17 +697,17 @@ class BillManager
             }    
             if (file_exists($attachment['temp_file'])){
                 unlink($attachment['temp_file']);
-                return true;
+                $result = true;
             }    
         }
-        var_dump($mail['to'], $mail['toEmail'], $supplier->getId());
+//        var_dump($mail['to'], $mail['toEmail'], $supplier->getId());
         if ($supplier && (!empty($mail['to']) || !empty($mail['toEmail']))){
             $supplier->setToBillEmail(!empty($mail['to']) ? $mail['to']:implode(';', $mail['toEmail']));
             $this->entityManager->persist($supplier);
             $this->entityManager->flush();
         }                    
         
-        return;
+        return $result;
     }
     
     /**
