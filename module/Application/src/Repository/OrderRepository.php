@@ -416,7 +416,7 @@ class OrderRepository extends EntityRepository{
                 $queryBuilder->setMaxResults(self::MAX_ORDER_SEARCH_RESULT);
             }
         }
-//var_dump($queryBuilder->getParameters('alnum')); exit;
+var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }      
     
