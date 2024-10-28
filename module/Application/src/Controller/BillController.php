@@ -390,6 +390,7 @@ class BillController extends AbstractActionController
                 ->find($supplierId);
         
         $this->billManager->updateIdocSupplier($idoc, $supplier); 
+        $this->billManager->tryPtu($idoc);
         
         return new JsonModel([
             'ok'
