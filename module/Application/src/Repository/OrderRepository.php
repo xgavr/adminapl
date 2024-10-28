@@ -403,7 +403,7 @@ class OrderRepository extends EntityRepository{
             if (!empty($params['search'])){
                 $orX = $queryBuilder->expr()->orX();
                 $orX->add($queryBuilder->expr()->eq('o.id', 0));
-                $orX->add($queryBuilder->expr()->eq('o.trackNumber', trim($params['search'])));
+                $orX->add($queryBuilder->expr()->like('o.trackNumber', "'".trim($params['search'])."'"));
                 
                 $contacts = $this->searchContacts($params['search']);                
                 foreach ($contacts as $contact){
@@ -480,7 +480,7 @@ class OrderRepository extends EntityRepository{
             if (!empty($params['search'])){
                 $orX = $queryBuilder->expr()->orX();
                 $orX->add($queryBuilder->expr()->eq('o.id', 0));
-                $orX->add($queryBuilder->expr()->eq('o.trackNumber', trim($params['search'])));
+                $orX->add($queryBuilder->expr()->like('o.trackNumber', "'".trim($params['search'])."'"));
                 
                 $contacts = $this->searchContacts($params['search']);                
                 foreach ($contacts as $contact){
