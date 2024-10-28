@@ -701,7 +701,7 @@ class BillManager
         }
         
         if ($supplier && (!empty($mail['to']) || !empty($mail['toEmail']))){
-            $supplier->setToBillEmail(!empty($mail['toEmail']) ? implode(';', $mail['toEmail']):$mail['to']);
+            $supplier->setToBillEmail(!empty($mail['to']) ? $mail['to']:implode(';', $mail['toEmail']));
             $this->entityManager->persist($supplier);
             $this->entityManager->flush();
         }                    
