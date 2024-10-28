@@ -152,9 +152,9 @@ class OrderController extends AbstractActionController
         }
 
         $result = $query->getResult(2);
-        if (!empty($search)){
-            $total = count($result);
-        }
+//        if (!empty($search)){
+//            $total = count($result);
+//        }
         
         return new JsonModel([
             'total' => $total,
