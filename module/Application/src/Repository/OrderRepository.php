@@ -491,7 +491,7 @@ class OrderRepository extends EntityRepository{
                     $orX->add($queryBuilder->expr()->eq('o.id', $order['orderId']));                    
                 }
                 $queryBuilder->andWhere($orX);
-                return self::MAX_ORDER_SEARCH_RESULT;
+                $queryBuilder->setMaxResults(self::MAX_ORDER_SEARCH_RESULT);
             }
         }
         
