@@ -486,10 +486,10 @@ class OrderRepository extends EntityRepository{
                 foreach ($contacts as $contact){
                     $orX->add($queryBuilder->expr()->eq('c.id', $contact['id']));                    
                 }
-                $orders = $this->searchOe($params['search']);                
-                foreach ($orders as $order){
-                    $orX->add($queryBuilder->expr()->eq('o.id', $order['orderId']));                    
-                }
+//                $orders = $this->searchOe($params['search']);                
+//                foreach ($orders as $order){
+//                    $orX->add($queryBuilder->expr()->eq('o.id', $order['orderId']));                    
+//                }
                 $queryBuilder->andWhere($orX);
                 return self::MAX_ORDER_SEARCH_RESULT;
             }
