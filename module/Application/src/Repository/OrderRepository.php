@@ -405,10 +405,10 @@ class OrderRepository extends EntityRepository{
                 $orX->add($queryBuilder->expr()->eq('o.id', 0));
                 $orX->add($queryBuilder->expr()->eq('o.trackNumber', trim($params['search'])));
                 
-//                $contacts = $this->searchContacts($params['search']);                
-//                foreach ($contacts as $contact){
-//                    $orX->add($queryBuilder->expr()->eq('c.id', $contact['id']));                    
-//                }
+                $contacts = $this->searchContacts($params['search']);                
+                foreach ($contacts as $contact){
+                    $orX->add($queryBuilder->expr()->eq('c.id', $contact['id']));                    
+                }
                 $orders = $this->searchOe($params['search']);                
                 foreach ($orders as $order){
                     $orX->add($queryBuilder->expr()->eq('o.id', $order['orderId']));                    
@@ -417,7 +417,7 @@ class OrderRepository extends EntityRepository{
                 $queryBuilder->setMaxResults(self::MAX_ORDER_SEARCH_RESULT);
             }
         }
-//var_dump($queryBuilder->getQuery()->getSQL()); exit;
+var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }      
     
@@ -482,10 +482,10 @@ class OrderRepository extends EntityRepository{
                 $orX->add($queryBuilder->expr()->eq('o.id', 0));
                 $orX->add($queryBuilder->expr()->eq('o.trackNumber', trim($params['search'])));
                 
-//                $contacts = $this->searchContacts($params['search']);                
-//                foreach ($contacts as $contact){
-//                    $orX->add($queryBuilder->expr()->eq('c.id', $contact['id']));                    
-//                }
+                $contacts = $this->searchContacts($params['search']);                
+                foreach ($contacts as $contact){
+                    $orX->add($queryBuilder->expr()->eq('c.id', $contact['id']));                    
+                }
                 $orders = $this->searchOe($params['search']);                
                 foreach ($orders as $order){
                     $orX->add($queryBuilder->expr()->eq('o.id', $order['orderId']));                    
@@ -495,7 +495,7 @@ class OrderRepository extends EntityRepository{
             }
         }
         
-//var_dump($queryBuilder->getQuery()->getSQL()); exit;
+var_dump($queryBuilder->getQuery()->getSQL()); exit;
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
 
         return $result['orderCount'];
