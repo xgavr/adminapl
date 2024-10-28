@@ -161,6 +161,7 @@ class OrderRepository extends EntityRepository{
                 
                 $queryBuilder->andWhere($orX);
                 
+var_dump($queryBuilder->getQuery()->getSQL()); exit;
                 $result = $queryBuilder->getQuery()->getResult();
             }    
         }    
@@ -494,7 +495,7 @@ class OrderRepository extends EntityRepository{
             }
         }
         
-var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//var_dump($queryBuilder->getQuery()->getSQL()); exit;
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
 
         return $result['orderCount'];
