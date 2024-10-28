@@ -42,7 +42,10 @@ class CashRepository extends EntityRepository
             ->addSelect('identity(cd.cash) as cashId')    
             ->addSelect('identity(cd.user) as userId')    
             ->addSelect('identity(cd.order) as orderId')    
+            ->addSelect('CASE WHEN c.name is not null THEN c.name ELSE u.fullName END as cashName')    
             ->from(CashDoc::class, 'cd')
+            ->leftJoin('cd.cash', 'c')    
+            ->leftJoin('cd.user', 'u')    
                 ;
         
         if (is_array($params)){
