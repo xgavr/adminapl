@@ -440,6 +440,7 @@ class GoodsController extends AbstractActionController
         $group = $this->params()->fromQuery('group');
         $accurate = $this->params()->fromQuery('accurate');
         $office = $this->params()->fromQuery('office');
+        $foldCode = $this->params()->fromQuery('foldCode');
         $opts = $this->params()->fromQuery('opts', false);
         
         $params = [
@@ -449,6 +450,7 @@ class GoodsController extends AbstractActionController
             'producerId' => $producer,
             'groupId' => $group,
             'office' => $office,
+            'foldCode' => $foldCode,
             'accurate' => $accurate,            
         ];
         
