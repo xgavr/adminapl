@@ -36,7 +36,7 @@ $this->pageBreadcrumbs()->setItems([
                     <button id="ok" type="submit" class="btn btn-default" title="Поиск">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
-                    <select style="width: 200px" class="form-control refresh-table good-toolbar cookie-control" id="office" name="office">
+                    <select style="width: 200px" class="form-control good-toolbar cookie-control" id="office" name="office">
                         <option>все офисы</option>
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
@@ -169,6 +169,7 @@ $this->pageBreadcrumbs()->setItems([
 
         $(document).on('change', '#office', function (e) {
             officeChange();
+            refreshTable();
         });
 
         $("[data-toggle='tooltip']").tooltip();
