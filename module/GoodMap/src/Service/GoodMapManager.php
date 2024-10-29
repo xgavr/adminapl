@@ -13,9 +13,7 @@ use GoodMap\Entity\Shelf;
 use GoodMap\Entity\Cell;
 use Company\Entity\Office;
 use GoodMap\Entity\Fold;
-use GoodMap\Entity\FoldBalance;
-use GoodMap\Entity\FoldDoc;
-use Stock\Entity\Ptu;
+use GoodMap\Filter\DecodeFoldCode;
 
 /**
  * Description of GoodMapManager
@@ -476,35 +474,7 @@ class GoodMapManager {
      */
     public function decodeCode($code) 
     {
-        $rack = $this->entityManager->getRepository(Rack::class)
-                ->findOneBy(['code' => $code]);
-        
-        $result = [
-            'rack' => $rack,
-            'shelf' => null,
-            'cell' => null,
-        ];    
-        
-        $shelf = $this->entityManager->getRepository(Shelf::class)
-                ->findOneBy(['code' => $code]);
-        if ($shelf){
-            $result = [
-                'rack' => $shelf->getRack(),
-                'shelf' => $shelf,
-                'cell' => null,
-            ];    
-        }
-        
-        $cell = $this->entityManager->getRepository(Cell::class)
-                ->findOneBy(['code' => $code]);
-        if ($cell){
-            $result = [
-                'rack' => $cell->getShelf()->getRack(),
-                'shelf' => $cell->getShelf(),
-                'cell' => $cell,
-            ];    
-        }
-        
-        return $result;
+        $decodeFilter = new DecodeFoldCode();
+        return $decodeFilter->filter($code);
     }           
 }

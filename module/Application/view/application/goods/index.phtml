@@ -36,11 +36,14 @@ $this->pageBreadcrumbs()->setItems([
                     <button id="ok" type="submit" class="btn btn-default" title="Поиск">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
-                    <select style="width: 200px" class="form-control refresh-table good-toolbar cookie-control" name="office">
+                    <select style="width: 200px" class="form-control refresh-table good-toolbar cookie-control" id="office" name="office">
                         <option>все офисы</option>
                         <?php foreach ($offices as $office):?>
                             <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
                         <?php endforeach;?>
+                    </select>                    
+                    <select style="width: 200px" class="form-control refresh-table good-toolbar cookie-control" id="foldCode" name="foldCode">
+                        <option>все места хранения</option>
                     </select>                    
                 </div>
             </div>
@@ -93,7 +96,7 @@ $this->pageBreadcrumbs()->setItems([
         var url = $(e.currentTarget).attr('modal-url');
         showFormDialog({
             id: 'goodModal',
-            url: url,
+            url: url
 //            width: '500px'
         });
     });  
@@ -120,9 +123,12 @@ $this->pageBreadcrumbs()->setItems([
             if (cookieVal !== undefined){
                 $(this).val(cookieVal);                
             }
-        });                        
+        });    
+        
+        officeChange();
+        
         $table.bootstrapTable('refresh', {
-            url: '/goods/presence',
+            url: '/goods/presence'
         });
     }
 
@@ -131,9 +137,21 @@ $this->pageBreadcrumbs()->setItems([
         return {classes: retired};
     }
     
+    function officeChange(){
+        $('#foldCode').empty();
+        $('#foldCode').append('<option>все места хранения</option>');        
+        $.getJSON( '/good-map/content?sort=code&order=asc&office='+$('#office').val(), function( data ) {
+            if (Object.keys(data.rows).length){
+                $.each( data.rows, function( key, value ) {
+                    $('#foldCode').append('<option value="' + value.code + '">' + value.name + '</option>');
+                });
+            }    
+        });    
+    }    
+    
     $(function () {
         getCookies('goodsSaveId');
-        
+                
         $table.on('load-success.bs.table', function (e, res) {
             tableRowClick();
             $('.fold').editable();  
@@ -148,6 +166,10 @@ $this->pageBreadcrumbs()->setItems([
                 });        
             }
         });                
+
+        $(document).on('change', '#office', function (e) {
+            officeChange();
+        });
 
         $("[data-toggle='tooltip']").tooltip();
         
@@ -191,7 +213,7 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     function aplFormatter(value, row){
-        if (value != '0'){
+        if (value !== 0){
             return [
                 '<div class="pull-left">',
                 '<a href="https://autopartslist.ru/goods/view/id/' + value + '" target="_blank">' + value + '</a>',

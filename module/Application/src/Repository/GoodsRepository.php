@@ -26,7 +26,7 @@ use Application\Entity\Article;
 use Application\Entity\ArticleToken;
 use Application\Entity\GoodToken;
 use Stock\Entity\ComitentBalance;
-
+use GoodMap\Filter\DecodeFoldCode;
 
 /**
  * Description of GoodsRepository
@@ -1643,6 +1643,23 @@ class GoodsRepository extends EntityRepository
                             ->resetDQLPart('where')
                             ->andWhere($inX); 
                 }                    
+            }
+            if (isset($params['foldCode'])){
+                $foldCodeFilter = new DecodeFoldCode();
+                $folds = $foldCodeFilter->filter($value);
+                
+                if (!empty($folds['cell'])){
+                    $queryBuilder->andWhere('fb.cell = :cell')
+                            ->setParameter('cell', $folds['cell']->getId());                     
+                }
+                if (!empty($folds['shelf'])){
+                    $queryBuilder->andWhere('fb.shelf = :shelf')
+                            ->setParameter('shelf', $folds['shelf']->getId());                     
+                }
+                if (!empty($folds['rack'])){
+                    $queryBuilder->andWhere('fb.rack = :rack')
+                            ->setParameter('rack', $folds['rack']->getId());                     
+                }
             }
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
