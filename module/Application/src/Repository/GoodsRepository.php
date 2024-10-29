@@ -1646,7 +1646,7 @@ class GoodsRepository extends EntityRepository
             }
             if (isset($params['foldCode'])){
                 $foldCodeFilter = new DecodeFoldCode();
-                $folds = $foldCodeFilter->filter($value);
+                $folds = $foldCodeFilter->filter($params['foldCode']);
                 
                 if (!empty($folds['cell'])){
                     $queryBuilder->andWhere('fb.cell = :cell')
