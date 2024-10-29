@@ -21,6 +21,12 @@ use GoodMap\Entity\Cell;
 class DecodeFoldCode extends AbstractFilter
 {
 
+    /**
+     * Doctrine entity manager.
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $entityManager;
+    
     // Доступные опции фильтра.
     protected $options = [
     ];    
@@ -30,6 +36,7 @@ class DecodeFoldCode extends AbstractFilter
     {     
         // Задает опции фильтра (если они предоставлены).
         if(is_array($options)) {
+            $this->entityManager = $options['entityManager'];
         }    
     }
     

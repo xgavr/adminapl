@@ -474,7 +474,7 @@ class GoodMapManager {
      */
     public function decodeCode($code) 
     {
-        $decodeFilter = new DecodeFoldCode();
+        $decodeFilter = new DecodeFoldCode(['entityManager' => $this->entityManager]);
         return $decodeFilter->filter($code);
     }           
 }
