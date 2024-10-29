@@ -1644,7 +1644,7 @@ class GoodsRepository extends EntityRepository
                             ->andWhere($inX); 
                 }                    
             }
-            if (isset($params['foldCode'])){
+            if (!empty($params['foldCode'])){
                 $foldCodeFilter = new DecodeFoldCode(['entityManager' => $entityManager]);
                 $folds = $foldCodeFilter->filter($params['foldCode']);
                 
