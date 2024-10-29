@@ -127,10 +127,7 @@ $this->pageBreadcrumbs()->setItems([
         });    
         
         officeChange();
-        if (Cookies.get(cookieKey+'_foldCode') !== undefined){
-            $('#foldCode').val(Cookies.get(cookieKey+'_foldCode'));
-        }    
-        
+
         $table.bootstrapTable('refresh', {
             url: '/goods/presence'
         });
