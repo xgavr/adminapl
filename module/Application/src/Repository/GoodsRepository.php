@@ -1660,6 +1660,9 @@ class GoodsRepository extends EntityRepository
                     $queryBuilder->andWhere('fb.rack = :rack')
                             ->setParameter('rack', $folds['rack']->getId());                     
                 }
+                if ($params['foldCode'] < 0){
+                    $queryBuilder->andWhere('fb.foldCode is null');
+                }
             }
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();

@@ -44,6 +44,7 @@ $this->pageBreadcrumbs()->setItems([
                     </select>                    
                     <select style="width: 200px" class="form-control refresh-table good-toolbar cookie-control" id="foldCode" name="foldCode">
                         <option>все места хранения</option>
+                        <option value="-1">без места хранения</option>
                     </select>                    
                 </div>
             </div>
@@ -141,6 +142,7 @@ $this->pageBreadcrumbs()->setItems([
     function officeChange(){
         $('#foldCode').empty();
         $('#foldCode').append('<option>все места хранения</option>');        
+        $('#foldCode').append('<option value="-1">без места хранения</option>');        
         $.getJSON( '/good-map/content?sort=code&order=asc&office='+$('#office').val(), function( data ) {
             if (Object.keys(data.rows).length){
                 $.each( data.rows, function( key, value ) {
