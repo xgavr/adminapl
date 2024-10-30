@@ -143,7 +143,7 @@ class FoldManager {
                 ->findOneBy($params);
         
         if ($foldBalance){
-            $foldBalance->setRest($this->entityManager->getRepository(Fold::class)->goodFoldRest($fold));
+            $foldBalance->setRest(max(0, $this->entityManager->getRepository(Fold::class)->goodFoldRest($fold)));
         }    
 
         $this->entityManager->remove($fold);
@@ -189,7 +189,7 @@ class FoldManager {
                 ->findOneBy(array_filter($params));
         
         if ($foldBalance){
-            $foldBalance->setRest($rest);
+            $foldBalance->setRest(max(0, $rest));
 
             $this->entityManager->persist($foldBalance);
             $this->entityManager->flush();
@@ -217,7 +217,7 @@ class FoldManager {
                 $foldBalance->setFoldName($fold->getCell()->getName());
             }
 
-            $foldBalance->setRest($rest);
+            $foldBalance->setRest(max(0, $rest));
 
             $this->entityManager->persist($foldBalance);
             $this->entityManager->flush();            
