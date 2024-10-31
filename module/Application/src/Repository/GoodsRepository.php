@@ -1644,26 +1644,6 @@ class GoodsRepository extends EntityRepository
                             ->andWhere($inX); 
                 }                    
             }
-            if (!empty($params['foldCode'])){
-                $foldCodeFilter = new DecodeFoldCode(['entityManager' => $entityManager]);
-                $folds = $foldCodeFilter->filter($params['foldCode']);
-                
-                if (!empty($folds['cell'])){
-                    $queryBuilder->andWhere('fb.cell = :cell')
-                            ->setParameter('cell', $folds['cell']->getId());                     
-                }
-                if (!empty($folds['shelf'])){
-                    $queryBuilder->andWhere('fb.shelf = :shelf')
-                            ->setParameter('shelf', $folds['shelf']->getId());                     
-                }
-                if (!empty($folds['rack'])){
-                    $queryBuilder->andWhere('fb.rack = :rack')
-                            ->setParameter('rack', $folds['rack']->getId());                     
-                }
-                if ($params['foldCode'] < 0){
-                    $queryBuilder->andWhere('fb.foldCode is null');
-                }
-            }
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
@@ -1723,6 +1703,26 @@ class GoodsRepository extends EntityRepository
                             break;    
                     }
                 }   
+            }
+            if (!empty($params['foldCode'])){
+                $foldCodeFilter = new DecodeFoldCode(['entityManager' => $entityManager]);
+                $folds = $foldCodeFilter->filter($params['foldCode']);
+                
+                if (!empty($folds['cell'])){
+                    $queryBuilder->andWhere('fb.cell = :cell')
+                            ->setParameter('cell', $folds['cell']->getId());                     
+                }
+                if (!empty($folds['shelf'])){
+                    $queryBuilder->andWhere('fb.shelf = :shelf')
+                            ->setParameter('shelf', $folds['shelf']->getId());                     
+                }
+                if (!empty($folds['rack'])){
+                    $queryBuilder->andWhere('fb.rack = :rack')
+                            ->setParameter('rack', $folds['rack']->getId());                     
+                }
+                if ($params['foldCode'] < 0){
+                    $queryBuilder->andWhere('fb.foldCode is null');
+                }
             }
             
             $queryBuilder->join('g.producer', 'p')    

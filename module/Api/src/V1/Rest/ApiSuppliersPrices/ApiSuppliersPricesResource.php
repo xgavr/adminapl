@@ -7,6 +7,7 @@ use Application\Entity\GoodSupplier;
 use Application\Entity\Goods;
 use Stock\Entity\Reserve;
 use Stock\Entity\Movement;
+use GoodMap\Entity\FoldBalance;
 
 class ApiSuppliersPricesResource extends AbstractResourceListener
 {
@@ -83,6 +84,25 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
     }
     
     /**
+     * Хранение
+     * @param Goods $good
+     * @return string
+     */
+    private function fold($good)
+    {
+        $foldBalances = $this->entityManager->getRepository(FoldBalance::class)
+                ->findBy(['good' => $good->getId()]);
+        $result = [];
+        foreach ($foldBalances as $foldBalance){
+            if ($foldBalance->getRest() > 0){
+                $result[] = $foldBalance->getFoldName(); 
+            }
+        }      
+        
+        return implode(',', $result);
+    }
+    
+    /**
      * Цены и наличие товара из прайсов поставщиков
      *
      * @param  integer $id Апл Ид товара
@@ -102,10 +122,12 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                 $data = $goodSuppliersQuery->getResult();
                 foreach ($data as $row){      
                     $reserve = null;
-                    $restApl = 0;
+                    $restApl = 0; $fold = '';
                     if ($row->getSupplier()->getAplId() == 6){ //если Апл
                         $reserve = $this->aplReserve($good);
                         $restApl = $row->getRest();
+                        
+                        $fold = $this->fold($good);
                     }
                     $result[] = [
                         'price' => $row->getPrice(),
@@ -117,6 +139,7 @@ class ApiSuppliersPricesResource extends AbstractResourceListener
                         'comp' => $row->getLot(),
                         'reserve' => $reserve,
                         'restApl' => $restApl,
+                        'fold' => $fold,
                     ];
                 }
             }    
