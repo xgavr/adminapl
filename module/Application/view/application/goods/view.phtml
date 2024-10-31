@@ -633,7 +633,7 @@
             var url = $(this).attr('url');
             if (url){
                 $.get( url, function(data){
-                    $balanceTable.bootstrapTable('refresh', {silent: true});
+                    $balanceTable.bootstrapTable('refresh');
                 });        
             }    
         })
