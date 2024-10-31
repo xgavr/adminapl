@@ -9,6 +9,7 @@ namespace Application\Form;
 
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
+use Application\Entity\BillGetting;
 
 /**
  * Description of BillGetting
@@ -90,10 +91,7 @@ class BillGettingForm extends Form
             'name' => 'status',
             'options' => [
                 'label' => 'Статус',
-                'value_options' => [
-                    1 => 'Использовать',
-                    2 => 'Не использовать',                    
-                ]
+                'value_options' => BillGetting::getStatusList(),
             ],
         ]);
         

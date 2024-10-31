@@ -200,10 +200,7 @@ class PriceGettingForm extends Form
             'name' => 'status',
             'options' => [
                 'label' => 'Статус',
-                'value_options' => [
-                    1 => 'Использовать',
-                    2 => 'Не использовать',                    
-                ]
+                'value_options' => PriceGetting::getStatusList(),
             ],
         ]);
         
