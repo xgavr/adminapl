@@ -757,7 +757,7 @@ class OrderController extends AbstractActionController
         $folds = [];
         $foldBalances = $this->orderManager->goodFold($good);
         foreach ($foldBalances as $foldBalance){
-            $folds[] = $foldBalance->getName();
+            $folds[] = $foldBalance->getFoldName();
         }
         
         $this->layout()->setTemplate('layout/terminal');
