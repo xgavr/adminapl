@@ -348,6 +348,11 @@
                 </table>
                 <div id="balanceToolbar">
                     <div class="form-inline" role="form">
+                        <button class="btn btn-default" 
+                                type="button" title="Обновить резервы" id="updateReserve"
+                                url="/goods/update-reserve/<?= $goods->getId()?>">
+                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                        </button>                
                     </div>
                 </div>
                 <table id="balanceTable" 
@@ -586,6 +591,7 @@
     
     var $movementTable = $('#movementTable');
     var $comitentTable = $('#comitentTable');
+    var $balanceTable = $('#balanceTable');
 
     var $optsTable = $('#optsTable');
 
@@ -623,6 +629,14 @@
             $('.editable').editable();
         });        
 
+        $('#updateReserve').click(function (){
+            var url = $(this).attr('url');
+            if (url){
+                $.get( url, function(data){
+                    $balanceTable.bootstrapTable('refresh', {silent: true});
+                });        
+            }    
+        })
         $('#priceStatusSelect').change(function (){
             $('#priceTable').bootstrapTable('refresh');
         })

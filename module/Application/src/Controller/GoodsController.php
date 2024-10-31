@@ -1657,6 +1657,28 @@ class GoodsController extends AbstractActionController
                 
     }
     
+    public function updateReserveAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId);   
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->entityManager->getRepository(Reserve::class)
+                ->updateGoodBalance($good->getId());
+        
+        // Перенаправляем пользователя на страницу "goods".
+        return new JsonModel([
+            'result' => 'ok',
+        ]);           
+                
+    }
+    
     public function inSigmaContentAction()
     {
         $goodId = $this->params()->fromRoute('id', -1);
