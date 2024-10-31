@@ -69,26 +69,30 @@ class FoldManager {
      */
     public function addFold($data)
     {
-        $fold = new Fold();
-        $fold->setCell(empty($data['cell']) ?  null:$data['cell']);
-        $fold->setDateOper($data['dateOper']);
-        $fold->setDocId(empty($data['docId']) ?  null:$data['docId']);
-        $fold->setDocKey(empty($data['docKey']) ?  null:$data['docKey']);
-        $fold->setDocStamp(empty($data['docStamp']) ?  null:$data['docStamp']);
-        $fold->setDocType(empty($data['docType']) ?  null:$data['docType']);
-        $fold->setGood($data['good']);
-        $fold->setOffice($data['office']);
-        $fold->setQuantity($data['quantity']);
-        $fold->setRack($data['rack']);
-        $fold->setShelf(empty($data['shelf']) ?  null:$data['shelf']);
-        $fold->setStatus($data['status']);
+        if (!empty($data['quantity'])){
+            $fold = new Fold();
+            $fold->setCell(empty($data['cell']) ?  null:$data['cell']);
+            $fold->setDateOper($data['dateOper']);
+            $fold->setDocId(empty($data['docId']) ?  null:$data['docId']);
+            $fold->setDocKey(empty($data['docKey']) ?  null:$data['docKey']);
+            $fold->setDocStamp(empty($data['docStamp']) ?  null:$data['docStamp']);
+            $fold->setDocType(empty($data['docType']) ?  null:$data['docType']);
+            $fold->setGood($data['good']);
+            $fold->setOffice($data['office']);
+            $fold->setQuantity($data['quantity']);
+            $fold->setRack($data['rack']);
+            $fold->setShelf(empty($data['shelf']) ?  null:$data['shelf']);
+            $fold->setStatus($data['status']);
+
+            $this->entityManager->persist($fold);
+            $this->entityManager->flush();
+
+            $this->updateFoldBalance($fold);
+
+            return $fold;
+        }
         
-        $this->entityManager->persist($fold);
-        $this->entityManager->flush();
-        
-        $this->updateFoldBalance($fold);
-        
-        return $fold;
+        return;
     }
     
     /**

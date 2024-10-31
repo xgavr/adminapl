@@ -22,6 +22,7 @@ class BillGetting {
      // Supplier status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
+    const STATUS_COMMON_BOX      = 3; // Общий ящик.
     
     /**
      * @ORM\Id
@@ -151,7 +152,8 @@ class BillGetting {
     {
         return [
             self::STATUS_ACTIVE => 'Используется',
-            self::STATUS_RETIRED => 'Не используется'
+            self::STATUS_RETIRED => 'Не используется',
+            self::STATUS_COMMON_BOX => 'Используется обший ящик'
         ];
     }    
     

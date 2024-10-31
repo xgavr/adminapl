@@ -21,6 +21,7 @@ class PriceGetting {
      // Supplier status constants.
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
+    const STATUS_COMMON_BOX      = 3; // общий ящик.
     
     const STATUS_FILENAME_NONE       = 1; //Игнорировать filename, принимать файлы с любым наименованием
     const STATUS_FILENAME_IN         = 2; //Принимать файлы, содержащие filename
@@ -275,7 +276,8 @@ class PriceGetting {
     {
         return [
             self::STATUS_ACTIVE => 'Используется',
-            self::STATUS_RETIRED => 'Не используется'
+            self::STATUS_RETIRED => 'Не используется',
+            self::STATUS_COMMON_BOX => 'Используется общий ящик'
         ];
     }    
     
