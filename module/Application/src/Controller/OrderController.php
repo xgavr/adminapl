@@ -747,6 +747,9 @@ class OrderController extends AbstractActionController
             return;
         }
         
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId);
+        
         $goodSuppliersQuery = $this->entityManager->getRepository(GoodSupplier::class)
                 ->orderGoodSuppliers($goodId);
         $result = $goodSuppliersQuery->getResult();
