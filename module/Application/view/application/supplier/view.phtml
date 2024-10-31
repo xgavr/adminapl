@@ -389,7 +389,7 @@ $this->pageBreadcrumbs()->setItems([
                                     <div class="pull-left">
                                         <?= $billGetting->getStatusAsString() ?><br/>
                                         <?= $billGetting->getName() ?><br/>
-                                        <?php if ($priceGetting->getStatus() !== PriceGetting::STATUS_COMMON_BOX):?>
+                                        <?php if ($billGetting->getStatus() !== BillGetting::STATUS_COMMON_BOX):?>
                                             Email: <span><?= $billGetting->getEmail() ?></span>
                                             <?php if ($billGetting->getEmail()): ?>
                                                 <button value="/bills/by-mail/<?= $billGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
