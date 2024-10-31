@@ -229,7 +229,7 @@ class BillGettingForm extends Form
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                    ['name'=>'InArray', 'options'=>['haystack'=>array_keys(BillGetting::getStatusList())]]
                 ],
             ]); 
         
