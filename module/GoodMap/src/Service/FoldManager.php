@@ -24,6 +24,7 @@ use Stock\Entity\Pt;
 use Stock\Entity\Vtp;
 use Application\Entity\Order;
 use Stock\Entity\Register;
+use Application\Entity\Goods;
 
 /**
  * Description of FoldManager
@@ -735,4 +736,17 @@ class FoldManager {
             }
         }    
     }    
+    
+    /**
+     * Место хранения товарв
+     * @param Goods $good
+     * @param Office $office
+     */
+    public function goodFold($good, $office = null)
+    {
+        $foldBalances = $this->entityManager->getRepository(FoldBalance::class)
+                ->findBy(['good' => $good->getId()]);
+        
+        return $foldBalances;
+    }
 }

@@ -751,10 +751,17 @@ class OrderController extends AbstractActionController
                 ->orderGoodSuppliers($goodId);
         $result = $goodSuppliersQuery->getResult();
         
+        $folds = [];
+        $foldBalances = $this->orderManager->goodFold($good);
+        foreach ($foldBalances as $foldBalance){
+            $folds[] = $foldBalance->getName();
+        }
+        
         $this->layout()->setTemplate('layout/terminal');
         // Render the view template.
         return new ViewModel([
             'goodSuppliers' => $result,
+            'folds' => implode(',', $folds),
         ]);        
     }   
 

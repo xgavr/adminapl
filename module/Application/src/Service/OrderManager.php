@@ -2107,4 +2107,14 @@ class OrderManager
         
         return;
     }
+    
+    /**
+     * Хранение товара
+     * @param Goods $good
+     * @param Office $office
+     */
+    public function goodFold($good, $office = null)
+    {
+        return $this->foldManager->goodFold($good, $office);
+    }
 }

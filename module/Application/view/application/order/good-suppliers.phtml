@@ -8,6 +8,7 @@
         <th>Наличие</th>
         <th>Мин.</th>
         <th>Дата прайса</th>
+        <th>Хранение</th>
     </tr>
     
     <?php foreach ($goodSuppliers as $goodSupplier): ?>
@@ -30,6 +31,9 @@
             </td>
             <td class="text-right">
                 <?= $goodSupplier->getLot() ?>
+            </td>
+            <td>
+                <?= $goodSupplier->getFormatUpdate(); ?>
             </td>
             <td>
                 <?= $goodSupplier->getFormatUpdate(); ?>
