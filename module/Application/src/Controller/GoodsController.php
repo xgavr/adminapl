@@ -957,8 +957,8 @@ class GoodsController extends AbstractActionController
                 'delivery' => $rest['delivery'],
                 'vozvrat' => $rest['vozvrat'],
                 'available' => $rest['available'],                    
-                'foldCode' => $rest['foldName'],                    
-                'foldName' => $rest['foldCode'],                    
+                'foldCode' => $rest['foldCode'],                    
+                'foldName' => $rest['foldName'],                    
             ];
         }
         
