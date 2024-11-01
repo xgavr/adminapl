@@ -141,7 +141,7 @@ class PriceManager {
         if (file_exists($filename)){
             $filter = new Basename();
             $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
-                    ->findBy(['priceSupplier' => $supplier->getId(), 'status' => PriceGetting::STATUS_ACTIVE]);
+                    ->findBy(['priceSupplier' => $supplier->getId()]);
             foreach ($priceGettings as $priceGetting){
                 $target = self::PRICE_FOLDER.'/'.$priceGetting->getSupplier()->getId().'/'.$filter->filter($filename);
                 if (copy($filename, $target)){
@@ -182,7 +182,7 @@ class PriceManager {
                 
                 //Проверка наименования файла
                 $priceGettings = $this->entityManager->getRepository(PriceGetting::class)
-                        ->findBy(['supplier' => $supplier->getId(), 'status' => PriceGetting::STATUS_ACTIVE]);
+                        ->findBy(['supplier' => $supplier->getId()]);
                 
                 foreach ($priceGettings as $priceGetting){
                     if (!$priceNameValidator->isValid($newRaw->getFilename(), $priceGetting)){
