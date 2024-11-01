@@ -1005,7 +1005,7 @@ $disabled = (!empty($orderId)) ? '':'disabled';
         let rateDistance = Number($('#rateDistance').val());
         let distance = Number($('#shipmentDistance').val());
         let totalBid = bidTotal();
-        if (rate != <?= Shipping::RATE_TK?>){
+        if (rate !== <?= Shipping::RATE_TK?>){
             if (shippingLimit1 > 0 && totalBid>=shippingLimit1){
                 shipmentRate=shipmentRate1;
             }
@@ -1035,14 +1035,14 @@ $disabled = (!empty($orderId)) ? '':'disabled';
             $.get('/order/shipping/'+shipping, function(data){
                 $('#rate').val(data.rate);
                 switch(data.rate){
-                    case '<?= Shipping::RATE_TK?>':
+                    case <?= Shipping::RATE_TK?>:
                         $('#trackNumber').attr('disabled', false);
                         $('#courier').attr('disabled', false);
                         break;
-                    case '<?= Shipping::RATE_DISTANCE?>':
+                    case <?= Shipping::RATE_DISTANCE?>:
                         $('#shipmentDistance').attr('disabled', false);
                         $('#rateDistance').val(data.rateDistance);        
-                    case '<?= Shipping::RATE_TRIP?>':
+                    case <?= Shipping::RATE_TRIP?>:
                         $('#shipmentRate1').val(data.rateTrip1);        
                         $('#shipmentRate2').val(data.rateTrip2);        
                         $('#shippingLimit1').val(data.shippingLimit1);        
@@ -1263,9 +1263,9 @@ $disabled = (!empty($orderId)) ? '':'disabled';
     
     function bidStyle(row){
         let orderStatus = $('input[name="status"]').val();
-        if (orderStatus == <?= Order::STATUS_SHIPPED?>){
+        if (orderStatus === <?= Order::STATUS_SHIPPED?>){
             switch(row.take){
-                case '<?= Bid::TAKE_NO?>': 
+                case <?= Bid::TAKE_NO?>: 
                             return {classes: 'warning'}; break;
                     default:break;     
             }

@@ -9,6 +9,7 @@ $form->get('dateOper')->setAttributes([
 
 $form->get('amount')->setAttributes([
     'class'=>'form-control', 
+    'onfocus' => "this.select();",
     ]);
 
 $form->get('comment')->setAttributes([
