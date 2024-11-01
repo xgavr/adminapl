@@ -28,6 +28,7 @@ use Stock\Entity\GoodBalance;
 use Application\Entity\GoodSupplier;
 use Stock\Entity\Reserve;
 use Application\Entity\GoodToken;
+use GoodMap\Entity\FoldBalance;
 
 class GoodsController extends AbstractActionController
 {
@@ -936,18 +937,28 @@ class GoodsController extends AbstractActionController
             return;                        
         }        
         
-        $rests = $this->entityManager->getRepository(GoodBalance::class)
-                ->findBy(['good' => $goods->getId()]);
+        $params = [
+            'q' => $goods->getId(), 
+            'accurate' => Goods::SEARCH_ID,            
+        ];
         
+        $query = $this->entityManager->getRepository(Goods::class)
+                        ->presence($params);
+        $rests = $query->getResult();
+
         $result = [];
         foreach ($rests as $rest){
+//            var_dump($rest); exit;
             $result[] = [
-                'office' => $rest->getOffice()->getName().' ('.$rest->getCompany()->getName().')',
-                'rest' => $rest->getRest(),
-                'reserve' => $rest->getReserve(),
-                'delivery' => $rest->getDelivery(),
-                'vozvrat' => $rest->getVozvrat(),
-                'available' => $rest->getAvailable(),                    
+                'office' => $rest['officeName'].' ('.$rest['companyName'].')',
+                'officeId' => $rest['officeId'],
+                'rest' => $rest['rest'],
+                'reserve' => $rest['reserve'],
+                'delivery' => $rest['delivery'],
+                'vozvrat' => $rest['vozvrat'],
+                'available' => $rest['available'],                    
+                'foldCode' => $rest['foldName'],                    
+                'foldName' => $rest['foldCode'],                    
             ];
         }
         

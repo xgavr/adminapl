@@ -382,6 +382,7 @@
                              <th data-field="delivery"  data-type="numeric" data-width="20" data-align="right" data-formatter="deliveryFormatter">Доставка</th>
                              <th data-field="vozvrat"   data-type="numeric" data-width="20" data-align="right">Возврат</th>
                              <th data-field="available" data-type="numeric" data-width="20" data-align="right">Доступно</th>
+                             <th data-field="foldName" data-formatter="foldCodeFormatter">Хранение</th>
                          </tr>                
                     </thead>
                 </table>
@@ -627,6 +628,10 @@
 
         $optsTable.on('load-success.bs.table', function (e, res) {
             $('.editable').editable();
+        });        
+
+        $balanceTable.on('load-success.bs.table', function (e, res) {
+            $('.fold').editable();
         });        
 
         $('#updateReserve').click(function (){
@@ -1005,6 +1010,27 @@
         var date = new Date(value);
         return '<nobr>'+$.format.date(value, "dd.MM hh:mm")+'</nobr>';
     }
+
+    function foldCodeFormatter(value, row){
+        var disabled = (row.rest > 0) ? 'false':'true';
+        if (row.rest>0){
+            return [
+                '<a href="#"',
+                ' class="fold" data-type="select"',
+                ' data-pk="<?= $goods->getId()?>"',
+                ' data-value="'+row.foldCode+'"',
+                ' data-disabled="'+disabled+'"',
+                ' data-mode="inline"',
+                ' data-showbuttons="false"',
+                ' data-name="code"',
+                ' data-source="/fold/folds?office='+row.officeId+'"',
+                ' data-url="/fold/change-code?good=<?= $goods->getId()?>&office='+row.officeId+'&rest='+row.rest+'">',
+                '</a>'
+            ].join(''); 
+        }
+        
+        return '';
+    }    
 
     function oemActiveFormatter(value, row){
         if (value == 1){

@@ -1623,6 +1623,7 @@ class GoodsRepository extends EntityRepository
                 ->addSelect('gb.rest, gb.reserve, gb.delivery, gb.vozvrat, gb.rest-gb.reserve-gb.delivery-gb.vozvrat as available')        
                 ->addSelect('tg.name')
                 ->addSelect('gs.rest as aplRest')
+                ->addSelect('c.name as companyName')
                 ->addSelect('fb.foldName')
                 ->addSelect('fb.foldCode')
                 ;
@@ -1727,6 +1728,7 @@ class GoodsRepository extends EntityRepository
             
             $queryBuilder->join('g.producer', 'p')    
                     ->leftJoin('gb.office', 'off') 
+                    ->leftJoin('gb.company', 'c') 
                     ->leftJoin('g.tokenGroup', 'tg')
                     ->leftJoin('g.goodSuppliers', 'gs', 'WITH', 'gs.good=g.id and gs.supplier=7 and gs.update = :update')
                     ->leftJoin('g.foldBalances', 'fb', 'WITH', 'fb.rest != 0 and fb.office = gb.office')

@@ -1,0 +1,311 @@
+<?php
+use Application\Entity\Order;
+use Application\Entity\Shipping;
+
+$form = $this->form;
+
+$form->get('office')->setAttributes([
+    'class'=>'form-control intro', 
+    'placeholder' => 'Офис',
+    ]);
+
+$form->get('skiper')->setAttributes([
+    'class'=>'form-control intro', 
+    'placeholder' => 'Водитель',
+    ]);
+
+$form->get('phone2')->setAttributes([
+    'class'=>'form-control phone intro', 
+    'placeholder' => 'Телефон дополнительный',
+    ]);
+
+$form->get('dateShipment')->setAttributes([
+    'class'=>'form-control intro', 
+    'placeholder' => 'Дата доставки/самовывоза',
+    'title' => 'Дата доставки/самовывоза',
+    'min' => ($orderId)? null:date('Y-m-d'),
+    ]);
+
+$form->get('timeShipment')->setAttributes([
+    'class'=>'form-control intro', 
+    'placeholder' => 'Время доставки/самовываза',
+    'title' => 'Время доставки/самовывоза',
+    ]);
+
+$form->get('shipping')->setAttributes([
+    'class'=>'form-control intro', 
+    'placeholder' => 'Вариант доставки',
+    ]);
+
+$form->get('shipmentTotal')->setAttributes([
+    'class'=>'form-control  select-on-focus intro', 
+    'placeholder' => 'Стоимость доставки',
+    ]);
+
+$form->get('infoShipping')->setAttributes([
+    'class'=>'form-control intro', 
+    'placeholder' => 'Комментарий к доставке',
+    ]);
+
+$form->get('trackNumber')->setAttributes([
+    'class'=>'form-control intro', 
+    'placeholder' => 'Накладная ТК',
+    ]);
+
+$form->get('courier')->setAttributes([
+    'class'=>'form-control intro', 
+    'placeholder' => 'ТК',
+    ]);
+
+$form->get('shipmentDistance')->setAttributes([
+    'class'=>'form-control select-on-focus intro', 
+    'placeholder' => 'КМ',
+    ]);
+
+$form->get('address')->setAttributes([
+    'class'=>'form-control intro', 
+    'placeholder' => 'Адрес доставки',
+    'rows' => 1,
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'order-delivery-submit']);
+
+$form->prepare();
+
+$disabled = (!empty($orderId)) ? '':'disabled';
+
+?>
+            
+<?= $this->form()->openTag($form); ?>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Доставка</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('dateShipment')); ?>
+                            <?= $this->formElement($form->get('dateShipment')); ?>
+                            <?= $this->formElementErrors($form->get('dateShipment')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-1">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('timeShipment')); ?>
+                            <?= $this->formElement($form->get('timeShipment')); ?>
+                            <?= $this->formElementErrors($form->get('timeShipment')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-3">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('shipping')); ?>
+                            <?= $this->formElement($form->get('shipping')); ?>
+                            <?= $this->formElementErrors($form->get('shipping')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-1">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('shipmentDistance')); ?>
+                            <?= $this->formElement($form->get('shipmentDistance')); ?>
+                            <?= $this->formElementErrors($form->get('shipmentDistance')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-1">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('shipmentTotal')); ?>
+                            <?= $this->formElement($form->get('shipmentTotal')); ?>
+                            <?= $this->formElementErrors($form->get('shipmentTotal')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('courier')); ?>
+                            <?= $this->formElement($form->get('courier')); ?>
+                            <?= $this->formElementErrors($form->get('courier')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('trackNumber')); ?>
+                            <?= $this->formElement($form->get('trackNumber')); ?>
+                            <?= $this->formElementErrors($form->get('trackNumber')); ?>                  
+                        </div>
+                    </div>
+                </div>        
+                <div class="row">
+                    <div class="col-xs-8">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('address')); ?>
+                            <?= $this->formElement($form->get('address')); ?>
+                            <?= $this->formElementErrors($form->get('address')); ?>                  
+                        </div>
+                    </div>
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('phone2')); ?>
+                            <?= $this->formElement($form->get('phone2')); ?>
+                            <?= $this->formElementErrors($form->get('phone2')); ?>                  
+                        </div>
+                    </div>    
+                    <div class="col-xs-2">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('skiper')); ?>
+                            <?= $this->formElement($form->get('skiper')); ?>
+                            <?= $this->formElementErrors($form->get('skiper')); ?>                  
+                        </div>
+                    </div>    
+                </div>        
+                <div class="row">
+                    <div class="col-xs-12">                        
+                        <div class="form-group form-group-sm">
+                            <?//= $this->formLabel($form->get('infoShipping')); ?>
+                            <?= $this->formElement($form->get('infoShipping')); ?>
+                            <?= $this->formElementErrors($form->get('infoShipping')); ?>                  
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>    
+
+<?= $this->formElement($form->get('orderId')); ?>            
+<?= $this->formElement($form->get('rate')); ?>            
+<?= $this->formElement($form->get('shipmentRate')); ?>            
+<?= $this->formElement($form->get('shipmentRate1')); ?>            
+<?= $this->formElement($form->get('shipmentRate2')); ?>            
+<?= $this->formElement($form->get('shippingLimit1')); ?>            
+<?= $this->formElement($form->get('shippingLimit2')); ?>            
+<?= $this->formElement($form->get('rateDistance')); ?>            
+<?= $this->form()->closeTag(); ?>
+            
+<script>    
+    var $orderDeliveryForm = $('#order-delivery-form');
+        
+    $orderDeliveryForm.submit(function() {
+        deliverySubmitForm();
+        return false;
+    });
+                
+    function deliverySubmitForm(){
+        var data = serializeForm('#order-delivery-form');
+        $.ajax({
+            type: 'POST',
+            url: '/order/order-delivery-form/'+$('#orderId').val(),
+            data: $.param(data)
+        })
+            .done(function (data) {
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            })    
+            .always(function () {
+                $('#order-delivery-submit').attr('disabled', false);
+            });    
+    };
+    
+    function shippingUpdate(){
+        let rate = Number($('#rate').val());
+        let shipmentRate = Number($('#shipmentRate').val());
+        let shipmentRate1 = Number($('#shipmentRate1').val());
+        let shipmentRate2 = Number($('#shipmentRate2').val());
+        let shippingLimit1 = Number($('#shippingLimit1').val());
+        let shippingLimit2 = Number($('#shippingLimit2').val());
+        let rateDistance = Number($('#rateDistance').val());
+        let distance = Number($('#shipmentDistance').val());
+        let totalBid = bidTotal();
+        if (rate !== <?= Shipping::RATE_TK?>){
+            if (shippingLimit1 > 0 && totalBid>=shippingLimit1){
+                shipmentRate=shipmentRate1;
+            }
+            if (shippingLimit2 > 0 && totalBid>=shippingLimit2){
+                shipmentRate=shipmentRate2;
+            }
+        }    
+        $('#shipmentTotal').val(shipmentRate + rateDistance*distance);    
+        $('#shippingTotal').html($('#shipmentTotal').val());    
+        orderUpdateTotal();
+    }
+    
+    function shippingParams(){
+        $('#shipmentRate').val(0);
+        $('#rateDistance').val(0);        
+        $('#shipmentDistance').val(0);        
+        $('#shipmentTotal').val(0);
+        $('#shipmentRate1').val(0);        
+        $('#shipmentRate2').val(0);        
+        $('#shippingLimit1').val(0);        
+        $('#shippingLimit2').val(0);        
+        let shipping = $('#shipping').val();        
+        $('#shipmentDistance').attr('disabled', true);
+        $('#trackNumber').attr('disabled', true);
+        $('#courier').attr('disabled', true);
+        if (shipping > 0){
+            $.get('/order/shipping/'+shipping, function(data){
+                $('#rate').val(data.rate);
+                switch(data.rate){
+                    case <?= Shipping::RATE_TK?>:
+                        $('#trackNumber').attr('disabled', false);
+                        $('#courier').attr('disabled', false);
+                        break;
+                    case <?= Shipping::RATE_DISTANCE?>:
+                        $('#shipmentDistance').attr('disabled', false);
+                        $('#rateDistance').val(data.rateDistance);        
+                    case <?= Shipping::RATE_TRIP?>:
+                        $('#shipmentRate1').val(data.rateTrip1);        
+                        $('#shipmentRate2').val(data.rateTrip2);        
+                        $('#shippingLimit1').val(data.shippingLimit1);        
+                        $('#shippingLimit2').val(data.shippingLimit2);        
+                    default:     
+                        $('#shipmentRate').val(data.rateTrip); break;
+                    };
+                shippingUpdate();    
+            });    
+        }    
+    }
+    
+    function shippingList(){
+        //alert(11);
+        $.getJSON( '/order/shippings/'+$('#office').val(), function( data ) {
+            $('#shipping').empty();
+            $.each( data.rows, function( key, value ) {
+                $('#shipping').append('<option value="' + value.id + '">' + value.name + '</option>');
+            });
+            shippingParams();
+        });    
+    }
+    
+    $('#office').on('change', function(){
+        shippingList();        
+    });
+
+    $('#shipping').on('change', function(){
+        shippingParams();        
+    });
+
+    $('#shipmentDistance').on('change', function(){
+        shippingUpdate();        
+    });
+
+    $('#shipmentTotal').on('change', function(){
+        $('#shippingTotal').html($('#shipmentTotal').val());
+        orderUpdateTotal();        
+    });
+    
+    $( document ).ready(function() {
+        
+        <?php if (!$orderId): ?>
+            shippingParams();    
+        <?php endif; ?>    
+            
+        $('#order-submit').on('click', function(){
+            $('#order-submit').attr('disabled', true);
+            introSubmitForm();
+        });            
+    });    
+    
+</script>

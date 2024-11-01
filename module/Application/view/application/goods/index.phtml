@@ -161,7 +161,7 @@ $this->pageBreadcrumbs()->setItems([
         });        
         
         $(document).on('editable-save.bs.table', '#table', function (e, field, row, old, $el) {
-            console.log(row);
+//            console.log(row);
             if (field === 'foldCode'){
                 $.get( "/fold/change-code?good="+row.id+'&office='+row.officeId
                         +'&code='+row.foldCode+'&quantity='+row.rest, function(data){
@@ -210,18 +210,20 @@ $this->pageBreadcrumbs()->setItems([
     
     function linkFormatter(value, row){
         return [
-            '<div class="pull-left">',
-            '<a href="/goods/view/' + row.id + '" target="_blank">' + value + '</a>',
-            '</div>'
+            '<nobr>',
+            '<a href="/goods/view/' + row.id + '" class="btn btn-link btn-xs" title="Перейти на страницу товара" target="_blank">',
+            '<span class="glyphicon glyphicon-link"></span></a>'+value,
+            '</nobr>'
         ].join(''); 
     }    
     
     function aplFormatter(value, row){
         if (value !== 0){
             return [
-                '<div class="pull-left">',
-                '<a href="https://autopartslist.ru/goods/view/id/' + value + '" target="_blank">' + value + '</a>',
-                '</div>'
+                '<nobr>',
+                '<a href="https://autopartslist.ru/goods/view/id/' + value + '" class="btn btn-link btn-xs" target="_blank">',
+                '<span class="glyphicon glyphicon-link"></span></a>'+value,
+                '</nobr>'
             ].join(''); 
         } else {
             return '-';
