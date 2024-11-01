@@ -32,6 +32,7 @@ use Admin\Entity\Log;
 use Application\Entity\Oem;
 use Stock\Entity\Reserve;
 use Application\Filter\ArticleCode;
+use GoodMap\Entity\FoldBalance;
 
 /**
  * Description of GoodsService
@@ -1156,18 +1157,44 @@ class GoodsManager
             ];
         }
         
-        $rests = $this->entityManager->getRepository(GoodBalance::class)
-                ->findBy(['good' => $good->getId()]);
+//        $rests = $this->entityManager->getRepository(GoodBalance::class)
+//                ->findBy(['good' => $good->getId()]);
+//        $inStore = [];
+//        foreach ($rests as $rest){
+//            $inStore[] = [
+//                'office' => $rest->getOffice()->getName().' ('.$rest->getCompany()->getName().')',
+//                'officeAplId' => $rest->getOffice()->getAplId(),
+//                'rest' => $rest->getRest(),
+//                'reserve' => $rest->getReserve(),
+//                'delivery' => $rest->getDelivery(),
+//                'vozvrat' => $rest->getVozvrat(),
+//                'available' => $rest->getAvailable(),                    
+//            ];
+//        }
+        
+        $params = [
+            'q' => $good->getId(), 
+            'accurate' => Goods::SEARCH_ID,            
+        ];
+        
+        $query = $this->entityManager->getRepository(Goods::class)
+                        ->presence($params);
+        $rests = $query->getResult();
+
         $inStore = [];
         foreach ($rests as $rest){
+//            var_dump($rest); exit;
             $inStore[] = [
-                'office' => $rest->getOffice()->getName().' ('.$rest->getCompany()->getName().')',
-                'officeAplId' => $rest->getOffice()->getAplId(),
-                'rest' => $rest->getRest(),
-                'reserve' => $rest->getReserve(),
-                'delivery' => $rest->getDelivery(),
-                'vozvrat' => $rest->getVozvrat(),
-                'available' => $rest->getAvailable(),                    
+                'office' => $rest['officeName'].' ('.$rest['companyName'].')',
+                'officeId' => $rest['officeId'],
+                'officeAplId' => $rest['officeAplId'],
+                'rest' => $rest['rest'],
+                'reserve' => $rest['reserve'],
+                'delivery' => $rest['delivery'],
+                'vozvrat' => $rest['vozvrat'],
+                'available' => $rest['available'],                    
+                'foldCode' => $rest['foldCode'],                    
+                'foldName' => $rest['foldName'],                    
             ];
         }
         

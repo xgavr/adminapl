@@ -1619,7 +1619,7 @@ class GoodsRepository extends EntityRepository
         
         $queryBuilder->select('g.id, g.aplId, g.code, g.statusRawpriceEx, g.name, g.retailCount')
                 ->addSelect('p.id as producerId, p.name as producerName')
-                ->addSelect('off.name as officeName, off.id as officeId')        
+                ->addSelect('off.name as officeName, off.id as officeId, off.aplId as officeAplId')        
                 ->addSelect('gb.rest, gb.reserve, gb.delivery, gb.vozvrat, gb.rest-gb.reserve-gb.delivery-gb.vozvrat as available')        
                 ->addSelect('tg.name')
                 ->addSelect('gs.rest as aplRest')
