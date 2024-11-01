@@ -1024,7 +1024,7 @@
                 ' data-showbuttons="false"',
                 ' data-name="code"',
                 ' data-source="/fold/folds?office='+row.officeId+'"',
-                ' data-url="/fold/change-code?good=<?= $goods->getId()?>&office='+row.officeId+'&rest='+row.rest+'">',
+                ' data-url="/fold/change-code?good=<?= $goods->getId()?>&office='+row.officeId+'&rest='+row.rest+'">'+row.foldName,
                 '</a>'
             ].join(''); 
         }
