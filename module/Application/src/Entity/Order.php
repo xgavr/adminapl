@@ -1880,6 +1880,35 @@ class Order {
             'total' => $this->getTotal(),
         ];
     }    
+    
+    /**
+     * Форма доставки
+     * @return array
+     */
+    public function toDeliveryFromArray()
+    {
+        return [
+            'address' => $this->getAddress(),
+            'dateShipment' => date('Y-m-d', strtotime($this->getDateShipment())),
+            'timeShipment' => date('H', strtotime($this->getDateShipment())),
+            'courier' => ($this->getCourier()) ? $this->getCourier()->getId():null,
+            'courierName' => ($this->getCourier()) ? $this->getCourierName():null,
+            'trackNumber' => $this->getTrackNumber(),
+            'skiper' => ($this->getSkiper()) ? $this->getSkiper()->getId():null,
+            'skiperName' => ($this->getSkiper()) ? $this->getSkiper()->getFullName():null,
+            'shipping' => ($this->getShipping()) ? $this->getShipping()->getId():null,
+            'shipmentTotal' => $this->getShipmentTotal(),
+            'shipmentRate' => $this->getShipmentRate(),
+            'rate' => ($this->getShipping()) ? $this->getShipping()->getRate():null,
+            'shipmentRate1' => ($this->getShipping()) ? $this->getShipping()->getRateTrip1():null,
+            'shipmentRate2' => ($this->getShipping()) ? $this->getShipping()->getRateTrip2():null,
+            'shippingLimit1' => $this->getOffice()->getShippingLimit1(),
+            'shippingLimit2' => $this->getOffice()->getShippingLimit2(),
+            'shipmentDistance' => $this->getShipmentDistance(),
+            'rateDistance' => ($this->getShipping()) ? $this->getShipping()->getRateDistance():null,
+            'infoShipping' => $this->getInfoShipping(),
+        ];
+    }    
 
     /**
      * Лог

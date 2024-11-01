@@ -184,6 +184,17 @@ class OrderDeliveryForm extends Form
             ],
         ]);
 
+        // Добавляем поле "address"
+        $this->add([           
+            'type'  => 'textarea',
+            'name' => 'address',
+            'attributes' => [
+            ],
+            'options' => [
+                'label' => 'Адрес доставки',
+            ],
+        ]);
+        
         $this->add([           
             'type'  => 'hidden',
             'name' => 'rateDistance',

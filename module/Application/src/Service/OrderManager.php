@@ -1762,6 +1762,45 @@ class OrderManager
         $this->logManager->infoOrder($order, Log::STATUS_UPDATE);
 
         return $order;
+    } 
+    
+    /**
+     * Обновить доставку заказа
+     * @param Order $order
+     * @param array $data
+     */
+    public function updOrderDelivery($order, $data) 
+    {
+        
+        $order->setAddress(!empty($data['address']) ? $data['address'] : null);
+        $order->setDateShipment($data['dateShipment']);
+        $order->setShipmentDistance(!empty($data['shipmentDistance']) ? $data['shipmentDistance'] : 0);
+        $order->setShipmentRate(!empty($data['shipmentRate']) ? $data['shipmentRate'] : 0);
+        $order->setShipmetAddRate(!empty($data['shipmentAddRate']) ? $data['shipmentAddRate'] : 0);
+        $order->setShipmetTotal(!empty($data['shipmentTotal']) ? $data['shipmentTotal'] : 0);
+        $order->setTrackNumber(!empty($data['trackNumber']) ? $data['trackNumber'] : null);
+        $order->setInfoShipping(!empty($data['infoShipping']) ? $data['infoShipping'] : null);
+
+        $order->setShipping(null);
+        if (!empty($data['shipping'])){
+            $shipping = $this->entityManager->getRepository(Shipping::class)
+                    ->find($data['shipping']);
+            $order->setShipping($shipping);
+        }
+
+        $order->setSkiper(null);
+        if (!empty($data['skiper'])){
+            $skiper = $this->entityManager->getRepository(User::class)
+                    ->find($data['skiper']);
+            $order->setSkiper($skiper);
+        }
+        
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
+        
+        $this->updateOrderTotal($order);
+        
+        return $order;
     }    
     
 

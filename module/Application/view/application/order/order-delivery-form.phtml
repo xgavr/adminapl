@@ -4,11 +4,6 @@ use Application\Entity\Shipping;
 
 $form = $this->form;
 
-$form->get('office')->setAttributes([
-    'class'=>'form-control intro', 
-    'placeholder' => 'Офис',
-    ]);
-
 $form->get('skiper')->setAttributes([
     'class'=>'form-control intro', 
     'placeholder' => 'Водитель',
@@ -23,7 +18,7 @@ $form->get('dateShipment')->setAttributes([
     'class'=>'form-control intro', 
     'placeholder' => 'Дата доставки/самовывоза',
     'title' => 'Дата доставки/самовывоза',
-    'min' => ($orderId)? null:date('Y-m-d'),
+    'min' => ($order->getId())? null:date('Y-m-d'),
     ]);
 
 $form->get('timeShipment')->setAttributes([
@@ -40,6 +35,7 @@ $form->get('shipping')->setAttributes([
 $form->get('shipmentTotal')->setAttributes([
     'class'=>'form-control  select-on-focus intro', 
     'placeholder' => 'Стоимость доставки',
+    'onfocus' => "this.select();",
     ]);
 
 $form->get('infoShipping')->setAttributes([
@@ -50,6 +46,7 @@ $form->get('infoShipping')->setAttributes([
 $form->get('trackNumber')->setAttributes([
     'class'=>'form-control intro', 
     'placeholder' => 'Накладная ТК',
+    'onfocus' => "this.select();",
     ]);
 
 $form->get('courier')->setAttributes([
@@ -60,6 +57,7 @@ $form->get('courier')->setAttributes([
 $form->get('shipmentDistance')->setAttributes([
     'class'=>'form-control select-on-focus intro', 
     'placeholder' => 'КМ',
+    'onfocus' => "this.select();",
     ]);
 
 $form->get('address')->setAttributes([
@@ -72,107 +70,110 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'С�
 
 $form->prepare();
 
-$disabled = (!empty($orderId)) ? '':'disabled';
+$disabled = (!empty($order->getId())) ? '':'disabled';
 
 ?>
             
 <?= $this->form()->openTag($form); ?>
-<div class="row">
-    <div class="col-xs-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Доставка</h3>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-xs-2">                        
-                        <div class="form-group form-group-sm">
-                            <?//= $this->formLabel($form->get('dateShipment')); ?>
-                            <?= $this->formElement($form->get('dateShipment')); ?>
-                            <?= $this->formElementErrors($form->get('dateShipment')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-1">                        
-                        <div class="form-group form-group-sm">
-                            <?//= $this->formLabel($form->get('timeShipment')); ?>
-                            <?= $this->formElement($form->get('timeShipment')); ?>
-                            <?= $this->formElementErrors($form->get('timeShipment')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-3">                        
-                        <div class="form-group form-group-sm">
-                            <?//= $this->formLabel($form->get('shipping')); ?>
-                            <?= $this->formElement($form->get('shipping')); ?>
-                            <?= $this->formElementErrors($form->get('shipping')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-1">                        
-                        <div class="form-group form-group-sm">
-                            <?//= $this->formLabel($form->get('shipmentDistance')); ?>
-                            <?= $this->formElement($form->get('shipmentDistance')); ?>
-                            <?= $this->formElementErrors($form->get('shipmentDistance')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-1">                        
-                        <div class="form-group form-group-sm">
-                            <?//= $this->formLabel($form->get('shipmentTotal')); ?>
-                            <?= $this->formElement($form->get('shipmentTotal')); ?>
-                            <?= $this->formElementErrors($form->get('shipmentTotal')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-2">                        
-                        <div class="form-group form-group-sm">
-                            <?//= $this->formLabel($form->get('courier')); ?>
-                            <?= $this->formElement($form->get('courier')); ?>
-                            <?= $this->formElementErrors($form->get('courier')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-2">                        
-                        <div class="form-group form-group-sm">
-                            <?//= $this->formLabel($form->get('trackNumber')); ?>
-                            <?= $this->formElement($form->get('trackNumber')); ?>
-                            <?= $this->formElementErrors($form->get('trackNumber')); ?>                  
-                        </div>
-                    </div>
-                </div>        
-                <div class="row">
-                    <div class="col-xs-8">                        
-                        <div class="form-group form-group-sm">
-                            <?//= $this->formLabel($form->get('address')); ?>
-                            <?= $this->formElement($form->get('address')); ?>
-                            <?= $this->formElementErrors($form->get('address')); ?>                  
-                        </div>
-                    </div>
-                    <div class="col-xs-2">                        
-                        <div class="form-group form-group-sm">
-                            <?//= $this->formLabel($form->get('phone2')); ?>
-                            <?= $this->formElement($form->get('phone2')); ?>
-                            <?= $this->formElementErrors($form->get('phone2')); ?>                  
-                        </div>
-                    </div>    
-                    <div class="col-xs-2">                        
-                        <div class="form-group form-group-sm">
-                            <?//= $this->formLabel($form->get('skiper')); ?>
-                            <?= $this->formElement($form->get('skiper')); ?>
-                            <?= $this->formElementErrors($form->get('skiper')); ?>                  
-                        </div>
-                    </div>    
-                </div>        
-                <div class="row">
-                    <div class="col-xs-12">                        
-                        <div class="form-group form-group-sm">
-                            <?//= $this->formLabel($form->get('infoShipping')); ?>
-                            <?= $this->formElement($form->get('infoShipping')); ?>
-                            <?= $this->formElementErrors($form->get('infoShipping')); ?>                  
-                        </div>
-                    </div>
-                </div>    
+
+<div class="modal-header">
+    <h5 class="modal-title" id="otModalLabel">Доставка заказа <?= $order->getAplId() ?></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('dateShipment')); ?>
+                <?= $this->formElement($form->get('dateShipment')); ?>
+                <?= $this->formElementErrors($form->get('dateShipment')); ?>                  
             </div>
         </div>
-    </div>
-</div>    
+        <div class="col-xs-1">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('timeShipment')); ?>
+                <?= $this->formElement($form->get('timeShipment')); ?>
+                <?= $this->formElementErrors($form->get('timeShipment')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-3">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('shipping')); ?>
+                <?= $this->formElement($form->get('shipping')); ?>
+                <?= $this->formElementErrors($form->get('shipping')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-1">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('shipmentDistance')); ?>
+                <?= $this->formElement($form->get('shipmentDistance')); ?>
+                <?= $this->formElementErrors($form->get('shipmentDistance')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-1">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('shipmentTotal')); ?>
+                <?= $this->formElement($form->get('shipmentTotal')); ?>
+                <?= $this->formElementErrors($form->get('shipmentTotal')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('courier')); ?>
+                <?= $this->formElement($form->get('courier')); ?>
+                <?= $this->formElementErrors($form->get('courier')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('trackNumber')); ?>
+                <?= $this->formElement($form->get('trackNumber')); ?>
+                <?= $this->formElementErrors($form->get('trackNumber')); ?>                  
+            </div>
+        </div>
+    </div>        
+    <div class="row">
+        <div class="col-xs-8">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('address')); ?>
+                <?= $this->formElement($form->get('address')); ?>
+                <?= $this->formElementErrors($form->get('address')); ?>                  
+            </div>
+        </div>
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('phone2')); ?>
+                <?= $this->formElement($form->get('phone2')); ?>
+                <?= $this->formElementErrors($form->get('phone2')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-2">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('skiper')); ?>
+                <?= $this->formElement($form->get('skiper')); ?>
+                <?= $this->formElementErrors($form->get('skiper')); ?>                  
+            </div>
+        </div>    
+    </div>        
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group form-group-sm">
+                <?//= $this->formLabel($form->get('infoShipping')); ?>
+                <?= $this->formElement($form->get('infoShipping')); ?>
+                <?= $this->formElementErrors($form->get('infoShipping')); ?>                  
+            </div>
+        </div>
+    </div>    
+</div>
+    
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="order-delivery-submit">Сохранить</button>
+</div>
 
-<?= $this->formElement($form->get('orderId')); ?>            
 <?= $this->formElement($form->get('rate')); ?>            
 <?= $this->formElement($form->get('shipmentRate')); ?>            
 <?= $this->formElement($form->get('shipmentRate1')); ?>            
@@ -194,10 +195,24 @@ $disabled = (!empty($orderId)) ? '':'disabled';
         var data = serializeForm('#order-delivery-form');
         $.ajax({
             type: 'POST',
-            url: '/order/order-delivery-form/'+$('#orderId').val(),
+            url: '/order/order-delivery-form/<?= $order->getId()?>',
             data: $.param(data)
         })
             .done(function (data) {
+                if (data.row){
+                    if ($("#table")){
+                        $("#table").bootstrapTable('updateByUniqueId', {id: <?= $order->getId() ?>, row: data.row});
+                    }            
+                    if ($("#ordertable")){
+                        $("#ordertable").bootstrapTable('refresh', {silent: true});
+                    }            
+                    if ($("#mutualtable")){
+                        $("#mutualtable").bootstrapTable('refresh', {silent: true});
+                    }            
+                    $('#orderDeliveryForm').modal('hide');
+                } else {
+                    $('#orderLegalModal .modal-content').html(data);
+                }    
             })
             .fail(function () {
                 alert("Ошибка при открытии формы.");
@@ -217,7 +232,7 @@ $disabled = (!empty($orderId)) ? '':'disabled';
         let shippingLimit2 = Number($('#shippingLimit2').val());
         let rateDistance = Number($('#rateDistance').val());
         let distance = Number($('#shipmentDistance').val());
-        let totalBid = bidTotal();
+        let totalBid = <?= $order->getBidTotal() ?>;
         if (rate !== <?= Shipping::RATE_TK?>){
             if (shippingLimit1 > 0 && totalBid>=shippingLimit1){
                 shipmentRate=shipmentRate1;
@@ -228,18 +243,19 @@ $disabled = (!empty($orderId)) ? '':'disabled';
         }    
         $('#shipmentTotal').val(shipmentRate + rateDistance*distance);    
         $('#shippingTotal').html($('#shipmentTotal').val());    
-        orderUpdateTotal();
     }
     
-    function shippingParams(){
-        $('#shipmentRate').val(0);
-        $('#rateDistance').val(0);        
-        $('#shipmentDistance').val(0);        
-        $('#shipmentTotal').val(0);
-        $('#shipmentRate1').val(0);        
-        $('#shipmentRate2').val(0);        
-        $('#shippingLimit1').val(0);        
-        $('#shippingLimit2').val(0);        
+    function shippingParams(setnull = true){
+        if (setnull){
+            $('#shipmentRate').val(0);
+            $('#rateDistance').val(0);        
+            $('#shipmentDistance').val(0);        
+            $('#shipmentTotal').val(0);
+            $('#shipmentRate1').val(0);        
+            $('#shipmentRate2').val(0);        
+            $('#shippingLimit1').val(0);        
+            $('#shippingLimit2').val(0);        
+        }    
         let shipping = $('#shipping').val();        
         $('#shipmentDistance').attr('disabled', true);
         $('#trackNumber').attr('disabled', true);
@@ -263,7 +279,9 @@ $disabled = (!empty($orderId)) ? '':'disabled';
                     default:     
                         $('#shipmentRate').val(data.rateTrip); break;
                     };
-                shippingUpdate();    
+                if (setnull){    
+                    shippingUpdate();    
+                }    
             });    
         }    
     }
@@ -292,20 +310,29 @@ $disabled = (!empty($orderId)) ? '':'disabled';
     });
 
     $('#shipmentTotal').on('change', function(){
-        $('#shippingTotal').html($('#shipmentTotal').val());
-        orderUpdateTotal();        
+        $('#shippingTotal').html($('#shipmentTotal').val());      
     });
     
     $( document ).ready(function() {
+        shippingParams(false);
         
-        <?php if (!$orderId): ?>
-            shippingParams();    
-        <?php endif; ?>    
-            
-        $('#order-submit').on('click', function(){
-            $('#order-submit').attr('disabled', true);
-            introSubmitForm();
-        });            
+        var forms = $('#order-delivery-form');
+        
+        forms.submit(function() {
+            deliverySubmitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('deliverySubmitForm', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                deliverySubmitForm();
+            }, false);    
+        });
     });    
     
 </script>

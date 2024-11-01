@@ -115,15 +115,7 @@ $this->pageBreadcrumbs()->setItems([
 <?php echo $this->partial('/application/order/comment-partial', []); ?>
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 <script type="text/javascript">
-    var $table = $('#table').bootstrapTable({
-        onLoadSuccess: function() {
-            setCookies('orderSaveId');
-        }, 
-        onExpandRow: function (index, row, $detail) {
-            $detail.html('Идет загрузка...');
-            orderDetail(index, row, $detail);
-        }
-    });
+    var $table = $('#table');
     
 //    $('.bid-expand').on('editable-save.bs.table', function (e, field, row, old, $el) {
 //        alert(field);
@@ -215,6 +207,15 @@ $this->pageBreadcrumbs()->setItems([
 
         $('#ok').click(function () {
             refreshTable();
+        });
+        
+        $table.on('load-success.bs.table', function (e, res) {
+            setCookies('orderSaveId');
+        });
+
+        $table.on('expand-row.bs.table', function (e, index, row, $detail) {
+            $detail.html('Идет загрузка...');
+            orderDetail(index, row, $detail);
         });
         
         $(document).on('change', '.refresh-table', function (e) {
@@ -539,7 +540,7 @@ $this->pageBreadcrumbs()->setItems([
         },
         actionsGroups: [
            ['selection'],
-           ['addComment', 'comments', 'history'],
+           ['addComment', 'comments', 'delivery', 'history'],
            ['addLegal', 'updateFromApl', 'sendToApl', 'duplicate'],
            ['vt', 'cash', 'cashes']
         ],      
@@ -659,6 +660,22 @@ $this->pageBreadcrumbs()->setItems([
                     });
                 }
             },    
+            delivery: {
+                name: 'Доставка',
+                iconClass: 'glyphicon glyphicon-plane',
+                onClick: function (row){
+                    var url = '/order/order-delivery-form/'+row.id;
+                    showFormDialog({
+                        id: 'orderDeliveryForm',
+                        url: url,
+                        zIndex: 8888,
+                        width: '1440px'
+                    });
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            },
             history: {
                 name: 'История',
                 iconClass: 'glyphicon glyphicon-list-alt',
@@ -676,29 +693,6 @@ $this->pageBreadcrumbs()->setItems([
                     });                    
                 }
             },
-//            addMarketplaceNumber: {
-//                name: 'Номер заказа в ТП',
-//                iconClass: 'glyphicon glyphicon-plus',
-//                onClick: function (row){
-//                    var depend = $.parseJSON(row.dependInfo);
-//                    var dialogId = 'marketplaceOrderModal';
-//                    var url = '/market-place/marketplace-order-form?order='+row.id;
-//                    var zIndex = 9999;
-//                    if (depend.marketplaceOrders){
-//                        if (depend.marketplaceOrders.length){
-//                            var url = '/market-place/order-form/'+row.id;
-//                            var dialogId = 'marketplaceOrdersModal';
-//                            var zIndex = 8888;
-//                        }    
-//                    }
-//                    
-//                    showFormDialog({
-//                        id: dialogId,
-//                        url: url,
-//                        zIndex: zIndex
-//                    });
-//                }
-//            },    
             addLegal: {
                 name: 'Юр. лицо',
                 iconClass: 'glyphicon glyphicon-plus',

@@ -31,6 +31,7 @@ use Application\Form\OrderLegalForm;
 use Application\Filter\OrderFromIdZ;
 use Company\Entity\Legal;
 use Application\Entity\Client;
+use Application\Form\OrderDeliveryForm;
 
 class OrderController extends AbstractActionController
 {
@@ -599,6 +600,66 @@ class OrderController extends AbstractActionController
                     'bankName' => ($order->getBankAccount()) ? $order->getBankAccount()->getName():null,
                     'bankCity' => ($order->getBankAccount()) ? $order->getBankAccount()->getCity():null,
                 ];
+                $form->setData($data);
+            }    
+        }
+        // Render the view template.
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+            'form' => $form,
+            'order' => $order,
+        ]);        
+    } 
+    
+    public function orderDeliveryFormAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        $table = $this->params()->fromQuery('table', 'order');
+        
+        $order = null;
+        
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        }    
+        
+        $form = new OrderDeliveryForm($this->entityManager);
+        
+        $shipmentList = null;
+        $shipments = $this->entityManager->getRepository(Shipping::class)
+                ->findBy(['office' => $order->getOffice()->getId(), 'status' => Shipping::STATUS_ACTIVE]);
+        foreach ($shipments as $shipment){
+            $shipmentList[$shipment->getId()] = $shipment->getName();
+        }
+        $form->get('shipping')->setValueOptions($shipmentList);
+        
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost(); 
+            $form->setData($data);
+
+            if ($form->isValid()) {
+
+                $this->orderManager->updOrderDelivery($order, $data);
+
+                if ($table == 'order'){
+                    $query = $this->entityManager->getRepository(Order::class)
+                            ->findAllOrder(['orderId' => $order->getId()]);
+                    $result = $query->getOneOrNullResult(2);
+                    return new JsonModel([
+                        'row' => $result,
+                    ]);
+                }    
+            } else {
+                return new JsonModel(
+                   ['error' => $form->getMessages()]
+                );           
+            }
+        } else {
+            if ($order){
+                $data = $order->toArray();
+//                var_dump($data);
                 $form->setData($data);
             }    
         }

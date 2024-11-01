@@ -1341,7 +1341,7 @@ $this->headLink()
             return $('#ordertable').bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
-           ['addComment', 'comments', 'history'],
+           ['addComment', 'comments', 'delivery', 'history'],
            ['addLegal', 'changeContact', 'duplicate', 'sendToApl'],
            ['vt', 'cash', 'cashes']
         ],      
@@ -1449,6 +1449,22 @@ $this->headLink()
                     });
                 }
             },    
+            delivery: {
+                name: 'Доставка',
+                iconClass: 'glyphicon glyphicon-plane',
+                onClick: function (row){
+                    var url = '/order/order-delivery-form/'+row.id;
+                    showFormDialog({
+                        id: 'orderDeliveryForm',
+                        url: url,
+                        zIndex: 8888,
+                        width: '1440px'
+                    });
+                },
+                isEnabled: function(row) {
+                    return row.dateOper > '<?= $allowDate?>';
+                }                
+            },
             history: {
                 name: 'История',
                 iconClass: 'glyphicon glyphicon-list-alt',
