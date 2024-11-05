@@ -111,6 +111,7 @@ class IndexController extends AbstractActionController
         $rs = $this->params()->fromQuery('rs');
         $date = $this->params()->fromQuery('date');        
         $pay = $this->params()->fromQuery('pay');        
+        $kind = $this->params()->fromQuery('kind');        
         $offset = $this->params()->fromQuery('offset');
         $limit = $this->params()->fromQuery('limit');
         $dateStart = $this->params()->fromQuery('dateStart');
@@ -134,11 +135,11 @@ class IndexController extends AbstractActionController
         }    
         
         $query = $this->entityManager->getRepository(Statement::class)
-                        ->findStatement($q, $rs, ['start' => $startDate, 'end' => $endDate, 'pay' => $pay]);
+                        ->findStatement($q, $rs, ['start' => $startDate, 'end' => $endDate, 'pay' => $pay, 'kind' => $kind]);
         
 //        $total = count($query->getResult());
         $totalResult = $this->entityManager->getRepository(Statement::class)
-                        ->findStatement($q, $rs, ['start' => $startDate, 'end' => $endDate, 'count' => true, 'pay' => $pay]);
+                        ->findStatement($q, $rs, ['start' => $startDate, 'end' => $endDate, 'count' => true, 'pay' => $pay, 'kind' => $kind]);
         
         if ($offset) {
             $query->setFirstResult($offset);
