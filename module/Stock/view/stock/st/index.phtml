@@ -109,13 +109,13 @@
     
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status === '<?= St::STATUS_RETIRED?>'){
+        if (row.status === <?= St::STATUS_RETIRED?>){
            retired += ' retired';
         }
-        if (row.statusAccount === '<?= St::STATUS_TAKE_NO?>'){
+        if (row.statusAccount === <?= St::STATUS_TAKE_NO?>){
            retired += ' warning';
         }
-        if (row.statusAccount === '<?= St::STATUS_ACCOUNT_NO?>'){
+        if (row.statusAccount === <?= St::STATUS_ACCOUNT_NO?>){
            retired += ' status-account-no';
         }
         return {classes: retired};
@@ -161,12 +161,12 @@
     }    
     
     function writeOffFormatter(value, row){
-        if (row.writeOff == <?= St::WRITE_PAY?>){
+        if (row.writeOff === <?= St::WRITE_PAY?>){
             if (row.user){
-                return row.user.fullName
+                return row.user.fullName;
             }    
         }
-        if (row.writeOff == <?= St::WRITE_INVENTORY?>){
+        if (row.writeOff === <?= St::WRITE_INVENTORY?>){
             return 'Инв';
         }
         return value;
