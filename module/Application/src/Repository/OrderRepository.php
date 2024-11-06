@@ -324,9 +324,10 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('o, c, u, off, cc, m, sk, l')
+        $queryBuilder->select('o, c, u, off, cc, m, sk, l, client')
             ->from(Order::class, 'o')
             ->leftJoin('o.contact', 'c')
+            ->leftJoin('c.client', 'client')
 //            ->leftJoin('o.comments', 'com')
             ->leftJoin('o.contactCar', 'cc')
             ->leftJoin('cc.make', 'm')    
@@ -435,8 +436,7 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder->select('count(o.id) as orderCount')
             ->from(Order::class, 'o')
-            ->leftJoin('o.contact', 'c')
-            ->leftJoin('o.user', 'u')
+//            ->leftJoin('o.user', 'u')
                 ;
         
         if (is_array($params)){
@@ -452,7 +452,8 @@ class OrderRepository extends EntityRepository{
             }            
             if (!empty($params['clientId'])){
                 if (is_numeric($params['clientId'])){
-                    $queryBuilder->andWhere('c.client = :client')
+                    $queryBuilder->leftJoin('o.contact', 'c')
+                        ->andWhere('c.client = :client')
                         ->setParameter('client', $params['clientId'])
                             ;
                 }    
@@ -484,7 +485,7 @@ class OrderRepository extends EntityRepository{
                 
                 $contacts = $this->searchContacts($params['search']);                
                 foreach ($contacts as $contact){
-                    $orX->add($queryBuilder->expr()->eq('c.id', $contact['id']));                    
+                    $orX->add($queryBuilder->expr()->eq('o.contact', $contact['id']));                    
                 }
                 $orders = $this->searchOe($params['search']);                
                 foreach ($orders as $order){
