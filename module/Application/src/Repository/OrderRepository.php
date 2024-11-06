@@ -326,7 +326,7 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder->select('o, c, u, off, cc, m, sk, l, client')
             ->from(Order::class, 'o')
-            ->leftJoin('o.contact', 'c')
+            ->join('o.contact', 'c')
             ->leftJoin('c.client', 'client')
 //            ->leftJoin('o.comments', 'com')
             ->leftJoin('o.contactCar', 'cc')
