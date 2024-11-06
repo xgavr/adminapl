@@ -23,13 +23,14 @@
             <?= $goods->getCode()?>
             <?= $goods->getProducer()->getName()?>
             <sup style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></sup>
-<!--            <sup>
+            <sup>
                 <button class="btn btn-default btn-xs producer-union-modal-show" type="button" 
+                        <?= ($rbacManager->isGranted(null, 'rb.manage')) ? '':'disabled' ?> 
                         modal-url="/admin/producer-union-form/<?= $goods->getProducer()->getId() ?>?good=<?= $goods->getId()?>" 
                         data-toggle='tooltip' data-original-title="Заменить производителя">
                     <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
                 </button>
-            </sup>    -->
+            </sup>    
         </h3>
         <h5>
             Цена: <?= $goods->getPrice(); ?>

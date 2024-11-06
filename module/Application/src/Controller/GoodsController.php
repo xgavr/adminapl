@@ -81,9 +81,16 @@ class GoodsController extends AbstractActionController
      */
     private $logManager;
 
+    /**
+     * Rbac manager.
+     * @var \User\Service\RbacManager
+     */
+    private $rbacManager;
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $goodsManager, $assemblyManager, 
-            $articleManager, $nameManager, $externalManager, $rateManager, $logManager) 
+            $articleManager, $nameManager, $externalManager, $rateManager, 
+            $logManager, $rbacManager) 
     {
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
@@ -93,6 +100,7 @@ class GoodsController extends AbstractActionController
         $this->externalManager = $externalManager;
         $this->logManager = $logManager;
         $this->rateManager = $rateManager;
+        $this->rbacManager = $rbacManager;
     }  
     
     public function autocompleteGoodAction()
@@ -747,6 +755,7 @@ class GoodsController extends AbstractActionController
             'base' => $base,    
             'entityManager' => $this->entityManager,
             'tokens' => $tokens,
+            'rbacManager' => $this->rbacManager,
         ]);
     }      
 
