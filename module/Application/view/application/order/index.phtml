@@ -497,18 +497,19 @@ $this->pageBreadcrumbs()->setItems([
     function totalFormatter(value, row){
         var balanceText = '';
         var balanceClass = 'text-default';
+        var balance = 0;
         if (row.contact.client){
-            var balance = row.contact.client.balance;
-            balanceText = $.number(balance, 0, ',', ' ');
-            if (balance > 0){
+            balance = row.contact.client.balance;
+            balanceText = $.number(Math.abs(balance), 0, ',', ' ');
+            if (balance < 0){
                 balanceClass = 'text-success';
-            } else {
+            } else if (balance > 0) {
                 balanceClass = 'text-danger';
             }
         }
         return [
             $.number(value, 0, ',', ' '),
-            '<br/><small class="'+balanceClass+'">'+balanceText+'</small>'
+            (balance) ? '<br/><small class="'+balanceClass+'">'+balanceText+'</small>':''
         ].join(''); 
     }    
 
