@@ -270,8 +270,10 @@ class StManager
             
             $register = $this->entityManager->getRepository(Register::class)
                     ->findOneBy(['docKey' => $st->getLogKey()]);
+            $docStamp = $register->getDocStamp();
 
-            $this->updateStMovement($st, $register->getDocStamp());
+            $this->updateStMovement($st, $docStamp);
+            
         }     
         
         $this->foldManager->stFold($st, $docStamp);
