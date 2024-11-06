@@ -168,11 +168,13 @@ class ComitentController extends AbstractActionController
                         'delivery_commission' => [
                             'quantity' => $row['sale_qty'],
                             'amount' => $row['sale_amount'],
+                            'total' => $row['sale_amount'],
                             'price_per_instance' => $row['sale_price_seller'],
                         ],
                         'return_commission' => [
                             'quantity' => $row['return_qty'],
                             'amount' => $row['return_amount'],
+                            'total' => $row['return_amount'],
                             'price_per_instance' => $row['return_price_seller'],
                         ],
                         'rowNumber' => $row['row_number'],
