@@ -714,10 +714,13 @@ class PtuManager
         $rows = $this->entityManager->getRepository(PtuGood::class)
                 ->findBy(['good' => $oldGood->getId()]);
         foreach ($rows as $row){
+            $register = $this->entityManager->getRepository(Register::class)
+                    ->findOneBy(['docKey' => $row->getPtu()->getLogKey()]);
+            
             $row->setGood($newGood);
             $this->entityManager->persist($row);
             $this->entityManager->flush();
-            $this->updatePtuMovement($row->getPtu());
+            $this->updatePtuMovement($row->getPtu(), $register->getDocStamp());
         }
         
         return;
