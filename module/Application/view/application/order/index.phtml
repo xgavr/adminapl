@@ -211,6 +211,7 @@ $this->pageBreadcrumbs()->setItems([
         
         $table.on('load-success.bs.table', function (e, res) {
             setCookies('orderSaveId');
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
         $table.on('expand-row.bs.table', function (e, index, row, $detail) {
@@ -496,6 +497,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function totalFormatter(value, row){
         var balanceText = '';
+        var balanceTitle = '';
         var balanceClass = 'text-default';
         var balance = 0;
         if (row.contact.client){
@@ -503,13 +505,15 @@ $this->pageBreadcrumbs()->setItems([
             balanceText = $.number(Math.abs(balance), 0, ',', ' ');
             if (balance < 0){
                 balanceClass = 'text-success';
+                balanceTitle = 'Оплачено';
             } else if (balance > 0) {
                 balanceClass = 'text-danger';
+                balanceTitle = 'Долг';
             }
         }
         return [
             $.number(value, 0, ',', ' '),
-            (balance) ? '<br/><small class="'+balanceClass+'">'+balanceText+'</small>':''
+            (balance) ? '<br/><small class="'+balanceClass+'" data-toggle="tooltip" title="'+balanceTitle+'">'+balanceText+'</small>':''
         ].join(''); 
     }    
 
