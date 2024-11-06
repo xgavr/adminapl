@@ -146,13 +146,24 @@
 </div>    
 
 <script type="text/javascript">
+    var $table = $('#table');
+    var $ok = $('#ok');
+
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
 
-    var table = $('#table').bootstrapTable({
-        onLoadSuccess: function(res){
-//            $('#totalRow').html($('#table').bootstrapTable('getOptions').totalRows);
+    $(function () {
+        $ok.click(function () {
+            $table.bootstrapTable('refresh');
+        });
+        
+        $(".inputclear").click(function(){
+            $(".enter-search").val('');
+            refreshTable();
+        });
+
+        $table.on('load-success.bs.table', function (e, res) {
             $("[data-toggle='tooltip']").tooltip();
             $('.editableCheckBox').change(function() {
                 $.ajax({
@@ -163,16 +174,8 @@
 //                      alert( "Прибыли данные: " + msg );
                     }
                 });
-            })        
-        }
-    });
-
-    ok = $('#ok');
-
-    $(function () {
-        ok.click(function () {
-            table.bootstrapTable('refresh');
-        });
+            });        
+        });       
     });
     
     function queryParams(params) {
@@ -217,7 +220,7 @@
     
     function statusFormatter(value, row){
         var checked = 'checked';
-        if (value == <?= Producer::STATUS_RETIRED?>){
+        if (value === <?= Producer::STATUS_RETIRED?>){
             checked = '';
         }
         return [
