@@ -345,7 +345,7 @@ class OrderController extends AbstractActionController
             'orderAplId' => ($order) ? $order->getAplId():null,
             'comments' => $orderComments,
             'allowDate' => $this->orderManager->getAllowDate(),
-            'submitDisabled' => ($order) ? $order->getDateOper() > $this->orderManager->getAllowDate():false,
+            'submitDisabled' => ($order) ? $order->getDateOper() < $this->orderManager->getAllowDate():false,
         ]);        
     }        
         
