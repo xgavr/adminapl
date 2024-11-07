@@ -1812,11 +1812,14 @@ class OrderManager
      */
     public function updateOrderStatus($order, $status)            
     {
-        if ($status === Order::STATUS_SHIPPED && $order->getDateOper() < $this->allowDate){
-            $order->setDocDate(date('Y-m-d'));
+        $dateOper = $order->getDateOper();
+        
+        if ($status === Order::STATUS_SHIPPED && $dateOper < $this->allowDate){
+            $dateOper = date('Y-m-d');
+            $order->setDocDate($dateOper);
         }
         
-        if ($order->getDateOper() > $this->allowDate){
+        if ($dateOper > $this->allowDate){
             $order->setStatus($status);
             $order->setStatusEx(Order::STATUS_EX_NEW);
             $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
