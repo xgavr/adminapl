@@ -1812,7 +1812,10 @@ class OrderManager
      */
     public function updateOrderStatus($order, $status)            
     {
-
+        if ($status === Order::STATUS_SHIPPED && $order->getDateOper() < $this->allowDate){
+            $order->setDocDate(date('Y-m-d'));
+        }
+        
         if ($order->getDateOper() > $this->allowDate){
             $order->setStatus($status);
             $order->setStatusEx(Order::STATUS_EX_NEW);
