@@ -563,7 +563,7 @@ $this->pageBreadcrumbs()->setItems([
                   return row.status !== <?= Order::STATUS_NEW?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             }, 
             statusProcessed: {
@@ -576,7 +576,7 @@ $this->pageBreadcrumbs()->setItems([
                   return row.status !== <?= Order::STATUS_PROCESSED?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             }, 
             statusConfirmed: {
@@ -589,7 +589,7 @@ $this->pageBreadcrumbs()->setItems([
                   return row.status !== <?= Order::STATUS_CONFIRMED?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             }, 
             statusDelivery: {
@@ -603,7 +603,7 @@ $this->pageBreadcrumbs()->setItems([
                   return row.status !== <?= Order::STATUS_DELIVERY?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             }, 
             statusShipped: {
@@ -629,7 +629,7 @@ $this->pageBreadcrumbs()->setItems([
                   return row.status !== <?= Order::STATUS_CANCELED?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             },
             selection: {

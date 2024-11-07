@@ -1827,7 +1827,17 @@ class OrderManager
 
             $this->repostOrder($order);
             $this->logManager->infoOrder($order, Log::STATUS_UPDATE);
-        }    
+        } else {
+            if ($order->getStatus() !== Order::STATUS_SHIPPED && $status !== Order::STATUS_SHIPPED){
+                $order->setStatus($status);
+                $this->entityManager->persist($order);
+                $this->entityManager->flush($order);
+                
+                $this->entityManager->getRepository(Reserve::class)
+                        ->updateReserve($order);
+                $this->logManager->infoOrder($order, Log::STATUS_UPDATE);
+            }
+        }   
         
         return;
     }
