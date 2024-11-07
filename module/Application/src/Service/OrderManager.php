@@ -1814,7 +1814,7 @@ class OrderManager
     {
         $dateOper = $order->getDateOper();
         
-        if ($status === Order::STATUS_SHIPPED && $dateOper < $this->allowDate){
+        if ($status == Order::STATUS_SHIPPED && $dateOper < $this->allowDate){
             $dateOper = date('Y-m-d');
             $order->setDocDate($dateOper);
         }
@@ -1834,7 +1834,7 @@ class OrderManager
             $this->repostOrder($order);
             $this->logManager->infoOrder($order, Log::STATUS_UPDATE);
         } else {
-            if ($order->getStatus() !== Order::STATUS_SHIPPED && $status !== Order::STATUS_SHIPPED){
+            if ($order->getStatus() !== Order::STATUS_SHIPPED && $status != Order::STATUS_SHIPPED){
                 $order->setStatus($status);
                 $this->entityManager->persist($order);
                 $this->entityManager->flush($order);
