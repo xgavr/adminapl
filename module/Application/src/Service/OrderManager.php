@@ -1838,6 +1838,12 @@ class OrderManager
                 
                 $this->entityManager->getRepository(Reserve::class)
                         ->updateReserve($order);
+                
+                foreach ($order->getBids() as $bid){                    
+                    $this->entityManager->getRepository(Movement::class)
+                            ->updateGoodBalance($bid->getGood()->getId());
+                }
+                
                 $this->logManager->infoOrder($order, Log::STATUS_UPDATE);
             }
         }   
