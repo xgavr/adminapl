@@ -1355,7 +1355,7 @@ $this->headLink()
                   return row.status !== <?= Order::STATUS_NEW?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             }, 
             statusProcessed: {
@@ -1368,7 +1368,7 @@ $this->headLink()
                   return row.status != <?= Order::STATUS_PROCESSED?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             }, 
             statusConfirmed: {
@@ -1381,7 +1381,7 @@ $this->headLink()
                   return row.status !== <?= Order::STATUS_CONFIRMED?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             }, 
             statusDelivery: {
@@ -1395,7 +1395,7 @@ $this->headLink()
                   return row.status != <?= Order::STATUS_DELIVERY?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             }, 
             statusShipped: {
@@ -1408,7 +1408,7 @@ $this->headLink()
                   return row.status !== <?= Order::STATUS_SHIPPED?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             },
             statusCanceled: {
@@ -1421,7 +1421,7 @@ $this->headLink()
                   return row.status !== <?= Order::STATUS_CANCELED?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             },
             addComment: {
