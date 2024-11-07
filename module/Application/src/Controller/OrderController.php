@@ -344,6 +344,8 @@ class OrderController extends AbstractActionController
             'orderId' => ($order) ? $order->getId():null,
             'orderAplId' => ($order) ? $order->getAplId():null,
             'comments' => $orderComments,
+            'allowDate' => $this->orderManager->getAllowDate(),
+            'submitDisabled' => ($order) ? $order->getDateOper() > $this->orderManager->getAllowDate():false,
         ]);        
     }        
         
@@ -732,6 +734,7 @@ class OrderController extends AbstractActionController
         return new ViewModel([
             'order' => $order,
             'disabled' => $order->getStatus() == Order::STATUS_SHIPPED,
+            'allowDate' => $this->orderManager->getAllowDate(),
         ]);
     } 
     
