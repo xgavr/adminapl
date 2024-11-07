@@ -1818,7 +1818,7 @@ class OrderManager
             $dateOper = date('Y-m-d');
             $order->setDocDate($dateOper);
         }
-        var_dump($dateOper, $status); exit;
+//        var_dump($dateOper, $status); exit;
         if ($dateOper > $this->allowDate){
             $order->setStatus($status);
             $order->setStatusEx(Order::STATUS_EX_NEW);
