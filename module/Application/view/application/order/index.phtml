@@ -616,7 +616,7 @@ $this->pageBreadcrumbs()->setItems([
                   return row.status !== <?= Order::STATUS_SHIPPED?>;
                 },
                 isEnabled: function(row) {
-                    return row.dateOper > '<?= $allowDate?>';
+                    return row.dateOper > '<?= $allowDate?>' || row.status !== <?= Order::STATUS_SHIPPED?>;
                 }                
             },
             statusCanceled: {
