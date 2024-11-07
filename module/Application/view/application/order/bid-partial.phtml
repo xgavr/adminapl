@@ -111,7 +111,11 @@
                 result += value.rest;
             });
         }    
-        return result;
+        if (result > 0){
+            return '<b class="text-success">'+result+'</b>';
+        } else {
+            return '<span class="text-danger">-</span>';
+        }    
     }    
     
     function geActiveFormatter(value, row){
