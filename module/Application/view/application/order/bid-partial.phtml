@@ -51,6 +51,13 @@
                         formatter: "geNameFormatter",
                         editable: true
                     }, {
+                        field: 'rest',
+                        title: 'Наличие',
+                        width: 50,
+                        align: 'right',
+                        formatter: "geRestFormatter",
+                        editable: false
+                    }, {
                         field: 'num',
                         title: 'Количество',
                         width: 50,
@@ -95,6 +102,16 @@
         if (row.good.name) return row.good.name; 
         if (row.good.description)return row.good.description;
         return 'Нет названия';
+    }    
+    
+    function geRestFormatter(value, row){
+        var result = 0;
+        if (row.good.goodBalances){
+            $.each( row.good.goodBalances, function( key, value ) {
+                result += value.rest;
+            });
+        }    
+        return result;
     }    
     
     function geActiveFormatter(value, row){

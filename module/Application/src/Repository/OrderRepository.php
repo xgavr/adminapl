@@ -115,14 +115,17 @@ class OrderRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('b, g, p, tg')
+        $queryBuilder->select('b, g, p, tg, gb')
             ->from(Bid::class, 'b')
             ->join('b.good', 'g')    
             ->join('g.producer', 'p')    
             ->leftJoin('g.tokenGroup', 'tg')    
+            ->leftJoin('g.goodBalances', 'gb', 'WITH', 'gb.office = :office and gb.company = :company')    
             ->where('b.order = ?1')    
             ->orderBy('b.rowNo')
             ->setParameter('1', $order->getId())    
+            ->setParameter('office', $order->getOffice()->getId())    
+            ->setParameter('company', $order->getCompany()->getId())    
                 ;
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
