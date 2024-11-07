@@ -1821,6 +1821,13 @@ class OrderManager
 //        var_dump($dateOper, $status); exit;
         if ($dateOper > $this->allowDate){
             $order->setStatus($status);
+            
+            $aplOrders = $this->entityManager->getRepository(Order::class)
+                    ->findBy(['aplId' => $order->getAplId()]);
+            
+            if (count($aplOrders) > 1){
+                $order->setAplId(null);
+            }    
             $order->setStatusEx(Order::STATUS_EX_NEW);
             $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
             
