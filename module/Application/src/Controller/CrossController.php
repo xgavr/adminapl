@@ -298,7 +298,7 @@ class CrossController extends AbstractActionController
         $crossId = $this->params()->fromRoute('id', -1);
         
         $cross = $this->entityManager->getRepository(Cross::class)
-                ->findOneById($crossId);
+                ->find($crossId);
         
         if ($cross == null) {
             $this->getResponse()->setStatusCode(404);

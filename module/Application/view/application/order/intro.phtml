@@ -412,6 +412,7 @@ $disabled = (!empty($orderId)) ? '':'disabled';
                                  <button type="button" class="btn btn-default btn-xs price-select-btn">4</button>
                                  <button type="button" class="btn btn-default btn-xs price-select-btn">5</button>
                              </th>
+                             <th data-field='rest' data-align="right" data-width="50" data-formatter="geRestFormatter">Наличие</th>
                              <th data-field='num' data-align="right" data-editable="true" data-footer-formatter="footerFormatter" data-type="numeric" data-always-use-formatter="true" data-width="50">Кол-во</th>
                              <th data-field='amount' data-align="right" data-footer-formatter="footerFormatter" data-formatter="geAmountFormatter" data-always-use-formatter="true" data-type="numeric" data-width="100">Сумма</th>
                              <th data-field="rowNo" data-formatter="geActiveFormatter" data-width="10"></th>
@@ -1323,6 +1324,20 @@ $disabled = (!empty($orderId)) ? '':'disabled';
     function gePriceFormatter(value){
         return (Math.round(value)).toFixed(0);
     }        
+
+    function geRestFormatter(value, row){
+        var result = 0;
+        if (row.good.goodBalances){
+            $.each( row.good.goodBalances, function( key, value ) {
+                result += value.rest;
+            });
+        }    
+        if (result > 0){
+            return '<b class="text-success">'+result+'</b>';
+        } else {
+            return '<span class="text-danger">-</span>';
+        }    
+    }    
 
     function geAmountFormatter(value, row){
         return (Math.round(row.price*row.num*100)/100).toFixed(0);
