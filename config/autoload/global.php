@@ -76,7 +76,7 @@ return [
                 'servers' => [
                     [
                         '127.0.0.1', 11211
-                    ]
+                    ],
                 ],
                 'namespace' => 'AdmAPL',
                 'lib_options' => [
@@ -94,14 +94,12 @@ return [
 ////            'serializer',
         ],
         'FilesystemCache' => [
-            'adapter' => [
-                'name'    => Filesystem::class,
-                'options' => [
-                    // Store cached data in this directory.
-                    'cache_dir' => './data/cache',
-                    // Store cached data for 1 hour.
-                    'ttl' => 60*60*1 
-                ],
+            'adapter' => Filesystem::class,
+            'options' => [
+                // Store cached data in this directory.
+                'cache_dir' => './data/cache',
+                // Store cached data for 1 hour.
+                'ttl' => 60*60*1 
             ],
             'plugins' => [
                 [

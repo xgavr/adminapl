@@ -86,6 +86,12 @@ class CashManager {
      */
     private $telegramManager;
 
+    /**
+     * Дата запрета
+     * @var string
+     */
+    private $allowDate;
+    
     public function __construct($entityManager, $logManager, $legalManager, $zpManager,
             $costManager, $adminManager, $telegramManager)
     {

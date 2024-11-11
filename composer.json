@@ -34,7 +34,7 @@
         "psr/container": "^1.0",
         "laminas/laminas-captcha": "^2.9",
         "laminas/laminas-code": "^4.0",
-        "laminas/laminas-component-installer": "^2.1",
+        "laminas/laminas-component-installer": "^3.1",
         "laminas/laminas-config": "^3.3",
         "laminas/laminas-crypt": "^3.3",
         "laminas/laminas-developer-tools": "^2.9",
@@ -71,7 +71,8 @@
         "yoomoney/yookassa-sdk-php": "^2.11",
         "shuchkin/simplexlsx": "^1.1",
         "shuchkin/simplexls": "^0.10.4",
-        "splitbrain/php-qrcode": "^0.1.0"
+        "splitbrain/php-qrcode": "^0.1.0",
+        "laminas/laminas-cache-storage-adapter-filesystem": "^2.4"
     },
     "autoload": {
         "psr-4": {

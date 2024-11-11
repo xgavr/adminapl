@@ -239,8 +239,24 @@ if ($vtp){
 </div>    
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-    <button type="submit" class="btn btn-primary" id="vtp-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
+    <!--<div class="btn-group" role="group">-->
+        <div class="btn-group dropup" role="group">
+            <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle" 
+                    ria-haspopup="true" aria-expanded="false" <?= ($vtp) ? '':'disabled' ?>>
+                Печать
+                <span class="caret"></span>
+            </button>                
+            <ul class="dropdown-menu">
+                <li><a href="/print/vtp-torg2/<?= ($vtp) ? $vtp->getId():0 ?>?ext=Pdf" target="_blank">ТОРГ2 (pdf)</a></li>
+                <li><a href="/print/vtp-torg2/<?= ($vtp) ? $vtp->getId():0 ?>?ext=Xls" target="_blank">ТОРГ2 (xls)</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="/print/vtp-upd/<?= ($vtp) ? $vtp->getId():0 ?>?ext=Pdf" target="_blank">ТОРГ12 (pdf)</a></li>
+                <li><a href="/print/vtp-upd/<?= ($vtp) ? $vtp->getId():0 ?>?ext=Xls" target="_blank">ТОРГ12 (xls)</a></li>
+            </ul>
+        </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+        <button type="submit" class="btn btn-primary" id="vtp-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
+    <!--</div>-->    
 </div>
 
 <?= $this->form()->closeTag(); ?>
