@@ -110,7 +110,7 @@ class PrintManager {
                 ;
         
         $spreadsheet->setActiveSheetIndex(0)
-                ->setCellValue('A6', $vtp->getPtu()->getContract()->getCompany()->getLegalPresent())
+                ->setCellValue('A6', $vtp->getPtu()->getContract()->getCompany()->getLegalPresent(['onDate' => $vtp->getPtu()->getDocDate()]))
                 ->setCellValue('A9', $vtp->getPtu()->getOffice()->getName())
                 ->setCellValue('CI7', $vtp->getPtu()->getContract()->getCompany()->getOkpo())
                 ->setCellValue('AY17', $vtp->getDocNo())
@@ -124,8 +124,8 @@ class PrintManager {
                 ->setCellValue('BS24', date('m', strtotime($vtp->getDocDate())))
                 ->setCellValue('CS24', date('Y', strtotime($vtp->getDocDate())))
                 ->setCellValue('AS25', $vtp->getPtu()->getDocPresent())
-                ->setCellValue('U33', $vtp->getPtu()->getLegal()->getLegalPresent())
-                ->setCellValue('N37', $vtp->getPtu()->getLegal()->getLegalPresent())
+                ->setCellValue('U33', $vtp->getPtu()->getLegal()->getLegalPresent(['onDate' => $vtp->getPtu()->getDocDate()]))
+                ->setCellValue('N37', $vtp->getPtu()->getLegal()->getLegalPresent(['onDate' => $vtp->getPtu()->getDocDate()]))
                 ->setCellValue('BB42', $vtp->getPtu()->getContract()->getAct())
                 ->setCellValue('BV42', date('d', strtotime($vtp->getPtu()->getContract()->getDateStart())))
                 ->setCellValue('CC42', date('m', strtotime($vtp->getPtu()->getContract()->getDateStart())))

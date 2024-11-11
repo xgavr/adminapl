@@ -970,7 +970,7 @@ class Legal {
         }
 
         $criteria = Criteria::create()
-                ->andWhere(Criteria::expr()->eq('status', (string) $locationStatus))
+                ->andWhere(Criteria::expr()->eq('status', $locationStatus))
                 ->andWhere(Criteria::expr()->lte('dateStart', $onDate))
                 ->orderBy(['dateStart' => Criteria::DESC])
                 ->setMaxResults(1)
@@ -1002,7 +1002,7 @@ class Legal {
         }
 
         $criteria = Criteria::create()
-                ->andWhere(Criteria::expr()->eq('status', (string) $locationStatus))
+                ->andWhere(Criteria::expr()->eq('status', $locationStatus))
                 ->andWhere(Criteria::expr()->lte('dateStart', $onDate))
                 ->orderBy(['dateStart' => Criteria::DESC])
                 ->setMaxResults(1)
