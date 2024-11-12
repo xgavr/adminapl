@@ -210,6 +210,7 @@ class PriceManager {
      */
     private function saveAttachement($supplier, $mailList)
     {
+        $fromSupplier = null;
         if (count($mailList)){
             foreach ($mailList as $mail){
                 if (isset($mail['attachment'])){
