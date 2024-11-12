@@ -116,11 +116,15 @@ $this->pageBreadcrumbs()->setItems([
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 <script type="text/javascript">
     var $table = $('#table');
+    var $expandDetail = '';
     
-//    $('.bid-expand').on('editable-save.bs.table', function (e, field, row, old, $el) {
-//        alert(field);
-//    });        
-
+    function setExpandDetail(node){
+        $expandDetail = node;
+    }
+    
+    function getExpandDetail(){
+        return $expandDetail;
+    }
     
     function setCookies(cookieKey){
         let expires = 30;
@@ -217,6 +221,11 @@ $this->pageBreadcrumbs()->setItems([
         $table.on('expand-row.bs.table', function (e, index, row, $detail) {
             $detail.html('Идет загрузка...');
             orderDetail(index, row, $detail);
+            setExpandDetail($detail);
+        });
+        
+        $table.on('collapse-row.bs.table', function (e, index, row, $detail) {
+            setExpandDetail('');
         });
         
         $(document).on('change', '.refresh-table', function (e) {
@@ -548,10 +557,9 @@ $this->pageBreadcrumbs()->setItems([
             return $table.bootstrapTable('getData')[rowId];
         },
         actionsGroups: [
-           ['selection'],
-           ['addComment', 'comments', 'delivery', 'history'],
-           ['addLegal', 'updateFromApl', 'sendToApl', 'duplicate'],
-           ['vt', 'cash', 'cashes']
+           ['selection', 'addComment', 'delivery', 'cash', 'addLegal'],
+           ['comments', 'ordered', 'cashes', 'vt', 'history'],
+           ['updateFromApl', 'sendToApl', 'duplicate']
         ],      
         actions: {
             statusNew: {
@@ -645,7 +653,7 @@ $this->pageBreadcrumbs()->setItems([
                 }
             },    
             addComment: {
-                name: 'Добавить комментарий',
+                name: 'Комментарий',
                 iconClass: 'glyphicon glyphicon-plus',
                 onClick: function (row){
                     var url = '/comments/edit-local-form/'+row.id;
@@ -702,6 +710,26 @@ $this->pageBreadcrumbs()->setItems([
                     });                    
                 }
             },
+            ordered: {
+                name: 'Заказано',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.get( '/order/supplier-orders/'+row.id, function( data ) {
+                        bootbox.dialog({
+                            title: 'Заказано у поставщиков',
+                            message: data,
+                            size: 'large',
+                            buttons: {
+                                ok: {
+                                    label: "OK",
+                                    className: 'btn-info'
+                                }                    
+                            }
+                        }); 
+                    });    
+                }
+            },
             addLegal: {
                 name: 'Юр. лицо',
                 iconClass: 'glyphicon glyphicon-plus',
@@ -749,8 +777,8 @@ $this->pageBreadcrumbs()->setItems([
                 }                
             },    
             vt: {
-                name: 'Возврат',
-                iconClass: 'glyphicon glyphicon-repeat',
+                name: 'Возвраты',
+                iconClass: 'glyphicon glyphicon-list-alt',
                 onClick: function (row){
                     var url = '/vt/order-form/'+row.id;
                     showFormDialog({
@@ -765,8 +793,8 @@ $this->pageBreadcrumbs()->setItems([
                 }                
             },
             cash: {
-                name: 'Оплата+',
-                iconClass: 'glyphicon glyphicon-rub',
+                name: 'Оплата',
+                iconClass: 'glyphicon glyphicon-plus',
                 onClick: function (row){
                     var url = '/till/edit-cash-in?order='+row.id;
                     showFormDialog({
@@ -782,7 +810,7 @@ $this->pageBreadcrumbs()->setItems([
             },
             cashes: {
                 name: 'Оплаты',
-                iconClass: 'glyphicon glyphicon-rub',
+                iconClass: 'glyphicon glyphicon-list-alt',
                 onClick: function (row){
                     var url = '/cash/order-form/'+row.id;
                     showFormDialog({

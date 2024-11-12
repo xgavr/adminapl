@@ -85,7 +85,7 @@ $form->prepare();
 </div>    
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-    <button type="button" class="btn btn-primary selections-submit">Сохранить</button>
+    <button type="button" class="btn btn-primary selections-submit" disabled="">Сохранить</button>
 </div>
 
 
@@ -135,7 +135,11 @@ $form->prepare();
             })
                 .done(function (data) {
                     $('#table').bootstrapTable('updateByUniqueId', {id: <?= $order->getId()?>, row: data.row});
-                })
+                    if (getExpandDetail()){
+                        $('#table').bootstrapTable('collapseRowByUniqueId', data.row.id);
+                        $('#table').bootstrapTable('expandRowByUniqueId', data.row.id);
+                    }    
+               })
                 .fail(function () {
                     alert("Ошибка при записи данных.");
 
@@ -240,6 +244,7 @@ $form->prepare();
                 url: '/order/good-content/<?= $order->getId() ?>',
                 onLoadSuccess: function(res){
                     updateGoodTableTotal();
+                    $('.selections-submit').attr('disabled', false);
                 }                         
             <?php else: ?>                
                 data: data
