@@ -40,6 +40,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            Service\ApiSupplierManager::class => Service\Factory\ApiSupplierManagerFactory::class,
             Service\MikadoManager::class => Service\Factory\MikadoManagerFactory::class,
             Service\MskManager::class => Service\Factory\MskManagerFactory::class,
         ],

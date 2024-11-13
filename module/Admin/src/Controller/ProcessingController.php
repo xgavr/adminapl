@@ -260,6 +260,12 @@ class ProcessingController extends AbstractActionController
      */
     private $ddsManager;    
 
+    /**
+     * Api supplier manager.
+     * @var \ApiSupplier\Service\ApiSupplierManager
+     */
+    private $apiSupplierManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
@@ -269,7 +275,7 @@ class ProcessingController extends AbstractActionController
             $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
             $ozonService, $userManager, $smsManager, $sbpManager, $cashManager,
             $ampReportManager, $paymentManager, $bankMlManager, $finManager, 
-            $zpManager, $ddsManager) 
+            $zpManager, $ddsManager, $apiSupplierManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -311,6 +317,7 @@ class ProcessingController extends AbstractActionController
         $this->finManager = $finManager;
         $this->zpManager = $zpManager;
         $this->ddsManager = $ddsManager;
+        $this->apiSupplierManager = $apiSupplierManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -370,6 +377,18 @@ class ProcessingController extends AbstractActionController
         
         if ($settings['hello_check'] == 1){
             $this->billManager->tryIdocs();
+        }    
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
+    public function apiSuppliersAction()
+    {       
+        $settings = $this->adminManager->getSettings();
+        
+        if ($settings['hello_check'] == 1){
+            $this->apiSupplierManager->reglament();
         }    
         return new JsonModel(
             ['ok']

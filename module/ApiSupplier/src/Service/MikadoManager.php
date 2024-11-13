@@ -66,7 +66,7 @@ class MikadoManager {
      * Обработка ошибок
      * @param \Laminas\Http\Response $response
      */
-    public function exception($response)
+    private function exception($response)
     {
         switch ($response->getStatusCode()) {
             case 400: //Invalid code
@@ -159,7 +159,7 @@ class MikadoManager {
         $client->setOptions(['timeout' => 30]);
         
         $client->setParameterGet([
-            'Date_From' => date('Y-m-d', strtotime("-1 week")),
+            'Date_From' => date('Y-m-d', strtotime("-1 day")),
             'Date_To' => date('Y-m-d'),
             'nClientID' => $supplierApi->getLogin(),
             'Password' => $supplierApi->getPassword()
@@ -253,6 +253,11 @@ class MikadoManager {
                             'good_id' => $good->getId(),
                             'comment' => '',
                             'info' => '',
+                            'countryName' => '',
+                            'countryCode' => '',
+                            'unitName' => '',
+                            'unitCode' => '',
+                            'ntd' => '',
                         ], $rowNo);
                         $rowNo++;
                     }    
