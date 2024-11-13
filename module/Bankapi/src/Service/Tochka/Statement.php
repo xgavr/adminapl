@@ -20,7 +20,7 @@ use Laminas\Json\Encoder;
 class Statement {
 
     /**
-     * @var Bankapi\Service\Tochka\Authenticate
+     * @var \Bankapi\Service\Tochka\Authenticate
      */
     private $auth;
     

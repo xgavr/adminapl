@@ -943,10 +943,10 @@ class BillManager
      * xbr-s23530;xfrk-238901;xnk-751516;xnk-929906;xpm-phb-007
      * 
      * @param string $iid
-     * @param Idoc $idoc
+     * @param Supplier $supplier
      * @param float $price
      */
-    protected function _goodFromMikadoIid($iid, $idoc, $price)
+    protected function _goodFromMikadoIid($iid, $supplier, $price)
     {
         $delimeters = ['-'];
         $articleFilter = new ArticleCode();
@@ -958,7 +958,7 @@ class BillManager
                 $articleStr = implode('', $art_pro);
                 if ($articleStr){
                     $code = $articleFilter->filter($articleStr);
-                    $good = $this->_findGoodByCode($idoc, $articleStr, $price);
+                    $good = $this->_findGoodByCode($supplier, $articleStr, $price);
                     if ($good){
                         return $good;
                     }                
@@ -993,13 +993,13 @@ class BillManager
     /**
      * Поиск товара по внутренним кодам поставщика
      * @param string $iid
-     * @param Idoc $idoc
+     * @param Supplier $supplier
      */
-    protected function _goodFromSupplierIid($iid, $idoc)
+    protected function _goodFromSupplierIid($iid, $supplier)
     {
-        $parentSupplier = $idoc->getSupplier()->getParent();
+        $parentSupplier = $supplier->getParent();
         if (!$parentSupplier){
-            $parentSupplier = $idoc->getSupplier();
+            $parentSupplier = $supplier;
         }
 
         $good = $this->_goodFromIid($iid, $parentSupplier);
@@ -1018,11 +1018,11 @@ class BillManager
 
     /**
      * Найти подходящий товар по коду
-     * @param Idoc $idoc
+     * @param Supplier $supplier
      * @param string $articleStr
      * @param float $price
      */
-    protected function _findGoodByCode($idoc, $articleStr, $price)
+    protected function _findGoodByCode($supplier, $articleStr, $price)
     {
         
         $articleFilter = new ArticleCode();
@@ -1037,7 +1037,7 @@ class BillManager
                     }
                 } else {
                     $good = $this->entityManager->getRepository(GoodSupplier::class)
-                            ->findGoodChildSupplierByCode($code, $price, $idoc->getSupplier());
+                            ->findGoodChildSupplierByCode($code, $price, $supplier);
                     if ($good){
                         return $good;
                     }
@@ -1057,11 +1057,11 @@ class BillManager
     
     /**
      * Найти подходящий товар по коду
-     * @param Idoc $idoc
+     * 
      * @param Producer $producer
      * @param string $goodName
      */
-    protected function _findGoodByGoodName($idoc, $producer, $goodName)
+    protected function _findGoodByGoodName($producer, $goodName)
     {
         if ($producer && $goodName){
             $messages = [];
@@ -1097,11 +1097,11 @@ class BillManager
     
     /**
      * Получить товар
-     * @param Idoc $idoc
+     * @param Supplier $supplier
      * @param array $data
      * @return Goods
      */
-    public function findGood($idoc, $data)
+    public function findGood($supplier, $data)
     {
         $articleStr = empty($data['article']) ? null:$data['article'];
         $producerStr = empty($data['producer']) ? null:$data['producer'];
@@ -1113,7 +1113,7 @@ class BillManager
         $articleFilter = new ArticleCode();
         $code = $articleFilter->filter($articleStr);
         if ($code && !$producerStr){
-            $good = $this->_findGoodByCode($idoc, $articleStr, $price);
+            $good = $this->_findGoodByCode($supplier, $articleStr, $price);
             if ($good){
                 return $good;
             }
@@ -1143,13 +1143,13 @@ class BillManager
         
         if ($iid){
             
-            $good = $this->_goodFromSupplierIid($iid, $idoc);
+            $good = $this->_goodFromSupplierIid($iid, $supplier);
             if ($good){
                 return $good;
             }
             
-            if ($idoc->getSupplier()->getAplId() == 69){ //mikado
-                $good = $this->_goodFromMikadoIid($iid, $idoc, $price);
+            if ($supplier->getAplId() == 69){ //mikado
+                $good = $this->_goodFromMikadoIid($iid, $supplier, $price);
             } else {
                 $good = $this->_parseIid($iid, $goodName);                
             }
@@ -1159,7 +1159,7 @@ class BillManager
             }
 
             $good = $this->entityManager->getRepository(BillSetting::class)
-                    ->findGoodFromRawprice($idoc->getSupplier(), $iid);
+                    ->findGoodFromRawprice($supplier, $iid);
             if (is_array($good)){
                 return $this->_newGood($good['article'], $good['producer'], $good['goodName']);
             }
@@ -1170,7 +1170,7 @@ class BillManager
         }
         
         if (empty($articleStr) && $goodName && $producer){
-            $good = $this->_findGoodByGoodName($idoc, $producer, $goodName);
+            $good = $this->_findGoodByGoodName($producer, $goodName);
             if ($good){
                 return $good;
             }
@@ -1234,7 +1234,7 @@ class BillManager
                 $rowNo = 1;                
                 foreach ($idocData['tab'] as $tp){
                     if (!empty($tp['quantity']) && !empty($tp['good_name'])&& !empty($tp['amount'])){
-                        $good = $this->findGood($idoc, $tp);   
+                        $good = $this->findGood($idoc->getSupplier(), $tp);   
                         if (empty($good)){
                             if (!empty($tp['article'])){
                                 $notFoundArticle[] = $tp['article'];

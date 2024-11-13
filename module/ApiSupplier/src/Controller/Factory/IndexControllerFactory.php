@@ -5,6 +5,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use ApiSupplier\Controller\IndexController;
 use ApiSupplier\Service\MskManager;
+use ApiSupplier\Service\MikadoManager;
 
 /**
  * This is the factory for IndexController. Its purpose is to instantiate the
@@ -16,8 +17,9 @@ class IndexControllerFactory implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $mskManager = $container->get(MskManager::class);
+        $mikadoManager = $container->get(MikadoManager::class);
         
         // Instantiate the controller and inject dependencies
-        return new IndexController($entityManager, $mskManager);
+        return new IndexController($entityManager, $mskManager, $mikadoManager);
     }
 }

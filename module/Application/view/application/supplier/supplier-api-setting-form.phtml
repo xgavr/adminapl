@@ -35,73 +35,71 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'С�
 $form->prepare();
 
 ?>
-
-
             
-            <?= $this->form()->openTag($form); ?>
-            
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Настройка АПИ поставщика</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<?= $this->form()->openTag($form); ?>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Настройка АПИ поставщика</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
             </div>
-            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('name')); ?>
-                            <?= $this->formElement($form->get('name')); ?>
-                            <?= $this->formElementErrors($form->get('name')); ?>                  
-                        </div>
 
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('baseUri')); ?>
-                            <?= $this->formElement($form->get('baseUri')); ?>
-                            <?= $this->formElementErrors($form->get('baseUri')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('login')); ?>
-                            <?= $this->formElement($form->get('login')); ?>
-                            <?= $this->formElementErrors($form->get('login')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('password')); ?>
-                            <?= $this->formElement($form->get('password')); ?>
-                            <?= $this->formElementErrors($form->get('password')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('userId')); ?>
-                            <?= $this->formElement($form->get('userId')); ?>
-                            <?= $this->formElementErrors($form->get('userId')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('testUri')); ?>
-                            <?= $this->formElement($form->get('testUri')); ?>
-                            <?= $this->formElementErrors($form->get('testUri')); ?>                  
-                        </div>
-
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('status')); ?>
-                            <?= $this->formElement($form->get('status')); ?>
-                            <?= $this->formElementErrors($form->get('status')); ?>                  
-                        </div>
-
-                    </div>        
-                </div>
-                <?= $this->formElement($form->get('csrf')); ?>
-            </div>    
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary" id="supplier-api-setting-submit">Сохранить</button>
+            <div class="form-group">
+                <?= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
             </div>
-            
-            <?= $this->form()->closeTag(); ?>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('login')); ?>
+                <?= $this->formElement($form->get('login')); ?>
+                <?= $this->formElementErrors($form->get('login')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('password')); ?>
+                <?= $this->formElement($form->get('password')); ?>
+                <?= $this->formElementErrors($form->get('password')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('userId')); ?>
+                <?= $this->formElement($form->get('userId')); ?>
+                <?= $this->formElementErrors($form->get('userId')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('baseUri')); ?>
+                <?= $this->formElement($form->get('baseUri')); ?>
+                <?= $this->formElementErrors($form->get('baseUri')); ?>                  
+            </div>
+
+            <div class="form-group">
+                <?= $this->formLabel($form->get('testUri')); ?>
+                <?= $this->formElement($form->get('testUri')); ?>
+                <?= $this->formElementErrors($form->get('testUri')); ?>                  
+            </div>
+
+        </div>        
+    </div>
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>    
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="supplier-api-setting-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
             
 <script>
     $('#supplier-api-setting-submit').on('click', function() {

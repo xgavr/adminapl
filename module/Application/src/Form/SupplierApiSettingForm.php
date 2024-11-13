@@ -10,6 +10,7 @@ namespace Application\Form;
 use Laminas\Form\Form;
 use Laminas\Form\Element;
 use Laminas\InputFilter\InputFilter;
+use Application\Entity\SupplierApiSetting;
 
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -52,13 +53,14 @@ class SupplierApiSettingForm extends Form
                 
         // Добавляем поле "name"
         $this->add([           
-            'type'  => 'text',
+            'type'  => 'select',
             'name' => 'name',
             'attributes' => [
                 'id' => 'name'
             ],
             'options' => [
                 'label' => 'Наименование',
+                'value_options' => SupplierApiSetting::getNameList(),
             ],
         ]);
         
@@ -123,10 +125,7 @@ class SupplierApiSettingForm extends Form
             'name' => 'status',
             'options' => [
                 'label' => 'Статус',
-                'value_options' => [
-                    1 => 'Использовать',
-                    2 => 'Не использовать',                    
-                ]
+                'value_options' => SupplierApiSetting::getStatusList(),
             ],
         ]);
         
@@ -166,24 +165,16 @@ class SupplierApiSettingForm extends Form
                 'name'     => 'name',
                 'required' => true,
                 'filters'  => [
-                    ['name' => 'StringTrim'],
-                    ['name' => 'StripTags'],
-                    ['name' => 'StripNewlines'],
+                    ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'min' => 1,
-                            'max' => 128
-                        ],
-                    ],
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(SupplierApiSetting::getNameList())]]
                 ],
             ]);
         
         $inputFilter->add([
             'name' => 'baseUri',
-            'required' => true,
+            'required' => false,
             'validators' => [
                 ['name' => 'uri'],
             ],
@@ -263,7 +254,7 @@ class SupplierApiSettingForm extends Form
                     ['name' => 'ToInt'],
                 ],                
                 'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+                    ['name'=>'InArray', 'options'=>['haystack'=> array_keys(SupplierApiSetting::getStatusList())]]
                 ],
             ]); 
                 

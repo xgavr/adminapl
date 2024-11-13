@@ -10,6 +10,7 @@ namespace ApiSupplier\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
+use Application\Entity\SupplierApiSetting;
 
 
 class IndexController extends AbstractActionController
@@ -28,12 +29,19 @@ class IndexController extends AbstractActionController
     private $mskManager;
         
     /**
+     * Mikado manager.
+     * @var \ApiSupplier\Service\MikadoManager
+     */
+    private $mikadoManager;
+        
+    /**
      * Constructor. Its purpose is to inject dependencies into the controller.
      */
-    public function __construct($entityManager, $mskManager) 
+    public function __construct($entityManager, $mskManager, $mikadoManager) 
     {
        $this->entityManager = $entityManager;
        $this->mskManager = $mskManager;
+       $this->mikadoManager = $mikadoManager;
     }
 
     
@@ -50,6 +58,22 @@ class IndexController extends AbstractActionController
         //$this->layout()->setTemplate('layout/terminal');
         return new ViewModel([
             'content' => iconv('windows-1251', 'utf-8', $content),
+        ]);
+    }    
+    
+    public function testAction()
+    {
+        $api = $this->params()->fromQuery('api');
+        
+        $content = 'Привет мир!';
+        
+        if ($api == SupplierApiSetting::NAME_API_MIKADO){
+            $content = $this->mikadoManager->deliveriesToPtu();
+        }    
+        
+        $this->layout()->setTemplate('layout/terminal');
+        return new JsonModel([
+            'content' => $content,
         ]);
     }    
 }

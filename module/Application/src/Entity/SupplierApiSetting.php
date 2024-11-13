@@ -23,6 +23,9 @@ class SupplierApiSetting {
     const STATUS_ACTIVE       = 1; // Active.
     const STATUS_RETIRED      = 2; // Retired.
     
+    const NAME_UNKNOWN              = 1;
+    const NAME_API_MIKADO        = 2; 
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -92,6 +95,31 @@ class SupplierApiSetting {
         return $this->name;
     }
 
+    /**
+     * Returns possible names as array.
+     * @return array
+     */
+    public static function getNameList() 
+    {
+        return [
+            self::NAME_UNKNOWN => 'Неизвестно',
+            self::NAME_API_MIKADO => 'API Mikado'
+        ];
+    }    
+    
+    /**
+     * Returns name as string.
+     * @return string
+     */
+    public function getNameAsString()
+    {
+        $list = self::getNameList();
+        if (isset($list[$this->name]))
+            return $list[$this->name];
+        
+        return 'Unknown';
+    }    
+    
     public function setName($name) 
     {
         $this->name = $name;

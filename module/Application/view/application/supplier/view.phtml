@@ -1,6 +1,7 @@
 <?php
 use Application\Entity\PriceGetting;
 use Application\Entity\BillGetting;
+use Application\Entity\SupplierApiSetting;
 
 $this->headTitle($supplier->getName());
 
@@ -441,11 +442,19 @@ $this->pageBreadcrumbs()->setItems([
                             <div class="panel panel-info">
                                 <div class="panel-body">
                                     <div class="pull-left">
-                                        <?= $supplierApiSetting->getName() ?><br/>
-                                        <a href="<?= $supplierApiSetting->getBaseUri() ?>" target="_blank"><?= $supplierApiSetting->getBaseUri() ?></a><br/>
+                                        <b><?= $supplierApiSetting->getNameAsString() ?></b>                                        
+                                        <?php 
+                                            $apiDisabled = ($supplierApiSetting->getName() != SupplierApiSetting::NAME_UNKNOWN && $supplierApiSetting->getStatus() == SupplierApiSetting::STATUS_ACTIVE) ? '':'disabled';
+                                        ?>
+                                        <button value="/api-supplier/test?api=<?= $supplierApiSetting->getName() ?>" class="btn btn-default btn-xs refresh-button"
+                                                title="Проверить">
+                                            <span class="glyphicon glyphicon-link" ></span>
+                                        </button>
+                                        <br/>
                                         Логин: <span><?= $supplierApiSetting->getLogin() ?></span><br/>
                                         Пароль: <span><?= $supplierApiSetting->getPassword() ?></span><br/>
                                         Ключ: <span><?= $supplierApiSetting->getUserId() ?></span><br/>
+                                        <a href="<?= $supplierApiSetting->getBaseUri() ?>" target="_blank"><?= $supplierApiSetting->getBaseUri() ?></a><br/>
                                         <a href="<?= $supplierApiSetting->getTestUri() ?>" target="_blank"><?= $supplierApiSetting->getTestUri() ?></a><br/>
                                         <br/>
                                         Статус: <span><?= $supplierApiSetting->getStatusAsString() ?></span><br/>
