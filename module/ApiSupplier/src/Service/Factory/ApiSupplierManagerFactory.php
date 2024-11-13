@@ -11,6 +11,7 @@ namespace ApiSupplier\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use ApiSupplier\Service\MikadoManager;
+use ApiSupplier\Service\ApiSupplierManager;
 
 /**
  * Description of ApiSupplierManagerFactory
