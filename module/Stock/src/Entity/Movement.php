@@ -172,6 +172,18 @@ class Movement {
     private $vt;    
 
     /**
+     * @ORM\ManyToOne(targetEntity="Stock\Entity\Vt", inversedBy="docMovements") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $vtDoc;    
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Order", inversedBy="movements") 
+     * @ORM\JoinColumn(name="doc_id", referencedColumnName="id")
+     */
+    private $order;    
+
+    /**
      * @ORM\ManyToOne(targetEntity="User\Entity\User", inversedBy="movements") 
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
@@ -657,6 +669,40 @@ class Movement {
     {
         $this->vt = $vt;
     }   
+    
+    /*
+     * @return Vt
+     */    
+    public function getVtDoc() 
+    {
+        return $this->vtDoc;
+    }
+
+    /**
+     * @param Vt $vtDoc
+     */    
+    public function setVtDoc($vtDoc) 
+    {
+        $this->vtDoc = $vtDoc;
+    }   
+    
+    /**
+     * 
+     * @return Order
+     */
+    public function getOrder() {
+        return $this->order;
+    }
+
+    /**
+     * 
+     * @param Order $order
+     * @return $this
+     */
+    public function setOrder($order) {
+        $this->order = $order;
+        return $this;
+    }
     
     /**
      * 

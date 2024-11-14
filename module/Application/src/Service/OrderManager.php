@@ -1234,6 +1234,9 @@ class OrderManager
         $this->zpManager->addOrderCalculator($order);
         $this->foldManager->orderFold($order, $docStamp);
         
+        $this->entityManager->getRepository(Client::class)
+                ->updateClientRetailStat($order->getContact()->getClient());
+        
         return;
     }
     

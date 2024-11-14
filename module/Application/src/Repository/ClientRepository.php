@@ -20,6 +20,7 @@ use Company\Entity\Legal;
 use Application\Entity\Phone;
 use Application\Entity\Email;
 use Company\Entity\Contract;
+use Application\Entity\Bid;
 
 /**
  * Description of ClientRepository
@@ -685,5 +686,95 @@ class ClientRepository extends EntityRepository{
         $result = $queryBuilder->getQuery()->getResult();
 
         return $result;                
+    }
+    
+    /**
+     * Статитстика по клиенту
+     * @param Client $client
+     * @param bool $flush
+     */
+    public function updateClientRetailStat($client, $flush = true)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
+
+        $queryBuilder->select('sum(r.amount) as total')
+                ->addSelect('sum(case when r.docType = :docTypeOrder then 1 else 0 end) as orderCount')
+                ->setParameter('docTypeOrder', Movement::DOC_ORDER)
+                ->from(Retail::class, 'r')
+                ->join('r.contact', 'c')
+                ->where('r.status = :status')
+                ->setParameter('status', Retail::STATUS_ACTIVE)
+                ->andWhere('c.client = :client')
+                ->setParameter('client', $client->getId())
+                ->andWhere($orX)
+                ->setMaxResults(1)
+                ;
+        
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+        
+        $queryBuilder = $entityManager->createQueryBuilder();        
+        $queryBuilder->select('sum(abs(m.amount) - abs(m.baseAmount)) as income')
+                ->from(Movement::class, 'm')
+                ->join('m.order', 'o', 'WITH', 'm.docType = :docTypeOrder')
+                ->setParameter('docTypeOrder', Movement::DOC_ORDER)
+                ->join('o.contact', 'c')
+                ->where('m.status = :status')
+                ->setParameter('status', Movement::STATUS_ACTIVE)
+                ->andWhere('c.client = :client')
+                ->setParameter('client', $client->getId())
+                ->setMaxResults(1)
+                ;
+        
+        $orderResult = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('sum(abs(m.amount) - abs(m.baseAmount)) as income')
+                ->from(Movement::class, 'm')
+                ->join('m.vtDoc', 'v', 'WITH', 'm.docType = :docTypeVt')
+                ->setParameter('docTypeVt', Movement::DOC_VT)
+                ->join('v.order', 'o')
+                ->join('o.contact', 'c')
+                ->where('m.status = :status')
+                ->setParameter('status', Movement::STATUS_ACTIVE)
+                ->andWhere('c.client = :client')
+                ->setParameter('client', $client->getId())
+                ->setMaxResults(1)
+                ;
+
+        $vtResult = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        $client->setSalesGood((empty($orderResult['income']) ? 0:$orderResult['income']) - (empty($vtResult['income']) ? 0:$vtResult['income']));                
+        $client->setSalesOrder(empty($result['orderCount']) ? 0:$result['orderCount']);
+        $client->setSalesTotal(empty($result['total']) ? 0:$result['total']);
+        
+        $entityManager->persist($client);
+        if ($flush){
+            $entityManager->flush();
+        }
+        
+        return;
+    }
+    
+    /**
+     * Выборка для реактивации
+     */
+    public function findOrdersForReactor()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('b')
+                ->distinct()
+                ->from(Order::class, 'o')
+                ->where('o.status = :status')
+                ->setParameter('status', Order::STATUS_SHIPPED)
+                ->andWhere('o.dateShipment >= :dateStart')
+                ->setParameter($key, $queryBuilder)
+                ;
     }
 }

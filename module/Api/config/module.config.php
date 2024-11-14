@@ -125,6 +125,15 @@ return [
                     ],
                 ],
             ],
+            'api.rest.api-reactor' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api-reactor[/:api_reactor_id]',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\ApiReactor\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'access_filter' => [
@@ -162,6 +171,7 @@ return [
             \Api\V1\Rest\ApiClientInfo\ApiClientInfoResource::class => \Api\V1\Rest\ApiClientInfo\ApiClientInfoResourceFactory::class,
             \Api\V1\Rest\ApiLanding\ApiLandingResource::class => \Api\V1\Rest\ApiLanding\ApiLandingResourceFactory::class,
             \Api\V1\Rest\ApiSearch\ApiSearchResource::class => \Api\V1\Rest\ApiSearch\ApiSearchResourceFactory::class,
+            \Api\V1\Rest\ApiReactor\ApiReactorResource::class => \Api\V1\Rest\ApiReactor\ApiReactorResourceFactory::class,
         ],
     ],
     'view_manager' => [
@@ -199,6 +209,7 @@ return [
             9 => 'api.rest.api-client-info',
             10 => 'api.rest.api-landing',
             11 => 'api.rest.api-search',
+            12 => 'api.rest.api-reactor',
         ],
     ],
     'api-tools-rpc' => [
@@ -224,6 +235,7 @@ return [
             'Api\\V1\\Rest\\ApiClientInfo\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiLanding\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\ApiSearch\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\ApiReactor\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -286,6 +298,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Api\\V1\\Rest\\ApiReactor\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'Api\\V1\\Rpc\\Ping\\Controller' => [
@@ -333,6 +350,10 @@ return [
                 1 => 'application/json',
             ],
             'Api\\V1\\Rest\\ApiSearch\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
+            'Api\\V1\\Rest\\ApiReactor\\Controller' => [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
@@ -1435,6 +1456,28 @@ STATUS_CANCELED  = -10; // Отменен.',
             'collection_class' => \Api\V1\Rest\ApiSearch\ApiSearchCollection::class,
             'service_name' => 'ApiSearch',
         ],
+        'Api\\V1\\Rest\\ApiReactor\\Controller' => [
+            'listener' => \Api\V1\Rest\ApiReactor\ApiReactorResource::class,
+            'route_name' => 'api.rest.api-reactor',
+            'route_identifier_name' => 'api_reactor_id',
+            'collection_name' => 'api_reactor',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \Api\V1\Rest\ApiReactor\ApiReactorEntity::class,
+            'collection_class' => \Api\V1\Rest\ApiReactor\ApiReactorCollection::class,
+            'service_name' => 'ApiReactor',
+        ],
     ],
     'api-tools-hal' => [
         'metadata_map' => [
@@ -1568,6 +1611,18 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.api-search',
                 'route_identifier_name' => 'api_search_id',
+                'is_collection' => true,
+            ],
+            \Api\V1\Rest\ApiReactor\ApiReactorEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-reactor',
+                'route_identifier_name' => 'api_reactor_id',
+                'hydrator' => \Laminas\Hydrator\ArraySerializableHydrator::class,
+            ],
+            \Api\V1\Rest\ApiReactor\ApiReactorCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.api-reactor',
+                'route_identifier_name' => 'api_reactor_id',
                 'is_collection' => true,
             ],
         ],
