@@ -775,6 +775,7 @@ class ClientRepository extends EntityRepository{
         $queryBuilder->select('c')
                 ->from(Client::class, 'c')
                 ->where('c.salesOrder = 0')
+                ->andWhere('c.balanceDate is not null')
                 ;
         
         $data =$queryBuilder->getQuery()->getResult();
