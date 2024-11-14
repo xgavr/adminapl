@@ -18,6 +18,7 @@ use Company\Entity\Contract;
 use Laminas\Json\Encoder;
 use Cash\Entity\CashDoc;
 use Application\Entity\Oem;
+use Application\Entity\Client;
 
 /**
  * This service is responsible for adding/editing ptu.
@@ -427,6 +428,9 @@ class VtManager
         
         $this->cashManager->addUserVtTransaction($vt, $docStamp);
         $this->foldManager->vtFold($vt, $docStamp);
+
+        $this->entityManager->getRepository(Client::class)
+                ->updateClientRetailStat($vt->getOrder()->getContact()->getClient());
         return;
     }
 

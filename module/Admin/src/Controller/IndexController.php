@@ -31,6 +31,7 @@ use Company\Entity\BankAccount;
 use Admin\Form\AiSettings;
 use Admin\Form\IaSettings;
 use Application\Entity\Oem;
+use Application\Entity\Client;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -1409,4 +1410,15 @@ class IndexController extends AbstractActionController
            ['ok']
         );           
     }            
+    
+    public function restatClientAction()
+    {
+        
+        $this->entityManager->getRepository(Client::class)
+                ->restat();
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }    
 }

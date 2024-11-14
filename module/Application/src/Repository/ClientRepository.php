@@ -760,6 +760,29 @@ class ClientRepository extends EntityRepository{
         return;
     }
     
+    public function restat()
+    {
+        ini_set('memory_limit', '4098M');
+        set_time_limit(0);
+        
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+                ->from(Client::class, 'c')
+                ->where('c.salesOrder = 0')
+                ;
+        
+        $data =$queryBuilder->getQuery()->getResult();
+        
+        foreach ($data as $client){
+            $this->updateClientRetailStat($client);
+        }
+        
+        return;
+        
+    }
+    
     /**
      * Выборка для реактивации
      */
