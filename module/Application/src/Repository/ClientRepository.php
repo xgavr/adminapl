@@ -720,39 +720,21 @@ class ClientRepository extends EntityRepository{
         if (!empty($result['orderCount'])){
             
             $queryBuilder = $entityManager->createQueryBuilder();        
-            $queryBuilder->select('sum(abs(m.amount) - abs(m.baseAmount)) as income')
-                    ->from(Movement::class, 'm')
-                    ->join('m.order', 'o', 'WITH', 'm.docType = :docTypeOrder')
-                    ->setParameter('docTypeOrder', Movement::DOC_ORDER)
-                    ->join('o.contact', 'c')
-                    ->where('m.status = :status')
+            $queryBuilder->select('sum(r.amount - r.baseAmount) as income')
+                    ->from(Movement::class, 'r')
+                    ->where('r.status = :status')
                     ->setParameter('status', Movement::STATUS_ACTIVE)
-                    ->andWhere('c.client = :client')
+                    ->andWhere('r.client = :client')
                     ->setParameter('client', $client->getId())
+                    ->andWhere($orX)
                     ->setMaxResults(1)
                     ;
 
             $orderResult = $queryBuilder->getQuery()->getOneOrNullResult();
 
-            $queryBuilder = $entityManager->createQueryBuilder();
-            $queryBuilder->select('sum(abs(m.amount) - abs(m.baseAmount)) as income')
-                    ->from(Movement::class, 'm')
-                    ->join('m.vtDoc', 'v', 'WITH', 'm.docType = :docTypeVt')
-                    ->setParameter('docTypeVt', Movement::DOC_VT)
-                    ->join('v.order', 'o')
-                    ->join('o.contact', 'c')
-                    ->where('m.status = :status')
-                    ->setParameter('status', Movement::STATUS_ACTIVE)
-                    ->andWhere('c.client = :client')
-                    ->setParameter('client', $client->getId())
-                    ->setMaxResults(1)
-                    ;
-
-            $vtResult = $queryBuilder->getQuery()->getOneOrNullResult();
-
         }    
         
-        $client->setSalesGood((empty($orderResult['income']) ? 0:$orderResult['income']) - (empty($vtResult['income']) ? 0:$vtResult['income']));                
+        $client->setSalesGood(empty($orderResult['income']) ? 0:-$orderResult['income']);                
         $client->setSalesOrder(empty($result['orderCount']) ? 0:$result['orderCount']);
         $client->setSalesTotal(empty($result['total']) ? 0:$result['total']);
 
