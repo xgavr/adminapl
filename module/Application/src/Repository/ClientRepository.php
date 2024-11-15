@@ -711,7 +711,7 @@ class ClientRepository extends EntityRepository{
 
         $upd = [
             'sales_good' => empty($orderResult['income']) ? 0:-$orderResult['income'],
-            'sales_order' => empty($orderResult['orderCount']) ? -1:$orderResult['orderCount'],
+            'sales_order' => empty($orderResult['orderCount']) ? 0:$orderResult['orderCount'],
             'sales_total' => empty($orderResult['total']) ? 0:$orderResult['total'],
         ];
         
@@ -732,7 +732,7 @@ class ClientRepository extends EntityRepository{
         $queryBuilder->select('c')
                 ->from(Client::class, 'c')
                 ->where('c.salesOrder = 0')
-                ->andWhere('c.balanceDate is not null')
+//                ->andWhere('c.balanceDate is not null')
                 ;
         
         $data =$queryBuilder->getQuery()->getResult();
