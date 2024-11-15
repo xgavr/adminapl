@@ -404,6 +404,7 @@ class OrderManager
                         'user_id' => $order->getUserId(),
                         'oe' => $bid->getOe(),
                         'client_id' => $order->getContact()->getClient()->getId(),
+                        'parent_doc_id' => $order->getId(),
                     ];
 
                     $this->entityManager->getRepository(Movement::class)

@@ -281,6 +281,7 @@ class VtManager
                         'user_id' => $vt->getOrder()->getUserId(),
                         'oe' => $movement->getOe(),
                         'client_id' => $vt->getOrder()->getContact()->getClient()->getId(),
+                        'parent_doc_id' => $vt->getOrder()->getId(),
                     ];
 
                     $this->entityManager->getRepository(Movement::class)

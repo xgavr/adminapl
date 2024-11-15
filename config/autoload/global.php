@@ -111,7 +111,7 @@ return [
         ],
     ],
     'doctrine' => [        
-        // расширение функций DQL
+        // расширение функций DQL https://github.com/beberlei/DoctrineExtensions/blob/master/config/mysql.yml
         'configuration' => [
             'orm_default' => [
                 'string_functions' => [
@@ -121,6 +121,7 @@ return [
                     'ifnull' => 'DoctrineExtensions\Query\Mysql\IfNull',
                     'replace' => 'DoctrineExtensions\Query\Mysql\Replace',
                     'concat_ws' => 'DoctrineExtensions\Query\Mysql\ConcatWs',
+//                    'ifelse' => 'DoctrineExtensions\Query\Mysql\IfElse',  
                 ],
                 'numeric_functions' => [
                     'floor' => 'DoctrineExtensions\Query\Mysql\Floor',

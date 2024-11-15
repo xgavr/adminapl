@@ -696,35 +696,36 @@ class ClientRepository extends EntityRepository{
     public function updateClientRetailStat($client, $flush = true)
     {
         $entityManager = $this->getEntityManager();
-        $queryBuilder = $entityManager->createQueryBuilder();
+//        $queryBuilder = $entityManager->createQueryBuilder();
+//        
+//        $orX = $queryBuilder->expr()->orX();
+//        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
+//        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
+//
+//        $queryBuilder->select('sum(r.amount) as total')
+//                ->addSelect('sum(case when r.docType = :docTypeOrder then 1 else 0 end) as orderCount')
+//                ->setParameter('docTypeOrder', Movement::DOC_ORDER)
+//                ->from(Retail::class, 'r')
+//                ->join('r.contact', 'c')
+//                ->where('r.status = :status')
+//                ->setParameter('status', Retail::STATUS_ACTIVE)
+//                ->andWhere('c.client = :client')
+//                ->setParameter('client', $client->getId())
+//                ->andWhere($orX)
+//                ->setMaxResults(1)
+//                ;
+//        
+//        $result = $queryBuilder->getQuery()->getOneOrNullResult();
         
-        $orX = $queryBuilder->expr()->orX();
-        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
-        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
-
-        $queryBuilder->select('sum(r.amount) as total')
-                ->addSelect('sum(case when r.docType = :docTypeOrder then 1 else 0 end) as orderCount')
-                ->setParameter('docTypeOrder', Movement::DOC_ORDER)
-                ->from(Retail::class, 'r')
-                ->join('r.contact', 'c')
-                ->where('r.status = :status')
-                ->setParameter('status', Retail::STATUS_ACTIVE)
-                ->andWhere('c.client = :client')
-                ->setParameter('client', $client->getId())
-                ->andWhere($orX)
-                ->setMaxResults(1)
-                ;
-        
-        $result = $queryBuilder->getQuery()->getOneOrNullResult();
-        
-        if (!empty($result['orderCount'])){
+//        if (!empty($result['orderCount'])){
             
             $queryBuilder = $entityManager->createQueryBuilder();        
-            $queryBuilder->select('sum(r.amount - r.baseAmount) as income')
-                    ->from(Movement::class, 'r')
-                    ->where('r.status = :status')
+            $queryBuilder->select('sum(m.amount - m.baseAmount) as income, sum(-m.amount) as total')
+                    ->addSelect('count(distinct m.parentDocId) as orderCount')
+                    ->from(Movement::class, 'm')
+                    ->where('m.status = :status')
                     ->setParameter('status', Movement::STATUS_ACTIVE)
-                    ->andWhere('r.client = :client')
+                    ->andWhere('m.client = :client')
                     ->setParameter('client', $client->getId())
 //                    ->andWhere($orX)
                     ->setMaxResults(1)
@@ -732,11 +733,11 @@ class ClientRepository extends EntityRepository{
 
             $orderResult = $queryBuilder->getQuery()->getOneOrNullResult();
 
-        }    
+//        }    
         
         $client->setSalesGood(empty($orderResult['income']) ? 0:-$orderResult['income']);                
-        $client->setSalesOrder(empty($result['orderCount']) ? -1:$result['orderCount']);
-        $client->setSalesTotal(empty($result['total']) ? 0:$result['total']);
+        $client->setSalesOrder(empty($orderResult['orderCount']) ? -1:$orderResult['orderCount']);
+        $client->setSalesTotal(empty($orderResult['total']) ? 0:$orderResult['total']);
 
         $entityManager->persist($client);
         if ($flush){

@@ -136,6 +136,11 @@ class Movement {
      */
     protected $oe;
     
+    /** 
+     * @ORM\Column(name="parent_doc_id")  
+     */
+    protected $parentDocId;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="movements") 
      * @ORM\JoinColumn(name="good_id", referencedColumnName="id")
@@ -380,6 +385,15 @@ class Movement {
         return $this;
     }
     
+    public function getParentDocId() {
+        return $this->parentDocId;
+    }
+
+    public function setParentDocId($parentDocId) {
+        $this->parentDocId = $parentDocId;
+        return $this;
+    }
+
     /**
      * Returns possible doc as array.
      * @return array
