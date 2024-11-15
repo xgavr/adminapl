@@ -726,7 +726,7 @@ class ClientRepository extends EntityRepository{
                     ->setParameter('status', Movement::STATUS_ACTIVE)
                     ->andWhere('r.client = :client')
                     ->setParameter('client', $client->getId())
-                    ->andWhere($orX)
+//                    ->andWhere($orX)
                     ->setMaxResults(1)
                     ;
 
