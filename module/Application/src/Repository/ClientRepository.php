@@ -735,7 +735,7 @@ class ClientRepository extends EntityRepository{
         }    
         
         $client->setSalesGood(empty($orderResult['income']) ? 0:-$orderResult['income']);                
-        $client->setSalesOrder(empty($result['orderCount']) ? 0:$result['orderCount']);
+        $client->setSalesOrder(empty($result['orderCount']) ? -1:$result['orderCount']);
         $client->setSalesTotal(empty($result['total']) ? 0:$result['total']);
 
         $entityManager->persist($client);
