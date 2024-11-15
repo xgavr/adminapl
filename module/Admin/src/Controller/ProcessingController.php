@@ -1082,6 +1082,25 @@ class ProcessingController extends AbstractActionController
         );        
     }
     
+    /**
+     * 
+     * Обновление статистики клиентов
+     */
+    public function updateClientStatAction()
+    {
+        
+        $settings = $this->adminManager->getPriceSettings();
+
+        if ($settings['parse_oem'] == 1){
+            $this->entityManager->getRepository(\Application\Entity\Client::class)
+                    ->restat();
+        }    
+                
+        return new JsonModel(
+            ['ok']
+        );        
+    }
+    
     
     /**
      * Обновление наименований производителей
