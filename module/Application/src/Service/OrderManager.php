@@ -403,6 +403,7 @@ class OrderManager
                         'doc_stamp' => $docStamp,
                         'user_id' => $order->getUserId(),
                         'oe' => $bid->getOe(),
+                        'client_id' => $order->getContact()->getClient()->getId(),
                     ];
 
                     $this->entityManager->getRepository(Movement::class)

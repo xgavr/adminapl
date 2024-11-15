@@ -19,6 +19,7 @@ use Stock\Entity\Ptu;
 use Stock\Entity\Ot;
 use Application\Entity\Order;
 use User\Entity\User;
+use Application\Entity\Client;
 
 
 /**
@@ -188,6 +189,12 @@ class Movement {
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;    
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Client", inversedBy="movements") 
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     */
+    private $client;    
 
     public function __construct() {
     }
@@ -721,5 +728,24 @@ class Movement {
         $this->user = $user;
         return $this;
     }
+
+    /**
+     * 
+     * @return Client
+     */
+    public function getClient() {
+        return $this->client;
+    }
+
+    /**
+     * 
+     * @param Client $client
+     * @return $this
+     */
+    public function setClient($client) {
+        $this->client = $client;
+        return $this;
+    }
+
 
 }

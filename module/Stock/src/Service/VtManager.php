@@ -280,6 +280,7 @@ class VtManager
                         'doc_stamp' => $docStamp - 60*60*12, //-12 часов
                         'user_id' => $vt->getOrder()->getUserId(),
                         'oe' => $movement->getOe(),
+                        'client_id' => $vt->getOrder()->getContact()->getClient()->getId(),
                     ];
 
                     $this->entityManager->getRepository(Movement::class)
