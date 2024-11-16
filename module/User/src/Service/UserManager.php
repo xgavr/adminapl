@@ -353,10 +353,12 @@ class UserManager
      */
     public function checkUserExists($emailStr) {
         
-        $user = $this->entityManager->getRepository(User::class)
-                ->findOneByEmail($emailStr);
-//        $email = $this->entityManager->getRepository(Email::class)
-//                ->findOneBy(['name' => $emailStr]);
+//        $user = $this->entityManager->getRepository(User::class)
+//                ->findOneByEmail($emailStr);
+        $email = $this->entityManager->getRepository(Email::class)
+                ->findOneBy(['name' => $emailStr]);
+        
+        $user = $email->getContact()->getUser();
         
         return $user !== null;
     }
