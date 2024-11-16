@@ -357,8 +357,10 @@ class UserManager
 //                ->findOneByEmail($emailStr);
         $email = $this->entityManager->getRepository(Email::class)
                 ->findOneBy(['name' => $emailStr]);
-        
-        $user = $email->getContact()->getUser();
+        $user = null;
+        if ($email){
+            $user = $email->getContact()->getUser();
+        }    
         
         return $user !== null;
     }
