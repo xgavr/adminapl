@@ -124,7 +124,7 @@ class JobManager
           313 => ['command' => 'comments',                      'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление комментариев из АПЛ'],
           314 => ['command' => 'update-apl-cash',               'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление платежей из АПЛ'],
           315 => ['command' => 'update-apl-order',              'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление заказов из АПЛ'],
-          316 => ['command' => 'update-apl-users',              'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Загрузка пользователей из АПЛ'],
+          316 => ['command' => 'update-apl-users',              'shedule' => self::CRON_EVERY_MIN_30,   'description' => 'Загрузка пользователей из АПЛ'],
           317 => ['command' => 'update-good-names',             'shedule' => '44 * * * *',              'description' => 'Обновление наименований товаров в Апл'],
           318 => ['command' => 'update-good-prices',            'shedule' => '29,44 * * * *',           'description' => 'Обновление цен товаров в Апл'],
           319 => ['command' => 'update-rawprices',              'shedule' => '14,29,44,59 * * * *',     'description' => 'Обновление строк прайсов в АПЛ'],
