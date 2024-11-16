@@ -720,6 +720,10 @@ class ClientRepository extends EntityRepository{
         return;
     }
     
+    /**
+     * Пересчет статистики по клиентам
+     * @return null
+     */
     public function restat()
     {
         ini_set('memory_limit', '4098M');

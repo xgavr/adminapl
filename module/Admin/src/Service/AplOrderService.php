@@ -128,6 +128,7 @@ class AplOrderService {
             'email' => (empty($data['email'])) ? null:$data['email'],
             'phone' => (empty($data['phone'])) ? null:$data['phone'],
             'name' => (empty($data['name'])) ? null:$data['name'],
+            'pricecol' => (empty($data['clientInfo']['pricecol'])) ? null:$data['clientInfo']['pricecol'],
             'publish' => 1,
         ], $debug);
         
@@ -457,7 +458,7 @@ class AplOrderService {
 //        var_dump($data); exit;
         
         if (!empty($data['pricecol'])){
-            $this->updateClientPricecol($client, $data['pricecol']);
+            //$this->updateClientPricecol($client, $data['pricecol']);
         }
         
         $office = $this->aplDocService->officeFromAplId($data['publish']);
