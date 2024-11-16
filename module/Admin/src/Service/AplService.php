@@ -610,9 +610,11 @@ class AplService {
                     'status' => ($row['publish'] == 1 ? 1:2),
                     'roles' => $roles,
                     'aplId' => $row['id'],
-                    'birthday' => date_format(date_create($row['dob']), 'Y-m-d'),
                     'office' => $row['parent'],
-                ];    
+                ];  
+                if (!empty($row['dob'])){
+                   $user_data['birthday'] = date_format(date_create($row['dob']), 'Y-m-d'); 
+                }
 
                 $user = $this->userManager->addUser($user_data);                        
             }
