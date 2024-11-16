@@ -807,6 +807,10 @@ class AplService {
             'aplId' => $row['id'],
             'pricecol' => $digitsFilter->filter(empty($row['pricecol']) ? 0:$row['pricecol']),
         ];    
+        
+        if (!empty($row['name']) && !in_array(mb_strtolower($row['name']), ['nan', 'нан'])){
+            $client_data['name'] = $row['name'];
+        }
 
         if ($client){                    
             $this->clientManager->updClient($client, $client_data);                    
