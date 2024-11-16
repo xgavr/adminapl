@@ -123,11 +123,17 @@ class AplOrderService {
         if ($debug){
 //            var_dump($data);
         }
+        
+        $name = (empty($data['name'])) ? null:$data['name'];
+        if (empty($name)){
+            $name = (empty($data['clientInfo']['name'])) ? null:$data['clientInfo']['name'];
+        }
+        
         $client = $this->aplService->getClient([
             'id' => $data['client'],
             'email' => (empty($data['email'])) ? null:$data['email'],
             'phone' => (empty($data['phone'])) ? null:$data['phone'],
-            'name' => (empty($data['name'])) ? null:$data['name'],
+            'name' => $name,
             'pricecol' => (empty($data['clientInfo']['pricecol'])) ? null:$data['clientInfo']['pricecol'],
             'publish' => 1,
         ], $debug);
