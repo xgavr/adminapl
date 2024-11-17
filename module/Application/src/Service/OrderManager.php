@@ -815,17 +815,22 @@ class OrderManager
     public function addOrderPhoneEmail($order, $data, $flush = true)
     {
         $phoneFilter = new PhoneFilter();        
-//        var_dump($data['email']);
+
         if (!empty($data['phone'])){
-            $phone = $this->entityManager->getRepository(Phone::class)
-                    ->findOneBy(['name' => $phoneFilter->filter($data['phone'])]);
-            
-            if ($phone){
-                $orderPhone = new OrderPhone();
-                $orderPhone->setOrder($order);
-                $orderPhone->setPhone($phone);
-                $orderPhone->setKind(OrderPhone::KIND_MAIN);
-                $this->entityManager->persist($orderPhone);
+
+            $phones = explode(',', $data['phone']);
+
+            foreach ($phones as $k => $phoneStr){
+                $phone = $this->entityManager->getRepository(Phone::class)
+                        ->findOneBy(['name' => $phoneFilter->filter($phoneStr)]);
+
+                if ($phone){
+                    $orderPhone = new OrderPhone();
+                    $orderPhone->setOrder($order);
+                    $orderPhone->setPhone($phone);
+                    $orderPhone->setKind(($k === 0) ? OrderPhone::KIND_MAIN:OrderPhone::KIND_OTHER);
+                    $this->entityManager->persist($orderPhone);
+                }    
             }    
         }    
         
