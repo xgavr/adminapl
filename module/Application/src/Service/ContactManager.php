@@ -197,6 +197,11 @@ class ContactManager
             throw new \Exception('Неверный тип родительской сущности');
         }
 
+        if (!empty($data['phones'])){
+            foreach ($data['phones'] as $phoneStr){
+                $this->addPhone($contact, ['phone' => $phoneStr]);                
+            }
+        }
         if (isset($data['phone'])){
             $this->addPhone($contact, ['phone' => $data['phone']]);
         }    
@@ -234,6 +239,11 @@ class ContactManager
             $contact->setDescription($data['description']);
         }    
         
+        if (!empty($data['phones'])){
+            foreach ($data['phones'] as $phoneStr){
+                $this->addPhone($contact, ['phone' => $phoneStr]);                
+            }
+        }
         if (isset($data['phone'])){
             $this->addPhone($contact, ['phone' => $data['phone']]);
         }    

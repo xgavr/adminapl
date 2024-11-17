@@ -766,7 +766,7 @@ class AplService {
      */
     public function getClient($row, $debug = false)
     {
-        $contact = $client = null;
+        $contact = $client = $phones = null;
         if ($debug){
 //            var_dump('apl client: '.$row);            
         }
@@ -774,15 +774,21 @@ class AplService {
         $phoneFilter = new PhoneFilter();
         
         if (!$client && !empty($row['phone'])){
-            $phone = $this->entityManager->getRepository(Phone::class)
-                    ->findOneByName($phoneFilter->filter($row['phone']));
+            
+            $phones = explode(',', $row['phone']);
 
-            if ($phone){
-               $contact = $phone->getContact();
-               if ($contact){
-                   $client = $contact->getClient();
-               }
-            }
+            foreach ($phones as $phoneStr){
+                $phone = $this->entityManager->getRepository(Phone::class)
+                        ->findOneByName($phoneFilter->filter($phoneStr));
+
+                if ($phone){
+                   $contact = $phone->getContact();
+                   if ($contact){
+                       $client = $contact->getClient();
+                       break;
+                   }
+                }
+            }    
         }
 
         if (!$client && !empty($row['email'])){
@@ -832,6 +838,9 @@ class AplService {
                 if (!empty($row['phone'])){
                    $contact_data['phone'] = $row['phone']; 
                 }
+                if (is_array($phones)){
+                   $contact_data['phones'] = $phones; 
+                }
 
                 $this->contactManager->updateContact($contact, $contact_data, $client);
             } else {
@@ -842,6 +851,9 @@ class AplService {
                 ];
                 if (!empty($row['phone'])){
                    $contact_data['phone'] = $row['phone']; 
+                }
+                if (is_array($phones)){
+                   $contact_data['phones'] = $phones; 
                 }
 
                 $contact = $this->contactManager->addNewContact($client, $contact_data);                        

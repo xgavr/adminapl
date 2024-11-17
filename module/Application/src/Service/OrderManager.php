@@ -820,7 +820,6 @@ class OrderManager
 
             $phones = explode(',', $data['phone']);
 
-            var_dump($phones); 
             foreach ($phones as $k => $phoneStr){
                 $phone = $this->entityManager->getRepository(Phone::class)
                         ->findOneBy(['name' => $phoneFilter->filter($phoneStr)]);
