@@ -845,7 +845,6 @@ class OrderManager
         if (!empty($data['email'])){
             $email = $this->entityManager->getRepository(Email::class)
                     ->findOneBy(['name' => $data['email']]);   
-            var_dump($email->getId());
             if ($email){
                 $orderEmail = new OrderEmail();
                 $orderEmail->setOrder($order);

@@ -41,7 +41,7 @@ final class Version20241117085336 extends AbstractMigration
         $table->addColumn('email_id', 'integer', ['notnull'=>true, 'comment' => 'Email']);
         $table->addColumn('comment', 'string', ['notnull'=>false, 'length' => 120, 'comment' => 'Комментарий']);
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['order_id', 'email_id'], 'order_phone_uindx');
+        $table->addUniqueIndex(['order_id', 'email_id'], 'order_email_uindx');
         $table->addForeignKeyConstraint('orders', ['order_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'order_email_order_id_order_id_fk');
         $table->addForeignKeyConstraint('email', ['email_id'], ['id'], 

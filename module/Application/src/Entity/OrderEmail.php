@@ -44,7 +44,7 @@ class OrderEmail {
     protected $order;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Phone", inversedBy="orders") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Email", inversedBy="orders") 
      * @ORM\JoinColumn(name="email_id", referencedColumnName="id")
      */
     protected $email;
