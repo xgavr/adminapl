@@ -473,7 +473,9 @@ class Contact {
     public function setOffice($office) 
     {
         $this->office = $office;
-        $office->addContact($this);
+        if ($office){
+            $office->addContact($this);
+        }    
     }     
     
     /**
