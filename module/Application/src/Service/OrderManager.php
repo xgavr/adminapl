@@ -815,7 +815,7 @@ class OrderManager
     public function addOrderPhoneEmail($order, $data, $flush = true)
     {
         $phoneFilter = new PhoneFilter();        
-        var_dump($data['email']);
+//        var_dump($data['email']);
         if (!empty($data['phone'])){
             $phone = $this->entityManager->getRepository(Phone::class)
                     ->findOneBy(['name' => $phoneFilter->filter($data['phone'])]);
@@ -844,7 +844,8 @@ class OrderManager
         
         if (!empty($data['email'])){
             $email = $this->entityManager->getRepository(Email::class)
-                    ->findOneBy(['name' => $data['email']]);            
+                    ->findOneBy(['name' => $data['email']]);   
+            var_dump($email->getId());
             if ($email){
                 $orderEmail = new OrderEmail();
                 $orderEmail->setOrder($order);
