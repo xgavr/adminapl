@@ -201,8 +201,7 @@ class ContactManager
             foreach ($data['phones'] as $phoneStr){
                 $this->addPhone($contact, ['phone' => $phoneStr]);                
             }
-        }
-        if (isset($data['phone'])){
+        } elseif (isset($data['phone'])){
             $this->addPhone($contact, ['phone' => $data['phone']]);
         }    
         
