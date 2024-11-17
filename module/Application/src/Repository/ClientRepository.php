@@ -316,6 +316,7 @@ class ClientRepository extends EntityRepository{
 
         $queryBuilder->select('c.aplId, count(c.id) as countApl')
             ->from(Client::class, 'c')
+            ->andWhere('c.aplId > 0')    
             ->groupBy('c.aplId')
             ->having('countApl > 1')    
                 ;

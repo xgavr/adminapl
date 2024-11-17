@@ -318,8 +318,16 @@ class ContactManager
         $this->entityManager->flush();                
     }
     
+    /**
+     * 
+     * @param Phone $phone
+     */
     public function removePhone($phone)
     {
+        foreach ($phone->getOrders() as $orderPhone){
+            $this->entityManager->remove($orderPhone);
+        }
+        
         $this->entityManager->remove($phone);
         $this->entityManager->flush();
         
@@ -333,8 +341,16 @@ class ContactManager
         $this->entityManager->flush();                
     }
     
+    /**
+     * 
+     * @param Email $email
+     */
     public function removeEmail($email)
     {
+        foreach ($email->getOrders() as $orderEmail){
+            $this->entityManager->remove($orderEmail);
+        }
+        
         $this->entityManager->remove($email);
         $this->entityManager->flush();
         

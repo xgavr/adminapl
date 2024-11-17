@@ -15,6 +15,8 @@ use User\Entity\User;
 use Application\Entity\Client;
 use Application\Entity\Supplier;
 use Company\Entity\Office;
+use Doctrine\Common\Collections\ArrayCollection;
+use Application\Entity\OrderPhone;
 
 /**
  * Description of Phone
@@ -50,7 +52,17 @@ class Phone {
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="id")
      */
     protected $contact;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\OrderPhone", mappedBy="phone")
+    * @ORM\JoinColumn(name="id", referencedColumnName="phone_id")
+     */
+    private $orders;    
 
+    public function __construct() 
+    {
+        $this->orders = new ArrayCollection();
+    }    
     
     public function getId() 
     {
@@ -131,6 +143,23 @@ class Phone {
         $this->contact = $contact;
         $contact->addPhone($this);
     }     
+    
+    /**
+     * 
+     * @return OrderPhone
+     */
+    public function getOrders() {
+        return $this->orders;
+    }
+
+    /**
+     * 
+     * @param OrderPhone $orderPhone
+     */
+    public function addOrder($orderPhone)
+    {
+        $this->orders[] = $orderPhone;
+    }
     
     /**
      * 

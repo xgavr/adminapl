@@ -22,6 +22,8 @@ use Laminas\Json\Decoder;
 use Company\Entity\Legal;
 use User\Entity\User;
 use Company\Entity\Contract;
+use Application\Entity\OrderPhone;
+use Application\Entity\OrderEmail;
 
 
 /**
@@ -79,6 +81,11 @@ class Order {
      * @ORM\Column(name="apl_id")   
      */
     protected $aplId;
+
+    /**
+     * @ORM\Column(name="client_name")   
+     */
+    protected $clientName;
 
     /**
      * @ORM\Column(name="geo")   
@@ -326,6 +333,18 @@ class Order {
      */
     private $retails;
 
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\OrderPhone", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
+     */
+    private $phones;
+
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\OrderEmail", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
+     */
+    private $emails;
+
     private $ciphering = "AES-128-CTR"; //Метод шифрования
     
     private $iv = "1234567891011121"; // Non-NULL Initialization Vector for encryption
@@ -344,6 +363,8 @@ class Order {
         $this->qrcodes = new ArrayCollection();
         $this->cashDocs = new ArrayCollection();
         $this->retails = new ArrayCollection();
+        $this->phones = new ArrayCollection();
+        $this->emails = new ArrayCollection();
     }
     
     protected function _encrypt($unencryptedText, $passphrase)
@@ -560,6 +581,16 @@ class Order {
         $this->geo = $geo;
     }     
     
+    public function getClientName() {
+        return $this->clientName;
+    }
+
+    public function setClientName($clientName) {
+        $this->clientName = $clientName;
+        return $this;
+    }
+
+       
     public function getInvoiceInfo() 
     {
         return $this->invoiceInfo;
@@ -1790,6 +1821,33 @@ class Order {
         return $this->retails;
     }
     
+    public function getPhones() {
+        return $this->phones;
+    }
+
+    /**
+     * 
+     * @param OrderPhone $orderPhone
+     */
+    public function addPhone($orderPhone)
+    {
+        $this->phones[] = $orderPhone;
+    }
+    
+    public function getEmails() {
+        return $this->emails;
+    }
+
+    /**
+     * 
+     * @param OrderEmail $orderEmail
+     */
+    public function addEmail($orderEmail)
+    {
+        $this->emails[] = $orderEmail;
+    }
+
+
     /**
      * Массив для формы
      * @return array 

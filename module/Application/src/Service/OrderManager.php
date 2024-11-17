@@ -45,6 +45,8 @@ use Application\Entity\Comment;
 use User\Filter\PhoneFilter;
 use Stock\Entity\Vt;
 use Cash\Entity\CashDoc;
+use Application\Entity\OrderPhone;
+use Application\Entity\OrderEmail;
 
 /**
  * Description of OrderService
@@ -792,6 +794,72 @@ class OrderManager
     }
 
     /**
+     * Удалить связанные телефоны и почты
+     * @param Order $order
+     */
+    public function removeOrderPhonesEmails($order)
+    {
+        $this->entityManager->getConnection()
+                ->delete('order_phone', ['order_id' => $order->getId()]);
+        
+        $this->entityManager->getConnection()
+                ->delete('order_email', ['order_id' => $order->getId()]);
+    }
+    
+    /**
+     * Добавить связанные телефоны и почту
+     * @param Order $order
+     * @param array $data
+     * $param bool $flush
+     */
+    public function addOrderPhoneEmail($order, $data, $flush = true)
+    {
+        $phoneFilter = new PhoneFilter();        
+        
+        if (!empty($data['phone'])){
+            $phone = $this->entityManager->getRepository(Phone::class)
+                    ->findOneBy(['name' => $phoneFilter->filter($data['phone'])]);
+            
+            if ($phone){
+                $orderPhone = new OrderPhone();
+                $orderPhone->setOrder($order);
+                $orderPhone->setPhone($phone);
+                $orderPhone->setKind(OrderPhone::KIND_MAIN);
+                $this->entityManager->persist($orderPhone);
+            }    
+        }    
+        
+        if (!empty($data['phone2'])){
+            $phone2 = $this->entityManager->getRepository(Phone::class)
+                    ->findOneBy(['name' => $phoneFilter->filter($data['phone2'])]);
+            
+            if ($phone2){
+                $orderPhone = new OrderPhone();
+                $orderPhone->setOrder($order);
+                $orderPhone->setPhone($phone2);
+                $orderPhone->setKind(OrderPhone::KIND_OTHER);
+                $this->entityManager->persist($orderPhone);
+            }    
+        }    
+        
+        if (!empty($data['email'])){
+            $email = $this->entityManager->getRepository(Email::class)
+                    ->findOneBy(['name' => $phoneFilter->filter($data['email'])]);
+            
+            if ($email){
+                $orderEmail = new OrderEmail();
+                $orderEmail->setOrder($order);
+                $orderEmail->setEmail($email);
+                $this->entityManager->persist($orderEmail);
+            }    
+        }    
+        
+        if ($flush){
+            $this->entityManager->flush();
+        }    
+    }
+    
+    /**
      * Добавить выборы
      * @param Order $order
      * @param array $data
@@ -899,6 +967,7 @@ class OrderManager
             $order->setInfoShipping(!empty($data['infoShipping']) ? $data['infoShipping'] : null);
             $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
             $order->setStatusEx(empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx']);
+            $order->setClientName(!empty($data['name']) ? $data['name'] : null);
 
             $order->setOffice($office);
             if (empty($data['company'])){
@@ -1013,6 +1082,8 @@ class OrderManager
             // Добавляем сущность в менеджер сущностей.
             $this->entityManager->persist($order);
 
+            $this->addOrderPhoneEmail($order, $data, false);
+            
             // Применяем изменения к базе данных.
             $this->entityManager->flush();
             
@@ -1068,6 +1139,7 @@ class OrderManager
                 'date_created' => date('Y-m-d H:i:s'),
                 'status_account' => Order::STATUS_ACCOUNT_NO,
                 'status_ex' => empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx'],
+                'client_name' => (!empty($data['name']) ? $data['name'] : null),
             ];
 
             $company = null;
@@ -1173,6 +1245,8 @@ class OrderManager
                     ->insert('orders', $upd);
             $order = $this->entityManager->getRepository(Order::class)
                     ->findOneBy([], ['id'=>'DESC'],1,0);
+            
+            $this->addOrderPhoneEmail($order, $data);
 
             return $order;
         }
@@ -1399,6 +1473,7 @@ class OrderManager
             $order->setInfoShipping(!empty($data['infoShipping']) ? $data['infoShipping'] : null);
             $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
             $order->setStatusEx(empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx']);
+            $order->setClientName(!empty($data['name']) ? $data['name'] : null);
 
             if ($order->getOffice()->getId() != $data['office']){
                 $office = $this->entityManager->getRepository(Office::class)
@@ -1497,6 +1572,10 @@ class OrderManager
             }
 
             $this->entityManager->persist($order);
+            
+            $this->removeOrderPhonesEmails($order);
+            $this->addOrderPhoneEmail($order, $data, false);
+            
             // Применяем изменения к базе данных.
             $this->entityManager->flush();
         }    
@@ -1544,6 +1623,7 @@ class OrderManager
                 'user_id' => null,
                 'status_account' => Order::STATUS_ACCOUNT_NO,
                 'status_ex' => empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx'],
+                'client_name' => (!empty($data['name']) ? $data['name'] : null),
             ];
 
             if ($order->getOffice()->getId() != $data['office']){
@@ -1645,6 +1725,9 @@ class OrderManager
             $this->entityManager->getConnection()
                     ->update('orders', $upd, ['id' => $order->getId()]);
 
+            $this->removeOrderPhonesEmails($order);
+            $this->addOrderPhoneEmail($order, $data);
+            
             return $order;
         }
         
@@ -1960,6 +2043,7 @@ class OrderManager
         if ($order->getDateOper() > $this->allowDate){
             $this->removeOrderBids($order);
             $this->removeOrderSelections($order);
+            $this->removeOrderPhonesEmails($order);
             $this->entityManager->remove($order);
             $this->entityManager->flush();
         }    

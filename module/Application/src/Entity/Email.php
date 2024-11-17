@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Application\Entity\Contact;
 use Laminas\Filter\Encrypt;
 use Laminas\Filter\Decrypt;
+use Doctrine\Common\Collections\ArrayCollection;
+use Application\Entity\OrderEmail;
 
 /**
  * Description of Email
@@ -55,7 +57,16 @@ class Email {
      */
     protected $contact;
 
-    
+    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\OrderEmail", mappedBy="email")
+    * @ORM\JoinColumn(name="id", referencedColumnName="email_id")
+     */
+    private $orders;    
+
+    public function __construct() 
+    {
+        $this->orders = new ArrayCollection();
+    }        
     
     public function getId() 
     {
@@ -156,6 +167,23 @@ class Email {
         $contact->addEmail($this);
     }     
           
+    /**
+     * 
+     * @return OrderEmail
+     */
+    public function getOrders() {
+        return $this->orders;
+    }
+
+    /**
+     * 
+     * @param OrderEmail $orderEmail
+     */
+    public function addOrder($orderEmail)
+    {
+        $this->orders[] = $orderEmail;
+    }
+    
     /**
      * Возвращает тип адреса
      * @return int
