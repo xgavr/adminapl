@@ -844,7 +844,7 @@ class OrderManager
         
         if (!empty($data['email'])){
             $email = $this->entityManager->getRepository(Email::class)
-                    ->findOneBy(['name' => $phoneFilter->filter($data['email'])]);
+                    ->findOneBy(['name' => $data['email']]);
             
             if ($email){
                 $orderEmail = new OrderEmail();
