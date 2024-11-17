@@ -560,6 +560,10 @@ class AplOrderService {
             'user' => $userId,
             'office' => $office->getId(),
             'statusEx' => Order::STATUS_EX_OK,
+            'phone' => (empty($data['phone'])) ? null:$data['phone'],
+            'phon2' => (empty($data['phone2'])) ? null:$data['phone2'],
+            'email' => (empty($data['email'])) ? null:$data['email'],
+            'name' => (empty($data['name'])) ? null:$data['name'],
         ];
         
         $order = $this->entityManager->getRepository(Order::class)
