@@ -847,7 +847,7 @@ class AplOrderService {
      */
     public function unloadOrderPhone($order)
     {
-        $url = $this->aplApi().'unload-order?api='.$this->aplApiKey();
+        $url = $this->aplApi().'unload-order-info?api='.$this->aplApiKey();
         
         $post = [
             'id' => $order->getAplId(),
