@@ -870,7 +870,7 @@ class AplOrderService {
         }    
 
         if (is_array($result)){
-//            var_dump($result); exit;
+            var_dump($result); exit;
             $this->orderManager->removeOrderPhonesEmails($order);
             $this->orderManager->addOrderPhoneEmail($order, [
                 'phone' => empty($result['phone']) ? null:$result['phone'],
