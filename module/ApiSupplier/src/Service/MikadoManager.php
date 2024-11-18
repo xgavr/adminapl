@@ -287,7 +287,7 @@ class MikadoManager {
         if (is_object($xml)){
             
             $data = json_decode(json_encode($xml), TRUE);
-            
+            var_dump($data); exit;
             foreach ($data['Deliveries'] as $deliveries){
                 foreach ($deliveries as $delivery){
                     $ptu = $this->entityManager->getRepository(Ptu::class)
