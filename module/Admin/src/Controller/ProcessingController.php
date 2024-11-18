@@ -1664,6 +1664,25 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * Обновление телефонов заказов из апл
+     * 
+     * @return JsonModel
+     */
+    public function updateOrdersPhonesAction()
+    {
+        
+        $settings = $this->adminManager->getAplExchangeSettings();
+
+        if ($settings['order'] == 1){
+            $this->aplOrderService->updateOrderPhones();
+        }    
+        
+        return new JsonModel([
+            ['ok']
+        ]);
+    }    
+    
+    /**
      * Проверка выгрузки заказов из апл
      * 
      * @return JsonModel

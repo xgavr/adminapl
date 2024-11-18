@@ -136,6 +136,7 @@ class JobManager
           326 => ['command' => 'update-apl-order',              'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление заказов из АПЛ'],
 //          327 => ['command' => 'update-apl-ptu',                'shedule' => '25,55 * * * *',           'description' => 'Обновление поступлений из АПЛ'],
           327 => ['command' => 'update-apl-ptu',                'shedule' => self::CRON_EVERY_MIN_15,           'description' => 'Обновление поступлений из АПЛ'],
+          328 => ['command' => 'update-orders-phones',          'shedule' => self::CRON_EVERY_MIN_30,   'description' => 'Обновление телефонов в заказах из АПЛ'],
         ];
     }
     
