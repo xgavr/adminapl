@@ -320,8 +320,8 @@ class MikadoManager {
             
             $data = json_decode(json_encode($xml), TRUE);
 //            var_dump($data); exit;
-            foreach ($data['Deliveries'] as $deliveries){
-                if (count($deliveries) === 1){
+            foreach ($data['Deliveries'] as $deliveries){                
+                if (isset($deliveries['SumRUR'])){
                     $this->cDelivery($supplierApi, $deliveries);
                 } else {
                     foreach ($deliveries as $delivery){
