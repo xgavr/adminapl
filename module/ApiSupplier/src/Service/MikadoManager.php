@@ -290,22 +290,23 @@ class MikadoManager {
 //            var_dump($data); exit;
             foreach ($data['Deliveries'] as $deliveries){
                 foreach ($deliveries as $delivery){
-                    $ptu = $this->entityManager->getRepository(Ptu::class)
-                        ->findOneBy([
-                            'supplier' => $supplierApi->getSupplier()->getId(),
-                            'docNo' => $delivery['DelNumber'], 
-                            'docDate' => date('Y-m-d', strtotime($delivery['DelDate'])),
-                        ]);
-                    
-                    if ($ptu){
-                        continue; //уже есть
-                    }
-                    
-                    $ptuXml = new \SimpleXMLElement($this->deliveryInfo($supplierApi, $delivery['DelNumber']));
-                    if (is_object($ptuXml)){
-                        
-                        $this->deliveryToPtu($supplierApi->getSupplier(), json_decode(json_encode($ptuXml), TRUE));
-                        
+                    if ($delivery['SumRUR'] > 0){
+                        $ptu = $this->entityManager->getRepository(Ptu::class)
+                            ->findOneBy([
+                                'supplier' => $supplierApi->getSupplier()->getId(),
+                                'docNo' => $delivery['DelNumber'], 
+                                'docDate' => date('Y-m-d', strtotime($delivery['DelDate'])),
+                            ]);
+
+                        if ($ptu){
+                            continue; //уже есть
+                        }
+
+                        $ptuXml = new \SimpleXMLElement($this->deliveryInfo($supplierApi, $delivery['DelNumber']));
+                        if (is_object($ptuXml)){
+
+                            $this->deliveryToPtu($supplierApi->getSupplier(), json_decode(json_encode($ptuXml), TRUE));
+                        }    
                         
                     }    
                 }    
