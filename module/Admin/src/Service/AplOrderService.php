@@ -897,7 +897,7 @@ class AplOrderService {
         foreach ($orders as $order){
             $this->unloadOrderPhone($order);
 
-            if (time() > $startTime + 1740){
+            if (time() > $startTime + 100){
                 return;
             }
         }
