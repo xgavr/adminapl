@@ -1195,7 +1195,7 @@ class OrderRepository extends EntityRepository{
             ->setParameter('status', Order::STATUS_SHIPPED)  
             ->andWhere('p.phone is null')    
             ->andWhere('o.aplId > 0')    
-            ->setMaxResults(1000)
+            ->setMaxResults(10000)
                ;
         
         return $queryBuilder->getQuery()->getResult();
