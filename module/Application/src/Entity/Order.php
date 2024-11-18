@@ -10,6 +10,7 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Application\Entity\Contact;
 use Application\Entity\ContactCar;
 use Application\Entity\Courier;
@@ -582,7 +583,17 @@ class Order {
     }     
     
     public function getClientName() {
-        return $this->clientName;
+        if ($this->clientName){
+            return $this->clientName;
+        }
+        
+        if ($this->getContact()) {
+            return $this->getContact()->getName();
+        }
+        
+        if ($this->getClient()) {
+            return $this->getClientt()->getName();
+        }
     }
 
     public function setClientName($clientName) {
@@ -1055,7 +1066,7 @@ class Order {
     public function getAplLogin()
     {
         if ($this->contact){
-            $phone = $this->contact->getPhoneAsString();
+            $phone = $this->_getContactPhone();
             return $phone;
         }
         return;
@@ -1781,6 +1792,11 @@ class Order {
     
     public function _getContactEmail()
     {
+        $result = $this->getOrderEmail();
+        if ($result){
+            return $result;
+        }
+        
         if ($this->contact){
             if ($this->contact->getEmail()){
                 return  $this->contact->getEmail()->getName();
@@ -1791,12 +1807,30 @@ class Order {
     
     public function _getContactPhone()
     {
+        $result = $this->getOrderPhoneByKind();
+        
+        if ($result){
+            return $result;
+        }
+        
         if ($this->contact){
             if ($this->contact->getPhone()){
                 return  $this->contact->getPhone()->getName();
             }            
         }
         return;    
+    }
+    
+    /**
+     * Телефоны в формате АПЛ
+     * @return string
+     */
+    public function getPhoneToApl()
+    {
+        $phone1 = $this->_getContactPhone();
+        $phone2 = $this->getOrderPhoneByKind(OrderPhone::KIND_OTHER);
+        
+        return implode(',', array_filter([$phone1, $phone2]));
     }
     
     private function _getContactCarMake()
@@ -1824,6 +1858,25 @@ class Order {
     public function getPhones() {
         return $this->phones;
     }
+    
+    /**
+     * Получить телефон в заказе
+     * @param integer $kind
+     */
+    public function getOrderPhoneByKind($kind = OrderPhone::KIND_MAIN)
+    {
+        $criteria = Criteria::create()
+                ->andWhere(Criteria::expr()->eq('kind', $kind))
+                ->setMaxResults(1)
+                ;
+        
+        $data = $this->phones->matching($criteria);     
+        foreach ($data as $row){
+            return $row->getPhone()->getName();
+        }        
+        
+        return;
+    }
 
     /**
      * 
@@ -1838,6 +1891,19 @@ class Order {
         return $this->emails;
     }
 
+    /**
+     * Получить email в заказе
+     * 
+     */
+    public function getOrderEmail()
+    {
+        foreach ($this->emails as $row){
+            return $row->getEmail()->getName();
+        }        
+        
+        return;
+    }
+    
     /**
      * 
      * @param OrderEmail $orderEmail
@@ -1873,6 +1939,7 @@ class Order {
             'id' => $this->getId(),
             'aplId' => $this->getAplId(),
             'phone' => $this->_getContactPhone(),
+            'phone2' => $this->getOrderPhoneByKind(OrderPhone::KIND_OTHER),
             'email' => $this->_getContactEmail(),
             'name' => ($this->getContact()) ? $this->getContact()->getName():null,
             'vin' => ($this->getContactCar()) ? $this->getContactCar()->getVin():null,
@@ -1965,6 +2032,7 @@ class Order {
             'shipmentDistance' => $this->getShipmentDistance(),
             'rateDistance' => ($this->getShipping()) ? $this->getShipping()->getRateDistance():null,
             'infoShipping' => $this->getInfoShipping(),
+            'phone2' => $this->getOrderPhoneByKind(OrderPhone::KIND_OTHER),
         ];
     }    
 

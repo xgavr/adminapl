@@ -314,6 +314,7 @@ $disabled = (!empty($order->getId())) ? '':'disabled';
     });
     
     $( document ).ready(function() {
+        $('.phone').mask('8 (000) 000-0000', {selectOnFocus: true});
         shippingParams(false);
         
         var forms = $('#order-delivery-form');

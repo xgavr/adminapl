@@ -41,7 +41,7 @@ $form->get('name')->setAttributes([
     ]);
 
 $form->get('phone')->setAttributes([
-    'class'=>'form-control phone intro', 
+    'class'=>'form-control phone contact-phone intro', 
     'placeholder' => 'Телефон',
     'required' => true,
     ]);
@@ -784,7 +784,7 @@ $disabled = (!empty($orderId)) ? '':'disabled';
         }           
     }
 
-    $('.phone').on('input paste', function(){
+    $('.contact-phone').on('input paste', function(){
         var value = $( this ).val();
         if (value.length === 16){
             $.post('/ring/find-phone', {phone: value}, function (data) {

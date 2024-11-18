@@ -1887,6 +1887,16 @@ class OrderManager
             $order->setSkiper($skiper);
         }
         
+        $orderPhoneEmails = [
+            'phone' => $order->getOrderPhoneByKind(),
+            'phone2' => !empty($data['phone2']) ? $data['phone2'] : null,
+            'email' => $order->getOrderEmail(),
+        ];
+        
+        $this->removeOrderPhonesEmails($order);
+        
+        $this->addOrderPhoneEmail($order, $orderPhoneEmails, false);
+        
         $this->entityManager->persist($order);
         $this->entityManager->flush();
         
