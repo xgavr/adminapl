@@ -930,6 +930,42 @@ class AplController extends AbstractActionController
         ]);
     }    
     
+    public function updateOrderPhonesAction()
+    {                
+        $orderId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий заказ в базе данных.    
+        $order = $this->entityManager->getRepository(\Application\Entity\Order::class)
+                ->find($orderId);  
+        	
+        if ($order == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+        
+        if ($order->getAplId()){
+            $this->aplOrderService->unloadOrderPhone($order);
+        }    
+        
+        $query = $this->entityManager->getRepository(\Application\Entity\Order::class)
+                ->findAllOrder(['orderId' => $order->getId()]);
+        $data = $query->getOneOrNullResult(2);
+        
+        return new JsonModel([
+            'result' => 'ok',
+            'data' => $data,
+        ]);
+    }    
+    
+    public function updateOrdersPhonesAction()
+    {                
+        $result = $this->aplOrderService->updateOrderPhones();
+        
+        return new JsonModel([
+            'result' => $result,
+        ]);
+    }    
+    
     public function unloadOrdersAction()
     {                
         $result = $this->aplOrderService->uploadOrders(true);

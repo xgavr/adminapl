@@ -841,6 +841,71 @@ class AplOrderService {
     }
     
     /**
+     * Обновить телефон в заказе из Апл
+     * @param Order $order
+     * @return 
+     */
+    public function unloadOrderPhone($order)
+    {
+        $url = $this->aplApi().'unload-order?api='.$this->aplApiKey();
+        
+        $post = [
+            'id' => $order->getAplId(),
+        ];
+
+        $client = new Client();
+        $client->setUri($url);
+        $client->setMethod('POST');
+        $client->setParameterPost($post);
+        $client->setOptions(['timeout' => 120]);
+        $response = $client->send();
+        $body = $response->getBody();
+
+        try{
+            $result = json_decode($body, true);
+        } catch (\Laminas\Json\Exception\RuntimeException $ex) {
+            return false;
+        } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+            return true;
+        }    
+
+        if (is_array($result)){
+            var_dump($result); exit;
+            $this->orderManager->removeOrderPhonesEmails($order);
+            $this->orderManager->addOrderPhoneEmail($order, [
+                'phone' => empty($result['phone']) ? null:$result['phone'],
+                'email' => empty($result['email']) ? null:$result['email'],
+            ]);
+        } else {
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Обновить телефоны в заказах
+     * @return null
+     */
+    public function updateOrderPhones()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $orders = $this->entityManager->getRepository(Order::class)
+                ->findForUpdatePhone();
+        foreach ($orders as $order){
+            $this->unloadOrderPhone($order);
+
+            if (time() > $startTime + 1740){
+                return;
+            }
+        }
+        
+        return;
+    }
+    
+    /**
      * Обновить статус загруженной машины клиента
      * @param integer $userId
      * @return boolean

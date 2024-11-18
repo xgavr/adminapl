@@ -1176,5 +1176,29 @@ class OrderRepository extends EntityRepository{
                 
 //        var_dump($queryBuilder->getQuery()->getSQL());    
         return $queryBuilder->getQuery()->getOneOrNullResult();       
-    }        
+    }
+    
+    /**
+     * Выборка для обновления телефонов
+     */
+    public function findForUpdatePhone()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('o')
+            ->distinct()    
+            ->from(Order::class, 'o')
+            ->leftJoin('o.phones', 'p')    
+            ->where('o.status = :status')
+            ->setParameter('status', Order::STATUS_SHIPPED)  
+            ->andWhere('p.phone is null')    
+            ->andWhere('o.aplId > 0')    
+            ->setMaxResults(1000)
+               ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
 }

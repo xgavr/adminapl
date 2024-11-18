@@ -683,6 +683,9 @@ $disabled = (!empty($orderId)) ? '':'disabled';
                     <button type="button" class="btn btn-info btn-sm unload-order-from-apl" title="Загрузить из Апл" <?= ($orderId) ? '':'disabled'?>>
                         <span class="glyphicon glyphicon-arrow-down"></span> Загрузить из Апл
                     </button>
+                    <button type="button" class="btn btn-info btn-sm unload-phone-from-apl" title="Телефон из Апл" <?= ($orderId) ? '':'disabled'?>>
+                        <span class="glyphicon glyphicon-arrow-down"></span> Телефон из Апл
+                    </button>
                     <button type="button" class="btn btn-default btn-sm send-order-to-apl" title="Отправить в Апл" <?= ($orderId) ? '':'disabled'?>>
                         <span class="glyphicon glyphicon-arrow-up"></span> Отправить в Апл
                     </button>
@@ -842,6 +845,26 @@ $disabled = (!empty($orderId)) ? '':'disabled';
                         closeButton: true
                     });        
                     $.get('/apl/unload-order-id/<?= $orderId?>', function(data){
+                        if (data.result == 'ok'){
+                            dialog.modal('hide');
+                            if (confirm('Пергрузить?')){
+                                window.location.reload();
+                            }    
+                        }
+                    });                                
+                }
+        });
+    });
+
+    $(document).on('click', '.unload-phone-from-apl', function (e) {
+        bootbox.confirm('Телефон будет перезаписан данными с сайта АПЛ?',
+            function(result) {
+                if (result){
+                    var dialog = bootbox.dialog({
+                        message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Пожалуйста, подождите, пока мы что-то делаем...</p>',
+                        closeButton: true
+                    });        
+                    $.get('/apl/update-order-phones/<?= $orderId?>', function(data){
                         if (data.result == 'ok'){
                             dialog.modal('hide');
                             if (confirm('Пергрузить?')){
