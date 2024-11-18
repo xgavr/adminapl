@@ -274,6 +274,38 @@ class MikadoManager {
         return false;
     }
     
+    
+    /**
+     * Проверка накладной
+     * @param SupplierApiSetting $supplierApi
+     * @param array $cDelivery
+     */
+    private function cDelivery($supplierApi, $cDelivery)
+    {
+        if ($cDelivery['SumRUR'] > 0){
+            $ptu = $this->entityManager->getRepository(Ptu::class)
+                ->findOneBy([
+                    'supplier' => $supplierApi->getSupplier()->getId(),
+                    'docNo' => $cDelivery['DelNumber'], 
+                    'docDate' => date('Y-m-d', strtotime($cDelivery['DelDate'])),
+                ]);
+            
+            if ($ptu){
+                return; //уже есть
+            }
+            
+            $ptuXml = new \SimpleXMLElement($this->deliveryInfo($supplierApi, $cDelivery['DelNumber']));
+            if (is_object($ptuXml)){
+
+                $this->deliveryToPtu($supplierApi->getSupplier(), json_decode(json_encode($ptuXml), TRUE));
+                
+            }    
+            
+        }
+        
+        return;
+    }
+    
     /**
      * 
      */
@@ -289,26 +321,11 @@ class MikadoManager {
             $data = json_decode(json_encode($xml), TRUE);
 //            var_dump($data); exit;
             foreach ($data['Deliveries'] as $deliveries){
-                foreach ($deliveries as $delivery){
-                    var_dump($delivery); exit;                    
-                    if ($delivery['SumRUR'] > 0){
-                        $ptu = $this->entityManager->getRepository(Ptu::class)
-                            ->findOneBy([
-                                'supplier' => $supplierApi->getSupplier()->getId(),
-                                'docNo' => $delivery['DelNumber'], 
-                                'docDate' => date('Y-m-d', strtotime($delivery['DelDate'])),
-                            ]);
-
-                        if ($ptu){
-                            continue; //уже есть
-                        }
-
-                        $ptuXml = new \SimpleXMLElement($this->deliveryInfo($supplierApi, $delivery['DelNumber']));
-                        if (is_object($ptuXml)){
-
-                            $this->deliveryToPtu($supplierApi->getSupplier(), json_decode(json_encode($ptuXml), TRUE));
-                        }    
-                        
+                if (count($deliveries) === 1){
+                    $this->cDelivery($supplierApi, $deliveries);
+                } else {
+                    foreach ($deliveries as $delivery){
+                        $this->cDelivery($supplierApi, $delivery);
                     }    
                 }    
             }
