@@ -290,6 +290,7 @@ class MikadoManager {
 //            var_dump($data); exit;
             foreach ($data['Deliveries'] as $deliveries){
                 foreach ($deliveries as $delivery){
+                    var_dump($delivery); exit;                    
                     if ($delivery['SumRUR'] > 0){
                         $ptu = $this->entityManager->getRepository(Ptu::class)
                             ->findOneBy([
