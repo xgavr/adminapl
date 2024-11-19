@@ -842,6 +842,7 @@ class OrderManager
                     $phone = new Phone();
                     $phone->setName($phoneNum);
                     $phone->setContact($order->getContact());
+                    $phone->setDateCreated(date('Y-m-d H:i:s'));
                     $this->entityManager->persist($phone);
                 }
 
