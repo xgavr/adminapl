@@ -434,10 +434,14 @@ class ProcessingController extends AbstractActionController
     
     public function telegramPostponeAction()
     {
-        $settings = $this->adminManager->getTelegramSettings();
-        
-        if ($settings['send_pospone_msg'] == 1){
-            $this->telegramManager->sendPostponeMessage();
+        $settings = $this->adminManager->getSettings();
+
+        if ($settings['job'] == 1){
+            $settings = $this->adminManager->getTelegramSettings();
+
+            if ($settings['send_pospone_msg'] == 1){
+                $this->telegramManager->sendPostponeMessage();
+            }    
         }    
         
         return new JsonModel(
