@@ -839,11 +839,13 @@ class OrderManager
                     ->findOneBy(['name' => $phoneFilter->filter($data['phone2'])]);
             
             if ($phone2){
-                $orderPhone = new OrderPhone();
-                $orderPhone->setOrder($order);
-                $orderPhone->setPhone($phone2);
-                $orderPhone->setKind(OrderPhone::KIND_OTHER);
-                $this->entityManager->persist($orderPhone);
+                if ($phone2->getId() != $phone->getId()) {
+                    $orderPhone = new OrderPhone();
+                    $orderPhone->setOrder($order);
+                    $orderPhone->setPhone($phone2);
+                    $orderPhone->setKind(OrderPhone::KIND_OTHER);
+                    $this->entityManager->persist($orderPhone);
+                }    
             }    
         }    
         
