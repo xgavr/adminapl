@@ -183,6 +183,44 @@ class MikadoManager {
     }
     
     /**
+     * Добавить запись в пту
+     * @param Ptu $ptu
+     * @param array $tp
+     * @param integer $rowNo
+     */    
+    private function cDeliveryLine($ptu, $tp, $rowNo)
+    {
+        if (!empty($tp['QTY']) && !empty($tp['Name'])&& !empty($tp['PriceRUR'])){
+
+            $good = $this->billManager->findGood($ptu->getStatus(), [
+                'article' => $tp['ProducerCode'],
+                'producer' => $tp['producer'],
+                'good_name' => $tp['Name'],
+                'supplier_article' => $tp['Code'],
+                'price' => $tp['PriceRUR'],                        
+            ]);
+
+            if ($good){ 
+                $this->ptuManager->addPtuGood($ptu->getId(), [
+                    'status' => $ptu->getStatus(),
+                    'statusDoc' => $ptu->getStatusDoc(),
+                    'quantity' => $tp['QTY'],                    
+                    'amount' => round($tp['PriceRUR']*$tp['QTY'], 2),
+                    'good_id' => $good->getId(),
+                    'comment' => '',
+                    'info' => '',
+                    'countryName' => '',
+                    'countryCode' => '',
+                    'unitName' => '',
+                    'unitCode' => '',
+                    'ntd' => '',
+                ], $rowNo);
+            }    
+        }    
+        return;
+    }
+    
+    /**
      * Получить ПТУ
      *
      * @param Supplier $supplier 
@@ -233,34 +271,12 @@ class MikadoManager {
             
         if ($ptu && isset($data['DeliveryLines']['cDeliveryLine'])){
             $rowNo = 1;                
-            foreach ($data['DeliveryLines']['cDeliveryLine'] as $tp){
-                if (!empty($tp['QTY']) && !empty($tp['Name'])&& !empty($tp['PriceRUR'])){
-                    
-                    $good = $this->billManager->findGood($supplier, [
-                        'article' => $tp['ProducerCode'],
-                        'producer' => $tp['producer'],
-                        'good_name' => $tp['Name'],
-                        'supplier_article' => $tp['Code'],
-                        'price' => $tp['PriceRUR'],                        
-                    ]);
-                    
-                    if ($good){ 
-                        $this->ptuManager->addPtuGood($ptu->getId(), [
-                            'status' => $ptu->getStatus(),
-                            'statusDoc' => $ptu->getStatusDoc(),
-                            'quantity' => $tp['QTY'],                    
-                            'amount' => round($tp['PriceRUR']*$tp['QTY'], 2),
-                            'good_id' => $good->getId(),
-                            'comment' => '',
-                            'info' => '',
-                            'countryName' => '',
-                            'countryCode' => '',
-                            'unitName' => '',
-                            'unitCode' => '',
-                            'ntd' => '',
-                        ], $rowNo);
-                        $rowNo++;
-                    }    
+            if (isset($data['DeliveryLines']['cDeliveryLine']['QTY'])){
+                $this->cDeliveryLine($ptu, $data['DeliveryLines']['cDeliveryLine'], $rowNo);
+            } else {
+                foreach ($data['DeliveryLines']['cDeliveryLine'] as $tp){
+                    $this->cDeliveryLine($ptu, $tp, $rowNo);
+                    $rowNo++;
                 }    
             }
           
