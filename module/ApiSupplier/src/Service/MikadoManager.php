@@ -206,7 +206,7 @@ class MikadoManager {
             'supplier' => $supplier,
         ];
             
-//        var_dump($docDate); exit;
+        var_dump($data); exit;
         
         $office = $supplier->getOffice();
         
@@ -288,6 +288,7 @@ class MikadoManager {
                     'supplier' => $supplierApi->getSupplier()->getId(),
                     'docNo' => $cDelivery['DelNumber'], 
                     'docDate' => date('Y-m-d', strtotime($cDelivery['DelDate'])),
+                    'status' => Ptu::STATUS_ACTIVE,
                 ]);
             
             if ($ptu){
@@ -319,13 +320,13 @@ class MikadoManager {
         if (is_object($xml)){
             
             $data = json_decode(json_encode($xml), TRUE);
-            var_dump($data); exit;
-            foreach ($data['Deliveries'] as $deliveries){                
-                if (isset($deliveries['SumRUR'])){
-                    $this->cDelivery($supplierApi, $deliveries);
+//            var_dump($data); exit;
+            foreach ($data['Deliveries'] as $cDelivery){                
+                if (isset($cDelivery['SumRUR'])){
+                    $this->cDelivery($supplierApi, $cDelivery);
                 } else {
-                    foreach ($deliveries as $delivery){
-                        $this->cDelivery($supplierApi, $delivery);
+                    foreach (cDelivery as $delivery){
+                        $this->cDelivery($supplierApi, $cDelivery);
                     }    
                 }    
             }
