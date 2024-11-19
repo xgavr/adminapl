@@ -247,6 +247,10 @@ class TelegrammManager
                             unset($file[0]);
                             fputs($fp, implode("", $file));
                             fclose($fp);
+                        } else {
+                            $data['sending_pospone_msg'] = 1; // отправка закончилась
+                            $this->adminManager->setTelegramSettings($data);
+                            return;                            
                         }
                     } catch (\Longman\TelegramBot\Exception\TelegramException $e){
                         $data['sending_pospone_msg'] = 1; // отправка закончилась
