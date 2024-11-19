@@ -840,6 +840,7 @@ class OrderManager
             
             if ($phone2 && !empty($phone)){
                 if ($phone2->getId() != $phone->getId()) {
+                    var_dump($phone2->getId, $phone->getId()); exit;
                     $orderPhone2 = new OrderPhone();
                     $orderPhone2->setOrder($order);
                     $orderPhone2->setPhone($phone2);
