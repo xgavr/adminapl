@@ -823,11 +823,15 @@ class OrderManager
             if (!empty($data['phone2'])){
                 $phones[] = $data['phone2'];
             }
+            
+            $resultPhones = [];
+            foreach ($phones as $phoneStr){
+                $resultPhones[] = $phoneFilter->filter($phoneStr);
+            }
 
-            var_dump($phones); exit;
-            foreach (array_unique($phones) as $k => $phoneStr){
+            foreach (array_unique($resultPhones) as $k => $phoneNum){
                 $phone = $this->entityManager->getRepository(Phone::class)
-                        ->findOneBy(['name' => $phoneFilter->filter($phoneStr)]);
+                        ->findOneBy(['name' => $phoneNum]);
 
                 if ($phone){
                     $orderPhone = new OrderPhone();
