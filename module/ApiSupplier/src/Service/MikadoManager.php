@@ -325,8 +325,8 @@ class MikadoManager {
                 if (isset($cDelivery['SumRUR'])){
                     $this->cDelivery($supplierApi, $cDelivery);
                 } else {
-                    foreach (cDelivery as $delivery){
-                        $this->cDelivery($supplierApi, $cDelivery);
+                    foreach ($cDelivery as $delivery){
+                        $this->cDelivery($supplierApi, $delivery);
                     }    
                 }    
             }
