@@ -838,13 +838,13 @@ class OrderManager
             $phone2 = $this->entityManager->getRepository(Phone::class)
                     ->findOneBy(['name' => $phoneFilter->filter($data['phone2'])]);
             
-            if ($phone2){
+            if ($phone2 && !empty($phone)){
                 if ($phone2->getId() != $phone->getId()) {
-                    $orderPhone = new OrderPhone();
-                    $orderPhone->setOrder($order);
-                    $orderPhone->setPhone($phone2);
-                    $orderPhone->setKind(OrderPhone::KIND_OTHER);
-                    $this->entityManager->persist($orderPhone);
+                    $orderPhone2 = new OrderPhone();
+                    $orderPhone2->setOrder($order);
+                    $orderPhone2->setPhone($phone2);
+                    $orderPhone2->setKind(OrderPhone::KIND_OTHER);
+                    $this->entityManager->persist($orderPhone2);
                 }    
             }    
         }    
