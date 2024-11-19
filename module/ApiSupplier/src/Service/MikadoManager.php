@@ -206,7 +206,7 @@ class MikadoManager {
             'supplier' => $supplier,
         ];
             
-        var_dump($data); exit;
+//        var_dump($data); exit;
         
         $office = $supplier->getOffice();
         
