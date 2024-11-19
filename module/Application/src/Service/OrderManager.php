@@ -829,11 +829,21 @@ class OrderManager
                 $resultPhones[] = $phoneFilter->filter($phoneStr);
             }
 
-            var_dump($resultPhones); exit;
-            $k = 0;
-            foreach (array_unique($resultPhones) as $phoneNum){
+            foreach (array_unique($resultPhones) as $k => $phoneNum){
+                
+                if (empty($phoneNum)){
+                    continue;
+                }
+                
                 $phone = $this->entityManager->getRepository(Phone::class)
                         ->findOneBy(['name' => $phoneNum]);
+                
+                if (!$phone){
+                    $phone = new Phone();
+                    $phone->setName($phoneNum);
+                    $phone->setContact($order->getContact());
+                    $this->entityManager->persist($phone);
+                }
 
                 if ($phone){
                     $orderPhone = new OrderPhone();
@@ -842,8 +852,6 @@ class OrderManager
                     $orderPhone->setKind(($k === 0) ? OrderPhone::KIND_MAIN:OrderPhone::KIND_OTHER);
                     $this->entityManager->persist($orderPhone);
                 } 
-                
-                $k++;
             }    
         }    
                 
