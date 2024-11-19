@@ -829,7 +829,8 @@ class OrderManager
                 $resultPhones[] = $phoneFilter->filter($phoneStr);
             }
 
-            foreach (array_unique($resultPhones) as $k => $phoneNum){
+            $k = 0;
+            foreach (array_unique($resultPhones) as $phoneNum){
                 $phone = $this->entityManager->getRepository(Phone::class)
                         ->findOneBy(['name' => $phoneNum]);
 
@@ -840,6 +841,8 @@ class OrderManager
                     $orderPhone->setKind(($k === 0) ? OrderPhone::KIND_MAIN:OrderPhone::KIND_OTHER);
                     $this->entityManager->persist($orderPhone);
                 } 
+                
+                $k++;
             }    
         }    
                 
