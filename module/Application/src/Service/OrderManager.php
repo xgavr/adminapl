@@ -824,6 +824,7 @@ class OrderManager
                 $phones[] = $data['phone2'];
             }
 
+            var_dump($phones); exit;
             foreach (array_unique($phones) as $k => $phoneStr){
                 $phone = $this->entityManager->getRepository(Phone::class)
                         ->findOneBy(['name' => $phoneFilter->filter($phoneStr)]);
