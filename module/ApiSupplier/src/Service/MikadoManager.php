@@ -319,7 +319,7 @@ class MikadoManager {
         if (is_object($xml)){
             
             $data = json_decode(json_encode($xml), TRUE);
-//            var_dump($data); exit;
+            var_dump($data); exit;
             foreach ($data['Deliveries'] as $deliveries){                
                 if (isset($deliveries['SumRUR'])){
                     $this->cDelivery($supplierApi, $deliveries);
