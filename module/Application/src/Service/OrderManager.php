@@ -819,8 +819,12 @@ class OrderManager
         if (!empty($data['phone'])){
 
             $phones = explode(',', $data['phone']);
+            
+            if (!empty($data['phone2'])){
+                $phones[] = $data['phone2'];
+            }
 
-            foreach ($phones as $k => $phoneStr){
+            foreach (array_unique($phones) as $k => $phoneStr){
                 $phone = $this->entityManager->getRepository(Phone::class)
                         ->findOneBy(['name' => $phoneFilter->filter($phoneStr)]);
 
@@ -830,26 +834,10 @@ class OrderManager
                     $orderPhone->setPhone($phone);
                     $orderPhone->setKind(($k === 0) ? OrderPhone::KIND_MAIN:OrderPhone::KIND_OTHER);
                     $this->entityManager->persist($orderPhone);
-                }    
+                } 
             }    
         }    
-        
-        if (!empty($data['phone2'])){
-            $phone2 = $this->entityManager->getRepository(Phone::class)
-                    ->findOneBy(['name' => $phoneFilter->filter($data['phone2'])]);
-            
-            if ($phone2 && !empty($phone)){
-                if ($phone2->getId() != $phone->getId()) {
-                    var_dump($phone2->getId, $phone->getId()); exit;
-                    $orderPhone2 = new OrderPhone();
-                    $orderPhone2->setOrder($order);
-                    $orderPhone2->setPhone($phone2);
-                    $orderPhone2->setKind(OrderPhone::KIND_OTHER);
-                    $this->entityManager->persist($orderPhone2);
-                }    
-            }    
-        }    
-        
+                
         if (!empty($data['email'])){
             $email = $this->entityManager->getRepository(Email::class)
                     ->findOneBy(['name' => $data['email']]);   
