@@ -829,6 +829,7 @@ class OrderManager
                 $resultPhones[] = $phoneFilter->filter($phoneStr);
             }
 
+            var_dump($resultPhones); exit;
             $k = 0;
             foreach (array_unique($resultPhones) as $phoneNum){
                 $phone = $this->entityManager->getRepository(Phone::class)
