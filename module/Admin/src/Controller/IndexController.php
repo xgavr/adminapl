@@ -584,12 +584,13 @@ class IndexController extends AbstractActionController
 
                 $this->redirect()->toRoute('admin', ['action' => 'telegram-settings']);
             } else {
-                if ($settings){
-                    $form->setData($settings);
-                }    
                 $this->flashMessenger()->addInfoMessage(
                         'Настройки не сохранены.');                
             }
+        } else {
+            if ($settings){
+                $form->setData($settings);
+            }                
         }
         
         //$geoIpFilter = new \Admin\Filter\GeoIp();
