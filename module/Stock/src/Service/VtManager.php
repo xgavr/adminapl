@@ -740,7 +740,7 @@ class VtManager
         $vts = $this->entityManager->getRepository(Vt::class)
                 ->findForFixMovement();
         
-        var_dump(count($vts)); exit;
+//        var_dump(count($vts)); exit;
         foreach ($vts as $vt){
             $register = $this->entityManager->getRepository(Register::class)
                     ->findOneBy(['docId' => $vt->getId(), 'docType' => Movement::DOC_VT]);
