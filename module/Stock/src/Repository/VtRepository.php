@@ -296,7 +296,7 @@ class VtRepository extends EntityRepository{
         $queryBuilder->select('v')
             ->distinct()    
             ->from(Vt::class, 'v')
-            ->leftJoin('v.movements', 'm', 'WITH', 'm.docType = 4 and m.status != 2')    
+            ->leftJoin(\Stock\Entity\Movement::class, 'm', 'WITH', 'm.docId = v.id and m.docType = 4 and m.status != 2')    
             ->where('v.status != :status')
             ->setParameter('status', Vt::STATUS_RETIRED)  
             ->andWhere('m.docStamp is null')    
@@ -304,6 +304,7 @@ class VtRepository extends EntityRepository{
             ->setMaxResults(10000)
                ;
         
+        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();
         
     }
