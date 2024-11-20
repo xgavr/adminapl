@@ -16,6 +16,7 @@ use Application\Entity\Email;
 use User\Filter\PhoneFilter;
 use Application\Entity\Comment;
 use Application\Entity\Order;
+use Stock\Entity\Movement;
 
 /**
  * Description of ClientService
@@ -293,6 +294,13 @@ class ClientManager
         foreach ($comments as $comment){
             $comment->setClient($client);
             $this->entityManager->persist($comment);
+        }  
+        
+        $movements = $this->entityManager->getRepository(Movement::class)
+                ->findBy(['client' => $oldClient->getId()]);
+        foreach ($movements as $movement){
+            $movement->setClient($client);
+            $this->entityManager->persist($movement);
         }        
         
         $this->entityManager->flush();
