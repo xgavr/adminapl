@@ -320,6 +320,10 @@ class VtManager
                         unset($data['base_type']);
                         unset($data['base_id']);
                         unset($data['base_amount']);
+                        unset($data['user_id']);
+                        unset($data['oe']);
+                        unset($data['client_id']);
+                        unset($data['parent_doc_id']);
                         $data['contact_id'] = $vt->getOrder()->getContact()->getId();
                         $this->entityManager->getRepository(Comiss::class)
                                 ->insertComiss($data);
