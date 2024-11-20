@@ -222,8 +222,9 @@ class PriceManager {
                                 ->suplierByFromEmail($mail['fromEmail']);                        
                     }
                     
-                    var_dump($mail); exit;
+                    var_dump($mail['fromEmail']); 
                     foreach($mail['attachment'] as $attachment){
+                        var_dump($attachment); 
                         if ($attachment['filename'] && file_exists($attachment['temp_file'])){
                             if (file_exists($attachment['temp_file'])){ 
 
