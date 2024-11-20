@@ -282,6 +282,7 @@ class PriceManager {
      */
     public function addNewRaw($supplier, $data)
     {
+        $currentDate = date('Y-m-d H:i:s');
         $raw = $this->entityManager->getRepository(Raw::class)
                 ->findOneBy([
                     'filename' => $data['filename'],
@@ -292,6 +293,9 @@ class PriceManager {
                     'tmpfile' => empty($data['tmpfile']) ? null:$data['tmpfile'],
                     'supplier' => empty($supplier) ? null:$supplier->getId(), 
                 ]);
+        if ($raw){
+            $raw->setDateCreated($currentDate);            
+        }
         
         if (empty($raw)){
         
@@ -303,14 +307,10 @@ class PriceManager {
             $raw->setStatus(Raw::STATUS_NEW);
             $raw->setStatusEx(Raw::EX_NEW);
             $raw->setSubject(empty($data['subject']) ? null:$data['subject']);
-            $currentDate = date('Y-m-d H:i:s');
             $raw->setDateCreated($currentDate);
             $raw->setTmpfile(empty($data['tmpfile']) ? null:$data['tmpfile']);
 
             $raw->setSupplier($supplier);
-
-            $this->entityManager->persist($raw);
-            $this->entityManager->flush();
 
             if (!empty($data['fromEmail']) && $supplier){
                 if ($supplier->getParent()){
@@ -320,6 +320,10 @@ class PriceManager {
                 }    
             }
         }    
+        
+        $this->entityManager->persist($raw);
+        $this->entityManager->flush();
+
         
         return $raw;
     }
