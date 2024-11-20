@@ -140,6 +140,12 @@ class Vt {
     private $retails;    
     
     /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Movement", mappedBy="vt")
+    * @ORM\JoinColumn(name="id", referencedColumnName="doc_id")
+     */
+    private $movements;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -147,6 +153,7 @@ class Vt {
        $this->vtGoods = new ArrayCollection();
        $this->cashDocs = new ArrayCollection();
        $this->retails = new ArrayCollection();
+       $this->movements = new ArrayCollection();
     }
     
     
@@ -577,6 +584,10 @@ class Vt {
         return $this->retails;
     }
     
+    public function getMovements() {
+        return $this->movements;
+    }
+
     /**
      * Массив для формы
      * @return array 

@@ -728,6 +728,29 @@ class VtManager
         
         return;
     }
-            
+        
+    /**
+     * Исправить пропавшеи движения
+     */
+    public function fixMovement()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+        
+        $vts = $this->entityManager->getRepository(Vt::class)
+                ->findForFixMovement();
+        
+//        var_dump(count($vts)); exit;
+        foreach ($vts as $vt){
+            $register = $this->entityManager->getRepository(Register::class)
+                    ->findOneBy(['docId' => $vt->getId(), 'docType' => Movement::DOC_VT]);
+            if ($register){
+                $this->updateVtMovement($vt, $register->getDocStamp());
+            }    
+        }
+        
+        return;
+    }
+    
 }
 

@@ -389,5 +389,14 @@ class VtController extends AbstractActionController
         return new JsonModel(
            $result
         );           
-    }                        
+    }          
+    
+    public function fixVtMovementAction()
+    {        
+        $this->vtManager->fixMovement();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }            
 }

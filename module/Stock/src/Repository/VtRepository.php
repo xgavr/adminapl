@@ -282,5 +282,30 @@ class VtRepository extends EntityRepository{
         
         return;                
         
-    }                    
+    }           
+    
+    /**
+     * Выборка для исправления движения товаров
+     */
+    public function findForFixMovement()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('v')
+            ->distinct()    
+            ->from(Vt::class, 'v')
+            ->leftJoin('v.movements', 'm', 'WITH', 'm.docType = 4 and m.status != 2')    
+            ->where('v.status != :status')
+            ->setParameter('status', Vt::STATUS_RETIRED)  
+            ->andWhere('m.docStamp is null')    
+            //->andWhere('v.aplId > 0')    
+            ->setMaxResults(10000)
+               ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+    
 }
