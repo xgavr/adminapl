@@ -186,40 +186,45 @@ $this->pageBreadcrumbs()->setItems([
                                 <div class="panel-body">
                                     <div class="pull-left">
                                         <?= $priceGetting->getName() ?><br/>                                        
-                                        <?php if ($priceGetting->getStatus() !== PriceGetting::STATUS_COMMON_BOX):?>
                                             <?php if ($priceGetting->getPriceSupplier()):?>
                                                 Использовать прайс <a href="/supplier/view/<?= $priceGetting->getPriceSupplier()->getId()?>" target="_blank"><?= $priceGetting->getPriceSupplier()->getName()?></a>
                                             <?php else:?>
-                                                Email: <span><?= $priceGetting->getEmail() ?></span> 
-                                                <?php if ($priceGetting->getEmail()): ?>
-                                                    <button value="/price/by-mail/<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
-                                                            title="Проверить почту">
-                                                        <span class="glyphicon glyphicon-envelope" ></span>
-                                                    </button>
-                                                    <a class="btn btn-default btn-xs" type="button" title="Перейти на biz.mail.ru" href="https://biz.mail.ru/login/autopartslist.ru" target="_blank">
-                                                        <span class="glyphicon glyphicon-link"></span>
-                                                    </a>
-                                                <?php endif; ?>
-                                                <br/>
-                                                Email пароль: <span><?= $priceGetting->getEmailPassword() ?></span><br/>
-                                                Пароль приложения: <span><?= $priceGetting->getAppPassword() ?></span><br/>
-                                                FTP сервер: <span><?= $priceGetting->getFtp() ?></span><br/>
-                                                FTP папка: <span><?= $priceGetting->getFtpDir() ?></span><br/>
-                                                FTP логин: <span><?= $priceGetting->getFtpLogin() ?></span><br/>
-                                                FTP пароль: <span><?= $priceGetting->getFtpPassword() ?></span><br/>
-                                                Ссылка на скачивание: <span><?= $priceGetting->getLink() ?></span>
-                                                <?php if ($priceGetting->getLink()): ?>
-                                                    <button value="/price/by-link/<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
-                                                            title="Скачать по ссылке">
-                                                        <span class="glyphicon glyphicon-save-file" ></span>
-                                                    </button>
-                                                <?php endif; ?>
+                                                <?php if ($priceGetting->getStatus() !== PriceGetting::STATUS_COMMON_BOX):?>
+                                                    Email: <span><?= $priceGetting->getEmail() ?></span> 
+                                                    <?php if ($priceGetting->getEmail()): ?>
+                                                        <button value="/price/by-mail/<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
+                                                                title="Проверить почту">
+                                                            <span class="glyphicon glyphicon-envelope" ></span>
+                                                        </button>
+                                                        <a class="btn btn-default btn-xs" type="button" title="Перейти на biz.mail.ru" href="https://biz.mail.ru/login/autopartslist.ru" target="_blank">
+                                                            <span class="glyphicon glyphicon-link"></span>
+                                                        </a>
+                                                    <?php endif; ?>
+                                                    <br/>
+                                                    Email пароль: <span><?= $priceGetting->getEmailPassword() ?></span><br/>
+                                                    Пароль приложения: <span><?= $priceGetting->getAppPassword() ?></span><br/>
+                                                    FTP сервер: <span><?= $priceGetting->getFtp() ?></span><br/>
+                                                    FTP папка: <span><?= $priceGetting->getFtpDir() ?></span><br/>
+                                                    FTP логин: <span><?= $priceGetting->getFtpLogin() ?></span><br/>
+                                                    FTP пароль: <span><?= $priceGetting->getFtpPassword() ?></span><br/>
+                                                    Ссылка на скачивание: <span><?= $priceGetting->getLink() ?></span>
+                                                    <?php if ($priceGetting->getLink()): ?>
+                                                        <button value="/price/by-link/<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs refresh-button"
+                                                                title="Скачать по ссылке">
+                                                            <span class="glyphicon glyphicon-save-file" ></span>
+                                                        </button>
+                                                    <?php endif; ?>
                                             <?php endif;?>    
                                         <?php endif; ?>
                                         <br/>
                                         <?= $priceGetting->getStatusFilenameRuleAsString() ?><br/>
                                         Обмен с АПЛ: <span><?= $priceGetting->getOrderToAplAsString() ?></span><br/>
-                                        Статус: <span><?= $priceGetting->getStatusAsString() ?></span><br/>
+                                        Статус: <span><?= $priceGetting->getStatusAsString() ?></span>
+                                        <?php if ($priceGetting->getStatus() === PriceGetting::STATUS_COMMON_BOX):?>
+                                            <a class="btn btn-default btn-xs" type="button" title="Перейти на biz.mail.ru" href="https://biz.mail.ru/login/autopartslist.ru" target="_blank">
+                                                <span class="glyphicon glyphicon-link"></span>
+                                            </a>
+                                        <?php endif; ?>
                                     </div>        
                                     <div class="pull-right">                                
                                         <button value="/supplier/price-getting-form/<?= $supplier->getId() ?>?priceGetting=<?= $priceGetting->getId() ?>" class="btn btn-default btn-xs"
