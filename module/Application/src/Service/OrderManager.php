@@ -1358,11 +1358,11 @@ class OrderManager
             $result['comments'][] = $comment->toLog();
         }
         
-        foreach ($order->getContact()->getPhones() as $phone){
+        foreach ($order->getOrderPhones() as $phone){
             $result['phones'][] = $phone->toLog();
         }
 
-        foreach ($order->getContact()->getEmails() as $email){
+        foreach ($order->getOrderEmails() as $email){
             $result['emails'][] = $email->toLog();
         }
         

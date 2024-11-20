@@ -1051,7 +1051,6 @@ class Order {
      * Возвращает связанный contact.
      * @return Contact
      */
-    
     public function getContact() 
     {
         return $this->contact;
@@ -1870,6 +1869,18 @@ class Order {
         return $this->phones;
     }
     
+    public function getOrderPhones() {
+        if ($this->phones->count()){
+            $result = [];
+            foreach ($this->phones as $orderPhone){
+                $result[] = $orderPhone->getPhone();
+            }
+            return $result;
+        }
+        
+        return $this->getContact()->getPhones();
+    }
+    
     /**
      * Получить телефон в заказе
      * @param integer $kind
@@ -1902,6 +1913,18 @@ class Order {
         return $this->emails;
     }
 
+    public function getOrderEmails() {
+        if ($this->emails->count()){
+            $result = [];
+            foreach ($this->emails as $orderEmail){
+                $result[] = $orderEmail->getEmail();
+            }
+            return $result;
+        }
+        
+        return $this->getContact()->getEmails();
+    }
+    
     /**
      * Получить email в заказе
      * 
