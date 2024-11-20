@@ -304,7 +304,7 @@ class VtRepository extends EntityRepository{
             ->setMaxResults(10000)
                ;
         
-        var_dump($queryBuilder->getQuery()->getSQL());
+//        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();
         
     }
