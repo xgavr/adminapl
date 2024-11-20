@@ -2306,7 +2306,7 @@ class OrderManager
         $orders = $this->entityManager->getRepository(Order::class)
                 ->findForFixMovement();
         
-        var_dump(count($orders)); exit;
+//        var_dump(count($orders)); exit;
         foreach ($orders as $order){
             $register = $this->entityManager->getRepository(Register::class)
                     ->findOneBy(['docId' => $order->getId(), 'docType' => Movement::DOC_ORDER]);
