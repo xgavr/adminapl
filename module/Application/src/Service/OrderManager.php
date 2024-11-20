@@ -2311,6 +2311,9 @@ class OrderManager
         
 //        var_dump(count($orders)); exit;
         foreach ($orders as $order){
+            $this->entityManager->getRepository(Movement::class)
+                    ->removeDocMovements($order->getLogKey());  
+            
             $register = $this->entityManager->getRepository(Register::class)
                     ->findOneBy(['docId' => $order->getId(), 'docType' => Movement::DOC_ORDER]);
             if ($register){
