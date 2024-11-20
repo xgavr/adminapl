@@ -219,25 +219,26 @@ class PriceManager {
                     
                     if (empty($fromSupplier)){
                         $fromSupplier = $this->entityManager->getRepository(Supplier::class)
-                                ->suplierByFromEmail($mail['fromEmail']);                        
+                                ->suplierByFromEmail($mail['fromEmail']);
+                        if ($fromSupplier->getParent()){
+                            $fromSupplier = $fromSupplier->getParent();
+                        }
                     }
                     
-                    var_dump($mail['fromEmail']); 
+//                    var_dump($mail['fromEmail']); 
                     foreach($mail['attachment'] as $attachment){
-                        var_dump($attachment); 
+//                        var_dump($attachment); 
                         if ($attachment['filename'] && file_exists($attachment['temp_file'])){
-                            if (file_exists($attachment['temp_file'])){ 
 
-                                $newRaw = $this->addNewRaw($fromSupplier, [
-                                    'filename' => $attachment['filename'],
-                                    'fromEmail' => $mail['fromEmail'],
-                                    'subject' => $mail['subject'],
-                                    'tmpfile' => $attachment['temp_file'],
-                                    ]);
+                            $newRaw = $this->addNewRaw($fromSupplier, [
+                                'filename' => $attachment['filename'],
+                                'fromEmail' => $mail['fromEmail'],
+                                'subject' => $mail['subject'],
+                                'tmpfile' => $attachment['temp_file'],
+                                ]);
 
-                                if ($fromSupplier){
-                                    $this->checkNewPriceFile($newRaw);
-                                }    
+                            if ($fromSupplier){
+                                $this->checkNewPriceFile($newRaw);
                             }    
                         }
                     }
