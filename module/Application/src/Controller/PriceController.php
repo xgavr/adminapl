@@ -23,19 +23,19 @@ class PriceController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /**
      * Менеджер.
-     * @var Application\Service\SupplierManager 
+     * @var \Application\Service\SupplierManager 
      */
     private $supplierManager;    
     
     /**
      * Менеджер.
-     * @var Application\Service\PriceManager 
+     * @var \Application\Service\PriceManager 
      */
     private $priceManager;    
     
@@ -92,6 +92,15 @@ class PriceController extends AbstractActionController
         
         exit;
         
+    }
+    
+    public function commonMailAction()
+    {
+        $result = $this->priceManager->getNewPriceByMail();
+        
+        return new JsonModel(
+           ['ok']
+        );           
     }
     
     public function byLinkAction()
