@@ -1176,4 +1176,13 @@ class OrderController extends AbstractActionController
             'result' => 'ok-reload',
         ]);
     }        
+    
+    public function fixOrderMovementAction()
+    {        
+        $this->orderManager->fixMovement();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }        
 }

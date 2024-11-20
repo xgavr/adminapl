@@ -2297,4 +2297,24 @@ class OrderManager
     {
         return $this->foldManager->goodFold($good, $office);
     }
+    
+    /**
+     * Исправить пропавшеи движения
+     */
+    public function fixMovement()
+    {
+        $orders = $this->entityManager->getRepository(Order::class)
+                ->findForFixMovement();
+        
+        var_dump(count($orders)); exit;
+        foreach ($orders as $order){
+            $register = $this->entityManager->getRepository(Register::class)
+                    ->findOneBy(['docId' => $order->getId(), 'docType' => Movement::DOC_ORDER]);
+            if ($register){
+                $this->updateOrderMovement($order, $register->getDocStamp());
+            }    
+        }
+        
+        return;
+    }
 }

@@ -1201,4 +1201,30 @@ class OrderRepository extends EntityRepository{
         return $queryBuilder->getQuery()->getResult();
         
     }
+    
+    /**
+     * Выборка для исправления движения товаров
+     */
+    public function findForFixMovement()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('o')
+            ->distinct()    
+            ->from(Order::class, 'o')
+            ->leftJoin('o.movements', 'm', 'WITH', 'm.docType = 5 and m.status != 2')    
+            ->where('o.status = :status')
+            ->setParameter('status', Order::STATUS_SHIPPED)  
+            ->andWhere('m.docStamp is null')    
+            ->andWhere('o.aplId > 0')    
+            ->setMaxResults(10000)
+               ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+    
+    
 }

@@ -335,6 +335,12 @@ class Order {
     private $retails;
 
     /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Movement", mappedBy="order")
+    * @ORM\JoinColumn(name="id", referencedColumnName="doc_id")
+     */
+    private $movements;
+
+    /**
     * @ORM\OneToMany(targetEntity="Application\Entity\OrderPhone", mappedBy="order")
     * @ORM\JoinColumn(name="id", referencedColumnName="order_id")
      */
@@ -364,6 +370,7 @@ class Order {
         $this->qrcodes = new ArrayCollection();
         $this->cashDocs = new ArrayCollection();
         $this->retails = new ArrayCollection();
+        $this->movements = new ArrayCollection();
         $this->phones = new ArrayCollection();
         $this->emails = new ArrayCollection();
     }
@@ -1855,6 +1862,10 @@ class Order {
         return $this->retails;
     }
     
+    public function getMovements() {
+        return $this->movements;
+    }
+
     public function getPhones() {
         return $this->phones;
     }
