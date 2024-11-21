@@ -277,7 +277,7 @@ class QrCode {
     {
         switch ($this->imageMediaType){
             case 'image/png':
-                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='{$this->imageWidth}' height='{$this->imageWidth}'>";
+                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='{$this->imageWidth}' height='{$this->imageWidth}' alt='".$this->getTitle()."'>";
         }
         
         return;
@@ -287,7 +287,7 @@ class QrCode {
     {
         switch ($this->imageMediaType){
             case 'image/png':
-                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='200' height='200'>";
+                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='200' height='200' alt='".$this->getTitle()."'>";
         }
         
         return;
@@ -297,10 +297,15 @@ class QrCode {
     {
         switch ($this->imageMediaType){
             case 'image/png':
-                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='300' height='300'>";
+                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='300' height='300' alt='".$this->getTitle()."'>";
         }
         
         return;
+    }
+    
+    public function getTitle()
+    {
+        return 'Оплата '.$this->getAmount().'Р по заказу №'.$this->getOrderAplId();
     }
 
     public function getSourceName() {
@@ -660,8 +665,9 @@ class QrCode {
     public function toMsg()
     {
         return [
-            'img' => $this->getImg(),
+            'img' => $this->getMsgImg(),
             'payload' => $this->getPayload(),
+            'title' => $this->getTitle(),
         ];
     }
 }
