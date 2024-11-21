@@ -267,6 +267,7 @@ class ReportController extends AbstractActionController
         
         return new JsonModel([
             'total' => $totalResult['clientCount'],
+            'orderCount' => $totalResult['orderCount'],
             'income' => $totalResult['income'],
             'amount' => $totalResult['amount'],
             'rows' => $result,

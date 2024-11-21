@@ -930,16 +930,19 @@ class OrderRepository extends EntityRepository{
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
         
-        $queryBuilder->select('c.name as clientName, c.id as clientId, '
+        $queryBuilder->select('c.name as clientName, c.pricecol, c.id as clientId, '
                 . 'sum(-m.amount + m.baseAmount) as income, '
                 . 'sum(-m.amount + m.baseAmount)*100/sum(-m.amount) as margin, '
-                . 'sum(-m.amount) as amount')
+                . 'sum(-m.amount) as amount, ' 
+                . 'sum(-m.amount)/count(distinct(m.parentDocId)) as average, ' 
+                . 'count(distinct(m.parentDocId)) as orderCount')
                 ->from(Movement::class, 'm')
                 ->join('m.client', 'c')
                 ->where('m.status = :status')
                 ->setParameter('status', Movement::STATUS_ACTIVE)    
                 ->andWhere($orX)
                 ->groupBy('m.client')
+//                ->having('amount != 0')
                 ;
         
         if (!empty($params['office'])){
@@ -982,11 +985,13 @@ class OrderRepository extends EntityRepository{
         
         $queryBuilder->select('count(distinct(m.client)) as clientCount, '
                 . 'sum(-m.amount + m.baseAmount) as income, '
-                . 'sum(-m.amount) as amount')
+                . 'sum(-m.amount) as amount, '
+                . 'count(distinct(m.parentDocId)) as orderCount')
                 ->from(Movement::class, 'm')
                 ->where('m.status = :status')
                 ->setParameter('status', Movement::STATUS_ACTIVE)    
                 ->andWhere($orX)
+//                ->having('amount != 0')
                 ;
         
         if (!empty($params['office'])){
