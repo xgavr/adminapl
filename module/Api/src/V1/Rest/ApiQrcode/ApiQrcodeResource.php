@@ -5,6 +5,7 @@ use Laminas\ApiTools\ApiProblem\ApiProblem;
 use Laminas\ApiTools\Rest\AbstractResourceListener;
 use Laminas\Filter\ToFloat;
 use Bank\Entity\QrCode;
+use Admin\Filter\ClickFilter;
 
 class ApiQrcodeResource extends AbstractResourceListener
 {
@@ -94,8 +95,11 @@ class ApiQrcodeResource extends AbstractResourceListener
                 ]);
                 
                 if ($qrCode instanceof QrCode){
+                    $clickFilter = new ClickFilter();
+                    $result = $qrCode->toMsg();
+                    $result['payloadShort'] = $clickFilter->filter($result['payload']);
                     return [
-                        'qrcode' => $qrCode->toMsg()
+                        'qrcode' => $result,
                     ];
                 }
             }
