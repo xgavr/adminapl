@@ -399,7 +399,10 @@ class PriceManager {
             
             foreach ($priceGettings as $priceGetting){
                 $this->entityManager->getConnection()->update('price_gettings', 
-                        ['mailbox_check' => PriceGetting::MAILBOX_TO_CHECK], 
+                        [
+                            'mailbox_check' => PriceGetting::MAILBOX_TO_CHECK,
+                            'status' => ($priceGetting->getSupplier() == Supplier::STATUS_ACTIVE) ? PriceGetting::STATUS_ACTIVE:PriceGetting::STATUS_RETIRED,
+                        ], 
                         ['id' => $priceGetting->getId()]);
             }
             //рекурсивно запускаем снова 
