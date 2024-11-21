@@ -350,37 +350,39 @@ if ($ptu && !$copy){
             .done(function (data) {
                 $('#ptugoodtable').bootstrapTable('removeAll');
                 
-                $.each( data, function( index, row ) { 
-                    var good = {
-                        id: row.good.id,
-                        code: row.good.code,
-                        name: row.good.name,
-                        producer: {name: row.good.producer.name}
-                    };
-                    var unit = {
-                        name: ''
-                    };
-                    var country = {
-                        name: ''
-                    };
-                    var ntd = {
-                        ntd: ''
-                    };
-                    var row = {
-                        good: good,
-                        amount: row.goodSupplier.price*row.quantity,
-                        quantity: row.quantity,
-                        price: row.goodSupplier.price,
-                        unit: unit,
-                        country: country,
-                        ntd: ntd
-                    };
+                $.each( data, function( index, row ) {
+                    $.each(row.good.goodSuppliers, function (i, gs){
+                        var good = {
+                            id: row.good.id,
+                            code: row.good.code,
+                            name: row.good.name,
+                            producer: {name: row.good.producer.name}
+                        };
+                        var unit = {
+                            name: ''
+                        };
+                        var country = {
+                            name: ''
+                        };
+                        var ntd = {
+                            ntd: ''
+                        };
+                        var row = {
+                            good: good,
+                            amount: gs.price*row.quantity,
+                            quantity: row.quantity,
+                            price: gs.price,
+                            unit: unit,
+                            country: country,
+                            ntd: ntd
+                        };
 
-                    var newRowNo = getNewTableUniqueId('ptugoodtable', 'rowNo');
-                    row.rowNo = newRowNo;
-                    var rows = [];
-                    rows.push(row);
-                    $('#ptugoodtable').bootstrapTable('prepend', rows);  
+                        var newRowNo = getNewTableUniqueId('ptugoodtable', 'rowNo');
+                        row.rowNo = newRowNo;
+                        var rows = [];
+                        rows.push(row);
+                        $('#ptugoodtable').bootstrapTable('prepend', rows);  
+                    });    
                 });    
                 ptuUpdateTotal();
                 
