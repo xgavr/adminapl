@@ -29,6 +29,8 @@ use Stock\Entity\ComissBalance;
 use Bank\Entity\QrCode;
 use Bank\Entity\QrCodePayment;
 use Stock\Entity\Ot;
+use User\Validator\EmailBlackListValidator;
+use User\Validator\PhoneBlackListValidator;
 
 
 /**
@@ -142,24 +144,28 @@ class ContactManager
         $email = null;
         if ($emailstr){
             
-            $email = $this->entityManager->getRepository(Email::class)
-                    ->findOneByName($emailstr);
+            $emailBlackListValidator = new EmailBlackListValidator();
+            
+            if ($emailBlackListValidator->isValid($emailstr)){
+                $email = $this->entityManager->getRepository(Email::class)
+                        ->findOneByName($emailstr);
 
-            if ($email == null){
-                $email = new Email();            
-                $email->setContact($contact);
-                $email->setName($emailstr);            
+                if ($email == null){
+                    $email = new Email();            
+                    $email->setContact($contact);
+                    $email->setName($emailstr);            
 
-                $currentDate = date('Y-m-d H:i:s');
-                $email->setDateCreated($currentDate);
+                    $currentDate = date('Y-m-d H:i:s');
+                    $email->setDateCreated($currentDate);
 
-                $contact->addEmail($email);
+                    $contact->addEmail($email);
 
-                $this->entityManager->persist($email);
+                    $this->entityManager->persist($email);
 
-                if ($flushnow){
-                    $this->entityManager->flush($email);                
-                }
+                    if ($flushnow){
+                        $this->entityManager->flush($email);                
+                    }
+                }    
             }    
         } 
         return $email;

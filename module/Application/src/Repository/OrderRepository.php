@@ -918,6 +918,100 @@ class OrderRepository extends EntityRepository{
     }
     
     /**
+     * Выручка по клиентам
+     * @param array $params
+     */
+    public function revenueByClient($params)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('c.name as clientName, c.id as clientId, '
+                . 'sum(-m.amount + m.baseAmount) as income, '
+                . 'sum(-m.amount + m.baseAmount)*100/sum(-m.amount) as margin, '
+                . 'sum(-m.amount) as amount')
+                ->from(Movement::class, 'm')
+                ->join('m.client', 'c')
+                ->where('m.status = :status')
+                ->setParameter('status', Movement::STATUS_ACTIVE)    
+                ->andWhere($orX)
+                ->groupBy('m.client')
+                ;
+        
+        if (!empty($params['office'])){
+            if (is_numeric($params['office'])){
+                $queryBuilder->andWhere('m.office = :office')
+                        ->setParameter('office', $params['office']);
+            }    
+        }
+        if (!empty($params['startDate'])){
+            $queryBuilder
+                ->andWhere('m.dateOper >= :startDate')    
+                ->setParameter('startDate', $params['startDate'])    
+                    ;
+        }
+        if (!empty($params['endDate'])){
+            $queryBuilder
+                ->andWhere('m.dateOper <= :endDate')    
+                ->setParameter('endDate', $params['endDate']) 
+                    ;
+        }
+        if (isset($params['sort'])){
+            $queryBuilder->orderBy($params['sort'], $params['order']);
+        }            
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }
+    
+    /**
+     * Количество по группам товаров
+     * @param array $params
+     */
+    public function revenueByClientCount($params)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select('count(distinct(m.client)) as clientCount, '
+                . 'sum(-m.amount + m.baseAmount) as income, '
+                . 'sum(-m.amount) as amount')
+                ->from(Movement::class, 'm')
+                ->where('m.status = :status')
+                ->setParameter('status', Movement::STATUS_ACTIVE)    
+                ->andWhere($orX)
+                ;
+        
+        if (!empty($params['office'])){
+            if (is_numeric($params['office'])){
+                $queryBuilder->andWhere('m.office = :office')
+                        ->setParameter('office', $params['office']);
+            }    
+        }
+        if (!empty($params['startDate'])){
+            $queryBuilder
+                ->andWhere('m.dateOper >= :startDate')    
+                ->setParameter('startDate', $params['startDate'])    
+                    ;
+        }
+        if (!empty($params['endDate'])){
+            $queryBuilder
+                ->andWhere('m.dateOper <= :endDate')    
+                ->setParameter('endDate', $params['endDate']) 
+                    ;
+        }
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }
+    
+    /**
      * Найти записи для отправки в АПЛ
      */
     public function findForUpdateApl()

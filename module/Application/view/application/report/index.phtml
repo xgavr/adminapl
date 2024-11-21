@@ -14,6 +14,59 @@
             ;
 
 ?>
+<h2>Лучшие покупатели</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="toolbar5">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <select style="width: 100px" class="form-control officeSelect">
+                        <option selected>офис</option>
+                        <?php foreach ($offices as $office):?>
+                            <option value="<?= $office->getId()?>"><?= $office->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <div class="form-group">
+                    <select class="form-control periodSelect" name="period">
+                        <option value="all">За все времена</option>                        
+                        <option value="number">Год</option>                        
+                        <option value="month" selected="">Месяц</option>                        
+                    </select>
+                    <input name="dateStart" style="width: 200px" class="form-control dateStart" type="month" value="<?= date('Y-m')?>">
+                </div>                
+            </div>
+        </div>
+        <table id="table5" 
+            data-toggle="table" 
+            data-url="/report/revenueByClient"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50, 100]"
+            data-toolbar="#toolbar5"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-query-params="queryParams5"
+            data-sort-name="income"
+            data-sort-order="desc"            
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-response-handler="responseHandler"
+            data-show-export="true"
+            data-show-footer="true"
+            >
+            <thead>
+                <tr>
+                     <th data-field="clientName" data-footer-formatter="totalFooterFormatter" data-formatter="clientFormatter">Покупатель</th>
+                     <th data-field='amount' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Продажи, руб.</th>
+                     <th data-field='margin' data-sortable="true" data-align="right" data-formatter="totalFormatter">Маржа, %</th>
+                     <th data-field='income' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Доход, руб.</th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>
+
 <h2>Популярные товары</h2>
 
 <div class="row">
@@ -234,6 +287,7 @@
         $table2 = $('#table2'),
         $table3 = $('#table3'),
         $table4 = $('#table4'),
+        $table5 = $('#table5'),
         $ok = $('#ok');
         $periodName = 'День';
         
@@ -250,6 +304,7 @@
         $table2.bootstrapTable('refresh');
         $table3.bootstrapTable('refresh');
         $table4.bootstrapTable('refresh');
+        $table5.bootstrapTable('refresh');
     }
     
     $(function(){        
@@ -311,6 +366,11 @@
         $table4.on('load-success.bs.table', function (e, data) {
             $table4.find('.incomeFooter').text($.number(data.income,  0, ',', ' '));
             $table4.find('.quantityFooter').text($.number(data.quantity,  0, ',', ' '));
+        });  
+        
+        $table5.on('load-success.bs.table', function (e, data) {
+            $table5.find('.incomeFooter').text($.number(data.income,  0, ',', ' '));
+            $table5.find('.amountFooter').text($.number(data.amount,  0, ',', ' '));
         });  
         
         $(document).on('change', '.officeSelect', function (e) {
@@ -376,6 +436,10 @@
         return queryParams(params, $('#toolbar4'));
     }
 
+    function queryParams5(params){
+        return queryParams(params, $('#toolbar5'));
+    }
+
     function totalFooterFormatter() {
         return 'Итого:';
     }
@@ -404,6 +468,16 @@
         btn += ' class="btn btn-link btn-xs" target="_blank">';
         btn += '<span class="glyphicon glyphicon-link"></span>';
         btn += '</a><b>'+value+'</b> '+row.name;
+        return btn;
+    }    
+    
+    function clientFormatter(value, row){
+        var url = '/client/view/'+row.clientId;
+        btn = '<a';
+        btn += ' href="'+url+'"';
+        btn += ' class="btn btn-link btn-xs" target="_blank">';
+        btn += '<span class="glyphicon glyphicon-link"></span>';
+        btn += '</a> '+row.clientName;
         return btn;
     }    
     
