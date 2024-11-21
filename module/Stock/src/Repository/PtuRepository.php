@@ -430,8 +430,8 @@ class PtuRepository extends EntityRepository{
 
         $queryBuilder->select('so, gs, o, g, p')
             ->from(SupplierOrder::class, 'so')
-            ->join(GoodSupplier::class, 'gs', 'WITH', 'gs.good = so.good and gs.supplier = :supplier')
-            ->join('gs.good', 'g')  
+            ->join('so.good', 'g')  
+            ->join('g.goodSuppliers', 'gs', 'WITH', 'gs.supplier = :supplier')
             ->join('so.order', 'o')    
             ->join('g.producer', 'p')    
             ->where('so.supplier = :supplier')
