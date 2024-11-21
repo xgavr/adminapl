@@ -172,7 +172,7 @@ class SmsController extends AbstractActionController
                         $qrCodeInfo = $qrCode->toMsg();
 
                         $clickFilter = new ClickFilter();
-                        $result['prepayLink'] = $clickFilter->filter($order->getAplPaymentLink($qrCodeInfo['payload']));
+                        $result['prepayLink'] = $clickFilter->filter($qrCodeInfo['payload']);
                     }
                 }    
                 
