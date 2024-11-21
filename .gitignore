@@ -41,3 +41,4 @@ phpunit.xml
 /public/doc/
 /data/tmp/
 /node_modules/
+/data/session1/

@@ -287,6 +287,7 @@
                                 <option value="week">Неделя</option>                        
                                 <option value="month">Месяц</option>                        
                                 <option value="number"  selected="true">Год</option>                        
+                                <option value="all">за все время</option>                        
                             </select>
                             <input name="dateStart" id="dateStart" style="width: 200px" class="form-control" type="number" value="<?= date('Y')?>">
                         </div>
@@ -397,6 +398,7 @@
                                 <option value="week">Неделя</option>                        
                                 <option value="month">Месяц</option>                        
                                 <option value="number"  selected="true">Год</option>                        
+                                <option value="all">за все время</option>                        
                             </select>
                             <input name="dateStart" id="comitentDateStart" style="width: 200px" class="form-control" type="number" value="<?= date('Y')?>">
                         </div>
@@ -664,12 +666,26 @@
         })
         $('#periodSelect').change(function (e) {
             $('#dateStart').attr('type', $(this).val());
+            if ($(this).val() == 'number'){
+                $('#dateStart').val('<?= date('Y')?>');
+            }
+            if ($(this).val() == 'all'){
+                $('#dateStart').attr('type', 'number');
+                $('#dateStart').val('');
+            }
         });
         $('#comitentDateStart').change(function (){
             $comitentTable.bootstrapTable('refresh', {silent: true});
         })
         $('#comitentPeriodSelect').change(function (e) {
             $('#comitentDateStart').attr('type', $(this).val());
+            if ($(this).val() == 'number'){
+                $('#dateStart').val('<?= date('Y')?>');
+            }
+            if ($(this).val() == 'all'){
+                $('#dateStart').attr('type', 'number');
+                $('#dateStart').val('');
+            }
         });
     });
 
