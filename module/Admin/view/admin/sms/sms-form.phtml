@@ -315,37 +315,6 @@ $form->prepare();
         <?php endif;?>
     });    
 
-    $('.local-comment-qr-prepay').on('click', function() {
-        <?php if ($order->getAplId()): ?>
-            let prepay = prompt("Сумма предоплаты", "<?= $order->getPrepay()?>");
-            let str = $(this).children('.text-hide').html();
-            if (prepay != null) {
-                $.get('/sms/qr-prepay/<?= $order->getId()?>?prepay='+prepay, function( data ) {                
-                    if (data.prepayLink){
-                        $('#message').val($.trim(str)+' '+prepay+' р. Для оплаты пройдите по ссылке ' + data.prepayLink);
-                        updateMode($(this).children('b').length);
-                    }    
-                });
-            }            
-        <?php else:?>
-            bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');
-        <?php endif;?>
-    }); 
-    
-    $('.local-comment-qr-total').on('click', function() {
-        <?php if ($order->getAplId()): ?>
-            let str = $(this).children('.text-hide').html();
-            $.get('/sms/qr-prepay/<?= $order->getId()?>?prepay='+<?= $order->getTotal()?> , function( data ) {                
-                if (data.prepayLink){
-                    $('#message').val($.trim(str)+' р. Для оплаты пройдите по ссылке ' + data.prepayLink);
-                    updateMode($(this).children('b').length);
-                }    
-            });
-        <?php else:?>
-            bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');
-        <?php endif;?>
-    });    
-
     $('.local-comment-sb-prepay').on('click', function() {
         <?php if ($order->getAplId()): ?>
             let prepay = prompt("Сумма предоплаты", "<?= $order->getPrepay()?>");
@@ -362,6 +331,37 @@ $form->prepare();
             bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');
         <?php endif;?>
     });    
+    
+    $('.local-comment-qr-total').on('click', function() {
+        <?php if ($order->getAplId()): ?>
+            let str = $(this).children('.text-hide').html();
+            $.get('/sms/qr-prepay/<?= $order->getId()?>?prepay='+<?= $order->getTotal()?> , function( data ) {                
+                if (data.prepayLink){
+                    $('#message').val($.trim(str)+' р. Для оплаты пройдите по ссылке ' + data.prepayLink);
+                    updateMode($(this).children('b').length);
+                }    
+            });
+        <?php else:?>
+            bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');
+        <?php endif;?>
+    });  
+    
+    $('.local-comment-qr-prepay').on('click', function() {
+        <?php if ($order->getAplId()): ?>
+            let prepay = prompt("Сумма предоплаты", "<?= $order->getPrepay()?>");
+            let str = $(this).children('.text-hide').html();
+            if (prepay != null) {
+                $.get('/sms/qr-prepay/<?= $order->getId()?>?prepay='+prepay, function( data ) {                
+                    if (data.prepayLink){
+                        $('#message').val($.trim(str)+' '+prepay+' р. Для оплаты пройдите по ссылке ' + data.prepayLink);
+                        updateMode($(this).children('b').length);
+                    }    
+                });
+            }            
+        <?php else:?>
+            bootbox.alert('Нет номера заказа в АПЛ!. Нажмите "Отправить в АПЛ" для получения номера');
+        <?php endif;?>
+    }); 
     
     $('.local-comment-turbo-link').on('click', function() {
         <?php if ($order->getAplId()): ?>
