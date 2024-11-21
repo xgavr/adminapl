@@ -192,7 +192,7 @@ class PostController extends AbstractActionController
                 ]);
 
                 if ($qrCode instanceof QrCode){
-                    $qrCodeInfo = $qrCode->toLog();
+                    $qrCodeInfo = $qrCode->toCheck();
                 }
             }    
         }
