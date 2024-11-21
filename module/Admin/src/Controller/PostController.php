@@ -191,7 +191,7 @@ class PostController extends AbstractActionController
                     'amount' => $toFloat->filter($prepay),
                 ]);
 
-                if ($qrCode instanceof QrCode){
+                if ($qrCode){
                     $qrCodeInfo = $qrCode->toCheck();
                 }
             }    
