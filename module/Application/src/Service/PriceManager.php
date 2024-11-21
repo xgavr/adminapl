@@ -401,7 +401,7 @@ class PriceManager {
                 $this->entityManager->getConnection()->update('price_gettings', 
                         [
                             'mailbox_check' => PriceGetting::MAILBOX_TO_CHECK,
-                            'status' => ($priceGetting->getSupplier() == Supplier::STATUS_ACTIVE) ? PriceGetting::STATUS_ACTIVE:PriceGetting::STATUS_RETIRED,
+                            'status' => ($priceGetting->getSupplier()->getStatus() == Supplier::STATUS_ACTIVE) ? PriceGetting::STATUS_ACTIVE:PriceGetting::STATUS_RETIRED,
                         ], 
                         ['id' => $priceGetting->getId()]);
             }
