@@ -350,15 +350,14 @@ if ($ptu && !$copy){
             .done(function (data) {
                 $('#ptugoodtable').bootstrapTable('removeAll');
                 
-                $.each( data, function( index, so ) {
-                    var row = so;
-                    $.each(so.good.goodSuppliers, function (k, gs){
-                        console.log(row);
+                $.each( data, function( index, row ) {
+                    var parentRow = row;
+                    $.each(row.good.goodSuppliers, function (k, gs){
                         var good = {
-                            id: row.good.id,
-                            code: row.good.code,
-                            name: row.good.name,
-                            producer: {name: row.good.producer.name}
+                            id: parentRow.good.id,
+                            code: parentRow.good.code,
+                            name: parentRow.good.name,
+                            producer: {name: parentRow.good.producer.name}
                         };
                         var unit = {
                             name: ''
@@ -371,8 +370,8 @@ if ($ptu && !$copy){
                         };
                         var row = {
                             good: good,
-                            amount: gs.price*row.quantity,
-                            quantity: row.quantity,
+                            amount: gs.price*parentRow.quantity,
+                            quantity: parentRow.quantity,
                             price: gs.price,
                             unit: unit,
                             country: country,
