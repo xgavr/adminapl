@@ -36,8 +36,8 @@ class ApiQrcodeResource extends AbstractResourceListener
                     'amount' => $toFloat->filter($data->amount),
                 ]);
                 
-                if ($qrCode instanceof QrCode){
-                    return $qrCode->();
+                if ($qrCode){
+                    return $qrCode->toMsg();
                 }
             }
         }
