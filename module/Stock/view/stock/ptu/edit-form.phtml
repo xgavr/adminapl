@@ -350,10 +350,10 @@ if ($ptu && !$copy){
             .done(function (data) {
                 $('#ptugoodtable').bootstrapTable('removeAll');
                 
-                $.each( data, function( index, row ) {
-                    var parentRow = row;
-                    $.each(row.good.goodSuppliers, function (k, gs){
-                        console.log(parentRow);
+                $.each( data, function( index, so ) {
+                    var row = so;
+                    $.each(so.good.goodSuppliers, function (k, gs){
+                        console.log(row);
                         var good = {
                             id: row.good.id,
                             code: row.good.code,
