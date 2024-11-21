@@ -37,7 +37,7 @@ class ApiQrcodeResource extends AbstractResourceListener
                 ]);
                 
                 if ($qrCode instanceof QrCode){
-                    return $qrCode->toLog();
+                    return $qrCode->();
                 }
             }
         }
@@ -95,7 +95,7 @@ class ApiQrcodeResource extends AbstractResourceListener
                 
                 if ($qrCode instanceof QrCode){
                     return [
-                        'qrcode' => $qrCode->toCheck()
+                        'qrcode' => $qrCode->toMsg()
                     ];
                 }
             }

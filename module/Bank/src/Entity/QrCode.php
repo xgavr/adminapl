@@ -254,7 +254,7 @@ class QrCode {
     }
 
     public function getPayloadLink() {
-        return '<a href="'.$this->payload.'">'.''.'</a>';
+        return '<a href="'.$this->payload.'" target="_blank">'.$this->getTitle().'</a>';
     }
 
     public function getImageWidth() {
@@ -305,7 +305,7 @@ class QrCode {
     
     public function getTitle()
     {
-        return 'Оплата '.$this->getAmount().'Р по заказу №'.$this->getOrderAplId();
+        return 'Оплата '.$this->getAmountAsRub().'Р по заказу №'.$this->getOrderAplId();
     }
 
     public function getSourceName() {
@@ -667,6 +667,7 @@ class QrCode {
         return [
             'img' => $this->getMsgImg(),
             'payload' => $this->getPayload(),
+            'payloadLink' => $this->getPayloadLink(),
             'title' => $this->getTitle(),
         ];
     }
