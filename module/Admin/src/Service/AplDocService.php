@@ -322,8 +322,12 @@ class AplDocService {
                 }    
             }
         }
-                
-        return $this->producerManager->addNewProducer(['name' => $data['comment']]);
+        
+        if (!empty($data['comment'])){
+            return $this->producerManager->addNewProducer(['name' => $data['comment']]);
+        }
+        
+        return;
     }
     
     
