@@ -47,6 +47,8 @@ use Stock\Entity\Vt;
 use Cash\Entity\CashDoc;
 use Application\Entity\OrderPhone;
 use Application\Entity\OrderEmail;
+use User\Validator\EmailBlackListValidator;
+use User\Validator\PhoneBlackListValidator;
 
 /**
  * Description of OrderService
@@ -857,13 +859,18 @@ class OrderManager
         }    
                 
         if (!empty($data['email'])){
-            $email = $this->entityManager->getRepository(Email::class)
-                    ->findOneBy(['name' => $data['email']]);   
-            if ($email){
-                $orderEmail = new OrderEmail();
-                $orderEmail->setOrder($order);
-                $orderEmail->setEmail($email);
-                $this->entityManager->persist($orderEmail);
+            
+            $emailBlackListValidator = new EmailBlackListValidator();
+            
+            if ($emailBlackListValidator->isValid($data['email'])){
+                $email = $this->entityManager->getRepository(Email::class)
+                        ->findOneBy(['name' => $data['email']]);   
+                if ($email){
+                    $orderEmail = new OrderEmail();
+                    $orderEmail->setOrder($order);
+                    $orderEmail->setEmail($email);
+                    $this->entityManager->persist($orderEmail);
+                }    
             }    
         }    
         

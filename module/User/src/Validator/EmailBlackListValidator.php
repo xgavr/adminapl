@@ -15,7 +15,7 @@ class EmailBlackListValidator extends AbstractValidator
      * @var array
      */
     protected $options = array(
-        'hostBlackList' => ['5070687.ru'],
+        'hostBlackList' => ['5070687.ru', 'autopartslist.ru'],
     );
     
     /**
