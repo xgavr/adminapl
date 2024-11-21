@@ -352,7 +352,7 @@ if ($ptu && !$copy){
                 
                 $.each( data, function( index, row ) {
                     $.each(row.good.goodSuppliers, function (k, gs){
-                        console.log(gs);
+                        console.log(row);
                         var good = {
                             id: row.good.id,
                             code: row.good.code,
