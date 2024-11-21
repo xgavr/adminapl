@@ -190,7 +190,7 @@ class PostController extends AbstractActionController
                     'orderAplId' => $order->getAplId(),
                     'amount' => $toFloat->filter($prepay),
                 ]);
-
+                var_dump($qrCode->getId());
                 if ($qrCode){
                     $qrCodeInfo = $qrCode->toCheck();
                 }
