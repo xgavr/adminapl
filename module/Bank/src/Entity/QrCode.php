@@ -303,6 +303,11 @@ class QrCode {
         return;
     }
     
+    public function getLinkMsgImg()
+    {
+        return '<a href="'.$this->payload.'" target="_blank">'.$this->getMsgImg().'</a>';
+    }
+    
     public function getTitle()
     {
         return 'Оплата '.$this->getAmountAsRub().'Р по заказу №'.$this->getOrderAplId();
@@ -666,6 +671,7 @@ class QrCode {
     {
         return [
             'img' => $this->getMsgImg(),
+            'imgLink' => $this->getLinkMsgImg(),
             'payload' => $this->getPayload(),
             'payloadLink' => $this->getPayloadLink(),
             'title' => $this->getTitle(),
