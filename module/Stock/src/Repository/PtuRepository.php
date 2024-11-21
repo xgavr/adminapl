@@ -20,6 +20,7 @@ use Laminas\Filter\Digits;
 use Stock\Entity\PtuCost;
 use Company\Entity\Legal;
 use Company\Entity\Contract;
+use Application\Entity\GoodSupplier;
 
 /**
  * Description of PtuRepository
@@ -427,19 +428,20 @@ class PtuRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('so, g, p, o')
+        $queryBuilder->select('so, gs, o, g, p')
             ->from(SupplierOrder::class, 'so')
-            ->join('so.good', 'g')  
+            ->join(GoodSupplier::class, 'gs', 'WITH', 'gs.good = so.good and gs.supplier = :supplier')
+            ->join('gs.good', 'g')  
             ->join('so.order', 'o')    
             ->join('g.producer', 'p')    
-            ->where('so.supplier = ?1')
-            ->setParameter('1', $supplierId)    
-            ->andWhere('so.status = ?2')
-            ->setParameter('2', SupplierOrder::STATUS_NEW)    
-            ->andWhere('so.statusOrder = ?3')
-            ->setParameter('3', SupplierOrder::STATUS_ORDER_ORDERED) 
-            ->andWhere('so.dateCreated > ?4')    
-            ->setParameter('4', date('Y-m-d', strtotime('- 1 month'))) 
+            ->where('so.supplier = :supplier')
+            ->setParameter('supplier', $supplierId)    
+            ->andWhere('so.status = :status')
+            ->setParameter('status', SupplierOrder::STATUS_NEW)    
+            ->andWhere('so.statusOrder = :statusOrder')
+            ->setParameter('statusOrder', SupplierOrder::STATUS_ORDER_ORDERED) 
+            ->andWhere('so.dateCreated > :date')    
+            ->setParameter('date', date('Y-m-d', strtotime('- 1 month'))) 
             ->orderBy('so.id', 'DESC')    
                 ;
         

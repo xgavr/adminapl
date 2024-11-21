@@ -368,9 +368,9 @@ if ($ptu && !$copy){
                     };
                     var row = {
                         good: good,
-                        amount: row.good.meanPrice*row.quantity,
+                        amount: row.goodSupplier.price*row.quantity,
                         quantity: row.quantity,
-                        price: row.good.meanPrice,
+                        price: row.goodSupplier.price,
                         unit: unit,
                         country: country,
                         ntd: ntd
