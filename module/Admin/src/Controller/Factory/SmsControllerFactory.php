@@ -13,6 +13,7 @@ use Admin\Controller\SmsController;
 use Admin\Service\SmsManager;
 use Admin\Service\AdminManager;
 use Admin\Service\AplService;
+use Bank\Service\SbpManager;
 
 
 /**
@@ -29,8 +30,10 @@ class SmsControllerFactory implements FactoryInterface {
         $smsManager = $container->get(SmsManager::class);
         $adminManager = $container->get(AdminManager::class);
         $aplService = $container->get(AplService::class);
+        $sbpManager = $container->get(SbpManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new SmsController($entityManager, $smsManager, $adminManager, $aplService);
+        return new SmsController($entityManager, $smsManager, $adminManager, 
+                $aplService, $sbpManager);
     }
 }

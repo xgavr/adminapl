@@ -14,6 +14,7 @@ use Application\Entity\Order;
 use Admin\Form\SmsForm;
 use User\Filter\PhoneFilter;
 use Admin\Filter\ClickFilter;
+use Laminas\Filter\ToFloat;
 
 
 class SmsController extends AbstractActionController
@@ -43,13 +44,21 @@ class SmsController extends AbstractActionController
      */
     private $aplService;        
     
+    /**
+     * SbpManager manager.
+     * @var \Bank\Service\SbpManager
+     */
+    private $sbpManager;        
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($entityManager, $smsManager, $adminManager, $aplService) 
+    public function __construct($entityManager, $smsManager, $adminManager, 
+            $aplService, $sbpManager) 
     {
         $this->smsManager = $smsManager;        
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->aplService = $aplService;
+        $this->sbpManager = $sbpManager;
     }   
 
     
@@ -134,6 +143,39 @@ class SmsController extends AbstractActionController
             if ($order){
                 $clickFilter = new ClickFilter();
                 $result['prepayLink'] = $clickFilter->filter($order->getAplPaymentLink($prepay));
+            }    
+        }
+        
+        return new JsonModel($result);                   
+    }    
+
+    public function qrPrepayAction()
+    {
+        $orderId = (int)$this->params()->fromRoute('id', -1);
+        $prepay = $this->params()->fromQuery('prepay', 0);
+        
+        $result = [];
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+            
+            if ($order && !empty($prepay)){
+                
+                if ($order->getAplId()){
+                    $toFloat = new ToFloat();
+                    $qrCode = $this->sbpManager->registerQrCode([
+                        'orderAplId' => $order->getAplId(),
+                        'amount' => $toFloat->filter($prepay),
+                    ]);
+    //                var_dump($qrCode->getId());
+                    if ($qrCode){
+                        $qrCodeInfo = $qrCode->toMsg();
+
+                        $clickFilter = new ClickFilter();
+                        $result['prepayLink'] = $clickFilter->filter($order->getAplPaymentLink($qrCodeInfo['payload']));
+                    }
+                }    
+                
             }    
         }
         
