@@ -638,4 +638,16 @@ class QrCode {
             'payload' => $this->getPayload(),
         ];
     }
+    
+    /**
+     * Данные в письмо с кодом
+     * @return array 
+     */
+    public function toMsg()
+    {
+        return [
+            'img' => $this->getCheckImg(),
+            'payload' => $this->getPayload(),
+        ];
+    }
 }
