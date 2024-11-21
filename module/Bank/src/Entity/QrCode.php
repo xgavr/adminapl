@@ -646,7 +646,7 @@ class QrCode {
     public function toMsg()
     {
         return [
-            'img' => $this->getCheckImg(),
+            'img' => $this->getImg(),
             'payload' => $this->getPayload(),
         ];
     }
