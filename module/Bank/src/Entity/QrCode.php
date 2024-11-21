@@ -253,6 +253,10 @@ class QrCode {
         return $this->payload;
     }
 
+    public function getPayloadLink() {
+        return '<a href="'.$this->payload.'">'.''.'</a>';
+    }
+
     public function getImageWidth() {
         return $this->imageWidth;
     }
@@ -284,6 +288,16 @@ class QrCode {
         switch ($this->imageMediaType){
             case 'image/png':
                 return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='200' height='200'>";
+        }
+        
+        return;
+    }
+
+    public function getMsgImg()
+    {
+        switch ($this->imageMediaType){
+            case 'image/png':
+                return "<img src='data:{$this->imageMediaType};base64,{$this->imageContent}' width='300' height='300'>";
         }
         
         return;
