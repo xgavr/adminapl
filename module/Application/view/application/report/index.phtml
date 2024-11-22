@@ -64,7 +64,7 @@
                      <th data-field='orderCount' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Заказов</th>
                      <th data-field='amount' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Продажи, руб.</th>
                      <th data-field='margin' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Маржа, %</th>
-                     <th data-field='average' data-sortable="true" data-align="right" data-formatter="totalFormatter">Средний чек, руб.</th>
+                     <th data-field='average' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Средний чек, руб.</th>
                      <th data-field='income' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Доход, руб.</th>
                  </tr>                
             </thead>
@@ -377,6 +377,7 @@
             $table5.find('.incomeFooter').text($.number(data.income,  0, ',', ' '));
             $table5.find('.amountFooter').text($.number(data.amount,  0, ',', ' '));
             $table5.find('.marginFooter').text($.number(data.margin,  0, ',', ' '));
+            $table5.find('.averageFooter').text($.number(data.average,  0, ',', ' '));
             $table5.find('.orderCountFooter').text($.number(data.orderCount,  0, ',', ' '));
         });  
         

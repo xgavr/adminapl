@@ -280,6 +280,16 @@ $this->headLink()
                                     </div>    
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    <div class="pull-left">
+                                        Средний чек                                    
+                                    </div>    
+                                    <div class="pull-right">
+                                        <?= number_format(empty($revenue['average']) ? 0:$revenue['average'], '0', '.', ' ') ?>
+                                    </div>    
+                                </td>
+                            </tr>
                         </table>    
                     </div>
                     <div class="col-md-6">

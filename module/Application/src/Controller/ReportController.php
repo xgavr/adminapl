@@ -271,6 +271,7 @@ class ReportController extends AbstractActionController
             'income' => $totalResult['income'],
             'amount' => $totalResult['amount'],
             'margin' => $totalResult['margin'],
+            'average' => $totalResult['average'],
             'rows' => $result,
         ]);         
     }

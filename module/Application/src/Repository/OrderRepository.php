@@ -993,6 +993,7 @@ class OrderRepository extends EntityRepository{
                 . 'sum(-m.amount + m.baseAmount) as income, '
                 . 'sum(-m.amount) as amount, '
                 . 'sum(-m.amount + m.baseAmount)*100/sum(-m.amount) as margin, '
+                . 'sum(-m.amount)/count(distinct(m.parentDocId)) as average, ' 
                 . 'count(distinct(m.parentDocId)) as orderCount')
                 ->from(Movement::class, 'm')
                 ->where('m.status = :status')
