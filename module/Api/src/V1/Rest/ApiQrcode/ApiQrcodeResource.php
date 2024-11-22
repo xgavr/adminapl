@@ -38,7 +38,10 @@ class ApiQrcodeResource extends AbstractResourceListener
                 ]);
                 
                 if ($qrCode){
-                    return $qrCode->toMsg();
+                    $clickFilter = new ClickFilter();
+                    $result = $qrCode->toMsg();
+                    $result['payloadShort'] = $clickFilter->filter($result['payload']);
+                    return $result;
                 }
             }
         }
@@ -94,7 +97,7 @@ class ApiQrcodeResource extends AbstractResourceListener
                     'amount' => $toFloat->filter(round($params->amount/100, 2)),
                 ]);
                 
-                if ($qrCode instanceof QrCode){
+                if ($qrCode){
                     $clickFilter = new ClickFilter();
                     $result = $qrCode->toMsg();
                     $result['payloadShort'] = $clickFilter->filter($result['payload']);

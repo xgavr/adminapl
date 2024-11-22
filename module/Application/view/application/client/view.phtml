@@ -88,8 +88,8 @@ $this->headLink()
                                 <?php endforeach?>    
                             <?php endforeach;?>   
                         </table>
-                    </div>
-                    <div class="col-md-3">
+                    <!--</div>-->
+                    <!--<div class="col-md-3">-->
                         <table class="table table-bordered table-hover table-condensed">
                             <tr>
                                 <td width="1005">
@@ -126,7 +126,7 @@ $this->headLink()
                             <?php endforeach;?>
                         </table>
                     </div>    
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <table class="table table-bordered table-hover table-condensed">
                             <tr>
                                 <td width="100%">
@@ -226,7 +226,7 @@ $this->headLink()
                                         Долг                                    
                                     </div>    
                                     <div class="pull-right">
-                                        <strong><?= round($client->getBalance(), 2)?></strong>
+                                        <strong><?= number_format($client->getBalance(), '0', '.', ' ') ?></strong>
                                     </div>    
                                 </td>
                             </tr>
@@ -240,7 +240,50 @@ $this->headLink()
                                     </div>    
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    <div class="pull-left">
+                                        Заказов                                    
+                                    </div>    
+                                    <div class="pull-right">
+                                        <?= empty($revenue['orderCount']) ? 0:$revenue['orderCount'] ?>
+                                    </div>    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="pull-left">
+                                        Оборот                                    
+                                    </div>    
+                                    <div class="pull-right">
+                                        <?= number_format(empty($revenue['amount']) ? 0:$revenue['amount'], '0', '.', ' ') ?>
+                                    </div>    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="pull-left">
+                                        Доход                                    
+                                    </div>    
+                                    <div class="pull-right">
+                                        <?= number_format(empty($revenue['income']) ? 0:$revenue['income'], '0', '.', ' ') ?>
+                                    </div>    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="pull-left">
+                                        Маржа                                    
+                                    </div>    
+                                    <div class="pull-right">
+                                        <?= number_format(empty($revenue['margin']) ? 0:$revenue['margin'], '0', '.', ' ') ?>
+                                    </div>    
+                                </td>
+                            </tr>
                         </table>    
+                    </div>
+                    <div class="col-md-6">
+                        <div id="tester"></div>
                     </div>
                 </div> 
             </div>

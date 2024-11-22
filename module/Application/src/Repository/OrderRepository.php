@@ -951,6 +951,12 @@ class OrderRepository extends EntityRepository{
                         ->setParameter('office', $params['office']);
             }    
         }
+        if (!empty($params['client'])){
+            if (is_numeric($params['client'])){
+                $queryBuilder->andWhere('m.client = :client')
+                        ->setParameter('client', $params['client']);
+            }    
+        }
         if (!empty($params['startDate'])){
             $queryBuilder
                 ->andWhere('m.dateOper >= :startDate')    
@@ -986,6 +992,7 @@ class OrderRepository extends EntityRepository{
         $queryBuilder->select('count(distinct(m.client)) as clientCount, '
                 . 'sum(-m.amount + m.baseAmount) as income, '
                 . 'sum(-m.amount) as amount, '
+                . 'sum(-m.amount + m.baseAmount)*100/sum(-m.amount) as margin, '
                 . 'count(distinct(m.parentDocId)) as orderCount')
                 ->from(Movement::class, 'm')
                 ->where('m.status = :status')
@@ -998,6 +1005,12 @@ class OrderRepository extends EntityRepository{
             if (is_numeric($params['office'])){
                 $queryBuilder->andWhere('m.office = :office')
                         ->setParameter('office', $params['office']);
+            }    
+        }
+        if (!empty($params['client'])){
+            if (is_numeric($params['client'])){
+                $queryBuilder->andWhere('m.client = :client')
+                        ->setParameter('client', $params['client']);
             }    
         }
         if (!empty($params['startDate'])){

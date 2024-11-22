@@ -364,6 +364,10 @@ class ClientController extends AbstractActionController
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
         
+        $revenue = $this->entityManager->getRepository(Order::class)
+                ->revenueByClientCount(['client' => $client->getId()])
+                ->getOneOrNullResult();
+//        var_dump($revenue);
 //        var_dump($client->getLegalContact()->getId());
         // Render the view template.
         return new ViewModel([
@@ -371,6 +375,7 @@ class ClientController extends AbstractActionController
             'allowDate' => $this->adminManager->getAllowDate(),
             'legals' => $legalList,
             'companies' => $companies,
+            'revenue' => $revenue
         ]);
     }      
     
