@@ -747,9 +747,9 @@ $this->headScript()
                     y2.push(value.income);
                 });
 
-                res.push({x: x, y:y, type:"lines", name: 'Продажа'});
-                res.push({x: x1, y:y1, type:"lines", name: 'Закупка'});
-                res.push({x: x2, y:y2, type:"lines", name: 'Доход'});
+                res.push({x: x, y:y, type:"bar", name: 'Продажа'});
+                res.push({x: x1, y:y1, type:"bar", name: 'Закупка'});
+                res.push({x: x2, y:y2, type:"bar", name: 'Доход'});
 
                 const layout = {xaxis: {title: xTitle}, yaxis: {title: 'Сумма'}};
 
