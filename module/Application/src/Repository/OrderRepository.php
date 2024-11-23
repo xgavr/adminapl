@@ -723,7 +723,7 @@ class OrderRepository extends EntityRepository{
                     break;
                 case 'year':        
                 case 'number':
-                    $queryBuilder->addSelect('CONCAT_WS(\'-\', YEAR(m.dateOper), MONTH(m.dateOper)) as period');
+                    $queryBuilder->addSelect('date_format(m.dateOper, \'%Y-%m\') as period');
                     break;
                 default:
                     $queryBuilder->addSelect('YEAR(m.dateOper) as period');                    
