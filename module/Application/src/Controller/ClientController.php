@@ -154,7 +154,7 @@ class ClientController extends AbstractActionController
         $movement = $this->entityManager->getRepository(Movement::class)
                 ->findOneBy(['client' => $client->getId()], ['docStamp' => 'ASC']);
         	        
-        $dateStart = $movement->getDateOper();
+        $dateStart = ($movement) ? $movement->getDateOper():date('Y-01-01');
         $endDate = $client->getBalanceDateTimeOrNow();
         $period = 'year';
         
