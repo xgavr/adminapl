@@ -731,7 +731,7 @@ $this->headScript()
     function revenueChat(){
         var periodName = 'Период';
         $.getJSON('/client/revenue-content/<?= $client->getId()?>', function( data ) {
-            if (data.rows.count){
+            if (data.rows.length){
                 var x = []; var y = []; 
                 var x1 = []; var y1 = []; 
                 var x2 = []; var y2 = []; 
