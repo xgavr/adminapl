@@ -160,7 +160,7 @@ class ClientController extends AbstractActionController
         
         $dateDiff = (new \DateTime($endDate))->diff(new \DateTime($dateStart));
         if ($dateDiff->y > 2){
-            //$dateStart = date('Y-m-d', strtotime($endDate.' -2 years'));
+            $dateStart = date('Y-m-d', strtotime($endDate.' -3 years'));
         }
 
 //        var_dump($dateStart, $endDate, $period);
