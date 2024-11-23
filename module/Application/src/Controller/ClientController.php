@@ -410,6 +410,11 @@ class ClientController extends AbstractActionController
         $revenue = $this->entityManager->getRepository(Order::class)
                 ->revenueByClientCount(['client' => $client->getId()])
                 ->getOneOrNullResult();
+        
+        $movement = $this->entityManager->getRepository(Movement::class)
+                ->findOneBy(['client' => $client->getId()], ['docStamp' => 'ASC']);
+        	        
+        $dateStart = ($movement) ? date('d.m.Y', strtotime($movement->getDateOper())):'';
 //        var_dump($revenue);
 //        var_dump($client->getLegalContact()->getId());
         // Render the view template.
@@ -418,7 +423,8 @@ class ClientController extends AbstractActionController
             'allowDate' => $this->adminManager->getAllowDate(),
             'legals' => $legalList,
             'companies' => $companies,
-            'revenue' => $revenue
+            'revenue' => $revenue,
+            'dateStart' => $dateStart,
         ]);
     }      
     
