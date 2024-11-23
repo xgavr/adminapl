@@ -20,6 +20,7 @@ use Application\Entity\Order;
 use Stock\Entity\Comiss;
 use Company\Entity\Legal;
 use Company\Entity\Contract;
+use Stock\Entity\Movement;
 
 class ClientController extends AbstractActionController
 {
@@ -129,6 +130,48 @@ class ClientController extends AbstractActionController
             'balanceOut' => $totalResult['balanceOut'],
             'contractBalanceIn' => (empty($totalResult['contractBalanceIn'])) ? 0:$totalResult['contractBalanceIn'],
             'contractBalanceOut' => (empty($totalResult['contractBalanceOut'])) ? 0:$totalResult['contractBalanceOut'],
+            'rows' => $result,
+        ]);          
+    }    
+    
+    public function revenueContentAction()
+    {
+        $clientId = (int)$this->params()->fromRoute('id', -1);
+        if ($clientId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Find the client ID
+        $client = $this->entityManager->getRepository(Client::class)
+                ->find($clientId);
+        
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }      
+        
+        $movement = $this->entityManager->getRepository(Movement::class)
+                ->findOneBy(['client' => $client->getId()], ['docStamp' => 'ASC']);
+        	        
+        $dateStart = $movement->getDateOper();
+        $endDate = $client->getBalanceDateTimeOrNow();
+        $period = 'year';
+        
+        $dateDiff = (new \DateTime($endDate))->diff(new \DateTime($dateStart));
+        if ($dateDiff->y > 2){
+            $dateStart = date('Y-m-d', strtotime($endDate.' -2 years'));
+        }
+
+//        var_dump($dateStart, $endDate, $period);
+        $params = ['client' => $client->getId(), 'period' => $period, 
+            'startDate' => $dateStart, 'endDate' => $endDate];
+        
+        $result = $this->entityManager->getRepository(Order::class)
+                        ->revenueByYears($params)
+                        ->getResult(2);
+        
+        return new JsonModel([
             'rows' => $result,
         ]);          
     }    

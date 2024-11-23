@@ -698,6 +698,12 @@ class OrderRepository extends EntityRepository{
                         ->setParameter('office', $params['office']);
             }    
         }
+        if (!empty($params['client'])){
+            if (is_numeric($params['client'])){
+                $queryBuilder->andWhere('m.client = :client')
+                        ->setParameter('client', $params['client']);
+            }    
+        }
         if (!empty($params['startDate'])){
             $queryBuilder
                 ->andWhere('m.dateOper >= :startDate')    
@@ -717,7 +723,7 @@ class OrderRepository extends EntityRepository{
                     break;
                 case 'year':        
                 case 'number':
-                    $queryBuilder->addSelect('MONTH(m.dateOper) as period');
+                    $queryBuilder->addSelect('CONCAT_WS(\'-\', MONTH(m.dateOper), YEAR(m.dateOper)) as period');
                     break;
                 default:
                     $queryBuilder->addSelect('YEAR(m.dateOper) as period');                    

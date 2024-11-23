@@ -24,12 +24,17 @@ $this->pageBreadcrumbs()->setItems([
 $legalContact = $client->getLegalContact();
 //var_dump($client->getLegalContactsCount());
 
+//$this->headScript()
+//    ->prependFile('//cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.min.js')
+//                ;
+//$this->headLink()
+//    ->prependStylesheet('//cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.min.css')
+//        ;
+
 $this->headScript()
-    ->prependFile('//cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.min.js')
-                ;
-$this->headLink()
-    ->prependStylesheet('//cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.min.css')
-        ;
+                ->prependFile('//cdn.plot.ly/plotly-2.12.1.min.js')
+            ;
+
 ?>
 
 <!--<h1 style="text-transform: capitalize">
@@ -667,12 +672,12 @@ $this->headLink()
         } 
     }    
     
-    function rangeDatePickerInit(){
-        var startDate = new Date(new Date().getFullYear(), 0, 1);
-        var endDate = new Date();
-        var picker = new AirDatepicker('#rangeDateStart', {autoClose: true, range: true, multipleDatesSeparator: ' - '});
-        picker.selectDate([startDate, endDate]);
-    }
+//    function rangeDatePickerInit(){
+//        var startDate = new Date(new Date().getFullYear(), 0, 1);
+//        var endDate = new Date();
+//        var picker = new AirDatepicker('#rangeDateStart', {autoClose: true, range: true, multipleDatesSeparator: ' - '});
+//        picker.selectDate([startDate, endDate]);
+//    }
 
     function mutualContractList(){
         $('#mutualContractSelect').empty();
@@ -720,8 +725,40 @@ $this->headLink()
         return;
     }
 
+    /**
+    * График
+    * @returns {undefined} */
+    function revenueChat(){
+        var periodName = 'Период';
+        $.getJSON('/client/revenue-content/<?= $client->getId()?>', function( data ) {
+            var x = []; var y = []; 
+            var x1 = []; var y1 = []; 
+            var x2 = []; var y2 = []; 
+            var xTitle = periodName;
+            var res = []; 
+            var TESTER = document.getElementById('tester');
+            $.each(data.rows, function( index, value ) {
+                x.push(value.period);
+                y.push(value.revenue);
+                x1.push(value.period);
+                y1.push(value.purchase);
+                x2.push(value.period);
+                y2.push(value.income);
+            });
+
+            res.push({x: x, y:y, type:"lines", name: 'Продажа'});
+            res.push({x: x1, y:y1, type:"lines", name: 'Закупка'});
+            res.push({x: x2, y:y2, type:"lines", name: 'Доход'});
+
+            const layout = {xaxis: {title: xTitle}, yaxis: {title: 'Сумма'}};
+
+            Plotly.newPlot( TESTER, res, layout);        
+        });                        
+    }    
+
     $(function () {        
 //        rangeDatePickerInit();
+        revenueChat();
         
         $('#ordertable').on('load-success.bs.table', function (e, res) {
             setCookies('clientSaveId');
@@ -806,6 +843,7 @@ $this->headLink()
             var url = '/print/revise?ext=Pdf&company='+company+'&legal='+legal+'&contract='+contract+'&period='+period+'&dateStart='+dateStart;
             window.open(url, 'windowObject');
         });
+        
     });
 
     function orderQueryParams(params) {

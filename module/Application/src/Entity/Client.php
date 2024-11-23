@@ -235,6 +235,14 @@ class Client {
         
         return;
     }
+    
+    public function getBalanceDateTimeOrNow() {
+        if ($this->balanceDate){
+            return date('Y-m-d 23:59:59', strtotime($this->balanceDate));
+        }
+        
+        return date('Y-m-d 23:59:59');
+    }
 
     public function setBalanceDate($balanceDate) {
         $this->balanceDate = $balanceDate;
