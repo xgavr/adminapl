@@ -731,28 +731,30 @@ $this->headScript()
     function revenueChat(){
         var periodName = 'Период';
         $.getJSON('/client/revenue-content/<?= $client->getId()?>', function( data ) {
-            var x = []; var y = []; 
-            var x1 = []; var y1 = []; 
-            var x2 = []; var y2 = []; 
-            var xTitle = periodName;
-            var res = []; 
-            var TESTER = document.getElementById('tester');
-            $.each(data.rows, function( index, value ) {
-                x.push(value.period);
-                y.push(value.revenue);
-                x1.push(value.period);
-                y1.push(value.purchase);
-                x2.push(value.period);
-                y2.push(value.income);
-            });
+            if (data.rows.count){
+                var x = []; var y = []; 
+                var x1 = []; var y1 = []; 
+                var x2 = []; var y2 = []; 
+                var xTitle = periodName;
+                var res = []; 
+                var TESTER = document.getElementById('tester');
+                $.each(data.rows, function( index, value ) {
+                    x.push(value.period);
+                    y.push(value.revenue);
+                    x1.push(value.period);
+                    y1.push(value.purchase);
+                    x2.push(value.period);
+                    y2.push(value.income);
+                });
 
-            res.push({x: x, y:y, type:"lines", name: 'Продажа'});
-            res.push({x: x1, y:y1, type:"lines", name: 'Закупка'});
-            res.push({x: x2, y:y2, type:"lines", name: 'Доход'});
+                res.push({x: x, y:y, type:"lines", name: 'Продажа'});
+                res.push({x: x1, y:y1, type:"lines", name: 'Закупка'});
+                res.push({x: x2, y:y2, type:"lines", name: 'Доход'});
 
-            const layout = {xaxis: {title: xTitle}, yaxis: {title: 'Сумма'}};
+                const layout = {xaxis: {title: xTitle}, yaxis: {title: 'Сумма'}};
 
-            Plotly.newPlot( TESTER, res, layout);        
+                Plotly.newPlot( TESTER, res, layout);        
+            }    
         });                        
     }    
 
