@@ -761,7 +761,7 @@ $this->headScript()
                 res.push({x: x1, y:y1, type:"bar", name: 'Закупка'});
                 res.push({x: x2, y:y2, type:"bar", name: 'Доход'});
 
-                const layout = {xaxis: {title: xTitle}, yaxis: {title: 'Сумма'}};
+                const layout = {xaxis: {title: xTitle}, yaxis: {title: 'Сумма'}, barmode: 'stack'};
 
                 Plotly.newPlot( TESTER, res, layout);        
             }    
