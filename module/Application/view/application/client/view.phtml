@@ -750,16 +750,16 @@ $this->headScript()
                 var TESTER = document.getElementById('tester');
                 $.each(data.rows, function( index, value ) {
                     x.push(value.period);
-                    y.push(value.revenue);
+                    y.push(value.income);
                     x1.push(value.period);
                     y1.push(value.purchase);
                     x2.push(value.period);
-                    y2.push(value.income);
+                    y2.push(value.revenue);
                 });
 
-                res.push({x: x, y:y, type:"bar", name: 'Продажа'});
+                res.push({x: x, y:y, type:"bar", name: 'Доход'});
                 res.push({x: x1, y:y1, type:"bar", name: 'Закупка'});
-                res.push({x: x2, y:y2, type:"bar", name: 'Доход'});
+                res.push({x: x2, y:y2, type:"bar", name: 'Продажа'});
 
                 const layout = {xaxis: {title: xTitle}, yaxis: {title: 'Сумма'}, barmode: 'stack'};
 
