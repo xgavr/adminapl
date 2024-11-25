@@ -1888,6 +1888,8 @@ class OrderManager
         $order->setShipmetTotal(!empty($data['shipmentTotal']) ? $data['shipmentTotal'] : 0);
         $order->setTrackNumber(!empty($data['trackNumber']) ? $data['trackNumber'] : null);
         $order->setInfoShipping(!empty($data['infoShipping']) ? $data['infoShipping'] : null);
+        $order->setStatusAccount(Order::STATUS_ACCOUNT_NO); //
+        $order->setStatusExt(Order::STATUS_EX_NO); //
 
         $order->setShipping(null);
         if (!empty($data['shipping'])){
