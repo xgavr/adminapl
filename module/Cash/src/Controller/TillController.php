@@ -400,9 +400,15 @@ class TillController extends AbstractActionController
                     $cashDoc = $this->cashManager->addCashDoc($data);
                 }    
                 
-                return new JsonModel(
-                   ['ok']
-                );           
+                $out['ok'] = 1;
+                if (!empty($data['order'])){
+                    $query = $this->entityManager->getRepository(Order::class)
+                            ->findAllOrder(['orderId' => $data['order']]);
+                    $result = $query->getOneOrNullResult(2);
+                    $out['row'] = $result;
+                    $out['orderId'] = $data['order'];
+                }    
+                return new JsonModel($out);           
             } else {
 //                var_dump($form->getMessages());
             }

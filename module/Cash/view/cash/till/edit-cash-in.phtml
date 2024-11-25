@@ -209,9 +209,14 @@ $form->prepare();
             data: $.param(data)
         })
             .done(function (data) {
-                if (data == 'ok'){
+                if (data.row && data.orderId){
+                    if ($("#table")){
+                        $("#table").bootstrapTable('updateByUniqueId', {id: data.orderId, row: data.row});
+                    }            
+                }    
+                if (data.ok){
                     $('#cashInModal').modal('hide');
-                    $('#table').bootstrapTable('refresh', {'silent':true});
+//                    $('#table').bootstrapTable('refresh', {'silent':true});
                     if ($('#mutualtable').length){
                         $('#mutualtable').bootstrapTable('refresh', {'silent':true});
                     }    
