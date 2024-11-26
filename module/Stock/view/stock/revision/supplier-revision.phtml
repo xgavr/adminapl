@@ -91,6 +91,7 @@
                      <th data-field="name" data-formatter="contractFormatter" data-footer-formatter="totalFooterFormatter">Договор</th>
                      <th data-field="balance" data-footer-formatter="footerCreditFormatter" data-formatter="creditFormatter" data-align="right" data-width="100" data-original-title="Мы должны" data-sortable="true">Мы должны</th>
                      <th data-field="balance" data-footer-formatter="footerDebitFormatter" data-formatter="debitFormatter" data-align="right" data-width="100" data-original-title="Нам должны" data-sortable="true">Нам должны</th>
+                     <th data-field="dateRevision" data-formatter="dateFormatter" data-align="left" data-width="80" data-original-title="Дата сверки" data-sortable="true">Дата сверки</th>
                      <th data-field="id" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
             </thead>
@@ -194,6 +195,15 @@
         if (value>0){
             return (Math.round(value*100)/100).toFixed(2);
         }
+        return '';
+    }
+    
+    function dateFormatter(value){
+        if (value){
+            var date = new Date(value);
+            return $.format.date(date, "dd.MM.yyyy");
+        }
+        
         return '';
     }
     

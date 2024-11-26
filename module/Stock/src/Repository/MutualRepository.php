@@ -634,6 +634,13 @@ class MutualRepository extends EntityRepository{
 
             $mutual->setRevision($revision);
             $entityManager->persist($mutual);
+            
+            $contract = $mutual->getContract();
+            if ($mutual->getDateOper() > $contract->getDateRevision()){
+                $contract->setDateRevision($mutual->getDateOper());
+                $entityManager->persist($contract);
+            }
+            
             $entityManager->flush();
         }
         

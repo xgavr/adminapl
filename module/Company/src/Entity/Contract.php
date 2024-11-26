@@ -95,6 +95,11 @@ class Contract {
      */
     protected $nds;
     
+    /** 
+     * @ORM\Column(name="date_revision")  
+     */
+    protected $dateRevision;    
+
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="contracts") 
      * @ORM\JoinColumn(name="legal_id", referencedColumnName="id")
@@ -210,6 +215,15 @@ class Contract {
         return $this;
     }
     
+    public function getDateRevision() {
+        return $this->dateRevision;
+    }
+
+    public function setDateRevision($dateRevision) {
+        $this->dateRevision = $dateRevision;
+        return $this;
+    }
+
     /**
      * Returns status.
      * @return int     

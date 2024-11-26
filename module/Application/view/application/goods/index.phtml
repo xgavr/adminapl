@@ -3,7 +3,8 @@ use Application\Entity\Goods;
 
 $this->headTitle('Товары');
 
-$this->mainMenu()->setActiveItemId('rb');
+$this->mainMenu()->setActiveItemId('stock');
+$this->mainMenu()->setActiveUrl($this->url('goods'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
