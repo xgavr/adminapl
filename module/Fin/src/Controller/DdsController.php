@@ -82,12 +82,14 @@ class DdsController extends AbstractActionController
         
         $result['totalBegin']['13'] = '';
         $result['bankBegin']['13'] = '';
+        $result['depositBegin']['13'] = '';
         $result['cashBegin']['13'] = '';
         $result['accountantBegin']['13'] = '';
         $result['goodBegin']['13'] = '';
 
         $result['totalEnd']['13'] = '';
         $result['bankEnd']['13'] = '';
+        $result['depositEnd']['13'] = '';
         $result['cashEnd']['13'] = '';
         $result['accountantEnd']['13'] = '';
         $result['goodEnd']['13'] = '';

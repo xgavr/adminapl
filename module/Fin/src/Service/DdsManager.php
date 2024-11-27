@@ -262,7 +262,7 @@ class DdsManager {
                             ->find($row['companyId']);
                     $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
 
-                    $finDds->setDepositBegin($row['amount']);            
+                    $finDds->setDepositBegin(-$row['amount']);            
 
                     $this->entityManager->persist($finDds);                
                 }
@@ -349,7 +349,7 @@ class DdsManager {
                             ->find($row['companyId']);
                     $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
 
-                    $finDds->setDepositEnd($row['amount']);            
+                    $finDds->setDepositEnd(-$row['amount']);            
 
                     $this->entityManager->persist($finDds);                
                 }
