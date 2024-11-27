@@ -344,6 +344,7 @@ $this->headScript()
                             <option value="week">Неделя</option>                        
                             <option value="month">Месяц</option>                        
                             <option value="number"  selected="true">Год</option>                        
+                            <option value="all">За все времена</option>                        
                         </select>
                         <input name="dateStart" id="orderDateStart" style="width: 200px" class="form-control" type="number" value="<?= date('Y')?>">
                     </div>
@@ -526,6 +527,7 @@ $this->headScript()
                             <option value="month">Месяц</option>                        
                             <!--<option value="qv">Квартал</option>-->                        
                             <option value="number"  selected="true">Год</option>                        
+                            <option value="all">За все времена</option>                        
                         </select>
                         <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control" min="2012" type="number" value="<?= date('Y')?>">
                         <!--<input type="text" class="form-control" id="rangeDateStart" name="dateRange" value="<?= date('Y-m-01').' - '.date('Y-m-d')?>">-->
@@ -807,6 +809,10 @@ $this->headScript()
                 case 'month':    
 //                    $('#orderDateStart').val($.format.date(new Date(), "yyyy-MM"));
 //                    break;
+                case 'all':
+                    $('#orderDateStart').attr('type', 'text');
+                    $('#orderDateStart').val('');
+                    break;
                 default:
                     $('#orderDateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
             }
@@ -822,6 +828,10 @@ $this->headScript()
                 case 'month':    
 //                    $('#mutualDateStart').val($.format.date(new Date(), "yyyy-MM"));
 //                    break;
+                case 'all':
+                    $('#mutualDateStart').attr('type', 'text');
+                    $('#mutualDateStart').val('');
+                    break;
                 default:
                     $('#mutualDateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
             }
