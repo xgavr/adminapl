@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 //use Application\Entity\Contact;
+use Stock\Entity\Movement;
 
 /**
  * Description of Client
@@ -118,6 +119,12 @@ class Client {
     private $comments;
     
     /**
+    * @ORM\OneToMany(targetEntity="Stock\Entity\Movement", mappedBy="client")
+    * @ORM\JoinColumn(name="id", referencedColumnName="client_id")
+     */
+    private $movements;
+    
+    /**
      * Constructor.
      */
     public function __construct() 
@@ -125,6 +132,7 @@ class Client {
         $this->contacts = new ArrayCollection();
         $this->cart = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->movements = new ArrayCollection();
     }
     
     public function getId() 
@@ -483,6 +491,23 @@ class Client {
         $this->comments[] = $comment;
     }
         
+    
+    public function getMovements() {
+        return $this->movements;
+    }
+
+    /**
+     * 
+     * @param Movement $movement
+     * @return $this
+     */
+    public function addMovement($movement) {
+        if ($movement){
+            $this->movements[] = $movement;
+        }    
+        return $this;
+    }
+    
     /*
      * Возвращает связанный manager.
      * @return \User\Entity\User

@@ -251,6 +251,34 @@ class DdsRepository extends EntityRepository
     }
     
     /**
+     * Получить остатки на депозите
+     * @param date $startDate
+     * @return array
+     */
+    public function findDepositBalance($startDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('identity(s.company) as companyId, sum(s.amount) as amount')
+            ->from(Statement::class, 's')
+            ->where('s.status = :status')
+            ->setParameter('status', Statement::STATUS_ACTIVE)    
+            ->andWhere('s.kind = :kindIn or s.kind = :kindOut')
+            ->setParameter('kindIn', Statement::KIND_IN_DEPOSIT)    
+            ->setParameter('kindOut', Statement::KIND_OUT_DEPO)    
+            ->andWhere('s.chargeDate < :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->groupBy('companyId')    
+            //->addGroupBy('period')  
+                ;
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);       
+    }
+    
+    
+    /**
      * Получить остатки в кассе
      * @param date $startDate
      * @return array

@@ -48,6 +48,11 @@ class FinDds
     protected $accountantBegin;
 
     /** 
+     * @ORM\Column(name="deposit_begin")  
+     */
+    protected $depositBegin;
+
+    /** 
      * @ORM\Column(name="total_begin")  
      */
     protected $totalBegin;
@@ -66,6 +71,11 @@ class FinDds
      * @ORM\Column(name="accountant_end")  
      */
     protected $accountantEnd;
+
+    /** 
+     * @ORM\Column(name="deposit_end")  
+     */
+    protected $depositEnd;
 
     /** 
      * @ORM\Column(name="total_end")  
@@ -259,6 +269,15 @@ class FinDds
         return $this;
     }
 
+    public function getDepositBegin() {
+        return $this->depositBegin;
+    }
+
+    public function setDepositBegin($depositBegin) {
+        $this->depositBegin = $depositBegin;
+        return $this;
+    }
+    
     public function getTotalBegin() {
         return $this->totalBegin;
     }
@@ -295,6 +314,15 @@ class FinDds
         return $this;
     }
 
+    public function getDepositEnd() {
+        return $this->depositEnd;
+    }
+
+    public function setDepositEnd($depositEnd) {
+        $this->depositEnd = $depositEnd;
+        return $this;
+    }
+    
     public function getTotalEnd() {
         return $this->totalEnd;
     }
@@ -498,6 +526,7 @@ class FinDds
         return [
             'totalBegin' => 'Денег на начало месяца',
             'bankBegin' => 'Банк',
+            'depositBegin' => 'Депозит',
             'cashBegin' => 'Касса',
             'accountantBegin' => 'Подотчет',
             'goodBegin' => 'Товары на начало месяца',
@@ -523,6 +552,7 @@ class FinDds
             'totalOut_' => '',
             'totalEnd' => 'Денег на конец месяца',
             'bankEnd' => 'Банк',
+            'depositEnd' => 'Депозит',
             'cashEnd' => 'Касса',
             'accountantEnd' => 'Подотчет',
             'goodEnd' => 'Товары на конец месяца',
@@ -543,6 +573,7 @@ class FinDds
     {
         return [
             'bankBegin' => 'Банк',
+            'depositBegin' => 'Депозит',
             'cashBegin' => 'Касса',
             'accountantBegin' => 'Подотчет',
             
@@ -562,6 +593,7 @@ class FinDds
             'otherОut' => 'Прочее',
             
             'bankEnd' => 'Банк',
+            'depositEnd' => 'Депозит',
             'cashEnd' => 'Касса',
             'accountantEnd' => 'Подотчет',            
         ];    

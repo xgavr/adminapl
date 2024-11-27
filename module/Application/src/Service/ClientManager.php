@@ -195,6 +195,12 @@ class ClientManager
             return false;
         }    
         
+        $movementCount = $this->entityManager->getRepository(Movement::class)
+                ->count(['client' => $client->getId()]);
+        if ($movementCount){
+            return false;
+        }    
+        
         return true;
     }
     

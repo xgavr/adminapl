@@ -51,6 +51,8 @@ class DdsManager {
         $dds->setCashBegin(empty($data['cashBegin']) ? 0:$data['cashBegin']);
         $dds->setCashEnd(empty($data['cashEnd']) ? 0:$data['cashEnd']);
         $dds->setCost(empty($data['cost']) ? 0:$data['cost']);
+        $dds->setDepositBegin(empty($data['depositBegin']) ? 0:$data['depositBegin']);
+        $dds->setDepositEnd(empty($data['depositEnd']) ? 0:$data['depositEnd']);
         $dds->setDepositOut(empty($data['depositOut']) ? 0:$data['depositOut']);
         $dds->setDepositIn(empty($data['depositIn']) ? 0:$data['depositIn']);
         $dds->setGoodBegin(empty($data['goodBegin']) ? 0:$data['goodBegin']);
@@ -115,6 +117,8 @@ class DdsManager {
         $dds->setCashBegin(empty($data['cashBegin']) ? 0:$data['cashBegin']);
         $dds->setCashEnd(empty($data['cashEnd']) ? 0:$data['cashEnd']);
         $dds->setCost(empty($data['cost']) ? 0:$data['cost']);
+        $dds->setDepositBegin(empty($data['depositBegin']) ? 0:$data['depositBegin']);
+        $dds->setDepositEnd(empty($data['depositEnd']) ? 0:$data['depositEnd']);
         $dds->setDepositOut(empty($data['depositOut']) ? 0:$data['depositOut']);
         $dds->setDepositIn(empty($data['depositIn']) ? 0:$data['depositIn']);
         $dds->setGoodBegin(empty($data['goodBegin']) ? 0:$data['goodBegin']);
@@ -251,6 +255,18 @@ class DdsManager {
                     $this->entityManager->persist($finDds);                
                 }
 
+                $depositBalances = $this->entityManager->getRepository(FinDds::class)
+                        ->findDepositBalance($day->format('Y-m-d'));
+                foreach ($depositBalances as $row){
+                    $company = $this->entityManager->getRepository(Legal::class)
+                            ->find($row['companyId']);
+                    $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
+
+                    $finDds->setDepositBegin($row['amount']);            
+
+                    $this->entityManager->persist($finDds);                
+                }
+
                 $userBalances = $this->entityManager->getRepository(FinDds::class)
                         ->findUserBalance($day->format('Y-m-d'));
                 foreach ($userBalances as $row){
@@ -260,7 +276,8 @@ class DdsManager {
 
                     $finDds->setAccountantBegin($row['amount']);            
 
-                    $finDds->setTotalBegin($finDds->getBankBegin() + $finDds->getCashBegin() + $finDds->getAccountantBegin());
+                    $finDds->setTotalBegin($finDds->getBankBegin() + $finDds->getCashBegin()
+                            + $finDds->getAccountantBegin() + $finDds->getDepositBegin());
 
                     $this->entityManager->persist($finDds);                
                 }
@@ -325,6 +342,18 @@ class DdsManager {
                     $this->entityManager->persist($finDds);                
                 }
 
+                $depositBalances = $this->entityManager->getRepository(FinDds::class)
+                        ->findDepositBalance($firstDayNextMonth);
+                foreach ($depositBalances as $row){
+                    $company = $this->entityManager->getRepository(Legal::class)
+                            ->find($row['companyId']);
+                    $finDds = $this->getFinDds($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
+
+                    $finDds->setDepositEnd($row['amount']);            
+
+                    $this->entityManager->persist($finDds);                
+                }
+                
                 $userBalances = $this->entityManager->getRepository(FinDds::class)
                         ->findUserBalance($firstDayNextMonth);
                 foreach ($userBalances as $row){
@@ -334,7 +363,8 @@ class DdsManager {
 
                     $finDds->setAccountantEnd($row['amount']);            
 
-                    $finDds->setTotalEnd($finDds->getBankEnd() + $finDds->getCashEnd() + $finDds->getAccountantEnd());
+                    $finDds->setTotalEnd($finDds->getBankEnd() + $finDds->getCashEnd()
+                            + $finDds->getAccountantEnd() + $finDds->getDepositEnd());
 
                     $this->entityManager->persist($finDds);                
                 }
