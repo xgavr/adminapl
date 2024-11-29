@@ -5,6 +5,16 @@ $form->get('name')->setAttributes([
     'placeholder'=>'Наименование'
     ]);
 
+$form->get('address')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Адрес'
+    ]);
+
+$form->get('addressSms')->setAttributes([
+    'class'=>'form-control', 
+    'placeholder'=>'Адрес для СМС'
+    ]);
+
 $form->get('aplId')->setAttributes([
     'class'=>'form-control', 
     'placeholder'=>'apl ID'
@@ -76,7 +86,7 @@ $form->prepare();
                     </div>
                 </div>
             </div>    
-            <div clalss="row">
+            <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <?= $this->formLabel($form->get('aplId')); ?>
@@ -88,6 +98,40 @@ $form->prepare();
                         <?= $this->formElement($form->get('parent')); ?>
                         <?= $this->formElementErrors($form->get('parent')); ?>                  
                     </div>
+                </div>    
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('status')); ?>
+                        <?= $this->formElement($form->get('status')); ?>
+                        <?= $this->formElementErrors($form->get('status')); ?>                  
+                    </div>
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('region')); ?>
+                        <?= $this->formElement($form->get('region')); ?>
+                        <?= $this->formElementErrors($form->get('region')); ?>                  
+                    </div>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('address')); ?>
+                        <?= $this->formElement($form->get('address')); ?>
+                        <?= $this->formElementErrors($form->get('address')); ?>                  
+                    </div>
+                </div>
+            </div>    
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('addressSms')); ?>
+                        <?= $this->formElement($form->get('addressSms')); ?>
+                        <?= $this->formElementErrors($form->get('addressSms')); ?>                  
+                    </div>
+                </div>
+            </div>    
+            <div clalss="row">
+                <div class="col-md-6">                
                     <div class="form-group">
                         <?= $this->formLabel($form->get('shippingLimit1')); ?>
                         <?= $this->formElement($form->get('shippingLimit1')); ?>
@@ -105,17 +149,6 @@ $form->prepare();
                     </div>
                 </div>
                 <div class="col-md-6">                
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('status')); ?>
-                        <?= $this->formElement($form->get('status')); ?>
-                        <?= $this->formElementErrors($form->get('status')); ?>                  
-                    </div>
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('region')); ?>
-                        <?= $this->formElement($form->get('region')); ?>
-                        <?= $this->formElementErrors($form->get('region')); ?>                  
-                    </div>
-
                     <div class="form-group">
                         <?= $this->formLabel($form->get('shippingLimit2')); ?>
                         <?= $this->formElement($form->get('shippingLimit2')); ?>

@@ -548,5 +548,21 @@ class Client {
         ];
         
         return $result;
+    }   
+    
+    /**
+     * Массив для реактивации
+     * @return array 
+     */
+    public function toReactor()
+    {
+        $result = [
+            'client_id' => $this->getId(),
+            'name' => $this->getNameOrNan(),
+            'phone' => $this->getContactPhone(),
+            'orders' => [],
+        ];
+        
+        return $result;
     }        
 }

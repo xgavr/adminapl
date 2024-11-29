@@ -72,6 +72,16 @@ class Office {
     protected $fullName;
 
     /**
+     * @ORM\Column(name="address")   
+     */
+    protected $address;
+
+    /**
+     * @ORM\Column(name="address_sms")   
+     */
+    protected $addressSms;
+
+    /**
      * Граница стоимости заказа 1
      * @ORM\Column(name="shipping_limit_1")   
      */
@@ -261,6 +271,24 @@ class Office {
         $this->fullName = $fullName;
     }     
 
+    public function getAddress() {
+        return $this->address;
+    }
+
+    public function setAddress($address) {
+        $this->address = $address;
+        return $this;
+    }
+
+    public function getAddressSms() {
+        return $this->addressSms;
+    }
+
+    public function setAddressSms($addressSms) {
+        $this->addressSms = $addressSms;
+        return $this;
+    }
+    
     public function getShippingLimit1() 
     {
         return $this->shippingLimit1;

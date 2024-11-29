@@ -41,6 +41,11 @@ class Bid {
     protected $price;
 
     /**
+     * @ORM\Column(name="price0")   
+     */
+    protected $price0;
+
+    /**
      * @ORM\Column(name="num")   
      */
     protected $num;
@@ -128,6 +133,15 @@ class Bid {
         $this->price = $price;
     }     
 
+    public function getPrice0() {
+        return $this->price0;
+    }
+
+    public function setPrice0($price0) {
+        $this->price0 = $price0;
+        return $this;
+    }
+    
     public function getNum() 
     {
         return $this->num;

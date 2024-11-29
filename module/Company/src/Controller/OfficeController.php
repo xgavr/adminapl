@@ -183,7 +183,9 @@ class OfficeController extends AbstractActionController
                     'shippingLimit1'=>$office->getShippingLimit1(),     
                     'shippingLimit2'=>$office->getShippingLimit2(),     
                     'sbCard'=>$office->getSbCard(),     
-                    'sbOwner'=>$office->getSbOwner(),     
+                    'sbOwner'=>$office->getSbOwner(),
+                    'address' => $office->getAddress(),
+                    'addressSms' => $office->getAddressSms(),
                 ));
         }
         

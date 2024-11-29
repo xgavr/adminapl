@@ -681,11 +681,13 @@ class OrderManager
         if ($data['good'] instanceof Goods){
             $bid->setGood($data['good']);            
             $bid->setOpts($data['good']->getOptsJson());
+            $bid->setPrice0($data['good']->getPrice());
         } else {
             $good = $this->entityManager->getRepository(Goods::class)
                         ->findOneById($data['good']);        
             $bid->setGood($good);
             $bid->setOpts($good->getOptsJson());
+            $bid->setPrice0($good->getPrice());
         }    
         
         $bid->setOe(null);

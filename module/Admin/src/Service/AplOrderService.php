@@ -598,10 +598,11 @@ class AplOrderService {
                             'rowNo' => $rowNo,
                             'num' => $tp['sort'],
                             'price' => $tp['comment'],
+                            'price0' => empty($tp['opts'][0]) ? $tp['comment']:$tp['opts'][0],
                             'good' => $good,
                             'displayName' => (empty($tp['dispname'])) ? null:$tp['dispname'],
                             'oem' => (empty($tp['selection'])) ? null:mb_substr($tp['selection'], 3),
-                            'opts' => $good->getOptsJson(),
+                            'opts' => empty($tp['opts']) ? $good->getOptsJson(): Encoder::encode($tp['opts']),
                         ]);
                         $rowNo++;
                     } 

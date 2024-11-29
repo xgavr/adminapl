@@ -11,7 +11,7 @@ use Company\Entity\Office;
 /**
  * The form for collecting information about Role.
  */
-class OfficeForm extends Form implements ObjectManagerAwareInterface
+class OfficeForm extends Form 
 {
    
     protected $objectManager;
@@ -58,6 +58,30 @@ class OfficeForm extends Form implements ObjectManagerAwareInterface
             ],
             'options' => [
                 'label' => 'Наименование',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'textarea',
+            'name' => 'address',
+            'attributes' => [
+                'id' => 'address',
+                'rows' => 2,
+            ],
+            'options' => [
+                'label' => 'Адрес',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'textarea',
+            'name' => 'addressSms',
+            'attributes' => [
+                'id' => 'addressSms',
+                'rows' => 2,
+            ],
+            'options' => [
+                'label' => 'Адрес для СМС',
             ],
         ]);
         
@@ -222,6 +246,40 @@ class OfficeForm extends Form implements ObjectManagerAwareInterface
         $inputFilter->add([
                 'name'     => 'name',
                 'required' => true,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 256
+                        ],
+                    ],
+                ],
+            ]);                          
+        
+        $inputFilter->add([
+                'name'     => 'address',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 1,
+                            'max' => 256
+                        ],
+                    ],
+                ],
+            ]);                          
+        
+        $inputFilter->add([
+                'name'     => 'addressSMS',
+                'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],                    
                 ],                

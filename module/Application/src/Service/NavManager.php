@@ -696,6 +696,11 @@ class NavManager
                         'label' => 'Api',
                         'link'  => $url('api')
                     ];
+                    $adminDropdownItems[] = [
+                        'id' => 'apiReactor',
+                        'label' => 'ApiReactor',
+                        'link'  => $url('api-reactor')
+                    ];
                 }    
                 
                 if (count($adminDropdownItems)!=0) {

@@ -59,4 +59,5 @@ return [
     'Fin',
     'Zp',
     'GoodMap',
+    'ApiReactor',
 ];

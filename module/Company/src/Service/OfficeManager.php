@@ -52,6 +52,8 @@ class OfficeManager
         $office->setSbCard($data['sbCard']);
         $office->setSbOwner($data['sbOwner']);
         $office->setSbpMerchantId((empty($data['sbpMerchantId'])) ? null:$data['sbpMerchantId']); 
+        $office->setAddress((empty($data['address'])) ? null:$data['address']); 
+        $office->setAddress((empty($data['addressSms'])) ? null:$data['addressSms']); 
         $office->setParent((empty($data['parent'])) ? null:$data['parent']); 
         $office->setLinkReview((empty($data['linkReview'])) ? null:$data['linkReview']); 
         
@@ -97,6 +99,8 @@ class OfficeManager
         $office->setShippingLimit2($data['shippingLimit2']);
         $office->setSbCard($data['sbCard']);
         $office->setSbOwner($data['sbOwner']);
+        $office->setAddress((empty($data['address'])) ? null:$data['address']); 
+        $office->setAddress((empty($data['addressSms'])) ? null:$data['addressSms']); 
         $office->setSbpMerchantId((empty($data['sbpMerchantId'])) ? null:$data['sbpMerchantId']); 
         $office->setParent((empty($data['parent'])) ? null:$data['parent']); 
         $office->setLinkReview((empty($data['linkReview'])) ? null:$data['linkReview']); 

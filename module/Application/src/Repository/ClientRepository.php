@@ -755,19 +755,77 @@ class ClientRepository extends EntityRepository{
     
     /**
      * Выборка для реактивации
+     * @param array $params
      */
-    public function findOrdersForReactor()
+    public function findForReactor($params = null)
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('b')
-                ->distinct()
-                ->from(Order::class, 'o')
-                ->where('o.status = :status')
-                ->setParameter('status', Order::STATUS_SHIPPED)
-                ->andWhere('o.dateShipment >= :dateStart')
-                ->setParameter($key, $queryBuilder)
-                ;
+//        var_dump($params); exit;
+        if (!empty($params['out'])){
+            $queryBuilder->distinct()
+                    ->from(Order::class, 'o')
+                    ->join('o.phones', 'op')
+                    ->join('op.phone', 'p')
+                    ->join('o.contact', 'ct')
+                    ->join('ct.client', 'c')
+                    ->join('o.bids', 'b')
+                    ->join('b.good', 'g')
+                    ->join('o.office', 'office')
+                    ->join('office.region', 'region')
+                    ->where('o.status = :status')
+                    ->setParameter('status', Order::STATUS_SHIPPED)
+                    ->andWhere('c.pricecol < :pricecol')
+                    ->setParameter('pricecol', Client::PRICE_3)
+                    ->andWhere('c.salesOrder < 20')
+                    ->andWhere('c.aplId > 0')
+                    ->andWhere('o.aplId > 0')
+                    ->andWhere('o.dateShipment > :dateShipment')
+                    ->setParameter('dateShipment', date('Y-m-d', strtotime('-3 years')))
+                    ;
+
+            switch ($params['out']){
+                case 'clients':
+                    $queryBuilder
+                        ->addSelect('c.id as client_id')
+                        ->addSelect('o.clientName as name')
+                        ->addSelect('p.name as mobilephone')
+                        ; break;
+                case 'paychecks':
+                    $queryBuilder
+                        ->addSelect('o.aplId as paycheck_id')
+                        ->addSelect('o.dateShipment as create_datetime')
+                        ->addSelect('identity(o.office) as shop_id')
+                        ->addSelect('c.id as client_id')
+                        ->addSelect('identity(b.good) as position_id')
+                        ->addSelect('b.price*b.num as amount')
+                        ->addSelect('b.num as count')
+                        ; break;
+                case 'positions':
+                    $queryBuilder
+                        ->addSelect('g.id as position_id')
+                        ->addSelect('g.name as name')
+                        ->addSelect('g.price as price')
+                        ->addSelect('identity(g.tokenGroup) as category_id')
+                        ; break;
+                case 'categories':
+                    $queryBuilder
+                        ->leftJoin('g.tokenGroup', 'tg')
+                        ->addSelect('tg.id as category_id')
+                        ->addSelect('tg.name as name')
+                        ;break;
+                case 'branches':
+                default:
+                    $queryBuilder
+                        ->addSelect('office.id as branch_id')
+                        ->addSelect('office.name as name')
+                        ->addSelect('region.name as city')
+                        ;
+            }
+    //        var_dump($queryBuilder->getQuery()->getSQL());
+            return $queryBuilder->getQuery()->getResult();
+        }
+        return [];    
     }
 }

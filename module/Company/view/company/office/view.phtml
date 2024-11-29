@@ -36,6 +36,8 @@ $legalContact = $office->getLegalContact();
                     ID: <?= $this->escapeHtml($office->getId()) ?>, AplId: <?= $this->escapeHtml($office->getAplId()) ?><br/>
                     Наименование: <?= $this->escapeHtml($office->getName()) ?><br/>
                     Регион: <?= $this->escapeHtml($office->getRegion()->getFullName()) ?><br/>
+                    Адрес: <?= $this->escapeHtml($office->getAddress()) ?><br/>
+                    Адрес (СМС): <?= $this->escapeHtml($office->getAddressSms()) ?><br/>
                     Головной офис: <?= ($office->getParent()) ?  $office->getParent()->getName():'нет'?><br/>
                     Карта СБ: <?= $this->escapeHtml($office->getSbCard()) ?> <?= $this->escapeHtml($office->getSbOwner()) ?><br/>
                     Идентификатор ТСП в СБП: <?= $this->escapeHtml($office->getSbpMerchantId()) ?><br/>

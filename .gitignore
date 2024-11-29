@@ -42,3 +42,4 @@ phpunit.xml
 /data/tmp/
 /node_modules/
 /data/session1/
+/data/users.htpasswd

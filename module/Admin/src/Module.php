@@ -100,7 +100,9 @@ class Module
             $actionName = $event->getRouteMatch()->getParam('action', null);
 
             // Convert dash-style action name to camel-case.
-            $actionName = str_replace('-', '', lcfirst(ucwords($actionName, '-')));
+            if (!empty($actionName)){
+                $actionName = str_replace('-', '', lcfirst(ucwords($actionName, '-')));
+            }    
 
             if ($controllerName == ProcessingController::class) {
                 $settingManager = $event->getApplication()->getServiceManager()->get(SettingManager::class);

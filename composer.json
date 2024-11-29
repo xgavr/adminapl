@@ -87,6 +87,7 @@
             "ApiSupplier\\": "module/ApiSupplier/src/",
             "Cash\\": "module/Cash/src/",
             "Api\\": "module/Api/src/",
+            "ApiReactor\\": "module/ApiReactor/src/",
             "Ai\\": "module/Ai/src/",
             "Search\\": "module/Search/src/",
             "Fin\\": "module/Fin/src/",
