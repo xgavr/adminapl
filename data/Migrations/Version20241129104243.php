@@ -29,8 +29,9 @@ final class Version20241129104243 extends AbstractMigration
 
         $table = $schema->getTable('token_group');
         $table->addColumn('parent_id', 'integer', ['notnull' => false, 'default' => 0, 'comment' => 'Группа выше']);
-        $table->addForeignKeyConstraint('token_group', ['parent_id'], ['id'], 
-                ['onUpdate'=>'CASCADE'], 'token_group_parent_id_token_group_id_fk');
+        $table->addIndex(['parent_id'], 'parent_id_indx');
+//        $table->addForeignKeyConstraint('token_group', ['parent_id'], ['id'], 
+//                ['onUpdate'=>'CASCADE'], 'token_group_parent_id_token_group_id_fk');
     }
 
     public function down(Schema $schema): void
@@ -44,7 +45,8 @@ final class Version20241129104243 extends AbstractMigration
         $table->dropColumn('price0');
 
         $table = $schema->getTable('token_group');
-        $table->removeForeignKey('token_group_parent_id_token_group_id_fk');
+//        $table->removeForeignKey('token_group_parent_id_token_group_id_fk');
+        $table->dropIndex('parent_id_indx');
         $table->dropColumn('parent_id');
     }
 }
