@@ -164,7 +164,7 @@ return [
         'authorization' => [
             'ApiReactor\\V1\\Rest\\ApiReactorClients\\Controller' => [
                 'collection' => [
-                    'GET' => true,
+                    'GET' => false,
                     'POST' => false,
                     'PUT' => false,
                     'PATCH' => false,
