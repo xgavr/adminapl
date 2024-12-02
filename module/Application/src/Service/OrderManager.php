@@ -725,7 +725,7 @@ class OrderManager
             'row_no' => $row['rowNo'],
             'num' => $row['num'],
             'price' => $row['price'],
-            'price' => empty($row['price0']) ? $row['price']:$row['price0'],
+            'price0' => empty($row['price0']) ? $row['price']:$row['price0'],
             'display_name' => (empty($row['displayName'])) ? null:$row['displayName'],
             'date_created' => date('Y-m-d H:i:s'),
             'oe' => null,
