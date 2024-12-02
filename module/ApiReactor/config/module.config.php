@@ -70,6 +70,7 @@ return [
             ],
             'collection_query_whitelist' => [
                 0 => 'out',
+                1 => 'limit',
             ],
             'page_size' => 25,
             'page_size_param' => 'limit',

@@ -739,6 +739,7 @@ class OrderManager
             $upd['good_id'] = $row['good']->getId();
             if (empty($row['opts'])){
                 $upd['opts'] = $row['good']->getOptsJson();
+                $upd['price0'] = $row['good']->getPrice();
             }    
         } else {
             $upd['good_id'] = $row['good'];

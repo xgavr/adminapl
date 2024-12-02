@@ -823,6 +823,10 @@ class ClientRepository extends EntityRepository{
                         ->addSelect('region.name as city')
                         ;
             }
+            
+            if (!empty($params['limit'])){
+                $queryBuilder->getQuery()->setMaxResults($params['limit']);
+            }
     //        var_dump($queryBuilder->getQuery()->getSQL());
             return $queryBuilder->getQuery()->getResult();
         }

@@ -71,6 +71,7 @@ class ApiReactorClientsResource extends AbstractResourceListener
      */
     public function fetchAll($params = [])
     {
+//        var_dump($params->toArray()); exit;
         return $this->entityManager->getRepository(Client::class)
                 ->findForReactor($params->toArray());
 //        return new ApiProblem(405, 'The GET method has not been defined for collections');
