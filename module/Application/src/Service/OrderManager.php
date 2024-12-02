@@ -725,20 +725,23 @@ class OrderManager
             'row_no' => $row['rowNo'],
             'num' => $row['num'],
             'price' => $row['price'],
+            'price' => empty($row['price0']) ? $row['price']:$row['price0'],
             'display_name' => (empty($row['displayName'])) ? null:$row['displayName'],
             'date_created' => date('Y-m-d H:i:s'),
             'oe' => null,
             'order_id' => $order->getId(),
             'take' => Bid::TAKE_NO,
             'base_key' => (empty($row['baseKey'])) ? null:$row['baseKey'],
+            'opts' => (empty($row['opts'])) ? null:$row['opts'],
         ];
 
         if ($row['good'] instanceof Goods){
             $upd['good_id'] = $row['good']->getId();
-            $upd['opts'] = $row['good']->getOptsJson();
+            if (empty($row['opts'])){
+                $upd['opts'] = $row['good']->getOptsJson();
+            }    
         } else {
             $upd['good_id'] = $row['good'];
-            $upd['opts'] = (empty($row['opts'])) ? null:$row['opts'];
         }    
         
         if (!empty($row['oem'])){
