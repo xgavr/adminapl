@@ -825,9 +825,9 @@ class ClientRepository extends EntityRepository{
             }
             
             if (!empty($params['limit'])){
-                $queryBuilder->getQuery()->setMaxResults($params['limit']);
+                $queryBuilder->setMaxResults($params['limit']);
             }
-    //        var_dump($queryBuilder->getQuery()->getSQL());
+//            var_dump($queryBuilder->getQuery()->getSQL()); exit;
             return $queryBuilder->getQuery()->getResult();
         }
         return [];    
