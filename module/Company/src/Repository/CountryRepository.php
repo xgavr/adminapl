@@ -17,6 +17,22 @@ use Company\Entity\Country;
  */
 class CountryRepository extends EntityRepository
 {
+    
+    public function findAllCountry()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+            ->from(Country::class, 'c')
+            ->orderBy('c.name')
+                ;
+
+        return $queryBuilder->getQuery();
+    }    
+    
+    
     /**
      * Запрос Country для автозаполения
      * 

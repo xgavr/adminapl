@@ -103,7 +103,7 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api-reactor.rest.api-reactor-clients',
                 'route_identifier_name' => 'api_reactor_clients_id',
-                'hydrator' => \Laminas\Hydrator\ObjectPropertyHydrator::class,
+                'hydrator' => \Laminas\Hydrator\ReflectionHydrator::class,
             ],
             \ApiReactor\V1\Rest\ApiReactorClients\ApiReactorClientsCollection::class => [
                 'entity_identifier_name' => 'id',
@@ -165,7 +165,7 @@ return [
         'authorization' => [
             'ApiReactor\\V1\\Rest\\ApiReactorClients\\Controller' => [
                 'collection' => [
-                    'GET' => false,
+                    'GET' => true,
                     'POST' => false,
                     'PUT' => false,
                     'PATCH' => false,
