@@ -792,7 +792,7 @@ class ClientRepository extends EntityRepository{
                 case 'clients':
                     $queryBuilder
                         ->addSelect('c.id as client_id')
-                        ->addSelect('o.clientName as name')
+                        ->addSelect('c.name as name')
                         ->addSelect('p.name as mobilephone')
                         ; break;
                 case 'paychecks':
