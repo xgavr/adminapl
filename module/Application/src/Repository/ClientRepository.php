@@ -22,6 +22,7 @@ use Application\Entity\Email;
 use Company\Entity\Contract;
 use Application\Entity\Bid;
 use Company\Entity\Office;
+use Application\Entity\OrderPhone;
 
 /**
  * Description of ClientRepository
@@ -775,8 +776,10 @@ class ClientRepository extends EntityRepository{
                     ->join('b.good', 'g')
                     ->join('o.office', 'office')
                     ->join('office.region', 'region')
-                    ->where('o.status = :status')
+                    ->andWhere('o.status = :status')
                     ->setParameter('status', Order::STATUS_SHIPPED)
+                    ->andWhere('op.kind = :kind')
+                    ->setParameter('kind', OrderPhone::KIND_MAIN)
                     ->andWhere('c.pricecol < :pricecol')
                     ->setParameter('pricecol', Client::PRICE_3)
                     ->andWhere('office.status = :officeStatus')
