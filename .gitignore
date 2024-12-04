@@ -45,3 +45,4 @@ phpunit.xml
 /data/users.htpasswd
 /config/autoload/local.php.dist
 /public/users.htpasswd
+/data/users.htdigest
