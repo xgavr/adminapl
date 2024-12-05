@@ -781,7 +781,7 @@ class ClientRepository extends EntityRepository{
                     ->andWhere('op.kind = :kind')
                     ->setParameter('kind', OrderPhone::KIND_MAIN)
                     ->andWhere('c.pricecol < :pricecol')
-                    ->setParameter('pricecol', Client::PRICE_3)
+                    ->setParameter('pricecol', Client::PRICE_2)
                     ->andWhere('office.status = :officeStatus')
                     ->setParameter('officeStatus', Office::STATUS_ACTIVE)
                     ->andWhere('c.salesOrder < 20')
