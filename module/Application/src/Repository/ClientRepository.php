@@ -788,7 +788,7 @@ class ClientRepository extends EntityRepository{
                     ->andWhere('c.aplId > 0')
                     ->andWhere('o.aplId > 0')
                     ->andWhere('o.dateShipment > :dateShipment')
-                    ->setParameter('dateShipment', date('Y-m-d', strtotime('-3 years')))
+                    ->setParameter('dateShipment', date('Y-m-d', strtotime('-2 years')))
                     ;
 
             switch ($params['out']){
