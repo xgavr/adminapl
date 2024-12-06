@@ -33,6 +33,10 @@ $form->get('priceListStatus')->setAttributes([
     'class'=>'form-control'
     ]);
 
+$form->get('removePrice')->setAttributes([
+    'class'=>'form-control'
+    ]);
+
 $form->get('parent')->setAttributes([
     'class'=>'form-control'
     ]);
@@ -90,6 +94,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('priceListStatus')); ?>
             <?= $this->formElement($form->get('priceListStatus')); ?>
             <?= $this->formElementErrors($form->get('priceListStatus')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('removePrice')); ?>
+            <?= $this->formElement($form->get('removePrice')); ?>
+            <?= $this->formElementErrors($form->get('removePrice')); ?>                  
         </div>
 
         <div class="form-group">
