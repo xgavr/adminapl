@@ -826,7 +826,7 @@ class ClientRepository extends EntityRepository{
                     $queryBuilder
                         ->addSelect('office.id as branch_id')
                         ->addSelect('office.name as name')
-                        ->addSelect('office.address as address')
+                        ->addSelect('office.addressSms as address')
                         ->addSelect('region.name as city')
                         ;
             }
