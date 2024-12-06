@@ -272,6 +272,8 @@ class OfficeController extends AbstractActionController
                     'sbpMerchantId' => $office->getSbpMerchantId(),
                     'parent' => $office->getParentId(),
                     'linkReview' => $office->getLinkReview(),
+                    'address' => $office->getAddress(),
+                    'addressSms' => $office->getAddressSms(),
                 ));
         }
         
