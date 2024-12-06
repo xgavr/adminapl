@@ -17,6 +17,7 @@ use Company\Entity\Office;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
 use Bank\Entity\Statement;
+use Company\Entity\BankAccount;
 
 /**
  * Description of CashRepository
@@ -633,7 +634,7 @@ class CashRepository extends EntityRepository
         $orX = $queryBuiler->expr()->orX();
         $orX->add($queryBuiler->expr()->isNull('cd.statement'));
         $orX->add($queryBuiler->expr()->eq('cd.statement', $statement->getId()));
-                
+        
         
         $queryBuiler->select('cd')
             ->from(CashDoc::class, 'cd')
@@ -649,6 +650,15 @@ class CashRepository extends EntityRepository
             ->andWhere($orX)                    
             ->setMaxResults(1)    
             ;        
+        
+        $companyAccount = $entityManager->getRepository(BankAccount::class)
+                ->findOneBy(['rs' => $statement->getAccount()]);
+        if ($companyAccount->getCash()){
+            $queryBuiler->andWhere('cd.cash = :cash')
+                ->setParameter('cash', $companyAccount->getCash()->getId())
+                    ;                    
+        }
+                
 //            var_dump($queryBuiler->getParameters());
 //        var_dump($queryBuiler->getQuery()->getSQL()); exit;
         return $queryBuiler->getQuery()->getOneOrNullResult();
