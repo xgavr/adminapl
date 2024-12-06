@@ -1432,15 +1432,15 @@ class CashManager {
         $legalsToCheck = [];
         
         if ($statement->getCashDoc()){
-            $cashDoc = $statement->getCashDoc();
-            $legal = $cashDoc->getLegal();
-            $legalsToCheck[$legal->getId()] = $legal;
-            
-            if ($cashDoc->getStatement()){
-                if ($cashDoc->getStatement()->getId() != $statement->getId()){
-                    $cashDoc = null;
-                }                
-            }
+//            $cashDoc = $statement->getCashDoc();
+//            $legal = $cashDoc->getLegal();
+//            $legalsToCheck[$legal->getId()] = $legal;
+//            
+//            if ($cashDoc->getStatement()){
+//                if ($cashDoc->getStatement()->getId() != $statement->getId()){
+//                    $cashDoc = null;
+//                }                
+//            }
         }
         
         if (!$legal){
