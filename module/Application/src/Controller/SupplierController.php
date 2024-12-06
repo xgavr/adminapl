@@ -181,6 +181,8 @@ class SupplierController extends AbstractActionController
                 
                 // Перенаправляем пользователя на страницу "supplier".
                 return $this->redirect()->toRoute('supplier', ['action' => 'view', 'id' => $supplier->getId()]);
+            } else {
+                var_dump($form->getMessages());
             }
         }
         
