@@ -284,7 +284,9 @@ class LegalController extends AbstractActionController
                     'name'=>$office->getName(),
                     'aplId'=>$office->getAplId(),     
                     'region'=>$office->getRegion(),     
-                    'status'=>$office->getStatus(),     
+                    'status'=>$office->getStatus(),  
+                    'address' => $office->getAddress(),
+                    'addressSms' => $office->getAddressSms(),
                 ));
         }
         
