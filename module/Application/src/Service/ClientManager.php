@@ -57,6 +57,30 @@ class ClientManager
     }
     
     /**
+     * Обновить даты клиента
+     * @param Client $client
+     */
+    public function updateClentDates($client)
+    {
+        $movement = $this->entityManager->getRepository(Movement::class)
+                ->findOneBy(['client' => $client->getId()], ['docStamp' => 'ASC']);
+        	        
+        $dateOrder = ($movement) ? date('Y-m-d', strtotime($movement->getDateOper())):null;
+        $client->setDateOrder($dateOrder);
+        
+        $order = $this->entityManager->getRepository(Client::class)
+                ->findFirstDateOrder($client);
+        	        
+        $dateRegistration = ($order) ? date('Y-m-d', strtotime($order->getDateOper())):null;
+        $client->setDateRegistration($dateRegistration);
+        
+        $this->entityManager->persist($client);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
      * Добавить клиента
      * @param array $data
      * @return Client
@@ -419,6 +443,24 @@ class ClientManager
                 ->findAll();
         foreach ($clients as $client){
             $this->updateBalance($client);
+        }
+        
+        return;
+    }  
+    
+    /**
+     * Обновить даты всех клиентов
+     * @return null
+     */
+    public function updateDates()
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(900);
+        
+        $clients = $this->entityManager->getRepository(Client::class)
+                ->findAll();
+        foreach ($clients as $client){
+            $this->updateClentDates($client);
         }
         
         return;

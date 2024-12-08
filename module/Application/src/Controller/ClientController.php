@@ -814,4 +814,13 @@ class ClientController extends AbstractActionController
         );                   
     }
     
+    public function updateClientDatesAction()
+    {
+        $this->clientManager->updateDates();        
+        
+        return new JsonModel(
+           ['result' => 'ok']
+        );                   
+    }
+    
 }

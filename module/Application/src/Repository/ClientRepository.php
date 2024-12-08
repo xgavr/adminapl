@@ -756,6 +756,27 @@ class ClientRepository extends EntityRepository{
     }
     
     /**
+     * 
+     * @param Client $client
+     */
+    public function findFirstDateOrder($client)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('o')
+                ->distinct()
+                ->from(Order::class, 'o')
+                ->join('o.contact', 'c')
+                ->where('c.client = :client')
+                ->setParameter('client', $client->getId())
+                ->orderBy('o.dateOper', 'ASC')
+                ->setMaxResults(1);
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+    
+    /**
      * Выборка для реактивации
      * @param array $params
      */

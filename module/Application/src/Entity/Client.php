@@ -57,6 +57,15 @@ class Client {
      */
     protected $dateCreated;
 
+    /** 
+     * @ORM\Column(name="data_registration")  
+     */
+    protected $dateRegistration;
+
+    /** 
+     * @ORM\Column(name="data_order")  
+     */
+    protected $dateOrder;
     
     /**
      * @ORM\Column(name="name")   
@@ -364,7 +373,25 @@ class Client {
     {
         $this->dateCreated = $dateCreated;
     }    
-            
+         
+    public function getDateRegistration() {
+        return $this->dateRegistration;
+    }
+
+    public function setDateRegistration($dateRegistration) {
+        $this->dateRegistration = $dateRegistration;
+        return $this;
+    }
+
+    public function getDateOrder() {
+        return $this->dateOrder;
+    }
+
+    public function setDateOrder($dateOrder) {
+        $this->dateOrder = $dateOrder;
+        return $this;
+    }
+    
     /**
      * Returns the array of contacts assigned to this.
      * @return array
