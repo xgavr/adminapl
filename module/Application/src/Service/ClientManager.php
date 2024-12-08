@@ -59,8 +59,9 @@ class ClientManager
     /**
      * Обновить даты клиента
      * @param Client $client
+     * @param bool $flush
      */
-    public function updateClentDates($client)
+    public function updateClentDates($client, $flush = true)
     {
         $movement = $this->entityManager->getRepository(Movement::class)
                 ->findOneBy(['client' => $client->getId()], ['docStamp' => 'ASC']);
@@ -75,7 +76,9 @@ class ClientManager
         $client->setDateRegistration($dateRegistration);
         
         $this->entityManager->persist($client);
-        $this->entityManager->flush();
+        if ($flush){
+            $this->entityManager->flush();
+        }    
         
         return;
     }
@@ -146,6 +149,8 @@ class ClientManager
 
         $this->entityManager->persist($client);
         // Применяем изменения к базе данных.
+        $this->updateClentDates($client, false);
+        
         $this->entityManager->flush();
     }    
     
@@ -164,6 +169,8 @@ class ClientManager
         ];
         $this->entityManager->getConnection()
                 ->update('client', $upd, ['id' => $client->getId()]);
+
+        $this->updateClentDates($client);
     }    
     
     /**
@@ -454,13 +461,15 @@ class ClientManager
      */
     public function updateDates()
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(900);
         
         $clients = $this->entityManager->getRepository(Client::class)
                 ->findAll();
         foreach ($clients as $client){
-            $this->updateClentDates($client);
+            if (!$client->getDateRegistration()){
+                $this->updateClentDates($client);
+            }    
         }
         
         return;
