@@ -366,6 +366,14 @@ class Client {
     }
     
     /**
+     * 
+     * @return string
+     */
+    public function getFormatedDateCreated() {
+        return date('d.m.Y', strtotime($this->dateCreated));
+    }
+    
+    /**
      * Sets the date when this user was created.
      * @param string $dateCreated     
      */

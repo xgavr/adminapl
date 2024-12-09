@@ -8,6 +8,7 @@ use Stock\Entity\Movement;
 use Stock\Entity\Revise;
 use Cash\Entity\CashDoc;
 use Company\Entity\Contract;
+use Application\Entity\Client;
 
 $this->headTitle(ucfirst($client->getName()));
 
@@ -252,6 +253,16 @@ $this->headScript()
                                     </div>    
                                     <div class="pull-right">
                                         <strong><?= $dateStart ?></strong>
+                                    </div>    
+                                </td>
+                            </tr>    
+                            <tr>
+                                <td>
+                                    <div class="pull-left">
+                                        Дата регистрации                                    
+                                    </div>    
+                                    <div class="pull-right">
+                                        <strong><?= $client->getFormatedDateCreated() ?></strong>
                                     </div>    
                                 </td>
                             </tr>    

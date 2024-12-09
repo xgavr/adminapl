@@ -69,17 +69,13 @@ class ClientManager
         $dateOrder = ($movement) ? date('Y-m-d', strtotime($movement->getDateOper())):null;
         $client->setDateOrder($dateOrder);
         
-        $order = $this->entityManager->getRepository(Client::class)
-                ->findFirstDateOrder($client);
-        	        
-        $dateRegistration = ($order) ? date('Y-m-d', strtotime($order->getDateOper())):null;
-        $client->setDateRegistration($dateRegistration);
+        $this->entityManager->getRepository(Client::class)
+                ->updateFirstDateOrder($client, false);
         
-        $this->entityManager->persist($client);
         if ($flush){
             $this->entityManager->flush();
-        }    
-        
+        }
+        	        
         return;
     }
     

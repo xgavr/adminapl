@@ -756,24 +756,36 @@ class ClientRepository extends EntityRepository{
     }
     
     /**
-     * 
+     * Обновить дату регистрации
      * @param Client $client
+     * @param bool $flush
      */
-    public function findFirstDateOrder($client)
+    public function updateFirstDateOrder($client, $flush = true)
     {
-        $entityManager = $this->getEntityManager();
-        $queryBuilder = $entityManager->createQueryBuilder();
+        if (!$client->getDateRegistration()){
+            $entityManager = $this->getEntityManager();
+            $queryBuilder = $entityManager->createQueryBuilder();
+
+            $queryBuilder->select('o')
+                    ->from(Order::class, 'o')
+                    ->join('o.contact', 'c')
+                    ->where('c.client = :client')
+                    ->setParameter('client', $client->getId())
+                    ->orderBy('o.dateOper', 'ASC')
+                    ->setMaxResults(1);
+
+            $order = $queryBuilder->getQuery()->getOneOrNullResult();
+            
+            if ($order->getDateOper()){
+                $client->setDateRegistration($order->getDateOper());
+                $entityManager->persist($client);
+                if ($flush){
+                    $entityManager->flush();
+                }    
+            }
+        }  
         
-        $queryBuilder->select('o')
-                ->distinct()
-                ->from(Order::class, 'o')
-                ->join('o.contact', 'c')
-                ->where('c.client = :client')
-                ->setParameter('client', $client->getId())
-                ->orderBy('o.dateOper', 'ASC')
-                ->setMaxResults(1);
-        
-        return $queryBuilder->getQuery()->getOneOrNullResult();
+        return;
     }
     
     /**
