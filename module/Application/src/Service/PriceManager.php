@@ -220,9 +220,11 @@ class PriceManager {
                     if (empty($fromSupplier)){
                         $fromSupplier = $this->entityManager->getRepository(Supplier::class)
                                 ->suplierByFromEmail($mail['fromEmail']);
-                        if ($fromSupplier->getParent()){
-                            $fromSupplier = $fromSupplier->getParent();
-                        }
+                        if ($fromSupplier){
+                            if ($fromSupplier->getParent()){
+                                $fromSupplier = $fromSupplier->getParent();
+                            }
+                        }    
                     }
                     
 //                    var_dump($mail['fromEmail']); 

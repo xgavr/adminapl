@@ -983,7 +983,7 @@ class OrderRepository extends EntityRepository{
     }
     
     /**
-     * Количество по группам товаров
+     * Количество по клиентам
      * @param array $params
      */
     public function revenueByClientCount($params)

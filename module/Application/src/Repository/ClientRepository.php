@@ -776,13 +776,15 @@ class ClientRepository extends EntityRepository{
 
             $order = $queryBuilder->getQuery()->getOneOrNullResult();
             
-            if ($order->getDateOper()){
-                $client->setDateRegistration($order->getDateOper());
-                $entityManager->persist($client);
-                if ($flush){
-                    $entityManager->flush();
-                }    
-            }
+            if ($order){
+                if ($order->getDateOper()){
+                    $client->setDateRegistration($order->getDateOper());
+                    $entityManager->persist($client);
+                    if ($flush){
+                        $entityManager->flush();
+                    }    
+                }
+            }    
         }  
         
         return;
