@@ -344,6 +344,14 @@ class PriceManager {
         $this->entityManager->persist($raw);
         $this->entityManager->flush();
         
+        if ($raw->getSender()){
+            if ($supplier->getParent()){
+                $this->postManager->addEmailToContact($supplier->getParent()->getLegalContact(), $raw->getSender());
+            } else {    
+                $this->postManager->addEmailToContact($supplier->getLegalContact(), $raw->getSender());
+            }    
+        }    
+
         if ($supplier){
             $this->checkNewPriceFile($raw);
         }    
