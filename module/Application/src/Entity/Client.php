@@ -58,12 +58,12 @@ class Client {
     protected $dateCreated;
 
     /** 
-     * @ORM\Column(name="data_registration")  
+     * @ORM\Column(name="date_registration")  
      */
     protected $dateRegistration;
 
     /** 
-     * @ORM\Column(name="data_order")  
+     * @ORM\Column(name="date_order")  
      */
     protected $dateOrder;
     

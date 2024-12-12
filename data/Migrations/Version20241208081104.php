@@ -22,8 +22,8 @@ final class Version20241208081104 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('client');
-        $table->addColumn('data_registration', 'date', ['notnull' => false, 'comment' => 'Дата первой регистрации']);
-        $table->addColumn('data_order', 'date', ['notnull' => false, 'comment' => 'Дата первого заказа']);
+        $table->addColumn('date_registration', 'date', ['notnull' => false, 'comment' => 'Дата первой регистрации']);
+        $table->addColumn('date_order', 'date', ['notnull' => false, 'comment' => 'Дата первого заказа']);
 
     }
 
@@ -31,7 +31,7 @@ final class Version20241208081104 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $table = $schema->getTable('client');
-        $table->dropColumn('data_registration');
-        $table->dropColumn('data_order');
+        $table->dropColumn('date_registration');
+        $table->dropColumn('date_order');
     }
 }

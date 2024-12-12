@@ -256,7 +256,7 @@ $this->headScript()
                                     </div>    
                                 </td>
                             </tr>    
-                            <tr>
+<!--                            <tr>
                                 <td>
                                     <div class="pull-left">
                                         Дата регистрации                                    
@@ -265,7 +265,7 @@ $this->headScript()
                                         <strong><?= $client->getFormatedDateCreated() ?></strong>
                                     </div>    
                                 </td>
-                            </tr>    
+                            </tr>    -->
                             <tr>
                                 <td>
                                     <div class="pull-left">
@@ -818,8 +818,8 @@ $this->headScript()
                     $('#orderDateStart').attr('min', 2012);
                     break;
                 case 'month':    
-//                    $('#orderDateStart').val($.format.date(new Date(), "yyyy-MM"));
-//                    break;
+                    $('#orderDateStart').val($.format.date(new Date(), "yyyy-MM"));
+                    break;
                 case 'all':
                     $('#orderDateStart').attr('type', 'text');
                     $('#orderDateStart').val('');
@@ -837,8 +837,8 @@ $this->headScript()
                     $('#mutualDateStart').attr('min', 2012);
                     break;
                 case 'month':    
-//                    $('#mutualDateStart').val($.format.date(new Date(), "yyyy-MM"));
-//                    break;
+                    $('#mutualDateStart').val($.format.date(new Date(), "yyyy-MM"));
+                    break;
                 case 'all':
                     $('#mutualDateStart').attr('type', 'text');
                     $('#mutualDateStart').val('');

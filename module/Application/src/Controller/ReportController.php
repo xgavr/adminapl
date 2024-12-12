@@ -83,7 +83,7 @@ class ReportController extends AbstractActionController
             'base' => $base];
         
         $query = $this->entityManager->getRepository(Order::class)
-                    ->revenueByYears($params);            
+                    ->revenueByOrders($params);            
         
         $total = count($query->getResult());
         

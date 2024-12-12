@@ -734,6 +734,71 @@ class OrderRepository extends EntityRepository{
     }
     
     /**
+     * Количество заказов по периодам
+     * @param array $params
+     */
+    public function revenueByOrders($params)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_ORDER));
+        $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
+        
+        $queryBuilder->select(''
+                . 'sum(CASE WHEN r.docType = :orderDocType THEN 1 ELSE 0 END) as orderCount, '
+                . 'sum(CASE WHEN r.docType = :vtDocType THEN 1 ELSE 0 END) as vtCount')
+                ->from(Retail::class, 'r')
+                ->join('r.contact', 'contact')
+                ->join('contact.client', 'c')
+                ->where('r.status = :status')
+                ->setParameter('orderDocType', Movement::DOC_ORDER)    
+                ->setParameter('vtDocType', Movement::DOC_VT)    
+                ->setParameter('status', Retail::STATUS_ACTIVE)    
+                ->andWhere($orX)
+                ->groupBy('period')
+                ;
+        
+        if (!empty($params['office'])){
+            if (is_numeric($params['office'])){
+                $queryBuilder->andWhere('r.office = :office')
+                        ->setParameter('office', $params['office']);
+            }    
+        }
+        if (!empty($params['startDate'])){
+            $queryBuilder
+                ->andWhere('r.dateOper >= :startDate')    
+                ->setParameter('startDate', $params['startDate'])    
+                    ;
+        }
+        if (!empty($params['endDate'])){
+            $queryBuilder
+                ->andWhere('r.dateOper <= :endDate')    
+                ->setParameter('endDate', $params['endDate']) 
+                    ;
+        }
+        if (!empty($params['period'])){
+            switch ($params['period']){
+                case 'month':
+                    $queryBuilder->addSelect('DAY(r.dateOper) as period');
+                    $queryBuilder->addSelect('sum(CASE WHEN DAY(r.dateOper) = DAY(c.dateOrder) THEN 1 ELSE 0 END) as newClient');
+                    break;
+                case 'year':        
+                case 'number':
+                    $queryBuilder->addSelect('date_format(r.dateOper, \'%Y-%m\') as period');
+                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateOrder) THEN 1 ELSE 0 END) as newClient');
+                    break;
+                default:
+                    $queryBuilder->addSelect('YEAR(r.dateOper) as period');                    
+                    $queryBuilder->addSelect('sum(CASE WHEN YEAR(r.dateOper) = YEAR(c.dateOrder) THEN 1 ELSE 0 END) as newClient');
+                }
+        }    
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }
+
+    /**
      * Выручка по товарам
      * @param array $params
      */
