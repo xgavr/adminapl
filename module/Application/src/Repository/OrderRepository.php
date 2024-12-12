@@ -747,8 +747,8 @@ class OrderRepository extends EntityRepository{
         $orX->add($queryBuilder->expr()->eq('r.docType', Movement::DOC_VT));
         
         $queryBuilder->select(''
-                . 'sum(CASE WHEN r.docType = :orderDocType THEN 1 ELSE 0 END)/100 as orderCount, '
-                . 'sum(CASE WHEN r.docType = :vtDocType THEN 1 ELSE 0 END)/10 as vtCount')
+                . 'sum(CASE WHEN r.docType = :orderDocType THEN 1 ELSE 0 END) as orderCount, '
+                . 'sum(CASE WHEN r.docType = :vtDocType THEN 1 ELSE 0 END) as vtCount')
                 ->from(Retail::class, 'r')
                 ->join('r.contact', 'contact')
                 ->join('contact.client', 'c')
