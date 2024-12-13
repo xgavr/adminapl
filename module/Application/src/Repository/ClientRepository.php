@@ -796,42 +796,39 @@ class ClientRepository extends EntityRepository{
      */
     public function updateFirstDateOrder($client, $flush = true)
     {
-        if (!$client->getDateRegistration()){
+        $entityManager = $this->getEntityManager();
 
-            $entityManager = $this->getEntityManager();
-            
-            $movement = $entityManager->getRepository(Movement::class)
-                    ->findOneBy(['client' => $client->getId()], ['docStamp' => 'ASC']);
-        	        
-            $dateOrder = ($movement) ? date('Y-m-d', strtotime($movement->getDateOper())):null;
-            $client->setDateOrder($dateOrder);        
-                        
-            $client->setDateRegistration($client->getDateCreated());
-            
-            $queryBuilder = $entityManager->createQueryBuilder();
+        $movement = $entityManager->getRepository(Movement::class)
+                ->findOneBy(['client' => $client->getId()], ['docStamp' => 'ASC']);
 
-            $queryBuilder->select('o')
-                    ->from(Order::class, 'o')
-                    ->join('o.contact', 'c')
-                    ->where('c.client = :client')
-                    ->setParameter('client', $client->getId())
-                    ->orderBy('o.dateOper', 'ASC')
-                    ->setMaxResults(1);
+        $dateOrder = ($movement) ? date('Y-m-d', strtotime($movement->getDateOper())):null;
+        $client->setDateOrder($dateOrder);        
 
-            $order = $queryBuilder->getQuery()->getOneOrNullResult();
-            
-            if ($order){
-                if ($order->getDateOper()){
-                    $client->setDateRegistration($order->getDateOper());
-                    $entityManager->persist($client);
-                }
-            }    
-            
-            if ($flush){
-                $entityManager->flush();
-            }    
-        }  
-        
+        $client->setDateRegistration($client->getDateCreated());
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('o')
+                ->from(Order::class, 'o')
+                ->join('o.contact', 'c')
+                ->where('c.client = :client')
+                ->setParameter('client', $client->getId())
+                ->orderBy('o.dateOper', 'ASC')
+                ->setMaxResults(1);
+
+        $order = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        if ($order){
+            if ($order->getDateOper()){
+                $client->setDateRegistration($order->getDateOper());
+                $entityManager->persist($client);
+            }
+        }    
+
+        if ($flush){
+            $entityManager->flush();
+        }    
+
         return;
     }
     
