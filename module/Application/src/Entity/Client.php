@@ -386,6 +386,14 @@ class Client {
         return $this->dateRegistration;
     }
 
+    /**
+     * 
+     * @return string
+     */
+    public function getFormatedDateRegistration() {
+        return date('d.m.Y', strtotime($this->dateRegistration));
+    }
+    
     public function setDateRegistration($dateRegistration) {
         $this->dateRegistration = $dateRegistration;
         return $this;
