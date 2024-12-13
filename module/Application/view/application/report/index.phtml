@@ -473,7 +473,11 @@
     }
 
     function dateFormatter(value, row){
-        return '<nobr>'+$.format.date(value, "dd.MM.yy")+'</nobr>';        
+        if (value){
+            return '<nobr>'+$.format.date(value, "dd.MM.yy")+'</nobr>';        
+        }
+        
+        return '';
     }
 
     function totalFooterFormatter() {
