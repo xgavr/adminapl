@@ -782,16 +782,19 @@ class OrderRepository extends EntityRepository{
             switch ($params['period']){
                 case 'month':
                     $queryBuilder->addSelect('DAY(r.dateOper) as period');
-                    $queryBuilder->addSelect('sum(CASE WHEN DAY(r.dateOper) = DAY(c.dateOrder) THEN 1 ELSE 0 END) as newClient');
+                    $queryBuilder->addSelect('sum(CASE WHEN DAY(r.dateOper) = DAY(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
+                    $queryBuilder->addSelect('sum(CASE WHEN DAY(r.dateOper) = DAY(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
                     break;
                 case 'year':        
                 case 'number':
                     $queryBuilder->addSelect('date_format(r.dateOper, \'%Y-%m\') as period');
-                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateOrder) THEN 1 ELSE 0 END) as newClient');
+                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
+                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
                     break;
                 default:
                     $queryBuilder->addSelect('YEAR(r.dateOper) as period');                    
-                    $queryBuilder->addSelect('sum(CASE WHEN YEAR(r.dateOper) = YEAR(c.dateOrder) THEN 1 ELSE 0 END) as newClient');
+                    $queryBuilder->addSelect('sum(CASE WHEN YEAR(r.dateOper) = YEAR(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
+                    $queryBuilder->addSelect('sum(CASE WHEN YEAR(r.dateOper) = YEAR(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
                 }
         }    
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -1007,6 +1010,7 @@ class OrderRepository extends EntityRepository{
                 . 'sum(-m.amount) as amount, ' 
                 . 'sum(-m.amount)/count(distinct(m.parentDocId)) as average, ' 
                 . 'count(distinct(m.parentDocId)) as orderCount')
+                ->addSelect('c.dateRegistration, c.dateOrder')
                 ->from(Movement::class, 'm')
                 ->join('m.client', 'c')
                 ->where('m.status = :status')
