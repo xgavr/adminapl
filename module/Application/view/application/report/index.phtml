@@ -68,7 +68,7 @@
             <thead>
                 <tr>
                      <th data-field="clientName" data-formatter="clientFormatter">Покупатель</th>
-                     <th data-field='dateOrder' data-sortable="true" data-footer-formatter="totalFooterFormatter" data-formatter="dateFormatter">Дата первого заказа</th>
+                     <th data-field='dateOrder' data-sortable="false" data-footer-formatter="totalFooterFormatter" data-formatter="dateFormatter">Дата первого заказа</th>
                      <th data-field='orderCount' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Заказов</th>
                      <th data-field='amount' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Продажи, руб.</th>
                      <th data-field='margin' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Маржа, %</th>
@@ -367,7 +367,7 @@
             });
             
             res.push({x: x, y:y, type:"lines", name: 'Заказы'});
-            res.push({x: x1, y:y1, type:"bar", name: 'Новые ркгистрации'});
+            res.push({x: x1, y:y1, type:"bar", name: 'Новые регистрации'});
             res.push({x: x2, y:y2, type:"bar", name: 'Заказы новых клиентов'});
             res.push({x: x3, y:y3, type:"lines", name: 'Возвраты'});
             
@@ -475,7 +475,7 @@
 
     function dateFormatter(value, row){
         if (value){
-            return '<nobr>'+$.format.date(value, "dd.MM.yy")+'</nobr>';        
+            return '<nobr>'+$.format.date(value + ' 00:00:00', "dd.MM.yy")+'</nobr>';        
         }
         
         return '';
