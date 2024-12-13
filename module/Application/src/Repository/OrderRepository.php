@@ -782,14 +782,14 @@ class OrderRepository extends EntityRepository{
             switch ($params['period']){
                 case 'month':
                     $queryBuilder->addSelect('DAY(r.dateOper) as period');
-                    $queryBuilder->addSelect('sum(CASE WHEN DAY(r.dateOper) = DAY(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
-                    $queryBuilder->addSelect('sum(CASE WHEN DAY(r.dateOper) = DAY(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
+                    $queryBuilder->addSelect('sum(CASE WHEN DATE(r.dateOper) = DATE(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
+                    $queryBuilder->addSelect('sum(CASE WHEN DATE(r.dateOper) = DATE(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
                     break;
                 case 'year':        
                 case 'number':
                     $queryBuilder->addSelect('date_format(r.dateOper, \'%Y-%m\') as period');
-                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
-                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
+                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateOrder) and YEAR(r.dateOper) = YEAR(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
+                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateRegistration) and YEAR(r.dateOper) = YEAR(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
                     break;
                 default:
                     $queryBuilder->addSelect('YEAR(r.dateOper) as period');                    
@@ -1010,6 +1010,7 @@ class OrderRepository extends EntityRepository{
                 . 'sum(-m.amount) as amount, ' 
                 . 'sum(-m.amount)/count(distinct(m.parentDocId)) as average, ' 
                 . 'count(distinct(m.parentDocId)) as orderCount')
+                ->addSelect('CASE WHEN с.dateOrder >= :startDate and с.dateOrder <= :endDate THEN 1 ELSE 0 END) as newOrderFlag')
                 ->addSelect('c.dateRegistration, c.dateOrder')
                 ->from(Movement::class, 'm')
                 ->join('m.client', 'c')
@@ -1043,6 +1044,14 @@ class OrderRepository extends EntityRepository{
                 ->andWhere('m.dateOper <= :endDate')    
                 ->setParameter('endDate', $params['endDate']) 
                     ;
+        }
+        if (!empty($params['newClient'])){
+            if ($params['newClient'] == 1){
+                $queryBuilder                        
+                    ->andWhere('c.dateOrder <= :endDate')    
+                    ->andWhere('c.dateOrder >= :startDate')    
+                        ;
+            }    
         }
         if (isset($params['sort'])){
             $queryBuilder->orderBy($params['sort'], $params['order']);
@@ -1100,6 +1109,14 @@ class OrderRepository extends EntityRepository{
                 ->andWhere('m.dateOper <= :endDate')    
                 ->setParameter('endDate', $params['endDate']) 
                     ;
+        }
+        if (!empty($params['newClient'])){
+            if ($params['newClient'] == 1){
+                $queryBuilder
+                    ->andWhere('c.dateOrder <= :endDate')    
+                    ->andWhere('c.dateOrder >= :startDate')    
+                        ;
+            }    
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();

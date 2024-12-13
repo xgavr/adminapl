@@ -275,6 +275,7 @@ class ReportController extends AbstractActionController
         $office = $this->params()->fromQuery('office');
         $dateStart = $this->params()->fromQuery('dateStart');
         $period = $this->params()->fromQuery('period');
+        $newClient = $this->params()->fromQuery('newClient');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
         
@@ -295,7 +296,7 @@ class ReportController extends AbstractActionController
             }    
         }    
 
-        $params = ['office' => $office, 'period' => $period, 
+        $params = ['office' => $office, 'period' => $period, 'newClient' => $newClient, 
             'startDate' => $startDate, 'endDate' => $endDate,
             'sort' => $sort, 'order' => $order];
         

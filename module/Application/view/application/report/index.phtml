@@ -39,6 +39,12 @@
                     </select>
                     <input name="dateStart" style="width: 200px" class="form-control dateStart" type="month" value="<?= date('Y-m')?>">
                 </div>                
+                <div class="form-group">
+                    <select class="form-control newClient" name="newClient">
+                        <option value="all">все клиенты</option>                        
+                        <option value="1">новые клиенты</option>                        
+                    </select>
+                </div>                
             </div>
         </div>
         <table id="table5" 
@@ -57,10 +63,12 @@
             data-response-handler="responseHandler"
             data-show-export="true"
             data-show-footer="true"
+            data-row-style="rowStyle5"
             >
             <thead>
                 <tr>
-                     <th data-field="clientName" data-footer-formatter="totalFooterFormatter" data-formatter="clientFormatter">Покупатель</th>
+                     <th data-field="clientName" data-formatter="clientFormatter">Покупатель</th>
+                     <th data-field='dateOrder' data-sortable="true" data-footer-formatter="totalFooterFormatter" data-formatter="dateFormatter">Дата первого заказа</th>
                      <th data-field='orderCount' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Заказов</th>
                      <th data-field='amount' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Продажи, руб.</th>
                      <th data-field='margin' data-sortable="true" data-align="right" data-footer-formatter="serverFooterFormatter" data-formatter="totalFormatter">Маржа, %</th>
@@ -280,6 +288,7 @@
                     <th data-field="period" data-align="right" data-footer-formatter="totalFooterFormatter"><span class="periodName">День</span></th>
                      <th data-field='orderCount' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Заказы</th>
                      <th data-field='newClient' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Новые клиенты</th>
+                     <th data-field='newOrder' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Новые заказы</th>
                      <th data-field='vtCount' data-sortable="false" data-align="right" data-footer-formatter="footerFormatter" data-formatter="totalFormatter">Возвраты</th>
                  </tr>                
             </thead>
@@ -351,12 +360,15 @@
                 x1.push(value.period);
                 y1.push(value.newClient);
                 x2.push(value.period);
-                y2.push(value.vtCount);
+                y2.push(value.newOrder);
+                x3.push(value.period);
+                y3.push(value.vtCount);
             });
             
             res.push({x: x, y:y, type:"lines", name: 'Заказы'});
             res.push({x: x1, y:y1, type:"lines", name: 'Новые клиенты'});
-            res.push({x: x2, y:y2, type:"lines", name: 'Возвраты'});
+            res.push({x: x2, y:y2, type:"lines", name: 'Новые заказы'});
+            res.push({x: x3, y:y3, type:"bar", name: 'Возвраты'});
             
             const layout = {xaxis: {title: xTitle}, yaxis: {title: 'Количество'}};
                 
@@ -391,6 +403,10 @@
             refreshTable();
         });
 
+        $(document).on('change', '.newClient', function (e) {
+            $table5.bootstrapTable('refresh');
+        });
+
         $(document).on('change', '.periodSelect', function (e) {
             var selectType = $(this).val();
             $('.periodSelect').val($(this).val());
@@ -417,6 +433,14 @@
             refreshTable();
         });
     });
+
+    function rowStyle5(row){
+        var retired = 'tablerow';
+        if (row.newOrderFlag === 1){
+            return {classes: 'success '+retired};
+        }        
+        return {classes: retired};
+    }
 
     function queryParams(params, toolbar) {
         toolbar.find('input[name]').each(function () {
@@ -446,6 +470,10 @@
 
     function queryParams5(params){
         return queryParams(params, $('#toolbar5'));
+    }
+
+    function dateFormatter(value, row){
+        return '<nobr>'+$.format.date(value, "dd.MM.yy")+'</nobr>';        
     }
 
     function totalFooterFormatter() {
