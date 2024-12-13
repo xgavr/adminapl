@@ -1096,8 +1096,10 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['parse_oem'] == 1){
+//            $this->entityManager->getRepository(\Application\Entity\Client::class)
+//                    ->restat();
             $this->entityManager->getRepository(\Application\Entity\Client::class)
-                    ->restat();
+                    ->clientUpdateDates();
         }    
                 
         return new JsonModel(

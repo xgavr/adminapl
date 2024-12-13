@@ -1339,6 +1339,8 @@ class OrderManager
         $this->entityManager->getRepository(Client::class)
                 ->updateClientRetailStat($order->getContact()->getClient());
         
+        $this->clientManager->updateClentDates($order->getContact()->getClient());
+        
         return;
     }
     

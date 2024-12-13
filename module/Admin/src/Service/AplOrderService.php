@@ -948,7 +948,8 @@ class AplOrderService {
     }
 
     /*
-     * Получить машину клиентf
+     * Что-то не доделанное или неиспользуемое
+     * Получить машину клиента
      * @param array $row;
      */
     public function getUserModel($row)
@@ -966,22 +967,11 @@ class AplOrderService {
             return false;
         }
         
-        $data = [
-            'name' => $row['name'],
-            'status' => ($row['publish'] == 1 ? AplClient::STATUS_ACTIVE:AplClient::STATUS_RETIRED),
-            'aplId' => $row['id'],
-        ];    
-
-        if ($client){                    
-            $this->clientManager->updateClient($client, $client_data);                    
-        } else {                            
-            $client = $this->clientManager->addNewClient($client_data);                        
-        }
-
         return true;
     }
     
     /**
+     * Что-то не доделанное или неиспользуемое
      * Загрузить машины пользователей
      * @return 
      */

@@ -756,6 +756,40 @@ class ClientRepository extends EntityRepository{
     }
     
     /**
+     * Выюорка для обновления дат
+     * @return array
+     */
+    public function clientUpdateDates()
+    {
+        ini_set('memory_limit', '4098M');
+        set_time_limit(900);
+        $startTime = time();
+        
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+                ->from(Client::class, 'c')
+                ->where('c.dateRegistration is null')
+                ->setMaxResults(5000)
+                ;
+        
+        $data =$queryBuilder->getQuery()->getResult();
+        
+        foreach ($data as $client){
+            
+            $this->updateFirstDateOrder($client);
+            
+            if (time() > $startTime + 840){
+                break;
+            }
+        }
+        
+        return;
+        
+    }
+    
+    /**
      * Обновить дату регистрации
      * @param Client $client
      * @param bool $flush
@@ -763,7 +797,17 @@ class ClientRepository extends EntityRepository{
     public function updateFirstDateOrder($client, $flush = true)
     {
         if (!$client->getDateRegistration()){
+
             $entityManager = $this->getEntityManager();
+            
+            $movement = $entityManager->getRepository(Movement::class)
+                    ->findOneBy(['client' => $client->getId()], ['docStamp' => 'ASC']);
+        	        
+            $dateOrder = ($movement) ? date('Y-m-d', strtotime($movement->getDateOper())):null;
+            $client->setDateOrder($dateOrder);        
+                        
+            $client->setDateRegistration($client->getDateCreated());
+            
             $queryBuilder = $entityManager->createQueryBuilder();
 
             $queryBuilder->select('o')
@@ -780,10 +824,11 @@ class ClientRepository extends EntityRepository{
                 if ($order->getDateOper()){
                     $client->setDateRegistration($order->getDateOper());
                     $entityManager->persist($client);
-                    if ($flush){
-                        $entityManager->flush();
-                    }    
                 }
+            }    
+            
+            if ($flush){
+                $entityManager->flush();
             }    
         }  
         

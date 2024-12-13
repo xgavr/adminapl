@@ -135,8 +135,8 @@ class JobManager
           325 => ['command' => 'update-good-oem',               'shedule' => '18,48 * * * *',           'description' => 'Обновление номеров товаров'],
           326 => ['command' => 'update-apl-order',              'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление заказов из АПЛ'],
 //          327 => ['command' => 'update-apl-ptu',                'shedule' => '25,55 * * * *',           'description' => 'Обновление поступлений из АПЛ'],
-          327 => ['command' => 'update-apl-ptu',                'shedule' => self::CRON_EVERY_MIN_15,           'description' => 'Обновление поступлений из АПЛ'],
-          328 => ['command' => 'update-orders-phones',          'shedule' => self::CRON_EVERY_MIN_30,   'description' => 'Обновление телефонов в заказах из АПЛ'],
+          328 => ['command' => 'update-apl-ptu',                'shedule' => self::CRON_EVERY_MIN_15,           'description' => 'Обновление поступлений из АПЛ'],
+          329 => ['command' => 'update-orders-phones',          'shedule' => self::CRON_EVERY_MIN_30,   'description' => 'Обновление телефонов в заказах из АПЛ'],
         ];
     }
     
@@ -213,8 +213,8 @@ class JobManager
           605 => ['command' => 'td-update-oem',         'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление оригинальных номеров'],
           606 => ['command' => 'update-oem-sup-cross',  'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление номеров поставщиков и кроссов'],
           607 => ['command' => 'update-oem-intersect',  'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление пересечений оригинальных номеров'],
-          607 => ['command' => 'update-oem-rating',     'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление рейтинга ОЕ'],
-//          607 => ['command' => 'update-client-stat',  'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление статистики Клиентов'],
+          608 => ['command' => 'update-oem-rating',     'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление рейтинга ОЕ'],
+          609 => ['command' => 'update-client-stat',    'shedule' => self::CRON_EVERY_MIN_15, 'description' => 'Обновление статистики Клиентов'],
         ];
     }
 
