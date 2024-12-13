@@ -1080,6 +1080,7 @@ class OrderRepository extends EntityRepository{
                 . 'sum(-m.amount)/count(distinct(m.parentDocId)) as average, ' 
                 . 'count(distinct(m.parentDocId)) as orderCount')
                 ->from(Movement::class, 'm')
+                ->join('m.client', 'c')
                 ->where('m.status = :status')
                 ->setParameter('status', Movement::STATUS_ACTIVE)    
                 ->andWhere($orX)
