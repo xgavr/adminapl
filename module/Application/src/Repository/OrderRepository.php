@@ -1010,7 +1010,7 @@ class OrderRepository extends EntityRepository{
                 . 'sum(-m.amount) as amount, ' 
                 . 'sum(-m.amount)/count(distinct(m.parentDocId)) as average, ' 
                 . 'count(distinct(m.parentDocId)) as orderCount')
-                ->addSelect('(CASE WHEN с.dateOrder >= :startDate and с.dateOrder <= :endDate THEN 1 ELSE 0 END) as newOrderFlag')
+//                ->addSelect('(CASE WHEN с.dateOrder >= :startDate and с.dateOrder <= :endDate THEN 1 ELSE 0 END) as newOrderFlag')
                 ->addSelect('c.dateRegistration, c.dateOrder')
                 ->from(Movement::class, 'm')
                 ->join('m.client', 'c')
