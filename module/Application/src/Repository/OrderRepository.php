@@ -832,7 +832,7 @@ class OrderRepository extends EntityRepository{
         }
         if (!empty($params['endDate'])){
             $queryBuilder
-                ->andWhere('c.dateRegistration <= :startDate')    
+                ->andWhere('c.dateRegistration <= :endDate')    
                 ->setParameter('endDate', $params['endDate']) 
                     ;
         }
@@ -883,7 +883,7 @@ class OrderRepository extends EntityRepository{
         }
         if (!empty($params['endDate'])){
             $queryBuilder
-                ->andWhere('c.dateOrder <= :startDate')    
+                ->andWhere('c.dateOrder <= :endDate')    
                 ->setParameter('endDate', $params['endDate']) 
                     ;
         }
