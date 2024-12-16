@@ -178,7 +178,7 @@ class ReportController extends AbstractActionController
         
         return new JsonModel([
             'total' => count($result),
-            'rows' => $result,
+            'rows' => array_values($result),
         ]);         
     }
     
