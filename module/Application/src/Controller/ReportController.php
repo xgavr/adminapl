@@ -170,7 +170,7 @@ class ReportController extends AbstractActionController
         }
         foreach ($data2 as $row2){
             if (!empty($result[$row2['period']])){
-                $result[$row2['period']]['newOrder'] = $row1['newOrder'];
+                $result[$row2['period']]['newOrder'] = $row2['newOrder'];
             } else {
                 $result[$row2['period']] = $row2;
             }    
