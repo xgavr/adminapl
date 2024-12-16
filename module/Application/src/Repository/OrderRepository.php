@@ -839,14 +839,14 @@ class OrderRepository extends EntityRepository{
         if (!empty($params['period'])){
             switch ($params['period']){
                 case 'month':
-                    $queryBuilder->addSelect('DAY(o.dateOper) as period');
+                    $queryBuilder->addSelect('DAY(c.dateRegistration) as period');
                     break;
                 case 'year':        
                 case 'number':
-                    $queryBuilder->addSelect('date_format(o.dateOper, \'%Y-%m\') as period');
+                    $queryBuilder->addSelect('date_format(c.dateRegistration, \'%Y-%m\') as period');
                     break;
                 default:
-                    $queryBuilder->addSelect('YEAR(o.dateOper) as period');                    
+                    $queryBuilder->addSelect('YEAR(c.dateRegistration) as period');                    
                 }
         }    
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
@@ -890,14 +890,14 @@ class OrderRepository extends EntityRepository{
         if (!empty($params['period'])){
             switch ($params['period']){
                 case 'month':
-                    $queryBuilder->addSelect('DAY(o.dateOper) as period');
+                    $queryBuilder->addSelect('DAY(c.dateOrder) as period');
                     break;
                 case 'year':        
                 case 'number':
-                    $queryBuilder->addSelect('date_format(o.dateOper, \'%Y-%m\') as period');
+                    $queryBuilder->addSelect('date_format(c.dateOrder, \'%Y-%m\') as period');
                     break;
                 default:
-                    $queryBuilder->addSelect('YEAR(o.dateOper) as period');                    
+                    $queryBuilder->addSelect('YEAR(c.dateOrder) as period');                    
                 }
         }    
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
