@@ -175,10 +175,10 @@ class ReportController extends AbstractActionController
                 $result[$row2['period']] = $row2;
             }    
         }
-        
+        ksort($result);
         return new JsonModel([
             'total' => count($result),
-            'rows' => array_values(ksort($result)),
+            'rows' => array_values($result),
         ]);         
     }
     
