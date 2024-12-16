@@ -749,9 +749,10 @@ class OrderRepository extends EntityRepository{
         $queryBuilder->select(''
                 . 'sum(CASE WHEN r.docType = :orderDocType THEN 1 ELSE 0 END) as orderCount, '
                 . 'sum(CASE WHEN r.docType = :vtDocType THEN 1 ELSE 0 END) as vtCount')
+                ->addSelect('0 as newClient, 0 as newOrder')
                 ->from(Retail::class, 'r')
-                ->join('r.contact', 'contact')
-                ->join('contact.client', 'c')
+//                ->join('r.contact', 'contact')
+//                ->join('contact.client', 'c')
                 ->where('r.status = :status')
                 ->setParameter('orderDocType', Movement::DOC_ORDER)    
                 ->setParameter('vtDocType', Movement::DOC_VT)    
@@ -782,19 +783,121 @@ class OrderRepository extends EntityRepository{
             switch ($params['period']){
                 case 'month':
                     $queryBuilder->addSelect('DAY(r.dateOper) as period');
-                    $queryBuilder->addSelect('sum(CASE WHEN DATE(r.dateOper) = DATE(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
-                    $queryBuilder->addSelect('sum(CASE WHEN DATE(r.dateOper) = DATE(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
+//                    $queryBuilder->addSelect('sum(CASE WHEN DATE(r.dateOper) = DATE(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
+//                    $queryBuilder->addSelect('sum(CASE WHEN DATE(r.dateOper) = DATE(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
                     break;
                 case 'year':        
                 case 'number':
                     $queryBuilder->addSelect('date_format(r.dateOper, \'%Y-%m\') as period');
-                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateOrder) and YEAR(r.dateOper) = YEAR(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
-                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateRegistration) and YEAR(r.dateOper) = YEAR(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
+//                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateOrder) and YEAR(r.dateOper) = YEAR(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
+//                    $queryBuilder->addSelect('sum(CASE WHEN MONTH(r.dateOper) = MONTH(c.dateRegistration) and YEAR(r.dateOper) = YEAR(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
                     break;
                 default:
                     $queryBuilder->addSelect('YEAR(r.dateOper) as period');                    
-                    $queryBuilder->addSelect('sum(CASE WHEN YEAR(r.dateOper) = YEAR(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
-                    $queryBuilder->addSelect('sum(CASE WHEN YEAR(r.dateOper) = YEAR(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
+//                    $queryBuilder->addSelect('sum(CASE WHEN YEAR(r.dateOper) = YEAR(c.dateOrder) THEN 1 ELSE 0 END) as newOrder');
+//                    $queryBuilder->addSelect('sum(CASE WHEN YEAR(r.dateOper) = YEAR(c.dateRegistration) THEN 1 ELSE 0 END) as newClient');
+                }
+        }    
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }
+    
+    /**
+     * Новые клиенты за период
+     * @param array $params
+     */
+    public function newRegistrations($params)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('0 as orderCount, 0 as vtCount, count(distinct c.id) as newClient, 0 as newOrder')
+                ->from(Order::class, 'o')
+                ->join('o.contact', 'contact')
+                ->join('contact.client', 'c')
+                ->groupBy('period')
+                ;
+        
+        if (!empty($params['office'])){
+            if (is_numeric($params['office'])){
+                $queryBuilder->andWhere('o.office = :office')
+                        ->setParameter('office', $params['office']);
+            }    
+        }
+        if (!empty($params['startDate'])){
+            $queryBuilder
+                ->andWhere('c.dateRegistration >= :startDate')    
+                ->setParameter('startDate', $params['startDate'])    
+                    ;
+        }
+        if (!empty($params['endDate'])){
+            $queryBuilder
+                ->andWhere('c.dateRegistration <= :startDate')    
+                ->setParameter('endDate', $params['endDate']) 
+                    ;
+        }
+        if (!empty($params['period'])){
+            switch ($params['period']){
+                case 'month':
+                    $queryBuilder->addSelect('DAY(r.dateOper) as period');
+                    break;
+                case 'year':        
+                case 'number':
+                    $queryBuilder->addSelect('date_format(r.dateOper, \'%Y-%m\') as period');
+                    break;
+                default:
+                    $queryBuilder->addSelect('YEAR(r.dateOper) as period');                    
+                }
+        }    
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();
+    }
+
+    /**
+     * Новые заказы за период
+     * @param array $params
+     */
+    public function newOrders($params)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('0 as orderCount, 0 as vtCount, 0 as newClient, count(distinct c.id) as newOrder')
+                ->from(Order::class, 'o')
+                ->join('o.contact', 'contact')
+                ->join('contact.client', 'c')
+                ->groupBy('period')
+                ;
+        
+        if (!empty($params['office'])){
+            if (is_numeric($params['office'])){
+                $queryBuilder->andWhere('o.office = :office')
+                        ->setParameter('office', $params['office']);
+            }    
+        }
+        if (!empty($params['startDate'])){
+            $queryBuilder
+                ->andWhere('c.dateOrder >= :startDate')    
+                ->setParameter('startDate', $params['startDate'])    
+                    ;
+        }
+        if (!empty($params['endDate'])){
+            $queryBuilder
+                ->andWhere('c.dateOrder <= :startDate')    
+                ->setParameter('endDate', $params['endDate']) 
+                    ;
+        }
+        if (!empty($params['period'])){
+            switch ($params['period']){
+                case 'month':
+                    $queryBuilder->addSelect('DAY(r.dateOper) as period');
+                    break;
+                case 'year':        
+                case 'number':
+                    $queryBuilder->addSelect('date_format(r.dateOper, \'%Y-%m\') as period');
+                    break;
+                default:
+                    $queryBuilder->addSelect('YEAR(r.dateOper) as period');                    
                 }
         }    
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;

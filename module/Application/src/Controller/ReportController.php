@@ -136,19 +136,48 @@ class ReportController extends AbstractActionController
         $query = $this->entityManager->getRepository(Order::class)
                     ->revenueByOrders($params);            
         
-        $total = count($query->getResult());
+        $query1 = $this->entityManager->getRepository(Order::class)
+                    ->newRegistrations($params);            
+        
+        $query2 = $this->entityManager->getRepository(Order::class)
+                    ->newOrders($params);            
         
         if ($offset) {
             $query->setFirstResult($offset);
+            $query1->setFirstResult($offset);
+            $query2->setFirstResult($offset);
         }
         if ($limit) {
             $query->setMaxResults($limit);
+            $query1->setMaxResults($limit);
+            $query2->setMaxResults($limit);
         }
 
-        $result = $query->getResult();
+        $result = [];
+        $data = $query->getResult();
+        $data1 = $query1->getResult();
+        $data2 = $query2->getResult();
+        
+        foreach ($data as $row){
+            $result[$row['period']] = $row;
+        }
+        foreach ($data1 as $row1){
+            if (!empty($result[$row1['period']])){
+                $result[$row1['period']]['newClient'] = $row1['newClient'];
+            } else {
+                $result[$row1['period']] = $row1;
+            }    
+        }
+        foreach ($data2 as $row2){
+            if (!empty($result[$row2['period']])){
+                $result[$row2['period']]['newOrder'] = $row1['newOrder'];
+            } else {
+                $result[$row2['period']] = $row2;
+            }    
+        }
         
         return new JsonModel([
-            'total' => $total,
+            'total' => count($result),
             'rows' => $result,
         ]);         
     }
