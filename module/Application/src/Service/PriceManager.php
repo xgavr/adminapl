@@ -217,7 +217,7 @@ class PriceManager {
                     
                     $fromSupplier = $supplier;
                     
-                    if (empty($fromSupplier)){
+                    if (empty($fromSupplier) && !empty($mail['fromEmail'])){
                         $fromSupplier = $this->entityManager->getRepository(Supplier::class)
                                 ->suplierByFromEmail($mail['fromEmail']);
                         if ($fromSupplier){
