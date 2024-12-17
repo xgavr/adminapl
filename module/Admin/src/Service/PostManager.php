@@ -358,8 +358,12 @@ class PostManager {
     private function addMessageToLog($data)
     {
         $filter = new HtmlFilter();
+        
+        $fromEmail = null;
         $emailFilter = new EmailFromStr();
-        $fromEmail = $emailFilter->filter($data['from']);
+        if (!empty($data['from'])){
+            $fromEmail = $emailFilter->filter($data['from']);
+        }
 
         if ($fromEmail){
             $postLog = new PostLog();
