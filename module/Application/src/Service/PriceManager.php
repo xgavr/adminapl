@@ -234,7 +234,7 @@ class PriceManager {
 
                             $newRaw = $this->addNewRaw($fromSupplier, [
                                 'filename' => $attachment['filename'],
-                                'fromEmail' => $mail['fromEmail'],
+                                'fromEmail' => empty($mail['fromEmail']) ? null:$mail['fromEmail'],
                                 'subject' => $mail['subject'],
                                 'tmpfile' => $attachment['temp_file'],
                                 ]);
