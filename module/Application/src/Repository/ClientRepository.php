@@ -883,6 +883,7 @@ class ClientRepository extends EntityRepository{
                         ->addSelect('c.id as client_id')
                         ->addSelect('identity(b.good) as position_id')
                         ->addSelect('b.price*b.num as amount')
+                        ->addSelect('(b.price0-b.price)*b.num as discount')
                         ->addSelect('b.num as count')
                         ; break;
                 case 'positions':
