@@ -1043,7 +1043,7 @@ class AplOrderService {
             return true;
         }    
         
-        var_dump($result); exit;
+//        var_dump($result); exit;
         if (is_array($result)){
             $comment = $this->entityManager->getRepository(Comment::class)
                     ->findOneBy(['aplId' => $result['id']]);
