@@ -1043,7 +1043,7 @@ class AplOrderService {
             return true;
         }    
         
-//        var_dump($result); exit;
+        var_dump($result); exit;
         if (is_array($result)){
             $comment = $this->entityManager->getRepository(Comment::class)
                     ->findOneBy(['aplId' => $result['id']]);
@@ -1070,7 +1070,6 @@ class AplOrderService {
                 $this->commentManager->updateComment($comment, $data);                    
             } else {                            
                 if ($order){
-        var_dump($result); exit;
                     $comment = $this->commentManager->addOrderComment($order, $data);
                 } elseif ($client) {
                     $comment = $this->commentManager->addClientComment($client, $data);                            
