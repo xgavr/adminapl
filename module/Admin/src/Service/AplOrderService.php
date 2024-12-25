@@ -1066,7 +1066,6 @@ class AplOrderService {
                 'statusEx' => Comment::STATUS_EX_RECD,
             ];    
 
-            var_dump($data); exit;
             if ($comment){                    
                 $this->commentManager->updateComment($comment, $data);                    
             } else {                            
@@ -1075,7 +1074,7 @@ class AplOrderService {
                 } elseif ($client) {
                     $comment = $this->commentManager->addClientComment($client, $data);                            
                 } else {
-                    //return false;
+                    return false;
                 }   
             }
 
