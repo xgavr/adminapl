@@ -614,6 +614,7 @@ class Legal {
     {
         $criteria = Criteria::create()
                 ->andWhere(Criteria::expr()->eq('status', BankAccount::STATUS_ACTIVE))
+                ->andWhere(Criteria::expr()->eq('accountType', BankAccount::ACСOUNT_CHECKING))
                 ->orderBy(['id' => Criteria::DESC])
                 ->setMaxResults(1)
                 ;

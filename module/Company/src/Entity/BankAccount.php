@@ -33,6 +33,7 @@ class BankAccount {
     
     const ACСOUNT_CHECKING = 1; // расчетный.
     const ACCOUNT_SAVINGS  = 2; // накопительный.
+    const ACCOUNT_RESERVE  = 3; // резервный.
 
     /**
      * @ORM\Id
@@ -302,7 +303,8 @@ class BankAccount {
     {
         return [
             self::ACСOUNT_CHECKING => 'Расчетный',
-            self::ACCOUNT_SAVINGS => 'Накопительный'
+            self::ACCOUNT_SAVINGS => 'Накопительный',
+            self::ACCOUNT_RESERVE => 'Резервный'
         ];
     }    
     
