@@ -246,7 +246,7 @@ class ReportManager
 //                var_dump($reportTotal);
         if ($report->getDocDate() > $this->getAllowDate()){
             $report->setDocAmount($reportTotal);
-            $this->entityManager->persist($item);  
+            $this->entityManager->persist($report);  
             $this->entityManager->flush();
         }    
         
