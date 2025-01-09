@@ -177,6 +177,9 @@ class PaymentRepository extends EntityRepository
                 $supplier = $entityManager->getRepository(Supplier::class)
                         ->findOneById($params['supplier']);
                 if ($supplier){
+                    
+                    $queryBuilder->join('p.bankAccount', 'ba');
+                    
                     $orX = $queryBuilder->expr()->orX();
                     $orX->add($queryBuilder->expr()->eq('p.supplier', $supplier->getId()));
                     
