@@ -635,6 +635,38 @@ class Supplier {
     }
         
     /**
+     * Returns the array of for legal assigned to this.
+     * @return array
+     */
+    public function getLegals()
+    {
+        $result = [];
+        foreach ($this->getLegalContacts() as $contact){
+            foreach ($contact->getLegals() as $legal){
+                $result[] = $legal;
+            }            
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Returns the array of for bank accounts assigned to this.
+     * @return array
+     */
+    public function getBankAccounts()
+    {
+        $result = [];
+        foreach ($this->getLegals() as $legal){
+            foreach ($legal->getBankAccounts() as $bankAccount){
+                $result[] = $bankAccount;
+            }
+        }
+        
+        return $result;
+    }
+        
+    /**
      * Returns the array of for first legal contact assigned to this.
      * @return array
      */

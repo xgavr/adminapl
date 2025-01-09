@@ -159,28 +159,30 @@ class ComitentController extends AbstractActionController
                 
                 $filteredData['number'] = $filteredData['num'];
                 $filteredData['report_good_v2'] = [];
-                foreach ($filteredData['report_good'] as $row){
-                    $newRow = [
-                        'item' => [
-                            'good_id' => $row['good_id'],
-                            'offer_id' => $row['offer_id'],
-                        ],
-                        'delivery_commission' => [
-                            'quantity' => $row['sale_qty'],
-                            'amount' => $row['sale_amount'],
-                            'total' => $row['sale_amount'],
-                            'price_per_instance' => $row['sale_price_seller'],
-                        ],
-                        'return_commission' => [
-                            'quantity' => $row['return_qty'],
-                            'amount' => $row['return_amount'],
-                            'total' => $row['return_amount'],
-                            'price_per_instance' => $row['return_price_seller'],
-                        ],
-                        'rowNumber' => $row['row_number'],
-                    ];
-                    $filteredData['report_good_v2'][] = $newRow;
-                }
+                if (!empty($filteredData['report_good'])){
+                    foreach ($filteredData['report_good'] as $row){
+                        $newRow = [
+                            'item' => [
+                                'good_id' => $row['good_id'],
+                                'offer_id' => $row['offer_id'],
+                            ],
+                            'delivery_commission' => [
+                                'quantity' => $row['sale_qty'],
+                                'amount' => $row['sale_amount'],
+                                'total' => $row['sale_amount'],
+                                'price_per_instance' => $row['sale_price_seller'],
+                            ],
+                            'return_commission' => [
+                                'quantity' => $row['return_qty'],
+                                'amount' => $row['return_amount'],
+                                'total' => $row['return_amount'],
+                                'price_per_instance' => $row['return_price_seller'],
+                            ],
+                            'rowNumber' => $row['row_number'],
+                        ];
+                        $filteredData['report_good_v2'][] = $newRow;
+                    }
+                }    
                 
                 $report = $this->reportManager->findReport($marketplace, $filteredData, MarketSaleReport::TYPE_COMPENSATION);
                 $this->reportManager->clearReport($report);

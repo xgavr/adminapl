@@ -97,11 +97,19 @@ class PaymentRepository extends EntityRepository
                 }    
             }
             if (!empty($params['supplier'])){
+                                
                 $supplier = $entityManager->getRepository(Supplier::class)
                         ->findOneById($params['supplier']);
                 if ($supplier){
-                    $queryBuilder->andWhere('p.supplier = :supplier')
-                            ->setParameter('supplier', $supplier->getId());
+                    
+                    $orX = $queryBuilder->expr()->orX();
+                    $orX->add($queryBuilder->expr()->eq('p.supplier', $supplier->getId()));
+                    
+                    foreach ($supplier->getBankAccounts() as $bankAccount){
+                        $orX->add($queryBuilder->expr()->eq('ba.rs', $bankAccount->getRs()));                        
+                    }
+                    
+                    $queryBuilder->andWhere($orX);
                 }    
             }            
             if (!empty($params['status'])){
@@ -169,8 +177,14 @@ class PaymentRepository extends EntityRepository
                 $supplier = $entityManager->getRepository(Supplier::class)
                         ->findOneById($params['supplier']);
                 if ($supplier){
-                    $queryBuilder->andWhere('p.supplier = :supplier')
-                            ->setParameter('supplier', $supplier->getId());
+                    $orX = $queryBuilder->expr()->orX();
+                    $orX->add($queryBuilder->expr()->eq('p.supplier', $supplier->getId()));
+                    
+                    foreach ($supplier->getBankAccounts() as $bankAccount){
+                        $orX->add($queryBuilder->expr()->eq('ba.rs', $bankAccount->getRs()));                        
+                    }
+                    
+                    $queryBuilder->andWhere($orX);
                 }    
             }            
             if (!empty($params['status'])){
