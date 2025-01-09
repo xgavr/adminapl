@@ -106,7 +106,7 @@ class PaymentRepository extends EntityRepository
                     $orX->add($queryBuilder->expr()->eq('p.supplier', $supplier->getId()));
                     
                     foreach ($supplier->getBankAccounts() as $bankAccount){
-                        $orX->add($queryBuilder->expr()->eq('ba.rs', $bankAccount->getRs()));                        
+                        $orX->add($queryBuilder->expr()->eq('p.counterpartyAccountNumber', $bankAccount->getRs()));                        
                     }
                     
                     $queryBuilder->andWhere($orX);
@@ -178,13 +178,11 @@ class PaymentRepository extends EntityRepository
                         ->findOneById($params['supplier']);
                 if ($supplier){
                     
-                    $queryBuilder->join('p.bankAccount', 'ba');
-                    
                     $orX = $queryBuilder->expr()->orX();
                     $orX->add($queryBuilder->expr()->eq('p.supplier', $supplier->getId()));
                     
                     foreach ($supplier->getBankAccounts() as $bankAccount){
-                        $orX->add($queryBuilder->expr()->eq('ba.rs', $bankAccount->getRs()));                        
+                        $orX->add($queryBuilder->expr()->eq('p.counterpartyAccountNumber', $bankAccount->getRs()));                        
                     }
                     
                     $queryBuilder->andWhere($orX);
