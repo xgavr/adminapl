@@ -138,7 +138,7 @@ class PaymentRepository extends EntityRepository
             }
             $queryBuilder->andWhere($or);
         }
-                
+                        
         return $queryBuilder->getQuery();
         
     }    
