@@ -318,7 +318,7 @@ class DdsManager {
                 }
 
                 // банк текущий месяц
-                if ($day->format('Y-m-d') === \date('Y-m-01')){
+                if ($day->format('Y-m-d') == date('Y-m-01')){
                     $statements = $this->entityManager->getRepository(FinDds::class)
                             ->findStatement($firstDayNextMonth, date('Y-m-t'), []);
                     foreach ($statements as $statement){
