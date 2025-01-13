@@ -304,7 +304,7 @@ class DdsManager {
         foreach ($p as $day){
             if (date('Y-m-d') >= $day->format('Y-m-d')){
                 $firstDayNextMonth = date('Y-m-d', strtotime($day->format('Y-m-d').' first day of next month'));
-//                var_dump($firstDayNextMonth);
+                var_dump($firstDayNextMonth, $day->format('Y-m-d'));
                 $bankBalances = $this->entityManager->getRepository(FinDds::class)
                         ->findBankBalance($firstDayNextMonth);
                 foreach ($bankBalances as $row){
