@@ -1,6 +1,6 @@
 <?php
-use Zp\Entity\Personal;
-use Zp\Entity\PersonalAccrual;
+use Zp\Entity\PersonalRevise;
+use Zp\Entity\Accrual;
 use Laminas\Json\Encoder;
 
 $form = $this->form;
@@ -35,6 +35,22 @@ $form->get('kind')->setAttributes([
     ]);
 
 $form->get('user')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('vacationFrom')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('vacationTo')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('vacationPeriod')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('info')->setAttributes([
     'class'=>'form-control', 
     ]);
 
@@ -109,6 +125,29 @@ $form->prepare();
             </div>
         </div>    
     </div>    
+    <div class="row" id="vacation">
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('vacationFrom')); ?>
+                <?= $this->formElement($form->get('vacationFrom')); ?>
+                <?= $this->formElementErrors($form->get('vacationFrom')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('vacationTo')); ?>
+                <?= $this->formElement($form->get('vacationTo')); ?>
+                <?= $this->formElementErrors($form->get('vacationTo')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-4">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('vacationPeriod')); ?>
+                <?= $this->formElement($form->get('vacationPeriod')); ?>
+                <?= $this->formElementErrors($form->get('vacationPeriod')); ?>                  
+            </div>
+        </div>    
+    </div>    
     <div class="row">
         <div class="col-xs-12">
             <div class="form-group">
@@ -125,6 +164,8 @@ $form->prepare();
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
     <button type="submit" class="btn btn-primary" id="personal-revise-submit">Сохранить</button>
 </div>
+
+<?= $this->formElement($form->get('info')); ?>
 
 <?= $this->form()->closeTag(); ?>
             
@@ -154,8 +195,69 @@ $form->prepare();
             });    
     };
     
+    function showKind(){
+        $('#vacation').hide();
+        if ($("#kind").val() == <?= PersonalRevise::KIND_VACATION?>){
+            $('#vacation').show();
+            if ($('#info').val()){
+                var info = JSON.parse($('#info').val());
+                if (info){
+                    if (info.vacation){
+                        if (info.vacation.period){
+                            $('#vacationPeriod').val(info.vacation.period);
+                        }    
+                    }    
+                }    
+            }
+        }        
+    }
+    
+    function vacation(){
+        if ($('#companySelectForm').val() && $('#userSelectForm').val()){
+            $.getJSON( '/personal-revise/vacation?company='+$('#companySelectForm').val()+'&user='+$('#userSelectForm').val()+'&from='+$('#vacationFrom').val()+'&to='+$('#vacationTo').val(), function( data ) {
+                $('#vacationPeriod').val(data.period);
+                $('#amount').val(data.amount);
+                $('#info').val(JSON.stringify({vacation: data}));
+            });                        
+        }    
+        return;
+    }
+    
     $( document ).ready(function() {
+        
+        showKind();
+        
         $("#amount").inputmask();
+        
+        $('#kind').on('change', function(){
+            showKind();
+        });
+        
+        $('#vacationFrom').on('change', function(){
+            if ($('#vacationFrom').val() > $('#vacationTo').val()){
+                $('#vacationTo').val($('#vacationFrom').val());                
+            }
+            vacation();
+        });
+        
+        $('#vacationTo').on('change', function(){
+            if ($('#vacationFrom').val() > $('#vacationTo').val()){
+                $('#vacationFrom').val($('#vacationTo').val());                
+            }
+            vacation();
+        });
+        
+        $('#companySelectForm').on('change', function(){
+            if ($("#kind").val() == <?= PersonalRevise::KIND_VACATION?>){
+                vacation();
+            }    
+        });
+        
+        $('#userSelectForm').on('change', function(){
+            if ($("#kind").val() == <?= PersonalRevise::KIND_VACATION?>){
+                vacation();
+            }    
+        });
         
         var forms = $('#personal-revise-form');
         

@@ -673,6 +673,9 @@ class ZpCalculator {
         $personalRevise->setUser($data['user']);
         $personalRevise->setStatus($data['status']);
         $personalRevise->setKind($data['kind']);
+        $personalRevise->setVacationFrom(empty($data['vacationFrom']) ? null:$data['vacationFrom']);
+        $personalRevise->setVacationTo(empty($data['vacationTo']) ? null:$data['vacationTo']);
+        $personalRevise->setInfo(empty($data['info']) ? null:$data['info']);
         
         $this->entityManager->persist($personalRevise);
         $this->entityManager->flush();
@@ -698,6 +701,9 @@ class ZpCalculator {
         $personalRevise->setUser($data['user']);
         $personalRevise->setStatus($data['status']);
         $personalRevise->setKind($data['kind']);
+        $personalRevise->setVacationFrom(empty($data['vacationFrom']) ? null:$data['vacationFrom']);
+        $personalRevise->setVacationTo(empty($data['vacationTo']) ? null:$data['vacationTo']);
+        $personalRevise->setInfo(empty($data['info']) ? null:$data['info']);
         
         $this->entityManager->persist($personalRevise);
         $this->entityManager->flush();
@@ -1089,5 +1095,43 @@ class ZpCalculator {
         ]);
         
         return;
+    }
+    
+    /**
+     * Рассчитать отпуск
+     * @param Legal $company
+     * @param User $user
+     * @param date $from
+     * @param date $to
+     */
+    public function vacation($company, $user, $from, $to)
+    {
+        $vacationFrom = new \DateTime($from);
+        $vacationTo = new \DateTime($to);
+        $period = $vacationFrom->diff($vacationTo)->days + 1;
+                
+        $baseTo = date('Y-m-t', strtotime($from.' - 1 month'));
+        $baseFrom = date('Y-m-01', strtotime($baseTo.' - 6 month'));
+//        var_dump($baseFrom, $baseTo); exit;
+        $base = $this->entityManager->getRepository(DocCalculator::class)
+                ->baseAverage($baseTo, $baseFrom, ['company' => $company, 'user' => $user]);
+        
+        $dayAverage = $base;
+        
+        $timeTo = new \DateTime($baseTo);
+        $timeFrom = new \DateTime($baseFrom);
+        $baseDays = $timeTo->diff($timeFrom)->days;
+        if ($baseDays > 0){
+            $dayAverage = $base/$baseDays;
+        }  
+        
+        return [
+            'baseFrom' => $baseFrom,
+            'baseTo' => $baseTo,
+            'base' => $base,
+            'dayAverage' => $dayAverage,
+            'period' => $period,
+            'amount' => $dayAverage * $period
+        ];
     }
 }

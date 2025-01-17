@@ -18,6 +18,7 @@ use ApiMarketPlace\Entity\MarketSaleReport;
 use Zp\Entity\PersonalMutual;
 use Zp\Entity\PersonalRevise;
 use Application\Entity\Order;
+use Zp\Entity\DocCalculator;
         
 /**
  * Description of ZpRepository
@@ -835,4 +836,55 @@ class ZpRepository extends EntityRepository
         
         return $queryBuilder->getQuery();
     }
+    
+    /**
+     * База для расчета по среднему
+     * @param date $dateCalculation
+     * @param array $params
+     * @return int
+     */
+    public function baseAverage($from, $to, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('sum(dc.amount) as base')
+                ->from(DocCalculator::class, 'dc')
+                ->join('dc.accrual', 'a')
+                ->andWhere('dc.status = :status')
+                ->setParameter('status', DocCalculator::STATUS_ACTIVE)
+                ->andWhere('a.kind = :kind')
+                ->setParameter('kind', Accrual::KIND_PERCENT)
+                ->andWhere('dc.dateOper >= :from')
+                ->setParameter('from', $from)
+                ->andWhere('dc.dateOper <= :to')
+                ->setParameter('to', $to)
+                ->setMaxResults(1)
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['company'])){
+                if (is_numeric($params['company'])){
+                    $queryBuilder->andWhere('dc.company = :company')
+                            ->setParameter('company', $params['company'])
+                            ;
+                }
+            }
+            if (!empty($params['user'])){
+                if (is_numeric($params['user'])){
+                    $queryBuilder->andWhere('dc.user = :user')
+                            ->setParameter('user', $params['user'])
+                            ;
+                }
+            }
+        }
+        
+        $data = $queryBuilder->getQuery()->getOneOrNullResult();
+        if (!empty($data)){
+            return $data['base'];
+        }
+        
+        return 0;
+    }
+    
 }

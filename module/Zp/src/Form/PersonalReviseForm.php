@@ -132,6 +132,64 @@ class PersonalReviseForm extends Form
             ],
         ]);
         
+        $this->add([           
+            'type'  => 'date',
+            'name' => 'vacationFrom',
+            'attributes' => [
+                'id' => 'vacationFrom',
+                'value' => date('Y-m-d'),
+            ],
+            'options' => [
+                'label' => 'Отпуск с',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'date',
+            'name' => 'vacationTo',
+            'attributes' => [
+                'id' => 'vacationTo',
+                'value' => date('Y-m-d'),
+            ],
+            'options' => [
+                'label' => 'Отпуск по',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'date',
+            'name' => 'vacationTo',
+            'attributes' => [
+                'id' => 'vacationTo',
+                'value' => date('Y-m-d'),
+            ],
+            'options' => [
+                'label' => 'Отпуск по',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'number',
+            'name' => 'vacationPeriod',
+            'attributes' => [
+                'id' => 'vacationPeriod',
+                'value' => 0,
+                'min' => 0,
+            ],
+            'options' => [
+                'label' => 'Отпуск дней',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'hidden',
+            'name' => 'info',
+            'attributes' => [
+                'id' => 'info',
+            ],
+        ]);
+
+        
 //        $this->add([           
 //            'type'  => 'select',
 //            'name' => 'accrual',
@@ -164,7 +222,7 @@ class PersonalReviseForm extends Form
         $this->setInputFilter($inputFilter);
         
         $inputFilter->add([
-                'docNum'     => 'rate',
+                'name'     => 'docNum',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],                    
@@ -174,7 +232,47 @@ class PersonalReviseForm extends Form
             ]);        
 
         $inputFilter->add([
-                'comment'     => 'rate',
+                'name'     => 'comment',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                ],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'vacationFrom',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                ],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'vacationTo',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                ],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'vacationPeriod',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],                    
+                ],                
+                'validators' => [
+                ],
+            ]);        
+
+        $inputFilter->add([
+                'name'     => 'info',
                 'required' => false,
                 'filters'  => [
                     ['name' => 'StringTrim'],                    

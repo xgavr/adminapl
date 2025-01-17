@@ -64,6 +64,21 @@ class PersonalRevise
      */
     protected $kind;
 
+    /** 
+     * @ORM\Column(name="vacation_from")  
+     */
+    protected $vacationFrom;
+
+    /** 
+     * @ORM\Column(name="vacation_to")  
+     */
+    protected $vacationTo;
+
+    /** 
+     * @ORM\Column(name="info")  
+     */
+    protected $info;
+
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="personalRevises") 
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
@@ -148,6 +163,33 @@ class PersonalRevise
         return $this;
     }
     
+    public function getInfo() {
+        return $this->info;
+    }
+
+    public function setInfo($info) {
+        $this->info = $info;
+        return $this;
+    }
+
+    public function getVacationFrom() {
+        return $this->vacationFrom;
+    }
+
+    public function setVacationFrom($vacationFrom) {
+        $this->vacationFrom = $vacationFrom;
+        return $this;
+    }
+
+    public function getVacationTo() {
+        return $this->vacationTo;
+    }
+
+    public function setVacationTo($vacationTo) {
+        $this->vacationTo = $vacationTo;
+        return $this;
+    }
+
     public function setStatus($status) {
         $this->status = $status;
         return $this;

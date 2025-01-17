@@ -171,6 +171,9 @@ class ReviseController extends AbstractActionController
                     'docNum' => $revise->getDocNum(),
                     'amount' => $revise->getAmount(),
                     'comment' => $revise->getComment(),
+                    'vacationFrom' => $revise->getVacationFrom(),
+                    'vacationTo' => $revise->getVacationTo(),
+                    'info' => $revise->getInfo(),
                 ];
                 $form->setData($data);
             }    
@@ -205,5 +208,19 @@ class ReviseController extends AbstractActionController
         return new JsonModel(
            $result
         );           
-    }                
+    }    
+    
+    public function vacationAction()
+    {
+        $company = $this->params()->fromQuery('company');
+        $user = $this->params()->fromQuery('user');
+        $from = $this->params()->fromQuery('from');
+        $to = $this->params()->fromQuery('to');
+        
+        $result = $this->zpCalculator->vacation($company, $user, $from, $to);
+        
+        return new JsonModel(
+           $result
+        );           
+    }
 }
