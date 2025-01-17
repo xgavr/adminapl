@@ -1114,7 +1114,7 @@ class ZpCalculator {
         $baseFrom = date('Y-m-01', strtotime($baseTo.' - 6 month'));
 //        var_dump($baseFrom, $baseTo); exit;
         $base = $this->entityManager->getRepository(DocCalculator::class)
-                ->baseAverage($baseTo, $baseFrom, ['company' => $company, 'user' => $user]);
+                ->baseAverage($baseFrom, $baseTo, ['company' => $company, 'user' => $user]);
         
         $dayAverage = $base;
         
