@@ -35,6 +35,8 @@ class Payment {
     const PAYMENT_TYPE_TAX = 2; // налог
     
     const NDS_NO = 1; //без НДС
+    const NDS_5 = 5; // НДС 5%
+    const NDS_7 = 7; // НДС 7%
     const NDS_10 = 10; // НДС 20%
     const NDS_20 = 20; // НДС 20%
     
@@ -764,6 +766,8 @@ class Payment {
     {
         return [
             self::NDS_NO => 'без НДС',
+            self::NDS_5 => 'в т.ч. НДС 5%',
+            self::NDS_7 => 'в т.ч. НДС 7%',
             self::NDS_10 => 'в т.ч. НДС 10%',
             self::NDS_20 => 'в т.ч. НДС 20%',
         ];
@@ -777,6 +781,8 @@ class Payment {
     {
         return [
             self::NDS_NO => 'без НДС',
+            self::NDS_5 => '5%',
+            self::NDS_7 => '7%',
             self::NDS_10 => '10%',
             self::NDS_20 => '20%',
         ];
@@ -790,6 +796,10 @@ class Payment {
     public static function nds($amount, $nds) 
     {
         switch ($nds){
+            case Payment::NDS_5:
+                return round($amount*5/105, 2);
+            case Payment::NDS_7:
+                return round($amount*7/107, 2);
             case Payment::NDS_10:
                 return round($amount*10/110, 2);
             case Payment::NDS_20:
