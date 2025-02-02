@@ -419,11 +419,11 @@ $form->prepare();
                     break
                 case '<?= Payment::NDS_7?>': 
                     var nds = Math.round(amount*7*100/107)/100; 
-                    ndsStr = ndsStr1 + nds;
+                    ndsStr = ndsStr1 + ' ' + nds;
                     break
                 case '<?= Payment::NDS_5?>': 
                     var nds = Math.round(amount*5*100/105)/100; 
-                    ndsStr = ndsStr1 + nds;
+                    ndsStr = ndsStr1 + ' ' + nds;
                     break
                 case '<?= Payment::NDS_NO?>': 
                     ndsStr = ndsStr0;
