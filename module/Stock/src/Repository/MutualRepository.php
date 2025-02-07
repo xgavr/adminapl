@@ -51,6 +51,8 @@ class MutualRepository extends EntityRepository{
         
         foreach ($mutuals as $mutual){
             $connection->delete('mutual', ['id' => $mutual->getId()]);
+            
+            $this->updateContractBalance(['contract_id' => $mutual->getContract()->getId()]);
         }
         
         return;
