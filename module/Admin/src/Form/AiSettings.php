@@ -10,15 +10,13 @@ namespace Admin\Form;
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
 
-use DoctrineModule\Persistence\ObjectManagerAwareInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Description of AiSettings
  *
  * @author Daddy
  */
-class AiSettings extends Form implements ObjectManagerAwareInterface
+class AiSettings extends Form 
 {
     
     protected $objectManager;    
@@ -79,16 +77,6 @@ class AiSettings extends Form implements ObjectManagerAwareInterface
     private function addInputFilter() 
     {
         
-    }    
-    
-    public function setObjectManager(ObjectManager $objectManager)
-    {
-        $this->objectManager = $objectManager;
-    }
-
-    public function getObjectManager()
-    {
-        return $this->objectManager;
-    }            
+    }           
     
 }
