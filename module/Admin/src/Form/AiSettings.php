@@ -67,7 +67,7 @@ class AiSettings extends Form
             'name' => 'deepseek_api_key',
             'options' => [
                 'id' => 'deepseek_api_key',
-                'label' => 'Deepseek api key',
+                'label' => 'Deepseek Api Key',
             ],
         ]);
 
