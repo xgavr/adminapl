@@ -29,6 +29,10 @@ $form->get('gigachat_score')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('deepseek_api_key')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -41,6 +45,9 @@ $form->prepare();
         </button>                
         <button class="btn btn-default test-button" value="/ai/gigachat-test">
             <span class="glyphicon glyphicon-tag" ></span> Gigachat Test
+        </button>                
+        <button class="btn btn-default test-button" value="/ai/deepseek-test">
+            <span class="glyphicon glyphicon-tag" ></span> Deepseek Test
         </button>                
     </div>
 </div>
@@ -74,6 +81,11 @@ $form->prepare();
         <?= $this->formElement($form->get('submit')); ?>
     </div>   
     <div class="col-md-5">
+        <div class="form-group">
+            <?= $this->formLabel($form->get('deepseek_api_key')); ?>
+            <?= $this->formElement($form->get('deepseek_api_key')); ?>
+            <?= $this->formElementErrors($form->get('deepseek_api_key')); ?>                  
+        </div>
     </div>
 <!--    <div class="col-md-2" id="side-nav" >
         <ul class="nav nav-stacked nav-list affix">

@@ -785,6 +785,7 @@ class AdminManager {
         $config->ai_settings->gigachat_client_id = $data['gigachat_client_id'];
         $config->ai_settings->gigachat_client_secret = $data['gigachat_client_secret'];
         $config->ai_settings->gigachat_score = $data['gigachat_score'];
+        $config->ai_settings->deepseek_api_key = $data['deepseek_api_key'];
         
         $writer = new PhpArray();
         
