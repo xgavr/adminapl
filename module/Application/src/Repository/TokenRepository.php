@@ -327,11 +327,15 @@ class TokenRepository  extends EntityRepository
                 
                 $lemms = $entityManager->getRepository(SearchTitle::class)
                         ->lemmsFromSearchStr($params['q']);
-                var_dump($lemms);
+//                var_dump($lemms);
                 
-                $queryBuilder->andWhere('tg.lemms like :search')
-                    ->setParameter('search', '%' . $params['q'] . '%')
+                $queryBuilder->join('tg.tokens', 't')
+                        ->andWhere($queryBuilder->expr()->in('t.lemma', $lemms))
                         ;
+                
+//                $queryBuilder->andWhere('tg.lemms like :search')
+//                    ->setParameter('search', '%' . $params['q'] . '%')
+//                        ;
             }
             if (!empty($params['id'])){
                 if (is_numeric($params['id'])){
