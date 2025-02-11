@@ -241,7 +241,7 @@ $this->pageBreadcrumbs()->setItems([
                 title: 'Укажите категорию',
                 message: '<p>Выберете категорию для <b>'+rowName+'</b>:</p>',
                 inputType: 'select',
-                value: (rowGroupSite) ? rowGroupSite:getGroupSiteCookie(),        
+                value: (rowGroupSite > 0) ? rowGroupSite:getGroupSiteCookie(),        
                 inputOptions: inputOptions,
                 callback: function (result) {
 //                    console.log(result); return;               
@@ -310,14 +310,18 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function groupSiteFormatter(value, row){
-        var result = 'Не назаначена';
+        var groupSiteName = 'Не назаначена';
+        var groupSiteId = -1;
         
         if (row.groupSite){
-            result =  '<p><a href="#" class="category-select"';
-            result += ' data-id="'+row.id+'" data-name="'+row.name+'"';
-            result += ' data-group-site="'+row.groupSite.id+'">';
-            result +=  row.groupSite.fullName+'</a></p>'; 
+            groupSiteName = row.groupSite.fullName;
+            groupSiteId = row.groupSite.id;
         }
+        
+        var result =  '<p><a href="#" class="category-select"';
+        result += ' data-id="'+row.id+'" data-name="'+row.name+'"';
+        result += ' data-group-site="'+groupSiteId+'">';
+        result +=  + groupSiteName +'</a></p>'; 
     
         return result;
     }
