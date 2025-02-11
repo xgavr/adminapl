@@ -277,6 +277,9 @@ $this->pageBreadcrumbs()->setItems([
         $('#withGenericGroup').change(function (){
             $table.bootstrapTable('refresh');
         });
+        $('#withGroupSite').change(function (){
+            $table.bootstrapTable('refresh');
+        });
         $(document).on('click', '.category-select', function (e) {
             operType($(this).attr('data-id'), $(this).attr('data-name'), $(this).attr('data-group-site'));
         });
