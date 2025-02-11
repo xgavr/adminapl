@@ -3,7 +3,8 @@ use Application\Entity\GroupSite;
 
 $this->headTitle('Категории товаров на сайте');
 
-$this->mainMenu()->setActiveItemId('rb');
+$this->mainMenu()->setActiveItemId('fasade');
+$this->mainMenu()->setActiveUrl($this->url('group-site'));
 
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),

@@ -262,7 +262,7 @@ class NavManager
             }
            if (count($siteDropDownItems)!=0) {
                 $items[] = [
-                    'id' => 'rb',
+                    'id' => 'fasade',
                     'label' => 'Фасад',
                     'dropdown' => $siteDropDownItems
                 ];
