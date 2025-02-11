@@ -32,6 +32,7 @@ class GroupSiteRepository extends EntityRepository{
 
         $queryBuilder->select('gs.id, gs.code, gs.name, gs.sort, gs.level, gs.goodCount')
             ->addSelect('gs.status, identity(gs.siteGroup) as pid')
+            ->addSelect('gs.hasChild, gs.fullName')
             ->from(GroupSite::class, 'gs')
                 ;
         

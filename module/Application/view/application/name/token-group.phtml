@@ -303,7 +303,7 @@ $this->pageBreadcrumbs()->setItems([
         
     function activeFormatter(value, row){
         var urlEdit = '/name/token-group-name-form/'+row.id;
-        var btnEdit = '<button';
+        var btnEdit = '<nobr><button';
         btnEdit += ' type="button"';
         btnEdit += ' class="btn btn-default btn-xs"';
         btnEdit += ' aria-label="Left Align"'; 
@@ -320,7 +320,7 @@ $this->pageBreadcrumbs()->setItems([
         btn += ' title="Удалить"'; 
         btn += ' onclick="tableRowDelete(\''+url+'\')">';
         btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-        btn += '</button>';
+        btn += '</button></nobr>';
         return btnEdit + ' ' + btn;
     }    
 

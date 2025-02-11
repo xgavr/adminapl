@@ -152,7 +152,7 @@ $this->pageBreadcrumbs()->setItems([
         btn += '</button> ';
 
         url = '/group-site/delete/'+row.id;
-        var disabled = (row.goodCount !== 0) ? 'disabled="true"':''; 
+        var disabled = (row.hasChild === <?= GroupSite::HAS_CHILD ?>) ? 'disabled="true"':''; 
         btn += '<button '+disabled;
         btn += ' type="button" title="Удалить '+row.name+'"';
         btn += ' class="btn btn-default btn-xs del-group-site"';

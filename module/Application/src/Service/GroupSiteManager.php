@@ -63,7 +63,9 @@ class GroupSiteManager
         $groupSite->setAplId($data['aplId'] ?? 0);
         $groupSite->setSort($data['sort'] ?? 0);
         $groupSite->setSlug($data['slug'] ?? null);
+        $groupSite->setFullName($data['name']);
         $groupSite->setStatus($data['status'] ?? GroupSite::STATUS_ACTIVE);
+        $groupSite->setHasChild($data['hasChild'] ?? GroupSite::HAS_NO_CHILD);
         
         if (!empty($data['groupSite'])){
             if (is_numeric($data['groupSite'])){
@@ -77,15 +79,21 @@ class GroupSiteManager
         $this->entityManager->persist($groupSite);
         $this->entityManager->flush($groupSite);
         
-        $code = sprintf("%02d", $groupSite->getId());
+        $code = sprintf("%03d", $groupSite->getId());
+        $fullName = $data['name'];
         if (!empty($data['groupSite'])){
             $code = $data['groupSite']->getCode().'-'.$code;
+            $fullName = $data['groupSite']->getFullName().'/'.$data['name'];
+            
+            $data['groupSite']->setHasChild(GroupSite::HAS_CHILD);
+            $this->entityManager->persist($data['groupSite']);
         }
         
         $groupSite->setCode($code);
+        $groupSite->setFullName($fullName);
         
         $this->entityManager->persist($groupSite);
-        $this->entityManager->flush($groupSite);
+        $this->entityManager->flush();
         
         return $groupSite;
     }
@@ -108,10 +116,12 @@ class GroupSiteManager
         $groupSite->setAplId($data['aplId'] ?? 0);
         $groupSite->setSort($data['sort'] ?? 0);
         $groupSite->setSlug($data['slug'] ?? null);
+        $groupSite->setFullName($data['name']);
         $groupSite->setStatus($data['status'] ?? GroupSite::STATUS_ACTIVE);
+        $groupSite->setHasChild($data['hasChild'] ?? GroupSite::HAS_NO_CHILD);
         
-        $code = sprintf("%02d", $groupSite->getId());
-        
+        $code = sprintf("%03d", $groupSite->getId());
+        $fullName = $data['name'];        
         if (!empty($data['groupSite'])){
             if (is_numeric($data['groupSite'])){
                 $data['groupSite'] = $this->entityManager->getRepository(GroupSite::class)
@@ -120,12 +130,17 @@ class GroupSiteManager
             }
             $groupSite->setLevel($data['groupSite']->getLevel() + 1);
             $code = $data['groupSite']->getCode().'-'.$code;
+            $fullName = $data['groupSite']->getFullName().'/'.$data['name'];
+
+            $data['groupSite']->setHasChild(GroupSite::HAS_CHILD);
+            $this->entityManager->persist($data['groupSite']);
         }
         
         $groupSite->setCode($code);
+        $groupSite->setFullName($fullName);
         
         $this->entityManager->persist($groupSite);
-        $this->entityManager->flush($groupSite);
+        $this->entityManager->flush();
         
         return $groupSite;
     }

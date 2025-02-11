@@ -23,8 +23,11 @@ class GroupSite
 {
     
      // Status constants.
-    const STATUS_ACTIVE       = 1; // Active user.
-    const STATUS_RETIRED      = 2; // Retired user.       
+    const STATUS_ACTIVE       = 1; // Active.
+    const STATUS_RETIRED      = 2; // Retired.       
+
+    const HAS_CHILD       = 1; // имеет подгруппу.
+    const HAS_NO_CHILD      = 2; // конечная группа.       
 
     /**
      * @ORM\Id
@@ -37,6 +40,11 @@ class GroupSite
      * @ORM\Column(name="name")   
      */
     protected $name;
+
+    /**
+     * @ORM\Column(name="full_name")   
+     */
+    protected $fullName;
 
     /**
      * @ORM\Column(name="apl_id")   
@@ -84,6 +92,11 @@ class GroupSite
     protected $status;        
 
     /**
+     * @ORM\Column(name="has_child")  
+     */
+    protected $hasChild;        
+
+    /**
     * @ORM\OneToMany(targetEntity="\Application\Entity\GroupSite", mappedBy="siteGroups")
     * @ORM\JoinColumn(name="id", referencedColumnName="group_site_id")
     */
@@ -124,6 +137,15 @@ class GroupSite
 
     public function setName($name) {
         $this->name = $name;
+        return $this;
+    }
+
+    public function getFullName() {
+        return $this->fullName;
+    }
+
+    public function setFullName($fullName) {
+        $this->fullName = $fullName;
         return $this;
     }
 
@@ -216,7 +238,7 @@ class GroupSite
     }    
     
     /**
-     * Returns user status as string.
+     * Returns status as string.
      * @return string
      */
     public function getStatusAsString()
@@ -233,6 +255,40 @@ class GroupSite
         return $this;
     }
 
+    public function getHasChild() {
+        return $this->hasChild;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getHasChildList() 
+    {
+        return [
+            self::HAS_CHILD => 'Есть подгруппы',
+            self::HAS_NO_CHILD => 'Без подгрупп'
+        ];
+    }    
+    
+    /**
+     * Returns status as string.
+     * @return string
+     */
+    public function getHasChildAsString()
+    {
+        $list = self::getHasChildList();
+        if (isset($list[$this->hasChild]))
+            return $list[$this->hasChild];
+        
+        return 'Unknown';
+    }       
+    
+    public function setHasChild($hasChild) {
+        $this->hasChild = $hasChild;
+        return $this;
+    }
+    
     public function getTokenGroups() {
         return $this->tokenGroups;
     }
