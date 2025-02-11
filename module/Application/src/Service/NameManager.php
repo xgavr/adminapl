@@ -1418,9 +1418,21 @@ class NameManager
      */
     public function updateTokenGroupCategory($tokenGroup, $groupSite)
     {
+        $oldGroupSite = $tokenGroup->getGroupSite();
+        
         $tokenGroup->setGroupSite($groupSite);
         $this->entityManager->persist($tokenGroup);
         $this->entityManager->flush();
+        
+        if ($groupSite){
+            $this->entityManager->getRepository(GroupSite::class)
+                    ->updateGroupSiteGoodCount($groupSite);
+        }
+        
+        if ($oldGroupSite){
+            $this->entityManager->getRepository(GroupSite::class)
+                    ->updateGroupSiteGoodCount($oldGroupSite);
+        }
         
         return;
     }
@@ -1437,6 +1449,15 @@ class NameManager
             $goodCount = ($tokenGroup['goodCount'] == null) ? 0:$tokenGroup['goodCount']; 
             $this->updateTokenGroupGoodCount($tokenGroup['id'], $goodCount);
         }   
+        
+        $siteGroups = $this->entityManager->getRepository(GroupSite::class)
+                ->findAll();
+        foreach ($siteGroups as $groupSite){
+            $this->entityManager->getRepository(GroupSite::class)
+                    ->updateGroupSiteGoodCount($groupSite);
+        }
+        
+        return;
     }
     
     

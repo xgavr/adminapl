@@ -10,6 +10,7 @@ namespace Application\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\GroupSite;
+use Application\Entity\TokenGroup;
 
 /**
  * Description of GroupSiteRepository
@@ -52,4 +53,32 @@ class GroupSiteRepository extends EntityRepository{
         return $queryBuilder->getQuery();
     }    
     
+    /**
+     * Обновить количество товаров
+     * 
+     * @param GroupSite $groupSite
+     */
+    public function updateGroupSiteGoodCount($groupSite)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('sum(tg.goodCount) as goodCount')
+                ->from(TokenGroup::class, 'tg')
+                ->where('tg.groupSite = :groupSite')
+                ->setParameter('groupSite', $groupSite->getId())
+                ->setMaxResults(1)
+                ;
+        
+        $result = 0;
+        $row = $queryBuilder->getQuery()->getOneOrNullResult();
+        if ($row){
+           $result = $row['goodCount']; 
+        }
+        
+        $entityManager->getConnection()->update('group_site', ['goodCount' => $result], ['id' => $groupSite->getId()]);
+        
+        return;
+    }
 }

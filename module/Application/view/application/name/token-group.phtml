@@ -75,6 +75,7 @@ $this->pageBreadcrumbs()->setItems([
             data-sort-name="goodCount"
             data-sort-order="desc"
             data-id-field="id"
+            data-unique-id="id"
             data-classes = "table table-bordered table-hover table-condensed"
             >
             <thead>
@@ -221,10 +222,18 @@ $this->pageBreadcrumbs()->setItems([
     var $table = $('#table'),
         $ok = $('#ok');
 
-    function operType(rowId, rowName){        
+    function updateTokenGroupGroupSite(tokenGroupId, groupSiteId){
+        $.getJSON('/name/update-token-group-category/'+tokenGroupId+'?groupSite='+groupSiteId, function( data ) {
+            if (data.row && data.id){
+                $table.bootstrapTable('updateByUniqueId', {id: data.id, row: data.row});
+            }
+        });                            
+    }    
+
+    function operType(rowId, rowName, rowGroupSite){        
 
         $.getJSON( '/group-site/content?hasChild=<?= GroupSite::HAS_NO_CHILD?>', function( data ) {
-            var inputOptions = [];
+            var inputOptions = [{text: 'без категории', value: -1}];
             $.each(data.rows, function( index, value ) {
                 inputOptions.push({text: value.fullName, value: value.id});
             });
@@ -232,17 +241,13 @@ $this->pageBreadcrumbs()->setItems([
                 title: 'Укажите категорию',
                 message: '<p>Выберете категорию для <b>'+rowName+'</b>:</p>',
                 inputType: 'select',
-                value: getGroupSiteCookie(),        
+                value: (rowGroupSite) ? rowGroupSite:getGroupSiteCookie(),        
                 inputOptions: inputOptions,
                 callback: function (result) {
 //                    console.log(result); return;               
                     if (result){
                         setGroupSiteCookie(result);
-                        $.getJSON('/name/update-token-group-category/'+rowId+'?groupSite='+result, function( data ) {
-                            if (data.row && data.id){
-                                $table.bootstrapTable('updateByUniqueId', {id: data.id, row: data.row});
-                            }
-                        });                    
+                        updateTokenGroupGroupSite(rowId, result);
                     }    
                 }
             });
@@ -264,7 +269,7 @@ $this->pageBreadcrumbs()->setItems([
             $table.bootstrapTable('refresh');
         });
         $(document).on('click', '.category-select', function (e) {
-            operType($(this).attr('data-id'), $(this).attr('data-name'));
+            operType($(this).attr('data-id'), $(this).attr('data-name'), $(this).attr('data-group-site'));
         });
         
     });
@@ -308,10 +313,13 @@ $this->pageBreadcrumbs()->setItems([
         var result = 'Не назаначена';
         
         if (row.groupSite){
-            result = row.groupSite.fullName;
+            result =  '<p><a href="#" class="category-select"';
+            result += ' data-id="'+row.id+'" data-name="'+row.name+'" >';
+            result += ' data-group-site="'+row.groupSite.id+'">';
+            result +=  row.groupSite.fullName+'</a></p>'; 
         }
     
-        return '<p><a href="#" class="category-select" data-id="'+row.id+'" data-name="'+row.name+'">'+result+'</a></p>'; 
+        return result;
     }
         
     function activeFormatter(value, row){
