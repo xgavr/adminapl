@@ -77,7 +77,7 @@ class GroupSiteRepository extends EntityRepository{
            $result = $row['goodCount']; 
         }
         
-        $entityManager->getConnection()->update('group_site', ['goodCount' => $result], ['id' => $groupSite->getId()]);
+        $entityManager->getConnection()->update('group_site', ['good_count' => $result], ['id' => $groupSite->getId()]);
         
         return;
     }
