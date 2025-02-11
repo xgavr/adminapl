@@ -71,6 +71,15 @@ class AiSettings extends Form
             ],
         ]);
 
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'qwen_api_key',
+            'options' => [
+                'id' => 'qwen_api_key',
+                'label' => 'Qwen Api Key',
+            ],
+        ]);
+
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
