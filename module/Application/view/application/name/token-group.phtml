@@ -234,7 +234,7 @@ $this->pageBreadcrumbs()->setItems([
                 value: getGroupSiteCookie(),        
                 inputOptions: inputOptions,
                 callback: function (result) {
-                    console.log(result); return;               
+//                    console.log(result); return;               
                     if (result){
                         setGroupSiteCookie(result);
                         $.getJSON('/name/update-token-group-category/'+rowId+'?groupSite='+result, function( data ) {
@@ -307,7 +307,7 @@ $this->pageBreadcrumbs()->setItems([
         var result = 'Не назаначена';
         
         if (row.groupSite){
-            result = row.groupSite.name;
+            result = row.groupSite.fullName;
         }
     
         return '<p><a href="#" class="category-select" data-id="'+row.id+'" data-name="'+row.name+'">'+result+'</a></p>'; 
