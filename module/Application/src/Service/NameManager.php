@@ -38,6 +38,7 @@ use Application\Filter\ArticleCode;
 use Application\Filter\ProducerName;
 use Application\Filter\ModelName;
 use Admin\Filter\TransferName;
+use Application\Entity\GroupSite;
 
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
@@ -1407,6 +1408,21 @@ class NameManager
         $this->entityManager->getRepository(TokenGroup::class)
                 ->updateTokenGroup($tokenGroupId, ['goodCount' => $goodCount]);
         
+    }
+    
+    /**
+     * Обновление категории у группы наименований
+     * 
+     * @param TokenGroup $tokenGroup
+     * @param GroupSite $groupSite
+     */
+    public function updateTokenGroupCategory($tokenGroup, $groupSite)
+    {
+        $tokenGroup->setGroupSite($groupSite);
+        $this->entityManager->persist($tokenGroup);
+        $this->entityManager->flush();
+        
+        return;
     }
     
     /**

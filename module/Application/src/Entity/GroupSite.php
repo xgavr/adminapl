@@ -39,6 +39,11 @@ class GroupSite
     protected $name;
 
     /**
+     * @ORM\Column(name="apl_id")   
+     */
+    protected $aplId;
+
+    /**
      * @ORM\Column(name="code")   
      */
     protected $code;
@@ -122,6 +127,15 @@ class GroupSite
         return $this;
     }
 
+    public function getAplId() {
+        return $this->aplId;
+    }
+
+    public function setAplId($aplId) {
+        $this->aplId = $aplId;
+        return $this;
+    }
+    
     public function getCode() {
         return $this->code;
     }

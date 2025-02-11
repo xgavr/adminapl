@@ -11,7 +11,6 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Application\Entity\Rawprice;
 use Application\Entity\Token;
-use Application\Entity\ArticleTitle;
 use Application\Entity\Bigram;
 use Application\Entity\TokenGroup;
 use Application\Entity\GenericGroup;
@@ -24,6 +23,7 @@ use Application\Entity\TitleToken;
 use Application\Entity\TitleBigram;
 use Application\Entity\TokenGroupToken;
 use Application\Entity\TokenGroupBigram;
+use Application\Entity\GroupSite;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -919,6 +919,7 @@ class NameController extends AbstractActionController
         $goodCountLevel = $this->params()->fromQuery('goodCountLevel');
         $withoutName = $this->params()->fromQuery('withoutName');
         $withGenericGroup = $this->params()->fromQuery('withGenericGroup');
+        $withGroupSite = $this->params()->fromQuery('withGroupSite');
         
         $query = $this->entityManager->getRepository(TokenGroup::class)
                         ->findAllTokenGroup([
@@ -928,6 +929,7 @@ class NameController extends AbstractActionController
                             'goodCountLevel' => $goodCountLevel,
                             'withoutName' => $withoutName,
                             'withGenericGroup' => $withGenericGroup,
+                            'withGroupSite' => $withGroupSite,
                                 ]);
 
         $total = count($query->getResult(2));
@@ -942,6 +944,32 @@ class NameController extends AbstractActionController
             'rows' => $result,
         ]);          
     }    
+    
+    public function updateTokenGroupCategoryAction()
+    {    
+        $tokenGroupId = $this->params()->fromRoute('id', -1);
+        $groupSiteId = $this->params()->fromQuery('groupSite', -1);
+        
+        $groupSite = $this->entityManager->getRepository(GroupSite::class)
+                ->find($groupSiteId);
+        
+        if ($tokenGroupId > 0){
+            $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                    ->find($tokenGroupId);
+            if ($tokenGroup){
+                $this->nameManager->updateTokenGroupCategory($tokenGroup, $groupSite);
+
+                $query = $this->entityManager->getRepository(TokenGroup::class)
+                                ->findAllTokenGroup(['id' => $tokenGroup->getId()]);
+                
+                $result = $query->getOneOrNullResult(2);
+                return new JsonModel([
+                    'id' => $tokenGroup->getId(),
+                    'row' => $result,
+                ]);
+            }
+        }
+    }
     
     public function viewTokenGroupAction() 
     {       

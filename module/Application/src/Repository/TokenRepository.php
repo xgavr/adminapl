@@ -315,8 +315,9 @@ class TokenRepository  extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('tg')
+        $queryBuilder->select('tg, gs')
             ->from(TokenGroup::class, 'tg')
+            ->leftJoin('tg.groupSite', 'gs')    
             ->addOrderBy('tg.name')                
                 ;
         
@@ -325,6 +326,14 @@ class TokenRepository  extends EntityRepository
                 $queryBuilder->andWhere('tg.lemms like :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;
+            }
+            if (!empty($params['id'])){
+                if (is_numeric($params['id'])){
+                    $queryBuilder->andWhere('tg.id = :id')
+                        ->setParameter('id', $params['id'])
+                        ->setMaxResults(1)    
+                     ;
+                }    
             }
             if (isset($params['next1'])){
                 $queryBuilder->andWhere('tg.ids > ?1')
@@ -360,6 +369,14 @@ class TokenRepository  extends EntityRepository
                 if ($params['withoutName'] == 2){
                     $queryBuilder->andWhere('tg.name != ?5')
                         ->setParameter('5', '');
+                }                                
+            }
+            if (isset($params['withGroupSite'])){
+                if ($params['withGroupSite'] == 1){
+                    $queryBuilder->andWhere('tg.groupSite is not null');
+                }                                
+                if ($params['withGroupSite'] == 2){
+                    $queryBuilder->andWhere('tg.groupSite is null');
                 }                                
             }
             if (isset($params['withGenericGroup'])){

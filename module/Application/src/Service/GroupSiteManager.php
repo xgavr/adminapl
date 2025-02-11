@@ -60,6 +60,7 @@ class GroupSiteManager
         $groupSite->setImage($data['image'] ?? null);
         $groupSite->setLevel($data['level'] ?? 0);
         $groupSite->setName($data['name']);
+        $groupSite->setAplId($data['aplId'] ?? 0);
         $groupSite->setSort($data['sort'] ?? 0);
         $groupSite->setSlug($data['slug'] ?? null);
         $groupSite->setStatus($data['status'] ?? GroupSite::STATUS_ACTIVE);
@@ -104,6 +105,7 @@ class GroupSiteManager
         $groupSite->setImage($data['image'] ?? null);
         $groupSite->setLevel($data['level'] ?? 0);
         $groupSite->setName($data['name']);
+        $groupSite->setAplId($data['aplId'] ?? 0);
         $groupSite->setSort($data['sort'] ?? 0);
         $groupSite->setSlug($data['slug'] ?? null);
         $groupSite->setStatus($data['status'] ?? GroupSite::STATUS_ACTIVE);

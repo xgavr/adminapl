@@ -15,38 +15,45 @@ $this->pageBreadcrumbs()->setItems([
         <div id="toolbar">
             <div class="form-inline" role="form">
                 <div class="form-group">
-                    <input name="search" style="width: 150px" class="form-control" type="text" placeholder="Поиск">
+                    <div class="btn-group">
+                        <input name="search" style="width: 300px" class="form-control enter-search" 
+                               type="text" onfocus="this.select();" placeholder="Поиск">
+                        <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                    </div>    
+                    <button id="ok" type="submit" class="btn btn-default">OK</button>
                 </div>
-                <button id="ok" type="submit" class="btn btn-default">OK</button>
+                
                 <div class="form-group">
-                    Количество товаров
                     <select type="select" class="form-control" id="goodCountLevel">
-                        <option value="0_-1">больше 0</option>
-                        <option value="2_0">больше 1</option>
-                        <option value="5_0">больше 5</option>
-                        <option value="10_0" selected>больше 10</option>
-                        <option value="100_0">больше 100</option>
-                        <option value="500_0">больше 500</option>
-                        <option value="1000_0">больше 1000</option>
-                        <option value="0_0">=0</option>
-                        <option value="1_1">=1</option>
-                        <option value="2_2">=2</option>
-                        <option value="5_5">=5</option>
-                        <option value="10_10">=10</option>
+                        <option value="0_-1">Товаров больше 0</option>
+                        <option value="2_0">Товаров больше 1</option>
+                        <option value="5_0">Товаров больше 5</option>
+                        <option value="10_0" selected>Товаров больше 10</option>
+                        <option value="100_0">Товаров больше 100</option>
+                        <option value="500_0">Товаров больше 500</option>
+                        <option value="1000_0">Товаров больше 1000</option>
+                        <option value="0_0">Товаров =0</option>
+                        <option value="1_1">Товаров =1</option>
+                        <option value="2_2">Товаров =2</option>
+                        <option value="5_5">Товаров =5</option>
+                        <option value="10_10">Товаров =10</option>
                     </select>
                     <select type="select" class="form-control" id="withoutName">
                         <option value="0">Все</option>
                         <option value="1">Без названия</option>
                         <option value="2">С названием</option>
                     </select>
-                </div>    
-                <div class="form-group">
                     <select type="select" class="form-control" id="withGenericGroup">
                         <option value="0">Все</option>
                         <option value="1">с группами ТД</option>
                         <!--<option value="2">без групп ТД</option>-->
                     </select>
-                </div>
+                    <select type="select" class="form-control" id="withGroupSite">
+                        <option value="0">Все</option>
+                        <option value="2">без категорий</option>
+                        <option value="1">с категориями</option>
+                    </select>
+                </div>    
             </div>
         </div>
         <table id="table" 
@@ -57,20 +64,22 @@ $this->pageBreadcrumbs()->setItems([
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
             data-query-params="queryParams"
             data-response-handler="responseHandler"
             data-sort-name="goodCount"
             data-sort-order="desc"
+            data-classes = "table table-bordered table-hover table-condensed"
             >
             <thead>
                 <tr>
-                     <th data-field="id" data-type="numeric" data-sortable="true">ID</th>
+                     <th data-field="id" data-type="numeric" data-sortable="true" data-width="10">ID</th>
                      <th data-field="lemms" data-formatter="nameFormatter" data-sortable="true">Наименование</th>
+                     <th data-field="groupSite" data-formatter="groupSiteFormatter" data-sortable="true">Категория</th>
 <!--                     <th data-field="lemms" data-sortable="true">Токены</th>             -->
-                     <th data-field="goodCount" data-align='right' data-sortable="true">Товаров</th>             
-                     <th data-field="movement" data-align='right' data-sortable="true">Движений</th>             
-                     <th data-field="" data-formatter="activeFormatter" data-align="center"></th>
+                     <th data-field="goodCount" data-align='right' data-sortable="true" data-width="10">Товаров</th>             
+                     <th data-field="movement" data-align='right' data-sortable="true" data-width="10">Движений</th>             
+                     <th data-field="" data-formatter="activeFormatter" data-align="center" data-width="10"></th>
                  </tr>                
             </thead>
         </table>
@@ -189,26 +198,59 @@ $this->pageBreadcrumbs()->setItems([
     $(window).on('load', function() {
         totalFeatures();
     });
+    
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
 
-    var table = $('#table'),
-        ok = $('#ok');
+    var $table = $('#table'),
+        $ok = $('#ok');
 
+    function operType(rowId){        
+
+        $.getJSON( '/group-site/content', function( data ) {
+            var inputOptions = [];
+            $.each(data, function( index, value ) {
+                inputOptions.push({text: value, value: index});
+            });
+            bootbox.prompt({
+                title: 'Укажите категорию',
+                //message: '<p>Please select an option below:</p>',
+                inputType: 'radio',
+                value: rowKind,        
+                inputOptions: inputOptions,
+                callback: function (result) {
+    //                console.log(result);                
+                    if (result){
+                        $.getJSON('/name/update-token-group-category/'+rowId+'?groupSite='+result, function( data ) {
+                            if (data.row && data.id){
+                                $table.bootstrapTable('updateByUniqueId', {id: data.id, row: data.row});
+                            }
+                        });                    
+                    }    
+                }
+            });
+        }); 
+        return;
+    }
+    
     $(function () {
-        ok.click(function () {
-            table.bootstrapTable('refresh');
+        $ok.click(function () {
+            $table.bootstrapTable('refresh');
         });
         $('#goodCountLevel').change(function (){
-            $('#table').bootstrapTable('refresh');
-        })
+            $table.bootstrapTable('refresh');
+        });
         $('#withoutName').change(function (){
-            $('#table').bootstrapTable('refresh');
-        })
+            $table.bootstrapTable('refresh');
+        });
         $('#withGenericGroup').change(function (){
-            $('#table').bootstrapTable('refresh');
-        })
+            $table.bootstrapTable('refresh');
+        });
+        $(document).on('click', '.category-select', function (e) {
+            operType($(this).attr('data-id'));
+        });
+        
     });
     
     function queryParams(params) {
@@ -226,6 +268,7 @@ $this->pageBreadcrumbs()->setItems([
         params.goodCountLevel = $("#goodCountLevel").val();
         params.withoutName = $("#withoutName").val();
         params.withGenericGroup = $("#withGenericGroup").val();
+        params.withGroupSite = $("#withGroupSite").val();
         
         return params;
     }
@@ -243,6 +286,16 @@ $this->pageBreadcrumbs()->setItems([
         tokens += value;
         tokens += '</div>';
         return link + tokens;        
+    }
+    
+    function groupSiteFormatter(value, row){
+        var result = 'Не назаначена';
+        
+        if (row.groupSite){
+            result = row.groupSite.name;
+        }
+    
+        return '<p><a href="#" class="category-select" data-id="'+row.id+'">'+result+'</a></p>'; 
     }
         
     function activeFormatter(value, row){
@@ -271,6 +324,8 @@ $this->pageBreadcrumbs()->setItems([
     function responseHandler(res) {
         return res;
     }    
+    
+    
     
     /**
     * Промпт диалог
