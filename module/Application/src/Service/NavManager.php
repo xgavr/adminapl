@@ -251,6 +251,23 @@ class NavManager
                 ];
             }
 
+            // настройки для сайта
+            $siteDropDownItems = [];
+            if ($this->rbacManager->isGranted(null, 'site.manage')) {
+                $siteDropDownItems[] = [
+                            'id' => 'group-site',
+                            'label' => 'Категории',
+                            'link' => $url('group-site', [])
+                        ];                
+            }
+           if (count($siteDropDownItems)!=0) {
+                $items[] = [
+                    'id' => 'rb',
+                    'label' => 'Фасад',
+                    'dropdown' => $siteDropDownItems
+                ];
+            }       
+            
             //Справочники
             $rbDropdownItems = [];
             if ($this->rbacManager->isGranted(null, 'rb.manage')) {

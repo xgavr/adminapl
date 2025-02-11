@@ -28,12 +28,20 @@ class IndexController extends AbstractActionController
     private $gigaManager;
         
     /**
+     * Deepseek manager.
+     * @var \Ai\Service\DeepseekManager
+     */
+    private $deepseekManager;
+        
+    /**
      * Constructor. Its purpose is to inject dependencies into the controller.
      */
-    public function __construct($entityManager, $gigaManager) 
+    public function __construct($entityManager, $gigaManager, $deepseekManager) 
     {
        $this->entityManager = $entityManager;
-       $this->gigaManager = $gigaManager;    }
+       $this->gigaManager = $gigaManager;    
+       $this->deepseekManager = $deepseekManager;           
+    }
 
     
     public function indexAction()
@@ -58,6 +66,15 @@ class IndexController extends AbstractActionController
         ];
         
         $result = $this->gigaManager->completions($messages);
+
+        return new JsonModel($result);
+    }
+
+    public function deepseekTestAction()
+    {
+        $message = 'Когда уже ИИ захватит этот мир?';
+        
+        $result = $this->deepseekManager->completions($message);
 
         return new JsonModel($result);
     }

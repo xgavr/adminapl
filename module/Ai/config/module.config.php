@@ -40,6 +40,7 @@ return [
     ],    
     'service_manager' => [
         'factories' => [
+            Service\DeepseekManager::class => Service\Factory\DeepseekManagerFactory::class,
             Service\GigaManager::class => Service\Factory\GigaManagerFactory::class,
         ],
     ],    

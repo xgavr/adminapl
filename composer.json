@@ -72,7 +72,8 @@
         "shuchkin/simplexlsx": "^1.1",
         "shuchkin/simplexls": "^0.10.4",
         "splitbrain/php-qrcode": "^0.1.0",
-        "laminas/laminas-cache-storage-adapter-filesystem": "^2.4"
+        "laminas/laminas-cache-storage-adapter-filesystem": "^2.4",
+        "deepseek-php/deepseek-php-client": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -124,7 +125,8 @@
     },
     "config": {
         "allow-plugins": {
-            "laminas/laminas-component-installer": true
+            "laminas/laminas-component-installer": true,
+            "php-http/discovery": true
         }
     }
 }

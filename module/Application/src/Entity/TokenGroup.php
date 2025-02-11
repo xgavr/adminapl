@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Filter\IdsFormat;
 use Application\Entity\Rate;
+use Application\Entity\GroupSite;
 
 /**
  * Description of NameGroup
@@ -115,7 +116,12 @@ class TokenGroup {
     * @ORM\JoinColumn(name="id", referencedColumnName="group_id")
    */
    private $titleBigrams;        
-
+   
+    /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="tokenGroups") 
+     * @ORM\JoinColumn(name="group_site_id", referencedColumnName="id")
+     */
+    private $groupSite;   
 
     public function __construct() {
         $this->goods = new ArrayCollection();
@@ -347,6 +353,27 @@ class TokenGroup {
         $this->titleTokens[] = $titleToken;
     }             
 
+    /**
+     * 
+     * @return GroupSite
+     */
+    public function getGroupSite() {
+        return $this->groupSite;
+    }
+
+    /**
+     * 
+     * @param GroupSite $groupSite
+     * @return $this
+     */
+    public function setGroupSite($groupSite) {
+        $this->groupSite = $groupSite;
+        if ($groupSite){
+            $groupSite->addTokenGroup($this);
+        }
+        return $this;
+    }
+    
     /**
      * Массив для формы
      * @return array 

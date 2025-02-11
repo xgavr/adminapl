@@ -1,0 +1,134 @@
+<?php
+
+$form = $this->form;
+
+$form->get('name')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('description')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('groupSite')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('status')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'group-site-submit']);
+
+$form->prepare();
+
+?>
+            
+<?= $this->form()->openTag($form); ?>
+            
+<div class="modal-header">
+    <h5 class="modal-title">Категория фронтэнда</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
+            </div>
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col-xs-6">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('groupSite')); ?>
+                <?= $this->formElement($form->get('groupSite')); ?>
+                <?= $this->formElementErrors($form->get('groupSite')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-6">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('status')); ?>
+                <?= $this->formElement($form->get('status')); ?>
+                <?= $this->formElementErrors($form->get('status')); ?>                  
+            </div>
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('description')); ?>
+                <?= $this->formElement($form->get('description')); ?>
+                <?= $this->formElementErrors($form->get('description')); ?>                  
+            </div>
+        </div>    
+    </div>    
+</div>    
+                
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="group-site-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
+            
+<script  type="text/javascript">
+    /**
+    * очистить поле
+     */
+    $(".inputclear").click(function(node){
+    });    
+
+    function submitForm(){
+        var data = serializeForm('#group-site-form');
+         $('#group-site-submit').prop('disabled', true);
+        //console.log(data);
+        $.ajax({
+            type: 'POST',
+            url: '/group-site/edit-form/<?= ($groupSite) ? $groupSite->getId():"" ?>',
+            data: $.param(data)
+        })
+            .done(function (data) {
+                if (data == 'ok'){
+                    $('#groupSiteModal').modal('hide');
+                    if ($('#table')){
+                        $('#table').bootstrapTable('refresh', {silent: true});
+                    }    
+                } else {
+                    $('#groupSiteModal .modal-content').html(data);                    
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });    
+    };
+    
+    $( document ).ready(function() {
+    
+        var forms = $('#group-site-form');
+        
+        forms.submit(function() {
+            submitForm();
+            return false;
+        });
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('group-site-submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+                submitForm();
+            }, false);    
+        });
+    });    
+</script>

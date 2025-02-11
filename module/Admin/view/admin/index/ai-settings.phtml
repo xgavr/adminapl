@@ -33,6 +33,10 @@ $form->get('deepseek_api_key')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('qwen_api_key')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -48,6 +52,9 @@ $form->prepare();
         </button>                
         <button class="btn btn-default test-button" value="/ai/deepseek-test">
             <span class="glyphicon glyphicon-tag" ></span> Deepseek Test
+        </button>                
+        <button class="btn btn-default test-button" value="/ai/qwen-test">
+            <span class="glyphicon glyphicon-tag" ></span> Qwen Test
         </button>                
     </div>
 </div>
@@ -85,6 +92,11 @@ $form->prepare();
             <?= $this->formLabel($form->get('deepseek_api_key')); ?>
             <?= $this->formElement($form->get('deepseek_api_key')); ?>
             <?= $this->formElementErrors($form->get('deepseek_api_key')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('qwen_api_key')); ?>
+            <?= $this->formElement($form->get('qwen_api_key')); ?>
+            <?= $this->formElementErrors($form->get('qwen_api_key')); ?>                  
         </div>
     </div>
 <!--    <div class="col-md-2" id="side-nav" >
