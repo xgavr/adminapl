@@ -220,7 +220,7 @@ $this->pageBreadcrumbs()->setItems([
     var $table = $('#table'),
         $ok = $('#ok');
 
-    function operType(rowId){        
+    function operType(rowId, rowName){        
 
         $.getJSON( '/group-site/content?hasChild=<?= GroupSite::HAS_NO_CHILD?>', function( data ) {
             var inputOptions = [];
@@ -229,7 +229,7 @@ $this->pageBreadcrumbs()->setItems([
             });
             bootbox.prompt({
                 title: 'Укажите категорию',
-                message: '<p>Выберете категорию:</p>',
+                message: '<p>Выберете категорию для <b>'+rowName+'</b>:</p>',
                 inputType: 'select',
                 value: getGroupSiteCookie(),        
                 inputOptions: inputOptions,
@@ -263,7 +263,7 @@ $this->pageBreadcrumbs()->setItems([
             $table.bootstrapTable('refresh');
         });
         $(document).on('click', '.category-select', function (e) {
-            operType($(this).attr('data-id'));
+            operType($(this).attr('data-id'), $(this).attr('data-name'));
         });
         
     });
@@ -310,7 +310,7 @@ $this->pageBreadcrumbs()->setItems([
             result = row.groupSite.name;
         }
     
-        return '<p><a href="#" class="category-select" data-id="'+row.id+'">'+result+'</a></p>'; 
+        return '<p><a href="#" class="category-select" data-id="'+row.id+'" data-name="'+row.name+'">'+result+'</a></p>'; 
     }
         
     function activeFormatter(value, row){

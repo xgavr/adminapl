@@ -38,9 +38,9 @@ class GroupSiteRepository extends EntityRepository{
         
         if (is_array($params)){
             if (!empty($params['hasChild'])){
-                if (is_numeric($params['nasChild'])){
+                if (is_numeric($params['hasChild'])){
                     $queryBuilder->andWhere('gs.hasChild = :hasChild')
-                        ->setParameter('hasChild', $params['nasChild'])
+                        ->setParameter('hasChild', $params['hasChild'])
                      ;
                 }    
             }
