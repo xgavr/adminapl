@@ -1,4 +1,6 @@
 <?php
+use Application\Entity\GroupSite;
+
 $this->headTitle('Группы наименований');
 
 $this->mainMenu()->setActiveItemId('rb');
@@ -198,6 +200,15 @@ $this->pageBreadcrumbs()->setItems([
         });        
     }
 
+    function setGroupSiteCookie(selectedValue){
+        let expires = 30;
+        Cookies.set('selectedGroupSite', selectedValue, { expires: expires});        
+    }
+    
+    function getGroupSiteCookie(){
+        return Cookies.get('selectedGroupSite');
+    }    
+    
     $(window).on('load', function() {
         totalFeatures();
     });
@@ -211,20 +222,21 @@ $this->pageBreadcrumbs()->setItems([
 
     function operType(rowId){        
 
-        $.getJSON( '/group-site/content', function( data ) {
+        $.getJSON( '/group-site/content?hasCild=<?= GroupSite::HAS_NO_CHILD?>', function( data ) {
             var inputOptions = [];
             $.each(data.rows, function( index, value ) {
-                inputOptions.push({text: value.name, value: value.id});
+                inputOptions.push({text: value.fullName, value: value.id});
             });
             bootbox.prompt({
                 title: 'Укажите категорию',
-                //message: '<p>Please select an option below:</p>',
-                inputType: 'radio',
-//                value: rowKind,        
+                message: '<p>Выберете категорию:</p>',
+                inputType: 'select',
+                value: getGroupSiteCookie(),        
                 inputOptions: inputOptions,
                 callback: function (result) {
-    //                console.log(result);                
+                    console.log(result); return;               
                     if (result){
+                        setGroupSiteCookie(result);
                         $.getJSON('/name/update-token-group-category/'+rowId+'?groupSite='+result, function( data ) {
                             if (data.row && data.id){
                                 $table.bootstrapTable('updateByUniqueId', {id: data.id, row: data.row});

@@ -47,6 +47,7 @@ class GroupSiteController extends AbstractActionController
     {
         	        
         $q = $this->params()->fromQuery('search');
+        $hasChild = $this->params()->fromQuery('hasChild');
         $offset = $this->params()->fromQuery('offset');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order');
@@ -54,7 +55,7 @@ class GroupSiteController extends AbstractActionController
         $status = $this->params()->fromQuery('status', GroupSite::STATUS_ACTIVE);
         
         $query = $this->entityManager->getRepository(GroupSite::class)
-                        ->queryAllGroupSite(['q' => $q, 'sort' => $sort, 
+                        ->queryAllGroupSite(['q' => $q, 'hasChild' => $hasChild, 'sort' => $sort, 
                             'order' => $order, 'status' => $status]);
 
         $total = count($query->getResult(2));

@@ -37,6 +37,13 @@ class GroupSiteRepository extends EntityRepository{
                 ;
         
         if (is_array($params)){
+            if (!empty($params['hasChild'])){
+                if (is_numeric($params['nasChild'])){
+                    $queryBuilder->andWhere('gs.hasChild = :hasChild')
+                        ->setParameter('hasChild', $params['nasChild'])
+                     ;
+                }    
+            }
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('gs.'.$params['sort'], $params['order']);
             }            
