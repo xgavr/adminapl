@@ -329,10 +329,8 @@ class TokenRepository  extends EntityRepository
                         ->lemmsFromSearchStr($params['q']);
 //                var_dump($lemms);
                 
-                foreach ($lemms as $lemma){
-                    $queryBuilder->andWhere('tg.lemms like \'%:lemma%\'')
-                        ->setParameter('lemma', $lemma)
-                            ;
+                foreach ($lemms as $key => $lemma){
+                    $queryBuilder->andWhere($queryBuilder->expr()->like('tg.lemms', "%$lemma%"));
                 }
             }
             if (!empty($params['id'])){
