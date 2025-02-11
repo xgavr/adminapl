@@ -118,7 +118,7 @@ class TokenGroup {
    private $titleBigrams;        
    
     /**
-     * @ORM\ManyToOne(targetEntity="Company\Entity\Office", inversedBy="tokenGroups") 
+     * @ORM\ManyToOne(targetEntity="Application\Entity\GroupSite", inversedBy="tokenGroups") 
      * @ORM\JoinColumn(name="group_site_id", referencedColumnName="id")
      */
     private $groupSite;   
