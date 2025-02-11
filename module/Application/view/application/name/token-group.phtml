@@ -213,8 +213,8 @@ $this->pageBreadcrumbs()->setItems([
 
         $.getJSON( '/group-site/content', function( data ) {
             var inputOptions = [];
-            $.each(data, function( index, value ) {
-                inputOptions.push({text: value, value: index});
+            $.each(data.rows, function( index, value ) {
+                inputOptions.push({text: value.name, value: value.id});
             });
             bootbox.prompt({
                 title: 'Укажите категорию',
