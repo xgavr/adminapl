@@ -193,6 +193,9 @@ $this->pageBreadcrumbs()->setItems([
 </div>    
 
 <script type="text/javascript">
+    var $table = $('#table'),
+        $ok = $('#ok');
+
     function totalFeatures(){
         $(".badge").each(function( index ) {
             var node = $(this).attr('id');
@@ -216,11 +219,8 @@ $this->pageBreadcrumbs()->setItems([
     });
     
     function refreshTable(){
-        $('#table').bootstrapTable('refresh');
+        $table.bootstrapTable('refresh');
     }
-
-    var $table = $('#table'),
-        $ok = $('#ok');
 
     function updateTokenGroupGroupSite(tokenGroupId, groupSiteId){
         $.getJSON('/name/update-token-group-category/'+tokenGroupId+'?groupSite='+groupSiteId, function( data ) {
@@ -256,6 +256,15 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     $(function () {
+    
+        $(".inputclear").click(function(){
+            var val = $(".enter-search").val();
+            $(".enter-search").val('');
+            if (val){
+                refreshTable();
+            }    
+        });
+    
         $ok.click(function () {
             $table.bootstrapTable('refresh');
         });

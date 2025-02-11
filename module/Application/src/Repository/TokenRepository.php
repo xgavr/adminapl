@@ -17,6 +17,7 @@ use Application\Entity\Rawprice;
 use Application\Entity\TokenGroup;
 use Application\Entity\Goods;
 use Application\Entity\GenericGroup;
+use Search\Entity\SearchTitle;
 
 
 /**
@@ -322,7 +323,12 @@ class TokenRepository  extends EntityRepository
                 ;
         
         if (is_array($params)){
-            if (isset($params['q'])){
+            if (!empty($params['q'])){
+                
+                $lemms = $entityManager->getRepository(SearchTitle::class)
+                        ->lemmsFromSearchStr($params['q']);
+                var_dump($lemms);
+                
                 $queryBuilder->andWhere('tg.lemms like :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;

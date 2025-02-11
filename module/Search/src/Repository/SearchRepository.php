@@ -28,7 +28,7 @@ class SearchRepository extends EntityRepository
      * Токены из строки поиска
      * @param string $searchStr
      */
-    private function lemmsFromSearchStr($searchStr)
+    public function lemmsFromSearchStr($searchStr)
     {
         $entityManager = $this->getEntityManager();
 
