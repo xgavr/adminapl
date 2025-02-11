@@ -20,7 +20,7 @@ final class Version20250211105502 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $table = $schema->getTable('group-site');
+        $table = $schema->getTable('group_site');
         $table->addColumn('apl_id', 'integer', ['notnull' => true, 'default' => 0, 'comment' => 'Код в АПЛ']);
         $table->addIndex(['apl_id'], 'apl_id_indx');
 
@@ -29,7 +29,7 @@ final class Version20250211105502 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $table = $schema->getTable('group-site');
+        $table = $schema->getTable('group_site');
         $table->dropColumn('apl_id');
     }
 }
