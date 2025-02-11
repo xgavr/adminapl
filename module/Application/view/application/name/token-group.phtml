@@ -222,7 +222,7 @@ $this->pageBreadcrumbs()->setItems([
 
     function operType(rowId){        
 
-        $.getJSON( '/group-site/content?hasCild=<?= GroupSite::HAS_NO_CHILD?>', function( data ) {
+        $.getJSON( '/group-site/content?hasChild=<?= GroupSite::HAS_NO_CHILD?>', function( data ) {
             var inputOptions = [];
             $.each(data.rows, function( index, value ) {
                 inputOptions.push({text: value.fullName, value: value.id});
