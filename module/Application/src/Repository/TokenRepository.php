@@ -330,8 +330,8 @@ class TokenRepository  extends EntityRepository
 //                var_dump($lemms);
                 
                 foreach ($lemms as $lemma){
-                    $queryBuilder->andWhere('tg.lemms like ":lemma"')
-                        ->setParameter('lemma', '%' . $lemma . '%')
+                    $queryBuilder->andWhere('tg.lemms like \'%:lemma%\'')
+                        ->setParameter('lemma', $lemma)
                             ;
                 }
             }
