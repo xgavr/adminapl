@@ -128,11 +128,12 @@ $this->pageBreadcrumbs()->setItems([
         }    
         if (row.level === 2){
             result = '<em>'+value+'</em>';
-        }    
+        } 
         
+        var disabled = (row.goodCount > 0 && row.hasChild === <?= GroupSite::HAS_NO_CHILD?>) ? 'disabled="true"':''; 
         var url = '/group-site/edit-form?parent='+row.id;
         return [
-            '<button type="button" class="btn btn-default btn-xs group-site-modal-show"',
+            '<button '+disabled+' type="button" class="btn btn-default btn-xs group-site-modal-show"',
             ' aria-label="Left Align" modal-url="'+url+'" title="Добавить подгруппу">',
             '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>',
             '</button>',
