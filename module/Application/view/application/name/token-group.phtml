@@ -232,7 +232,7 @@ $this->pageBreadcrumbs()->setItems([
 
     function operType(rowId, rowName, rowGroupSite){        
 
-        $.getJSON( '/group-site/content?hasChild=<?= GroupSite::HAS_NO_CHILD?>', function( data ) {
+        $.getJSON( '/group-site/content?hasChild=<?= GroupSite::HAS_NO_CHILD?>&sort=code', function( data ) {
             var inputOptions = [{text: 'без категории', value: -1}];
             $.each(data.rows, function( index, value ) {
                 inputOptions.push({text: value.fullName, value: value.id});
