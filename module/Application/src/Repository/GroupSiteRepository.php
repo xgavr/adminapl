@@ -61,23 +61,46 @@ class GroupSiteRepository extends EntityRepository{
     public function updateGroupSiteGoodCount($groupSite)
     {
         $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-
-        $queryBuilder->select('sum(tg.goodCount) as goodCount')
-                ->from(TokenGroup::class, 'tg')
-                ->where('tg.groupSite = :groupSite')
-                ->setParameter('groupSite', $groupSite->getId())
-                ->setMaxResults(1)
-                ;
-        
         $result = 0;
-        $row = $queryBuilder->getQuery()->getOneOrNullResult();
-        if ($row){
-           $result = $row['goodCount']; 
-        }
         
-        $entityManager->getConnection()->update('group_site', ['good_count' => $result], ['id' => $groupSite->getId()]);
+        if ($groupSite->getHasChild() === GroupSite::HAS_NO_CHILD){
+
+            $queryBuilder = $entityManager->createQueryBuilder();
+
+            $queryBuilder->select('sum(tg.goodCount) as goodCount')
+                    ->from(TokenGroup::class, 'tg')
+                    ->where('tg.groupSite = :groupSite')
+                    ->setParameter('groupSite', $groupSite->getId())
+                    ->setMaxResults(1)
+                    ;
+            
+            $row = $queryBuilder->getQuery()->getOneOrNullResult();
+            if ($row){
+               $result = $row['goodCount']; 
+            }
+
+        } else {
+            $queryBuilder = $entityManager->createQueryBuilder();
+
+            $queryBuilder->select('sum(gs.goodCount) as goodCount')
+                    ->from(GroupSite::class, 'gs')
+                    ->where('gs.siteGroup = :groupSite')
+                    ->setParameter('groupSite', $groupSite->getId())
+                    ->setMaxResults(1)
+                    ;
+
+            $row = $queryBuilder->getQuery()->getOneOrNullResult();
+            if ($row){
+               $result = $row['goodCount']; 
+            }
+
+        }   
+        
+        $entityManager->getConnection()->update('group_site', ['good_count' => $result], ['id' => $groupSite->getId()]);            
+        
+        if ($groupSite->getSiteGroup()){
+            $this->updateGroupSiteGoodCount($groupSite->getSiteGroup());
+        }
         
         return;
     }
