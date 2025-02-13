@@ -1874,6 +1874,8 @@ class GoodsRepository extends EntityRepository
                 ->from(Goods::class, 'g')
                 ->join('g.producer', 'p')    
                 ->leftJoin('g.tokenGroup', 'tg')
+                ->andWhere('g.available != :available')
+                ->setParameter('available', Goods::AVAILABLE_FALSE)
                 ;
 
         
@@ -1975,6 +1977,8 @@ class GoodsRepository extends EntityRepository
                 ->from(Goods::class, 'g')
                 ->join('g.producer', 'p')   
                 ->setMaxResults(1)
+                ->andWhere('g.available != :available')
+                ->setParameter('available', Goods::AVAILABLE_FALSE)
                 ;
 
         
