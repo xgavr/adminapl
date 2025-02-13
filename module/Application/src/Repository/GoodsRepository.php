@@ -2049,11 +2049,7 @@ class GoodsRepository extends EntityRepository
                             break;    
                     }
                 }   
-            }
-                                    
-            if (!empty($params['sort'])){
-                $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);
-            }
+            }                                    
         }
         
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
