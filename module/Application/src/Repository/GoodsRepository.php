@@ -1869,8 +1869,8 @@ class GoodsRepository extends EntityRepository
         
         $queryBuilder->select('g.id, g.aplId, g.code, g.name, g.retailCount')
                 ->addSelect('g.checkOem, g.checkDescription, g.checkImage, g.checkCar, g.fasadeEx')
-                ->addSelect('tg.name')
-                ->addSelect('tg.name')
+                ->addSelect('p.name as producerName')
+                ->addSelect('tg.name as tokenGroupName')
                 ->from(Goods::class, 'g')
                 ->join('g.producer', 'p')    
                 ->leftJoin('g.tokenGroup', 'tg')
