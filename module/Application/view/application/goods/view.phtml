@@ -582,17 +582,9 @@
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">    
-    $(window).on('load', function() {
-        $('.nav-tabs a:first').tab('show');
-        $('.editable').editable();
-    });
-
-    var $linkedTable = $('#linkedTable');
-    
+    var $linkedTable = $('#linkedTable');    
     var $oemTable = $('#oemTable');
-
-    var $priceTable = $('#priceTable');
-    
+    var $priceTable = $('#priceTable');    
     var $movementTable = $('#movementTable');
     var $comitentTable = $('#comitentTable');
     var $balanceTable = $('#balanceTable');
@@ -600,6 +592,15 @@
     var $optsTable = $('#optsTable');
 
     $(function () {
+        $(window).on('load', function() {
+            <?php if (!empty($tab)):?>
+                $('.nav-tabs #<?= $tab ?>').tab('show');
+            <?php else: ?>    
+                $('.nav-tabs a:first').tab('show');
+            <?php endif; ?>  
+                
+            $('.editable').editable();
+        });
     
         $linkedTable.on('load-success.bs.table', function (e, res) {
             $('#linkedBadge').html($linkedTable.bootstrapTable('getOptions').totalRows);

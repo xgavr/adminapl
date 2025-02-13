@@ -93,7 +93,8 @@
             "Search\\": "module/Search/src/",
             "Fin\\": "module/Fin/src/",
             "Zp\\": "module/Zp/src/",
-            "GoodMap\\": "module/GoodMap/src/"
+            "GoodMap\\": "module/GoodMap/src/",
+            "Fasade\\": "module/Fasade/src/"
         }
     },
     "autoload-dev": {

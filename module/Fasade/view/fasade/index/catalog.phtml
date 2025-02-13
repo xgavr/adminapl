@@ -1,0 +1,246 @@
+<?php
+use Application\Entity\Goods;
+
+$this->headTitle('Каталог товаров на сайте');
+
+$this->mainMenu()->setActiveItemId('fasade');
+$this->mainMenu()->setActiveUrl($this->url('catalog'));
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Фасад'=>$this->url('group-site'),
+            'Каталог'=>$this->url('catalog')
+            ]);
+            
+?>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <button class="btn btn-default good-modal-show" type="button" 
+                            modal-url="/goods/edit-form" 
+                            data-toggle='tooltip' data-original-title="Добавить товар">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>    
+                <div class="form-group">
+                    <div class="btn-group">
+                        <input id="searchinput" name="search" style="width: 400px" class="form-control good-toolbar enter-search" onfocus="this.select();" type="text" placeholder="Артикул">
+                        <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                    </div>
+                    <button id="ok" type="submit" class="btn btn-default" title="Поиск">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <table id="table" 
+            data-toggle="table" 
+            data-cookie="true"
+            data-cookie-id-table="catalogSaveId"
+            data-cookie-expire="1m"
+            data-side-pagination="server"
+            data-pagination="true" 
+            data-page-list="[5, 10, 20, 50, 100, 500, 1000, 10000]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
+            data-row-style="rowStyle"
+            data-auto-refresh="true"
+            >
+            <thead>
+                <tr>
+                     <!--<th data-field="id" data-type="numeric" data-sortable="true" data-width="100">ID</th>-->
+                     <th data-field="aplId" data-type="numeric" data-formatter="aplFormatter" data-sortable="true" data-width="100">AplId</th>
+                     <th data-field="producerName" data-formatter="producerFormatter"data-width="100">Производитель</th>             
+                     <th data-field="code" data-formatter="linkFormatter" data-sortable="true" data-width="100">Артикул</th>
+                     <th data-field="name" >Наименование</th>             
+                     <th data-field="available" data-width="50" data-formatter="activeFormatter">Проверки</th>             
+                     <th data-field="available" data-width="50" data-align="right" data-formatter="availableFormatter">Доступно</th>             
+                     <th data-field="retailCount" data-width="50" data-sortable="true" data-align="right">Продаж</th>             
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<?php echo $this->partial('/stock/index/stock-partial', []); ?>
+
+<script type="text/javascript">
+    var $table = $('#table'),
+        $ok = $('#ok');
+
+    function refreshTable(){
+//        $table.bootstrapTable('refresh');
+        $table.bootstrapTable('selectPage', 1);
+        setCookies('goodsSaveId');
+    }
+
+    function setCookies(cookieKey){
+        let expires = 30;
+        $('.cookie-control').each(function () {
+            Cookies.set(cookieKey+'_'+$(this).attr('name'), $(this).val(), { expires: expires});        
+        });        
+    }    
+    
+    function getCookies(cookieKey){
+        $('.cookie-control').each(function () {
+            var cookieVal = Cookies.get(cookieKey+'_'+$(this).attr('name'));
+            if (cookieVal !== undefined){
+                $(this).val(cookieVal);                
+            }
+        });            
+        $table.bootstrapTable('refresh', {
+            url: '/fasade/catalog-content'
+        });
+    }
+
+    function rowStyle(row){
+        var retired = 'tablerow';
+        return {classes: retired};
+    }
+    
+    function officeChange(){
+        $('#foldCode').empty();
+        $('#foldCode').append('<option>все места хранения</option>');        
+        $('#foldCode').append('<option value="-1">без места хранения</option>');        
+        $.getJSON( '/good-map/content?sort=code&order=asc&office='+$('#office').val(), function( data ) {
+            if (Object.keys(data.rows).length){
+                $.each( data.rows, function( key, value ) {
+                    $('#foldCode').append('<option value="' + value.code + '">' + value.name + '</option>');
+                });
+            }    
+        });    
+    }    
+    
+    $(function () {
+        getCookies('goodsSaveId');
+                
+        $table.on('load-success.bs.table', function (e, res) {
+            tableRowClick();
+            $('.fold').editable();  
+        });        
+        
+        $(document).on('editable-save.bs.table', '#table', function (e, field, row, old, $el) {
+//            console.log(row);
+            if (field === 'foldCode'){
+                $.get( "/fold/change-code?good="+row.id+'&office='+row.officeId
+                        +'&code='+row.foldCode+'&quantity='+row.rest, function(data){
+
+                });        
+            }
+        });                
+        $(document).on('click', '.good-modal-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
+            showFormDialog({
+                id: 'goodModal',
+                url: url
+    //            width: '500px'
+            });
+        });  
+        $("[data-toggle='tooltip']").tooltip();
+        
+        $ok.click(function () {
+            refreshTable();
+        });
+        $(".inputclear").click(function(){
+            $("#searchinput").val('');
+            refreshTable();
+        });
+        $(".refresh-table").change(function(){
+            refreshTable();
+        });
+        $('select[name="accurate"]').change(function(){
+            refreshTable();
+        });        
+    });
+    
+    function queryParams(params) {
+        $('.toolbar').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('.page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }            
+        
+        return params;
+    }
+    
+    function linkFormatter(value, row){
+        return [
+            '<nobr>',
+            '<a href="/goods/view/' + row.id + '" class="btn btn-link btn-xs" title="Перейти на страницу товара" target="_blank">',
+            '<span class="glyphicon glyphicon-link"></span></a>'+value,
+            '</nobr>'
+        ].join(''); 
+    }    
+    
+    function aplFormatter(value, row){
+        if (value !== 0){
+            return [
+                '<nobr>',
+                '<a href="https://autopartslist.ru/goods/view/id/' + value + '" class="btn btn-link btn-xs" target="_blank">',
+                '<span class="glyphicon glyphicon-link"></span></a>'+value,
+                '</nobr>'
+            ].join(''); 
+        } else {
+            return '-';
+        }    
+    }    
+    
+    function producerFormatter(value, row){
+//        return [
+//            '<div class="pull-left">',
+//            '<a href="/producer/view/' + row.producerId + '" target="_blank">' + value + '</a>',
+//            '</div>'
+//        ].join(''); 
+        return value;
+    }        
+    
+    
+    function activeFormatter(value, row){
+ 
+        var url = '/goods/view/'+row.id+'?tab=oem-tab';
+        btn = '<nobr><a';
+        btn += ' type="button"';
+        btn += ' class="btn btn-xs ' + ((row.checkOem === <?= Goods::CHECK_OEM_OK?>) ? 'btn-success':'btn-warning') + '"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Проверить номера" '; 
+        btn += ' href="'+url+'" target="_blank">'; 
+        btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span> Проверить номера';
+        btn += '</a>';
+
+//        url = '/goods/view/'+row.id+'?tab=home-tab';
+//        btn += ' <button';
+//        btn += ' type="button"';
+//        btn += ' class="btn btn-xs btn-info"';
+//        btn += ' aria-label="Left Align"'; 
+//        btn += ' title="Проверить описание" '; 
+//        btn += ' modal-url="'+url+'">'; 
+//        btn += '<span class="glyphicon glyphicon-check" aria-hidden="true"></span> Проверить описание';
+//        btn += '</button>';
+
+        btn += '</nobr>';
+        
+        return btn;
+    }    
+    
+    
+    function availableFormatter(value) {
+        return  (value > 0) ? value:0;
+    }     
+    
+    function responseHandler(res) {
+        return res;
+    }    
+</script>

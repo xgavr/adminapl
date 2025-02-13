@@ -102,11 +102,17 @@ class OemRepository  extends EntityRepository{
                 'update_rating' => Oem::RATING_FOR_UPDATE,
             ];
 //            var_dump($data);
-            $this->getEntityManager()->getRepository(Goods::class)
+            $inserted = $this->getEntityManager()->getRepository(Goods::class)
                     ->addGoodOem($data);
             
+            $upd = ['status_oem_ex' => Goods::OEM_EX_NEW];
+            
+            if ($inserted > 0){
+                $upd['check_oem'] = Goods::CHECK_OEM_NO;
+            }
+            
             $this->getEntityManager()->getRepository(Goods::class)
-                    ->updateGoodId($goodId, ['status_oem_ex' => Goods::OEM_EX_NEW]);            
+                    ->updateGoodId($goodId, $upd);            
         } else {
             if ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD){
                 $this->getEntityManager()->getConnection()->update('oem', 

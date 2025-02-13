@@ -6,28 +6,29 @@
  * and open the template in the editor.
  */
 
-namespace Application\Service\Factory;
+namespace Fasade\Service\Factory;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Application\Service\GroupSiteManager;
-use Admin\Service\LogManager;
+use Admin\Service\AdminManager;
+use Fasade\Service\FasadeManager;
+
 
 /**
- * Description of GroupSiteManagerFactory
+ * Description of FasadeManagerFactory
  *
  * @author Daddy
  */
-class GroupSiteManagerFactory  implements FactoryInterface
+class FasadeManagerFactory  implements FactoryInterface
 {
                    
     public function __invoke(ContainerInterface $container, 
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $logManager = $container->get(LogManager::class);
+        $adminManager = $container->get(AdminManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new GroupSiteManager($entityManager, $logManager);
+        return new FasadeManager($entityManager, $adminManager);
     }
 }

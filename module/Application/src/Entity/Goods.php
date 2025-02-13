@@ -70,10 +70,25 @@ class Goods {
     const NAME_EX_NEW            = 1; // не передано
     const NAME_EX_TRANSFERRED    = 2; // передано.
     
+    const FASADE_EX_NEW            = 1; // не передано
+    const FASADE_EX_TRANSFERRED    = 2; // передано.
+    
     const DEFAULT_GROUP_APL_ID    = -1; //группа апл по умолчнию 
     
     const TD_DIRECT = 1; //точно совпадает с товаровм в ТД
     const TD_NO_DIRECT = 2; //не совпадает с товаровм в ТД
+    
+    const CHECK_OEM_OK = 1; //номера проверены
+    const CHECK_OEM_NO = 2;
+    
+    const CHECK_DESCRIPTION_OK = 1; //описание проверено
+    const CHECK_DESCRIPTION_NO = 2;
+    
+    const CHECK_IMAGE_OK = 1; //картинка проверена
+    const CHECK_IMAGE_NO = 2;
+    
+    const CHECK_CAR_OK = 1; //машина проверена
+    const CHECK_CAR_NO = 2;
     
     const GROUP_TOKEN_UPDATE_FLAG = 2; // месяц обновления наименования товара
     
@@ -255,6 +270,31 @@ class Goods {
      * @ORM\Column(name="retail_count")  
      */
     protected $retailCount = 0;        
+    
+    /**
+     * @ORM\Column(name="check_oem")  
+     */
+    protected $checkOem;        
+    
+    /**
+     * @ORM\Column(name="check_description")  
+     */
+    protected $checkDescription;        
+    
+    /**
+     * @ORM\Column(name="check_image")  
+     */
+    protected $checkImage;        
+    
+    /**
+     * @ORM\Column(name="check_car")  
+     */
+    protected $checkCar;
+    
+    /**
+     * @ORM\Column(name="fasade_ex")  
+     */
+    protected $fasadeEx;        
     
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Producer", inversedBy="goods") 
@@ -1180,6 +1220,51 @@ class Goods {
     {
         $this->statusImgEx = $statusImgEx;
     }    
+    
+    public function getCheckOem() {
+        return $this->checkOem;
+    }
+
+    public function setCheckOem($checkOem) {
+        $this->checkOem = $checkOem;
+        return $this;
+    }
+
+    public function getCheckDescription() {
+        return $this->checkDescription;
+    }
+
+    public function setCheckDescription($checkDescription) {
+        $this->checkDescription = $checkDescription;
+        return $this;
+    }
+
+    public function getCheckImage() {
+        return $this->checkImage;
+    }
+
+    public function setCheckImage($checkImage) {
+        $this->checkImage = $checkImage;
+        return $this;
+    }
+
+    public function getCheckCar() {
+        return $this->checkCar;
+    }
+
+    public function setCheckCar($checkCar) {
+        $this->checkCar = $checkCar;
+        return $this;
+    }
+
+    public function getFasadeEx() {
+        return $this->fasadeEx;
+    }
+
+    public function setFasadeEx($fasadeEx) {
+        $this->fasadeEx = $fasadeEx;
+        return $this;
+    }
     
     public function getInStore()
     {

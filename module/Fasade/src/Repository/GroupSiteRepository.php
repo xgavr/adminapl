@@ -6,10 +6,10 @@
  * and open the template in the editor.
  */
 
-namespace Application\Repository;
+namespace Fasade\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Application\Entity\GroupSite;
+use Fasade\Entity\GroupSite;
 use Application\Entity\TokenGroup;
 
 /**

@@ -38,7 +38,7 @@ use Application\Filter\ArticleCode;
 use Application\Filter\ProducerName;
 use Application\Filter\ModelName;
 use Admin\Filter\TransferName;
-use Application\Entity\GroupSite;
+use Fasade\Entity\GroupSite;
 
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;

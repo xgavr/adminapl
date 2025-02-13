@@ -5,12 +5,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace Application\Controller\Factory;
+namespace Fasade\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Application\Controller\GroupSiteController;
-use Application\Service\GroupSiteManager;
+use Fasade\Controller\GroupSiteController;
+use Fasade\Service\GroupSiteManager;
 
 
 /**

@@ -1856,6 +1856,211 @@ class GoodsRepository extends EntityRepository
     }    
 
     /**
+     * Товары для фасада
+     * 
+     * @param array $params
+     * @return Query
+     */
+    public function catalog($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('g.id, g.aplId, g.code, g.name, g.retailCount')
+                ->addSelect('g.checkOem, g.checkDescription, g.checkImage, g.checkCar, g.fasadeEx')
+                ->addSelect('tg.name')
+                ->addSelect('tg.name')
+                ->from(Goods::class, 'g')
+                ->join('g.producer', 'p')    
+                ->leftJoin('g.tokenGroup', 'tg')
+                ;
+
+        
+        if (is_array($params)){
+            if (isset($params['accurate'])){
+                if ($params['accurate'] == Goods::SEARCH_COMISS){
+                    $comiss = $this->getEntityManager()->getRepository(Comiss::class)
+                            ->goodInCommiss(['asArray' => 1]);
+                    
+                    $inX = $queryBuilder->expr()->in('g.id', implode(',', $comiss));
+                    $queryBuilder
+                            ->resetDQLPart('where')
+                            ->andWhere($inX); 
+                }                    
+            }
+            if (isset($params['q'])){                
+                $codeFilter = new ArticleCode();
+                $q = $codeFilter->filter($params['q']);
+
+                $searchOpt= Goods::SEARCH_CODE;
+                if (isset($params['accurate'])){
+                    $searchOpt= $params['accurate'];
+                }
+//                var_dump($q); exit;
+                if ($q){
+                    
+                    $queryBuilder->resetDQLPart('from')
+                            ->resetDQLPart('join')
+                            ->resetDQLPart('where')
+                            ->from(Goods::class, 'g')
+                            ->leftJoin('g.goodBalances', 'gb')
+                            ;
+                
+                    switch ($searchOpt){
+                        case Goods::SEARCH_APLID:
+                            $queryBuilder
+                                ->andWhere('g.aplId = :aplId')                           
+                                ->setParameter('aplId', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_ID:
+                            $queryBuilder
+                                ->andWhere('g.id = :id')                           
+                                ->setParameter('id', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_OE:
+                            $orX = $queryBuilder->expr()->orX(
+                                    $queryBuilder->expr()->eq('o.oe', '?4')    
+                                );
+                            $queryBuilder->join('g.oems', 'o')
+                                ->andWhere($orX) 
+                                ->setParameter('4', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_NAME: 
+                            $tg = $this->findTokenGroupByPhrase($params['q']);
+        //                    var_dump($tg); exit;
+                            if (count($tg)){
+                                $inX = $queryBuilder->expr()->in('tg.id', $tg);
+                                $queryBuilder
+                                        ->andWhere($inX)
+                                        ->andWhere('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0') 
+                                        ;                                        
+                            }                                    
+                            break;
+                        default:
+                            $queryBuilder
+                                ->andWhere('g.code = :code')                           
+                                ->setParameter('code', $q)    
+                                ;
+                            break;    
+                    }
+                }   
+            }
+                                    
+            if (!empty($params['sort'])){
+                $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);
+            }
+        }
+        
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();            
+    }    
+    
+    /**
+     * Количество товаров для фасада
+     * 
+     * @param array $params
+     * @return Query
+     */
+    public function catalogTotal($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('count(g.id) as totalCount')
+                ->from(Goods::class, 'g')
+                ->join('g.producer', 'p')   
+                ->setMaxResults(1)
+                ;
+
+        
+        if (is_array($params)){
+            if (isset($params['accurate'])){
+                if ($params['accurate'] == Goods::SEARCH_COMISS){
+                    $comiss = $this->getEntityManager()->getRepository(Comiss::class)
+                            ->goodInCommiss(['asArray' => 1]);
+                    
+                    $inX = $queryBuilder->expr()->in('g.id', implode(',', $comiss));
+                    $queryBuilder
+                            ->resetDQLPart('where')
+                            ->andWhere($inX); 
+                }                    
+            }
+            if (isset($params['q'])){                
+                $codeFilter = new ArticleCode();
+                $q = $codeFilter->filter($params['q']);
+
+                $searchOpt= Goods::SEARCH_CODE;
+                if (isset($params['accurate'])){
+                    $searchOpt= $params['accurate'];
+                }
+//                var_dump($q); exit;
+                if ($q){
+                    
+                    $queryBuilder->resetDQLPart('from')
+                            ->resetDQLPart('join')
+                            ->resetDQLPart('where')
+                            ->from(Goods::class, 'g')
+                            ->leftJoin('g.goodBalances', 'gb')
+                            ;
+                
+                    switch ($searchOpt){
+                        case Goods::SEARCH_APLID:
+                            $queryBuilder
+                                ->andWhere('g.aplId = :aplId')                           
+                                ->setParameter('aplId', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_ID:
+                            $queryBuilder
+                                ->andWhere('g.id = :id')                           
+                                ->setParameter('id', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_OE:
+                            $orX = $queryBuilder->expr()->orX(
+                                    $queryBuilder->expr()->eq('o.oe', '?4')    
+                                );
+                            $queryBuilder->join('g.oems', 'o')
+                                ->andWhere($orX) 
+                                ->setParameter('4', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_NAME: 
+                            $tg = $this->findTokenGroupByPhrase($params['q']);
+        //                    var_dump($tg); exit;
+                            if (count($tg)){
+                                $inX = $queryBuilder->expr()->in('tg.id', $tg);
+                                $queryBuilder
+                                        ->andWhere($inX)
+                                        ->andWhere('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0') 
+                                        ;                                        
+                            }                                    
+                            break;
+                        default:
+                            $queryBuilder
+                                ->andWhere('g.code = :code')                           
+                                ->setParameter('code', $q)    
+                                ;
+                            break;    
+                    }
+                }   
+            }
+                                    
+            if (!empty($params['sort'])){
+                $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);
+            }
+        }
+        
+//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getOneOrNullResult();            
+    }    
+    
+    /**
      * Найти прайсы товара
      * 
      * @param Goods $good

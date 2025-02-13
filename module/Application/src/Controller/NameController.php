@@ -23,7 +23,7 @@ use Application\Entity\TitleToken;
 use Application\Entity\TitleBigram;
 use Application\Entity\TokenGroupToken;
 use Application\Entity\TokenGroupBigram;
-use Application\Entity\GroupSite;
+use Fasade\Entity\GroupSite;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;

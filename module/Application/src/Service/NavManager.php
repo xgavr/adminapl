@@ -258,9 +258,16 @@ class NavManager
                             'id' => 'group-site',
                             'label' => 'Категории',
                             'link' => $url('group-site', [])
+                        ];    
+                
+                $siteDropDownItems[] = [
+                            'id' => 'catalog',
+                            'label' => 'Каталог',
+                            'link' => $url('catalog', [])
                         ];                
             }
-           if (count($siteDropDownItems)!=0) {
+            
+            if (count($siteDropDownItems)!=0) {
                 $items[] = [
                     'id' => 'fasade',
                     'label' => 'Фасад',

@@ -60,4 +60,5 @@ return [
     'Zp',
     'GoodMap',
     'ApiReactor',
+    'Fasade',
 ];

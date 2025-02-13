@@ -693,7 +693,8 @@ class GoodsController extends AbstractActionController
     public function viewAction() 
     {       
         $goodsId = (int)$this->params()->fromRoute('id', -1);
-        
+        $tab = $this->params()->fromQuery('tab');
+
         // Validate input parameter
         if ($goodsId<0) {
             $this->getResponse()->setStatusCode(404);
@@ -756,6 +757,7 @@ class GoodsController extends AbstractActionController
             'entityManager' => $this->entityManager,
             'tokens' => $tokens,
             'rbacManager' => $this->rbacManager,
+            'tab' => $tab,
         ]);
     }      
 

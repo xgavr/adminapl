@@ -133,20 +133,6 @@ return [
                     ],
                 ],
             ],        
-            'group-site' => [
-                'type'    => Segment::class,
-                'options' => [
-                    'route'    => '/group-site[/:action[/:id]]',
-                    'constraints' => [
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[0-9]*'
-                    ],
-                    'defaults' => [
-                        'controller'    => Controller\GroupSiteController::class,
-                        'action'        => 'index',
-                    ],
-                ],
-            ],        
             'image' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -569,7 +555,6 @@ return [
             Controller\ExternalController::class => Controller\Factory\ExternalControllerFactory::class,
             Controller\GoodsController::class => Controller\Factory\GoodsControllerFactory::class,
             Controller\GroupController::class => Controller\Factory\GroupControllerFactory::class,
-            Controller\GroupSiteController::class => Controller\Factory\GroupSiteControllerFactory::class,
             Controller\ImageController::class => Controller\Factory\ImageControllerFactory::class,
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\MakeController::class => Controller\Factory\MakeControllerFactory::class,
@@ -614,7 +599,6 @@ return [
             Service\ExternalDB\PartsApiManager::class => Service\Factory\ExternalDB\PartsApiManagerFactory::class,
             Service\ExternalDB\ZetasoftManager::class => Service\Factory\ExternalDB\ZetasoftManagerFactory::class,
             Service\GoodsManager::class => Service\Factory\GoodsManagerFactory::class,
-            Service\GroupSiteManager::class => Service\Factory\GroupSiteManagerFactory::class,
             Service\ImageManager::class => Service\Factory\ImageManagerFactory::class,
             Service\MakeManager::class => Service\Factory\MakeManagerFactory::class,
             Service\MarketManager::class => Service\Factory\MarketManagerFactory::class,
@@ -686,10 +670,6 @@ return [
                 ['actions' => '*', 'allow' => '@']
             ],
             Controller\GroupController::class => [
-                // Allow access to authenticated users.
-                ['actions' => '*', 'allow' => '@']
-            ],
-            Controller\GroupSiteController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],

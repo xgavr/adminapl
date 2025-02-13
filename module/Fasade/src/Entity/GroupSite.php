@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Application\Entity;
+namespace Fasade\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,7 +15,7 @@ use Application\Entity\TokenGroup;
 
 /**
  * Description of GroupSite
- * @ORM\Entity(repositoryClass="\Application\Repository\GroupSiteRepository")
+ * @ORM\Entity(repositoryClass="\Fasade\Repository\GroupSiteRepository")
  * @ORM\Table(name="group_site")
  * @author Daddy
  */
@@ -97,13 +97,13 @@ class GroupSite
     protected $hasChild;        
 
     /**
-    * @ORM\OneToMany(targetEntity="\Application\Entity\GroupSite", mappedBy="siteGroups")
+    * @ORM\OneToMany(targetEntity="\Fasade\Entity\GroupSite", mappedBy="siteGroups")
     * @ORM\JoinColumn(name="id", referencedColumnName="group_site_id")
     */
     private $siteGroups;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\GroupSite", inversedBy="siteGroup") 
+     * @ORM\ManyToOne(targetEntity="Fasade\Entity\GroupSite", inversedBy="siteGroup") 
      * @ORM\JoinColumn(name="group_site_id", referencedColumnName="id")
      */
     private $siteGroup;

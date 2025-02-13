@@ -5,14 +5,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace Application\Form;
+namespace Fasade\Form;
 
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilter;
 
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Application\Entity\GroupSite;
+use Fasade\Entity\GroupSite;
 
 /**
  * Description of GroupSite

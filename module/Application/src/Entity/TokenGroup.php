@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Filter\IdsFormat;
 use Application\Entity\Rate;
-use Application\Entity\GroupSite;
+use Fasade\Entity\GroupSite;
 
 /**
  * Description of NameGroup
@@ -118,7 +118,7 @@ class TokenGroup {
    private $titleBigrams;        
    
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\GroupSite", inversedBy="tokenGroups") 
+     * @ORM\ManyToOne(targetEntity="Fasade\Entity\GroupSite", inversedBy="tokenGroups") 
      * @ORM\JoinColumn(name="group_site_id", referencedColumnName="id")
      */
     private $groupSite;   

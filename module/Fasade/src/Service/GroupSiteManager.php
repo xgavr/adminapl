@@ -5,9 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace Application\Service;
+namespace Fasade\Service;
 
-use Application\Entity\GroupSite;
+use Fasade\Entity\GroupSite;
 use Application\Entity\TokenGroup;
 
 

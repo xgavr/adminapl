@@ -5,13 +5,13 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Application\Controller;
+namespace Fasade\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
-use Application\Entity\GroupSite;
-use Application\Form\GroupSiteForm;
+use Fasade\Entity\GroupSite;
+use Fasade\Form\GroupSiteForm;
 
 
 class GroupSiteController extends AbstractActionController
@@ -25,7 +25,7 @@ class GroupSiteController extends AbstractActionController
     
     /**
      * Менеджер групп сайта.
-     * @var \Application\Service\GroupSiteManager
+     * @var \Fasade\Service\GroupSiteManager
      */
     private $grouSiteManager;
     

@@ -45,7 +45,7 @@ return [
     ],    
     'view_manager' => [
         'template_path_stack' => [
-            'ai' => __DIR__ . '/../view',
+            'Search' => __DIR__ . '/../view',
         ],
     ],
     'doctrine' => [
