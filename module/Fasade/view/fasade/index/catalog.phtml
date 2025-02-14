@@ -78,7 +78,7 @@ $this->pageBreadcrumbs()->setItems([
     function refreshTable(){
 //        $table.bootstrapTable('refresh');
         $table.bootstrapTable('selectPage', 1);
-        setCookies('goodsSaveId');
+        setCookies('catalogSaveId');
     }
 
     function setCookies(cookieKey){
@@ -119,21 +119,14 @@ $this->pageBreadcrumbs()->setItems([
     }    
     
     $(function () {
-        getCookies('goodsSaveId');
+        getCookies('catalogSaveId');
                 
         $table.on('load-success.bs.table', function (e, res) {
-            tableRowClick();
-            $('.fold').editable();  
+            tableRowClick();  
         });        
         
         $(document).on('editable-save.bs.table', '#table', function (e, field, row, old, $el) {
 //            console.log(row);
-            if (field === 'foldCode'){
-                $.get( "/fold/change-code?good="+row.id+'&office='+row.officeId
-                        +'&code='+row.foldCode+'&quantity='+row.rest, function(data){
-
-                });        
-            }
         });                
         $(document).on('click', '.good-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
@@ -161,7 +154,7 @@ $this->pageBreadcrumbs()->setItems([
     });
     
     function queryParams(params) {
-        $('.toolbar').each(function () {
+        $('#toolbar').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         limit = $('.page-size').html();

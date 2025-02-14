@@ -6,7 +6,7 @@ namespace Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
-use Application\Entity\GroupSite;
+use Fasade\Entity\GroupSite;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 
 /**
