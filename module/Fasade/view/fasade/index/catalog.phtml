@@ -32,7 +32,7 @@ $this->pageBreadcrumbs()->setItems([
                         <?php endforeach;?>
                     </select>                    
                     <div class="btn-group">
-                        <input id="searchinput" name="search" style="width: 400px" 
+                        <input id="searchinput" name="search" style="width: 200px" 
                                class="form-control good-toolbar enter-search" 
                                onfocus="this.select();" type="text" placeholder="Артикул, наименование">
                         <span class="glyphicon glyphicon-remove-circle inputclear"></span>
@@ -40,6 +40,11 @@ $this->pageBreadcrumbs()->setItems([
                     <button id="ok" type="submit" class="btn btn-default" title="Поиск">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
+                    <select class="form-control good-toolbar cookie-control refresh-table" name="retailCount">
+                        <option value="0">все товары</option>
+                        <option value="1">с продажами</option>
+                        <option value="2">без продаж</option>
+                    </select>                    
                 </div>
             </div>
         </div>

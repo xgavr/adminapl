@@ -66,6 +66,7 @@ class IndexController extends AbstractActionController
         $producer = $this->params()->fromQuery('producer');
         $group = $this->params()->fromQuery('group');
         $accurate = $this->params()->fromQuery('accurate');
+        $retailCount = $this->params()->fromQuery('retailCount');
         
         $params = [
             'q' => $q, 
@@ -74,6 +75,7 @@ class IndexController extends AbstractActionController
             'producerId' => $producer,
             'groupId' => $group,
             'accurate' => $accurate,            
+            'retailCount' => $retailCount,            
         ];
         
         $query = $this->entityManager->getRepository(Goods::class)
