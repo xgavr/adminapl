@@ -26,6 +26,11 @@ $this->pageBreadcrumbs()->setItems([
                     </button>
                 </div>    
                 <div class="form-group">
+                    <select class="form-control good-toolbar cookie-control" name="accurate">
+                        <?php foreach(Goods::getSearchList() as $key=>$value):?>
+                            <option value="<?= $key?>"><?= $value?></option>
+                        <?php endforeach;?>
+                    </select>                    
                     <div class="btn-group">
                         <input id="searchinput" name="search" style="width: 400px" class="form-control good-toolbar enter-search" onfocus="this.select();" type="text" placeholder="Артикул">
                         <span class="glyphicon glyphicon-remove-circle inputclear"></span>
@@ -154,7 +159,10 @@ $this->pageBreadcrumbs()->setItems([
     });
     
     function queryParams(params) {
-        $('#toolbar').each(function () {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         limit = $('.page-size').html();
@@ -164,7 +172,7 @@ $this->pageBreadcrumbs()->setItems([
         offset = $('li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
-        }            
+        }    
         
         return params;
     }

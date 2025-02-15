@@ -1677,6 +1677,12 @@ class GoodsRepository extends EntityRepository
                                 ->setParameter('id', $q)    
                                 ;
                             break;    
+                        case Goods::SEARCH_PRODUCER:
+                            $queryBuilder
+                                ->andWhere('p.name like \'%:producerName%\'')                           
+                                ->setParameter('producerName', $q)    
+                                ;
+                            break;    
                         case Goods::SEARCH_OE:
                             $orX = $queryBuilder->expr()->orX(
                                     $queryBuilder->expr()->eq('o.oe', '?4')    
@@ -1901,13 +1907,6 @@ class GoodsRepository extends EntityRepository
                 }
 //                var_dump($q); exit;
                 if ($q){
-                    
-                    $queryBuilder->resetDQLPart('from')
-                            ->resetDQLPart('join')
-                            ->resetDQLPart('where')
-                            ->from(Goods::class, 'g')
-                            ->leftJoin('g.goodBalances', 'gb')
-                            ;
                 
                     switch ($searchOpt){
                         case Goods::SEARCH_APLID:
@@ -1920,6 +1919,12 @@ class GoodsRepository extends EntityRepository
                             $queryBuilder
                                 ->andWhere('g.id = :id')                           
                                 ->setParameter('id', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_PRODUCER:
+                            $queryBuilder
+                                ->andWhere('p.name like \'%:producerName%\'')                           
+                                ->setParameter('producerName', $q)    
                                 ;
                             break;    
                         case Goods::SEARCH_OE:
@@ -1937,8 +1942,7 @@ class GoodsRepository extends EntityRepository
                             if (count($tg)){
                                 $inX = $queryBuilder->expr()->in('tg.id', $tg);
                                 $queryBuilder
-                                        ->andWhere($inX)
-                                        ->andWhere('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0') 
+                                        ->andWhere($inX) 
                                         ;                                        
                             }                                    
                             break;
@@ -2005,13 +2009,6 @@ class GoodsRepository extends EntityRepository
 //                var_dump($q); exit;
                 if ($q){
                     
-                    $queryBuilder->resetDQLPart('from')
-                            ->resetDQLPart('join')
-                            ->resetDQLPart('where')
-                            ->from(Goods::class, 'g')
-                            ->leftJoin('g.goodBalances', 'gb')
-                            ;
-                
                     switch ($searchOpt){
                         case Goods::SEARCH_APLID:
                             $queryBuilder
@@ -2023,6 +2020,12 @@ class GoodsRepository extends EntityRepository
                             $queryBuilder
                                 ->andWhere('g.id = :id')                           
                                 ->setParameter('id', $q)    
+                                ;
+                            break;    
+                        case Goods::SEARCH_PRODUCER:
+                            $queryBuilder
+                                ->andWhere('p.name like \'%:producerName%\'')                           
+                                ->setParameter('producerName', $q)    
                                 ;
                             break;    
                         case Goods::SEARCH_OE:

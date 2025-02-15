@@ -99,6 +99,7 @@ class Goods {
     const SEARCH_COMISS = 5; //товары на комиссии
     const SEARCH_NAME = 6; //поиск по наименованию
     const SEARCH_TP = 7; //товары в торговых площадках
+    const SEARCH_PRODUCER = 8; //производитель
     
     /**
      * @ORM\Id
@@ -1158,8 +1159,25 @@ class Goods {
             self::SEARCH_ID => 'Поиск по id',
             self::SEARCH_OE => 'Поиск по ОЕ',
             self::SEARCH_NAME => 'Поиск по наименованию',
+            self::SEARCH_PRODUCER => 'Поиск по производителю',
             self::SEARCH_COMISS => 'На комиссии',
             self::SEARCH_TP => 'В маркетплейсах',
+        ];
+    }
+    
+    /**
+     * Опции поиска для каталога
+     * @return array
+     */
+    public static function getCatalogSearchList()
+    {
+        return [
+            self::SEARCH_CODE => 'Поиск по артикулу',
+            self::SEARCH_APLID => 'Поиск по Apl Id',
+            self::SEARCH_ID => 'Поиск по id',
+            self::SEARCH_OE => 'Поиск по ОЕ',
+            self::SEARCH_NAME => 'Поиск по наименованию',
+            self::SEARCH_PRODUCER => 'Поиск по производителю',
         ];
     }
 
