@@ -1985,7 +1985,11 @@ class GoodsRepository extends EntityRepository
         
         if (is_array($params)){
             if (!empty($params['retailCount'])){
-                $queryBuilder->andWhere('g.retailCount > 0');
+                if ($params['retailCount'] == 2){
+                    $queryBuilder->andWhere('g.retailCount = 0');
+                } else {
+                    $queryBuilder->andWhere('g.retailCount > 0');                    
+                }    
             }
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
