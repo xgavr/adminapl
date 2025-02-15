@@ -1678,9 +1678,9 @@ class GoodsRepository extends EntityRepository
                                 ;
                             break;    
                         case Goods::SEARCH_PRODUCER:
+                            $likeX = $queryBuilder->expr()->like('p.name', '\'%'.$q.'%\'');
                             $queryBuilder
-                                ->andWhere('p.name like \'%:producerName%\'')                           
-                                ->setParameter('producerName', $q)    
+                                ->andWhere($likeX) 
                                 ;
                             break;    
                         case Goods::SEARCH_OE:
@@ -1912,9 +1912,9 @@ class GoodsRepository extends EntityRepository
                                 ;
                             break;    
                         case Goods::SEARCH_PRODUCER:
+                            $likeX = $queryBuilder->expr()->like('p.name', '\'%'.$q.'%\'');
                             $queryBuilder
-                                ->andWhere('p.name like \'%:producerName%\'')                           
-                                ->setParameter('producerName', $q)    
+                                ->andWhere($likeX) 
                                 ;
                             break;    
                         case Goods::SEARCH_OE:
@@ -2003,10 +2003,10 @@ class GoodsRepository extends EntityRepository
                                 ;
                             break;    
                         case Goods::SEARCH_PRODUCER:
+                            $likeX = $queryBuilder->expr()->like('p.name', '\'%'.$q.'%\'');
                             $queryBuilder
-                                ->leftJoin('g.producer', 'p')
-                                ->andWhere('p.name like \'%:producerName%\'')  
-                                ->setParameter('producerName', $q)    
+                                ->andWhere($likeX) 
+                                ->leftJoin('g.producer', 'p')  
                                 ;
                             break;    
                         case Goods::SEARCH_OE:
@@ -2025,7 +2025,6 @@ class GoodsRepository extends EntityRepository
                                 $inX = $queryBuilder->expr()->in('tg.id', $tg);
                                 $queryBuilder
                                         ->andWhere($inX)
-                                        ->andWhere('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0') 
                                         ;                                        
                             }                                    
                             break;
@@ -2040,7 +2039,7 @@ class GoodsRepository extends EntityRepository
             }                                    
         }
         
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+//        var_dump($queryBuilder->getQuery()->getParameters()); exit;
         return $queryBuilder->getQuery()->getOneOrNullResult();            
     }    
     
