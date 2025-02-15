@@ -2024,6 +2024,7 @@ class GoodsRepository extends EntityRepository
                             if (count($tg)){
                                 $inX = $queryBuilder->expr()->in('tg.id', $tg);
                                 $queryBuilder
+                                        ->leftJoin('g.tokenGroup', 'tg')
                                         ->andWhere($inX)
                                         ;                                        
                             }                                    
