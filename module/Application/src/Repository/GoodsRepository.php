@@ -1886,17 +1886,7 @@ class GoodsRepository extends EntityRepository
 
         
         if (is_array($params)){
-            if (isset($params['accurate'])){
-                if ($params['accurate'] == Goods::SEARCH_COMISS){
-                    $comiss = $this->getEntityManager()->getRepository(Comiss::class)
-                            ->goodInCommiss(['asArray' => 1]);
-                    
-                    $inX = $queryBuilder->expr()->in('g.id', implode(',', $comiss));
-                    $queryBuilder
-                            ->resetDQLPart('where')
-                            ->andWhere($inX); 
-                }                    
-            }
+
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
@@ -1987,17 +1977,7 @@ class GoodsRepository extends EntityRepository
 
         
         if (is_array($params)){
-            if (isset($params['accurate'])){
-                if ($params['accurate'] == Goods::SEARCH_COMISS){
-                    $comiss = $this->getEntityManager()->getRepository(Comiss::class)
-                            ->goodInCommiss(['asArray' => 1]);
-                    
-                    $inX = $queryBuilder->expr()->in('g.id', implode(',', $comiss));
-                    $queryBuilder
-                            ->resetDQLPart('where')
-                            ->andWhere($inX); 
-                }                    
-            }
+
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
@@ -2024,7 +2004,8 @@ class GoodsRepository extends EntityRepository
                             break;    
                         case Goods::SEARCH_PRODUCER:
                             $queryBuilder
-                                ->andWhere('p.name like \'%:producerName%\'')                           
+                                ->andWhere('p.name like \'%:producerName%\'')  
+                                ->leftJoin('g.producer', 'p')
                                 ->setParameter('producerName', $q)    
                                 ;
                             break;    
