@@ -2004,8 +2004,8 @@ class GoodsRepository extends EntityRepository
                             break;    
                         case Goods::SEARCH_PRODUCER:
                             $queryBuilder
-                                ->andWhere('p.name like \'%:producerName%\'')  
                                 ->leftJoin('g.producer', 'p')
+                                ->andWhere('p.name like \'%:producerName%\'')  
                                 ->setParameter('producerName', $q)    
                                 ;
                             break;    
