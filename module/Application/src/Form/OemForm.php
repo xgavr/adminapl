@@ -71,7 +71,7 @@ class OemForm extends Form
                 'value' => Oem::SOURCE_MAN,
             ],
             'options' => [
-                'label' => 'Номер у поставщика',
+                'label' => 'Источник номера',
                 'value_options' => Oem::getSourceList(),
             ],
        ]);

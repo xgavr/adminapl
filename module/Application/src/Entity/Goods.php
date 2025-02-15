@@ -1243,6 +1243,24 @@ class Goods {
         return $this->checkOem;
     }
 
+    public static function getCheckOemList()
+    {
+        return [
+            self::CHECK_OEM_NO => 'Номер не проверен',
+            self::CHECK_OEM_OK => 'Номер проверен',
+        ];
+    }
+    
+    public function getCheckOemAsString()
+    {
+        $list = self::getCheckOemList();
+        if (isset($list[$this->checkOem])) {
+            return $list[$this->checkOem];
+        }
+
+        return '';
+    }
+    
     public function setCheckOem($checkOem) {
         $this->checkOem = $checkOem;
         return $this;
@@ -1252,6 +1270,24 @@ class Goods {
         return $this->checkDescription;
     }
 
+    public static function getCheckDescriptionList()
+    {
+        return [
+            self::CHECK_DESCRIPTION_NO => 'Описание не проверено',
+            self::CHECK_DESCRIPTION_OK => 'Описание проверено',
+        ];
+    }
+    
+    public function getCheckDescriptionAsString()
+    {
+        $list = self::getCheckDescriptionList();
+        if (isset($list[$this->checkDescription])) {
+            return $list[$this->checkDescription];
+        }
+
+        return '';
+    }
+    
     public function setCheckDescription($checkDescription) {
         $this->checkDescription = $checkDescription;
         return $this;
@@ -1261,6 +1297,25 @@ class Goods {
         return $this->checkImage;
     }
 
+    public static function getCheckImageList()
+    {
+        return [
+            self::CHECK_IMAGE_OK => 'Картинка проверена',
+            self::CHECK_IMAGE_NO => 'Картинка не проверена',
+        ];
+    }
+    
+    public function getCheckImageAsString()
+    {
+        $list = self::getCheckImageList();
+        if (isset($list[$this->checkImage])) {
+            return $list[$this->checkImage];
+        }
+
+        return '';
+    }
+    
+    
     public function setCheckImage($checkImage) {
         $this->checkImage = $checkImage;
         return $this;
@@ -1270,11 +1325,44 @@ class Goods {
         return $this->checkCar;
     }
 
+    public static function getCheckCarList()
+    {
+        return [
+            self::CHECK_CAR_NO => 'Машина не проверена',
+            self::CHECK_CAR_OK => 'Машина проверена',
+        ];
+    }
+    
+    public function getCheckCarAsString()
+    {
+        $list = self::getCheckCarList();
+        if (isset($list[$this->checkCar])) {
+            return $list[$this->checkCar];
+        }
+
+        return '';
+    }
+    
+    
     public function setCheckCar($checkCar) {
         $this->checkCar = $checkCar;
         return $this;
     }
 
+    public static function getCheckList()
+    {
+        return[
+          'checkOem_'.self::CHECK_OEM_NO => self::getCheckOemList()[self::CHECK_OEM_NO],  
+          'checkOem_'.self::CHECK_OEM_OK => self::getCheckOemList()[self::CHECK_OEM_OK],  
+          'checkDescription_'.self::CHECK_DESCRIPTION_NO => self::getCheckDescriptionList()[self::CHECK_DESCRIPTION_NO],  
+          'checkDescription_'.self::CHECK_DESCRIPTION_OK => self::getCheckDescriptionList()[self::CHECK_DESCRIPTION_OK],  
+          'checkImage_'.self::CHECK_IMAGE_NO => self::getCheckImageList()[self::CHECK_IMAGE_NO],  
+          'checkImage_'.self::CHECK_IMAGE_OK => self::getCheckImageList()[self::CHECK_IMAGE_OK],  
+          'checkCar_'.self::CHECK_CAR_NO => self::getCheckCarList()[self::CHECK_CAR_NO],  
+          'checkCar_'.self::CHECK_CAR_OK => self::getCheckCarList()[self::CHECK_CAR_OK],  
+        ];
+    }
+    
     public function getFasadeEx() {
         return $this->fasadeEx;
     }

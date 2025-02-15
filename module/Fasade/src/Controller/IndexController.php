@@ -67,6 +67,7 @@ class IndexController extends AbstractActionController
         $group = $this->params()->fromQuery('group');
         $accurate = $this->params()->fromQuery('accurate');
         $retailCount = $this->params()->fromQuery('retailCount');
+        $checks = $this->params()->fromQuery('checks');
         
         $params = [
             'q' => $q, 
@@ -77,6 +78,11 @@ class IndexController extends AbstractActionController
             'accurate' => $accurate,            
             'retailCount' => $retailCount,            
         ];
+        
+        if (!empty($checks)){
+            list($check, $checkValue) = explode('_', $checks);
+            $params[$check] = $checkValue;
+        }
         
         $query = $this->entityManager->getRepository(Goods::class)
                         ->catalog($params);  

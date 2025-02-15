@@ -1893,7 +1893,26 @@ class GoodsRepository extends EntityRepository
                     $queryBuilder->andWhere('g.retailCount > 0');                    
                 }    
             }
-
+            if (!empty($params['checkOem'])){
+                $queryBuilder->andWhere('g.checkOem = :checkOem')
+                    ->setParameter('checkOem', $params['checkOem'])    
+                    ;
+            }
+            if (!empty($params['checkDescription'])){
+                $queryBuilder->andWhere('g.checkDescription = :checkDescription')
+                    ->setParameter('checkDescription', $params['checkDescription'])    
+                    ;
+            }
+            if (!empty($params['checkImage'])){
+                $queryBuilder->andWhere('g.checkImage = :checkImage')
+                    ->setParameter('checkImage', $params['checkImage'])    
+                    ;
+            }
+            if (!empty($params['checkCar'])){
+                $queryBuilder->andWhere('g.checkCar = :checkCar')
+                    ->setParameter('checkCar', $params['checkCar'])    
+                    ;
+            }
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
@@ -1990,6 +2009,26 @@ class GoodsRepository extends EntityRepository
                 } else {
                     $queryBuilder->andWhere('g.retailCount > 0');                    
                 }    
+            }
+            if (!empty($params['checkOem'])){
+                $queryBuilder->andWhere('g.checkOem = :checkOem')
+                    ->setParameter('checkOem', $params['checkOem'])    
+                    ;
+            }
+            if (!empty($params['checkDescription'])){
+                $queryBuilder->andWhere('g.checkDescription = :checkDescription')
+                    ->setParameter('checkDescription', $params['checkDescription'])    
+                    ;
+            }
+            if (!empty($params['checkImage'])){
+                $queryBuilder->andWhere('g.checkImage = :checkImage')
+                    ->setParameter('checkImage', $params['checkImage'])    
+                    ;
+            }
+            if (!empty($params['checkCar'])){
+                $queryBuilder->andWhere('g.checkCar = :checkCar')
+                    ->setParameter('checkCar', $params['checkCar'])    
+                    ;
             }
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
