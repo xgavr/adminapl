@@ -346,10 +346,16 @@ class OemController extends AbstractActionController
         $this->oemManager->updateOem($oem, ['oeNumber' => $oem->getOeNumber(), 'brandName' => $oem->getBrandName(),
             'status' => $status, 'source' => $oem->getSource()]);
         
+//        $query = $this->entityManager->getRepository(Goods::class)
+//                        ->findOems($oem->getGood()->getId(), ['id' => $oem->getId()]);
+//        $result = $query->getOneOrNullResult(2);
+        
         // Перенаправляем пользователя на страницу "goods".
-        return new JsonModel(
-           ['ok']
-        );           
+        return new JsonModel([
+            'ok'
+//            'id' => $oem->getId(),
+//            'row' => $result,
+        ]);           
     }    
     
 }

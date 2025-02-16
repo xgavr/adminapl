@@ -1469,7 +1469,7 @@ class GoodsRepository extends EntityRepository
             ->andWhere('o.source != 7')    
             ->setParameter('myCode', Oem::SOURCE_MY_CODE)    
             ->setParameter('iid', Oem::SOURCE_IID) 
-            ->addOrderBy('o.status', 'ASC')    
+//            ->addOrderBy('o.status', 'ASC')    
             ;
         
         if (is_array($params)){
@@ -1478,6 +1478,12 @@ class GoodsRepository extends EntityRepository
                 $queryBuilder->andWhere('o.oe like :search')
                     ->setParameter('search', '%' . $filter->filter($params['q']) . '%')
                         ;
+            }
+            if (!empty($params['id'])){
+                if (is_numeric($params['id'])){
+                    $queryBuilder->andWhere('o.id != :id')
+                            ->setParameter('id', $params['id']);
+                }    
             }
             if (!empty($params['limit'])){
                 if (is_numeric($params['limit'])){

@@ -393,7 +393,7 @@
                     .done(function (data) {
                         dialog.modal('hide');
                         if (data == 'ok'){
-                            table.bootstrapTable('refresh');
+                            table.bootstrapTable('refresh', {silent: true});
                         } else if (data == 'ok-reload'){
                             window.location.reload();
                         } else {
