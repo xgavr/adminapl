@@ -82,7 +82,7 @@
                         <div class="pull-right">                                    
                             <button value="/goods/delete-image/<?= $image->getId()?>" class="btn btn-warning btn-xs this-delete"
                                     title="Удалить">
-                                <span class="glyphicon glyphicon-remove" ></span>
+                                <span class="glyphicon glyphicon-trash" ></span>
                             </button>                             
                         </div>                                                                            
                     </div>
@@ -221,7 +221,7 @@
                         <select style="width: 200px" class="form-control" id='oemSourceSelect'>
                             <option value="null" selected>все источники</option>
                             <?php foreach ($oemSources as $key => $value):?>
-                                <option value="<?= $key?>"><?= $value?></option>
+                                <option value="<?= $key?>" <?= ($key === Oem::SOURCE_EXT_SOURCE) ? 'selected':'' ?>><?= $value?></option>
                             <?php endforeach;?>
                         </select>
                         <button value="/goods/good-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
@@ -688,73 +688,71 @@
                 $('#dateStart').val('');
             }
         });
-    });
-
-    $(document).on('click', '.reserve-show', function (e) {
-        var url = $(e.currentTarget).attr('modal-url');
-        $.ajax({
-            url: url,
-            success: function (data) {
-                var message = '<table width="100%"><tr><th>Документ</th><th>Резерв</th></tr>';
-                $.each(data, function( index, value ) {
-//                    console.log(value);
-                    message += '<tr>';
-                    message += '<td>'+value.link+'</td>';                        
-                    message += '<td>'+value.rest+'</td>';                        
-                    message += '</tr>';
-                });                    
-                message += '</table>';                                
-               bootbox.alert({
-                    message: message,
-                    size: 'small'
-                });
-            }
-        });
-    });  
-
-    $('.refresh-ozon').on('click', function(e) {
-        var url = e.currentTarget.value;
-        if (url){
-            var dialog = bootbox.dialog({
-                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-                closeButton: false
-            });
-
+        $(document).on('click', '.reserve-show', function (e) {
+            var url = $(e.currentTarget).attr('modal-url');
             $.ajax({
-                type: 'GET',
-                url: url
-            })
-                .done(function (obj) {
-                    dialog.modal('hide');
-                    var messagePrice = 'Цена обновлена!';
-                    var messageStock = 'Остаток обновлен!';
-                    $.each(obj.price, function (key, product) {
-                        if (product.updated == false){
-                            messagePrice = 'Цена не обновлена<br/>';
-                            $.each(product.errors, function (index, value) {
-                                messagePrice += value.message + '<br/>';
-                            });
-                        }    
-                    });    
-                    $.each(obj.stock, function (key, product) {
-                        if (product.updated == false){
-                            messageStock = 'Остаток не обновлен<br/>';
-                            $.each(product.errors, function (index, value) {
-                                messageStock += value.message + '<br/>';
-                            });
-                        }    
-                    });    
-                    dialog = bootbox.dialog({
-                        message: '<p><i class="fa fa-spin fa-spinner"></i>'+messagePrice+'</p><p><i class="fa fa-spin fa-spinner"></i>'+messageStock+'</p>',
-                        closeButton: true
+                url: url,
+                success: function (data) {
+                    var message = '<table width="100%"><tr><th>Документ</th><th>Резерв</th></tr>';
+                    $.each(data, function( index, value ) {
+    //                    console.log(value);
+                        message += '<tr>';
+                        message += '<td>'+value.link+'</td>';                        
+                        message += '<td>'+value.rest+'</td>';                        
+                        message += '</tr>';
+                    });                    
+                    message += '</table>';                                
+                   bootbox.alert({
+                        message: message,
+                        size: 'small'
                     });
+                }
+            });
+        });
+        $('.refresh-ozon').on('click', function(e) {
+            var url = e.currentTarget.value;
+            if (url){
+                var dialog = bootbox.dialog({
+                    message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                    closeButton: false
+                });
+
+                $.ajax({
+                    type: 'GET',
+                    url: url
                 })
-                .fail(function () {
-                    dialog.modal('hide');
-                    bootbox.alert("Произошла ошибка при выполнении операции.");
-                });        
-        }        
-    }); 
+                    .done(function (obj) {
+                        dialog.modal('hide');
+                        var messagePrice = 'Цена обновлена!';
+                        var messageStock = 'Остаток обновлен!';
+                        $.each(obj.price, function (key, product) {
+                            if (product.updated == false){
+                                messagePrice = 'Цена не обновлена<br/>';
+                                $.each(product.errors, function (index, value) {
+                                    messagePrice += value.message + '<br/>';
+                                });
+                            }    
+                        });    
+                        $.each(obj.stock, function (key, product) {
+                            if (product.updated == false){
+                                messageStock = 'Остаток не обновлен<br/>';
+                                $.each(product.errors, function (index, value) {
+                                    messageStock += value.message + '<br/>';
+                                });
+                            }    
+                        });    
+                        dialog = bootbox.dialog({
+                            message: '<p><i class="fa fa-spin fa-spinner"></i>'+messagePrice+'</p><p><i class="fa fa-spin fa-spinner"></i>'+messageStock+'</p>',
+                            closeButton: true
+                        });
+                    })
+                    .fail(function () {
+                        dialog.modal('hide');
+                        bootbox.alert("Произошла ошибка при выполнении операции.");
+                    });        
+            }        
+        }); 
+    });
 
     function tabQueryParams(tab, params) {
         $(tab +'Toolbar').find('input[name]').each(function () {
@@ -820,8 +818,7 @@
                 case <?= $key?>: result="<?= $value?>"; break;      
             <?php endforeach;?>            
             default: result = 'Неизвестно'; break;
-        }
-        
+        }        
         return result;
     }    
     
@@ -1059,11 +1056,11 @@
         var url = '/oem/oem-status-form/'+row.id+'?status='+status;
         var btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' class="btn btn-default btn-xs this-delete"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Изменить доступность"'; 
         btn += ' onclick="tableRowDelete(\''+url+'\', \'oemTable\')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
         
         var editUrl = '/oem/oem-form/<?= $goods->getId() ?>?oem='+row.id;

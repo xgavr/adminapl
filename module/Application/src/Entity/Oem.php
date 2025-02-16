@@ -30,6 +30,7 @@ class Oem {
     const SOURCE_INTERSECT = 5; // Пересечение.
     const SOURCE_MY_CODE = 6; //Артикул товара
     const SOURCE_IID = 8; //Номер у поставщика
+    const SOURCE_EXT_SOURCE = 9; //Внешние источники
     
     const RATING_UPDATED      = 1; // Рейтинг обновлен.
     const RATING_FOR_UPDATE   = 2; // Рейтинг не обновлен.
@@ -328,11 +329,12 @@ class Oem {
     public static function getSourceList() 
     {
         return [
+            self::SOURCE_EXT_SOURCE => 'Внешние источники',
+            self::SOURCE_INTERSECT => self::INTERSECT_NAME,
             self::SOURCE_TD => self::SOURCE_TD_NAME,
             self::SOURCE_SUP => 'Поставщик',
             self::SOURCE_MAN => 'Введено вручную',
             self::SOURCE_CROSS => 'Кросс лист',
-            self::SOURCE_INTERSECT => self::INTERSECT_NAME,
             self::SOURCE_MY_CODE => 'Свой артикул',
             self::SOURCE_IID => 'Номер у поставщика',
         ];

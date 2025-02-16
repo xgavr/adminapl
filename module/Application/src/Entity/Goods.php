@@ -1246,8 +1246,8 @@ class Goods {
     public static function getCheckOemList()
     {
         return [
-            self::CHECK_OEM_NO => 'Номер не проверен',
-            self::CHECK_OEM_OK => 'Номер проверен',
+            self::CHECK_OEM_NO => 'Номера не проверены',
+            self::CHECK_OEM_OK => 'Номера проверены',
         ];
     }
     

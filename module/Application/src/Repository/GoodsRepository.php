@@ -1496,8 +1496,15 @@ class GoodsRepository extends EntityRepository
                             ->setParameters([])
                             ;
                             
-                    $queryBuilder->andWhere('o.source = :source')
-                            ->setParameter('source', $params['source']);
+                    if ($params['source'] === Oem::SOURCE_EXT_SOURCE){
+                        $queryBuilder->andWhere($queryBuilder->expr()->in('o.source', [
+                            Oem::SOURCE_TD, Oem::SOURCE_SUP, Oem::SOURCE_MAN,
+                            Oem::SOURCE_CROSS
+                        ]));                        
+                    } else {
+                        $queryBuilder->andWhere('o.source = :source')
+                                ->setParameter('source', $params['source']);
+                    }    
                 }    
             }
         }
