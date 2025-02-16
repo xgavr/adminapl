@@ -247,6 +247,7 @@
                     data-url="/goods/oem-content/<?= $goods->getId()?>"
                     data-side-pagination="server"
                     data-pagination="true" 
+                    data-page-size="20"
                     data-page-list="[5, 10, 20, 50]"
                     data-toolbar="#oemToolbar"
                     data-show-refresh="true"
@@ -259,12 +260,13 @@
                     >
                     <thead>
                         <tr>
-                             <th data-field="id" data-type="numeric">Id</th>
+                             <!--<th data-field="id" data-type="numeric">Id</th>-->
+                             <th data-field="oe">Код</th>
                              <th data-field="oeNumber" data-formatter="oeNumberFormatter">Номер</th>
                              <th data-field="brandName">Бренд</th>
                              <th data-field="source" data-formatter="sourceFormatter">Источник</th>
                              <!--<th data-field="status" data-formatter="statusFormatter">Статус</th>-->
-                             <th data-field="status" data-formatter="oemActiveFormatter"></th>
+                             <th data-field="status" data-widht="10" data-formatter="oemActiveFormatter"></th>
                         </tr>                
                     </thead>
                 </table>

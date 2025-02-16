@@ -1468,7 +1468,8 @@ class GoodsRepository extends EntityRepository
             ->andWhere('o.source != :iid')    
             ->andWhere('o.source != 7')    
             ->setParameter('myCode', Oem::SOURCE_MY_CODE)    
-            ->setParameter('iid', Oem::SOURCE_IID)    
+            ->setParameter('iid', Oem::SOURCE_IID) 
+            ->addOrderBy('o.status', 'ASC')    
             ;
         
         if (is_array($params)){
