@@ -54,6 +54,7 @@ class BankRepository extends EntityRepository
         }
         
         if ($q){
+            $q = trim($q);
             $or = $queryBuilder->expr()->orX();
             $or->add($queryBuilder->expr()->like('s.counterpartyInn', '?1'));
             $or->add($queryBuilder->expr()->like('s.counterpartyName', '?1'));
