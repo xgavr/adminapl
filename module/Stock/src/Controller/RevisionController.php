@@ -266,7 +266,7 @@ class RevisionController extends AbstractActionController
         
     }
 
-    public function changeReviseReatilAction()
+    public function changeReviseRetailAction()
     {
         $retailId = (int)$this->params()->fromRoute('id', -1);
         $check = (int)$this->params()->fromQuery('check', Retail::REVISE_OK);
