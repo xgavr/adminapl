@@ -12,6 +12,7 @@ use Application\Entity\Oem;
 use Application\Entity\Raw;
 use Application\Entity\Rawprice;
 use Application\Filter\ArticleCode;
+use Application\Entity\Goods;
 
 /**
  * Description of RbService
@@ -77,6 +78,11 @@ class OemManager
             $oem->setSource($data['source']);
             $oem->setBrandName($data['brandName']);
             $oem->setUpdateRating(Oem::RATING_FOR_UPDATE);
+            
+            $good = $oem->getGood();
+            $good->setStatusOem(Goods::OEM_INTERSECT); ///обновить пересечения
+            $good->setFasadeEx(Goods::FASADE_EX_NEW); //обновить фасад
+            $this->entityManager->persist($good);
 
             $this->entityManager->persist($oem);
             $this->entityManager->flush();                    

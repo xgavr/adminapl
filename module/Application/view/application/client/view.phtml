@@ -8,7 +8,7 @@ use Stock\Entity\Movement;
 use Stock\Entity\Revise;
 use Cash\Entity\CashDoc;
 use Company\Entity\Contract;
-use Application\Entity\Client;
+use Stock\Entity\Mutual;
 
 $this->headTitle(ucfirst($client->getName()));
 
@@ -551,7 +551,7 @@ $this->headScript()
                         </select>
                     </div>
                     <div class="form-group">
-                        <select id="mutualLegalSelect" class="form-control" name="legal">
+                        <select id="mutualLegalSelect" class="form-control" name="legal" style="width: 200px">
                             <option>все</option>
                             <?php foreach ($legals as $key => $value):?>
                                 <option value="<?= $key?>"><?= $value?></option>                            
@@ -559,7 +559,7 @@ $this->headScript()
                         </select>
                     </div>
                     <div class="form-group">
-                        <select id="mutualContractSelect" class="form-control" name="contract">
+                        <select id="mutualContractSelect" class="form-control" name="contract" style="width: 200px">
                             <option>все договоры</option>
                         </select>
                     </div>
@@ -598,6 +598,7 @@ $this->headScript()
                         <th data-field="amount" data-type="numeric" data-align="right" data-width="30" data-formatter="inFormatter">Отгрузка</th>
                         <th data-field="amount" data-type="numeric" data-align="right" data-width="30" data-formatter="outFormatter">Оплата</th>
                         <th data-field="rest" data-type="numeric" data-align="right" data-footer-formatter="footerRestFormatter" data-formatter="restFormatter" data-width="30">Баланс</th>
+                        <th data-field="revise" data-checkbox="true" data-formatter="reviseFormatter" data-width="5"></th>
                         <th data-field="docKey" data-formatter="docKeyFormatter">Документ</th>
                         <th data-field="legal.name" data-formatter="legalFormatter">Юр. лицо</th>
                         <th data-field="contract.name" data-formatter="contractFormatter">Договор</th>
@@ -781,6 +782,20 @@ $this->headScript()
         });                        
     }    
 
+    function changeRevise(mutualId, check){
+        
+        var url = "/revision/change-revise/"+mutualId+'?check='+check;
+        $.ajax({
+            type: 'GET',
+            url: url
+        })
+            .done(function (data) {
+            })
+            .fail(function () {
+                bootbox.alert("Произошла ошибка при выполнении операции.");
+            });                
+    }
+
     $(function () {        
 //        rangeDatePickerInit();
         revenueChat();
@@ -875,6 +890,26 @@ $this->headScript()
             var dateRange = $("#rangeDateStart").val();
             var url = '/print/revise?ext=Pdf&company='+company+'&legal='+legal+'&contract='+contract+'&period='+period+'&dateStart='+dateStart;
             window.open(url, 'windowObject');
+        });
+        
+        $('#mutualtable').on('check.bs.table', function (e, row) {
+            changeRevise(row.id, <?= Mutual::REVISE_OK?>);
+        });
+        
+        $('#mutualtable').on('uncheck.bs.table', function (e, row) {
+            changeRevise(row.id, <?= Mutual::REVISE_NOT?>);
+        });
+        
+        $('#mutualtable').on('check-all.bs.table', function (e, rows) {
+            $.each( rows, function( key, value ) {
+                changeRevise(value.id, <?= Mutual::REVISE_OK?>);
+            });            
+        });
+        
+        $('#mutualtable').on('uncheck-all.bs.table', function (e, rowsDefore, rows) {
+            $.each( rows, function( key, value ) {
+                changeRevise(value.id, <?= Mutual::REVISE_NOT?>);
+            });            
         });
         
     });
@@ -1252,6 +1287,10 @@ $this->headScript()
         }
         return;
     }    
+
+    function reviseFormatter(value){
+        return value===<?= Mutual::REVISE_OK?>;
+    }
 
     function restFormatter(value){
         return (Math.round(value*100)/100).toFixed(2);

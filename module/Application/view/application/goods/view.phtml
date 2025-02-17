@@ -225,16 +225,16 @@
                             <?php endforeach;?>
                         </select>
                         <button value="/goods/good-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
-                                title="Обновить номера" data-table="oemTable">
-                            <span class="glyphicon glyphicon-refresh" ></span>
+                                title="Загрузить номера из ТекДока" data-table="oemTable">
+                            <span class="glyphicon glyphicon-import" ></span>
                         </button>                             
                         <button value="/goods/good-oem-sup-cross/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
-                                title="Обновить номера поставщиков и кроссы" data-table="oemTable">
-                            <span class="glyphicon glyphicon-refresh" ></span>
+                                title="Обновить номера из прайсов и кроссов" data-table="oemTable">
+                            <span class="glyphicon glyphicon-import" ></span>
                         </button>                             
                         <button value="/goods/good-oem-intersect/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
                                 title="Обновить пересечения номеров" data-table="oemTable">
-                            <span class="glyphicon glyphicon-refresh" ></span>
+                            <span class="glyphicon glyphicon-import" ></span>
                         </button>                             
                         <button value="/apl/ex-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
                                 title="Обновить в АПЛ" data-table="oemTable">
@@ -268,7 +268,7 @@
                              <th data-field="source" data-formatter="sourceFormatter">Источник</th>
                              <th data-field="rating" data-width="10">Рейтинг</th>
                              <!--<th data-field="status" data-formatter="statusFormatter">Статус</th>-->
-                             <th data-field="status" data-width="5" data-formatter="oemActiveFormatter"></th>
+                             <th data-field="status" data-width="5" data-align="right" data-formatter="oemActiveFormatter"></th>
                         </tr>                
                     </thead>
                 </table>
