@@ -781,9 +781,9 @@ $this->headScript()
         });                        
     }    
 
-    function changeRevise(mutualId, check){
+    function changeRevise(retailId, check){
         
-        var url = "/revision/change-revise/"+mutualId+'?check='+check;
+        var url = "/revision/change-revise-retail/"+retailId+'?check='+check;
         $.ajax({
             type: 'GET',
             url: url
