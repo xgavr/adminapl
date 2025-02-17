@@ -12,6 +12,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Entity\Supplier;
 use Stock\Entity\Mutual;
+use Stock\Entity\Retail;
 use Company\Entity\Legal;
 use Admin\Entity\Log;
 use Company\Entity\Contract;
@@ -257,6 +258,30 @@ class RevisionController extends AbstractActionController
                     ->changeRevise($mutual, $check, $currentUser);
             
             $this->logManager->infoMutual($mutual, Log::STATUS_INFO);
+        }
+        
+        return new JsonModel([
+                'result' => 'ok',
+            ]);
+        
+    }
+
+    public function changeReviseReatilAction()
+    {
+        $retailId = (int)$this->params()->fromRoute('id', -1);
+        $check = (int)$this->params()->fromQuery('check', Retail::REVISE_OK);
+        
+        $retail = $this->entityManager->getRepository(Retail::class)
+                ->find($retailId);
+        
+        if ($retail){
+            
+            $currentUser = $this->logManager->currentUser();
+            
+            $this->entityManager->getRepository(Retail::class)
+                    ->changeReviseRetail($retail, $check, $currentUser);
+            
+            $this->logManager->infoRetail($retail, Log::STATUS_INFO);
         }
         
         return new JsonModel([

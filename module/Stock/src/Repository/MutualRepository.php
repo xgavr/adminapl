@@ -650,6 +650,23 @@ class MutualRepository extends EntityRepository{
     }
     
     /**
+     * Сменить флаг сверки
+     * @param Retail $retail
+     * @param int $check
+     * @param User $currentUser
+     */
+    public function changeReviseRetail($retail, $check, $currentUser)
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $retail->setRevise($check);        
+        $entityManager->persist($retail);
+        $entityManager->flush();
+        
+        return;
+    }
+    
+    /**
      * Заполнить ревизии
      */
     public function fillRevision($currentUser)

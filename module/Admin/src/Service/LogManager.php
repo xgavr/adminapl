@@ -30,7 +30,7 @@ use Stock\Entity\Vt;
 use Stock\Entity\VtGood;
 use Cash\Entity\CashDoc;
 use Application\Entity\Comment;
-use Application\Entity\Goods;
+use Stock\Entity\Retail;
 use Application\Entity\Email;
 use Stock\Entity\Mutual;
 
@@ -500,6 +500,34 @@ class LogManager {
             $data = [
                 'log_key' => $mutual->getDocKey(),
                 'message' => Json::encode($mutualLog),
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => $status,
+                'priority' => Log::PRIORITY_INFO,
+                'user_id' => $currentUser->getId(),
+            ];
+
+            $this->entityManager->getConnection()->insert('log', $data);
+        }    
+        
+        return;        
+    }
+    
+    /**
+     * Лог ревизии 
+     * @param Retail $retail
+     * @param int $status
+     * @return null
+     */
+    public function infoRetail($retail, $status)
+    {
+        $currentUser = $this->currentUser();
+        
+        if ($currentUser){
+            $retailLog = ['revision' => $retail->getRevise(), 'revisionName' => $retail->getReviseAsString()];
+
+            $data = [
+                'log_key' => $retail->getDocKey(),
+                'message' => Json::encode($retailLog),
                 'date_created' => date('Y-m-d H:i:s'),
                 'status' => $status,
                 'priority' => Log::PRIORITY_INFO,

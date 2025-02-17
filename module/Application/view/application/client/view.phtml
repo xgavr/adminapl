@@ -8,7 +8,6 @@ use Stock\Entity\Movement;
 use Stock\Entity\Revise;
 use Cash\Entity\CashDoc;
 use Company\Entity\Contract;
-use Stock\Entity\Mutual;
 
 $this->headTitle(ucfirst($client->getName()));
 
@@ -893,22 +892,22 @@ $this->headScript()
         });
         
         $('#mutualtable').on('check.bs.table', function (e, row) {
-            changeRevise(row.id, <?= Mutual::REVISE_OK?>);
+            changeRevise(row.id, <?= Retail::REVISE_OK?>);
         });
         
         $('#mutualtable').on('uncheck.bs.table', function (e, row) {
-            changeRevise(row.id, <?= Mutual::REVISE_NOT?>);
+            changeRevise(row.id, <?= Retail::REVISE_NOT?>);
         });
         
         $('#mutualtable').on('check-all.bs.table', function (e, rows) {
             $.each( rows, function( key, value ) {
-                changeRevise(value.id, <?= Mutual::REVISE_OK?>);
+                changeRevise(value.id, <?= Retail::REVISE_OK?>);
             });            
         });
         
         $('#mutualtable').on('uncheck-all.bs.table', function (e, rowsDefore, rows) {
             $.each( rows, function( key, value ) {
-                changeRevise(value.id, <?= Mutual::REVISE_NOT?>);
+                changeRevise(value.id, <?= Retail::REVISE_NOT?>);
             });            
         });
         
