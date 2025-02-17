@@ -1366,7 +1366,6 @@ class CashManager {
             $cash = $companyAccount->getCash();
             $company = $companyAccount->getLegal();
         }    
-        var_dump($legal->getId());
         if ($cash && $company && $legal){
             
             if ($company->getInn() == $legalInn){ 
@@ -1484,7 +1483,7 @@ class CashManager {
         
         $statement->setPay(Statement::PAY_CHECK);
         foreach ($legalsToCheck as $legal){            
-//            var_dump($legal->getId());
+            var_dump(count($legalsToCheck));
             $statement->setPay(Statement::PAY_NEW);
             if ($cashDoc){
                 if ($cashDoc->getAplId()){
