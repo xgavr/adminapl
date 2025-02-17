@@ -659,6 +659,12 @@ class Idoc {
                 }        
                 if (!empty($billSettingData['priceCol'])){
                     $tab['price'] = $this->readNumeric($initRow-1, $billSettingData['priceCol']-1, $idocData);
+                    if ($tab['price']){
+                        if (!empty($tab['quantity']) && !empty($tab['good_name'])){
+                            $total += $tab['price']*$tab['quantity'];
+                            $tab['amount'] = $tab['price']*$tab['quantity'];
+                        }   
+                    }            
                 }        
                 if (!empty($billSettingData['amountCol'])){
                     $tab['amount'] = $this->readNumeric($initRow-1, $billSettingData['amountCol']-1, $idocData);
