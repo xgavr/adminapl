@@ -252,6 +252,14 @@ if ($ptu && !$copy){
 </div>
                 
 <div class="modal-footer">
+    <?php if ($ptu):?>
+        <?php if ($ptu->getIdoc()):?>
+            <button type="button" class="btn btn-secondary bill-setting-modal-show" 
+                    modal-url="/bills/bill-setting-form/<?= $ptu->getIdoc()->getId()?>">Электронная накладная</button>    
+        <?php endif;?>
+        <button type="button" class="btn btn-secondary vtp-index-modal-show" 
+                modal-url="/vtp/ptu-form/<?= $ptu->getId()?>">Возврат</button>
+    <?php endif; ?>    
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
     <button type="submit" class="btn btn-primary" id="ptu-submit" <?= $disabled ? 'disabled':''; ?>>Сохранить</button>
 </div>
