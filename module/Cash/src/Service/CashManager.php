@@ -223,7 +223,7 @@ class CashManager {
         }
         
         $contract = $this->entityManager->getRepository(Office::class)
-                ->findDefaultContract($office, $legal, $dateDoc, $pay);
+                ->findDefaultContract($office, $legal, $dateDoc, $pay, $kind);
         
         if (!$contract){
             $contract = $this->legalManager->addContract($legal, 

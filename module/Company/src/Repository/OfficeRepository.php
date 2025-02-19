@@ -66,10 +66,12 @@ class OfficeRepository extends EntityRepository{
      * @param Legal $legal
      * @param date $dateDoc
      * @param integer $pay
+     * @param integer $kind
      * 
      * @return Contract
      */
-    public function findCurrentContract($company, $legal, $dateDoc = null, $pay = Contract::PAY_CASH)
+    public function findCurrentContract($company, $legal, $dateDoc = null, 
+            $pay = Contract::PAY_CASH, $kind = Contract::KIND_SUPPLIER)
     {
         if (!$dateDoc){
             $dateDoc = date('Y-m-d');
@@ -88,6 +90,8 @@ class OfficeRepository extends EntityRepository{
                 ->setParameter('3', $dateDoc)
                 ->andWhere('c.pay = ?4')
                 ->setParameter('4', $pay)
+                ->andWhere('c.kind = :kind')
+                ->setParameter('kind', $kind)
                 ->andWhere('c.status = :status')
                 ->setParameter('status', Contract::STATUS_ACTIVE)
                 ->orderBy('c.dateStart', 'DESC')
@@ -104,10 +108,12 @@ class OfficeRepository extends EntityRepository{
      * @param Legal $legal
      * @param date $dateDoc
      * @param integer $pay
+     * @param integer $kind
      * 
      * @return Contract
      */
-    public function findDefaultContract($office, $legal, $dateDoc = null, $pay = Contract::PAY_CASH)
+    public function findDefaultContract($office, $legal, $dateDoc = null, 
+            $pay = Contract::PAY_CASH, $kind = Contract::KIND_SUPPLIER)
     {
         if (!$dateDoc){
             $dateDoc = date('Y-m-d');
@@ -116,7 +122,7 @@ class OfficeRepository extends EntityRepository{
         $company = $this->findDefaultCompany($office, $dateDoc);
         
         if ($company){            
-            return $this->findCurrentContract($company, $legal, $dateDoc, $pay);
+            return $this->findCurrentContract($company, $legal, $dateDoc, $pay, $kind);
         }
         
         return;
