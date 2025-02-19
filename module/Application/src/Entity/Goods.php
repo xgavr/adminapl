@@ -1558,7 +1558,7 @@ class Goods {
         $result = [];
         
         foreach ($this->getArticles() as $article){
-            foreach ($article->getArticleTitles as $articleTitle){
+            foreach ($article->getArticleTitles() as $articleTitle){
                 $result[] = $articleTitle->getTitle();
             }
         }
