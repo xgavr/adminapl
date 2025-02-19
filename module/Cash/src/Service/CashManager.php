@@ -350,7 +350,6 @@ class CashManager {
                         $cashDoc->getContractKind(), $cashDoc->contractPayCash());
                 $legalId = $cashDoc->getLegal()->getId();
                 $contractId = $contract->getId();
-                var_dump($contractId);
             }
             $data = [
                 'doc_key' => $cashDoc->getLogKey(),

@@ -181,7 +181,8 @@ class OrderManager
         if ($order->getLegal()){
             $contract = $order->getContract();
             if (!$contract){
-                $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId()); 
+                $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), 
+                        $order->getDocDate(), $order->getAplId(), Contract::KIND_CUSTOMER); 
                 $this->entityManager->getConnection()->update('orders', ['contract_id' => $contract->getId()], ['id' => $order->getId()]);
                 $this->entityManager->refresh($order);
             }    
@@ -284,10 +285,12 @@ class OrderManager
      * @param date $dateStart
      * @param string $act
      * @param integer $pay
+     * @param integer $kind
      * 
      * @return Contract
      */
-    public function findDefaultContract($office, $legal, $dateStart, $act, $pay = Contract::PAY_CASHLESS)
+    public function findDefaultContract($office, $legal, $dateStart, $act, 
+            $pay = Contract::PAY_CASHLESS, $kind = Contract::KIND_CUSTOMER)
     {
         $dateValidator = new Date();
         $dateValidator->setFormat('Y-m-d H:i:s');
@@ -296,7 +299,7 @@ class OrderManager
         }
         
         $contract = $this->entityManager->getRepository(Office::class)
-                ->findDefaultContract($office, $legal, $dateStart, $pay);
+                ->findDefaultContract($office, $legal, $dateStart, $pay, $kind);
         
         if (!$contract){
             $contract = $this->legalManager->addContract($legal, 
@@ -306,7 +309,7 @@ class OrderManager
                         'act' => trim($act),
                         'dateStart' => $dateStart,
                         'status' => Contract::STATUS_ACTIVE,
-                        'kind' => Contract::KIND_CUSTOMER,
+                        'kind' => $kind,
                         'pay' => $pay,
                         'nds' => Contract::NDS_NO,
                     ]);
@@ -325,7 +328,8 @@ class OrderManager
     {
         $contract = $order->getContract();
         if (!$contract){
-            $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId());
+            $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), 
+                    $order->getDocDate(), $order->getAplId(), Contract::KIND_CUSTOMER);
             $this->entityManager->getConnection()->update('orders', ['contract_id' => $contract->getId()], ['id' => $order->getId()]);
             $this->entityManager->refresh($order);
         }    
@@ -1313,7 +1317,8 @@ class OrderManager
             return;
         }
         if (!$order->getContract() && $order->getLegal()){
-            $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(), $order->getDocDate(), $order->getAplId());
+            $contract = $this->findDefaultContract($order->getOffice(), $order->getLegal(),
+                    $order->getDocDate(), $order->getAplId(), Contract::KIND_CUSTOMER);
             $this->entityManager->getConnection()->update('orders', ['contract_id' => $contract->getId()], ['id' => $order->getId()]);
         }            
         $this->entityManager->refresh($order);
@@ -1834,7 +1839,8 @@ class OrderManager
             ]);
             $upd['legal_id'] = $legal->getId();
 
-            $contract = $this->findDefaultContract($order->getOffice(), $legal, $order->getDocDate(), $order->getAplId());
+            $contract = $this->findDefaultContract($order->getOffice(), $legal, 
+                    $order->getDocDate(), $order->getAplId(), Contract::KIND_CUSTOMER);
             $upd['contract_id'] = $contract->getId();
         }
 
