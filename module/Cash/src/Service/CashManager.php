@@ -1443,26 +1443,6 @@ class CashManager {
         }
         
         if (!$legal){
-            $legalsInnKpp = $this->entityManager->getRepository(Legal::class)
-                    ->findBy(['inn' => $legalInn]);
-            foreach ($legalsInnKpp as $legal){
-                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement);
-                $legalsToCheck[$legal->getId()] = $legal;
-                if ($cashDoc){
-                    break;
-                }
-            }   
-            
-            $legalsInn = $this->entityManager->getRepository(Legal::class)
-                    ->findBy(['inn' => $legalInn, 'kpp' => $legalKpp]);
-            foreach ($legalsInn as $legal){
-                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement);
-                $legalsToCheck[$legal->getId()] = $legal;
-                if ($cashDoc){
-                    break;
-                }
-            } 
-            
             $bankAccounts = $this->entityManager->getRepository(BankAccount::class)
                     ->findBy(['rs' => $legalRs]);
 
@@ -1474,6 +1454,26 @@ class CashManager {
                     break;
                 }
             }
+            
+            $legalsInnKpp = $this->entityManager->getRepository(Legal::class)
+                    ->findBy(['inn' => $legalInn, 'kpp' => $legalKpp]);
+            foreach ($legalsInnKpp as $legal){
+                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement);
+                $legalsToCheck[$legal->getId()] = $legal;
+                if ($cashDoc){
+                    break;
+                }
+            }             
+            
+            $legalsInn = $this->entityManager->getRepository(Legal::class)
+                    ->findBy(['inn' => $legalInn]);
+            foreach ($legalsInn as $legal){
+                $cashDoc = $this->findCashDocLegal($legal, $amount, $statement);
+                $legalsToCheck[$legal->getId()] = $legal;
+                if ($cashDoc){
+                    break;
+                }
+            }   
         }
 
         if (!$legal){
@@ -1485,7 +1485,7 @@ class CashManager {
         
         $statement->setPay(Statement::PAY_CHECK);
         foreach ($legalsToCheck as $legal){            
-            var_dump(count($legalsToCheck));
+//            var_dump(count($legalsToCheck));
             $statement->setPay(Statement::PAY_NEW);
             if ($cashDoc){
                 if ($cashDoc->getAplId()){
