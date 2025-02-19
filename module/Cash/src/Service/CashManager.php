@@ -1443,30 +1443,26 @@ class CashManager {
         }
         
         if (!$legal){
-            $legals = $this->entityManager->getRepository(Legal::class)
+            $legalsInnKpp = $this->entityManager->getRepository(Legal::class)
                     ->findBy(['inn' => $legalInn]);
-            foreach ($legals as $legal){
+            foreach ($legalsInnKpp as $legal){
                 $cashDoc = $this->findCashDocLegal($legal, $amount, $statement);
                 $legalsToCheck[$legal->getId()] = $legal;
                 if ($cashDoc){
                     break;
                 }
-            }    
-        }
-
-        if (!$legal){
-            $legals = $this->entityManager->getRepository(Legal::class)
+            }   
+            
+            $legalsInn = $this->entityManager->getRepository(Legal::class)
                     ->findBy(['inn' => $legalInn, 'kpp' => $legalKpp]);
-            foreach ($legals as $legal){
+            foreach ($legalsInn as $legal){
                 $cashDoc = $this->findCashDocLegal($legal, $amount, $statement);
                 $legalsToCheck[$legal->getId()] = $legal;
                 if ($cashDoc){
                     break;
                 }
-            }    
-        }
-
-        if (!$legal){
+            } 
+            
             $bankAccounts = $this->entityManager->getRepository(BankAccount::class)
                     ->findBy(['rs' => $legalRs]);
 
@@ -1478,6 +1474,12 @@ class CashManager {
                     break;
                 }
             }
+        }
+
+        if (!$legal){
+        }
+
+        if (!$legal){
         }    
         
         
