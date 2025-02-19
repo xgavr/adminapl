@@ -207,6 +207,17 @@
                         <?php endforeach;?>
                     </p>
                 </table>                    
+                <table class="table table-bordered">
+                    <p>
+                        <?php foreach ($goods->getArticleTitles() as $articleTitle):?>
+                            <tr>
+                                <td>
+                                    <?= $articleTitle?>
+                                </td>
+                            </tr>                                              
+                        <?php endforeach;?>
+                    </p>
+                </table>                    
             </div>
             <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
                 <div id="oemToolbar">

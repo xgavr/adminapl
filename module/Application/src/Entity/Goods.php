@@ -1549,4 +1549,21 @@ class Goods {
         return $result;
     }        
     
+    /**
+     * Наименования из прайсов
+     * @return array 
+     */
+    public function articleTitles()
+    {
+        $result = [];
+        
+        foreach ($this->getArticles() as $article){
+            foreach ($article->getArticleTitles as $articleTitle){
+                $result[] = $articleTitle->getTitle();
+            }
+        }
+        
+        return $result;
+    }
+    
 }
