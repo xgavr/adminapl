@@ -1485,7 +1485,7 @@ class CashManager {
         
         $statement->setPay(Statement::PAY_CHECK);
         foreach ($legalsToCheck as $legal){            
-//            var_dump(count($legalsToCheck));
+            var_dump(count($legalsToCheck));
             $statement->setPay(Statement::PAY_NEW);
             if ($cashDoc){
                 if ($cashDoc->getAplId()){
