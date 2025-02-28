@@ -24,6 +24,7 @@ class GigaManager {
      * Adapter
      */
     const HTTPS_ADAPTER = 'Laminas\Http\Client\Adapter\Curl';  
+
     
     /**
      * Doctrine entity manager.
@@ -40,7 +41,7 @@ class GigaManager {
     public function __construct($entityManager, $adminManager)
     {
         $this->entityManager = $entityManager;
-        $this->adminManager = $adminManager;
+        $this->adminManager = $adminManager;    
     }
     
     /**
@@ -68,21 +69,23 @@ class GigaManager {
     /**
      * токен доступа
      * 
-     * @param string $uuid
      */    
-    public function accessToken($uuid = null)
+    public function accessToken()
     {
         $aiSettings = $this->adminManager->getAiSettings();
+        
+        if (!empty($aiSettings['gigachat_expires_at']) && !empty($aiSettings['gigachat_access_token'])){
+            if ($aiSettings['gigachat_expires_at'] > time()){
+                return $aiSettings['gigachat_access_token'];
+            }            
+        }
         
         $postParameters = [
             'scope' => $aiSettings['gigachat_score'],
         ];
         
-        if (empty($uuid)){
-            $uuid4 = Uuid::uuid4();
-            $uuid = $uuid4->toString();
-//            var_dump($uuid); exit;
-        }
+        $uuid4 = Uuid::uuid4();
+        $uuid = $uuid4->toString();
         
         $client = new Client();
         $client->setUri('https://ngw.devices.sberbank.ru:9443/api/v2/oauth');
@@ -103,7 +106,13 @@ class GigaManager {
                 
         if ($response->isOk()){
             $result = Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);
-            return $result;
+            
+            $aiSettings['gigachat_access_token'] = $result['access_token'];
+            $aiSettings['gigachat_expires_at'] = $result['expires_at'];
+            
+            $this->adminManager->setAiSettings($aiSettings);
+            
+            return $result['access_token'];
         }
         
         return $this->exception($response);
@@ -112,27 +121,13 @@ class GigaManager {
     /**
      * Возвращает массив объектов с данными доступных моделей
      * 
-     * @param string $uuid
-     * @param array $accessToken
-     * @param string $model
      */
-    public function models($uuid = null, $accessToken = null, $model = null)
+    public function models()
     {
+
+        $accessToken = $this->accessToken();
+        
         if (empty($accessToken)){
-            $accessToken = $this->accessToken($uuid);
-        }
-        
-        if (empty($accessToken['expires_at'])){
-            return [];
-        }
-        
-        $expire = $accessToken['expires_at'];
-        
-        if ($expire <= time()){
-            $accessToken = $this->accessToken($uuid);            
-        }
-        
-        if (empty($accessToken['access_token'])){
             return [];
         }
 
@@ -146,7 +141,7 @@ class GigaManager {
         
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
-             'Authorization: Bearer '.$accessToken['access_token'],
+             'Authorization: Bearer '.$accessToken,
         ]);      
         
 //        var_dump($headers); exit;
@@ -166,34 +161,37 @@ class GigaManager {
      * Возвращает ответ модели с учетом переданных сообщений
      * 
      * @param string $messages
-     * @param string $uuid
-     * @param array $accessToken
+     * @param array $params
      * 
      * @return array
      */
-    public function completions($messages = null, $uuid = null, $accessToken = null)
+    public function completions($messages = null, $params = null)
     {
+        $accessToken = $this->accessToken();
+        
         if (empty($accessToken)){
-            $accessToken = $this->accessToken($uuid);
-        }
-        
-        if (empty($accessToken['expires_at'])){
             return [];
         }
         
-        $expire = $accessToken['expires_at'];
+        $model = 'GigaChat:latest';
+        $temperature = null;
+        $xSessionIId = md5($messages[0]['content']);
         
-        if ($expire <= time()){
-            $accessToken = $this->accessToken($uuid);            
+        if (is_array($params)){
+            if (!empty($params['model'])){
+                $model = $params['model'];
+            }
+            if (!empty($params['temperature'])){
+                $temperature = $params['temperature'];
+            }
+            if (!empty($params['xSessionIId'])){
+                $xSessionIId = $params['xSessionIId'];
+            }
         }
         
-        if (empty($accessToken['access_token'])){
-            return [];
-        }
-
 //        var_dump($accessToken); exit;
         $postParameters = [
-            'model' => 'GigaChat:latest',
+            'model' => $model,
             'messages' => $messages,
         ];
         
@@ -207,7 +205,8 @@ class GigaManager {
         $headers = $client->getRequest()->getHeaders();
         $headers->addHeaders([
              'Content-Type: application/json',
-             'Authorization: Bearer '.$accessToken['access_token'],
+             'X-Session-ID: '.$xSessionIId,
+             'Authorization: Bearer '.$accessToken,
         ]);      
         
 //        var_dump($headers); exit;
