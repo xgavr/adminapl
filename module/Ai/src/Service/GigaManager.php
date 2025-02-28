@@ -75,7 +75,7 @@ class GigaManager {
         $aiSettings = $this->adminManager->getAiSettings();
         
         if (!empty($aiSettings['gigachat_expires_at']) && !empty($aiSettings['gigachat_access_token'])){
-            if ($aiSettings['gigachat_expires_at'] > time()){
+            if (intval($aiSettings['gigachat_expires_at']) > time()+60){
                 return $aiSettings['gigachat_access_token'];
             }            
         }
