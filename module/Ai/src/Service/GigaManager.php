@@ -107,10 +107,11 @@ class GigaManager {
         if ($response->isOk()){
             $result = Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);
             
-            $aiSettings['gigachat_access_token'] = $result['access_token'];
-            $aiSettings['gigachat_expires_at'] = $result['expires_at'];
+            $data = $aiSettings->toArray();
+            $data['gigachat_access_token'] = $result['access_token'];
+            $data['gigachat_expires_at'] = $result['expires_at'];
             
-            $this->adminManager->setAiSettings($aiSettings);
+            $this->adminManager->setAiSettings($data);
             
             return $result['access_token'];
         }
