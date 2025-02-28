@@ -379,7 +379,7 @@ class VtpManager
     public function updateVtpDocStatus($vtp, $statusDoc, $docDate = null)            
     {
 
-        if ($vtp->getDocDate() > $this->allowDate){
+        if ($vtp->getDocDate() > $this->allowDate || $docDate > $this->allowDate){
             $vtp->setStatusDoc($statusDoc);
             $vtp->setStatusEx(Vtp::STATUS_EX_NEW);
             $vtp->setStatusAccount(Vtp::STATUS_ACCOUNT_NO);
