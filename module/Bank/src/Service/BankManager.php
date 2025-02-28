@@ -11,7 +11,6 @@ namespace Bank\Service;
 use Bank\Entity\Balance;
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
-use Bank\Filter\Statement1cToArray;
 use Bank\Filter\ConvertStatement1c;
 use Application\Filter\CsvDetectDelimiterFilter;
 use Application\Filter\RawToStr;
@@ -224,15 +223,21 @@ class BankManager
     {
         $messages[] = [
             'role' => 'system',
-            'content' => 'Ты бухгалтер. '
-            . 'Извлеки сумму комиссии из назначения платежа. Требуется точнось до копеек. Ответь только числом в формате 1234.56',
+            'content' => 'Ты бухгалтер. В назначении платежа указана сумма комиссии. '
+            . 'Выведи сумму комиссии в числовом формате, 2 знака после запятой. '
+            . 'Выведи только число. Если комиссии нет выведи 0',
         ];
         $messages[] = [
             'role' => 'user',
             'content' => $statement->getPaymentPurposeDot(),
         ];
         
-        $result = $this->gigaManager->completions($messages);
+        $result = $this->gigaManager->completions($messages, [
+            'model' => 'GigaChat-Pro',
+            'temperature' => '0.1',
+            'xSessionIId' => md5($messages[0]['content']),
+        ]);
+        
 //        var_dump($messages, $result);
         if (!empty($result['choices'])){
             foreach ($result['choices'] as $choice){
