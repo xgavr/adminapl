@@ -211,7 +211,7 @@ class GigaManager {
              'Authorization: Bearer '.$accessToken,
         ]);      
         
-        var_dump($headers); //exit;
+//        var_dump($headers); //exit;
         
         $response = $client->send();
                 
