@@ -238,7 +238,7 @@ class BankManager
             'xSessionIId' => md5($messages[0]['content']),
         ]);
         
-        var_dump($messages, $result);
+//        var_dump($messages, $result);
         if (!empty($result['choices'])){
             foreach ($result['choices'] as $choice){
                 if (!empty($choice['message']['content'])){
