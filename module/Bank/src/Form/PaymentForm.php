@@ -60,7 +60,8 @@ class PaymentForm extends Form
         $this->add([
             'type'  => 'select',
             'name' => 'supplier',
-            'attributes' => [                
+            'attributes' => [  
+                'id' => 'supplier'
             ],
             'options' => [
                 'label' => 'Оплата поставщику',

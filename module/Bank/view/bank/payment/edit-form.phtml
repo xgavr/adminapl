@@ -443,11 +443,11 @@ $form->prepare();
     }
     
     function changeBankAccount(){
-        $('select[name="supplier"]').empty();
-        $('select[name="supplier"]').append('<option>нет</option>');
+        $('$supplier').empty();
+        $('$supplier').append('<option>нет</option>');
         $.getJSON( '/payment/account-available-suppliers/'+$('select[name="bankAccount"]').val(), function( data ) {
             $.each( data.suppliers, function( key, value ) {
-                $('select[name="supplier"]').append('<option value="' + value.id + '">' + value.name + '</option>');
+                $('$supplier').append('<option value="' + value.id + '">' + value.name + '</option>');
             });
             $('input[name="taxInfoOkato"]').val(data.company.oktmo);            
         });            
@@ -509,7 +509,7 @@ $form->prepare();
             changePaymentAuto();
         });
 
-        $('select[name="supplier"]').on('change', function(){
+        $('$supplier').on('change', function(){
             $.getJSON( '/payment/supplier-current-details/'+$(this).val()+'?account='+$('select[name="bankAccount"]').val(), function( data ) {
     //            clearDetails();
                 $('input[name="counterpartyInn"]').val(data['inn']);
