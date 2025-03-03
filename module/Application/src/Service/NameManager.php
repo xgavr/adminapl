@@ -965,7 +965,7 @@ class NameManager
             'role' => 'system',
             'content' => 'Ты менедежер магазина автозапчастей. В строке прайса указано наименование товара. '
             . 'Перепиши наименование, исправив грамматические, орфографические и пунктуационные ошибки в тексте. '
-            . 'Выведи только новое наименование. Если наименование нормальное, то выведи только пустую строку',
+            . 'Выведи только новое наименование',
         ];
         $messages[] = [
             'role' => 'user',
@@ -974,7 +974,7 @@ class NameManager
         
         $result = $this->gigaManager->completions($messages, [
             'model' => 'GigaChat-Pro',
-            'temperature' => '0.1',
+            'temperature' => '1',
             'xSessionIId' => md5($messages[0]['content']),
         ]);
         
@@ -991,7 +991,7 @@ class NameManager
             }
         }
         
-        return;        
+        return $rawprice->getTitle();        
     }
     
     /**
