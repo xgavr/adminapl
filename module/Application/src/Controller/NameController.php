@@ -644,7 +644,7 @@ class NameController extends AbstractActionController
         $result = $this->nameManager->fixTitle($rawprice);
         
         return new JsonModel([
-            $result,
+            'alert' =>  $result,
         ]);          
     }
     

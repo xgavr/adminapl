@@ -574,6 +574,9 @@
             })
                 .done(function (data) {
                     dialog.modal('hide');
+                    if (data.alert){
+                        bootbox.alert(data.alert);
+                    }    
                     if (data == 'ok'){
                         bootbox.alert("Ок!");
                         window.location.reload();
