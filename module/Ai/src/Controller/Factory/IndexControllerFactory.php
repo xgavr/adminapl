@@ -6,6 +6,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Ai\Controller\IndexController;
 use Ai\Service\GigaManager;
 use Ai\Service\DeepseekManager;
+use Ai\Service\QwenManager;
 
 /**
  * This is the factory for IndexController. Its purpose is to instantiate the
@@ -18,8 +19,10 @@ class IndexControllerFactory implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $gigaManager = $container->get(GigaManager::class);
         $deepseekManager = $container->get(DeepseekManager::class);
+        $qwenManager = $container->get(QwenManager::class);
         
         // Instantiate the controller and inject dependencies
-        return new IndexController($entityManager, $gigaManager, $deepseekManager);
+        return new IndexController($entityManager, $gigaManager, $deepseekManager,
+                $qwenManager);
     }
 }

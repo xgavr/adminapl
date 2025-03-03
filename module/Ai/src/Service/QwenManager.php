@@ -16,11 +16,11 @@ use DeepSeek\Enums\Models;
 use Laminas\Http\Client;
 
 /**
- * Description of DeepseekManager
+ * Description of QwenManager
  * 
  * @author Daddy
  */
-class DeepseekManager {
+class QwenManager {
     
     /**
      * Adapter
@@ -75,31 +75,12 @@ class DeepseekManager {
     {
         $aiSettings = $this->adminManager->getAiSettings();
         
-        if (!empty($aiSettings['deepseek_api_key'])){
-            return $aiSettings['deepseek_api_key'];
+        if (!empty($aiSettings['qwen_api_key'])){
+            return $aiSettings['qwen_api_key'];
         }
         
         return;
     }  
-    
-    /**
-     * Возвращает ответ модели с учетом переданных сообщений
-     * 
-     * @param string $message
-     * 
-     * 
-     * @return array
-     */
-    public function completionsDsc($message = null)
-    {
-        $aiSettings = $this->adminManager->getAiSettings();
-        
-        $response = DeepSeekClient::build($aiSettings['deepseek_api_key'])
-            ->query($message)
-            ->run();
-
-        return $response;        
-    }
     
     /**
      * Возвращает ответ модели с учетом переданных сообщений
@@ -117,7 +98,7 @@ class DeepseekManager {
             return [];
         }
         
-        $model = 'deepseek-chat';
+        $model = 'qwen-plus';
         $temperature = 1;
         
         if (is_array($params)){
@@ -148,8 +129,10 @@ class DeepseekManager {
             'top_logprobs' => null,
         ];
         
+//        var_dump($postParameters); //exit;
+
         $client = new Client();
-        $client->setUri('https://api.deepseek.com/chat/completions');
+        $client->setUri('https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions');
         $client->setAdapter($this::HTTPS_ADAPTER);
         $client->setMethod('POST');
         $client->setOptions(['timeout' => 30]);

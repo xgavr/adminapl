@@ -42,6 +42,7 @@ return [
         'factories' => [
             Service\DeepseekManager::class => Service\Factory\DeepseekManagerFactory::class,
             Service\GigaManager::class => Service\Factory\GigaManagerFactory::class,
+            Service\QwenManager::class => Service\Factory\QwenManagerFactory::class,
         ],
     ],    
     'view_manager' => [

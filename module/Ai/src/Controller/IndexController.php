@@ -34,13 +34,21 @@ class IndexController extends AbstractActionController
     private $deepseekManager;
         
     /**
+     * Qwen manager.
+     * @var \Ai\Service\QwenManager
+     */
+    private $qwenManager;
+        
+    /**
      * Constructor. Its purpose is to inject dependencies into the controller.
      */
-    public function __construct($entityManager, $gigaManager, $deepseekManager) 
+    public function __construct($entityManager, $gigaManager, $deepseekManager,
+            $qwenManager) 
     {
        $this->entityManager = $entityManager;
        $this->gigaManager = $gigaManager;    
        $this->deepseekManager = $deepseekManager;           
+       $this->qwenManager = $qwenManager;           
     }
 
     
@@ -72,9 +80,26 @@ class IndexController extends AbstractActionController
 
     public function deepseekTestAction()
     {
-        $message = 'Когда уже ИИ захватит этот мир?';
+
+        $messages[] = [
+            'role' => 'user',
+            'content' => 'Привет!',
+        ];        
         
-        $result = $this->deepseekManager->completions($message);
+        $result = $this->deepseekManager->completions($messages);
+
+        return new JsonModel($result);
+    }
+
+    public function qwenTestAction()
+    {
+
+        $messages[] = [
+            'role' => 'user',
+            'content' => 'Привет!',
+        ];        
+        
+        $result = $this->qwenManager->completions($messages);
 
         return new JsonModel($result);
     }
