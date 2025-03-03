@@ -969,7 +969,8 @@ class NameManager
         ];
         $messages[] = [
             'role' => 'user',
-            'content' => $rawprice->getTitle(),
+            'content' => 'Артикул: '.$rawprice->getArticle().' Производитель: '.$rawprice->getProducer().
+                        'Наименование: '.$rawprice->getTitle(),
         ];
         
         $result = $this->gigaManager->completions($messages, [
