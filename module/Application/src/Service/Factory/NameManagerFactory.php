@@ -11,6 +11,7 @@ namespace Application\Service\Factory;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Service\NameManager;
+use Ai\Service\GigaManager;
 /**
  * Description of PbManagerFactory
  *
@@ -23,8 +24,9 @@ class NameManagerFactory  implements FactoryInterface
                     $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
+        $gigaManager = $container->get(GigaManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new NameManager($entityManager);
+        return new NameManager($entityManager, $gigaManager);
     }
 }

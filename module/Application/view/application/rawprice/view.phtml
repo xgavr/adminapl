@@ -112,6 +112,10 @@ $this->pageBreadcrumbs()->setItems([
                                 title="Разобрать">
                                 Токены
                         </button>
+                        <button value="/name/fix-good-name/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"
+                                title="Исправить наименование">
+                                Исправить
+                        </button>
                     <?php endif;?>    
                     <?php if ($rawprice->getStatusToken() != $rawprice::TOKEN_NEW):?>
                         <button value="/producer/assembly-producer-from-rawprice/<?= $rawprice->getId() ?>" class="btn btn-info btn-xs refresh-button"

@@ -605,8 +605,8 @@ class NameController extends AbstractActionController
             return;
         }
         
-        $rawprice = $this->entityManager->getRepository(\Application\Entity\Rawprice::class)
-                ->findOneById($rawpriceId);
+        $rawprice = $this->entityManager->getRepository(Rawprice::class)
+                ->find($rawpriceId);
         
         if ($rawprice == null) {
             $this->getResponse()->setStatusCode(404);
@@ -622,6 +622,29 @@ class NameController extends AbstractActionController
         
         return new JsonModel([
             'ok',
+        ]);          
+    }
+    
+    public function fixGoodNameAction()
+    {
+        $rawpriceId = (int)$this->params()->fromRoute('id', -1);
+        if ($rawpriceId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $rawprice = $this->entityManager->getRepository(Rawprice::class)
+                ->find($rawpriceId);
+        
+        if ($rawprice == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $result = $this->nameManager->fixTitle($rawprice);
+        
+        return new JsonModel([
+            $result,
         ]);          
     }
     

@@ -58,10 +58,17 @@ class NameManager
      */
     private $entityManager;
   
+    /**
+     * Giga manager.
+     * @var \Ai\Service\GigaManager
+     */
+    private $gigaManager;
+  
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager)
+    public function __construct($entityManager, $gigaManager)
     {
         $this->entityManager = $entityManager;
+        $this->gigaManager = $gigaManager;
     }
     
     /**
@@ -947,8 +954,49 @@ class NameManager
     }
     
     /**
+     * Исправление ошибок в наименовании товара
+     * 
+     * @param Rawprice $rawprice
+     * @param bool update
+     */
+    public function fixTitle($rawprice, $update = false)
+    {
+        $messages[] = [
+            'role' => 'system',
+            'content' => 'Ты менедежер магазина автозапчастей. В строке прайса указано наименование товара. '
+            . 'Перепиши наименование, исправив грамматические, орфографические и пунктуационные ошибки в тексте. '
+            . 'Выведи только новое наименование. Если наименование нормальное, то выведи только пустую строку',
+        ];
+        $messages[] = [
+            'role' => 'user',
+            'content' => $rawprice->getTitle(),
+        ];
+        
+        $result = $this->gigaManager->completions($messages, [
+            'model' => 'GigaChat-Max',
+            'temperature' => '0.1',
+            'xSessionIId' => md5($messages[0]['content']),
+        ]);
+        
+        if (!empty($result['choices'])){
+            foreach ($result['choices'] as $choice){
+                if (!empty($choice['message']['content'])){
+                    if ($update){
+                        $this->entityManager->getRepository(Rawprice::class)
+                                ->updateRawpriceField($rawprice->getId(), ['goodname' => $choice['message']['content']]);                        
+                        
+                    }
+                    return $choice['message']['content'];
+                }    
+            }
+        }
+        
+        return;        
+    }
+    
+    /**
      * Выборка токенов из прайса и добавление их в таблицу токенов
-     * @param Appllication\Entity\Raw $raw
+     * @param Raw $raw
      */
     public function grabTokenFromRaw($raw)
     {
@@ -1006,7 +1054,7 @@ class NameManager
     /**
      * Удаление токена
      * 
-     * @param \Application\Entity\Token $token
+     * @param Token $token
      */
     public function removeToken($token) 
     {   
