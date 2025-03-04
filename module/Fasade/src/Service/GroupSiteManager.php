@@ -142,6 +142,12 @@ class GroupSiteManager
         $this->entityManager->persist($groupSite);
         $this->entityManager->flush();
         
+        if ($groupSite->getSiteGroups()){
+            foreach ($groupSite->getSiteGroups() as $childGroup){
+                $this->updateGroupSite($childGroup, $childGroup->toArray());
+            }
+        }
+        
         return $groupSite;
     }
     

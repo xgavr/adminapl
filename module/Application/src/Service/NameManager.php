@@ -1468,6 +1468,8 @@ class NameManager
      */
     public function updateTokenGroupCategory($tokenGroup, $groupSite)
     {
+        ini_set('memory_limit', '2048M');
+
         $oldGroupSite = $tokenGroup->getGroupSite();
         
         if ($oldGroupSite){
