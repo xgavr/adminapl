@@ -99,6 +99,24 @@ class GroupSiteManager
     }
     
     /**
+     * 
+     * @param GroupSite $groupSite
+     */
+    private function updateChildFullName($groupSite)
+    {
+        foreach ($groupSite->getSiteGroups() as $childGroup){
+            
+            $childGroup->setFullName($groupSite->getFullName().'/'.$childGroup->getName());
+            $this->entityManager->persist($childGroup);
+            $this->entityManager->flush();  
+            
+            $this->updateChildFullName($childGroup);
+        }  
+        
+        return;
+    }
+    
+    /**
      * Обновить группу для сайта
      * 
      * @param GroupSite $groupSite
@@ -142,11 +160,13 @@ class GroupSiteManager
         $this->entityManager->persist($groupSite);
         $this->entityManager->flush();
         
-        if ($groupSite->getSiteGroups()){
-            foreach ($groupSite->getSiteGroups() as $childGroup){
-                $this->updateGroupSite($childGroup, $childGroup->toArray());
-            }
-        }
+        $this->updateChildFullName($groupSite);
+        
+//        if ($groupSite->getSiteGroups()){
+//            foreach ($groupSite->getSiteGroups() as $childGroup){
+//                $this->updateGroupSite($childGroup, $childGroup->toArray());
+//            }
+//        }
         
         return $groupSite;
     }
