@@ -1470,7 +1470,9 @@ class NameManager
     {
         $oldGroupSite = $tokenGroup->getGroupSite();
         
-        $oldGroupSite->getGoods()->clear();
+        if ($oldGroupSite){
+            $oldGroupSite->getGoods()->clear();
+        }    
         
         $tokenGroup->setGroupSite($groupSite);
         $this->entityManager->persist($tokenGroup);
