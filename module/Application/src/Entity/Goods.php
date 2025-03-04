@@ -405,6 +405,15 @@ class Goods {
    */
    private $foldBalances;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Fasade\Entity\GroupSite", inversedBy="goods")
+     * @ORM\JoinTable(name="good_group_site",
+     *      joinColumns={@ORM\JoinColumn(name="good_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_site_id", referencedColumnName="id")}
+     *      )
+     */
+    protected $categories;
+   
    /**
      * Конструктор.
      */
@@ -417,6 +426,7 @@ class Goods {
       $this->attributeValues = new ArrayCollection();
       $this->oems = new ArrayCollection();
       $this->foldBalances = new ArrayCollection();
+      $this->categories = new ArrayCollection();
     }
     
   
@@ -1514,6 +1524,30 @@ class Goods {
         return $this->foldBalances;
     }
 
+    // Возвращает категории для данного товара.
+    public function getCategories() 
+    {
+        return $this->categories;
+    }      
+      
+    /**
+     * // Добавляет новую категорию к данному товару.
+     * @param GroupSite $groupSite
+     */
+    public function addCategory($groupSite) 
+    {
+        $this->categories[] = $groupSite;        
+    }
+    
+    /**
+     * 
+     * @param GroupSite $groupSite
+     */
+    public function removeCategoryAssociation($groupSite) 
+    {
+        $this->categories->removeElement($groupSite);
+    } 
+    
     /**
      * Лог
      * @return array

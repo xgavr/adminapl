@@ -115,9 +115,15 @@ class GroupSite
     */
     private $tokenGroups;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="\Application\Entity\Goods", mappedBy="categories")
+     */
+    protected $goods;    
+    
     public function __construct() {
         $this->tokenGroups = new ArrayCollection();
         $this->siteGroups = new ArrayCollection();
+        $this->goods = new ArrayCollection();
     }
 
     public function getId() 
@@ -318,6 +324,10 @@ class GroupSite
         $this->siteGroups->add($groupSite);
     }
     
+    /**
+     * 
+     * @return GroupSite
+     */
     public function getSiteGroup() {
         return $this->siteGroup;
     }
@@ -339,7 +349,29 @@ class GroupSite
         
         return $this;
     }
-        
+     
+    // Возвращает товары, связанные с данной категорией.
+    public function getGoods() 
+    {
+        return $this->goods;
+    }
+    
+    // Добавляет товар в коллекцию товаров, связанных с этой категорией.
+    public function addGood($good) 
+    {
+        $this->goods[] = $good;        
+    }   
+    
+    /**
+     * 
+     * @param Good $good
+     */
+    public function removeGoodAssociation($good) 
+    {
+        $this->goods->removeElement($good);
+    } 
+    
+    
     /**
      * Массив для формы
      * @return array 

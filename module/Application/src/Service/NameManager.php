@@ -1470,6 +1470,8 @@ class NameManager
     {
         $oldGroupSite = $tokenGroup->getGroupSite();
         
+        $oldGroupSite->getGoods()->clear();
+        
         $tokenGroup->setGroupSite($groupSite);
         $this->entityManager->persist($tokenGroup);
         $this->entityManager->flush();
@@ -1477,12 +1479,20 @@ class NameManager
         if ($groupSite){
             $this->entityManager->getRepository(GroupSite::class)
                     ->updateGroupSiteGoodCount($groupSite);
+            
+            $goods = $this->entityManager->getRepository(Goods::class)
+                    ->findBy(['tokenGroup' => $tokenGroup->getId()]);
+            foreach ($goods as $good){
+                $this->entityManager->getRepository(Goods::class)
+                        ->addGoodCategory($good, $groupSite);
+            }
         }
         
         if ($oldGroupSite){
             $this->entityManager->getRepository(GroupSite::class)
-                    ->updateGroupSiteGoodCount($oldGroupSite);
-        }
+                    ->updateGroupSiteGoodCount($oldGroupSite);          
+        }       
+        
         
         return;
     }

@@ -27,6 +27,7 @@ use Application\Entity\ArticleToken;
 use Application\Entity\GoodToken;
 use Stock\Entity\ComitentBalance;
 use GoodMap\Filter\DecodeFoldCode;
+use Fasade\Entity\GroupSite;
 
 /**
  * Description of GoodsRepository
@@ -2174,6 +2175,36 @@ class GoodsRepository extends EntityRepository
     public function removeGoodCars($good)
     {
         $deleted = $this->getEntityManager()->getConnection()->delete('good_car', ['good_id' => $good->getId()]);
+        return $deleted;        
+    }
+    
+    /**
+     * Добавление категории к товару
+     * 
+     * @param Goods $good
+     * @param GroupSite $groupSite
+     * @return integer
+     */
+    public function addGoodCategory($good, $groupSite)
+    {
+        try{
+            $inserted = $this->getEntityManager()->getConnection()->insert('good_group_site', ['good_id' => $good->getId(), 'group_site_id' => $groupSite->getId()]);
+        } catch (Exception $e){
+            
+        }    
+        return $inserted;        
+    }
+
+    
+    /**
+     * Удаления категорий товара
+     * 
+     * @param Goods $good
+     * @return integer
+     */
+    public function removeGoodCategories($good)
+    {
+        $deleted = $this->getEntityManager()->getConnection()->delete('good_group_site', ['good_id' => $good->getId()]);
         return $deleted;        
     }
     

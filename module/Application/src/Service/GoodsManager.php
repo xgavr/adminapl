@@ -277,6 +277,9 @@ class GoodsManager
                 ->removeGoodCars($good);        
         
         $this->entityManager->getRepository(Goods::class)
+                ->removeGoodCategories($good);        
+        
+        $this->entityManager->getRepository(Goods::class)
                 ->removeGoodAttributeValues($good);  
         
         $this->entityManager->getRepository(\Application\Entity\GoodToken::class)

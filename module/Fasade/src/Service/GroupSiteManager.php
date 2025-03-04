@@ -165,8 +165,24 @@ class GroupSiteManager
             $this->entityManager->persist($tokenGroup);
         }
         
+        $parentGroup = $groupSite->getSiteGroup();
+        
+        $groupSite->getGoods()->clear();
+        
         $this->entityManager->remove($groupSite);
         $this->entityManager->flush();
+        
+        if ($parentGroup){
+            
+            $this->entityManager->getRepository(GroupSite::class)
+                    ->updateGroupSiteGoodCount($parentGroup);
+            
+            if (empty($parentGroup->getSiteGroups()->count())){
+                $parentGroup->setHasChild(GroupSite::HAS_NO_CHILD);
+                $this->entityManager->persist($parentGroup);
+                $this->entityManager->flush();
+            }
+        }
         
         return;
     }
