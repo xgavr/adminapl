@@ -160,7 +160,13 @@ class GroupSiteManager
         $this->entityManager->persist($groupSite);
         $this->entityManager->flush();
         
-        $this->updateChildFullName($groupSite);
+//        $this->updateChildFullName($groupSite);
+        
+        $childs = $this->entityManager->getRepository(GroupSite::class)
+                ->findBy(['siteGroup' => $groupSite->getId()]);
+        foreach ($childs as $child){
+            $this->updateGroupSite($child, $child->toArray());            
+        }
         
 //        if ($groupSite->getSiteGroups()){
 //            foreach ($groupSite->getSiteGroups() as $childGroup){
