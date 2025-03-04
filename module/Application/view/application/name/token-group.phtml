@@ -223,11 +223,16 @@ $this->pageBreadcrumbs()->setItems([
     }
 
     function updateTokenGroupGroupSite(tokenGroupId, groupSiteId){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: true
+        });
         $.getJSON('/name/update-token-group-category/'+tokenGroupId+'?groupSite='+groupSiteId, function( data ) {
-            if (data.row && data.id){
-                $table.bootstrapTable('updateByUniqueId', {id: data.id, row: data.row});
-            }
-        });                            
+        if (data.row && data.id){
+            $table.bootstrapTable('updateByUniqueId', {id: data.id, row: data.row});
+            dialog.modal('hide');
+        }
+    });                            
     }    
 
     function operType(rowId, rowName, rowGroupSite){        
