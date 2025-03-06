@@ -1620,5 +1620,22 @@ class NameController extends AbstractActionController
         ]);          
         
     }
+    
+    public function aiNamingAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId);
+        
+        if ($good){
+            $this->nameManager->aiNaming($good);
+        }
+        
+        return new JsonModel(
+           ['ok']
+        );                   
+        
+    }
 
 }

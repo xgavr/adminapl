@@ -187,7 +187,7 @@
                         <th colspan="3">Наименование</th>
                     </tr>
                     <tr>
-                        <td colspan="3">
+                        <td colspan="2">
                             <div style="width: 100%">
                                 <a href="#" id="good-name-editable" class="editable" 
                                    data-type="text" 
@@ -207,13 +207,16 @@
                                 </a>                                
                             </div>
                         </td> 
-<!--                        <td>
-                            <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                    title="Обновить в АПЛ">
-                                <span class="glyphicon glyphicon-export" ></span>
+                        <td>
+                            <button class="btn btn-default btn-xs ai-naming"
+                                    title="ИИ генерация">
+                                <span class="glyphicon glyphicon-fire" ></span>
                             </button>
-                        </td>-->
+                        </td>
                     </tr> 
+                    <tr>
+                        <th colspan="3">Описания поставщиков</th>
+                    </tr>
                     <?php foreach ($goods->articleTitles() as $articleTitle):?>
                         <tr>
                             <td colspan="2">
@@ -229,7 +232,7 @@
                         <th width="10">
                             <button class="btn btn-default btn-xs save-description"
                                     title="Сохранить описание">
-                                <span class="glyphicon glyphicon-save"></span>
+                                <span class="glyphicon glyphicon-floppy-save"></span>
                             </button>                                
                         </th
                     </tr>
@@ -738,6 +741,20 @@
             }); 
             return;            
         });
+        
+        $('.ai-naming').click(function (){
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: true
+            });
+            $.getJSON('/name/ai-naming/<?= $goods->getId()?>', function( data ) {
+                if (data == 'ok'){
+//                    window.location.href = '/goods/view/<?= $goods->getId()?>?tab=home-tab';
+                }
+                dialog.modal('hide');
+            });    
+            return;            
+        })
         
         $('.delete-from-category').click(function (){
             var categoryId = $(this).attr('value');
