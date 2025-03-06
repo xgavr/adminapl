@@ -2496,12 +2496,13 @@ class NameManager
             if (!empty($result['choices'])){
                 foreach ($result['choices'] as $choice){
                     if (!empty($choice['message']['content'])){
-                        var_dump($choice['message']['content']);
+//                        var_dump($choice['message']['content']);
+                        return $choice['message']['content'];
                     }    
                 }
             }
         }    
         
-        return;        
+        return [];        
     }
 }

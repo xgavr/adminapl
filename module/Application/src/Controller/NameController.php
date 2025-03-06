@@ -1627,13 +1627,13 @@ class NameController extends AbstractActionController
         
         $good = $this->entityManager->getRepository(Goods::class)
                 ->find($goodId);
-        
+        $result = [];
         if ($good){
-            $this->nameManager->aiNaming($good);
+            $result = $this->nameManager->aiNaming($good);
         }
         
         return new JsonModel(
-           ['ok']
+           $result
         );                   
         
     }

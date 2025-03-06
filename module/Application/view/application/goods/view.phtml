@@ -748,6 +748,7 @@
                 closeButton: true
             });
             $.getJSON('/name/ai-naming/<?= $goods->getId()?>', function( data ) {
+                console.log(data);
                 if (data == 'ok'){
 //                    window.location.href = '/goods/view/<?= $goods->getId()?>?tab=home-tab';
                 }
