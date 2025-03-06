@@ -162,16 +162,18 @@
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>                                
                         </th>
-                        <?php foreach ($goods->getCategories() as $groupSite):?>
-                        <td colspan="2"><?= $groupSite->getName() ?></td>
-                        <?php endforeach;?>
-                        <td width="10">
-                            <button class="btn btn-default btn-xs delete-from-category"
-                                    value="<?= $groupSite->getId() ?>" title="Удалить из категории">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </button>                                
-                        </td>
                     </tr>
+                    <?php foreach ($goods->getCategories() as $groupSite):?>
+                        <tr>
+                            <td colspan="2"><?= $groupSite->getName() ?></td>
+                            <td width="10">
+                                <button class="btn btn-default btn-xs delete-from-category"
+                                        value="<?= $groupSite->getId() ?>" title="Удалить из категории">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>                                
+                            </td>
+                        </tr>
+                    <?php endforeach;?>
                     <tr>
                         <td>
                             <a href="#" id="good-name-editable" class="editable" 
