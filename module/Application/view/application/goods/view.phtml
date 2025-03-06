@@ -192,7 +192,8 @@
                                data-type="text" 
                                data-pk="<?= $goods->getId()?>" 
                                data-name="name" 
-                               data-disabled="false" 
+                               data-disabled="false"
+                               data-mode='inline'
                                data-url="/goods/name-edit">
                                     <?php if ($goods->getName()): ?>
                                         <?= $this->escapeHtml($goods->getName()); ?>
