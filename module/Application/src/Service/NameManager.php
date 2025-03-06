@@ -2484,7 +2484,7 @@ class NameManager
                 ' Описания из прайсов:'.PHP_EOL.implode(PHP_EOL, $good->articleTitles()),
             ];
 
-            var_dump($messages); exit;
+//            var_dump($messages); exit;
 
             $result = $this->gigaManager->completions($messages, [
                 'model' => 'GigaChat-Max',
