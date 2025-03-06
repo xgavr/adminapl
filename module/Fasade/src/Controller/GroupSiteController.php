@@ -12,6 +12,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Fasade\Entity\GroupSite;
 use Fasade\Form\GroupSiteForm;
+use Application\Entity\Goods;
 
 
 class GroupSiteController extends AbstractActionController
@@ -155,4 +156,44 @@ class GroupSiteController extends AbstractActionController
         );           
     }
     
+    public function deleteGoodFromCategoryAction()
+    {
+        $id = $this->params()->fromRoute('id', -1);
+        $goodId = $this->params()->fromQuery('good', -1);
+        
+        $groupSite = $this->entityManager->getRepository(GroupSite::class)
+                ->find($id);
+
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId);
+        
+        if ($good && $groupSite){
+            $groupSite->removeGoodAssociation($good);
+        }
+        
+        return new JsonModel(
+           ['ok']
+        );           
+    }
+    
+    public function includeGooodToCategoryAction()
+    {
+        $id = $this->params()->fromRoute('id', -1);
+        $goodId = $this->params()->fromQuery('good', -1);
+        
+        $groupSite = $this->entityManager->getRepository(GroupSite::class)
+                ->find($id);
+
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId);
+        
+        if ($good && $groupSite){
+            $this->entityManager->getRepository(Goods::class)
+                    ->addGoodCategory($good, $groupSite);
+        }
+        
+        return new JsonModel(
+           ['ok']
+        );                   
+    }
 }

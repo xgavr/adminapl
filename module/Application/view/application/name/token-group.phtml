@@ -203,16 +203,7 @@ $this->pageBreadcrumbs()->setItems([
                 $('#'+node).text(data['total']);
             });
         });        
-    }
-
-    function setGroupSiteCookie(selectedValue){
-        let expires = 30;
-        Cookies.set('selectedGroupSite', selectedValue, { expires: expires});        
-    }
-    
-    function getGroupSiteCookie(){
-        return Cookies.get('selectedGroupSite');
-    }    
+    }   
     
     $(window).on('load', function() {
         totalFeatures();

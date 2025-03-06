@@ -718,8 +718,8 @@ class GoodsController extends AbstractActionController
         $offices = $this->entityManager->getRepository(Office::class)
                 ->findBy([]);
         
-        $titleFeatures = $this->entityManager->getRepository(TitleToken::class)
-                ->goodTitleFeatures($goods);
+//        $titleFeatures = $this->entityManager->getRepository(TitleToken::class)
+//                ->goodTitleFeatures($goods);
         
 //        $rests = $this->entityManager->getRepository(GoodBalance::class)
 //                ->findBy(['good' => $goods->getId()]);
@@ -747,7 +747,7 @@ class GoodsController extends AbstractActionController
             'oemSources' => \Application\Entity\Oem::getSourceList(),
             'priceStatuses' => [Rawprice::STATUS_PARSED => 'Последние'],
 //            'rate' => $rate,
-            'titleFeatures' => $titleFeatures,
+//            'titleFeatures' => $titleFeatures,
             'offices' => $offices,
 //            'rests' => $rests,
             'currentUser' => $this->logManager->currentUser(),

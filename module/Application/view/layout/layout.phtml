@@ -229,6 +229,14 @@
         return false;
     });
     
+    function setGroupSiteCookie(selectedValue){
+        let expires = 30;
+        Cookies.set('selectedGroupSite', selectedValue, { expires: expires});        
+    }
+    
+    function getGroupSiteCookie(){
+        return Cookies.get('selectedGroupSite');
+    }     
     /*
     * проверка на авторизацию
     */

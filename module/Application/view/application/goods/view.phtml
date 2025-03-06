@@ -6,6 +6,7 @@
     use Application\Filter\GoodAvailable;
     use Application\Entity\Goods;
     use ApiMarketPlace\Entity\MarketSaleReport;
+    use Fasade\Entity\GroupSite;
     
     $priceCols = $goodsManager->priceCols($goods);
     $retailCount = ($goods->getRetailCount()) ? $goods->getRetailCount():'';
@@ -36,7 +37,7 @@
             Цена: <?= $goods->getPrice(); ?>
             <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
                     title="Обновить в АПЛ">
-                <span class="glyphicon glyphicon-refresh" ></span> Обновить в АПЛ
+                <span class="glyphicon glyphicon-export" ></span> Обновить в АПЛ
             </button>
             <?= $goods->getAplIdLinkId('Ссылка на АПЛ'); ?>
         </h5>
@@ -148,75 +149,71 @@
                             <td width="10">
                                 <button value="/goods/delete-attribute/<?= $attributeValue->getAttribute()->getId()?>" type="button"
                                         class="btn btn-default btn-xs this-delete" title="Не показывать">
-                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                 </button>
                             </td>
                         </tr>                                              
                     <?php endforeach;?>
-                        <tr>
-                            <td>
-                                <a href="#" id="good-name-editable" class="editable" 
-                                   data-type="text" 
-                                   data-pk="<?= $goods->getId()?>" 
-                                   data-name="name" 
-                                   data-disabled="true" 
-                                   data-url="/goods/name-edit">
-                                        <?php if ($goods->getName()): ?>
-                                            <?= $this->escapeHtml($goods->getName()); ?>
-                                        <?php endif;?>
-                                </a>
-                            </td> 
-                            <td>
-                                <?= $goods->getAplIdLinkCode(); ?>
-                            </td>
-                            <td>
-                                <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                        title="Обновить в АПЛ">
-                                    <span class="glyphicon glyphicon-refresh" ></span>
-                                </button>
-                            </td>
-                        </tr>    
+                    <tr>
+                        <th colspan="2">Категории</th>
+                        <th width="10">
+                            <button class="btn btn-default btn-xs include-in-category"
+                                    title="Включить в категорию">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>                                
+                        </th>
+                        <?php foreach ($goods->getCategories() as $groupSite):?>
+                        <td colspan="2"><?= $groupSite->getName() ?></td>
+                        <?php endforeach;?>
+                        <td width="10">
+                            <button class="btn btn-default btn-xs delete-from-category"
+                                    value="<?= $groupSite->getId() ?>" title="Удалить из категории">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>                                
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="#" id="good-name-editable" class="editable" 
+                               data-type="text" 
+                               data-pk="<?= $goods->getId()?>" 
+                               data-name="name" 
+                               data-disabled="true" 
+                               data-url="/goods/name-edit">
+                                    <?php if ($goods->getName()): ?>
+                                        <?= $this->escapeHtml($goods->getName()); ?>
+                                    <?php endif;?>
+                            </a>
+                        </td> 
+                        <td>
+                            <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                    title="Обновить в АПЛ">
+                                <span class="glyphicon glyphicon-export" ></span>
+                            </button>
+                        </td>
+                    </tr> 
+                    <?php foreach ($goods->articleTitles() as $articleTitle):?>
                         <tr>
                             <td colspan="2">
-                                <?php foreach ($tokens as $token):?>
-                                    <span><?= $token->getLemma();?></span>
-                                <?php endforeach;?>
-                            </td> 
-                            <td>
-                                <button value="/goods/update-good-token/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                                        title="Обновить токены">
-                                    <span class="glyphicon glyphicon-refresh" ></span>
-                                </button>
+                                <?= $articleTitle?>
                             </td>
-                        </tr>    
-                </table>                    
-                <table class="table table-bordered">
-                    <p>
-                        <?php foreach ($titleFeatures as $titleFeature):?>
-                            <tr>
-                                <td align='right' width="5">
-                                    <?= $titleFeature['frequency']?>
-                                </td>
-                                <td colspan="3">
-                                    <?= $titleFeature['title']?>
-                                </td>
-                                <td width="10">
-                                    <?= $titleFeature['displayLemma']?>
-                                </td>
-                            </tr>                                              
-                        <?php endforeach;?>
-                    </p>
-                </table>                    
-                <table class="table table-bordered">
-                    <p>
-                        <?php foreach ($goods->articleTitles() as $articleTitle):?>
-                            <tr>
-                                <td>
-                                    <?= $articleTitle?>
-                                </td>
-                            </tr>                                              
-                        <?php endforeach;?>
-                    </p>
+                            <td width="10">
+                            </td>
+                        </tr>                                              
+                    <?php endforeach;?>
+                    <tr>
+                        <td>
+                            <?php foreach ($tokens as $token):?>
+                                <span><?= $token->getLemma();?></span>
+                            <?php endforeach;?>
+                        </td> 
+                        <td width="10">
+                            <button value="/goods/update-good-token/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                                    title="Обновить токены">
+                                <span class="glyphicon glyphicon-refresh" ></span>
+                            </button>
+                        </td>
+                    </tr>    
                 </table>                    
             </div>
             <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
@@ -661,6 +658,46 @@
                 });        
             }    
         })
+                
+        $('.include-in-category').click(function (){
+            $.getJSON( '/group-site/content?hasChild=<?= GroupSite::HAS_NO_CHILD?>&sort=code', function( data ) {
+                var inputOptions = [{text: 'без категории', value: -1}];
+                $.each(data.rows, function( index, value ) {
+                    inputOptions.push({text: value.fullName, value: value.id});
+                });
+                bootbox.prompt({
+                    title: 'Укажите категорию',
+                    message: '<p>Выберете категорию для <b><?= $goods->getInputName()?></b>:</p>',
+                    inputType: 'select',
+                    value: getGroupSiteCookie(),        
+                    inputOptions: inputOptions,
+                    callback: function (result) {
+    //                    console.log(result); return;               
+                        if (result){
+                            setGroupSiteCookie(result);
+                            $.getJSON('/group-site/include-good-to-category/'+result+'?good=<?= $goods->getId()?>', function( data ) {
+                            if (data == 'ok'){
+                                window.location.href = '/goods/view/<?= $goods->getId()?>?tab=home-tab';
+                            }
+                        }    
+                    }
+                });
+            }); 
+            return;            
+        })
+        
+        $('.delete-from-category').click(function (){
+            bootbox.confirm("Исключить из категории <?= $goods->getInputName()?>?", function(result){ 
+                if (result){                            
+                    $.getJSON('/group-site/delete-good-from-category/'+$(this).attr('value')+'?good=<?= $goods->getId()?>', function( data ) {
+                    if (data == 'ok'){
+                        window.location.href = '/goods/view/<?= $goods->getId()?>?tab=home-tab';
+                    }
+                }
+            });
+            return;            
+        })
+        
         $('#priceStatusSelect').change(function (){
             $('#priceTable').bootstrapTable('refresh');
         })
