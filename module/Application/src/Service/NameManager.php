@@ -42,6 +42,7 @@ use Fasade\Entity\GroupSite;
 
 use Laminas\Config\Config;
 use Laminas\Config\Writer\PhpArray;
+use Laminas\Json\Decoder;
 
 
 /**
@@ -2497,7 +2498,11 @@ class NameManager
                 foreach ($result['choices'] as $choice){
                     if (!empty($choice['message']['content'])){
 //                        var_dump($choice['message']['content']);
-                        return $choice['message']['content'];
+                        try{
+                            return Decoder::decode($choice['message']['content'], \Laminas\Json\Json::TYPE_ARRAY);
+                        } catch (Exception $e){
+                            
+                        }    
                     }    
                 }
             }
