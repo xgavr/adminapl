@@ -1630,6 +1630,7 @@ class NameController extends AbstractActionController
         $result = [];
         if ($good){
             $result = $this->nameManager->aiNaming($good);
+            var_dump($result); exit;
         }
         
         return new JsonModel(
