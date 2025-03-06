@@ -754,7 +754,7 @@
                 }
                 if (data.description){
 //                    $("#description").html(data.description);
-                    $('#description').contents().find('body').html(data.description);
+                    $('#description').data("wysihtml5").editor.setValue(data.description);
                 }
                 dialog.modal('hide');
             });    
