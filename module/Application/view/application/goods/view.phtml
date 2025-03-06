@@ -748,6 +748,7 @@
                 closeButton: true
             });
             $.getJSON('/name/ai-naming/<?= $goods->getId()?>', function( data ) {
+                console.log(data);
                 if (data.name){
                     $("#good-name-editable").val(data.name);
                 }
