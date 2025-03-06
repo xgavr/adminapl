@@ -678,23 +678,25 @@
                         if (result){
                             setGroupSiteCookie(result);
                             $.getJSON('/group-site/include-good-to-category/'+result+'?good=<?= $goods->getId()?>', function( data ) {
-                            if (data == 'ok'){
-                                window.location.href = '/goods/view/<?= $goods->getId()?>?tab=home-tab';
-                            }
-                        }    
+                                if (data == 'ok'){
+                                    window.location.href = '/goods/view/<?= $goods->getId()?>?tab=home-tab';
+                                }
+                            });    
+                        };    
                     }
                 });
             }); 
             return;            
-        })
+        });
         
         $('.delete-from-category').click(function (){
             bootbox.confirm("Исключить из категории <?= $goods->getInputName()?>?", function(result){ 
                 if (result){                            
                     $.getJSON('/group-site/delete-good-from-category/'+$(this).attr('value')+'?good=<?= $goods->getId()?>', function( data ) {
-                    if (data == 'ok'){
-                        window.location.href = '/goods/view/<?= $goods->getId()?>?tab=home-tab';
-                    }
+                        if (data == 'ok'){
+                            window.location.href = '/goods/view/<?= $goods->getId()?>?tab=home-tab';
+                        }
+                    });    
                 }
             });
             return;            
