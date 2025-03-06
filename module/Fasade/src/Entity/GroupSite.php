@@ -11,6 +11,7 @@ namespace Fasade\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\TokenGroup;
+use Application\Entity\Goods;
 
 
 /**
@@ -364,11 +365,11 @@ class GroupSite
     
     /**
      * 
-     * @param Good $good
+     * @param Goods $good
      */
     public function removeGoodAssociation($good) 
     {
-        $this->goods->removeElement($good);
+        $good->removeCategoryAssociation($this);
     } 
     
     

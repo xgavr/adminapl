@@ -169,7 +169,10 @@ class GroupSiteController extends AbstractActionController
         
         if ($good && $groupSite){
             $groupSite->removeGoodAssociation($good);
+//            $this->entityManager->persist($groupSite);
             $this->entityManager->flush();
+            $this->entityManager->getRepository(GroupSite::class)
+                    ->updateGroupSiteGoodCount($groupSite);
         }
         
         return new JsonModel(
@@ -191,6 +194,8 @@ class GroupSiteController extends AbstractActionController
         if ($good && $groupSite){
             $this->entityManager->getRepository(Goods::class)
                     ->addGoodCategory($good, $groupSite);
+            $this->entityManager->getRepository(GroupSite::class)
+                    ->updateGroupSiteGoodCount($groupSite);
         }
         
         return new JsonModel(
