@@ -750,7 +750,7 @@
             $.getJSON('/name/ai-naming/<?= $goods->getId()?>', function( data ) {
 //                console.log(data.name);
                 if (data.name){
-                    $("#good-name-editable").html(data.name);
+                    $('#good-name-editable').editable('setValue', data.name);
                 }
                 if (data.description){
 //                    $("#description").html(data.description);
