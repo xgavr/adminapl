@@ -748,12 +748,12 @@
                 closeButton: true
             });
             $.getJSON('/name/ai-naming/<?= $goods->getId()?>', function( data ) {
-                console.log(data.name);
+//                console.log(data.name);
                 if (data.name){
-                    $("#good-name-editable").val(data.name);
+                    $("#good-name-editable").html(data.name);
                 }
                 if (data.description){
-                    $("#description").val(data.description);
+                    $("#description").html(data.description);
                 }
                 dialog.modal('hide');
             });    
