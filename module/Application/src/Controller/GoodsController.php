@@ -1754,6 +1754,23 @@ class GoodsController extends AbstractActionController
         exit;
     }  
     
+    public function descriptionEditAction()
+    {
+        if ($this->getRequest()->isPost()) {
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            $goodId = $data['pk'];
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($goodId);
+                    
+            if ($good && $data['value']){
+                $this->goodsManager->updateGoodDescription($good, $data['value']);                    
+            }    
+        }
+        
+        exit;
+    }  
+    
     public function attributeEditAction()
     {
         if ($this->getRequest()->isPost()) {

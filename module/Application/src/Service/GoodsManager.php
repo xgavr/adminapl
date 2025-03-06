@@ -166,6 +166,22 @@ class GoodsManager
     {
         $good->setName($name);
         $good->setStatusNameEx(Goods::NAME_EX_NEW);
+        $good->setFasadeEx(Goods::FASADE_EX_NEW);
+        $this->entityManager->persist($good);
+        $this->entityManager->flush($good);        
+    }
+    
+    /**
+     * Обновить описание товара
+     * 
+     * @param Goods $good
+     * @param string $description
+     */
+    public function updateGoodDescription($good, $description)
+    {
+        $good->setDescription($description);
+        $good->setStatusNameEx(Goods::NAME_EX_NEW);
+        $good->setFasadeEx(Goods::FASADE_EX_NEW);
         $this->entityManager->persist($good);
         $this->entityManager->flush($good);        
     }
