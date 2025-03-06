@@ -753,7 +753,8 @@
                     $("#good-name-editable").html(data.name);
                 }
                 if (data.description){
-                    $("#description").html(data.description);
+//                    $("#description").html(data.description);
+                    $('#description').contents().find('body').html(data.description);
                 }
                 dialog.modal('hide');
             });    
