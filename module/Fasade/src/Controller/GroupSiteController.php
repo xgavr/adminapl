@@ -176,7 +176,7 @@ class GroupSiteController extends AbstractActionController
         );           
     }
     
-    public function includeGooodToCategoryAction()
+    public function includeGoodToCategoryAction()
     {
         $id = $this->params()->fromRoute('id', -1);
         $goodId = $this->params()->fromQuery('good', -1);
