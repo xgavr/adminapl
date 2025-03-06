@@ -81,7 +81,7 @@
                             <?php endif; ?>
                         </div>
                         <div class="pull-right">                                    
-                            <button value="/goods/delete-image/<?= $image->getId()?>" class="btn btn-warning btn-xs this-delete"
+                            <button value="/goods/delete-image/<?= $image->getId()?>" class="btn btn-default btn-xs this-delete"
                                     title="Удалить">
                                 <span class="glyphicon glyphicon-trash" ></span>
                             </button>                             
@@ -192,7 +192,7 @@
                                data-type="text" 
                                data-pk="<?= $goods->getId()?>" 
                                data-name="name" 
-                               data-disabled="true" 
+                               data-disabled="false" 
                                data-url="/goods/name-edit">
                                     <?php if ($goods->getName()): ?>
                                         <?= $this->escapeHtml($goods->getName()); ?>

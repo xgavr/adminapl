@@ -169,6 +169,7 @@ class GroupSiteController extends AbstractActionController
         
         if ($good && $groupSite){
             $groupSite->removeGoodAssociation($good);
+            $this->entityManager->flush();
         }
         
         return new JsonModel(
