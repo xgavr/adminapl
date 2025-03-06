@@ -121,6 +121,12 @@
         <div class="tab-content" id="featureTabContent">
             <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
                 <table class="table table-bordered">
+                    <tr>
+                        <th colspan="3">Характеристики</th>
+                    </tr>
+                    <?php if (!$goods->getAttributeValues()->count()):?>
+                        <tr><td colspan="3"><i>Нет характеристик</i></td></tr>
+                    <?php endif;?>
                     <?php foreach ($goods->getAttributeValues() as $attributeValue):?>
                         <tr style="text-decoration: <?= $attributeValue->getAttribute()->getStatusDecorationAsString()?>">
                             <td align='right'>
@@ -163,6 +169,9 @@
                             </button>                                
                         </th>
                     </tr>
+                    <?php if (!$goods->getCategories()->count()):?>
+                        <tr><td colspan="3"><i>Нет категорий</i></td></tr>
+                    <?php endif;?>
                     <?php foreach ($goods->getCategories() as $groupSite):?>
                         <tr>
                             <td colspan="2"><?= $groupSite->getName() ?></td>
@@ -175,7 +184,10 @@
                         </tr>
                     <?php endforeach;?>
                     <tr>
-                        <td>
+                        <th colspan="3">Наименование</th>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
                             <a href="#" id="good-name-editable" class="editable" 
                                data-type="text" 
                                data-pk="<?= $goods->getId()?>" 
@@ -204,7 +216,7 @@
                         </tr>                                              
                     <?php endforeach;?>
                     <tr>
-                        <td>
+                        <td colspan="2">
                             <?php foreach ($tokens as $token):?>
                                 <span><?= $token->getLemma();?></span>
                             <?php endforeach;?>
@@ -216,6 +228,9 @@
                             </button>
                         </td>
                     </tr>    
+                    <tr>
+                        <th colspan="3">Наименование</th>
+                    </tr>
                 </table>                    
             </div>
             <div class="tab-pane fade" role="tabpanel" id="oem" aria-labelledby="oem-tab">
