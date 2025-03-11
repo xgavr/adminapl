@@ -31,6 +31,7 @@ use Application\Entity\Goods;
 use Application\Entity\GoodSupplier;
 use Application\Entity\Oem;
 use Laminas\Json\Decoder;
+use Kily\Tools\Upd\Parser;
 
 /**
  * Description of BillManager
@@ -526,6 +527,111 @@ class BillManager
         ]);                
         
         return $result;
+    }
+    
+    /**
+     * Преобразовать xml в array
+     * @param Supplier $supplier
+     * @param string $filename
+     * @param string $filepath
+     * @param string $sender
+     * @param string $subject
+     * @return array
+     */
+    
+    protected function _xml2array($supplier, $filename, $filepath, $sender, $subject)
+    {
+        ini_set('memory_limit', '512M');
+        $result = [];
+        
+        if (file_exists($filepath)){
+            
+            if (!filesize($filepath)){
+                return;
+            }
+
+            $data = Parser::parseFile($filepath, false);
+            
+            $result[] = [
+                '',
+                '',
+                'Номер',
+                'Дата',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+            ];
+            
+            $result[] = [
+                '',
+                '',
+                'НомерСчФ' => $data['Документ']['СвСчФакт']['@attributes']['НомерСчФ'] ?? '',
+                'ДатаСчФ' => $data['Документ']['СвСчФакт']['@attributes']['ДатаСчФ'] ?? '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+            ];
+            
+            $result[] = [
+                'Код',
+                'Артикул',
+                'Наименование',
+                'Количество',
+                'ОКЕИ',
+                'ЕИ',
+                'Сумма',
+                'Код Страны',
+                'Страна',
+                'НТД',
+            ];
+            
+            foreach ($data['Документ']['ТаблСчФакт']['СведТов'] as $row){
+                $result[] = [
+                    'КодТов' => $row['ДопСведТов']['@attributes']['КодТов'] ?? '',
+                    'АртикулТов' => $row['ДопСведТов']['@attributes']['АртикулТов'] ?? '',
+                    'НаимТов' => $row['@attributes']['НаимТов']?? '',
+                    'КолТов' => $row['@attributes']['КолТов'] ?? '',
+                    'ОКЕИ_Тов' => $row['@attributes']['ОКЕИ_Тов'] ?? '',
+                    'НаимЕдИзм' => $row['ДопСведТов']['@attributes']['НаимЕдИзм'] ?? '',                    
+                    'СтТовУчНал' => $row['@attributes']['СтТовУчНал'] ?? '',                    
+                    'КодПроисх' => $row['СвТД']['@attributes']['КодПроисх'] ?? '',                    
+                    'КрНаимСтрПр' => $row['ДопСведТов']['@attributes']['КрНаимСтрПр'] ?? '',
+                    'НомерТД' => $row['СвТД']['@attributes']['НомерТД'] ?? '',
+                ];
+            }
+            
+            $result[] = [
+                '',
+                '',
+                '',
+                '',
+                '',
+                'Итого',
+                'СтТовУчНалВсего' => $data['Документ']['ТаблСчФакт']['ВсегоОпл']['@attributes']['СтТовУчНалВсего'] ?? '',                    
+                '',
+                '',
+                '',
+            ];
+            
+        }                
+        
+        $this->addIdoc($supplier, [
+            'status' => Idoc::STATUS_ACTIVE,
+            'name' => $filename,
+            'description' => Encoder::encode($result),
+            'docKey' => null,
+            'sender' => $sender,
+            'subject' => $subject,
+            'tmpfile' => $filepath,
+        ]);                
+        
+        return $result;
     }    
 
     /**
@@ -554,6 +660,10 @@ class BillManager
             
             if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
                 return $this->_xls2array($supplier, $filename, $filepath, $sender, $subject);            
+            }
+            
+            if (in_array(strtolower($pathinfo['extension']), ['xml'])){
+                return $this->_xml2array($supplier, $filename, $filepath, $sender, $subject);            
             }
             
             if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){

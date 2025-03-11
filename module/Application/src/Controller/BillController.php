@@ -167,6 +167,7 @@ class BillController extends AbstractActionController
         if ($idocId>0) {
             $idoc = $this->entityManager->getRepository(Idoc::class)
                     ->find($idocId);
+//            var_dump($idoc->getDescriptionAsArray());
             if (!$billSetting){
                 $billSetting = $this->entityManager->getRepository(BillSetting::class)
                         ->billSettingForIdoc($idoc);
