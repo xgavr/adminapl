@@ -246,7 +246,8 @@ class BillSetting {
         
         $result = preg_replace('/[^а-яА-Я]/ui', '', str_replace($blackListRu, '', $name));
         if (empty($result)){
-            $result = preg_replace('/[^a-zA-Z]/ui', '',$name );            
+            $name0 = explode('-', $name);
+            $result = preg_replace('/[^a-zA-Z]/ui', '',$name0[0]);            
         }
                 
         if (empty($result)){
