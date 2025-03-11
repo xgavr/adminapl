@@ -552,6 +552,8 @@ class BillManager
 
             $data = Parser::parseFile($filepath, false);
             
+//            var_dump($data); exit;
+            
             $result[] = [
                 '',
                 '',
@@ -591,7 +593,15 @@ class BillManager
                 'НТД',
             ];
             
-            foreach ($data['Документ']['ТаблСчФакт'] as $row){
+            /**
+             * если много строк в документе то массив, иначе нет массива (косяки парсера или контура)
+             */
+            $rows = $data['Документ']['ТаблСчФакт']['СведТов'];
+            if (!empty($data['Документ']['ТаблСчФакт']['СведТов']['@attributes'])){
+                $rows = $data['Документ']['ТаблСчФакт'];
+            }
+            
+            foreach ($rows as $row){
                 $result[] = [
                     'КодТов' => $row['ДопСведТов']['@attributes']['КодТов'] ?? '',
                     'АртикулТов' => $row['ДопСведТов']['@attributes']['АртикулТов'] ?? '',
