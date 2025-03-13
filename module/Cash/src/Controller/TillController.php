@@ -494,7 +494,7 @@ class TillController extends AbstractActionController
                    ['ok']
                 );           
             } else {
-//                var_dump($form->getMessages());
+                var_dump($form->getMessages());
             }
         } else {
             if ($cashDoc){
