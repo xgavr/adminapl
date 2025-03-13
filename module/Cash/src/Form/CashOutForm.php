@@ -228,6 +228,7 @@ class CashOutForm extends Form
             'name' => 'legal',
             'attributes' => [
                 'id' => 'legal',
+                'required' => false,
             ],
             'options' => [
                 'label' => 'Юр. лицо',
@@ -239,6 +240,7 @@ class CashOutForm extends Form
             'name' => 'contract',
             'attributes' => [
                 'id' => 'contract',
+                'required' => false,
             ],
             'options' => [
                 'label' => 'Договор',

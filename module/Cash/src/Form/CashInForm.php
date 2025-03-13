@@ -219,6 +219,7 @@ class CashInForm extends Form
             'name' => 'legal',
             'attributes' => [
                 'id' => 'legal',
+                'required' => false,
             ],
             'options' => [
                 'label' => 'Юр. лицо',
@@ -230,6 +231,7 @@ class CashInForm extends Form
             'name' => 'contract',
             'attributes' => [
                 'id' => 'contract',
+                'required' => false,
             ],
             'options' => [
                 'label' => 'Договор',
