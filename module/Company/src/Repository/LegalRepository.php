@@ -336,7 +336,7 @@ class LegalRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('c')
-                ->from(Contract::class)
+                ->from(Contract::class, 'c')
                 ->join('c.legal', 'l')
                 ->join('l.contacts', 'cnt')
                 ->where('cnt.client = :client')
