@@ -265,7 +265,7 @@ class CashManager {
             if ($cashDoc->getOrder()){
                 $contractOffice = $cashDoc->getOrder()->getOffice();
             }
-            $contract = $cashDoc->getContact();
+            $contract = $cashDoc->getContract();
             if (empty($contract)){
                 $contract = $this->findDefaultContract($contractOffice, 
                         $cashDoc->getLegal(), $cashDoc->getDateOper(), $cashDoc->getId(),
