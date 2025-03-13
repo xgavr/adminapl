@@ -291,11 +291,13 @@ $form->prepare();
     }
     
     
-    function contactName(){
+    function contactName(onload = flase){
         if ($('#phone').val()){
             $.getJSON( '/till/phone-contact?phone='+$('#phone').val(), function( data ) {
                 $('#contactName').html(data.name);
-                contracts(data.contracts);
+                if (!onload){
+                    contracts(data.contracts);
+                }
             });            
         }    
         if ($('#orderApl').val()){
@@ -303,7 +305,9 @@ $form->prepare();
                 $('#contactName').html(data.name);
                 $('#phone').val(data.phone);
                 $('#order').val(data.order);
-                contracts(data.contracts);
+                if (!onload){
+                    contracts(data.contracts);
+                }
             });            
         }    
     }
@@ -356,7 +360,7 @@ $form->prepare();
     $( document ).ready(function() {
         
         showKindOutGroup();
-        contactName();
+        contactName(true);
         <?php if (!$cashDoc): ?>
             cashChange();   
         <?php endif; ?>    
