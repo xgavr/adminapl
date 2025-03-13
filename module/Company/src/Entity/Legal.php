@@ -649,6 +649,7 @@ class Legal {
     
     /**
      * Assigns.
+     * @param BankAccount $bankAccount
      */
     public function addBankAccount($bankAccount)
     {

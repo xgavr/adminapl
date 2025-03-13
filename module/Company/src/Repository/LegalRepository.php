@@ -14,6 +14,7 @@ use Application\Entity\Contact;
 use Company\Entity\Contract;
 use Company\Entity\BankAccount;
 use Company\Entity\EdoOperator;
+use Application\Entity\Client;
 
 /**
  * Description of SupplierRepository
@@ -322,5 +323,28 @@ class LegalRepository extends EntityRepository
                 
 
         return $queryBuilder->getQuery()->getResult();        
+    }
+    
+    /**
+     * 
+     * @param Client $client
+     */
+    public function clientContracts($client)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('c')
+                ->from(Contract::class)
+                ->join('c.legal', 'l')
+                ->join('l.contacts', 'cnt')
+                ->where('cnt.client = :client')
+                ->setParameter('client', $client->getId())
+                ->addOrderBy('c.status', 'asc')
+                ->addOrderBy('c.dateStart', 'desc')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult(); 
     }
 }

@@ -265,9 +265,12 @@ class CashManager {
             if ($cashDoc->getOrder()){
                 $contractOffice = $cashDoc->getOrder()->getOffice();
             }
-            $contract = $this->findDefaultContract($contractOffice, 
-                    $cashDoc->getLegal(), $cashDoc->getDateOper(), $cashDoc->getId(),
-                    $cashDoc->getContractKind(), $cashDoc->contractPayCash());
+            $contract = $cashDoc->getContact();
+            if (empty($contract)){
+                $contract = $this->findDefaultContract($contractOffice, 
+                        $cashDoc->getLegal(), $cashDoc->getDateOper(), $cashDoc->getId(),
+                        $cashDoc->getContractKind(), $cashDoc->contractPayCash());
+            }    
 
             $data = [
                 'doc_key' => $cashDoc->getLogKey(),
@@ -345,9 +348,12 @@ class CashManager {
                 $contractOffice = $cashDoc->getOrder()->getOffice();
             }
             if ($cashDoc->getLegal()){
-                $contract = $this->findDefaultContract($contractOffice, 
-                        $cashDoc->getLegal(), $cashDoc->getDateOper(), $cashDoc->getId(),
-                        $cashDoc->getContractKind(), $cashDoc->contractPayCash());
+                $contract = $cashDoc->getContract();
+                if (empty($contract)){
+                    $contract = $this->findDefaultContract($contractOffice, 
+                            $cashDoc->getLegal(), $cashDoc->getDateOper(), $cashDoc->getId(),
+                            $cashDoc->getContractKind(), $cashDoc->contractPayCash());
+                }    
                 $legalId = $cashDoc->getLegal()->getId();
                 $contractId = $contract->getId();
             }
@@ -951,6 +957,7 @@ class CashManager {
         $cashDoc->setInfo(empty($data['info']) ? null:$data['info']);
         $cashDoc->setKind($data['kind']);
         $cashDoc->setLegal(empty($data['legal']) ? null:$data['legal']);
+        $cashDoc->setContract(empty($data['contract']) ? null:$data['contract']);
         $cashDoc->setOrder(empty($data['order']) ? null:$data['order']);
         $cashDoc->setStatus($data['status']);
         $cashDoc->setStatusEx(empty($data['statusEx']) ? CashDoc::STATUS_EX_NEW:$data['statusEx']);
@@ -1011,6 +1018,7 @@ class CashManager {
         $cashDoc->setInfo(empty($data['info']) ? null:$data['info']);
         $cashDoc->setKind($data['kind']);
         $cashDoc->setLegal(empty($data['legal']) ? null:$data['legal']);
+        $cashDoc->setContract(empty($data['contract']) ? null:$data['contract']);
         $cashDoc->setOrder(empty($data['order']) ? null:$data['order']);
         $cashDoc->setStatus($data['status']);
         $cashDoc->setStatusEx(empty($data['statusEx']) ? CashDoc::STATUS_EX_NEW:$data['statusEx']);

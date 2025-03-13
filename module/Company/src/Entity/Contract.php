@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Company\Entity\Legal;
 use Company\Entity\Office;
 use Bank\Entity\Payment;
+use Cash\Entity\CashDoc;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -129,6 +130,13 @@ class Contract {
     * @ORM\JoinColumn(name="id", referencedColumnName="contract_id")
    */
    private $mutuals;        
+   
+    /**
+    * @ORM\OneToMany(targetEntity="Cash\Entity\CashDoc", mappedBy="contract")
+    * @ORM\JoinColumn(name="id", referencedColumnName="contract_id")
+    */
+    private $cashDocs;
+   
 
     /**
      * Constructor.
@@ -137,6 +145,7 @@ class Contract {
     {
         $this->ptu = new ArrayCollection();
         $this->mutuals = new ArrayCollection();
+        $this->cashDocs = new ArrayCollection();
     }
 
     public function getId() 
@@ -558,6 +567,19 @@ class Contract {
         return $this->mutuals;
     }
     
+    
+    public function getCashDocs() {
+        return $this->cashDocs;
+    }
+
+    /**
+     * 
+     * @param CashDoc $cashDoc
+     */
+    public function addCashDoc($cashDoc) {
+        $this->cashDocs[] = $cashDoc;
+    }
+
     /**
      * Массив для формы
      * @return array 

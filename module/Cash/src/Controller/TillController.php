@@ -22,6 +22,7 @@ use Application\Entity\Order;
 use Bank\Entity\Statement;
 use Bank\Entity\QrCodePayment;
 use User\Entity\User;
+use Company\Entity\Contract;
 
 
 class TillController extends AbstractActionController
@@ -210,15 +211,24 @@ class TillController extends AbstractActionController
             return;
         }
         
-        $clientId = null;
+        $clientId = null; $contracts = [];
         if ($phone->getContact()->getClient()){
-            $clientId = $phone->getContact()->getClient()->getId();
+            $client = $phone->getContact()->getClient();
+            $clientId = $client->getId();
+            
+            $clientContracts = $this->entityManager->getRepository(Contract::class)
+                    ->clientContracts($client);
+            
+            foreach ($clientContracts as $contract){
+                $contracts[$contract->getId()] = $contract->getContractPresentPay();
+            }
         }
         
         return new JsonModel([
             'name' => $phone->getContact()->getName(),
             'id' => $phone->getContact()->getId(),
             'clientId' => $clientId,
+            'contracts' => $contracts,
         ]);                  
     }
 
@@ -236,11 +246,18 @@ class TillController extends AbstractActionController
             $this->getResponse()->setStatusCode(404);
             return;
         }
-        
+        $contracts = [];
+        $clientContracts = $this->entityManager->getRepository(Contract::class)
+                ->clientContracts($order->getClient());
+
+        foreach ($clientContracts as $contract){
+            $contracts[$contract->getId()] = $contract->getContractPresentPay();
+        }        
         return new JsonModel([
             'name' => $order->getContact()->getName(),
             'phone' => ($order->getContact()->getPhone()) ? $order->getContact()->getPhone()->getName():null,
             'order' => $order->getId(),
+            'contracts' => $contracts,
         ]);                  
     }
 

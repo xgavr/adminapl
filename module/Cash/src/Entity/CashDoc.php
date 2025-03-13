@@ -177,6 +177,12 @@ class CashDoc {
     private $legal;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Company\Entity\Contract", inversedBy="cashDocs") 
+     * @ORM\JoinColumn(name="contract_id", referencedColumnName="id")
+     */
+    private $contract;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="companyCashDocs") 
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
      */
@@ -1098,6 +1104,31 @@ class CashDoc {
         $this->legal = $legal;
     }
 
+    /**
+     * 
+     * @return Contract
+     */
+    public function getContract() {
+        return $this->contract;
+    }
+
+    /**
+     * 
+     * @param Contract $contract
+     * @return $this
+     */
+    public function setContract($contract) {
+        $this->contract = $contract;
+        if ($contract){
+            $contract->addCashDoc($this);
+        }
+        return $this;
+    }
+        
+    /**
+     * 
+     * @return Legal
+     */
     public function getCompany()
     {
         return $this->company;
@@ -1205,6 +1236,7 @@ class CashDoc {
             'info' => $this->info,
             'kind' => $this->kind,
             'legal' => ($this->legal) ? $this->legal->getId():null,
+            'contract' => ($this->contract) ? $this->contract->getId():null,
             'legalData' => ($this->legal) ? $this->getLegal()->toArray():null,
             'supplier' => $this->getDefaultSupplierId(),
             'order' => ($this->order) ? $this->order->getId():null,
@@ -1238,6 +1270,7 @@ class CashDoc {
             'info' => $this->info,
             'kind' => $this->kind,
             'legal' => ($this->legal) ? $this->legal->toArray():null,
+            'contract' => ($this->contract) ? $this->contract->toArray():null,
             'supplierAplId' => $this->getDefaultSupplierAplId(),
 //            'order' => ($this->order) ? $this->order->getAplId():null,
             'order' => ($this->order) ? $this->order->toArray():null,
@@ -1273,6 +1306,7 @@ class CashDoc {
             'info' => $this->info,
             'kind' => $this->kind,
             'legal' => ($this->legal) ? $this->legal->getId():null,
+            'contract' => ($this->contract) ? $this->contract->getId():null,
             'supplier' => $this->getDefaultSupplierId(),
             'order' => ($this->order) ? $this->order->getAplId():null,
             'status' => $this->status,

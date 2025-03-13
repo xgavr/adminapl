@@ -214,6 +214,28 @@ class CashInForm extends Form
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'legal',
+            'attributes' => [
+                'id' => 'legal',
+            ],
+            'options' => [
+                'label' => 'Юр. лицо',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'contract',
+            'attributes' => [
+                'id' => 'contract',
+            ],
+            'options' => [
+                'label' => 'Договор',
+            ],
+        ]);
+        
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',

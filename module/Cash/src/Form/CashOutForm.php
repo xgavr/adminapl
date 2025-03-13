@@ -225,6 +225,28 @@ class CashOutForm extends Form
         
         $this->add([            
             'type'  => 'select',
+            'name' => 'legal',
+            'attributes' => [
+                'id' => 'legal',
+            ],
+            'options' => [
+                'label' => 'Юр. лицо',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'contract',
+            'attributes' => [
+                'id' => 'contract',
+            ],
+            'options' => [
+                'label' => 'Договор',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
             'name' => 'cost',
             'attributes' => [
                 'id' => 'cost',

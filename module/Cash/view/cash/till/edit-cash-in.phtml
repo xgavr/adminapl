@@ -58,6 +58,15 @@ $form->get('company')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('legal')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('contract')->setAttributes([
+    'class'=>'form-control', 
+    'required' => false,
+    ]);
+
 $form->get('supplier')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -96,9 +105,16 @@ $form->prepare();
                 </div>
                 <div class="col-xs-3">                        
                     <div class="form-group">
-                        <?= $this->formLabel($form->get('company')); ?>
-                        <?= $this->formElement($form->get('company')); ?>
-                        <?= $this->formElementErrors($form->get('company')); ?>                  
+                        <?= $this->formLabel($form->get('dateOper')); ?>
+                        <?= $this->formElement($form->get('dateOper')); ?>
+                        <?= $this->formElementErrors($form->get('dateOper')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('status')); ?>
+                        <?= $this->formElement($form->get('status')); ?>
+                        <?= $this->formElementErrors($form->get('status')); ?>                  
                     </div>
                 </div>    
             </div>
@@ -112,16 +128,9 @@ $form->prepare();
                 </div>    
                 <div class="col-xs-3">                        
                     <div class="form-group">
-                        <?= $this->formLabel($form->get('dateOper')); ?>
-                        <?= $this->formElement($form->get('dateOper')); ?>
-                        <?= $this->formElementErrors($form->get('dateOper')); ?>                  
-                    </div>
-                </div>    
-                <div class="col-xs-3">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('status')); ?>
-                        <?= $this->formElement($form->get('status')); ?>
-                        <?= $this->formElementErrors($form->get('status')); ?>                  
+                        <?= $this->formLabel($form->get('company')); ?>
+                        <?= $this->formElement($form->get('company')); ?>
+                        <?= $this->formElementErrors($form->get('company')); ?>                  
                     </div>
                 </div>    
             </div>    
@@ -162,7 +171,9 @@ $form->prepare();
                 </div>    
                 <div class="col-xs-3">                        
                     <div class="form-group">
-                        <div></div>
+                        <?= $this->formLabel($form->get('contract')); ?>
+                        <?= $this->formElement($form->get('contract')); ?>
+                        <?= $this->formElementErrors($form->get('contract')); ?>                  
                     </div>
                 </div>    
             </div>    
@@ -269,14 +280,14 @@ $form->prepare();
     {
         $('#refill').hide();
         $('#cashRefill').attr('required', false);
-        if ($("#kind").val() == <?= CashDoc::KIND_IN_REFILL?>){
+        if ($("#kind").val() === '<?= CashDoc::KIND_IN_REFILL?>'){
             $('#refill').show();
             $('#cashRefill').attr('required', true);
         }
         
         $('#userReturn').hide();
         $('#userRefill').attr('required', false);
-        if ($("#kind").val() == <?= CashDoc::KIND_IN_RETURN_USER?>){
+        if ($("#kind").val() === '<?= CashDoc::KIND_IN_RETURN_USER?>'){
             $('#userReturn').show();
             $('#userRefill').attr('required', true);
         }
@@ -285,7 +296,7 @@ $form->prepare();
         $('#orderApl').attr('required', false);
         $('#legal').attr('required', false);
         $('#phone').attr('required', false);
-        if ($("#kind").val() == <?= CashDoc::KIND_IN_PAYMENT_CLIENT?>){
+        if ($("#kind").val() === '<?= CashDoc::KIND_IN_PAYMENT_CLIENT?>'){
             $('#payment').show();
             $('#phone').attr('required', true);
 //            $('#orderApl').attr('required', true);
@@ -295,7 +306,7 @@ $form->prepare();
         $('#supplierReturn').hide();
         $('#supplier').attr('required', false);
         $('#legal').attr('required', false);
-        if ($("#kind").val() == <?= CashDoc::KIND_IN_RETURN_SUPPLIER?>){
+        if ($("#kind").val() === '<?= CashDoc::KIND_IN_RETURN_SUPPLIER?>'){
             $('#supplierReturn').show();
             $('#supplier').attr('required', true);
             $('#legal').attr('required', true);
