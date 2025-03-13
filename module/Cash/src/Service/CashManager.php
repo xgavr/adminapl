@@ -844,6 +844,10 @@ class CashManager {
             $data['legal'] = $this->entityManager->getRepository(Legal::class)
                     ->find($data['legal']);
         }
+        if (!empty($data['contract'])){
+            $data['contract'] = $this->entityManager->getRepository(Contract::class)
+                    ->find($data['contract']);
+        }
         if (!empty($data['cost'])){
             $data['cost'] = $this->entityManager->getRepository(Cost::class)
                     ->find($data['cost']);
@@ -1251,7 +1255,7 @@ class CashManager {
         }  
         
         if ($order){
-            $contractsList = ['авто' => 'авто'];
+            $contractsList = [-1 => 'авто'];
             $contracts = $this->entityManager->getRepository(Contract::class)
                     ->clientContracts($order->getClient());
             foreach ($contracts as $contract){

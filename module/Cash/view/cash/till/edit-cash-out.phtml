@@ -284,7 +284,7 @@ $form->prepare();
     
     function contracts(contracts){
         $('#contract').empty();
-        $('#contract').append('<option value="авто">авто</option>');
+        $('#contract').append('<option value="-1">авто</option>');
         $.each( contracts, function( key, value ) {
             $('#contract').append('<option value="' + key + '">' + value + '</option>');
         });

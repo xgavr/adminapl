@@ -306,6 +306,26 @@ class CashInForm extends Form
                 ],
             ]);        
         
+        $inputFilter->add([
+                'name'     => 'legal',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                ],
+            ]);        
+        
+        $inputFilter->add([
+                'name'     => 'contract',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                ],
+            ]);        
+        
     }    
     
     public function setObjectManager(ObjectManager $objectManager)
