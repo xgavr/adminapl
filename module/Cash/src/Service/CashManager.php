@@ -1137,6 +1137,10 @@ class CashManager {
             $statementId = null, $orderId = null)
     {
         $user = $this->logManager->currentUser();
+        $order = null;
+        if ($cashDoc){
+            $order = $cashDoc->getOrder();
+        }    
         if ($form->has('cash')){
             if ($cashDoc){
                 $cash = $cashDoc->getCash();
@@ -1243,8 +1247,18 @@ class CashManager {
             foreach ($legals as $legal){
                 $companyList[$legal->getId()] = $legal->getName();
             }            
-            $form->get('company')->setValueOptions($companyList);
-        }    
+            $form->get('company')->setValueOptions($companyList);                        
+        }  
+        
+        if ($order){
+            $contractsList = ['авто' => 'авто'];
+            $contracts = $this->entityManager->getRepository(Contract::class)
+                    ->clientContracts($order->getClient());
+            foreach ($contracts as $contract){
+                $contractsList[$contract->getId()] = $contract->getContractPresentPay();
+                $form->get('contract')->setValueOptions($contractsList); 
+            }
+        }
     }    
     
     /**
