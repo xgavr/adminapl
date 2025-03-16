@@ -722,7 +722,7 @@
                 });
                 bootbox.prompt({
                     title: 'Укажите категорию',
-                    message: '<p>Выберете категорию для <b><?= $goods->getInputName()?></b>:</p>',
+                    message: '<p>Выберете категорию для <b><?= htmlspecialchars($goods->getInputName())?></b>:</p>',
                     inputType: 'select',
                     value: getGroupSiteCookie(),        
                     inputOptions: inputOptions,
