@@ -922,6 +922,8 @@ class CashManager {
         }    
         
         $cashDoc->setLegal($legal);
+        $cashDoc->setStatusEx(CashDoc::STATUS_EX_NEW);
+        $cashDoc->setStatusAccount(CashDoc::STATUS_ACCOUNT_NO);
         
         if ($cashDoc->getDateOper() > $this->getAllowDate()){
             $this->repostCashDoc($cashDoc);
