@@ -1056,6 +1056,19 @@ class Order {
         return $this->contact;
     }
     
+    /*
+     * Возвращает связанный staff.
+     * @return User
+     */
+    public function getStaffOrderAplId() 
+    {
+        if ($this->getContact()->getUser()){
+            return $this->getContact()->getUser()->getAplId();
+        }
+        
+        return;
+    }
+    
     /**
      * Это передача в комиссию
      * @return boolean
@@ -2037,7 +2050,7 @@ class Order {
             'selections' => $this->getSelectionsAsString(),
             'dependInfo' => $this->getDependInfoAsArray(),
             'total' => $this->getTotal(),
-            'staff' => ($order->getContact()->getUser()) ? $order->getContact()->getUser()->getId():null,
+            'staff' => $this->getStaffOrderAplId(),
         ];
     }    
     

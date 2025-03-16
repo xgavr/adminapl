@@ -1280,7 +1280,7 @@ class CashDoc {
             'vt' => ($this->vt) ? $this->vt->toArray():null,
             'creator' => ($this->userCreator) ? $this->userCreator->toArray():null,
             'statement' => ($this->statement) ? $this->statement->toArray():null,
-            'staff' => ($this->order->getContact()->getUser()) ? $this->order->getContact()->getUser()->getId():null,
+            'staff' => ($this->order) ? $this->order->getStaffOrderAplId():null,
         ];
         
         return $result;
