@@ -2037,6 +2037,7 @@ class Order {
             'selections' => $this->getSelectionsAsString(),
             'dependInfo' => $this->getDependInfoAsArray(),
             'total' => $this->getTotal(),
+            'staff' => ($order->getContact()->getUser()) ? $order->getContact()->getUser()->getId():null,
         ];
     }    
     
