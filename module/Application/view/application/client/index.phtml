@@ -89,7 +89,7 @@ $this->pageBreadcrumbs()->setItems([
                 <tr>
                      <th data-field="id" data-type="numeric" data-sortable="true" data-width="100">ID</th>
                      <th data-field="aplId" data-formatter="aplFormatter" data-type="numeric" data-width="100" data-sortable="true">AplId</th>
-                     <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Имя</th>
+                     <th data-field="name" data-formatter="linkFormatter" data-footer-formatter="footerTotalFormatter" data-sortable="true">Имя</th>
                      <!--<th data-field="balance" data-sortable="true" data-align="right" data-width="150" data-formatter="amountFormatter">Долг</th>-->
                      <th data-field="balance" data-footer-formatter="footerCreditFormatter" data-formatter="creditFormatter" data-align="right" data-width="100" data-original-title="Мы должны" data-sortable="true">Мы должны</th>
                      <th data-field="balance" data-footer-formatter="footerDebitFormatter" data-formatter="debitFormatter" data-align="right" data-width="100" data-original-title="Нам должны" data-sortable="true">Нам должны</th>
@@ -151,6 +151,7 @@ $this->pageBreadcrumbs()->setItems([
             }    
             $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
             $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
+            $('#totalFooter').html((Math.round((inTotal-outTotal)*100)/100).toFixed(2));
         });        
 
         $(".inputclear").click(function(){
@@ -272,6 +273,10 @@ $this->pageBreadcrumbs()->setItems([
 
     function footerCreditFormatter(data){
         return '<span id="outTotalFooter"></span>';
+    }
+    
+    function footerTotalFormatter(data){
+        return 'Итого: <span id="totalFooter"></span>';
     }
     
     function dateFormatter(value, row){
