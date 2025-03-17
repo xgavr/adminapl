@@ -196,6 +196,9 @@ $this->pageBreadcrumbs()->setItems([
         $('select[name="accurate"]').change(function(){
             refreshTable();
         });        
+        $('select[name="rest"]').change(function(){
+            refreshTable();
+        });        
     });
     
     function queryParams(params) {

@@ -1661,6 +1661,7 @@ class GoodsRepository extends EntityRepository
                             ->andWhere($inX); 
                 }                    
             }
+            $q = null;
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
@@ -1774,6 +1775,10 @@ class GoodsRepository extends EntityRepository
                     case Goods::REST_AVIALABLE:
                         $queryBuilder->andWhere('gb.rest != 0');
                         break;
+                    default:
+                        if (empty($q)){
+                            $queryBuilder->andWhere('gb.rest != 0');                        
+                        }
                 }
             }
             
