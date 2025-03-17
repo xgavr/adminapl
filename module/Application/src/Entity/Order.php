@@ -1062,7 +1062,7 @@ class Order {
      */
     public function getStaffOrderAplId() 
     {
-        if ($this->getContact()->getUser()){
+        if ($this->getContact()->getUser() && empty($this->getLegal())){
             return $this->getContact()->getUser()->getAplId();
         }
         
@@ -2050,6 +2050,7 @@ class Order {
             'selections' => $this->getSelectionsAsString(),
             'dependInfo' => $this->getDependInfoAsArray(),
             'total' => $this->getTotal(),
+            'amount' => $this->getTotal(),
             'staff' => $this->getStaffOrderAplId(),
         ];
     }    
