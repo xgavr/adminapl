@@ -1770,10 +1770,10 @@ class GoodsRepository extends EntityRepository
             if (!empty($params['rest'])){
                 switch($params['rest']){
                     case Goods::REST_REST:
-                        $queryBuilder->andWhere('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0');
+                        $queryBuilder->andWhere('gb.rest != 0');
                         break;
                     case Goods::REST_AVIALABLE:
-                        $queryBuilder->andWhere('gb.rest != 0');
+                        $queryBuilder->andWhere('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0');
                         break;
                     default:
                         if (empty($q)){
@@ -1818,6 +1818,7 @@ class GoodsRepository extends EntityRepository
                 ;
         
         if (is_array($params)){
+            $q = null;
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
@@ -1890,6 +1891,10 @@ class GoodsRepository extends EntityRepository
                     case Goods::REST_AVIALABLE:
                         $queryBuilder->andWhere('cb.rest != 0');
                         break;
+                    default:
+                        if (empty($q)){
+                            $queryBuilder->andWhere('cb.rest != 0');                        
+                        }
                 }
             }
 
