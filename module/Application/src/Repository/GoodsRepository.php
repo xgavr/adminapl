@@ -1677,7 +1677,7 @@ class GoodsRepository extends EntityRepository
                             ->resetDQLPart('where')
                             ->from(Goods::class, 'g')
                             ->leftJoin('g.goodBalances', 'gb')
-                            ->andWhere('gb.rest != 0')
+                            //->andWhere('gb.rest != 0')
                             ;
                 
                     switch ($searchOpt){
