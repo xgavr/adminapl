@@ -1202,9 +1202,9 @@ class Goods {
     public static function getRestList()
     {
         return [
+            self::REST_ALL => 'Все',
             self::REST_AVIALABLE => 'Доступные',
             self::REST_REST => 'В наличии',
-            self::REST_ALL => 'Все',
         ];
     }
     
