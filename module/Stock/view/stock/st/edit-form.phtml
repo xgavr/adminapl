@@ -345,7 +345,7 @@ if ($st){
                     var good = {
                         id: '<?= $good->getId()?>',
                         code: '<?= $good->getCode()?>',
-                        name: '<?= $good->getNameShort()?>',
+                        name: '<?= htmlspecialchars($good->getNameShort())?>',
                         producer: {name: '<?= $good->getProducer()->getName()?>'}
                     };
                     var row = {
