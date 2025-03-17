@@ -1677,6 +1677,7 @@ class GoodsRepository extends EntityRepository
                             ->resetDQLPart('where')
                             ->from(Goods::class, 'g')
                             ->leftJoin('g.goodBalances', 'gb')
+                            ->andWhere('gb.rest != 0')
                             ;
                 
                     switch ($searchOpt){
@@ -1695,7 +1696,7 @@ class GoodsRepository extends EntityRepository
                         case Goods::SEARCH_PRODUCER:
                             $likeX = $queryBuilder->expr()->like('p.name', '\'%'.$q.'%\'');
                             $queryBuilder
-                                ->andWhere($likeX) 
+                                ->andWhere($likeX)                                  
                                 ;
                             break;    
                         case Goods::SEARCH_OE:
