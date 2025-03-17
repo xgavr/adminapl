@@ -1199,7 +1199,7 @@ class Goods {
      * Опции остатка
      * @return array
      */
-    public static function getResrList()
+    public static function getRestList()
     {
         return [
             self::REST_AVIALABLE => 'Доступные',
