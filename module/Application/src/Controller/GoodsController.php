@@ -450,6 +450,7 @@ class GoodsController extends AbstractActionController
         $accurate = $this->params()->fromQuery('accurate');
         $office = $this->params()->fromQuery('office');
         $foldCode = $this->params()->fromQuery('foldCode');
+        $rest = $this->params()->fromQuery('rest');
         $opts = $this->params()->fromQuery('opts', false);
         
         $params = [
@@ -461,6 +462,7 @@ class GoodsController extends AbstractActionController
             'office' => $office,
             'foldCode' => $foldCode,
             'accurate' => $accurate,            
+            'rest' => $rest,            
         ];
         
         if($accurate == Goods::SEARCH_TP){

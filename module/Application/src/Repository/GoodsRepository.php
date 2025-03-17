@@ -1646,7 +1646,7 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->from(GoodBalance::class, 'gb')
                 ->join('gb.good', 'g')
 //                ->where('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0')    
-                ->where('gb.rest != 0')    
+//                ->where('gb.rest != 0')    
                 ;
         
         if (is_array($params)){
@@ -1715,7 +1715,7 @@ class GoodsRepository extends EntityRepository
                                 $inX = $queryBuilder->expr()->in('tg.id', $tg);
                                 $queryBuilder
                                         ->andWhere($inX)
-                                        ->andWhere('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0') 
+//                                        ->andWhere('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0') 
                                         ;                                        
                             }                                    
                             break;
@@ -1766,6 +1766,17 @@ class GoodsRepository extends EntityRepository
                 }    
             }
             
+            if (!empty($params['rest'])){
+                switch($params['rest']){
+                    case Goods::REST_REST:
+                        $queryBuilder->andWhere('gb.rest != 0 and gb.rest-gb.reserve-gb.delivery-gb.vozvrat > 0');
+                        break;
+                    case Goods::REST_AVIALABLE:
+                        $queryBuilder->andWhere('gb.rest != 0');
+                        break;
+                }
+            }
+            
             if (!empty($params['sort'])){
                 $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);
             }
@@ -1798,7 +1809,7 @@ class GoodsRepository extends EntityRepository
         
         $queryBuilder->from(ComitentBalance::class, 'cb')
                 ->join('cb.good', 'g')
-                ->where('cb.rest != 0')    
+//                ->where('cb.rest != 0')    
                 ;
         
         if (is_array($params)){
@@ -1849,7 +1860,7 @@ class GoodsRepository extends EntityRepository
                                 $inX = $queryBuilder->expr()->in('tg.id', $tg);
                                 $queryBuilder
                                         ->andWhere($inX)
-                                        ->andWhere('cb.rest != 0') 
+//                                        ->andWhere('cb.rest != 0') 
                                         ;                                        
                             }                                    
                             break;
@@ -1868,6 +1879,15 @@ class GoodsRepository extends EntityRepository
                     ->leftJoin('g.tokenGroup', 'tg')
                  ;   
             
+            if (!empty($params['rest'])){
+                switch($params['rest']){
+                    case Goods::REST_REST:
+                    case Goods::REST_AVIALABLE:
+                        $queryBuilder->andWhere('cb.rest != 0');
+                        break;
+                }
+            }
+
             if (!empty($params['sort'])){
                 $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);
             }

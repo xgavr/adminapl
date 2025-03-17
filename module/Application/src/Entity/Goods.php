@@ -101,6 +101,10 @@ class Goods {
     const SEARCH_TP = 7; //товары в торговых площадках
     const SEARCH_PRODUCER = 8; //производитель
     
+    const REST_ALL = 1; //все
+    const REST_REST = 2; //есть остаток
+    const REST_AVIALABLE = 3; //доступные
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -1190,7 +1194,20 @@ class Goods {
             self::SEARCH_PRODUCER => 'Поиск по производителю',
         ];
     }
-
+    
+    /**
+     * Опции остатка
+     * @return array
+     */
+    public static function getResrList()
+    {
+        return [
+            self::REST_AVIALABLE => 'Доступные',
+            self::REST_REST => 'В наличии',
+            self::REST_ALL => 'Все',
+        ];
+    }
+    
     public function getStatusOemEx()
     {
         $this->statusOemEx;
