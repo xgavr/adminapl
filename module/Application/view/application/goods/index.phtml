@@ -80,6 +80,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="code" data-formatter="linkFormatter" data-sortable="true" data-width="100">Артикул</th>
                      <th data-field="tgName" data-formatter="nameFormatter">Наименование</th>             
                      <th data-field="rest" data-width="50" data-align="right">Остаток</th>             
+                     <th data-field="price" data-width="50" data-align="right" data-formatter="priceFormatter">Сумма</th>             
                      <th data-field="reserve" data-width="50" data-align="right">Резерв</th>             
                      <th data-field="delivery" data-width="50" data-align="right">Доставка</th>             
                      <th data-field="vozvrat" data-width="50" data-align="right">Возврат</th>             
@@ -232,6 +233,14 @@ $this->pageBreadcrumbs()->setItems([
         }
         
         return value;
+    }    
+    
+    function priceFormatter(value, row){
+        if (value){
+            return (row.rest*value).toFixed(2);
+        }
+        
+        return '';
     }    
     
     function aplFormatter(value, row){
