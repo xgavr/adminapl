@@ -85,6 +85,16 @@
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
+    var curentRowIndex = -1;
+    
+    function setCurrentIndex(index){
+        curentRowIndex = index;
+    }
+    
+    function getCurrentIndex(){
+        return curentRowIndex;
+    }
+    
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
