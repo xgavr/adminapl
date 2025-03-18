@@ -298,6 +298,16 @@ $this->pageBreadcrumbs()->setItems([
         btn += '<span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>';
         btn += '</button>';
 
+        url = '/st/edit-form?good='+value;
+        btn += ' <button';
+        btn += ' type="button"';
+        btn += ' class="btn btn-xs btn-default st-modal-show"';
+        btn += ' aria-label="Left Align"'; 
+        btn += ' title="Оформить списание" ' + disabled; 
+        btn += ' modal-url="'+url+'">'; 
+        btn += '<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>';
+        btn += '</button>';
+
         url = '/vtp/edit-form?good='+value;
         btn += ' <button';
         btn += ' type="button"';
