@@ -62,6 +62,7 @@
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
             data-row-style="rowStyle"
+            data-unique-id="id"
             >
             <thead>
                 <tr>
@@ -159,6 +160,70 @@
         btn += '</button>';
         return btn;
     }    
+    
+    function changeStatus(docId, status){
+        $.get( "/ot/status/"+docId+'?status='+status, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: docId, row: data});
+        });        
+    }
+
+    
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            setCurrentIndex($(rowElem).attr('data-index'));
+            return $table.bootstrapTable('getData')[getCurrentIndex()];
+        },
+        actionsGroups: [
+           ['statusActiv', 'statusRetired'], 
+           ['history']
+        ],      
+        actions: {
+            statusActiv: {
+                name: 'Сделать активным',
+                iconClass: 'glyphicon glyphicon-ok',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Ot::STATUS_ACTIVE?>);
+                },
+                isShown: function(row) {
+                    return row.status === <?= Ot::STATUS_RETIRED?>;
+                },
+                isEnabled: function(row) {
+                    return row.status === <?= Ot::STATUS_RETIRED?>;
+                }                
+            }, 
+            statusRetired: {
+                name: 'Сделать не активным',
+                iconClass: 'glyphicon glyphicon-remove',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Ot::STATUS_RETIRED?>);
+                },
+                isShown: function(row) {
+                    return row.status === <?= Ot::STATUS_ACTIVE?>;
+                },
+                isEnabled: function(row) {
+                    return row.status === <?= Ot::STATUS_ACTIVE?>;
+                }                
+            },
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.id+"?docType=ot",
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
+                }
+            }
+        }
+    });        
     
     function responseHandler(res) {
         return res;

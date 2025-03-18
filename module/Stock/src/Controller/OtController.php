@@ -368,4 +368,27 @@ class OtController extends AbstractActionController
         );           
     }
         
+    public function statusAction()
+    {
+        $otId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', Ot::STATUS_ACTIVE);
+        $ot = $this->entityManager->getRepository(Ot::class)
+                ->find($otId);        
+
+        if ($ot == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->otManager->updateOtStatus($ot, $status);
+        $query = $this->entityManager->getRepository(Ot::class)
+                ->findAllOt(['otId' => $ot->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
+        return new JsonModel(
+           $result
+        );           
+    }        
+    
+    
 }

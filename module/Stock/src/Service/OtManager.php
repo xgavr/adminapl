@@ -1,9 +1,7 @@
 <?php
 namespace Stock\Service;
 
-use Stock\Entity\Vtp;
 use Stock\Entity\Ot;
-use Stock\Entity\Ptu;
 use Stock\Entity\OtGood;
 use Admin\Entity\Log;
 use Stock\Entity\Movement;
@@ -364,13 +362,37 @@ class OtManager
     }       
     
     /**
+     * Update ot status.
+     * @param Ot $ot
+     * @param integer $status
+     * @return integer
+     */
+    public function updateOtStatus($ot, $status)            
+    {
+
+        if ($ot->getDocDate() > $this->allowDate || $ot->getStatus() != Ot::STATUS_ACTIVE){
+            $ot->setStatus($status);
+            $ot->setStatusEx(Ot::STATUS_EX_NEW);
+            $ot->setStatusAccount(Ot::STATUS_ACCOUNT_NO);
+            
+            $this->entityManager->persist($ot);
+            $this->entityManager->flush();
+
+            $this->repostOt($ot);
+            $this->logManager->infoOt($ot, Log::STATUS_UPDATE);
+        }    
+        
+        return;
+    }
+    
+    /**
      * Удаление ОТ
      * 
      * @param Ot $ot
      */
     public function removeOt($ot)
     {
-        if ($data['doc_date'] > $this->allowDate){
+        if ($ot->getDocDate() > $this->allowDate){
             $this->logManager->infoOt($ot, Log::STATUS_DELETE);
             $this->entityManager->getRepository(Movement::class)
                     ->removeDocMovements($ot->getLogKey());

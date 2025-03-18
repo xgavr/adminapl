@@ -94,6 +94,12 @@ class OtRepository extends EntityRepository{
                             ->setParameter('month', $params['month']);
                 }    
             }
+            if (!empty($params['otId'])){
+                if (is_numeric($params['otId'])){
+                    $queryBuilder->andWhere('o.id = :otId')
+                            ->setParameter('otId', $params['otId']);
+                }    
+            }
             if (!empty($params['q'])){     
                 $articleCodeFilter = new ArticleCode(); 
                 $queryBuilder->distinct()
