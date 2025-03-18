@@ -206,11 +206,11 @@ $this->pageBreadcrumbs()->setItems([
         $('.good-toolbar').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
-        limit = $('.page-size').html();
+        limit = $('#table .page-size').html();
         if (limit){
             params.limit = limit;
         }    
-        offset = $('li.page-number.active a').html();
+        offset = $('#table li.page-number.active a').html();
         if (offset){
             params.offset = params.limit * (offset - 1);
         }            
