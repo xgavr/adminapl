@@ -222,7 +222,7 @@ if ($st){
                 if (data == 'ok'){
                     $('#stModal').modal('hide');
                     if ($('#table').length){
-                        $('#table').bootstrapTable('refresh');
+                        $('#table').bootstrapTable('refresh', {silent: true});
                     }    
                     if ($('#movementTable').length){
                         $('#movementTable').bootstrapTable('refresh');
