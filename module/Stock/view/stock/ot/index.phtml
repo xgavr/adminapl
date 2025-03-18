@@ -90,13 +90,13 @@
 
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status === '<?= Ot::STATUS_RETIRED?>'){
+        if (row.status === <?= Ot::STATUS_RETIRED?>){
            retired += ' retired';
         }
-        if (row.status === '<?= Ot::STATUS_COMMISSION?>'){
+        if (row.status === <?= Ot::STATUS_COMMISSION?>){
            retired += ' info';
         }
-        if (row.statusAccount === '<?= Ot::STATUS_ACCOUNT_NO?>'){
+        if (row.statusAccount === <?= Ot::STATUS_ACCOUNT_NO?>){
            retired += ' status-account-no';
         }
         
