@@ -57,7 +57,7 @@
             data-toolbar="#toolbar"
             data-show-refresh="true"
             data-show-toggle="true"
-            data-query-params="queryParams"
+            data-query-params="stQueryParams"
             data-sort-name="id"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
@@ -89,7 +89,7 @@
         $table.bootstrapTable('refresh');
     }
 
-    function queryParams(params) {
+    function stQueryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
