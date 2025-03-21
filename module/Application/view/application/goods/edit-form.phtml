@@ -87,7 +87,7 @@ $docName = 'Новый';
         })
             .done(function (data) {
                 console.log(data);
-                if (data){
+                if (data.result){
                     $('#goodModal').modal('hide');
                     if ($('#table')){
                         $('#table').bootstrapTable('refresh');
