@@ -86,6 +86,7 @@ $docName = 'Новый';
             data: $.param(data)
         })
             .done(function (data) {
+                console.log(data);
                 if (data){
                     $('#goodModal').modal('hide');
                     if ($('#table')){
