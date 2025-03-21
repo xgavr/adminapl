@@ -26,53 +26,53 @@ $docName = 'Новый';
 
 ?>
             
-            <?= $this->form()->openTag($form); ?>
-            
-            <div class="modal-header">
-                <h5 class="modal-title" id="goodModalLabel">Новый товар</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-xs-12">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('code')); ?>
-                            <?= $this->formElement($form->get('code')); ?>
-                            <?= $this->formElementErrors($form->get('code')); ?>                  
-                        </div>
-                    </div>    
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('producer')); ?>
-                            <?= $this->formElement($form->get('producer')); ?>
-                            <?= $this->formElementErrors($form->get('producer')); ?>                  
-                        </div>
-                    </div>    
-                </div>    
-                <div class="row">
-                    <div class="col-xs-12">                        
-                        <div class="form-group">
-                            <?= $this->formLabel($form->get('name')); ?>
-                            <?= $this->formElement($form->get('name')); ?>
-                            <?= $this->formElementErrors($form->get('name')); ?>                  
-                        </div>
-                    </div>    
-                </div>
+<?= $this->form()->openTag($form); ?>
 
-                <?= $this->formElement($form->get('csrf')); ?>
-            </div>    
-                
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-primary" id="good-submit">Сохранить</button>
+<div class="modal-header">
+    <h5 class="modal-title" id="goodModalLabel">Новый товар</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('code')); ?>
+                <?= $this->formElement($form->get('code')); ?>
+                <?= $this->formElementErrors($form->get('code')); ?>                  
             </div>
-            
-            <?= $this->form()->closeTag(); ?>
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('producer')); ?>
+                <?= $this->formElement($form->get('producer')); ?>
+                <?= $this->formElementErrors($form->get('producer')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('name')); ?>
+                <?= $this->formElement($form->get('name')); ?>
+                <?= $this->formElementErrors($form->get('name')); ?>                  
+            </div>
+        </div>    
+    </div>
+
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>    
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary" id="good-submit">Сохранить</button>
+</div>
+
+<?= $this->form()->closeTag(); ?>
             
 <script  type="text/javascript">
     /**
@@ -86,9 +86,18 @@ $docName = 'Новый';
             data: $.param(data)
         })
             .done(function (data) {
-                if (data == 'ok'){
+                if (data){
                     $('#goodModal').modal('hide');
-                    $('#table').bootstrapTable('refresh');
+                    if ($('#table')){
+                        $('#table').bootstrapTable('refresh');
+                    }    
+                    if (data.result.id){
+//                        window.open('/goods/view/'+data.result.id, '_blank');
+                        var a = document.createElement('a');
+                        a.target="_blank";
+                        a.href='/goods/view/'+data.result.id';
+                        a.click();
+                    }
                 } else {
                     $('#goodModal .modal-content').html(data);                    
                 }    

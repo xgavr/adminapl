@@ -179,7 +179,7 @@ class GoodsController extends AbstractActionController
                 }    
                 
                 return new JsonModel(
-                   ['ok']
+                   ['result' => $good->toArray()]
                 );           
             }
         } else {

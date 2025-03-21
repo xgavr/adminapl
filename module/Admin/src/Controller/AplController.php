@@ -164,6 +164,7 @@ class AplController extends AbstractActionController
             return;                        
         } 
         
+        $this->aplService->updateProducerAplId($good->getProducer());
         $this->aplService->getGoodAplId($good);
         $this->aplService->sendGroup($good);
         $this->aplService->sendGoodOem($good);
