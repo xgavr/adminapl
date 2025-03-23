@@ -255,7 +255,8 @@ class CashRepository extends EntityRepository
             ->andWhere('c.office = :office')
             ->setParameter('office', $office->getId())    
             ->andWhere('c.restStatus = :restStatus')
-            ->setParameter('restStatus', Cash::REST_ACTIVE)    
+            ->setParameter('restStatus', Cash::REST_ACTIVE)  
+            ->groupBy('c.id')    
                 ;
         
         $result = $queryBuilder->getQuery()->getResult();
