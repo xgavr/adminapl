@@ -125,17 +125,47 @@ class TillController extends AbstractActionController
     public function balancesAction()
     {       
         $officeId = $this->params()->fromQuery('office');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period', 'date');
+        
+        $office = $this->entityManager->getRepository(Office::class)
+                ->find($officeId);
                 
-        $data = $this->entityManager->getRepository(Cash::class)
-                    ->findBy(['office' => $officeId, 'restStatus' => Cash::REST_ACTIVE]);
+        if ($office == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
         
-        $result = [];
-        
-        foreach ($data as $row){
-            if (round($row->getBalance(), 2) != 0){
-                $result[] = $row->toArray();
+        $startDate = date('Y-m-d');
+        $endDate = date('Y-m-d');
+        if ($dateStart){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d', strtotime('+ 1 week - 1 day', strtotime($startDate)));
             }    
-        }                        
+            if ($period == 'month'){
+                $endDate = date('Y-m-d', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = $dateStart.'-12-31';
+            }    
+        }    
+        
+//        $data = $this->entityManager->getRepository(Cash::class)
+//                    ->findBy(['office' => $officeId, 'restStatus' => Cash::REST_ACTIVE]);
+//        
+//        $result = [];
+//        
+//        foreach ($data as $row){
+//            if (round($row->getBalance(), 2) != 0){
+//                $result[] = $row->toArray();
+//            }    
+//        }                        
+        
+        $result = $this->entityManager->getRepository(Cash::class)
+                ->cashBalances($office, $endDate);
         
         return new JsonModel([
             'total' => count($result),

@@ -232,6 +232,36 @@ class CashRepository extends EntityRepository
 
         return $result['balance'];        
     }
+    
+    
+    /**
+     * Остаток в кассах
+     * @param Office $office
+     * @param date $endDate
+     */
+    public function cashBalances($office, $endDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('sum(ct.amount) as balance, c.name, c.aplId')
+            ->from(CashTransaction::class, 'ct')
+            ->from('ct.cash', 'c')
+            ->andWhere('ct.dateOper <= ?2')
+            ->setParameter('2', $endDate)    
+            ->andWhere('ct.status = ?3')
+            ->setParameter('3', CashTransaction::STATUS_ACTIVE)    
+            ->andWhere('c.office = :office')
+            ->setParameter('office', $office->getId())    
+            ->andWhere('c.restStatus = :restStatus')
+            ->setParameter('restStatus', Cash::REST_ACTIVE)    
+                ;
+        
+        $result = $queryBuilder->getQuery()->Result();
+
+        return $result;        
+    }
     /**
      * Запрос по кассовым документам
      * 
