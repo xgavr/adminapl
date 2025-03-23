@@ -258,7 +258,7 @@ class CashRepository extends EntityRepository
             ->setParameter('restStatus', Cash::REST_ACTIVE)    
                 ;
         
-        $result = $queryBuilder->getQuery()->Result();
+        $result = $queryBuilder->getQuery()->getResult();
 
         return $result;        
     }
