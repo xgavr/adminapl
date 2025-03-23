@@ -658,7 +658,7 @@ class CashDoc {
             case $this::KIND_IN_RETURN_USER:
             case $this::KIND_OUT_SALARY:
             case $this::KIND_OUT_USER:
-                return $this->getUserRefill()->getAplId();
+                return $this->getUserRefillAplId();
             case $this::KIND_OUT_REFILL:
             case $this::KIND_IN_REFILL:
                 return $this->getCashRefill()->getAplId();
@@ -948,9 +948,21 @@ class CashDoc {
         $this->user = $user;
     }
 
+    /**
+     * retutn User
+     */
     public function getUserRefill()
     {
         return $this->userRefill;
+    }
+    
+    public function getUserRefillAplId()
+    {
+        if ($this->getUserRefill()){
+            return $this->getUserRefill()->getAplId();
+        }
+        
+        return;
     }
     
     /**
