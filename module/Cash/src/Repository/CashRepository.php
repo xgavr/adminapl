@@ -245,7 +245,7 @@ class CashRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('sum(ct.amount) as balance, c.name, c.aplId')
+        $queryBuilder->select('round(sum(ct.amount), 2) as balance, c.name, c.aplId')
             ->from(CashTransaction::class, 'ct')
             ->join('ct.cash', 'c')
             ->andWhere('ct.dateOper <= ?2')
