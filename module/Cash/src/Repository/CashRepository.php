@@ -257,6 +257,7 @@ class CashRepository extends EntityRepository
             ->andWhere('c.restStatus = :restStatus')
             ->setParameter('restStatus', Cash::REST_ACTIVE)  
             ->groupBy('c.id')    
+            ->having('balance != 0')    
                 ;
         
         $result = $queryBuilder->getQuery()->getResult();
