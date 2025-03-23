@@ -247,7 +247,7 @@ class CashRepository extends EntityRepository
 
         $queryBuilder->select('sum(ct.amount) as balance, c.name, c.aplId')
             ->from(CashTransaction::class, 'ct')
-            ->from('ct.cash', 'c')
+            ->join('ct.cash', 'c')
             ->andWhere('ct.dateOper <= ?2')
             ->setParameter('2', $endDate)    
             ->andWhere('ct.status = ?3')
