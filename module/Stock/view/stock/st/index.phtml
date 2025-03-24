@@ -56,13 +56,14 @@
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
             data-query-params="stQueryParams"
             data-sort-name="id"
             data-sort-order="desc"            
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
             data-row-style="rowStyle"
+            data-unique-id="id"
             >
             <thead>
                 <tr>
@@ -85,6 +86,16 @@
     var $table = $('#table'),
         $ok = $('#ok');
     
+    var curentRowIndex = -1;
+    
+    function setCurrentIndex(index){
+        curentRowIndex = index;
+    }
+    
+    function getCurrentIndex(){
+        return curentRowIndex;
+    }
+        
     function refreshTable(){
         $table.bootstrapTable('refresh');
     }
@@ -111,6 +122,9 @@
         var retired = 'tablerow';
         if (row.status === <?= St::STATUS_RETIRED?>){
            retired += ' retired';
+        }
+        if (row.writeOff === <?= St::WRITE_COMMISSION?>){
+           retired += ' info';
         }
         if (row.statusAccount === <?= St::STATUS_TAKE_NO?>){
            retired += ' warning';
@@ -169,8 +183,74 @@
         if (row.writeOff === <?= St::WRITE_INVENTORY?>){
             return 'Инв';
         }
+        if (row.writeOff === <?= St::WRITE_COMMISSION?>){
+            return 'Возврат с комиссии';
+        }
         return value;
     }    
+
+    function changeStatus(docId, status){
+        $.get( "/st/status/"+docId+'?status='+status, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: docId, row: data});
+        });        
+    } 
+    
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            setCurrentIndex($(rowElem).attr('data-index'));
+            return $table.bootstrapTable('getData')[getCurrentIndex()];
+        },
+        actionsGroups: [
+           ['statusActiv', 'statusRetired'], 
+           ['history']
+        ],      
+        actions: {
+            statusActiv: {
+                name: 'Сделать активным',
+                iconClass: 'glyphicon glyphicon-ok',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= St::STATUS_ACTIVE?>);
+                },
+                isShown: function(row) {
+                    return row.status === <?= St::STATUS_RETIRED?>;
+                },
+                isEnabled: function(row) {
+                    return row.status === <?= St::STATUS_RETIRED?>;
+                }                
+            }, 
+            statusRetired: {
+                name: 'Сделать не активным',
+                iconClass: 'glyphicon glyphicon-remove',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= St::STATUS_RETIRED?>);
+                },
+                isShown: function(row) {
+                    return row.status === <?= St::STATUS_ACTIVE?>;
+                },
+                isEnabled: function(row) {
+                    return row.status === <?= St::STATUS_ACTIVE?>;
+                }                
+            },
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.id+"?docType=vt",
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
+                }
+            }
+        }
+    });        
 
     function responseHandler(res) {
         return res;

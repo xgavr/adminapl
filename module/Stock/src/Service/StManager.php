@@ -447,6 +447,30 @@ class StManager
     }
     
     /**
+     * Update st status.
+     * @param St $st
+     * @param integer $status
+     * @return integer
+     */
+    public function updateStStatus($st, $status)            
+    {
+
+        if ($st->getDocDate() > $this->allowDate || $st->getStatus() != St::STATUS_ACTIVE){
+            $st->setStatus($status);
+            $st->setStatusEx(St::STATUS_EX_NEW);
+            $st->setStatusAccount(St::STATUS_ACCOUNT_NO);
+            
+            $this->entityManager->persist($st);
+            $this->entityManager->flush();
+
+            $this->repostSt($st);
+            $this->logManager->infoSt($st, Log::STATUS_UPDATE);
+        }    
+        
+        return;
+    }
+    
+    /**
      * Удаление строк СТ
      * @param St $st
      */

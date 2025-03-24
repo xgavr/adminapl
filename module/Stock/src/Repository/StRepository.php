@@ -94,6 +94,12 @@ class StRepository extends EntityRepository{
                             ->setParameter('month', $params['month']);
                 }    
             }
+            if (!empty($params['stId'])){
+                if (is_numeric($params['stId'])){
+                    $queryBuilder->andWhere('s.id = :stId')
+                            ->setParameter('stId', $params['stId']);
+                }    
+            }
             if (!empty($params['q'])){     
                 $articleCodeFilter = new ArticleCode(); 
                 $queryBuilder->distinct()

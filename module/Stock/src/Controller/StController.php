@@ -451,5 +451,28 @@ class StController extends AbstractActionController
         return new JsonModel(
            $result
         );           
-    }                    
+    }     
+    
+    public function statusAction()
+    {
+        $stId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', St::STATUS_ACTIVE);
+        $st = $this->entityManager->getRepository(St::class)
+                ->find($stId);        
+
+        if ($st == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->stManager->updateStStatus($st, $status);
+        $query = $this->entityManager->getRepository(St::class)
+                ->findAllSt(['stId' => $st->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
+        return new JsonModel(
+           $result
+        );           
+    }        
+    
 }
