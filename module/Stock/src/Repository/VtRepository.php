@@ -97,6 +97,12 @@ class VtRepository extends EntityRepository{
                             ->setParameter('month', $params['month']);
                 }    
             }
+            if (!empty($params['vtId'])){
+                if (is_numeric($params['vtId'])){
+                    $queryBuilder->andWhere('v.id = :vtId')
+                            ->setParameter('vtId', $params['vtId']);
+                }    
+            }
             if (!empty($params['q'])){     
                 $articleCodeFilter = new ArticleCode(); 
                 $queryBuilder->distinct()

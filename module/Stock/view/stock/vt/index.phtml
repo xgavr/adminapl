@@ -1,5 +1,6 @@
 <?php
     use Stock\Entity\Vt;
+    
     $this->headTitle('Возврат товаров');
 
     $this->mainMenu()->setActiveItemId('client');
@@ -57,6 +58,7 @@
             data-response-handler="responseHandler"
             data-classes = "table table-bordered table-hover table-condensed"
             data-row-style="rowStyle"
+            data-unique-id="id"
             >
             <thead>
                 <tr>
@@ -81,6 +83,16 @@
     var $table = $('#table'),
         $ok = $('#ok');
     
+    var curentRowIndex = -1;
+    
+    function setCurrentIndex(index){
+        curentRowIndex = index;
+    }
+    
+    function getCurrentIndex(){
+        return curentRowIndex;
+    }
+    
     $(function () {   
         $(document).on('click', '.send-vt-doc', function (e) {
             var url = $(this).attr('modal-url');
@@ -96,22 +108,22 @@
     
     function rowStyle(row){
         var retired = 'tablerow';
-        if (row.status === '<?= Vt::STATUS_RETIRED?>'){
+        if (row.status === <?= Vt::STATUS_RETIRED?>){
            retired += ' retired';
         }
-        if (row.status === '<?= Vt::STATUS_COMMISSION?>'){
+        if (row.status === <?= Vt::STATUS_COMMISSION?>){
            retired += ' info';
         }
-        if (row.status === '<?= Vt::STATUS_DEFECT?>'){
+        if (row.status === <?= Vt::STATUS_DEFECT?>){
            retired += ' info';
         }
-        if (row.status === '<?= Vt::STATUS_WAIT?>'){
+        if (row.status === <?= Vt::STATUS_WAIT?>){
            retired += ' info';
         }
-        if (row.statusAccount === '<?= Vt::STATUS_TAKE_NO?>'){
+        if (row.statusAccount === <?= Vt::STATUS_TAKE_NO?>){
            retired = ' warning';
         }
-        if (row.statusAccount === '<?= Vt::STATUS_ACCOUNT_NO?>'){
+        if (row.statusAccount === <?= Vt::STATUS_ACCOUNT_NO?>){
            retired += ' status-account-no';
         }
         
@@ -190,6 +202,69 @@
 
         return btn;
     }    
+    
+    function changeStatus(docId, status){
+        $.get( "/vt/status/"+docId+'?status='+status, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: docId, row: data});
+        });        
+    } 
+    
+    var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            setCurrentIndex($(rowElem).attr('data-index'));
+            return $table.bootstrapTable('getData')[getCurrentIndex()];
+        },
+        actionsGroups: [
+           ['statusActiv', 'statusRetired'], 
+           ['history']
+        ],      
+        actions: {
+            statusActiv: {
+                name: 'Сделать активным',
+                iconClass: 'glyphicon glyphicon-ok',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Vt::STATUS_ACTIVE?>);
+                },
+                isShown: function(row) {
+                    return row.status === <?= Vt::STATUS_RETIRED?>;
+                },
+                isEnabled: function(row) {
+                    return row.status === <?= Vt::STATUS_RETIRED?>;
+                }                
+            }, 
+            statusRetired: {
+                name: 'Сделать не активным',
+                iconClass: 'glyphicon glyphicon-remove',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Vt::STATUS_RETIRED?>);
+                },
+                isShown: function(row) {
+                    return row.status === <?= Vt::STATUS_ACTIVE?>;
+                },
+                isEnabled: function(row) {
+                    return row.status === <?= Vt::STATUS_ACTIVE?>;
+                }                
+            },
+            history: {
+                name: 'История',
+                iconClass: 'glyphicon glyphicon-list-alt',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/log/history/"+row.id+"?docType=vt",
+                        success: function (result) {
+                            bootbox.alert({
+                                size: "large",
+                                message: result
+                            });
+                        }
+                    });                    
+                }
+            }
+        }
+    });        
     
     function responseHandler(res) {
         return res;

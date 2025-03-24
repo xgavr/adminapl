@@ -592,6 +592,30 @@ class VtManager
     }
     
     /**
+     * Update vt status.
+     * @param Vt $vt
+     * @param integer $status
+     * @return integer
+     */
+    public function updateVtStatus($vt, $status)            
+    {
+
+        if ($vt->getDocDate() > $this->allowDate){
+            $vt->setStatus($status);
+            $vt->setStatusEx(Vt::STATUS_EX_NEW);
+            $vt->setStatusAccount(Vt::STATUS_ACCOUNT_NO);
+            
+            $this->entityManager->persist($vt);
+            $this->entityManager->flush();
+
+            $this->repostVt($vt);
+            $this->logManager->infoVt($vt, Log::STATUS_UPDATE);
+        }    
+        
+        return;
+    }
+    
+    /**
      * Удаление строк возврата
      * @param Vt $vt
      */

@@ -398,5 +398,28 @@ class VtController extends AbstractActionController
         return new JsonModel([
             'result' => 'ok-reload',
         ]);
-    }            
+    }      
+    
+    public function statusAction()
+    {
+        $vtId = $this->params()->fromRoute('id', -1);
+        $status = $this->params()->fromQuery('status', Ot::STATUS_ACTIVE);
+        $vt = $this->entityManager->getRepository(Vt::class)
+                ->find($vtId);        
+
+        if ($vt == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->otManager->updateVtStatus($vt, $status);
+        $query = $this->entityManager->getRepository(Ot::class)
+                ->findAllVt(['vtId' => $vt->getId()]);
+        $result = $query->getOneOrNullResult(2);
+        
+        return new JsonModel(
+           $result
+        );           
+    }        
+    
 }
