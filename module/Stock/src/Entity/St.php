@@ -43,6 +43,7 @@ class St {
     const WRITE_PAY        = 2; // Списать на зп .
     const WRITE_INVENTORY  = 3; // инвентаризация
     const WRITE_COMMISSION  = 4; // вернуть комиссару
+    const WRITE_INVENTORY_OLD  = 6; // инвентаризация со списанием
     //const WRITE_STORNO      = 5; // отмена списания
 
     const STATUS_ACCOUNT_OK  = 1;// обновлено 
@@ -398,6 +399,7 @@ class St {
             self::WRITE_PAY => 'Списать в зп',
             self::WRITE_INVENTORY => 'Инвентаризация',
             self::WRITE_COMMISSION => 'Вернуть с коммиссии',
+            self::WRITE_INVENTORY_OLD => 'Списание в бухгалтерии',
             //self::WRITE_STORNO => 'Отмена списания',
         ];
     }    
