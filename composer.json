@@ -74,7 +74,8 @@
         "splitbrain/php-qrcode": "^0.1.0",
         "laminas/laminas-cache-storage-adapter-filesystem": "^2.4",
         "deepseek-php/deepseek-php-client": "^2.0",
-        "kilylabs/upd-parser-php": "^0.2.0"
+        "kilylabs/upd-parser-php": "^0.2.0",
+        "laximo/guayaquillib": "^3.0"
     },
     "autoload": {
         "psr-4": {

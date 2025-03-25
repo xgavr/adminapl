@@ -15,6 +15,7 @@ use Application\Service\ExternalDB\PartsApiManager;
 use Application\Service\ExternalManager;
 use Application\Service\ExternalDB\AbcpManager;
 use Application\Service\ExternalDB\ZetasoftManager;
+use Application\Service\ExternalDB\LaximoManager;
 
 /**
  * Description of AssemblyManagerFactory
@@ -32,9 +33,11 @@ class ExternalManagerFactory  implements FactoryInterface
         $partsApiManager = $container->get(PartsApiManager::class);
         $abcpManager = $container->get(AbcpManager::class);
         $zetasoftManager = $container->get(ZetasoftManager::class);
+        $laximoManager = $container->get(LaximoManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new ExternalManager($entityManager, $autoDbManager, 
-                $partsApiManager, $abcpManager, $zetasoftManager);
+                $partsApiManager, $abcpManager, $zetasoftManager,
+                $laximoManager);
     }
 }

@@ -56,6 +56,14 @@ class ExternalManager
     private $zetasoftManager;
 
     /**
+     * Менеджер laximo
+     * 
+     * @var \Application\Service\ExternalDB\LaximoManager 
+     */
+
+    private $laximoManager;
+
+    /**
      * Менеджер auto-db
      * 
      * @var \Application\Service\ExternalDB\AutodbManager 
@@ -70,13 +78,15 @@ class ExternalManager
     private $partsApiManager;
     
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $autoDbManager, $partsApiManager, $abcpManager, $zetasoftManager)
+    public function __construct($entityManager, $autoDbManager, $partsApiManager, 
+            $abcpManager, $zetasoftManager, $laximoManager)
     {
         $this->entityManager = $entityManager;
         $this->autoDbManager = $autoDbManager;
         $this->partsApiManager = $partsApiManager;
         $this->abcpManager = $abcpManager;
         $this->zetasoftManager = $zetasoftManager;
+        $this->laximoManager = $laximoManager;
     }
     
     /**
@@ -150,6 +160,24 @@ class ExternalManager
             case 'getInfo': $result = $this->zetasoftManager->getDirectInfo($params['good']->getId(), $params['good']->getCode()); break;
             case 'getSimilarInfo': $result = $this->zetasoftManager->getSimilarDirectInfo($params['good']->getId(), $params['good']->getCode(), $params['good']->getGenericGroup()->getTdId(), $params['good']->getTokenGroupId()); break;
             case 'getImages': $result = $this->zetasoftManager->getImages($params['good']); break;
+            default: break;
+        }
+        
+//        var_dump($result);
+        return $result;
+    }
+    
+    /**
+     * Подключение к laximo api
+     * 
+     * @param string $action
+     * @param array $params
+     * @return array|null;
+     */
+    public function laximo($action, $params = null)
+    {
+        switch($action){
+            case 'ping': $result = $this->laximoManager->ping(); break;
             default: break;
         }
         

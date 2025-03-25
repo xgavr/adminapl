@@ -16,6 +16,7 @@ use Admin\Form\TelegramSettingsForm;
 use Admin\Form\AbcpSettings;
 use Admin\Form\PartsApiSettings;
 use Admin\Form\ZetasoftSettings;
+use Admin\Form\LaximoSettings;
 use Admin\Form\ApiMarketPlaces;
 use Admin\Form\SmsForm;
 use Application\Entity\Order;
@@ -767,6 +768,52 @@ class IndexController extends AbstractActionController
                         'Настройки сохранены.');
 
                 $this->redirect()->toRoute('admin', ['action' => 'zetasoft-settings']);
+            } else {
+                $this->flashMessenger()->addInfoMessage(
+                        'Настройки не сохранены.');                
+            }
+        }
+        
+        return new ViewModel([
+            'form' => $form,
+        ]);  
+        
+    }
+
+    /**
+     * Управление настройками laximo
+     * 
+     * @return ViewModel
+     */
+    public function laximoSettingsAction()
+    {
+        $form = new LaximoSettings();
+    
+        $settings = $this->adminManager->getLaximoSettings();
+        
+        if ($settings){
+            $form->setData($settings);
+        }    
+        // Проверяем, является ли пост POST-запросом.
+        if ($this->getRequest()->isPost()) {
+            
+            // Получаем POST-данные.
+            $data = $this->params()->fromPost();
+            
+            // Заполняем форму данными.
+            $form->setData($data);
+            if ($form->isValid()) {
+                                
+                // Получаем валидированные данные формы.
+                $data = $form->getData();
+                
+                //                 
+                $this->adminManager->setLaximoSettings($data);
+                
+                $this->flashMessenger()->addSuccessMessage(
+                        'Настройки сохранены.');
+
+                $this->redirect()->toRoute('admin', ['action' => 'laximo-settings']);
             } else {
                 $this->flashMessenger()->addInfoMessage(
                         'Настройки не сохранены.');                

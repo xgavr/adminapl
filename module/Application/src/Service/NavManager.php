@@ -616,6 +616,12 @@ class NavManager
                     'link'  => $url('admin', ['action' => 'apl-exchange-settings'])                    
                 ];
 
+                $settingsDropDownItems[] = [
+                    'id' => 'laximo',
+                    'label' => 'Настройи Laximo',
+                    'link'  => $url('admin', ['action' => 'laximo-settings'])                    
+                ];
+                
 //                $settingsDropDownItems[] = [
 //                    'id' => 'zetasoft',
 //                    'label' => 'Настройи ZetaSoft',

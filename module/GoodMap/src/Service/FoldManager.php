@@ -465,7 +465,7 @@ class FoldManager {
     {
         $this->removeFoldsByDoc($vt->getId(), Movement::DOC_VT);
         
-        if ($vt->getStatus() === Vt::STATUS_ACTIVE){
+        if ($vt->getStatus() !== Vt::STATUS_RETIRED){
             
             $defaultRack = $this->findOfficeRack($vt->getOffice());
 

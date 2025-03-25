@@ -127,4 +127,21 @@ class ExternalController extends AbstractActionController
         ]);                   
     }
     
+    public function laximoAction()
+    {
+        $action = $this->params()->fromQuery('action');
+        
+        if ($action == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $result = $this->externalManager->laximo($action);
+        
+        //.
+        return new JsonModel([
+            'message' => $result,
+        ]);                   
+    }
+    
 }

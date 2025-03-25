@@ -28,7 +28,8 @@ class AdminManager {
     const TELEGRAM_SETTINGS_FILE       = './data/settings/telegram_config.php'; // файл с настройками telegram
     const ABCP_SETTINGS_FILE                    = './data/settings/abcp_config.php'; //файл с настройками abcp
     const AVTOIT_SETTINGS_FILE                    = './data/settings/avtoit_config.php'; //файл с настройками abcp
-    const ZETASOFT_SETTINGS_FILE                    = './data/settings/zetasoft_config.php'; //файл с настройками abcp
+    const ZETASOFT_SETTINGS_FILE                    = './data/settings/zetasoft_config.php'; //файл с настройками zetasoft
+    const LAXIMO_SETTINGS_FILE                    = './data/settings/laximo_config.php'; //файл с настройками laximo
     const PARTS_API_SETTINGS_FILE      = './data/settings/parts_api_config.php'; //файл с настройками abcp
     const API_MARKET_PLACES      = './data/settings/api_market_places.php'; //файл с настройками апи тп
     const SBP_SETTINGS      = './data/settings/sbp_settings.php'; //файл с настройками сбп
@@ -643,6 +644,56 @@ class AdminManager {
         $writer = new PhpArray();
         
         $writer->toFile(self::ZETASOFT_SETTINGS_FILE, $config);
+    }
+    
+    /**
+     * Получить настройки laximo
+     * 
+     * @return array
+     */
+    public function getLaximoSettings()
+    {
+        if (file_exists(self::LAXIMO_SETTINGS_FILE)){
+            $config = new Config(include self::LAXIMO_SETTINGS_FILE);
+        }  else {
+            $config = new Config([], true);
+            $config->laximo_settings = [];
+        }   
+        
+        return $config->laximo_settings;
+    }
+
+    
+    /**
+     * Настройки laximo
+     * @param array $data
+     */
+    public function setLaximoSettings($data)
+    {
+        if (!is_dir(self::SETTINGS_DIR)){
+            mkdir(self::SETTINGS_DIR);
+        }        
+        if (file_exists(self::LAXIMO_SETTINGS_FILE)){
+            $config = new Config(include self::LAXIMO_SETTINGS_FILE, true);
+        }  else {
+            $config = new Config([], true);
+            $config->laximo_settings = [];
+        }
+        
+        if (!isset($config->laximo_settings)){
+            $config->laximo_settings = [];
+        }
+        
+//        $config->laximo_settings->host = $data['host'];
+        $config->laximo_settings->login = $data['login'];
+//        $config->laximo_settings->md5_key = $data['md5_key'];
+        $config->laximo_settings->api_key = $data['api_key'];
+//        $config->laximo_settings->max_query = $data['max_query'];
+//        $config->laximo_settings->do_query = $data['do_query'];
+        
+        $writer = new PhpArray();
+        
+        $writer->toFile(self::LAXIMO_SETTINGS_FILE, $config);
     }
     
     /**
