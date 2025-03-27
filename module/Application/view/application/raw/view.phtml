@@ -58,30 +58,30 @@ $this->pageBreadcrumbs()->setItems([
                             <?= $this->escapeHtml($row->getStatusAsString())?>
                             <br/>
                             <?php if ($row->getUnknownProducer()):?>
-                                <a href="/producer/unknown-view/<?= $row->getUnknownProducer()->getId();?> target='_blank'"><?=$row->getUnknownProducer()->getName()?></a>                            
+                                <a href="/producer/unknown-view/<?= $row->getUnknownProducer()->getId();?>" target="_blank"><?=$row->getUnknownProducer()->getName()?></a>                            
                             <?php endif?>
                             <br/>
                             <?php if ($row->getCode()):?>
                                 <?php if ($row->getCode()->getId()):?>
-                                    <a href="/producer/article-view/<?= $row->getCode()->getId();?> target='_blank'"><?=$row->getCode()->getCode()?></a>                            
+                                    <a href="/producer/article-view/<?= $row->getCode()->getId();?>" target="_blank"><?=$row->getCode()->getCode()?></a>                            
                                 <?php endif?>
                             <?php endif?>
                             <br/>
                             <?php if ($row->getStatusGood() == $row::GOOD_OK):?>
-                                <a href="/goods/view/<?= $row->getGood()->getId();?> target='_blank'"><?=$row->getGood()->getCode()?></a>                            
-                                <a href="/producer/view/<?= $row->getGood()->getProducer()->getId();?> target='_blank'"><?=$row->getGood()->getProducer()->getName()?></a> 
+                                <a href="/goods/view/<?= $row->getGood()->getId();?>" target="_blank"><?=$row->getGood()->getCode()?></a>                            
+                                <a href="/producer/view/<?= $row->getGood()->getProducer()->getId();?>" target="_blank"><?=$row->getGood()->getProducer()->getName()?></a> 
                                 
                                 <br/>
                                 <?php
                                     $foldBalances = $entityManager->getRepository(FoldBalance::class)
                                             ->findBy(['good' => $row->getGood()->getId()]);
                                 ?>    
-                                <table>
+                                <table class="table table-bordered table-condensed">
                                     <?php foreach ($foldBalances as $fold): ?>
                                         <?php if($fold->getRest() != 0): ?>
                                             <tr class="text-muted">
                                                 <td><?= $fold->getFoldName();?></td>
-                                                <td class="text-capitalize"><?= $fold->getRest();?></td>
+                                                <td class="text-right"><?= $fold->getRest();?></td>
                                             </tr>
                                         <?php endif;?>    
                                    <?php endforeach; ?>     
