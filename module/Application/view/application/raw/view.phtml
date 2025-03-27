@@ -79,7 +79,7 @@ $this->pageBreadcrumbs()->setItems([
                                 <table>
                                     <?php foreach ($foldBalances as $fold): ?>
                                         <tr>
-                                            <td><?= $fold->getName();?></td>
+                                            <td><?= $fold->getFoldName();?></td>
                                             <td><?= $fold->getRest();?></td>
                                         </tr>
                                    <?php endforeach; ?>     
