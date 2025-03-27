@@ -78,10 +78,12 @@ $this->pageBreadcrumbs()->setItems([
                                 ?>    
                                 <table>
                                     <?php foreach ($foldBalances as $fold): ?>
-                                        <tr>
-                                            <td><?= $fold->getFoldName();?></td>
-                                            <td><?= $fold->getRest();?></td>
-                                        </tr>
+                                        <?php if($fold->getRest() != 0): ?>
+                                            <tr class="text-muted">
+                                                <td><?= $fold->getFoldName();?></td>
+                                                <td class="text-capitalize"><?= $fold->getRest();?></td>
+                                            </tr>
+                                        <?php endif;?>    
                                    <?php endforeach; ?>     
                                </table>
                             <?php else:?>
