@@ -90,7 +90,8 @@ class UserRepository  extends EntityRepository
 
         $queryBuilder->select('u')
             ->from(User::class, 'u')
-//            ->leftJoin('u.office', 'o')    
+//            ->leftJoin('u.office', 'o')   
+            ->addOrderBy('u.status')    
                 ;
         
         if (is_array($params)){

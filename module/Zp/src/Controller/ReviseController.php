@@ -129,7 +129,7 @@ class ReviseController extends AbstractActionController
         $form->get('company')->setValueOptions($companyList);
         $form->get('company')->setValue($companyId);
         $form->get('user')->setValueOptions($this->entityManager->
-                getRepository(User::class)->userListForm(['status' => User::STATUS_ACTIVE, 'all' => 'веберете сотрудника']));
+                getRepository(User::class)->userListForm(['all' => 'веберете сотрудника']));
         $form->get('user')->setValue($userId);
 
         if ($this->getRequest()->isPost()) {
