@@ -1,6 +1,7 @@
 <?php
 use Application\Entity\Rawprice;
 use Application\Entity\Raw;
+use GoodMap\Entity\FoldBalance;
 
 $this->headTitle('Прайс '.$raw->getSupplier()->getName());
 
@@ -57,18 +58,32 @@ $this->pageBreadcrumbs()->setItems([
                             <?= $this->escapeHtml($row->getStatusAsString())?>
                             <br/>
                             <?php if ($row->getUnknownProducer()):?>
-                                <a href="/producer/unknown-view/<?= $row->getUnknownProducer()->getId();?>"><?=$row->getUnknownProducer()->getName()?></a>                            
+                                <a href="/producer/unknown-view/<?= $row->getUnknownProducer()->getId();?> target='_blank'"><?=$row->getUnknownProducer()->getName()?></a>                            
                             <?php endif?>
                             <br/>
                             <?php if ($row->getCode()):?>
                                 <?php if ($row->getCode()->getId()):?>
-                                    <a href="/producer/article-view/<?= $row->getCode()->getId();?>"><?=$row->getCode()->getCode()?></a>                            
+                                    <a href="/producer/article-view/<?= $row->getCode()->getId();?> target='_blank'"><?=$row->getCode()->getCode()?></a>                            
                                 <?php endif?>
                             <?php endif?>
                             <br/>
                             <?php if ($row->getStatusGood() == $row::GOOD_OK):?>
-                                <a href="/goods/view/<?= $row->getGood()->getId();?>"><?=$row->getGood()->getCode()?></a>                            
-                                <a href="/producer/view/<?= $row->getGood()->getProducer()->getId();?>"><?=$row->getGood()->getProducer()->getName()?></a> 
+                                <a href="/goods/view/<?= $row->getGood()->getId();?> target='_blank'"><?=$row->getGood()->getCode()?></a>                            
+                                <a href="/producer/view/<?= $row->getGood()->getProducer()->getId();?> target='_blank'"><?=$row->getGood()->getProducer()->getName()?></a> 
+                                
+                                <br/>
+                                <?php
+                                    $foldBalances = $entityManager->getRepository(FoldBalance::class)
+                                            ->findBy(['good' => $row->getGood()->getId()]);
+                                ?>    
+                                <table>
+                                    <?php foreach ($foldBalances as $fold): ?>
+                                        <tr>
+                                            <td><?= $fold->getName();?></td>
+                                            <td><?= $fold->getRest();?></td>
+                                        </tr>
+                                   <?php endforeach; ?>     
+                               </table>
                             <?php else:?>
                                 <?= $row->getStatusGoodName(); ?>
                             <?php endif?>

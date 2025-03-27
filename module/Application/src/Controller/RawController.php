@@ -177,6 +177,7 @@ class RawController extends AbstractActionController
             'raw' => $raw,
             'rawManager' => $this->rawManager,
             'parseManager' => $this->parseManager,
+            'entityManager' => $this->entityManager,
             'rawprice' => $paginator,
             'priceDescriptionElements' => $priceDescriptionForm->getElements(),
             'statuses' => $statuses,
