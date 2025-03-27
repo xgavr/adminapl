@@ -19,6 +19,7 @@ use Zp\Entity\PersonalMutual;
 use Zp\Entity\PersonalRevise;
 use Application\Entity\Order;
 use Zp\Entity\DocCalculator;
+use User\Entity\User;
         
 /**
  * Description of ZpRepository
@@ -140,6 +141,28 @@ class ZpRepository extends EntityRepository
         }    
 //                var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getOneOrNullResult();       
+    }
+    
+    /**
+     * Список сотрудников в ЗП
+     */
+    public function findMutualsUsers()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->join('u.personalMutuals', 'pm')
+            ->distinct()
+            ->andWhere('pm.status = :status')
+            ->setParameter('status', PersonalMutual::STATUS_ACTIVE) 
+            ->orderBy('u.status')    
+                
+                ;
+        
+        return $queryBuilder->getQuery()->getResult(); 
     }
     
     /**

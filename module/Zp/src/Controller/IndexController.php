@@ -66,8 +66,8 @@ class IndexController extends AbstractActionController
     {
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
-        $users = $this->entityManager->getRepository(User::class)
-                ->findBy(['status' => User::STATUS_ACTIVE]);
+        $users = $this->entityManager->getRepository(PersonalMutual::class)
+                ->findMutualsUsers();
         $accruals = $this->entityManager->getRepository(Accrual::class)
                 ->findBy(['status' => Accrual::STATUS_ACTIVE]);
         
@@ -154,8 +154,8 @@ class IndexController extends AbstractActionController
     {
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
-        $users = $this->entityManager->getRepository(User::class)
-                ->findBy(['status' => User::STATUS_ACTIVE]);
+        $users = $this->entityManager->getRepository(PersonalMutual::class)
+                ->findMutualsUsers();
         $accruals = $this->entityManager->getRepository(Accrual::class)
                 ->findBy(['status' => Accrual::STATUS_ACTIVE]);
         
@@ -273,8 +273,8 @@ class IndexController extends AbstractActionController
 
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
-        $users = $this->entityManager->getRepository(User::class)
-                ->findBy(['status' => User::STATUS_ACTIVE]);
+        $users = $this->entityManager->getRepository(PersonalMutual::class)
+                ->findMutualsUsers();
         $accruals = $this->entityManager->getRepository(Accrual::class)
                 ->findBy(['status' => Accrual::STATUS_ACTIVE]);
         
