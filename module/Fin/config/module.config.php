@@ -23,6 +23,20 @@ return [
                     ],
                 ],
             ],
+            'balance' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/balance[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller'    => Controller\BalanceController::class,
+                        'action'        => 'index',
+                    ],
+                ],
+            ],
             'dds' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -55,6 +69,10 @@ return [
     ],
     'access_filter' => [
         'controllers' => [
+            Controller\BalanceController::class => [
+                // Allow access to authenticated users.
+                ['actions' => '*', 'allow' => '@']
+            ],
             Controller\DdsController::class => [
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
@@ -71,6 +89,7 @@ return [
     ],    
     'controllers' => [
         'factories' => [
+            Controller\BalanceController::class => Controller\Factory\BalanceControllerFactory::class,
             Controller\DdsController::class => Controller\Factory\DdsControllerFactory::class,
             Controller\IndexController::class => Controller\Factory\IndexControllerFactory::class,
             Controller\OpuController::class => Controller\Factory\OpuControllerFactory::class,
@@ -78,6 +97,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            Service\BalanceManager::class => Service\Factory\BalanceManagerFactory::class,
             Service\DdsManager::class => Service\Factory\DdsManagerFactory::class,
             Service\FinManager::class => Service\Factory\FinManagerFactory::class,
         ],

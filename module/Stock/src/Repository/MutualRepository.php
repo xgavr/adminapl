@@ -371,6 +371,11 @@ class MutualRepository extends EntityRepository{
                         ->setParameter('endDate', $params['endDate'])
                         ;
             }
+            if (!empty($params['endDateMinus'])){
+                $queryBuilder->andWhere("$alias.dateOper < :endDateMinus")
+                        ->setParameter('endDateMinus', $params['endDateMinus'])
+                        ;
+            }
             if (!empty($params['turnover'])){
                 $queryBuilder
                     ->addSelect("sum(case "
@@ -409,6 +414,16 @@ class MutualRepository extends EntityRepository{
                         ->addGroupBy("$alias.company")
                         ;
             }
+            if (!empty($params['debtor'])){
+                $queryBuilder
+                        ->having("total > 0")
+                        ;
+            }
+            if (!empty($params['creditor'])){
+                $queryBuilder
+                        ->having("total < 0")
+                        ;
+            }
         }
         
         return $queryBuilder;                        
@@ -423,7 +438,7 @@ class MutualRepository extends EntityRepository{
     {
         $qb = $this->mutualBalanceQb($params);        
         
-//        var_dump($qb->getQuery()->getSQL());
+//        var_dump($qb->getQuery()->getSQL()); exit;
         return $qb->getQuery();
     }
 

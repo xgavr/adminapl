@@ -1,0 +1,183 @@
+<?php
+use Laminas\Json\Encoder;
+use Fin\Entity\FinDds;
+use Fin\Entity\FinBalance;
+
+$this->headTitle('Баланс');
+
+$this->mainMenu()->setActiveItemId('report');
+$this->mainMenu()->setActiveUrl($this->url('balance'));
+
+$this->pageBreadcrumbs()->setItems([
+            'Главная'=>$this->url('home'),
+            'Баланс' => $this->url('balance')
+            ]);  
+
+?>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="toolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group">
+                    <select id="yearSelect" class="form-control" name="year">
+                        <?php foreach ($years as $year):?>
+                            <option value="<?= $year?>"><?= $year?></option>
+                        <?php endforeach; ?>    
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select id="companySelect" name="company" style="width: 200px" class="form-control cookie-control">
+                        <?php foreach ($companies as $value):?>
+                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                        <?php endforeach;?>
+                    </select>                    
+                </div>    
+                <button class="btn btn-default calculate-button"
+                        title="Пересчитать баланс">
+                    <span class="glyphicon glyphicon-rub" ></span>
+                </button>                         
+            </div>
+        </div>    
+        <table id="table" 
+            data-toggle="table" 
+            data-url="/balance/content"
+            data-side-pagination="server"
+            data-pagination="false" 
+            data-page-list="[5, 10, 20, 50]"
+            data-toolbar="#toolbar"
+            data-show-refresh="true"
+            data-show-toggle="false"
+            data-query-params="queryParams"
+            data-response-handler="responseHandler"
+            data-show-footer="false"
+            data-row-style="rowStyle"
+            data-classes = "table table-bordered table-hover table-condensed"
+            >
+            <thead>
+                <tr>
+                     <th data-field="mark" data-sortable="false">Показатель</th>
+                     <th data-field="01" data-sortable="false" data-align="right" data-formatter="amountFormatter">Январь</th>
+                     <th data-field="02" data-sortable="false" data-align="right" data-formatter="amountFormatter">Февраль</th>
+                     <th data-field="03" data-sortable="false" data-align="right" data-formatter="amountFormatter">Март</th>
+                     <th data-field="04" data-sortable="false" data-align="right" data-formatter="amountFormatter">Апрель</th>
+                     <th data-field="05" data-sortable="false" data-align="right" data-formatter="amountFormatter">Май</th>
+                     <th data-field="06" data-sortable="false" data-align="right" data-formatter="amountFormatter">Июнь</th>
+                     <th data-field="07" data-sortable="false" data-align="right" data-formatter="amountFormatter">Июль</th>
+                     <th data-field="08" data-sortable="false" data-align="right" data-formatter="amountFormatter">Август</th>
+                     <th data-field="09" data-sortable="false" data-align="right" data-formatter="amountFormatter">Сентябрь</th>
+                     <th data-field="10" data-sortable="false" data-align="right" data-formatter="amountFormatter">Октябрь</th>
+                     <th data-field="11" data-sortable="false" data-align="right" data-formatter="amountFormatter">Ноябрь</th>
+                     <th data-field="12" data-sortable="false" data-align="right" data-formatter="amountFormatter">Декабрь</th>
+                     <th data-field="13" data-sortable="false" data-align="right" data-formatter="amountTotalFormatter">Итого</th>
+                 </tr>                
+            </thead>
+        </table>
+    </div>
+</div>    
+
+<script type="text/javascript">
+    var $table = $('#table');
+        $ok = $('#ok');
+    
+    function refreshTable(){
+        $table.bootstrapTable('refresh');
+    }
+    
+
+    $(function () {
+        $ok.click(function () {
+            refreshTable();
+        });
+        $table.on('load-success.bs.table', function (e, res) {
+            tableRowClick();        
+        });                
+        $(document).on('change', '#companySelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('change', '#yearSelect', function (e) {
+            refreshTable();
+        });
+        $(document).on('click', '.calculate-button', function (e) {
+            var url = "/balance/calculate?year="+$('#yearSelect').val();
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: true
+            });
+            $.ajax({
+                type: 'GET',
+                url: url
+            })
+                .done(function (data) {
+                    dialog.modal('hide');
+                    refreshTable();
+                })
+                .fail(function () {
+                    dialog.modal('hide');
+                    bootbox.alert("Произошла ошибка при выполнении операции.");
+                });                
+            });                
+    });    
+    
+    function rowStyle(row){
+        var retired = 'tablerow';
+        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinBalance::getSuccessList()))?>) >= 0){
+            retired += ' success';
+        }
+        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinBalance::getInfoList()))?>) >= 0){
+            retired += ' info';
+        }
+        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinBalance::getMuteList()))?>) >= 0){
+            retired += ' retired-muted';
+        }
+        if ($.inArray(row.key, <?= Encoder::encode(array_keys(FinBalance::getWarningList()))?>) >= 0){
+            retired += ' warning';
+        }
+        return {classes: retired};
+    }
+    
+    function queryParams(params) {
+        $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        limit = $('#table .page-size').html();
+        if (limit){
+            params.limit = limit;
+        }    
+        offset = $('#table li.page-number.active a').html();
+        if (offset){
+            params.offset = params.limit * (offset - 1);
+        }    
+        
+        return params;
+    }
+    
+    function amountFormatter(value, row){
+        if (value > 0){
+            return $.number(value, 0, ',', ' ' );
+        }
+        if (value < 0){
+            return '<span style="color:red">'+$.number(value, 0, ',', ' ' )+'</span>';
+        }
+        
+        return '';
+    }    
+        
+    function amountTotalFormatter(value, row){
+        if (value > 0){
+            return '<b>'+$.number(value, 0, ',', ' ' )+'</b>';
+        }
+        if (value < 0){
+            return '<b style="color:red">'+$.number(value, 0, ',', ' ' )+'</b>';
+        }
+        
+        return '';
+    }    
+        
+    function responseHandler(res) {
+        return res;
+    }    
+</script>

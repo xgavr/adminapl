@@ -623,7 +623,7 @@ class ClientRepository extends EntityRepository{
     }  
     
     /**
-     * Посиск клиентов для обнуления
+     * Поиск клиентов для обнуления
      * @param int $year
      */
     public function findClientsForReset($year = 2014)

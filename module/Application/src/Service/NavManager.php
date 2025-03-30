@@ -478,6 +478,13 @@ class NavManager
                             'label' => 'ОПиУ',
                             'link' => $url('opu')
                         ];
+                if ($this->rbacManager->isGranted(null, 'admin.manage')) {
+                    $reportDropdownItems[] = [
+                                'id' => 'fin',
+                                'label' => 'Баланс',
+                                'link' => $url('balance')
+                            ];
+                }    
                 $reportDropdownItems[] = [
                             'id' => 'fin',
                             'label' => 'Аналитика',

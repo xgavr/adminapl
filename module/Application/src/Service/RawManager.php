@@ -640,10 +640,12 @@ class RawManager {
                 ->findRawForRemove($days);
 
         foreach ($raws as $raw){
-            if ($raw->getSupplier()->getRemovePrice() === Supplier::REMOVE_PRICE_LIST_OFF && $raw->getSupplier()->getStatus() === Supplier::STATUS_ACTIVE){
-                $this->updateOldRaw($raw);
-                continue; //погодить удалять последний разобранный
-            }
+            if ($raw->getSupplier()){
+                if ($raw->getSupplier()->getRemovePrice() === Supplier::REMOVE_PRICE_LIST_OFF && $raw->getSupplier()->getStatus() === Supplier::STATUS_ACTIVE){
+                    $this->updateOldRaw($raw);
+                    continue; //погодить удалять последний разобранный
+                }
+            }    
             $rawpriceQuery = $this->entityManager->getRepository(Rawprice::class)
                     ->deleteRawRawpricesQuery($raw);
             $iterator = $rawpriceQuery->iterate();
