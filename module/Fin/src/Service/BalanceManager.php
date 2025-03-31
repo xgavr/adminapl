@@ -229,6 +229,8 @@ class BalanceManager {
                         $finBalance = $this->getFinBalance($statement['period'], $company, FinBalance::STATUS_FACT);
 
                         $finBalance->setCash($finBalance->getCash() + $statement['amount']);
+    
+                        $this->entityManager->persist($finBalance);                
                     }    
                 }
                 

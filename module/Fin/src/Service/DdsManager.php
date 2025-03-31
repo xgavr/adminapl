@@ -327,6 +327,8 @@ class DdsManager {
                         $finDds = $this->getFinDds($statement['period'], $company, FinDds::STATUS_FACT);
 
                         $finDds->setBankEnd($finDds->getBankBegin() + $statement['amount']);
+                        
+                        $this->entityManager->persist($finDds);
                     }    
                 }
                 
