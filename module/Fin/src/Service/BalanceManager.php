@@ -316,7 +316,7 @@ class BalanceManager {
                             ->find($row['companyId']);
                     $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinBalance::STATUS_FACT);
 
-                    $finBalance->setSupplierCredit($finBalance->getSupplierCredit() + $row['total']);            
+                    $finBalance->setSupplierCredit($finBalance->getSupplierCredit() - $row['total']);            
 
                     $this->entityManager->persist($finBalance);                
                 }
