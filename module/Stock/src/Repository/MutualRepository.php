@@ -331,7 +331,7 @@ class MutualRepository extends EntityRepository{
         
         if (is_array($params)){            
             if (!empty($params['supplierBalance'])){
-                $queryBuilder->addSelect($alias.'ms')
+                $queryBuilder//->addSelect($alias.'ms')
                         ->join($alias.'mcn.supplier', $alias.'ms')
                         ->addGroupBy($alias.'mcn.supplier')
                         ;
@@ -400,18 +400,18 @@ class MutualRepository extends EntityRepository{
                 $queryBuilder->addSelect('('. $qbb->getQuery()->getDQL().') as endTotal');
             }
             if (!empty($params['groupContract'])){
-                $queryBuilder->addSelect($alias.'mct')
+                $queryBuilder//->addSelect($alias.'mct')
                         ->addGroupBy("$alias.contract")
                         ;
             }
             if (!empty($params['groupLegal'])){
-                $queryBuilder->addSelect($alias.'ml')
+                $queryBuilder//->addSelect($alias.'ml')
                         ->addGroupBy("$alias.legal")
                         ;
             }
             if (!empty($params['groupCompany'])){
-                $queryBuilder->addSelect($alias.'mc')
-                        ->addGroupBy("$alias.company")
+                $queryBuilder->addSelect('identity('.$alias.'.company) as companyId')
+                        ->addGroupBy("companyId")
                         ;
             }
             if (!empty($params['debtor'])){

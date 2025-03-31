@@ -243,6 +243,18 @@ class BalanceManager {
                     $this->entityManager->persist($finBalance);                
                 }
 
+                $userBalances = $this->entityManager->getRepository(FinDds::class)
+                        ->findUserBalance($firstDayNextMonth);
+                foreach ($userBalances as $row){
+                    $company = $this->entityManager->getRepository(Legal::class)
+                            ->find($row['companyId']);
+                    $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
+
+                    $finBalance->setCash(-$row['amount'] + $finBalance->getCash());            
+
+                    $this->entityManager->persist($finBalance);                
+                }
+
                 $depositBalances = $this->entityManager->getRepository(FinDds::class)
                         ->findDepositBalance($firstDayNextMonth);
                 foreach ($depositBalances as $row){
@@ -255,17 +267,6 @@ class BalanceManager {
                     $this->entityManager->persist($finBalance);                
                 }
                 
-                $userBalances = $this->entityManager->getRepository(FinDds::class)
-                        ->findUserBalance($firstDayNextMonth);
-                foreach ($userBalances as $row){
-                    $company = $this->entityManager->getRepository(Legal::class)
-                            ->find($row['companyId']);
-                    $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
-
-                    $finBalance->setCash($row['amount'] + $finBalance->getCash());            
-
-                    $this->entityManager->persist($finBalance);                
-                }
             }
         }
         $this->entityManager->flush();
@@ -292,27 +293,27 @@ class BalanceManager {
 //                var_dump($firstDayNextMonth, $day->format('Y-m-d'));
                 $suppliersDebtors = $this->entityManager->getRepository(Mutual::class)
                         ->mutualBalance(['endDateMinus' => $firstDayNextMonth, 'supplierBalance' => 1,
-                            'groupCompany' => 1, 'debtor' => 1]);
+                            'groupCompany' => 1, 'debtor' => 1])->getResult();              
                 foreach ($suppliersDebtors as $row){
-                    var_dump($suppliersDebtors); exit;
+//                    var_dump($row); exit;
                     $company = $this->entityManager->getRepository(Legal::class)
                             ->find($row['companyId']);
                     $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinBalance::STATUS_FACT);
 
-                    $finBalance->setSupplierDebtor($row['total']);            
+                    $finBalance->setSupplierDebtor($row['total'] + $finBalance->getSupplierDebtor());            
 
                     $this->entityManager->persist($finBalance);                
                 }
                 
                 $suppliersCreditors = $this->entityManager->getRepository(Mutual::class)
                         ->mutualBalance(['endDateMinus' => $firstDayNextMonth, 'supplierBalance' => 1,
-                            'groupCompany' => 1, 'creditor' => 1]);
+                            'groupCompany' => 1, 'creditor' => 1])->getResult();
                 foreach ($suppliersCreditors as $row){
                     $company = $this->entityManager->getRepository(Legal::class)
                             ->find($row['companyId']);
                     $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinBalance::STATUS_FACT);
 
-                    $finBalance->setSupplierCredit($row['total']);            
+                    $finBalance->setSupplierCredit($row['total'] - $finBalance->getSupplierCredit());            
 
                     $this->entityManager->persist($finBalance);                
                 }
