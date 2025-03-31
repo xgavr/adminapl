@@ -212,6 +212,10 @@ class Idoc {
      */
     private function _getDataValueColumns($data)
     {
+        if (empty($data)){
+            return $data;
+        }
+        
         $matrix = new Matrix($data);
         $transpose = $matrix->transpose()->toArray();
 //        return $transpose;
