@@ -405,7 +405,7 @@ class MutualRepository extends EntityRepository{
                         ;
             }
             if (!empty($params['groupLegal'])){
-                $queryBuilder//->addSelect($alias.'ml')
+                $queryBuilder->addSelect('identity('.$alias.'.legal) as legalId')
                         ->addGroupBy("$alias.legal")
                         ;
             }
