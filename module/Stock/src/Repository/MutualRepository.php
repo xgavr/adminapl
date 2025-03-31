@@ -356,6 +356,13 @@ class MutualRepository extends EntityRepository{
                         ->setParameter('contract', $params['contractId'])
                         ;
             }
+            if (!empty($params['contractKind'])){
+                if (is_numeric($params['contractKind'])){
+                    $queryBuilder->andWhere($alias.'mct.kind = :contractKind')
+                            ->setParameter('contractKind', $params['contractKind'])
+                            ;
+                }    
+            }
             if (!empty($params['docStamp'])){
                 $queryBuilder->andWhere("$alias.docStamp <= :docStamp")
                         ->setParameter('docStamp', $params['docStamp'])

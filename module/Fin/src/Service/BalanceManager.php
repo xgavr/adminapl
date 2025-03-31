@@ -15,6 +15,7 @@ use Cash\Entity\CashDoc;
 use Bank\Entity\Statement;
 use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
+use Company\Entity\Contract;
 
 /**
  * Description of BalanceManager
@@ -293,7 +294,7 @@ class BalanceManager {
 //                var_dump($firstDayNextMonth, $day->format('Y-m-d'));
                 $suppliersDebtors = $this->entityManager->getRepository(Mutual::class)
                         ->mutualBalance(['endDateMinus' => $firstDayNextMonth, 'groupContract' => 1,
-                            'groupCompany' => 1, 'debtor' => 1])->getResult();
+                            'groupCompany' => 1,'contractKind' => Contract::KIND_SUPPLIER, 'debtor' => 1])->getResult();
         var_dump($firstDayNextMonth, $suppliersDebtors);
                 foreach ($suppliersDebtors as $row){
 //                    var_dump($row); exit;
@@ -308,7 +309,7 @@ class BalanceManager {
                 
                 $suppliersCreditors = $this->entityManager->getRepository(Mutual::class)
                         ->mutualBalance(['endDateMinus' => $firstDayNextMonth, 'groupContract' => 1,
-                            'groupCompany' => 1, 'creditor' => 1])->getResult();
+                            'groupCompany' => 1,'contractKind' => Contract::KIND_SUPPLIER, 'creditor' => 1])->getResult();
         var_dump($firstDayNextMonth, $suppliersCreditors);
                 foreach ($suppliersCreditors as $row){
                     $company = $this->entityManager->getRepository(Legal::class)
