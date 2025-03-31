@@ -400,7 +400,7 @@ class MutualRepository extends EntityRepository{
                 $queryBuilder->addSelect('('. $qbb->getQuery()->getDQL().') as endTotal');
             }
             if (!empty($params['groupContract'])){
-                $queryBuilder//->addSelect($alias.'mct')
+                $queryBuilder->addSelect('identity('.$alias.'.contract) as contractId')
                         ->addGroupBy("$alias.contract")
                         ;
             }
