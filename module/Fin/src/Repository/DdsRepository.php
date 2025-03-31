@@ -251,6 +251,31 @@ class DdsRepository extends EntityRepository
     }
     
     /**
+     * Получить остатки в банке организации
+     * @param Legal $company
+     * @param date $startDate
+     * @return array
+     */
+    public function findCompanyBankBalance($company, $startDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('sum(b.balance) as amount')
+            ->from(Balance::class, 'b')
+            ->andWhere('b.dateBalance = :startDate')    
+            ->setParameter('startDate', $startDate)    
+            ->andWhere('b.company = :company')    
+            ->setParameter('company', $company->getId()) 
+            ->setMaxResults(1)    
+ 
+                ;
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getOneOrNullResult(2);       
+    }
+    
+    /**
      * Получить остатки на депозите
      * @param date $startDate
      * @return array

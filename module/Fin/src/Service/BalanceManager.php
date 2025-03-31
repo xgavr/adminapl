@@ -209,16 +209,17 @@ class BalanceManager {
 //                var_dump($firstDayNextMonth, $day->format('Y-m-d'));
                 $bankBalances = $this->entityManager->getRepository(FinDds::class)
                         ->findBankBalance($firstDayNextMonth);
+                
                 foreach ($bankBalances as $row){
                     $company = $this->entityManager->getRepository(Legal::class)
                             ->find($row['companyId']);
                     $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinBalance::STATUS_FACT);
-
+                    
                     $finBalance->setCash($finBalance->getCash() + $row['amount']);  
                     
                     $this->entityManager->persist($finBalance);                
                     
-                    var_dump('bank', $finBalance->getPeriod(), $finBalance->getCash());
+//                    var_dump('bank', $finBalance->getPeriod(), $finBalance->getCash());
                 }
 
                 // банк текущий месяц
@@ -228,13 +229,22 @@ class BalanceManager {
                     foreach ($statements as $statement){
                         $company = $this->entityManager->getRepository(Legal::class)
                                 ->find($statement['companyId']);
+                        
+                        $companyBalance =  $this->entityManager->getRepository(FinDds::class)
+                            ->findCompanyBankBalance($company, date('Y-m-01'));
+                        
+                        $begin = 0;
+                        if ($companyBalance){
+                            $begin = $companyBalance['amount'];
+                        }
+                        
                         $finBalance = $this->getFinBalance($statement['period'], $company, FinBalance::STATUS_FACT);
 
-                        $finBalance->setCash($finBalance->getCash() + $statement['amount']);
+                        $finBalance->setCash($begin + $finBalance->getCash() + $statement['amount']);
     
                         $this->entityManager->persist($finBalance);                
                         
-                        var_dump('bank', $finBalance->getPeriod(), $finBalance->getCash());
+//                        var_dump('bank', $finBalance->getPeriod(), $finBalance->getCash());
                     }    
                 }
                 
@@ -249,7 +259,7 @@ class BalanceManager {
 
                     $this->entityManager->persist($finBalance);                
                         
-                    var_dump('cash', $finBalance->getPeriod(), $finBalance->getCash());
+//                    var_dump('cash', $finBalance->getPeriod(), $finBalance->getCash());
                 }
 
                 $userBalances = $this->entityManager->getRepository(FinDds::class)
@@ -263,7 +273,7 @@ class BalanceManager {
 
                     $this->entityManager->persist($finBalance);                
 
-                    var_dump('user', $finBalance->getPeriod(), $finBalance->getCash());
+//                    var_dump('user', $finBalance->getPeriod(), $finBalance->getCash());
                 }
 
                 $depositBalances = $this->entityManager->getRepository(FinDds::class)
