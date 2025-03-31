@@ -294,7 +294,7 @@ class BalanceManager {
                 $suppliersDebtors = $this->entityManager->getRepository(Mutual::class)
                         ->mutualBalance(['endDateMinus' => $firstDayNextMonth, 'supplierBalance' => 1,
                             'groupCompany' => 1, 'debtor' => 1])->getResult();
-        var_dump($suppliersDebtors);
+        var_dump($firstDayNextMonth, $suppliersDebtors);
                 foreach ($suppliersDebtors as $row){
 //                    var_dump($row); exit;
                     $company = $this->entityManager->getRepository(Legal::class)
@@ -309,7 +309,7 @@ class BalanceManager {
                 $suppliersCreditors = $this->entityManager->getRepository(Mutual::class)
                         ->mutualBalance(['endDateMinus' => $firstDayNextMonth, 'supplierBalance' => 1,
                             'groupCompany' => 1, 'creditor' => 1])->getResult();
-        var_dump($suppliersCreditors);
+        var_dump($firstDayNextMonth, $suppliersCreditors);
                 foreach ($suppliersCreditors as $row){
                     $company = $this->entityManager->getRepository(Legal::class)
                             ->find($row['companyId']);
