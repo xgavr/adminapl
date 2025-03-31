@@ -84,7 +84,7 @@ class BalanceController extends AbstractActionController
                 }
                 $result[$key][date('m', strtotime($row['period']))] = $value;
                 
-                $result[$key]['13'] += (float) $value;
+                //$result[$key]['13'] += (float) $value;
             }    
         }        
 

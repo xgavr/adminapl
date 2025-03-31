@@ -214,7 +214,7 @@ class BalanceManager {
                             ->find($row['companyId']);
                     $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinBalance::STATUS_FACT);
 
-                    $finBalance->setCash($row['amount']);            
+                    $finBalance->setCash($finBalance->getCash() + $row['amount']);            
 
                     $this->entityManager->persist($finBalance);                
                 }
@@ -251,7 +251,7 @@ class BalanceManager {
                             ->find($row['companyId']);
                     $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinDds::STATUS_FACT);
 
-                    $finBalance->setCash(-$row['amount'] + $finBalance->getCash());            
+                    $finBalance->setCash($row['amount'] + $finBalance->getCash());            
 
                     $this->entityManager->persist($finBalance);                
                 }
@@ -295,7 +295,7 @@ class BalanceManager {
                 $suppliersDebtors = $this->entityManager->getRepository(Mutual::class)
                         ->mutualBalance(['endDateMinus' => $firstDayNextMonth, 'groupContract' => 1,
                             'groupCompany' => 1,'contractKind' => Contract::KIND_SUPPLIER, 'debtor' => 1])->getResult();
-        var_dump($firstDayNextMonth, $suppliersDebtors);
+//        var_dump($firstDayNextMonth, $suppliersDebtors);
                 foreach ($suppliersDebtors as $row){
 //                    var_dump($row); exit;
                     $company = $this->entityManager->getRepository(Legal::class)
@@ -310,7 +310,7 @@ class BalanceManager {
                 $suppliersCreditors = $this->entityManager->getRepository(Mutual::class)
                         ->mutualBalance(['endDateMinus' => $firstDayNextMonth, 'groupContract' => 1,
                             'groupCompany' => 1,'contractKind' => Contract::KIND_SUPPLIER, 'creditor' => 1])->getResult();
-        var_dump($firstDayNextMonth, $suppliersCreditors);
+//        var_dump($firstDayNextMonth, $suppliersCreditors);
                 foreach ($suppliersCreditors as $row){
                     $company = $this->entityManager->getRepository(Legal::class)
                             ->find($row['companyId']);
