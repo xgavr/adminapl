@@ -331,7 +331,7 @@ class MutualRepository extends EntityRepository{
         
         if (is_array($params)){            
             if (!empty($params['supplierBalance'])){
-                $queryBuilder//->addSelect($alias.'ms')
+                $queryBuilder->addSelect($alias.'ms.id as supplierId')
                         ->join($alias.'mcn.supplier', $alias.'ms')
                         ->addGroupBy($alias.'mcn.supplier')
                         ;
