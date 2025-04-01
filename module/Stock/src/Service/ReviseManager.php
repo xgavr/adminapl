@@ -458,11 +458,11 @@ class ReviseManager
     public function offsetClientBalance($client, $year = 2024)
     {
         $operDate = $year.'-01-01';
+        var_dump($operDate, $this->getAllowDate()); exit;
         if (empty($client->getBalance()) && $operDate > $this->getAllowDate()){
             $retailBalances = $this->entityManager->getRepository(Client::class)
                     ->getRetailBalanceByCompany($client);
             
-            var_dump($retailBalances); exit;
             foreach ($retailBalances as $retailBalance){
                 $data = [
                     'docNo' => 'Nавто',
