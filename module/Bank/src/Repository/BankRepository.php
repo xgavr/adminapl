@@ -177,9 +177,10 @@ class BankRepository extends EntityRepository
     /**
      * Получить текущий остаток по счету 
      * @param string $account
+     * @param date $endDate
      * @return float
      */
-    public function currentBalance($account)
+    public function currentBalance($account, $endDate = null)
     {
         $entityManger = $this->getEntityManager();
         $queryBuilder = $entityManger->createQueryBuilder();
@@ -191,6 +192,11 @@ class BankRepository extends EntityRepository
                 ->orderBy('b.dateBalance', 'DESC')
                 ->setMaxResults(1)
                 ;
+        
+        if ($endDate){
+            $queryBuilder->andWhere('b.dateBalance < :startDate')
+                    ->setParameter('startDate', $endDate);
+        }
         
         $balance = $queryBuilder->getQuery()->getOneOrNullResult();
         
@@ -206,6 +212,11 @@ class BankRepository extends EntityRepository
                     ->setParameter('status', Statement::STATUS_ACTIVE)
                     ->groupBy('s.account')
                     ;
+            
+            if ($endDate){
+                $queryBuilder->andWhere('s.chargeDate < :endDate')
+                        ->setParameter('endDate', $endDate);
+            }
             
             $statement = $queryBuilder->getQuery()->getOneOrNullResult();
             
@@ -449,5 +460,25 @@ class BankRepository extends EntityRepository
                 ->findOneBy(['inn' => $statement->getСounterpartyInn()]);
         
         return $legal;
+    }
+    
+    /**
+     * Компании в выписках
+     */
+    public function statementCompanies()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('identity(c.company) as companyId')
+            ->from(Statement::class, 's')
+            ->distinct()    
+            ->andWhere('s.status = :status') 
+            ->setParameter('status', Statement::STATUS_ACTIVE)    
+             ;
+        
+        return $queryBuilder->getQuery()->getResult(2);
+        
     }
 }

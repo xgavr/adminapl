@@ -16,6 +16,7 @@ use Bank\Entity\Statement;
 use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
 use Company\Entity\Contract;
+use Company\Entity\BankAccount;
 
 /**
  * Description of BalanceManager
@@ -203,49 +204,26 @@ class BalanceManager {
             new \DateTime($endDate)
         );
 
+        $companies = $this->entityManager->getRepository(BankAccount::class)
+                ->companies();
+
         foreach ($p as $day){
             if (date('Y-m-d') >= $day->format('Y-m-d')){
                 $firstDayNextMonth = date('Y-m-d', strtotime($day->format('Y-m-d').' first day of next month'));
-//                var_dump($firstDayNextMonth, $day->format('Y-m-d'));
-                $bankBalances = $this->entityManager->getRepository(FinDds::class)
-                        ->findBankBalance($firstDayNextMonth);
                 
-                foreach ($bankBalances as $row){
-                    $company = $this->entityManager->getRepository(Legal::class)
-                            ->find($row['companyId']);
+                foreach ($companies as $company){
+                    $bankTotal = 0;
+                    foreach ($company->getBankAccounts() as $bankAccount){
+                        $bankTotal += $this->entityManager->getRepository(Statement::class)
+                                ->currentBalance($bankAccount->getRs(), $firstDayNextMonth);
+                    }
+                    
                     $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinBalance::STATUS_FACT);
                     
-                    $finBalance->setCash($finBalance->getCash() + $row['amount']);  
+                    $finBalance->setCash($finBalance->getCash() + $bankTotal);
                     
-                    $this->entityManager->persist($finBalance);                
+                    $this->entityManager->persist($finBalance); 
                     
-//                    var_dump('bank', $finBalance->getPeriod(), $finBalance->getCash());
-                }
-
-                // банк текущий месяц
-                if ($day->format('Y-m-d') == date('Y-m-01')){
-                    $statements = $this->entityManager->getRepository(FinDds::class)
-                            ->findStatement(date('Y-m-01'), date('Y-m-t'), []);
-                    foreach ($statements as $statement){
-                        $company = $this->entityManager->getRepository(Legal::class)
-                                ->find($statement['companyId']);
-                        
-                        $companyBalance =  $this->entityManager->getRepository(FinDds::class)
-                            ->findCompanyBankBalance($company, date('Y-m-01'));
-                        
-                        $begin = 0;
-                        if ($companyBalance){
-                            $begin = $companyBalance['amount'];
-                        }
-                        
-                        $finBalance = $this->getFinBalance($statement['period'], $company, FinBalance::STATUS_FACT);
-
-                        $finBalance->setCash($begin + $finBalance->getCash() + $statement['amount']);
-    
-                        $this->entityManager->persist($finBalance);                
-                        
-//                        var_dump('bank', $finBalance->getPeriod(), $finBalance->getCash());
-                    }    
                 }
                 
                 $cashBalances = $this->entityManager->getRepository(FinDds::class)
