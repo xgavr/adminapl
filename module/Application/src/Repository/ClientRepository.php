@@ -598,6 +598,31 @@ class ClientRepository extends EntityRepository{
     }  
 
     /**
+     * Получить баланс клиента по компаниям
+     * @param Client $client
+     */
+    public function  getRetailBalanceByCompany($client)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select("identity(r.office) as officeId, identity(r.company) as companyId, sum(r.amount) as total")
+                ->from(Retail::class, 'r')
+                ->join('r.contact', 'c')
+                ->where('c.client = :client')
+                ->setParameter('client', $client->getId())
+                ->andWhere('r.status = :status')
+                ->setParameter('status', Retail::STATUS_ACTIVE)
+                ->andWhere('r.contract is null')
+                ->addGroupBy('officeId')
+                ->addGroupBy('companyId')
+                ;
+
+        return $queryBuilder->getQuery()->getResult();
+
+    }  
+
+    /**
      * Обновить баланс клиента
      * @param Client $client
      */

@@ -427,6 +427,43 @@ class ReviseManager
     }
     
     /**
+     *  Взаимозачет долга клиентов
+     * @param Client $client
+     * @return Revise $revise
+     */
+    public function offsetClientBalance($client)
+    {
+        if (empty($client->getBalance())){
+            $retailBalances = $this->entityManager->getRepository(Client::class)
+                    ->getRetailBalanceByCompany($client);
+            
+            foreach ($retailBalances as $retailBalance){
+                $data = [
+                    'docNo' => 'Nавто',
+                    'docDate' => date('Y-m-d'),
+//                    'docDate' => '2024-01-01',
+                    'comment' => 'Взаимозачет розничного баланса',
+                    'status' => Revise::STATUS_ACTIVE,
+                    'amount' => -$retailBalance['total'],
+                    'contact' => $client->getContact()->getId(),
+                    'office' => $retailBalance['officeId'],
+                    'company' => $retailBalance['companyId'],
+                    'kind' => Revise::KIND_REVISE_CLIENT,
+                ];
+                
+                try{
+                    $revise = $this->addRevise($data);
+                    return $revise;
+                } catch (\Doctrine\DBAL\Exception\NotNullConstraintViolationException $e){
+                    var_dump($client->getId());
+                }    
+            }    
+        }
+        
+        return;
+    }
+    
+    /**
      * Обнуление старых долгов клиентов
      * @param integer $year
      */

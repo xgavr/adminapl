@@ -530,6 +530,10 @@ $this->headScript()
                             data-table="mutualtable" title="Обнулить розничный долг">
                         <span class="glyphicon" ></span>0
                     </button>                         
+                    <button value="/revise/offset-client-balance/<?= $client->getId() ?>" class="btn btn-default btn-sm refresh-table-button"
+                            data-table="mutualtable" title="Взаимозачет розничного долга">
+                        <span class="glyphicon glyphicon-envelope" ></span>0
+                    </button>                         
                     <div class="form-group">
                         <select id="mutualPeriodSelect" class="form-control" name="period">
                             <option value="date">Дата</option>

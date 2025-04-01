@@ -325,6 +325,24 @@ class ReviseController extends AbstractActionController
         );           
     }
     
+    public function offsetClientBalanceAction()
+    {
+        $clientId = $this->params()->fromRoute('id', -1);
+        $client = $this->entityManager->getRepository(Client::class)
+                ->find($clientId);        
+
+        if ($client == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->reviseManager->offsetClientBalance($client);
+        
+        return new JsonModel(
+           ['result' => 'ok-reload']
+        );           
+    }
+    
     public function statusAction()
     {
         $reviseId = $this->params()->fromRoute('id', -1);
