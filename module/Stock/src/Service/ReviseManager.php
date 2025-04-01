@@ -464,24 +464,26 @@ class ReviseManager
                     ->getRetailBalanceByCompany($client);
             
             foreach ($retailBalances as $retailBalance){
-                $data = [
-                    'docNo' => 'Nавто',
-//                    'docDate' => date('Y-m-d'),
-                    'docDate' => $operDate,
-                    'comment' => 'Взаимозачет розничного баланса',
-                    'status' => Revise::STATUS_ACTIVE,
-                    'amount' => -$retailBalance['total'],
-                    'contact' => $client->getContact()->getId(),
-                    'office' => $retailBalance['officeId'],
-                    'company' => $retailBalance['companyId'],
-                    'kind' => Revise::KIND_REVISE_CLIENT,
-                ];
-                
-                try{
-                    $revise = $this->addRevise($data);
-                    //return $revise;
-                } catch (\Doctrine\DBAL\Exception\NotNullConstraintViolationException $e){
-                    var_dump($client->getId());
+                if (round($retailBalance['total']) != 0){
+                    $data = [
+                        'docNo' => 'Nавто',
+    //                    'docDate' => date('Y-m-d'),
+                        'docDate' => $operDate,
+                        'comment' => 'Взаимозачет розничного баланса',
+                        'status' => Revise::STATUS_ACTIVE,
+                        'amount' => -$retailBalance['total'],
+                        'contact' => $client->getContact()->getId(),
+                        'office' => $retailBalance['officeId'],
+                        'company' => $retailBalance['companyId'],
+                        'kind' => Revise::KIND_REVISE_CLIENT,
+                    ];
+
+                    try{
+                        $revise = $this->addRevise($data);
+                        //return $revise;
+                    } catch (\Doctrine\DBAL\Exception\NotNullConstraintViolationException $e){
+                        var_dump($client->getId());
+                    }    
                 }    
             }    
         }
