@@ -17,6 +17,7 @@ use Bank\Entity\Statement;
 use Fin\Entity\FinBalance;
 use Stock\Entity\Movement;
 use Cash\Entity\Cash;
+use Stock\Entity\Retail;
 
 /**
  * Description of BalanceRepository
@@ -77,4 +78,45 @@ class BalanceRepository extends EntityRepository
         return $queryBuilder->getQuery();   
     }
     
+    /**
+     * Получить балансы покупателей
+     * @param date $endDate
+     * @param array $params
+     * @return array
+     */
+    public function findRetails($endDate, $params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX(); 
+        
+        $queryBuilder->select('identity(r.company) as companyId, identity(r.contact) as contactId, sum(r.amount) as amount')
+            ->from(Retail::class, 'r')    
+            ->where('r.status = :status')
+            ->setParameter('status', Retail::STATUS_ACTIVE)    
+//            ->andWhere('r.dateOper >= :startDate')    
+//            ->setParameter('startDate', $startDate)    
+            ->andWhere('r.dateOper < :endDate')    
+            ->setParameter('endDate', $endDate) 
+            ->groupBy('companyId')    
+            ->addGroupBy('contactId')  
+                ;
+        
+        if (is_array($params)){
+            if (!empty($params['debtor'])){
+                $queryBuilder
+                        ->having("amount > 0")
+                        ;
+            }
+            if (!empty($params['creditor'])){
+                $queryBuilder
+                        ->having("amount < 0")
+                        ;
+            }            
+        }
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);       
+    }
 }

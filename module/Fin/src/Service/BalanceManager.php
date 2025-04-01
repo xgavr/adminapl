@@ -322,6 +322,55 @@ class BalanceManager {
         }
         $this->entityManager->flush();
     }
+    
+    /**
+     * Покупатели
+     * @param date $period
+     */
+    public function clients($period)
+    {
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+        
+        $p = new \DatePeriod(
+            new \DateTime($startDate),
+            \DateInterval::createFromDateString('first day of next month'),
+            new \DateTime($endDate)
+        );
+
+        foreach ($p as $day){
+            if (date('Y-m-d') >= $day->format('Y-m-d')){
+                $firstDayNextMonth = date('Y-m-d', strtotime($day->format('Y-m-d').' first day of next month'));
+//                var_dump($firstDayNextMonth, $day->format('Y-m-d'));
+                $clientDebtors = $this->entityManager->getRepository(FinBalance::class)
+                        ->findRetails($firstDayNextMonth, ['debtor' => 1]);
+//        var_dump($firstDayNextMonth, $clientDebtors);
+                foreach ($clientDebtors as $row){
+                    $company = $this->entityManager->getRepository(Legal::class)
+                            ->find($row['companyId']);
+                    $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinBalance::STATUS_FACT);
+
+                    $finBalance->setClientDebtor($row['amount'] + $finBalance->getClientDebtor());            
+
+                    $this->entityManager->persist($finBalance);                
+                }
+                
+                $clientCreditors = $this->entityManager->getRepository(FinBalance::class)
+                        ->findRetails($firstDayNextMonth, ['creditor' => 1]);
+//        var_dump($firstDayNextMonth, $clientCreditors);
+                foreach ($clientCreditors as $row){
+                    $company = $this->entityManager->getRepository(Legal::class)
+                            ->find($row['companyId']);
+                    $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinBalance::STATUS_FACT);
+
+                    $finBalance->setClientCredit($finBalance->getClientCredit() - $row['amount']);            
+
+                    $this->entityManager->persist($finBalance);                
+                }
+            }
+        }
+        $this->entityManager->flush();
+    }
 
     /**
      * 
@@ -836,6 +885,7 @@ class BalanceManager {
         $this->caches($period);
         $this->goods($period);
         $this->suppliers($period);
+        $this->clients($period);
 
 //        $this->incomeRetail($period);
 //        $this->incomeSupplier($period);
