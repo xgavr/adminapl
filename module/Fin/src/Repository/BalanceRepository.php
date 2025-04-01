@@ -101,7 +101,8 @@ class BalanceRepository extends EntityRepository
             ->andWhere('r.dateOper < :endDate')    
             ->setParameter('endDate', $endDate) 
             ->groupBy('companyId')    
-            ->addGroupBy('contactId')  
+            ->addGroupBy('contactId') 
+            ->andHaving('amount != 0')    
                 ;
         
         if (is_array($params)){
