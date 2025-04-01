@@ -501,7 +501,7 @@ class ReviseManager
 
         $clientBalances = $this->entityManager->getRepository(FinBalance::class)
                 ->findRetails($year.'-01-02');
-        var_dump(count($clientBalances)); exit;
+//        var_dump(count($clientBalances)); exit;
         foreach ($clientBalances as $row){
             $contact = $this->entityManager->getRepository(Contact::class)
                     ->find($row['contactId']);
