@@ -668,6 +668,7 @@ class ClientRepository extends EntityRepository{
         return $result;        
     }
     
+    
     /**
      * Юр лица клиента
      * @param Client $client

@@ -343,6 +343,16 @@ class ReviseController extends AbstractActionController
         );           
     }
     
+    public function offsetClientBalancesAction()
+    {
+        $year = $this->params()->fromQuery('year');
+        $this->reviseManager->offsetClientBalances($year);
+        
+        return new JsonModel(
+           ['result' => 'ok']
+        );           
+    }    
+    
     public function statusAction()
     {
         $reviseId = $this->params()->fromRoute('id', -1);

@@ -14,9 +14,8 @@ use Company\Entity\Office;
 use User\Filter\PhoneFilter;
 use Stock\Entity\Movement;
 use Stock\Entity\Register;
-use ApiMarketPlace\Entity\MarketSaleReport;
-use Laminas\Json\Encoder;
 use Application\Entity\Client;
+use Fin\Entity\FinBalance;
 
 /**
  * This service is responsible for adding/editing revise.
@@ -427,43 +426,6 @@ class ReviseManager
     }
     
     /**
-     *  Взаимозачет долга клиентов
-     * @param Client $client
-     * @return Revise $revise
-     */
-    public function offsetClientBalance($client)
-    {
-        if (empty($client->getBalance())){
-            $retailBalances = $this->entityManager->getRepository(Client::class)
-                    ->getRetailBalanceByCompany($client);
-            
-            foreach ($retailBalances as $retailBalance){
-                $data = [
-                    'docNo' => 'Nавто',
-                    'docDate' => date('Y-m-d'),
-//                    'docDate' => '2024-01-01',
-                    'comment' => 'Взаимозачет розничного баланса',
-                    'status' => Revise::STATUS_ACTIVE,
-                    'amount' => -$retailBalance['total'],
-                    'contact' => $client->getContact()->getId(),
-                    'office' => $retailBalance['officeId'],
-                    'company' => $retailBalance['companyId'],
-                    'kind' => Revise::KIND_REVISE_CLIENT,
-                ];
-                
-                try{
-                    $revise = $this->addRevise($data);
-                    //return $revise;
-                } catch (\Doctrine\DBAL\Exception\NotNullConstraintViolationException $e){
-                    var_dump($client->getId());
-                }    
-            }    
-        }
-        
-        return;
-    }
-    
-    /**
      * Обнуление старых долгов клиентов
      * @param integer $year
      */
@@ -486,5 +448,74 @@ class ReviseManager
         
         return;
     }
+    
+    /**
+     *  Взаимозачет долга клиентов
+     * @param Client $client
+     * @param integer $year
+     * @return Revise $revise
+     */
+    public function offsetClientBalance($client, $year = 2024)
+    {
+        $operDate = $year.'-01-01';
+        if (empty($client->getBalance()) and $operDate > $this->allowDate()){
+            $retailBalances = $this->entityManager->getRepository(Client::class)
+                    ->getRetailBalanceByCompany($client);
+            
+            foreach ($retailBalances as $retailBalance){
+                $data = [
+                    'docNo' => 'Nавто',
+//                    'docDate' => date('Y-m-d'),
+                    'docDate' => $operDate,
+                    'comment' => 'Взаимозачет розничного баланса',
+                    'status' => Revise::STATUS_ACTIVE,
+                    'amount' => -$retailBalance['total'],
+                    'contact' => $client->getContact()->getId(),
+                    'office' => $retailBalance['officeId'],
+                    'company' => $retailBalance['companyId'],
+                    'kind' => Revise::KIND_REVISE_CLIENT,
+                ];
+                
+                try{
+                    $revise = $this->addRevise($data);
+                    //return $revise;
+                } catch (\Doctrine\DBAL\Exception\NotNullConstraintViolationException $e){
+                    var_dump($client->getId());
+                }    
+            }    
+        }
+        
+        return;
+    }
+    
+    /**
+     * Взаимозачет старых долгов клиентов
+     * @param integer $year
+     */
+    public function offsetClientBalances($year = 2024)
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(1800);
+        $startTime = time();
+        $finishTime = $startTime + 1740;
+
+        $clientBalances = $this->entityManager->getRepository(FinBalance::class)
+                ->findRetails($year.'-01-02');
+        var_dump(count($clientBalances)); exit;
+        foreach ($clientBalances as $row){
+            $contact = $this->entityManager->getRepository(Contact::class)
+                    ->find($row['contactId']);
+            if ($contact){
+                if ($contact->getClient()){
+                    $this->offsetClientBalance($contact->getClient(), $year);
+                }
+            }    
+            if (time() >= $finishTime){
+                break;
+            }
+        }
+        
+        return;
+    }    
 }
 
