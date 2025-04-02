@@ -398,7 +398,7 @@ class BalanceManager {
                             ->find($row['companyId']);
                     $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinBalance::STATUS_FACT);
 
-                    $finBalance->setZp($row['amount'] + $finBalance->getZp());            
+                    $finBalance->setZp($finBalance->getZp() - $row['amount']);            
 
                     $this->entityManager->persist($finBalance);                
                 }                
