@@ -9,15 +9,10 @@
 namespace Fin\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Fin\Entity\FinDds;
 use Company\Entity\Legal;
-use Cash\Entity\CashTransaction;
-use Cash\Entity\UserTransaction;
-use Bank\Entity\Statement;
 use Fin\Entity\FinBalance;
-use Stock\Entity\Movement;
-use Cash\Entity\Cash;
 use Stock\Entity\Retail;
+use Zp\Entity\PersonalMutual;
 
 /**
  * Description of BalanceRepository
@@ -117,6 +112,33 @@ class BalanceRepository extends EntityRepository
                         ;
             }            
         }
+//                var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery()->getResult(2);       
+    }
+    
+    /**
+     * Получить zp
+     * @param date $endDate
+     * @return array
+     */
+    public function findZp($endDate)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+//        $orX = $queryBuilder->expr()->orX(); 
+        
+        $queryBuilder->select('identity(pm.company) as companyId, sum(pm.amount) as amount')
+            ->from(PersonalMutual::class, 'pm')    
+            ->where('pm.status = :status')
+            ->setParameter('status', PersonalMutual::STATUS_ACTIVE)    
+            ->andWhere('pm.dateOper < :endDate')    
+            ->setParameter('endDate', $endDate) 
+            ->groupBy('companyId')    
+            ->andHaving('amount != 0')    
+                ;
+        
 //                var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery()->getResult(2);       
     }
