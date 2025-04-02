@@ -224,6 +224,30 @@ class UserOutForm extends Form
         
         $this->add([            
             'type'  => 'select',
+            'name' => 'legal',
+            'attributes' => [
+                'id' => 'legal',
+                'required' => false,
+            ],
+            'options' => [
+                'label' => 'Юр. лицо',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
+            'name' => 'contract',
+            'attributes' => [
+                'id' => 'contract',
+                'required' => false,
+            ],
+            'options' => [
+                'label' => 'Договор',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'select',
             'name' => 'cost',
             'attributes' => [
                 'id' => 'cost',
@@ -340,6 +364,25 @@ class UserOutForm extends Form
                 ],
             ]);        
         
+        $inputFilter->add([
+                'name'     => 'legal',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                ],
+            ]);        
+        
+        $inputFilter->add([
+                'name'     => 'contract',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'ToInt'],
+                ],                
+                'validators' => [
+                ],
+            ]);         
     }    
     
     public function setObjectManager(ObjectManager $objectManager)

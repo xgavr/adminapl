@@ -66,6 +66,15 @@ $form->get('supplier')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('legal')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('contract')->setAttributes([
+    'class'=>'form-control', 
+    'required' => false,
+    ]);
+
 $form->get('cost')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -104,9 +113,16 @@ $form->prepare();
                 </div>
                 <div class="col-xs-3">                        
                     <div class="form-group">
-                        <?= $this->formLabel($form->get('company')); ?>
-                        <?= $this->formElement($form->get('company')); ?>
-                        <?= $this->formElementErrors($form->get('company')); ?>                  
+                        <?= $this->formLabel($form->get('dateOper')); ?>
+                        <?= $this->formElement($form->get('dateOper')); ?>
+                        <?= $this->formElementErrors($form->get('dateOper')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('status')); ?>
+                        <?= $this->formElement($form->get('status')); ?>
+                        <?= $this->formElementErrors($form->get('status')); ?>                  
                     </div>
                 </div>    
             </div>
@@ -120,16 +136,9 @@ $form->prepare();
                 </div>    
                 <div class="col-xs-3">                        
                     <div class="form-group">
-                        <?= $this->formLabel($form->get('dateOper')); ?>
-                        <?= $this->formElement($form->get('dateOper')); ?>
-                        <?= $this->formElementErrors($form->get('dateOper')); ?>                  
-                    </div>
-                </div>    
-                <div class="col-xs-3">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('status')); ?>
-                        <?= $this->formElement($form->get('status')); ?>
-                        <?= $this->formElementErrors($form->get('status')); ?>                  
+                        <?= $this->formLabel($form->get('company')); ?>
+                        <?= $this->formElement($form->get('company')); ?>
+                        <?= $this->formElementErrors($form->get('company')); ?>                  
                     </div>
                 </div>    
             </div>    
@@ -162,6 +171,13 @@ $form->prepare();
                 </div>    
                 <div class="col-xs-3">                        
                     <div class="form-group">
+                        <?= $this->formLabel($form->get('vt')); ?>
+                        <?= $this->formElement($form->get('vt')); ?>
+                        <?= $this->formElementErrors($form->get('vt')); ?>                  
+                    </div>
+                </div>    
+                <div class="col-xs-3">                        
+                    <div class="form-group">
                         <?= $this->formLabel($form->get('phone')); ?>
                         <span id="contactName"></span>
                         <?= $this->formElement($form->get('phone')); ?>
@@ -170,9 +186,9 @@ $form->prepare();
                 </div>    
                 <div class="col-xs-3">                        
                     <div class="form-group">
-                        <?= $this->formLabel($form->get('vt')); ?>
-                        <?= $this->formElement($form->get('vt')); ?>
-                        <?= $this->formElementErrors($form->get('vt')); ?>                  
+                        <?= $this->formLabel($form->get('contract')); ?>
+                        <?= $this->formElement($form->get('contract')); ?>
+                        <?= $this->formElementErrors($form->get('contract')); ?>                  
                     </div>
                 </div>    
             </div>    
@@ -232,6 +248,9 @@ $form->prepare();
                     $('#userOutModal').modal('hide');
                     //window.location.reload();
                     $('#table').bootstrapTable('refresh', {'silent':true});
+                    if ($('#mutualtable').length){
+                        $('#mutualtable').bootstrapTable('refresh', {'silent':true});
+                    }    
                     if ($('#cashdoctable').length){
                         $('#cashdoctable').bootstrapTable('refresh', {'silent':true});
                     }    
@@ -253,6 +272,35 @@ $form->prepare();
                 $('#company').append('<option value="' + key + '">' + value.name + '</option>');
             });
         });    
+    }
+    
+    function contracts(contracts){
+        $('#contract').empty();
+        $('#contract').append('<option value="-1">авто</option>');
+        $.each( contracts, function( key, value ) {
+            $('#contract').append('<option value="' + key + '">' + value + '</option>');
+        });
+    }
+    
+    function contactName(onload = flase){
+        if ($('#phone').val()){
+            $.getJSON( '/till/phone-contact?phone='+$('#phone').val(), function( data ) {
+                $('#contactName').html(data.name);
+                if (!onload){
+                    contracts(data.contracts);
+                }
+            });            
+        }    
+        if ($('#orderApl').val()){
+            $.getJSON( '/till/order-apl/'+$('#orderApl').val(), function( data ) {
+                $('#contactName').html(data.name);
+                $('#phone').val(data.phone);
+                $('#order').val(data.order);
+                if (!onload){
+                    contracts(data.contracts);
+                }
+            });            
+        }    
     }
     
     function showKindOutGroup()
@@ -316,6 +364,7 @@ $form->prepare();
     $( document ).ready(function() {
         
         showKindOutGroup();
+        contactName(true);
         <?php if (!$cashDoc): ?>
             userChange();   
         <?php endif; ?>    
@@ -328,6 +377,12 @@ $form->prepare();
             userChange();
         });
         
+        $('#phone').on('change', function(){
+            contactName();
+        });
+        $('#orderApl').on('change', function(){
+            contactName();
+        });
         
         var forms = $('#user-out-form');
         
