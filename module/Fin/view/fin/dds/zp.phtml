@@ -1,4 +1,6 @@
 <?php
+use Zp\Entity\PersonalMutual;
+
 $this->headTitle('Зарплата');
 
 $this->mainMenu()->setActiveItemId('report');
@@ -7,7 +9,7 @@ $this->mainMenu()->setActiveUrl($this->url('dds'));
 $this->pageBreadcrumbs()->setItems([
             'Главная'=>$this->url('home'),
             'ДДС' => $this->url('dds'),
-            'Зарплата' => $this->url('dds', ['action' => 'zp'])
+            'Получено деньгами' => $this->url('dds', ['action' => 'zp'])
             ]);  
 
 ?>
@@ -34,7 +36,7 @@ $this->pageBreadcrumbs()->setItems([
         </div>    
         <table id="table" 
             data-toggle="table" 
-            data-url="/dds/zp-content"
+            data-url="/dds/zp-content?kind=<?= PersonalMutual::KIND_PAYMENT?>"
             data-side-pagination="server"
             data-pagination="false" 
             data-page-list="[5, 10, 20, 50]"
