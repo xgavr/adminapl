@@ -12,6 +12,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Fin\Entity\FinDds;
 use Company\Entity\Legal;
+use Fin\Entity\FinOpu;
 
 
 class DdsController extends AbstractActionController
@@ -154,7 +155,7 @@ class DdsController extends AbstractActionController
     {
         $year = $this->params()->fromQuery('year', date('Y'));
         $companyId = $this->params()->fromQuery('company');
-        $status = $this->params()->fromQuery('status');
+        $kind = $this->params()->fromQuery('kind');
         
         $startDate = "$year-01-01";
         $endDate = "$year-12-31";
@@ -162,8 +163,8 @@ class DdsController extends AbstractActionController
         $company = $this->entityManager->getRepository(Legal::class)
                 ->find($companyId);
                 
-        $data = $this->entityManager->getRepository(FinDds::class)
-                        ->findZp($startDate, $endDate, $company);
+        $data = $this->entityManager->getRepository(FinOpu::class)
+                        ->findZp($startDate, $endDate, $company, $kind);
         
         $result = $this->finManager->emptyZpYear($startDate, $endDate, $company);
         
@@ -175,7 +176,7 @@ class DdsController extends AbstractActionController
         return new JsonModel([
             'total' => count($result),
             'rows' => array_values($result),
-        ]);                  
+        ]);                   
     }
     
     public function retailAction()
