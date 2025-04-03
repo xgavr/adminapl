@@ -152,6 +152,8 @@ class IndexController extends AbstractActionController
     
     public function payslipAction()
     {
+        $userId = $this->params()->fromRoute('id');
+        
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
         $users = $this->entityManager->getRepository(PersonalMutual::class)
@@ -165,6 +167,7 @@ class IndexController extends AbstractActionController
             'accruals' => $accruals,
             'currentUser' => $this->logManager->currentUser(),
             'rbacManager' => $this->rbacManager,
+            'userId' => $userId,
         ]);
     }
     

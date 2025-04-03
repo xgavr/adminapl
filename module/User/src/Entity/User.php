@@ -180,6 +180,11 @@ class User
         return "<a href='/users/view/{$this->id}' target='_blank'>{$this->fullName}</a>";                
     }
 
+    public function getPayslipLink()
+    {
+        return "<a href='/payslip/{$this->id}' target='_blank'>{$this->fullName}</a>";                
+    }
+
     /**
      * Sets user ID. 
      * @param int $id    
@@ -631,6 +636,7 @@ class User
             'status' => $this->getStatus(),
             'balance' => $this->getBalance(),
             'statusAsString' => $this->getStatusAsString(),
+            'payslip' => $this->getPayslipLink(),
         ];
     }
 }

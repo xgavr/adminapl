@@ -162,6 +162,7 @@ class ZpRepository extends EntityRepository
             ->andWhere('pm.status = :status')
             ->setParameter('status', PersonalMutual::STATUS_ACTIVE) 
             ->orderBy('u.status')    
+            ->addOrderBy('u.fullName')    
                 
                 ;
         
