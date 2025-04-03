@@ -135,14 +135,16 @@ use Stock\Entity\Movement;
             $('#mutualDateStart').attr('type', selectType);
             switch(selectType){
                 case 'number':
-                    $('#mutualDateStart').val(new Date().getFullYear());
-                    $('#mutualDateStart').attr('min', 2024);
+                    $('#dateStart').val(new Date().getFullYear());
+                    $('#dateStart').attr('min', 2024);
                     break;
                 case 'month':    
-//                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM"));
-//                    break;
+                    $('#dateStart').attr('min', '2024-01');
+                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM"));
+                    break;
                 default:
-                    $('#mutualDateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
+                    $('#dateStart').attr('min', '2024-01-01');
+                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
             }
         });
     });    
