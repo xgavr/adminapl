@@ -335,7 +335,7 @@ class IndexController extends AbstractActionController
     
     public function userSelectAction()
     {
-        $companyId = (int) $this->params()->fromRoute('id', -1);
+        $companyId = (int) $this->params()->fromQuery('company', -1);
 
         $result = [];
         if ($companyId>0) {

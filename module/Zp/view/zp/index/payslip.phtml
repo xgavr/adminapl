@@ -186,7 +186,7 @@ $this->pageBreadcrumbs()->setItems([
         //alert(11);
         $.getJSON( '/zp/user-select/?company='+$('#companySelect').val(), function( data ) {
             $('#userSelect').empty();
-            $('#userSelect').append('<option>все сотрудники</option>');
+            $('#userSelect').append('<option value="-1">все сотрудники</option>');
             $.each( data.rows, function( key, value ) {
                 $('#userSelect').append('<option value="' + key + '">' + value.name + '</option>');
             });
