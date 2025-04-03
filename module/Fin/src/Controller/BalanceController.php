@@ -196,7 +196,7 @@ class BalanceController extends AbstractActionController
             $balanceResult = $this->entityManager->getRepository(PersonalMutual::class)
                             ->payslip($params)->getOneOrNullResult(2);
             
-            $endBalance = empty($balanceResult['amount']) ? 0:$balanceResult['amount'];
+            $endBalance = empty($balanceResult['amount']) ? 0:-$balanceResult['amount'];
             
             $params['startDate'] = $startDate;        
             $totalResult = $this->entityManager->getRepository(PersonalMutual::class)
