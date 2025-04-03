@@ -203,8 +203,8 @@ class BalanceController extends AbstractActionController
                             ->payslip($params)->getOneOrNullResult(2);
             
             $amount = empty($totalResult['amount']) ? 0:round($totalResult['amount'], 2);
-            $amountIn = empty($totalResult['amountIn']) ? 0:round($totalResult['amountIn'], 2);
-            $amountOut = empty($totalResult['amountOut']) ? 0:round($totalResult['amountOut'], 2);
+            $amountOut = empty($totalResult['amountIn']) ? 0:round($totalResult['amountIn'], 2);
+            $amountIn = empty($totalResult['amountOut']) ? 0:round($totalResult['amountOut'], 2);
             $startBalance = $endBalance - $amount;
             
             if ($startBalance || $amountIn || $amountOut || $endBalance){
