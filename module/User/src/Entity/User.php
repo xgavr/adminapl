@@ -182,7 +182,7 @@ class User
 
     public function getPayslipLink()
     {
-        return "<a href='/payslip/{$this->id}' target='_blank'>{$this->fullName}</a>";                
+        return "<a href='/zp/payslip/{$this->id}' target='_blank'>{$this->fullName}</a>";                
     }
 
     /**

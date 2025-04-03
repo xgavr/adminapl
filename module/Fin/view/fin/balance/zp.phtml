@@ -83,34 +83,31 @@ $this->pageBreadcrumbs()->setItems([
         $(document).on('change', '#companySelect', function (e) {
             refreshTable();
         });
-        $(document).on('change', '#yearSelect', function (e) {
+        $(document).on('change', '#dateStart', function (e) {
             refreshTable();
         });
-        $(document).on('click', '.calculate-button', function (e) {
-            var url = "/opu/calculate?year="+$('#yearSelect').val();
-            var dialog = bootbox.dialog({
-                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-                closeButton: true
-            });
-            $.ajax({
-                type: 'GET',
-                url: url
-            })
-                .done(function (data) {
-                    dialog.modal('hide');
-                    refreshTable();
-                })
-                .fail(function () {
-                    dialog.modal('hide');
-                    bootbox.alert("Произошла ошибка при выполнении операции.");
-                });                
-            });                
+        $(document).on('change', '#periodSelect', function (e) {
+            var selectType = $(this).val();
+            $('#dateStart').attr('type', selectType);
+            switch(selectType){
+                case 'number':
+                    $('#dateStart').val(new Date().getFullYear());
+                    $('#dateStart').attr('min', 2024);
+                    break;
+                case 'month':    
+//                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM"));
+//                    break;
+                default:
+                    $('#dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
+            }
+        });
+                
     });    
     
     function rowStyle(row){
         var retired = 'tablerow';
         
-        if (row.user.status === '<?= User::STATUS_RETIRED?>'){
+        if (row.user.status === <?= User::STATUS_RETIRED?>){
             retired += ' retired';
         }
         
