@@ -31,12 +31,19 @@ class DdsController extends AbstractActionController
     private $ddsManager;
         
     /**
+     * Fin manager.
+     * @var \Fin\Service\FinManager
+     */
+    private $finManager;
+        
+    /**
      * Constructor. Its purpose is to inject dependencies into the controller.
      */
-    public function __construct($entityManager, $ddsManager) 
+    public function __construct($entityManager, $ddsManager, $finManager) 
     {
        $this->entityManager = $entityManager;
        $this->ddsManager = $ddsManager;
+       $this->finManager = $finManager;
     }
 
     
