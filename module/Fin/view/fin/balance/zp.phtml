@@ -140,15 +140,15 @@ $this->pageBreadcrumbs()->setItems([
             return +row[field];
         }).reduce(function (sum, i) {
             return (Math.round((sum + i)*100)/100);
-        }, 0)), 0, ',', ' ');
+        }, 0)), 2, ',', ' ');
     }        
     
     function amountFormatter(value){
         if (value > 0){
-            return $.number(value, 0, ',', ' ' );
+            return $.number(value, 2, ',', ' ' );
         }
         if (value < 0){
-            return '<span style="color:red">'+$.number(value, 0, ',', ' ' )+'</span>';
+            return '<span style="color:red">'+$.number(value, 2, ',', ' ' )+'</span>';
         }
         
         return '';
@@ -156,10 +156,10 @@ $this->pageBreadcrumbs()->setItems([
         
     function amountTotalFormatter(value){
         if (value > 0){
-            return '<b>'+$.number(value, 0, ',', ' ' )+'</b>';
+            return '<b>'+$.number(value, 2, ',', ' ' )+'</b>';
         }
         if (value < 0){
-            return '<b style="color:red">'+$.number(value, 0, ',', ' ' )+'</b>';
+            return '<b style="color:red">'+$.number(value, 2, ',', ' ' )+'</b>';
         }
         
         return '';
