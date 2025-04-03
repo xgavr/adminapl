@@ -44,9 +44,11 @@ $this->pageBreadcrumbs()->setItems([
                 <div class="form-group">
                     <select id="userSelect" name="user" style="width: 200px" class="form-control cookie-control">
                         <option>все сотрудники</option>
-                        <?php foreach ($users as $value):?>
-                            <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
-                        <?php endforeach;?>
+                        <?php if (!empty($users)):?>
+                            <?php foreach ($users as $value):?>
+                                <option value="<?= $value->getId()?>"><?= $value->getName()?></option>
+                            <?php endforeach;?>
+                        <?php endif;?>        
                     </select>                    
                 </div>    
                 <div class="form-group">
@@ -153,6 +155,17 @@ $this->pageBreadcrumbs()->setItems([
         });
         return;
     }    
+    
+    function userList(){
+        //alert(11);
+        $.getJSON( '/zp/user-select/?company='+$('#companySelect').val(), function( data ) {
+            $('#userSelect').empty();
+            $('#userSelect').append('<option>все сотрудники</option>');
+            $.each( data.rows, function( key, value ) {
+                $('#userSelect').append('<option value="' + key + '">' + value.name + '</option>');
+            });
+        });    
+    }    
 
     $(function () {
         $ok.click(function () {
@@ -161,6 +174,7 @@ $this->pageBreadcrumbs()->setItems([
         $table.on('load-success.bs.table', function (e, res) {
         });                
         $(document).on('change', '#companySelect', function (e) {
+            userList();
             refreshTable();
         });
         $(document).on('change', '#userSelect', function (e) {

@@ -67,7 +67,7 @@ class IndexController extends AbstractActionController
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
         $users = $this->entityManager->getRepository(PersonalMutual::class)
-                ->findMutualsUsers();
+                ->findMutualsUsers($companies[0]);
         $accruals = $this->entityManager->getRepository(Accrual::class)
                 ->findBy(['status' => Accrual::STATUS_ACTIVE]);
         
@@ -155,7 +155,7 @@ class IndexController extends AbstractActionController
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
         $users = $this->entityManager->getRepository(PersonalMutual::class)
-                ->findMutualsUsers();
+                ->findMutualsUsers($companies[0]);
         $accruals = $this->entityManager->getRepository(Accrual::class)
                 ->findBy(['status' => Accrual::STATUS_ACTIVE]);
         
@@ -265,7 +265,7 @@ class IndexController extends AbstractActionController
     
     public function mutualAction()
     {
-        $company = $this->params()->fromQuery('company');
+        $companyId = $this->params()->fromQuery('company', -1);
         $user = $this->params()->fromQuery('user');
         $accrual = $this->params()->fromQuery('accrual');
         $dateStart = $this->params()->fromQuery('dateStart');
@@ -273,8 +273,10 @@ class IndexController extends AbstractActionController
 
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
+        $company = $this->entityManager->getRepository(Legal::class)
+                ->find($companyId);
         $users = $this->entityManager->getRepository(PersonalMutual::class)
-                ->findMutualsUsers();
+                ->findMutualsUsers($company);
         $accruals = $this->entityManager->getRepository(Accrual::class)
                 ->findBy(['status' => Accrual::STATUS_ACTIVE]);
         
@@ -285,7 +287,7 @@ class IndexController extends AbstractActionController
             'users' => $users,
             'accruals' => $accruals,
             'userId' => $user,
-            'companyId' => $company,
+            'companyId' => $companyId,
             'accrualId' => $accrual,
             'period' => $period,
             'dateStart' => $dateStart,
@@ -330,4 +332,28 @@ class IndexController extends AbstractActionController
            ['result' => 'ok']
         );                           
     }
+    
+    public function userSelectAction()
+    {
+        $companyId = (int) $this->params()->fromRoute('id', -1);
+
+        $result = [];
+        if ($companyId>0) {
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($companyId);            
+            $users = $this->entityManager->getRepository(PersonalMutual::class)
+                    ->findMutualsUsers($company);
+            
+            foreach ($users as $user){
+                $result[$user->getId()] = [
+                    'id' => $user->getId(),
+                    'name' => $user->getFullName(),                
+                ];
+            }                
+        }    
+        
+        return new JsonModel([
+            'rows' => $result,
+        ]);                  
+    }    
 }

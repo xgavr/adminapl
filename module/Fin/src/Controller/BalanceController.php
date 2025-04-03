@@ -13,6 +13,8 @@ use Laminas\View\Model\JsonModel;
 use Fin\Entity\FinDds;
 use Fin\Entity\FinBalance;
 use Company\Entity\Legal;
+use Zp\Entity\PersonalMutual;
+use User\Entity\User;
 
 
 class BalanceController extends AbstractActionController
@@ -146,29 +148,79 @@ class BalanceController extends AbstractActionController
 
     public function zpContentAction()
     {
-        $year = $this->params()->fromQuery('year', date('Y'));
-        $companyId = $this->params()->fromQuery('company');
-        $status = $this->params()->fromQuery('status');
+        $q = $this->params()->fromQuery('search');
+        $offset = $this->params()->fromQuery('offset');
+        $company = $this->params()->fromQuery('company');
+        $dateStart = $this->params()->fromQuery('dateStart');
+        $period = $this->params()->fromQuery('period');
+        $limit = $this->params()->fromQuery('limit');
+        $sort = $this->params()->fromQuery('sort');
+        $order = $this->params()->fromQuery('order', 'DESC');
         
-        $startDate = "$year-01-01";
-        $endDate = "$year-12-31";
-
+        $startDate = '2012-01-01';
+        $endDate = '2199-01-01';
+        if (!empty($dateStart)){
+            $startDate = date('Y-m-d', strtotime($dateStart));
+            $endDate = $startDate;
+            if ($period == 'week'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'month'){
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+            }    
+            if ($period == 'number'){
+                $startDate = $dateStart.'-01-01';
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+            }    
+        }    
+        
         $company = $this->entityManager->getRepository(Legal::class)
-                ->find($companyId);
+                    ->find($company);
+        
+        $params = [
+            'company' => $company,
+            'startDate' => $startDate,
+            'endDate' => $endDate, 'summary' => true,
+            'company' => $company->getId(),
+//            'sort' => $sort, 'order' => $order, 
+        ];
+        
+        $users = $this->entityManager->getRepository(PersonalMutual::class)
+                ->findMutualsUsers($company);
+        
+        $data = [];
+        foreach ($users as $user){
+            
+            $params['user'] = $user->getId();
+            unset($params['startDate']);
+            $balanceResult = $this->entityManager->getRepository(PersonalMutual::class)
+                            ->payslip($params)->getOneOrNullResult(2);
+            
+            $endBalance = empty($balanceResult['amount']) ? 0:$balanceResult['amount'];
+            
+            $params['startDate'] = $startDate;        
+            $totalResult = $this->entityManager->getRepository(PersonalMutual::class)
+                            ->payslip($params)->getOneOrNullResult(2);
+            
+            $row = [
                 
-        $data = $this->entityManager->getRepository(FinDds::class)
-                        ->findZp($startDate, $endDate, $company);
-        
-        $result = $this->finManager->emptyZpYear($startDate, $endDate, $company);
-        
-        foreach ($data as $row){
-            $result[$row['userId']][date('m', strtotime($row['period']))] = abs(round($row['amount']));
-            $result[$row['userId']][13] += abs(round($row['amount']));
-        }
+                'company' => $company->toArray(),
+                'user' => $user->toArray(),
+                
+                'start' => $endBalance-$totalResult['amount'],
+                'amount' => $totalResult['amount'],
+                'amountIn' => $totalResult['amountIn'],
+                'amountOut' => $totalResult['amountOut'],
+                'end' => $endBalance,
+            ];
+            
+            
+            $data[] = $row;        
+        } 
         
         return new JsonModel([
-            'total' => count($result),
-            'rows' => array_values($result),
+            'total' => count($data),
+            'rows' => $data,
         ]);                  
     }
     

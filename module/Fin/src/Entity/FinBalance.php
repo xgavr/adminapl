@@ -333,21 +333,19 @@ class FinBalance
             'currentAssets' => 'Оборотные активы',
             'goods' => 'Товары',
             'cash' => 'Деньги',
-            'supplierDebtor' => 'Поставщики должны нам',
-            'clientDebtor' => 'Покупатели должны нам',
+            'supplierDebtor' => '<a href="/supplier-revision" target="_blank">Поставщики должны нам</a>',
+            'clientDebtor' => '<a href="/client" target="_blank">Покупатели должны нам</a>',
             'deposit' => 'Депозиты',
             'otherAssets' => 'Прочие активы',
             'totalAssets_' => '',
             'totalPassive' => 'Пассивы',
-            'supplierCredit' => 'Мы должны поставщикам',
-            'clientCredit' => 'Мы должны покупателям',
-            'zp' => 'Долг по зарплате',
+            'supplierCredit' => '<a href="/supplier-revision" target="_blank">Мы должны поставщикам</a>',
+            'clientCredit' => '<a href="/client" target="_blank">Мы должны покупателям</a>',
+            'zp' => '<a href="/balance/zp" target="_blank">Долг по зарплате</a>',
             'loans' => 'Кредиты',
             'otherPassive' => 'Прочие обязательства',
             'income' => 'Накопленная прибыль/убыток',
             'dividends' => 'Дивиденты',
-//            'zp' => '<a href="/opu/zp?kind=20" target="_blank">Зарплата</a>',
-
         ];    
     }
     

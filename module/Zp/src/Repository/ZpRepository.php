@@ -145,8 +145,9 @@ class ZpRepository extends EntityRepository
     
     /**
      * Список сотрудников в ЗП
+     * @param Legal $company
      */
-    public function findMutualsUsers()
+    public function findMutualsUsers($company)
     {
         $entityManager = $this->getEntityManager();
 
@@ -156,6 +157,8 @@ class ZpRepository extends EntityRepository
             ->from(User::class, 'u')
             ->join('u.personalMutuals', 'pm')
             ->distinct()
+            ->andWhere('pm.company = :company')
+            ->setParameter('company', $company->getId()) 
             ->andWhere('pm.status = :status')
             ->setParameter('status', PersonalMutual::STATUS_ACTIVE) 
             ->orderBy('u.status')    
