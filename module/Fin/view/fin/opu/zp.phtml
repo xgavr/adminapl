@@ -150,7 +150,7 @@ $this->pageBreadcrumbs()->setItems([
     function footerFormatter(data){
         var field = this.field;
         return $.number((data.map(function (row) {
-            return +row[field];
+            return +(Math.round(row[field]*100)/100);
         }).reduce(function (sum, i) {
             return (Math.round((sum + i)*100)/100);
         }, 0)), 0, ',', ' ');
