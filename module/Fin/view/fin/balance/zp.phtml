@@ -1,4 +1,6 @@
 <?php
+use User\Entity\User;
+
 $this->headTitle('Зарплата');
 
 $this->mainMenu()->setActiveItemId('report');
@@ -107,6 +109,10 @@ $this->pageBreadcrumbs()->setItems([
     
     function rowStyle(row){
         var retired = 'tablerow';
+        
+        if (row.user.status === '<?= User::STATUS_RETIRED?>'){
+            retired += ' retired';
+        }
         
         return {classes: retired};
     }
