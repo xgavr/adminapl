@@ -148,34 +148,29 @@ class BalanceController extends AbstractActionController
 
     public function zpContentAction()
     {
-        $q = $this->params()->fromQuery('search');
-        $offset = $this->params()->fromQuery('offset');
-        $company = $this->params()->fromQuery('company');
+        $companyId = $this->params()->fromQuery('company', -1);
         $dateStart = $this->params()->fromQuery('dateStart');
         $period = $this->params()->fromQuery('period');
-        $limit = $this->params()->fromQuery('limit');
-        $sort = $this->params()->fromQuery('sort');
-        $order = $this->params()->fromQuery('order', 'DESC');
         
-        $startDate = '2012-01-01';
+        $startDate = '2024-01-01';
         $endDate = '2199-01-01';
         if (!empty($dateStart)){
-            $startDate = date('Y-m-d', strtotime($dateStart));
+            $startDate = date('Y-m-d', strtotime(max($dateStart, $startDate)));
             $endDate = $startDate;
             if ($period == 'week'){
-                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime($startDate)));
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 week - 1 day', strtotime(max($dateStart, $startDate))));
             }    
             if ($period == 'month'){
-                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime($startDate)));
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 month - 1 day', strtotime(max($dateStart, $startDate))));
             }    
             if ($period == 'number'){
                 $startDate = $dateStart.'-01-01';
-                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime($startDate)));
+                $endDate = date('Y-m-d 23:59:59', strtotime('+ 1 year - 1 day', strtotime(max($dateStart, $startDate))));
             }    
         }    
         
         $company = $this->entityManager->getRepository(Legal::class)
-                    ->find($company);
+                    ->find($companyId);
         
         $params = [
             'company' => $company,
