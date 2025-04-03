@@ -24,7 +24,7 @@ use Stock\Entity\Movement;
                         <option value="month" <?= ($period == 'month') ? 'selected':''?>>Месяц</option>                        
                         <option value="number" <?= ($period == 'number') ? 'selected':''?>>Год</option>                        
                     </select>
-                    <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control refresh-table" min="2024-01-01" type="<?= $period?>" value="<?= $dateStart?>">
+                    <input name="dateStart" id="mutualDateStart" style="width: 200px" class="form-control refresh-table" min="2024-01" type="<?= $period?>" value="<?= $dateStart?>">
                 </div>
                 <div class="form-group">
                     <select id="mutualCompanySelect" name="company" style="width: 200px" <?= ($rbacManager->isGranted(null, 'zp.manage')) ? '':'disabled' ?> class="form-control cookie-control">
