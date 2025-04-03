@@ -196,26 +196,32 @@ class BalanceController extends AbstractActionController
             $balanceResult = $this->entityManager->getRepository(PersonalMutual::class)
                             ->payslip($params)->getOneOrNullResult(2);
             
-            $endBalance = empty($balanceResult['amount']) ? 0:-$balanceResult['amount'];
+            $endBalance = empty($balanceResult['amount']) ? 0:round(-$balanceResult['amount'], 2);
             
             $params['startDate'] = $startDate;        
             $totalResult = $this->entityManager->getRepository(PersonalMutual::class)
                             ->payslip($params)->getOneOrNullResult(2);
             
-            $row = [
-                
-                'company' => $company->toArray(),
-                'user' => $user->toArray(),
-                
-                'start' => $endBalance-$totalResult['amount'],
-                'amount' => $totalResult['amount'],
-                'amountIn' => $totalResult['amountIn'],
-                'amountOut' => $totalResult['amountOut'],
-                'end' => $endBalance,
-            ];
+            $amount = empty($totalResult['amount']) ? 0:round($totalResult['amount'], 2);
+            $amountIn = empty($totalResult['amountIn']) ? 0:round($totalResult['amountIn'], 2);
+            $amountOut = empty($totalResult['amountOut']) ? 0:round($totalResult['amountOut'], 2);
+            $startBalance = $endBalance - $amount;
             
-            
-            $data[] = $row;        
+            if ($startBalance || $amountIn || $amountOut || $endBalance){
+                $row = [
+
+                    'company' => $company->toArray(),
+                    'user' => $user->toArray(),
+
+                    'start' => $startBalance,
+                    'amount' =>  $amount,
+                    'amountIn' => $amountIn,
+                    'amountOut' => $amountOut,
+                    'end' => $endBalance,
+                ];                
+
+                $data[] = $row;        
+            }    
         } 
         
         return new JsonModel([
