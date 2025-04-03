@@ -196,11 +196,7 @@ $this->pageBreadcrumbs()->setItems([
     $(function () {
         $ok.click(function () {
             refreshTable();
-        });
-        
-        <?php if (!empty($userId)):?>
-            $('#userSelect').val(<?= $userId?>);
-        <?php endif;?>    
+        });  
         
         $table.on('load-success.bs.table', function (e, res) {
             $('#startBalance').html($.number(res.startBalance, 0, ',', ' '));

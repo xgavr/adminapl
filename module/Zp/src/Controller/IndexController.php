@@ -153,11 +153,27 @@ class IndexController extends AbstractActionController
     public function payslipAction()
     {
         $userId = $this->params()->fromRoute('id');
+        $companyId = $this->params()->fromQuery('company', -1);
         
         $companies = $this->entityManager->getRepository(Legal::class)
                 ->companies();
+        
+        $company = null;
+        if ($companyId > 0){
+            $company = $this->entityManager->getRepository(Legal::class)
+                    ->find($companyId);
+        }
+        if (empty($company)){
+            $company = $companies[0];
+        }
+        
+        if ($userId > 0){
+            $user = $this->entityManager->getRepository(User::class)
+                    ->find($userId);
+        }
+        
         $users = $this->entityManager->getRepository(PersonalMutual::class)
-                ->findMutualsUsers($companies[0]);
+                ->findMutualsUsers($company);
         $accruals = $this->entityManager->getRepository(Accrual::class)
                 ->findBy(['status' => Accrual::STATUS_ACTIVE]);
         
@@ -165,9 +181,8 @@ class IndexController extends AbstractActionController
             'companies' => $companies,
             'users' => $users,
             'accruals' => $accruals,
-            'currentUser' => $this->logManager->currentUser(),
+            'currentUser' => empty($user) ? $this->logManager->currentUser():$user,
             'rbacManager' => $this->rbacManager,
-            'userId' => $userId,
         ]);
     }
     
