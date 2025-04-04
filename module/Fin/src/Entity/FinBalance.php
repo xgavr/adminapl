@@ -395,10 +395,10 @@ class FinBalance
         return $this->ro;
     }
 
-    public function setRo($income) {
+    public function setRo($revenue) {
         $this->ro = 0;
         if ($this->assets()){
-            $this->ro = max(0, round($income/$this->assets(), 2));
+            $this->ro = max(0, round($revenue/$this->assets(), 2));
         }
         return $this;
     }
@@ -568,7 +568,7 @@ class FinBalance
                 . '"></span>',            
             'ro' => 'Ресурсоотдача '
                 . '<span class="glyphicon glyphicon-question-sign" data-toggle="tooltip" title="'
-                . 'Каких то утвержденных норм нет. Если на 1 рубль активов приходится меньше 1 '
+                . 'выручка/стоимость активов. Каких то утвержденных норм нет. Если на 1 рубль активов приходится меньше 1 '
                 . 'рубля выручки - это плохо. А вот если приходится 1,5 или 2 рубля - это нормально'
                 . ' или хорошо? Поэтому сложно по одному месяцу провести выводы. Этот показатель '
                 . 'хорош в динамике. Если показатель растет -то компания на верном пути, если падает'

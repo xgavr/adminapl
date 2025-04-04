@@ -480,7 +480,7 @@ class BalanceManager {
                     $finBalance->setAl();
                     
                     $finOpu = $this->finManager->getFinOpu($day->format('Y-m-t'), $company, FinOpu::STATUS_FACT);
-                    $finBalance->setRo($finOpu->getIncomeTotal());
+                    $finBalance->setRo($finOpu->getRevenueTotal());
                     $finBalance->setRsk($finOpu->getProfitNet());
                     $finBalance->setRa($finOpu->getProfitNet());
                     $finBalance->setFn();
