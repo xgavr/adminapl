@@ -323,6 +323,15 @@ class FinBalance
         return $this->totalPassive;
     }
     
+    /**
+     * Собственный капитал
+     * @return float
+     */
+    private function capital()
+    {
+        return $this->assets() - $this->shortPassives();
+    }
+    
     private function shortPassives()
     {
         return 
@@ -365,7 +374,7 @@ class FinBalance
     public function setKtl() {
         $this->ktl = 0;
         if ($this->shortPassives()){
-            $this->ktl = round($this->assets()/$this->shortPassives(), 2);
+            $this->ktl = round($this->assets()/$this->shortPassives());
         }    
         return $this;
     }
@@ -377,7 +386,7 @@ class FinBalance
     public function setKfl() {
         $this->kfl = 0;
         if ($this->assets()){
-            $this->kfl = max(0, round(($this->assets()-$this->shortPassives())*100/$this->assets()));
+            $this->kfl = max(0, round(($this->capital())*100/$this->assets()));
         }    
         return $this;
     }
@@ -398,8 +407,12 @@ class FinBalance
         return $this->al;
     }
 
-    public function setAl($al) {
-        $this->al = $al;
+    public function setAl() {
+        $this->al = 0;
+        $cash = $this->getCash() + $this->getDeposit();
+        if ($cash){
+            $this->al = round($cash/$this->shortPassives());
+        }    
         return $this;
     }
 
@@ -407,8 +420,11 @@ class FinBalance
         return $this->fn;
     }
 
-    public function setFn($fn) {
-        $this->fn = $fn;
+    public function setFn() {
+        $this->fn = 0;
+        if ($this->getTotalAssets()){
+            $this->fn = max(0, round($this->capital()*100/$this->getTotalAssets(), 2));
+        }
         return $this;
     }
 
@@ -416,8 +432,11 @@ class FinBalance
         return $this->rsk;
     }
 
-    public function setRsk($rsk) {
-        $this->rsk = $rsk;
+    public function setRsk($profit) {
+        $this->rsk = 0;
+        if ($this->capital()){
+            $this->rsk = round($profit*100/$this->capital(), 2);
+        }
         return $this;
     }
 
@@ -425,8 +444,11 @@ class FinBalance
         return $this->ra;
     }
 
-    public function setRa($ra) {
-        $this->ra = $ra;
+    public function setRa($profit) {
+        $this->ra = 0;
+        if ($this->assets()){
+            $this->ra = round($profit*100/$this->assets(), 2);
+        }
         return $this;
     }
 
@@ -506,12 +528,12 @@ class FinBalance
             'dividends' => 'Дивиденты рекомендуемые',
             'dividends_' => '',
             'finmark' => 'Финансовые показатели',
-            'ktl' => 'Коэффициент текущей ликвидности',
+            'ktl' => 'Текущая ликвидность',
+            'al' => 'Абсолютная ликвидность',
             'kfl' => 'Коэффициент финансовой ликвидности, %',
             'ro' => 'Ресурсоотдача',
-            'al' => 'Абсолютная ликвидность',
             'fn' => 'Финансовая независимость',
-            'rsk' => 'Рентабельность СК',
+            'rsk' => 'Рентабельность собственного капитала',
             'ra' => 'Рентабельность активов',
         ];    
     }
