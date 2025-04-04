@@ -266,6 +266,12 @@ class ProcessingController extends AbstractActionController
      */
     private $apiSupplierManager;    
 
+    /**
+     * Balance manager.
+     * @var \Fin\Service\BalanceManager
+     */
+    private $balanceManager;    
+
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $postManager, $autoruManager, $telegramManager, 
             $aplService, $priceManager, $rawManager, $supplierManager, $adminManager,
@@ -275,7 +281,7 @@ class ProcessingController extends AbstractActionController
             $aplCashService, $billManager, $registerManager, $ptManager, $jobManager, 
             $ozonService, $userManager, $smsManager, $sbpManager, $cashManager,
             $ampReportManager, $paymentManager, $bankMlManager, $finManager, 
-            $zpManager, $ddsManager, $apiSupplierManager) 
+            $zpManager, $ddsManager, $apiSupplierManager, $balanceManager) 
     {
         $this->entityManager = $entityManager;
         $this->postManager = $postManager;        
@@ -318,6 +324,7 @@ class ProcessingController extends AbstractActionController
         $this->zpManager = $zpManager;
         $this->ddsManager = $ddsManager;
         $this->apiSupplierManager = $apiSupplierManager;
+        $this->balanceManager = $balanceManager;
     }   
 
     public function dispatch(Request $request, Response $response = null)
@@ -2306,6 +2313,7 @@ class ProcessingController extends AbstractActionController
 
             $this->finManager->calculate($period);
             $this->ddsManager->calculate($period);
+            $this->balanceManager->calculate($period);
         }    
                 
         return new JsonModel(

@@ -86,6 +86,9 @@ $this->pageBreadcrumbs()->setItems([
     
 
     $(function () {
+        
+        $('[data-toggle="tooltip"]').tooltip();
+        
         $ok.click(function () {
             refreshTable();
         });
