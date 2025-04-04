@@ -89,7 +89,7 @@ class FinManager {
      * @param integer $status
      * @return FinOpu
      */
-    private function getFinOpu($period, $companyId, $status)
+    public function getFinOpu($period, $companyId, $status)
     {
         $result = $this->entityManager->getRepository(FinOpu::class)
                 ->findOneBy(['period' => $period, 'company' => $companyId, 'status' => $status]);

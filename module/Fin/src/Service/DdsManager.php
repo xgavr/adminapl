@@ -90,7 +90,7 @@ class DdsManager {
      * @param integer $status
      * @return FinDds
      */
-    private function getFinDds($period, $companyId, $status)
+    public function getFinDds($period, $companyId, $status)
     {
         $result = $this->entityManager->getRepository(FinDds::class)
                 ->findOneBy(['period' => $period, 'company' => $companyId, 'status' => $status]);

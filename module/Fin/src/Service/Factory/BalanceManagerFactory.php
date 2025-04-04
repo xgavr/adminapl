@@ -12,6 +12,8 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Fin\Service\BalanceManager;
 use Admin\Service\AdminManager;
+use Fin\Service\DdsManager;
+use Fin\Service\FinManager;
 
 /**
  * Description of BalanceManagerFactory
@@ -26,8 +28,11 @@ class BalanceManagerFactory  implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $adminManager = $container->get(AdminManager::class);
+        $ddsManager = $container->get(DdsManager::class);
+        $finManager = $container->get(FinManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new BalanceManager($entityManager, $adminManager);
+        return new BalanceManager($entityManager, $adminManager, $ddsManager, 
+                $finManager);
     }
 }

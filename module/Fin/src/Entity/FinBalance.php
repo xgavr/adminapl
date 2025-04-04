@@ -107,6 +107,46 @@ class FinBalance
      */
     protected $totalPassive;
     
+    /** 
+     * @ORM\Column(name="balance")  
+     */
+    protected $balance;
+    
+    /** 
+     * @ORM\Column(name="ktl")  
+     */
+    protected $ktl;
+    
+    /** 
+     * @ORM\Column(name="kfl")  
+     */
+    protected $kfl;
+    
+    /** 
+     * @ORM\Column(name="ro")  
+     */
+    protected $ro;
+    
+    /** 
+     * @ORM\Column(name="al")  
+     */
+    protected $al;
+    
+    /** 
+     * @ORM\Column(name="fn")  
+     */
+    protected $fn;
+    
+    /** 
+     * @ORM\Column(name="rsk")  
+     */
+    protected $rsk;
+    
+    /** 
+     * @ORM\Column(name="ra")  
+     */
+    protected $ra;
+    
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Legal", inversedBy="finOpus") 
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
@@ -196,8 +236,23 @@ class FinBalance
         return $this->totalAssets;
     }
 
-    public function setTotalAssets($totalAssets) {
-        $this->totalAssets = $totalAssets;
+    private function assets()
+    {
+        return
+                $this->getCash() +
+                $this->getClientDebtor() +
+                $this->getDeposit() +
+                $this->getOtherAssets() + 
+                $this->getSupplierDebtor() +
+                $this->getGoods()
+                ;
+    }
+    
+    public function setTotalAssets() {
+        $this->totalAssets = 
+                    $this->assets()
+                ;
+        
         return $this;
     }
 
@@ -250,8 +305,8 @@ class FinBalance
         return $this->income;
     }
 
-    public function setIncome($income) {
-        $this->income = $income;
+    public function setIncome() {
+        $this->income = $this->getTotalAssets() - $this->passives();
         return $this;
     }
 
@@ -259,21 +314,122 @@ class FinBalance
         return $this->dividends;
     }
 
-    public function setDividends($dividends) {
-        $this->dividends = $dividends;
+    public function setDividends() {
+        $this->dividends = max(0, round(($this->getIncome() - $this->getGoods())/2, -3));
         return $this;
     }    
     
     public function getTotalPassive() {
         return $this->totalPassive;
     }
+    
+    private function shortPassives()
+    {
+        return 
+                $this->getSupplierCredit() +
+                $this->getLoans() + 
+                $this->getOtherPassive() + 
+                $this->getClientCredit() + 
+                $this->getZp()
+                ;
+    }
 
-    public function setTotalPassive($totalPassive) {
-        $this->totalPassive = $totalPassive;
+    private function passives()
+    {
+        return 
+            $this->shortPassives()
+                ;
+    }
+
+    public function setTotalPassive() {
+        $this->totalPassive =
+                $this->passives()
+              + $this->getIncome()
+                ;
         return $this;
     }
     
-    
+    public function getBalance() {
+        return $this->balance;
+    }
+
+    public function setBalance() {
+        $this->balance = $this->getTotalAssets() - $this->getTotalPassive();
+        return $this;
+    }
+
+    public function getKtl() {
+        return $this->ktl;
+    }
+
+    public function setKtl() {
+        $this->ktl = 0;
+        if ($this->shortPassives()){
+            $this->ktl = round($this->assets()/$this->shortPassives(), 2);
+        }    
+        return $this;
+    }
+
+    public function getKfl() {
+        return $this->kfl;
+    }
+
+    public function setKfl() {
+        $this->kfl = 0;
+        if ($this->assets()){
+            $this->kfl = max(0, round(($this->assets()-$this->shortPassives())*100/$this->assets()));
+        }    
+        return $this;
+    }
+
+    public function getRo() {
+        return $this->ro;
+    }
+
+    public function setRo($income) {
+        $this->ro = 0;
+        if ($this->assets()){
+            $this->ro = round($income/$this->assets(), 2);
+        }
+        return $this;
+    }
+
+    public function getAl() {
+        return $this->al;
+    }
+
+    public function setAl($al) {
+        $this->al = $al;
+        return $this;
+    }
+
+    public function getFn() {
+        return $this->fn;
+    }
+
+    public function setFn($fn) {
+        $this->fn = $fn;
+        return $this;
+    }
+
+    public function getRsk() {
+        return $this->rsk;
+    }
+
+    public function setRsk($rsk) {
+        $this->rsk = $rsk;
+        return $this;
+    }
+
+    public function getRa() {
+        return $this->ra;
+    }
+
+    public function setRa($ra) {
+        $this->ra = $ra;
+        return $this;
+    }
+
     public function getStatus() {
         return $this->status;
     }
@@ -330,9 +486,9 @@ class FinBalance
     {
         return [
             'totalAssets' => 'Активы',
-            'currentAssets' => 'Оборотные активы',
+//            'currentAssets' => 'Оборотные активы',
             'goods' => 'Товары',
-            'cash' => 'Деньги',
+            'cash' => 'Деньги (банк + касса + подотчет)',
             'supplierDebtor' => '<a href="/supplier-revision" target="_blank">Поставщики должны нам</a>',
             'clientDebtor' => '<a href="/client" target="_blank">Покупатели должны нам</a>',
             'deposit' => 'Депозиты',
@@ -344,8 +500,19 @@ class FinBalance
             'zp' => '<a href="/balance/zp" target="_blank">Долг по зарплате</a>',
             'loans' => 'Кредиты',
             'otherPassive' => 'Прочие обязательства',
-            'income' => 'Накопленная прибыль/убыток',
-            'dividends' => 'Дивиденты',
+            'income' => 'Накопленная прибыль/<span style="color: red">убыток</span>',
+            'balance_' => '',
+            'balance' => 'Баланс (Активы=Пассивы)',
+            'dividends' => 'Дивиденты рекомендуемые',
+            'dividends_' => '',
+            'finmark' => 'Финансовые показатели',
+            'ktl' => 'Коэффициент текущей ликвидности',
+            'kfl' => 'Коэффициент финансовой ликвидности, %',
+            'ro' => 'Ресурсоотдача',
+            'al' => 'Абсолютная ликвидность',
+            'fn' => 'Финансовая независимость',
+            'rsk' => 'Рентабельность СК',
+            'ra' => 'Рентабельность активов',
         ];    
     }
     
@@ -360,7 +527,7 @@ class FinBalance
     public static function getWarningList()
     {
         return [
-            'currentAssets' => 'Оборотные активы',
+//            'currentAssets' => 'Оборотные активы',
             'goods' => 'Товары',
             'cash' => 'Деньги',
             'supplierDebtor' => 'Поставщики должны нам',
@@ -373,15 +540,23 @@ class FinBalance
             'zp' => 'Долг по зарплате',
             'loans' => 'Кредиты',
             'otherPassive' => 'Прочие обязательства',
-            'income' => 'Накопленная прибыль/убыток',
-            'dividends' => 'Дивиденты',            
+            'income' => 'Накопленная прибыль/убыток',          
         ];    
     }
     
     public static function getInfoList()
     {
         return [
-
+            'balance' => 'Баланс (Активы=Пассивы)',
+            'dividends' => 'Дивиденты рекомендуемые',
+            'finmark' => 'Финансовые показатели',
+            'ktl' => 'Коэффициент текущей ликвидности',
+            'kfl' => 'Коэффициент финансовой ликвидности',
+            'ro' => 'Ресурсоотдача',
+            'al' => 'Абсолютная ликвидность',
+            'fn' => 'Финансовая независимость',
+            'rsk' => 'Рентабельность СК',
+            'ra' => 'Рентабельность активов',
         ];    
     }
     
@@ -394,7 +569,14 @@ class FinBalance
     public static function getMuteList()
     {
         return [
-
+            'dividends' => 'Дивиденты рекомендуемые',
+            'ktl' => 'Коэффициент текущей ликвидности',
+            'kfl' => 'Коэффициент финансовой ликвидности',
+            'ro' => 'Ресурсоотдача',
+            'al' => 'Абсолютная ликвидность',
+            'fn' => 'Финансовая независимость',
+            'rsk' => 'Рентабельность СК',
+            'ra' => 'Рентабельность активов',
         ];    
     }
     

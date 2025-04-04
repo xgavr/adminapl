@@ -156,11 +156,15 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     function amountFormatter(value, row){
+        var precision = 0;
+        if (row.key === 'ktl' || row.key === 'ro'){
+            precision = 2;
+        }
         if (value > 0){
-            return $.number(value, 0, ',', ' ' );
+            return $.number(value, precision, ',', ' ' );
         }
         if (value < 0){
-            return '<span style="color:red">'+$.number(value, 0, ',', ' ' )+'</span>';
+            return '<span style="color:red">'+$.number(value, precision, ',', ' ' )+'</span>';
         }
         
         return '';

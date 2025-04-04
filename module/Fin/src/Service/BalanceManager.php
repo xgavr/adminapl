@@ -11,12 +11,11 @@ namespace Fin\Service;
 use Fin\Entity\FinBalance;
 use Fin\Entity\FinDds;
 use Company\Entity\Legal;
-use Cash\Entity\CashDoc;
 use Bank\Entity\Statement;
-use Stock\Entity\Movement;
 use Stock\Entity\Mutual;
 use Company\Entity\Contract;
 use Company\Entity\BankAccount;
+use Fin\Entity\FinOpu;
 
 /**
  * Description of BalanceManager
@@ -31,12 +30,31 @@ class BalanceManager {
      */
     private $entityManager;
     
+    /**
+     * Admin manager
+     * @var \Admin\Service\AdminManager
+     */
     private $adminManager;
 
-    public function __construct($entityManager, $adminManager)
+    /**
+     * Dds manager
+     * @var \Fin\Service\DdsManager
+     */
+    private $ddsManager;
+
+    /**
+     * Fin manager
+     * @var \Fin\Service\FinManager
+     */
+    private $finManager;
+
+    public function __construct($entityManager, $adminManager, $ddsManager, 
+            $finManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
+        $this->ddsManager = $ddsManager;
+        $this->finManager = $finManager;
     }
     
     /**
@@ -65,6 +83,14 @@ class BalanceManager {
         $balance->setTotalAssets(empty($data['totalAssets']) ? 0:$data['totalAssets']);
         $balance->setTotalPassive(empty($data['totalPassive']) ? 0:$data['totalPassive']);
         $balance->setZp(empty($data['zp']) ? 0:$data['zp']);
+        $balance->setBalance(0);
+        $balance->setAl(0);
+        $balance->setKfl(0);
+        $balance->setKtl(0);
+        $balance->setRa(0);
+        $balance->setRo(0);
+        $balance->setRsk(0);
+        $balance->setFn(0);
         
         $this->entityManager->persist($balance);
         $this->entityManager->flush();
@@ -117,6 +143,14 @@ class BalanceManager {
         $balance->setTotalAssets(empty($data['totalAssets']) ? 0:$data['totalAssets']);
         $balance->setTotalPassive(empty($data['totalPassive']) ? 0:$data['totalPassive']);
         $balance->setZp(empty($data['zp']) ? 0:$data['zp']);
+        $balance->setBalance(0);
+        $balance->setAl(0);
+        $balance->setKfl(0);
+        $balance->setKtl(0);
+        $balance->setRa(0);
+        $balance->setRo(0);
+        $balance->setRsk(0);
+        $balance->setFn(0);
         
         $this->entityManager->persist($balance);
         $this->entityManager->flush();
@@ -373,41 +407,6 @@ class BalanceManager {
     }
     
     /**
-     * Zp
-     * @param date $period
-     */
-    public function zp($period)
-    {
-        $startDate = date('Y-01-01', strtotime($period));
-        $endDate = date('Y-12-31 23:59:59', strtotime($period));
-        
-        $p = new \DatePeriod(
-            new \DateTime($startDate),
-            \DateInterval::createFromDateString('first day of next month'),
-            new \DateTime($endDate)
-        );
-
-        foreach ($p as $day){
-            if (date('Y-m-d') >= $day->format('Y-m-d')){
-                $firstDayNextMonth = date('Y-m-d', strtotime($day->format('Y-m-d').' first day of next month'));
-                $zps = $this->entityManager->getRepository(FinBalance::class)
-                        ->findZp($firstDayNextMonth);
-
-                foreach ($zps as $row){
-                    $company = $this->entityManager->getRepository(Legal::class)
-                            ->find($row['companyId']);
-                    $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinBalance::STATUS_FACT);
-
-                    $finBalance->setZp($finBalance->getZp() - $row['amount']);            
-
-                    $this->entityManager->persist($finBalance);                
-                }                
-            }
-        }
-        $this->entityManager->flush();
-    }
-    
-    /**
      * Остатки товаров на конец
      * @param date $period
      */
@@ -443,6 +442,53 @@ class BalanceManager {
     }
     
     /**
+     * Zp
+     * @param date $period
+     */
+    public function zp($period)
+    {
+        $startDate = date('Y-01-01', strtotime($period));
+        $endDate = date('Y-12-31 23:59:59', strtotime($period));
+        
+        $p = new \DatePeriod(
+            new \DateTime($startDate),
+            \DateInterval::createFromDateString('first day of next month'),
+            new \DateTime($endDate)
+        );
+
+        foreach ($p as $day){
+            if (date('Y-m-d') >= $day->format('Y-m-d')){
+                $firstDayNextMonth = date('Y-m-d', strtotime($day->format('Y-m-d').' first day of next month'));
+                $zps = $this->entityManager->getRepository(FinBalance::class)
+                        ->findZp($firstDayNextMonth);
+
+                foreach ($zps as $row){
+                    $company = $this->entityManager->getRepository(Legal::class)
+                            ->find($row['companyId']);
+                    $finBalance = $this->getFinBalance($day->format('Y-m-t'), $company, FinBalance::STATUS_FACT);
+
+                    $finBalance->setZp($finBalance->getZp() - $row['amount']);            
+
+                    $finBalance->setTotalAssets();
+                    $finBalance->setIncome();
+                    $finBalance->setTotalPassive();
+                    $finBalance->setBalance();
+                    $finBalance->setDividends();
+                    
+                    $finBalance->setKtl();
+                    $finBalance->setKfl();
+                    
+                    $finOpu = $this->finManager->getFinOpu($day->format('Y-m-t'), $company, FinOpu::STATUS_FACT);
+                    $finBalance->setRo($finOpu->getIncomeTotal());
+                    
+                    $this->entityManager->persist($finBalance);                
+                }                
+            }
+        }
+        $this->entityManager->flush();
+    }
+    
+    /**
      * Посчитать balance за период
      * @param date $period
      */
@@ -464,7 +510,6 @@ class BalanceManager {
         $this->clients($period);
         $this->zp($period);
 
-        
         return;
     }
 }
