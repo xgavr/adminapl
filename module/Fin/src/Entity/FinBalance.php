@@ -411,7 +411,7 @@ class FinBalance
         $this->al = 0;
         $cash = $this->getCash() + $this->getDeposit();
         if ($cash){
-            $this->al = round($cash/$this->shortPassives());
+            $this->al = round($cash*100/$this->shortPassives());
         }    
         return $this;
     }

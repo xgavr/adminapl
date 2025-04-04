@@ -162,14 +162,14 @@ $this->pageBreadcrumbs()->setItems([
         }
         if (value){
             if (row.key === 'ktl'){
-                if (value > 2){
+                if (value >= 2){
                     return '<span style="color:green">'+$.number(value, precision, ',', ' ' )+'</span>';
                 } else {
                     return '<span style="color:red">'+$.number(value, precision, ',', ' ' )+'</span>';
                 }
             }
             if (row.key === 'kfl'){
-                if (value > 50){
+                if (value >= 50){
                     return '<span style="color:green">'+$.number(value, precision, ',', ' ' )+'</span>';
                 } else {
                     return '<span style="color:red">'+$.number(value, precision, ',', ' ' )+'</span>';
@@ -177,7 +177,7 @@ $this->pageBreadcrumbs()->setItems([
             }
 
             if (row.key === 'al'){
-                if (value > 20){
+                if (value >= 20){
                     return '<span style="color:green">'+$.number(value, precision, ',', ' ' )+'</span>';
                 } else {
                     return '<span style="color:red">'+$.number(value, precision, ',', ' ' )+'</span>';
@@ -185,7 +185,7 @@ $this->pageBreadcrumbs()->setItems([
             }
 
             if (row.key === 'fn'){
-                if (value > 40){
+                if (value >= 40){
                     return '<span style="color:green">'+$.number(value, precision, ',', ' ' )+'</span>';
                 } else {
                     return '<span style="color:red">'+$.number(value, precision, ',', ' ' )+'</span>';
@@ -193,7 +193,7 @@ $this->pageBreadcrumbs()->setItems([
             }
 
             if (row.key === 'rsk'){
-                if (value > 35){
+                if (value >= 35){
                     return '<span style="color:green">'+$.number(value, precision, ',', ' ' )+'</span>';
                 } else {
                     return '<span style="color:red">'+$.number(value, precision, ',', ' ' )+'</span>';
@@ -201,7 +201,7 @@ $this->pageBreadcrumbs()->setItems([
             }
 
             if (row.key === 'ra'){
-                if (value > 10){
+                if (value >= 10){
                     return '<span style="color:green">'+$.number(value, precision, ',', ' ' )+'</span>';
                 } else {
                     return '<span style="color:red">'+$.number(value, precision, ',', ' ' )+'</span>';
