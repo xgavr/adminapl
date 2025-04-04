@@ -447,7 +447,7 @@ class FinBalance
     public function setRa($profit) {
         $this->ra = 0;
         if ($this->assets()){
-            $this->ra = round($profit*100/$this->assets(), 2);
+            $this->ra = max(0, round($profit*100/$this->assets(), 2));
         }
         return $this;
     }
