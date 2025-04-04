@@ -398,7 +398,7 @@ class FinBalance
     public function setRo($income) {
         $this->ro = 0;
         if ($this->assets()){
-            $this->ro = round($income/$this->assets(), 2);
+            $this->ro = max(0, round($income/$this->assets(), 2));
         }
         return $this;
     }
@@ -435,7 +435,7 @@ class FinBalance
     public function setRsk($profit) {
         $this->rsk = 0;
         if ($this->capital()){
-            $this->rsk = round($profit*100/$this->capital(), 2);
+            $this->rsk = max(0, round($profit*100/$this->capital(), 2));
         }
         return $this;
     }
@@ -528,13 +528,13 @@ class FinBalance
             'dividends' => 'Дивиденты рекомендуемые',
             'dividends_' => '',
             'finmark' => 'Финансовые показатели',
-            'ktl' => 'Текущая ликвидность',
-            'al' => 'Абсолютная ликвидность',
-            'kfl' => 'Коэффициент финансовой ликвидности, %',
+            'ktl' => 'Текущая ликвидность (>2)',
+            'kfl' => 'Коэффициент финансовой ликвидности (>50), %',
+            'al' => 'Абсолютная ликвидность (>20), %',
+            'fn' => 'Финансовая независимость (>40), %',
+            'rsk' => 'Рентабельность собственного капитала (>35), %',
+            'ra' => 'Рентабельность активов (>10), %',
             'ro' => 'Ресурсоотдача',
-            'fn' => 'Финансовая независимость',
-            'rsk' => 'Рентабельность собственного капитала',
-            'ra' => 'Рентабельность активов',
         ];    
     }
     
