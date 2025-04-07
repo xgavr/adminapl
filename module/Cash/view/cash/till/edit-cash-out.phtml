@@ -188,13 +188,6 @@ $form->prepare();
                         <?= $this->formElementErrors($form->get('phone')); ?>                  
                     </div>
                 </div>
-                <div class="col-xs-3">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('contract')); ?>
-                        <?= $this->formElement($form->get('contract')); ?>
-                        <?= $this->formElementErrors($form->get('contract')); ?>                  
-                    </div>
-                </div>    
             </div>    
             <div class="row" id="supplierReturn">
                 <div class="col-xs-3">                        
@@ -202,13 +195,6 @@ $form->prepare();
                         <?= $this->formLabel($form->get('supplier')); ?>
                         <?= $this->formElement($form->get('supplier')); ?>
                         <?= $this->formElementErrors($form->get('supplier')); ?>                  
-                    </div>
-                </div>    
-                <div class="col-xs-3">                        
-                    <div class="form-group">
-                        <?= $this->formLabel($form->get('contract')); ?>
-                        <?= $this->formElement($form->get('contract')); ?>
-                        <?= $this->formElementErrors($form->get('contract')); ?>                  
                     </div>
                 </div>    
             </div>    
@@ -221,6 +207,15 @@ $form->prepare();
                     </div>
                 </div>    
             </div>    
+            <div class="row" id="contracts">
+                <div class="col-xs-3">                        
+                    <div class="form-group">
+                        <?= $this->formLabel($form->get('contract')); ?>
+                        <?= $this->formElement($form->get('contract')); ?>
+                        <?= $this->formElementErrors($form->get('contract')); ?>                  
+                    </div>
+                </div>                    
+            </div>
             <div class="row">    
                 <div class="col-xs-12">                        
                     <div class="form-group">
@@ -321,6 +316,8 @@ $form->prepare();
     
     function showKindOutGroup()
     {
+        $('#contracts').hide();
+        
         $('#costGroup').hide();
         $('#cost').attr('required', false);
         if ($("#kind").val() == <?= CashDoc::KIND_OUT_COST?>){
@@ -348,6 +345,7 @@ $form->prepare();
         $('#legal').attr('required', false);
         if ($("#kind").val() == <?= CashDoc::KIND_OUT_RETURN_CLIENT?>){
             $('#payment').show();
+            $('#contracts').show();
             $('#phone').attr('required', true);
             $('#orderApl').attr('required', true);
             //$('#legal').attr('required', true);
@@ -358,6 +356,7 @@ $form->prepare();
         $('#legal').attr('required', false);
         if ($("#kind").val() == <?= CashDoc::KIND_OUT_SUPPLIER?>){
             $('#supplierReturn').show();
+            $('#contracts').show();
             $('#supplier').attr('required', true);
 //            $('#legal').attr('required', true);
         }
