@@ -310,7 +310,17 @@ $form->prepare();
         }    
     }
     
-    function showKindOutGroup(onload = false)
+    function supplierContracts(onload = false){
+        if ($('#supplier').val()){
+            $.getJSON( '/till/supplier-contracts/'+$('#supplier').val(), function( data ) {
+                if (!onload){
+                    contracts(data.contracts);
+                }
+            });            
+        }    
+    }
+    
+    function showKindOutGroup()
     {
         $('#costGroup').hide();
         $('#cost').attr('required', false);
@@ -363,22 +373,20 @@ $form->prepare();
         if ($("#kind").val() == <?= CashDoc::KIND_OUT_SUPPLIER?>){
             $('#supplierReturn').show();
             $('#supplier').attr('required', true);
-//            $('#legal').attr('required', true);
-            if (!onload){
-                contracts(data.contracts);
-            }        
+//            $('#legal').attr('required', true);     
         }
     }
     
     
     $( document ).ready(function() {
         
-        showKindOutGroup(true);
+        showKindOutGroup();
         contactName(true);
         <?php if (!$cashDoc): ?>
             userChange();   
         <?php endif; ?>    
         //cashChange();
+        supplierContracts();
 
         $('#kind').on('change', function(){
             showKindOutGroup();
@@ -392,6 +400,9 @@ $form->prepare();
         });
         $('#orderApl').on('change', function(){
             contactName();
+        });
+        $('#supplier').on('change', function(){
+            supplierContracts();
         });
         
         var forms = $('#user-out-form');

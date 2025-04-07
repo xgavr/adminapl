@@ -23,6 +23,7 @@ use Bank\Entity\Statement;
 use Bank\Entity\QrCodePayment;
 use User\Entity\User;
 use Company\Entity\Contract;
+use Application\Entity\Supplier;
 
 
 class TillController extends AbstractActionController
@@ -287,6 +288,32 @@ class TillController extends AbstractActionController
             'name' => $order->getContact()->getName(),
             'phone' => ($order->getContact()->getPhone()) ? $order->getContact()->getPhone()->getName():null,
             'order' => $order->getId(),
+            'contracts' => $contracts,
+        ]);                  
+    }
+
+    public function supplierContractsAction()
+    {
+        $supplierId = $this->params()->fromRoute('id', -1);
+        if ($supplierId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        $supplier = $this->entityManager->getRepository(Supplier::class)
+                ->find($supplierId);
+        
+        if ($supplier == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        $contracts = [];
+        $supplierContracts = $this->entityManager->getRepository(Contract::class)
+                ->clientContracts($supplier);
+
+        foreach ($supplierContracts as $contract){
+            $contracts[$contract->getId()] = $contract->getContractPresentPay();
+        }        
+        return new JsonModel([
             'contracts' => $contracts,
         ]);                  
     }
