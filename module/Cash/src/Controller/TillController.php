@@ -436,7 +436,7 @@ class TillController extends AbstractActionController
         $statementId = (int)$this->params()->fromQuery('statement', -1);
         $orderId = (int)$this->params()->fromQuery('order', -1);
         
-        $cashDoc = $statement = $order = null;
+        $cashDoc = $statement = $order = $supplierId = null;
         
         if ($cashDocId > 0){
             $cashDoc = $this->entityManager->getRepository(CashDoc::class)
@@ -511,7 +511,7 @@ class TillController extends AbstractActionController
         $statementId = (int)$this->params()->fromQuery('statement', -1);
         $orderId = (int)$this->params()->fromQuery('order', -1);
         
-        $cashDoc = $statement = $order = null;
+        $cashDoc = $statement = $order = $supplierId = null;
         
         if ($cashDocId > 0){
             $cashDoc = $this->entityManager->getRepository(CashDoc::class)

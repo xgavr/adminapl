@@ -279,7 +279,7 @@ if ($ptu && !$copy){
             .done(function (data) {
                 if (data == 'ok'){
                     $('#ptuModal').modal('hide');
-                    $('#table').bootstrapTable('refresh');
+                    $('#table').bootstrapTable('refresh', {silent: true});
                     if ($('#movementTable').length){
                         $('#movementTable').bootstrapTable('refresh', {silent: true});
                     }    
