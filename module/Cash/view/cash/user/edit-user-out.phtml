@@ -289,7 +289,7 @@ $form->prepare();
         });
     }
     
-    function contactName(onload = flase){
+    function contactName(onload = false){
         if ($('#phone').val()){
             $.getJSON( '/till/phone-contact?phone='+$('#phone').val(), function( data ) {
                 $('#contactName').html(data.name);
@@ -310,7 +310,7 @@ $form->prepare();
         }    
     }
     
-    function showKindOutGroup(onload = flase)
+    function showKindOutGroup(onload = false)
     {
         $('#costGroup').hide();
         $('#cost').attr('required', false);
