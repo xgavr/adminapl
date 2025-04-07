@@ -227,7 +227,7 @@ class UserController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $userId = $data['user'];
-            $supplierId = $data['user'];
+            $supplierId = $data['supplier'];
         }
         
         $form = new UserInForm($this->entityManager);
@@ -288,7 +288,7 @@ class UserController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $userId = $data['user'];
-            $supplierId = $data['user'];
+            $supplierId = $data['supplier'];
         }
         
         $form = new UserOutForm($this->entityManager);

@@ -1004,7 +1004,7 @@ class Statement {
     public static function getKindOutList() 
     {
         return [
-            self::KIND_OUT_SUPPLIER => 'Оплата постащику',
+            self::KIND_OUT_SUPPLIER => 'Оплата поставщику',
             self::KIND_OUT_SELF => 'Перевод на свой счет',
             self::KIND_OUT_CART_PAY => 'Оплата корпоративной картой',
             self::KIND_OUT_TAX => 'Уплата налога',
