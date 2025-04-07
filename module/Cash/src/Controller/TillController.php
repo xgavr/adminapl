@@ -456,10 +456,11 @@ class TillController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $cashId = $data['cash'];
+            $supplierId = $data['supplier'];
         }
         
         $form = new CashInForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form, $cashDoc, $cashId, $statementId, $orderId);
+        $this->cashManager->cashFormOptions($form, $cashDoc, $cashId, $statementId, $orderId, $supplierId);
         
         if ($this->getRequest()->isPost()) {
             
@@ -527,8 +528,14 @@ class TillController extends AbstractActionController
                     ->find($orderId);
         }    
         
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();
+            $cashId = $data['cash'];
+            $supplierId = $data['supplier'];
+        }
+        
         $form = new CashOutForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form, $cashDoc, $cashId, $statementId, $orderId);
+        $this->cashManager->cashFormOptions($form, $cashDoc, $cashId, $statementId, $orderId, $supplierId);
         
         if ($this->getRequest()->isPost()) {
             

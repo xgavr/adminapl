@@ -1138,12 +1138,13 @@ class CashManager {
      * @param integer $cashId
      * @param integer $statementId
      * @param integer $orderId
+     * @param integer $supplierId
      */
     public function cashFormOptions($form, $cashDoc = null, $cashId = null, 
-            $statementId = null, $orderId = null)
+            $statementId = null, $orderId = null, $supplierId = null)
     {
         $user = $this->logManager->currentUser();
-        $order = null;
+        $order = $supplier = $contracts = null;
         if ($cashDoc){
             $order = $cashDoc->getOrder();
         }    
@@ -1256,14 +1257,27 @@ class CashManager {
             $form->get('company')->setValueOptions($companyList);                        
         }  
         
+        if ($supplierId){
+            $supplier = $this->entityManager->getRepository(Supplier::class)
+                    ->find($supplierId);
+        }
+                
         if ($order){
-            $contractsList = [-1 => 'авто'];
             $contracts = $this->entityManager->getRepository(Contract::class)
                     ->clientContracts($order->getClient());
+        }
+        
+        if ($supplier){
+            $contracts = $this->entityManager->getRepository(Contract::class)
+                    ->supplierContracts($order->getClient());
+        }
+        
+        if ($contracts){
+            $contractsList = [-1 => 'авто'];
             foreach ($contracts as $contract){
                 $contractsList[$contract->getId()] = $contract->getContractPresentPay();
                 $form->get('contract')->setValueOptions($contractsList); 
-            }
+            }            
         }
     }    
     

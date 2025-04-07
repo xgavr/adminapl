@@ -224,8 +224,14 @@ class UserController extends AbstractActionController
                     ->find($orderId);
         }    
         
+        if ($this->getRequest()->isPost()) {
+            $data = $this->params()->fromPost();
+            $userId = $data['user'];
+            $supplierId = $data['user'];
+        }
+        
         $form = new UserInForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form, $cashDoc, null, null, $orderId);
+        $this->cashManager->cashFormOptions($form, $cashDoc, null, null, $orderId, $supplierId);
         
         if ($this->getRequest()->isPost()) {
             
@@ -282,10 +288,11 @@ class UserController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $userId = $data['user'];
+            $supplierId = $data['user'];
         }
         
         $form = new UserOutForm($this->entityManager);
-        $this->cashManager->cashFormOptions($form, $cashDoc, null, null, $orderId);
+        $this->cashManager->cashFormOptions($form, $cashDoc, null, null, $orderId, $supplierId);
         
         if ($this->getRequest()->isPost()) {
             
