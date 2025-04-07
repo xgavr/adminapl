@@ -310,7 +310,7 @@ $form->prepare();
         }    
     }
     
-    function showKindOutGroup()
+    function showKindOutGroup(onload = flase)
     {
         $('#costGroup').hide();
         $('#cost').attr('required', false);
@@ -364,13 +364,16 @@ $form->prepare();
             $('#supplierReturn').show();
             $('#supplier').attr('required', true);
 //            $('#legal').attr('required', true);
+            if (!onload){
+                contracts(data.contracts);
+            }        
         }
     }
     
     
     $( document ).ready(function() {
         
-        showKindOutGroup();
+        showKindOutGroup(true);
         contactName(true);
         <?php if (!$cashDoc): ?>
             userChange();   
