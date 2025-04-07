@@ -308,7 +308,7 @@ class TillController extends AbstractActionController
         }
         $contracts = [];
         $supplierContracts = $this->entityManager->getRepository(Contract::class)
-                ->clientContracts($supplier);
+                ->supplierContracts($supplier);
 
         foreach ($supplierContracts as $contract){
             $contracts[$contract->getId()] = $contract->getContractPresentPay();

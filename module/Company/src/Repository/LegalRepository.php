@@ -353,7 +353,7 @@ class LegalRepository extends EntityRepository
      * 
      * @param Supplier $supplier
      */
-    public function clientContracts($supplier)
+    public function supplierContracts($supplier)
     {
         $entityManager = $this->getEntityManager();
 
