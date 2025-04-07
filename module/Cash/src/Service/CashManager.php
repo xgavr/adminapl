@@ -1269,7 +1269,7 @@ class CashManager {
         
         if ($supplier){
             $contracts = $this->entityManager->getRepository(Contract::class)
-                    ->supplierContracts($order->getClient());
+                    ->supplierContracts($supplier);
         }
         
         if ($contracts){
