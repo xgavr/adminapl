@@ -1147,6 +1147,8 @@ class CashManager {
         $order = $supplier = $contracts = null;
         if ($cashDoc){
             $order = $cashDoc->getOrder();
+            $supplierId = $cashDoc->getDefaultSupplierId();
+            
         }    
         if ($form->has('cash')){
             if ($cashDoc){
