@@ -197,6 +197,7 @@ class CashInForm extends Form
             'type'  => 'select',
             'name' => 'supplier',
             'attributes' => [                
+                'id' => 'supplier',
             ],
             'options' => [
                 'label' => 'Поставщик',

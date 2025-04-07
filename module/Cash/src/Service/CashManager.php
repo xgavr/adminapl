@@ -1215,7 +1215,7 @@ class CashManager {
         }    
 
         $suppliers = $this->entityManager->getRepository(Supplier::class)
-                ->findBy([], ['status' => 'ASC', 'name' => 'ASC']);
+                ->findBy(['parent' => null], ['status' => 'ASC', 'name' => 'ASC']);
         $supplierList = ['--не выбран--'];
         foreach ($suppliers as $supplier) {
             $supplierList[$supplier->getId()] = $supplier->getName();

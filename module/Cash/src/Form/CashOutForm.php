@@ -205,7 +205,8 @@ class CashOutForm extends Form
         $this->add([            
             'type'  => 'select',
             'name' => 'supplier',
-            'attributes' => [                
+            'attributes' => [
+                'id' => 'supplier',
             ],
             'options' => [
                 'label' => 'Поставщик',
