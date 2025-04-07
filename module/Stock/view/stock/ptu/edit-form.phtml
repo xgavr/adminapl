@@ -281,7 +281,7 @@ if ($ptu && !$copy){
                     $('#ptuModal').modal('hide');
                     $('#table').bootstrapTable('refresh');
                     if ($('#movementTable').length){
-                        $('#movementTable').bootstrapTable('refresh');
+                        $('#movementTable').bootstrapTable('refresh', {silent: true});
                     }    
                 } else {
                     $('#ptuModal .modal-content').html(data);                    
