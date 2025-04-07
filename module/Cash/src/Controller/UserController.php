@@ -273,7 +273,7 @@ class UserController extends AbstractActionController
         $userId = (int)$this->params()->fromQuery('user', -1);
         $orderId = (int)$this->params()->fromQuery('order', -1);
         
-        $cashDoc = $order = null;
+        $cashDoc = $order = $supplierId = null;
         
         if ($cashDocId > 0){
             $cashDoc = $this->entityManager->getRepository(CashDoc::class)
