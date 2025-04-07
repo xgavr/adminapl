@@ -119,17 +119,7 @@
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
 
 <script type="text/javascript">
-    var $table = $('#table').bootstrapTable({
-            onLoadSuccess: function(res){
-                tableRowClick();        
-                var inTotal = (res.turnover.inTotal) ? res.turnover.inTotal:0;
-                var outTotal = (res.turnover.outTotal) ? -res.turnover.outTotal:0;
-                var endTotal = (res.turnover.endTotal) ? res.turnover.endTotal:0;
-                $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
-                $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
-                $('#startTotalFooter').html((Math.round((inTotal-outTotal-endTotal)*100)/100).toFixed(2));
-            }
-        });
+    var $table = $('#table');
         $ok = $('#ok');
     
     function refreshTable(){
@@ -225,6 +215,16 @@
                     $('#dateStart').val($.format.date(new Date(), "yyyy-MM-dd"));
             }
         });
+        
+        $table.on('load-success.bs.table', function (e, res) {
+            tableRowClick();        
+            var inTotal = (res.turnover.inTotal) ? res.turnover.inTotal:0;
+            var outTotal = (res.turnover.outTotal) ? -res.turnover.outTotal:0;
+            var endTotal = (res.turnover.endTotal) ? res.turnover.endTotal:0;
+            $('#inTotalFooter').html((Math.round(inTotal*100)/100).toFixed(2));
+            $('#outTotalFooter').html((Math.round(outTotal*100)/100).toFixed(2));
+            $('#startTotalFooter').html((Math.round((inTotal-outTotal-endTotal)*100)/100).toFixed(2));
+        }); 
         
         $table.on('check.bs.table', function (e, row) {
             changeRevise(row.id, <?= Mutual::REVISE_OK?>);
