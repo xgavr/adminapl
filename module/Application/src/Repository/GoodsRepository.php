@@ -2266,30 +2266,11 @@ class GoodsRepository extends EntityRepository
         if ($source){
             $query['source'] = $source;
         }
-//        $oems = $this->getEntityManager()->getRepository(Oem::class)
-//                ->findBy($query);
-        
-        $entityManager = $this->getEntityManager();
-
-        $queryBuilder = $entityManager->createQueryBuilder();
-        
-        $queryBuilder->select('o.id as oemId')
-            ->from(Oem::class, 'o')
-            ->where('o.good = :goodId')
-            ->setParameter('goodId', $goodId)    
-            ;
-        
-        
-        if ($source){
-            $queryBuilder->andWhere('o.source = :sounrce')
-                    ->setParameter('source', $source);
-        }
-                
-        $oems = $queryBuilder->getQuery()->getResult();
-        
+        $oems = $this->getEntityManager()->getRepository(Oem::class)
+                ->findBy($query);
         $result = true;
         foreach ($oems as $oem){
-            $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oem['oemId']]);
+            $this->getEntityManager()->getConnection()->delete('oem', ['id' => $oem->getId()]);
         }
         return $result;
     }
