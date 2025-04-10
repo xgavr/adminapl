@@ -286,11 +286,11 @@ $this->pageBreadcrumbs()->setItems([
         var url = '/raw/delete-form/'+row.id;
         btn = '<button';
         btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' class="btn btn-default btn-xs this-delete"';
         btn += ' aria-label="Left Align"'; 
         btn += ' title="Удалить"'; 
         btn += ' onclick="tableRowDelete(\''+url+'\')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
         btn += '</button>';
         return btn;
     }
