@@ -395,7 +395,7 @@ class BillManager
                             $value = date('Y-m-d', Date::excelToTimestamp(floatval($cell->getValue())));
                         } else {
                             if (!empty($cell->getCalculatedValue())){
-                                $value = mb_substr(trim($cell->getCalculatedValue()), 0, 50);
+                                $value = mb_substr(trim($cell->getCalculatedValue()), 0, 100);
                             } else {
                                 $value = '';
                             }    
