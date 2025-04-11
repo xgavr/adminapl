@@ -192,7 +192,11 @@ use Stock\Entity\Movement;
     }    
     
     function amountFormatter(value){
-        return (Math.round(Math.abs(value)*100)/100).toFixed(2);
+        if (value < 0){
+            return (Math.round(Math.abs(value)*100)/100).toFixed(2);
+        } else {
+            return '<span style="color: red">'+(Math.round(-value*100)/100).toFixed(2)+'</span>';
+        }    
     }        
     
     function docKeyFormatter(value, row){
