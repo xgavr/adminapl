@@ -374,7 +374,7 @@ class MarketManager
             if (!empty($images)){
                 foreach ($images as $image){
                     if (Images::isToTransfer($image['path'])){
-                        $imageList[] = $this::APL_BASE_URL.'/images/api/'.$good['aplId'].'/'.$image['name'];
+                        $imageList[] = $this::APL_BASE_URL.'/images/api/'.$good['aplId'].'/'. rawurlencode($image['name']);
                     }    
 //                    $this->entityManager->detach($image);
                 }
