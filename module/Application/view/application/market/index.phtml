@@ -16,10 +16,10 @@ $this->pageBreadcrumbs()->setItems([
     <button class="btn btn-default market-modal-show" type="button" modal-url="/market/edit-form">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"> Добавить</span>
     </button>                
-    <button value="/ozon-zeroing" class="btn btn-default zeroing-ozon"
+<!--    <button value="/ozon-zeroing" class="btn btn-default zeroing-ozon"
             title="Обновить остатки в Озоне">
         <span class="glyphicon glyphicon-remove-circle"> Обнулить OZON</span>
-    </button> 
+    </button> -->
 </p>
 
 <table class="table table-striped">
@@ -78,9 +78,9 @@ $this->pageBreadcrumbs()->setItems([
                             title="Копировать">
                         <span class="glyphicon glyphicon-duplicate" ></span>
                     </button>
-                    <button class="btn btn-xs btn-danger this-delete" value="<?= $this->url('market', 
+                    <button class="btn btn-xs btn-default this-delete" value="<?= $this->url('market', 
                             ['action'=>'delete', 'id'=>$market->getId()]); ?>">
-                        <span class="glyphicon glyphicon-remove" ></span>
+                        <span class="glyphicon glyphicon-trash" ></span>
                     </button>
                 </nobr>    
             </td>    
@@ -137,12 +137,6 @@ $this->pageBreadcrumbs()->setItems([
                             title="Сформировать">
                         <span class="glyphicon glyphicon-play" ></span>
                     </button> 
-                    <?php if ($market->getOzonUpdate() != MarketPriceSetting::OZON_IGNORE):?>
-                        <button value="/market-place/ozon-update-market/<?= $market->getId()?>" class="btn btn-default btn-xs refresh-ozon"
-                                title="Обновить цены и остатки в Озоне">OZON
-                            <span class="glyphicon glyphicon-play" ></span>
-                        </button> 
-                    <?php endif; ?>
                 </nobr>    
             </td>    
         </tr>
