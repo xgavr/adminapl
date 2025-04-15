@@ -400,7 +400,7 @@ class StManager
 //            'info' => $data['info'],
             'row_no' => $rowNo,
             'take' => StGood::TAKE_NO,
-            'baseKey' => empty($data['baseKey']) ? null:$data['baseKey'],
+            'base_key' => empty($data['baseKey']) ? null:$data['baseKey'],
         ];
         //var_dump($stGood); exit;
         
