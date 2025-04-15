@@ -132,7 +132,7 @@ class StManager
     
             if ($st->getStatus() == St::STATUS_ACTIVE){
                 $bases = $this->entityManager->getRepository(Movement::class)
-                        ->findBases($stGood->getGood()->getId(), $docStamp, $st->getOffice()->getId());
+                        ->findBases($stGood->getGood()->getId(), $docStamp, $st->getOffice()->getId(), $stGood->getBaseKey());
                 
                 $write = $stGood->getQuantity();
                 
@@ -494,6 +494,11 @@ class StManager
         $rowNo = 1;
         if ($data){
             foreach ($data as $row){
+                if (isset($row['baseKey'])){
+                    if ($row['baseKey'] == StGood::BASE_KEY_AUTO){
+                        unset($row['baseKey']);
+                    }
+                }
                 $this->addStGood($st->getId(), $row, $rowNo);
                 $rowNo++;
             }
