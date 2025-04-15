@@ -20,6 +20,8 @@ use User\Entity\User;
 use Company\Entity\Cost;
 use Stock\Entity\GoodBalance;
 use Stock\Entity\Register;
+use Stock\Entity\Movement;
+use Stock\Entity\StGood;
 
 class StController extends AbstractActionController
 {
@@ -475,4 +477,46 @@ class StController extends AbstractActionController
         );           
     }        
     
+    public function findBaseAction()
+    {
+        $stId = $this->params()->fromRoute('id', -1);
+        
+        $st = $this->entityManager->getRepository(St::class)
+                ->find($stId);        
+
+        if ($st == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $reg = $this->entityManager->getRepository(Register::class)
+                ->findOneBy(['docId' => $st->getId(), 'docType' => Movement::DOC_ST]);
+        
+        if ($reg){
+            $docStamp = $reg->getDocStamp();
+        } else {
+            $docStamp = $this->entityManager->getRepository(Register::class)
+                    ->stRegister($st);        
+        }    
+        $stGoods = $st->getStGoods();
+        $result = [0 => StGood::BASE_KEY_AUTO];
+        $keys = [];
+        foreach ($stGoods as $stGood){
+            $bases = $this->entityManager->getRepository(Movement::class)
+                    ->findBases($stGood->getGood()->getId(), $docStamp, $st->getOffice()->getId());
+            foreach ($bases as $base){
+                if (!array_key_exists($base['baseKey'], $keys)){
+                    $keys[$base['baseKey']] = $base['baseKey'];
+                    $result[] = [
+                        'value' => $base['baseKey'],
+                        'text' => $base['baseKey'],
+                    ];
+                }
+            }    
+        }    
+        
+        return new JsonModel(
+            $result
+        );                   
+    }     
 }

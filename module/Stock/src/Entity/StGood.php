@@ -34,6 +34,7 @@ class StGood {
     const STATUS_DOC_RECD       = 1; // Получено.
     const STATUS_DOC_NOT_RECD  = 2; // Не получено.
 
+    const BASE_KEY_AUTO = 'авто';
 
     /**
      * @ORM\Id
