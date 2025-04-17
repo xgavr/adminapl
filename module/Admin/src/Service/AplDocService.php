@@ -460,6 +460,7 @@ class AplDocService {
             if (!$supplier){
                 $dataPtu['supplier'] = $ptu->getSupplier();
             }
+            $dataPtu['contract'] = $ptu->getContract();
             
             $this->ptuManager->updatePtu($ptu, $dataPtu);
             $this->ptuManager->removePtuGood($ptu); 

@@ -379,6 +379,7 @@ class AplCashService {
         $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                 ->findOneByAplId($data['id']);
         if ($cashDoc){
+            $dataCash['contract'] = $cashDoc->getContract();
             $this->cashManager->updateCashDoc($cashDoc, $dataCash);
         } else {        
             if (!empty($dataCash['kind'])){
