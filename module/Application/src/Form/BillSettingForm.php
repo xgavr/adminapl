@@ -242,6 +242,30 @@ class BillSettingForm extends Form
 
         $this->add([           
             'type'  => 'number',
+            'name' => 'innCol',
+            'attributes' => [
+                'id' => 'innCol',
+                'min' => 0,
+            ],
+            'options' => [
+                'label' => 'ИНН поставщика',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'number',
+            'name' => 'innRow',
+            'attributes' => [
+                'id' => 'innRow',
+                'min' => 0,
+            ],
+            'options' => [
+                'label' => 'ИНН поставщика',
+            ],
+        ]);
+        
+        $this->add([           
+            'type'  => 'number',
             'name' => 'contractCol',
             'attributes' => [
                 'id' => 'contractCol',
@@ -606,6 +630,24 @@ class BillSettingForm extends Form
                     
         $inputFilter->add([
                 'name'     => 'contractRow',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'innCol',
+                'required' => false,
+                'filters'  => [
+                ],                
+                'validators' => [
+                ],
+            ]);
+                    
+        $inputFilter->add([
+                'name'     => 'innRow',
                 'required' => false,
                 'filters'  => [
                 ],                

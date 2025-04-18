@@ -84,6 +84,14 @@ $form->get('contractRow')->setAttributes([
     'class'=>'form-control input-sm input-num', 
     ]);
 
+$form->get('innCol')->setAttributes([
+    'class'=>'form-control input-sm input-num', 
+    ]);
+
+$form->get('innRow')->setAttributes([
+    'class'=>'form-control input-sm input-num', 
+    ]);
+
 $form->get('tagNoCashCol')->setAttributes([
     'class'=>'form-control input-sm input-num', 
     ]);
@@ -246,6 +254,12 @@ $form->prepare();
                             <td><?= $this->formLabel($form->get('idDateCol')); ?></td>
                             <td><?= $this->formElement($form->get('idDateRow')); ?></td>
                             <td><?= $this->formElement($form->get('idDateCol')); ?></td>
+                        </tr>
+                        <tr>
+                            <td><?= $this->formLabel($form->get('innCol')); ?></td>
+                            <td><?= $this->formElement($form->get('innRow')); ?></td>
+                            <td><?= $this->formElement($form->get('innCol')); ?></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td><?= $this->formLabel($form->get('contractCol')); ?></td>

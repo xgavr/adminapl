@@ -10,6 +10,7 @@ use Stock\Entity\Ptu;
 use Bank\Entity\Statement;
 use Company\Entity\BankAccount;
 use Stock\Entity\Register;
+use Stock\Entity\Vtp;
 
 /**
  * This service is responsible for adding/editing roles.
@@ -207,6 +208,40 @@ class CostManager
         
 //        $this->entityManager->flush();
         
+        return $costMutual;
+    }  
+    
+    /**
+     * Провести расчет
+     * @param Vtp $vtp
+     * @param float $markdown Сумма уценки
+     * @param float $docStamp
+     * 
+     * @return CostMutual
+     */
+    public function repostVtp($vtp, $markdown, $docStamp)
+    {
+        $this->removeCostMutual(Movement::DOC_VTP, $vtp->getId());
+        
+        $costMutual = null;
+        
+        $markdownCost = $this->entityManager->getRepository(Cost::class)
+                ->findOneBy(['kind' => Cost::KIND_SUPPLIER_MARKDOWN]);
+        
+        if ($markdownCost && !empty($markdown)){
+            $this->entityManager->getConnection()->insert('cost_mutual', [
+                'amount' => round($markdown, 2),
+                'company_id' => $vtp->getPtu->getContract()->getCompany()->getId(),
+                'date_oper' => $vtp->getDocDate(),
+                'doc_id' => $vtp->getId(),
+                'doc_key' => $vtp->getLogKey(),
+                'doc_stamp' => $docStamp,
+                'doc_type' => Movement::DOC_VTP,
+                'status' => CostMutual::getStatusFromVtp($vtp),
+                'cost_id' => $markdownCost->getId(),
+            ]);
+        }    
+
         return $costMutual;
     }    
     

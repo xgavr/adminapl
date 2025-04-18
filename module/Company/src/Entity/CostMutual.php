@@ -9,6 +9,7 @@ use Stock\Entity\St;
 use Company\Entity\Cost;
 use Stock\Entity\Ptu;
 use Bank\Entity\Statement;
+use Stock\Entity\Vtp;
 
 /**
  * This class represents a position accrual.
@@ -242,6 +243,22 @@ class CostMutual
     {
         switch ($ptu->getStatus()){
             case Ptu::STATUS_ACTIVE: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }    
+
+    /**
+     * Returns possible vtp status.
+     * @param Vtp $vtp
+     * @return integer
+     */
+    public static function getStatusFromVtp($vtp) 
+    {
+        switch ($vtp->getStatus()){
+            case Vtp::STATUS_ACTIVE: 
+                if ($vtp->getStatusDoc() === Vtp::STATUS_DOC_NOT_RECD){
+                    return self::STATUS_ACTIVE;
+                }    
             default: return self::STATUS_RETIRED;    
         }
     }    

@@ -42,6 +42,12 @@ class VtpManager
     private $foldManager;
     
     /**
+     * Cost manager
+     * @var \Company\Service\CostManager
+     */
+    private $costManager;
+    
+    /**
      * Дата запрета
      * @var string
      */
@@ -50,12 +56,14 @@ class VtpManager
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager, $adminManager, $foldManager) 
+    public function __construct($entityManager, $logManager, $adminManager, 
+            $foldManager, $costManager) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->adminManager = $adminManager;
         $this->foldManager = $foldManager;
+        $this->costManager = $costManager;
         
         $setting = $this->adminManager->getSettings();
         $this->allowDate = $setting['allow_date'];
@@ -124,6 +132,9 @@ class VtpManager
 
         $vtpGoods = $this->entityManager->getRepository(VtpGood::class)
                     ->findByVtp($vtp->getId());
+        
+        $markdown = 0; //уценка
+        
         foreach ($vtpGoods as $vtpGood){
             if ($vtp->getStatus() == Vtp::STATUS_ACTIVE && $vtp->getStatusDoc() == Vtp::STATUS_DOC_NOT_RECD){
                 $bases = $this->entityManager->getRepository(Movement::class)
@@ -143,7 +154,7 @@ class VtpManager
                         $amount = $quantity*$vtpGood->getAmount()/$vtpGood->getQuantity();
                     }    
                     $baseAmount = $base['basePrice']*$quantity;
-                    
+                    $markdown += $baseAmount - $amount;
                     $data = [
                         'doc_key' => $vtp->getLogKey(),
                         'doc_type' => Movement::DOC_VTP,
@@ -188,6 +199,7 @@ class VtpManager
                 ->update('vtp', ['status_account' => $vtpTake], ['id' => $vtp->getId()]);        
         
         $this->foldManager->vtpFold($vtp, $docStamp);
+        $this->costManager->repostVtp($vtp, round($markdown, 2), $docStamp);
         
         return;
     }    

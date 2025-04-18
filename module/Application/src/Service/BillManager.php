@@ -258,6 +258,8 @@ class BillManager
         $billSetting->setIdDateRow(empty($data['idDateRow']) ? null:$data['idDateRow']);
         $billSetting->setContractCol(empty($data['contractCol']) ? null:$data['contractCol']);
         $billSetting->setContractRow(empty($data['contractRow']) ? null:$data['contractRow']);
+        $billSetting->setInnCol(empty($data['innCol']) ? null:$data['innCol']);
+        $billSetting->setInnRow(empty($data['innRow']) ? null:$data['innRow']);
         $billSetting->setTagNoCashCol(empty($data['tagNoCashCol']) ? null:$data['tagNoCashCol']);
         $billSetting->setTagNoCashRow(empty($data['tagNoCashRow']) ? null:$data['tagNoCashRow']);
         $billSetting->setTagNoCashValue(empty($data['tagNoCashValue']) ? null:$data['tagNoCashValue']);
@@ -310,6 +312,8 @@ class BillManager
         $billSetting->setIdDateRow(empty($data['idDateRow']) ? null:$data['idDateRow']);
         $billSetting->setContractCol(empty($data['contractCol']) ? null:$data['contractCol']);
         $billSetting->setContractRow(empty($data['contractRow']) ? null:$data['contractRow']);
+        $billSetting->setInnCol(empty($data['innCol']) ? null:$data['innCol']);
+        $billSetting->setInnRow(empty($data['innRow']) ? null:$data['innRow']);
         $billSetting->setTagNoCashCol(empty($data['tagNoCashCol']) ? null:$data['tagNoCashCol']);
         $billSetting->setTagNoCashRow(empty($data['tagNoCashRow']) ? null:$data['tagNoCashRow']);
         $billSetting->setTagNoCashValue(empty($data['tagNoCashValue']) ? null:$data['tagNoCashValue']);

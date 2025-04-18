@@ -6,6 +6,7 @@ use Stock\Service\VtpManager;
 use Admin\Service\LogManager;
 use Admin\Service\AdminManager;
 use GoodMap\Service\FoldManager;
+use Company\Service\CostManager;
 
 /**
  * This is the factory class for VtpManager service. The purpose of the factory
@@ -22,7 +23,9 @@ class VtpManagerFactory
         $logManager = $container->get(LogManager::class);
         $adminManager = $container->get(AdminManager::class);
         $foldManager = $container->get(FoldManager::class);
+        $costManager = $container->get(CostManager::class);
                         
-        return new VtpManager($entityManager, $logManager, $adminManager, $foldManager);
+        return new VtpManager($entityManager, $logManager, $adminManager, 
+                $foldManager, $costManager);
     }
 }

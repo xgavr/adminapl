@@ -123,6 +123,16 @@ class BillSetting {
     protected $contractRow;    
 
     /**
+     * @ORM\Column(name="inn_col")  
+     */
+    protected $innCol;    
+
+    /**
+     * @ORM\Column(name="inn_row")  
+     */
+    protected $innRow;    
+
+    /**
      * @ORM\Column(name="tag_non_cash_col")  
      */
     protected $tagNonCashCol;    
@@ -529,7 +539,23 @@ class BillSetting {
         $this->contractRow = $contractRow;
     }    
 
-    public function getTagNoCashCol()
+    public function getInnCol() {
+        return $this->innCol;
+    }
+
+    public function getInnRow() {
+        return $this->innRow;
+    }
+
+    public function setInnCol($innCol) {
+        $this->innCol = $innCol;
+    }
+
+    public function setInnRow($innRow) {
+        $this->innRow = $innRow;
+    }
+
+        public function getTagNoCashCol()
     {
         return $this->tagNonCashCol;
     }

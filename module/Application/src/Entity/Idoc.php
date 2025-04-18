@@ -631,6 +631,9 @@ class Idoc {
         if (!empty($billSettingData['contractRow'])){
             $result['contract'] = $this->readText($billSettingData['contractRow']-1, $billSettingData['contractCol']-1, $idocData);
         }    
+        if (!empty($billSettingData['innRow'])){
+            $result['inn'] = $this->readText($billSettingData['innRow']-1, $billSettingData['innCol']-1, $idocData);
+        }    
         if (!empty($billSettingData['tagNoCashRow'])){
             $result['tag_no_cash'] = $this->readText($billSettingData['tagNoCashRow']-1, $billSettingData['tagNoCashCol']-1, $idocData);
         }    

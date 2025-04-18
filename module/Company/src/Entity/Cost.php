@@ -30,6 +30,7 @@ class Cost {
     const KIND_BANK_ACQUIRING       = 6; // эквайринг 
     const KIND_BANK_CART       = 7; // оплата расходов корп картой 
     const KIND_CREDIT_RETURN   = 8; // возврат кредита 
+    const KIND_SUPPLIER_MARKDOWN   = 9; // уценка при возврате  
         
     const KIND_FIN_EXP       = 1; // текущие расходы
     const KIND_FIN_FIX       = 2; // постоянные расходы
@@ -178,6 +179,7 @@ class Cost {
             self::KIND_BANK_CART => 'Расходы по корп. картам',
             self::KIND_BANK_COMMISSION => 'Комиссия банка',
             self::KIND_CREDIT_RETURN => 'Возврат кредита',
+            self::KIND_SUPPLIER_MARKDOWN => 'Уценка при возврате',
 //            self::KIND_OTH => 'Прочие',
         ];
     }    
