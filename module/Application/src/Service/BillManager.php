@@ -466,6 +466,8 @@ class BillManager
         ini_set('memory_limit', '512M');
         set_time_limit(0);         
         
+        $result = [];
+        
         if ($content){
             
             $dom = new \DOMDocument();
@@ -491,7 +493,7 @@ class BillManager
                            
         }    
                                     
-        return;        
+        return $result;        
     }
 
     /**
