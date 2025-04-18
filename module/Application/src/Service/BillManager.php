@@ -109,7 +109,7 @@ class BillManager
         $billSettings = $this->entityManager->getRepository(BillSetting::class)
                 ->billSettingsWithInn();
         
-        $idoc->setDescription($this->_filedata2array(null, $idoc->getName(), $idoc->getTmpfile()));                    
+        $idoc->setDescription(Encoder::encode($this->_filedata2array(null, $idoc->getName(), $idoc->getTmpfile())));                    
         
         foreach ($billSettings as $billSetting){
             
@@ -683,7 +683,7 @@ class BillManager
     {
         $result = [];
         $pathinfo = pathinfo($filename);
-        
+//        var_dump($pathinfo);
 //        $stripContent = strip_tags($content);
         if ($supplier){
             if($supplier->getId() == 65) { //микадо злбчее
@@ -694,21 +694,19 @@ class BillManager
         }    
         if (!empty($pathinfo['extension'])){
             
-            if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
-                $result = $this->_xls2array($filepath);            
-            }
-            
-            if (in_array(strtolower($pathinfo['extension']), ['xml'])){
-                $result = $this->_xml2array($filepath);            
-            }
-            
-            if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
-                $result = $this->_csv2array($filepath);            
-            } else {
-                $result = $this->_xls2array($filepath);                                
-            }       
+            switch (strtolower($pathinfo['extension'])){
+                case 'xml':
+                    $result = $this->_xml2array($filepath);
+                    break;
+                case 'txt':
+                case 'csv':
+                    $result = $this->_csv2array($filepath); 
+                    break;
+                default:
+                    $result = $this->_xls2array($filepath);
+            }      
         }
-        
+//        var_dump($result);
         return $result;
     }    
     
