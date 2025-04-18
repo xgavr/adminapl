@@ -109,7 +109,7 @@ class BillManager
         $billSettings = $this->entityManager->getRepository(BillSetting::class)
                 ->billSettingsWithInn();
         
-        $idoc->setDescription($this->_filedata2array(null, null, $idoc->getTmpfile()));                    
+        $idoc->setDescription($this->_filedata2array(null, $idoc->getName(), $idoc->getTmpfile()));                    
         
         foreach ($billSettings as $billSetting){
             
