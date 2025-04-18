@@ -113,10 +113,12 @@ class BillManager
             $idocData = $idoc->idocToPtu($billSetting->toArray());
             if (!empty($idocData['inn'])){
                 $legals = $this->entityManager->getRepository(Legal::class)
-                        ->findBy(['inn' => $idocData['inn']]);
+                        ->findBy(['inn' => trim($idocData['inn'])]);
                 foreach ($legals as $legal){
                     if ($legal->getSupplier()){
                         $idoc->setSupplier($legal->getSupplier());
+                        $this->entityManager->persist($idoc);
+                        $this->entityManager->flush();
                         return $legal->getSupplier();
                     }
                 }
@@ -159,13 +161,13 @@ class BillManager
         $idoc->setSubject(empty($data['subject']) ? null:$data['subject']);
         $idoc->setTmpfile(empty($data['tmpfile']) ? null:$data['tmpfile']);
         
+        $this->entityManager->persist($idoc);
+        $this->entityManager->flush();
+        
         if (!$supplier){
             $this->setSupplierByDescriptionInn($idoc);
         }
 
-        $this->entityManager->persist($idoc);
-        $this->entityManager->flush();
-        
         
         if ($supplier && !empty($data['sender'])){
             $this->postManager->addEmailToContact($supplier->getLegalContact(), $data['sender']);
