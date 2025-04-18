@@ -32,6 +32,7 @@ use Application\Entity\GoodSupplier;
 use Application\Entity\Oem;
 use Laminas\Json\Decoder;
 use Kily\Tools\Upd\Parser;
+use Company\Entity\Legal;
 
 /**
  * Description of BillManager
@@ -99,6 +100,30 @@ class BillManager
         return $this::BILL_FOLDER;
     }
 
+    /**
+     * Найти поставщика по ИНН в описании
+     * @param Idoc $idoc
+     */
+    private function supplierByDescriptionInn($idoc)
+    {
+        $billSettings = $this->entityManager->getRepository(BillSetting::class)
+                ->billSettingsWithInn();
+        
+        foreach ($billSettings as $billSetting){
+            $idocData = $idoc->idocToPtu($billSetting->toArray());
+            if (!empty($idocData['inn'])){
+                $legals = $this->entityManager->getRepository(Legal::class)
+                        ->findBy(['inn' => $idocData['inn']]);
+                foreach ($legals as $legal){
+                    if ($legal->getSupplier()){
+                        return $legal->getSupplier();
+                    }
+                }
+            }
+        }
+        
+        return;
+    }
 
     /**
      * Добавить документ
@@ -559,7 +584,7 @@ class BillManager
 //            var_dump($data); exit;
             
             $result[] = [
-                '',
+                'ИНН',
                 '',
                 'Номер',
                 'Дата',
@@ -572,7 +597,7 @@ class BillManager
             ];
             
             $result[] = [
-                '',
+                'ИННЮЛ' => $data['Документ']['СвСчФакт']['СвПрод']['ИдСв']['@attributes']['ИННЮЛ'] ?? '',
                 '',
                 'НомерСчФ' => $data['Документ']['СвСчФакт']['@attributes']['НомерСчФ'] ?? '',
                 'ДатаСчФ' => $data['Документ']['СвСчФакт']['@attributes']['ДатаСчФ'] ?? '',

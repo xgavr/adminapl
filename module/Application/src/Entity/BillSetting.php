@@ -759,6 +759,8 @@ class BillSetting {
             'idDateRow' => $this->getIdDateRow(),
             'contractCol' => $this->getContractCol(),
             'contractRow' => $this->getContractRow(),
+            'innCol' => $this->getInnCol(),
+            'innRow' => $this->getInnRow(),
             'tagNoCashCol' => $this->getTagNoCashCol(),
             'tagNoCashRow' => $this->getTagNoCashRow(),
             'tagNoCashValue' => $this->getTagNoCashValue(),

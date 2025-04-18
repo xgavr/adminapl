@@ -263,4 +263,21 @@ class BillRepository  extends EntityRepository{
         
     }
     
+    /**
+     * Найти настройки с ИНН
+     */
+    public function billSettingsWithInn()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('bs')
+            ->from(BillSetting::class, 'bs') 
+            ->andWhere('bs.innRow > 0')    
+            ->andWhere('bs.innCol > 0')    
+                ;        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
 }
