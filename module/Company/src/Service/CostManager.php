@@ -231,7 +231,7 @@ class CostManager
         if ($markdownCost && !empty($markdown)){
             $this->entityManager->getConnection()->insert('cost_mutual', [
                 'amount' => round($markdown, 2),
-                'company_id' => $vtp->getPtu->getContract()->getCompany()->getId(),
+                'company_id' => $vtp->getPtu()->getContract()->getCompany()->getId(),
                 'date_oper' => $vtp->getDocDate(),
                 'doc_id' => $vtp->getId(),
                 'doc_key' => $vtp->getLogKey(),
